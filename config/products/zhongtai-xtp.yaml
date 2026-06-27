@@ -1,0 +1,29 @@
+id: zhongtai-xtp
+display_name: 中泰 XTP 3.0
+scope: cn
+asset_class: stock
+domain: gateways
+provider:
+  id: zhongtai
+  display_name: 中泰证券
+product: xtp
+status: active
+priority: 10
+adapter: zhongtai_xtp
+source:
+  type: http_api
+  page_url: https://xtp.zts.com.cn/doc/api/xtpDoc
+  menu_url: https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getDocMenu
+  content_url: https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id={doc_id}
+  referer: https://xtp.zts.com.cn/doc/api/xtpDoc
+  authorization: bearernull
+  download_page_url: https://xtp.zts.com.cn/service/download
+  download_api_url: https://xtp.zts.com.cn/jeecg-boot/xtp/ProductDocument
+output:
+  docs_dir: docs/cn/stock/gateways/zhongtai/xtp
+  index_file: index/cn/stock/zhongtai-xtp.json
+  clean_before_crawl: true
+metadata_defaults:
+  api_type: reference
+  source_type: http_api
+  version: XTP 3.0

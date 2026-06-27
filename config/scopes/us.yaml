@@ -1,0 +1,9 @@
+id: us
+display_name: 美国市场
+region: US
+description: 美国市场接口文档，下面按资产类别继续分层。
+asset_classes:
+  - stock
+  - futures
+  - options
+  - fund

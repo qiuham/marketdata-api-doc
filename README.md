@@ -1,0 +1,115 @@
+# MarketData API Docs
+
+多市场交易、行情和极速柜台 API 文档库。这个仓库参考 `crypto-api-docs` 的组织方式，但抽象为更大的接口文档体系：`cn`、`us`、`crypto` 作为顶层范围，范围下面再区分股票、期货、期权、交易所、券商和极速柜台等。
+
+## 设计原则
+
+- **范围优先**：顶层按 `cn`、`us`、`crypto` 组织；`cn` / `us` 下面再按 `stock`、`futures`、`options` 等资产类别分层。
+- **业务域分层**：资产类别下面再按 `gateways`、`brokers`、`exchanges`、`data-vendors` 等业务域分层。
+- **产品独立**：每个接入对象都有独立 `product_id`，例如 `zhongtai-xtp`、`zhongtai-xtppro`。
+- **文档统一**：落地为 Markdown，并使用 YAML frontmatter 记录来源、范围、资产类别、提供方、产品、接口类型和更新时间。
+- **索引友好**：每个产品生成独立 JSON 索引，同时生成全局 `index/catalog.json`，方便 AI、搜索和后续工具读取。
+- **采集可插拔**：公开网页、SDK、PDF、Word、头文件、本地手工文档都通过 adapter 或 ingest 流程进入同一套结构。
+
+## 覆盖范围
+
+> 此表由 `src/utils/readme_updater.py` 根据 `config/products/*.yaml` 和 `index/**/*.json` 自动生成。
+
+| 范围 | 资产 | 业务域 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
+|------|------|--------|--------|------|------|----------|----------|
+| cn | stock | gateways | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/gateways/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
+| cn | stock | gateways | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/gateways/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
+
+## 快速开始
+
+```bash
+# 查看产品清单
+PYTHONPATH=. python src/main.py list
+
+# 爬取单个产品
+PYTHONPATH=. python src/main.py crawl -p zhongtai-xtp
+
+# 生成全部产品索引和全局 catalog
+PYTHONPATH=. python src/main.py index --all
+
+# 刷新 README 自动内容
+PYTHONPATH=. python src/main.py readme
+
+# 校验配置、文档目录和索引
+PYTHONPATH=. python src/main.py validate
+```
+
+## 项目结构
+
+> 此结构由 `src/utils/readme_updater.py` 根据当前仓库文件自动生成。
+
+```
+marketdata-api-doc/
+├── .github/
+│   └── workflows/        # GitHub Actions
+│       ├── crawl-docs.yml
+│       └── validate.yml
+├── config/
+│   ├── scopes/           # cn / us / crypto 等顶层范围
+│   │   ├── cn.yaml
+│   │   ├── crypto.yaml
+│   │   └── us.yaml
+│   └── products/         # 接入产品配置
+│       ├── zhongtai-xtp.yaml
+│       └── zhongtai-xtppro.yaml
+├── docs/                 # Markdown 文档
+│   ├── cn/
+│   │   ├── stock/
+│   │   │   ├── gateways/
+│   │   │   │   ├── zhongtai/
+│   │   │   │       ├── xtp/                        # 36 Markdown docs
+│   │   │   │       └── xtppro/                     # 21 Markdown docs
+│   ├── us/
+│   ├── crypto/
+├── index/                # JSON 索引（供 AI 读取）
+│   ├── catalog.json
+│   ├── cn/stock/zhongtai-xtp.json
+│   └── cn/stock/zhongtai-xtppro.json
+├── src/
+│   ├── adapters/         # 采集/导入适配器
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── zhongtai_xtp.py
+│   │   └── zhongtai_xtppro.py
+│   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
+│   │   ├── __init__.py
+│   │   ├── browser.py
+│   │   ├── config.py
+│   │   ├── indexer.py
+│   │   ├── markdown.py
+│   │   ├── path_generator.py
+│   │   └── readme_updater.py
+│   └── main.py
+├── requirements.txt
+└── README.md
+```
+
+## Frontmatter 规范
+
+每篇文档都应该带上前置信息，至少包含：
+
+```yaml
+id: zhongtai-xtp-2056206185257816066
+scope: cn
+asset_class: stock
+domain: gateways
+provider: zhongtai
+product: xtp
+product_id: zhongtai-xtp
+api_type: market_data
+source_type: http_api
+source_url: https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185257816066
+version: XTP 3.0
+updated_at: 2026-05-18
+```
+
+## 首批接入计划
+
+- `zhongtai-xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
+- `zhongtai-xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
+- 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、`crypto/exchanges`、行情数据供应商和内部网关。

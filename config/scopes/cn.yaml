@@ -1,0 +1,10 @@
+id: cn
+display_name: 中国市场
+region: CN
+description: 中国市场接口文档，下面按资产类别继续分层。
+asset_classes:
+  - stock
+  - futures
+  - options
+  - fund
+  - bond

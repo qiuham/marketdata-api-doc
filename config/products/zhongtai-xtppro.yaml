@@ -1,0 +1,26 @@
+id: zhongtai-xtppro
+display_name: 中泰 XTP Pro
+scope: cn
+asset_class: stock
+domain: gateways
+provider:
+  id: zhongtai
+  display_name: 中泰证券
+product: xtppro
+status: active
+priority: 20
+adapter: zhongtai_xtppro
+source:
+  type: vitepress
+  home_url: https://xtp.zts.com.cn/xtp-pro/
+  preload_url: https://xtp.zts.com.cn/xtp-pro/API4/交易XTrader-API使用指南QuickStart.html
+  base_url: https://xtp.zts.com.cn/xtp-pro/
+  content_selector: main .vp-doc
+output:
+  docs_dir: docs/cn/stock/gateways/zhongtai/xtppro
+  index_file: index/cn/stock/zhongtai-xtppro.json
+  clean_before_crawl: true
+metadata_defaults:
+  api_type: reference
+  source_type: vitepress
+  version: XTP Pro

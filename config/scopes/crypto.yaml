@@ -1,0 +1,8 @@
+id: crypto
+display_name: Crypto
+region: global
+description: 加密货币交易所、行情、衍生品和链上接口。
+asset_classes:
+  - spot
+  - derivatives
+  - onchain
