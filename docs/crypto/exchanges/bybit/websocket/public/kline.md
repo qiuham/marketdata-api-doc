@@ -1,0 +1,184 @@
+---
+exchange: bybit
+source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/kline
+api_type: WebSocket
+updated_at: 2026-05-27 19:23:22.816223
+---
+
+# Kline
+
+Subscribe to the klines stream.
+
+tip
+
+If `confirm`=true, this means that the candle has closed. Otherwise, the candle is still open and updating.
+
+**Available intervals:**  
+
+
+  * `1` `3` `5` `15` `30` (min)
+  * `60` `120` `240` `360` `720` (min)
+  * `D` (day)
+  * `W` (week)
+  * `M` (month)
+
+
+
+**Push frequency:** 1-60s
+
+**Topic:**  
+`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
+
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+topic| string| Topic name  
+type| string| Data type. `snapshot`  
+ts| number| The timestamp (ms) that the system generates the data  
+data| array| Object  
+> start| number| The start timestamp (ms)  
+> end| number| The end timestamp (ms)  
+> [interval](/docs/v5/enum#interval)| string| Kline interval  
+> open| string| Open price  
+> close| string| Close price  
+> high| string| Highest price  
+> low| string| Lowest price  
+> volume| string| Trade volume  
+> turnover| string| Turnover  
+> confirm| boolean| Whether the tick is ended or not  
+> timestamp| number| The timestamp (ms) of the last matched order in the candle  
+  
+### Subscribe Example
+    
+    
+    from pybit.unified_trading import WebSocket  
+    from time import sleep  
+    ws = WebSocket(  
+        testnet=True,  
+        channel_type="linear",  
+    )  
+    def handle_message(message):  
+        print(message)  
+    ws.kline_stream(  
+        interval=5,  
+        symbol="BTCUSDT",  
+        callback=handle_message  
+    )  
+    while True:  
+        sleep(1)  
+    
+
+### Response Example
+    
+    
+    {  
+        "topic": "kline.5.BTCUSDT",  
+        "data": [  
+            {  
+                "start": 1672324800000,  
+                "end": 1672325099999,  
+                "interval": "5",  
+                "open": "16649.5",  
+                "close": "16677",  
+                "high": "16677",  
+                "low": "16608",  
+                "volume": "2.081",  
+                "turnover": "34666.4005",  
+                "confirm": false,  
+                "timestamp": 1672324988882  
+            }  
+        ],  
+        "ts": 1672324988882,  
+        "type": "snapshot"  
+    }
+
+---
+
+# K線
+
+訂閱K線推送
+
+提示
+
+註意如果字段`confirm`為true, 則表明這是這根K線的最後一個tick；否則，這只是一個快照數據，即中間價格
+
+**可用時間粒度:**  
+
+
+  * `1` `3` `5` `15` `30` (分鐘)
+  * `60` `120` `240` `360` `720` (分鐘)
+  * `D` (天)
+  * `W` (週)
+  * `M` (月)
+
+
+
+**推送頻率:** 1-60s
+
+**Topic:**  
+`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
+
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+topic| string| Topic名  
+type| string| 數據類型. `snapshot`  
+ts| number| 行情服務生成數據的時間戳 (毫秒)  
+data| array| Object  
+> start| number| 開始時間戳 (毫秒)  
+> end| number| 結束時間戳 (毫秒)  
+> [interval](/docs/zh-TW/v5/enum#interval)| string| K線粒度  
+> open| string| 開盤價  
+> close| string| 收盤價  
+> high| string| 最高價  
+> low| string| 最低價  
+> volume| string| 交易量  
+> turnover| string| 交易額  
+> confirm| boolean| 是否確認  
+> timestamp| number| 蠟燭中最後一筆淨值時間戳 (毫秒)  
+  
+### 訂閱示例
+    
+    
+    from pybit.unified_trading import WebSocket  
+    from time import sleep  
+    ws = WebSocket(  
+        testnet=True,  
+        channel_type="linear",  
+    )  
+    def handle_message(message):  
+        print(message)  
+    ws.kline_stream(  
+        interval=5,  
+        symbol="BTCUSDT",  
+        callback=handle_message  
+    )  
+    while True:  
+        sleep(1)  
+    
+
+### 響應示例
+    
+    
+    {  
+        "topic": "kline.5.BTCUSDT",  
+        "data": [  
+            {  
+                "start": 1672324800000,  
+                "end": 1672325099999,  
+                "interval": "5",  
+                "open": "16649.5",  
+                "close": "16677",  
+                "high": "16677",  
+                "low": "16608",  
+                "volume": "2.081",  
+                "turnover": "34666.4005",  
+                "confirm": false,  
+                "timestamp": 1672324988882  
+            }  
+        ],  
+        "ts": 1672324988882,  
+        "type": "snapshot"  
+    }

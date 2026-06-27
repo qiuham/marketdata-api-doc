@@ -1,0 +1,23 @@
+id: okx
+display_name: OKX
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: okx
+  display_name: OKX
+product: api
+status: active
+priority: 160
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: okx
+  concurrency: 5
+output:
+  docs_dir: docs/crypto/exchanges/okx
+  index_file: index/crypto/okx.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

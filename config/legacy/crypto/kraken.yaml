@@ -1,0 +1,34 @@
+name: kraken
+
+crawler:
+  # Kraken 是 SPA，稳定入口使用首页，再从顶部导航发现启用的菜单入口
+  home_url: "https://docs.kraken.com/api/"
+  scope_prefix: "https://docs.kraken.com/api/docs/"
+
+  # 暂时只启用这些顶部菜单；后续需要扩展时在这里追加菜单即可
+  nav_items:
+    - label: "Guides"
+      url: "https://docs.kraken.com/api/docs/guides/global-intro"
+    - label: "Spot REST"
+      url: "https://docs.kraken.com/api/docs/rest-api/add-order"
+    - label: "Spot WebSocket"
+      url: "https://docs.kraken.com/api/docs/websocket-v2/add_order"
+    - label: "Futures REST"
+      url: "https://docs.kraken.com/api/docs/futures-api/trading/send-order"
+    - label: "Futures WebSocket"
+      url: "https://docs.kraken.com/api/docs/futures-api/websocket/book"
+    - label: "Spot/Futures FIX"
+      url: "https://docs.kraken.com/api/docs/fix-api/nos-fix"
+
+  # 页面选择器
+  selectors:
+    # Docusaurus 侧边栏链接
+    sidebar_links: '.menu__link'
+    # 折叠菜单按钮
+    collapsible_button: 'button[aria-expanded="false"]'
+    # 主内容区域
+    main_content: 'article, main, [role="main"]'
+
+output:
+  base_dir: "docs"
+  dir_name: "kraken"

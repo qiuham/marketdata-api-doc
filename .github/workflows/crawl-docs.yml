@@ -10,6 +10,13 @@ name: Crawl Docs
         options:
           - zhongtai-xtp
           - zhongtai-xtppro
+          - binance
+          - bybit
+          - coinbase
+          - gateio
+          - hyperliquid
+          - kraken
+          - okx
           - all
       limit:
         description: Optional page limit for test runs, for example 3

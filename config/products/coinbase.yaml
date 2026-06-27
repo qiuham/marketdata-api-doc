@@ -1,0 +1,23 @@
+id: coinbase
+display_name: Coinbase
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: coinbase
+  display_name: Coinbase
+product: api
+status: active
+priority: 120
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: coinbase
+  concurrency: 5
+output:
+  docs_dir: docs/crypto/exchanges/coinbase
+  index_file: index/crypto/coinbase.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

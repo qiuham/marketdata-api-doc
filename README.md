@@ -19,6 +19,13 @@
 |------|------|--------|--------|------|------|----------|----------|
 | cn | stock | gateways | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/gateways/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
 | cn | stock | gateways | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/gateways/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
+| crypto | digital_asset | exchanges | Binance | [Binance](./docs/crypto/exchanges/binance/) | ✅ | 821 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Bybit | [Bybit](./docs/crypto/exchanges/bybit/) | ✅ | 454 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Coinbase | [Coinbase](./docs/crypto/exchanges/coinbase/) | ✅ | 71 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Gate.io | [Gate.io](./docs/crypto/exchanges/gateio/) | ✅ | 66 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Hyperliquid | [Hyperliquid](./docs/crypto/exchanges/hyperliquid/) | ✅ | 34 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Kraken | [Kraken](./docs/crypto/exchanges/kraken/) | ✅ | 243 | 2026-05-27 |
+| crypto | digital_asset | exchanges | OKX | [OKX](./docs/crypto/exchanges/okx/) | ✅ | 509 | 2026-05-27 |
 
 ## 快速开始
 
@@ -54,26 +61,58 @@ marketdata-api-doc/
 │   │   ├── cn.yaml
 │   │   ├── crypto.yaml
 │   │   └── us.yaml
-│   └── products/         # 接入产品配置
-│       ├── zhongtai-xtp.yaml
-│       └── zhongtai-xtppro.yaml
+│   ├── products/         # 接入产品配置
+│   │   ├── binance.yaml
+│   │   ├── bybit.yaml
+│   │   ├── coinbase.yaml
+│   │   ├── gateio.yaml
+│   │   ├── hyperliquid.yaml
+│   │   ├── kraken.yaml
+│   │   ├── okx.yaml
+│   │   ├── zhongtai-xtp.yaml
+│   │   └── zhongtai-xtppro.yaml
+│   └── legacy/           # 兼容旧项目的源站配置
+│       └── crypto/
+│           ├── binance.yaml
+│           ├── bybit.yaml
+│           ├── coinbase.yaml
+│           ├── gateio.yaml
+│           ├── hyperliquid.yaml
+│           ├── kraken.yaml
+│           └── okx.yaml
 ├── docs/                 # Markdown 文档
 │   ├── cn/
-│   │   ├── stock/
-│   │   │   ├── gateways/
-│   │   │   │   ├── zhongtai/
-│   │   │   │       ├── xtp/                        # 36 Markdown docs
-│   │   │   │       └── xtppro/                     # 21 Markdown docs
-│   ├── us/
+│   │   └── stock/
+│   │       └── gateways/
+│   │           └── zhongtai/
+│   │               ├── xtp/                        # 36 Markdown docs
+│   │               └── xtppro/                     # 21 Markdown docs
 │   ├── crypto/
+│   │   └── exchanges/
+│   │       ├── binance/                            # 821 Markdown docs
+│   │       ├── bybit/                              # 454 Markdown docs
+│   │       ├── coinbase/                           # 71 Markdown docs
+│   │       ├── gateio/                             # 66 Markdown docs
+│   │       ├── hyperliquid/                        # 34 Markdown docs
+│   │       ├── kraken/                             # 243 Markdown docs
+│   │       └── okx/                                # 509 Markdown docs
+│   └── us/
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
 │   ├── cn/stock/zhongtai-xtp.json
-│   └── cn/stock/zhongtai-xtppro.json
+│   ├── cn/stock/zhongtai-xtppro.json
+│   ├── crypto/binance.json
+│   ├── crypto/bybit.json
+│   ├── crypto/coinbase.json
+│   ├── crypto/gateio.json
+│   ├── crypto/hyperliquid.json
+│   ├── crypto/kraken.json
+│   └── crypto/okx.json
 ├── src/
 │   ├── adapters/         # 采集/导入适配器
 │   │   ├── __init__.py
 │   │   ├── base.py
+│   │   ├── crypto_legacy.py
 │   │   ├── zhongtai_xtp.py
 │   │   └── zhongtai_xtppro.py
 │   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
@@ -108,8 +147,9 @@ version: XTP 3.0
 updated_at: 2026-05-18
 ```
 
-## 首批接入计划
+## 已接入范围
 
-- `zhongtai-xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
-- `zhongtai-xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
-- 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、`crypto/exchanges`、行情数据供应商和内部网关。
+- `cn/stock/gateways/zhongtai/xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
+- `cn/stock/gateways/zhongtai/xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
+- `crypto/exchanges/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
+- 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

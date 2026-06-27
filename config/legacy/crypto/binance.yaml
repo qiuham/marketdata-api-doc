@@ -1,0 +1,39 @@
+name: binance
+
+crawler:
+  # 多语言支持
+  languages:
+    - lang: en
+      start_urls:
+        - "https://developers.binance.com/docs/binance-spot-api-docs/CHANGELOG"
+        - "https://developers.binance.com/docs/derivatives/Introduction"
+        - "https://developers.binance.com/docs/margin_trading/Introduction"
+        - "https://developers.binance.com/docs/algo/Introduction"
+        - "https://developers.binance.com/docs/wallet/Introduction"
+        - "https://developers.binance.com/docs/copy_trading/Introduction"
+        - "https://developers.binance.com/docs/convert/Introduction"
+        - "https://developers.binance.com/docs/institutional_loan/Introduction"
+        - "https://developers.binance.com/docs/alpha/change-log"
+        - "https://developers.binance.com/docs/sub_account/Introduction"
+    - lang: zh
+      start_urls:
+        - "https://developers.binance.com/docs/zh-CN/binance-spot-api-docs/CHANGELOG"
+        - "https://developers.binance.com/docs/zh-CN/derivatives/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/margin_trading/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/algo/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/wallet/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/copy_trading/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/convert/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/institutional_loan/Introduction"
+        - "https://developers.binance.com/docs/zh-CN/alpha/change-log"
+        - "https://developers.binance.com/docs/zh-CN/sub_account/Introduction"
+
+  selectors:
+    collapsed_menu: ".menu__list-item--collapsed"
+    doc_link: 'aside nav a:not([role="button"])'
+    main_content: "main article"
+    title: "h1"
+
+output:
+  base_dir: "docs"
+  dir_name: "binance"

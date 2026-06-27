@@ -1,0 +1,12 @@
+name: hyperliquid
+
+crawler:
+  # 单入口打开，但爬取范围覆盖 For Developers 下的所有页面
+  start_urls:
+    - "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api"
+  scope_prefixes:
+    - "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/"
+
+output:
+  base_dir: "docs"
+  dir_name: "hyperliquid"

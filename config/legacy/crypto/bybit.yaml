@@ -1,0 +1,24 @@
+name: bybit
+
+crawler:
+  # 多语言支持
+  languages:
+    - lang: en
+      start_urls:
+        - "https://bybit-exchange.github.io/docs/v5/guide"
+    - lang: zh-TW
+      start_urls:
+        - "https://bybit-exchange.github.io/docs/zh-TW/v5/guide"
+
+  # 页面选择器
+  selectors:
+    # Docusaurus 侧边栏链接
+    sidebar_links: '.menu__link:not([href="#"])'
+    # 折叠菜单按钮（Bybit 使用 href="#"）
+    collapsible_button: 'a[href="#"]'
+    # 主内容区域（只选择 article，避免包含外层的分页导航）
+    main_content: 'article'
+
+output:
+  base_dir: "docs"
+  dir_name: "bybit"

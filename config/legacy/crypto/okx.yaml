@@ -1,0 +1,22 @@
+name: okx
+
+crawler:
+  # 多语言支持
+  languages:
+    - lang: en
+      start_urls:
+        - "https://www.okx.com/docs-v5/en/"           # 主API文档
+        - "https://www.okx.com/docs-v5/trick_en/"     # 使用教程
+    - lang: zh
+      start_urls:
+        - "https://www.okx.com/docs-v5/zh/"           # 主API文档
+        - "https://www.okx.com/docs-v5/trick/"        # 使用教程
+
+  selectors:
+    sidebar_links: 'nav a[href*="#"]'
+    main_content: "main, article, .content, [role='main']"
+    title: "h1, h2"
+
+output:
+  base_dir: "docs"
+  dir_name: "okx"

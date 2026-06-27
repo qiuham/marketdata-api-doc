@@ -1,0 +1,23 @@
+id: binance
+display_name: Binance
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: binance
+  display_name: Binance
+product: api
+status: active
+priority: 100
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: binance
+  concurrency: 5
+output:
+  docs_dir: docs/crypto/exchanges/binance
+  index_file: index/crypto/binance.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

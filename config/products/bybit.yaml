@@ -1,0 +1,23 @@
+id: bybit
+display_name: Bybit
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: bybit
+  display_name: Bybit
+product: api
+status: active
+priority: 110
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: bybit
+  concurrency: 5
+output:
+  docs_dir: docs/crypto/exchanges/bybit
+  index_file: index/crypto/bybit.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

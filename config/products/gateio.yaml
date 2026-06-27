@@ -1,0 +1,23 @@
+id: gateio
+display_name: Gate.io
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: gateio
+  display_name: Gate.io
+product: api
+status: active
+priority: 130
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: gateio
+  concurrency: 2
+output:
+  docs_dir: docs/crypto/exchanges/gateio
+  index_file: index/crypto/gateio.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

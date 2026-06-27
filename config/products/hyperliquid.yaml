@@ -1,0 +1,23 @@
+id: hyperliquid
+display_name: Hyperliquid
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: hyperliquid
+  display_name: Hyperliquid
+product: api
+status: active
+priority: 140
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: hyperliquid
+  concurrency: 3
+output:
+  docs_dir: docs/crypto/exchanges/hyperliquid
+  index_file: index/crypto/hyperliquid.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

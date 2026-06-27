@@ -37,7 +37,7 @@ class ReadmeUpdater:
             provider = product.get("provider", {}) if isinstance(product.get("provider"), dict) else {}
             status = self._status_icon(str(product.get("status", "")))
             total = index_data.get("total", "-") if index_data else "-"
-            updated_at = index_data.get("updated_at", "-") if index_data else "-"
+            updated_at = self._format_date(index_data.get("updated_at", "-")) if index_data else "-"
             display_name = product.get("display_name", product.get("id", ""))
             product_link = f"[{display_name}](./{docs_dir}/)" if docs_dir else str(display_name)
             lines.append(
@@ -59,10 +59,17 @@ class ReadmeUpdater:
             lines.extend(["├── .github/", "│   └── workflows/        # GitHub Actions"])
             self._append_tree(lines, workflows, "│       ")
 
+        legacy_dir = self.project_root / "config" / "legacy"
+        has_legacy = legacy_dir.exists()
         lines.extend(["├── config/", "│   ├── scopes/           # cn / us / crypto 等顶层范围"])
         self._append_tree(lines, self._list_files(self.project_root / "config" / "scopes", "*.yaml"), "│   │   ")
-        lines.append("│   └── products/         # 接入产品配置")
-        self._append_tree(lines, self._list_files(self.project_root / "config" / "products", "*.yaml"), "│       ")
+        lines.append("│   ├── products/         # 接入产品配置" if has_legacy else "│   └── products/         # 接入产品配置")
+        self._append_tree(lines, self._list_files(self.project_root / "config" / "products", "*.yaml"), "│   │   " if has_legacy else "│       ")
+        if has_legacy:
+            lines.append("│   └── legacy/           # 兼容旧项目的源站配置")
+            for child in sorted(path for path in legacy_dir.iterdir() if path.is_dir()):
+                lines.append(f"│       └── {child.name}/")
+                self._append_tree(lines, self._list_files(child, "*.yaml"), "│           ")
 
         lines.append("├── docs/                 # Markdown 文档")
         self._append_docs_tree(lines, products)
@@ -81,35 +88,51 @@ class ReadmeUpdater:
         return "\n".join(lines)
 
     def _append_docs_tree(self, lines: list[str], products: list[dict[str, Any]]) -> None:
-        grouped: dict[str, dict[str, dict[str, dict[str, list[dict[str, Any]]]]]] = {}
-        for product in products:
-            scope = str(product.get("scope", product.get("market", "unknown")))
-            asset = str(product.get("asset_class", "unknown"))
-            domain = str(product.get("domain", "unknown"))
-            provider = product.get("provider", {}) if isinstance(product.get("provider"), dict) else {}
-            provider_id = str(provider.get("id", "unknown"))
-            grouped.setdefault(scope, {}).setdefault(asset, {}).setdefault(domain, {}).setdefault(provider_id, []).append(product)
+        tree: dict[str, Any] = {}
+        leaf_comments: dict[tuple[str, ...], str] = {}
 
-        for scope in sorted(grouped):
-            lines.append(f"│   ├── {scope}/")
-            for asset in sorted(grouped[scope]):
-                lines.append(f"│   │   ├── {asset}/")
-                for domain in sorted(grouped[scope][asset]):
-                    lines.append(f"│   │   │   ├── {domain}/")
-                    for provider_id in sorted(grouped[scope][asset][domain]):
-                        lines.append(f"│   │   │   │   ├── {provider_id}/")
-                        products_for_provider = grouped[scope][asset][domain][provider_id]
-                        for index, product in enumerate(products_for_provider):
-                            connector = "└──" if index == len(products_for_provider) - 1 else "├──"
-                            index_data = self._load_index(product)
-                            total = index_data.get("total", "-") if index_data else "-"
-                            lines.append(
-                                f"│   │   │   │       {connector} {product.get('product', product.get('id'))}/".ljust(52)
-                                + f"# {total} Markdown docs"
-                            )
-        for extra in ["us", "crypto"]:
-            if extra not in grouped and (self.project_root / "docs" / extra).exists():
-                lines.append(f"│   ├── {extra}/")
+        for product in products:
+            docs_dir = str(product.get("output", {}).get("docs_dir", "")).strip("/")
+            if not docs_dir.startswith("docs/"):
+                continue
+            parts = tuple(part for part in docs_dir.split("/")[1:] if part)
+            if not parts:
+                continue
+            node = tree
+            for part in parts:
+                node = node.setdefault(part, {})
+            index_data = self._load_index(product)
+            total = index_data.get("total", "-") if index_data else "-"
+            leaf_comments[parts] = f"# {total} Markdown docs"
+
+        # Include placeholder docs directories such as docs/us even before products exist.
+        docs_root = self.project_root / "docs"
+        if docs_root.exists():
+            for child in sorted(path for path in docs_root.iterdir() if path.is_dir()):
+                tree.setdefault(child.name, {})
+
+        self._render_tree(lines, tree, "│   ", (), leaf_comments)
+
+    def _render_tree(
+        self,
+        lines: list[str],
+        tree: dict[str, Any],
+        prefix: str,
+        path_parts: tuple[str, ...],
+        leaf_comments: dict[tuple[str, ...], str],
+    ) -> None:
+        items = sorted(tree.items())
+        for index, (name, children) in enumerate(items):
+            connector = "└──" if index == len(items) - 1 else "├──"
+            current = path_parts + (name,)
+            comment = leaf_comments.get(current, "")
+            line = f"{prefix}{connector} {name}/"
+            if comment:
+                line = line.ljust(52) + comment
+            lines.append(line)
+            if children:
+                child_prefix = prefix + ("    " if index == len(items) - 1 else "│   ")
+                self._render_tree(lines, children, child_prefix, current, leaf_comments)
 
     def _append_index_tree(self, lines: list[str]) -> None:
         index_root = self.project_root / "index"
@@ -123,6 +146,12 @@ class ReadmeUpdater:
                 continue
             entries.append(str(path.relative_to(index_root)))
         self._append_tree(lines, entries, "│   ")
+
+    def _format_date(self, value: Any) -> str:
+        text = str(value or "").strip()
+        if not text or text == "-":
+            return "-"
+        return text.split("T", 1)[0].split(" ", 1)[0]
 
     def _load_index(self, product: dict[str, Any]) -> dict[str, Any]:
         index_file = self.project_root / product.get("output", {}).get("index_file", "")

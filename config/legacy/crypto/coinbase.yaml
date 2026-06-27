@@ -1,0 +1,18 @@
+name: coinbase
+
+crawler:
+  # Coinbase Advanced Trade API: REST reference + WebSocket/guides pages.
+  start_urls:
+    - "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction"
+    - "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview"
+
+  scope_prefixes:
+    - "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/"
+    - "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/"
+
+  base_prefix: "https://docs.cdp.coinbase.com/"
+  max_discovery_pages: 300
+
+output:
+  base_dir: "docs"
+  dir_name: "coinbase"

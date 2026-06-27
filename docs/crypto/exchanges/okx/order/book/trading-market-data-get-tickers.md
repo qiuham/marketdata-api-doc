@@ -1,0 +1,245 @@
+---
+exchange: okx
+source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-tickers
+anchor_id: order-book-trading-market-data-get-tickers
+api_type: API
+updated_at: 2026-05-27 19:35:32.143188
+---
+
+# GET / Tickers
+
+Retrieve the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours. Best ask price may be lower than the best bid price during the pre-open period.
+
+#### Rate Limit: 20 requests per 2 seconds
+
+#### Rate limit rule: IP
+
+#### HTTP Request
+
+`GET /api/v5/market/tickers`
+
+> Request Example
+    
+    
+    GET /api/v5/market/tickers?instType=SWAP
+    
+    
+    
+    
+    import okx.MarketData as MarketData
+    
+    flag = "0"  # Production trading:0 , demo trading:1
+    
+    marketDataAPI =  MarketData.MarketAPI(flag=flag)
+    
+    # Retrieve the latest price snapshot, best bid/ask price, and trading volume in the last 24 hours
+    result = marketDataAPI.get_tickers(
+        instType="SWAP"
+    )
+    print(result)
+    
+
+#### Request Parameters
+
+Parameter | Type | Required | Description  
+---|---|---|---  
+instType | String | Yes | Instrument type  
+`SPOT`  
+`SWAP`  
+`FUTURES`  
+`OPTION`  
+`EVENTS`  
+instFamily | String | No | Instrument family  
+Applicable to `FUTURES`/`SWAP`/`OPTION`  
+  
+> Response Example
+    
+    
+    {
+        "code":"0",
+        "msg":"",
+        "data":[
+         {
+            "instType":"SWAP",
+            "instId":"LTC-USD-SWAP",
+            "last":"9999.99",
+            "lastSz":"1",
+            "askPx":"9999.99",
+            "askSz":"11",
+            "bidPx":"8888.88",
+            "bidSz":"5",
+            "open24h":"9000",
+            "high24h":"10000",
+            "low24h":"8888.88",
+            "volCcy24h":"2222",
+            "vol24h":"2222",
+            "sodUtc0":"0.1",
+            "sodUtc8":"0.1",
+            "ts":"1597026383085"
+         },
+         {
+            "instType":"SWAP",
+            "instId":"BTC-USD-SWAP",
+            "last":"9999.99",
+            "lastSz":"1",
+            "askPx":"9999.99",
+            "askSz":"11",
+            "bidPx":"8888.88",
+            "bidSz":"5",
+            "open24h":"9000",
+            "high24h":"10000",
+            "low24h":"8888.88",
+            "volCcy24h":"2222",
+            "vol24h":"2222",
+            "sodUtc0":"0.1",
+            "sodUtc8":"0.1",
+            "ts":"1597026383085"
+        }
+      ]
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+instType | String | Instrument type  
+instId | String | Instrument ID  
+last | String | Last traded price  
+lastSz | String | Last traded size. 0 represents there is no trading volume  
+askPx | String | Best ask price  
+askSz | String | Best ask size  
+bidPx | String | Best bid price  
+bidSz | String | Best bid size  
+open24h | String | Open price in the past 24 hours  
+high24h | String | Highest price in the past 24 hours  
+low24h | String | Lowest price in the past 24 hours  
+volCcy24h | String | 24h trading volume, with a unit of `currency`.   
+If it is a `derivatives` contract, the value is the number of base currency. e.g. the unit is BTC for BTC-USD-SWAP and BTC-USDT-SWAP   
+If it is `SPOT`/`MARGIN`, the value is the quantity in quote currency.  
+vol24h | String | 24h trading volume, with a unit of `contract`.   
+If it is a `derivatives` contract, the value is the number of contracts.   
+If it is `SPOT`/`MARGIN`, the value is the quantity in base currency.  
+sodUtc0 | String | Open price in the UTC 0  
+sodUtc8 | String | Open price in the UTC 8  
+ts | String | Ticker data generation time, Unix timestamp format in milliseconds, e.g. `1597026383085`
+
+---
+
+# GET / 获取所有产品行情信息
+
+获取产品行情信息。在提前挂单阶段，best ask的价格有机会低于best bid。
+
+#### 限速：20次/2s
+
+#### 限速规则：IP
+
+#### HTTP请求
+
+`GET /api/v5/market/tickers`
+
+> 请求示例
+    
+    
+    GET /api/v5/market/tickers?instType=SWAP
+    
+    
+    
+    
+    import okx.MarketData as MarketData
+    
+    flag = "0"  # 实盘:0 , 模拟盘：1
+    
+    marketDataAPI =  MarketData.MarketAPI(flag=flag)
+    
+    # 获取所有产品行情信息
+    result = marketDataAPI.get_tickers(
+        instType="SWAP"
+    )
+    print(result)
+    
+
+#### 请求参数
+
+参数名 | 类型 | 是否必须 | 描述  
+---|---|---|---  
+instType | String | 是 | 产品类型  
+`SPOT`：币币  
+`SWAP`：永续合约  
+`FUTURES`：交割合约  
+`OPTION`：期权  
+`EVENTS`：事件合约  
+instFamily | String | 否 | 交易品种  
+适用于`交割`/`永续`/`期权`，如 `BTC-USD`  
+  
+> 返回结果
+    
+    
+    {
+        "code":"0",
+        "msg":"",
+        "data":[
+         {
+            "instType":"SWAP",
+            "instId":"LTC-USD-SWAP",
+            "last":"9999.99",
+            "lastSz":"1",
+            "askPx":"9999.99",
+            "askSz":"11",
+            "bidPx":"8888.88",
+            "bidSz":"5",
+            "open24h":"9000",
+            "high24h":"10000",
+            "low24h":"8888.88",
+            "volCcy24h":"2222",
+            "vol24h":"2222",
+            "sodUtc0":"0.1",
+            "sodUtc8":"0.1",
+            "ts":"1597026383085"
+         },
+         {
+            "instType":"SWAP",
+            "instId":"BTC-USD-SWAP",
+            "last":"9999.99",
+            "lastSz":"1",
+            "askPx":"9999.99",
+            "askSz":"11",
+            "bidPx":"8888.88",
+            "bidSz":"5",
+            "open24h":"9000",
+            "high24h":"10000",
+            "low24h":"8888.88",
+            "volCcy24h":"2222",
+            "vol24h":"2222",
+            "sodUtc0":"0.1",
+            "sodUtc8":"0.1",
+            "ts":"1597026383085"
+        }
+      ]
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+instType | String | 产品类型  
+instId | String | 产品ID  
+last | String | 最新成交价  
+lastSz | String | 最新成交的数量，0 代表没有成交量  
+askPx | String | 卖一价  
+askSz | String | 卖一价的挂单数数量  
+bidPx | String | 买一价  
+bidSz | String | 买一价的挂单数量  
+open24h | String | 24小时开盘价  
+high24h | String | 24小时最高价  
+low24h | String | 24小时最低价  
+volCcy24h | String | 24小时成交量，以`币`为单位  
+如果是`衍生品`合约，数值为交易货币的数量。比如，对于 BTC-USD-SWAP 和 BTC-USDT-SWAP，单位均为 BTC  
+如果是`币币/币币杠杆`，数值为计价货币的数量。  
+vol24h | String | 24小时成交量，以`张`为单位  
+如果是`衍生品`合约，数值为合约的张数。  
+如果是`币币/币币杠杆`，数值为交易货币的数量。  
+sodUtc0 | String | UTC 0 时开盘价  
+sodUtc8 | String | UTC+8 时开盘价  
+ts | String | ticker数据产生时间，Unix时间戳的毫秒数格式，如 `1597026383085`

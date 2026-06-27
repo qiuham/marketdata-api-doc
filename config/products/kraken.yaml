@@ -1,0 +1,23 @@
+id: kraken
+display_name: Kraken
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: kraken
+  display_name: Kraken
+product: api
+status: active
+priority: 150
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: kraken
+  concurrency: 2
+output:
+  docs_dir: docs/crypto/exchanges/kraken
+  index_file: index/crypto/kraken.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''

@@ -1,0 +1,22 @@
+name: gateio
+
+crawler:
+  # Gate developer docs are protected from plain curl, but render normally in a browser.
+  # Discover all sidebar/header developer-doc links for both language versions.
+  start_urls:
+    - "https://www.gate.com/docs/developers/apiv4/zh_CN/"
+    - "https://www.gate.com/docs/developers/apiv4/en/"
+
+  allowed_languages:
+    - "zh_CN"
+    - "en"
+
+  base_prefix: "https://www.gate.com/docs/developers/"
+  max_discovery_pages: 500
+
+  selectors:
+    main_content: "main .content__default, main"
+
+output:
+  base_dir: "docs"
+  dir_name: "gateio"
