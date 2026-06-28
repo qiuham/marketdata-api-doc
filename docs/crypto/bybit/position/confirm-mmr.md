@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/confirm-mmr
 api_type: Position
-updated_at: 2026-05-27 19:21:09.319737
+updated_at: 2026-06-28 19:13:37.668772
 ---
 
 # Add Or Reduce Margin

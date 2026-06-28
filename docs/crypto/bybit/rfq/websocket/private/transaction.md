@@ -2,187 +2,970 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/private/transaction
 api_type: WebSocket
-updated_at: 2026-05-27 19:21:51.742695
+updated_at: 2026-06-28 19:14:24.085332
 ---
 
-# Execution
+# SBE Public Trade Integration
 
-Obtain the user's own block trade information. All legs in the same block trade are included in the same update. As long as the user performs block trade as a counterparty, the data will be pushed.
+## Overview
 
-**Topic:** `rfq.open.trades`
+  * **Channel:** Private MM WebSocket only (not available on public WS).
+  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
+  * **Push frequency** : real-time
+  * Messages are delivered in-order per symbol group. A single packet may contain 1–1024 trades
 
-### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-id| string| Message ID  
-topic| string| Topic name  
-creationTime| int| Data created timestamp (ms)  
-data| array| Object  
-data| array|   
-> rfqId| string| Inquiry ID  
-> rfqLinkId| string| Custom RFQ ID. Not publicly disclosed.  
-> quoteId| string| Quote ID  
-> quoteLinkId| string| Custom quote ID. Not publicly disclosed.  
-> quoteSide| string| Return of completed inquiry, executed quote direction, `buy` or `sell`  
-> strategyType| string| Inquiry label  
-> status| string| Status: `Filled` , `Failed`  
-> rfqDeskCode| string| The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry  
-> quoteDeskCode| string| The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation  
-> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
-> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
-> legs| array of objects| Combination transaction  
->> category| string| category. Valid values include: `linear`, `option` and `spot`  
->> orderId| string| bybit order id  
->> symbol| string| symbol name  
->> side| string| Direction, valid values are `buy` and `sell`  
->> price| string| Execution price  
->> qty| string| Number of executions  
->> markPrice| string| The markPrice (contract) at the time of transaction, and the spot price is indexPrice  
->> execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.  
->> execId| string| The unique exec(trade) ID from the exchange  
->> resultCode| integer| The status code of the this order. "0" means success  
->>resultMessage| string| Error message about resultCode. If resultCode is "0", resultMessage is "".  
->> rejectParty| string| Empty if status is `Filled`. Valid values: `Taker` or `Maker` if status is `Rejected`, "rejectParty=`bybit`" to indicate errors that occur on the Bybit side.  
+
+## Flow
+
+### Ping / Pong (JSON control frames)
+
+**Send Ping**
+    
+    
+    {"req_id": "100001", "op": "ping"}  
+    
+
+**Receive Pong**
+    
+    
+    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    
+
+### Subscribe
+
+  * Topic format: `publicTrade.sbe.<symbol>`
+
+
+
+**Subscribe request**
+    
+    
+    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    
+
+**Subscription confirmation**
+    
+    
+    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    
+
+## SBE XML Template (Public Trade)
+
+[sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+
+## Field Reference
+
+**Message:** `PublicTradeEvent` (id = 20002)
+
+Field Name| ID| SBE Type| Unit / Format| Notes  
+---|---|---|---|---  
+ts| 1| int64| µs| System generation time at market data service.  
+priceExponent| 2| int8| exponent| Decimal places for price. Display price = priceMantissa × 10^`priceExponent`.  
+sizeExponent| 3| int8| exponent| Decimal places for size. Display size = sizeMantissa × 10^`sizeExponent`.  
+tradeItems| 40| group(`groupSize16Encoding`)| -| Repeating trade items  
+symbol| 55| varString8| UTF-8| 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.  
   
-### Subscribe Example
+### Each tradeItems[i] entry
+
+Field (id)| Type| Description  
+---|---|---  
+fillTime (1)| int64| Trade fill timestamp(µs)  
+price (2)| int64| Apply priceExponent. Display ask size = `size × 10^sizeExponent`.  
+size (3)| int64| Apply sizeExponent. Display ask size = `size × 10^sizeExponent`.  
+seq (4)| int64| Cross sequence id  
+side (5)| SideType(uint8)| Side of taker  
+isBlockTrade (6)| BoolEnum(uint8)| IsBlockTrade(0 = not blockTrade, 1 = blockTrade)  
+isRPI (7)| BoolEnum(uint8)| IsRPI (0 = not RPI, 1 = RPI)  
+execId (100)| varString8| Trade ID  
+  
+#### SideType
+
+  * `0`: UNKOWN
+  * `1`: BUY
+  * `2`: SELL
+  * `254`: NON_REPRESENTABLE
+
+
+
+#### BoolEnum
+
+  * `0`: FALSE
+  * `1`: TRUE
+  * `254`: NON_REPRESENTABLE
+
+
+
+## Integration Script
+
+### Python
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "rfq.open.trades"  
-        ]  
-    }  
+    import json  
+    import struct  
+    import websocket  
+    from typing import Tuple  
+      
+    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    SYMBOL = "BTCUSDT"  
+    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
+      
+      
+    # ---------------- SBE helpers ----------------  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        # display = mantissa * 10^exp  
+        # exp can be negative  
+        return mantissa * (10.0**exp)  
+      
+      
+    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
+        if off + 1 > len(buf):  
+            raise ValueError("varString8: missing length")  
+      
+        ln = buf[off]  
+        off += 1  
+      
+        if off + ln > len(buf):  
+            raise ValueError("varString8: out of range")  
+      
+        s = buf[off : off + ln].decode("utf-8", errors="replace")  
+        off += ln  
+        return s, off  
+      
+      
+    def parse_public_trade_event(buf: bytes) -> dict:  
+        # messageHeader: <HHHH  
+        if len(buf) < 8:  
+            raise ValueError("too short for header")  
+      
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
+        off = 8  
+      
+        if template_id != 20002:  
+            raise ValueError(f"unexpected templateId={template_id}")  
+      
+        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
+        if len(buf) < off + 8 + 1 + 1:  
+            raise ValueError("too short for fixed fields")  
+      
+        ts = struct.unpack_from("<q", buf, off)[0]  
+        off += 8  
+      
+        price_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        size_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        # group header: blockLength(uint16), numInGroup(uint16)  
+        if len(buf) < off + 4:  
+            raise ValueError("too short for group header")  
+      
+        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
+        off += 4  
+      
+        trades = []  
+        for _ in range(num_in_group):  
+            entry_start = off  
+      
+            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
+            fill_time = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            price_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            size_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            seq = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            side = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_block = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_rpi = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            # Skip any future extension bytes in fixed part  
+            fixed_consumed = off - entry_start  
+            if fixed_consumed < grp_block_len:  
+                off += grp_block_len - fixed_consumed  
+            elif fixed_consumed > grp_block_len:  
+                # schema mismatch vs blockLength  
+                raise ValueError(  
+                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
+                )  
+            exec_id, off = read_varstring8(buf, off)  
+            trades.append(  
+                {  
+                    "fillTime": fill_time,  
+                    "priceMantissa": price_m,  
+                    "sizeMantissa": size_m,  
+                    "price": apply_exp(price_m, price_exp),  
+                    "size": apply_exp(size_m, size_exp),  
+                    "seq": seq,  
+                    "side": side,  
+                    "isBlockTrade": bool(is_block),  
+                    "isRPI": bool(is_rpi),  
+                    "execId": exec_id,  
+                }  
+            )  
+      
+        symbol, off = read_varstring8(buf, off)  
+      
+        return {  
+            "header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
+                "version": version,  
+            },  
+            "ts": ts,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "symbol": symbol,  
+            "tradeItems": trades,  
+            "parsed_length": off,  
+        }  
+      
+      
+    # ---------------- WS handlers ----------------  
+    def on_open(ws):  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("subscribed:", TOPIC)  
+      
+      
+    def on_message(ws, message):  
+        if isinstance(message, (bytes, bytearray)):  
+            evt = parse_public_trade_event(message)  
+      
+            # print first trade only (example)  
+            if evt["tradeItems"]:  
+                t0 = evt["tradeItems"][0]  
+                print(  
+                    evt["symbol"],  
+                    "trades=",  
+                    len(evt["tradeItems"]),  
+                    "first:",  
+                    t0["price"],  
+                    "@",  
+                    t0["size"],  
+                    "seq=",  
+                    t0["seq"],  
+                )  
+        else:  
+            print("TEXT:", message)  
+      
+      
+    def on_error(ws, err):  
+        print("WS error:", err)  
+      
+      
+    def on_close(ws, *_):  
+        print("closed")  
+      
+      
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        ws = websocket.WebSocketApp(  
+            WS_URL,  
+            on_open=on_open,  
+            on_message=on_message,  
+            on_error=on_error,  
+            on_close=on_close,  
+        )  
+        ws.run_forever(ping_interval=20, ping_timeout=10)  
     
 
-### Stream Example
+### Golang
     
     
-    {  
-      "topic": "rfq.open.trades",  
-      "creationTime": 1757578749474,  
-      "data": [  
-        {  
-          "rfqId": "1757578410512325974246073709371267",  
-          "rfqLinkId": "",  
-          "quoteId": "1757578719388835162295211364781592",  
-          "quoteLinkId": "",  
-          "quoteSide": "Buy",  
-          "strategyType": "custom",  
-          "status": "Filled",  
-          "rfqDeskCode": "1nu9d1",  
-          "quoteDeskCode": "test0904",  
-          "legs": [  
-            {  
-              "category": "linear",  
-              "symbol": "BTCUSDT",  
-              "side": "Buy",  
-              "price": "91600",  
-              "qty": "1",  
-              "orderId": "64fe4108-555e-4361-ae2d-3a8d0c292859",  
-              "markPrice": "91741.11",  
-              "execFee": "-1.374",  
-              "execId": "42b8be1e-36cf-4aba-bb75-4602cc11df37",  
-              "resultCode": 0,  
-              "resultMessage": "",  
-              "rejectParty": ""  
+    package main  
+      
+    import (  
+            "encoding/binary"  
+            "encoding/json"  
+            "fmt"  
+            "log"  
+            "math"  
+            "time"  
+      
+            "github.com/gorilla/websocket"  
+    )  
+      
+    const (  
+            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            Symbol = "BTCUSDT"  
+            Topic  = "publicTrade.sbe." + Symbol  
+    )  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+            return float64(mantissa) * math.Pow10(int(exp))  
+    }  
+      
+    func readVarString8(buf []byte, off int) (string, int, error) {  
+            if off+1 > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: missing length")  
             }  
-          ],  
-          "createdAt": "1757578749361",  
-          "updatedAt": "1757578749464"  
-        }  
-      ]  
+            ln := int(buf[off])  
+            off++  
+            if off+ln > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: out of range")  
+            }  
+            s := string(buf[off : off+ln])  
+            off += ln  
+            return s, off, nil  
+    }  
+      
+    type TradeItem struct {  
+            FillTime     int64   `json:"fillTime"`  
+            PriceMant    int64   `json:"priceMantissa"`  
+            SizeMant     int64   `json:"sizeMantissa"`  
+            Price        float64 `json:"price"`  
+            Size         float64 `json:"size"`  
+            Seq          int64   `json:"seq"`  
+            Side         uint8   `json:"side"`  
+            IsBlockTrade bool    `json:"isBlockTrade"`  
+            IsRPI        bool    `json:"isRPI"`  
+            ExecID       string   `json:"execId"`  
+    }  
+      
+    type PublicTradeEvent struct {  
+            Header struct {  
+                    BlockLength uint16 `json:"blockLength"`  
+                    TemplateID  uint16 `json:"templateId"`  
+                    SchemaID    uint16 `json:"schemaId"`  
+                    Version     uint16 `json:"version"`  
+            } `json:"header"`  
+      
+            Ts            int64       `json:"ts"`  
+            PriceExponent int8        `json:"priceExponent"`  
+            SizeExponent  int8        `json:"sizeExponent"`  
+            TradeItems    []TradeItem `json:"tradeItems"`  
+            Symbol        string      `json:"symbol"`  
+            ParsedLength  int         `json:"parsed_length"`  
+    }  
+      
+    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
+            if len(buf) < 8 {  
+                    return nil, fmt.Errorf("too short for header")  
+            }  
+            off := 0  
+            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
+            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
+            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
+            off += 8  
+      
+            if tid != 20002 {  
+                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
+            }  
+            if off+8+1+1 > len(buf) {  
+                    return nil, fmt.Errorf("too short for fixed fields")  
+            }  
+            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
+            off += 8  
+            priceExp := int8(buf[off])  
+            off++  
+            sizeExp := int8(buf[off])  
+            off++  
+      
+            // group header  
+            if off+4 > len(buf) {  
+                    return nil, fmt.Errorf("too short for group header")  
+            }  
+            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
+            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            off += 4  
+      
+            items := make([]TradeItem, 0, int(numInGroup))  
+            for i := 0; i < int(numInGroup); i++ {  
+                    entryStart := off  
+      
+                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
+                    if off+needMin > len(buf) {  
+                            return nil, fmt.Errorf("too short for trade entry %d", i)  
+                    }  
+      
+                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+      
+                    side := uint8(buf[off]); off++  
+                    isBlock := uint8(buf[off]); off++  
+                    isRpi := uint8(buf[off]); off++  
+      
+                    fixedConsumed := off - entryStart  
+                    if fixedConsumed < int(grpBlockLen) {  
+                            off += int(grpBlockLen) - fixedConsumed  
+                    } else if fixedConsumed > int(grpBlockLen) {  
+                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
+                    }  
+      
+                     execID, off2, err := readVarString8(buf, off)  
+                    if err != nil {  
+                            return nil, err  
+                    }  
+                    off = off2  
+      
+      
+                    items = append(items, TradeItem{  
+                            FillTime:     fillTime,  
+                            PriceMant:    priceM,  
+                            SizeMant:     sizeM,  
+                            Price:        applyExp(priceM, priceExp),  
+                            Size:         applyExp(sizeM, sizeExp),  
+                            Seq:          seq,  
+                            Side:         side,  
+                            IsBlockTrade: isBlock != 0,  
+                            IsRPI:        isRpi != 0,  
+                            ExecID:       execID,  
+                    })  
+            }  
+      
+            symbol, off2, err := readVarString8(buf, off)  
+            if err != nil {  
+                    return nil, err  
+            }  
+            off = off2  
+      
+            evt := &PublicTradeEvent{  
+                    Ts:            ts,  
+                    PriceExponent: priceExp,  
+                    SizeExponent:  sizeExp,  
+                    TradeItems:    items,  
+                    Symbol:        symbol,  
+                    ParsedLength:  off,  
+            }  
+            evt.Header.BlockLength = blk  
+            evt.Header.TemplateID = tid  
+            evt.Header.SchemaID = sid  
+            evt.Header.Version = ver  
+            return evt, nil  
+    }  
+      
+    func main() {  
+            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
+            c, _, err := d.Dial(WSURL, nil)  
+            if err != nil {  
+                    log.Fatal(err)  
+            }  
+            defer c.Close()  
+      
+            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
+            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
+                    log.Fatal(err)  
+            }  
+            log.Println("subscribed:", Topic)  
+      
+            for {  
+                    mt, msg, err := c.ReadMessage()  
+                    if err != nil {  
+                            log.Fatal(err)  
+                    }  
+                    if mt == websocket.BinaryMessage {  
+                            evt, err := parsePublicTradeEvent(msg)  
+                            if err != nil {  
+                                    log.Println("decode error:", err)  
+                                    continue  
+                            }  
+                            if len(evt.TradeItems) > 0 {  
+                                    t0 := evt.TradeItems[0]  
+                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
+                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
+                            }  
+                    } else {  
+                            log.Println("TEXT:", string(msg))  
+                    }  
+            }  
     }
 
 ---
 
-# 交易頻道
+# SBE Public Trade 接入指南
 
-獲取用戶自己的大宗交易信息。同一大宗交易中的所有 legs 都包含在同一更新中。只要用戶作為交易對手方進行大宗交易，數據將被推送。
+## 總覽
 
-**主題：** `rfq.open.trades`
+  * **Channel:** 僅支援MMWS域名
+  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
+  * **推送頻率** :即時 
+  * 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
 
-### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-id| string| 消息 ID  
-topic| string| 主題名稱  
-creationTime| int| 數據創建時間戳（毫秒）  
-data| array| Object  
-data| array|   
-> rfqId| string| 詢價單 ID  
-> rfqLinkId| string| 詢價單的自定義 ID，客戶的敏感信息，不會向報價方披露，返回 ""。  
-> quoteId| string| 報價單 ID  
-> quoteLinkId| string| 報價單自定義 ID，客戶的敏感信息，不會向詢價方披露，返回 ""。  
-> quoteSide| string| 已完成詢價的返回，執行的報價方向，`buy`（買入） 或 `sell`（賣出）  
-> strategyType| string| 詢價標籤  
-> status| string| 狀態：`Filled`（已成交）、`Failed`（失敗）  
-> rfqDeskCode| string| 詢價方的唯一識別碼，如果在詢價期間設置為匿名，則不可見  
-> quoteDeskCode| string| 報價方的唯一識別碼，如果在報價期間設置為匿名，則不可見  
-> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
-> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
-> legs| Array of objects| 組合交易  
->> category| string| 類別。有效值包括：`linear`（線性）、`option`（期權） 和 `spot`（現貨）  
->> orderId| string| Bybit 訂單 ID  
->> symbol| string| 交易對名稱  
->> side| string| 方向，有效值為 `buy`（買入） 和 `sell`（賣出）  
->> price| string| 執行價格  
->> qty| string| 執行數量  
->> markPrice| string| 交易時的標記價格（合約），現貨的標記價格為 indexPrice  
->> execFee| string| Taker 或 Maker 支付給交易所的大宗交易手續費（以基礎貨幣計算）。  
->> execId| string| 交易所生成的唯一交易 ID  
->> resultCode| integer| 該訂單的狀態碼。"0" 表示成功  
->>resultMessage| string| 關於 resultCode 的錯誤信息。如果 resultCode 為 "0"，則 resultMessage 為 ""。  
->> rejectParty| string| 如果狀態為 `Filled` 則為空。有效值為：`Taker` 或 `Maker`（如果狀態為 `Rejected`）；"rejectParty=`bybit`" 表示錯誤發生於 Bybit 端。  
+
+## 流程
+
+### Ping / Pong (JSON 控制 frame)
+
+**Send Ping**
+    
+    
+    {"req_id": "100001", "op": "ping"}  
+    
+
+**Receive Pong**
+    
+    
+    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    
+
+### 訂閱
+
+  * Topic format: `publicTrade.sbe.<symbol>`
+
+
+
+**訂閱示例**
+    
+    
+    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    
+
+**訂閱回報**
+    
+    
+    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    
+
+## SBE XML 模板 (Public Trade)
+
+[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
+
+## 欄位參考
+
+**Message:** `PublicTradeEvent` (id = 20002)
+
+欄位名稱| ID| SBE 型別| 單位 / 格式| 備註  
+---|---|---|---|---  
+ts| 1| int64| µs| 行情服务產生資料的系統時間戳  
+priceExponent| 2| int8| exponent| 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent`  
+sizeExponent| 3| int8| exponent| 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent`  
+tradeItems| 40| group  
+(`groupSize16Encoding`)| -| 重複的成交項目(Repeating trade items)  
+symbol| 55| varString8| UTF-8| 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"`  
   
-### 訂閱示例
+### 每個 tradeItems[i] 條目
+
+欄位(id)| 型別| 說明  
+---|---|---  
+fillTime(1)| int64| 成交撮合時間戳(µs)  
+price(2)| int64| 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。  
+size(3)| int64| 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。  
+seq(4)| int64| 撮合序列 ID  
+side(5)| SideType(uint8)| taker單方向  
+isBlockTrade(6)| BoolEnum(uint8)| 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade)  
+isRPI(7)| BoolEnum(uint8)| 是否為 RPI(0 = 非 RPI,1 = RPI)  
+execId(100)| varString8| 成交 ID  
+  
+#### SideType
+
+  * `0`: UNKOWN
+  * `1`: BUY
+  * `2`: SELL
+  * `254`: NON_REPRESENTABLE
+
+
+
+#### BoolEnum
+
+  * `0`: FALSE
+  * `1`: TRUE
+  * `254`: NON_REPRESENTABLE
+
+
+
+## 接入示例
+
+### Python
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "rfq.open.trades"  
-        ]  
-    }  
+    import json  
+    import struct  
+    import websocket  
+    from typing import Tuple  
+      
+    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    SYMBOL = "BTCUSDT"  
+    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
+      
+      
+    # ---------------- SBE helpers ----------------  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        # display = mantissa * 10^exp  
+        # exp can be negative  
+        return mantissa * (10.0**exp)  
+      
+      
+    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
+        if off + 1 > len(buf):  
+            raise ValueError("varString8: missing length")  
+      
+        ln = buf[off]  
+        off += 1  
+      
+        if off + ln > len(buf):  
+            raise ValueError("varString8: out of range")  
+      
+        s = buf[off : off + ln].decode("utf-8", errors="replace")  
+        off += ln  
+        return s, off  
+      
+      
+    def parse_public_trade_event(buf: bytes) -> dict:  
+        # messageHeader: <HHHH  
+        if len(buf) < 8:  
+            raise ValueError("too short for header")  
+      
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
+        off = 8  
+      
+        if template_id != 20002:  
+            raise ValueError(f"unexpected templateId={template_id}")  
+      
+        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
+        if len(buf) < off + 8 + 1 + 1:  
+            raise ValueError("too short for fixed fields")  
+      
+        ts = struct.unpack_from("<q", buf, off)[0]  
+        off += 8  
+      
+        price_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        size_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        # group header: blockLength(uint16), numInGroup(uint16)  
+        if len(buf) < off + 4:  
+            raise ValueError("too short for group header")  
+      
+        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
+        off += 4  
+      
+        trades = []  
+        for _ in range(num_in_group):  
+            entry_start = off  
+      
+            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
+            fill_time = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            price_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            size_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            seq = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            side = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_block = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_rpi = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            # Skip any future extension bytes in fixed part  
+            fixed_consumed = off - entry_start  
+            if fixed_consumed < grp_block_len:  
+                off += grp_block_len - fixed_consumed  
+            elif fixed_consumed > grp_block_len:  
+                # schema mismatch vs blockLength  
+                raise ValueError(  
+                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
+                )  
+            exec_id, off = read_varstring8(buf, off)  
+            trades.append(  
+                {  
+                    "fillTime": fill_time,  
+                    "priceMantissa": price_m,  
+                    "sizeMantissa": size_m,  
+                    "price": apply_exp(price_m, price_exp),  
+                    "size": apply_exp(size_m, size_exp),  
+                    "seq": seq,  
+                    "side": side,  
+                    "isBlockTrade": bool(is_block),  
+                    "isRPI": bool(is_rpi),  
+                    "execId": exec_id,  
+                }  
+            )  
+      
+        symbol, off = read_varstring8(buf, off)  
+      
+        return {  
+            "header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
+                "version": version,  
+            },  
+            "ts": ts,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "symbol": symbol,  
+            "tradeItems": trades,  
+            "parsed_length": off,  
+        }  
+      
+      
+    # ---------------- WS handlers ----------------  
+    def on_open(ws):  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("subscribed:", TOPIC)  
+      
+      
+    def on_message(ws, message):  
+        if isinstance(message, (bytes, bytearray)):  
+            evt = parse_public_trade_event(message)  
+      
+            # print first trade only (example)  
+            if evt["tradeItems"]:  
+                t0 = evt["tradeItems"][0]  
+                print(  
+                    evt["symbol"],  
+                    "trades=",  
+                    len(evt["tradeItems"]),  
+                    "first:",  
+                    t0["price"],  
+                    "@",  
+                    t0["size"],  
+                    "seq=",  
+                    t0["seq"],  
+                )  
+        else:  
+            print("TEXT:", message)  
+      
+      
+    def on_error(ws, err):  
+        print("WS error:", err)  
+      
+      
+    def on_close(ws, *_):  
+        print("closed")  
+      
+      
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        ws = websocket.WebSocketApp(  
+            WS_URL,  
+            on_open=on_open,  
+            on_message=on_message,  
+            on_error=on_error,  
+            on_close=on_close,  
+        )  
+        ws.run_forever(ping_interval=20, ping_timeout=10)    
     
 
-### 資料流示例
+### Golang
     
     
-    {  
-      "topic": "rfq.open.trades",  
-      "creationTime": 1757578749474,  
-      "data": [  
-        {  
-          "rfqId": "1757578410512325974246073709371267",  
-          "rfqLinkId": "",  
-          "quoteId": "1757578719388835162295211364781592",  
-          "quoteLinkId": "",  
-          "quoteSide": "Buy",  
-          "strategyType": "custom",  
-          "status": "Filled",  
-          "rfqDeskCode": "1nu9d1",  
-          "quoteDeskCode": "test0904",  
-          "legs": [  
-            {  
-              "category": "linear",  
-              "symbol": "BTCUSDT",  
-              "side": "Buy",  
-              "price": "91600",  
-              "qty": "1",  
-              "orderId": "64fe4108-555e-4361-ae2d-3a8d0c292859",  
-              "markPrice": "91741.11",  
-              "execFee": "-1.374",  
-              "execId": "42b8be1e-36cf-4aba-bb75-4602cc11df37",  
-              "resultCode": 0,  
-              "resultMessage": "",  
-              "rejectParty": ""  
+    package main  
+      
+    import (  
+            "encoding/binary"  
+            "encoding/json"  
+            "fmt"  
+            "log"  
+            "math"  
+            "time"  
+      
+            "github.com/gorilla/websocket"  
+    )  
+      
+    const (  
+            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            Symbol = "BTCUSDT"  
+            Topic  = "publicTrade.sbe." + Symbol  
+    )  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+            return float64(mantissa) * math.Pow10(int(exp))  
+    }  
+      
+    func readVarString8(buf []byte, off int) (string, int, error) {  
+            if off+1 > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: missing length")  
             }  
-          ],  
-          "createdAt": "1757578749361",  
-          "updatedAt": "1757578749464"  
-        }  
-      ]  
+            ln := int(buf[off])  
+            off++  
+            if off+ln > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: out of range")  
+            }  
+            s := string(buf[off : off+ln])  
+            off += ln  
+            return s, off, nil  
+    }  
+      
+    type TradeItem struct {  
+            FillTime     int64   `json:"fillTime"`  
+            PriceMant    int64   `json:"priceMantissa"`  
+            SizeMant     int64   `json:"sizeMantissa"`  
+            Price        float64 `json:"price"`  
+            Size         float64 `json:"size"`  
+            Seq          int64   `json:"seq"`  
+            Side         uint8   `json:"side"`  
+            IsBlockTrade bool    `json:"isBlockTrade"`  
+            IsRPI        bool    `json:"isRPI"`  
+            ExecID       string   `json:"execId"`  
+    }  
+      
+    type PublicTradeEvent struct {  
+            Header struct {  
+                    BlockLength uint16 `json:"blockLength"`  
+                    TemplateID  uint16 `json:"templateId"`  
+                    SchemaID    uint16 `json:"schemaId"`  
+                    Version     uint16 `json:"version"`  
+            } `json:"header"`  
+      
+            Ts            int64       `json:"ts"`  
+            PriceExponent int8        `json:"priceExponent"`  
+            SizeExponent  int8        `json:"sizeExponent"`  
+            TradeItems    []TradeItem `json:"tradeItems"`  
+            Symbol        string      `json:"symbol"`  
+            ParsedLength  int         `json:"parsed_length"`  
+    }  
+      
+    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
+            if len(buf) < 8 {  
+                    return nil, fmt.Errorf("too short for header")  
+            }  
+            off := 0  
+            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
+            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
+            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
+            off += 8  
+      
+            if tid != 20002 {  
+                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
+            }  
+            if off+8+1+1 > len(buf) {  
+                    return nil, fmt.Errorf("too short for fixed fields")  
+            }  
+            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
+            off += 8  
+            priceExp := int8(buf[off])  
+            off++  
+            sizeExp := int8(buf[off])  
+            off++  
+      
+            // group header  
+            if off+4 > len(buf) {  
+                    return nil, fmt.Errorf("too short for group header")  
+            }  
+            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
+            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            off += 4  
+      
+            items := make([]TradeItem, 0, int(numInGroup))  
+            for i := 0; i < int(numInGroup); i++ {  
+                    entryStart := off  
+      
+                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
+                    if off+needMin > len(buf) {  
+                            return nil, fmt.Errorf("too short for trade entry %d", i)  
+                    }  
+      
+                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+      
+                    side := uint8(buf[off]); off++  
+                    isBlock := uint8(buf[off]); off++  
+                    isRpi := uint8(buf[off]); off++  
+      
+                    fixedConsumed := off - entryStart  
+                    if fixedConsumed < int(grpBlockLen) {  
+                            off += int(grpBlockLen) - fixedConsumed  
+                    } else if fixedConsumed > int(grpBlockLen) {  
+                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
+                    }  
+      
+                     execID, off2, err := readVarString8(buf, off)  
+                    if err != nil {  
+                            return nil, err  
+                    }  
+                    off = off2  
+      
+      
+                    items = append(items, TradeItem{  
+                            FillTime:     fillTime,  
+                            PriceMant:    priceM,  
+                            SizeMant:     sizeM,  
+                            Price:        applyExp(priceM, priceExp),  
+                            Size:         applyExp(sizeM, sizeExp),  
+                            Seq:          seq,  
+                            Side:         side,  
+                            IsBlockTrade: isBlock != 0,  
+                            IsRPI:        isRpi != 0,  
+                            ExecID:       execID,  
+                    })  
+            }  
+      
+            symbol, off2, err := readVarString8(buf, off)  
+            if err != nil {  
+                    return nil, err  
+            }  
+            off = off2  
+      
+            evt := &PublicTradeEvent{  
+                    Ts:            ts,  
+                    PriceExponent: priceExp,  
+                    SizeExponent:  sizeExp,  
+                    TradeItems:    items,  
+                    Symbol:        symbol,  
+                    ParsedLength:  off,  
+            }  
+            evt.Header.BlockLength = blk  
+            evt.Header.TemplateID = tid  
+            evt.Header.SchemaID = sid  
+            evt.Header.Version = ver  
+            return evt, nil  
+    }  
+      
+    func main() {  
+            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
+            c, _, err := d.Dial(WSURL, nil)  
+            if err != nil {  
+                    log.Fatal(err)  
+            }  
+            defer c.Close()  
+      
+            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
+            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
+                    log.Fatal(err)  
+            }  
+            log.Println("subscribed:", Topic)  
+      
+            for {  
+                    mt, msg, err := c.ReadMessage()  
+                    if err != nil {  
+                            log.Fatal(err)  
+                    }  
+                    if mt == websocket.BinaryMessage {  
+                            evt, err := parsePublicTradeEvent(msg)  
+                            if err != nil {  
+                                    log.Println("decode error:", err)  
+                                    continue  
+                            }  
+                            if len(evt.TradeItems) > 0 {  
+                                    t0 := evt.TradeItems[0]  
+                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
+                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
+                            }  
+                    } else {  
+                            log.Println("TEXT:", string(msg))  
+                    }  
+            }  
     }

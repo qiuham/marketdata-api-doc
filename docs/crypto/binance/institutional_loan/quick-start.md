@@ -2,275 +2,105 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/quick-start
 api_type: REST
-updated_at: 2026-05-27 19:01:31.222213
+updated_at: 2026-06-28 18:56:19.272631
 ---
 
-# Get Risk Unit Force Liquidation Record(USER_DATA)
+# Risk Unit Transfer(TRADE)
 
-#### API Description[​](/docs/institutional_loan/trade#api-description "Direct link to API Description")
+## API Description[​](/docs/institutional_loan/transfer#api-description "Direct link to API Description")
 
-Get Institution Loan Risk Unit Force Liquidation Record. This endpoint is accessible only with the credit account API key.
+When specified risk unit LTV thresholds and/or the relevant product transfer out rules are met, the Risk Unit Transfer API allows users to perform the following:
 
-#### HTTP Request[​](/docs/institutional_loan/trade#http-request "Direct link to HTTP Request")
+  * Transfer of assets from margin collateral/credit accounts to spot accounts with the same Spot UID. This endpoint is accessible via each of the credit/collateral accounts with its API Key or parent account .
 
-GET /sapi/v1/margin/loan-group/force-liquidation
 
-#### Request Weight[​](/docs/institutional_loan/trade#request-weight "Direct link to Request Weight")
+
+Please Note: To transfer funds out of the Institutional Loan Risk Unit, first transfer to the spot wallet using the dedicated Risk Unit Transfer API. After that, use the [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer) to move the assets to an account outside of the risk unit.
+
+For all other designated use cases shown below, please use the [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer).
+
+  * Transfer assets between Credit Account and other Margin Collateral Accounts within the risk unit without LTV restrictions. Please see [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer), this needs to be done via master account API key.
+  * Transfers between Spot collateral account and accounts outside of the risk unit.
+
+
+
+## HTTP Request[​](/docs/institutional_loan/transfer#http-request "Direct link to HTTP Request")
+
+POST /sapi/v1/margin/loan-group/transfer-out
+
+## Request Weight[​](/docs/institutional_loan/transfer#request-weight "Direct link to Request Weight")
 
 1(IP)
 
-#### Request Parameters[​](/docs/institutional_loan/trade#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/institutional_loan/transfer#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-groupId| LONG| NO| Risk unit unique identifier  
-startTime| LONG| NO|   
+subEmail| STRING| NO| When the parent account calls this endpoint, the subEmail field is mandatory. If left empty, error code -27026 will be returned.  
+When a credit or collateral account calls this endpoint, the subEmail field may be omitted and will default to the account's own subEmail.  
+If the wrong subEmail is inputted, error code -3003 will be returned.  
+asset| STRING| YES| Asset Name , USDT or USDC  
+amount| DECIMAL| YES| Transfer amount of the asset. The real transferred amount = min(risk unit max transfer amount, collateral account max transfer amount).  
   
-endTime| LONG| NO|   
-  
-current| LONG| NO| The currently querying page. Start from 1. Default:1  
-size| LONG| NO| Default:10 Max:100  
-recvWindow| LONG| NO| The value cannot be greater than 60000  
-timestamp| LONG| YES|   
-  
-  
-  * Credit account may query currently activated and closed risk unit based on the parameter groupId. If groupId is empty, only currently activated risk units will be returned.
-  * Responses are returned in descending order.
-  * If startTime and endTime are not provided, data from the last 7 days will be returned by default.
-  * If startTime is omitted, it defaults to endTime minus 7 days.
-  * If endTime is omitted, it defaults to the current time.
-  * The time span between startTime and endTime must not exceed 100 days; otherwise, an error will be returned with no records.
+## Response Example[​](/docs/institutional_loan/transfer#response-example "Direct link to Response Example")
 
+None
 
+## Error Code Description:[​](/docs/institutional_loan/transfer#error-code-description "Direct link to Error Code Description:")
 
-#### Response Example[​](/docs/institutional_loan/trade#response-example "Direct link to Response Example")
-    
-    
-    {  
-      "total": 2,  
-      "rows": [  
-        {  
-          "groupId": 6,  
-          "startLtv": 1,  
-          "endLtv": 0,  
-          "liquidationStartTime": 1748381716906,  
-          "liquidationEndTime": 1748525848742,  
-          "totalNetEquity": 16671.5507973,  
-          "totalMaintenanceMargin": 0,  
-          "totalLiability": 16667.926,  
-          "liquidationSnapshot": {  
-            "snapshots": [  
-              {  
-                "subEmail": "1000255973134@test.com",  
-                "memberType": "CREDIT",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "12671.05079731",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973134@test.com",  
-                "memberType": "CREDIT",  
-                "walletType": "SPOT",  
-                "netEquity": "0E-8",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973138@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "1000.25333000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973137@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "1000.24667000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973135@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "CROSS_MARGIN",  
-                "netEquity": "1000.00000000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973136@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "CROSS_MARGIN",  
-                "netEquity": "1000.00000000",  
-                "maintainMargin": "0E-8"  
-              }  
-            ],  
-            "liabilities":   
-              {"assetName": "USDT",  
-                "principal": "11667.92600000",  
-                "interest": "5000.00000000"  
-              }  
-          }  
-        }  
-      ]  
-    }  
-    
-
-## Response detail description:[​](/docs/institutional_loan/trade#response-detail-description "Direct link to Response detail description:")
-
-Parameter| Type| Description  
----|---|---  
-total| LONG| Total risk unit number  
-rows| OBJECT ARRAY|   
-→ groupId| Long| Risk unit unique identifier  
-→ startLtv| LONG| The initial LTV for the risk unit  
-→ endLtv| LONG| The current LTV for the risk unit  
-→ liquidationStartTime| Long| Liquidation start timestamp (milliseconds)  
-→ liquidationEndTime| Long| Liquidation end timestamp (milliseconds)  
-→ totalNetEquity| String| ∑Equity in all PM sub account + ( ∑Collateral Value - ∑(Liability + Interest) in all Cross Margin account + Free accepted tokens in spot  
-→totalMaintenanceMargin| String| Aggregated Maintenance Margin  
-→ totalLiability| String| Outstanding Loan Principal + Outstanding Loan Interest  
-liquidationSnapshot| OBJECT ARRAY|   
-snapshots| OBJECT ARRAY|   
-→ subEmail| String| Sub account registered email  
-→ memberType| String| memberType can be "CREDIT" or "COLLATERAL"  
-→ walletType| String| Account type for sub account . It can be "PORTFOLIO_MARGIN", "SPOT" or "CROSS_MARGIN"  
-→ netEquity| String| Net equity in wallet  
-→ maintainMargin| String| Maintenance margin required  
-liabilities| OBJECT ARRAY|   
-→ assetName| String| Asset name  
-→ principal| String| Outstanding loan principal amount  
-→ interest| String| Outstanding loan interest
+  * -27025 : Please try again until the previous transaction is completed.
+  * -27026 : Receiver UID is not within the Institutional Loan risk unit.
+  * -27027 : The receiver UID margin wallet has not been enabled.
+  * -27028 : Exceed the max transfer out amount, which is min(Risk Unit max transfer out, Collateral Account max transfer out). Risk Unit max transfer out can be checked via “Query Risk Unit Details (USER_DATA)” API endpoint.
+  * -27029 : Institution loan collateral accounts can only transfer assets to other collateral accounts’ margin accounts within the same risk unit.
 
 ---
 
-# 查询风险单元强制平仓记录 (USER_DATA)
+# 风险单位资金划转 (TRADE)
 
-#### 接口描述[​](/docs/zh-CN/institutional_loan/trade#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/institutional_loan/transfer#接口描述 "接口描述的直接链接")
 
-获取风险单位强制平仓记录。 仅支持放贷账户调用该接口。
+当达到特定的风险单位 LTV 阈值和/或相关产品的转出规则时，风险单位资金划转 API 允许用户执行以下操作：
 
-#### HTTP请求[​](/docs/zh-CN/institutional_loan/trade#http请求 "HTTP请求的直接链接")
+  * 将资产从杠杆抵押账户或放贷账户转至相同现货 UID 下的现货账户， 此接口可支持单个抵押账户或放贷账户调用，也可由母账户调用。
 
-GET /sapi/v1/margin/loan-group/force-liquidation
 
-#### 请求权重[​](/docs/zh-CN/institutional_loan/trade#请求权重 "请求权重的直接链接")
+
+请注意：要将资金转出机构借贷风险单位，首先要使用机构借贷特定的转账 API 将资金转入现货钱包。然后，使用[万向转账 API](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)将资产转移到风险单元之外的账户。
+
+此外的划转场景，请您使用[万向转账 API操作。](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)
+
+  * 资金在放贷账户与风险单位内其他杠杆抵押账户之间划转，此划转不受转出 LTV 的限制。您可以查看[万向划转 API 文档](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)了解更多详情，此接口需要通过母账户 API Key 操作。
+  * 现货账户与风险单位外的账户之间转账。
+
+
+
+## HTTP请求[​](/docs/zh-CN/institutional_loan/transfer#http请求 "HTTP请求的直接链接")
+
+POST /sapi/v1/margin/loan-group/transfer-out
+
+## 请求权重[​](/docs/zh-CN/institutional_loan/transfer#请求权重 "请求权重的直接链接")
 
 1(IP)
 
-#### 请求参数[​](/docs/zh-CN/institutional_loan/trade#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/institutional_loan/transfer#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-groupId| LONG| NO| 唯一风险单位标识符  
-startTime| LONG| NO| 开始时间  
-endTime| LONG| NO| 结束时间  
-current| LONG| NO| 当前查询页。 开始值 1. 默认:1  
-size| LONG| NO| 默认:10 最大:100  
-recvWindow| LONG| NO|   
+subEmail| STRING| NO| 抵押子账户或放贷子账户的邮箱地址  
+母账户调用该接口时，subEmail必填，为空则报错；  
+放贷账户或抵押账户调用该接口时，subEmail可为空，默认为其本身subEmail.  
+asset| STRING| YES| 资产名称，如 USDT 或 USDC  
+amount| DECIMAL| YES| 转出金额。 注意 实际可转出金额取值于 min(风险单位最大可转出金额, 抵押账号最大可转出金额)， 两者取小。  
   
-timestamp| LONG| YES|   
-  
-  
-  * 放贷账户可根据参数groupId查询当前生效状态 风险单位和已经关闭的风险单位，若groupId为空，则返回当前生效状态 的风险单位。
-  * 响应返回为降序排列。
-  * 若startTime和endTime没传，则默认返回最近7天数据。
-  * startTime不传，默认endTime-7天；结束时间不传，默认当前时间。
-  * startTime和endTime时间长度不能超过100天，否则报错，无返回记录。
+## 响应示例[​](/docs/zh-CN/institutional_loan/transfer#响应示例 "响应示例的直接链接")
 
+无
 
+## 常见错误代码：[​](/docs/zh-CN/institutional_loan/transfer#常见错误代码 "常见错误代码：的直接链接")
 
-#### 响应示例[​](/docs/zh-CN/institutional_loan/trade#响应示例 "响应示例的直接链接")
-    
-    
-    {  
-      "total": 2,  
-      "rows": [  
-        {  
-          "groupId": 6,  
-          "startLtv": 1,  
-          "endLtv": 0,  
-          "liquidationStartTime": 1748381716906,  
-          "liquidationEndTime": 1748525848742,  
-          "totalNetEquity": 16671.5507973,  
-          "totalMaintenanceMargin": 0,  
-          "totalLiability": 16667.926,  
-          "liquidationSnapshot": {  
-            "snapshots": [  
-              {  
-                "subEmail": "1000255973134@test.com",  
-                "memberType": "CREDIT",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "12671.05079731",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973134@test.com",  
-                "memberType": "CREDIT",  
-                "walletType": "SPOT",  
-                "netEquity": "0E-8",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973138@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "1000.25333000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973137@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "PORTFOLIO_MARGIN",  
-                "netEquity": "1000.24667000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973135@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "CROSS_MARGIN",  
-                "netEquity": "1000.00000000",  
-                "maintainMargin": "0E-8"  
-              },  
-              {  
-                "subEmail": "1000255973136@test.com",  
-                "memberType": "COLLATERAL",  
-                "walletType": "CROSS_MARGIN",  
-                "netEquity": "1000.00000000",  
-                "maintainMargin": "0E-8"  
-              }  
-            ],  
-            "liabilities":   
-              {"assetName": "USDT",  
-                "principal": "11667.92600000",  
-                "interest": "5000.00000000"  
-              }  
-          }  
-        }  
-      ]  
-    }  
-    
-
-## Response detail description:[​](/docs/zh-CN/institutional_loan/trade#response-detail-description "Response detail description:的直接链接")
-
-Parameter| Type| Description  
----|---|---  
-total| LONG| 风险单位数量  
-rows| OBJECT ARRAY|   
-→ groupId| Long| 唯一风险单位标识符  
-→ startLtv| LONG| 初始贷款价值比  
-→ endLtv| LONG| 最新贷款价值比  
-→ liquidationStartTime| Long| 强平开始时间 (毫秒)  
-→ liquidationEndTime| Long| 强平结束时间 (毫秒)  
-→ totalNetEquity| String| Σ所有统一账户子账户抵押品权益 + Σ 抵押品价值 - Σ 全仓杠杆账户（负债 + 利息） + 现货可用资产  
-→totalMaintenanceMargin| String| 维持保证金总额  
-→ totalLiability| String| 未偿还贷款本金 + 未偿还贷款利息  
-liquidationSnapshot| OBJECT ARRAY|   
-snapshots| OBJECT ARRAY|   
-→ subEmail| String| Sub account registered email  
-→ memberType| String| 子账号类型，可取值"CREDIT" 或 "COLLATERAL"  
-→ walletType| String| 钱包类型，可取值 "PORTFOLIO_MARGIN", "SPOT" 或 "CROSS_MARGIN"  
-→ netEquity| String| 账户净资产  
-→ maintainMargin| String| 维持保证金  
-liabilities| OBJECT ARRAY|   
-→ assetName| String| 币种名称  
-→ principal| String| 未偿还贷款本金  
-→ interest| String| 未偿还利息
+  1. -27025 : 前一笔交易还未完成，请稍后再试。
+  2. -27026 : 接收账号不在当前风险单位内。
+  3. -27027 : 接收账号没有开通杠杆账户。
+  4. -27028 : 超出最大可转出金额。实际最大可转出金额取值于 min(风险单位最大可转出金额, 抵押账号最大可转出金额)， 两者取小。请通过接口“查询风险单位详情”获取最大转出金额。
+  5. -27029 : 抵押账户只能划转资金到风险单位内其他杠杆账户对应的抵押账户。

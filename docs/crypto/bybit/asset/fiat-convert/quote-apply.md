@@ -2,107 +2,191 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/quote-apply
 api_type: REST
-updated_at: 2026-05-27 19:15:14.993615
+updated_at: 2026-06-28 19:08:52.516579
 ---
 
-# Trade Notify
+# Funding Account Transaction History
 
-## Trade Notify
+Return transaction log in Funding Account. This endpoint supports filtering by transaction type and time range.
 
-### Webhook URL
+### HTTP Request
 
-  * **Webhook_url** : Provided in the [trade-execute](/docs/v5/asset/fiat-convert/confirm-quote) API.
+GET`/v5/asset/fundinghistory`
 
+### Request Parameters
 
+Parameter| Required| Type| Comments  
+---|---|---|---  
+createTimeFrom| false| string| Start timestamp (seconds). Must be used together with `createTimeTo`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+createTimeTo| false| string| End timestamp (seconds). Must be used together with `createTimeFrom`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor, used for pagination  
+  
+### Response Parameters
 
-### Webhook Method
-
-  * **HTTP Method** : `POST`
-
-
-
-### Authentication
-
-  * Share the **IP whitelist** with each other.
-
-
-
-### Headers
-    
-    
-    Content-Type: application/json  
-    timestamp: xxx  
-    publicKey: xxx  
-    
-
+Parameter| Type| Comments  
+---|---|---  
+nextPageCursor| string| Cursor for next page  
+list| array| Transaction list  
+> memberId| string| Member ID  
+> currency| string| Coin symbol  
+> ioDirection| string| Direction. `I`: In, `O`: Out  
+> txnAmt| string| Transaction amount  
+> afterAmt| string| Balance after transaction  
+> createTime| string| Create time (Unix seconds)  
+> showBusiType| string| Business type (localized key)  
+> showBusiTypeEn| string| Business type in English  
+> description| string| Description (localized key)  
+> descriptionEn| string| Description in English  
+  
 * * *
 
-### Request Body
+### Request Example
 
-The request body is in **JSON** format with the following fields:
+  * HTTP
+  * Python
+  * Node.js
 
-Field Name| Type| Description  
----|---|---  
-`tradeNo`| string| Trade order number  
-`status`| string| Trade status: `processing`, `success`, or `failed`  
-`quoteTxId`| string| Quote transaction ID. System generated, used to confirm the quote  
-`exchangeRate`| string| Exchange rate  
-`fromCoin`| string| Convert from coin (coin to sell)  
-`fromCoinType`| string| Coin type of `fromCoin`, either `fiat` or `crypto`  
-`toCoin`| string| Convert to coin (coin to buy)  
-`toCoinType`| string| Coin type of `toCoin`, either `fiat` or `crypto`  
-`fromAmount`| string| From coin amount (amount to sell)  
-`toAmount`| string| To coin amount (amount to buy according to the exchange rate)  
-`createdAt`| string| Trade created time
+
+    
+    
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1739433600000  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_asset_overview(  
+        limit=1  
+    ))  
+    
+    
+    
+      
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "nextPageCursor": "MTM3MTU3OTk=",  
+            "list": [  
+                {  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1772699449372  
+    }
 
 ---
 
-# 交易通知
+# 資金帳戶歷史記錄
 
-## 交易通知
+查詢資金帳戶的交易記錄，支持按交易類型和時間範圍進行篩選。
 
-### Webhook URL
+### HTTP 請求
 
-  * **Webhook_url** ：在 [trade-execute](/docs/zh-TW/v5/asset/fiat-convert/confirm-quote) API 中提供
+GET`/v5/asset/fundinghistory`
 
+### 請求參數
 
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+createTimeFrom| false| string| 起始時間戳（秒）。須與 `createTimeTo` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+createTimeTo| false| string| 結束時間戳（秒）。須與 `createTimeFrom` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+limit| false| string| 每頁數據條數。[`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於翻頁  
+  
+### 返回參數
 
-### Webhook Method
-
-  * **HTTP Method** ：`POST`
-
-
-
-### Authentication
-
-  * 雙方共享 **IP 白名單**
-
-
-
-### Headers
-    
-    
-    Content-Type: application/json  
-    timestamp: xxx  
-    publicKey: xxx  
-    
-
+參數| 類型| 說明  
+---|---|---  
+nextPageCursor| string| 下一頁游標  
+list| array| 交易記錄列表  
+> memberId| string| 用戶ID  
+> currency| string| 幣種  
+> ioDirection| string| 方向。`I`: 收入，`O`: 支出  
+> txnAmt| string| 交易金額  
+> afterAmt| string| 交易後餘額  
+> createTime| string| 創建時間（Unix 秒）  
+> showBusiType| string| 業務類型（本地化 key）  
+> showBusiTypeEn| string| 英文業務類型  
+> description| string| 描述（本地化 key）  
+> descriptionEn| string| 英文描述  
+  
 * * *
 
-### Request Body
+### 請求示例
 
-請求體為 **JSON** 格式，包含以下欄位：
+  * HTTP
+  * Python
+  * Node.js
 
-欄位名稱| 型別| 說明  
----|---|---  
-`tradeNo`| string| 交易訂單號  
-`status`| string| 交易狀態：`processing`、`success` 或 `failed`  
-`quoteTxId`| string| 報價交易 ID，由系統產生，用於確認報價  
-`exchangeRate`| string| 匯率  
-`fromCoin`| string| 兌出幣種（賣出的幣）  
-`fromCoinType`| string| `fromCoin` 的幣種類型，`fiat` 或 `crypto`  
-`toCoin`| string| 兌入幣種（買入的幣）  
-`toCoinType`| string| `toCoin` 的幣種類型，`fiat` 或 `crypto`  
-`fromAmount`| string| 兌出幣種數量（賣出數量）  
-`toAmount`| string| 兌入幣種數量（依照匯率計算的買入數量）  
-`createdAt`| string| 交易建立時間
+
+    
+    
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1739433600000  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "nextPageCursor": "MTM3MTU3OTk=",  
+            "list": [  
+                {  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1772699449372  
+    }

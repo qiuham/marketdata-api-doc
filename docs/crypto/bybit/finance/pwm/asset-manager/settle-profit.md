@@ -2,54 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-05-27 19:17:52.309375
+updated_at: 2026-06-28 19:11:39.730635
 ---
 
-# Get Subscribable Product Info
+# Fund Transfer Between Sub-Accounts
 
 info
 
-Does not need authentication.
+This endpoint must be called using the API key of the fund custodian sub-account.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/customize-plan/product`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+transferId| **true**|  string| Transfer request ID  
+fromUserId| **true**|  int64| Source UID. Must be a custodian sub-account of the current fund  
+toUserId| **true**|  int64| Destination UID. Must be a custodian sub-account of the current fund  
+amount| **true**|  string| Transfer amount  
+coin| **true**|  string| Coin name  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-products| array| Product card list grouped by category  
-> type| string| Product category: `equityFund` / `multiCoinEarning` / `onchainEarn` / `fixedYield`  
-> cards| array| Product card list for this category  
->> category| string| Product type  
->> productId| string| Underlying product ID (available for flexible savings / fixed yield / on-chain earn products)  
->> fundName| string| Fund name in English (fund products)  
->> coin| string| Product coin  
->> apr| string| Current annualized return rate (flexible savings / fixed yield products)  
->> aprRangeLow| string| APR lower bound (fund products)  
->> aprRangeHigh| string| APR upper bound (fund products)  
->> tags| array[string]| Product tags  
->> introduction| string| Product introduction in English (fund products)  
->> aum| string| Assets under management (base coin)  
->> minInvestmentAmount| string| Minimum subscription amount  
->> maxInvestmentAmount| string| Maximum subscription amount  
->> duration| int| Lock-up period in days. `0` means flexible (fixed yield products)  
->> maxDrawdown| string| Historical maximum drawdown (fund products)  
->> sharpRatio| string| Sharpe ratio (fund products)  
->> estAPR| string| Estimated APR for the product  
+transferId| string| Transfer ID  
+status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/customize-plan/product HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### Response Example
@@ -57,94 +59,62 @@ products| array| Product card list grouped by category
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "products": [  
-                {  
-                    "type": "equityFund",  
-                    "cards": [  
-                        {  
-                            "category": "equityFund",  
-                            "fundName": "Market Neutral Alpha",  
-                            "coin": "USDT",  
-                            "aprRangeLow": "0.08",  
-                            "aprRangeHigh": "0.15",  
-                            "tags": ["Delta Neutral"],  
-                            "introduction": "A market-neutral strategy fund",  
-                            "aum": "5000000",  
-                            "minInvestmentAmount": "100000",  
-                            "maxInvestmentAmount": "5000000",  
-                            "maxDrawdown": "-0.035",  
-                            "sharpRatio": "2.3",  
-                            "estAPR": "0.06"  
-                        }  
-                    ]  
-                },  
-                {  
-                    "type": "multiCoinEarning",  
-                    "cards": [  
-                        {  
-                            "category": "flexibleSavings",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "apr": "0.05",  
-                            "duration": 0,  
-                            "minInvestmentAmount": "10000",  
-                            "maxInvestmentAmount": "10000000",  
-                            "estAPR": "0.02"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }
 
 ---
 
-# 查詢可申購產品卡片（直客模式）
+# 基金托管子賬號間資金劃轉
 
 信息
 
-無需身份驗證。
+此接口必須使用基金托管子賬號的 API Key 操作。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/customize-plan/product`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+transferId| **true**|  string| 劃轉請求ID  
+fromUserId| **true**|  int64| 資金劃出UID（必須是當前基金的基金托管賬號）  
+toUserId| **true**|  int64| 資金劃入UID（必須是當前基金的基金托管賬號）  
+amount| **true**|  string| 劃轉金額  
+coin| **true**|  string| 幣種名稱  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-products| array| 按產品類別分組的卡片列表  
-> type| string| 產品類別：`equityFund` / `multiCoinEarning` / `onchainEarn` / `fixedYield`  
-> cards| array| 該類別下的產品卡片列表  
->> category| string| 產品類型  
->> productId| string| 對應的底層產品ID（活期 / 固收 / 鏈上賺幣產品有此字段）  
->> fundName| string| 基金名稱英文（基金產品）  
->> coin| string| 產品幣種  
->> apr| string| 當前年化收益率（活期 / 固收產品）  
->> aprRangeLow| string| 年化收益率下界（基金產品）  
->> aprRangeHigh| string| 年化收益率上界（基金產品）  
->> tags| array[string]| 產品標籤  
->> introduction| string| 產品簡介英文（基金產品）  
->> aum| string| 基金管理規模（本位幣）  
->> minInvestmentAmount| string| 最小申購金額  
->> maxInvestmentAmount| string| 最大申購金額  
->> duration| int| 鎖定期天數，`0` 表示活期（固收產品）  
->> maxDrawdown| string| 歷史最大回撤（基金產品）  
->> sharpRatio| string| 夏普比率（基金產品）  
->> estAPR| string| 產品預估APR  
+transferId| string| 劃轉ID  
+status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/customize-plan/product HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### 響應示例
@@ -152,43 +122,9 @@ products| array| 按產品類別分組的卡片列表
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "products": [  
-                {  
-                    "type": "equityFund",  
-                    "cards": [  
-                        {  
-                            "category": "equityFund",  
-                            "fundName": "Market Neutral Alpha",  
-                            "coin": "USDT",  
-                            "aprRangeLow": "0.08",  
-                            "aprRangeHigh": "0.15",  
-                            "tags": ["Delta Neutral"],  
-                            "introduction": "A market-neutral strategy fund",  
-                            "aum": "5000000",  
-                            "minInvestmentAmount": "100000",  
-                            "maxInvestmentAmount": "5000000",  
-                            "maxDrawdown": "-0.035",  
-                            "sharpRatio": "2.3",  
-                            "estAPR": "0.06"  
-                        }  
-                    ]  
-                },  
-                {  
-                    "type": "multiCoinEarning",  
-                    "cards": [  
-                        {  
-                            "category": "flexibleSavings",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "apr": "0.05",  
-                            "duration": 0,  
-                            "minInvestmentAmount": "10000",  
-                            "maxInvestmentAmount": "10000000",  
-                            "estAPR": "0.02"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }

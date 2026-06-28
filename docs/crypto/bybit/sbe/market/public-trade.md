@@ -2,969 +2,970 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/public-trade
 api_type: Market Data
-updated_at: 2026-05-27 19:21:58.574707
+updated_at: 2026-06-28 19:14:26.768310
 ---
 
-# SBE Basic Information
+# SBE Public Trade Integration
 
-MMWS / Gateway only
+## Overview
 
-All SBE-based feeds are described in this section are available **only** via the **Market Maker WebSocket (MMWS) / Market Maker Gateway (GW)** infrastructure. For access and architecture details, see the official announcement: [Market Maker Gateway](https://announcements.bybit.com/en/article/introducing-the-market-maker-gateway-for-enhanced-api-connectivity-and-performance-bltfaba80a427cac5e5/)
-
-This page gives a unified introduction to Bybit's **SBE-based market data** channels and how they fit into the MMWS/GW environment. Detailed, feature-specific behavior and code examples are provided in the sub-pages for:
-
-  * **BBO SBE** (Level 1, with RPI fields)
-  * **Level-50 SBE** (50-level order book snapshots + deltas)
-  * **PublicTrade SBE** (Spot & Futures)
-  * **WS order entry SBE** (Spot & Futures & Options)
-  * **Fast Order Response SBE** (ultra-low-latency active order acknowledgements)
+  * **Channel:** Private MM WebSocket only (not available on public WS).
+  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
+  * **Push frequency** : real-time
+  * Messages are delivered in-order per symbol group. A single packet may contain 1–1024 trades
 
 
 
-## SBE path
+## Flow
 
-  * Spot market: `wss://{MMWS url}/v5/public-sbe/spot`
-  * USDT/USDC contracts market: `wss://{MMWS url}/v5/public-sbe/linear`
-  * Coin-margin contracts market: `wss://{MMWS url}/v5/public-sbe/inverse`
-  * WS order entry: `wss://{MMWS url}/v5/trade-sbe`
-  * Fast order response (private): `wss://{MMWS url}/v5/private-sbe`
+### Ping / Pong (JSON control frames)
 
-
-
-## What is SBE?
-
-Bybit uses **Simple Binary Encoding (SBE)** in accordance with the FIX/SBE 1.0 specification:
-
-  * Binary, little-endian encoding
-  * Fixed-width fields where possible
-  * Explicit **message header** \+ **message body** layout
-  * High-efficiency decoding suitable for HFT and MM strategies
-
-
-
-Compared with JSON WebSocket feeds, SBE provides:
-
-  * Smaller payloads (up to ~30–50% reduction vs equivalent JSON data)
-  * Deterministic binary layouts
-  * Microsecond timestamp precision
-  * Lower CPU usage for both encoding and decoding
-
-
-
-## SBE Connection Limit
-
-  * **Spot:** 1500 connections limit per dedicated MMWS host.
-  * **Futures (linear + inverse):** 3000 connections limit per dedicated MMWS host.
-  * Once you breach the connection limit, new connections return **HTTP 429**.
-
-
-
-## Behavior Of PreLaunch Contracts
-
-  * There is no feed until `ContinuousTrading` stage for orderbook & publicTrade
-
-
-
-## Market SBE XML Template
+**Send Ping**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="quote.sbe" id="1" version="0" semanticVersion="1.0.0" description="Bybit market data streams SBE message schema" byteOrder="littleEndian" headerType="messageHeader">  
-      <types>  
-        <composite name="messageHeader" description="Template ID and length of message root">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <composite name="varString8" description="Variable length UTF-8 string.">  
-          <type name="length" primitiveType="uint8"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-        <composite name="groupSize16Encoding" description="Repeating group dimensions.">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="numInGroup" primitiveType="uint16"/>  
-        </composite>  
-        <enum name="pkgTypeEnum" encodingType="uint8">  
-          <validValue name="SNAPSHOT">0</validValue>  
-          <validValue name="DELTA">1</validValue>  
-        </enum>  
-        <enum name="SideType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BUY">1</validValue>  
-          <validValue name="SELL">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-        <enum name="BoolEnum" encodingType="uint8">  
-          <validValue name="FALSE">0</validValue>  
-          <validValue name="TRUE">1</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-      </types>  
-      <!-- Stream event for "ob.rpi.1.sbe.<symbol>" channel -->  
-      <sbe:message name="BestOBRpiEvent" id="20000">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="seq" type="int64" description="Cross sequence ID"/>  
-        <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>  
-        <field id="4" name="u" type="int64" description="Update Id"/>  
-        <field id="5" name="askNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask normal price"/>  
-        <field id="6" name="askNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask normal size"/>  
-        <field id="7" name="askRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask rpi price"/>  
-        <field id="8" name="askRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask rpi size"/>  
-        <field id="9" name="bidNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid normal price"/>  
-        <field id="10" name="bidNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid normal size"/>  
-        <field id="11" name="bidRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid rpi price"/>  
-        <field id="12" name="bidRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid rpi size"/>  
-        <field id="13" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="14" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-      <!-- Stream event for "ob.50.sbe.<symbol>" channel -->  
-      <sbe:message name="OBL50Event" id="20001">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="seq" type="int64" description="Cross sequence ID"/>  
-        <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>  
-        <field id="4" name="u" type="int64" description="Update Id"/>  
-        <field id="5" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="6" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <field id="7" name="pkgType" type="pkgTypeEnum" description="Package type"/>  
-        <group id="40" name="asks" dimensionType="groupSize16Encoding" description="Sell side order book updates">  
-          <field id="1" name="price" type="int64" description="Price mantissa"/>  
-          <field id="2" name="size" type="int64" description="Size mantissa"/>  
-        </group>  
-        <group id="41" name="bids" dimensionType="groupSize16Encoding" description="Buy side order book updates">  
-          <field id="1" name="price" type="int64" description="Price mantissa"/>  
-          <field id="2" name="size" type="int64" description="Size mantissa"/>  
-        </group>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-      <!-- Stream event for "publicTrade.sbe.<symbol>" channel -->  
-      <sbe:message name="PublicTradeEvent" id="20002">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">  
-          <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>  
-          <field id="2" name="price" type="int64" description="Price mantissa"/>  
-          <field id="3" name="size" type="int64" description="Size mantissa"/>  
-          <field id="4" name="seq" type="int64" description="Cross sequence ID"/>  
-          <field id="5" name="side" type="SideType" description="Side of taker"/>  
-          <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>  
-          <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>  
-          <data id="100" name="execId" type="varString8" description="Trade ID"/>  
-        </group>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-    </sbe:messageSchema>  
+    {"req_id": "100001", "op": "ping"}  
     
 
-## WS Order Entry SBE XML Template
+**Receive Pong**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" package="order.trading.api.sbe" id="2" version="1" semanticVersion="1.0.0" description="Order Trading API SBE Schema" byteOrder="littleEndian">  
-      <types>  
-        <composite name="messageHeader" description="Standard message header">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <composite name="groupSize16Encoding" description="Repeating group dimensions.">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="numInGroup" primitiveType="uint16"/>  
-        </composite>  
-        <type name="String8" primitiveType="char" length="8"/>  
-        <type name="String16" primitiveType="char" length="16"/>  
-        <type name="String32" primitiveType="char" length="32"/>  
-        <type name="String64" primitiveType="char" length="64"/>  
-        <composite name="varString16" description="Variable length UTF-8 string">  
-          <type name="length" primitiveType="uint16"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-        <composite name="Decimal64" description="Decimal floating point number">  
-          <type name="exponent" primitiveType="int8"/>  
-          <type name="mantissa" primitiveType="int64"/>  
-        </composite>  
-        <enum name="CategoryType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="SPOT">1</validValue>  
-          <validValue name="LINEAR">2</validValue>  
-          <validValue name="INVERSE">3</validValue>  
-          <validValue name="OPTION">4</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="PositionIdxType" encodingType="uint8">  
-          <validValue name="ONE_WAY">0</validValue>  
-          <validValue name="HEDGE_BUY">1</validValue>  
-          <validValue name="HEDGE_SELL">2</validValue>  
-          <validValue name="UNKNOWN">253</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="OrderType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="MARKET">1</validValue>  
-          <validValue name="LIMIT">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="SideType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BUY">1</validValue>  
-          <validValue name="SELL">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="TimeInForceType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="GOOD_TILL_CANCEL">1</validValue>  
-          <validValue name="POST_ONLY">2</validValue>  
-          <validValue name="IMMEDIATE_OR_CANCEL">3</validValue>  
-          <validValue name="FILL_OR_KILL">4</validValue>  
-          <validValue name="RPI">5</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="SmpType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="CANCEL_TAKER">1</validValue>  
-          <validValue name="CANCEL_MAKER">2</validValue>  
-          <validValue name="CANCEL_BOTH">3</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="MarketUnitType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BASE_COIN">1</validValue>  
-          <validValue name="QUOTE_COIN">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="BoolEnum" encodingType="uint8">  
-          <validValue name="FALSE">0</validValue>  
-          <validValue name="TRUE">1</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-        <composite name="ApiRequestHeader" description="API Request header">  
-          <type name="reqId" primitiveType="char" length="64"/>  
-          <type name="timestamp" primitiveType="uint64"/>  
-          <type name="recvWindow" primitiveType="uint32"/>  
-          <type name="referer" primitiveType="char" length="64"/>  
-        </composite>  
-        <composite name="ApiRespHeader" description="Response header">  
-          <type name="reqId" primitiveType="char" length="64"/>  
-          <type name="connId" primitiveType="char" length="64"/>  
-          <type name="traceId" primitiveType="char" length="64"/>  
-          <type name="timeNow" primitiveType="int64"/>  
-          <type name="inTime" primitiveType="int64"/>  
-          <type name="bapiLimit" primitiveType="int64"/>  
-          <type name="bapiLimitStatus" primitiveType="int64"/>  
-          <type name="bapiLimitResetTimestamp" primitiveType="int64"/>  
-        </composite>  
-        <composite name="CommonOrderRespData" description="Common order response data">  
-          <type name="orderId" primitiveType="char" length="64"/>  
-          <type name="orderLinkId" primitiveType="char" length="64"/>  
-        </composite>  
-      </types>  
-      <message name="AuthReq" id="1" description="Authentication request">  
-        <field name="reqId" id="1" type="String64"/>  
-        <field name="apiKey" id="2" type="String64"/>  
-        <field name="expires" id="3" type="uint64"/>  
-        <field name="signature" id="4" type="String64"/>  
-      </message>  
-      <message name="AuthResp" id="2" description="Authentication response">  
-        <field name="reqId" id="1" type="String64"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="connId" id="3" type="String64"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="PingReq" id="3" description="Ping request">  
-        <field name="timestamp" id="1" type="uint64"/>  
-      </message>  
-      <message name="PongResp" id="4" description="Pong response">  
-        <field name="timestamp" id="1" type="uint64"/>  
-        <field name="pongTime" id="2" type="uint64"/>  
-      </message>  
-      <message name="CreateOrderReqV5" id="5" description="Create order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="side" id="4" type="SideType"/>  
-        <field name="orderType" id="5" type="OrderType"/>  
-        <field name="qty" id="6" type="Decimal64"/>  
-        <field name="price" id="7" type="Decimal64"/>  
-        <field name="orderLinkId" id="8" type="String64"/>  
-        <field name="timeInForce" id="9" type="TimeInForceType"/>  
-        <field name="positionIdx" id="10" type="PositionIdxType"/>  
-        <field name="marketUnit" id="11" type="MarketUnitType"/>  
-        <field name="isLeverage" id="12" type="BoolEnum"/>  
-        <field name="reduceOnly" id="13" type="BoolEnum"/>  
-        <field name="closeOnTrigger" id="14" type="BoolEnum"/>  
-        <field name="mmp" id="15" type="BoolEnum"/>  
-        <field name="smpType" id="16" type="SmpType"/>  
-      </message>  
-      <message name="CreateOrderRespV5" id="6" description="Create order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="ReplaceOrderReqV5" id="7" description="Replace order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="orderId" id="4" type="String64"/>  
-        <field name="orderLinkId" id="5" type="String64"/>  
-        <field name="qty" id="6" type="Decimal64"/>  
-        <field name="price" id="7" type="Decimal64"/>  
-      </message>  
-      <message name="ReplaceOrderRespV5" id="8" description="Replace order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="CancelOrderReqV5" id="9" description="Cancel order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="orderId" id="4" type="String64"/>  
-        <field name="orderLinkId" id="5" type="String64"/>  
-      </message>  
-      <message name="CancelOrderRespV5" id="10" description="Cancel order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="BatchCreateOrderReqV5" id="11" description="Batch create order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="side" id="2" type="SideType"/>  
-          <field name="orderType" id="3" type="OrderType"/>  
-          <field name="qty" id="4" type="Decimal64"/>  
-          <field name="price" id="5" type="Decimal64"/>  
-          <field name="orderLinkId" id="6" type="String64"/>  
-          <field name="timeInForce" id="7" type="TimeInForceType"/>  
-          <field name="positionIdx" id="8" type="PositionIdxType"/>  
-          <field name="marketUnit" id="9" type="MarketUnitType"/>  
-          <field name="isLeverage" id="10" type="BoolEnum"/>  
-          <field name="reduceOnly" id="11" type="BoolEnum"/>  
-          <field name="closeOnTrigger" id="12" type="BoolEnum"/>  
-          <field name="mmp" id="13" type="BoolEnum"/>  
-          <field name="smpType" id="14" type="SmpType"/>  
-        </group>  
-      </message>  
-      <message name="BatchCreateOrderRespV5" id="12" description="Batch create order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="BatchReplaceOrderReqV5" id="13" description="Batch replace order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="orderId" id="2" type="String64"/>  
-          <field name="orderLinkId" id="3" type="String64"/>  
-          <field name="qty" id="4" type="Decimal64"/>  
-          <field name="price" id="5" type="Decimal64"/>  
-        </group>  
-      </message>  
-      <message name="BatchReplaceOrderRespV5" id="14" description="Batch replace order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="BatchCancelOrderReqV5" id="15" description="Batch cancel order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="orderId" id="2" type="String64"/>  
-          <field name="orderLinkId" id="3" type="String64"/>  
-        </group>  
-      </message>  
-      <message name="BatchCancelOrderRespV5" id="16" description="Batch cancel order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="CommonErrResp" id="17" description="Common error response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-    </sbe:messageSchema>  
+    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
     
 
-## Fast Order Response SBE XML Template
+### Subscribe
+
+  * Topic format: `publicTrade.sbe.<symbol>`
+
+
+
+**Subscribe request**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"  
-                       xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"  
-                       package="order.fast.sbe"  
-                       id="1"  
-                       version="0"  
-                       semanticVersion="1.0.0"  
-                       description="Bybit fast order response SBE schema"  
-                       byteOrder="littleEndian"  
-                       headerType="messageHeader">  
-      <types>  
-        <composite name="messageHeader" description="Template ID and length of message root">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <composite name="varString8" description="Variable length UTF-8 string">  
-          <type name="length" primitiveType="uint8"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-      </types>  
-      <!-- Fast order response: active place/cancel/amend acknowledgements -->  
-      <sbe:message name="FastOrderResp" id="21000">  
-        <!-- Routing / classification -->  
-        <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>  
-        <!-- Side / status / rejection -->  
-        <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>  
-        <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>  
-        <!-- Price / size (mantissas) with exponents -->  
-        <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>  
-        <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>  
-        <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>  
-        <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>  
-        <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>  
-        <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>  
-        <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>  
-        <!-- Timing -->  
-        <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>  
-        <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>  
-        <field id="13" name="seq" type="int64" description="Cross sequence ID"/>  
-        <!-- SymbolID -->  
-        <field id="14" name="symbolID" type="int32" description="Symbol ID"/>  
-        <!-- Order identifiers -->  
-        <data id="100" name="orderId" type="varString8" description="Order ID"/>  
-        <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>  
-      </sbe:message>  
-    </sbe:messageSchema>
+    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    
+
+**Subscription confirmation**
+    
+    
+    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    
+
+## SBE XML Template (Public Trade)
+
+[sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+
+## Field Reference
+
+**Message:** `PublicTradeEvent` (id = 20002)
+
+Field Name| ID| SBE Type| Unit / Format| Notes  
+---|---|---|---|---  
+ts| 1| int64| µs| System generation time at market data service.  
+priceExponent| 2| int8| exponent| Decimal places for price. Display price = priceMantissa × 10^`priceExponent`.  
+sizeExponent| 3| int8| exponent| Decimal places for size. Display size = sizeMantissa × 10^`sizeExponent`.  
+tradeItems| 40| group(`groupSize16Encoding`)| -| Repeating trade items  
+symbol| 55| varString8| UTF-8| 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.  
+  
+### Each tradeItems[i] entry
+
+Field (id)| Type| Description  
+---|---|---  
+fillTime (1)| int64| Trade fill timestamp(µs)  
+price (2)| int64| Apply priceExponent. Display ask size = `size × 10^sizeExponent`.  
+size (3)| int64| Apply sizeExponent. Display ask size = `size × 10^sizeExponent`.  
+seq (4)| int64| Cross sequence id  
+side (5)| SideType(uint8)| Side of taker  
+isBlockTrade (6)| BoolEnum(uint8)| IsBlockTrade(0 = not blockTrade, 1 = blockTrade)  
+isRPI (7)| BoolEnum(uint8)| IsRPI (0 = not RPI, 1 = RPI)  
+execId (100)| varString8| Trade ID  
+  
+#### SideType
+
+  * `0`: UNKOWN
+  * `1`: BUY
+  * `2`: SELL
+  * `254`: NON_REPRESENTABLE
+
+
+
+#### BoolEnum
+
+  * `0`: FALSE
+  * `1`: TRUE
+  * `254`: NON_REPRESENTABLE
+
+
+
+## Integration Script
+
+### Python
+    
+    
+    import json  
+    import struct  
+    import websocket  
+    from typing import Tuple  
+      
+    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    SYMBOL = "BTCUSDT"  
+    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
+      
+      
+    # ---------------- SBE helpers ----------------  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        # display = mantissa * 10^exp  
+        # exp can be negative  
+        return mantissa * (10.0**exp)  
+      
+      
+    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
+        if off + 1 > len(buf):  
+            raise ValueError("varString8: missing length")  
+      
+        ln = buf[off]  
+        off += 1  
+      
+        if off + ln > len(buf):  
+            raise ValueError("varString8: out of range")  
+      
+        s = buf[off : off + ln].decode("utf-8", errors="replace")  
+        off += ln  
+        return s, off  
+      
+      
+    def parse_public_trade_event(buf: bytes) -> dict:  
+        # messageHeader: <HHHH  
+        if len(buf) < 8:  
+            raise ValueError("too short for header")  
+      
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
+        off = 8  
+      
+        if template_id != 20002:  
+            raise ValueError(f"unexpected templateId={template_id}")  
+      
+        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
+        if len(buf) < off + 8 + 1 + 1:  
+            raise ValueError("too short for fixed fields")  
+      
+        ts = struct.unpack_from("<q", buf, off)[0]  
+        off += 8  
+      
+        price_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        size_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        # group header: blockLength(uint16), numInGroup(uint16)  
+        if len(buf) < off + 4:  
+            raise ValueError("too short for group header")  
+      
+        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
+        off += 4  
+      
+        trades = []  
+        for _ in range(num_in_group):  
+            entry_start = off  
+      
+            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
+            fill_time = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            price_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            size_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            seq = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            side = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_block = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_rpi = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            # Skip any future extension bytes in fixed part  
+            fixed_consumed = off - entry_start  
+            if fixed_consumed < grp_block_len:  
+                off += grp_block_len - fixed_consumed  
+            elif fixed_consumed > grp_block_len:  
+                # schema mismatch vs blockLength  
+                raise ValueError(  
+                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
+                )  
+            exec_id, off = read_varstring8(buf, off)  
+            trades.append(  
+                {  
+                    "fillTime": fill_time,  
+                    "priceMantissa": price_m,  
+                    "sizeMantissa": size_m,  
+                    "price": apply_exp(price_m, price_exp),  
+                    "size": apply_exp(size_m, size_exp),  
+                    "seq": seq,  
+                    "side": side,  
+                    "isBlockTrade": bool(is_block),  
+                    "isRPI": bool(is_rpi),  
+                    "execId": exec_id,  
+                }  
+            )  
+      
+        symbol, off = read_varstring8(buf, off)  
+      
+        return {  
+            "header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
+                "version": version,  
+            },  
+            "ts": ts,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "symbol": symbol,  
+            "tradeItems": trades,  
+            "parsed_length": off,  
+        }  
+      
+      
+    # ---------------- WS handlers ----------------  
+    def on_open(ws):  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("subscribed:", TOPIC)  
+      
+      
+    def on_message(ws, message):  
+        if isinstance(message, (bytes, bytearray)):  
+            evt = parse_public_trade_event(message)  
+      
+            # print first trade only (example)  
+            if evt["tradeItems"]:  
+                t0 = evt["tradeItems"][0]  
+                print(  
+                    evt["symbol"],  
+                    "trades=",  
+                    len(evt["tradeItems"]),  
+                    "first:",  
+                    t0["price"],  
+                    "@",  
+                    t0["size"],  
+                    "seq=",  
+                    t0["seq"],  
+                )  
+        else:  
+            print("TEXT:", message)  
+      
+      
+    def on_error(ws, err):  
+        print("WS error:", err)  
+      
+      
+    def on_close(ws, *_):  
+        print("closed")  
+      
+      
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        ws = websocket.WebSocketApp(  
+            WS_URL,  
+            on_open=on_open,  
+            on_message=on_message,  
+            on_error=on_error,  
+            on_close=on_close,  
+        )  
+        ws.run_forever(ping_interval=20, ping_timeout=10)  
+    
+
+### Golang
+    
+    
+    package main  
+      
+    import (  
+            "encoding/binary"  
+            "encoding/json"  
+            "fmt"  
+            "log"  
+            "math"  
+            "time"  
+      
+            "github.com/gorilla/websocket"  
+    )  
+      
+    const (  
+            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            Symbol = "BTCUSDT"  
+            Topic  = "publicTrade.sbe." + Symbol  
+    )  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+            return float64(mantissa) * math.Pow10(int(exp))  
+    }  
+      
+    func readVarString8(buf []byte, off int) (string, int, error) {  
+            if off+1 > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: missing length")  
+            }  
+            ln := int(buf[off])  
+            off++  
+            if off+ln > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: out of range")  
+            }  
+            s := string(buf[off : off+ln])  
+            off += ln  
+            return s, off, nil  
+    }  
+      
+    type TradeItem struct {  
+            FillTime     int64   `json:"fillTime"`  
+            PriceMant    int64   `json:"priceMantissa"`  
+            SizeMant     int64   `json:"sizeMantissa"`  
+            Price        float64 `json:"price"`  
+            Size         float64 `json:"size"`  
+            Seq          int64   `json:"seq"`  
+            Side         uint8   `json:"side"`  
+            IsBlockTrade bool    `json:"isBlockTrade"`  
+            IsRPI        bool    `json:"isRPI"`  
+            ExecID       string   `json:"execId"`  
+    }  
+      
+    type PublicTradeEvent struct {  
+            Header struct {  
+                    BlockLength uint16 `json:"blockLength"`  
+                    TemplateID  uint16 `json:"templateId"`  
+                    SchemaID    uint16 `json:"schemaId"`  
+                    Version     uint16 `json:"version"`  
+            } `json:"header"`  
+      
+            Ts            int64       `json:"ts"`  
+            PriceExponent int8        `json:"priceExponent"`  
+            SizeExponent  int8        `json:"sizeExponent"`  
+            TradeItems    []TradeItem `json:"tradeItems"`  
+            Symbol        string      `json:"symbol"`  
+            ParsedLength  int         `json:"parsed_length"`  
+    }  
+      
+    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
+            if len(buf) < 8 {  
+                    return nil, fmt.Errorf("too short for header")  
+            }  
+            off := 0  
+            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
+            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
+            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
+            off += 8  
+      
+            if tid != 20002 {  
+                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
+            }  
+            if off+8+1+1 > len(buf) {  
+                    return nil, fmt.Errorf("too short for fixed fields")  
+            }  
+            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
+            off += 8  
+            priceExp := int8(buf[off])  
+            off++  
+            sizeExp := int8(buf[off])  
+            off++  
+      
+            // group header  
+            if off+4 > len(buf) {  
+                    return nil, fmt.Errorf("too short for group header")  
+            }  
+            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
+            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            off += 4  
+      
+            items := make([]TradeItem, 0, int(numInGroup))  
+            for i := 0; i < int(numInGroup); i++ {  
+                    entryStart := off  
+      
+                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
+                    if off+needMin > len(buf) {  
+                            return nil, fmt.Errorf("too short for trade entry %d", i)  
+                    }  
+      
+                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+      
+                    side := uint8(buf[off]); off++  
+                    isBlock := uint8(buf[off]); off++  
+                    isRpi := uint8(buf[off]); off++  
+      
+                    fixedConsumed := off - entryStart  
+                    if fixedConsumed < int(grpBlockLen) {  
+                            off += int(grpBlockLen) - fixedConsumed  
+                    } else if fixedConsumed > int(grpBlockLen) {  
+                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
+                    }  
+      
+                     execID, off2, err := readVarString8(buf, off)  
+                    if err != nil {  
+                            return nil, err  
+                    }  
+                    off = off2  
+      
+      
+                    items = append(items, TradeItem{  
+                            FillTime:     fillTime,  
+                            PriceMant:    priceM,  
+                            SizeMant:     sizeM,  
+                            Price:        applyExp(priceM, priceExp),  
+                            Size:         applyExp(sizeM, sizeExp),  
+                            Seq:          seq,  
+                            Side:         side,  
+                            IsBlockTrade: isBlock != 0,  
+                            IsRPI:        isRpi != 0,  
+                            ExecID:       execID,  
+                    })  
+            }  
+      
+            symbol, off2, err := readVarString8(buf, off)  
+            if err != nil {  
+                    return nil, err  
+            }  
+            off = off2  
+      
+            evt := &PublicTradeEvent{  
+                    Ts:            ts,  
+                    PriceExponent: priceExp,  
+                    SizeExponent:  sizeExp,  
+                    TradeItems:    items,  
+                    Symbol:        symbol,  
+                    ParsedLength:  off,  
+            }  
+            evt.Header.BlockLength = blk  
+            evt.Header.TemplateID = tid  
+            evt.Header.SchemaID = sid  
+            evt.Header.Version = ver  
+            return evt, nil  
+    }  
+      
+    func main() {  
+            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
+            c, _, err := d.Dial(WSURL, nil)  
+            if err != nil {  
+                    log.Fatal(err)  
+            }  
+            defer c.Close()  
+      
+            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
+            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
+                    log.Fatal(err)  
+            }  
+            log.Println("subscribed:", Topic)  
+      
+            for {  
+                    mt, msg, err := c.ReadMessage()  
+                    if err != nil {  
+                            log.Fatal(err)  
+                    }  
+                    if mt == websocket.BinaryMessage {  
+                            evt, err := parsePublicTradeEvent(msg)  
+                            if err != nil {  
+                                    log.Println("decode error:", err)  
+                                    continue  
+                            }  
+                            if len(evt.TradeItems) > 0 {  
+                                    t0 := evt.TradeItems[0]  
+                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
+                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
+                            }  
+                    } else {  
+                            log.Println("TEXT:", string(msg))  
+                    }  
+            }  
+    }
 
 ---
 
-# SBE 基本信息
+# SBE Public Trade 接入指南
 
-僅限 MMWS / Gateway
+## 總覽
 
-本節中所描述的所有基於 SBE 的行情資料頻道，只能透過 **Market Maker WebSocket (MMWS) / Market Maker Gateway (GW)** 基礎設施使用。
-
-如需接入方式與架構細節，請參考官方公告: [做市商網關](https://announcements.bybit.com/en/article/introducing-the-market-maker-gateway-for-enhanced-api-connectivity-and-performance-bltfaba80a427cac5e5/)
-
-本頁提供 Bybit **基於 SBE 的市場數據** 通道在 MMWS/GW 環境中的統一介紹。關於各功能的詳細行為與程式碼範例，請參考以下子頁面:
-
-  * **BBO SBE** (Level 1, 含 RPI 欄位)
-  * **Level-50 SBE** (50 檔深度訂單簿快照 + 增量更新)
-  * **PublicTrade SBE** (現貨 & 合約)
-  * **WS下單 SBE** (現貨 & 合約 & 期權)
-  * **Fast Order Response SBE** (超低延遲主動訂單回執)
+  * **Channel:** 僅支援MMWS域名
+  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
+  * **推送頻率** :即時 
+  * 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
 
 
 
-## SBE 服務路徑
+## 流程
 
-  * 現貨行情: `wss://{MMWS url}/v5/public-sbe/spot`
-  * USDT/USDC合約行情: `wss://{MMWS url}/v5/public-sbe/linear`
-  * 幣本位合約行情: `wss://{MMWS url}/v5/public-sbe/inverse`
-  * WS下單: `wss://{MMWS url}/v5/trade-sbe`
-  * Fast Order Response（私有）: `wss://{MMWS url}/v5/private-sbe`
+### Ping / Pong (JSON 控制 frame)
 
-
-
-## 什麼是 SBE?
-
-Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)** :
-
-  * 二進位資料, little-endian 編碼
-  * 儘可能使用固定長度欄位
-  * 明確區分 **訊息標頭 (message header)** 與 **訊息主體 (message body)** 佈局
-  * 高效率解碼, 適用於高頻交易 (HFT) 與做市策略
-
-
-
-與 JSON WebSocket 行情相比, SBE 具備以下優點:
-
-  * 較小的訊息負載 (相較等價 JSON 資料可降低約 30–50%)
-  * 決定性的二進位結構
-  * 微秒級時間戳精度
-  * 在編碼與解碼時皆有較低的 CPU 消耗
-
-
-
-## SBE 連接數限制
-
-  * **現貨:** 每個專屬 MMWS host 限制 1500 條連接.
-  * **合約 (linear + inverse):** 每個專屬 MMWS host 限制 3000 條連接.
-  * 一旦超過連接上限, 新連接會返回 **HTTP 429** 。
-
-
-
-## 盤前合約的推送行為
-
-  * 直到`ContinuousTrading`(連續競價)階段, orderbook 和 publicTrade 數據才會下發
-
-
-
-## 行情 SBE XML Template
+**Send Ping**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="quote.sbe" id="1" version="0" semanticVersion="1.0.0" description="Bybit market data streams SBE message schema" byteOrder="littleEndian" headerType="messageHeader">  
-      <types>  
-        <composite name="messageHeader" description="Template ID and length of message root">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <composite name="varString8" description="Variable length UTF-8 string.">  
-          <type name="length" primitiveType="uint8"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-        <composite name="groupSize16Encoding" description="Repeating group dimensions.">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="numInGroup" primitiveType="uint16"/>  
-        </composite>  
-        <enum name="pkgTypeEnum" encodingType="uint8">  
-          <validValue name="SNAPSHOT">0</validValue>  
-          <validValue name="DELTA">1</validValue>  
-        </enum>  
-        <enum name="SideType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BUY">1</validValue>  
-          <validValue name="SELL">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-        <enum name="BoolEnum" encodingType="uint8">  
-          <validValue name="FALSE">0</validValue>  
-          <validValue name="TRUE">1</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-      </types>  
-      <!-- Stream event for "ob.rpi.1.sbe.<symbol>" channel -->  
-      <sbe:message name="BestOBRpiEvent" id="20000">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="seq" type="int64" description="Cross sequence ID"/>  
-        <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>  
-        <field id="4" name="u" type="int64" description="Update Id"/>  
-        <field id="5" name="askNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask normal price"/>  
-        <field id="6" name="askNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask normal size"/>  
-        <field id="7" name="askRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best ask rpi price"/>  
-        <field id="8" name="askRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best ask rpi size"/>  
-        <field id="9" name="bidNormalPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid normal price"/>  
-        <field id="10" name="bidNormalSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid normal size"/>  
-        <field id="11" name="bidRpiPrice" type="int64" mbx:exponent="priceExponent" description="Mantissa for the best bid rpi price"/>  
-        <field id="12" name="bidRpiSize" type="int64" mbx:exponent="sizeExponent" description="Mantissa for the best bid rpi size"/>  
-        <field id="13" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="14" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-      <!-- Stream event for "ob.50.sbe.<symbol>" channel -->  
-      <sbe:message name="OBL50Event" id="20001">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="seq" type="int64" description="Cross sequence ID"/>  
-        <field id="3" name="cts" type="int64" description="The timestamp in microseconds from the matching engine when this orderbook data is produced."/>  
-        <field id="4" name="u" type="int64" description="Update Id"/>  
-        <field id="5" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="6" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <field id="7" name="pkgType" type="pkgTypeEnum" description="Package type"/>  
-        <group id="40" name="asks" dimensionType="groupSize16Encoding" description="Sell side order book updates">  
-          <field id="1" name="price" type="int64" description="Price mantissa"/>  
-          <field id="2" name="size" type="int64" description="Size mantissa"/>  
-        </group>  
-        <group id="41" name="bids" dimensionType="groupSize16Encoding" description="Buy side order book updates">  
-          <field id="1" name="price" type="int64" description="Price mantissa"/>  
-          <field id="2" name="size" type="int64" description="Size mantissa"/>  
-        </group>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-      <!-- Stream event for "publicTrade.sbe.<symbol>" channel -->  
-      <sbe:message name="PublicTradeEvent" id="20002">  
-        <field id="1" name="ts" type="int64" description="The timestamp in microseconds that the system generates the data"/>  
-        <field id="2" name="priceExponent" type="int8" description="Price exponent for decimal point positioning"/>  
-        <field id="3" name="sizeExponent" type="int8" description="Size exponent for decimal point positioning"/>  
-        <group id="40" name="tradeItems" dimensionType="groupSize16Encoding" description="trade items">  
-          <field id="1" name="fillTime" type="int64" description="The timestamp in microseconds that the order is filled"/>  
-          <field id="2" name="price" type="int64" description="Price mantissa"/>  
-          <field id="3" name="size" type="int64" description="Size mantissa"/>  
-          <field id="4" name="seq" type="int64" description="Cross sequence ID"/>  
-          <field id="5" name="side" type="SideType" description="Side of taker"/>  
-          <field id="6" name="isBlockTrade" type="BoolEnum" description="Whether it is a block trade order or not"/>  
-          <field id="7" name="isRPI" type="BoolEnum" description="Whether it is a RPI trade or not"/>  
-          <data id="100" name="execId" type="varString8" description="Trade ID"/>  
-        </group>  
-        <data id="55" name="symbol" type="varString8"/>  
-      </sbe:message>  
-    </sbe:messageSchema>  
+    {"req_id": "100001", "op": "ping"}  
     
 
-## 交易 SBE XML Template
+**Receive Pong**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" package="order.trading.api.sbe" id="2" version="1" semanticVersion="1.0.0" description="Order Trading API SBE Schema" byteOrder="littleEndian">  
-      <types>  
-        <!-- 标准消息头 -->  
-        <composite name="messageHeader" description="Standard message header">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <!-- Group尺寸编码 -->  
-        <composite name="groupSize16Encoding" description="Repeating group dimensions.">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="numInGroup" primitiveType="uint16"/>  
-        </composite>  
-        <!-- 字符串类型 -->  
-        <type name="String8" primitiveType="char" length="8"/>  
-        <type name="String16" primitiveType="char" length="16"/>  
-        <type name="String32" primitiveType="char" length="32"/>  
-        <type name="String64" primitiveType="char" length="64"/>  
-        <!-- 变长字符串 -->  
-        <composite name="varString16" description="Variable length UTF-8 string">  
-          <type name="length" primitiveType="uint16"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-        <!-- Decimal64 类型 -->  
-        <composite name="Decimal64" description="Decimal floating point number">  
-          <type name="exponent" primitiveType="int8"/>  
-          <type name="mantissa" primitiveType="int64"/>  
-        </composite>  
-        <!-- 枚举类型定义 -->  
-        <enum name="CategoryType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="SPOT">1</validValue>  
-          <validValue name="LINEAR">2</validValue>  
-          <validValue name="INVERSE">3</validValue>  
-          <validValue name="OPTION">4</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="PositionIdxType" encodingType="uint8">  
-          <validValue name="ONE_WAY">0</validValue>  
-          <validValue name="HEDGE_BUY">1</validValue>  
-          <validValue name="HEDGE_SELL">2</validValue>  
-          <validValue name="UNKNOWN">253</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="OrderType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="MARKET">1</validValue>  
-          <validValue name="LIMIT">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="SideType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BUY">1</validValue>  
-          <validValue name="SELL">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="TimeInForceType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="GOOD_TILL_CANCEL">1</validValue>  
-          <validValue name="POST_ONLY">2</validValue>  
-          <validValue name="IMMEDIATE_OR_CANCEL">3</validValue>  
-          <validValue name="FILL_OR_KILL">4</validValue>  
-          <validValue name="RPI">5</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="SmpType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="CANCEL_TAKER">1</validValue>  
-          <validValue name="CANCEL_MAKER">2</validValue>  
-          <validValue name="CANCEL_BOTH">3</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="MarketUnitType" encodingType="uint8">  
-          <validValue name="UNKNOWN">0</validValue>  
-          <validValue name="BASE_COIN">1</validValue>  
-          <validValue name="QUOTE_COIN">2</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-          <sbe:metaAttribute name="sbe:unknownName" value="UNKNOWN"/>  
-        </enum>  
-        <enum name="BoolEnum" encodingType="uint8">  
-          <validValue name="FALSE">0</validValue>  
-          <validValue name="TRUE">1</validValue>  
-          <validValue name="NON_REPRESENTABLE">254</validValue>  
-        </enum>  
-        <!-- API请求头 -->  
-        <composite name="ApiRequestHeader" description="API Request header">  
-          <type name="reqId" primitiveType="char" length="64"/>  
-          <type name="timestamp" primitiveType="uint64"/>  
-          <type name="recvWindow" primitiveType="uint32"/>  
-          <type name="referer" primitiveType="char" length="64"/>  
-        </composite>  
-        <!-- 响应头 -->  
-        <composite name="ApiRespHeader" description="Response header">  
-          <type name="reqId" primitiveType="char" length="64"/>  
-          <type name="connId" primitiveType="char" length="64"/>  
-          <type name="traceId" primitiveType="char" length="64"/>  
-          <type name="timeNow" primitiveType="int64"/>  
-          <type name="inTime" primitiveType="int64"/>  
-          <type name="bapiLimit" primitiveType="int64"/>  
-          <type name="bapiLimitStatus" primitiveType="int64"/>  
-          <type name="bapiLimitResetTimestamp" primitiveType="int64"/>  
-        </composite>  
-        <!-- 通用订单响应数据 -->  
-        <composite name="CommonOrderRespData" description="Common order response data">  
-          <type name="orderId" primitiveType="char" length="64"/>  
-          <type name="orderLinkId" primitiveType="char" length="64"/>  
-        </composite>  
-      </types>  
-      <!-- 消息定义 -->  
-      <!-- 认证消息 -->  
-      <message name="AuthReq" id="1" description="Authentication request">  
-        <field name="reqId" id="1" type="String64"/>  
-        <field name="apiKey" id="2" type="String64"/>  
-        <field name="expires" id="3" type="uint64"/>  
-        <field name="signature" id="4" type="String64"/>  
-      </message>  
-      <message name="AuthResp" id="2" description="Authentication response">  
-        <field name="reqId" id="1" type="String64"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="connId" id="3" type="String64"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <!-- Ping/Pong 心跳消息 -->  
-      <message name="PingReq" id="3" description="Ping request">  
-        <field name="timestamp" id="1" type="uint64"/>  
-      </message>  
-      <message name="PongResp" id="4" description="Pong response">  
-        <field name="timestamp" id="1" type="uint64"/>  
-        <field name="pongTime" id="2" type="uint64"/>  
-      </message>  
-      <!-- 交易消息 -->  
-      <message name="CreateOrderReqV5" id="5" description="Create order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="side" id="4" type="SideType"/>  
-        <field name="orderType" id="5" type="OrderType"/>  
-        <field name="qty" id="6" type="Decimal64"/>  
-        <field name="price" id="7" type="Decimal64"/>  
-        <field name="orderLinkId" id="8" type="String64"/>  
-        <field name="timeInForce" id="9" type="TimeInForceType"/>  
-        <field name="positionIdx" id="10" type="PositionIdxType"/>  
-        <field name="marketUnit" id="11" type="MarketUnitType"/>  
-        <field name="isLeverage" id="12" type="BoolEnum"/>  
-        <field name="reduceOnly" id="13" type="BoolEnum"/>  
-        <field name="closeOnTrigger" id="14" type="BoolEnum"/>  
-        <field name="mmp" id="15" type="BoolEnum"/>  
-        <field name="smpType" id="16" type="SmpType"/>  
-      </message>  
-      <message name="CreateOrderRespV5" id="6" description="Create order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="ReplaceOrderReqV5" id="7" description="Replace order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="orderId" id="4" type="String64"/>  
-        <field name="orderLinkId" id="5" type="String64"/>  
-        <field name="qty" id="6" type="Decimal64"/>  
-        <field name="price" id="7" type="Decimal64"/>  
-      </message>  
-      <message name="ReplaceOrderRespV5" id="8" description="Replace order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <message name="CancelOrderReqV5" id="9" description="Cancel order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <field name="symbolId" id="3" type="int64"/>  
-        <field name="orderId" id="4" type="String64"/>  
-        <field name="orderLinkId" id="5" type="String64"/>  
-      </message>  
-      <message name="CancelOrderRespV5" id="10" description="Cancel order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <field name="result" id="3" type="CommonOrderRespData"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-      <!-- 批量操作消息 -->  
-      <message name="BatchCreateOrderReqV5" id="11" description="Batch create order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="side" id="2" type="SideType"/>  
-          <field name="orderType" id="3" type="OrderType"/>  
-          <field name="qty" id="4" type="Decimal64"/>  
-          <field name="price" id="5" type="Decimal64"/>  
-          <field name="orderLinkId" id="6" type="String64"/>  
-          <field name="timeInForce" id="7" type="TimeInForceType"/>  
-          <field name="positionIdx" id="8" type="PositionIdxType"/>  
-          <field name="marketUnit" id="9" type="MarketUnitType"/>  
-          <field name="isLeverage" id="10" type="BoolEnum"/>  
-          <field name="reduceOnly" id="11" type="BoolEnum"/>  
-          <field name="closeOnTrigger" id="12" type="BoolEnum"/>  
-          <field name="mmp" id="13" type="BoolEnum"/>  
-          <field name="smpType" id="14" type="SmpType"/>  
-        </group>  
-      </message>  
-      <message name="BatchCreateOrderRespV5" id="12" description="Batch create order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="BatchReplaceOrderReqV5" id="13" description="Batch replace order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="orderId" id="2" type="String64"/>  
-          <field name="orderLinkId" id="3" type="String64"/>  
-          <field name="qty" id="4" type="Decimal64"/>  
-          <field name="price" id="5" type="Decimal64"/>  
-        </group>  
-      </message>  
-      <message name="BatchReplaceOrderRespV5" id="14" description="Batch replace order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="BatchCancelOrderReqV5" id="15" description="Batch cancel order request">  
-        <field name="header" id="1" type="ApiRequestHeader"/>  
-        <field name="category" id="2" type="CategoryType"/>  
-        <group name="request" id="200" dimensionType="groupSize16Encoding">  
-          <field name="symbolId" id="1" type="int64"/>  
-          <field name="orderId" id="2" type="String64"/>  
-          <field name="orderLinkId" id="3" type="String64"/>  
-        </group>  
-      </message>  
-      <message name="BatchCancelOrderRespV5" id="16" description="Batch cancel order response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <group name="list" id="100" dimensionType="groupSize16Encoding">  
-          <field name="code" id="1" type="int32"/>  
-          <field name="category" id="2" type="CategoryType"/>  
-          <field name="symbolId" id="3" type="int64"/>  
-          <field name="orderId" id="4" type="String64"/>  
-          <field name="orderLinkId" id="5" type="String64"/>  
-          <data name="msg" id="20" type="varString16"/>  
-        </group>  
-        <data name="retMsg" id="200" type="varString16"/>  
-      </message>  
-      <message name="CommonErrResp" id="17" description="Common error response">  
-        <field name="respHeader" id="1" type="ApiRespHeader"/>  
-        <field name="retCode" id="2" type="int32"/>  
-        <data name="retMsg" id="20" type="varString16"/>  
-      </message>  
-    </sbe:messageSchema>  
+    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
     
 
-## Fast Order Response SBE XML 模板
+### 訂閱
+
+  * Topic format: `publicTrade.sbe.<symbol>`
+
+
+
+**訂閱示例**
     
     
-    <?xml version="1.0" encoding="UTF-8"?>  
-    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"  
-                       xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro"  
-                       package="order.fast.sbe"  
-                       id="1"  
-                       version="0"  
-                       semanticVersion="1.0.0"  
-                       description="Bybit fast order response SBE schema"  
-                       byteOrder="littleEndian"  
-                       headerType="messageHeader">  
-      <types>  
-        <composite name="messageHeader" description="Template ID and length of message root">  
-          <type name="blockLength" primitiveType="uint16"/>  
-          <type name="templateId" primitiveType="uint16"/>  
-          <type name="schemaId" primitiveType="uint16"/>  
-          <type name="version" primitiveType="uint16"/>  
-        </composite>  
-        <composite name="varString8" description="Variable length UTF-8 string">  
-          <type name="length" primitiveType="uint8"/>  
-          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
-        </composite>  
-      </types>  
-      <!-- Fast order response: active place/cancel/amend acknowledgements -->  
-      <sbe:message name="FastOrderResp" id="21000">  
-        <!-- Routing / classification -->  
-        <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>  
-        <!-- Side / status / rejection -->  
-        <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>  
-        <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>  
-        <!-- Price / size (mantissas) with exponents -->  
-        <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>  
-        <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>  
-        <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>  
-        <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>  
-        <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>  
-        <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>  
-        <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Spot market buy only; otherwise 0"/>  
-        <!-- Timing -->  
-        <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>  
-        <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>  
-        <field id="13" name="seq" type="int64" description="Cross sequence ID"/>  
-        <!-- SymbolID -->  
-        <field id="14" name="symbolID" type="int32" description="Symbol ID"/>  
-        <!-- Order identifiers -->  
-        <data id="100" name="orderId" type="varString8" description="Order ID"/>  
-        <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>  
-      </sbe:message>  
-    </sbe:messageSchema>
+    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    
+
+**訂閱回報**
+    
+    
+    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    
+
+## SBE XML 模板 (Public Trade)
+
+[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
+
+## 欄位參考
+
+**Message:** `PublicTradeEvent` (id = 20002)
+
+欄位名稱| ID| SBE 型別| 單位 / 格式| 備註  
+---|---|---|---|---  
+ts| 1| int64| µs| 行情服务產生資料的系統時間戳  
+priceExponent| 2| int8| exponent| 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent`  
+sizeExponent| 3| int8| exponent| 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent`  
+tradeItems| 40| group  
+(`groupSize16Encoding`)| -| 重複的成交項目(Repeating trade items)  
+symbol| 55| varString8| UTF-8| 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"`  
+  
+### 每個 tradeItems[i] 條目
+
+欄位(id)| 型別| 說明  
+---|---|---  
+fillTime(1)| int64| 成交撮合時間戳(µs)  
+price(2)| int64| 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。  
+size(3)| int64| 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。  
+seq(4)| int64| 撮合序列 ID  
+side(5)| SideType(uint8)| taker單方向  
+isBlockTrade(6)| BoolEnum(uint8)| 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade)  
+isRPI(7)| BoolEnum(uint8)| 是否為 RPI(0 = 非 RPI,1 = RPI)  
+execId(100)| varString8| 成交 ID  
+  
+#### SideType
+
+  * `0`: UNKOWN
+  * `1`: BUY
+  * `2`: SELL
+  * `254`: NON_REPRESENTABLE
+
+
+
+#### BoolEnum
+
+  * `0`: FALSE
+  * `1`: TRUE
+  * `254`: NON_REPRESENTABLE
+
+
+
+## 接入示例
+
+### Python
+    
+    
+    import json  
+    import struct  
+    import websocket  
+    from typing import Tuple  
+      
+    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    SYMBOL = "BTCUSDT"  
+    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
+      
+      
+    # ---------------- SBE helpers ----------------  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        # display = mantissa * 10^exp  
+        # exp can be negative  
+        return mantissa * (10.0**exp)  
+      
+      
+    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
+        if off + 1 > len(buf):  
+            raise ValueError("varString8: missing length")  
+      
+        ln = buf[off]  
+        off += 1  
+      
+        if off + ln > len(buf):  
+            raise ValueError("varString8: out of range")  
+      
+        s = buf[off : off + ln].decode("utf-8", errors="replace")  
+        off += ln  
+        return s, off  
+      
+      
+    def parse_public_trade_event(buf: bytes) -> dict:  
+        # messageHeader: <HHHH  
+        if len(buf) < 8:  
+            raise ValueError("too short for header")  
+      
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
+        off = 8  
+      
+        if template_id != 20002:  
+            raise ValueError(f"unexpected templateId={template_id}")  
+      
+        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
+        if len(buf) < off + 8 + 1 + 1:  
+            raise ValueError("too short for fixed fields")  
+      
+        ts = struct.unpack_from("<q", buf, off)[0]  
+        off += 8  
+      
+        price_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        size_exp = struct.unpack_from("<b", buf, off)[0]  
+        off += 1  
+      
+        # group header: blockLength(uint16), numInGroup(uint16)  
+        if len(buf) < off + 4:  
+            raise ValueError("too short for group header")  
+      
+        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
+        off += 4  
+      
+        trades = []  
+        for _ in range(num_in_group):  
+            entry_start = off  
+      
+            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
+            fill_time = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            price_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            size_m = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            seq = struct.unpack_from("<q", buf, off)[0]  
+            off += 8  
+      
+            side = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_block = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            is_rpi = struct.unpack_from("<B", buf, off)[0]  
+            off += 1  
+      
+            # Skip any future extension bytes in fixed part  
+            fixed_consumed = off - entry_start  
+            if fixed_consumed < grp_block_len:  
+                off += grp_block_len - fixed_consumed  
+            elif fixed_consumed > grp_block_len:  
+                # schema mismatch vs blockLength  
+                raise ValueError(  
+                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
+                )  
+            exec_id, off = read_varstring8(buf, off)  
+            trades.append(  
+                {  
+                    "fillTime": fill_time,  
+                    "priceMantissa": price_m,  
+                    "sizeMantissa": size_m,  
+                    "price": apply_exp(price_m, price_exp),  
+                    "size": apply_exp(size_m, size_exp),  
+                    "seq": seq,  
+                    "side": side,  
+                    "isBlockTrade": bool(is_block),  
+                    "isRPI": bool(is_rpi),  
+                    "execId": exec_id,  
+                }  
+            )  
+      
+        symbol, off = read_varstring8(buf, off)  
+      
+        return {  
+            "header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
+                "version": version,  
+            },  
+            "ts": ts,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "symbol": symbol,  
+            "tradeItems": trades,  
+            "parsed_length": off,  
+        }  
+      
+      
+    # ---------------- WS handlers ----------------  
+    def on_open(ws):  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("subscribed:", TOPIC)  
+      
+      
+    def on_message(ws, message):  
+        if isinstance(message, (bytes, bytearray)):  
+            evt = parse_public_trade_event(message)  
+      
+            # print first trade only (example)  
+            if evt["tradeItems"]:  
+                t0 = evt["tradeItems"][0]  
+                print(  
+                    evt["symbol"],  
+                    "trades=",  
+                    len(evt["tradeItems"]),  
+                    "first:",  
+                    t0["price"],  
+                    "@",  
+                    t0["size"],  
+                    "seq=",  
+                    t0["seq"],  
+                )  
+        else:  
+            print("TEXT:", message)  
+      
+      
+    def on_error(ws, err):  
+        print("WS error:", err)  
+      
+      
+    def on_close(ws, *_):  
+        print("closed")  
+      
+      
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        ws = websocket.WebSocketApp(  
+            WS_URL,  
+            on_open=on_open,  
+            on_message=on_message,  
+            on_error=on_error,  
+            on_close=on_close,  
+        )  
+        ws.run_forever(ping_interval=20, ping_timeout=10)    
+    
+
+### Golang
+    
+    
+    package main  
+      
+    import (  
+            "encoding/binary"  
+            "encoding/json"  
+            "fmt"  
+            "log"  
+            "math"  
+            "time"  
+      
+            "github.com/gorilla/websocket"  
+    )  
+      
+    const (  
+            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            Symbol = "BTCUSDT"  
+            Topic  = "publicTrade.sbe." + Symbol  
+    )  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+            return float64(mantissa) * math.Pow10(int(exp))  
+    }  
+      
+    func readVarString8(buf []byte, off int) (string, int, error) {  
+            if off+1 > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: missing length")  
+            }  
+            ln := int(buf[off])  
+            off++  
+            if off+ln > len(buf) {  
+                    return "", off, fmt.Errorf("varString8: out of range")  
+            }  
+            s := string(buf[off : off+ln])  
+            off += ln  
+            return s, off, nil  
+    }  
+      
+    type TradeItem struct {  
+            FillTime     int64   `json:"fillTime"`  
+            PriceMant    int64   `json:"priceMantissa"`  
+            SizeMant     int64   `json:"sizeMantissa"`  
+            Price        float64 `json:"price"`  
+            Size         float64 `json:"size"`  
+            Seq          int64   `json:"seq"`  
+            Side         uint8   `json:"side"`  
+            IsBlockTrade bool    `json:"isBlockTrade"`  
+            IsRPI        bool    `json:"isRPI"`  
+            ExecID       string   `json:"execId"`  
+    }  
+      
+    type PublicTradeEvent struct {  
+            Header struct {  
+                    BlockLength uint16 `json:"blockLength"`  
+                    TemplateID  uint16 `json:"templateId"`  
+                    SchemaID    uint16 `json:"schemaId"`  
+                    Version     uint16 `json:"version"`  
+            } `json:"header"`  
+      
+            Ts            int64       `json:"ts"`  
+            PriceExponent int8        `json:"priceExponent"`  
+            SizeExponent  int8        `json:"sizeExponent"`  
+            TradeItems    []TradeItem `json:"tradeItems"`  
+            Symbol        string      `json:"symbol"`  
+            ParsedLength  int         `json:"parsed_length"`  
+    }  
+      
+    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
+            if len(buf) < 8 {  
+                    return nil, fmt.Errorf("too short for header")  
+            }  
+            off := 0  
+            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
+            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
+            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
+            off += 8  
+      
+            if tid != 20002 {  
+                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
+            }  
+            if off+8+1+1 > len(buf) {  
+                    return nil, fmt.Errorf("too short for fixed fields")  
+            }  
+            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
+            off += 8  
+            priceExp := int8(buf[off])  
+            off++  
+            sizeExp := int8(buf[off])  
+            off++  
+      
+            // group header  
+            if off+4 > len(buf) {  
+                    return nil, fmt.Errorf("too short for group header")  
+            }  
+            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
+            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
+            off += 4  
+      
+            items := make([]TradeItem, 0, int(numInGroup))  
+            for i := 0; i < int(numInGroup); i++ {  
+                    entryStart := off  
+      
+                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
+                    if off+needMin > len(buf) {  
+                            return nil, fmt.Errorf("too short for trade entry %d", i)  
+                    }  
+      
+                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
+      
+                    side := uint8(buf[off]); off++  
+                    isBlock := uint8(buf[off]); off++  
+                    isRpi := uint8(buf[off]); off++  
+      
+                    fixedConsumed := off - entryStart  
+                    if fixedConsumed < int(grpBlockLen) {  
+                            off += int(grpBlockLen) - fixedConsumed  
+                    } else if fixedConsumed > int(grpBlockLen) {  
+                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
+                    }  
+      
+                     execID, off2, err := readVarString8(buf, off)  
+                    if err != nil {  
+                            return nil, err  
+                    }  
+                    off = off2  
+      
+      
+                    items = append(items, TradeItem{  
+                            FillTime:     fillTime,  
+                            PriceMant:    priceM,  
+                            SizeMant:     sizeM,  
+                            Price:        applyExp(priceM, priceExp),  
+                            Size:         applyExp(sizeM, sizeExp),  
+                            Seq:          seq,  
+                            Side:         side,  
+                            IsBlockTrade: isBlock != 0,  
+                            IsRPI:        isRpi != 0,  
+                            ExecID:       execID,  
+                    })  
+            }  
+      
+            symbol, off2, err := readVarString8(buf, off)  
+            if err != nil {  
+                    return nil, err  
+            }  
+            off = off2  
+      
+            evt := &PublicTradeEvent{  
+                    Ts:            ts,  
+                    PriceExponent: priceExp,  
+                    SizeExponent:  sizeExp,  
+                    TradeItems:    items,  
+                    Symbol:        symbol,  
+                    ParsedLength:  off,  
+            }  
+            evt.Header.BlockLength = blk  
+            evt.Header.TemplateID = tid  
+            evt.Header.SchemaID = sid  
+            evt.Header.Version = ver  
+            return evt, nil  
+    }  
+      
+    func main() {  
+            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
+            c, _, err := d.Dial(WSURL, nil)  
+            if err != nil {  
+                    log.Fatal(err)  
+            }  
+            defer c.Close()  
+      
+            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
+            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
+                    log.Fatal(err)  
+            }  
+            log.Println("subscribed:", Topic)  
+      
+            for {  
+                    mt, msg, err := c.ReadMessage()  
+                    if err != nil {  
+                            log.Fatal(err)  
+                    }  
+                    if mt == websocket.BinaryMessage {  
+                            evt, err := parsePublicTradeEvent(msg)  
+                            if err != nil {  
+                                    log.Println("decode error:", err)  
+                                    continue  
+                            }  
+                            if len(evt.TradeItems) > 0 {  
+                                    t0 := evt.TradeItems[0]  
+                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
+                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
+                            }  
+                    } else {  
+                            log.Println("TEXT:", string(msg))  
+                    }  
+            }  
+    }

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api
 anchor_id: public-data-rest-api
 api_type: REST
-updated_at: 2026-05-27 19:36:06.606074
+updated_at: 2026-06-28 19:37:52.561101
 ---
 
 # REST API
@@ -277,14 +277,14 @@ instCategory | String | The asset category of the instrument’s base asset (the
 upcChg | Array of objects | Upcoming changes. It is [] when there is no upcoming change.  
 > param | String | The parameter name to be updated.   
 `tickSz`  
-`minSz`  
+`minSz`: For `FUTURES`/`SWAP`, `lotSz` will be modified synchronously.  
 `maxMktSz`  
 > newValue | String | The parameter value that will replace the current one.  
 > effTime | String | Effective time. Unix timestamp format in milliseconds, e.g. `1597026383085`  
 When a new contract is going to be listed, the instrument data of the new contract will be available with status preopen. When a product is going to be delisted (e.g. when a FUTURES contract is settled or OPTION contract is exercised), the instrument will not be available   
 listTime and contTdSwTime  
 For spot symbols listed through a call auction or pre-open, listTime represents the start time of the auction or pre-open, and contTdSwTime indicates the end of the auction or pre-open and the start of continuous trading. For other scenarios, listTime will mark the beginning of continuous trading, and contTdSwTime will return an empty value "".  state  
-The state will always change from `preopen` to `live` when the listTime is reached.  
+For `SPOT`, `MARGIN`, `SWAP`, and `FUTURES`, the state changes from `preopen` to `live` when the `listTime` is reached. For `OPTION` contracts, the state may change to `live` slightly after `listTime` due to internal processing. It is recommended to verify that `state` is `live` before placing orders.  
 When a product is going to be delisted (e.g. when a FUTURES contract is settled or OPTION contract is exercised), the instrument will not be available.  Instruments REST endpoints and WebSocket channel will update `expTime` once the delisting announcement is published.  
 Instruments REST endpoint and WebSocket channel will update `listTime` once the listing announcement is published:  
 1\. For `SPOT/MARGIN/SWAP`, this event is only applicable to `instType`, `instId`, `listTime`, `state`.  
@@ -1172,6 +1172,8 @@ instFamily | String | Yes | Instrument family, only applicable to `OPTION`
   
 expTime | String | No | Contract expiry date, the format is "YYMMDD", e.g. "200527"  
   
+**Note** : This endpoint may not return data for every option listed in `/api/v5/public/instruments`. Data can be absent in two cases: 1\. The option is listed but not yet tradeable (e.g. supplemental options may not become tradeable until a scheduled time; data will not be available before trading opens). 2\. Implied volatility surface fitting fails due to insufficient market quotes. This is more likely to occur in demo trading; in live trading, market maker quotes are generally available to ensure fitting succeeds.
+
 > Response Example
     
     
@@ -1812,11 +1814,10 @@ instType | String | Yes | Instrument type
 `FUTURES`  
 `OPTION`  
 type | String | No | Type  
-`regular_update`   
 `liquidation_balance_deposit`  
 `bankruptcy_loss`  
-`platform_revenue`   
-`adl`: ADL historical data   
+~~`platform_revenue`~~(Deprecated, returns empty values. To be removed in a future update)   
+~~`adl`~~(Deprecated, returns empty values. To be removed in a future update)   
 The default is `all type`  
 instFamily | String | Conditional | Instrument family  
 Required for `FUTURES`/`SWAP`/`OPTION`  
@@ -1835,13 +1836,13 @@ limit | String | No | Number of results per request. The maximum is `100`; The d
                 "details": [
                     {
                         "adlType": "",
-                        "amt": "",
-                        "balance": "1343.1308",
+                        "amt": "1343.1308",
+                        "balance": "1369179138.7489",
                         "ccy": "ETH",
                         "maxBal": "",
                         "maxBalTs": "",
                         "ts": "1704883083000",
-                        "type": "regular_update"
+                        "type": "liquidation_balance_deposit"
                     }
                 ],
                 "instFamily": "ETH-USD",
@@ -1864,23 +1865,27 @@ instType | String | Instrument type
 details | Array of objects | security fund data  
 > balance | String | The balance of security fund  
 > amt | String | The change in the balance of security fund   
-Applicable when type is `liquidation_balance_deposit`, `bankruptcy_loss` or `platform_revenue`  
+Applicable when type is `liquidation_balance_deposit` or `bankruptcy_loss`  
 > ccy | String | The currency of security fund  
 > type | String | The type of security fund  
-> maxBal | String | Maximum security fund balance in the past eight hours   
-Only applicable when type is `adl`  
-> maxBalTs | String | Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g. `1597026383085`   
-Only applicable when type is `adl`  
+`liquidation_balance_deposit`  
+`bankruptcy_loss`  
+~~`platform_revenue`~~(Deprecated, returns empty values)  
+~~`adl`~~(Deprecated, returns empty values)  
+> maxBal | String | ~~Maximum security fund balance in the past eight hours  
+Only applicable when type is `adl`~~(Deprecated, returns empty values)  
+> maxBalTs | String | ~~Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g.`1597026383085`   
+Only applicable when type is `adl`~~(Deprecated, returns empty values)  
 > decRate | String | ~~Real-time security fund decline rate (compare balance and maxBal)  
 Only applicable when type is `adl`~~(Deprecated)  
-> adlType | String | ADL related events   
+> adlType | String | ~~ADL related events  
 `rate_adl_start`: ADL begins due to high security fund decline rate   
 `bal_adl_start`: ADL begins due to security fund balance falling   
 `pos_adl_start`：ADL begins due to the volume of liquidation orders falls to a certain level (only applicable to premarket symbols)   
 `adl_end`: ADL ends   
-Only applicable when type is `adl`  
+Only applicable when type is `adl`~~(Deprecated, returns empty values)  
 > ts | String | The update timestamp of security fund. Unix timestamp format in milliseconds, e.g. `1597026383085`  
-The enumeration value `regular_update` of type field is used to present up-to-minute security fund change. The amt field will be used to present the difference of security fund balance when the type field is `liquidation_balance_deposit`, `bankruptcy_loss` or `platform_revenue`, which is generated once per day around 08:00 am (UTC). When type is `regular_update`, the amt field will be returned as "". 
+The `regular_update` type has been removed. The `adl` and `platform_revenue` types are deprecated and currently return empty values; they will be removed in a future update. The `amt` field presents the difference in security fund balance when the `type` is `liquidation_balance_deposit` or `bankruptcy_loss`, which is generated once per day around 08:00 am (UTC). 
 
 ### Unit convert
 
@@ -3179,13 +3184,13 @@ instCategory | String | 标的资产类别（产品ID的第一部分）。例如
 upcChg | Array of objects | 即将变更的参数列表。当没有即将变更的参数时，返回空数组 []  
 > param | String | 即将变更的参数名称。  
 `tickSz`  
-`minSz`  
+`minSz`：若为交割/永续合约（`FUTURES`/`SWAP`），`lotSz` 会同步变更。  
 `maxMktSz`  
 > newValue | String | 即将变更的参数值。  
 > effTime | String | 生效时间。Unix 时间戳格式，例如 `1597026383085`  
 当合约预上线时，状态变更为预上线（即新生成一个合约，新合约会处于预上线状态）；  listTime以及contTdSwTime  
 对于通过集合竞价/提前挂单方式上线的币币，listTime为集合竞价/提前挂单的开始时间，contTdSwTime为集合竞价/提前挂单的结束时间、连续交易的开始时间；对于其他情况及业务线，listTime即为连续交易开始时间，contTdSwTime将返回""  state  
-状态state总是在时间到达listTime时由`preopen`转变为`live`  
+对于`币币`、`杠杆`、`永续`和`交割`，状态state在时间到达listTime时由`preopen`转变为`live`。对于`期权`合约，由于内部处理原因，状态可能在`listTime`之后短暂延迟变为`live`。建议在下单前确认`state`为`live`。  
 当产品下线的时候（如交割合约被交割的时候，期权合约被行权的时候），查询不到该产品  产品下线公告一经发出，接口及频道会更新下线时间(expTime)。  
 产品上线公告一经发出，接口及频道会更新上线时间：  
 1\. 对于币币/杠杆/永续， 该事件仅适用于产品类型(instType), 交易产品ID(instId), 上线时间(listTime), 产品状态(state)字段；  
@@ -4077,6 +4082,8 @@ enabled | Boolean | 限价是否生效
 instFamily | String | 是 | 交易品种，仅适用于期权  
 expTime | String | 否 | 合约到期日，格式为"YYMMDD"，如 "200527"  
   
+**注意** ：本接口返回的数据可能不包含 `/api/v5/public/instruments` 中所有的期权合约。以下两种情况可能导致数据缺失： 1\. 期权已上架但尚未开始交易（例如，补充期权默认在特定时间开始交易，在开始交易之前可能无法获取对应数据）。 2\. 因市场报价不足导致隐含波动率曲面拟合失败。此情况在模拟盘中较易发生；实盘中由于做市商会提供报价，通常可保证拟合成功。
+
 > 返回结果
     
     
@@ -4706,11 +4713,10 @@ instType | String | 是 | 产品类型
 `FUTURES`：交割合约  
 `OPTION`：期权  
 type | String | 否 | 风险保证金类型  
-`regular_update`：定期更新   
 `liquidation_balance_deposit`：强平注入   
 `bankruptcy_loss`：穿仓亏损   
-`platform_revenue`：平台收入注入   
-`adl`：自动减仓历史数据   
+~~`platform_revenue`：平台收入注入~~（已弃用，返回空值。将在后续更新中删除）   
+~~`adl`：自动减仓历史数据~~（已弃用，返回空值。将在后续更新中删除）   
 默认返回全部类型  
 instFamily | String | 可选 | 交易品种  
 `交割`/`永续`/`期权`情况下，`instFamily`必传  
@@ -4729,13 +4735,13 @@ limit | String | 否 | 分页返回的结果集数量，最大为100，不填默
                 "details": [
                     {
                         "adlType": "",
-                        "amt": "",
-                        "balance": "1343.1308",
+                        "amt": "1343.1308",
+                        "balance": "1369179138.7489",
                         "ccy": "ETH",
                         "maxBal": "",
                         "maxBalTs": "",
                         "ts": "1704883083000",
-                        "type": "regular_update"
+                        "type": "liquidation_balance_deposit"
                     }
                 ],
                 "instFamily": "ETH-USD",
@@ -4758,23 +4764,27 @@ instType | String | 产品类型
 details | Array of objects | 风险保证金详情  
 > balance | String | 风险保证金总量  
 > amt | String | 风险保证金更新数量   
-在type为`liquidation_balance_deposit`，`bankruptcy_loss`，`platform_revenue`时适用  
+在type为`liquidation_balance_deposit`或`bankruptcy_loss`时适用  
 > ccy | String | 风险保证金总量对应的币种  
 > type | String | 风险保证金类型  
-> maxBal | String | 过去八小时内的风险保证金余额最大值   
-仅在type为`adl`时适用  
-> maxBalTs | String | 过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`   
-仅在type为`adl`时适用  
+`liquidation_balance_deposit`：强平注入  
+`bankruptcy_loss`：穿仓亏损  
+~~`platform_revenue`：平台收入注入~~（已弃用，返回空值）  
+~~`adl`：自动减仓历史数据~~（已弃用，返回空值）  
+> maxBal | String | ~~过去八小时内的风险保证金余额最大值  
+仅在type为`adl`时适用~~（已弃用，返回空值）  
+> maxBalTs | String | ~~过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如`1597026383085`   
+仅在type为`adl`时适用~~（已弃用，返回空值）  
 > decRate | String | ~~风险保证金实时下降率（balance与maxBal相比较）  
 仅在type为`adl`时适用~~（已弃用）  
-> adlType | String | 关于自动减仓的事件   
+> adlType | String | ~~关于自动减仓的事件  
 `rate_adl_start`：由于风险保证金下降率过高造成的自动减仓开始   
 `bal_adl_start`：由于风险保证金余额下降过高造成的自动减仓开始   
 `pos_adl_start`：由于强平单的规模积累到一定程度的自动减仓开始（仅适用于盘前交易市场）  
 `adl_end`：自动减仓结束   
-仅在type为`adl`时适用  
+仅在type为`adl`时适用~~（已弃用，返回空值）  
 > ts | String | 风险保证金更新时间，Unix时间戳的毫秒数格式，如 `1597026383085`  
-`regular_update` 提供分钟级别的风险保证金余额更新。更新后，amt 字段用于展示 type 为 `liquidation_balance_deposit`， `bankruptcy_loss` 或 `platform_revenue` 时的风险保证金余额差值，数据一天产生一次，每天下午4点左右（UTC 8）更新。当 type 为 `regular_update`时，amt字段将返回""。 
+`regular_update` 类型已被删除。`adl` 和 `platform_revenue` 类型已弃用，当前返回空值；将在后续更新中删除。`amt` 字段用于展示 type 为 `liquidation_balance_deposit` 或 `bankruptcy_loss` 时的风险保证金余额差值，数据一天产生一次，每天下午4点左右（UTC 8）更新。 
 
 ### 张币转换 
 

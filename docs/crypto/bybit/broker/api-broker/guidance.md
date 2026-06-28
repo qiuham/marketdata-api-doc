@@ -2,310 +2,359 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/api-broker/guidance
 api_type: REST
-updated_at: 2026-05-27 19:15:57.673514
+updated_at: 2026-06-28 19:09:39.871242
 ---
 
-# Application Process
+# Get Earning
 
-## 1\. Information Submission
+info
 
-Submit the following information to Bybit Business via this Email: `broker_program@bybit.com`:
-
-  * **Bybit UID** : Used to log in to the OAuth management backend.
-  * **OpenAPI Whitelist IP** : Only applicable to OpenAPI; the OAuth management backend has no IP restrictions.
-
-
-
-* * *
-
-## 2\. Merchant Initialization
-
-  1. **Log in to Bybit** using the corresponding UID.
-  2. **Access the OAuth Admin Portal** :  
-Visit <https://www.bybit.com/app/user/oauth-admin>
-     * Configure **Application Name** , **Email** , upload **logo** , etc.  
-![](/docs/assets/images/oauth-redirect-url-c4a7907e15a702366f747de41cc92c00.jpg)
-  3. **Core Parameter`redirect_uri`**:
-     * Multiple callback addresses can be configured.
-     * The `redirect_uri` passed when invoking the page must be configured in the management backend.
-     * If the passed value does not match the configuration, it defaults to the first address.
-  4. **After Successful Application** :
-     * You will receive `client_id` and `client_secret`.
-     * **Important** : Securely store this information and do not share it with others.
+  * Use exchange broker master account to query
+  * The data can support up to past 1 months until T-1. To extract data from over a month ago, please contact your Relationship Manager
+  * `begin` & `end` are either entered at the same time or not entered, and latest 7 days data are returned by default
 
 
 
-* * *
+> API rate limit: 10 req / sec
 
-## API Integration
+### HTTP Request
 
-### 1\. Construct Authorization Page
-    
-    
-    https://www.bybit.com/en/oauth?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openapi&state={state}  
-    
+GET`/v5/broker/earnings-info`
 
-Parameter| Description  
----|---  
-`client_id`| Obtained after merchant initialization.  
-`response_type`| Fixed value: `code`.  
-`scope`| Pass `openapi`; other values require confirmation with Bybit.  
-`state`| Random string.  
-`redirect_uri`| The address to redirect to after user authorization; must be configured in the management backend.  
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+bizType| false| string| Business type. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT`  
+begin| false| string| Begin date, in the format of YYYYMMDD, e.g, 20231201, search the data from 1st Dec 2023 00:00:00 UTC (include)  
+end| false| string| End date, in the format of YYYYMMDD, e.g, 20231201, search the data before 2nd Dec 2023 00:00:00 UTC (exclude)  
+uid| false| string| 
+
+  * To get results for a specific subaccount: Enter the subaccount UID
+  * To get results for all subaccounts: Leave the field empty
+
   
-* * *
-
-### 2\. Authorization Success Callback
-
-After the user confirms authorization, the page redirects (301) to `redirect_uri` with the parameter `code`.  
-**Example** :  
-If `redirect_uri = https://www.example.com/callback`, the callback URL will be: 
-    
-    
-    https://www.example.com/callback/?response_type=code&code=sSn87036PCFub1g0FGigexSjT&scope=openapi&state=1234abc  
-    
-
-Parameter| Description  
----|---  
-`code`| Core parameter; used by the merchant backend to obtain `access_token`.  
+limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
-* * *
+### Response Parameters
 
-### 3\. Obtain Access Token
+Parameter| Type| Comments  
+---|---|---  
+totalEarningCat| Object| Category statistics for total earning data  
+> spot| array| Object. Earning for Spot trading. If do not have any rebate, keep empty array  
+>> coin| string| Rebate coin name  
+>> earning| string| Rebate amount of the coin  
+> derivatives| array| Object. Earning for Derivatives trading. If do not have any rebate, keep empty array  
+>> coin| string| Rebate coin name  
+>> earning| string| Rebate amount of the coin  
+> options| array| Object. Earning for Option trading. If do not have any rebate, keep empty array  
+>> coin| string| Rebate coin name  
+>> earning| string| Rebate amount of the coin  
+> convert| array| Object. Earning for Convert trading. If do not have any rebate, keep empty array  
+>> coin| string| Rebate coin name  
+>> earning| string| Rebate amount of the coin  
+> total| array| Object. Sum earnings of all categories. If do not have any rebate, keep empty array  
+>> coin| string| Rebate coin name  
+>> earning| string| Rebate amount of the coin  
+details| array| Object. Detailed trading information for each sub UID and each category  
+> userId| string| Sub UID  
+> bizType| string| Business type. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT`  
+> symbol| string| Symbol name  
+> coin| string| Rebate coin name  
+> earning| string| Rebate amount  
+> markupEarning| string| Earning generated from markup fee rate  
+> baseFeeEarning| string| Earning generated from base fee rate  
+> orderId| string| Order ID  
+> execId| string| Trade ID  
+> execTime| string| Order execution timestamp (ms)  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+  
+### Request Example
 
-  * **URL** : `https://api2.bybit.com/oauth/v1/public/access_token`
-  * **Method** : `POST`
+  * HTTP
+  * Python
+  * Node.js
 
 
-
-#### Request Example
     
     
-    curl -v -X POST {url} \  
-      -H 'Content-Type: application/x-www-form-urlencoded' \  
-      -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \  
-      -d 'client_id={client_id}' \  
-      -d 'client_secret={client_secret}' \  
-      -d 'code={code}'    # Note: Code can only be used once.  
+    GET /v5/broker/earnings-info?begin=20231129&end=20231129&uid=117894077 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1701399431920  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: 32d2aa1bc205ddfb89849b85e2a8b7e23b1f8f69fe95d6f2cb9c87562f9086a6  
+    Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_exchange_broker_earnings(  
+        begin="20231129",  
+        end="20231129",  
+        uid="117894077",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getExchangeBrokerEarnings({  
+        bizType: 'SPOT',  
+        begin: '20231201',  
+        end: '20231207',  
+        limit: 1000,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
-#### Response Example
+### Response Example
     
     
     {  
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjcwODM5NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiJPNmZ0QkdTYVdEIn0.Vq46cxPIzKmWz5fFwU4fQuF-IDqFJDOIelNLnH8r2Oo",  
-        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njk1ODk1NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiIwaVZMWVY3Z1pGIn0.ByGH8d5XtSQnkbxeyiXd56iJUTddBWjqFK8_EcAw48w",  
-        "token_type": "bearer",  
-        "expires_in": 86400,  
-        "refresh_token_expires_in": 2592000  
-    }  
-    
-
-* * *
-
-### 4\. Obtain OpenAPI
-
-  * **URL** : `https://api2.bybit.com/oauth/v1/resource/restrict/openapi`
-  * **Method** : `GET`
-  * **Authorization** : Include the `Authorization` header formatted as `"Bearer {access_token}"`.  
-**Example** : If `access_token = "12345"`, then `Authorization = "Bearer 12345"`.
-
-
-
-#### Request Example
-    
-    
-    curl {url} \  
-      -H "Authorization: Bearer {access_token}"  
-    
-
-#### Response Example
-    
-    
-    {  
-      "ret_code": 0,  
-      "ret_msg": "success",  
-      "result": {  
-        "api_key": "xxxxxxx",  
-        "api_secret": "xxxxx"  
-      }  
-    }  
-    
-
-* * *
-
-### Notes
-
-  * The `code` parameter from the authorization callback is single-use and expires quickly.
-  * Store `client_secret` and `api_secret` securely and never expose them publicly.
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "totalEarningCat": {  
+                "spot": [],  
+                "derivatives": [  
+                    {  
+                        "coin": "USDT",  
+                        "earning": "0.00027844"  
+                    }  
+                ],  
+                "options": [],  
+                "total": [  
+                    {  
+                        "coin": "USDT",  
+                        "earning": "0.00027844"  
+                    }  
+                ]  
+            },  
+            "details": [  
+                {  
+                    "userId": "117894077",  
+                    "bizType": "DERIVATIVES",  
+                    "symbol": "DOGEUSDT",  
+                    "coin": "USDT",  
+                    "earning": "0.00016166",  
+                    "markupEarning": "0.000032332",  
+                    "baseFeeEarning": "0.000129328",  
+                    "orderId": "ec2132f2-a7e0-4a0c-9219-9f3cbcd8e878",  
+                    "execId": "c8f418a0-2ccc-594f-ae72-effedf24d0c4",  
+                    "execTime": "1701275846033"  
+                },  
+                {  
+                    "userId": "117894077",  
+                    "bizType": "DERIVATIVES",  
+                    "symbol": "TRXUSDT",  
+                    "coin": "USDT",  
+                    "earning": "0.00011678",  
+                    "markupEarning": "0.000023356",  
+                    "baseFeeEarning": "0.000093424",  
+                    "orderId": "28b29c2b-ba14-450e-9ce7-3cee0c1fa6da",  
+                    "execId": "632c7705-7f3a-5350-b69c-d41a8b3d0697",  
+                    "execTime": "1701245285017"  
+                }  
+            ],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1701398193964  
+    }
 
 ---
 
-# 申請流程
+# 查詢返佣信息
 
-## 1\. 信息提交
+信息
 
-通过邮箱（[broker_program@bybit.com](mailto:broker_program@bybit.com)）向 Bybit 商務提交以下信息：
-
-  * **Bybit UID**  
-用於登陸 OAuth 管理後台
-
-  * **OpenAPI 白名單 IP**  
-僅作用於 OpenAPI（OAuth 管理後台沒有 IP 限制）
+  * 使用經紀商的母帳戶進行查詢
+  * 支持查詢過去1個月的數據至T-1. 要取得1個月之前的數據, 請聯繫您的客戶經理
+  * `begin` & `end`兩個入参, 要麼同時輸入, 要麼都不輸入. 当不输入时, 默认返回最近7天的数据
 
 
 
+> API頻率: 10次/秒
 
-* * *
+### HTTP 請求
 
-## 2\. 商戶初始化
+GET`/v5/broker/earnings-info`
 
-  1. **登陸 Bybit**  
-使用對應的 UID 登陸 Bybit 賬戶
+### 請求參數
 
-  2. **訪問管理後台**  
-打開連結：<https://www.bybit.com/app/user/oauth-admin>
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+bizType| false| string| 業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT`  
+begin| false| string| 開始時間, 格式: YYYYMMDD, 比如, 20231201, 表示搜尋時間是從2023年12月1日 00:00:00 UTC (包含)  
+end| false| string| 結束時間, 格式: YYYYMMDD, 比如, 20231201, 表示搜尋時間是結束於2023年12月2日 00:00:00 UTC (不包含)  
+uid| false| string| 
 
-     * 設定 Application Name
-     * 設定 Email
-     * 上傳 Logo
-     * 其他相關操作  
-![](/docs/zh-TW/assets/images/oauth-redirect-url-c4a7907e15a702366f747de41cc92c00.jpg)
-  3. **核心參數配置**  
-**redirect_uri** ：
+  * 輸入子UID來查詢指定UID的具體數據
+  * 要向獲得所有子UID的數據, 則不傳
 
-     * 可設定多個回調地址
-     * 喚起頁面傳入的 redirect_uri 必須在管理後台配置
-     * 如傳入與配置不匹配，默認跳轉到第一個地址
-  4. **獲取憑證**
-
-     * 申請成功後，會收到 client_id 和 client_secret
-     * **重要** ：請務必妥善保存此信息，不要對他人展示
-
-
-
-* * *
-
-## 接口調試
-
-### 1\. 拼接授權頁面
-    
-    
-    https://www.bybit.com/en/oauth/en/oauth?  
-    client_id={client_id}&  
-    response_type=code&  
-    redirect_uri={redirect_uri}&  
-    scope=openapi&  
-    state={state}  
-    
-
-參數| 說明| 備註  
----|---|---  
-`client_id`| 商戶身份標識| 商戶初始化完成後獲得  
-`response_type`| 響應類型| 固定值：`code`  
-`scope`| 權限範圍| 傳 `openapi`（其他值需與 Bybit 確認）  
-`state`| 狀態參數| 隨機字符串，防 CSRF 攻擊  
-`redirect_uri`| 回調地址| 必須在管理後台配置  
   
-* * *
-
-### 2\. 授權成功回調
-
-用戶確認授權後，頁面將會 301 重定向至 redirect_uri 並攜帶參數 code
-
-**示例** ：
-    
-    
-    # 假設 redirect_uri = https://www.example.com/callback  
-    # 回調後的 URL：  
-    https://www.example.com/callback/?  
-    response_type=code&  
-    code=sSn87036PCFub1g0FGigexSjT&  
-    scope=openapi&  
-    state=1234abc  
-    
-
-參數| 說明| 用途  
----|---|---  
-`code`| 授權碼| 核心參數，用於獲取 access_token  
+limit| false| integer| 每頁數量限制. [`1`, `1000`]. 默認: `1000`  
+cursor| false| string| 游標，用於翻頁  
   
-* * *
+### 響應參數
 
-### 3\. 獲取 access_token
+參數| 類型| 說明  
+---|---|---  
+totalEarningCat| Object| 按照業務類型統計的總的返佣數據  
+> spot| array| Object. 現貨交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`  
+>> coin| string| 返佣幣種  
+>> earning| string| 返佣金額  
+> derivatives| array| Object. 期貨交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`  
+>> coin| string| 返佣幣種  
+>> earning| string| 返佣金額  
+> options| array| Object. 期權交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`  
+>> coin| string| 返佣幣種  
+>> earning| string| 返佣金額  
+> convert| array| Object. 閃兌交易的返佣. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`  
+>> coin| string| 返佣幣種  
+>> earning| string| 返佣金額  
+> total| array| Object. 所有業務類型的返佣總和. 如果沒有對應的返佣或者沒有查詢該類型, 則返回空數組 `[]`  
+>> coin| string| 返佣幣種  
+>> earning| string| 返佣金額  
+details| array| Object. 每個子UID以及每個業務類型的交易細節  
+> userId| string| 子帳戶  
+> bizType| string| 業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS`, `CONVERT`  
+> symbol| string| 幣對名  
+> coin| string| 返佣幣種  
+> earning| string| 返佣金額  
+> markupEarning| string| 加點佣金  
+> baseFeeEarning| string| 基礎佣金  
+> orderId| string| 訂單ID  
+> execId| string| 成交ID  
+> execTime| string| 訂單執行時間戳 (毫秒)  
+nextPageCursor| string| 游標，用於翻頁  
+  
+### 請求示例
 
-**接口信息** ：
-
-  * **URL** : <https://api2.bybit.com/oauth/v1/public/access_token>
-  * **方法** : POST
-
+  * HTTP
+  * Python
+  * Node.js
 
 
-**請求示例** ：
     
     
-    curl -v -X POST {url} \  
-      -H 'Content-Type: application/x-www-form-urlencoded' \  
-      -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \  
-      -d 'client_id={client_id}' \  
-      -d 'client_secret={client_secret}' \  
-      -d 'code={code}'    # 注意：code 只能使用 1 次  
+    GET /v5/broker/earnings-info?begin=20231129&end=20231129&uid=117894077 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1701399431920  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: 32d2aa1bc205ddfb89849b85e2a8b7e23b1f8f69fe95d6f2cb9c87562f9086a6  
+    Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_exchange_broker_earnings(  
+        begin="20231129",  
+        end="20231129",  
+        uid="117894077",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getExchangeBrokerEarnings({  
+        bizType: 'SPOT',  
+        begin: '20231201',  
+        end: '20231207',  
+        limit: 1000,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
-**響應示例** ：
+### 響應示例
     
     
     {  
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",  
-      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",  
-      "token_type": "bearer",  
-      "expires_in": 86400,  
-      "refresh_token_expires_in": 2592000  
-    }  
-    
-
-* * *
-
-### 4\. 獲取 OpenAPI
-
-**接口信息** ：
-
-  * **URL** : <https://api2.bybit.com/oauth/v1/resource/restrict/openapi>
-  * **方法** : GET
-  * **認證** : 需要在請求頭中攜帶 Authorization 信息  
-格式：`Bearer {access_token}`  
-示例：`Authorization: Bearer 12345`
-
-
-
-#### 請求示例
-    
-    
-    curl {url} \  
-      -H "Authorization: Bearer {access_token}"  
-    
-
-#### 響應示例
-    
-    
-    {  
-      "ret_code": 0,  
-      "ret_msg": "success",  
-      "result": {  
-        "api_key": "xxxxxxx",  
-        "api_secret": "xxxxx"  
-      }  
-    }  
-    
-
-* * *
-
-### 注意事項
-
-  1. **安全存儲**  
-client_secret 和 api_secret 需安全存儲，切勿泄露
-
-  2. **Code 使用限制**  
-授權碼（code）為一次性使用，请在有效時間内使用
-
-  3. **參數配置驗證**  
-確保所有參數（特別是 redirect_uri）已在管理後台正確配置
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "totalEarningCat": {  
+                "spot": [],  
+                "derivatives": [  
+                    {  
+                        "coin": "USDT",  
+                        "earning": "0.00027844"  
+                    }  
+                ],  
+                "options": [],  
+                "total": [  
+                    {  
+                        "coin": "USDT",  
+                        "earning": "0.00027844"  
+                    }  
+                ]  
+            },  
+            "details": [  
+                {  
+                    "userId": "117894077",  
+                    "bizType": "DERIVATIVES",  
+                    "symbol": "DOGEUSDT",  
+                    "coin": "USDT",  
+                    "earning": "0.00016166",  
+                    "markupEarning": "0.000032332",  
+                    "baseFeeEarning": "0.000129328",  
+                    "orderId": "ec2132f2-a7e0-4a0c-9219-9f3cbcd8e878",  
+                    "execId": "c8f418a0-2ccc-594f-ae72-effedf24d0c4",  
+                    "execTime": "1701275846033"  
+                },  
+                {  
+                    "userId": "117894077",  
+                    "bizType": "DERIVATIVES",  
+                    "symbol": "TRXUSDT",  
+                    "coin": "USDT",  
+                    "earning": "0.00011678",  
+                    "markupEarning": "0.000023356",  
+                    "baseFeeEarning": "0.000093424",  
+                    "orderId": "28b29c2b-ba14-450e-9ce7-3cee0c1fa6da",  
+                    "execId": "632c7705-7f3a-5350-b69c-d41a8b3d0697",  
+                    "execTime": "1701245285017"  
+                }  
+            ],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1701398193964  
+    }

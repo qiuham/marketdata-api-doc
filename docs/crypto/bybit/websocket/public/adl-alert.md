@@ -2,197 +2,183 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/adl-alert
 api_type: WebSocket
-updated_at: 2026-05-27 19:23:19.421396
+updated_at: 2026-06-28 19:15:52.974146
 ---
 
-# ADL Alert
+# Kline
 
-Subscribe to ADL alerts and insurance pool information.
+Subscribe to the klines stream.
 
-> **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
+tip
 
-Push frequency: **1s**
+If `confirm`=true, this means that the candle has closed. Otherwise, the candle is still open and updating.
+
+**Available intervals:**  
+
+
+  * `1` `3` `5` `15` `30` (min)
+  * `60` `120` `240` `360` `720` (min)
+  * `D` (day)
+  * `W` (week)
+  * `M` (month)
+
+
+
+**Push frequency:** 1-60s
 
 **Topic:**  
-`adlAlert.{coin}`
-
-Available filters:
-
-  * `adlAlert.USDT` for USDT Perpetual/Delivery
-  * `adlAlert.USDC` for USDC Perpetual/Delivery
-  * `adlAlert.inverse` for Inverse contracts.
-
-
-
-For more information on how ADL is triggered, see the [ADL endpoint](/docs/v5/market/adl-alert).
+`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> c| string| Token of the insurance pool  
-> s| string| Trading pair name  
-> b| string| Balance of the insurance fund. Used to determine if ADL is triggered. For shared insurance pool, the "b" field will follow a T+1 refresh mechanism and will be updated daily at 00:00 UTC.  
-> mb| string| Deprecated, always return "". Maximum balance of the insurance pool in the last 8 hours  
-> i_pr| string| PnL ratio threshold for triggering **contract PnL drawdown ADL**
-
-  * ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value
-
-  
-> pr| string| Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped  
-> adl_tt| string| Trigger threshold for **contract PnL drawdown ADL**
-
-  * This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL
-
-  
-> adl_sr| string| Stop ratio threshold for **contract PnL drawdown ADL**
-
-  * ADL stops when the symbol's 8 hours drawdown ratio falls below this value
-
-  
+topic| string| Topic name  
+type| string| Data type. `snapshot`  
+ts| number| The timestamp (ms) that the system generates the data  
+data| array| Object  
+> start| number| The start timestamp (ms)  
+> end| number| The end timestamp (ms)  
+> [interval](/docs/v5/enum#interval)| string| Kline interval  
+> open| string| Open price  
+> close| string| Close price  
+> high| string| Highest price  
+> low| string| Lowest price  
+> volume| string| Trade volume  
+> turnover| string| Turnover  
+> confirm| boolean| Whether the tick is ended or not  
+> timestamp| number| The timestamp (ms) of the last matched order in the candle  
   
 ### Subscribe Example
     
     
-    {"op": "subscribe", "args": ["adlAlert.USDT"]}  
+    from pybit.unified_trading import WebSocket  
+    from time import sleep  
+    ws = WebSocket(  
+        testnet=True,  
+        channel_type="linear",  
+    )  
+    def handle_message(message):  
+        print(message)  
+    ws.kline_stream(  
+        interval=5,  
+        symbol="BTCUSDT",  
+        callback=handle_message  
+    )  
+    while True:  
+        sleep(1)  
     
 
 ### Response Example
     
     
     {  
-      "topic": "adlAlert.USDT",  
-      "type": "snapshot",  
-      "ts": 1757736794000,  
-      "data": [  
-        {  
-          "c": "USDT",  
-          "s": "FWOGUSDT",  
-          "b": -5421.29889888,  
-          "mb": -5421.29889888,  
-          "i_pr": -0.3,  
-          "pr": 0,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        {  
-          "c": "USDT",  
-          "s": "ZORAUSDT",  
-          "b": 19873.46255153,  
-          "mb": 19874.97612833,  
-          "i_pr": -0.3,  
-          "pr": 0.000174,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        {  
-          "c": "USDT",  
-          "s": "BERAUSDT",  
-          "b": 453.36427074,  
-          "mb": 453.36427074,  
-          "i_pr": -0.3,  
-          "pr": 0.24576,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        ...,  
-      ]  
+        "topic": "kline.5.BTCUSDT",  
+        "data": [  
+            {  
+                "start": 1672324800000,  
+                "end": 1672325099999,  
+                "interval": "5",  
+                "open": "16649.5",  
+                "close": "16677",  
+                "high": "16677",  
+                "low": "16608",  
+                "volume": "2.081",  
+                "turnover": "34666.4005",  
+                "confirm": false,  
+                "timestamp": 1672324988882  
+            }  
+        ],  
+        "ts": 1672324988882,  
+        "type": "snapshot"  
     }
 
 ---
 
-# ADL告警
+# K線
 
-訂閱按組劃分保險池 ADL 告警及相關資訊
+訂閱K線推送
 
-> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
+提示
 
-推送頻率: **1秒**
+註意如果字段`confirm`為true, 則表明這是這根K線的最後一個tick；否則，這只是一個快照數據，即中間價格
+
+**可用時間粒度:**  
+
+
+  * `1` `3` `5` `15` `30` (分鐘)
+  * `60` `120` `240` `360` `720` (分鐘)
+  * `D` (天)
+  * `W` (週)
+  * `M` (月)
+
+
+
+**推送頻率:** 1-60s
 
 **Topic:**  
-`adlAlert.{coin}`
-
-可用類型為:
-
-  * `adlAlert.USDT` 用於USDT 永續、交割
-  * `adlAlert.USDC` 用於USDC 永續、交割
-  * `adlAlert.inverse` 用於反向合約
-
-
-
-規則詳情請參考 [查詢ADL告警](/docs/zh-TW/v5/market/adl-alert)
+`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> c| string| 保險池所屬幣種  
-> s| string| 交易對名稱  
-> b| string| 保險基金餘額，用於判斷是否觸發 ADL。對於共用保險池，balance 將採用 T+1 刷新機制，並於每日 UTC 時間 00:00 更新。  
-> mb| string| 被棄用，並將傳回空字串。最近 8 小時內的保險池最大餘額  
-> i_pr| string| 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 
-
-  * 當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL
-
-  
-> pr| string| symbol 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止  
-> adl_tt| string| **合約盈虧回撤 ADL** 的觸發閾值 
-
-  * 僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效
-
-  
-> adl_sr| string| **合約盈虧回撤 ADL** 的停止比例閾值 
-
-  * 當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止
-
-  
+topic| string| Topic名  
+type| string| 數據類型. `snapshot`  
+ts| number| 行情服務生成數據的時間戳 (毫秒)  
+data| array| Object  
+> start| number| 開始時間戳 (毫秒)  
+> end| number| 結束時間戳 (毫秒)  
+> [interval](/docs/zh-TW/v5/enum#interval)| string| K線粒度  
+> open| string| 開盤價  
+> close| string| 收盤價  
+> high| string| 最高價  
+> low| string| 最低價  
+> volume| string| 交易量  
+> turnover| string| 交易額  
+> confirm| boolean| 是否確認  
+> timestamp| number| 蠟燭中最後一筆淨值時間戳 (毫秒)  
   
 ### 訂閱示例
     
     
-    {"op": "subscribe", "args": ["adlAlert.USDT"]}  
+    from pybit.unified_trading import WebSocket  
+    from time import sleep  
+    ws = WebSocket(  
+        testnet=True,  
+        channel_type="linear",  
+    )  
+    def handle_message(message):  
+        print(message)  
+    ws.kline_stream(  
+        interval=5,  
+        symbol="BTCUSDT",  
+        callback=handle_message  
+    )  
+    while True:  
+        sleep(1)  
     
 
 ### 響應示例
     
     
     {  
-      "topic": "adlAlert.USDT",  
-      "type": "snapshot",  
-      "ts": 1757736794000,  
-      "data": [  
-        {  
-          "c": "USDT",  
-          "s": "FWOGUSDT",  
-          "b": -5421.29889888,  
-          "mb": -5421.29889888,  
-          "i_pr": -0.3,  
-          "pr": 0,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        {  
-          "c": "USDT",  
-          "s": "ZORAUSDT",  
-          "b": 19873.46255153,  
-          "mb": 19874.97612833,  
-          "i_pr": -0.3,  
-          "pr": 0.000174,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        {  
-          "c": "USDT",  
-          "s": "BERAUSDT",  
-          "b": 453.36427074,  
-          "mb": 453.36427074,  
-          "i_pr": -0.3,  
-          "pr": 0.24576,  
-          "adl_tt": 10000,  
-          "adl_sr": -0.25  
-        },  
-        ...,  
-      ]  
+        "topic": "kline.5.BTCUSDT",  
+        "data": [  
+            {  
+                "start": 1672324800000,  
+                "end": 1672325099999,  
+                "interval": "5",  
+                "open": "16649.5",  
+                "close": "16677",  
+                "high": "16677",  
+                "low": "16608",  
+                "volume": "2.081",  
+                "turnover": "34666.4005",  
+                "confirm": false,  
+                "timestamp": 1672324988882  
+            }  
+        ],  
+        "ts": 1672324988882,  
+        "type": "snapshot"  
     }

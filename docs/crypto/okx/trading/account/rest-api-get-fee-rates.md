@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fee-rates
 anchor_id: trading-account-rest-api-get-fee-rates
 api_type: REST
-updated_at: 2026-05-27 19:34:30.189019
+updated_at: 2026-06-28 19:36:17.430533
 ---
 
 # Get fee rates
@@ -58,6 +58,7 @@ instType | String | Yes | Instrument type
 `EVENTS`  
 instId | String | No | Instrument ID, e.g. `BTC-USDT`  
 Applicable to `SPOT`/`MARGIN`  
+Specifying this parameter returns the correct applicable fee rates (e.g., market maker rates for users in incentive programs).  
 instFamily | String | No | Instrument family, e.g. `BTC-USD`  
 Applicable to `FUTURES`/`SWAP`/`OPTION`  
 groupId | String | No | Instrument trading fee group ID  
@@ -140,7 +141,7 @@ fiat | Array of objects | ~~Details of fiat fee rate~~(deprecated)
 settle | String | Settlement fee rate for users whose positions match the event contract settlement result. Users holding the opposite positions will not be charged during settlement. Only applicable to `EVENTS`  
 Remarks:   
 The fee rate like maker and taker: positive number, which means the rate of rebate; negative number, which means the rate of commission.  
-Exception: The values for delivery and exercise are positive numbers, representing the commission rate.  USDⓈ represent the stablecoin besides USDT  The Open API will not reflect zero-fee trading. For zero-fee pairs, please refer to [https://www.okx.com/fees ](https://www.okx.com/fees).
+Exception: The values for delivery and exercise are positive numbers, representing the commission rate.  USDⓈ represent the stablecoin besides USDT  The Open API will not reflect zero-fee trading. For zero-fee pairs, please refer to [https://www.okx.com/fees ](https://www.okx.com/fees).  For users in market maker incentive programs: specifying `instId` (for `SPOT`/`MARGIN`) or `instFamily` (for `FUTURES`/`SWAP`/`OPTION`) returns the correct applicable fee rates. Without these parameters, the response reflects the organic base fee rates.
 
 ---
 
@@ -196,6 +197,7 @@ instType | String | 是 | 产品类型
 `EVENTS`：事件合约  
 instId | String | 否 | 产品ID，如 `BTC-USDT`  
 仅适用于instType为`币币/币币杠杆`  
+指定此参数将返回正确的适用手续费率（如：参与做市激励计划用户的做市商费率）。  
 instFamily | String | 否 | 交易品种  
 适用于`交割`/`永续`/`期权`，如 `BTC-USD`  
 groupId | String | 否 | 交易产品手续费分组ID  
@@ -278,4 +280,4 @@ fiat | Array of objects | ~~法币费率~~ （已废弃）
 settle | String | 结算手续费率，适用于持仓方向与事件合约结算结果一致的用户。持反向仓位的用户结算时不收取手续费。仅适用于 `EVENTS`  
 备注：  
 手续费率的值（如 maker/taker）：正数，代表是返佣的费率；负数，代表平台扣除的费率。  
-例外：delivery 和 exercise 为正数，代表平台扣除的费率。  USDⓈ 代表除 USDT 之外的稳定币。  接口不会体现零手续费，零手续费交易对请参考<https://www.okx.com/zh-hans/fees>
+例外：delivery 和 exercise 为正数，代表平台扣除的费率。  USDⓈ 代表除 USDT 之外的稳定币。  接口不会体现零手续费，零手续费交易对请参考<https://www.okx.com/zh-hans/fees> 对于参与做市激励计划的用户：指定 `instId`（适用于 `SPOT`/`MARGIN`）或 `instFamily`（适用于 `FUTURES`/`SWAP`/`OPTION`）将返回正确的适用手续费率；若不指定上述参数，则返回基础档位手续费率。

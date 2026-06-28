@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/trade/Query-Special-Key-List-of-Low-Latency-Trading
 api_type: Trading
-updated_at: 2026-05-27 18:58:01.549879
+updated_at: 2026-06-28 18:53:01.769790
 ---
 
 # Small Liability Exchange (MARGIN)

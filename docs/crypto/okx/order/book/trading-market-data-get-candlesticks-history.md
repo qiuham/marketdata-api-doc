@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-candlesticks-history
 anchor_id: order-book-trading-market-data-get-candlesticks-history
 api_type: API
-updated_at: 2026-05-27 19:35:33.704161
+updated_at: 2026-06-28 19:37:20.107245
 ---
 
 # GET / Candlesticks history
@@ -50,6 +50,10 @@ e.g. [1s/1m/3m/5m/15m/30m/1H/2H/4H]
 UTC+8 opening price k-line: [6H/12H/1D/2D/3D/1W/1M/3M]  
 UTC+0 opening price k-line: [6Hutc/12Hutc/1Dutc/2Dutc/3Dutc/1Wutc/1Mutc/3Mutc]  
 limit | String | No | Number of results per request. The maximum is `300`. The default is `100`.  
+adjust | String | No | Price adjustment type for equity perpetual contracts.  
+`forward`: Forward adjustment.  
+If this field is omitted, unadjusted data is returned by default.  
+Only applicable to equity perpetual contracts.  
   
 > Response Example
     
@@ -108,7 +112,7 @@ confirm | String | The state of candlesticks
   
 The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,volCcy,volCcyQuote,confirm] 
 
-1s candle is not supported by OPTION, but it is supported by other business lines (SPOT, MARGIN, FUTURES and SWAP)
+1s candle is not supported by OPTION, but it is supported by other business lines (SPOT, MARGIN, FUTURES and SWAP)  When `adjust=forward`, the historical OHLC prices are multiplied by the adjustment factor for the relevant period. For stock splits, `vol` and `volCcy` are also adjusted proportionally. `volCcyQuote` is not adjusted. This parameter is only effective for equity perpetual contracts.
 
 ---
 
@@ -156,6 +160,9 @@ bar | String | 否 | 时间粒度，默认值`1m`
 UTC+8开盘价k线：[6H/12H/1D/2D/3D/1W/1M/3M]  
 UTC+0开盘价k线：[6Hutc/12Hutc/1Dutc/2Dutc/3Dutc/1Wutc/1Mutc/3Mutc]  
 limit | String | 否 | 分页返回的结果集数量，最大为300，不填默认返回100条  
+adjust | String | 否 | 复权类型，仅适用于股票永续合约。  
+`forward`：前复权。  
+不填时默认返回不复权数据。  
   
 > 返回结果
     
@@ -211,4 +218,4 @@ volCcyQuote | String | 交易量，以计价货币为单位
 confirm | String | K线状态  
 `0`：K线未完结  
 `1`：K线已完结  
-返回值数组顺序分别为是：[ts,o,h,l,c,vol,volCcy,volCcyQuote,confirm]  期权不支持 1s K线， 其他业务线 (币币, 杠杆, 交割和永续)支持
+返回值数组顺序分别为是：[ts,o,h,l,c,vol,volCcy,volCcyQuote,confirm]  期权不支持 1s K线， 其他业务线 (币币, 杠杆, 交割和永续)支持  当传入 `adjust=forward` 时，历史K线的开高低收（OHLC）价格将乘以对应时期的复权因子。对于拆股，成交量（`vol`、`volCcy`）也会按相同比例调整。成交金额（`volCcyQuote`）不做调整。该参数仅对股票永续合约有效。

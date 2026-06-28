@@ -2,102 +2,79 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-combo/create
 api_type: REST
-updated_at: 2026-05-27 19:15:39.807875
+updated_at: 2026-06-28 19:09:18.112942
 ---
 
-# Get Bot Detail
+# Create Bot
 
-Retrieve comprehensive details for a specific futures combo bot, including configuration, current status, PnL metrics, portfolio positions, margin balances, and timestamps.
+Create a new futures combo trading bot that manages a portfolio of multiple futures symbols with automatic position rebalancing.
 
 info
 
-  * **`bot_id`:**  
-Obtained from the [Create Futures Combo Bot](/docs/v5/bot/futures-combo/create) response.
+  * **Prerequisites:**  
+Call [Get Futures Combo Bot Limit](/docs/v5/bot/futures-combo/get-limit) before this endpoint to validate parameter ranges. User must pass KYC/compliance and GEO IP checks.
 
-  * **PnL fields:**  
-`total_pnl` is the cumulative total. `realized_pnl` and `unrealized_pnl` break it down. `funding_fee` shows net funding fee. `total_pnl_per` and `roi` express returns as percentages.
+  * **Portfolio configuration:**  
+The `symbol_settings` array defines the per-symbol portfolio. All `target_position_percent` values across symbols must sum to **100**.
+
+  * **Rebalancing mode (`adjust_position_mode`):**  
+`1`: Time-based — rebalance at fixed time intervals  
+`2`: Percentage-based — rebalance when allocation drifts by a threshold  
+`3`: Time or percentage — whichever triggers first  
+`4`: Manual — user-triggered only  
+`5`: On settings modification  
+`6`: On transfer
+
+  * **Side (`side` in `symbol_settings`):**  
+`1`: Long, `2`: Short
+
+  * **Response`bot_id`:**  
+Returned on success. Use for [Get Detail](/docs/v5/bot/futures-combo/get-detail) and [Close](/docs/v5/bot/futures-combo/close).
 
   * **Rate limit:**  
 10 requests per second per UID.
+
+  * **Subject to compliance wall, GEO IP check, and KYC verification.**
 
 
 
 
 ### HTTP Request
 
-POST`/v5/fcombobot/detail`
+POST`/v5/fcombobot/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-bot_id| **true**|  string| Bot ID to query  
+leverage| **true**|  string| Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1  
+init_margin| **true**|  string| Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)  
+adjust_position_mode| **true**|  integer| Rebalancing trigger mode: `1` Time, `2` Percentage, `3` Time or Percentage, `4` Manual, `5` On settings change, `6` On transfer  
+symbol_settings| **true**|  array<object>| Per-symbol portfolio configuration. At least one entry required. All `target_position_percent` must sum to 1  
+> symbol| **true**|  string| Trading pair symbol (e.g. `BTCUSDT`)  
+> target_position_percent| **true**|  string| Target portfolio weight as whole-number percentage (e.g. `"0.5"` means 50%)  
+> side| **true**|  integer| Position direction: `1` Long, `2` Short  
+adjust_position_percent| false| string| Rebalancing drift threshold as percentage, range: [0.01, 0.5] (e.g. `"0.05"` means rebalance when allocation drifts 5%). **Required** when mode includes percentage  
+adjust_position_time_interval| false| integer| Rebalancing time interval **in seconds**. **Required** when mode includes time. `30M`, `1H`, `4H`, `8H`, `12H`, `1D`, `3D`, `7D`, `14D`, `28D` convert to seconds  
+sl_percent| false| string| Stop-loss as percentage of total margin (e.g. `"0.2"` means close when loss reaches 20%)  
+tp_percent| false| string| Take-profit as percentage of total margin (e.g. `"0.5"` means close when profit reaches 50%)  
+trailing_stop_percent| false| string| Trailing stop callback as percentage (e.g. `"0.05"` means 5%)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-status_code| integer| `0` = success, non-zero = error  
+status_code| integer| `0` = success, `421` = user banned  
+bot_id| integer| Unique bot ID. Use for [Get Detail](/docs/v5/bot/futures-combo/get-detail) and [Close](/docs/v5/bot/futures-combo/close)  
+ban_reason_text| string| Localized ban reason. Returned only when `status_code=421`  
 debug_msg| string| Debug message (testnet only)  
-detail| object| Combo bot detail object (see below)  
-> bot_id| string| Unique combo bot ID  
-> bot_mode| string| Strategy direction: `Unspecified`, `Long`, `Short`, `Mix`  
-> bot_display_status| string| UI display status: `Unspecified`, `Initializing`, `Awaiting activation`, `Running`, `Cancelling`, `Completed`  
-> bot_name| string| Bot display name (comma-separated symbol list)  
-> leverage| string| Position leverage multiplier (e.g. `"5"` means 5x)  
-> total_margin| string| Total margin including additional top-ups (decimal string)  
-> equity| string| Running equity value in quote currency (decimal string)  
-> total_pnl| string| Cumulative total PnL in quote currency (decimal string)  
-> total_pnl_per| string| Total PnL as percentage of total margin (e.g. `"0.0505"` means 5.05%)  
-> roi| string| Return on investment as percentage  
-> total_apr| string| Total annualized profit rate as percentage (e.g. `"0.365"` means 36.5% APR)  
-> realized_pnl| string| Cumulative realized PnL (decimal string)  
-> unrealized_pnl| string| Unrealized PnL based on mark price (decimal string)  
-> total_exec_fee| string| Cumulative trading execution fees (decimal string)  
-> funding_fee| string| Cumulative funding fee (decimal string, positive = received, negative = paid)  
-> total_position_value| string| Total position value in quote currency (decimal string)  
-> margin_balance| string| Margin balance in quote currency (decimal string)  
-> available_balance| string| Available (free) balance in quote currency (decimal string)  
-> imr| string| Initial margin rate as decimal ratio (e.g. `"0.1"` = 10%)  
-> mmr| string| Maintenance margin rate as decimal ratio (e.g. `"0.005"` = 0.5%)  
-> symbol_settings| array<object>| Per-symbol portfolio configuration  
->> symbol| string| Trading pair symbol (e.g. `BTCUSDT`)  
->> base_token| string| Base coin (e.g. `BTC`)  
->> quote_token| string| Quote coin (e.g. `USDT`)  
->> target_position_percent| string| Target portfolio weight as percentage  
->> side| string| Position direction: `Long`, `Short`  
->> symbol_id| integer| Internal symbol ID  
-> adjust_position_mode| string| Rebalancing trigger mode: `Unspecified`, `Time-based rebalancing`, `Percentage-based rebalancing`, `Time or percentage (whichever triggers first)`, `Manual rebalancing by user`, `Rebalancing on settings modification`, `Rebalancing on transfer`  
-> adjust_position_percent| string| Rebalancing drift threshold as percentage  
-> adjust_position_time_interval| integer| Rebalancing time interval in seconds  
-> adjusted_position_num| string| Total number of position rebalances performed  
-> last_adjust_position_time| string| Last rebalancing timestamp (Unix seconds)  
-> sl_percent| string| Stop-loss as percentage (e.g. `"0.2"` means 20%)  
-> tp_percent| string| Take-profit as percentage (e.g. `"0.5"` means 50%)  
-> trailing_stop_percent| string| Trailing stop callback as percentage (e.g. `"0.05"` means 5%)  
-> stop_type| string| Stop reason: `Unspecified`, `Init failure`, `User stopped`, `Liquidation`, `Symbol delisted`, `Stop-loss triggered`, `System stopped`, `User banned`, `Take-profit triggered`, `Insufficient order balance`, `Reduce-only`, `Bankruptcy price breach`, `Trailing stop`, `OI limit`, `Compliance clearance`, `ADL (Auto-Deleveraging)`  
-> close_code| string| UI close code: `Unspecified`, `Failed initiation`, `Canceled manually by user`, `Canceled automatically (other)`, `Canceled by take-profit trigger`, `Canceled by stop-loss trigger`, `Canceled by liquidation`, `DCA reached max investment`, `User account banned`, `Neutral grid hit top price`, `Neutral grid hit bottom price`, `Martingale round take-profit triggered`, `Symbol delisted`, `Negative arbitrage`, `Trailing stop exit`, `OI limit`, `Compliance clearance`, `ADL (Auto-Deleveraging)`  
-> exit_equity| string| Equity at exit (decimal string)  
-> sl_exit_equity| string| Equity at stop-loss exit (decimal string)  
-> tp_exit_equity| string| Equity at take-profit exit (decimal string)  
-> midway_transfer| string| Midway margin transfer amount (decimal string)  
-> settlement_assets| string| Settlement asset transfer details  
-> follow_num| integer| Number of users copying this bot  
-> used_reward_amount| string| Total voucher/reward amount used  
-> used_reward_id| string| ID of the first insurance voucher used  
-> total_bonus| string| Total bonus amount  
-> run_time_duration| string| Running duration in seconds  
-> create_time| string| Bot creation timestamp (Unix seconds)  
-> end_time| string| Bot end timestamp (Unix seconds), `0` if still running  
-> last_modify_setting_time| string| Last settings modification timestamp (Unix seconds)  
-> ws_token| string| WebSocket token for real-time updates  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/fcombobot/detail HTTP/1.1  
+    POST /v5/fcombobot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -106,7 +83,25 @@ detail| object| Combo bot detail object (see below)
     Content-Type: application/json  
       
     {  
-        "bot_id": "612324421335537259"  
+        "leverage": "5",  
+        "init_margin": "500",  
+        "adjust_position_mode": 3,  
+        "adjust_position_percent": "0.05",  
+        "adjust_position_time_interval": 3600,  
+        "symbol_settings": [  
+            {  
+                "symbol": "BTCUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 1  
+            },  
+            {  
+                "symbol": "ETHUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 2  
+            }  
+        ],  
+        "sl_percent": "0.2",  
+        "tp_percent": "0.5"  
     }  
     
 
@@ -119,170 +114,85 @@ detail| object| Combo bot detail object (see below)
         "result": {  
             "status_code": 0,  
             "debug_msg": "",  
-            "detail": {  
-                "bot_id": "612324421335537259",  
-                "bot_mode": "BOT_MODE_MIX",  
-                "bot_display_status": "BOT_DISPLAY_STATUS_COMPLETED",  
-                "leverage": "5",  
-                "total_margin": "500",  
-                "total_pnl": "-3.7543",  
-                "total_pnl_per": "-0.0075",  
-                "equity": "496.24",  
-                "roi": "",  
-                "total_apr": "",  
-                "adjusted_position_num": "0",  
-                "last_adjust_position_time": "1774503406",  
-                "create_time": "1774503396",  
-                "end_time": "1774503410",  
-                "close_code": "BOT_CLOSE_CODE_CANCELED_MANUALLY",  
-                "ws_token": "",  
-                "symbol_settings": [  
-                    {  
-                        "symbol": "BTCUSDT",  
-                        "base_token": "BTC",  
-                        "quote_token": "USDT",  
-                        "target_position_percent": "0.5",  
-                        "side": "SIDE_LONG",  
-                        "symbol_id": 5  
-                    },  
-                    {  
-                        "symbol": "ETHUSDT",  
-                        "base_token": "ETH",  
-                        "quote_token": "USDT",  
-                        "target_position_percent": "0.5",  
-                        "side": "SIDE_SHORT",  
-                        "symbol_id": 6  
-                    }  
-                ],  
-                "sl_percent": "0.2",  
-                "tp_percent": "0.5",  
-                "total_position_value": "0",  
-                "margin_balance": "0",  
-                "available_balance": "0",  
-                "imr": "0",  
-                "mmr": "0",  
-                "funding_fee": "0",  
-                "adjust_position_mode": "ADJUST_POSITION_MODE_TIME_OR_PERCENT",  
-                "adjust_position_percent": "0.05",  
-                "adjust_position_time_interval": 3600,  
-                "bot_name": "BTC ETH",  
-                "run_time_duration": "15",  
-                "settlement_assets": "496.24566099 USDT",  
-                "stop_type": "BOT_STOP_TYPE_BY_USER",  
-                "follow_num": 0,  
-                "used_reward_amount": "",  
-                "used_reward_id": "0",  
-                "total_bonus": "0",  
-                "realized_pnl": "-3.7543",  
-                "unrealized_pnl": "0",  
-                "total_exec_fee": "0.7061",  
-                "last_modify_setting_time": "0",  
-                "midway_transfer": "0",  
-                "exit_equity": "0",  
-                "trailing_stop_percent": "0",  
-                "sl_exit_equity": "0",  
-                "tp_exit_equity": "0"  
-            }  
+            "bot_id": "612323083000239723",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774503836793  
+        "time": 1774502598542  
     }
 
 ---
 
-# 查詢拼盤機器人詳情
+# 創建拼盤機器人
 
-查詢指定合約拼盤機器人的完整詳情，包括配置、當前狀態、盈虧指標、投資拼盤倉位、保證金餘額及時間戳。
+創建一個新的合約拼盤交易機器人，用於管理多個合約交易對的投資拼盤，並支援自動倉位再平衡。
 
 信息
 
-  * **`bot_id`：**  
-從[創建合約拼盤機器人](/docs/zh-TW/v5/bot/futures-combo/create)響應中獲取。
+  * **前置條件：**  
+在調用本端點前，請先調用[查詢拼盤機器人限制參數](/docs/zh-TW/v5/bot/futures-combo/get-limit)，驗證參數範圍。用戶必須通過 KYC 合規及地理位置 IP 審核。
 
-  * **盈虧字段：**  
-`total_pnl` 為累計總盈虧。`realized_pnl` 和 `unrealized_pnl` 為細分數據。`funding_fee` 為淨資金費。`total_pnl_per` 和 `roi` 以百分比表示收益率。
+  * **投資拼盤配置：**  
+`symbol_settings` 陣列定義各交易對的投資拼盤配置。所有交易對的 `target_position_percent` 之和必須等於 **100** 。
+
+  * **再平衡模式（`adjust_position_mode`）：**  
+`1`：按時間 — 按固定時間間隔再平衡  
+`2`：按百分比 — 偏離閾值時再平衡  
+`3`：時間或百分比 — 任一條件觸發即再平衡  
+`4`：手動 — 由用戶手動觸發  
+`5`：設置修改時再平衡  
+`6`：資金轉入時再平衡
+
+  * **方向（`symbol_settings` 中的 `side`）：**  
+`1`：做多，`2`：做空
+
+  * **響應`bot_id`：**  
+成功時返回，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-combo/close)。
 
   * **頻率限制：**  
 每個 UID 每秒最多 10 次請求。
+
+  * **受合規管控、地理位置 IP 限制及 KYC 驗證約束。**
 
 
 
 
 ### HTTP請求
 
-POST`/v5/fcombobot/detail`
+POST`/v5/fcombobot/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-bot_id| **true**|  string| 要查詢的機器人 ID  
+leverage| **true**|  string| 倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1  
+init_margin| **true**|  string| 初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）  
+adjust_position_mode| **true**|  integer| 再平衡觸發模式：`1` 按時間，`2` 按百分比，`3` 時間或百分比，`4` 手動，`5` 設置修改時，`6` 轉入時  
+symbol_settings| **true**|  array<object>| 各交易對投資拼盤配置，至少一項。所有 `target_position_percent` 之和必須為 1  
+> symbol| **true**|  string| 交易對名稱（例如 `BTCUSDT`）  
+> target_position_percent| **true**|  string| 目標倉位權重，整數百分比（例如 `"0.5"` 表示 50%）  
+> side| **true**|  integer| 倉位方向：`1` 做多，`2` 做空  
+adjust_position_percent| false| string| 再平衡偏離閾值百分比，範圍：[0.01, 0.5]（例如 `"0.05"` 表示偏離 5% 時再平衡）。當模式包含百分比時**必填**  
+adjust_position_time_interval| false| integer| 再平衡時間間隔（**秒** ）。當模式包含時間時**必填** 。`30M`、`1H`、`4H`、`8H`、`12H`、`1D`、`3D`、`7D`、`14D`、`28D` 均轉換為秒  
+sl_percent| false| string| 止損百分比，以總保證金為基準（例如 `"0.2"` 表示虧損達 20% 時平倉）  
+tp_percent| false| string| 止盈百分比，以總保證金為基準（例如 `"0.5"` 表示盈利達 50% 時平倉）  
+trailing_stop_percent| false| string| 移動止損回撥百分比（例如 `"0.05"` 表示 5%）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-status_code| integer| `0` = 成功，非零 = 錯誤  
+status_code| integer| `0` = 成功，`421` = 用戶被封禁  
+bot_id| integer| 唯一機器人 ID，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-combo/close)  
+ban_reason_text| string| 本地化封禁原因，僅當 `status_code=421` 時返回  
 debug_msg| string| 調試信息（僅測試網）  
-detail| object| 拼盤機器人詳情對象（詳見下方）  
-> bot_id| string| 唯一拼盤機器人 ID  
-> bot_mode| string| 策略方向：`Unspecified`、`Long`、`Short`、`Mix`  
-> bot_display_status| string| UI 顯示狀態：`Unspecified`、`Initializing`、`Awaiting activation`、`Running`、`Cancelling`、`Completed`  
-> bot_name| string| 機器人顯示名稱（逗號分隔的交易對列表）  
-> leverage| string| 倉位槓桿倍數（例如 `"5"` 表示 5 倍）  
-> total_margin| string| 總保證金（含追加投資，小數字符串）  
-> equity| string| 當前淨值（報價幣種，小數字符串）  
-> total_pnl| string| 累計總盈虧（報價幣種，小數字符串）  
-> total_pnl_per| string| 總盈虧佔總保證金的百分比（例如 `"0.0505"` 表示 5.05%）  
-> roi| string| 投資回報率百分比  
-> total_apr| string| 總年化收益率百分比（例如 `"0.365"` 表示 36.5% APR）  
-> realized_pnl| string| 累計已實現盈虧（小數字符串）  
-> unrealized_pnl| string| 基於標記價格的未實現盈虧（小數字符串）  
-> total_exec_fee| string| 累計交易手續費（小數字符串）  
-> funding_fee| string| 累計資金費（小數字符串，正值 = 收入，負值 = 支出）  
-> total_position_value| string| 總倉位價值（報價幣種，小數字符串）  
-> margin_balance| string| 保證金餘額（報價幣種，小數字符串）  
-> available_balance| string| 可用（空閒）餘額（報價幣種，小數字符串）  
-> imr| string| 初始保證金率（小數比例，例如 `"0.1"` = 10%）  
-> mmr| string| 維持保證金率（小數比例，例如 `"0.005"` = 0.5%）  
-> symbol_settings| array<object>| 各交易對投資拼盤配置  
->> symbol| string| 交易對名稱（例如 `BTCUSDT`）  
->> base_token| string| 基礎幣種（例如 `BTC`）  
->> quote_token| string| 報價幣種（例如 `USDT`）  
->> target_position_percent| string| 目標倉位權重百分比  
->> side| string| 倉位方向：`Long`、`Short`  
->> symbol_id| integer| 內部交易對 ID  
-> adjust_position_mode| string| 再平衡觸發模式：`Unspecified`、`Time-based rebalancing`、`Percentage-based rebalancing`、`Time or percentage (whichever triggers first)`、`Manual rebalancing by user`、`Rebalancing on settings modification`、`Rebalancing on transfer`  
-> adjust_position_percent| string| 再平衡偏離閾值百分比  
-> adjust_position_time_interval| integer| 再平衡時間間隔（秒）  
-> adjusted_position_num| string| 已執行的倉位再平衡總次數  
-> last_adjust_position_time| string| 最後一次再平衡時間戳（Unix 秒）  
-> sl_percent| string| 止損百分比（例如 `"0.2"` 表示 20%）  
-> tp_percent| string| 止盈百分比（例如 `"0.5"` 表示 50%）  
-> trailing_stop_percent| string| 移動止損回撥百分比（例如 `"0.05"` 表示 5%）  
-> stop_type| string| 停止原因：`Unspecified`、`Init failure`、`User stopped`、`Liquidation`、`Symbol delisted`、`Stop-loss triggered`、`System stopped`、`User banned`、`Take-profit triggered`、`Insufficient order balance`、`Reduce-only`、`Bankruptcy price breach`、`Trailing stop`、`OI limit`、`Compliance clearance`、`ADL (Auto-Deleveraging)`  
-> close_code| string| UI 關閉代碼：`Unspecified`、`Failed initiation`、`Canceled manually by user`、`Canceled automatically (other)`、`Canceled by take-profit trigger`、`Canceled by stop-loss trigger`、`Canceled by liquidation`、`DCA reached max investment`、`User account banned`、`Neutral grid hit top price`、`Neutral grid hit bottom price`、`Martingale round take-profit triggered`、`Symbol delisted`、`Negative arbitrage`、`Trailing stop exit`、`OI limit`、`Compliance clearance`、`ADL (Auto-Deleveraging)`  
-> exit_equity| string| 退出時淨值（小數字符串）  
-> sl_exit_equity| string| 止損退出時淨值（小數字符串）  
-> tp_exit_equity| string| 止盈退出時淨值（小數字符串）  
-> midway_transfer| string| 中途保證金轉入金額（小數字符串）  
-> settlement_assets| string| 關閉時資產結算詳情  
-> follow_num| integer| 跟單此機器人的用戶數量  
-> used_reward_amount| string| 已使用的憑證/獎勵總金額  
-> used_reward_id| string| 首個使用的保險憑證 ID  
-> total_bonus| string| 總獎勵金額  
-> run_time_duration| string| 運行時長（秒）  
-> create_time| string| 機器人創建時間戳（Unix 秒）  
-> end_time| string| 機器人結束時間戳（Unix 秒），運行中返回 `0`  
-> last_modify_setting_time| string| 最後一次設置修改時間戳（Unix 秒）  
-> ws_token| string| 用於實時更新的 WebSocket 令牌  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/fcombobot/detail HTTP/1.1  
+    POST /v5/fcombobot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -291,7 +201,25 @@ detail| object| 拼盤機器人詳情對象（詳見下方）
     Content-Type: application/json  
       
     {  
-        "bot_id": "612324421335537259"  
+        "leverage": "5",  
+        "init_margin": "500",  
+        "adjust_position_mode": 3,  
+        "adjust_position_percent": "0.05",  
+        "adjust_position_time_interval": 3600,  
+        "symbol_settings": [  
+            {  
+                "symbol": "BTCUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 1  
+            },  
+            {  
+                "symbol": "ETHUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 2  
+            }  
+        ],  
+        "sl_percent": "0.2",  
+        "tp_percent": "0.5"  
     }  
     
 
@@ -304,71 +232,9 @@ detail| object| 拼盤機器人詳情對象（詳見下方）
         "result": {  
             "status_code": 0,  
             "debug_msg": "",  
-            "detail": {  
-                "bot_id": "612324421335537259",  
-                "bot_mode": "BOT_MODE_MIX",  
-                "bot_display_status": "BOT_DISPLAY_STATUS_COMPLETED",  
-                "leverage": "5",  
-                "total_margin": "500",  
-                "total_pnl": "-3.7543",  
-                "total_pnl_per": "-0.0075",  
-                "equity": "496.24",  
-                "roi": "",  
-                "total_apr": "",  
-                "adjusted_position_num": "0",  
-                "last_adjust_position_time": "1774503406",  
-                "create_time": "1774503396",  
-                "end_time": "1774503410",  
-                "close_code": "BOT_CLOSE_CODE_CANCELED_MANUALLY",  
-                "ws_token": "",  
-                "symbol_settings": [  
-                    {  
-                        "symbol": "BTCUSDT",  
-                        "base_token": "BTC",  
-                        "quote_token": "USDT",  
-                        "target_position_percent": "0.5",  
-                        "side": "SIDE_LONG",  
-                        "symbol_id": 5  
-                    },  
-                    {  
-                        "symbol": "ETHUSDT",  
-                        "base_token": "ETH",  
-                        "quote_token": "USDT",  
-                        "target_position_percent": "0.5",  
-                        "side": "SIDE_SHORT",  
-                        "symbol_id": 6  
-                    }  
-                ],  
-                "sl_percent": "0.2",  
-                "tp_percent": "0.5",  
-                "total_position_value": "0",  
-                "margin_balance": "0",  
-                "available_balance": "0",  
-                "imr": "0",  
-                "mmr": "0",  
-                "funding_fee": "0",  
-                "adjust_position_mode": "ADJUST_POSITION_MODE_TIME_OR_PERCENT",  
-                "adjust_position_percent": "0.05",  
-                "adjust_position_time_interval": 3600,  
-                "bot_name": "BTC ETH",  
-                "run_time_duration": "15",  
-                "settlement_assets": "496.24566099 USDT",  
-                "stop_type": "BOT_STOP_TYPE_BY_USER",  
-                "follow_num": 0,  
-                "used_reward_amount": "",  
-                "used_reward_id": "0",  
-                "total_bonus": "0",  
-                "realized_pnl": "-3.7543",  
-                "unrealized_pnl": "0",  
-                "total_exec_fee": "0.7061",  
-                "last_modify_setting_time": "0",  
-                "midway_transfer": "0",  
-                "exit_equity": "0",  
-                "trailing_stop_percent": "0",  
-                "sl_exit_equity": "0",  
-                "tp_exit_equity": "0"  
-            }  
+            "bot_id": "612323083000239723",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774503836793  
+        "time": 1774502598542  
     }

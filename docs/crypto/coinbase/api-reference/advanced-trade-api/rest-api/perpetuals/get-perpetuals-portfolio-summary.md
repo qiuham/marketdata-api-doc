@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary
 api_type: Account
-updated_at: 2026-05-27 18:47:38.210437
+updated_at: 2026-06-28 19:25:23.750923
 ---
 
 # Get Perpetuals Portfolio Summary
@@ -73,6 +73,8 @@ Get a summary of your Perpetuals portfolio
         }
       }
     }
+
+**Deprecated — retires September 9, 2026.** This INTX perpetuals endpoint is being replaced by the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). Migrate before the cutover — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 #### Authorizations
 

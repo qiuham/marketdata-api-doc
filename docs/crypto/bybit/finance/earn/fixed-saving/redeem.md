@@ -2,65 +2,59 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/redeem
 api_type: REST
-updated_at: 2026-05-27 19:17:38.542167
+updated_at: 2026-06-28 19:11:23.326253
 ---
 
-# Get Airdrop Products
+# Redeem
+
+API ker permission: `Earn`  
+API rate limit: 5 reqs / sec
 
 info
 
-Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
+  * Early redemption is only supported for category=`FundPool` products where `allowEarlyRedemption` is `true`. Calling this endpoint for other product types returns an error.
+  * The position must have been held for at least `redemptionLimitDuration` before early redemption is allowed.
+  * Redeemed funds are always returned to the `FUND` account.
+
+
 
 ### HTTP Request
 
-GET`/v5/earn/hold-to-earn/product`
+POST`/v5/earn/fixed-term/redeem`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+productId| **true**|  string| Product ID  
+category| **true**|  string| Product sub-type: `FundPool`  
+positionId| **true**|  string| Position ID to redeem  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-products| array| Object  
-> coinName| string| Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`  
-> yields| array| Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)  
->> coinName| string| Yield coin name  
->> apy| string| Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin  
-> status| string| Product stage, `NotStarted`, `Online`, `Ended`  
-> apy| string| Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday  
-> announcementUrl| string| Activity rules announcement URL  
+redeemAmount| string| Estimated redemption amount (principal)  
+estEarnings| string| Estimated earnings at early redemption APY  
   
-info
-
-  * Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
-  * When `coinName != yields.coinName`, it is a cross-coin airdrop
-  * Results are sorted by product creation time, newest first.
-
-
-
 * * *
 
 ### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    POST /v5/earn/fixed-term/redeem HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
       
-    
-    
-    
-      
+    {  
+        "productId": 1001,  
+        "category": "FundPool",  
+        "positionId": 200001  
+    }  
     
 
 ### Response Example
@@ -70,107 +64,65 @@ info
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "products": [  
-                {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",  
-                    "apy": "0.210604%"  
-                },  
-                {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",  
-                    "apy": "0.029978%"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",  
-                    "apy": "10%"  
-                }  
-            ]  
+            "redeemAmount": "0.1",  
+            "estEarnings": "0.00002191"  
         },  
         "retExtInfo": {},  
-        "time": 1779348459085  
+        "time": 1776075665623  
     }
 
 ---
 
-# 獲取空投產品列表
+# 提前贖回
+
+API key權限：`Earn`  
+API 頻率限制：每秒5次
 
 信息
 
-不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
+  * 提前贖回僅支持 category=`FundPool` 且 `allowEarlyRedemption` 為 `true` 的產品。對其他產品類型調用此端點將返回錯誤。
+  * 持倉必須已持有至少 `redemptionLimitDuration` 的時間後才允許提前贖回。
+  * 贖回資金始終返回至 `FUND` 帳戶。
+
+
 
 ### HTTP 請求
 
-GET`/v5/earn/hold-to-earn/product`
+POST`/v5/earn/fixed-term/redeem`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+productId| **true**|  string| 產品ID  
+category| **true**|  string| 產品子類型：`FundPool`  
+positionId| **true**|  string| 要贖回的持倉ID  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-products| array| Object  
-> coinName| string| **投資幣種** 名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）  
-> yields| string| **收益幣種** 明細  
->> coinName| string| 收益幣種  
->> apy| string| 該收益幣種**昨日 APR** ，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`  
-> status| string| 產品當前階段，`NotStarted`, `Online`, `Ended`  
-> apy| string| **昨日綜合APR** ，昨日無收益時返回 `"0%"`  
-> announcementUrl| string| **活動規則連結** （公告頁 URL）  
+redeemAmount| string| 預計贖回金額（本金）  
+estEarnings| string| 按提前贖回APY計算的預計收益  
   
-信息
-
-  * 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
-  * 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
-  * 結果按產品創建時間倒序排列（較新在前）。
-
-
-
 * * *
 
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    POST /v5/earn/fixed-term/redeem HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
       
-    
-    
-    
-      
+    {  
+        "productId": 1001,  
+        "category": "FundPool",  
+        "positionId": 200001  
+    }  
     
 
 ### 響應示例
@@ -180,45 +132,9 @@ products| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "products": [  
-                {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",  
-                    "apy": "0.210604%"  
-                },  
-                {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",  
-                    "apy": "0.029978%"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",  
-                    "apy": "10%"  
-                }  
-            ]  
+            "redeemAmount": "0.1",  
+            "estEarnings": "0.00002191"  
         },  
         "retExtInfo": {},  
-        "time": 1779348459085  
+        "time": 1776075665623  
     }

@@ -2,93 +2,159 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/trade/Query-Current-Margin-Order-Count-Usage
 api_type: Trading
-updated_at: 2026-05-27 18:57:42.652240
+updated_at: 2026-06-28 18:52:46.494138
 ---
 
-# Query Liquidation Loan (USER_DATA)
+# Query Margin Account's all OCO (USER_DATA)
 
-## Description[​](/docs/margin_trading/trade/Query-Liquidation-Loan#description "Direct link to Description")
+## API Description[​](/docs/margin_trading/trade/Query-Margin-Account-All-OCO#api-description "Direct link to API Description")
 
-Query the current user's cross-margin liquidation loan information, including the original loan amount, repaid amount, and remaining amount.
+Retrieves all OCO for a specific margin account based on provided optional parameters
 
-When a cross-margin account is liquidated and the account equity turns negative (i.e., bankruptcy occurs), the system automatically generates a liquidation loan record to represent the deficit. Use this endpoint to check the current status of any outstanding liquidation loan.
+## HTTP Request[​](/docs/margin_trading/trade/Query-Margin-Account-All-OCO#http-request "Direct link to HTTP Request")
 
-## HTTP Request[​](/docs/margin_trading/trade/Query-Liquidation-Loan#http-request "Direct link to HTTP Request")
+GET `/sapi/v1/margin/allOrderList`
 
-GET `/sapi/v1/margin/liquidation-loan`
+## Request Weight[​](/docs/margin_trading/trade/Query-Margin-Account-All-OCO#request-weight "Direct link to Request Weight")
 
-## Request Weight[​](/docs/margin_trading/trade/Query-Liquidation-Loan#request-weight "Direct link to Request Weight")
+**200(IP)**
 
-**100(UID)**
-
-## Request Parameters[​](/docs/margin_trading/trade/Query-Liquidation-Loan#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/margin_trading/trade/Query-Margin-Account-All-OCO#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
+isIsolated| STRING| NO| for isolated margin or not, "TRUE", "FALSE"，default "FALSE"  
+symbol| STRING| NO| mandatory for isolated margin, not supported for cross margin  
+fromId| LONG| NO| If supplied, neither `startTime` or `endTime` can be provided  
+startTime| LONG| NO|   
+endTime| LONG| NO|   
+limit| INT| NO| Default Value: 500; Max Value: 1000  
 recvWindow| LONG| NO| The value cannot be greater than `60000`  
 timestamp| LONG| YES|   
   
-## Response Example[​](/docs/margin_trading/trade/Query-Liquidation-Loan#response-example "Direct link to Response Example")
+## Response Example[​](/docs/margin_trading/trade/Query-Margin-Account-All-OCO#response-example "Direct link to Response Example")
     
     
-    {  
-        "asset": "USDC",  
-        "amount": "1000.00000000",  
-        "repaidAmount": "300.00000000",  
-        "remainingAmount": "700.00000000"  
-    }  
-    
-
-## Response Parameters[​](/docs/margin_trading/trade/Query-Liquidation-Loan#response-parameters "Direct link to Response Parameters")
-
-Name| Type| Description  
----|---|---  
-asset| STRING| The asset of the liquidation loan (USDC by default)  
-amount| DECIMAL| Total liquidation loan amount  
-repaidAmount| DECIMAL| Amount that has been repaid  
-remainingAmount| DECIMAL| Outstanding amount remaining to be repaid
+    [  
+      {  
+        "orderListId": 29,  
+        "contingencyType": "OCO",  
+        "listStatusType": "EXEC_STARTED",  
+        "listOrderStatus": "EXECUTING",  
+        "listClientOrderId": "amEEAXryFzFwYF1FeRpUoZ",  
+        "transactionTime": 1565245913483,  
+        "symbol": "LTCBTC",  
+        "isIsolated": true,       // if isolated margin  
+        "orders": [  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 4,  
+            "clientOrderId": "oD7aesZqjEGlZrbtRpy5zB"  
+          },  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 5,  
+            "clientOrderId": "Jr1h6xirOxgeJOUuYQS7V3"  
+          }  
+        ]  
+      },  
+      {  
+        "orderListId": 28,  
+        "contingencyType": "OCO",  
+        "listStatusType": "EXEC_STARTED",  
+        "listOrderStatus": "EXECUTING",  
+        "listClientOrderId": "hG7hFNxJV6cZy3Ze4AUT4d",  
+        "transactionTime": 1565245913407,  
+        "symbol": "LTCBTC",  
+        "orders": [  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 2,  
+            "clientOrderId": "j6lFOfbmFMRjTYA7rRJ0LP"  
+          },  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 3,  
+            "clientOrderId": "z0KCjOdditiLS5ekAFtK81"  
+          }  
+        ]  
+      }  
+    ]
 
 ---
 
-# 查询强平穿仓欠款 (USER_DATA)
+# 查询特定杠杆账户所有 OCO (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/margin_trading/trade/Query-Margin-Account-All-OCO#接口描述 "接口描述的直接链接")
 
-查询当前用户的全仓杠杆强平穿仓欠款信息，包括欠款总额、已还金额和剩余待偿还金额。
+根据提供的可选参数检索特定杠杆账户所有的 OCO 订单。
 
-当用户的全仓杠杆账户触发强制平仓且发生穿仓时，系统会产生强平欠款记录（即穿仓导致的负债）。此接口允许用户查看尚未偿还的强平穿仓欠款余额。
+## HTTP请求[​](/docs/zh-CN/margin_trading/trade/Query-Margin-Account-All-OCO#http请求 "HTTP请求的直接链接")
 
-## HTTP请求[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#http请求 "HTTP请求的直接链接")
+GET `/sapi/v1/margin/allOrderList`
 
-GET `/sapi/v1/margin/liquidation-loan`
+## 请求权重[​](/docs/zh-CN/margin_trading/trade/Query-Margin-Account-All-OCO#请求权重 "请求权重的直接链接")
 
-## 请求权重[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#请求权重 "请求权重的直接链接")
+**200(IP)**
 
-**100(UID)**
-
-## 请求参数[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/margin_trading/trade/Query-Margin-Account-All-OCO#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-recvWindow| LONG| NO| 赋值不能大于 `60000`  
+isIsolated| STRING| NO| 是否逐仓杠杆，"TRUE", "FALSE", 默认 "FALSE"  
+symbol| STRING| NO| 逐仓杠杆必填，全仓杠杆不支持该参数  
+fromId| LONG| NO| 提供该项后, `startTime` 和 `endTime` 都不可提供  
+startTime| LONG| NO|   
+endTime| LONG| NO|   
+limit| INT| NO| 默认值: 500; 最大值: 1000  
+recvWindow| LONG| NO| 赋值不能超过 `60000`  
 timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/margin_trading/trade/Query-Margin-Account-All-OCO#响应示例 "响应示例的直接链接")
     
     
-    {  
-        "asset": "USDC",  
-        "amount": "1000.00000000",  
-        "repaidAmount": "300.00000000",  
-        "remainingAmount": "700.00000000"  
-    }  
-    
-
-## 响应参数[​](/docs/zh-CN/margin_trading/trade/Query-Liquidation-Loan#响应参数 "响应参数的直接链接")
-
-名称| 类型| 描述  
----|---|---  
-asset| STRING| 强平欠款资产（默认为USDC）  
-amount| DECIMAL| 强平穿仓欠款总额  
-repaidAmount| DECIMAL| 已偿还金额  
-remainingAmount| DECIMAL| 剩余未偿还金额
+    [  
+      {  
+        "orderListId": 29,  
+        "contingencyType": "OCO",  
+        "listStatusType": "EXEC_STARTED",  
+        "listOrderStatus": "EXECUTING",  
+        "listClientOrderId": "amEEAXryFzFwYF1FeRpUoZ",  
+        "transactionTime": 1565245913483,  
+        "symbol": "LTCBTC",  
+        "isIsolated": true,       // 是否是逐仓symbol交易   
+        "orders": [  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 4,  
+            "clientOrderId": "oD7aesZqjEGlZrbtRpy5zB"  
+          },  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 5,  
+            "clientOrderId": "Jr1h6xirOxgeJOUuYQS7V3"  
+          }  
+        ]  
+      },  
+      {  
+        "orderListId": 28,  
+        "contingencyType": "OCO",  
+        "listStatusType": "EXEC_STARTED",  
+        "listOrderStatus": "EXECUTING",  
+        "listClientOrderId": "hG7hFNxJV6cZy3Ze4AUT4d",  
+        "transactionTime": 1565245913407,  
+        "symbol": "LTCBTC",  
+        "orders": [  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 2,  
+            "clientOrderId": "j6lFOfbmFMRjTYA7rRJ0LP"  
+          },  
+          {  
+            "symbol": "LTCBTC",  
+            "orderId": 3,  
+            "clientOrderId": "z0KCjOdditiLS5ekAFtK81"  
+          }  
+        ]  
+      }  
+    ]

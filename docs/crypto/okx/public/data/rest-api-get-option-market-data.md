@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-option-market-data
 anchor_id: public-data-rest-api-get-option-market-data
 api_type: REST
-updated_at: 2026-05-27 19:36:10.677127
+updated_at: 2026-06-28 19:37:56.602014
 ---
 
 # Get option market data
@@ -46,6 +46,8 @@ instFamily | String | Yes | Instrument family, only applicable to `OPTION`
   
 expTime | String | No | Contract expiry date, the format is "YYMMDD", e.g. "200527"  
   
+**Note** : This endpoint may not return data for every option listed in `/api/v5/public/instruments`. Data can be absent in two cases: 1\. The option is listed but not yet tradeable (e.g. supplemental options may not become tradeable until a scheduled time; data will not be available before trading opens). 2\. Implied volatility surface fitting fails due to insufficient market quotes. This is more likely to occur in demo trading; in live trading, market maker quotes are generally available to ensure fitting succeeds.
+
 > Response Example
     
     
@@ -165,6 +167,8 @@ ts | String | Data update time, Unix timestamp format in milliseconds, e.g. `159
 instFamily | String | 是 | 交易品种，仅适用于期权  
 expTime | String | 否 | 合约到期日，格式为"YYMMDD"，如 "200527"  
   
+**注意** ：本接口返回的数据可能不包含 `/api/v5/public/instruments` 中所有的期权合约。以下两种情况可能导致数据缺失： 1\. 期权已上架但尚未开始交易（例如，补充期权默认在特定时间开始交易，在开始交易之前可能无法获取对应数据）。 2\. 因市场报价不足导致隐含波动率曲面拟合失败。此情况在模拟盘中较易发生；实盘中由于做市商会提供报价，通常可保证拟合成功。
+
 > 返回结果
     
     

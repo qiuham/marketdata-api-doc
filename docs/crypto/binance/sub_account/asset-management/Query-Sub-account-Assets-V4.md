@@ -2,113 +2,119 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Assets-V4
 api_type: Account
-updated_at: 2026-05-27 19:02:32.929183
+updated_at: 2026-06-28 18:57:18.694642
 ---
 
-# Query Sub-account Futures Asset Transfer History (For Master Account) (USER_DATA)
+# Query Universal Transfer History (For Master Account) (USER_DATA)
 
-## API Description[​](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#api-description "Direct link to API Description")
+## API Description[​](/docs/sub_account/asset-management/Query-Universal-Transfer-History#api-description "Direct link to API Description")
 
-Query Sub-account Futures Asset Transfer History
+Query Universal Transfer History
 
-## HTTP Request[​](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/sub_account/asset-management/Query-Universal-Transfer-History#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/sub-account/futures/internalTransfer`
+GET `/sapi/v1/sub-account/universalTransfer`
 
-## Request Weight(IP)[​](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#request-weightip "Direct link to Request Weight\(IP\)")
+## Request Weight(IP)[​](/docs/sub_account/asset-management/Query-Universal-Transfer-History#request-weightip "Direct link to Request Weight\(IP\)")
 
 **1**
 
-## Request Parameters[​](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/sub_account/asset-management/Query-Universal-Transfer-History#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-email| STRING| YES| [Sub-account email](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#email-address)  
-futuresType| LONG| YES| 1:USDT-margined Futures，2: Coin-margined Futures  
-startTime| LONG| NO| Cannot be earlier than 1 month ago  
+fromEmail| STRING| NO|   
+toEmail| STRING| NO|   
+clientTranId| STRING| NO|   
+startTime| LONG| NO|   
 endTime| LONG| NO|   
-page| INT| NO| Default value: 1  
-limit| INT| NO| Default value: 50, Max value: 500  
+page| INT| NO| Default 1  
+limit| INT| NO| Default 500, Max 500  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## Response Example[​](/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#response-example "Direct link to Response Example")
+>   * fromEmail and toEmail cannot be sent at the same time.
+>   * Return fromEmail equal master account email by default.
+>   * The query time period must be less than 7 days.
+>   * If startTime and endTime not sent, return records of the last 7 days by default.
+> 
+
+
+## Response Example[​](/docs/sub_account/asset-management/Query-Universal-Transfer-History#response-example "Direct link to Response Example")
     
     
     {  
-        "success":true,  
-        "futuresType": 2,  
-        "transfers":[  
+        "result": [  
             {  
-                "from":"aaa@test.com",  
-                "to":"bbb@test.com",  
-                "asset":"BTC",  
-                "qty":"1",  
-                "tranId":11897001102,  
-                "time":1544433328000  
-            },  
-            {  
-                "from":"bbb@test.com",  
-                "to":"ccc@test.com",  
-                "asset":"ETH",  
-                "qty":"2",  
-                "tranId":11631474902,  
-                "time":1544433328000  
+                "tranId": 92275823339,  
+                "fromEmail": "abctest@gmail.com",  
+                "toEmail": "deftest@gmail.com",  
+                "asset": "BNB",  
+                "amount": "0.01",  
+                "createTimeStamp": 1640317374000,  
+                "fromAccountType": "USDT_FUTURE",  
+                "toAccountType": "SPOT",  
+                "status": "SUCCESS",  
+                "clientTranId": "test"  
             }  
-        ]  
+        ],  
+        "totalCount": 1  
     }
 
 ---
 
-# 查询子账户合约资金划转历史 (适用主账户) (USER_DATA)
+# 查询子母账户万能划转历史 (适用主账户) (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#接口描述 "接口描述的直接链接")
 
-查询子账户合约资金划转历史
+查询子母账户万能划转历史
 
-## HTTP请求[​](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/sub-account/futures/internalTransfer`
+GET `/sapi/v1/sub-account/universalTransfer`
 
-## 请求权重(IP)[​](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#请求权重ip "请求权重\(IP\)的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#请求权重ip "请求权重\(IP\)的直接链接")
 
 **1**
 
-## 请求参数[​](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-email| STRING| YES| 子账户邮箱 [备注](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#request-email-address)  
-futuresType| LONG| YES| 1:USDT合约，2: 币本位合约  
-startTime| LONG| NO| 只能查询近一个月内历史纪录  
+fromEmail| STRING| NO|   
+toEmail| STRING| NO|   
+clientTranId| STRING| NO|   
+startTime| LONG| NO|   
 endTime| LONG| NO|   
-page| INT| NO| 默认值: 1  
-limit| INT| NO| 默认值: 50, 最大值：500  
+page| INT| NO| 默认 1  
+limit| INT| NO| 默认 500, 最大 500  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History#响应示例 "响应示例的直接链接")
+>   * 本查询接口只可以单边查询，fromEmail 和 toEmail 不能同时传入。
+>   * 若 fromEmail 和 toEmail 都未传，默认返回 fromEmail 为母账户的划转记录。
+>   * 若 startTime 和 endTime 都未传，则只可查询最近7天的记录。
+>   * 查询时间范围最大不得超过7天。
+> 
+
+
+## 响应示例[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#响应示例 "响应示例的直接链接")
     
     
     {  
-        "success":true,  
-        "futuresType": 2,  
-        "transfers":[  
+        "result": [  
             {  
-                "from":"aaa@test.com",  
-                "to":"bbb@test.com",  
-                "asset":"BTC",  
-                "qty":"1",  
-                "tranId":11897001102,  
-                "time":1544433328000  
-            },  
-            {  
-                "from":"bbb@test.com",  
-                "to":"ccc@test.com",  
-                "asset":"ETH",  
-                "qty":"2",  
-                "tranId":11631474902,  
-                "time":1544433328000  
+                "tranId": 92275823339,  
+                "fromEmail": "abctest@gmail.com",  
+                "toEmail": "deftest@gmail.com",  
+                "asset": "BNB",  
+                "amount": "0.01",  
+                "createTimeStamp": 1640317374000,  
+                "fromAccountType": "USDT_FUTURE",  
+                "toAccountType": "SPOT",  
+                "status": "SUCCESS",  
+                "clientTranId": "test"  
             }  
-        ]  
+        ],  
+        "totalCount": 1  
     }

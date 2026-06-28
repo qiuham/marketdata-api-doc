@@ -2,141 +2,239 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/dca/close
 api_type: REST
-updated_at: 2026-05-27 19:15:35.780933
+updated_at: 2026-06-28 19:09:15.633777
 ---
 
-# Bot Error Codes
+# Create Bot
 
-HTTP-level error codes returned by the Bot APIs.
+Create a new futures combo trading bot that manages a portfolio of multiple futures symbols with automatic position rebalancing.
 
-## Futures Combo Bot
+info
 
-Applies to: [Create](/docs/v5/bot/futures-combo/create), [Close](/docs/v5/bot/futures-combo/close), [Get Detail](/docs/v5/bot/futures-combo/get-detail), [Get Limit](/docs/v5/bot/futures-combo/get-limit)
+  * **Prerequisites:**  
+Call [Get Futures Combo Bot Limit](/docs/v5/bot/futures-combo/get-limit) before this endpoint to validate parameter ranges. User must pass KYC/compliance and GEO IP checks.
 
-error_code| error_msg| Applicable Endpoint(s)  
+  * **Portfolio configuration:**  
+The `symbol_settings` array defines the per-symbol portfolio. All `target_position_percent` values across symbols must sum to **100**.
+
+  * **Rebalancing mode (`adjust_position_mode`):**  
+`1`: Time-based — rebalance at fixed time intervals  
+`2`: Percentage-based — rebalance when allocation drifts by a threshold  
+`3`: Time or percentage — whichever triggers first  
+`4`: Manual — user-triggered only  
+`5`: On settings modification  
+`6`: On transfer
+
+  * **Side (`side` in `symbol_settings`):**  
+`1`: Long, `2`: Short
+
+  * **Response`bot_id`:**  
+Returned on success. Use for [Get Detail](/docs/v5/bot/futures-combo/get-detail) and [Close](/docs/v5/bot/futures-combo/close).
+
+  * **Rate limit:**  
+10 requests per second per UID.
+
+  * **Subject to compliance wall, GEO IP check, and KYC verification.**
+
+
+
+
+### HTTP Request
+
+POST`/v5/fcombobot/create`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+leverage| **true**|  string| Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1  
+init_margin| **true**|  string| Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)  
+adjust_position_mode| **true**|  integer| Rebalancing trigger mode: `1` Time, `2` Percentage, `3` Time or Percentage, `4` Manual, `5` On settings change, `6` On transfer  
+symbol_settings| **true**|  array<object>| Per-symbol portfolio configuration. At least one entry required. All `target_position_percent` must sum to 1  
+> symbol| **true**|  string| Trading pair symbol (e.g. `BTCUSDT`)  
+> target_position_percent| **true**|  string| Target portfolio weight as whole-number percentage (e.g. `"0.5"` means 50%)  
+> side| **true**|  integer| Position direction: `1` Long, `2` Short  
+adjust_position_percent| false| string| Rebalancing drift threshold as percentage, range: [0.01, 0.5] (e.g. `"0.05"` means rebalance when allocation drifts 5%). **Required** when mode includes percentage  
+adjust_position_time_interval| false| integer| Rebalancing time interval **in seconds**. **Required** when mode includes time. `30M`, `1H`, `4H`, `8H`, `12H`, `1D`, `3D`, `7D`, `14D`, `28D` convert to seconds  
+sl_percent| false| string| Stop-loss as percentage of total margin (e.g. `"0.2"` means close when loss reaches 20%)  
+tp_percent| false| string| Take-profit as percentage of total margin (e.g. `"0.5"` means close when profit reaches 50%)  
+trailing_stop_percent| false| string| Trailing stop callback as percentage (e.g. `"0.05"` means 5%)  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
 ---|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
+status_code| integer| `0` = success, `421` = user banned  
+bot_id| integer| Unique bot ID. Use for [Get Detail](/docs/v5/bot/futures-combo/get-detail) and [Close](/docs/v5/bot/futures-combo/close)  
+ban_reason_text| string| Localized ban reason. Returned only when `status_code=421`  
+debug_msg| string| Debug message (testnet only)  
   
 * * *
 
-## Futures Grid Bot
+### Request Example
+    
+    
+    POST /v5/fcombobot/create HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "leverage": "5",  
+        "init_margin": "500",  
+        "adjust_position_mode": 3,  
+        "adjust_position_percent": "0.05",  
+        "adjust_position_time_interval": 3600,  
+        "symbol_settings": [  
+            {  
+                "symbol": "BTCUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 1  
+            },  
+            {  
+                "symbol": "ETHUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 2  
+            }  
+        ],  
+        "sl_percent": "0.2",  
+        "tp_percent": "0.5"  
+    }  
+    
 
-Applies to: [Create](/docs/v5/bot/futures-grid/create), [Close](/docs/v5/bot/futures-grid/close), [Get Detail](/docs/v5/bot/futures-grid/get-detail), [Validate Input](/docs/v5/bot/futures-grid/validate-input)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
-
-## Futures Martingale Bot
-
-Applies to: [Create](/docs/v5/bot/futures-martingale/create), [Close](/docs/v5/bot/futures-martingale/close), [Get Detail](/docs/v5/bot/futures-martingale/get-detail), [Get Limit](/docs/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
-
-## DCA Bot
-
-Applies to: [Create](/docs/v5/bot/dca/create), [Close](/docs/v5/bot/dca/close)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)| Create  
-421| User is banned| Create  
-503| Bot cannot be closed currently (investment cycle in progress)| Close  
-  
-* * *
-
-## Spot Grid Bot
-
-Applies to: [Create](/docs/v5/bot/spot-grid/create), [Close](/docs/v5/bot/spot-grid/close), [Get Detail](/docs/v5/bot/spot-grid/get-detail), [Validate Input](/docs/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| Create, Validate Input  
-401| Insufficient balance| Create  
-404| Grid bot not found| Get Detail  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)| Close  
-421| User is banned| Create
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "status_code": 0,  
+            "debug_msg": "",  
+            "bot_id": "612323083000239723",  
+            "ban_reason_text": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1774502598542  
+    }
 
 ---
 
-# 機器人錯誤碼
+# 創建拼盤機器人
 
-Bot API 返回的 HTTP 層級錯誤碼。
+創建一個新的合約拼盤交易機器人，用於管理多個合約交易對的投資拼盤，並支援自動倉位再平衡。
 
-## 合約組合機器人（Futures Combo Bot）
+信息
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-combo/create)、[關閉](/docs/zh-TW/v5/bot/futures-combo/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-combo/get-limit)
+  * **前置條件：**  
+在調用本端點前，請先調用[查詢拼盤機器人限制參數](/docs/zh-TW/v5/bot/futures-combo/get-limit)，驗證參數範圍。用戶必須通過 KYC 合規及地理位置 IP 審核。
 
-error_code| error_msg| 適用端點  
+  * **投資拼盤配置：**  
+`symbol_settings` 陣列定義各交易對的投資拼盤配置。所有交易對的 `target_position_percent` 之和必須等於 **100** 。
+
+  * **再平衡模式（`adjust_position_mode`）：**  
+`1`：按時間 — 按固定時間間隔再平衡  
+`2`：按百分比 — 偏離閾值時再平衡  
+`3`：時間或百分比 — 任一條件觸發即再平衡  
+`4`：手動 — 由用戶手動觸發  
+`5`：設置修改時再平衡  
+`6`：資金轉入時再平衡
+
+  * **方向（`symbol_settings` 中的 `side`）：**  
+`1`：做多，`2`：做空
+
+  * **響應`bot_id`：**  
+成功時返回，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-combo/close)。
+
+  * **頻率限制：**  
+每個 UID 每秒最多 10 次請求。
+
+  * **受合規管控、地理位置 IP 限制及 KYC 驗證約束。**
+
+
+
+
+### HTTP請求
+
+POST`/v5/fcombobot/create`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+leverage| **true**|  string| 倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1  
+init_margin| **true**|  string| 初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）  
+adjust_position_mode| **true**|  integer| 再平衡觸發模式：`1` 按時間，`2` 按百分比，`3` 時間或百分比，`4` 手動，`5` 設置修改時，`6` 轉入時  
+symbol_settings| **true**|  array<object>| 各交易對投資拼盤配置，至少一項。所有 `target_position_percent` 之和必須為 1  
+> symbol| **true**|  string| 交易對名稱（例如 `BTCUSDT`）  
+> target_position_percent| **true**|  string| 目標倉位權重，整數百分比（例如 `"0.5"` 表示 50%）  
+> side| **true**|  integer| 倉位方向：`1` 做多，`2` 做空  
+adjust_position_percent| false| string| 再平衡偏離閾值百分比，範圍：[0.01, 0.5]（例如 `"0.05"` 表示偏離 5% 時再平衡）。當模式包含百分比時**必填**  
+adjust_position_time_interval| false| integer| 再平衡時間間隔（**秒** ）。當模式包含時間時**必填** 。`30M`、`1H`、`4H`、`8H`、`12H`、`1D`、`3D`、`7D`、`14D`、`28D` 均轉換為秒  
+sl_percent| false| string| 止損百分比，以總保證金為基準（例如 `"0.2"` 表示虧損達 20% 時平倉）  
+tp_percent| false| string| 止盈百分比，以總保證金為基準（例如 `"0.5"` 表示盈利達 50% 時平倉）  
+trailing_stop_percent| false| string| 移動止損回撥百分比（例如 `"0.05"` 表示 5%）  
+  
+### 響應參數
+
+參數| 類型| 說明  
 ---|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
+status_code| integer| `0` = 成功，`421` = 用戶被封禁  
+bot_id| integer| 唯一機器人 ID，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-combo/close)  
+ban_reason_text| string| 本地化封禁原因，僅當 `status_code=421` 時返回  
+debug_msg| string| 調試信息（僅測試網）  
   
 * * *
 
-## 合約網格機器人（Futures Grid Bot）
+### 請求示例
+    
+    
+    POST /v5/fcombobot/create HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "leverage": "5",  
+        "init_margin": "500",  
+        "adjust_position_mode": 3,  
+        "adjust_position_percent": "0.05",  
+        "adjust_position_time_interval": 3600,  
+        "symbol_settings": [  
+            {  
+                "symbol": "BTCUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 1  
+            },  
+            {  
+                "symbol": "ETHUSDT",  
+                "target_position_percent": "0.5",  
+                "side": 2  
+            }  
+        ],  
+        "sl_percent": "0.2",  
+        "tp_percent": "0.5"  
+    }  
+    
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-grid/create)、[關閉](/docs/zh-TW/v5/bot/futures-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/futures-grid/validate-input)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
-
-## 合約馬丁格爾機器人（Futures Martingale Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-martingale/create)、[關閉](/docs/zh-TW/v5/bot/futures-martingale/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-martingale/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
-
-## 定投機器人（DCA Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/dca/create)、[關閉](/docs/zh-TW/v5/bot/dca/close)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)（參數無效，例如重複的交易對或無效的頻率）| 創建  
-421| User is banned（用戶已被封禁）| 創建  
-503| Bot cannot be closed currently (investment cycle in progress)（機器人當前無法關閉，投資週期進行中）| 關閉  
-  
-* * *
-
-## 現貨網格機器人（Spot Grid Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/spot-grid/create)、[關閉](/docs/zh-TW/v5/bot/spot-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/spot-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 創建、驗證輸入  
-401| Insufficient balance（餘額不足）| 創建  
-404| Grid bot not found（找不到網格機器人）| 查詢詳情  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)（網格無法取消，已處於取消中或已完成狀態）| 關閉  
-421| User is banned（用戶已被封禁）| 創建
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "status_code": 0,  
+            "debug_msg": "",  
+            "bot_id": "612323083000239723",  
+            "ban_reason_text": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1774502598542  
+    }

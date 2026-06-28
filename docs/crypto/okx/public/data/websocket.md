@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-05-27 19:36:17.123835
+updated_at: 2026-06-28 19:38:02.920427
 ---
 
 # WebSocket
@@ -350,13 +350,13 @@ It is `null` when the value is not generated.
 > upcChg | Array of objects | Upcoming changes. It is [] when there is no upcoming change.  
 >> param | String | The parameter name to be updated.   
 `tickSz`  
-`minSz`  
+`minSz`: For `FUTURES`/`SWAP`, `lotSz` will be modified synchronously.  
 `maxMktSz`  
 >> newValue | String | The parameter value that will replace the current one.  
 >> effTime | String | Effective time. Unix timestamp format in milliseconds, e.g. `1597026383085`  
 Instrument status will trigger pushing of incremental data from instruments channel. When a new contract is going to be listed, the instrument data of the new contract will be available with status preopen. When a product is going to be delisted (e.g. when a FUTURES contract is settled or OPTION contract is exercised), the instrument status will be changed to expired.  listTime and contTdSwTime  
 For spot symbols listed through a call auction or pre-open, listTime represents the start time of the auction or pre-open, and contTdSwTime indicates the end of the auction or pre-open and the start of continuous trading. For other scenarios, listTime will mark the beginning of continuous trading, and contTdSwTime will return an empty value "".  state  
-The state will always change from `preopen` to `live` when the listTime is reached. Certain symbols will now have `state:preopen` before they go live. Before going live, the instruments channel will push data for pre-listing symbols with `state:preopen`. If the listing is cancelled, the channel will send full data excluding the cancelled symbol, without additional notification. When the symbol goes live (reaching listTime), the channel will push data with `state:live`. Users can also query the corresponding data via the REST endpoint.  
+For `SPOT`, `MARGIN`, `SWAP`, and `FUTURES`, the state changes from `preopen` to `live` when the `listTime` is reached. For `OPTION` contracts, the state may change to `live` slightly after `listTime` due to internal processing. It is recommended to verify that `state` is `live` before placing orders. Certain symbols will now have `state:preopen` before they go live. Before going live, the instruments channel will push data for pre-listing symbols with `state:preopen`. If the listing is cancelled, the channel will send full data excluding the cancelled symbol, without additional notification. When the symbol goes live (at or shortly after `listTime` for `OPTION`), the channel will push data with `state:live`. Users can also query the corresponding data via the REST endpoint.  
 When a product is going to be delisted (e.g. when a FUTURES contract is settled or OPTION contract is exercised), the instrument will not be available. 
 
 ### Event contract markets channel
@@ -2035,9 +2035,7 @@ Liquidation data comes from different data sources, so the updated data is not n
 
 Auto-deleveraging warning channel.
 
-In the `normal` state, data will be pushed once every minute to display the balance of security fund and etc.
-
-In the warning state or when there is ADL risk (`warning/adl`), data will be pushed every second to display information such as the real-time decline rate of security fund.
+Data is only pushed in the `warning` or `adl` state, once every second, displaying the security fund balance and related risk information. No data is pushed in the `normal` state.
 
 For more ADL details, please refer to [Introduction to Auto-deleveraging](https://www.okx.com/help/iv-introduction-to-auto-deleveraging-adl)
 
@@ -2163,17 +2161,20 @@ connId | String | Yes | WebSocket connection ID
        },
        "data":[
           {
-             "maxBal":"",
-             "adlRecBal":"8000.0",
-             "bal":"280784384.9564228289548144",
              "instType":"FUTURES",
-             "ccy": "USDT",
              "instFamily":"BTC-USDT",
+             "state":"warning",
+             "bal":"280784384.9564228289548144",
+             "ccy":"",
+             "maxBal":"",
              "maxBalTs":"",
              "adlType":"",
-             "state":"normal",
-             "adlBal":"0",
-             "ts":"1700210763001"
+             "adlBal":"",
+             "adlRecBal":"",
+             "ts":"1700210763001",
+             "decRate":"",
+             "adlRate":"",
+             "adlRecRate":""
           }
        ]
     }
@@ -2193,22 +2194,21 @@ data | Array of objects | Subscribed data
 > instType | String | Instrument type  
 > instFamily | String | Instrument family  
 > state | String | state   
-`normal`   
 `warning`   
 `adl`  
 > bal | String | Real-time security fund balance  
-> ccy | String | The corresponding currency of security fund balance  
-> maxBal | String | Maximum security fund balance in the past eight hours   
+> ccy | String | ~~The corresponding currency of security fund balance~~(Deprecated, returns `""`. To be removed in a future update)  
+> maxBal | String | ~~Maximum security fund balance in the past eight hours  
   
-Applicable when state is `warning` or `adl`  
-> maxBalTs | String | Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g. `1597026383085`  
-> adlType | String | ADL related events   
+Applicable when state is `warning` or `adl`~~(Deprecated, returns `""`. To be removed in a future update)  
+> maxBalTs | String | ~~Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g.`1597026383085`~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlType | String | ~~ADL related events  
 `rate_adl_start`: ADL begins due to high security fund decline rate   
 `bal_adl_start`: ADL begins due to security fund balance falling   
 `pos_adl_start`：ADL begins due to the volume of liquidation orders falls to a certain level (only applicable to premarket symbols)   
-`adl_end`: ADL ends  
-> adlBal | String | security fund balance that triggers ADL  
-> adlRecBal | String | security fund balance that turns off ADL  
+`adl_end`: ADL ends~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlBal | String | ~~security fund balance that triggers ADL~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlRecBal | String | ~~security fund balance that turns off ADL~~(Deprecated, returns `""`. To be removed in a future update)  
 > ts | String | Data push time, Unix timestamp format in milliseconds, e.g. `1597026383085`  
 > decRate | String | ~~Real-time security fund decline rate (compare bal and maxBal)  
   
@@ -2716,13 +2716,13 @@ data | Array of objects | 订阅的数据
 > upcChg | Array of objects | 即将变更的参数列表。当没有即将变更的参数时，返回空数组 []  
 >> param | String | 即将变更的参数名称。  
 `tickSz`  
-`minSz`  
+`minSz`：若为交割/永续合约（`FUTURES`/`SWAP`），`lotSz` 会同步变更。  
 `maxMktSz`  
 >> newValue | String | 即将变更的参数值。  
 >> effTime | String | 生效时间。Unix 时间戳格式，例如 `1597026383085`  
 产品状态变更，是触发instrument接口推送条件： 当合约预上线时，状态变更为预上线（即新生成一个合约，新合约会处于预上线状态）； 当产品下线的时候（如交割合约被交割的时候，期权合约被行权的时候），状态变更为已过期  listTime以及contTdSwTime  
 对于通过集合竞价/提前挂单方式上线的币币，listTime为集合竞价/提前挂单的开始时间，contTdSwTime为集合竞价/提前挂单的结束时间、连续交易的开始时间；对于其他情况及业务线，listTime即为连续交易开始时间，contTdSwTime将返回""  state  
-状态state总是在时间到达listTime时由`preopen`转变为`live`。上线前，交易产品频道将推送预上线产品，状态为`state:preopen`；若上线被取消，频道将全量推送数据，其中不包括被取消的预上线产品，不做额外通知。交易产品上线时（到达listTime），频道将推送状态为交易中`state:live`。用户亦可以通过REST接口查询到相应数据。  
+对于`币币`、`杠杆`、`永续`和`交割`，状态state在时间到达listTime时由`preopen`转变为`live`。对于`期权`合约，由于内部处理原因，状态可能在`listTime`之后短暂延迟变为`live`。建议在下单前确认`state`为`live`。上线前，交易产品频道将推送预上线产品，状态为`state:preopen`；若上线被取消，频道将全量推送数据，其中不包括被取消的预上线产品，不做额外通知。交易产品上线时（`期权`合约可能在listTime之后短暂时间内），频道将推送状态为交易中`state:live`。用户亦可以通过REST接口查询到相应数据。  
 当产品下线的时候（如交割合约被交割的时候，期权合约被行权的时候），查询不到该产品 
 
 ### 事件合约市场频道 
@@ -4372,9 +4372,7 @@ data | Array of objects | 订阅的数据
 
 自动减仓预警。
 
-普通状态（`normal`）下，每分钟推送一次，展示风险保证金的余额等信息。
-
-预警状态下或有自动减仓风险（`warning/adl`）时，每1秒推送一次数据，展示风险保证金的实时下降率等信息。
+仅在 `warning` 或 `adl` 状态下推送数据，每1秒推送一次，展示风险保证金余额及相关风险信息。`normal` 状态下不再推送数据。
 
 更多自动减仓细节，请见[自动减仓机制介绍](https://www.okx.com/cn/help/iv-introduction-to-auto-deleveraging-adl)
 
@@ -4499,17 +4497,20 @@ connId | String | 是 | WebSocket连接ID
        },
        "data":[
           {
-             "maxBal":"",
-             "adlRecBal":"8000.0",
-             "bal":"280784384.9564228289548144",
              "instType":"FUTURES",
-             "ccy": "USDT",
              "instFamily":"BTC-USDT",
+             "state":"warning",
+             "bal":"280784384.9564228289548144",
+             "ccy":"",
+             "maxBal":"",
              "maxBalTs":"",
              "adlType":"",
-             "state":"normal",
-             "adlBal":"0",
-             "ts":"1700210763001"
+             "adlBal":"",
+             "adlRecBal":"",
+             "ts":"1700210763001",
+             "decRate":"",
+             "adlRate":"",
+             "adlRecRate":""
           }
        ]
     }
@@ -4529,21 +4530,20 @@ data | Array of objects | 订阅的数据
 > instType | String | 产品类型  
 > instFamily | String | 交易品种  
 > state | String | 状态   
-`normal`：普通状态   
 `warning`：预警状态   
 `adl`：已开启自动减仓  
 > bal | String | 实时风险保证金余额  
-> ccy | String | 风险保证金余额对应币种  
-> maxBal | String | 过去八小时内的风险保证金余额最大值   
-仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""  
-> maxBalTs | String | 过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
-> adlType | String | 关于自动减仓的事件  
+> ccy | String | ~~风险保证金余额对应币种~~ （已弃用，返回 `""`。将在后续更新中删除）  
+> maxBal | String | ~~过去八小时内的风险保证金余额最大值  
+仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""~~（已弃用，返回 `""`。将在后续更新中删除）  
+> maxBalTs | String | ~~过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如`1597026383085`~~（已弃用，返回 `""`。将在后续更新中删除）  
+> adlType | String | ~~关于自动减仓的事件  
 `rate_adl_start`：由于风险保证金下降率过高造成的自动减仓开始   
 `bal_adl_start`：由于风险保证金余额下降过高造成的自动减仓开始   
 `pos_adl_start`：由于强平单的规模积累到一定程度的自动减仓开始（仅适用于盘前交易市场）   
-`adl_end`：自动减仓结束  
-> adlBal | String | 触发自动减仓的风险保证金余额  
-> adlRecBal | String | 自动减仓结束的风险保证金余额  
+`adl_end`：自动减仓结束~~（已弃用，返回 `""`。将在后续更新中删除）  
+> adlBal | String | ~~触发自动减仓的风险保证金余额~~ （已弃用，返回 `""`。将在后续更新中删除）  
+> adlRecBal | String | ~~自动减仓结束的风险保证金余额~~ （已弃用，返回 `""`。将在后续更新中删除）  
 > ts | String | 数据更新时间，Unix时间戳的毫秒数格式，如 1597026383085  
 > decRate | String | ~~风险保证金实时下降率（bal与maxBal相比较）  
 仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""~~（已弃用）  

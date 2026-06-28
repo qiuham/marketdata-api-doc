@@ -2,28 +2,30 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/repayment-available-amount
 api_type: REST
-updated_at: 2026-05-27 19:22:17.515764
+updated_at: 2026-06-28 19:14:48.646334
 ---
 
-# Get Available Amount to Repay
+# Get Status And Leverage
+
+Query the Spot margin status and leverage
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/repayment-available-amount`
+GET`/v5/spot-margin-trade/state`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| **true**|  string| Coin name, uppercase only  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-currency| string| Coin name, uppercase only  
-lossLessRepaymentAmount| string| Repayment amount = min(spot coin available balance, coin borrow amount)  
-  
+spotLeverage| string| Spot margin leverage. Returns `""` if the margin trade is turned off  
+spotMarginMode| string| Spot margin status. `1`: on, `0`: off  
+effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal places, truncate downwards  
+[](/docs/api-explorer/v5/spot-margin-uta/status)
+
 * * *
 
 ### Request Example
@@ -35,7 +37,7 @@ lossLessRepaymentAmount| string| Repayment amount = min(spot coin available bala
 
     
     
-    GET /v5/spot-margin-trade/repayment-available-amount?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/state HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -50,13 +52,26 @@ lossLessRepaymentAmount| string| Repayment amount = min(spot coin available bala
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_repayment_available_amount(  
-        currency="BTC"  
-    ))  
+    print(session.spot_margin_trade_get_status_and_leverage())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSpotMarginState()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -64,38 +79,40 @@ lossLessRepaymentAmount| string| Repayment amount = min(spot coin available bala
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "lossLessRepaymentAmount": "0.02000000",  
-            "currency": "BTC"  
+            "spotLeverage": "10",  
+            "spotMarginMode": "1",  
+            "effectiveLeverage": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1756273388821  
+        "time": 1692696841231  
     }
 
 ---
 
-# 查詢負債幣種可還款金額
+# 查詢開關狀態和倍數
+
+查詢統一帳戶下槓桿交易的開關狀態和槓桿倍數
+
+> **覆蓋範圍: 全倉槓桿 (統一帳戶)**
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/repayment-available-amount`
+GET`/v5/spot-margin-trade/state`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| **true**|  string| 幣名稱，僅限大寫  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-currency| string| 幣名稱，僅限大寫  
-lossLessRepaymentAmount| string| 還款金額=min(現貨幣可用餘額，借幣金額)  
+spotLeverage| string| 槓桿倍數. 如果處於關閉狀態的話, 則返回 `""`  
+spotMarginMode| string| 開關狀態. `1`: 開啟, `0`: 關閉  
+effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，向下截取  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -105,7 +122,7 @@ lossLessRepaymentAmount| string| 還款金額=min(現貨幣可用餘額，借幣
 
     
     
-    GET /v5/spot-margin-trade/repayment-available-amount?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/state HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -118,7 +135,22 @@ lossLessRepaymentAmount| string| 還款金額=min(現貨幣可用餘額，借幣
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSpotMarginState()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -126,11 +158,12 @@ lossLessRepaymentAmount| string| 還款金額=min(現貨幣可用餘額，借幣
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "lossLessRepaymentAmount": "0.02000000",  
-            "currency": "BTC"  
+            "spotLeverage": "10",  
+            "spotMarginMode": "1",  
+            "effectiveLeverage": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1756273388821  
+        "time": 1692696841231  
     }

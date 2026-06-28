@@ -2,27 +2,27 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-05-27 19:22:10.582597
+updated_at: 2026-06-28 19:14:42.204163
 ---
 
-# Renew Fixed-Rate Borrow
+# Get Max Borrowable Amount
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/fixedborrow-renew`
+GET`/v5/spot-margin-trade/max-borrowable`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanId| **true**|  string| Loan ID  
-qty| false| string| Renewal quantity. If not specified, the entire remaining amount will be renewed; if specified, the renewal will be based on the entered quantity  
+currency| **true**|  string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| string| `Success` / `Failure`  
+currency| string| Coin name, uppercase only  
+maxLoan| string| Max borrowable amount  
   
 * * *
 
@@ -35,17 +35,12 @@ result| string| `Success` / `Failure`
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow-renew HTTP/1.1  
+    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "loanId": "2092341042506646784"  
-    }  
     
     
     
@@ -55,8 +50,8 @@ result| string| `Success` / `Failure`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_fixed_borrow_renew(  
-        loanId="2092341042506646784"  
+    print(session.spot_margin_trade_get_max_borrowable(  
+        currency="BTC"  
     ))  
     
     
@@ -69,32 +64,35 @@ result| string| `Success` / `Failure`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": "Success",  
+        "retMsg": "Success",  
+        "result": {  
+            "maxLoan": "17.54689892",  
+            "currency": "BTC"  
+        },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1756261353733  
     }
 
 ---
 
-# 固定利率借款續借
+# 查詢最大可借數
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/fixedborrow-renew`
+GET`/v5/spot-margin-trade/max-borrowable`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanId| **true**|  string| 借款合約 ID  
-qty| false| string| 續借數量。未輸入則將剩餘全部金額續借；輸入則按輸入的數量續借  
+currency| **true**|  string| 幣名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| string| `Success`：成功 / `Failure`：失敗  
+currency| string| 幣名稱，僅限大寫  
+maxLoan| string| 最高可藉金額  
   
 * * *
 
@@ -107,17 +105,12 @@ result| string| `Success`：成功 / `Failure`：失敗
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow-renew HTTP/1.1  
+    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "loanId": "2092341042506646784"  
-    }  
     
     
     
@@ -133,8 +126,11 @@ result| string| `Success`：成功 / `Failure`：失敗
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": "Success",  
+        "retMsg": "Success",  
+        "result": {  
+            "maxLoan": "17.54689892",  
+            "currency": "BTC"  
+        },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1756261353733  
     }

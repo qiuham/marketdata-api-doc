@@ -2,77 +2,97 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/market-data/Get-All-Margin-Assets
 api_type: Market Data
-updated_at: 2026-05-27 18:56:44.636602
+updated_at: 2026-06-28 18:51:54.602164
 ---
 
-# Get All Margin Assets (MARKET_DATA)
+# Get list Schedule (MARKET_DATA)
 
-## API Description[​](/docs/margin_trading/market-data/Get-All-Margin-Assets#api-description "Direct link to API Description")
+## API Description[​](/docs/margin_trading/market-data/Get-List-Schedule#api-description "Direct link to API Description")
 
-Get All Margin Assets.
+Get the upcoming tokens or symbols listing schedule for Cross Margin and Isolated Margin.
 
-## HTTP Request[​](/docs/margin_trading/market-data/Get-All-Margin-Assets#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/margin_trading/market-data/Get-List-Schedule#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/margin/allAssets`
+GET `/sapi/v1/margin/list-schedule`
 
-## Request Weight[​](/docs/margin_trading/market-data/Get-All-Margin-Assets#request-weight "Direct link to Request Weight")
+## Request Weight(IP)[​](/docs/margin_trading/market-data/Get-List-Schedule#request-weightip "Direct link to Request Weight\(IP\)")
 
-**1(IP)**
+**100**
 
-## Request Parameters[​](/docs/margin_trading/market-data/Get-All-Margin-Assets#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/margin_trading/market-data/Get-List-Schedule#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-asset| STRING| NO|   
+recvWindow| LONG| NO|   
+timestamp| LONG| YES|   
   
-## Response Example[​](/docs/margin_trading/market-data/Get-All-Margin-Assets#response-example "Direct link to Response Example")
+## Response Example[​](/docs/margin_trading/market-data/Get-List-Schedule#response-example "Direct link to Response Example")
     
     
     [  
       {  
-        "assetFullName": "USD coin",  
-        "assetName": "USDC",  
-        "isBorrowable": true,  
-        "isMortgageable": true,  
-        "userMinBorrow": "0.00000000",  
-        "userMinRepay": "0.00000000",  
-        "delistTime": 1704973040  
+        "listTime": 1686161202000,  
+        "crossMarginAssets": [  
+          "BTC",  
+          "USDT"  
+        ],  
+        "isolatedMarginSymbols": [  
+          "ADAUSDT",  
+          "BNBUSDT"  
+        ]  
+      },  
+      {  
+        "listTime": 1686222232000,  
+        "crossMarginAssets": [  
+          "ADA"  
+        ],  
+        "isolatedMarginSymbols": []  
       }  
     ]
 
 ---
 
-# 获取所有杠杆资产信息 (MARKET_DATA)
+# 查询上架计划 (MARKET_DATA)
 
-## 接口描述[​](/docs/zh-CN/margin_trading/market-data/Get-All-Margin-Assets#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/margin_trading/market-data/Get-List-Schedule#接口描述 "接口描述的直接链接")
 
-获取所有杠杆资产信息
+查询全仓和逐仓的币种或币对的上架计划
 
-## HTTP请求[​](/docs/zh-CN/margin_trading/market-data/Get-All-Margin-Assets#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/margin_trading/market-data/Get-List-Schedule#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/margin/allAssets`
+GET `/sapi/v1/margin/list-schedule`
 
-## 请求权重[​](/docs/zh-CN/margin_trading/market-data/Get-All-Margin-Assets#请求权重 "请求权重的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/margin_trading/market-data/Get-List-Schedule#请求权重ip "请求权重\(IP\)的直接链接")
 
-**1(IP)**
+**100**
 
-## 请求参数[​](/docs/zh-CN/margin_trading/market-data/Get-All-Margin-Assets#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/margin_trading/market-data/Get-List-Schedule#请求参数 "请求参数的直接链接")
 
-Name| Type| Mandatory| Description  
+名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-asset| STRING| NO|   
+recvWindow| LONG| NO|   
+timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/margin_trading/market-data/Get-All-Margin-Assets#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/margin_trading/market-data/Get-List-Schedule#响应示例 "响应示例的直接链接")
     
     
     [  
       {  
-        "assetFullName": "USD coin",  
-        "assetName": "USDC",  
-        "isBorrowable": true,  
-        "isMortgageable": true,  
-        "userMinBorrow": "0.00000000",  
-        "userMinRepay": "0.00000000",  
-        "delistTime": 1704973040  
+        "listTime": 1686161202000,  
+        "crossMarginAssets": [  
+          "BTC",  
+          "USDT"  
+        ],  
+        "isolatedMarginSymbols": [  
+          "ADAUSDT",  
+          "BNBUSDT"  
+        ]  
+      },  
+      {  
+        "listTime": 1686222232000,  
+        "crossMarginAssets": [  
+          "ADA"  
+        ],  
+        "isolatedMarginSymbols": []  
       }  
     ]

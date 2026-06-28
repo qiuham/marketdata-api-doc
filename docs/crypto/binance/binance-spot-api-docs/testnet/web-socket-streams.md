@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-streams
 api_type: REST
-updated_at: 2026-05-27 18:54:52.161109
+updated_at: 2026-06-28 18:50:08.567577
 ---
 
 # User Data Streams for Binance
@@ -315,7 +315,7 @@ Check the [Enums page](/docs/binance-spot-api-docs/enums) for more relevant enum
     }  
     
 
-### 订单更新[​](/docs/zh-CN/binance-spot-api-docs/user-data-stream#订单更新 "��订单更新的直接链接")
+### 订单更新[​](/docs/zh-CN/binance-spot-api-docs/user-data-stream#订单更新 "订单更新的直接链接")
 
 订单通过`executionReport`事件进行更新。
 
@@ -345,8 +345,8 @@ Check the [Enums page](/docs/binance-spot-api-docs/enums) for more relevant enum
             "l": "0.00000000",                 // 订单末次成交量  
             "z": "0.00000000",                 // 订单累计已成交量  
             "L": "0.00000000",                 // 订单末次成交价格  
-            "n": "0",                          // 手续费数量  
-            "N": null,                         // 手续费资产类别  
+            "n": "0",                          // 佣金数量  
+            "N": null,                         // 佣金资产类别  
             "T": 1499405658657,                // 成交时间  
             "t": -1,                           // Trade ID  
             "v": 3,                            // 被阻止的交易Id；仅在订单因为STP被阻止时显示  

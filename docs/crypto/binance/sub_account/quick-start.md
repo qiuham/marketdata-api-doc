@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/quick-start
 api_type: Account
-updated_at: 2026-05-27 19:03:11.946223
+updated_at: 2026-06-28 18:57:52.046959
 ---
 
 # Quick Start
@@ -95,7 +95,7 @@ A YAML file with OpenAPI specification on the RESTful API is available to be use
 
 新注册的币安账号都会有一个现货(`SPOT`)账号。
 
-### 杠杆账户[​](/docs/zh-CN/sub_account/quick-start#杠杆账户 "杠杆�账户的直接链接")
+### 杠杆账户[​](/docs/zh-CN/sub_account/quick-start#杠杆账户 "杠杆账户的直接链接")
 
 为了开设杠杆(`MARGIN`)账户, 可以参考[Binance杠杆交易账户设置指南](https://www.binance.vision/zh/tutorials/binance-margin-trading-guide)
 

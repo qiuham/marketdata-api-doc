@@ -2,111 +2,91 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/convert/trade/Cancel-Order
 api_type: Trading
-updated_at: 2026-05-27 19:00:52.221116
+updated_at: 2026-06-28 18:55:44.532458
 ---
 
-# Get Convert Trade History(USER_DATA)
+# Query limit open orders (USER_DATA)
 
-## API Description[​](/docs/convert/trade/Get-Convert-Trade-History#api-description "Direct link to API Description")
+## API Description[​](/docs/convert/trade/Query-Order#api-description "Direct link to API Description")
 
-Get Convert Trade History
+Request a quote for the requested token pairs
 
-## HTTP Request[​](/docs/convert/trade/Get-Convert-Trade-History#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/convert/trade/Query-Order#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/convert/tradeFlow`
+GET `/sapi/v1/convert/limit/queryOpenOrders`
 
-## Request Weight(UID)[​](/docs/convert/trade/Get-Convert-Trade-History#request-weightuid "Direct link to Request Weight\(UID\)")
+## Request Weight[​](/docs/convert/trade/Query-Order#request-weight "Direct link to Request Weight")
 
-**3000**
+**3000(UID)**
 
-## Request Parameters[​](/docs/convert/trade/Get-Convert-Trade-History#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/convert/trade/Query-Order#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-startTime| LONG| YES|   
-endTime| LONG| YES|   
-limit| INT| NO| Default 100, Max 1000  
-recvWindow| LONG| NO|   
+recvWindow| LONG| NO| The value cannot be greater than 60000  
 timestamp| LONG| YES|   
   
->   * The max interval between startTime and endTime is 30 days.
-> 
-
-
-## Response Example[​](/docs/convert/trade/Get-Convert-Trade-History#response-example "Direct link to Response Example")
+## Response Example[​](/docs/convert/trade/Query-Order#response-example "Direct link to Response Example")
     
     
     {  
-       "list": [  
+        "list": [  
             {  
-                "quoteId": "f3b91c525b2644c7bc1e1cd31b6e1aa6",  
-                "orderId": 940708407462087195,    
-                "orderStatus": "SUCCESS",  // order status  
-                "fromAsset": "USDT",       // from asset  
-                "fromAmount": "20",        // from amount  
-                "toAsset": "BNB",          // to asset  
-                "toAmount": "0.06154036",  // to amount  
-                "ratio": "0.00307702",     // price ratio  
-                "inverseRatio": "324.99",  // inverse price   
-                "createTime": 1624248872184  
+                "quoteId": "18sdf87kh9df",   
+                "orderId": 1150901289839,   
+                "orderStatus": "SUCCESS",   
+                "fromAsset": "BNB",   
+                "fromAmount": "10",   
+                "toAsset": "USDT",   
+                "toAmount": "2317.89",   
+                "ratio": "231.789",   
+                "inverseRatio": "0.00431427",   
+                "createTime": 1614089498000,  
+               "expiredTimestamp": 1614099498000  
             }  
-       ],  
-        "startTime": 1623824139000,  
-        "endTime": 1626416139000,  
-        "limit": 100,  
-        "moreData": false  
+        ]  
     }
 
 ---
 
-# 获取闪兑交易记录(USER_DATA)
+# 查询闪兑限价单 (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/convert/trade/Get-Convert-Trade-History#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/convert/trade/Query-Order#接口描述 "接口描述的直接链接")
 
-获取闪兑交易记录
+查询闪兑限价单
 
-## HTTP请求[​](/docs/zh-CN/convert/trade/Get-Convert-Trade-History#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/convert/trade/Query-Order#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/convert/tradeFlow`
+GET `/sapi/v1/convert/limit/queryOpenOrders`
 
-## 请求权重(UID)[​](/docs/zh-CN/convert/trade/Get-Convert-Trade-History#请求权重uid "请求权重\(UID\)的直接链接")
+## 请求权重[​](/docs/zh-CN/convert/trade/Query-Order#请求权重 "请求权重的直接链接")
 
-**3000**
+**3000(UID)**
 
-## 请求参数[​](/docs/zh-CN/convert/trade/Get-Convert-Trade-History#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/convert/trade/Query-Order#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-startTime| LONG| YES|   
-endTime| LONG| YES|   
-limit| INT| NO| 默认 100, 最大 1000  
-recvWindow| LONG| NO|   
+recvWindow| LONG| NO| 该值不大于60000  
 timestamp| LONG| YES|   
   
->   * startTime和endTime的最大时间间隔为30天
-> 
-
-
-## 响应示例[​](/docs/zh-CN/convert/trade/Get-Convert-Trade-History#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/convert/trade/Query-Order#响应示例 "响应示例的直接链接")
     
     
     {  
-       "list": [  
+        "list": [  
             {  
-                "quoteId": "f3b91c525b2644c7bc1e1cd31b6e1aa6",  
-                "orderId": 940708407462087195,  // 订单号  
-                "orderStatus": "SUCCESS",  // 订单状态  
-                "fromAsset": "USDT",       // 闪兑前币种  
-                "fromAmount": "20",        // 闪兑前金额  
-                "toAsset": "BNB",          // 闪兑后币种  
-                "toAmount": "0.06154036",  // 闪兑后金额  
-                "ratio": "0.00307702",     // 价格  
-                "inverseRatio": "324.99",  // 反向价格  
-                "createTime": 1624248872184  
+                "quoteId": "18sdf87kh9df",   
+                "orderId": 1150901289839,   
+                "orderStatus": "SUCCESS",   
+                "fromAsset": "BNB",   
+                "fromAmount": "10",   
+                "toAsset": "USDT",   
+                "toAmount": "2317.89",   
+                "ratio": "231.789",   
+                "inverseRatio": "0.00431427",   
+                "createTime": 1614089498000,  
+               "expiredTimestamp": 1614099498000  
             }  
-       ],  
-        "startTime": 1623824139000,  
-        "endTime": 1626416139000,  
-        "limit": 100,  
-        "moreData": false  
+        ]  
     }

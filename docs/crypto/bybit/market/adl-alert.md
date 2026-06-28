@@ -2,36 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/adl-alert
 api_type: Market Data
-updated_at: 2026-05-27 19:18:13.473269
+updated_at: 2026-06-28 19:12:08.195084
 ---
 
-# Get Delivery Price
+# Get Funding Rate History
 
-Get the delivery price.
+Query for historical funding rates. Each symbol has a different funding interval. For example, if the interval is 8 hours and the current time is UTC 12, then it returns the last funding rate, which settled at UTC 8.
 
-> **Covers: USDT futures / USDC futures / Inverse futures / Option**
+To query the funding rate interval, please refer to the [instruments-info](/docs/v5/market/instrument) endpoint.
+
+> **Covers: USDT and USDC perpetual / Inverse perpetual**
 
 info
 
-  * Option: only returns those symbols which are `DELIVERING` (UTC 8 - UTC 12) when `symbol` is not specified.
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * Passing only `startTime` returns an error.
+  * Passing only `endTime` returns 200 records up till `endTime`.
+  * Passing neither returns 200 records up till the current time.
 
 
 
 ### HTTP Request
 
-GET`/v5/market/delivery-price`
+GET`/v5/market/funding/history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `inverse`, `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-baseCoin| false| string| Base coin, uppercase only. Default: `BTC`. _Valid for`option` only_  
-settleCoin| false| string| Settle coin, uppercase only. Default: `USDC`.  
-limit| false| integer| Limit for data size per page. [`1`, `200`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `200`]. Default: `200`  
   
 ### Response Parameters
 
@@ -40,10 +42,9 @@ Parameter| Type| Comments
 category| string| Product type  
 list| array| Object  
 > symbol| string| Symbol name  
-> deliveryPrice| string| Delivery price  
-> deliveryTime| string| Delivery timestamp (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/market/delivery-price)
+> fundingRate| string| Funding rate  
+> fundingRateTimestamp| string| Funding rate timestamp (ms)  
+[](/docs/api-explorer/v5/market/history-fund-rate)
 
 * * *
 
@@ -58,16 +59,17 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/market/delivery-price?category=option&symbol=ETH-26DEC22-1400-C HTTP/1.1  
+    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP()  
-    print(session.get_option_delivery_price(  
-        category="option",  
-        symbol="ETH-26DEC22-1400-C",  
+    print(session.get_funding_rate_history(  
+        category="linear",  
+        symbol="ETHPERP",  
+        limit=1,  
     ))  
     
     
@@ -78,17 +80,18 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "ETH-26DEC22-1400-C"}  
-    client.NewUtaBybitServiceWithParams(params).GetDeliveryPrice(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT"}  
+    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var deliveryPriceRequest = MarketDataRequest.builder().category(CategoryType.OPTION).baseCoin("BTC").limit(10).build();  
-    client.getDeliveryPrice(deliveryPriceRequest, System.out::println);  
+    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
+    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
     
     
     
@@ -99,7 +102,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-        .getDeliveryPrice({ category: 'option', symbol: 'ETH-26DEC22-1400-C' })  
+        .getFundingRateHistory({  
+            category: 'linear',  
+            symbol: 'ETHPERP',  
+            limit: 1,  
+        })  
         .then((response) => {  
             console.log(response);  
         })  
@@ -113,51 +120,50 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "category": "option",  
-            "nextPageCursor": "",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "ETH-26DEC22-1400-C",  
-                    "deliveryPrice": "1220.728594450",  
-                    "deliveryTime": "1672041600000"  
+                    "symbol": "ETHPERP",  
+                    "fundingRate": "0.0001",  
+                    "fundingRateTimestamp": "1672041600000"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672055336993  
+        "time": 1672051897447  
     }
 
 ---
 
-# 查詢交割價格
+# 查詢歷史資金費率
 
-查詢平台交割產品的交割價格，支持反向交割, USDT/USDC交割, 和期權
+查詢資金費率，每個symbol的資金費率產生週期不同。假設資金費率為8小時，當前時間是UTC12點，則返回的是上一個結算即UTC8點產生的資金費率。如要查詢symbol的資金費率時間間隔，請查詢[可交易產品規格](/docs/zh-TW/v5/market/instrument)接口
 
-> **覆蓋範圍: USDC交割 / 反向交割 / 期權**
+> **覆蓋範圍: USDT和USDC永續 / 反向永續**
 
-信息
+時間入参規則
 
-  * 期權: 當不指定symbol時, 僅返回處於交割中狀態的(UTC8~UTC12)的數據
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 只傳`startTime`會報錯
+  * 只傳`endTime`，則返回endTime往前的200條數據
+  * 都不傳，返回當前時間的往前200條數據
 
 
 
 ### HTTP請求
 
-GET`/v5/market/delivery-price`
+GET`/v5/market/funding/history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`, `inverse`, `option`  
-symbol| false| string| 合約名稱  
-baseCoin| false| string| 交易貨幣. 默認: `BTC`. 僅支持`option`  
-settleCoin| false| string| 結算貨幣，僅限大寫。默認：`USDC`。  
-limit| false| integer| 每頁數量限制. [`1`, `200`]. 默認: `50`  
-cursor| false| string| 游標，用於分頁  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
+symbol| **true**|  string| 合約名稱  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `200`]. 默認: `200`  
   
 ### 響應參數
 
@@ -166,10 +172,9 @@ cursor| false| string| 游標，用於分頁
 category| string| 產品類型  
 list| array| Object  
 > symbol| string| 合約名稱  
-> deliveryPrice| string| 交割價格  
-> deliveryTime| string| 交割時間戳 (毫秒)  
-nextPageCursor| string| 游標，用於分頁  
-[](/docs/zh-TW/api-explorer/v5/market/delivery-price)
+> fundingRate| string| 資金費率  
+> fundingRateTimestamp| string| 資金費率時間戳 (毫秒)  
+[](/docs/zh-TW/api-explorer/v5/market/history-fund-rate)
 
 * * *
 
@@ -184,16 +189,17 @@ nextPageCursor| string| 游標，用於分頁
 
     
     
-    GET /v5/market/delivery-price?category=option&symbol=ETH-26DEC22-1400-C HTTP/1.1  
+    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP()  
-    print(session.get_option_delivery_price(  
-        category="option",  
-        symbol="ETH-26DEC22-1400-C",  
+    print(session.get_funding_rate_history(  
+        category="linear",  
+        symbol="ETHPERP",  
+        limit=1,  
     ))  
     
     
@@ -204,17 +210,18 @@ nextPageCursor| string| 游標，用於分頁
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "ETH-26DEC22-1400-C"}  
-    client.NewUtaBybitServiceWithParams(params).GetDeliveryPrice(context.Background())  
+    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
+    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var deliveryPriceRequest = MarketDataRequest.builder().category(CategoryType.OPTION).baseCoin("BTC").limit(10).build();  
-    client.getDeliveryPrice(deliveryPriceRequest, System.out::println);  
+    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
+    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
     
     
     
@@ -225,7 +232,11 @@ nextPageCursor| string| 游標，用於分頁
     });  
       
     client  
-        .getDeliveryPrice({ category: 'option', symbol: 'ETH-26DEC22-1400-C' })  
+        .getFundingRateHistory({  
+            category: 'linear',  
+            symbol: 'ETHPERP',  
+            limit: 1,  
+        })  
         .then((response) => {  
             console.log(response);  
         })  
@@ -239,18 +250,17 @@ nextPageCursor| string| 游標，用於分頁
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "category": "option",  
-            "nextPageCursor": "",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "ETH-26DEC22-1400-C",  
-                    "deliveryPrice": "1220.728594450",  
-                    "deliveryTime": "1672041600000"  
+                    "symbol": "ETHPERP",  
+                    "fundingRate": "0.0001",  
+                    "fundingRateTimestamp": "1672041600000"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672055336993  
+        "time": 1672051897447  
     }

@@ -2,127 +2,109 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/asset/query-user-delegation
 api_type: REST
-updated_at: 2026-05-27 18:59:14.912196
+updated_at: 2026-06-28 18:54:08.591206
 ---
 
-# Query User Universal Transfer History(USER_DATA)
+# Query User Delegation History(For Master Account)(USER_DATA)
 
-## API Description[​](/docs/wallet/asset/query-user-universal-transfer#api-description "Direct link to API Description")
+## API Description[​](/docs/wallet/asset/query-user-delegation#api-description "Direct link to API Description")
 
-Query User Universal Transfer History
+Query User Delegation History
 
-## HTTP Request[​](/docs/wallet/asset/query-user-universal-transfer#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/wallet/asset/query-user-delegation#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/asset/transfer`
+GET `/sapi/v1/asset/custody/transfer-history`
 
-## Request Weight(IP)[​](/docs/wallet/asset/query-user-universal-transfer#request-weightip "Direct link to Request Weight\(IP\)")
+## Request Weight(IP)[​](/docs/wallet/asset/query-user-delegation#request-weightip "Direct link to Request Weight\(IP\)")
 
-**1**
+**60**
 
-## Request Parameters[​](/docs/wallet/asset/query-user-universal-transfer#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/wallet/asset/query-user-delegation#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-type| ENUM| YES|   
-startTime| LONG| NO|   
-endTime| LONG| NO|   
-current| INT| NO| Default 1  
-size| INT| NO| Default 10, Max 100  
-fromSymbol| STRING| NO|   
-toSymbol| STRING| NO|   
+email| STRING| YES|   
+startTime| LONG| YES|   
+endTime| LONG| YES|   
+type| ENUM| NO| Delegate/Undelegate  
+asset| STRING| NO|   
+current| INTEGER| NO| default 1  
+size| INTEGER| NO| default 10, max 100  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * `fromSymbol` must be sent when type are ISOLATEDMARGIN_MARGIN and ISOLATEDMARGIN_ISOLATEDMARGIN
->   * `toSymbol` must be sent when type are MARGIN_ISOLATEDMARGIN and ISOLATEDMARGIN_ISOLATEDMARGIN
->   * Support query within the last 6 months only
->   * If `startTime`and `endTime` not sent, return records of the last 7 days by default
-> 
-
-
-## Response Example[​](/docs/wallet/asset/query-user-universal-transfer#response-example "Direct link to Response Example")
+## Response Example[​](/docs/wallet/asset/query-user-delegation#response-example "Direct link to Response Example")
     
     
     {  
-        "total": 2,  
+        "total": 3316,  
         "rows": [  
             {  
-                "asset": "USDT",  
+                "clientTranId": "293915932290879488",  
+                "transferType": "Undelegate",  
+                "asset": "ETH",  
                 "amount": "1",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED", // status: CONFIRMED / FAILED / PENDING  
-                "tranId": 11415955596,  
-                "timestamp": 1544433328000  
+                "time": 1695205406000  
             },  
             {  
-                "asset": "USDT",  
-                "amount": "2",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED",  
-                "tranId": 11366865406,  
-                "timestamp": 1544433328000  
+                "clientTranId": "293915892281413632",  
+                "transferType": "Delegate",  
+                "asset": "ETH",  
+                "amount": "1",  
+                "time": 1695205396000  
             }  
         ]  
     }
 
 ---
 
-# 查询用户万向划转历史(USER_DATA)
+# 查询用户委托资金历史(适用主账户)(USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/wallet/asset/query-user-delegation#接口描述 "接口描述的直接链接")
 
-查询用户万向划转历史
+查询用户委托资金历史
 
-## HTTP请求[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/wallet/asset/query-user-delegation#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/asset/transfer`
+GET `/sapi/v1/asset/custody/transfer-history`
 
-## 请求权重(IP)[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#请求权重ip "请求权重\(IP\)的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/wallet/asset/query-user-delegation#请求权重ip "请求权重\(IP\)的直接链接")
 
-**1**
+**60**
 
-## 请求参数[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/wallet/asset/query-user-delegation#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-type| ENUM| YES|   
-startTime| LONG| NO|   
-endTime| LONG| NO|   
-current| INT| NO| 默认 1  
-size| INT| NO| 默认 10, 最大 100  
-fromSymbol| STRING| NO|   
-toSymbol| STRING| NO|   
+email| STRING| YES|   
+startTime| LONG| YES|   
+endTime| LONG| YES|   
+type| ENUM| NO| Delegate/Undelegate  
+asset| STRING| NO|   
+current| INTEGER| NO| 默认 1  
+size| INTEGER| NO| 默认 10, 最大 100  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * `fromSymbol` 必须要发送，当类型为 ISOLATEDMARGIN_MARGIN 和 ISOLATEDMARGIN_ISOLATEDMARGIN
->   * `toSymbol` 必须要发送，当类型为 MARGIN_ISOLATEDMARGIN 和 ISOLATEDMARGIN_ISOLATEDMARGIN
->   * 仅支持查询最近半年（6个月）数据
->   * 若`startTime`和`endTime`没传，则默认返回最近7天数据
-> 
-
-
-## 响应示例[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/wallet/asset/query-user-delegation#响应示例 "响应示例的直接链接")
     
     
     {  
-        "total": 2,  
+        "total": 3316,  
         "rows": [  
             {  
-                "asset": "USDT",  
+                "clientTranId": "293915932290879488",  
+                "transferType": "Undelegate",  
+                "asset": "ETH",  
                 "amount": "1",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED", // status: CONFIRMED / FAILED / PENDING  
-                "tranId": 11415955596,  
-                "timestamp": 1544433328000  
+                "time": 1695205406000  
             },  
             {  
-                "asset": "USDT",  
-                "amount": "2",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED",  
-                "tranId": 11366865406,  
-                "timestamp": 1544433328000  
+                "clientTranId": "293915892281413632",  
+                "transferType": "Delegate",  
+                "asset": "ETH",  
+                "amount": "1",  
+                "time": 1695205396000  
             }  
         ]  
     }

@@ -2,89 +2,127 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/account
 api_type: Account
-updated_at: 2026-05-27 19:01:06.163706
+updated_at: 2026-06-28 18:55:57.103920
 ---
 
-# Close Risk Unit (TRADE)
+# Query Closed Risk Unit Record (USER_DATA)
 
-## API Description[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#api-description "Direct link to API Description")
+## API Description[​](/docs/institutional_loan/account/Query-Closed-Group-Record#api-description "Direct link to API Description")
 
-The closure of the Institutional Loan risk unit can only be initiated by API calls from the credit account. If the closure is successful all the collateral accounts will be unlinked. Please note the following conditions must be met:
+Query closed risk unit record. This endpoint is accessible only with the credit account API key.
 
-  * The Institution Loan risk unit is active.
-  * The outstanding institutional loan liabilities for that particular risk unit have been repaid.
+## HTTP Request[​](/docs/institutional_loan/account/Query-Closed-Group-Record#http-request "Direct link to HTTP Request")
 
+GET /sapi/v1/margin/loan-groups/closed
 
+## Request Weight[​](/docs/institutional_loan/account/Query-Closed-Group-Record#request-weight "Direct link to Request Weight")
 
-## HTTP Request[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#http-request "Direct link to HTTP Request")
+1(IP)
 
-DELETE /sapi/v1/margin/loan-group
-
-## Request Weight[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#request-weight "Direct link to Request Weight")
-
-1000(UID)
-
-## Request Parameters[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/institutional_loan/account/Query-Closed-Group-Record#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-groupId| LONG| YES| Risk unit unique identifier  
+current| LONG| NO| The currently querying page. Start from 1. Default:1  
+size| LONG| NO| Default:10 Max:100  
   
-## Response Example[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#response-example "Direct link to Response Example")
+## Response Example[​](/docs/institutional_loan/account/Query-Closed-Group-Record#response-example "Direct link to Response Example")
     
     
     {  
-      "groupId": 10001,  
-      "status": "CLOSED"  
+      "total": 2,  
+      "rows": [  
+        {  
+          "groupId": 72,  
+          "parentEmail": "wdywgceiwbfq@test.com",  
+          "creditEmail": "wdywaxmzlnah@test.com",  
+          "enabled": false,  
+          "createTime": 1753410654608,  
+          "closeTime": 1753422899052  
+        },  
+        {  
+          "groupId": 73,  
+          "parentEmail": "wdywgceiwbfq@test.com",  
+          "creditEmail": "wdyw7x4gfybn@test.com",  
+          "enabled": false,  
+          "createTime": 1753422987379,  
+          "closeTime": 1753423516629  
+        }  
+      ]  
     }  
     
 
-## Response detail description:[​](/docs/institutional_loan/account/Institution-Loan-Group-Close#response-detail-description "Direct link to Response detail description:")
+## Response detail description[​](/docs/institutional_loan/account/Query-Closed-Group-Record#response-detail-description "Direct link to Response detail description")
 
 Parameter| Type| Description  
 ---|---|---  
-groupId| LONG| Risk unit unique identifier  
-status| STRING| CLOSED:This risk unit has been closed successfully
+total| LONG| Risk unit number which get as query result  
+rows| OBJECT ARRAY|   
+→ groupId| LONG| Risk unit unique identifier  
+→ parentEmail| STRING| Parent account email  
+→ creditEmail| STRING| Credit account email  
+→ enabled| STRING| The status of the group. TRUE for enabled; FALSE for disabled.  
+→ createTime| LONG| The group create timestamp (milliseconds)  
+→ closeTime| LONG| The group close timestamp (milliseconds)
 
 ---
 
-# 关闭风险单位 (TRADE)
+# 查询关闭的风险单元记录(USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#接口描述 "接口描述的直接链接")
 
-关闭操作仅支持通过机构借贷子账户 API 执行。成功关闭后，系统将自动解除该风险单位与所有抵押账户的关联。请注意，操作前需满足以下条件：
+查询已关闭的风险单元记录。 仅支持放贷账户调用该接口。
 
-  * 机构贷单位处于生效活跃状态。
-  * 已全额偿还此风险单位内贷款及利息。
+## HTTP请求[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#http请求 "HTTP请求的直接链接")
 
+GET /sapi/v1/margin/loan-groups/closed
 
+## 请求权重[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#请求权重 "请求权重的直接链接")
 
-## HTTP 请求[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#http-请求 "HTTP 请求的直接链接")
+1(IP)
 
-DELETE /sapi/v1/margin/loan-group
+## 请求参数[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#请求参数 "请求参数的直接链接")
 
-## 请求权重[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#请求权重 "请求权重的直接链接")
-
-1000(UID)
-
-## 请求参数[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#请求参数 "请求参数的直接链接")
-
-名称| 类型| 是否必须| 描述  
+名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-groupId| LONG| YES| 唯一风险单位标识符  
+current| LONG| NO| 当前查询页。 开始值 1。 默认:1  
+size| LONG| NO| 默认:10 最大:100  
   
-## 响应示例[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#响应示例 "响应示例的直接链接")
     
     
     {  
-      "groupId": 10001,  
-      "status": "CLOSED"  
+      "total": 2,  
+      "rows": [  
+        {  
+          "groupId": 72,  
+          "parentEmail": "wdywgceiwbfq@test.com",  
+          "creditEmail": "wdywaxmzlnah@test.com",  
+          "enabled": false,  
+          "createTime": 1753410654608,  
+          "closeTime": 1753422899052  
+        },  
+        {  
+          "groupId": 73,  
+          "parentEmail": "wdywgceiwbfq@test.com",  
+          "creditEmail": "wdyw7x4gfybn@test.com",  
+          "enabled": false,  
+          "createTime": 1753422987379,  
+          "closeTime": 1753423516629  
+        }  
+      ]  
     }  
     
 
-## 响应信息详解：[​](/docs/zh-CN/institutional_loan/account/Institution-Loan-Group-Close#响应信息详解 "响应信息详解：的直接链接")
+## 响应信息详解：[​](/docs/zh-CN/institutional_loan/account/Query-Closed-Group-Record#响应信息详解 "响应信息详解：的直接链接")
 
 参数| 类型| 描述  
 ---|---|---  
-groupId| LONG| 唯一风险单位标识符  
-status| STRING| CLOSED: 此风险单位已成功关闭
+total| LONG| 查询记录总数量  
+rows| OBJECT ARRAY|   
+→ groupId| LONG| 唯一风险单位标识符  
+→ parentEmail| STRING|   
+→ creditEmail| STRING|   
+→ enabled| STRING| 状态。TRUE表示活跃状态；FALSE表示关闭状态。  
+→ createTime| LONG| 风险单位创建时间（毫秒）  
+→ closeTime| LONG|

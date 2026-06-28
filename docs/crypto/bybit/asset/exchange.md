@@ -2,41 +2,47 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/exchange
 api_type: REST
-updated_at: 2026-05-27 19:15:08.084894
+updated_at: 2026-06-28 19:08:46.100250
 ---
 
-# Confirm a Quote
+# Get Convert Status
 
-info
-
-  1. The exchange is async; please check the final status by calling the convert history API.
-  2. Make sure you confirm the quote before it expires.
-
-
+Returns the details of this convert.
 
 ### HTTP Request
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/fiat/trade-query`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-quoteTxId| **true**|  string| The quote tx ID from [Request a Quote](/docs/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| The user's sub userId in bybit  
-webhookUrl| false| string| API URL to call when order is successful or failed (max 256 characters)  
-MerchantRequestId| false| string| Customised request ID(maximum length of 36)
-
-  * Generally it is useless, but it is convenient to track the quote request internally if you fill this field
-
-  
+tradeNo| false| string| Trade order No,tradeNo or merchantRequestId must be provided  
+merchantRequestId| false| string| Customised request ID,tradeNo or merchantRequestId must be provided  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tradeNo| string| Trade order No  
-merchantRequestId| string| Customised request ID  
+result| object| object  
+> tradeNo| string| Trade order No  
+> status| string| Trade status:
+
+  * processing
+  * success
+  * failed
+
+  
+> quoteTxId| string| Quote transaction ID. It is system generated, and it is used to confirm quote  
+> exchangeRate| string| Exchange rate  
+> fromCoin| string| Convert from coin (coin to sell)  
+> fromCoinType| string| From coin type. `fiat` or `crypto`  
+> toCoin| string| Convert to coin (coin to buy)  
+> toCoinType| string| To coin type. `fiat` or `crypto`  
+> fromAmount| string| From coin amount (amount to sell)  
+> toAmount| string| To coin amount (amount to buy according to exchange rate)  
+> createdAt| string| Trade created time  
+> subUserId| string| The user's sub userId in bybit  
   
 ### Request Example
 
@@ -46,19 +52,12 @@ merchantRequestId| string| Customised request ID
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1  
+    GET /v5/fiat/trade-query?tradeNo=TradeNo123456 HTTP/1.1    
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720071899789  
+    X-BAPI-TIMESTAMP: 1720074159814  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
     
     
     
@@ -68,9 +67,8 @@ merchantRequestId| string| Customised request ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote_fiat_convert(  
-        quoteTxId="QuoteTaxId123456",  
-        subUserId="43456"  
+    print(session.get_fiat_convert_status(  
+        tradeNo="TradeNo123456"  
     ))  
     
 
@@ -82,44 +80,58 @@ merchantRequestId| string| Customised request ID
         "retMsg": "success",  
         "result": {  
             "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
+            "status": "success",  
+            "quoteTaxId": "QuoteTaxId123456",  
+            "exchangeRate": "1.0",  
+            "fromCoin": "GEL",  
+            "fromCoinType": "fiat",  
+            "toCoin": "USDT",  
+            "toCoinType": "crypto",  
+            "fromAmount": "100",  
+            "toAmount": "100",  
+            "createdAt": "1764558832014",  
+            "subUserId": "123456"  
         }  
     }
 
 ---
 
-# 確認報價
-
-信息
-
-  1. 兌換是異步的；請通過調用查詢結果 API 確認最終狀態 
-  2. 請確保在報價過期之前確認報價
-
-
+# 查詢報價單狀態
 
 ### HTTP 請求
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/fiat/trade-query`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-quoteTxId| **true**|  string| 報價交易 ID，來源於 [申請報價](/docs/zh-TW/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| 用戶在 Bybit 平台的子用戶 ID  
-webhookUrl| false| string| 當訂單成功或失敗時調用的 API URL（最多 256 個字符）  
-merchantRequestId| false| string| 自定義請求 ID（最大長度為 36）
-
-  * 通常無需填寫，但如果填寫此字段，便於內部跟踪報價請求
-
-  
+tradeNo| 否| string| 交易訂單號，`tradeNo` 或 `merchantRequestId` 必須提供一個  
+merchantRequestId| 否| string| 自定義請求 ID，`tradeNo` 或 `merchantRequestId` 必須提供一個  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-tradeNo| string| 交易訂單號  
-merchantRequestId| string| 自定義請求 ID  
+result| object| object  
+> tradeNo| string| 交易訂單號  
+> status| string| 交易狀態：
+
+  * processing
+  * success
+  * failed
+
+  
+> quoteTxId| string| 報價交易 ID，系統生成，用於確認報價  
+> exchangeRate| string| 匯率  
+> fromCoin| string| 轉換前的幣種（賣出的幣種）  
+> fromCoinType| string| 轉換前的幣種類型：`fiat` 或 `crypto`  
+> toCoin| string| 轉換後的幣種（買入的幣種）  
+> toCoinType| string| 轉換後的幣種類型：`fiat` 或 `crypto`  
+> fromAmount| string| 轉換前的幣種數量（賣出數量）  
+> toAmount| string| 轉換後的幣種數量（根據匯率買入的數量）  
+> createdAt| string| 交易創建時間  
+> subUserId| string| 用戶在 Bybit 平台的子用戶 ID  
   
 ### 請求示例
 
@@ -128,19 +140,12 @@ merchantRequestId| string| 自定義請求 ID
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1    
+    GET /v5/fiat/trade-query?tradeNo=TradeNo123456 HTTP/1.1    
     Host: api-testnet.bybit.com    
     X-BAPI-SIGN: XXXXXX    
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
-    X-BAPI-TIMESTAMP: 1720071899789    
+    X-BAPI-TIMESTAMP: 1720074159814    
     X-BAPI-RECV-WINDOW: 5000    
-    Content-Type: application/json    
-    Content-Length: 52    
-      
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
     
 
 ### 響應示例
@@ -151,6 +156,16 @@ merchantRequestId| string| 自定義請求 ID
         "retMsg": "success",  
         "result": {  
             "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
+            "status": "success",  
+            "quoteTaxId": "QuoteTaxId123456",  
+            "exchangeRate": "1.0",  
+            "fromCoin": "GEL",  
+            "fromCoinType": "fiat",  
+            "toCoin": "USDT",  
+            "toCoinType": "crypto",  
+            "fromAmount": "100",  
+            "toAmount": "100",  
+            "createdAt": "1764558832014",  
+            "subUserId": "123456"  
         }  
     }

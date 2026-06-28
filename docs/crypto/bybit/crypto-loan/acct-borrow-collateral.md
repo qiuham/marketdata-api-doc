@@ -2,43 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/acct-borrow-collateral
 api_type: REST
-updated_at: 2026-05-27 19:16:20.249954
+updated_at: 2026-06-28 19:10:00.119110
 ---
 
-# Get Collateral Coins
+# Get Account Borrowable/Collateralizable Limit
 
-info
+Query for the minimum and maximum amounts your account can borrow and how much collateral you can put up.
 
-Does not need authentication.
+> Permission: "Spot trade"
 
 ### HTTP Request
 
-GET`/v5/crypto-loan/collateral-data`
+GET`/v5/crypto-loan/borrowable-collateralisable-number`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-vipLevel| false| string| VIP level 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| Coin name, uppercase only  
+loanCurrency| **true**|  string| Loan coin name  
+collateralCurrency| **true**|  string| Collateral coin name  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-vipCoinList| array| Object  
-> list| array| Object  
->> collateralAccuracy| integer| Valid collateral coin precision  
->> initialLTV| string| The Initial LTV ratio determines the initial amount of coins that can be borrowed. The initial LTV ratio may vary for different collateral  
->> marginCallLTV| string| If the LTV ratio (Loan Amount/Collateral Amount) reaches the threshold, you will be required to add more collateral to your loan  
->> liquidationLTV| string| If the LTV ratio (Loan Amount/Collateral Amount) reaches the threshold, Bybit will liquidate your collateral assets to repay your loan and interest in full  
->> maxLimit| string| Collateral limit  
-> vipLevel| string| VIP level  
+collateralCurrency| string| Collateral coin name  
+loanCurrency| string| Loan coin name  
+maxCollateralAmount| string| Max. limit to mortgage  
+maxLoanAmount| string| Max. limit to borrow  
+minCollateralAmount| string| Min. limit to mortgage  
+minLoanAmount| string| Min. limit to borrow  
   
 ### Request Example
 
@@ -49,18 +42,24 @@ vipCoinList| array| Object
 
     
     
-    GET /v5/crypto-loan/collateral-data?currency=ETH&vipLevel=PRO1 HTTP/1.1  
+    GET /v5/crypto-loan/borrowable-collateralisable-number?loanCurrency=USDT&collateralCurrency=BTC HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1728627083198  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_collateral_coins(  
-        currency="ETH",  
-        vipLevel="PRO1",  
+    print(session.get_account_borrowable_or_collateralizable_limit(  
+        loanCurrency="USDT",  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -74,9 +73,9 @@ vipCoinList| array| Object
     });  
       
     client  
-      .getCollateralCoins({  
-        currency: 'ETH',  
-        vipLevel: 'PRO1',  
+      .getAccountBorrowCollateralLimit({  
+        loanCurrency: 'USDT',  
+        collateralCurrency: 'BTC',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -93,62 +92,46 @@ vipCoinList| array| Object
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "vipCoinList": [  
-                {  
-                    "list": [  
-                        {  
-                            "collateralAccuracy": 8,  
-                            "currency": "ETH",  
-                            "initialLTV": "0.8",  
-                            "liquidationLTV": "0.95",  
-                            "marginCallLTV": "0.87",  
-                            "maxLimit": "32000"  
-                        }  
-                    ],  
-                    "vipLevel": "PRO1"  
-                }  
-            ]  
+            "collateralCurrency": "BTC",  
+            "loanCurrency": "USDT",  
+            "maxCollateralAmount": "164.957732055526752104",  
+            "maxLoanAmount": "8000000",  
+            "minCollateralAmount": "0.000412394330138818",  
+            "minLoanAmount": "20"  
         },  
         "retExtInfo": {},  
-        "time": 1728618590498  
+        "time": 1728627084863  
     }
 
 ---
 
-# 查詢質押幣種
+# 查詢帳戶可借貸/抵押的限額
 
-信息
+查詢本帳戶支持的最小/最大的借貸和質押額
 
-不需要鑒權
+> 權限: "現貨交易"
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan/collateral-data`
+GET`/v5/crypto-loan/borrowable-collateralisable-number`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-vipLevel| false| string| Vip等級 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(至尊VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| 幣種名稱  
+loanCurrency| **true**|  string| 借貸幣種  
+collateralCurrency| **true**|  string| 質押幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-vipCoinList| array| Object  
-> list| array| Object  
->> collateralAccuracy| integer| 質押幣種精度  
->> initialLTV| string| 初始質押率, 初始 LTV 決定了最初可借入的資產金額，因質押資產而異  
->> marginCallLTV| string| 追加保證金率, 如果 LTV (待還本息/質押金額) 達到此閾值，系統會提醒您追加質押資產  
->> liquidationLTV| string| 強平質押率, 如果 LTV (待還本息/質押金額) 達到此閾值，系統會對您的質押資產進行強制平倉，以全額償還本金和利息。  
->> maxLimit| string| 抵押限額  
-> vipLevel| string| Vip等級  
+collateralCurrency| string| 抵押幣種  
+loanCurrency| string| 借貸幣種  
+maxCollateralAmount| string| 最大可質押金額  
+maxLoanAmount| string| 最大可借貸金額  
+minCollateralAmount| string| 最小質押金額  
+minLoanAmount| string| 最小借貸金額  
   
 ### 請求示例
 
@@ -159,18 +142,24 @@ vipCoinList| array| Object
 
     
     
-    GET /v5/crypto-loan/collateral-data?currency=ETH&vipLevel=PRO1 HTTP/1.1  
+    GET /v5/crypto-loan/borrowable-collateralisable-number?loanCurrency=USDT&collateralCurrency=BTC HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1728627083198  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_collateral_coins(  
-        currency="ETH",  
-        vipLevel="PRO1",  
+    print(session.get_account_borrowable_or_collateralizable_limit(  
+        loanCurrency="USDT",  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -184,9 +173,9 @@ vipCoinList| array| Object
     });  
       
     client  
-      .getCollateralCoins({  
-        currency: 'ETH',  
-        vipLevel: 'PRO1',  
+      .getAccountBorrowCollateralLimit({  
+        loanCurrency: 'USDT',  
+        collateralCurrency: 'BTC',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -203,22 +192,13 @@ vipCoinList| array| Object
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "vipCoinList": [  
-                {  
-                    "list": [  
-                        {  
-                            "collateralAccuracy": 8,  
-                            "currency": "ETH",  
-                            "initialLTV": "0.8",  
-                            "liquidationLTV": "0.95",  
-                            "marginCallLTV": "0.87",  
-                            "maxLimit": "32000"  
-                        }  
-                    ],  
-                    "vipLevel": "PRO1"  
-                }  
-            ]  
+            "collateralCurrency": "BTC",  
+            "loanCurrency": "USDT",  
+            "maxCollateralAmount": "164.957732055526752104",  
+            "maxLoanAmount": "8000000",  
+            "minCollateralAmount": "0.000412394330138818",  
+            "minLoanAmount": "20"  
         },  
         "retExtInfo": {},  
-        "time": 1728618590498  
+        "time": 1728627084863  
     }

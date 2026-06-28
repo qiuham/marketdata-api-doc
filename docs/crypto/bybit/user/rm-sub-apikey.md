@@ -2,31 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-sub-apikey
 api_type: REST
-updated_at: 2026-05-27 19:23:04.937288
+updated_at: 2026-06-28 19:15:36.416637
 ---
 
-# Delete Sub UID
+# Sign Agreement
 
-Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
-Use **master** user's api key**.
+To trade commodity contracts, please complete the agreement signing first. Once completed, you will be able to trade all metals commodity contracts.
 
-tip
+info
 
-The API key must have one of the below permissions in order to call this endpoint
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+  * Only the master account can sign the agreement via this endpoint. Subaccounts are not supported for this action.
+  * Once the master account has signed, all subaccounts will be eligible to trade.
+  * The API key must have at least one of the following permissions to call this endpoint: Account Transfer, Subaccount Transfer, or Withdrawal.
 
 
 
 ### HTTP Request
 
-POST`/v5/user/del-submember`
+POST`/v5/user/agreement`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subMemberId| **true**|  string| Sub UID  
+category| false| integer| `2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`3`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. This field remains supported, but new enum values will no longer be added here — use `categoryV2` instead._  
+categoryV2| false| integer| `1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`2`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._  
+agree| **true**|  boolean| `true`  
   
 ### Response Parameters
 
@@ -36,22 +41,22 @@ None
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    POST /v5/user/del-submember HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
-    X-BAPI-RECV-WINDOW: 5000  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 34  
+    Content-Length: 40  
       
     {  
-        "subMemberId": "112725187"  
+        "agree": true,  
+        "categoryV2": 2  
     }  
     
     
@@ -62,30 +67,10 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.delete_sub_uid(  
-        subMemberId="112725187"  
+    print(session.sign_agreement(  
+        category=2,  
+        agree=True  
     ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -93,89 +78,61 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1772695037330  
     }
 
 ---
 
-# 刪除子帳戶
+# 簽署協議
 
-刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
+通過該接口, 您可以完成貴金融合約協議的簽署, 只有在完成簽署後, 才能進行交易貴金屬合約
 
-  
-僅可使用**母**帳戶api key調用.
+信息
 
-提示
-
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+  * 請使用母帳戶調用接口, 子帳戶不支持。一旦母帳戶簽署後，所有子帳戶都可以交易
+  * API key權限需要擁有其中之一"帳戶劃轉, 母子帳戶劃轉, 提幣"
 
 
 
 ### HTTP 請求
 
-POST`/v5/user/del-submember`
+POST`/v5/user/agreement`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-subMemberId| **true**|  string| Sub UID  
+category| false| integer| `2`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`3`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。該字段仍然可用，但後續新增的枚舉值將不再添加至此字段，請使用 `categoryV2`。_  
+categoryV2| false| integer| `1`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`2`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。建議使用此字段，後續新增的枚舉值將統一添加至此字段。_  
+agree| **true**|  boolean| `true`  
   
 ### 返回參數
 
 無
 
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    POST /v5/user/del-submember HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
-    X-BAPI-RECV-WINDOW: 5000  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 34  
+    Content-Length: 40  
       
     {  
-        "subMemberId": "112725187"  
+        "agree": true,  
+        "categoryV2": 2  
     }  
-    
-    
-    
-      
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -183,8 +140,8 @@ subMemberId| **true**|  string| Sub UID
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1772695037330  
     }

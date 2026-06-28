@@ -2,127 +2,196 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/asset/query-user-universal-transfer
 api_type: REST
-updated_at: 2026-05-27 18:59:15.531293
+updated_at: 2026-06-28 18:54:13.823141
 ---
 
-# Query User Universal Transfer History(USER_DATA)
+# User Asset (USER_DATA)
 
-## API Description[​](/docs/wallet/asset/query-user-universal-transfer#api-description "Direct link to API Description")
+## API Description[​](/docs/wallet/asset/user-assets#api-description "Direct link to API Description")
 
-Query User Universal Transfer History
+Get user assets, just for positive data.
 
-## HTTP Request[​](/docs/wallet/asset/query-user-universal-transfer#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/wallet/asset/user-assets#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/asset/transfer`
+POST `/sapi/v3/asset/getUserAsset`
 
-## Request Weight(IP)[​](/docs/wallet/asset/query-user-universal-transfer#request-weightip "Direct link to Request Weight\(IP\)")
+## Request Weight(IP)[​](/docs/wallet/asset/user-assets#request-weightip "Direct link to Request Weight\(IP\)")
 
-**1**
+**5**
 
-## Request Parameters[​](/docs/wallet/asset/query-user-universal-transfer#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/wallet/asset/user-assets#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-type| ENUM| YES|   
-startTime| LONG| NO|   
-endTime| LONG| NO|   
-current| INT| NO| Default 1  
-size| INT| NO| Default 10, Max 100  
-fromSymbol| STRING| NO|   
-toSymbol| STRING| NO|   
+asset| STRING| NO| If asset is blank, then query all positive assets user have.  
+needBtcValuation| BOOLEAN| NO| Whether need btc valuation or not.  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * `fromSymbol` must be sent when type are ISOLATEDMARGIN_MARGIN and ISOLATEDMARGIN_ISOLATEDMARGIN
->   * `toSymbol` must be sent when type are MARGIN_ISOLATEDMARGIN and ISOLATEDMARGIN_ISOLATEDMARGIN
->   * Support query within the last 6 months only
->   * If `startTime`and `endTime` not sent, return records of the last 7 days by default
+>   * If asset is set, then return this asset, otherwise return all assets positive.
+>   * If needBtcValuation is set, then return btcValudation.
 > 
 
 
-## Response Example[​](/docs/wallet/asset/query-user-universal-transfer#response-example "Direct link to Response Example")
+## Response Example[​](/docs/wallet/asset/user-assets#response-example "Direct link to Response Example")
     
     
-    {  
-        "total": 2,  
-        "rows": [  
-            {  
-                "asset": "USDT",  
-                "amount": "1",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED", // status: CONFIRMED / FAILED / PENDING  
-                "tranId": 11415955596,  
-                "timestamp": 1544433328000  
-            },  
-            {  
-                "asset": "USDT",  
-                "amount": "2",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED",  
-                "tranId": 11366865406,  
-                "timestamp": 1544433328000  
-            }  
-        ]  
-    }
+    [  
+        {  
+            "asset": "AVAX",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BCH",  
+            "free": "0.9",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BNB",  
+            "free": "887.47061626",  
+            "locked": "0",  
+            "freeze": "10.52",  
+            "withdrawing": "0.1",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BUSD",  
+            "free": "9999.7",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "SHIB",  
+            "free": "532.32",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "USDT",  
+            "free": "50300000001.44911105",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "WRZ",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        }  
+    ]
 
 ---
 
-# 查询用户万向划转历史(USER_DATA)
+# 用户持仓(USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/wallet/asset/user-assets#接口描述 "接口描述的直接链接")
 
-查询用户万向划转历史
+获取用户持仓，仅返回>0的数据。
 
-## HTTP请求[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/wallet/asset/user-assets#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/asset/transfer`
+POST `/sapi/v3/asset/getUserAsset`
 
-## 请求权重(IP)[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#请求权重ip "请求权重\(IP\)的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/wallet/asset/user-assets#请求权重ip "请求权重\(IP\)的直接链接")
 
-**1**
+**5**
 
-## 请求参数[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/wallet/asset/user-assets#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-type| ENUM| YES|   
-startTime| LONG| NO|   
-endTime| LONG| NO|   
-current| INT| NO| 默认 1  
-size| INT| NO| 默认 10, 最大 100  
-fromSymbol| STRING| NO|   
-toSymbol| STRING| NO|   
+asset| STRING| NO| 如果资产为空，则查询用户所有的正资产。  
+needBtcValuation| BOOLEAN| NO| 是否需要返回兑换成BTC的估值  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * `fromSymbol` 必须要发送，当类型为 ISOLATEDMARGIN_MARGIN 和 ISOLATEDMARGIN_ISOLATEDMARGIN
->   * `toSymbol` 必须要发送，当类型为 MARGIN_ISOLATEDMARGIN 和 ISOLATEDMARGIN_ISOLATEDMARGIN
->   * 仅支持查询最近半年（6个月）数据
->   * 若`startTime`和`endTime`没传，则默认返回最近7天数据
-> 
-
-
-## 响应示例[​](/docs/zh-CN/wallet/asset/query-user-universal-transfer#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/wallet/asset/user-assets#响应示例 "响应示例的直接链接")
     
     
-    {  
-        "total": 2,  
-        "rows": [  
-            {  
-                "asset": "USDT",  
-                "amount": "1",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED", // status: CONFIRMED / FAILED / PENDING  
-                "tranId": 11415955596,  
-                "timestamp": 1544433328000  
-            },  
-            {  
-                "asset": "USDT",  
-                "amount": "2",  
-                "type": "MAIN_UMFUTURE",  
-                "status": "CONFIRMED",  
-                "tranId": 11366865406,  
-                "timestamp": 1544433328000  
-            }  
-        ]  
-    }
+    [  
+        {  
+            "asset": "AVAX",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BCH",  
+            "free": "0.9",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BNB",  
+            "free": "887.47061626",  
+            "locked": "0",  
+            "freeze": "10.52",  
+            "withdrawing": "0.1",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BUSD",  
+            "free": "9999.7",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "SHIB",  
+            "free": "532.32",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "USDT",  
+            "free": "50300000001.44911105",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "WRZ",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        }  
+    ]

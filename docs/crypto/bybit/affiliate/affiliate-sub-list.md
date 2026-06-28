@@ -2,70 +2,58 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-sub-list
 api_type: REST
-updated_at: 2026-05-27 19:14:26.809183
+updated_at: 2026-06-28 19:07:53.594462
 ---
 
-# Get Affiliate User List
+# Get Asset List
 
-To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.  
-Affiliate site: <https://affiliates.bybit.com>
+Query user's on-chain token portfolio including holdings, market value, and PnL.
 
-tip
+info
 
-  * Use master UID only
-  * The api key can only have "Affiliate" permission
+  * Only returns tokens with non-zero balance; zero-balance tokens are filtered out
+  * Assets are sorted by USD value descending
+  * Use `tradeFlag` to determine if a token can be sold via [Execute Redeem](/docs/v5/alpha/trade-redeem)
+  * Use `tokenCode` from the response for quote and execution requests
+  * Use `chainCode` \+ `tokenAddress` to call [Get Token Details](/docs/v5/alpha/biz-token-details) for more info
 
 
 
 ### HTTP Request
 
-GET`/v5/affiliate/aff-user-list`
+POST`/v5/alpha/trade/asset-list`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-size| false| integer| Limit for data size per page. [`0`, `100`]. Default: `0`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-needDeposit| false| boolean| `true`: return deposit info; `false`(default): does not return deposit info  
-need30| false| boolean| `true`: return 30 days trading info; `false`(default): does not return 30 days trading info  
-need365| false| boolean| `true`: return 365 days trading info; `false`(default): does not return 365 days trading info  
-startDate| false| string| Start date of the query period, format `YYYY-MM-DD`  
-endDate| false| string| End date of the query period, format `YYYY-MM-DD`  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> userId| string| user Id  
-> registerTime| string| user register time  
-> source| string| user registration source, from which referrer code  
-> remarks| string| The remark  
-> isKyc| boolean| Whether KYC is completed  
-> takerVol30Day| string| Taker volume in last 30 days (USDT), update at T + 1. All volume related attributes below includes Derivatives, Option, Spot volume  
-> makerVol30Day| string| Maker volume in last 30 days (USDT), update at T + 1  
-> tradeVol30Day| string| Total trading volume in last 30 days (USDT), update at T + 1  
-> depositAmount30Day| string| Deposit amount in last 30 days (USDT)  
-> takerVol365Day| string| Taker volume in the past year (USDT), update at T + 1  
-> makerVol365Day| string| Maker volume in the past year (USDT), update at T + 1  
-> tradeVol365Day| string| Total trading volume in the past year (USDT), update at T + 1  
-> depositAmount365Day| string| Total deposit amount in the past year (USDT)  
-> takerVol| string| Taker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
-> makerVol| string| Maker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
-> tradeVol| string| Total trading volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
-> startDate| string| Start date of the query period  
-> endDate| string| End date of the query period  
-> tradfiTradeVol| string| Only when `startDate` and `endDate` are in the input parameters, returns tradfi trade volume between `startDate` and `endDate`  
-> tradfiTradeVol30Day| string| tradfi trade volume in last 30 days (USDT). When `startDate` and `endDate` are in the input parameters, return 0  
-> tradfiTradeVol365Day| string| tradfi trade volume in the past year (USDT). When `startDate` and `endDate` are in the input parameters, return 0  
-> commissionsVol| json| Only when `startDate` and `endDate` are in the input parameters, returns commission between `startDate` and `endDate`  
-> commissions30Day| json| commission in last 30 days  
-> commissions365Day| json| commission in the past year  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+totalAssetUsd| string| Total portfolio value in USD  
+assetList| array| Token holdings list  
+> chainCode| string| Blockchain code, e.g. `ETH`, `SOL`, `BSC`  
+> chainIconUrl| string| Chain icon URL  
+> tokenAddress| string| Token contract address  
+> tokenCode| string| Token code in `DEX_<id>` format. Use this in quote and execution requests  
+> tokenSymbol| string| Token symbol  
+> tokenDecimals| integer| Token decimal precision  
+> tokenIconUrlDay| string| Token icon URL (light mode)  
+> tokenIconUrlNight| string| Token icon URL (dark mode)  
+> tokenAmount| string| Holding quantity  
+> tokenAmountUsd| string| Holding value in USD  
+> tradeFlag| integer| Whether tradable. `0`: Not tradable, `1`: Tradable  
+> pnl| string| Unrealized profit/loss in USD. Positive = profit. Null if no cost basis available  
+> pnlRatio| string| PnL ratio as decimal, e.g. `0.15` = +15%. Null if no cost basis available  
+> costPrice| string| Average cost price. Null if no cost basis available  
+> lastPrice| string| Current market price  
+> costTotalValue| string| Total cost basis in USD. Null if no cost basis available  
+> assetStatus| integer| Token lifecycle status. `0`: Running, `1`: Delisting soon, `2`: Delisted  
+> announcementUrl| string| Delisting announcement URL. Present when `assetStatus` is `1` or `2`  
+> estimatedOfflineTime| integer| Estimated delisting timestamp (ms). Present when `assetStatus=1`  
+> delistingTime| integer| Actual delisting timestamp (ms). Present when `assetStatus=2`  
   
-* * *
-
 ### Request Example
 
   * HTTP
@@ -75,50 +63,23 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST /v5/alpha/trade/asset-list HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1685596324209  
+    X-BAPI-TIMESTAMP: 1704067200000  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_affiliate_user_list(  
-        cursor="0",  
-        size="2",  
-        need365=True,  
-        need30=True,  
-        needDeposit=True,  
-        startDate="2025-10-21",  
-        endDate="2025-10-22",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    {}  
+    
+    
+    
       
-    client  
-      .getAffiliateUserInfo({ size: 2 })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -126,167 +87,86 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "totalAssetUsd": "1250.50",  
+            "assetList": [  
                 {  
-                    "userId": "103895898",  
-                    "registerTime": "2024-10-29",  
-                    "source": "Default",  
-                    "remarks": "",  
-                    "isKyc": true,  
-                    "takerVol30Day": "12861.362976",  
-                    "makerVol30Day": "262.60865",  
-                    "tradeVol30Day": "13123.971626",  
-                    "depositAmount30Day": "",  
-                    "takerVol365Day": "208971.63737375",  
-                    "makerVol365Day": "33392.64275",  
-                    "tradeVol365Day": "242364.28012375",  
-                    "depositAmount365Day": "",  
-                    "takerVol": "194231.4175",  
-                    "makerVol": "32886.108",  
-                    "tradeVol": "227117.5255",  
-                    "startDate": "2025-08-21",  
-                    "endDate": "2025-10-22",  
-                    "tradfiTradeVol": "0",  
-                    "tradfiTradeVol30Day": "0",  
-                    "tradfiTradeVol365Day": "0",  
-                    "commissions30Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0.0621748",  
-                        "USDC": "0",  
-                        "USDT": "2.64288011"  
-                    },  
-                    "commissionsVol": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0",  
-                        "USDC": "0",  
-                        "USDT": "0.00835765"  
-                    },  
-                    "commissions365Day": {  
-                        "BTC": "0.00000002",  
-                        "ETH": "0.00000063",  
-                        "MNT": "0.1210605",  
-                        "USDC": "0.13462624",  
-                        "USDT": "2.79509816"  
-                    }  
-                },  
-                {  
-                    "userId": "1547321",  
-                    "registerTime": "2023-06-28",  
-                    "source": "Default",  
-                    "remarks": "",  
-                    "isKyc": false,  
-                    "takerVol30Day": "",  
-                    "makerVol30Day": "",  
-                    "tradeVol30Day": "",  
-                    "depositAmount30Day": "",  
-                    "takerVol365Day": "147664.35398115",  
-                    "makerVol365Day": "74696.351",  
-                    "tradeVol365Day": "222360.70498115",  
-                    "depositAmount365Day": "",  
-                    "takerVol": "30936.86124",  
-                    "makerVol": "36.032",  
-                    "tradeVol": "30972.89324",  
-                    "startDate": "2025-08-21",  
-                    "endDate": "2025-10-22",  
-                    "tradfiTradeVol": "0",  
-                    "tradfiTradeVol30Day": "0",  
-                    "tradfiTradeVol365Day": "0",  
-                    "commissions30Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0",  
-                        "USDC": "0",  
-                        "USDT": "0"  
-                    },  
-                    "commissionsVol": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "2.35583601",  
-                        "USDC": "0",  
-                        "USDT": "3.1648939"  
-                    },  
-                    "commissions365Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "8.90403178",  
-                        "USDC": "0",  
-                        "USDT": "23.89337689"  
-                    }  
+                    "chainCode": "SOL",  
+                    "chainIconUrl": "https://example.com/sol.png",  
+                    "tokenAddress": "0xabc...",  
+                    "tokenCode": "DEX_123",  
+                    "tokenSymbol": "PEPE",  
+                    "tokenDecimals": 18,  
+                    "tokenIconUrlDay": "https://example.com/pepe-day.png",  
+                    "tokenIconUrlNight": "https://example.com/pepe-night.png",  
+                    "tokenAmount": "50000000",  
+                    "tokenAmountUsd": "500.00",  
+                    "tradeFlag": 1,  
+                    "pnl": "75.00",  
+                    "pnlRatio": "0.15",  
+                    "costPrice": "0.0000085",  
+                    "lastPrice": "0.00001",  
+                    "costTotalValue": "425.00",  
+                    "assetStatus": 0  
                 }  
-            ],  
-            "nextPageCursor": "16197"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1733205472513  
+        "time": 1704067200000  
     }
 
 ---
 
-# 查詢代理用戶列表
+# 查詢資產列表
 
-要使用此接口，您应该有一个代理商账户，并且在创建 API 密钥时仅勾选“代理商”权限。  
-代理商网站: <https://affiliates.bybit.com>
+查詢用戶的鏈上代幣持倉，包含持倉數量、市值及盈虧信息。
 
-提示
+信息
 
-  * 僅支持使用母帳戶uid
-  * 若要查詢該接口, api key僅能擁有代理商權限, 若擁有任何其他權限想, 請移除
+  * 僅返回餘額不為零的代幣，零餘額代幣不在返回列表中
+  * 資產按 USD 價值倒序排列
+  * 使用 `tradeFlag` 判斷代幣是否可通過 [執行贖回](/docs/zh-TW/v5/alpha/trade-redeem) 賣出
+  * 使用返回的 `tokenCode` 用於報價及執行接口
+  * 使用 `chainCode` \+ `tokenAddress` 調用 [獲取代幣詳情](/docs/zh-TW/v5/alpha/biz-token-details) 獲取更多信息
 
 
 
 ### HTTP 請求
 
-GET`/v5/affiliate/aff-user-list`
+POST`/v5/alpha/trade/asset-list`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-size| false| integer| 每頁數量限制. [`0`, `100`]. 默認: `0`  
-cursor| false| string| 游標，用於翻頁  
-needDeposit| false| boolean| `true`: 返回入金信息; `false`(默認): 不返回入金信息  
-need30| false| boolean| `true`: 返回最近30天交易信息; `false`(default): 不返回最近30天交易信息  
-need365| false| boolean| `true`: 返回最近365天交易信息; `false`(default): 不返回最近365天交易信息  
-startDate| false| string| 查詢時段開始日期，格式為 `YYYY-MM-DD`  
-endDate| false| string| 查詢時段結束日期，格式為 `YYYY-MM-DD`  
-  
-### 返回參數
+無
+
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> userId| string| 帳戶uid  
-> registerTime| string| 用戶註冊時間  
-> source| string| 用戶註冊來源，來自哪个Referrer Code  
-> remarks| string| 備註  
-> isKyc| boolean| KYC是否完成  
-> takerVol30Day| string| 過去30天的吃單交易量, T+1更新. 單位: USDT. 所有下方交易量相關的字段, 包含了期貨、期權和現貨的交易量  
-> makerVol30Day| string| 過去30天的掛單交易量, T+1更新. 單位: USDT  
-> tradeVol30Day| string| 過去30天的總交易量, T+1更新. 單位: USDT  
-> depositAmount30Day| string| 過去30天的入金金額. 單位: USDT  
-> takerVol365Day| string| 過去一年的吃單交易量, T+1更新. 單位: USDT  
-> makerVol365Day| string| 過去一年的掛單交易量, T+1更新. 單位: USDT  
-> tradeVol365Day| string| 過去一年的總交易量, T+1更新. 單位: USDT  
-> depositAmount365Day| string| 過去一年的總入金金額. 單位: USDT  
-> takerVol| string| 在 [`startDate`, `endDate`] 區間內的吃單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
-> makerVol| string| 在 [`startDate`, `endDate`] 區間內的掛單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
-> tradeVol| string| 在 [`startDate`, `endDate`] 區間內的總成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
-> startDate| string| 查詢時段開始日期  
-> endDate| string| 查詢時段結束日期  
-> tradfiTradeVol| string| 當輸入參數中包含 `startDate` 和 `endDate` 時, 返回`startDate` 和 `endDate` 之間tradfi 交易量（USDT）  
-> tradfiTradeVol30Day| string| 過去 30 天的 tradfi 交易量（USDT）。如果輸入參數包含 `startDate` 和 `endDate`，則傳回 0。  
-> tradfiTradeVol365Day| string| 過去一年的 tradfi 交易量（USDT）。如果輸入參數包含 `startDate` 和 `endDate`，則傳回 0。  
-> commissionsVol| json| 當輸入參數中包含 `startDate` 和 `endDate` 時, 返回`startDate` 和 `endDate` 之間的佣金  
-> commissions30Day| json| 過去 30 天內的佣金  
-> commissions365Day| json| 過去一年內的佣金  
-nextPageCursor| string| 游標，用於翻頁  
+totalAssetUsd| string| 持倉總市值（USD）  
+assetList| array| 代幣持倉列表  
+> chainCode| string| 區塊鏈代碼，如 `ETH`、`SOL`、`BSC`  
+> chainIconUrl| string| 鏈圖標 URL  
+> tokenAddress| string| 代幣合約地址  
+> tokenCode| string| `DEX_<id>` 格式的代幣代碼，用於報價及執行接口  
+> tokenSymbol| string| 代幣符號  
+> tokenDecimals| integer| 代幣小數精度  
+> tokenIconUrlDay| string| 代幣圖標 URL（淺色模式）  
+> tokenIconUrlNight| string| 代幣圖標 URL（深色模式）  
+> tokenAmount| string| 持倉數量  
+> tokenAmountUsd| string| 持倉市值（USD）  
+> tradeFlag| integer| 是否可交易。`0`: 不可交易，`1`: 可交易  
+> pnl| string| 未實現盈虧（USD），正數為盈利。無成本數據時為 null  
+> pnlRatio| string| 盈虧比率（小數），如 `0.15` = +15%。無成本數據時為 null  
+> costPrice| string| 平均成本價。無成本數據時為 null  
+> lastPrice| string| 當前市場價格  
+> costTotalValue| string| 總成本（USD）。無成本數據時為 null  
+> assetStatus| integer| 代幣生命週期狀態。`0`: 運行中，`1`: 即將下線，`2`: 已下線  
+> announcementUrl| string| 下線公告 URL。`assetStatus` 為 `1` 或 `2` 時存在  
+> estimatedOfflineTime| integer| 預計下線時間（ms）。`assetStatus=1` 時存在  
+> delistingTime| integer| 實際下線時間（ms）。`assetStatus=2` 時存在  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -296,50 +176,23 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST /v5/alpha/trade/asset-list HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1685596324209  
+    X-BAPI-TIMESTAMP: 1704067200000  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_affiliate_user_list(  
-        cursor="0",  
-        size="2",  
-        need365=True,  
-        need30=True,  
-        needDeposit=True,  
-        startDate="2025-10-21",  
-        endDate="2025-10-22",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    {}  
+    
+    
+    
       
-    client  
-      .getAffiliateUserInfo({ size: 2 })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -347,100 +200,31 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "totalAssetUsd": "1250.50",  
+            "assetList": [  
                 {  
-                    "userId": "103895898",  
-                    "registerTime": "2024-10-29",  
-                    "source": "Default",  
-                    "remarks": "",  
-                    "isKyc": true,  
-                    "takerVol30Day": "12861.362976",  
-                    "makerVol30Day": "262.60865",  
-                    "tradeVol30Day": "13123.971626",  
-                    "depositAmount30Day": "",  
-                    "takerVol365Day": "208971.63737375",  
-                    "makerVol365Day": "33392.64275",  
-                    "tradeVol365Day": "242364.28012375",  
-                    "depositAmount365Day": "",  
-                    "takerVol": "194231.4175",  
-                    "makerVol": "32886.108",  
-                    "tradeVol": "227117.5255",  
-                    "startDate": "2025-08-21",  
-                    "endDate": "2025-10-22",  
-                    "tradfiTradeVol": "0",  
-                    "tradfiTradeVol30Day": "0",  
-                    "tradfiTradeVol365Day": "0",  
-                    "commissions30Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0.0621748",  
-                        "USDC": "0",  
-                        "USDT": "2.64288011"  
-                    },  
-                    "commissionsVol": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0",  
-                        "USDC": "0",  
-                        "USDT": "0.00835765"  
-                    },  
-                    "commissions365Day": {  
-                        "BTC": "0.00000002",  
-                        "ETH": "0.00000063",  
-                        "MNT": "0.1210605",  
-                        "USDC": "0.13462624",  
-                        "USDT": "2.79509816"  
-                    }  
-                },  
-                {  
-                    "userId": "1547321",  
-                    "registerTime": "2023-06-28",  
-                    "source": "Default",  
-                    "remarks": "",  
-                    "isKyc": false,  
-                    "takerVol30Day": "",  
-                    "makerVol30Day": "",  
-                    "tradeVol30Day": "",  
-                    "depositAmount30Day": "",  
-                    "takerVol365Day": "147664.35398115",  
-                    "makerVol365Day": "74696.351",  
-                    "tradeVol365Day": "222360.70498115",  
-                    "depositAmount365Day": "",  
-                    "takerVol": "30936.86124",  
-                    "makerVol": "36.032",  
-                    "tradeVol": "30972.89324",  
-                    "startDate": "2025-08-21",  
-                    "endDate": "2025-10-22",  
-                    "tradfiTradeVol": "0",  
-                    "tradfiTradeVol30Day": "0",  
-                    "tradfiTradeVol365Day": "0",  
-                    "commissions30Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "0",  
-                        "USDC": "0",  
-                        "USDT": "0"  
-                    },  
-                    "commissionsVol": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "2.35583601",  
-                        "USDC": "0",  
-                        "USDT": "3.1648939"  
-                    },  
-                    "commissions365Day": {  
-                        "BTC": "0",  
-                        "ETH": "0",  
-                        "MNT": "8.90403178",  
-                        "USDC": "0",  
-                        "USDT": "23.89337689"  
-                    }  
+                    "chainCode": "SOL",  
+                    "chainIconUrl": "https://example.com/sol.png",  
+                    "tokenAddress": "0xabc...",  
+                    "tokenCode": "DEX_123",  
+                    "tokenSymbol": "PEPE",  
+                    "tokenDecimals": 18,  
+                    "tokenIconUrlDay": "https://example.com/pepe-day.png",  
+                    "tokenIconUrlNight": "https://example.com/pepe-night.png",  
+                    "tokenAmount": "50000000",  
+                    "tokenAmountUsd": "500.00",  
+                    "tradeFlag": 1,  
+                    "pnl": "75.00",  
+                    "pnlRatio": "0.15",  
+                    "costPrice": "0.0000085",  
+                    "lastPrice": "0.00001",  
+                    "costTotalValue": "425.00",  
+                    "assetStatus": 0  
                 }  
-            ],  
-            "nextPageCursor": "16197"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1733205472513  
+        "time": 1704067200000  
     }

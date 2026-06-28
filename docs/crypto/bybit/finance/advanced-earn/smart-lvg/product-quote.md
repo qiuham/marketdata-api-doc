@@ -2,155 +2,121 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/product-quote
 api_type: REST
-updated_at: 2026-05-27 19:17:11.081980
+updated_at: 2026-06-28 19:10:53.782559
 ---
 
-# Double Win Offers
-
-### WebSocket public URL
-
-  * **Mainnet:**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **Testnet:**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# Get Product Quote
 
 info
 
-  * Subscribing to this topic does not require authentication.
-  * This topic pushes **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Custom Product Quote](/docs/v5/finance/advanced-earn/double-win/leverage) to obtain a quote on demand.
-  * **Recommended usage** : call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) to refresh before re-subscribing.
+Does not need authentication. **Up to 50 requests** per second per IP.
 
+### HTTP Request
 
+GET`/v5/earn/advance/product-extra-info`
 
-### Topic: `earn.doublewin.offers`
+### Request Parameters
 
+Parameter| Required| Type| Comments  
+---|---|---|---  
+category| **true**|  string| Product category. `SmartLeverage`  
+productId| **true**|  string| Product ID  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name. `earn.doublewin.offers`  
-data| array| Object  
-> p| string| Product ID  
-> c| string| Current index price of the underlying asset  
-> l| string| Current maximum leverage multiplier  
-> m| string| Maximum single order amount at current quote  
-> e| string| Quote expiry time, Unix timestamp in ms  
+category| string| `SmartLeverage`  
+productId| string| Product ID  
+breakevenPrice| string| Breakeven price — the best available institutional quote. Empty if no active quote  
+currentPrice| string| Current market price of the underlying asset. Used as reference for `initialPrice`  
+expireAt| string| Quote expiry time, Unix timestamp in ms. Empty if no active quote  
+maxInvestmentAmount| string| Maximum single order amount at current quote. Empty if no active quote  
   
-### Push Example
+note
+
+`breakevenPrice`, `expireAt`, and `maxInvestmentAmount` may be empty when no institutional quote is available. `currentPrice` is sourced directly from the market feed and is always present.
+
+### Request Example
+    
+    
+    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### Response Example
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "productId": "12999",  
+            "breakevenPrice": "68650.62",  
+            "expireAt": "1775036984839",  
+            "maxInvestmentAmount": "1000",  
+            "currentPrice": "68403.67",  
+            "category": "SmartLeverage"  
+        },  
+        "retExtInfo": {},  
+        "time": 1775036429311  
     }
 
 ---
 
-# 漲跌雙贏報價
-
-### WebSocket 公共頻道網址
-
-  * **主網：**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **測試網：**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# 查詢產品報價
 
 信息
 
-  * 訂閱此頻道無需身份驗證。
-  * 本頻道**僅推送固定區間產品** （`isRfqProduct=false`）。RFQ 產品需調用[查詢自選區間產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/leverage)進行主動詢價。
-  * **推薦使用方式** ：初始化時調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)獲取當前報價，再訂閱本頻道保持即時更新。WebSocket 斷線後，請先調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)重新整理，再重新訂閱。
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
+### HTTP 請求
 
+GET`/v5/earn/advance/product-extra-info`
 
-### 頻道：`earn.doublewin.offers`
+### 請求參數
 
+參數| 必填| 類型| 說明  
+---|---|---|---  
+category| **true**|  string| 產品類別，`SmartLeverage`  
+productId| **true**|  string| 產品 ID  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| 頻道名稱，`earn.doublewin.offers`  
-data| array| 列表  
-> p| string| 產品 ID  
-> c| string| 標的資產當前指數價格  
-> l| string| 當前最大槓桿倍數  
-> m| string| 當前報價下的最大單筆下單金額  
-> e| string| 報價到期時間，毫秒級 Unix 時間戳  
+category| string| `SmartLeverage`  
+productId| string| 產品 ID  
+breakevenPrice| string| 損益平衡價格——最優機構報價。若無有效報價則為空  
+currentPrice| string| 標的資產的當前市場價格。用作 `initialPrice` 的參考  
+expireAt| string| 報價到期時間，毫秒級 Unix 時間戳。若無有效報價則為空  
+maxInvestmentAmount| string| 當前報價下的最大單筆訂單金額。若無有效報價則為空  
   
-### 推送示例
+備註
+
+當無機構報價時，`breakevenPrice`、`expireAt` 和 `maxInvestmentAmount` 可能為空。`currentPrice` 直接來自市場行情，始終存在。
+
+### 請求示例
+    
+    
+    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### 響應示例
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "productId": "12999",  
+            "breakevenPrice": "68650.62",  
+            "expireAt": "1775036984839",  
+            "maxInvestmentAmount": "1000",  
+            "currentPrice": "68403.67",  
+            "category": "SmartLeverage"  
+        },  
+        "retExtInfo": {},  
+        "time": 1775036429311  
     }

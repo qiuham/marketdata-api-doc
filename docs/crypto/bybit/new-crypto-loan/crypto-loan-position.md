@@ -2,45 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/crypto-loan-position
 api_type: REST
-updated_at: 2026-05-27 19:18:41.372140
+updated_at: 2026-06-28 19:12:37.365554
 ---
 
-# Create Borrow Order
+# Get Borrow Order Info
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
-
-info
-
-  * The loan funds are released to the Funding wallet.
-  * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
-
-
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-fixed/borrow`
+GET`/v5/crypto-loan-fixed/borrow-order-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Currency to borrow  
-orderAmount| **true**|  string| Amount to borrow  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-autoRepay| false| string| Deprecated. Enable Auto-Repay to have assets in your Funding Account automatically repay your loan upon Borrowing order expiration, preventing overdue penalties. Ensure your Funding Account maintains sufficient amount for repayment to avoid automatic repayment failures.  
-`"true"`: enable, default; `"false"`: disable  
-repayType| false| string| `1`:Auto Repayment (default); Enable "Auto Repayment" to automatically repay your loan using assets in your funding account when it dues, avoiding overdue penalties. `2`:Transfer to flexible loan  
-collateralList| false| array<object>| Collateral coin list, supports putting up to 100 currency in the array  
-> currency| false| string| Currency used to mortgage  
-> amount| false| string| Amount to mortgage  
+orderId| false| string| Loan order ID  
+orderCurrency| false| string| Loan coin name  
+state| false| string| Borrow order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled  
+term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Loan order ID  
+list| array| Object  
+> annualRate| string| Annual rate for the borrowing  
+> orderId| long| Loan order ID  
+> orderTime| string| Order created time  
+> filledQty| string| Filled qty  
+> orderQty| string| Order qty  
+> orderCurrency| string| Coin name  
+> state| integer| Borrow order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: fail  
+> term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+> repayType| string| `1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
 
@@ -51,26 +50,12 @@ orderId| string| Loan order ID
 
     
     
-    POST /v5/crypto-loan-fixed/borrow HTTP/1.1  
+    GET /v5/crypto-loan-fixed/borrow-order-info?orderId=13010 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752633649752  
+    X-BAPI-TIMESTAMP: 1752655239825  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 208  
-      
-    {  
-        "orderCurrency": "ETH",  
-        "orderAmount": "1.5",  
-        "annualRate": "0.022",  
-        "term": "30",  
-        "autoRepay": "true",  
-        "collateralList": {  
-            "currency": "BTC",  
-            "amount": "0.1"  
-        }  
-    }  
     
     
     
@@ -80,16 +65,8 @@ orderId| string| Loan order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.borrow_fixed_crypto_loan(  
-        loanCurrency="ETH",  
-        loanAmount="1.5",  
-        annualRate="0.022",  
-        term="30",  
-        autoRepay="true",  
-        collateralList={  
-            "currency": "BTC",  
-            "amount": "0.1",  
-        },  
+    print(session.get_borrowing_orders_fixed_crypto_loan(  
+        orderId="13010"  
     ))  
     
     
@@ -104,50 +81,62 @@ orderId| string| Loan order ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "orderId": "13007"  
+            "list": [  
+                {  
+                    "annualRate": "0.01",  
+                    "filledQty": "0",  
+                    "orderCurrency": "MANA",  
+                    "orderId": 13010,  
+                    "orderQty": "2000",  
+                    "orderTime": "1752654035179",  
+                    "repayType": "2",  
+                    "state": 1,  
+                    "term": 30  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1752655241090  
     }
 
 ---
 
-# 創建借款單
+# 查詢個人借款訂單
 
 > 權限: "現貨"  
->  頻率: 1次/秒
-
-信息
-
-  * 借款發放到資金帳戶
-  * 質押金將從資金帳戶扣減, 因此確保資金帳戶有足額質押幣種
-
-
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-fixed/borrow`
+GET`/v5/crypto-loan-fixed/borrow-order-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 借入幣種  
-orderAmount| **true**|  string| 借入金額  
-annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
-term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-autoRepay| false| string| 已廢棄。啟用「自動還款」可在借款訂單到期時，自動使用資金帳戶中的資產還款，以避免逾期罰款。請確保資金帳戶中有足夠金額，以避免自動還款失敗。  
-`"true"`：啟用，預設值；`"false"`：停用  
-repayType| false| string| `1`:自動還款. (默认值); 啟用「自動還款」可在藉款訂單到期時，自動使用資金帳戶中的資產還款，以避免逾期罰款; `2`:轉活期;  
-collateralList| false| array<object>| 抵押幣種清單，最多支持陣列中放入 100 種幣種  
-> currency| false| string| 用於抵押的幣種  
-> amount| false| string| 抵押金額  
+orderId| false| string| 借款訂單 ID  
+orderCurrency| false| string| 借款幣種名稱  
+state| false| string| 借款訂單狀態，`1`: 等待匹配; `2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消  
+term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 借款單ID  
+list| array| Object  
+> annualRate| string| 借款年化利率  
+> orderId| long| 借款訂單 ID  
+> orderTime| string| 訂單建立時間  
+> filledQty| string| 成交數量  
+> orderQty| string| 訂單數量  
+> orderCurrency| string| 幣種名稱  
+> state| integer| 借款訂單狀態，`1`: 等待匹配；`2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消；`5`: 失敗  
+> term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+> repayType| string| `1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;  
+nextPageCursor| string| 下一頁游標  
   
 ### 請求示例
 
@@ -158,46 +147,16 @@ orderId| string| 借款單ID
 
     
     
-    POST /v5/crypto-loan-fixed/borrow HTTP/1.1  
+    GET /v5/crypto-loan-fixed/borrow-order-info?orderId=13010 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752633649752  
+    X-BAPI-TIMESTAMP: 1752655239825  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 208  
+    
+    
+    
       
-    {  
-        "orderCurrency": "ETH",  
-        "orderAmount": "1.5",  
-        "annualRate": "0.022",  
-        "term": "30",  
-        "autoRepay": "true",  
-        "collateralList": {  
-            "currency": "BTC",  
-            "amount": "0.1"  
-        }  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.borrow_fixed_crypto_loan(  
-        loanCurrency="ETH",  
-        loanAmount="1.5",  
-        annualRate="0.022",  
-        term="30",  
-        autoRepay="true",  
-        collateralList={  
-            "currency": "BTC",  
-            "amount": "0.1",  
-        },  
-    ))  
     
     
     
@@ -211,8 +170,21 @@ orderId| string| 借款單ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "orderId": "13007"  
+            "list": [  
+                {  
+                    "annualRate": "0.01",  
+                    "filledQty": "0",  
+                    "orderCurrency": "MANA",  
+                    "orderId": 13010,  
+                    "orderQty": "2000",  
+                    "orderTime": "1752654035179",  
+                    "repayType": "2",  
+                    "state": 1,  
+                    "term": 30  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1752655241090  
     }

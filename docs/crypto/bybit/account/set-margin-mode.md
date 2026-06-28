@@ -2,34 +2,27 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
 api_type: Account
-updated_at: 2026-05-27 19:14:13.679484
+updated_at: 2026-06-28 19:07:41.129775
 ---
 
-# Set Margin Mode
+# Get SMP Group ID
 
-Default is regular margin mode
+Query the SMP group ID of self match prevention
 
 ### HTTP Request
 
-POST`/v5/account/set-margin-mode`
+GET`/v5/account/smp-group`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-setMarginMode| **true**|  string| `ISOLATED_MARGIN`, `REGULAR_MARGIN`(i.e. Cross margin), `PORTFOLIO_MARGIN`  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-reasons| array| Object. If requested successfully, it is an empty array  
-> reasonCode| string| Fail reason code  
-> reasonMsg| string| Fail reason msg  
-[](/docs/api-explorer/v5/account/set-margin-mode)
-
-* * *
-
+smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default  
+  
 ### Request Example
 
   * HTTP
@@ -39,17 +32,12 @@ reasons| array| Object. If requested successfully, it is an empty array
 
     
     
-    POST /v5/account/set-margin-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/account/smp-group HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672134396332  
+    X-BAPI-TIMESTAMP: 1702363848192  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "setMarginMode": "PORTFOLIO_MARGIN"  
-    }  
     
     
     
@@ -59,75 +47,61 @@ reasons| array| Object. If requested successfully, it is an empty array
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_margin_mode(  
-        setMarginMode="PORTFOLIO_MARGIN",  
-    ))  
+    print(session.get_smp_group())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .setMarginMode('PORTFOLIO_MARGIN')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getSMPGroup()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
     
     
     {  
-        "retCode": 3400045,  
-        "retMsg": "Set margin mode failed",  
+        "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "reasons": [  
-                {  
-                    "reasonCode": "3400000",  
-                    "reasonMsg": "Equity needs to be equal to or greater than 1000 USDC"  
-                }  
-            ]  
-        }  
+            "smpGroup": 0  
+        },  
+        "retExtInfo": {},  
+        "time": 1702363848539  
     }
 
 ---
 
-# 設置保證金模式(帳戶)
+# 查詢SMP組ID
 
-用戶如果不設置，默認按全倉保證金
+查詢自成交攔截的SMP交易群組ID
 
 ### HTTP 請求
 
-POST`/v5/account/set-margin-mode`
+GET`/v5/account/smp-group`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-setMarginMode| **true**|  string| `ISOLATED_MARGIN`(逐倉保證金模式)  
-`REGULAR_MARGIN`（全倉保證金模式）  
-`PORTFOLIO_MARGIN`（組合保證金模式）  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-reasons| array| Object. 若請求提交成功, 則返回空數組  
-> reasonCode| string| 失敗錯誤碼  
-> reasonMsg| string| 失敗錯誤消息  
-[](/docs/zh-TW/api-explorer/v5/account/set-margin-mode)
-
-* * *
-
+smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`  
+  
 ### 請求示例
 
   * HTTP
@@ -137,62 +111,46 @@ reasons| array| Object. 若請求提交成功, 則返回空數組
 
     
     
-    POST /v5/account/set-margin-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/account/smp-group HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672134396332  
+    X-BAPI-TIMESTAMP: 1702363848192  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    
+    
+    
       
-    {  
-        "setMarginMode": "PORTFOLIO_MARGIN"  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.set_margin_mode(  
-        setMarginMode="PORTFOLIO_MARGIN",  
-    ))  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .setMarginMode('PORTFOLIO_MARGIN')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getSMPGroup()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
     
     
     {  
-        "retCode": 3400045,  
-        "retMsg": "Set margin mode failed",  
+        "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "reasons": [  
-                {  
-                    "reasonCode": "3400000",  
-                    "reasonMsg": "Equity needs to be equal to or greater than 1000 USDC"  
-                }  
-            ]  
-        }  
+            "smpGroup": 0  
+        },  
+        "retExtInfo": {},  
+        "time": 1702363848539  
     }

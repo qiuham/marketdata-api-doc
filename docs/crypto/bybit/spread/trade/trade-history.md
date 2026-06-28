@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/trade-history
 api_type: Trading
-updated_at: 2026-05-27 19:22:37.921550
+updated_at: 2026-06-28 19:15:08.144352
 ---
 
 # Get Trade History

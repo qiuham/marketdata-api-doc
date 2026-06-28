@@ -2,29 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query
 api_type: REST
-updated_at: 2026-05-27 19:21:24.431618
+updated_at: 2026-06-28 19:13:54.765684
 ---
 
-# Get Rate Limit
+# Set Rate Limit
 
 > API rate limit: 50 req per second
 
 info
 
-  * A master account can query its own and its subaccounts' API rate limit.
-  * A subaccount can only query its own API rate limit.
+  * If the UID requesting this endpoint is a master account, UIDs passed to the `uids` parameter must be subaccounts of the master account.
+  * If the UID requesting this endpoint is not a master account, the UID passed to the `uids` parameter must be the UID of the subaccount requesting this endpoint.
+  * Only institutional users can request this endpoint.
 
 
 
 ### HTTP Request
 
-GET`/v5/apilimit/query`
+POST`/v5/apilimit/set`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-uids| **true**|  string| Multiple UIDs separated by commas  
+list| **true**|  array| Object  
+> uids| **true**|  string| Multiple UIDs separated by commas  
+> [bizType](/docs/v5/enum#biztype)| **true**|  string| Business type  
+> rate| **true**|  integer| API rate limit per second  
   
 ### Response Parameters
 
@@ -34,6 +38,8 @@ list| array| Object
 > uids| string| Multiple UIDs separated by commas  
 > [bizType](/docs/v5/enum#biztype)| string| Business type  
 > rate| integer| API rate limit per second  
+> success| boolean| Whether or not the request was successful  
+> [msg](/docs/v5/enum#msg)| string| Result message  
   
 ### Request Example
 
@@ -44,14 +50,23 @@ list| array| Object
 
     
     
-    GET /v5/apilimit/query?uids=290118 HTTP/1.1  
+    POST /v5/apilimit/set HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
+    X-BAPI-TIMESTAMP: 1711420489915  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 2  
+      
+    {  
+        "list": [  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
+    }  
     
     
     
@@ -61,8 +76,14 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_api_rate_limit(  
-        uids="290118"  
+    print(session.set_api_rate_limit(  
+        list=[  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
     ))  
     
     
@@ -77,47 +98,48 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
+            "result": [  
                 {  
                     "uids": "290118",  
                     "bizType": "SPOT",  
-                    "rate": 600  
-                },  
-                {  
-                    "uids": "290118",  
-                    "bizType": "DERIVATIVES",  
-                    "rate": 400  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1754894341984  
+        "time": 1754894296913  
     }
 
 ---
 
-# 查詢 API 速率限制
+# 設定 API 速率限制
 
-### 查詢 API 速率限制
+### 設定 API 速率限制
 
 > API 速率限制：每秒 50 個請求
 
 信息
 
-  * 母帳戶能查詢自己和子帳戶的頻率
-  * 子帳戶只能查詢自己的頻率
+  * 如果請求接口使用者是母帳戶，需要提頻的uid必須是所屬該母帳戶
+  * 如果請求使用者非母帳戶，則提頻的uid必須是自己
+  * UID必須屬於機構用户
 
 
 
 ### HTTP 請求
 
-GET`/v5/apilimit/query`
+POST`/v5/apilimit/set`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-uids| true| string| uid列表，多個以逗號隔開  
+list| true| array| Object  
+> uids| true| string| uid列表，多個以逗號隔開  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| true| string| 業務類型  
+> rate| true| integer| api rate limit 每秒頻率  
   
 ### 響應參數
 
@@ -127,18 +149,29 @@ list| array| Object
 > uids| string| uid列表，多個以逗號隔開  
 > [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
 > rate| integer| api rate limit 每秒頻率  
+> success| boolean| 是否成功  
+> [msg](/docs/zh-TW/v5/enum#msg)| string| 結果訊息  
   
-### 響應參數
+### 請求實例
     
     
-    GET /v5/apilimit/query?uids=290118 HTTP/1.1  
+    POST /v5/apilimit/set HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
+    X-BAPI-TIMESTAMP: 1711420489915  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 2  
+      
+    {  
+        "list": [  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
+    }  
     
 
 ### 響應示例
@@ -148,19 +181,16 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
+            "result": [  
                 {  
                     "uids": "290118",  
                     "bizType": "SPOT",  
-                    "rate": 600  
-                },  
-                {  
-                    "uids": "290118",  
-                    "bizType": "DERIVATIVES",  
-                    "rate": 400  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1754894341984  
+        "time": 1754894296913  
     }

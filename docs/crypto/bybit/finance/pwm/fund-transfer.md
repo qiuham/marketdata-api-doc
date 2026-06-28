@@ -2,43 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/fund-transfer
 api_type: REST
-updated_at: 2026-05-27 19:17:55.830615
+updated_at: 2026-06-28 19:11:41.575169
 ---
 
-# Get Asset Trend
+# Fund Transfer Between Sub-Accounts
+
+info
+
+This endpoint must be called using the API key of the fund custodian sub-account.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID  
-startTime| false| int| Start timestamp (ms). Default: current time minus 7 days  
-endTime| false| int| End timestamp (ms). Default: current time  
+transferId| **true**|  string| Transfer request ID  
+fromUserId| **true**|  int64| Source UID. Must be a custodian sub-account of the current fund  
+toUserId| **true**|  int64| Destination UID. Must be a custodian sub-account of the current fund  
+amount| **true**|  string| Transfer amount  
+coin| **true**|  string| Coin name  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-dataPoints| array| Asset data point list, sorted in ascending order by date  
-> date| string| Date in `YYYY-MM-DD` format  
-> assetValueUsd| string| Total plan assets on that day (USD valuation), taken from the daily settlement snapshot  
+transferId| string| Transfer ID  
+status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### Response Example
@@ -46,57 +59,62 @@ dataPoints| array| Asset data point list, sorted in ascending order by date
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "planId": "10001",  
-            "dataPoints": [  
-                {  
-                    "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
-                },  
-                {  
-                    "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
-                }  
-            ]  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }
 
 ---
 
-# 查詢資產趨勢曲線
+# 基金托管子賬號間資金劃轉
+
+信息
+
+此接口必須使用基金托管子賬號的 API Key 操作。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID  
-startTime| false| int| 起始時間戳（ms），默認當前時間-7天  
-endTime| false| int| 結束時間戳（ms），默認當前時間  
+transferId| **true**|  string| 劃轉請求ID  
+fromUserId| **true**|  int64| 資金劃出UID（必須是當前基金的基金托管賬號）  
+toUserId| **true**|  int64| 資金劃入UID（必須是當前基金的基金托管賬號）  
+amount| **true**|  string| 劃轉金額  
+coin| **true**|  string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-dataPoints| array| 資產數據點列表，按日期升序排列  
-> date| string| 日期，格式 `YYYY-MM-DD`  
-> assetValueUsd| string| 當日計劃總資產（USD估值），取每日結算快照值  
+transferId| string| 劃轉ID  
+status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### 響應示例
@@ -104,17 +122,9 @@ dataPoints| array| 資產數據點列表，按日期升序排列
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "planId": "10001",  
-            "dataPoints": [  
-                {  
-                    "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
-                },  
-                {  
-                    "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
-                }  
-            ]  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }

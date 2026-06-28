@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/faqs/order_count_decrement
 api_type: REST
-updated_at: 2026-05-27 18:54:01.035373
+updated_at: 2026-06-28 18:49:24.697039
 ---
 
 # Price Range Execution Rule
@@ -162,6 +162,18 @@ If the reference price is being calculated outside the matching engine, then a q
 
 The reference price was set manually by a human operator. This calculation method will only be used in situations when algorithmic calculation of the reference price has been deemed unsuitable.
 
+## External Reference Price Calculation Method 1[​](/docs/binance-spot-api-docs/faqs/price_range_execution_rules#external-reference-price-calculation-method-1 "Direct link to External Reference Price Calculation Method 1")
+
+The reference price is calculated as the average of the trading price from 4 external data providers.
+
+## External Reference Price Calculation Method 2[​](/docs/binance-spot-api-docs/faqs/price_range_execution_rules#external-reference-price-calculation-method-2 "Direct link to External Reference Price Calculation Method 2")
+
+The reference price is the index price of the corresponding USDⓈ-M Binance Futures.
+
+## External Reference Price Calculation Method 3[​](/docs/binance-spot-api-docs/faqs/price_range_execution_rules#external-reference-price-calculation-method-3 "Direct link to External Reference Price Calculation Method 3")
+
+The reference price is calculated as the 5 minute SMA of the Binance Spot mid-spread price.
+
 ---
 
 # 价格区间执行规则
@@ -320,3 +332,15 @@ FIX接口| `ExpiryReason <25056>`
 ## 外部参考价格计算方法 0[​](/docs/zh-CN/binance-spot-api-docs/faqs/price_range_execution_rules#外部参考价格计算方法-0 "外部参考价格计算方法 0的直接链接")
 
 参考价格由人工手动设置。该计算方法仅在不适合使用算法计算参考价格的情况下使用。
+
+## 外部参考价格计算方法 1[​](/docs/zh-CN/binance-spot-api-docs/faqs/price_range_execution_rules#外部参考价格计算方法-1 "外部参考价格计算方法 1的直接链接")
+
+参考价格为 4 个外部数据提供方的交易价格的平均值。
+
+## 外部参考价格计算方法 2[​](/docs/zh-CN/binance-spot-api-docs/faqs/price_range_execution_rules#外部参考价格计算方法-2 "外部参考价格计算方法 2的直接链接")
+
+参考价格为对应的 USDⓈ-M 币安合约的指数价格。
+
+## 外部参考价格计算方法 3[​](/docs/zh-CN/binance-spot-api-docs/faqs/price_range_execution_rules#外部参考价格计算方法-3 "外部参考价格计算方法 3的直接链接")
+
+参考价格为币安现货买卖中间价的 5 分钟简单移动平均值（SMA）。

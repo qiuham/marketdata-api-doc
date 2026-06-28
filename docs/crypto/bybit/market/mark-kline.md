@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-05-27 19:18:26.877871
+updated_at: 2026-06-28 19:12:20.989569
 ---
 
 # Get Open Interest
@@ -43,6 +43,8 @@ symbol| string| Symbol name
 list| array| Object  
 > openInterest| string| Open interest. The value is the sum of both sides.   
 The unit of value, e.g., BTCUSD(inverse) is USD, BTCUSDT(linear) is BTC  
+> singleOpenInterest| string| Open interest. The value is the single side.   
+The unit of value, e.g., BTCUSD(inverse) is USD, BTCUSDT(linear) is BTC  
 > timestamp| string| The timestamp (ms)  
 nextPageCursor| string| Used to paginate  
 [](/docs/api-explorer/v5/market/open-interest)
@@ -60,7 +62,7 @@ nextPageCursor| string| Used to paginate
 
     
     
-    GET /v5/market/open-interest?category=inverse&symbol=BTCUSD&intervalTime=5min&startTime=1669571100000&endTime=1669571400000 HTTP/1.1  
+    GET /v5/market/open-interest?limit=5&category=inverse&intervalTime=1d&symbol=BTCUSD HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -131,18 +133,35 @@ nextPageCursor| string| Used to paginate
             "category": "inverse",  
             "list": [  
                 {  
-                    "openInterest": "461134384.00000000",  
-                    "timestamp": "1669571400000"  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780963200000"  
                 },  
                 {  
-                    "openInterest": "461134292.00000000",  
-                    "timestamp": "1669571100000"  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780876800000"  
+                },  
+                {  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780790400000"  
+                },  
+                {  
+                    "openInterest": "63942311.00000000",  
+                    "singleOpenInterest": "31971156",  
+                    "timestamp": "1780704000000"  
+                },  
+                {  
+                    "openInterest": "63942311.00000000",  
+                    "singleOpenInterest": "31971156",  
+                    "timestamp": "1780617600000"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "nextPageCursor": "lastid%3D19408935%26lasttime%3D1780617600"  
         },  
         "retExtInfo": {},  
-        "time": 1672053548579  
+        "time": 1780994051392  
     }
 
 ---
@@ -185,6 +204,8 @@ symbol| string| 合約名稱
 list| array| Object  
 > openInterest| string| 未平倉合約數量, 數值為雙邊的和  
 這個數值的單位是, 比如, BTCUSDT永續是BTC, BTCUSD反向合約是USD  
+> singleOpenInterest| string| 未平倉合約數量, 數值為單邊的值  
+這個數值的單位是, 比如, BTCUSDT永續是BTC, BTCUSD反向合約是USD  
 > timestamp| string| 數據產生的時間戳（毫秒）  
 nextPageCursor| string| 游標，用於翻頁  
 [](/docs/zh-TW/api-explorer/v5/market/open-interest)
@@ -202,7 +223,7 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/market/open-interest?category=inverse&symbol=BTCUSD&intervalTime=5min&startTime=1669571100000&endTime=1669571400000 HTTP/1.1  
+    GET /v5/market/open-interest?limit=5&category=inverse&intervalTime=1d&symbol=BTCUSD HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -273,16 +294,33 @@ nextPageCursor| string| 游標，用於翻頁
             "category": "inverse",  
             "list": [  
                 {  
-                    "openInterest": "461134384.00000000",  
-                    "timestamp": "1669571400000"  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780963200000"  
                 },  
                 {  
-                    "openInterest": "461134292.00000000",  
-                    "timestamp": "1669571100000"  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780876800000"  
+                },  
+                {  
+                    "openInterest": "63910691.00000000",  
+                    "singleOpenInterest": "31955346",  
+                    "timestamp": "1780790400000"  
+                },  
+                {  
+                    "openInterest": "63942311.00000000",  
+                    "singleOpenInterest": "31971156",  
+                    "timestamp": "1780704000000"  
+                },  
+                {  
+                    "openInterest": "63942311.00000000",  
+                    "singleOpenInterest": "31971156",  
+                    "timestamp": "1780617600000"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "nextPageCursor": "lastid%3D19408935%26lasttime%3D1780617600"  
         },  
         "retExtInfo": {},  
-        "time": 1672053548579  
+        "time": 1780994051392  
     }

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-candlesticks
 anchor_id: order-book-trading-market-data-get-candlesticks
 api_type: API
-updated_at: 2026-05-27 19:35:33.391426
+updated_at: 2026-06-28 19:37:19.796543
 ---
 
 # GET / Candlesticks
@@ -50,6 +50,10 @@ UTC+0 opening price k-line: [6Hutc/12Hutc/1Dutc/2Dutc/3Dutc/1Wutc/1Mutc/3Mutc]
 after | String | No | Pagination of data to return records earlier than the requested `ts`  
 before | String | No | Pagination of data to return records newer than the requested `ts`. The latest data will be returned when using `before` individually  
 limit | String | No | Number of results per request. The maximum is `300`. The default is `100`.  
+adjust | String | No | Price adjustment type for equity perpetual contracts.  
+`forward`: Forward adjustment.  
+If this field is omitted, unadjusted data is returned by default.  
+Only applicable to equity perpetual contracts.  
   
 > Response Example
     
@@ -110,7 +114,7 @@ The first candlestick data may be incomplete, and should not be polled repeatedl
 
 The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,volCcy,volCcyQuote,confirm]. 
 
-For the current cycle of k-line data, when there is no transaction, the opening high and closing low default take the closing price of the previous cycle.
+For the current cycle of k-line data, when there is no transaction, the opening high and closing low default take the closing price of the previous cycle.  When `adjust=forward`, the historical OHLC prices are multiplied by the adjustment factor for the relevant period. For stock splits, `vol` and `volCcy` are also adjusted proportionally. `volCcyQuote` is not adjusted. This parameter is only effective for equity perpetual contracts.
 
 ---
 
@@ -158,6 +162,9 @@ UTC+0开盘价k线：[/6Hutc/12Hutc/1Dutc/2Dutc/3Dutc/1Wutc/1Mutc/3Mutc]
 after | String | 否 | 请求此时间戳之前（更旧的数据）的分页内容，传的值为对应接口的`ts`  
 before | String | 否 | 请求此时间戳之后（更新的数据）的分页内容，传的值为对应接口的`ts`, 单独使用时，会返回最新的数据。  
 limit | String | 否 | 分页返回的结果集数量，最大为300，不填默认返回100条  
+adjust | String | 否 | 复权类型，仅适用于股票永续合约。  
+`forward`：前复权。  
+不填时默认返回不复权数据。  
   
 > 返回结果
     
@@ -214,4 +221,4 @@ confirm | String | K线状态
 `0`：K线未完结  
 `1`：K线已完结  
 返回的第一条K线数据可能不是完整周期k线，返回值数组顺序分别为是：[ts,o,h,l,c,vol,volCcy,volCcyQuote,confirm]   
-对于当前周期的K线数据，没有成交时，开高收低默认都取上一周期的收盘价格。
+对于当前周期的K线数据，没有成交时，开高收低默认都取上一周期的收盘价格。  当传入 `adjust=forward` 时，历史K线的开高低收（OHLC）价格将乘以对应时期的复权因子。对于拆股，成交量（`vol`、`volCcy`）也会按相同比例调整。成交金额（`volCcyQuote`）不做调整。该参数仅对股票永续合约有效。

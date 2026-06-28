@@ -2,23 +2,16 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/cancel-all-quotes
 api_type: Trading
-updated_at: 2026-05-27 19:21:33.880897
+updated_at: 2026-06-28 19:14:02.430752
 ---
 
-# Cancel All RFQs
+# Cancel All Quotes
 
-Cancel all active RFQs. **Up to 50 requests per second**
-
-info
-
-  * Inquirer cancels order: Cancel the inquiry, all its corresponding quotes becoming invalid
-  * Quoter cancels the order: The inquiry is not affected, but the quote becomes invalid
-
-
+Cancel all active quotes. **Up to 50 requests per second**
 
 ### HTTP Request
 
-POST`/v5/rfq/cancel-all-rfq`
+POST`/v5/rfq/cancel-all-quotes`
 
 ### Request Parameters
 
@@ -28,10 +21,11 @@ None
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array of objects|   
+result| Object|   
 > rfqId| string| Inquiry ID  
-> rfqLinkId| string| Custom inquiry ID  
-> code| string| Whether or not the cancellations were a success, `0`: success  
+> quoteId| string| Quote ID  
+> quoteLinkId| string| Custom quote ID  
+> code| string| Whether or not cancellation was a success, `0`: success  
 > msg| string| Cancellation failure reason  
   
 ### Request Example
@@ -42,7 +36,7 @@ result| array of objects|
 
     
     
-    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
+    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -70,32 +64,26 @@ result| array of objects|
         "retMsg": "OK",  
         "result": [  
             {  
-                "rfqId": "175766967076315412093641573648082",  
-                "rfqLinkId": "",  
+                "rfqId": "175740723913299909861293671607573",  
+                "quoteLinkId": "",  
+                "quoteId": "1757407497684679708210572531298710",  
                 "code": 0,  
                 "msg": ""  
             }  
         ],  
         "retExtInfo": {},  
-        "time": 1757669676581  
+        "time": 1757407503982  
     }
 
 ---
 
-# 取消所有詢價單
+# 取消所有報價單
 
-取消所有您的詢價單。**每秒最多 50 次請求**
-
-信息
-
-  * 詢價方取消訂單：取消詢價單，所有報價均失效。
-  * 報價方取消訂單：詢價單不受影響，報價單失效。
-
-
+取消所有報價單。**每秒最多 50 次請求**
 
 ### HTTP 請求
 
-POST`/v5/rfq/cancel-all-rfq`
+POST`/v5/rfq/cancel-all-quotes`
 
 ### 請求參數
 
@@ -105,16 +93,18 @@ POST`/v5/rfq/cancel-all-rfq`
 
 參數| 類型| 說明  
 ---|---|---  
-result| array of objects| 詢價單資料  
-> rfqId| string| 詢價單 ID  
-> rfqLinkId| string| 詢價單自定義 ID  
-> code| string| 取消成功或失敗，0 表示取消成功  
-> msg| string| 取消失敗原因  
+result| object|   
+> data| Array of object|   
+>> rfqId| string| 詢價單 ID  
+>> quoteId| string| 報價單 ID  
+>> quoteLinkId| string| 報價單自定義 ID  
+>> code| string| 取消成功或失敗，0 表示取消成功  
+>> msg| string| 取消失敗原因  
   
 ### 請求示例
     
     
-    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
+    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -132,12 +122,13 @@ result| array of objects| 詢價單資料
         "retMsg": "OK",  
         "result": [  
             {  
-                "rfqId": "175766967076315412093641573648082",  
-                "rfqLinkId": "",  
+                "rfqId": "175740723913299909861293671607573",  
+                "quoteLinkId": "",  
+                "quoteId": "1757407497684679708210572531298710",  
                 "code": 0,  
                 "msg": ""  
             }  
         ],  
         "retExtInfo": {},  
-        "time": 1757669676581  
+        "time": 1757407503982  
     }

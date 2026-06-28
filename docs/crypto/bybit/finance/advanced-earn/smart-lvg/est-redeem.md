@@ -2,52 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/est-redeem
 api_type: REST
-updated_at: 2026-05-27 19:17:05.572205
+updated_at: 2026-06-28 19:10:51.322580
 ---
 
-# Get Redeem Estimated Amount
+# Get Product Quote
 
 info
 
-  * Need authentication. **Up to 10 requests** per second.
-  * Requires Earn permission on the API key.
-  * This is a **required prerequisite** before placing a Redeem order. The result is cached server-side for 10 minutes and validated when the redeem order is submitted. If the cache expires, call this endpoint again before retrying.
-
-
+Does not need authentication. **Up to 50 requests** per second per IP.
 
 ### HTTP Request
 
-GET`/v5/earn/advance/get-redeem-est-amount-list`
+GET`/v5/earn/advance/product-extra-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product type. `SmartLeverage`  
-positionIds| **true**|  string| Comma-separated position IDs to query, max 5. e.g. `897,898`  
+category| **true**|  string| Product category. `SmartLeverage`  
+productId| **true**|  string| Product ID  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> success| bool| Whether the estimation was successful for this position  
-> positionId| string| Position ID  
-> estRedeemAmount| string| Estimated redeem amount in `investCoin`  
-> estRedeemTime| string| Estimated time to receive funds, Unix timestamp in ms  
-> slippageRate| string| Slippage tolerance rate for this redemption  
+category| string| `SmartLeverage`  
+productId| string| Product ID  
+breakevenPrice| string| Breakeven price — the best available institutional quote. Empty if no active quote  
+currentPrice| string| Current market price of the underlying asset. Used as reference for `initialPrice`  
+expireAt| string| Quote expiry time, Unix timestamp in ms. Empty if no active quote  
+maxInvestmentAmount| string| Maximum single order amount at current quote. Empty if no active quote  
   
-* * *
+note
+
+`breakevenPrice`, `expireAt`, and `maxInvestmentAmount` may be empty when no institutional quote is available. `currentPrice` is sourced directly from the market feed and is always present.
 
 ### Request Example
     
     
-    GET /v5/earn/advance/get-redeem-est-amount-list?category=SmartLeverage&positionIds=1277,1260 HTTP/1.1  
+    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -57,72 +51,56 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "success": true,  
-                    "positionId": "1260",  
-                    "estRedeemAmount": "975.0977",  
-                    "estRedeemTime": "1775038305626",  
-                    "slippageRate": "0.97"  
-                },  
-                {  
-                    "success": true,  
-                    "positionId": "1277",  
-                    "estRedeemAmount": "76.8356",  
-                    "estRedeemTime": "1775038305615",  
-                    "slippageRate": "0.97"  
-                }  
-            ]  
+            "productId": "12999",  
+            "breakevenPrice": "68650.62",  
+            "expireAt": "1775036984839",  
+            "maxInvestmentAmount": "1000",  
+            "currentPrice": "68403.67",  
+            "category": "SmartLeverage"  
         },  
         "retExtInfo": {},  
-        "time": 1775038005629  
+        "time": 1775036429311  
     }
 
 ---
 
-# 查詢贖回預估金額
+# 查詢產品報價
 
 信息
 
-  * 需要身份驗證。每秒**最多 10 次請求** 。
-  * API 金鑰需要具備 Earn（理財）權限。
-  * 這是提交贖回訂單前的**必要前置步驟** 。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。若快取已過期，請在重試前重新調用本接口。
-
-
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
 ### HTTP 請求
 
-GET`/v5/earn/advance/get-redeem-est-amount-list`
+GET`/v5/earn/advance/product-extra-info`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類型，`SmartLeverage`  
-positionIds| **true**|  string| 要查詢的倉位 ID（逗號分隔），最多 5 個，例如：`897,898`  
+category| **true**|  string| 產品類別，`SmartLeverage`  
+productId| **true**|  string| 產品 ID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 列表  
-> success| bool| 是否成功獲取  
-> positionId| string| 倉位 ID  
-> estRedeemAmount| string| 以 `investCoin` 計的預估贖回金額  
-> estRedeemTime| string| 預計到帳時間，毫秒級 Unix 時間戳  
-> slippageRate| string| 此次贖回的滑點容忍率  
+category| string| `SmartLeverage`  
+productId| string| 產品 ID  
+breakevenPrice| string| 損益平衡價格——最優機構報價。若無有效報價則為空  
+currentPrice| string| 標的資產的當前市場價格。用作 `initialPrice` 的參考  
+expireAt| string| 報價到期時間，毫秒級 Unix 時間戳。若無有效報價則為空  
+maxInvestmentAmount| string| 當前報價下的最大單筆訂單金額。若無有效報價則為空  
   
-* * *
+備註
+
+當無機構報價時，`breakevenPrice`、`expireAt` 和 `maxInvestmentAmount` 可能為空。`currentPrice` 直接來自市場行情，始終存在。
 
 ### 請求示例
     
     
-    GET /v5/earn/advance/get-redeem-est-amount-list?category=SmartLeverage&positionIds=1277,1260 HTTP/1.1  
+    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -132,23 +110,13 @@ list| array| 列表
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "success": true,  
-                    "positionId": "1260",  
-                    "estRedeemAmount": "975.0977",  
-                    "estRedeemTime": "1775038305626",  
-                    "slippageRate": "0.97"  
-                },  
-                {  
-                    "success": true,  
-                    "positionId": "1277",  
-                    "estRedeemAmount": "76.8356",  
-                    "estRedeemTime": "1775038305615",  
-                    "slippageRate": "0.97"  
-                }  
-            ]  
+            "productId": "12999",  
+            "breakevenPrice": "68650.62",  
+            "expireAt": "1775036984839",  
+            "maxInvestmentAmount": "1000",  
+            "currentPrice": "68403.67",  
+            "category": "SmartLeverage"  
         },  
         "retExtInfo": {},  
-        "time": 1775038005629  
+        "time": 1775036429311  
     }

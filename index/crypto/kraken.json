@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/kraken",
   "total": 243,
-  "updated_at": "2026-05-27 20:13:06.681244",
+  "updated_at": "2026-06-28 19:35:46.536436",
   "documents_by_type": {
     "REST": [
       {
@@ -51,7 +51,7 @@
       },
       {
         "id": "nos-fix",
-        "title": "New Order Single",
+        "title": "Send order",
         "path": "docs/crypto/kraken/fix-api/nos-fix.md",
         "filename": "nos-fix.md",
         "api_type": "REST",
@@ -59,7 +59,7 @@
         "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 19:43:06.451248"
+        "updated_at": "2026-06-28 19:35:38.227386"
       },
       {
         "id": "ocr-fix",
@@ -1031,7 +1031,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 19:53:25.444233"
+        "updated_at": "2026-06-28 19:35:39.016531"
       },
       {
         "id": "set-leverage-setting",
@@ -1203,7 +1203,7 @@
       },
       {
         "id": "add-order",
-        "title": "Add Order",
+        "title": "Error loading page",
         "path": "docs/crypto/kraken/rest-api/add-order.md",
         "filename": "add-order.md",
         "api_type": "REST",
@@ -1211,7 +1211,7 @@
         "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:00:11.557011"
+        "updated_at": "2026-06-28 19:35:45.772241"
       },
       {
         "id": "allocate-strategy",
@@ -2011,7 +2011,7 @@
       },
       {
         "id": "book",
-        "title": "Book",
+        "title": "Exchange overview",
         "path": "docs/crypto/kraken/futures-api/websocket/book.md",
         "filename": "book.md",
         "api_type": "WebSocket",
@@ -2019,7 +2019,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 19:55:06.599886"
+        "updated_at": "2026-06-28 19:35:42.034915"
       },
       {
         "id": "challenge",
@@ -2443,7 +2443,7 @@
       },
       {
         "id": "add_order",
-        "title": "Add Order",
+        "title": "Error loading page",
         "path": "docs/crypto/kraken/websocket-v2/add_order.md",
         "filename": "add_order.md",
         "api_type": "WebSocket",
@@ -2451,7 +2451,7 @@
         "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:10:57.986985"
+        "updated_at": "2026-06-28 19:35:46.536436"
       },
       {
         "id": "amend_order",
@@ -2817,7 +2817,7 @@
       },
       {
         "id": "global-intro",
-        "title": "Kraken APIs",
+        "title": "Exchange overview",
         "path": "docs/crypto/kraken/guides/global-intro.md",
         "filename": "global-intro.md",
         "api_type": "Guide",
@@ -2825,7 +2825,7 @@
         "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 19:58:01.998670"
+        "updated_at": "2026-06-28 19:35:42.811744"
       },
       {
         "id": "spot-amends",
@@ -3011,6 +3011,18 @@
       "updated_at": "2026-05-27 19:56:56.487814"
     },
     {
+      "id": "global-intro",
+      "title": "Exchange overview",
+      "path": "docs/crypto/kraken/guides/global-intro.md",
+      "filename": "global-intro.md",
+      "api_type": "Guide",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-06-28 19:35:42.811744"
+    },
+    {
       "id": "fix-auth",
       "title": "FIX Authentication",
       "path": "docs/crypto/kraken/guides/fix-auth.md",
@@ -3081,18 +3093,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:57:39.572999"
-    },
-    {
-      "id": "global-intro",
-      "title": "Kraken APIs",
-      "path": "docs/crypto/kraken/guides/global-intro.md",
-      "filename": "global-intro.md",
-      "api_type": "Guide",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 19:58:01.998670"
     },
     {
       "id": "spot-amends",
@@ -3393,18 +3393,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:45:58.426252"
-    },
-    {
-      "id": "add-order",
-      "title": "Add Order",
-      "path": "docs/crypto/kraken/rest-api/add-order.md",
-      "filename": "add-order.md",
-      "api_type": "REST",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 20:00:11.557011"
     },
     {
       "id": "add-order-batch",
@@ -3717,6 +3705,18 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:48:22.754896"
+    },
+    {
+      "id": "add-order",
+      "title": "Error loading page",
+      "path": "docs/crypto/kraken/rest-api/add-order.md",
+      "filename": "add-order.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-06-28 19:35:45.772241"
     },
     {
       "id": "er-fix",
@@ -4751,18 +4751,6 @@
       "updated_at": "2026-05-27 19:52:48.948342"
     },
     {
-      "id": "nos-fix",
-      "title": "New Order Single",
-      "path": "docs/crypto/kraken/fix-api/nos-fix.md",
-      "filename": "nos-fix.md",
-      "api_type": "REST",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 19:43:06.451248"
-    },
-    {
       "id": "ocrr-fix",
       "title": "Order Cancel Replace Request (Spot only)",
       "path": "docs/crypto/kraken/fix-api/ocrr-fix.md",
@@ -5015,6 +5003,18 @@
       "updated_at": "2026-05-27 19:51:01.043217"
     },
     {
+      "id": "nos-fix",
+      "title": "Send order",
+      "path": "docs/crypto/kraken/fix-api/nos-fix.md",
+      "filename": "nos-fix.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-06-28 19:35:38.227386"
+    },
+    {
       "id": "send-order",
       "title": "Send order",
       "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
@@ -5024,7 +5024,7 @@
       "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 19:53:25.444233"
+      "updated_at": "2026-06-28 19:35:39.016531"
     },
     {
       "id": "sequence-reset-fix",
@@ -5195,18 +5195,6 @@
       "updated_at": "2026-05-27 20:08:48.990284"
     },
     {
-      "id": "add_order",
-      "title": "Add Order",
-      "path": "docs/crypto/kraken/websocket-v2/add_order.md",
-      "filename": "add_order.md",
-      "api_type": "WebSocket",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 20:10:57.986985"
-    },
-    {
       "id": "amendorder",
       "title": "Amend Order",
       "path": "docs/crypto/kraken/websocket-v1/amendorder.md",
@@ -5277,18 +5265,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 20:11:26.814314"
-    },
-    {
-      "id": "book",
-      "title": "Book",
-      "path": "docs/crypto/kraken/futures-api/websocket/book.md",
-      "filename": "book.md",
-      "api_type": "WebSocket",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 19:55:06.599886"
     },
     {
       "id": "book",
@@ -5445,6 +5421,30 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 20:12:02.295409"
+    },
+    {
+      "id": "add_order",
+      "title": "Error loading page",
+      "path": "docs/crypto/kraken/websocket-v2/add_order.md",
+      "filename": "add_order.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-06-28 19:35:46.536436"
+    },
+    {
+      "id": "book",
+      "title": "Exchange overview",
+      "path": "docs/crypto/kraken/futures-api/websocket/book.md",
+      "filename": "book.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-06-28 19:35:42.034915"
     },
     {
       "id": "executions",

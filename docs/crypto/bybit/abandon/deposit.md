@@ -2,51 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/deposit
 api_type: REST
-updated_at: 2026-05-27 19:13:42.501966
+updated_at: 2026-06-28 19:07:07.461113
 ---
 
-# Get Broker Earning
-
-danger
-
-This endpoint has been deprecated, please move to new [Get Exchange Broker Earning](/docs/v5/broker/exchange-broker/exchange-earning)
+# Enable Universal Transfer for Sub UID
 
 info
 
-  * Use exchange broker master account to query
-  * The data can support up to past 6 months until T-1
-  * `startTime` & `endTime` are either entered at the same time or not entered
+You no longer need to configure transferable sub UIDs. Now, all sub UIDs are automatically enabled for universal transfer.
 
+Transfer between sub-sub or main-sub
 
+Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
+
+caution
+
+Can query by the master UID's api key **only**
 
 ### HTTP Request
 
-GET`/v5/broker/earning-record`
+POST`/v5/asset/transfer/save-transfer-sub-member`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-bizType| false| string| Business type. `SPOT`, `DERIVATIVES`, `OPTIONS`  
-startTime| false| integer| The start timestamp(ms)  
-endTime| false| integer| The end timestamp(ms)  
-limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+subMemberIds| **true**|  array| This list has a **single item**. Separate multiple UIDs by comma, e.g., `"uid1,uid2,uid3"`  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-list| array| Object  
-> userId| string| UID  
-> bizType| string| Business type  
-> symbol| string| Symbol name  
-> coin| string| Coin name. The currency of earning  
-> earning| string| Commission  
-> orderId| string| Order ID  
-> execTime| string| Execution timestamp (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-  
+None
+
 ### Request Example
 
   * HTTP
@@ -55,17 +41,29 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/broker/earning-record?bizType=SPOT&startTime=1686240000000&endTime=1686326400000&limit=1 HTTP/1.1  
+    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686708862669  
+    X-BAPI-TIMESTAMP: 1672147595971  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    
-    
-    
       
+    {  
+        "subMemberIds": ["554117,592324,592334"]  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.enable_universal_transfer_for_sub_uid(  
+        subMemberIds=["554117,592324,592334"],  
+    ))  
     
 
 ### Response Example
@@ -74,68 +72,43 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     {  
         "retCode": 0,  
         "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "userId": "xxxx",  
-                    "bizType": "SPOT",  
-                    "symbol": "BTCUSDT",  
-                    "coin": "BTC",  
-                    "earning": "0.000015",  
-                    "orderId": "1531607271849858304",  
-                    "execTime": "1686306035957"  
-                }  
-            ],  
-            "nextPageCursor": "0%2C1"  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1686708863283  
+        "time": 1672147593188  
     }
 
 ---
 
-# 查詢經紀商返佣
-
-危險
-
-該接口已經廢棄, 請使用[查詢經紀商返佣信息](/docs/zh-TW/v5/broker/exchange-broker/exchange-earning)
+# 配置互相劃轉的子帳號
 
 信息
 
-  * 使用經紀商的母帳戶進行查詢
-  * 支持查詢過去6個月的數據
-  * `startTime` & `endTime`兩個入参, 要麼同時輸入, 要麼都不輸入
+無需再配置可劃轉的子帳號, 該限制已移除, 默認任意子帳號之間可以劃轉
 
+該接口用於配置開啟萬能劃轉的子帳號列表。沒有進行配置的子帳號是無法進行萬能劃轉的。
 
+提示
+
+萬能劃轉是允許您將資金直接從一個子帳號劃轉到另一個子帳號，同樣允許母子帳號間的劃轉。
+
+警告
+
+僅支持母帳號API key
 
 ### HTTP 請求
 
-GET`/v5/broker/earning-record`
+POST`/v5/asset/transfer/save-transfer-sub-member`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-bizType| false| string| 業務類型. `SPOT`, `DERIVATIVES`, `OPTIONS`  
-startTime| false| integer| 開始時間戳 (毫秒)  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `1000`]. 默認: `1000`  
-cursor| false| string| 游標，用於翻頁  
+subMemberIds| **true**|  array<string>| 子帳號. 支持輸入多個子帳號，用逗號隔開, 比如, "uid1,uid2,uid3"  
   
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-list| array| Object  
-> userId| string| uid  
-> bizType| string| 業務類型  
-> symbol| string| 合約名稱  
-> coin| string| 幣種名稱. 即`earning`的單位  
-> earning| string| 佣金  
-> orderId| string| 訂單ID  
-> execTime| string| 成交時間戳 (毫秒)  
-nextPageCursor| string| 游標，用於翻頁  
-  
+無
+
 ### 請求示例
 
   * HTTP
@@ -144,39 +117,38 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/broker/earning-record?bizType=SPOT&startTime=1686240000000&endTime=1686326400000&limit=1 HTTP/1.1  
+    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686708862669  
+    X-BAPI-TIMESTAMP: 1672147595971  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    
-    
-    
       
+    {  
+        "subMemberIds": ["554117,592324,592334"]  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.enable_universal_transfer_for_sub_uid(  
+        subMemberIds=["554117,592324,592334"],  
+    ))  
     
 
-### 響應示例
+### Response Example
     
     
     {  
         "retCode": 0,  
         "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "userId": "xxxx",  
-                    "bizType": "SPOT",  
-                    "symbol": "BTCUSDT",  
-                    "coin": "BTC",  
-                    "earning": "0.000015",  
-                    "orderId": "1531607271849858304",  
-                    "execTime": "1686306035957"  
-                }  
-            ],  
-            "nextPageCursor": "0%2C1"  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1686708863283  
+        "time": 1672147593188  
     }

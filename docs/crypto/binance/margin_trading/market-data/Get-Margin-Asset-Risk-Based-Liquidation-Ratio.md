@@ -2,83 +2,73 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/market-data/Get-Margin-Asset-Risk-Based-Liquidation-Ratio
 api_type: Market Data
-updated_at: 2026-05-27 18:56:53.465901
+updated_at: 2026-06-28 18:52:01.775809
 ---
 
-# Query Isolated Margin Tier Data (USER_DATA)
+# Query Margin Available Inventory(USER_DATA)
 
-## API Description[​](/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#api-description "Direct link to API Description")
+## API Description[​](/docs/margin_trading/market-data/Query-margin-avaliable-inventory#api-description "Direct link to API Description")
 
-Get isolated margin tier data collection with any tier as <https://www.binance.com/en/margin-data>
+Margin available Inventory query
 
-## HTTP Request[​](/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/margin_trading/market-data/Query-margin-avaliable-inventory#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/margin/isolatedMarginTier`
+GET `/sapi/v1/margin/available-inventory`
 
-## Request Weight[​](/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#request-weight "Direct link to Request Weight")
+## Request Weight(UID)[​](/docs/margin_trading/market-data/Query-margin-avaliable-inventory#request-weightuid "Direct link to Request Weight\(UID\)")
 
-**1(IP)**
+**50**
 
-## Request Parameters[​](/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/margin_trading/market-data/Query-margin-avaliable-inventory#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-symbol| STRING| YES|   
-tier| INTEGER| NO| All margin tier data will be returned if tier is omitted  
-recvWindow| LONG| NO| No more than `60000`  
-timestamp| LONG| YES|   
+type| STRING| YES| MARGIN,ISOLATED  
   
-## Response Example[​](/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#response-example "Direct link to Response Example")
+## Response Example[​](/docs/margin_trading/market-data/Query-margin-avaliable-inventory#response-example "Direct link to Response Example")
     
     
-    [  
-        {  
-            "symbol": "BTCUSDT",  
-            "tier": 1,  
-            "effectiveMultiple": "10",  
-            "initialRiskRatio": "1.111",  
-            "liquidationRiskRatio": "1.05",  
-            "baseAssetMaxBorrowable": "9",  
-            "quoteAssetMaxBorrowable": "70000"  
+    {  
+        "assets": {  
+            "MATIC": "100000000",  
+            "STPT": "100000000",  
+            "TVK": "100000000",  
+            "SHIB": "97409653"  
         }  
-    ]
+       "updateTime": 1699272487  
+    }
 
 ---
 
-# 获取逐仓档位信息 (USER_DATA)
+# 杠杆可用放贷库存查询(USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/margin_trading/market-data/Query-margin-avaliable-inventory#接口描述 "接口描述的直接链接")
 
-通过档位获取逐仓杠杆档位数据， 如： <https://www.binance.com/en/margin-data>
+杠杆可用放贷库存查询
 
-## HTTP请求[​](/docs/zh-CN/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/margin_trading/market-data/Query-margin-avaliable-inventory#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/margin/isolatedMarginTier`
+GET `/sapi/v1/margin/available-inventory`
 
-## 请求权重[​](/docs/zh-CN/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#请求权重 "请求权重的直接链接")
+## 请求权重(UID)[​](/docs/zh-CN/margin_trading/market-data/Query-margin-avaliable-inventory#请求权重uid "请求权重\(UID\)的直接链接")
 
-**1(IP)**
+**50**
 
-## 请求参数[​](/docs/zh-CN/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/margin_trading/market-data/Query-margin-avaliable-inventory#请求参数 "请求参数的直接链接")
 
-名称| 类型| 是否必须| 描述  
+名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-symbol| STRING| YES|   
-tier| INTEGER| NO| 不传则返回所有逐仓杠杆档位  
-recvWindow| LONG| NO| 赋值不能大于 `60000`  
-timestamp| LONG| YES|   
+type| STRING| YES| MARGIN,ISOLATED  
   
-## 响应示例[​](/docs/zh-CN/margin_trading/market-data/Query-Isolated-Margin-Tier-Data#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/margin_trading/market-data/Query-margin-avaliable-inventory#响应示例 "响应示例的直接链接")
     
     
-    [  
-        {  
-            "symbol": "BTCUSDT",  
-            "tier": 1,  
-            "effectiveMultiple": "10",  
-            "initialRiskRatio": "1.111",  
-            "liquidationRiskRatio": "1.05",  
-            "baseAssetMaxBorrowable": "9",  
-            "quoteAssetMaxBorrowable": "70000"  
+    {  
+        "assets": {  
+            "MATIC": "100000000",  
+            "STPT": "100000000",  
+            "TVK": "100000000",  
+            "SHIB": "97409653"  
         }  
-    ]
+      	"updateTime": 1699272487  
+    }

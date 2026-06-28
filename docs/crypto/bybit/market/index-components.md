@@ -2,263 +2,247 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/index-components
 api_type: Market Data
-updated_at: 2026-05-27 19:18:17.583695
+updated_at: 2026-06-28 19:12:13.965630
 ---
 
-# Get Index Price Components
+# Get Historical Volatility
+
+Query option historical volatility
+
+> **Covers: Option**
+
+info
+
+  * The data is hourly.
+  * If both `startTime` and `endTime` are not specified, it will return the most recent 1 hours worth of data.
+  * `startTime` and `endTime` are a pair of params. Either both are passed or they are not passed at all.
+  * This endpoint can query the last 2 years worth of data, but make sure [`endTime` \- `startTime`] <= 30 days.
+
+
 
 ### HTTP Request
 
-GET`/v5/market/index-price-components`
+GET`/v5/market/historical-volatility`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-indexName| **true**|  string| Index name, like `BTCUSDT`  
+category| **true**|  string| Product type. `option`  
+baseCoin| false| string| Base coin, uppercase only. Default: return BTC data  
+quoteCoin| false| string| Quote coin, `USD` or `USDT`. Default: return quoteCoin=USD  
+[period](/docs/v5/enum#optionperiod)| false| integer| Period. If not specified, it will return data with a 7-day average by default  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-indexName| string| Name of the index (e.g., BTCUSDT)  
-lastPrice| string| Last price of the index  
-updateTime| string| Timestamp of the last update in milliseconds  
-components| array| List of components contributing to the index price  
-> exchange| string| Name of the exchange  
-> spotPair| string| Spot trading pair on the exchange (e.g., BTCUSDT)  
-> equivalentPrice| string| Equivalent price  
-> multiplier| string| Multiplier used for the component price  
-> price| string| Actual price  
-> weight| string| Weight in the index calculation  
-  
+category| string| Product type  
+list| array| Object  
+> period| integer| Period  
+> value| string| Volatility  
+> time| string| Timestamp (ms)  
+[](/docs/api-explorer/v5/market/iv)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
-  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/index-price-components?indexName=1000BTTUSDT HTTP/1.1  
+    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_index_price_components(  
-        indexName="1000BTTUSDT"  
+    session = HTTP(testnet=True)  
+    print(session.get_historical_volatility(  
+        category="option",  
+        baseCoin="ETH",  
+        period=30,  
     ))  
     
     
     
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
+    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
+    client  
+        .getHistoricalVolatility({  
+            category: 'option',  
+            baseCoin: 'ETH',  
+            period: 30,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
     
     
     {  
-      "retCode": 0,  
-      "retMsg": "",  
-      "result": {  
-        "indexName": "1000BTTUSDT",  
-        "lastPrice": "0.0006496",  
-        "updateTime": "1758182745072",  
-        "components": [  
-          {  
-            "exchange": "GateIO",  
-            "spotPair": "BTT_USDT",  
-            "equivalentPrice": "0.0006485",  
-            "multiplier": "1000",  
-            "price": "0.0006485",  
-            "weight": "0.1383220862762299"  
-          },  
-          {  
-            "exchange": "Bybit",  
-            "spotPair": "BTTUSDT",  
-            "equivalentPrice": "0.0006502",  
-            "multiplier": "1000",  
-            "price": "0.0006502",  
-            "weight": "0.0407528429737999"  
-          },  
-          {  
-            "exchange": "Bitget",  
-            "spotPair": "BTTUSDT",  
-            "equivalentPrice": "0.000648",  
-            "multiplier": "1000",  
-            "price": "0.000648",  
-            "weight": "0.1629044859431618"  
-          },  
-          {  
-            "exchange": "BitMart",  
-            "spotPair": "BTT_USDT",  
-            "equivalentPrice": "0.000649",  
-            "multiplier": "1000",  
-            "price": "0.000649",  
-            "weight": "0.0432327388538453"  
-          },  
-          {  
-            "exchange": "Binance",  
-            "spotPair": "BTTCUSDT",  
-            "equivalentPrice": "0.00065",  
-            "multiplier": "1000",  
-            "price": "0.00065",  
-            "weight": "0.5322401401714303"  
-          },  
-          {  
-            "exchange": "Mexc",  
-            "spotPair": "BTTUSDT",  
-            "equivalentPrice": "0.0006517",  
-            "multiplier": "1000",  
-            "price": "0.0006517",  
-            "weight": "0.0825477057815328"  
-          }  
+        "retCode": 0,  
+        "retMsg": "SUCCESS",  
+        "category": "option",  
+        "result": [  
+            {  
+                "period": 30,  
+                "value": "0.45024716",  
+                "time": "1672052400000"  
+            }  
         ]  
-      },  
-      "retExtInfo": {},  
-      "time": 1758182745621  
     }
 
 ---
 
-# 獲取指數價格組成
+# 查詢期權波動率
 
-### HTTP 請求
+獲取期權的歷史波動率數據
 
-GET`/v5/market/index-price-components`
+> **覆蓋範圍: 期權**
+
+信息
+
+  * 數據為每小時數據.
+  * 若沒有入参時間，則默認返回最近1小時的數據，即最近的一條數據.
+  * `starTime` 和 `endTime` 要麼都傳，要麼都不傳
+  * 接口支持查詢過去2年的數據, 但確保[`endTime` \- `startTime`] 小於等於30天.
+
+
+
+### HTTP請求
+
+GET`/v5/market/historical-volatility`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-indexName| **true**|  string| 指數名稱，例如 `BTCUSDT`  
+category| **true**|  string| 產品類型. `option`  
+baseCoin| false| string| 交易幣種. 不傳則默認返回BTC數據  
+quoteCoin| false| string| 報價幣種, `USD` 或 `USDT`. 不傳則默認返回quoteCoin=USD數據  
+[period](/docs/zh-TW/v5/enum#optionperiod)| false| string| 週期. 不傳則默認返回7天加權的數據  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-indexName| string| 指數名稱（例如 BTCUSDT）  
-lastPrice| string| 指數的最新價格  
-updateTime| string| 最近更新的時間戳，單位為毫秒  
-components| array| 構成指數價格的組成部分列表  
-> exchange| string| 交易所名稱  
-> spotPair| string| 交易所的現貨交易對（例如 BTCUSDT）  
-> equivalentPrice| string| 等效價格  
-> multiplier| string| 用於計算價格的乘數  
-> price| string| 實際價格  
-> weight| string| 指數計算中的權重  
-  
+category| string| 產品類型  
+list| array| Object  
+> period| string| 週期  
+> value| string| 波動率  
+> time| string| 數據生成時間戳 (毫秒)  
+[](/docs/zh-TW/api-explorer/v5/market/iv)
+
 * * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * Go
+  * GO
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/index-price-components?indexName=1000BTTUSDT HTTP/1.1    
-    Host: api-testnet.bybit.com    
+    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(testnet=True)  
+    print(session.get_historical_volatility(  
+        category="option",  
+        baseCoin="ETH",  
+        period=30,  
+    ))  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "option", "baseCoin": "BTC"}  
+    client.NewUtaBybitServiceWithParams(params).GetHistoryVolatility(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
+    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
-    
-    
-    
-      
+    client  
+        .getHistoricalVolatility({  
+            category: 'option',  
+            baseCoin: 'ETH',  
+            period: 30,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
     
     
-    {    
-      "retCode": 0,    
-      "retMsg": "",    
-      "result": {    
-        "indexName": "1000BTTUSDT",    
-        "lastPrice": "0.0006496",    
-        "updateTime": "1758182745072",    
-        "components": [    
-          {    
-            "exchange": "GateIO",    
-            "spotPair": "BTT_USDT",    
-            "equivalentPrice": "0.0006485",    
-            "multiplier": "1000",    
-            "price": "0.0006485",    
-            "weight": "0.1383220862762299"    
-          },    
-          {    
-            "exchange": "Bybit",    
-            "spotPair": "BTTUSDT",    
-            "equivalentPrice": "0.0006502",    
-            "multiplier": "1000",    
-            "price": "0.0006502",    
-            "weight": "0.0407528429737999"    
-          },    
-          {    
-            "exchange": "Bitget",    
-            "spotPair": "BTTUSDT",    
-            "equivalentPrice": "0.000648",    
-            "multiplier": "1000",    
-            "price": "0.000648",    
-            "weight": "0.1629044859431618"    
-          },    
-          {    
-            "exchange": "BitMart",    
-            "spotPair": "BTT_USDT",    
-            "equivalentPrice": "0.000649",    
-            "multiplier": "1000",    
-            "price": "0.000649",    
-            "weight": "0.0432327388538453"    
-          },    
-          {    
-            "exchange": "Binance",    
-            "spotPair": "BTTCUSDT",    
-            "equivalentPrice": "0.00065",    
-            "multiplier": "1000",    
-            "price": "0.00065",    
-            "weight": "0.5322401401714303"    
-          },    
-          {    
-            "exchange": "Mexc",    
-            "spotPair": "BTTUSDT",    
-            "equivalentPrice": "0.0006517",    
-            "multiplier": "1000",    
-            "price": "0.0006517",    
-            "weight": "0.0825477057815328"    
-          }    
-        ]    
-      },    
-      "retExtInfo": {},    
-      "time": 1758182745621    
+    {  
+        "retCode": 0,  
+        "retMsg": "SUCCESS",  
+        "category": "option",  
+        "result": [  
+            {  
+                "period": 7,  
+                "value": "0.27545620",  
+                "time": "1672232400000"  
+            }  
+        ]  
     }

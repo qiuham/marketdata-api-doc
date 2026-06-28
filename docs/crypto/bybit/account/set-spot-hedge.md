@@ -2,33 +2,27 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-spot-hedge
 api_type: Account
-updated_at: 2026-05-27 19:14:17.074300
+updated_at: 2026-06-28 19:07:42.977223
 ---
 
-# Set Spot Hedging
+# Get SMP Group ID
 
-You can turn on/off Spot hedging feature in Portfolio margin
+Query the SMP group ID of self match prevention
 
 ### HTTP Request
 
-POST`/v5/account/set-hedging-mode`
+GET`/v5/account/smp-group`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-setHedgingMode| **true**|  string| `ON`, `OFF`  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-retCode| integer| Result code  
-retMsg| string| Result message  
-[](/docs/api-explorer/v5/account/set-spot-hedge)
-
-* * *
-
+smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default  
+  
 ### Request Example
 
   * HTTP
@@ -38,18 +32,12 @@ retMsg| string| Result message
 
     
     
-    POST /v5/account/set-hedging-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/account/smp-group HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1700117968580  
+    X-BAPI-TIMESTAMP: 1702363848192  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 31  
-      
-    {  
-        "setHedgingMode": "OFF"  
-    }  
     
     
     
@@ -59,9 +47,7 @@ retMsg| string| Result message
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_hedging_mode(  
-        setHedgingMode="OFF"  
-    ))  
+    print(session.get_smp_group())  
     
     
     
@@ -74,9 +60,7 @@ retMsg| string| Result message
     });  
       
     client  
-      .setSpotHedging({  
-        setHedgingMode: 'ON' | 'OFF',  
-      })  
+      .getSMPGroup()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -90,35 +74,34 @@ retMsg| string| Result message
     
     {  
         "retCode": 0,  
-        "retMsg": "SUCCESS"  
+        "retMsg": "success",  
+        "result": {  
+            "smpGroup": 0  
+        },  
+        "retExtInfo": {},  
+        "time": 1702363848539  
     }
 
 ---
 
-# 設置現貨對衝
+# 查詢SMP組ID
 
-您可以開關現貨對從功能, 僅限統一帳戶組合保證金模式下
+查詢自成交攔截的SMP交易群組ID
 
 ### HTTP 請求
 
-POST`/v5/account/set-hedging-mode`
+GET`/v5/account/smp-group`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-setHedgingMode| **true**|  string| `ON`, `OFF`  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-retCode| integer| Result code  
-retMsg| string| Result message  
-[](/docs/zh-TW/api-explorer/v5/account/set-spot-hedge)
-
-* * *
-
+smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`  
+  
 ### 請求示例
 
   * HTTP
@@ -128,18 +111,12 @@ retMsg| string| Result message
 
     
     
-    POST /v5/account/set-hedging-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/account/smp-group HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1700117968580  
+    X-BAPI-TIMESTAMP: 1702363848192  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 31  
-      
-    {  
-        "setHedgingMode": "OFF"  
-    }  
     
     
     
@@ -156,9 +133,7 @@ retMsg| string| Result message
     });  
       
     client  
-      .setSpotHedging({  
-        setHedgingMode: 'ON' | 'OFF',  
-      })  
+      .getSMPGroup()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -172,5 +147,10 @@ retMsg| string| Result message
     
     {  
         "retCode": 0,  
-        "retMsg": "SUCCESS"  
+        "retMsg": "success",  
+        "result": {  
+            "smpGroup": 0  
+        },  
+        "retExtInfo": {},  
+        "time": 1702363848539  
     }

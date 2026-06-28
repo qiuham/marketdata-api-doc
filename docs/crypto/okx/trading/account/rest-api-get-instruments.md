@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-instruments
 anchor_id: trading-account-rest-api-get-instruments
 api_type: REST
-updated_at: 2026-05-27 19:34:24.161118
+updated_at: 2026-06-28 19:36:11.476978
 ---
 
 # Get instruments
@@ -284,13 +284,13 @@ instCategory | String | The asset category of the instrument’s base asset (the
 upcChg | Array of objects | Upcoming changes. It is [] when there is no upcoming change.  
 > param | String | The parameter name to be updated.   
 `tickSz`  
-`minSz`  
+`minSz`: For `FUTURES`/`SWAP`, `lotSz` will be modified synchronously.  
 `maxMktSz`  
 > newValue | String | The parameter value that will replace the current one.  
 > effTime | String | Effective time. Unix timestamp format in milliseconds, e.g. `1597026383085`  
 listTime and contTdSwTime  
 For spot symbols listed through a call auction or pre-open, listTime represents the start time of the auction or pre-open, and contTdSwTime indicates the end of the auction or pre-open and the start of continuous trading. For other scenarios, listTime will mark the beginning of continuous trading, and contTdSwTime will return an empty value "".  state  
-The state will always change from `preopen` to `live` when the listTime is reached.  
+For `SPOT`, `MARGIN`, `SWAP`, and `FUTURES`, the state changes from `preopen` to `live` when the `listTime` is reached. For `OPTION` contracts, the state may change to `live` slightly after `listTime` due to internal processing. It is recommended to verify that `state` is `live` before placing orders.  
 When a product is going to be delisted (e.g. when a FUTURES contract is settled or OPTION contract is exercised), the instrument will not be available.
 
 ---
@@ -554,11 +554,11 @@ instCategory | String | 标的资产类别（产品ID的第一部分）。例如
 upcChg | Array of objects | 即将变更的参数列表。当没有即将变更的参数时，返回空数组 []  
 > param | String | 即将变更的参数名称。  
 `tickSz`  
-`minSz`  
+`minSz`：若为交割/永续合约（`FUTURES`/`SWAP`），`lotSz` 会同步变更。  
 `maxMktSz`  
 > newValue | String | 即将变更的参数值。  
 > effTime | String | 生效时间。Unix 时间戳格式，例如 `1597026383085`  
 listTime以及contTdSwTime  
 对于通过集合竞价/提前挂单方式上线的币币，listTime为集合竞价/提前挂单的开始时间，contTdSwTime为集合竞价/提前挂单的结束时间、连续交易的开始时间；对于其他情况及业务线，listTime即为连续交易开始时间，contTdSwTime将返回""  state  
-状态state总是在时间到达listTime时由`preopen`转变为`live`  
+对于`币币`、`杠杆`、`永续`和`交割`，状态state在时间到达listTime时由`preopen`转变为`live`。对于`期权`合约，由于内部处理原因，状态可能在`listTime`之后短暂延迟变为`live`。建议在下单前确认`state`为`live`。  
 当产品下线的时候（如交割合约被交割的时候，期权合约被行权的时候），查询不到该产品

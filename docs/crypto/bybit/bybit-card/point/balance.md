@@ -2,23 +2,21 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/balance
 api_type: REST
-updated_at: 2026-05-27 19:16:14.022169
+updated_at: 2026-06-28 19:09:54.228133
 ---
 
-# Query Cashback Detail
+# Query Point Balance
 
-Query the cashback detail for a specific card reward order, including point amount, cashback value, currency, and order status.
+Query the user's card reward point balance, including available points, pending (frozen) points, account status, and related information.
 
 ### HTTP Request
 
-POST`/v5/card/reward/point/cashback/detail`
+POST`/v5/card/reward/points/balance`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-bizTxnId| **true**|  string| Order ID  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
@@ -26,18 +24,12 @@ Parameter| Type| Comments
 retCode| integer| Business return code. `0`: success; non-zero: failure  
 retMsg| string| Return message  
 result| object|   
-> points| string| Point amount  
-> amt| string| Cashback amount  
-> ccy| string| Currency  
-> ccyType| string| Currency type. `FIAT`: fiat currency, `CRYPTO`: crypto currency  
-> createTime| string| Creation time  
-> bizTxnId| string| Order ID  
-> sourceId| integer| Coupon/voucher ID  
-> sourceCode| string| External order ID  
-> orderStatus| integer| Order status  
-> orderSubStatus| integer| Order sub-status  
-> orderShowStatus| string| Display status. `NO_PAY`: Unpaid, `ORDER_PENDING_SHOW`: Pending, `ORDER_SUCCESS`: Success, `ORDER_FAIL`: Failed  
-> failedBizCode| string| Failure reason code  
+> accountId| string| Account ID  
+> availablePoint| string| Available points  
+> pendingPoint| string| Pending (frozen) points  
+> status| string| Account status  
+> updateTime| string| Last update time (Unix ms timestamp)  
+> settlementPeriod| integer| Settlement period  
   
 * * *
 
@@ -50,7 +42,7 @@ result| object|
 
     
     
-    POST /v5/card/reward/point/cashback/detail?bizTxnId=TXN20230101001 HTTP/1.1  
+    POST /v5/card/reward/points/balance HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -61,33 +53,29 @@ result| object|
     
     import requests  
       
-    url = "https://api-testnet.bybit.com/v5/card/reward/point/cashback/detail"  
+    url = "https://api-testnet.bybit.com/v5/card/reward/points/balance"  
     headers = {  
         "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
         "X-BAPI-SIGN": "XXXXX",  
         "X-BAPI-TIMESTAMP": "1672211918471",  
         "X-BAPI-RECV-WINDOW": "5000"  
     }  
-    params = {  
-        "bizTxnId": "TXN20230101001"  
-    }  
-    response = requests.post(url, headers=headers, params=params)  
+    response = requests.post(url, headers=headers)  
     print(response.json())  
     
     
     
     const axios = require('axios');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/point/cashback/detail';  
+    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/balance';  
     const headers = {  
       'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
       'X-BAPI-SIGN': 'XXXXX',  
       'X-BAPI-TIMESTAMP': '1672211918471',  
       'X-BAPI-RECV-WINDOW': '5000'  
     };  
-    const params = { bizTxnId: 'TXN20230101001' };  
       
-    axios.post(url, {}, { headers, params })  
+    axios.post(url, {}, { headers })  
       .then(response => console.log(response.data))  
       .catch(error => console.error(error));  
     
@@ -99,18 +87,12 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "points": "500",  
-            "amt": "1.00",  
-            "ccy": "USDT",  
-            "ccyType": "CRYPTO",  
-            "createTime": "2023-01-01 12:00:00",  
-            "bizTxnId": "TXN20230101001",  
-            "sourceId": 12345,  
-            "sourceCode": "ORD20230101001",  
-            "orderStatus": 1,  
-            "orderSubStatus": 0,  
-            "orderShowStatus": "ORDER_SUCCESS",  
-            "failedBizCode": ""  
+            "accountId": "100001",  
+            "availablePoint": 5000,  
+            "pendingPoint": 200,  
+            "status": "active",  
+            "updateTime": 1672211918471,  
+            "settlementPeriod": 30  
         },  
         "retExtInfo": {},  
         "time": 1672211918471  
@@ -118,20 +100,18 @@ result| object|
 
 ---
 
-# 查詢 Cashback 明細
+# 查詢積分餘額
 
-查詢指定卡片獎勵訂單的 cashback 返現明細，包含積分數、返現金額、幣種及訂單狀態等。
+查詢用戶卡片獎勵積分餘額，包含可用積分、凍結積分、賬戶狀態等信息。
 
 ### HTTP 請求
 
-POST`/v5/card/reward/point/cashback/detail`
+POST`/v5/card/reward/points/balance`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-bizTxnId| **true**|  string| 訂單號  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
@@ -139,18 +119,12 @@ bizTxnId| **true**|  string| 訂單號
 retCode| integer| 業務返回碼。`0`: 成功；非零: 失敗  
 retMsg| string| 返回消息  
 result| object|   
-> points| string| 積分數  
-> amt| string| 返現金額  
-> ccy| string| 幣種  
-> ccyType| string| 幣種類型。`FIAT`: 法幣，`CRYPTO`: 數字貨幣  
-> createTime| string| 創建時間  
-> bizTxnId| string| 訂單號  
-> sourceId| integer| 卡券 ID  
-> sourceCode| string| 外部訂單號  
-> orderStatus| integer| 訂單狀態  
-> orderSubStatus| integer| 訂單子狀態  
-> orderShowStatus| string| 展示狀態。`NO_PAY`: 未支付，`ORDER_PENDING_SHOW`: 處理中，`ORDER_SUCCESS`: 成功，`ORDER_FAIL`: 失敗  
-> failedBizCode| string| 失敗原因碼  
+> accountId| string| 賬戶 ID  
+> availablePoint| string| 可用積分  
+> pendingPoint| string| 凍結積分  
+> status| string| 賬戶狀態  
+> updateTime| string| 更新時間（Unix 毫秒時間戳）  
+> settlementPeriod| integer| 結算週期  
   
 * * *
 
@@ -163,7 +137,7 @@ result| object|
 
     
     
-    POST /v5/card/reward/point/cashback/detail?bizTxnId=TXN20230101001 HTTP/1.1  
+    POST /v5/card/reward/points/balance HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -174,33 +148,29 @@ result| object|
     
     import requests  
       
-    url = "https://api-testnet.bybit.com/v5/card/reward/point/cashback/detail"  
+    url = "https://api-testnet.bybit.com/v5/card/reward/points/balance"  
     headers = {  
         "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
         "X-BAPI-SIGN": "XXXXX",  
         "X-BAPI-TIMESTAMP": "1672211918471",  
         "X-BAPI-RECV-WINDOW": "5000"  
     }  
-    params = {  
-        "bizTxnId": "TXN20230101001"  
-    }  
-    response = requests.post(url, headers=headers, params=params)  
+    response = requests.post(url, headers=headers)  
     print(response.json())  
     
     
     
     const axios = require('axios');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/point/cashback/detail';  
+    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/balance';  
     const headers = {  
       'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
       'X-BAPI-SIGN': 'XXXXX',  
       'X-BAPI-TIMESTAMP': '1672211918471',  
       'X-BAPI-RECV-WINDOW': '5000'  
     };  
-    const params = { bizTxnId: 'TXN20230101001' };  
       
-    axios.post(url, {}, { headers, params })  
+    axios.post(url, {}, { headers })  
       .then(response => console.log(response.data))  
       .catch(error => console.error(error));  
     
@@ -212,18 +182,12 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "points": "500",  
-            "amt": "1.00",  
-            "ccy": "USDT",  
-            "ccyType": "CRYPTO",  
-            "createTime": "2023-01-01 12:00:00",  
-            "bizTxnId": "TXN20230101001",  
-            "sourceId": 12345,  
-            "sourceCode": "ORD20230101001",  
-            "orderStatus": 1,  
-            "orderSubStatus": 0,  
-            "orderShowStatus": "ORDER_SUCCESS",  
-            "failedBizCode": ""  
+            "accountId": "100001",  
+            "availablePoint": 5000,  
+            "pendingPoint": 200,  
+            "status": "active",  
+            "updateTime": 1672211918471,  
+            "settlementPeriod": 30  
         },  
         "retExtInfo": {},  
         "time": 1672211918471  

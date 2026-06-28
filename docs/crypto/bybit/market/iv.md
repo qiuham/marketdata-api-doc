@@ -2,50 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/iv
 api_type: Market Data
-updated_at: 2026-05-27 19:18:23.374894
+updated_at: 2026-06-28 19:12:16.440405
 ---
 
-# Get Long Short Ratio
+# Get Historical Volatility
 
-This refers to the net long and short positions as percentages of all position holders during the selected time.   
-Long account ratio = Number of holders with long positions / Total number of holders   
-Short account ratio = Number of holders with short positions / Total number of holders   
-Long-short account ratio = Long account ratio / Short account ratio
+Query option historical volatility
+
+> **Covers: Option**
 
 info
 
-  * The earliest query start time is July 20, 2020
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * The data is hourly.
+  * If both `startTime` and `endTime` are not specified, it will return the most recent 1 hours worth of data.
+  * `startTime` and `endTime` are a pair of params. Either both are passed or they are not passed at all.
+  * This endpoint can query the last 2 years worth of data, but make sure [`endTime` \- `startTime`] <= 30 days.
 
 
 
 ### HTTP Request
 
-GET`/v5/market/account-ratio`
+GET`/v5/market/historical-volatility`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`(USDT Contract),`inverse`  
-[symbol](/docs/v5/enum#symbol)| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-[period](/docs/v5/enum#datarecordingperiod)| **true**|  string| Data recording period. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
-startTime| false| string| The start timestamp (ms)  
-endTime| false| string| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `500`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+category| **true**|  string| Product type. `option`  
+baseCoin| false| string| Base coin, uppercase only. Default: return BTC data  
+quoteCoin| false| string| Quote coin, `USD` or `USDT`. Default: return quoteCoin=USD  
+[period](/docs/v5/enum#optionperiod)| false| integer| Period. If not specified, it will return data with a 7-day average by default  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+category| string| Product type  
 list| array| Object  
-> symbol| string| Symbol name  
-> buyRatio| string| The ratio of the number of long position  
-> sellRatio| string| The ratio of the number of short position  
-> timestamp| string| Timestamp (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/market/long-short-ratio)
+> period| integer| Period  
+> value| string| Volatility  
+> time| string| Timestamp (ms)  
+[](/docs/api-explorer/v5/market/iv)
 
 * * *
 
@@ -53,43 +52,24 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
   * HTTP
   * Python
-  * GO
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_long_short_ratio(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        period="1h",  
-        limit=2,  
-        startTime="1696089600000",  
-        endTime="1696262400000"  
+    session = HTTP(testnet=True)  
+    print(session.get_historical_volatility(  
+        category="option",  
+        baseCoin="ETH",  
+        period=30,  
     ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
-    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
     
     
     
@@ -98,30 +78,29 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
-    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
+    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
+        testnet: true,  
     });  
       
     client  
-      .getLongShortRatio({  
-        category: 'linear',  
-        symbol: 'BTCUSDT',  
-        period: '1h',  
-        limit: 100,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getHistoricalVolatility({  
+            category: 'option',  
+            baseCoin: 'ETH',  
+            period: 30,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -129,72 +108,59 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.49",  
-                    "sellRatio": "0.51",  
-                    "timestamp": "1696262400000"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.4927",  
-                    "sellRatio": "0.5073",  
-                    "timestamp": "1696258800000"  
-                }  
-            ],  
-            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
-        },  
-        "retExtInfo": {},  
-        "time": 1731567491688  
+        "retMsg": "SUCCESS",  
+        "category": "option",  
+        "result": [  
+            {  
+                "period": 30,  
+                "value": "0.45024716",  
+                "time": "1672052400000"  
+            }  
+        ]  
     }
 
 ---
 
-# 查詢多空比
+# 查詢期權波動率
 
-指選定時間內淨多頭部位和淨空頭部位佔所有持有者的百分比。  
-多頭帳戶比例 = 多頭持倉者數 / 總持倉者數量   
-空頭帳戶比例 = 空頭持倉者數 / 總持倉者數   
-多空帳戶比例 = 多頭帳戶比例 / 空頭帳戶比例   
+獲取期權的歷史波動率數據
 
+> **覆蓋範圍: 期權**
 
 信息
 
-  * 查詢起始時間最早為2020年7月20日
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 數據為每小時數據.
+  * 若沒有入参時間，則默認返回最近1小時的數據，即最近的一條數據.
+  * `starTime` 和 `endTime` 要麼都傳，要麼都不傳
+  * 接口支持查詢過去2年的數據, 但確保[`endTime` \- `startTime`] 小於等於30天.
 
 
 
 ### HTTP請求
 
-GET`/v5/market/account-ratio`
+GET`/v5/market/historical-volatility`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`(USDT永續, USDT交割),`inverse`  
-[symbol](/docs/zh-TW/v5/enum#symbol)| **true**|  string| 合約名稱  
-[period](/docs/zh-TW/v5/enum#datarecordingperiod)| **true**|  string| 數據週期. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
-startTime| false| string| 開始時間戳 (毫秒)  
-endTime| false| string| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `500`]. 默認: `50`  
-cursor| false| string| 游標，用於分頁  
+category| **true**|  string| 產品類型. `option`  
+baseCoin| false| string| 交易幣種. 不傳則默認返回BTC數據  
+quoteCoin| false| string| 報價幣種, `USD` 或 `USDT`. 不傳則默認返回quoteCoin=USD數據  
+[period](/docs/zh-TW/v5/enum#optionperiod)| false| string| 週期. 不傳則默認返回7天加權的數據  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+category| string| 產品類型  
 list| array| Object  
-> symbol| string| 合約名稱  
-> buyRatio| string| 持有多倉比例  
-> sellRatio| string| 持有空倉的比例  
-> timestamp| string| 時間戳 (毫秒)  
-nextPageCursor| string| 游標，用於分頁  
-[](/docs/zh-TW/api-explorer/v5/market/long-short-ratio)
+> period| string| 週期  
+> value| string| 波動率  
+> time| string| 數據生成時間戳 (毫秒)  
+[](/docs/zh-TW/api-explorer/v5/market/iv)
 
 * * *
 
@@ -209,12 +175,18 @@ nextPageCursor| string| 游標，用於分頁
 
     
     
-    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(testnet=True)  
+    print(session.get_historical_volatility(  
+        category="option",  
+        baseCoin="ETH",  
+        period=30,  
+    ))  
     
     
     
@@ -224,8 +196,8 @@ nextPageCursor| string| 游標，用於分頁
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
-    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
+    params := map[string]interface{}{"category": "option", "baseCoin": "BTC"}  
+    client.NewUtaBybitServiceWithParams(params).GetHistoryVolatility(context.Background())  
     
     
     
@@ -234,30 +206,29 @@ nextPageCursor| string| 游標，用於分頁
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
-    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
+    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
+        testnet: true,  
     });  
       
     client  
-      .getLongShortRatio({  
-        category: 'linear',  
-        symbol: 'BTCUSDT',  
-        period: '1h',  
-        limit: 100,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getHistoricalVolatility({  
+            category: 'option',  
+            baseCoin: 'ETH',  
+            period: 30,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -265,24 +236,13 @@ nextPageCursor| string| 游標，用於分頁
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.49",  
-                    "sellRatio": "0.51",  
-                    "timestamp": "1696262400000"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.4927",  
-                    "sellRatio": "0.5073",  
-                    "timestamp": "1696258800000"  
-                }  
-            ],  
-            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
-        },  
-        "retExtInfo": {},  
-        "time": 1731567491688  
+        "retMsg": "SUCCESS",  
+        "category": "option",  
+        "result": [  
+            {  
+                "period": 7,  
+                "value": "0.27545620",  
+                "time": "1672232400000"  
+            }  
+        ]  
     }

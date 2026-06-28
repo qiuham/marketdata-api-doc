@@ -2,128 +2,79 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account
 api_type: Account
-updated_at: 2026-05-27 19:03:11.328870
+updated_at: 2026-06-28 18:57:50.700519
 ---
 
-# Quick Start
+# Withdrawl Assets From The Managed Sub-account (For Investor Master Account) (USER_DATA)
 
-## API Key Setup[​](/docs/sub_account/quick-start#api-key-setup "Direct link to API Key Setup")
+## API Description[​](/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#api-description "Direct link to API Description")
 
-  * Some endpoints will require an API Key. Please refer to [this page](https://www.binance.com/en/support/articles/360002502072) regarding API key creation.
-  * Once API key is created, it is recommended to set IP restrictions on the key for security reasons.
-  * **Never share your API key/secret key to ANYONE.**
+Withdrawl Assets From The Managed Sub-account
 
-If the API keys were accidentally shared, please delete them immediately and create a new key. 
+## HTTP Request[​](/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#http-request "Direct link to HTTP Request")
 
-## API Key Restrictions[​](/docs/sub_account/quick-start#api-key-restrictions "Direct link to API Key Restrictions")
+`POST /sapi/v1/managed-subaccount/withdraw `
 
-  * After creating the API key, the default restrictions is `Enable Reading`.
-  * To **enable withdrawals via the API** , the API key restriction needs to be modified through the Binance UI.
+## Request Weight(IP)[​](/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#request-weightip "Direct link to Request Weight\(IP\)")
+
+**1**
+
+## Request Parameters[​](/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#request-parameters "Direct link to Request Parameters")
+
+Name| Type| Mandatory| Description  
+---|---|---|---  
+fromEmail| STRING| YES|   
+asset| STRING| YES|   
+amount| DECIMAL| YES|   
+transferDate| LONG| NO| Withdrawals is automatically occur on the transfer date(UTC0). If a date is not selected, the withdrawal occurs right now  
+recvWindow| LONG| NO|   
+timestamp| LONG| YES|   
+  
+>   * You need to enable `Enable Spot & Margin Trading` option for the api key which requests this endpoint
+> 
 
 
-
-## Enabling Accounts[​](/docs/sub_account/quick-start#enabling-accounts "Direct link to Enabling Accounts")
-
-### Spot Account[​](/docs/sub_account/quick-start#spot-account "Direct link to Spot Account")
-
-A `SPOT` account is provided by default upon creation of a Binance Account.
-
-### Margin Account[​](/docs/sub_account/quick-start#margin-account "Direct link to Margin Account")
-
-To enable a `MARGIN` account for Margin Trading, please refer to the [Margin Trading Guide](https://www.binance.vision/tutorials/binance-margin-trading-guide)
-
-## API Library[​](/docs/sub_account/quick-start#api-library "Direct link to API Library")
-
-### Python connector[​](/docs/sub_account/quick-start#python-connector "Direct link to Python connector")
-
-This is a lightweight library that works as a connector to Binance public API, written in Python.
-
-<https://github.com/binance/binance-connector-python>
-
-### Javascript connector[​](/docs/sub_account/quick-start#javascript-connector "Direct link to Javascript connector")
-
-This is a lightweight library that works as a connector to Binance public API, written for JavaScript users.
-
-<https://github.com/binance/binance-connector-js>
-
-### Ruby connector[​](/docs/sub_account/quick-start#ruby-connector "Direct link to Ruby connector")
-
-This is a lightweight library that works as a connector to Binance public API, written for Ruby users.
-
-<https://github.com/binance/binance-connector-ruby>
-
-### DotNET connector[​](/docs/sub_account/quick-start#dotnet-connector "Direct link to DotNET connector")
-
-This is a lightweight library that works as a connector to Binance public API, written for C# users.
-
-<https://github.com/binance/binance-connector-dotnet>
-
-### Java connector[​](/docs/sub_account/quick-start#java-connector "Direct link to Java connector")
-
-This is a lightweight library that works as a connector to Binance public API, written for Java users.
-
-<https://github.com/binance/binance-connector-java>
-
-### Postman Collections[​](/docs/sub_account/quick-start#postman-collections "Direct link to Postman Collections")
-
-There is now a Postman collection containing the API endpoints for quick and easy use.
-
-This is recommended for new users who want to get a quick-start into using the API.
-
-For more information please refer to this page: [Binance API Postman](https://github.com/binance/binance-api-postman)
-
-### Swagger[​](/docs/sub_account/quick-start#swagger "Direct link to Swagger")
-
-A YAML file with OpenAPI specification on the RESTful API is available to be used, as well as a Swagger UI page for the consulting.
-
-<https://github.com/binance/binance-api-swagger>
+## Response Example[​](/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#response-example "Direct link to Response Example")
+    
+    
+    {  
+        "tranId":66157362489  
+    }
 
 ---
 
-# 快速开始
+# 投资人账户为托管子账户提币资产 (适用投资人母账户) (USER_DATA)
 
-## API Key 权限设置[​](/docs/zh-CN/sub_account/quick-start#api-key-权限设置 "API Key 权限设置的直接链接")
+## 接口描述[​](/docs/zh-CN/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#接口描述 "接口描述的直接链接")
 
-  * 新创建的API的默认权限是 `只读`。
-  * 如果需要通过API提款, 需要在UI修改权限, 选中 `允许提现`。
+投资人账户为托管子账户提币资产
 
+## HTTP请求[​](/docs/zh-CN/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#http请求 "HTTP请求的直接链接")
 
+POST `/sapi/v1/managed-subaccount/withdraw`
 
-## 账户[​](/docs/zh-CN/sub_account/quick-start#账户 "账户的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#请求权重ip "请求权重\(IP\)的直接链接")
 
-### 现货账户[​](/docs/zh-CN/sub_account/quick-start#现货账户 "现货账户的直接链接")
+**1**
 
-新注册的币安账号都会有一个现货(`SPOT`)账号。
+## 请求参数[​](/docs/zh-CN/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#请求参数 "请求参数的直接链接")
 
-### 杠杆账户[​](/docs/zh-CN/sub_account/quick-start#杠杆账户 "杠杆�账户的直接链接")
-
-为了开设杠杆(`MARGIN`)账户, 可以参考[Binance杠杆交易账户设置指南](https://www.binance.vision/zh/tutorials/binance-margin-trading-guide)
-
-## API 代码库[​](/docs/zh-CN/sub_account/quick-start#api-代码库 "API 代码库的直接链接")
-
-### Connectors[​](/docs/zh-CN/sub_account/quick-start#connectors "Connectors的直接链接")
-
-以下有一些轻量级的代码库，使不同语言的用户能够直接调用现货的 Binance 公共 API：
-
-  * Python <https://github.com/binance/binance-connector-python>
-  * JavaScript <https://github.com/binance/binance-connector-js>
-  * Ruby <https://github.com/binance/binance-connector-ruby>
-  * DotNET C# <https://github.com/binance/binance-connector-dotnet>
-  * Java <https://github.com/binance/binance-connector-java>
-  * Rust <https://github.com/binance/binance-spot-connector-rust>
-  * PHP <https://github.com/binance/binance-connector-php>
-  * Go <https://github.com/binance/binance-connector-go>
+名称| 类型| 是否必需| 描述  
+---|---|---|---  
+fromEmail| STRING| YES|   
+asset| STRING| YES|   
+amount| DECIMAL| YES|   
+transferDate| LONG| NO| 提币会自动发生在选择的日期(UTC0)，如果没有选择日期，提币会立即生效  
+recvWindow| LONG| NO|   
+timestamp| LONG| YES|   
+  
+>   * 您需要开通API Key`允许现货和杠杆交易`权限
+> 
 
 
-
-### Postman Collections[​](/docs/zh-CN/sub_account/quick-start#postman-collections "Postman Collections的直接链接")
-
-Postman 集合现已推出。推荐给寻求快速和轻松地开始使用 API 的新用户。
-
-<https://github.com/binance/binance-api-postman>
-
-### Swagger[​](/docs/zh-CN/sub_account/quick-start#swagger "Swagger的直接链接")
-
-以下有提供包含 RESTful API 的 OpenAPI 规范的 YAML 文件，以及可供参考的 Swagger UI 页面。
-
-<https://github.com/binance/binance-api-swagger>
+## 响应示例[​](/docs/zh-CN/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account#响应示例 "响应示例的直接链接")
+    
+    
+    {  
+        "tranId":66157362489  
+    }

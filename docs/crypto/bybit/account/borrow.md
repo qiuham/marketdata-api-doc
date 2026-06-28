@@ -2,40 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/borrow
 api_type: Account
-updated_at: 2026-05-27 19:13:55.418637
+updated_at: 2026-06-28 19:07:19.630686
 ---
 
-# Get Coin Greeks
+# Get Borrow History
 
-Get current account Greeks information
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Get interest records, sorted in reverse order of creation time.
 
 ### HTTP Request
 
-GET`/v5/asset/coin-greeks`
+GET`/v5/account/borrow-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-baseCoin| false| string| Base coin, uppercase only. If not passed, all supported base coin greeks will be returned by default  
+currency| false| string| `USDC`,`USDT`,`BTC`,`ETH` etc, uppercase only  
+startTime| false| integer| The start timestamp (ms) 
+
+  * startTime and endTime are not passed, return 30 days by default
+  * Only startTime is passed, return range between startTime and startTime + 30 days 
+  * Only endTime is passed, return range between endTime-30 days and endTime
+  * If both are passed, the rule is endTime - startTime <= 30 days
+
+  
+endTime| false| integer| The end time. timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> baseCoin| string| Base coin. e.g.,`BTC`,`ETH`,`SOL`  
-> totalDelta| string| Delta value  
-> totalGamma| string| Gamma value  
-> totalVega| string| Vega value  
-> totalTheta| string| Theta value  
-[](/docs/api-explorer/v5/account/coin-greeks)
+> currency| string| `USDC`,`USDT`,`BTC`,`ETH`  
+> createdTime| integer| Created timestamp (ms)  
+> borrowCost| string| Interest  
+> hourlyBorrowRate| string| Hourly Borrow Rate  
+> InterestBearingBorrowSize| string| Interest Bearing Borrow Size  
+> costExemption| string| Cost exemption  
+> borrowAmount| string| Total borrow amount  
+> unrealisedLoss| string| Unrealised loss  
+> freeBorrowedAmount| string| The borrowed amount for interest free  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[](/docs/api-explorer/v5/account/borrow-history)
 
 * * *
 
@@ -48,11 +58,11 @@ list| array| Object
 
     
     
-    GET /v5/asset/coin-greeks?baseCoin=BTC HTTP/1.1  
+    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672287887610  
+    X-BAPI-TIMESTAMP: 1672277745427  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -63,8 +73,9 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_coin_greeks(  
-        baseCoin="BTC",  
+    print(session.get_borrow_history(  
+        currency="BTC",  
+        limit=1,  
     ))  
     
     
@@ -72,19 +83,25 @@ list| array| Object
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getCoinGreeks('BTC')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getBorrowHistory({  
+        currency: 'USDT',  
+        startTime: 1670601600000,  
+        endTime: 1673203200000,  
+        limit: 30,  
+        cursor: 'nextPageCursorToken',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -94,53 +111,68 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
             "list": [  
                 {  
-                    "baseCoin": "BTC",  
-                    "totalDelta": "0.00004001",  
-                    "totalGamma": "-0.00000009",  
-                    "totalVega": "-0.00039689",  
-                    "totalTheta": "0.01243824"  
+                    "borrowAmount": "1.06333265702840778",  
+                    "costExemption": "0",  
+                    "freeBorrowedAmount": "0",  
+                    "createdTime": 1697439900204,  
+                    "InterestBearingBorrowSize": "1.06333265702840778",  
+                    "currency": "BTC",  
+                    "unrealisedLoss": "0",  
+                    "hourlyBorrowRate": "0.000001216904",  
+                    "borrowCost": "0.00000129"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672287887942  
+        "time": 1697442206478  
     }
 
 ---
 
-# 查詢Greeks信息
+# 查詢利息記錄
 
-獲取當前賬戶Greeks信息
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+獲取利息記錄，按照創建時間倒敘排列
 
 ### HTTP 請求
 
-GET`/v5/asset/coin-greeks`
+GET`/v5/account/borrow-history`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 類型  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-baseCoin| false| string| baseCoin- 不傳入, 默認返回全部baseCoin的greeks  
+currency| false| string| USDC、USDT、BTC、ETH  
+startTime| false| integer| 開始時間戳 (毫秒) 
+
+  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
+  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
+  * 若只傳startTime，則查詢startTime和startTime+30天的數據
+  * 若只傳endTime，則查詢endTime-30天和endTime的數據
+
+  
+endTime| false| integer| 結束時間 (毫秒)  
+limit| false| integer| 每頁數量, 最大50. 默認每頁20條  
+cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
-參數| 類型| 類型  
+參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> baseCoin| string| baseCoin 例如: BTC、ETH、SOL etc  
-> totalDelta| string| Delta值  
-> totalGamma| string| Gamma值  
-> totalVega| string| Vega值  
-> totalTheta| string| Theta值  
-[](/docs/zh-TW/api-explorer/v5/account/coin-greeks)
+> currency| string| USDC、USDT、BTC、ETH  
+> createdTime| integer| 時間戳（毫秒）  
+> borrowCost| string| 利息  
+> hourlyBorrowRate| string| 利率  
+> InterestBearingBorrowSize| string| 豁免利息額度  
+> costExemption| string| 豁免計息成本  
+> borrowAmount| string| 當前總借貸  
+> unrealisedLoss| string| 浮動虧損  
+> freeBorrowedAmount| string| 借款中免息的數額  
+nextPageCursor| string| 游標，用於翻頁  
+[](/docs/zh-TW/api-explorer/v5/account/borrow-history)
 
 * * *
 
@@ -153,11 +185,11 @@ list| array| Object
 
     
     
-    GET /v5/asset/coin-greeks?baseCoin=BTC HTTP/1.1  
+    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672287887610  
+    X-BAPI-TIMESTAMP: 1672277745427  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -168,8 +200,9 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_coin_greeks(  
-        baseCoin="BTC",  
+    print(session.get_borrow_history(  
+        currency="BTC",  
+        limit=1,  
     ))  
     
     
@@ -177,19 +210,25 @@ list| array| Object
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getCoinGreeks('BTC')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getBorrowHistory({  
+        currency: 'USDT',   
+        startTime: 1670601600000,   
+        endTime: 1673203200000,   
+        limit: 30,   
+        cursor: 'nextPageCursorToken',   
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -199,16 +238,21 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
             "list": [  
                 {  
-                    "baseCoin": "BTC",  
-                    "totalDelta": "0.00004001",  
-                    "totalGamma": "-0.00000009",  
-                    "totalVega": "-0.00039689",  
-                    "totalTheta": "0.01243824"  
+                    "borrowAmount": "1.06333265702840778",  
+                    "costExemption": "0",  
+                    "freeBorrowedAmount": "0",  
+                    "createdTime": 1697439900204,  
+                    "InterestBearingBorrowSize": "1.06333265702840778",  
+                    "currency": "BTC",  
+                    "unrealisedLoss": "0",  
+                    "hourlyBorrowRate": "0.000001216904",  
+                    "borrowCost": "0.00000129"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672287887942  
+        "time": 1697442206478  
     }

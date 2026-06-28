@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/derivatives/options-trading/common-definition
 api_type: REST
-updated_at: 2026-05-27 18:55:40.922208
+updated_at: 2026-06-28 18:50:51.787156
 ---
 
 # General Info
@@ -20,11 +20,11 @@ updated_at: 2026-05-27 18:55:40.922208
 ### Testnet API Information[​](/docs/derivatives/options-trading/general-info#testnet-api-information "Direct link to Testnet API Information")
 
   * Most of the endpoints can be used in the testnet platform.
-  * The REST base url for **testnet** is "<https://testnet.binancefuture.com>"
+  * The REST base url for **testnet** is "<https://demo-fapi.binance.com>"
   * The Websocket base url for **testnet** is: 
-    * High Performance Market Data url path:"wss://fstream.binancefuture.com/public/"
-    * Market Data url path: "wss://fstream.binancefuture.com/market/"
-    * Private Data url path: "wss://fstream.binancefuture.com/private/"
+    * High Performance Market Data url path:"wss://demo-fstream.binance.com/public/"
+    * Market Data url path: "wss://demo-fstream.binance.com/market/"
+    * Private Data url path: "wss://demo-fstream.binance.com/private/"
   * After generating an API key on the testnet, users can use this API key directly for testnet options trading.
 
 
@@ -283,11 +283,11 @@ Note that the signature is different in example 3. There is no & between "GTC" a
 ### Testnet API 信息[​](/docs/zh-CN/derivatives/options-trading/general-info#testnet-api-信息 "Testnet API 信息的直接链接")
 
   * 本篇接口亦可接入testnet测试平台使用
-  * **testnet** 的 REST baseurl 为 "<https://testnet.binancefuture.com>"
+  * **testnet** 的 REST baseurl 为 "<https://demo-fapi.binance.com>"
   * **testnet** 的 Websocket baseurl为 
-    * 高性能市场数据url路径："wss://fstream.binancefuture.com/public/"
-    * 市场数据url路径："wss://fstream.binancefuture.com/market/"
-    * 私有数据url路径："wss://fstream.binancefuture.com/private/"
+    * 高性能市场数据url路径："wss://demo-fstream.binance.com/public/"
+    * 市场数据url路径："wss://demo-fstream.binance.com/market/"
+    * 私有数据url路径："wss://demo-fstream.binance.com/private/"
   * 用户在testnet生产api key后，可用api key直接进行testnet期权交易
 
 

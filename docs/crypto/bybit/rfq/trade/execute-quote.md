@@ -2,44 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/execute-quote
 api_type: Trading
-updated_at: 2026-05-27 19:21:40.700441
+updated_at: 2026-06-28 19:14:12.036879
 ---
 
-# Get Public Trades
+# Get RFQ Configuration
 
-Get the recently executed rfq successfully. **Up to 50 requests per second**
+RFQ Config. **Up to 50 requests** per second.
+
+info
+
+  * Query for information on the quoting party that can participate in your transaction, your own deskCode and other configuration information.
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-GET`/v5/rfq/public-trades`
+GET`/v5/rfq/config`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-startTime| false| integer| The timestamp (ms), `startTime` and `endTime` of the order transaction are 30 days  
-endTime| false| integer| The closing timestamp (ms), `startTime` and `endTime` of the order are 30 days  
-limit| false| integer| Return the number of items. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| Object|   
-> cursor| string| Refer to the `cursor` request parameter  
-> list| array| An array of RFQs  
->> rfqId| string| Inquiry ID  
->> strategyType| string| Policy type  
->> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
->> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
->> legs| array of objects| Combination transaction  
->>> category| string| category. Valid values include: `linear`, `option` and `spot`  
->>> symbol| string| The unique instrument ID  
->>> side| string| Direction, valid values are `Buy` and `Sell`  
->>> price| string| Execution price  
->>> qty| string| Number of executions  
->>> markPrice| string| The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.  
+result| array| Order ID  
+list| Object|   
+> deskCode| string| Your deskCode, a unique identification code  
+> maxLegs| integer| Maximum number of legs  
+> maxLP| integer| The maximum number of LPs (liquidity providers) selected in the inquiry  
+> maxActiveRfq| integer| The maximum number of unfinished inquiry orders allowed by a user  
+> rfqExpireTime| integer| Inquiry expiration time (mins)  
+> minLimitQtySpotOrder| integer| Spot minimum order quantity  
+>minLimitQtyContractOrder| integer| Contract minimum order quantity  
+> minLimitQtyOptionOrder| integer| Option minimum order  
+> strategyTypes| array| Product strategy  
+>> strategyName| string| Strategy name  
+> counterparties| array| Information on the quoters who can participate in the transaction  
+>> traderName| string| Name of the quoter  
+>> deskCode| string| The unique identification code of the quoting party  
+>> type| string| Quoter type. `LP` is an automated market maker connected via API, null means a normal quoting party  
   
 ### Request Example
 
@@ -49,7 +53,7 @@ result| Object|
 
     
     
-    GET /v5/rfq/public-trades HTTP/1.1  
+    GET /v5/rfq/create-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -64,7 +68,7 @@ result| Object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_public_trades())  
+    print(session.get_rfq_config())  
     
 
 ### Response Example
@@ -74,104 +78,87 @@ result| Object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "cursor": "page_token%3D14912%26last_time%3D1756826273947000000%26",  
-            "list": [  
+            "deskCode": "1nu9d1",  
+            "maxLegs": 25,  
+            "maxLP": 50,  
+            "rfqExpireTime": 10,  
+            "maxActiveRfq": 10,  
+            "minLimitQtySpotOrder": 10,  
+            "minLimitQtyContractOrder": 10,  
+            "minLimitQtyOptionOrder": 1,  
+            "strategyTypes": [  
                 {  
-                    "rfqId": "1756892210565322771637442724834278",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "spot",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "price": "100000",  
-                            "qty": "0.5",  
-                            "markPrice": "110320"  
-                        }  
-                    ],  
-                    "createdAt": "1756892210567",  
-                    "updatedAt": "1756892215712"  
+                    "strategyName": "custom"  
                 },  
                 {  
-                    "rfqId": "1756891080435210075162963643082323",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "linear",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Buy",  
-                            "price": "143843.9",  
-                            "qty": "0.01",  
-                            "markPrice": "143843"  
-                        }  
-                    ],  
-                    "createdAt": "1756891080437",  
-                    "updatedAt": "1756891081550"  
+                    "strategyName": "FundingRate"  
                 },  
                 {  
-                    "rfqId": "1756826272870633375460463539530377",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "linear",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Buy",  
-                            "price": "107600.9",  
-                            "qty": "1",  
-                            "markPrice": "108481.73"  
-                        }  
-                    ],  
-                    "createdAt": "1756826272871",  
-                    "updatedAt": "1756826273947"  
-                }  
+                    "strategyName": "CarryTrade"  
+                },  
+                ...,  
+            ],  
+            "counterparties": [  
+                {  
+                    "traderName": "1zQkH0y7Y3acALM",  
+                    "deskCode": "gIMhjitYqE9WG5F",  
+                    "type": "LP"  
+                },  
+                {  
+                    "traderName": "Bernie LP",  
+                    "deskCode": "Bernie",  
+                    "type": "LP"  
+                },  
+                ...,  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756892357602  
+        "time": 1756870672013  
     }
 
 ---
 
-# 獲取rfq公共成交數據
+# rfq配寘資訊
 
-獲取最近成功執行的 RFQ。**每秒最多 50 次請求**
+査詢rfq配寘資訊 **每秒最多 50 次請求**
+
+信息
+
+查詢可參與交易的報價方資訊，以及自己的 deskCode 和其他配置資訊。 **在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況**
 
 ### HTTP 請求
 
-GET`/v5/rfq/public-trades`
+GET`/v5/rfq/config`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-startTime| **false**|  integer| 訂單交易的開始時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 30 天  
-endTime| **false**|  integer| 訂單交易的結束時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 30 天  
-limit| **false**|  integer| 返回的項目數量，最多 100 項，默認為 50 項  
-cursor| **false**|  string| 翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| Object|   
-> cursor| string| 翻頁標記  
-> list| Array| RFQ 數據陣列  
->> rfqId| string| 詢價單 ID  
->> strategyType| string| 策略類型  
->> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
->> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
->> legs| Array of objects| 組合交易  
->>> category| string| 類型。有效值包括：`linear`、`option` 和 `spot`  
->>> symbol| string| 唯一的交易品種 ID  
->>> side| string| 方向，有效值包括 `Buy` 和 `Sell`  
->>> price| string| 執行價格  
->>> qty| string| 執行數量  
->>> markPrice| string| 交易時期貨的標記價格，現貨為指數價格，期權為標的價格的標記價格  
+result| array| 訂單 ID  
+list| Object|   
+> deskCode| string| 自己的 deskCode，唯一識別代碼  
+> maxLegs| integer| 最大腿數  
+> maxLP| integer| 詢價單中可選的最大 LP 數量  
+> maxActiveRfq| integer| 使用者允許的未完成詢價單最大數量  
+> rfqExpireTime| integer| 詢價過期時間，分鐘  
+> minLimitQtySpotOrder| integer| 現貨最小下單量乘數  
+> minLimitQtyContractOrder| integer| 合約最小下單量乘數  
+> minLimitQtyOptionOrder| integer| 期權最小下單量乘數  
+> strategyTypes| array| 產品策略  
+>> strategyName| string| 策略名稱  
+> counterparties| array| 可參與交易的報價方資訊  
+>> traderName| string| 報價方名稱  
+>> deskCode| string| 報價方的唯一識別代碼，公開可見；報價和詢價的相關介面使用此代碼表示報價方  
+>> type| string| 報價方類型:`LP`指通過API連接的自動做市商，為空表示普通報價方  
   
 ### 請求示例
     
     
-    GET /v5/rfq/public-trades HTTP/1.1  
+    GET /v5/rfq/create-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -186,58 +173,40 @@ result| Object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "cursor": "page_token%3D14912%26last_time%3D1756826273947000000%26",  
-            "list": [  
+            "deskCode": "1nu9d1",  
+            "maxLegs": 25,  
+            "maxLP": 50,  
+            "rfqExpireTime": 10,  
+            "maxActiveRfq": 10,  
+            "minLimitQtySpotOrder": 10,  
+            "minLimitQtyContractOrder": 10,  
+            "minLimitQtyOptionOrder": 1,  
+            "strategyTypes": [  
                 {  
-                    "rfqId": "1756892210565322771637442724834278",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "spot",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "price": "100000",  
-                            "qty": "0.5",  
-                            "markPrice": "110320"  
-                        }  
-                    ],  
-                    "createdAt": "1756892210567",  
-                    "updatedAt": "1756892215712"  
+                    "strategyName": "custom"  
                 },  
                 {  
-                    "rfqId": "1756891080435210075162963643082323",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "linear",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Buy",  
-                            "price": "143843.9",  
-                            "qty": "0.01",  
-                            "markPrice": "143843"  
-                        }  
-                    ],  
-                    "createdAt": "1756891080437",  
-                    "updatedAt": "1756891081550"  
+                    "strategyName": "FundingRate"  
                 },  
                 {  
-                    "rfqId": "1756826272870633375460463539530377",  
-                    "strategyType": "custom",  
-                    "legs": [  
-                        {  
-                            "category": "linear",  
-                            "symbol": "BTCUSDT",  
-                            "side": "Buy",  
-                            "price": "107600.9",  
-                            "qty": "1",  
-                            "markPrice": "108481.73"  
-                        }  
-                    ],  
-                    "createdAt": "1756826272871",  
-                    "updatedAt": "1756826273947"  
-                }  
+                    "strategyName": "CarryTrade"  
+                },  
+                ...,  
+            ],  
+            "counterparties": [  
+                {  
+                    "traderName": "1zQkH0y7Y3acALM",  
+                    "deskCode": "gIMhjitYqE9WG5F",  
+                    "type": "LP"  
+                },  
+                {  
+                    "traderName": "Bernie LP",  
+                    "deskCode": "Bernie",  
+                    "type": "LP"  
+                },  
+                ...,  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756892357602  
+        "time": 1756870672013  
     }

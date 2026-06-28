@@ -2,31 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/ltv-adjust-history
 api_type: REST
-updated_at: 2026-05-27 19:19:07.865093
+updated_at: 2026-06-28 19:13:02.926566
 ---
 
-# Get Max. Allowed Collateral Reduction Amount
-
-Retrieve the maximum redeemable amount of your collateral asset based on LTV.
+# Obtain Max Loan Amount
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-common/max-collateral-amount`
+POST`/v5/crypto-loan-common/max-loan`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| **true**|  string| Collateral coin  
+currency| **true**|  string| Coin to borrow  
+collateralList| false| array<object>|   
+> amount| **true**|  string| Collateral amount. Only check funding account balance  
+> ccy| **true**|  string| Collateral coin. Both `amount` & `ccy` are required, when you pass "collateralList"  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-maxCollateralAmount| string| Maximum reduction amount  
+currency| string| Coin to borrow  
+maxLoan| string| Based on your current collateral, and with the option to add more collateral, you can borrow up to `maxLoan`  
+notionalUsd| string| Nontional USD value  
+remainingQuota| string| The **remaining** individual platform borrowing limit (shared between main and sub accounts)  
   
 ### Request Example
 
@@ -37,12 +41,28 @@ maxCollateralAmount| string| Maximum reduction amount
 
     
     
-    GET /v5/crypto-loan-common/max-collateral-amount?currency=BTC HTTP/1.1  
+    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627687351  
+    X-BAPI-TIMESTAMP: 1768532512103  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "currency": "BTC",  
+        "collateralList": [  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
+    }  
     
     
     
@@ -52,8 +72,18 @@ maxCollateralAmount| string| Maximum reduction amount
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_max_allowed_collateral_reduction_amount_new_crypto_loan(  
-        collateralCurrency="BTC",  
+    print(session.get_max_loan_amount_new_crypto_loan(  
+        currency="BTC",  
+        collateralList=[  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
     ))  
     
     
@@ -68,36 +98,43 @@ maxCollateralAmount| string| Maximum reduction amount
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "maxCollateralAmount": "0.08585184"  
+            "currency": "BTC",  
+            "maxLoan": "0.1722",  
+            "notionalUsd": "16456.06",  
+            "remainingQuota": "9999999.9421"  
         },  
         "retExtInfo": {},  
-        "time": 1752627687596  
+        "time": 1768533990031  
     }
 
 ---
 
-# 查詢最大可減少的質押金額
-
-查詢某個借貸訂單允許的最大可減少質押金額
+# 獲取最大可借
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-common/max-collateral-amount`
+POST`/v5/crypto-loan-common/max-loan`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| **true**|  string| 質押幣種  
+currency| **true**|  string| 借款幣種  
+collateralList| false| array<object>|   
+> amount| **true**|  string| 抵押品金額. 僅檢查資金錢包可用  
+> ccy| **true**|  string| 抵押品幣種. 當要傳入"collateralList"時, `amount` & `ccy`兩個參數必填  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-maxCollateralAmount| string| 最大可減少金額  
+currency| string| 借款幣種  
+maxLoan| string| 根據已抵押數額, 以及入參時是否新增抵押, 計算出最多可借金額  
+notionalUsd| string| 美元價值  
+remainingQuota| string| 該帳戶(母子帳戶共享)在平台上**剩餘** 可借額度  
   
 ### 請求示例
 
@@ -108,24 +145,32 @@ maxCollateralAmount| string| 最大可減少金額
 
     
     
-    GET /v5/crypto-loan-common/max-collateral-amount?currency=BTC HTTP/1.1  
+    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627687351  
+    X-BAPI-TIMESTAMP: 1768532512103  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "currency": "BTC",  
+        "collateralList": [  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_max_allowed_collateral_reduction_amount_new_crypto_loan(  
-        collateralCurrency="BTC",  
-    ))  
+      
     
     
     
@@ -139,8 +184,11 @@ maxCollateralAmount| string| 最大可減少金額
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "maxCollateralAmount": "0.08585184"  
+            "currency": "BTC",  
+            "maxLoan": "0.1722",  
+            "notionalUsd": "16456.06",  
+            "remainingQuota": "9999999.9421"  
         },  
         "retExtInfo": {},  
-        "time": 1752627687596  
+        "time": 1768533990031  
     }

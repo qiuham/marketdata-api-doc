@@ -2,183 +2,365 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-05-27 19:43:06.451248
+updated_at: 2026-06-28 19:35:38.227386
 ---
 
-# New Order Single
+# Send order
 
-To submit a new order, the client needs to send a NewOrderSingle message. All orders are submitted from the client’s perspective to Kraken exchange to place bid/offer on the Kraken Order book. A range of order types, Time-In-Force (TIF) and order flags can be specified by the parameters below.
-
-The supported order types are:
-
-  * `market`: The full order quantity executes immediately at the best available price in the order book.
-  * `limit`: The full order quantity is placed immediately with a limit price restriction to only trade at this price or better.
-  * `stop-loss`: A market order is triggered when the reference price reaches the stop price (from an unfavourable direction).
-  * `stop-loss-limit`: A limit order is triggered when the reference price reaches the stop price (from an unfavourable direction).
-  * `take-profit`: A market order is triggered when the reference price reaches the stop price (from an favourable direction).
-  * `take-profit-limit`: A limit order is triggered when the reference price reaches the stop price (from an favourable direction).
-  * `trailing-stop`: A market order is triggered when the market reverts a specified distance from the peak price.
-  * `trailing-stop-limit`: A limit order is triggered when the market reverts a specified distance from the peak price.
-* FIX Specification
-  * Spot Example
-  * Futures Example
-
-### MESSAGE BODY
-
-**header** `` *required*
-
-MsgType `D`
-
-**11 - ClOrdID** string required
-
-Unique identifier of the order. The ID can be one of the following formats:
-
-  * **Ever-Increasing Positive Numbers** : Ever-increasing positive numbers, such as microseconds timestamps, to ensure the uniqueness and sequential nature of the identifiers. (Spot only)   
-**Example** : Using the current microsecond timestamp as the ClOrdID, such as `1623448294234000` (Max 18 characters)
-  * **Timestamp-First v4 UUIDs** : A timestamp-first v4 UUID might look like `1b4e28ba-2fa1-11d2-883f-0016d3cca427`, where the initial part (`1b4e28ba-2fa1`) of the UUID represents the timestamp. The timestamp granularity to generate the first part need to be 10 microseconds maximum such as `162344829423400`. 
-
-**40 - OrderType** char required
-
-The execution model of the order.
-
-**Possible values:**
-  * `1` : market
-  * `2` : Limit
-  * `3` : Stop-loss
-  * `4` : Stop-loss-limit
-  * `R` : Take-profit
-  * `T` : Take-profit-limit
-  * `U` : Trailing-stop
-  * `V` : Trailing-stop-limit (Spot only) 
-
-**44 - Price** float conditional
-
-**Condition:** OrderType=Limit/Stop-Loss-Limit/Take-Profit-Limit/Trailing-stop-limit 
-
-Limit Price of the order to be placed in the Order Book. This field is denominated in Quote Currency.
-
-**38 - OrderQty** float required
-
-Order quantity in terms of the base asset.
-
-**1138 - DisplayQty** float
-
-Iceberg qty. This will indicate the Qty to show on the book. Only possible on Limit order. The Minimum value is 1 / 15 of order_qty. (Spot only)
-
-**54 - Side** integer required
-
-Side of the order.
-
-**Possible values:**
-  * `1` : Buy
-  * `2` : Sell
-
-**55 - Symbol** string required
-
-Pair in the format BASE/QUOTE.
-
-**59 - TimeInForce** string required
-
-Time-in-force specifies how long an order remains in effect before being expired.
-
-**Possible values:**
-  * `1` : GTC (Good till canceled)
-  * `3` : IOC (Immediate or Cancel)
-  * `4` : FOK (Fill or Kill)
-  * `6` : GTD (Good till date) - (Spot only) 
-
-**60 - TransactTime** string required
-
-**Format:** YYYYMMDD-HH:MM:SS.uuu
-
-Time of order creation expressed in UTC. 
-
-**126 - ExpireTime** string conditional
-
-**Condition:** TimeinForce=GTD 
-
-**Format:** YYYYMMDD-HH:MM:SS
-
-Expiration of the Order if not fully filled before it. Expressed in UTC. GTD orders can have an expiry time up to one month in future. (Spot only) 
-
-**168 - EffectiveTime** string
-
-Scheduled start time on the order expressed in UTC. the order won't be visible on the book and won't match before that time. (Spot only) 
-
-**18 - ExecInst** char
-
-If more than one instruction is applicable to an order, this field may contain multiple instructions separated by space.
-
-**Possible values:**
-  * `E` : Reduce-Only - Reduces an existing margin position without opening an opposite long or short position worth more than the current value of your leveraged assets.
-  * `P` : Post-Only - Cancels the order if it will take liquidity on arrival. Post only orders will always be posted passively in the book.
-  * `v` : viqc - Orderqty (tag 38) expressed in quote currency. (Spot Only) 
-  * `f` : Cumulative fee in base currency - base is the default for sell orders. (Spot Only)
-  * `q` : Cumulative fee in quote currency - quote is the default for buy orders. (Spot Only)
-  * `s` : Single fee - Mandatory and only supported fee option for derivatives - fee sent on the execution report are based on the trade.
-
-**99 - StopPx** float conditional
-
-**Condition:** OrderType=Stop-Loss/Take-Profit/Stop-Loss-Limit/Trailing-stop/Trailing-stop-limit 
-
-Defines the trigger price of the order. This field is denominated in Quote Currency. 
-
-**388 - DiscretionInst** integer
-
-The reference price to track for triggering orders.
-
-**Possible values:**
-  * `1` :Related to index price
-  * `5` :Related to last trade price
-**Default value:`5`**
-
-**5001 - Leverage** string
-
-Use margin account for the order funding. (Spot only)
-
-**Possible values:**
-  * `0` :Margin disabled 
-  * `1` :Margin enabled
-**Default value:`0`**
-
-**7928 - SelfTradePrevention** integer
-
-Self Trade Prevention (STP) is a protection feature to prevent users from inadvertently or deliberately trading against themselves. To prevent a self-match, one of the following STP modes can be used to define which order(s) will be expired. (Spot only)
-
-**Possible values:**
-  * `0` : Cancel both - both arriving and resting orders will be canceled.
-  * `1` : Cancel Newest - arriving order will be canceled.
-  * `2` : Cancel Oldest - resting order will be canceled.
-**Default value:`1`**
-
-**78 - NoAllocs** integer
-
-Number of subaccount that are part of the order. Always 1 for the broker accounts.
-
-**79 - AllocAccount** String
-
-Account ID of the Subaccount that this order is targeted to. Only available for Broker accounts. Please contact your AM for further questions.
-
-**62 - ValidUntilTime** string
-
-**Format:** YYYYMMDD-HH:MM:SS.uuu
-
-The engine will reject any order entered into the matching engine after this time. This provides extra protection against latency on time sensitive orders. The timestamp should be at least 2 seconds and at most 60 seconds in the future.
-
-**trailer** `` *required*
+Send order
     
     
-    8=FIX.4.4|9=140|35=D|34=2|49=MYCOMPID|52=20230707-13:56:08.000|56=KRAKEN-TRD|11=1688738168|38=0.01|40=2|44=1000|54=1|55=BTC/USD|59=1|60=20230707-13:56:08.277|10=222|  
+    curl --request POST \
+      --url https://futures.kraken.com/derivatives/api/v3/sendorder \
+      --header 'APIKey: <api-key>' \
+      --header 'Authent: <api-key>'
     
     
-    
-    8=FIX.4.4|9=181|35=D|34=2|49=damien2_DRV|52=20250303-14:09:32.902|56=KRAKEN-DRV-TRD|11=9e58120f-182b-4dce-9609-8ca7cdd174f0|18=s|38=0.1|40=2|44=1000|54=1|55=PF_ETHUSD|59=1|60=20250303-14:09:32.896|10=148|  
-    
+    {
+      "result": "success",
+      "sendStatus": {
+        "order_id": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+        "status": "placed",
+        "receivedTime": "2019-09-05T16:33:50.734Z",
+        "orderEvents": [
+          {
+            "type": "PLACE",
+            "order": {
+              "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+              "type": "lmt",
+              "symbol": "PF_XBTUSD",
+              "side": "buy",
+              "quantity": 10000,
+              "filled": 0,
+              "limitPrice": 9400,
+              "reduceOnly": false,
+              "timestamp": "2019-09-05T16:33:50.734Z",
+              "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
+            }
+          }
+        ]
+      },
+      "serverTime": "2019-09-05T16:33:50.734Z"
+    }
 
-Order Validation
+POST
 
-Kraken will validate each order it receives by checking that the user sent all the required FIX fields for the order.
+/
 
-  * FIX field level validation will result in [session level reject](/api/docs/fix-api/reject-session_level-fix).
-  * Business rule validation failures will result in rejection in the form of an [business level reject](/api/docs/fix-api/reject-business_level-fix)
-  * Once the order is accepted and Acked, any further Business rule validations that will result in an [execution report](/api/docs/fix-api/er-fix) with an unsolicited cancel status.
+sendorder
+
+Send order
+    
+    
+    curl --request POST \
+      --url https://futures.kraken.com/derivatives/api/v3/sendorder \
+      --header 'APIKey: <api-key>' \
+      --header 'Authent: <api-key>'
+    
+    
+    {
+      "result": "success",
+      "sendStatus": {
+        "order_id": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+        "status": "placed",
+        "receivedTime": "2019-09-05T16:33:50.734Z",
+        "orderEvents": [
+          {
+            "type": "PLACE",
+            "order": {
+              "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+              "type": "lmt",
+              "symbol": "PF_XBTUSD",
+              "side": "buy",
+              "quantity": 10000,
+              "filled": 0,
+              "limitPrice": 9400,
+              "reduceOnly": false,
+              "timestamp": "2019-09-05T16:33:50.734Z",
+              "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
+            }
+          }
+        ]
+      },
+      "serverTime": "2019-09-05T16:33:50.734Z"
+    }
+
+#### Authorizations
+
+APIKey
+
+string
+
+header
+
+required
+
+General API key with full access
+
+Authent
+
+string
+
+header
+
+required
+
+Authentication string
+
+#### Query Parameters
+
+processBefore
+
+string<date-time>
+
+The time before which the request should be processed, otherwise it is rejected.
+
+orderType
+
+enum<string>
+
+required
+
+The order type:
+
+  * `lmt` \- a limit order
+
+  * `post` \- a post-only limit order
+
+  * `mkt` \- an immediate-or-cancel order with 1% price protection
+
+  * `stp` \- a stop order
+
+  * `take_profit` \- a take profit order
+
+  * `ioc` \- an immediate-or-cancel order
+
+  * `trailing_stop` \- a trailing stop order
+
+  * `fok` \- fill or kill order The order type:
+
+  * `lmt` \- a limit order
+
+  * `post` \- a post-only limit order
+
+  * `mkt` \- an immediate-or-cancel order with 1% price protection
+
+  * `stp` \- a stop order
+
+  * `take_profit` \- a take profit order
+
+  * `ioc` \- an immediate-or-cancel order
+
+  * `trailing_stop` \- a trailing stop order
+
+  * `fok` \- fill-or-kill order
+
+`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
+
+Available options:
+
+`lmt`,
+
+`post`,
+
+`ioc`,
+
+`mkt`,
+
+`stp`,
+
+`take_profit`,
+
+`trailing_stop`,
+
+`fok`,
+
+`unknown`
+
+symbol
+
+string
+
+required
+
+The symbol of the Futures
+
+side
+
+enum<string>
+
+required
+
+The direction of the order. The direction of the order.
+
+`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
+
+Available options:
+
+`buy`,
+
+`sell`,
+
+`unknown`
+
+size
+
+number
+
+required
+
+The size associated with the order. Note that different Futures have different contract sizes.
+
+limitPrice
+
+number
+
+The limit price associated with the order. Note that for stop orders, limitPrice denotes the worst price at which the `stp` or `take_profit` order can get filled at. If no `limitPrice` is provided the `stp` or `take_profit` order will trigger a market order. If placing a `trailing_stop` order then leave undefined.
+
+stopPrice
+
+number
+
+The stop price associated with a stop or take profit order.
+
+Required if orderType is `stp` or `take_profit`, but if placing a `trailing_stop` then leave undefined. Note that for stop orders, limitPrice denotes the worst price at which the `stp` or `take_profit` order can get filled at. If no `limitPrice` is provided the `stp` or `take_profit` order will trigger a market order.
+
+cliOrdId
+
+string
+
+The order identity that is specified from the user. It must be globally unique.
+
+Maximum string length: `100`
+
+triggerSignal
+
+enum<string>
+
+If placing a `stp`, `take_profit` or `trailing_stop`, the signal used for trigger.
+
+  * `mark` \- the mark price
+  * `index` \- the index price
+  * `last` \- the last executed trade
+
+Available options:
+
+`mark`,
+
+`index`,
+
+`last`
+
+reduceOnly
+
+boolean
+
+Set as true if you wish the order to only reduce an existing position.
+
+Any order which increases an existing position will be rejected. Default false.
+
+trailingStopMaxDeviation
+
+number
+
+Required if the order type is `trailing_stop`. Maximum value of 50%, minimum value of 0.1% for 'PERCENT' 'maxDeviationUnit'.
+
+Is the maximum distance the trailing stop's trigger price may trail behind the requested trigger signal. It defines the threshold at which the trigger price updates.
+
+Required range: `0.1 <= x <= 50`
+
+trailingStopDeviationUnit
+
+enum<string>
+
+Required if the order type is `trailing_stop`.
+
+This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% below the trigger signal. Similarly, if the deviation is 100, the unit is 'QUOTE_CURRENCY', the underlying order is a sell, and the contract is quoted in USD, then the trigger price will never be more than $100 below the trigger signal.
+
+`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
+
+Available options:
+
+`PERCENT`,
+
+`QUOTE_CURRENCY`,
+
+`unknown`
+
+limitPriceOffsetValue
+
+number
+
+Can only be set for triggers, e.g. order types `take_profit`, `stop` and `trailing_stop`. If set, `limitPriceOffsetUnit` must be set as well. This defines a relative limit price depending on the trigger `stopPrice`. The price is determined when the trigger is activated by the `triggerSignal`. The offset can be positive or negative, there might be restrictions on the value depending on the `limitPriceOffsetUnit`.
+
+limitPriceOffsetUnit
+
+enum<string>
+
+Can only be set together with `limitPriceOffsetValue`. This defines the unit for the relative limit price distance from the trigger's `stopPrice`.
+
+Available options:
+
+`QUOTE_CURRENCY`,
+
+`PERCENT`
+
+broker
+
+string
+
+Valid Broker identifier on whose behalf the order is sent.
+
+Note: This is currently available exclusively in the Kraken pre-prod environments.
+
+Maximum string length: `100`
+
+#### Response
+
+200 - application/json
+
+  * Success Response
+
+  * Errors
+
+sendStatus
+
+object
+
+required
+
+A structure containing information on the send order request.
+
+Show child attributes
+
+result
+
+enum<string>
+
+required
+
+Available options:
+
+`success`
+
+Example:
+
+`"success"`
+
+serverTime
+
+string<date-time>
+
+required
+
+Server time in Coordinated Universal Time (UTC)
+
+Example:
+
+`"2020-08-27T17:03:33.196Z"`
+
+Was this page helpful?
+
+[Get instrument status](/api-reference/instrument-details/get-instrument-status)[Edit order](/api-reference/order-management/edit-order)
+
+Ctrl+I

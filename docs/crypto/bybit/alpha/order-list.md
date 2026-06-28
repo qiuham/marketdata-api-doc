@@ -2,78 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/order-list
 api_type: REST
-updated_at: 2026-05-27 19:14:34.463776
+updated_at: 2026-06-28 19:08:11.219045
 ---
 
-# Get Order List
+# Get Trade Quote
 
-Query user's on-chain trade order history with status, fees, and execution details.
+Get a price quote before executing a purchase or redeem trade. This is a **mandatory step** before calling [Execute Purchase](/docs/v5/alpha/trade-purchase) or [Execute Redeem](/docs/v5/alpha/trade-redeem).
 
 info
 
-  * Supports filtering by trade type, order status, token, and time range
-  * Maximum query range is 90 days; orders sorted by creation time descending
-  * Order status flow: `1` (Processing) → `2` (Success) or `3` (Failed)
-  * On-chain confirmation typically takes 10–60 seconds
-  * Use this endpoint after [Execute Purchase](/docs/v5/alpha/trade-purchase) or [Execute Redeem](/docs/v5/alpha/trade-redeem) to confirm the final order status
+  * Returns estimated receive amount, exchange rate, platform fee, gas cost, and slippage
+  * `quoteData` and `correctingCode` must be passed as-is to the execution endpoint — do not modify
+  * Quote expires at `expireTime`; re-fetch if expired before executing
+  * `correctingCode` is an MD5 of `(quoteData + fromTokenCode + fromTokenAmount + toTokenCode)` for tamper protection
+  * Token codes can be obtained from [Get Pay Token List](/docs/v5/alpha/pay-token-list) (CEX tokens) and [Get Biz Token List](/docs/v5/alpha/biz-token-list) (DEX tokens)
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/trade/order-list`
+POST`/v5/alpha/trade/quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-tradeType| false| integer| Filter by trade type. `0`: All (default), `1`: Purchase, `2`: Redeem  
-tokenCode| false| string| Filter by token code  
-orderStatus| false| array| Filter by order status (multiple values allowed). `1`: Processing, `2`: Success, `3`: Failed  
-days| false| integer| Query last N days. Range: [0, 90]. `0` uses system default (90 days). Default: `0`  
-limit| **true**|  integer| Results per page. Range: [1, 100]  
-pageIndex| **true**|  integer| Page number (1-based)  
-direction| false| string| Pagination direction. `prev`, `next`  
+tradeType| **true**|  integer| Trade type. `1`: Purchase (buy on-chain token with payment token), `2`: Redeem (sell on-chain token for payment token)  
+fromTokenCode| **true**|  string| Source token code (`CEX_<id>` or `DEX_<id>`). Purchase: CEX token (e.g. `CEX_1` for USDT); Redeem: DEX token (e.g. `DEX_123`)  
+fromTokenAmount| **true**|  string| Amount to pay, string-formatted positive decimal. Must be greater than 0  
+toTokenCode| **true**|  string| Target token code (`CEX_<id>` or `DEX_<id>`). Purchase: DEX token; Redeem: CEX token (e.g. `CEX_1` for USDT)  
+quoteMode| false| integer| Quote mode. `0`: Auto (default), `1`: Price Priority, `2`: Success Rate Priority  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-total| integer| Total order count matching the filter  
-pageIndex| integer| Current page number  
-orders| array| Order list  
-> orderType| integer| Order type. `1`: Market order, `2`: Limit order  
-> tradeType| integer| Trade type. `1`: Purchase, `2`: Redeem  
-> orderNo| string| System order number  
-> orderStatus| integer| Order status. `1`: Processing, `2`: Success, `3`: Failed  
-> fromTokenCode| string| Source token code  
-> fromTokenAmount| string| Intended payment amount  
-> fromTokenSymbol| string| Source token symbol  
-> fromTokenDecimals| integer| Source token decimal precision  
-> fromTokenIconUrlDay| string| Source token icon URL (light mode)  
-> fromTokenIconUrlNight| string| Source token icon URL (dark mode)  
-> fromChainCode| string| Source chain code  
-> fromChainIconUrl| string| Source chain icon URL  
-> toTokenCode| string| Target token code  
-> toTokenAmount| string| Actual amount received (populated after completion)  
-> toTokenSymbol| string| Target token symbol  
-> toTokenDecimals| integer| Target token decimal precision  
-> toTokenIconUrlDay| string| Target token icon URL (light mode)  
-> toTokenIconUrlNight| string| Target token icon URL (dark mode)  
-> toChainCode| string| Target chain code  
-> toChainIconUrl| string| Target chain icon URL  
-> gasTokenSymbol| string| Native gas token symbol, e.g. `ETH`, `SOL`, `BNB`  
-> gasOnchain| string| On-chain gas fee in native token  
-> gasUsd| string| Gas fee in USD. May be null if order is still processing  
-> platformFee| string| Platform fee  
-> platformFeeUsd| string| Platform fee in USD. May be null if order is still processing  
-> quoteMode| integer| Quote mode used  
-> createTime| integer| Order creation time (Unix timestamp in seconds)  
-> executionTime| integer| Order completion time (Unix timestamp in seconds)  
-> failureReasonCode| string| Failure reason code, only present when `orderStatus=3`. `ERR999`: Unknown, `ERR101`: System exception, `ERR102`: Execution timeout, `ERR103`: Insufficient balance, `ERR104`: Broadcast failed, `ERR105`: On-chain execution failed, `ERR106`: Trade loss too large, `ERR107`: Liquidity range too large  
-> source| string| Trade source identifier  
-> swapRate| string| Actual exchange rate  
-> actualFromTokenAmount| string| Actual amount paid  
+tradeType| integer| Trade type echoed back  
+fromTokenCode| string| Source token code  
+fromTokenAmount| string| Amount to pay  
+fromTokenAmountUsd| string| Payment amount in USD  
+toTokenCode| string| Target token code  
+toTokenAmount| string| Expected amount to receive  
+toTokenAmountUsd| string| Expected receive amount in USD  
+minToTokenAmount| string| Minimum amount to receive after slippage  
+slippage| string| Estimated slippage as decimal, e.g. `0.005` = 0.5%  
+gas| string| Estimated gas fee in native token unit  
+gasUsd| string| Gas fee in USD  
+platformFee| string| Platform fee  
+platformFeeUsd| string| Platform fee in USD  
+swapRate| string| Exchange rate (toToken per fromToken)  
+lossRate| string| Estimated loss rate from fees and slippage  
+quoteData| string| Base64-encoded quote context. **Must be passed as-is to the execution endpoint**  
+correctingCode| string| MD5 checksum for data integrity. **Must be passed as-is to the execution endpoint**  
+quoteMode| integer| Actual quote mode used  
+quoteDataId| string| Unique quote ID for idempotency  
+expireTime| integer| Quote expiration time (ms). Do not execute with an expired quote  
+timestamp| integer| Quote timestamp (ms). Use to compare freshness across multiple quotes  
+chargeAmount| string| Fee charge amount  
+modeEstimations| array| Alternative mode estimations for comparison  
+> quoteMode| integer| Quote mode  
+> estimatedGas| string| Estimated gas fee in this mode  
+> estimatedGasUsd| string| Estimated gas in USD  
+> estimatedSlippage| string| Estimated slippage  
   
 ### Request Example
 
@@ -84,7 +74,7 @@ orders| array| Order list
 
     
     
-    POST /v5/alpha/trade/order-list HTTP/1.1  
+    POST /v5/alpha/trade/quote HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -93,10 +83,11 @@ orders| array| Order list
     Content-Type: application/json  
       
     {  
-        "tradeType": 0,  
-        "days": 7,  
-        "limit": 20,  
-        "pageIndex": 1  
+        "tradeType": 1,  
+        "fromTokenCode": "CEX_1",  
+        "fromTokenAmount": "100",  
+        "toTokenCode": "DEX_123",  
+        "quoteMode": 0  
     }  
     
     
@@ -115,112 +106,106 @@ orders| array| Order list
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "total": 1,  
-            "pageIndex": 1,  
-            "orders": [  
+            "tradeType": 1,  
+            "fromTokenCode": "CEX_1",  
+            "fromTokenAmount": "100",  
+            "fromTokenAmountUsd": "100.00",  
+            "toTokenCode": "DEX_123",  
+            "toTokenAmount": "12500000",  
+            "toTokenAmountUsd": "99.50",  
+            "minToTokenAmount": "12375000",  
+            "slippage": "0.005",  
+            "gas": "0.0003",  
+            "gasUsd": "0.30",  
+            "platformFee": "0.20",  
+            "platformFeeUsd": "0.20",  
+            "swapRate": "125000",  
+            "lossRate": "0.005",  
+            "quoteData": "eyJhbGciOiJIUzI1NiJ9...",  
+            "correctingCode": "a1b2c3d4e5f6",  
+            "quoteMode": 0,  
+            "quoteDataId": "QD_20240101_001",  
+            "expireTime": 1704067230000,  
+            "modeEstimations": [  
                 {  
-                    "orderType": 1,  
-                    "tradeType": 1,  
-                    "orderNo": "ORD_20240101_001",  
-                    "orderStatus": 2,  
-                    "fromTokenCode": "CEX_1",  
-                    "fromTokenAmount": "100",  
-                    "fromTokenSymbol": "USDT",  
-                    "fromTokenDecimals": 6,  
-                    "fromChainCode": "ETH",  
-                    "toTokenCode": "DEX_123",  
-                    "toTokenAmount": "12450000",  
-                    "toTokenSymbol": "PEPE",  
-                    "toTokenDecimals": 18,  
-                    "toChainCode": "ETH",  
-                    "gasTokenSymbol": "ETH",  
-                    "gasOnchain": "0.0003",  
-                    "gasUsd": "0.30",  
-                    "platformFee": "0.20",  
-                    "platformFeeUsd": "0.20",  
-                    "quoteMode": 0,  
-                    "createTime": 1704067200,  
-                    "executionTime": 1704067230,  
-                    "swapRate": "124500",  
-                    "actualFromTokenAmount": "100"  
+                    "quoteMode": 1,  
+                    "estimatedGas": "12600000",  
+                    "estimatedGasUsd": "0.28",  
+                    "estimatedSlippage": "0.008"  
+                },  
+                {  
+                    "quoteMode": 2,  
+                    "estimatedGas": "12400000",  
+                    "estimatedGasUsd": "0.35",  
+                    "estimatedSlippage": "0.003"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1704067300000  
+        "time": 1704067200000  
     }
 
 ---
 
-# 查詢訂單列表
+# 獲取交易報價
 
-查詢用戶的鏈上交易訂單歷史，包含訂單狀態、手續費及執行詳情。
+在執行購買或贖回交易前獲取價格報價。調用 [執行購買](/docs/zh-TW/v5/alpha/trade-purchase) 或 [執行贖回](/docs/zh-TW/v5/alpha/trade-redeem) 前**必須** 先調用此接口。
 
 信息
 
-  * 支持按交易類型、訂單狀態、代幣及時間範圍篩選
-  * 最大查詢範圍為 90 天，結果按創建時間倒序排列
-  * 訂單狀態流轉：`1`（處理中）→ `2`（成功）或 `3`（失敗）
-  * 鏈上確認通常需要 10–60 秒
-  * 調用 [執行購買](/docs/zh-TW/v5/alpha/trade-purchase) 或 [執行贖回](/docs/zh-TW/v5/alpha/trade-redeem) 後，可使用此接口確認最終訂單狀態
+  * 返回預估接收數量、匯率、平台手續費、Gas 費用及滑點
+  * `quoteData` 和 `correctingCode` 必須原樣傳入執行接口，不得修改
+  * 報價在 `expireTime` 後過期，過期後須重新獲取
+  * `correctingCode` 為 `(quoteData + fromTokenCode + fromTokenAmount + toTokenCode)` 的 MD5 校驗碼，用於防篡改
+  * 代幣代碼可通過 [獲取支付代幣列表](/docs/zh-TW/v5/alpha/pay-token-list)（CEX 代幣）及 [獲取業務代幣列表](/docs/zh-TW/v5/alpha/biz-token-list)（DEX 代幣）獲取
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/trade/order-list`
+POST`/v5/alpha/trade/quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-tradeType| false| integer| 按交易類型篩選。`0`: 全部（默認），`1`: 購買，`2`: 贖回  
-tokenCode| false| string| 按代幣代碼篩選  
-orderStatus| false| array| 按訂單狀態篩選（支持多個值）。`1`: 處理中，`2`: 成功，`3`: 失敗  
-days| false| integer| 查詢最近 N 天。範圍：[0, 90]。`0` 使用系統默認（90 天）。默認：`0`  
-limit| **true**|  integer| 每頁條數。範圍：[1, 100]  
-pageIndex| **true**|  integer| 頁碼（從 1 開始）  
-direction| false| string| 翻頁方向。`prev`、`next`  
+tradeType| **true**|  integer| 交易類型。`1`: 購買（用支付代幣買入鏈上代幣），`2`: 贖回（賣出鏈上代幣換支付代幣）  
+fromTokenCode| **true**|  string| 源代幣代碼（`CEX_<id>` 或 `DEX_<id>`）。購買填 CEX 代幣（如 USDT 對應 `CEX_1`）；贖回填 DEX 代幣（如 `DEX_123`）  
+fromTokenAmount| **true**|  string| 支付數量，字符串格式的正小數，須大於 0  
+toTokenCode| **true**|  string| 目標代幣代碼（`CEX_<id>` 或 `DEX_<id>`）。購買填 DEX 代幣；贖回填 CEX 代幣（如 USDT 對應 `CEX_1`）  
+quoteMode| false| integer| 報價模式。`0`: 自動（默認），`1`: 價格優先，`2`: 成功率優先  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-total| integer| 符合篩選條件的訂單總數  
-pageIndex| integer| 當前頁碼  
-orders| array| 訂單列表  
-> orderType| integer| 訂單類型。`1`: 市價單，`2`: 限價單  
-> tradeType| integer| 交易類型。`1`: 購買，`2`: 贖回  
-> orderNo| string| 系統訂單號  
-> orderStatus| integer| 訂單狀態。`1`: 處理中，`2`: 成功，`3`: 失敗  
-> fromTokenCode| string| 源代幣代碼  
-> fromTokenAmount| string| 預計支付數量  
-> fromTokenSymbol| string| 源代幣符號  
-> fromTokenDecimals| integer| 源代幣小數精度  
-> fromTokenIconUrlDay| string| 源代幣圖標 URL（淺色模式）  
-> fromTokenIconUrlNight| string| 源代幣圖標 URL（深色模式）  
-> fromChainCode| string| 源鏈代碼  
-> fromChainIconUrl| string| 源鏈圖標 URL  
-> toTokenCode| string| 目標代幣代碼  
-> toTokenAmount| string| 實際接收數量（完成後填充）  
-> toTokenSymbol| string| 目標代幣符號  
-> toTokenDecimals| integer| 目標代幣小數精度  
-> toTokenIconUrlDay| string| 目標代幣圖標 URL（淺色模式）  
-> toTokenIconUrlNight| string| 目標代幣圖標 URL（深色模式）  
-> toChainCode| string| 目標鏈代碼  
-> toChainIconUrl| string| 目標鏈圖標 URL  
-> gasTokenSymbol| string| 原生 Gas 代幣符號，如 `ETH`、`SOL`、`BNB`  
-> gasOnchain| string| 鏈上 Gas 費用（原生代幣單位）  
-> gasUsd| string| Gas 費用（USD）。訂單處理中時可能為 null  
-> platformFee| string| 平台手續費  
-> platformFeeUsd| string| 平台手續費（USD）。訂單處理中時可能為 null  
-> quoteMode| integer| 使用的報價模式  
-> createTime| integer| 訂單創建時間（Unix 時間戳，秒）  
-> executionTime| integer| 訂單完成時間（Unix 時間戳，秒）  
-> failureReasonCode| string| 失敗原因代碼，僅當 `orderStatus=3` 時存在。`ERR999`: 未知原因，`ERR101`: 系統異常，`ERR102`: 執行超時，`ERR103`: 餘額不足，`ERR104`: 廣播失敗，`ERR105`: 鏈上執行失敗，`ERR106`: 交易損耗過大，`ERR107`: 流動性範圍過大  
-> source| string| 交易來源標識  
-> swapRate| string| 實際兌換匯率  
-> actualFromTokenAmount| string| 實際支付數量  
+tradeType| integer| 交易類型回顯  
+fromTokenCode| string| 源代幣代碼  
+fromTokenAmount| string| 支付數量  
+fromTokenAmountUsd| string| 支付金額（USD）  
+toTokenCode| string| 目標代幣代碼  
+toTokenAmount| string| 預估接收數量  
+toTokenAmountUsd| string| 預估接收金額（USD）  
+minToTokenAmount| string| 扣除滑點後最低接收數量  
+slippage| string| 預估滑點（小數），如 `0.005` = 0.5%  
+gas| string| 預估 Gas 費用（原生代幣單位）  
+gasUsd| string| Gas 費用（USD）  
+platformFee| string| 平台手續費  
+platformFeeUsd| string| 平台手續費（USD）  
+swapRate| string| 兌換匯率（每單位 fromToken 可換 toToken 數量）  
+lossRate| string| 含手續費與滑點的預估損耗率  
+quoteData| string| Base64 編碼報價數據。**必須原樣傳入執行接口，不得修改**  
+correctingCode| string| 數據完整性 MD5 校驗碼。**必須原樣傳入執行接口**  
+quoteMode| integer| 實際使用的報價模式  
+quoteDataId| string| 唯一報價 ID，用於冪等性控制  
+expireTime| integer| 報價過期時間（ms），過期後請勿使用該報價執行交易  
+timestamp| integer| 報價時間戳（ms），可用於比較多個報價的新鮮度  
+chargeAmount| string| 收費金額  
+modeEstimations| array| 其他模式的預估數據，供對比參考  
+> quoteMode| integer| 報價模式  
+> estimatedGas| string| 該模式預估 Gas 費用  
+> estimatedGasUsd| string| 該模式預估 Gas 費用（USD）  
+> estimatedSlippage| string| 該模式預估滑點  
   
 ### 請求示例
 
@@ -231,7 +216,7 @@ orders| array| 訂單列表
 
     
     
-    POST /v5/alpha/trade/order-list HTTP/1.1  
+    POST /v5/alpha/trade/quote HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -240,10 +225,11 @@ orders| array| 訂單列表
     Content-Type: application/json  
       
     {  
-        "tradeType": 0,  
-        "days": 7,  
-        "limit": 20,  
-        "pageIndex": 1  
+        "tradeType": 1,  
+        "fromTokenCode": "CEX_1",  
+        "fromTokenAmount": "100",  
+        "toTokenCode": "DEX_123",  
+        "quoteMode": 0  
     }  
     
     
@@ -262,37 +248,41 @@ orders| array| 訂單列表
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "total": 1,  
-            "pageIndex": 1,  
-            "orders": [  
+            "tradeType": 1,  
+            "fromTokenCode": "CEX_1",  
+            "fromTokenAmount": "100",  
+            "fromTokenAmountUsd": "100.00",  
+            "toTokenCode": "DEX_123",  
+            "toTokenAmount": "12500000",  
+            "toTokenAmountUsd": "99.50",  
+            "minToTokenAmount": "12375000",  
+            "slippage": "0.005",  
+            "gas": "0.0003",  
+            "gasUsd": "0.30",  
+            "platformFee": "0.20",  
+            "platformFeeUsd": "0.20",  
+            "swapRate": "125000",  
+            "lossRate": "0.005",  
+            "quoteData": "eyJhbGciOiJIUzI1NiJ9...",  
+            "correctingCode": "a1b2c3d4e5f6",  
+            "quoteMode": 0,  
+            "quoteDataId": "QD_20240101_001",  
+            "expireTime": 1704067230000,  
+            "modeEstimations": [  
                 {  
-                    "orderType": 1,  
-                    "tradeType": 1,  
-                    "orderNo": "ORD_20240101_001",  
-                    "orderStatus": 2,  
-                    "fromTokenCode": "CEX_1",  
-                    "fromTokenAmount": "100",  
-                    "fromTokenSymbol": "USDT",  
-                    "fromTokenDecimals": 6,  
-                    "fromChainCode": "ETH",  
-                    "toTokenCode": "DEX_123",  
-                    "toTokenAmount": "12450000",  
-                    "toTokenSymbol": "PEPE",  
-                    "toTokenDecimals": 18,  
-                    "toChainCode": "ETH",  
-                    "gasTokenSymbol": "ETH",  
-                    "gasOnchain": "0.0003",  
-                    "gasUsd": "0.30",  
-                    "platformFee": "0.20",  
-                    "platformFeeUsd": "0.20",  
-                    "quoteMode": 0,  
-                    "createTime": 1704067200,  
-                    "executionTime": 1704067230,  
-                    "swapRate": "124500",  
-                    "actualFromTokenAmount": "100"  
+                    "quoteMode": 1,  
+                    "estimatedGas": "12600000",  
+                    "estimatedGasUsd": "0.28",  
+                    "estimatedSlippage": "0.008"  
+                },  
+                {  
+                    "quoteMode": 2,  
+                    "estimatedGas": "12400000",  
+                    "estimatedGasUsd": "0.35",  
+                    "estimatedSlippage": "0.003"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1704067300000  
+        "time": 1704067200000  
     }

@@ -2,36 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/tier
 api_type: REST
-updated_at: 2026-05-27 19:16:18.033139
+updated_at: 2026-06-28 19:09:59.501167
 ---
 
-# Query Tier Info
+# Get Account Borrowable/Collateralizable Limit
 
-Query the user's card reward tier level and spending limit information, including used limit, total limit, tier level, and auto cashback setting.
+Query for the minimum and maximum amounts your account can borrow and how much collateral you can put up.
+
+> Permission: "Spot trade"
 
 ### HTTP Request
 
-POST`/v5/card/reward/points/tier`
+GET`/v5/crypto-loan/borrowable-collateralisable-number`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+loanCurrency| **true**|  string| Loan coin name  
+collateralCurrency| **true**|  string| Collateral coin name  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-retCode| integer| Business return code. `0`: success; non-zero: failure  
-retMsg| string| Return message  
-result| object|   
-> usedLimit| string| Used spending limit (in USD, converted from points × 0.002, rounded to 2 decimal places)  
-> limit| string| Total spending limit  
-> unit| string| Limit unit (e.g. `USD`)  
-> tier| string| User tier level  
-> autoCashback| boolean| Whether auto cashback is enabled  
+collateralCurrency| string| Collateral coin name  
+loanCurrency| string| Loan coin name  
+maxCollateralAmount| string| Max. limit to mortgage  
+maxLoanAmount| string| Max. limit to borrow  
+minCollateralAmount| string| Min. limit to mortgage  
+minLoanAmount| string| Min. limit to borrow  
   
-* * *
-
 ### Request Example
 
   * HTTP
@@ -41,42 +42,47 @@ result| object|
 
     
     
-    POST /v5/card/reward/points/tier HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/crypto-loan/borrowable-collateralisable-number?loanCurrency=USDT&collateralCurrency=BTC HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-TIMESTAMP: 1728627083198  
     X-BAPI-RECV-WINDOW: 5000  
     
     
     
-    import requests  
-      
-    url = "https://api-testnet.bybit.com/v5/card/reward/points/tier"  
-    headers = {  
-        "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
-        "X-BAPI-SIGN": "XXXXX",  
-        "X-BAPI-TIMESTAMP": "1672211918471",  
-        "X-BAPI-RECV-WINDOW": "5000"  
-    }  
-    response = requests.post(url, headers=headers)  
-    print(response.json())  
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_account_borrowable_or_collateralizable_limit(  
+        loanCurrency="USDT",  
+        collateralCurrency="BTC",  
+    ))  
     
     
     
-    const axios = require('axios');  
+    const { RestClientV5 } = require('bybit-api');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/tier';  
-    const headers = {  
-      'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
-      'X-BAPI-SIGN': 'XXXXX',  
-      'X-BAPI-TIMESTAMP': '1672211918471',  
-      'X-BAPI-RECV-WINDOW': '5000'  
-    };  
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
-    axios.post(url, {}, { headers })  
-      .then(response => console.log(response.data))  
-      .catch(error => console.error(error));  
+    client  
+      .getAccountBorrowCollateralLimit({  
+        loanCurrency: 'USDT',  
+        collateralCurrency: 'BTC',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -84,47 +90,49 @@ result| object|
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "request.success",  
         "result": {  
-            "usedLimit": "10.00",  
-            "limit": "500.00",  
-            "unit": "1",  
-            "tier": "GOLD",  
-            "autoCashback": true  
+            "collateralCurrency": "BTC",  
+            "loanCurrency": "USDT",  
+            "maxCollateralAmount": "164.957732055526752104",  
+            "maxLoanAmount": "8000000",  
+            "minCollateralAmount": "0.000412394330138818",  
+            "minLoanAmount": "20"  
         },  
         "retExtInfo": {},  
-        "time": 1672211918471  
+        "time": 1728627084863  
     }
 
 ---
 
-# 查詢 Tier 信息
+# 查詢帳戶可借貸/抵押的限額
 
-查詢用戶卡片獎勵 Tier 等級及消費額度信息，包含已消費額度、總額度、用戶 Tier 等級及是否開啟自動 cashback 等。
+查詢本帳戶支持的最小/最大的借貸和質押額
+
+> 權限: "現貨交易"
 
 ### HTTP 請求
 
-POST`/v5/card/reward/points/tier`
+GET`/v5/crypto-loan/borrowable-collateralisable-number`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+loanCurrency| **true**|  string| 借貸幣種  
+collateralCurrency| **true**|  string| 質押幣種  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-retCode| integer| 業務返回碼。`0`: 成功；非零: 失敗  
-retMsg| string| 返回消息  
-result| object|   
-> usedLimit| string| 已消費額度（單位 USD，積分 × 0.002 轉換，保留兩位小數，四捨五入）  
-> limit| string| 總額度  
-> unit| string| 額度單位（如 `USD`）  
-> tier| string| 用戶 Tier 等級  
-> autoCashback| boolean| 是否開啟自動 cashback  
+collateralCurrency| string| 抵押幣種  
+loanCurrency| string| 借貸幣種  
+maxCollateralAmount| string| 最大可質押金額  
+maxLoanAmount| string| 最大可借貸金額  
+minCollateralAmount| string| 最小質押金額  
+minLoanAmount| string| 最小借貸金額  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -134,42 +142,47 @@ result| object|
 
     
     
-    POST /v5/card/reward/points/tier HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/crypto-loan/borrowable-collateralisable-number?loanCurrency=USDT&collateralCurrency=BTC HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-TIMESTAMP: 1728627083198  
     X-BAPI-RECV-WINDOW: 5000  
     
     
     
-    import requests  
-      
-    url = "https://api-testnet.bybit.com/v5/card/reward/points/tier"  
-    headers = {  
-        "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
-        "X-BAPI-SIGN": "XXXXX",  
-        "X-BAPI-TIMESTAMP": "1672211918471",  
-        "X-BAPI-RECV-WINDOW": "5000"  
-    }  
-    response = requests.post(url, headers=headers)  
-    print(response.json())  
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_account_borrowable_or_collateralizable_limit(  
+        loanCurrency="USDT",  
+        collateralCurrency="BTC",  
+    ))  
     
     
     
-    const axios = require('axios');  
+    const { RestClientV5 } = require('bybit-api');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/tier';  
-    const headers = {  
-      'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
-      'X-BAPI-SIGN': 'XXXXX',  
-      'X-BAPI-TIMESTAMP': '1672211918471',  
-      'X-BAPI-RECV-WINDOW': '5000'  
-    };  
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
-    axios.post(url, {}, { headers })  
-      .then(response => console.log(response.data))  
-      .catch(error => console.error(error));  
+    client  
+      .getAccountBorrowCollateralLimit({  
+        loanCurrency: 'USDT',  
+        collateralCurrency: 'BTC',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -177,14 +190,15 @@ result| object|
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "request.success",  
         "result": {  
-            "usedLimit": "10.00",  
-            "limit": "500.00",  
-            "unit": "1",  
-            "tier": "GOLD",  
-            "autoCashback": true  
+            "collateralCurrency": "BTC",  
+            "loanCurrency": "USDT",  
+            "maxCollateralAmount": "164.957732055526752104",  
+            "maxLoanAmount": "8000000",  
+            "minCollateralAmount": "0.000412394330138818",  
+            "minLoanAmount": "20"  
         },  
         "retExtInfo": {},  
-        "time": 1672211918471  
+        "time": 1728627084863  
     }

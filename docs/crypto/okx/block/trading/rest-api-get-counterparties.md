@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-counterparties
 anchor_id: block-trading-rest-api-get-counterparties
 api_type: REST
-updated_at: 2026-05-27 19:35:41.892030
+updated_at: 2026-06-28 19:37:28.204278
 ---
 
 # Get Counterparties

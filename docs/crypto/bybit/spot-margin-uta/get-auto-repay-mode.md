@@ -2,14 +2,14 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/get-auto-repay-mode
 api_type: REST
-updated_at: 2026-05-27 19:22:12.874997
+updated_at: 2026-06-28 19:14:42.818641
 ---
 
-# Get Liability Info
+# Get Max Borrowable Amount
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/liability`
+GET`/v5/spot-margin-trade/max-borrowable`
 
 ### Request Parameters
 
@@ -22,11 +22,7 @@ currency| **true**|  string| Coin name, uppercase only
 Parameter| Type| Comments  
 ---|---|---  
 currency| string| Coin name, uppercase only  
-totalBorrowAmount| string| Total liability = borrowSize  
-fixedBorrowAmount| string| Fixed-rate liability  
-flexibleBorrowAmount| string| Floating-rate liability = borrowSize - fixedBorrowAmount  
-spotTotalBorrow| string| Spot liability + open order liability  
-derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - reservation  
+maxLoan| string| Max borrowable amount  
   
 * * *
 
@@ -39,7 +35,7 @@ derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - res
 
     
     
-    GET /v5/spot-margin-trade/liability?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -54,7 +50,7 @@ derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - res
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_liability(  
+    print(session.spot_margin_trade_get_max_borrowable(  
         currency="BTC"  
     ))  
     
@@ -70,17 +66,71 @@ derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - res
         "retCode": 0,  
         "retMsg": "Success",  
         "result": {  
-            "currency": "BTC",  
-            "totalBorrowAmount": "0.05000000",  
-            "fixedBorrowAmount": "0.02000000",  
-            "flexibleBorrowAmount": "0.03000000",  
-            "spotTotalBorrow": "0.04000000",  
-            "derivativesBorrow": "0.01000000"  
+            "maxLoan": "17.54689892",  
+            "currency": "BTC"  
         },  
         "retExtInfo": {},  
-        "time": 1756273388821  
+        "time": 1756261353733  
     }
 
 ---
 
-# Unicorn! · GitHub
+# 查詢最大可借數
+
+### HTTP 請求
+
+GET`/v5/spot-margin-trade/max-borrowable`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+currency| **true**|  string| 幣名稱，僅限大寫  
+  
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+currency| string| 幣名稱，僅限大寫  
+maxLoan| string| 最高可藉金額  
+  
+* * *
+
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "Success",  
+        "result": {  
+            "maxLoan": "17.54689892",  
+            "currency": "BTC"  
+        },  
+        "retExtInfo": {},  
+        "time": 1756261353733  
+    }

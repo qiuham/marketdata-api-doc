@@ -2,310 +2,171 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/api-broker/connection
 api_type: REST
-updated_at: 2026-05-27 19:15:57.053159
+updated_at: 2026-06-28 19:09:36.216602
 ---
 
-# Application Process
+# Broker Connection
 
-## 1\. Information Submission
+Broker Dedicated Connection is a dedicated connectivity solution for approved brokers and qualified high-volume API users. It is designed for faster and more reliable API access in latency-sensitive trading environments.
 
-Submit the following information to Bybit Business via this Email: `broker_program@bybit.com`:
+The service uses dedicated routing and optimized infrastructure to improve connection stability, reduce latency fluctuations, and support consistent execution during periods of high traffic.
 
-  * **Bybit UID** : Used to log in to the OAuth management backend.
-  * **OpenAPI Whitelist IP** : Only applicable to OpenAPI; the OAuth management backend has no IP restrictions.
+## Benefits
 
-
-
-* * *
-
-## 2\. Merchant Initialization
-
-  1. **Log in to Bybit** using the corresponding UID.
-  2. **Access the OAuth Admin Portal** :  
-Visit <https://www.bybit.com/app/user/oauth-admin>
-     * Configure **Application Name** , **Email** , upload **logo** , etc.  
-![](/docs/assets/images/oauth-redirect-url-c4a7907e15a702366f747de41cc92c00.jpg)
-  3. **Core Parameter`redirect_uri`**:
-     * Multiple callback addresses can be configured.
-     * The `redirect_uri` passed when invoking the page must be configured in the management backend.
-     * If the passed value does not match the configuration, it defaults to the first address.
-  4. **After Successful Application** :
-     * You will receive `client_id` and `client_secret`.
-     * **Important** : Securely store this information and do not share it with others.
+  * Lower and more stable latency compared with shared public API routes.
+  * Improved execution consistency for order placement, amendments, and cancellations.
+  * Better private WebSocket push delivery.
+  * Improved access to low-latency market data during high-traffic periods.
+  * Support for SBE order entry and SBE market data workflows.
 
 
 
-* * *
+## Supported products and paths
 
-## API Integration
+Broker Dedicated Connection supports Spot, Linear Futures, Inverse Futures, and Options.
 
-### 1\. Construct Authorization Page
-    
-    
-    https://www.bybit.com/en/oauth?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openapi&state={state}  
-    
-
-Parameter| Description  
+Version| Path  
 ---|---  
-`client_id`| Obtained after merchant initialization.  
-`response_type`| Fixed value: `code`.  
-`scope`| Pass `openapi`; other values require confirmation with Bybit.  
-`state`| Random string.  
-`redirect_uri`| The address to redirect to after user authorization; must be configured in the management backend.  
+V5| `/v5/private/*`  
+V5| `/v5/private-sbe/*`  
+V5| `/v5/trade`  
+V5| `/v5/trade-sbe`  
+V5| `/v5/public/*`  
+V5| `/v5/public-sbe/*`  
   
-* * *
-
-### 2\. Authorization Success Callback
-
-After the user confirms authorization, the page redirects (301) to `redirect_uri` with the parameter `code`.  
-**Example** :  
-If `redirect_uri = https://www.example.com/callback`, the callback URL will be: 
+Use the dedicated hostname provided by Bybit with the same V5 WebSocket path structure:
     
     
-    https://www.example.com/callback/?response_type=code&code=sSn87036PCFub1g0FGigexSjT&scope=openapi&state=1234abc  
+    wss://{dedicated hostname}/v5/trade  
+    wss://{dedicated hostname}/v5/private  
+    wss://{dedicated hostname}/v5/public-sbe/linear  
     
 
-Parameter| Description  
----|---  
-`code`| Core parameter; used by the merchant backend to obtain `access_token`.  
-  
-* * *
+## Eligibility
 
-### 3\. Obtain Access Token
+Broker Dedicated Connection is available to approved brokers and qualified high-volume API users.
 
-  * **URL** : `https://api2.bybit.com/oauth/v1/public/access_token`
-  * **Method** : `POST`
+Applicants must meet at least one of the following requirements:
 
-
-
-#### Request Example
-    
-    
-    curl -v -X POST {url} \  
-      -H 'Content-Type: application/x-www-form-urlencoded' \  
-      -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \  
-      -d 'client_id={client_id}' \  
-      -d 'client_secret={client_secret}' \  
-      -d 'code={code}'    # Note: Code can only be used once.  
-    
-
-#### Response Example
-    
-    
-    {  
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjcwODM5NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiJPNmZ0QkdTYVdEIn0.Vq46cxPIzKmWz5fFwU4fQuF-IDqFJDOIelNLnH8r2Oo",  
-        "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Njk1ODk1NDEsIkNsaWVudElEIjoiQThmMzNFeEVTeEhjIiwiR3JhbnRNZW1iZXJJRCI6MTA2MzEwNzQxLCJBcHByb3ZlZFNjb3BlIjpbIm9wZW5hcGkiXSwiTm9uY2UiOiIwaVZMWVY3Z1pGIn0.ByGH8d5XtSQnkbxeyiXd56iJUTddBWjqFK8_EcAw48w",  
-        "token_type": "bearer",  
-        "expires_in": 86400,  
-        "refresh_token_expires_in": 2592000  
-    }  
-    
-
-* * *
-
-### 4\. Obtain OpenAPI
-
-  * **URL** : `https://api2.bybit.com/oauth/v1/resource/restrict/openapi`
-  * **Method** : `GET`
-  * **Authorization** : Include the `Authorization` header formatted as `"Bearer {access_token}"`.  
-**Example** : If `access_token = "12345"`, then `Authorization = "Bearer 12345"`.
+  * Monthly Spot trading volume of 10,000,000 USDT or equivalent.
+  * Monthly Derivatives trading volume of 500,000,000 USDT or equivalent.
+  * At least 60 referred users.
 
 
 
-#### Request Example
-    
-    
-    curl {url} \  
-      -H "Authorization: Bearer {access_token}"  
-    
+For questions about broker eligibility, contact `broker_program@bybit.com`.
 
-#### Response Example
-    
-    
-    {  
-      "ret_code": 0,  
-      "ret_msg": "success",  
-      "result": {  
-        "api_key": "xxxxxxx",  
-        "api_secret": "xxxxx"  
-      }  
-    }  
-    
+## Application process
 
-* * *
+After approval from your Broker Account Manager, contact `api_services@bybit.com` or your dedicated broker support group with:
 
-### Notes
+  * Entity name
+  * Main UID
+  * Estimated API throughput
+  * IP addresses or CIDR ranges, up to 10 entries
 
-  * The `code` parameter from the authorization callback is single-use and expires quickly.
-  * Store `client_secret` and `api_secret` securely and never expose them publicly.
+
+
+Applications are typically reviewed within 3 business days.
+
+## Integration steps
+
+  1. Confirm the products and V5 paths your system will route through the dedicated connection.
+  2. Prepare the source IP addresses or CIDR ranges used by your production infrastructure.
+  3. Submit the application details through your Broker Account Manager, `api_services@bybit.com`, or your dedicated broker support group.
+  4. After approval, replace the public hostname with the dedicated hostname provided by Bybit for supported paths.
+  5. Keep the same authentication, signing, retry, and reconnect logic required by each standard V5 API path.
+  6. Monitor latency variation, reconnect behavior, private push delivery, and order workflow consistency after migration.
+
+
+
+## Operational notes
+
+  * Keep assigned dedicated hostnames confidential.
+  * Update the IP whitelist before changing production egress IPs.
+  * Route unsupported paths through the standard API hostname.
+  * For broker OAuth setup, see [OAuth Integration Guidance](/docs/v5/broker/api-broker/guidance).
 
 ---
 
-# 申請流程
+# 經紀商專屬鏈路連線
 
-## 1\. 信息提交
+Broker Dedicated Connection 是面向已批准經紀商與符合條件的高交易量 API 用戶的專屬連線解決方案。它適用於對延遲敏感的交易環境，提供更快速且更可靠的 API 接入。
 
-通过邮箱（[broker_program@bybit.com](mailto:broker_program@bybit.com)）向 Bybit 商務提交以下信息：
+該服務透過專屬路由與優化基礎設施，提高連線穩定性，降低延遲波動，並支援高流量期間更一致的執行表現。
 
-  * **Bybit UID**  
-用於登陸 OAuth 管理後台
+## 優勢
 
-  * **OpenAPI 白名單 IP**  
-僅作用於 OpenAPI（OAuth 管理後台沒有 IP 限制）
-
-
-
-
-* * *
-
-## 2\. 商戶初始化
-
-  1. **登陸 Bybit**  
-使用對應的 UID 登陸 Bybit 賬戶
-
-  2. **訪問管理後台**  
-打開連結：<https://www.bybit.com/app/user/oauth-admin>
-
-     * 設定 Application Name
-     * 設定 Email
-     * 上傳 Logo
-     * 其他相關操作  
-![](/docs/zh-TW/assets/images/oauth-redirect-url-c4a7907e15a702366f747de41cc92c00.jpg)
-  3. **核心參數配置**  
-**redirect_uri** ：
-
-     * 可設定多個回調地址
-     * 喚起頁面傳入的 redirect_uri 必須在管理後台配置
-     * 如傳入與配置不匹配，默認跳轉到第一個地址
-  4. **獲取憑證**
-
-     * 申請成功後，會收到 client_id 和 client_secret
-     * **重要** ：請務必妥善保存此信息，不要對他人展示
+  * 相較共享 stream.bybit.com 路由，延遲更低且更穩定。
+  * 提升下單、改單與撤單的執行一致性。
+  * 改善私有 WebSocket 推送交付。
+  * 在高流量期間改善低延遲行情資料接入。
+  * 支援 SBE 下單與 SBE 行情資料流程。
 
 
 
-* * *
+## 支援產品與路徑
 
-## 接口調試
+Broker Dedicated Connection 支援現貨、USDT/USDC 合約、幣本位合約與期權。
 
-### 1\. 拼接授權頁面
-    
-    
-    https://www.bybit.com/en/oauth/en/oauth?  
-    client_id={client_id}&  
-    response_type=code&  
-    redirect_uri={redirect_uri}&  
-    scope=openapi&  
-    state={state}  
-    
-
-參數| 說明| 備註  
----|---|---  
-`client_id`| 商戶身份標識| 商戶初始化完成後獲得  
-`response_type`| 響應類型| 固定值：`code`  
-`scope`| 權限範圍| 傳 `openapi`（其他值需與 Bybit 確認）  
-`state`| 狀態參數| 隨機字符串，防 CSRF 攻擊  
-`redirect_uri`| 回調地址| 必須在管理後台配置  
+版本| 路徑  
+---|---  
+V5| `/v5/private/*`  
+V5| `/v5/private-sbe/*`  
+V5| `/v5/trade`  
+V5| `/v5/trade-sbe`（6月主網）  
+V5| `/v5/public/*`  
+V5| `/v5/public-sbe/*`  
   
-* * *
-
-### 2\. 授權成功回調
-
-用戶確認授權後，頁面將會 301 重定向至 redirect_uri 並攜帶參數 code
-
-**示例** ：
+使用 Bybit 提供的專屬 hostname，並保持相同的 V5 WebSocket 路徑結構:
     
     
-    # 假設 redirect_uri = https://www.example.com/callback  
-    # 回調後的 URL：  
-    https://www.example.com/callback/?  
-    response_type=code&  
-    code=sSn87036PCFub1g0FGigexSjT&  
-    scope=openapi&  
-    state=1234abc  
+    wss://{dedicated hostname}/v5/trade  
+    wss://{dedicated hostname}/v5/private  
+    wss://{dedicated hostname}/v5/public-sbe/linear  
     
 
-參數| 說明| 用途  
----|---|---  
-`code`| 授權碼| 核心參數，用於獲取 access_token  
-  
-* * *
+## 申請資格
 
-### 3\. 獲取 access_token
+Broker Dedicated Connection 面向已批准經紀商與符合條件的高交易量 API 用戶開放。
 
-**接口信息** ：
+申請人必須至少滿足以下任一要求:
 
-  * **URL** : <https://api2.bybit.com/oauth/v1/public/access_token>
-  * **方法** : POST
+  * 月現貨交易量達 10,000,000 USDT 或等值資產。
+  * 月衍生品交易量達 500,000,000 USDT 或等值資產。
+  * 至少有 60 名邀請用戶。
 
 
 
-**請求示例** ：
-    
-    
-    curl -v -X POST {url} \  
-      -H 'Content-Type: application/x-www-form-urlencoded' \  
-      -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36' \  
-      -d 'client_id={client_id}' \  
-      -d 'client_secret={client_secret}' \  
-      -d 'code={code}'    # 注意：code 只能使用 1 次  
-    
+如需諮詢經紀商資格，請聯繫 `broker_program@bybit.com`。
 
-**響應示例** ：
-    
-    
-    {  
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",  
-      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",  
-      "token_type": "bearer",  
-      "expires_in": 86400,  
-      "refresh_token_expires_in": 2592000  
-    }  
-    
+## 申請流程
 
-* * *
+經 Broker Account Manager 批准後，請聯繫 `api_services@bybit.com` 或您的專屬經紀商支援群組，並提供以下資料:
 
-### 4\. 獲取 OpenAPI
-
-**接口信息** ：
-
-  * **URL** : <https://api2.bybit.com/oauth/v1/resource/restrict/openapi>
-  * **方法** : GET
-  * **認證** : 需要在請求頭中攜帶 Authorization 信息  
-格式：`Bearer {access_token}`  
-示例：`Authorization: Bearer 12345`
+  * 實體名稱
+  * 主 UID
+  * 預估 API 吞吐量
+  * IP 位址或 CIDR 範圍，最多 10 個條目
 
 
 
-#### 請求示例
-    
-    
-    curl {url} \  
-      -H "Authorization: Bearer {access_token}"  
-    
+申請通常會在 3 個工作日內完成審核。
 
-#### 響應示例
-    
-    
-    {  
-      "ret_code": 0,  
-      "ret_msg": "success",  
-      "result": {  
-        "api_key": "xxxxxxx",  
-        "api_secret": "xxxxx"  
-      }  
-    }  
-    
+## 接入步驟
 
-* * *
+  1. 確認系統將透過專屬連線路由的產品與 V5 路徑。
+  2. 準備生產基礎設施使用的源 IP 位址或 CIDR 範圍。
+  3. 透過您的 Broker Account Manager、`api_services@bybit.com` 或專屬經紀商支援群組提交申請資料。
+  4. 審核通過後，針對支援路徑，將公共 hostname 替換為 Bybit 提供的專屬 hostname。
+  5. 保持每個標準 V5 API 路徑要求的相同鑑權、簽名、重試與重連邏輯。
+  6. 遷移後監控延遲波動、重連行為、私有推送交付以及訂單流程一致性。
 
-### 注意事項
 
-  1. **安全存儲**  
-client_secret 和 api_secret 需安全存儲，切勿泄露
 
-  2. **Code 使用限制**  
-授權碼（code）為一次性使用，请在有效時間内使用
+## 運維注意事項
 
-  3. **參數配置驗證**  
-確保所有參數（特別是 redirect_uri）已在管理後台正確配置
+  * 對已分配的專屬 hostname 保密。
+  * 在生產出口 IP 變更前，請先更新 IP 白名單。
+  * 將不支援的路徑路由至標準 API hostname。
+  * 關於經紀商 OAuth 配置，請參考 [OAuth 接入文檔](/docs/zh-TW/v5/broker/api-broker/guidance)。

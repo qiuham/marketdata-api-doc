@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-asset-bills-history
 anchor_id: funding-account-rest-api-asset-bills-history
 api_type: REST
-updated_at: 2026-05-27 19:36:30.490213
+updated_at: 2026-06-28 19:38:16.177550
 ---
 
 # Asset bills history
@@ -201,6 +201,11 @@ type | String | No | Bill type
 `408`: Auto earn interest (USDG earn)  
 `476`: Transferred out to Cloud Exchange  
 `477`: Transferred in from Cloud Exchange  
+thirdPartyType | String | No | Third-party custody type. If not specified, defaults to `1` (for backward compatibility).  
+`1`: Copper  
+`2`: Komainu  
+`5`: SCB  
+When a master account is bound to multiple custody providers, use this parameter to filter bills by the specified custody provider. Applicable to bill types `284`–`289`.  
 clientId | String | No | Client-supplied ID for transfer or withdrawal  
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 after | String | No | Pagination of data to return records earlier than the requested `ts` or `billId`, Unix timestamp format in milliseconds, e.g. `1597026383085`  
@@ -442,6 +447,11 @@ type | String | 否 | 账单类型
 `408`：自动赚币（USDG赚币）利息  
 `476`：云交易所转出  
 `477`：云交易所转入  
+thirdPartyType | String | 否 | 第三方托管类型。不填则默认为 `1`（向后兼容）。  
+`1`：Copper  
+`2`：Komainu  
+`5`：SCB  
+当母账户绑定多家托管商时，使用此参数可筛选指定托管商的账单。适用于账单类型 `284`–`289`。  
 clientId | String | 否 | 转账或提币的客户自定义ID  
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 after | String | 否 | 查询在此之前的内容，值为时间戳或账单记录ID，Unix 时间戳为毫秒数格式，如 `1597026383085`  

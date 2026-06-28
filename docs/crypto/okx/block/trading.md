@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading
 anchor_id: block-trading
 api_type: API
-updated_at: 2026-05-27 19:35:40.815995
+updated_at: 2026-06-28 19:37:27.119468
 ---
 
 # Block Trading
@@ -6497,7 +6497,7 @@ code | String | 结果代码，0 表示成功。
 msg | String | 错误信息，如果代码不为 0，则不为空。  
 data | Array of objects | 包含结果的对象数组.  
 > strategy | String | 期权策略, 如 `CALL_CALENDAR_SPREAD`  
-> cTime | String | 执行创建的时间，Unix时间戳的毫秒数格式。  
+> cTime | String | 成交时间，Unix时间戳的毫秒数格式。  
 > blockTdId | String | 大宗交易ID  
 > groupId | String | 组合询价单ID  
 只适用于组合询价单，普通询价单返回 ""  

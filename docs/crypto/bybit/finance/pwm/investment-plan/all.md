@@ -2,20 +2,24 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/all
 api_type: REST
-updated_at: 2026-05-27 19:17:56.448984
+updated_at: 2026-06-28 19:11:44.981972
 ---
 
-# Get Asset Trend
+# Get Fund Historical NAV
+
+info
+
+The maximum allowed time range between `startTime` and `endTime` is **180 days**.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+GET`/v5/earn/pwm/investment-plan/fund-nav`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID  
+fundId| **true**|  string| Fund ID  
 startTime| false| int| Start timestamp (ms). Default: current time minus 7 days  
 endTime| false| int| End timestamp (ms). Default: current time  
   
@@ -23,17 +27,20 @@ endTime| false| int| End timestamp (ms). Default: current time
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-dataPoints| array| Asset data point list, sorted in ascending order by date  
+fundId| string| Fund ID  
+fundName| string| Fund name  
+coin| string| Fund denomination coin  
+currentNav| string| Latest NAV (= currentShareValue / initialShareValue)  
+dataPoints| array| NAV data point list, sorted in ascending order by date  
 > date| string| Date in `YYYY-MM-DD` format  
-> assetValueUsd| string| Total plan assets on that day (USD valuation), taken from the daily settlement snapshot  
+> nav| string| NAV for that day, taken from the daily settlement snapshot  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/fund-nav?fundId=2001 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -47,15 +54,18 @@ dataPoints| array| Asset data point list, sorted in ascending order by date
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
+            "fundId": "2001",  
+            "fundName": "Market Neutral Alpha",  
+            "coin": "USDT",  
+            "currentNav": "1.035",  
             "dataPoints": [  
                 {  
                     "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
+                    "nav": "1.028"  
                 },  
                 {  
                     "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
+                    "nav": "1.031"  
                 }  
             ]  
         }  
@@ -63,17 +73,21 @@ dataPoints| array| Asset data point list, sorted in ascending order by date
 
 ---
 
-# 查詢資產趨勢曲線
+# 查詢基金歷史淨值
+
+信息
+
+`startTime` 與 `endTime` 的時間範圍最多為 **180 天** 。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+GET`/v5/earn/pwm/investment-plan/fund-nav`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID  
+fundId| **true**|  string| 基金ID  
 startTime| false| int| 起始時間戳（ms），默認當前時間-7天  
 endTime| false| int| 結束時間戳（ms），默認當前時間  
   
@@ -81,17 +95,20 @@ endTime| false| int| 結束時間戳（ms），默認當前時間
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-dataPoints| array| 資產數據點列表，按日期升序排列  
+fundId| string| 基金ID  
+fundName| string| 基金名稱  
+coin| string| 基金計價幣種  
+currentNav| string| 最新淨值（= currentShareValue / initialShareValue）  
+dataPoints| array| 淨值數據點列表，按日期升序排列  
 > date| string| 日期，格式 `YYYY-MM-DD`  
-> assetValueUsd| string| 當日計劃總資產（USD估值），取每日結算快照值  
+> nav| string| 當日淨值，取每日結算快照  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/fund-nav?fundId=2001 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -105,15 +122,18 @@ dataPoints| array| 資產數據點列表，按日期升序排列
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
+            "fundId": "2001",  
+            "fundName": "Market Neutral Alpha",  
+            "coin": "USDT",  
+            "currentNav": "1.035",  
             "dataPoints": [  
                 {  
                     "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
+                    "nav": "1.028"  
                 },  
                 {  
                     "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
+                    "nav": "1.031"  
                 }  
             ]  
         }  

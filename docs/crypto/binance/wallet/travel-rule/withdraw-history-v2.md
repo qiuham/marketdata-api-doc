@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/travel-rule/withdraw-history-v2
 api_type: REST
-updated_at: 2026-05-27 19:00:12.707435
+updated_at: 2026-06-28 18:55:04.145140
 ---
 
 # Withdraw Questionnaire Contents (for existing local entities)
@@ -17,6 +17,7 @@ updated_at: 2026-05-27 19:00:12.707435
   * [India](/docs/wallet/travel-rule/withdraw-questionnaire#india)
   * [EU(Poland,France)](/docs/wallet/travel-rule/withdraw-questionnaire#eupolandfrance)
   * [South Africa](/docs/wallet/travel-rule/withdraw-questionnaire#south-africa)
+  * [Australia](/docs/wallet/travel-rule/withdraw-questionnaire#australia)
 
 
 
@@ -211,6 +212,33 @@ declaration| BOOLEAN| YES| Declaration confirmation
 >   4. Required when `sendTo` is `2`.
 >   5. Required when `vasp` is `others`.
 >   6. The `Vasp List` API provides the VASP and identifier information. If the VASP cannot be found, please input `others` within `vasp` and the name of the exchange within `vaspName` field.
+> 
+
+
+## Australia[​](/docs/wallet/travel-rule/withdraw-questionnaire#australia "Direct link to Australia")
+
+Name| Type| Mandatory| Description  
+---|---|---|---  
+isAddressOwner| INTEGER| YES| 1:Send to myself, 2:Send to another beneficiary  
+bnfType| INTEGER| YES *1| 0:Individual, 1:Corporate/Entity  
+bnfFirstName| STRING| YES *2| Individual beneficiary first name. For more information please refer to the `Name restrictions` section in the `appendix`.  
+bnfLastName| STRING| YES *2| Individual beneficiary last name. For more information please refer to the `Name restrictions` section in the `appendix`.  
+country| STRING| YES *2| Beneficiary country code, ISO 2 digit, lower case. Obtained from `Country List` API.  
+city| STRING| YES *2| Beneficiary city/town. Obtained from `Region List` API (`regionName` value).  
+bnfCorpName| STRING| YES *3| Beneficiary corporation name.  
+bnfCorpCountry| STRING| YES *3| Beneficiary corporation country code, ISO 2 digit, lower case. Obtained from `Country List` API.  
+bnfCorpCity| STRING| YES *3| Beneficiary corporation city/town. Obtained from `Region List` API (`regionName` value).  
+sendTo| INTEGER| YES| 1:Private Wallet, 2:Another VASP  
+vasp| STRING| YES *4| VASP identifier of the beneficiary  
+vaspName| STRING| YES *5| VASP Name  
+declaration| BOOLEAN| YES| Declaration confirmation  
+  
+>   1. Required when `isAddressOwner` is `2`.
+>   2. Required when `bnfType` is `0`(Individual).
+>   3. Required when `bnfType` is `1`(Corporate/Entity).
+>   4. Required when `sendTo` is `2`.
+>   5. Required when `vasp` is `others`.
+>   6. The `Vasp List` API provides the VASP and identifier information. If the VASP cannot be found, please input `others` within `vasp` and the name of the exchange within `vaspName` field.
 >
 
 ---
@@ -227,6 +255,7 @@ declaration| BOOLEAN| YES| Declaration confirmation
   * [印度](/docs/zh-CN/wallet/travel-rule/withdraw-questionnaire#%E5%8D%B0%E5%BA%A6)
   * [欧洲(波兰,法国)](/docs/zh-CN/wallet/travel-rule/withdraw-questionnaire#%E6%AC%A7%E6%B4%B2%E6%B3%A2%E5%85%B0%E6%B3%95%E5%9B%BD)
   * [南非](/docs/zh-CN/wallet/travel-rule/withdraw-questionnaire#%E5%8D%97%E9%9D%9E)
+  * [澳大利亚](/docs/zh-CN/wallet/travel-rule/withdraw-questionnaire#%E6%BE%B3%E5%A4%A7%E5%88%A9%E4%BA%9A)
 
 
 
@@ -419,4 +448,31 @@ declaration| BOOLEAN| YES|
 >   4. 当 `sendTo` 是 `2` 时必填.
 >   5. 当 `vasp` 是 `others` 时必填.
 >   6. `Vasp List` 接口提供 VASP 及其标识符信息。如果`vasp`不在`预先加载VASP列表`中, `vasp`字段请填`others`, `vaspName`字段请填交易所的名字。
+> 
+
+
+## 澳大利亚[​](/docs/zh-CN/wallet/travel-rule/withdraw-questionnaire#澳大利亚 "澳大利亚的直接链接")
+
+名称| 类型| 是否必需| 描述  
+---|---|---|---  
+isAddressOwner| INTEGER| YES| 1:发给自己，2:发给其他收款人  
+bnfType| INTEGER| YES *1| 0:个人账户，1:企业账户  
+bnfFirstName| STRING| YES *2| 个人收款人名。姓名的相关信息，请参阅`附录`中的`姓名限制`部分。  
+bnfLastName| STRING| YES *2| 个人收款人姓。姓名的相关信息，请参阅`附录`中的`姓名限制`部分。  
+country| STRING| YES *2| 收款人国家二位字母代码(ISO-3166)，必须为小写。通过`国家列表`接口获取。  
+city| STRING| YES *2| 收款人城市/城镇。通过`地区列表`接口获取（使用 `regionName` 值）。  
+bnfCorpName| STRING| YES *3| 收款人公司名称。  
+bnfCorpCountry| STRING| YES *3| 收款人公司国家二位字母代码(ISO-3166)，必须为小写。通过`国家列表`接口获取。  
+bnfCorpCity| STRING| YES *3| 收款人公司城市/城镇。通过`地区列表`接口获取（使用 `regionName` 值）。  
+sendTo| INTEGER| YES| 1:私有钱包，2:其他 VASP  
+vasp| STRING| YES *4| 收款人的 VASP identifier  
+vaspName| STRING| YES *5| VASP 名称  
+declaration| BOOLEAN| YES| 声明确认  
+  
+>   1. 当 `isAddressOwner` 是 `2` 时必填。
+>   2. 当 `bnfType` 是 `0`（个人）时必填。
+>   3. 当 `bnfType` 是 `1`（公司/实体）时必填。
+>   4. 当 `sendTo` 是 `2` 时必填。
+>   5. 当 `vasp` 是 `others` 时必填。
+>   6. `Vasp List` 接口提供 VASP 及其标识符信息。如果 `vasp` 不在`预先加载VASP列表`中，`vasp`字段请填 `others`，`vaspName` 字段请填交易所的名字。
 >

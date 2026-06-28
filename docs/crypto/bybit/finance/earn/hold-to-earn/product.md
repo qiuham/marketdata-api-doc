@@ -2,65 +2,64 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-05-27 19:17:39.789936
+updated_at: 2026-06-28 19:11:27.635172
 ---
 
-# Get Airdrop Products
-
-info
-
-Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
+# Get All Fund Orders
 
 ### HTTP Request
 
-GET`/v5/earn/hold-to-earn/product`
+GET`/v5/earn/pwm/asset-manager/all-order`
 
 ### Request Parameters
 
-None
+Parameter| Required| Type| Comments  
+---|---|---|---  
+fundId| false| string| Filter by fund ID. Returns orders for all managed funds if omitted  
+orderType| false| string| Order type filter: `Subscribe` / `Redeem`. Returns all if omitted  
+status| false| string| Order status filter: `Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`. Returns all if omitted  
+startTime| false| integer| Start time in milliseconds. See time range rules below  
+endTime| false| integer| End time in milliseconds. See time range rules below  
+limit| false| integer| Page size. Default: `20`, max: `50`  
+cursor| false| string| Pagination cursor (uses order `orderId` as cursor)  
+  
+Time Range Rules
+
+  * Neither `startTime` nor `endTime` passed: returns data from the last 7 days
+  * Both passed: returns data from `max(endTime - 7 days, startTime)` to `endTime`
+  * Only `startTime` passed: returns data from `startTime` to `startTime + 7 days`
+  * Only `endTime` passed: returns data from `endTime - 7 days` to `endTime`
+
+
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-products| array| Object  
-> coinName| string| Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`  
-> yields| array| Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)  
->> coinName| string| Yield coin name  
->> apy| string| Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin  
-> status| string| Product stage, `NotStarted`, `Online`, `Ended`  
-> apy| string| Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday  
-> announcementUrl| string| Activity rules announcement URL  
+list| array| Order list  
+> orderId| string| Unique order identifier  
+> fundId| string| Fund ID  
+> fundName| string| Fund name  
+> accountUid| string| Fund main sub-account UID  
+> orderType| string| Order type: `Subscribe` / `Redeem`  
+> coin| string| Coin  
+> amount| string| Order amount (base coin). Subscription orders only; empty for redemption orders  
+> shares| string| Order shares. Redemption orders only; empty for subscription orders  
+> status| string| Order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`  
+> createdTime| string| Order creation timestamp (milliseconds)  
+nextPageCursor| string| Next page cursor. Empty string indicates no more data  
   
-info
-
-  * Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
-  * When `coinName != yields.coinName`, it is a cross-coin airdrop
-  * Results are sorted by product creation time, newest first.
-
-
-
 * * *
 
 ### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -68,109 +67,95 @@ info
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "products": [  
+            "list": [  
                 {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",  
-                    "apy": "0.210604%"  
+                    "orderId": "768",  
+                    "fundId": "100001",  
+                    "fundName": "Alpha BTC Strategy Fund",  
+                    "accountUid": "800001",  
+                    "orderType": "Subscribe",  
+                    "coin": "BTC",  
+                    "amount": "10.00000000",  
+                    "shares": "",  
+                    "status": "Completed",  
+                    "createdTime": "1700000000000"  
                 },  
                 {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",  
-                    "apy": "0.029978%"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",  
-                    "apy": "10%"  
+                    "orderId": "769",  
+                    "fundId": "100001",  
+                    "fundName": "Alpha BTC Strategy Fund",  
+                    "accountUid": "800002",  
+                    "orderType": "Redeem",  
+                    "coin": "BTC",  
+                    "amount": "",  
+                    "shares": "5000.00",  
+                    "status": "Pending Review",  
+                    "createdTime": "1700100000000"  
                 }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1779348459085  
+            ],  
+            "nextPageCursor": ""  
+        }  
     }
 
 ---
 
-# 獲取空投產品列表
-
-信息
-
-不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
+# 查詢機構相關基金全部訂單列表
 
 ### HTTP 請求
 
-GET`/v5/earn/hold-to-earn/product`
+GET`/v5/earn/pwm/asset-manager/all-order`
 
 ### 請求參數
 
-無
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+fundId| false| string| 篩選基金ID，不傳返回所有管轄基金的訂單  
+orderType| false| string| 訂單類型篩選：`Subscribe` / `Redeem`，不傳返回全部  
+status| false| string| 訂單狀態篩選：`Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`，不傳返回全部  
+startTime| false| integer| 起始時間毫秒時間戳，時間範圍規則見下方說明  
+endTime| false| integer| 結束時間毫秒時間戳，時間範圍規則見下方說明  
+limit| false| integer| 每頁數量，默認 `20`，最大 `50`  
+cursor| false| string| 分頁游標（使用訂單 `orderId` 作為游標）  
+  
+時間範圍規則
+
+  * `startTime` 和 `endTime` 都不傳：默認返回最近7天數據
+  * 都傳入：查詢 `max(endTime - 7天, startTime)` 到 `endTime` 的數據
+  * 只傳 `startTime`：查詢 `startTime` 到 `startTime + 7天` 的數據
+  * 只傳 `endTime`：查詢 `endTime - 7天` 到 `endTime` 的數據
+
+
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-products| array| Object  
-> coinName| string| **投資幣種** 名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）  
-> yields| string| **收益幣種** 明細  
->> coinName| string| 收益幣種  
->> apy| string| 該收益幣種**昨日 APR** ，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`  
-> status| string| 產品當前階段，`NotStarted`, `Online`, `Ended`  
-> apy| string| **昨日綜合APR** ，昨日無收益時返回 `"0%"`  
-> announcementUrl| string| **活動規則連結** （公告頁 URL）  
+list| array| 訂單列表  
+> orderId| string| 訂單唯一標識  
+> fundId| string| 基金ID  
+> fundName| string| 基金名稱  
+> accountUid| string| 基金主子賬戶UID  
+> orderType| string| 訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）  
+> coin| string| 幣種  
+> amount| string| 訂單金額（本位幣），僅申購訂單有值，贖回訂單為空  
+> shares| string| 訂單份額，僅贖回訂單有值，申購訂單為空  
+> status| string| 訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）  
+> createdTime| string| 訂單創建時間戳（毫秒）  
+nextPageCursor| string| 下一頁游標，為空表示無更多數據  
   
-信息
-
-  * 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
-  * 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
-  * 結果按產品創建時間倒序排列（較新在前）。
-
-
-
 * * *
 
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -178,47 +163,34 @@ products| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "products": [  
+            "list": [  
                 {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page",  
-                    "apy": "0.210604%"  
+                    "orderId": "768",  
+                    "fundId": "100001",  
+                    "fundName": "Alpha BTC Strategy Fund",  
+                    "accountUid": "800001",  
+                    "orderType": "Subscribe",  
+                    "coin": "BTC",  
+                    "amount": "10.00000000",  
+                    "shares": "",  
+                    "status": "Completed",  
+                    "createdTime": "1700000000000"  
                 },  
                 {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page",  
-                    "apy": "0.029978%"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page",  
-                    "apy": "10%"  
+                    "orderId": "769",  
+                    "fundId": "100001",  
+                    "fundName": "Alpha BTC Strategy Fund",  
+                    "accountUid": "800002",  
+                    "orderType": "Redeem",  
+                    "coin": "BTC",  
+                    "amount": "",  
+                    "shares": "5000.00",  
+                    "status": "Pending Review",  
+                    "createdTime": "1700100000000"  
                 }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1779348459085  
+            ],  
+            "nextPageCursor": ""  
+        }  
     }

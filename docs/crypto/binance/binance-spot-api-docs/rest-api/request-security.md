@@ -2,3960 +2,3231 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/request-security
 api_type: REST
-updated_at: 2026-05-27 18:54:31.285860
+updated_at: 2026-06-28 18:49:52.787758
 ---
 
-# Trading endpoints
+# CHANGELOG for Binance SPOT Testnet
 
-### New order (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade "Direct link to New order \(TRADE\)")
-    
-    
-    POST /api/v3/order  
-    
+**Last Updated: 2026-06-24**
 
-Send in a new order.
+**Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/). This is not always synced with the live exchange.
 
-This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
+### 2026-06-24[​](/docs/binance-spot-api-docs/testnet#2026-06-24 "Direct link to 2026-06-24")
 
-**Weight:** 1
+  * Beginning at **2026-07-02 07:00 UTC** , [WebSocket Streams](/docs/binance-spot-api-docs/testnet/web-socket-streams) will undergo an infrastructure upgrade and will approximately take up to an hour.
+  * During the upgrade, your WebSocket connection may be disconnected; please reconnect to restore your connection.
 
-**Unfilled Order Count:** 1
 
-**Parameters:**
 
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES| Please see [Enums](/docs/binance-spot-api-docs/enums#side) for supported values.  
-type| ENUM| YES| Please see [Enums](/docs/binance-spot-api-docs/enums#ordertypes) for supported values.  
-timeInForce| ENUM| NO| Please see [Enums](/docs/binance-spot-api-docs/enums#timeinforce) for supported values.  
-quantity| DECIMAL| NO|   
-quoteOrderQty| DECIMAL| NO|   
-price| DECIMAL| NO|   
-newClientOrderId| STRING| NO| A unique id among open orders. Automatically generated if not sent.  
-Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.  
-strategyId| LONG| NO|   
-strategyType| INT| NO| The value cannot be less than `1000000`.  
-stopPrice| DECIMAL| NO| Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.  
-trailingDelta| LONG| NO| See [Trailing Stop order FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq).  
-icebergQty| DECIMAL| NO| Used with `LIMIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` to create an iceberg order.  
-newOrderRespType| ENUM| NO| Set the response JSON. `ACK`, `RESULT`, or `FULL`; `MARKET` and `LIMIT` order types default to `FULL`, all other orders default to `ACK`.  
-selfTradePreventionMode| ENUM| NO| The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes).  
-pegPriceType| ENUM| NO| `PRIMARY_PEG` or `MARKET_PEG`.   
-See [Pegged Orders Info](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetValue| INT| NO| Price level to peg the price to (max: 100).   
-See [Pegged Orders Info](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetType| ENUM| NO| Only `PRICE_LEVEL` is supported.   
-See [Pegged Orders Info](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
+* * *
+
+### 2026-06-22[​](/docs/binance-spot-api-docs/testnet#2026-06-22 "Direct link to 2026-06-22")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 3:1 schema will be retired on 2026-06-29, [6 months after being deprecated](/docs/binance-spot-api-docs/faqs/sbe_faq#regarding-legacy-support).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2026-06-10[​](/docs/binance-spot-api-docs/testnet#2026-06-10 "Direct link to 2026-06-10")
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api "Direct link to FIX API")
+
+  * Documentation update: removed `LastFragment (893)` from [FIX API](/docs/binance-spot-api-docs/testnet/fix-api#marketdataincrementalrefresh). 
+    * As [previously announced](/docs/binance-spot-api-docs/testnet#2025-11-28), `MarketDataIncrementalRefresh <X>` messages stopped being fragmented on 2025-12-02, and the server no longer sends `LastFragment (893)`.
+    * The field has been removed from the [FIX API](/docs/binance-spot-api-docs/testnet/fix-api) field list and from the corresponding [QuickFIX MD schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml).
+  * Documentation update: updated the [News `<B>`](/docs/binance-spot-api-docs/testnet/fix-api#news-b) message description to be consistent with the announcement from [2026-06-09](/docs/binance-spot-api-docs/testnet#2026-06-09).
+
+
+
+* * *
+
+### 2026-06-09[​](/docs/binance-spot-api-docs/testnet#2026-06-09 "Direct link to 2026-06-09")
+
+**Update:**
+
+  * Updated the [Price Range Execution Rule FAQ](/docs/binance-spot-api-docs/faqs/price_range_execution_rules#externalCalculationId1) with new External Reference Price Calculation Methods.
+
+
+
+The `serverShutdown` event will be sent when the **server is about to be shut down** ; when you receive this event, please disconnect and open a new connection.
+
+All mention of a fixed time before the server shuts down has been removed from the documentation.
+
+  * Documented the `serverShutdown` event in [SBE Market Data Streams](/docs/binance-spot-api-docs/testnet/sbe-market-data-streams#serverShutdown). 
+    * ~~`serverShutdown` event will be sent 10 minutes before disconnection.~~
+    * Please establish a new connection as soon as possible to prevent connection interruption.
+    * Note that you will receive `serverShutdown` events in JSON in WebSocket text frames.
+
+
+
+* * *
+
+### 2026-06-03[​](/docs/binance-spot-api-docs/testnet#2026-06-03 "Direct link to 2026-06-03")
+
+#### Data reset[​](/docs/binance-spot-api-docs/testnet#data-reset "Direct link to Data reset")
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2026-05-11[​](/docs/binance-spot-api-docs/testnet#2026-05-11 "Direct link to 2026-05-11")
+
+The following rollout will occur at **approximately 08:00 UTC today**.
+
+  * Added WebSocket Stream support for [Block Trades](https://www.binance.info/en/support/faq/detail/557f95eaf8fb4460aed0a891d42a1425). 
+    * New stream: 
+      * `<symbol>@blockTrade`
+
+
+
+* * *
+
+### 2026-05-06[​](/docs/binance-spot-api-docs/testnet#2026-05-06 "Direct link to 2026-05-06")
+
+#### Data reset[​](/docs/binance-spot-api-docs/testnet#data-reset-1 "Direct link to Data reset")
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features "Direct link to New Features")
+
+**Notice: The following changes will take effect once the Spot Test Network is back online.**
+
+  * Added `serverShutdown` event to [WebSocket API](/docs/binance-spot-api-docs/testnet/websocket-api/connection-events#serverShutdown) and [WebSocket Streams](/docs/binance-spot-api-docs/testnet/web-socket-streams#serverShutdown).
+
+    * `serverShutdown` event will be sent 10 minutes before disconnection.
+  * [`PERCENT_PRICE`](/docs/binance-spot-api-docs/testnet/filters#percent_price), [`PERCENT_PRICE_BY_SIDE`](/docs/binance-spot-api-docs/testnet/filters#percent_price_by_side), [`MIN_NOTIONAL`](/docs/binance-spot-api-docs/testnet/filters#min_notional), and [`NOTIONAL`](/docs/binance-spot-api-docs/testnet/filters#notional) filters now use [reference price](/docs/binance-spot-api-docs/faqs/price_range_execution_rules) when it exists and is non-null. The filters fall back to their previous behavior when the reference price does not exist or is null.
+
+  * Market data for [Block Trades](https://www.binance.info/en/support/faq/detail/557f95eaf8fb4460aed0a891d42a1425).
+
+    * New Endpoints/Methods 
+      * REST API: 
+        * `GET /api/v3/historicalBlockTrades`
+      * WebSocket API: 
+        * `blockTrades.historical`
+  * Order query responses may include an [`expiryReason`](/docs/binance-spot-api-docs/testnet/enums#expiryreasons) field.
+
+    * This field is returned **only for expired orders** and helps users understand why an order expired, including cases where the order is expired due to the **execution price range rule**.
+    * This field is included in both JSON and SBE 3:4 responses.
+    * This applies to the following endpoint/method: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `GET /api/v3/allOrders`
+        * `GET /api/v3/orderList`
+        * `GET /api/v3/allOrderList`
+      * WebSocket API: 
+        * `order.status`
+        * `allOrders`
+        * `orderList.status`
+        * `allOrderLists`
+  * REST and WebSocket API SBE schema 3:4
+
+    * The current schema 3:3 [spot_3_3.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_3.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:4: 
+      * New message `BlockTradesResponse`
+      * New type `blockTradeId`
+      * New field `expiryReason` in `OrderResponse` and `OrdersResponse`
+
+
+
+* * *
+
+### 2026-04-28[​](/docs/binance-spot-api-docs/testnet#2026-04-28 "Direct link to 2026-04-28")
+
+  * Corrected the JSON in the `Price Range Execution Rule FAQ` for the question [`How does the Price Range Execution Rule work?`](/docs/binance-spot-api-docs/faqs/price_range_execution_rules#how-does-the-price-range-execution-rule-work).
+
+
+
+* * *
+
+### 2026-04-17[​](/docs/binance-spot-api-docs/testnet#2026-04-17 "Direct link to 2026-04-17")
+
+The following will occur **today at approximately 10:00 UTC**.
+
+  * The update speed of the below SBE Market Data Streams has been changed **from 50ms to 25ms** : 
+    * SBE Market Data Streams: [Diff Depth Streams](/docs/binance-spot-api-docs/testnet/sbe-market-data-streams#diff-depth-streams)
+    * FIX SBE: [MarketDataIncrementalDepth](/docs/binance-spot-api-docs/testnet/fix-api#marketdataincrementaldepth)
+
+
+
+* * *
+
+### 2026-04-16[​](/docs/binance-spot-api-docs/testnet#2026-04-16 "Direct link to 2026-04-16")
+
+  * Updated the documentation to clarify that if a symbol has never had a reference price set, an error code [`-2043`](/docs/binance-spot-api-docs/testnet/errors#-2043-no_reference_price) is returned when querying the reference price. This applies to the following endpoint/method: 
+    * REST API: `GET /api/v3/referencePrice`
+    * WebSocket API: `referencePrice`
+
+
+
+* * *
+
+### 2026-03-27[​](/docs/binance-spot-api-docs/testnet#2026-03-27 "Direct link to 2026-03-27")
+
+The following will occur **today at approximately 07:00 UTC**.
+
+  * `RAW_REQUESTS` rate limit increases to 300,000 per 5 minutes.
+
+  * Request weights for the following endpoints and methods become 0 when the request is successful. Failed requests are still charged the documented weight.   
+IPs that only call these endpoints and methods successfully will never hit the `REQUEST_WEIGHT` rate limit.
+
+    * REST API 
+      * `POST /api/v3/order`
+      * `POST /api/v3/sor/order`
+      * `DELETE /api/v3/order`
+      * `DELETE /api/v3/openOrders`
+      * `POST /api/v3/order/cancelReplace`
+      * `POST /api/v3/order/oco`
+      * `POST /api/v3/orderList/oco`
+      * `POST /api/v3/orderList/oto`
+      * `POST /api/v3/orderList/otoco`
+      * `POST /api/v3/orderList/opo`
+      * `POST /api/v3/orderList/opoco`
+      * `DELETE /api/v3/orderList`
+      * `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API 
+      * `order.place`
+      * `sor.order.place`
+      * `order.cancel`
+      * `openOrders.cancelAll`
+      * `order.cancelReplace`
+      * `orderList.place`
+      * `orderList.place.oco`
+      * `orderList.place.oto`
+      * `orderList.place.otoco`
+      * `orderList.place.opo`
+      * `orderList.place.opoco`
+      * `orderList.cancel`
+      * `order.amend.keepPriority`
+  * [STP Transfer](/docs/binance-spot-api-docs/faqs/stp_faq) will be allowed on all symbols **today at approximately 07:00 UTC**.
+
+
+
+
+* * *
+
+### 2026-03-16[​](/docs/binance-spot-api-docs/testnet#2026-03-16 "Direct link to 2026-03-16")
+
+**Notice: This will be rolled out at approximately 9:00 UTC today.**
+
+  * Symbols `BTCUSDT` and `BROCCOLI714USDC` have [Price Range Execution Rule](/docs/binance-spot-api-docs/faqs/price_range_execution_rules) enabled. The settings are for testing only and may not be indicative of settings on the live exchange.
+
+
+
+* * *
+
+### 2026-03-12[​](/docs/binance-spot-api-docs/testnet#2026-03-12 "Direct link to 2026-03-12")
+
+  * The removal of `!ticker@arr` for Spot Testnet has been **moved to today at 07:30 UTC**.
+
+
+
+* * *
+
+### 2026-03-11[​](/docs/binance-spot-api-docs/testnet#2026-03-11 "Direct link to 2026-03-11")
+
+**Notice:** FIX TLS Connectivity Update on **2026-03-17** , starting from **03:00 UTC** and will take about 1 hour to complete.
+
+**Action Required:**
+
+During the update window, existing FIX connections may drop intermittently. To ensure successful reconnections and new connections afterward, please verify before our update that your client sends SNI (Server Name Indication) during the TLS handshake and validates the certificate against the requested hostname.   
+Clients without SNI may receive an error message during handshake related to incorrect certificate during or after the update window, leading to TLS handshake or hostname verification failures. This can occur with some Node.js clients if SNI is not explicitly configured.  
+Please consult the [FIX API documentation](/docs/binance-spot-api-docs/testnet/fix-api#general-api-information) for full context.
+
+* * *
+
+### 2026-03-09[​](/docs/binance-spot-api-docs/testnet#2026-03-09 "Direct link to 2026-03-09")
+
+**Notice:** The changes in this section will be gradually rolled out starting from **2026-03-11 02:00 UTC** and will be finished at approximately **2026-03-12 13:00 UTC**.
+
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-1 "Direct link to New Features")
+
+  * [Price Range Execution Rule](/docs/binance-spot-api-docs/faqs/price_range_execution_rules)
+    * New Endpoints/Methods 
+      * REST API: 
+        * `GET /api/v3/executionRules`
+        * `GET /api/v3/referencePrice`
+        * `GET /api/v3/referencePrice/calculation`
+      * WebSocket API: 
+        * `executionRules`
+        * `referencePrice`
+        * `referencePrice.calculation`
+    * New JSON Stream: `<symbol>@referencePrice`
+  * REST and WebSocket API SBE schema 3:3 
+    * The current schema 3:2 [spot_3_2.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_2.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:3: 
+      * New message `ExecutionRulesResponse`
+      * New message `PriceRangeExecutionRule` (to be embedded in `ExecutionRulesResponse`)
+      * New message `ReferencePriceResponse`
+      * New message `ReferencePriceCalculationResponse`
+      * New enum `executionRuleType`
+      * New enum `expiryReason`
+      * New enum `calculationType`
+      * New field `expiryReason` in `NewOrderResultResponse`, `NewOrderFullResponse`, `NewOrderListResultResponse` and `NewOrderListFullResponse`
+      * New field `expiryReason` in `ExecutionReportEvent`
+      * New message `ServerShutdownEvent` for WebSocket API only
+  * FIX SBE schema 1:1 
+    * This will be used for FIX Order Entry, FIX Drop Copy, and FIX Market Data.
+    * The current FIX schema 1:0 [spot-fixsbe-1_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot-fixsbe-1_0.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 1:1: 
+      * New enum `expiryReason`
+      * New field `ExpiryReason` in `ExecutionReport`
+
+
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api-1 "Direct link to FIX API")
+
+  * ExpiryReason `<25056>` is optionally added to the ExecutionReport `<T>` message. 
+    * Updated QuickFIX Schema for FIX Market Data and FIX Order Entry.
+
+
+
+#### WebSocket API[​](/docs/binance-spot-api-docs/testnet#websocket-api "Direct link to WebSocket API")
+
+  * `serverShutdown` event added.
+
+
+
+#### General Changes[​](/docs/binance-spot-api-docs/testnet#general-changes "Direct link to General Changes")
+
+  * The responses to order placement and order list placement endpoints display the expiry reason depending on the value of `newOrderRespAck`: 
+    * If `newOrderRespType=ACK`, the expiry reason is not displayed.
+    * If `newOrderRespType=RESULT` or `newOrderRespType=FULL` mode, the expiry reason, if any, is displayed in field `expiryReason`.
+    * This affects the following endpoints/methods: 
+      * REST API 
+        * `POST /api/v3/order`
+        * `POST /api/v3/sor/order`
+        * `POST /api/v3/order/cancelReplace`
+        * `POST /api/v3/order/oco`
+        * `POST /api/v3/orderList/oco`
+        * `POST /api/v3/orderList/oto`
+        * `POST /api/v3/orderList/otoco`
+        * `POST /api/v3/orderList/opo`
+        * `POST /api/v3/orderList/opoco`
+      * WebSocket API 
+        * `order.place`
+        * `sor.order.place`
+        * `order.cancelReplace`
+        * `orderList.place`
+        * `orderList.place.oco`
+        * `orderList.place.oto`
+        * `orderList.place.otoco`
+        * `orderList.place.opo`
+        * `orderList.place.opoco`
+    * In User Data Streams, `executionReport` events have a new optional field, `eR`, which shows the expiry reason, if any.
+  * These endpoints have been deprecated for a long time and will be retired: 
+    * `GET /api/v1/ping`
+    * `GET /api/v1/time`
+    * `POST /api/v1/userDataStream`
+    * `PUT /api/v1/userDataStream`
+    * `GET /api/v1/ticker/bookTicker`
+    * `GET /api/v1/ticker/price`
+    * `GET /api/v1/klines`
+    * `GET /api/v1/historicalTrades`
+    * `GET /api/v1/depth`
+    * `GET /api/v1/aggTrades`
+    * `GET /api/v1/ticker/24hr`
+  * The following endpoints will be retired: 
+    * `GET /api/v1/userDataStream`
+    * `DELETE /api/v1/userDataStream`
+    * `GET /api/v1/trades`
+
+
+
+* * *
+
+### 2026-03-05[​](/docs/binance-spot-api-docs/testnet#2026-03-05 "Direct link to 2026-03-05")
+
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-2 "Direct link to New Features")
+
+  * Users of the Spot Test Network can now choose to add commissions on their Testnet orders, if they want to test their integration of commission APIs and fields.
+
+
+
+* * *
+
+### 2026-02-24[​](/docs/binance-spot-api-docs/testnet#2026-02-24 "Direct link to 2026-02-24")
+
+  * Following the announcement on [2025-11-28](/docs/binance-spot-api-docs/testnet#2025-11-28), `!ticker@arr` will be retired on **2026-03-26**
+  * [`ICEBERG_PARTS`](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 100 for all symbols starting 07:30 UTC.
+
+
+
+* * *
+
+### 2026-02-09[​](/docs/binance-spot-api-docs/testnet#2026-02-09 "Direct link to 2026-02-09")
+
+  * Clarified exponent field requirements in [FIX SBE documentation](/docs/binance-spot-api-docs/testnet/fix-api#fix-sbe)
+
+
+
+* * *
+
+### 2026-02-04[​](/docs/binance-spot-api-docs/testnet#2026-02-04 "Direct link to 2026-02-04")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+REST and WebSocket API:
+
+  * Reminder that SBE 3:0 schema will be retired on 2026-02-06, [6 months after being deprecated](/docs/binance-spot-api-docs/faqs/sbe_faq#regarding-legacy-support).
+
+
+
+* * *
+
+### 2026-02-02[​](/docs/binance-spot-api-docs/testnet#2026-02-02 "Direct link to 2026-02-02")
+
+  * Documented that [FIX Drop Copy session](/docs/binance-spot-api-docs/testnet/fix-api#fix-api-drop-copy-sessions) data is delayed by 1 second. This has been the delay since the inception of the FIX API.
+
+
+
+* * *
+
+### 2026-01-27[​](/docs/binance-spot-api-docs/testnet#2026-01-27 "Direct link to 2026-01-27")
+
+  * [ICEBERG_PARTS](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 50 for all symbols today.
+
+
+
+* * *
+
+### 2026-01-26[​](/docs/binance-spot-api-docs/testnet#2026-01-26 "Direct link to 2026-01-26")
+
+  * Added undocumented `recvWindow` to `userDataStream.subscribe.signature`.
+
+
+
+* * *
+
+### 2026-01-21[​](/docs/binance-spot-api-docs/testnet#2026-01-21 "Direct link to 2026-01-21")
+
+#### REST and WebSocket API[​](/docs/binance-spot-api-docs/testnet#rest-and-websocket-api "Direct link to REST and WebSocket API")
+
+Following the announcement from [2025-10-24](/docs/binance-spot-api-docs/testnet#2025-10-24), the following endpoints/methods will no longer be available starting from **2026-02-04, 07:00 UTC**
+
+REST API
+
+  * `POST /api/v3/userDataStream`
+  * `PUT /api/v3/userDataStream`
+  * `DELETE /api/v3/userDataStream`
+
+
+
+WebSocket API
+
+  * `userDataStream.start`
+  * `userDataStream.ping`
+  * `userDataStream.stop`
+
+
+
+* * *
+
+### 2026-01-07[​](/docs/binance-spot-api-docs/testnet#2026-01-07 "Direct link to 2026-01-07")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-12-18[​](/docs/binance-spot-api-docs/testnet#2025-12-18 "Direct link to 2025-12-18")
+
+  * Updated [FIX SBE documentation](/docs/binance-spot-api-docs/testnet/fix-api#fix-sbe)
+  * Clarified User Data Stream documentation regarding [`eventStreamTerminated`](/docs/binance-spot-api-docs/testnet/user-data-stream#event-stream-terminated).
+  * Assets `这是测试币` and `456` and symbol `这是测试币456` have been added for testing endpoints/methods with a Unicode symbol. Balances for both assets have been distributed to all accounts.
+
+
+
+* * *
+
+### 2025-12-17[​](/docs/binance-spot-api-docs/testnet#2025-12-17 "Direct link to 2025-12-17")
+
+#### REST API[​](/docs/binance-spot-api-docs/testnet#rest-api "Direct link to REST API")
+
+  * When calling endpoints that require signatures, percent-encode payloads before computing signatures. Requests that do not follow this order will be rejected with [`-1022 INVALID_SIGNATURE`](/docs/binance-spot-api-docs/testnet/errors#-1022-invalid_signature). Please review and update your signing logic accordingly.
+  * Updated documentation for REST API regarding [Signed Endpoints examples for placing an order](https://developers.binance.com/docs/binance-spot-api-docs/testnet/rest-api/request-security#signed-endpoint-examples-for-post-apiv3order)
+
+
+
+#### WebSocket API[​](/docs/binance-spot-api-docs/testnet#websocket-api-1 "Direct link to WebSocket API")
+
+  * Updated documentation for WebSocket API regarding [SIGNED request security](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/request-security#signed-request-security)
+
+
+
+* * *
+
+### 2025-12-15[​](/docs/binance-spot-api-docs/testnet#2025-12-15 "Direct link to 2025-12-15")
+
+**Clarification Regarding UTF-8 Encoding:**
+
+  * In [FIX](/docs/binance-spot-api-docs/testnet/fix-api), [REST](https://developers.binance.com/docs/binance-spot-api-docs/testnet/rest-api/general-api-information), and [WebSocket APIs](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/general-api-information), if your request contains a symbol name containing non-ASCII characters, then the response may contain non-ASCII characters encoded in UTF-8.
+  * In REST and WebSocket APIs, some endpoints/methods may return asset and/or symbol names containing non-ASCII characters encoded in UTF-8 even if the request did not contain non-ASCII characters.
+  * In [WebSocket Streams](/docs/binance-spot-api-docs/testnet/web-socket-streams), if your request contains a symbol name containing non-ASCII characters, then the stream events may contain non-ASCII characters encoded in UTF-8.
+  * In WebSocket Streams, [All Market Mini Tickers Stream](/docs/binance-spot-api-docs/testnet/web-socket-streams#all-market-mini-tickers-stream) and [All Market Rolling Window Statistics Streams](/docs/binance-spot-api-docs/testnet/web-socket-streams#all-market-rolling-window-statistics-streams) events may contain non-ASCII characters encoded in UTF-8.
+  * In [SBE Market Data Streams](/docs/binance-spot-api-docs/testnet/sbe-market-data-streams), if your request contains a symbol name containing non-ASCII characters, then the stream events may contain non-ASCII characters encoded in UTF-8.
+  * [UserDataStream events](/docs/binance-spot-api-docs/testnet/user-data-stream) may contain non-ASCII characters encoded in UTF-8 if you own or trade any assets or symbols whose names contain non-ASCII characters.
+  * For full compatibility with Binance APIs, please ensure your code is designed to handle UTF-8-encoded strings.
+
+
+
+* * *
+
+### 2025-12-09[​](/docs/binance-spot-api-docs/testnet#2025-12-09 "Direct link to 2025-12-09")
+
+  * [Schema for FIX SBE](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot-fixsbe-1_0.xml) has been updated to use `smallGroupSize16Encoding` in `MarketDataSnapshot` and use `presence="optional"` for incremental book ticker/depth `MDEntrySize` fields.
+  * Updated documentation re: [FIX vs FIX SBE](/docs/binance-spot-api-docs/testnet/fix-api#fix-vs-fix-sbe)
+  * Added documentation in REST, and WebSocket APIs stating:   
+**Please avoid SQL keywords in requests** as they may trigger a security block by a WAF (Web Application Firewall) rule.   
+See <https://www.binance.com/en/support/faq/detail/360004492232> for more details.
+
+
+
+* * *
+
+### 2025-12-04[​](/docs/binance-spot-api-docs/testnet#2025-12-04 "Direct link to 2025-12-04")
+
+  * [QuickFix Schema for FIX OE](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated to add `ExecutionReportType` and `SBESchemaVersionDeprecated` for FIX SBE support.
+  * [QuickFix Schema for FIX MD](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) has been updated to add `SBESchemaVersionDeprecated` for FIX SBE support.
+
+
+
+* * *
+
+### 2025-11-28[​](/docs/binance-spot-api-docs/testnet#2025-11-28 "Direct link to 2025-11-28")
+
+**Notice: The following changes will be deployed starting from 2025-12-01 2:00 UTC and may take several hours to complete**
+
+#### General Changes[​](/docs/binance-spot-api-docs/testnet#general-changes-1 "Direct link to General Changes")
+
+  * Parameter `symbol` and `symbols` can now support Unicode values encoded in UTF-8.
+  * Following the announcement from [2025-11-14](/docs/binance-spot-api-docs/testnet#2025-11-14), all documentation related to `!ticker@arr` has been removed. 
+    * The feature will remain available until a future retirement announcement is made.
+    * Please use `<symbol>@ticker` or `!miniTicker@arr` instead.
+
+
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api-2 "Direct link to FIX API")
+
+  * Unicode values encoded in UTF-8 can now be accepted in FIX messages. This is allowed for the following tags only: 
+    * `Currency (15)`
+    * `MiscFeeCurr (138)`
+    * `Symbol (55)`
+    * `SecondarySymbol (25019)`
+    * `CounterSymbol (25028)`
+    * `SecurityDesc (107)`
+  * When Unicode is put in a tag value that is not one of the tags above, FIX API will now send back a `RefTagID (371)` tag in the Reject `<3>`, pointing to exactly which tag is not allowed to contain Unicode.
+  * NewOrderList `<E>` accepts `TriggerPriceDirection (1109)` without `TriggerPrice (1102)`.
+
+
+
+#### WebSocket Streams[​](/docs/binance-spot-api-docs/testnet#websocket-streams "Direct link to WebSocket Streams")
+
+  * WebSocket Market Streams supports URL-encoded urls.   
+
+
   
-Some additional mandatory parameters based on order `type`:
-
-Type| Additional mandatory parameters| Additional Information  
----|---|---  
-`LIMIT`| `timeInForce`, `quantity`, `price`|   
-`MARKET`| `quantity` or `quoteOrderQty`| `MARKET` orders using the `quantity` field specifies the amount of the `base asset` the user wants to buy or sell at the market price.   
-E.g. MARKET order on BTCUSDT will specify how much BTC the user is buying or selling.   
-  
-`MARKET` orders using `quoteOrderQty` specifies the amount the user wants to spend (when buying) or receive (when selling) the `quote` asset; the correct `quantity` will be determined based on the market liquidity and `quoteOrderQty`.   
-E.g. Using the symbol BTCUSDT:   
-`BUY` side, the order will buy as many BTC as `quoteOrderQty` USDT can.   
-`SELL` side, the order will sell as much BTC needed to receive `quoteOrderQty` USDT.  
-`STOP_LOSS`| `quantity`, `stopPrice` or `trailingDelta`| This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)  
-`STOP_LOSS_LIMIT`| `timeInForce`, `quantity`, `price`, `stopPrice` or `trailingDelta`|   
-`TAKE_PROFIT`| `quantity`, `stopPrice` or `trailingDelta`| This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)  
-`TAKE_PROFIT_LIMIT`| `timeInForce`, `quantity`, `price`, `stopPrice` or `trailingDelta`|   
-`LIMIT_MAKER`| `quantity`, `price`| This is a `LIMIT` order that will be rejected if the order immediately matches and trades as a taker.   
-This is also known as a POST-ONLY order.  
-  
-Notes on using parameters for Pegged Orders:
-
-  * These parameters are allowed for `LIMIT`, `LIMIT_MAKER`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` orders.
-  * If `pegPriceType` is specified, `price` becomes optional. Otherwise, it is still mandatory.
-  * `pegPriceType=PRIMARY_PEG` means the primary peg, that is the best price on the same side of the order book as your order.
-  * `pegPriceType=MARKET_PEG` means the market peg, that is the best price on the opposite side of the order book from your order.
-  * Use `pegOffsetType` and `pegOffsetValue` to request a price level other than the best one. These parameters must be specified together.
 
 
+**Notice: The following changes will occur at approximately 2025-12-02 11:00 UTC** :
 
-Other info:
-
-  * Any `LIMIT` or `LIMIT_MAKER` type order can be made an iceberg order by sending an `icebergQty`.
-
-  * Any order with an `icebergQty` MUST have `timeInForce` set to `GTC`.
-
-  * For `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` and `TAKE_PROFIT` orders, `trailingDelta` can be combined with `stopPrice`.
-
-  * `MARKET` orders using `quoteOrderQty` will not break `LOT_SIZE` filter rules; the order will execute a `quantity` that will have the notional value as close as possible to `quoteOrderQty`. Trigger order price rules against market price for both MARKET and LIMIT versions:
-
-  * Price above market price: `STOP_LOSS` `BUY`, `TAKE_PROFIT` `SELL`
-
-  * Price below market price: `STOP_LOSS` `SELL`, `TAKE_PROFIT` `BUY`
+  * [FIX SBE support](/docs/binance-spot-api-docs/testnet/fix-api) becomes available.
+  * [One Pays the Other (OPO)](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/opo.md) becomes available on all symbols. 
+    * `opoAllowed` begins to appear in Exchange Information requests, indicating if One-Pays-the-Other (OPO) orders are supported on each symbol. 
+      * REST API: `GET /api/v3/exchangeInfo`
+      * WebSocket API: `exchangeInfo`
+    * New requests for OPO: 
+      * REST API: 
+        * `POST /api/v3/orderList/opo`
+        * `POST /api/v3/orderList/opoco`
+      * WebSocket API 
+        * `orderList.place.opo`
+        * `orderList.place.opoco`
+      * FIX API 
+        * NewOrderList `<E>` has field `OPO (25046)`. Please update to the latest QuickFIX Schema for OPO support.
+  * STP mode [`TRANSFER`](/docs/binance-spot-api-docs/faqs/stp_faq) has been added. The exact date that STP `TRANSFER` will be enabled has not yet been determined.
+  * **SBE: A new schema 3:2 ([spot_3_2.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_2.xml)) is available.**
+    * The current schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in 3:2: 
+      * New enum variant `TRANSFER` for `selfTradePreventionMode` and `allowedSelfTradePreventionModes`.
+      * All schemas below 3:1 are unable to represent any response that could contain the STP mode `TRANSFER` (e.g. Exchange Information, order placement, order cancellation, or querying the status of an order).   
+When a response cannot be represented in the requested schema, an error is returned.
+  * FIX API changes: 
+    * `LastFragment (893)` becomes deprecated. 
+      * This means that the MarketIncrementalRefresh `<X>` messages will no longer be fragmented and may contain more than 10,000 entries.
+      * The documentation has been updated to reflect this change.
+    * ListStatus `<N>` will no longer emit the optional `symbol` field. 
+      * This applies to FIX Order Entry and FIX Drop Copy.
+      * The documentation has been updated to reflect this change.
 
 
 
+* * *
 
-**Data Source:** Matching Engine
+### 2025-11-25[​](/docs/binance-spot-api-docs/testnet#2025-11-25 "Direct link to 2025-11-25")
 
-**Response - ACK:**
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // Unless it's part of an order list, value will be -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595  
-    }  
-    
+  * [`ICEBERG_PARTS`](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 25 for all symbols.
 
-**Response - RESULT:**
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // Unless it's part of an order list, value will be -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595,  
-        "price": "0.00000000",  
-        "origQty": "10.00000000",  
-        "executedQty": "10.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "10.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "MARKET",  
-        "side": "SELL",  
-        "workingTime": 1507725176595,  
-        "selfTradePreventionMode": "NONE"  
-    }  
-    
 
-**Response - FULL:**
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // Unless it's part of an order list, value will be -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595,  
-        "price": "0.00000000",  
-        "origQty": "10.00000000",  
-        "executedQty": "10.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "10.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "MARKET",  
-        "side": "SELL",  
-        "workingTime": 1507725176595,  
-        "selfTradePreventionMode": "NONE",  
-        "fills": [  
-            {  
-                "price": "4000.00000000",  
-                "qty": "1.00000000",  
-                "commission": "4.00000000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 56  
-            },  
-            {  
-                "price": "3999.00000000",  
-                "qty": "5.00000000",  
-                "commission": "19.99500000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 57  
-            },  
-            {  
-                "price": "3998.00000000",  
-                "qty": "2.00000000",  
-                "commission": "7.99600000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 58  
-            },  
-            {  
-                "price": "3997.00000000",  
-                "qty": "1.00000000",  
-                "commission": "3.99700000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 59  
-            },  
-            {  
-                "price": "3995.00000000",  
-                "qty": "1.00000000",  
-                "commission": "3.99500000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 60  
-            }  
-        ]  
-    }  
-    
 
-**Conditional fields in Order Responses**
+* * *
 
-There are fields in the order responses (e.g. order placement, order query, order cancellation) that appear only if certain conditions are met.
+### 2025-11-14[​](/docs/binance-spot-api-docs/testnet#2025-11-14 "Direct link to 2025-11-14")
 
-These fields can apply to order lists.
+  * All Market Tickers Stream (`!ticker@arr`) has been deprecated; This means this will be removed both from the documentation and from our systems at a later date. More details to follow.
+  * Please use [`<symbol>@ticker`](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-ticker-streams) or [`!miniTicker@arr`](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-mini-tickers-stream) instead.
 
-The fields are listed below:
 
-Field| Description| Visibility conditions| Examples  
----|---|---|---  
-`icebergQty`| Quantity for the iceberg order| Appears only if the parameter `icebergQty` was sent in the request.| `"icebergQty": "0.00000000"`  
-`preventedMatchId`| When used in combination with `symbol`, can be used to query a prevented match.| Appears only if the order expired due to STP.| `"preventedMatchId": 0`  
-`preventedQuantity`| Order quantity that expired due to STP| Appears only if the order expired due to STP.| `"preventedQuantity": "1.200000"`  
-`stopPrice`| Price when the algorithmic order will be triggered| Appears for `STOP_LOSS`. `TAKE_PROFIT`, `STOP_LOSS_LIMIT` and `TAKE_PROFIT_LIMIT` orders.| `"stopPrice": "23500.00000000"`  
-`strategyId`| Can be used to label an order that's part of an order strategy.| Appears if the parameter was populated in the request.| `"strategyId": 37463720`  
-`strategyType`| Can be used to label an order that is using an order strategy.| Appears if the parameter was populated in the request.| `"strategyType": 1000000`  
-`trailingDelta`| Delta price change required before order activation| Appears for Trailing Stop Orders.| `"trailingDelta": 10`  
-`trailingTime`| Time when the trailing order is now active and tracking price changes| Appears only for Trailing Stop Orders.| `"trailingTime": -1`  
-`usedSor`| Field that determines whether order used SOR| Appears when placing orders using SOR| `"usedSor": true`  
-`workingFloor`| Field that determines whether the order is being filled by the SOR or by the order book the order was submitted to.| Appears when placing orders using SOR| `"workingFloor": "SOR"`  
-`pegPriceType`| Price peg type| Only for pegged orders| `"pegPriceType": "PRIMARY_PEG"`  
-`pegOffsetType`| Price peg offset type| Only for pegged orders, if requested| `"pegOffsetType": "PRICE_LEVEL"`  
-`pegOffsetValue`| Price peg offset value| Only for pegged orders, if requested| `"pegOffsetValue": 5`  
-`peggedPrice`| Current price order is pegged at| Only for pegged orders, once determined| `"peggedPrice": "87523.83710000"`  
-`expiryReason`| Cause of the order’s expiration| When an order has expired| `"expiryReason": "INSUFFICIENT_LIQUIDITY"`  
-  
-### Test new order (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#test-new-order-trade "Direct link to Test new order \(TRADE\)")
-    
-    
-    POST /api/v3/order/test  
-    
 
-Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
+* * *
 
-**Weight:**
+### 2025-11-12[​](/docs/binance-spot-api-docs/testnet#2025-11-12 "Direct link to 2025-11-12")
 
-Condition| Request Weight  
+  * The steps on [how to manage a local order book correctly](https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-streams#how-to-manage-a-local-order-book-correctly) has been corrected.
+
+
+
+* * *
+
+### 2025-11-11[​](/docs/binance-spot-api-docs/testnet#2025-11-11 "Direct link to 2025-11-11")
+
+#### SBE Market Data[​](/docs/binance-spot-api-docs/testnet#sbe-market-data "Direct link to SBE Market Data")
+
+  * **At 2025-11-11 07:00 UTC, the update speed of`<symbol>@depth` and `<symbol>@depth20` streams will be changed to 50ms**. 
+    * This change will apply automatically to all users of SBE Market Data and doesn't require any action.
+    * The total amount of data received per second will be increased (up to 2x).
+    * These new update speeds will take effect on the live exchange at **2025-11-26 07:00 UTC**.
+    * [SBE Market Data](/docs/binance-spot-api-docs/testnet/sbe-market-data-streams) has been updated to reflect these changes.
+
+
+
+* * *
+
+### 2025-11-10[​](/docs/binance-spot-api-docs/testnet#2025-11-10 "Direct link to 2025-11-10")
+
+  * "Last Updated" dates will be removed from all documents except for CHANGELOG.
+  * Moving forward, CHANGELOG will be the source of reference for when changes were made to any document.
+
+
+
+* * *
+
+### 2025-11-05[​](/docs/binance-spot-api-docs/testnet#2025-11-05 "Direct link to 2025-11-05")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-10-24[​](/docs/binance-spot-api-docs/testnet#2025-10-24 "Direct link to 2025-10-24")
+
+#### SBE[​](/docs/binance-spot-api-docs/testnet#sbe "Direct link to SBE")
+
+  * SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) has been updated to support [listenToken Subscription Methods](https://developers.binance.com/docs/margin_trading/trade-data-stream/Listen-Token-Websocket-API) for Margin Trading.
+
+
+
+#### REST and WebSocket API[​](/docs/binance-spot-api-docs/testnet#rest-and-websocket-api-1 "Direct link to REST and WebSocket API")
+
+Following the announcement from [2025-04-01](/docs/binance-spot-api-docs/testnet#2025-04-01), all documentation related with `listenKey` for use on `wss://stream.binance.com` has been removed.
+
+Please refer to the list of requests and methods below for more information.
+
+The features will remain available until a future retirement announcement is made.
+
+REST API
+
+  * `POST /api/v3/userDataStream`
+  * `PUT /api/v3/userDataStream`
+  * `DELETE /api/v3/userDataStream`
+
+
+
+WebSocket API
+
+  * `userDataStream.start`
+  * `userDataStream.ping`
+  * `userDataStream.stop`
+
+
+
+* * *
+
+### 2025-10-17[​](/docs/binance-spot-api-docs/testnet#2025-10-17 "Direct link to 2025-10-17")
+
+**Notice: The following changes will be enabled at 2025-10-17 07:00 UTC**
+
+  * An optional parameter, `symbolStatus`, has been added to the following endpoints: 
+    * **REST API**
+      * `GET /api/v3/depth`
+      * `GET /api/v3/ticker/price`
+      * `GET /api/v3/ticker/bookTicker`
+      * `GET /api/v3/ticker/24hr`
+      * `GET /api/v3/ticker/tradingDay`
+      * `GET /api/v3/ticker`
+    * **WebSocket API**
+      * `depth`
+      * `ticker.price`
+      * `ticker.book`
+      * `ticker.24hr`
+      * `ticker.tradingDay`
+      * `ticker`
+  * When the parameter `symbolStatus=<STATUS>` is provided, only symbols whose trading status matches the specified `STATUS` will be included in the response: 
+    * If a single symbol is specified using the `symbol=<SYMBOL>` parameter and its trading status does not match the given `STATUS`, the endpoint will return error code [`-1220 SYMBOL_DOES_NOT_MATCH_STATUS`](/docs/binance-spot-api-docs/testnet/errors#-1220-symbol_does_not_match_status).
+    * If multiple symbols are specified using the `symbols=[...]` parameter, the response will be an array that excludes any symbols whose trading status does not match `STATUS`. If no symbols from the symbols parameter have a trading status that matches `STATUS`, the response is an empty array.
+    * For endpoints where the `symbol` and `symbols` parameters are optional, omitting these parameters is treated as if all symbols had been specified in the `symbols=[...]` parameter. See the previous line for the behavior of `symbolStatus=<STATUS>`.
+
+
+
+* * *
+
+### 2025-10-08[​](/docs/binance-spot-api-docs/testnet#2025-10-08 "Direct link to 2025-10-08")
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api-3 "Direct link to FIX API")
+
+**Notice: The following changes will be enabled at 2025-10-08 07:00 UTC**
+
+  * Updated [QuickFIX Schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) for FIX Market Data: 
+    * Updated RecvWindow (25000) to reflect microsecond support announced on [2025-08-05](/docs/binance-spot-api-docs/testnet#2025-08-05).
+    * Updated [InstrumentList `<y>`](/docs/binance-spot-api-docs/testnet/fix-api#instrumentlist) message: 
+      * Added fields: `StartPriceRange`, `EndPriceRange`.
+      * Made the following fields optional: `MinTradeVol`, `MaxTradeVol`, `MinQtyIncrement`, `MarketMinTradeVol`, `MarketMaxTradeVol`, `MarketMinQtyIncrement`, `MinPriceIncrement`.
+    * The changes to InstrumentList `<y>` are breaking changes. Please update to the new schema.
+
+
+
+* * *
+
+### 2025-10-01[​](/docs/binance-spot-api-docs/testnet#2025-10-01 "Direct link to 2025-10-01")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+REST and WebSocket API:
+
+  * Reminder that SBE 2:1 schema will be retired on 2025-10-02, [6 months after being deprecated](/docs/binance-spot-api-docs/faqs/sbe_faq#regarding-legacy-support).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2025-09-24[​](/docs/binance-spot-api-docs/testnet#2025-09-24 "Direct link to 2025-09-24")
+
+**Notice: The following changes will be deployed on 2025-09-24, starting at 7:00 UTC and may take several hours to complete.**
+
+  * Added an endpoint to retrieve the list of filters relevant to an account on a given symbol. This is the only endpoint that shows if an account has `MAX_ASSET` filters applied to it. 
+    * REST API: [`GET /api/v3/myFilters`](/docs/binance-spot-api-docs/testnet/rest-api/account-endpoints#myFilters)
+    * WebSocket API: [`myFilters`](/docs/binance-spot-api-docs/testnet/websocket-api/account-requests#myFilters)
+  * Comments in **SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml))** have been added, modified, and removed. Although there is no need for users of `3:1` to update to this version of the file, we advise updating to maintain consistency.
+  * Added documentation for filter [`MAX_ASSET`](/docs/binance-spot-api-docs/testnet/filters#max_asset). 
+    * In `Testnet` only: all accounts have a `MAX_ASSET` filter for asset `JPY` with value set to `1000000`.
+
+
+
+* * *
+
+### 2025-09-18[​](/docs/binance-spot-api-docs/testnet#2025-09-18 "Direct link to 2025-09-18")
+
+  * Updated documentation for `recvWindow` to reflect microsecond support announced on [2025-08-05](/docs/binance-spot-api-docs/testnet#2025-08-05). 
+    * REST API: [Timing Security](/docs/binance-spot-api-docs/testnet/rest-api/request-security#timingsecurity)
+    * WebSocket API: [Timing Security](/docs/binance-spot-api-docs/testnet/websocket-api/request-security#timingsecurity)
+
+
+
+* * *
+
+### 2025-09-12[​](/docs/binance-spot-api-docs/testnet#2025-09-12 "Direct link to 2025-09-12")
+
+  * The [QuickFix schema for FIX Order Entry](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated to support Pegged Orders.
+  * Updated FIX API Documentation for `RecvWindow` in 
+    * [Message Components](/docs/binance-spot-api-docs/testnet/fix-api#header)
+    * [Timing Security](/docs/binance-spot-api-docs/testnet/fix-api#timing-security)
+
+
+
+* * *
+
+### 2025-09-05[​](/docs/binance-spot-api-docs/testnet#2025-09-05 "Direct link to 2025-09-05")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-08-28[​](/docs/binance-spot-api-docs/testnet#2025-08-28 "Direct link to 2025-08-28")
+
+  * Updated SBE FAQ section [regarding legacy support](/docs/binance-spot-api-docs/faqs/sbe_faq#regarding-legacy-support) to include more details on schema compatibility and explain `NonRepresentable` and `NonRepresentableMessage`.
+
+
+
+* * *
+
+### 2025-08-26[​](/docs/binance-spot-api-docs/testnet#2025-08-26 "Direct link to 2025-08-26")
+
+  * Updated "Request Security" documentation for [REST API](/docs/binance-spot-api-docs/testnet/rest-api/request-security) and [WebSocket API](/docs/binance-spot-api-docs/testnet/websocket-api/request-security) with no functional changes.
+
+
+
+* * *
+
+### 2025-08-25[​](/docs/binance-spot-api-docs/testnet#2025-08-25 "Direct link to 2025-08-25")
+
+  * **SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml))** will be updated on **2025-08-25 at 05:00 UTC**
+    * The following fields have been renamed because the [SbeTool](/docs/binance-spot-api-docs/faqs/sbe_faq#generate-sbe-decoders) code generator has been found to generate Java code that does not compile. 
+      * Although only users impacted by this issue need to update the schema, we advise all users to upgrade to the latest version to maintain consistency.
+      * Message `MaxAssetFilter`
+        * field `limitExponent` renamed to `qtyExponent`
+        * field `limit` renamed to `maxQty`
+
+
+
+* * *
+
+### 2025-08-19[​](/docs/binance-spot-api-docs/testnet#2025-08-19 "Direct link to 2025-08-19")
+
+  * `userDataStream.subscribe` returns `subscriptionId` in the responses.   
+This was missed in a [previous](/docs/binance-spot-api-docs/testnet#2025-08-05) changelog entry.
+
+
+
+* * *
+
+### 2025-08-07[​](/docs/binance-spot-api-docs/testnet#2025-08-07 "Direct link to 2025-08-07")
+
+  * Updated FIX API documentation 
+    * [FIX Market Data limits](/docs/binance-spot-api-docs/testnet/fix-api#connection-limits): The subscription limit has always been present but was undocumented.
+    * [On message processing order](/docs/binance-spot-api-docs/testnet/fix-api#on-message-processing-order): Reworded and reformatted.
+
+
+
+**Notice: The following will be enabled on 2025-08-08, 07:00 UTC**
+
+  * Filter [`MAX_NUM_ORDER_LISTS`](/docs/binance-spot-api-docs/testnet/filters#max_num_order_lists), is enabled with the limit of 20 per symbol.
+
+
+
+* * *
+
+### 2025-08-05[​](/docs/binance-spot-api-docs/testnet#2025-08-05 "Direct link to 2025-08-05")
+
+**Notice: The following changes will be deployed on 2025-08-06, starting 7:00 UTC and may take several hours to complete.**   
+Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+#### General Changes[​](/docs/binance-spot-api-docs/testnet#general-changes-2 "Direct link to General Changes")
+
+  * The [pegged order](/docs/binance-spot-api-docs/faqs/pegged_orders) functionality is now available. 
+    * Exchange Information requests emit the field `pegInstructionsAllowed`.
+    * The following conditional fields `pegPriceType`, `pegOffSetType`, `pegOffsetValues`, and `peggedPrice` appear in responses of the following requests if the order was a pegged order: 
+      * REST API 
+        * `GET /api/v3/order`
+        * `GET /api/v3/orderList`
+        * `GET /api/v3/openOrderList`
+        * `GET /api/v3/allOrders`
+        * `DELETE /api/v3/order`
+        * `DELETE /api/v3/orderList`
+        * `DELETE /api/v3/openOrders`
+        * `PUT /api/v3/order/amend/keepPriority`
+      * WebSocket API 
+        * `order.status`
+        * `orderList.status`
+        * `allOrders`
+        * `order.cancel`
+        * `orderList.cancel`
+        * `openOrders.cancelAll`
+        * `order.amend.keepPriority`
+    * FIX API 
+      * `OrdType(4)` supports new value `P(PEGGED)`
+      * Tags `PegOffsetValue(211)`, `PegPriceType(1094)`, `PegMoveType(835)`, and `PegOffsetType(836)` have been added to the following messages: 
+        * NewOrderSingle `<D>`
+        * NewOrderList `<E>`
+        * OrderCancelRequestAndNewOrderSingle `<XCN>`
+        * When placing an order, the `ExecutionReport` `<8>` message will echo back `PegInstructions`, with an extra optional field `PeggedPrice (839)`.
+    * New error messages for pegged orders are added. Please see the [Errors](/docs/binance-spot-api-docs/testnet/errors) document for more information.
+  * Changes with `recvWindow`: 
+    * A third check is made after your message leaves the message broker just before it is sent to the Matching Engine. 
+      * This does not cover potential delays inside the Matching Engine itself.
+    * `recvWindow` supports microseconds. 
+      * The value is still specified in milliseconds, but can now take a decimal component to specify it with higher precision.
+      * This means that the parameter supports a **maximum precision of 3 decimal places**. (e.g. 6000.346)
+      * APIs affected: 
+        * FIX API
+        * REST API
+        * WebSocket API
+  * The following requests have a new structure called `specialCommission`. See [Commission Rates](/docs/binance-spot-api-docs/faqs/commission_faq). 
+    * REST API 
+      * `GET /api/v3/account/commission`
+      * `POST /api/v3/order/test` with `computeCommissionRates=true`
+      * `POST /api/v3/sor/order/test` with `computeCommissionRates=true`
+    * WebSocket API 
+      * `account.commission`
+      * `order.test` with `computeCommissionRates=true`
+      * `sor.order.test` with `computeCommissionRates=true`
+  * The new [`MAX_NUM_ORDER_AMENDS`](https://github.com/binance/binance-spot-api-docs/blob/master/testnet/filters.md#max_num_order_amends) filter is enabled with a limit of 10 amendments per order.
+  * New error codes `-1120` and `1211`. See [Errors](/docs/binance-spot-api-docs/testnet/errors) for more information.
+  * **SBE: A new schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) is available.**
+    * The current schema 3:0 ([spot_3_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_0.xml)) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:1: 
+      * `ExchangeInfoResponse`: new field `pegInstructionsAllowed`
+      * `ExecutionReportEvent`: new fields `pricePeg`, `pricePegOffsetLevel`, `peggedPrice`
+      * `UserDataStreamSubscribeResponse`: new field `subscriptionId`
+      * New field `subscriptionId` for all user data stream events.
+      * Field `apiKey` renamed to `loggedOnApiKey` for `WebSocketSessionLogonResponse`, `WebSocketSessionStatusResponse` and WebSocketSessionLogoutResponse
+      * `OrderTestWithCommissionsResponse`: 2 new fields `specialCommissionForOrderMaker` and `specialCommissionForOrderTaker`
+      * `AccountCommissionResponse`: 4 new fields `specialCommissionMaker`, `specialCommissionTaker`, `specialCommissionBuyer` and `specialCommissionSeller`
+      * Support for `EXCHANGE_MAX_NUM_ORDER_LISTS`, `MAX_NUM_ORDER_LISTS`, and `MAX_NUM_ORDER_AMENDS` filters.
+      * `ExecutionReportEvent`: fields `rejectReason` and `origClientOrderId` now show their default values in SBE format to match the JSON format.
+      * `NonRepresentableMessage`: New message added to represent a message that cannot be represented in this schema ID and version. Receipt of this message indicates that something should be available, but it is not representable using the SBE schema currently in use.
+  * Query order lists requests will first query the data in the cache, and if it cannot be found will query the database. 
+    * REST API: `GET /api/v3/openOrderLists`
+    * WebSocket API: `openOrderLists.status`
+  * Orders with cumulative quantity of 0 in the final state `EXPIRED_IN_MATCH` (i.e. the order expired due to STP) will be archived after 90 days.
+  * Bug fix: The Matching Engine no longer accepts order lists that exceed the order count filter limits. Affected filters: 
+    * `MAX_NUM_ORDERS`
+    * `MAX_ALGO_ORDERS`
+    * `MAX_ICEBERG_ORDERS`
+    * `EXCHANGE_MAX_NUM_ORDERS`
+    * `EXCHANGE_MAX_ALGO_ORDERS`
+    * `EXCHANGE_MAX_ICEBERG_ORDERS`
+
+
+
+#### WebSocket API[​](/docs/binance-spot-api-docs/testnet#websocket-api-2 "Direct link to WebSocket API")
+
+  * A single WebSocket connection can subscribe to multiple User Data Streams at once. 
+    * Only one subscription per account is allowed on a single connection.
+  * Method `userDataStream.subscribe.signature` has been added that allows you to subscribe to the User Data Stream without needing to login first. 
+    * This also doesn’t require an Ed25519 API Key, and can work with any [API Key type](/docs/binance-spot-api-docs/faqs/api_key_types).
+    * For [SBE support](/docs/binance-spot-api-docs/faqs/sbe_faq) you need to use schema 3:1 at least.
+  * Method `session.subscriptions` has been added that lists all the subscriptions active for the current session.
+  * The meaning of the field `userDataStream` in the session requests has changed slightly. 
+    * Previously, this returned `true` if you were subscribed to the user data stream of your logged-on account.
+    * Now it returns `true` if you have at least one active user data stream subscription 
+      * `true` \- If there is at least one subscription active
+      * `false` \- If there are no active subscriptions
+  * `userDataStream.unsubscribe` supports closing multiple subscriptions. 
+    * When called with no parameter, this will close all subscriptions.
+    * When called with `subscriptionId`, this will attempt to close the subscription matching that Id, if it exists.
+    * The authorization for this request has been changed to `NONE`.
+
+
+
+#### User Data Stream[​](/docs/binance-spot-api-docs/testnet#user-data-stream "Direct link to User Data Stream")
+
+  * Field `subscriptionId` has been added to the User Data Stream events payload when listening through the [WebSocket API](/docs/binance-spot-api-docs/testnet/websocket-api/user-data-stream-requests#user-data-stream-subscribe). This will identify which subscription the event is coming from.
+
+
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api-4 "Direct link to FIX API")
+
+  * When a client sends a reject message, the FIX API will no longer send the client back a Reject `<3>` message. Error messages are clearer when a tag is invalid, missing a value, or when the field value is empty or malformed 
+    * If the tag number was invalid, you will receive the error: 
+          
+          { "code": -1169, "msg": "Invalid tag number." }  
+          
+
+    * If a valid tag was specified without a value, you will receive the error: 
+          
+          { "code": -1177, "msg": "Tag specified without a value." }  
+          
+
+    * If the field value was empty or malformed, you will still receive the error: 
+          
+          { "code": -1102, "msg": "Field value was empty or malformed." }  
+          
+
+
+
+
+* * *
+
+### 2025-07-02[​](/docs/binance-spot-api-docs/testnet#2025-07-02 "Direct link to 2025-07-02")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. (see [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details)
+
+* * *
+
+### 2025-06-04[​](/docs/binance-spot-api-docs/testnet#2025-06-04 "Direct link to 2025-06-04")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. (see [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details)
+
+* * *
+
+### 2025-05-28[​](/docs/binance-spot-api-docs/testnet#2025-05-28 "Direct link to 2025-05-28")
+
+  * Documented API timeout value and error under General API Information for each API: 
+    * [FIX](/docs/binance-spot-api-docs/testnet/fix-api#general-api-information)
+    * [REST](/docs/binance-spot-api-docs/testnet/rest-api/general-api-information)
+    * [WebSocket](/docs/binance-spot-api-docs/testnet/websocket-api/general-api-information)
+
+
+
+* * *
+
+### 2025-05-22[​](/docs/binance-spot-api-docs/testnet#2025-05-22 "Direct link to 2025-05-22")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 2:0 schema will be retired on 2025-05-28, [6 months after being deprecated](/docs/binance-spot-api-docs/faqs/sbe_faq).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2025-05-21[​](/docs/binance-spot-api-docs/testnet#2025-05-21 "Direct link to 2025-05-21")
+
+**Notice: The following changes will happen at 2025-05-21 7:00 UTC.**
+
+  * The previous behavior of `recvWindow` on FIX, REST, and WebSocket APIs will be augmented by an additional check. 
+    * To review, the existing behavior is: 
+      * If `timestamp` is greater than `serverTime` \+ 1 second at receipt of the request, the request is rejected. Rejection by this check increments message limits (FIX API) and IP limits (REST and WebSocket APIs), but not Unfilled Order Count (order placement endpoints of all APIs).
+      * If the difference between `timestamp` and `serverTime` at receipt of the request is greater than `recvWindow`, the request is rejected. Rejection by this check increments message limits (FIX API) and IP limits (REST and WebSocket APIs) but not Unfilled Order Count (order placement endpoints of all APIs).
+    * The additional check is: 
+      * Just before a request is forwarded to the Matching Engine, if the difference between `timestamp` and the current `serverTime` is greater than `recvWindow`, the request is rejected. Rejection by this check increments message limits (FIX API), IP limits (REST and WebSocket APIs), and Unfilled Order Count (order placement endpoints of all APIs).
+    * The documentation for Timing security has been updated to reflect the additional check. 
+      * [REST API](/docs/binance-spot-api-docs/testnet/rest-api/request-security#timing-security)
+      * [WebSocket API](/docs/binance-spot-api-docs/testnet/websocket-api/request-security#timing-security)
+      * [FIX API](/docs/binance-spot-api-docs/testnet/fix-api#timing-security)
+  * Fixed a bug in FIX Market Data message InstrumentList `<y>`. Previously, the value of `NoRelatedSym(146)` could have been incorrect.
+
+
+
+* * *
+
+### 2025-04-29[​](/docs/binance-spot-api-docs/testnet#2025-04-29 "Direct link to 2025-04-29")
+
+  * Features that currently require an Ed25519 API key will soon be opened up to HMAC and RSA keys. 
+    * For example, subscribing to User Data Stream in WebSocket API will be possible with any API key type before listenKeys are removed.
+    * Users are still encouraged to migrate to Ed25519 API keys as they are more secure and performant on Binance Spot Trading.
+    * More details to come.
+
+
+
+* * *
+
+### 2025-04-25[​](/docs/binance-spot-api-docs/testnet#2025-04-25 "Direct link to 2025-04-25")
+
+  * **Notice: The following changes will happen at 2025-04-25 09:00 UTC.**
+  * The following request weights will be increased from 1 to 4: 
+    * REST API: `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API: `order.amend.keepPriority`
+    * The documentation for both REST and WebSocket API has been updated to reflect the upcoming changes.
+  * Clarified that `SEQNUM` in the FIX-API is a 32-bit unsigned integer that rolls over. This has been the `SEQNUM` data type since the inception of the FIX-API.
+
+
+
+* * *
+
+### 2025-04-21[​](/docs/binance-spot-api-docs/testnet#2025-04-21 "Direct link to 2025-04-21")
+
+  * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now enabled on all symbols.**
+  * **[Self-trade prevention mode`DECREMENT`](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/stp_faq.md) is now enabled on all symbols.**
+
+
+
+* * *
+
+### 2025-04-01[​](/docs/binance-spot-api-docs/testnet#2025-04-01 "Direct link to 2025-04-01")
+
+**Notice:** The following changes will be deployed tomorrow **April 2, 2025 starting at 7:00 UTC** and may take several hours to complete.   
+Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-3 "Direct link to New Features")
+
+  * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now available.**
+    * FIX API: New Order Entry Messages **OrderAmendKeepPriorityRequest** and **OrderAmendReject**
+    * REST API: `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API: `order.amend.keepPriority`
+    * You can check the new `allowAmend` field in Exchange Information Requests to see if it's enabled on a given symbol: 
+      * REST API: `GET /api/v3/exchangeInfo`
+      * WebSocket API: `exchangeInfo`
+  * **Self-trade prevention mode`DECREMENT` is now available.**
+    * Instead of expiring one or both orders, `DECREMENT` mode decreases the available quantity of both orders by increasing the `prevented quantity` of both orders by the amount of the prevented match.
+    * This can expire the orders if their `filled quantity` \+ `prevented quantity` >= `order quantity`.
+    * You can check the `allowedSelfTradePreventionModes` field in Exchange Information Requests to see if this mode is enabled on a given symbol.
+
+
+
+#### General Changes[​](/docs/binance-spot-api-docs/testnet#general-changes-3 "Direct link to General Changes")
+
+  * **Important:** The following legacy URLs will be **removed in May 2025**. Please change to the new URLs as soon as possible:
+
+Legacy URL| Latest URL  
 ---|---  
-Without `computeCommissionRates`| 1  
-With `computeCommissionRates`| 20  
+`wss://testnet.binance.vision/ws-api/v3`| `wss://ws-api.testnet.binance.vision/ws-api/v3`  
+`wss://testnet.binance.vision/ws`| `wss://stream.testnet.binance.vision/ws`  
   
-**Parameters:**
+  * Behavior when querying and/or canceling with `orderId` and `origClientOrderId/cancelOrigClientOrderId`: 
+    * The behavior when both parameters were provided was not consistent across all endpoints.
+    * Moving forward, when both parameters are provided, the order is first searched for using its `orderId`, and if found, `origClientOrderId`/`cancelOrigClientOrderId` is checked against that order. If both conditions pass, the request succeeds. If both conditions are not met the request is rejected.
+    * Affected requests: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `DELETE /api/v3/order`
+        * `POST /api/v3/order/cancelReplace`
+      * WebSocket API: 
+        * `order.status`
+        * `order.cancel`
+        * `order.cancelReplace`
+      * FIX API 
+        * OrderCancelRequest `<F>`
+        * OrderCancelRequestAndNewOrderSingle `<XCN>`
+  * Behavior when canceling with `listOrderId` and `listClientOrderId`: 
+    * The behavior when both parameters were provided was not consistent across all endpoints.
+    * Moving forward, when both parameters are passed, the order list is first searched for using its `listOrderId`, and if found, `listClientOrderId` is checked against that order list. If both conditions are not met the request is rejected.
+    * Affected requests: 
+      * REST API 
+        * `DELETE /api/v3/orderList`
+      * WebSocket API 
+        * `orderList.cancel`
+  * Previously, the request weight for myTrades was 20 regardless of the parameters provided. Now, if you provide `orderId`, the request weight is 5. 
+    * REST API: `GET /api/v3/myTrades`
+    * WebSocket API: `myTrades`
+  * If the unfilled order count for `intervalNum:DAY` is exceeded, the unfilled order count for `intervalNum:SECOND` is no longer incremented.
+  * Change when querying and deleting orders: 
+    * When neither `orderId` nor `origClientOrderId` are present, the request is now rejected with `-1102` instead of `-1128`.
+    * Affected requests: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `DELETE /api/v3/order`
+      * WebSocket API 
+        * `order.status`
+        * `order.cancel`
+      * FIX API 
+        * OrderCancelRequest `<F>`
+  * New Error code `-2038` for order amend keep priority requests that fail.
+  * New messages for error code `-1034`.
 
-In addition to all parameters accepted by [`POST /api/v3/order`](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade), the following optional parameters are also accepted:
 
-Name| Type| Mandatory| Description  
----|---|---|---  
-computeCommissionRates| BOOLEAN| NO| Default: `false`   
-See [Commissions FAQ](/docs/binance-spot-api-docs/faqs/commission_faq#test-order-diferences) to learn more.  
+
+#### FIX API[​](/docs/binance-spot-api-docs/testnet#fix-api-5 "Direct link to FIX API")
+
+  * The [QuickFix schema for FIX OE](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) is updated to support the Order Amend Keep Priority feature and new STP mode, `DECREMENT`.
+  * FIX Order Entry connection limits will be a maximum of 10 concurrent connections per account.
+  * The connection rate limits are now enforced. Note that these limits are checked independently for both the account and the IP address. 
+    * FIX Order Entry: 15 connection attempts within 30 seconds
+    * FIX Drop Copy: 15 connection attempts within 30 seconds
+    * FIX Market Data: 300 connection attempts within 300 seconds
+  * News `<B>` contains a countdown until disconnection in the Headline field. 
+    * Following the completion of this update, when the server enters maintenance, a `News` message will be sent to clients **every 10 seconds for 10 minutes**. After this period, clients will be logged out and their sessions will be closed.
+  * OrderCancelRequest `<F>` and OrderCancelRequestAndNewOrderSingle `<XCN>` will now allow both `orderId` and `clientOrderId`.
+  * FIX API verifies that `EncryptMethod(98)` is 0 at Logon `<A>`.
+
+
+
+#### User Data Streams[​](/docs/binance-spot-api-docs/testnet#user-data-streams "Direct link to User Data Streams")
+
+  * **Receiving user data streams on stream.testnet.binance.vision using a`listenKey` is now deprecated.**
+    * This feature will be removed from our systems at a later date.
+  * **Instead, you should get user data updates by subscribing to the[User Data Stream on the WebSocket API](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/user-data-stream-requests).**
+    * This should offer slightly better performance (lower latency).
+    * This requires the use of an Ed25519 API Key.
+  * In a future update, information about the base WebSocket endpoint for the User Data Streams will be removed.
+  * In a future update, the following requests will be removed from the documentation: 
+    * `POST /api/v3/userDataStream`
+    * `PUT /api/v3/userDataStream`
+    * `DELETE /api/v3/userDataStream`
+    * `userDataStream.start`
+    * `userDataStream.ping`
+    * `userDataStream.stop`
+  * The [User Data Stream documentation](/docs/binance-spot-api-docs/testnet/user-data-stream) will remain as reference for the payloads you can receive.
+
+
+
+#### SBE[​](/docs/binance-spot-api-docs/testnet#sbe-1 "Direct link to SBE")
+
+  * **A new schema 3:0 ([spot_3_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_0.xml)) is now available.**
+    * The current schema 2:1 ([spot_2_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_1.xml)) is now deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Note that trying to use schema 3:0 before it is released will result in an error.
+  * Changes in schema 3:0: 
+    * Support for Order Amend Keep Priority: 
+      * Added field `amendAllowed` to ExchangeInfoResponse.
+      * New Messages `OrderAmendmentsResponse` and `OrderAmendKeepPriorityResponse`
+    * Breaking changes: 
+      * All enums now have a `NON_REPRESENTABLE` variant. This will be used to encode new enum values in the future, which would be incompatible with 3:0.
+      * New enum variant `DECREMENT` for `selfTradePreventionMode` and `allowedSelfTradePreventionModes`
+      * `symbolStatus` enum values `AUCTION_MATCH`, `PRE_TRADING` and `POST_TRADING` have been removed.
+      * Fields `usedSor`, `orderCapacity`, `workingFloor`, `preventedQuantity`, and `matchType` are no longer optional.
+      * Field `orderCreationTime` in `ExecutionReportEvent` is now optional.
+  * When using deprecated schema 2:1 on the WebSocket API to listen to the User Data Stream: 
+    * `ListStatusEvent` field `listStatusType` will be rendered as `ExecStarted` when it should have been `Updated`. Upgrade to schema 3:0 to get the correct value.
+    * `ExecutionReportEvent` field `selfTradePreventionMode` will be rendered as `None` when it should have been `Decrement`. This only happens when `executionType` is `TradePrevention`.
+    * `ExecutionReportEvent` field `orderCreationTime` will be rendered as -1 when it has no value.
+  * All schemas below 3:0 are unable to represent responses for Order Amend Keep Priority requests and any response that could contain the STP mode `DECREMENT` (e.g. Exchange Information, order placement, order cancelation, or querying the status of your order). When a response cannot be represented in the requested schema, an error is returned.
+
+
+
+* * *
+
+### 2025-03-31[​](/docs/binance-spot-api-docs/testnet#2025-03-31 "Direct link to 2025-03-31")
+
+  * Added a clarification on the performance of canceling an order.
+
+
+
+* * *
+
+### 2025-03-13[​](/docs/binance-spot-api-docs/testnet#2025-03-13 "Direct link to 2025-03-13")
+
+  * **Notice: The following changes will happen on March 13,2025 at 05:00 UTC:**
+    * FIX Drop Copy sessions will have a limit of **60 messages per minute**.
+    * FIX Market Data sessions will have a limit of **2000 messages per minute**.
+    * The FIX API documentation has been updated to reflect the upcoming changes.
+
+
+
+* * *
+
+### 2025-03-05[​](/docs/binance-spot-api-docs/testnet#2025-03-05 "Direct link to 2025-03-05")
+
+  * **Notice: This is in the process of being deployed. Please consult the Spot Test Network's[homepage](https://testnet.binance.vision/) to be informed of the release completion.**   
+The following request weights will be increased from 2 to 4: 
+    * REST API: `GET /api/v3/aggTrade`
+    * WebSocket API: `trades.aggregate`
+  * The documentation for both REST and WebSocket API has been updated to reflect the upcoming changes.
+
+
+
+* * *
+
+### 2025-02-28[​](/docs/binance-spot-api-docs/testnet#2025-02-28 "Direct link to 2025-02-28")
+
+  * **SBE Market Data Streams** are now available. These streams offer a smaller payload and should offer better latency than the equivalent JSON streams for a subset of latency-sensitive market data streams.
+  * Streams available in SBE format: 
+    * Real-time: trade stream
+    * Real-time: best bid/ask
+    * Every 100 ms: diff. depth
+    * Every 100 ms: partial book depth
+  * For more information please refer to the [SBE Market Data Streams](/docs/binance-spot-api-docs/testnet/sbe-market-data-streams).
+
+
+
+* * *
+
+### 2025-02-05[​](/docs/binance-spot-api-docs/testnet#2025-02-05 "Direct link to 2025-02-05")
+
+  * **Notice: These changes will be deployed starting at 7:00 UTC, and may take several hours to complete.** **The following changes will apply to WebSocket Market Data Streams, User Data Streams, and the WebSocket API:**
+    * Our WebSocket services will send a ping frame **every 20 seconds** instead of 3 minutes.
+    * The allowed pong delay will be **1 minute** instead of 10 minutes.
+    * The documentation for these services have been updated to reflect the change.
+  * `AggressorSide (2446)` is now rendered in the [FIX Market Data Trade Stream](/docs/binance-spot-api-docs/testnet/fix-api#tradestream). The QuickFIX schema [file](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) has also been updated. Please download the latest schema before the Spot Testnet upgrade is completed.
+
+
+
+* * *
+
+### 2024-12-17[​](/docs/binance-spot-api-docs/testnet#2024-12-17 "Direct link to 2024-12-17")
+
+  * FIX Market Data is now available. The [FIX API](/docs/binance-spot-api-docs/testnet/fix-api) documentation for SPOT Testnet has been updated regarding this feature.
+  * Please refer to this [link](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) for the QuickFIX Schema for FIX Market Data.
+
+
+
+* * *
+
+### 2024-11-27[​](/docs/binance-spot-api-docs/testnet#2024-11-27 "Direct link to 2024-11-27")
+
+**Note:** These changes will be deployed live **starting 2024-11-28** and may take several hours for all features to work as intended.
+
+**New Feature: Microsecond support:**
+
+The system now supports microseconds in all related time and/or timestamp fields. Microsecond support is **opt-in** , by default the requests and responses still use milliseconds.  
   
-**Data Source:** Memory
+Examples in documentation are also using milliseconds for the foreseeable future.
 
-**Response:**
+WebSocket Streams
 
-Without `computeCommissionRates`
-    
-    
-    {}  
-    
-
-With `computeCommissionRates`
-    
-    
-    {  
-        "standardCommissionForOrder": {   // Standard commission rates on trades from the order.  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "specialCommissionForOrder": {    // Special commission rates on trades from the order.  
-            "maker": "0.05000000",  
-            "taker": "0.06000000"  
-        },  
-        "taxCommissionForOrder": {        // Tax commission rates for trades from the order.  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "discount": {                     // Discount on standard commissions when paying in BNB.  
-            "enabledForAccount": true,  
-            "enabledForSymbol": true,  
-            "discountAsset": "BNB",  
-            "discount": "0.25000000"      // Standard commission is reduced by this rate when paying commission in BNB.  
-        }  
-    }  
-    
-
-### Cancel order (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-order-trade "Direct link to Cancel order \(TRADE\)")
-    
-    
-    DELETE /api/v3/order  
-    
-
-Cancel an active order.
-
-**Weight:** 1
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-orderId| LONG| NO|   
-origClientOrderId| STRING| NO|   
-newClientOrderId| STRING| NO| Used to uniquely identify this cancel. Automatically generated by default.  
-cancelRestrictions| ENUM| NO| Supported values:   
-`ONLY_NEW` \- Cancel will succeed if the order status is `NEW`.  
-`ONLY_PARTIALLY_FILLED ` \- Cancel will succeed if order status is `PARTIALLY_FILLED`.  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-Notes:
-
-  * Either `orderId` or `origClientOrderId` must be sent.
-  * If both `orderId` and `origClientOrderId` are provided, the `orderId` is searched first, then the `origClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * For example: `/stream?streams=btcusdt@trade&timeUnit=millisecond`
+    * Supported values are: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**Data Source:** Matching Engine
+REST API
 
-**Response:**
-    
-    
-    {  
-        "symbol": "LTCBTC",  
-        "origClientOrderId": "myOrder1",  
-        "orderId": 4,  
-        "orderListId": -1, // Unless it's part of an order list, value will be -1  
-        "clientOrderId": "cancelMyOrder1",  
-        "transactTime": 1684804350068,  
-        "price": "2.00000000",  
-        "origQty": "1.00000000",  
-        "executedQty": "0.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "0.00000000",  
-        "status": "CANCELED",  
-        "timeInForce": "GTC",  
-        "type": "LIMIT",  
-        "side": "BUY",  
-        "selfTradePreventionMode": "NONE"  
-    }  
-    
-
-**Notes:**
-
-  * The payload above does not show all fields that can appear in the order response. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-  * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` \+ `origClientOrderId` will be slower.
+  * A new optional header `X-MBX-TIME-UNIT` can be sent in the request to select the time unit. 
+    * Supported values: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * The time unit affects time-related parameters in requests (e.g, `startTime`, `endTime`, `timestamp`).
+    * The time unit affects timestamp fields in responses (e.g., `time`, `transactTime`).
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**Regarding`cancelRestrictions`**
+WebSocket API
 
-  * If the `cancelRestrictions` value is not any of the supported values, the error will be:
-
-
-    
-    
-    {  
-        "code": -1145,  
-        "msg": "Invalid cancelRestrictions"  
-    }  
-    
-
-  * If the order did not pass the conditions for `cancelRestrictions`, the error will be:
-
-
-    
-    
-    {  
-        "code": -2011,  
-        "msg": "Order was not canceled due to cancel restrictions."  
-    }  
-    
-
-### Cancel All Open Orders on a Symbol (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-all-open-orders-on-a-symbol-trade "Direct link to Cancel All Open Orders on a Symbol \(TRADE\)")
-    
-    
-    DELETE /api/v3/openOrders  
-    
-
-Cancels all active orders on a symbol. This includes orders that are part of an order list.
-
-**Weight:** 1
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Data Source:** Matching Engine
-
-**Response:**
-    
-    
-    [  
-        {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "E6APeyTJvkMvLMYMqu1KQ4",  
-            "orderId": 11,  
-            "orderListId": -1,  
-            "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-            "transactTime": 1684804350068,  
-            "price": "0.089853",  
-            "origQty": "0.178622",  
-            "executedQty": "0.000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "A3EF2HCwxgZPFMrfwbgrhv",  
-            "orderId": 13,  
-            "orderListId": -1,  
-            "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-            "transactTime": 1684804350069,  
-            "price": "0.090430",  
-            "origQty": "0.178622",  
-            "executedQty": "0.000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        {  
-            "orderListId": 1929,  
-            "contingencyType": "OCO",  
-            "listStatusType": "ALL_DONE",  
-            "listOrderStatus": "ALL_DONE",  
-            "listClientOrderId": "2inzWQdDvZLHbbAmAozX2N",  
-            "transactionTime": 1585230948299,  
-            "symbol": "BTCUSDT",  
-            "orders": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 20,  
-                    "clientOrderId": "CwOOIPHSmYywx6jZX77TdL"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 21,  
-                    "clientOrderId": "461cPg51vQjV3zIMOXNz39"  
-                }  
-            ],  
-            "orderReports": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "origClientOrderId": "CwOOIPHSmYywx6jZX77TdL",  
-                    "orderId": 20,  
-                    "orderListId": 1929,  
-                    "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-                    "transactTime": 1688005070874,  
-                    "price": "0.668611",  
-                    "origQty": "0.690354",  
-                    "executedQty": "0.000000",  
-                    "origQuoteOrderQty": "0.000000",  
-                    "cummulativeQuoteQty": "0.000000",  
-                    "status": "CANCELED",  
-                    "timeInForce": "GTC",  
-                    "type": "STOP_LOSS_LIMIT",  
-                    "side": "BUY",  
-                    "stopPrice": "0.378131",  
-                    "icebergQty": "0.017083",  
-                    "selfTradePreventionMode": "NONE"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "origClientOrderId": "461cPg51vQjV3zIMOXNz39",  
-                    "orderId": 21,  
-                    "orderListId": 1929,  
-                    "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-                    "transactTime": 1688005070874,  
-                    "price": "0.008791",  
-                    "origQty": "0.690354",  
-                    "executedQty": "0.000000",  
-                    "origQuoteOrderQty": "0.000000",  
-                    "cummulativeQuoteQty": "0.000000",  
-                    "status": "CANCELED",  
-                    "timeInForce": "GTC",  
-                    "type": "LIMIT_MAKER",  
-                    "side": "BUY",  
-                    "icebergQty": "0.639962",  
-                    "selfTradePreventionMode": "NONE"  
-                }  
-            ]  
-        }  
-    ]  
-    
-
-### Cancel an Existing Order and Send a New Order (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-an-existing-order-and-send-a-new-order-trade "Direct link to Cancel an Existing Order and Send a New Order \(TRADE\)")
-    
-    
-    POST /api/v3/order/cancelReplace  
-    
-
-  * Cancels an existing order and places a new order on the same symbol.
-  * Filters and Order Count are evaluated before the processing of the cancellation and order placement occurs.
-  * A new order that was not attempted (i.e. when `newOrderResult: NOT_ATTEMPTED`), will still increase the unfilled order count by 1.
-  * You can only cancel an individual order from an orderList using this endpoint, but the result is the same as canceling the entire orderList.
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * Supported values: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * The time unit affects time-related parameters in requests (e.g, `startTime`, `endTime`, `timestamp`).
+    * The time unit affects timestamp fields in responses (e.g., `time`, `transactTime`).
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**Weight:** 1
+User Data Streams
 
-**Unfilled Order Count:** 1
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * Supported values 
+      * `MILLISECOND`
+      * `MICROSECOND`.
+      * `microsecond`
+      * `millisecond`
 
-**Parameters:**
 
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES|   
-type| ENUM| YES|   
-cancelReplaceMode| ENUM| YES| The allowed values are:   
-`STOP_ON_FAILURE` \- If the cancel request fails, the new order placement will not be attempted.   
-`ALLOW_FAILURE` \- new order placement will be attempted even if cancel request fails.  
-timeInForce| ENUM| NO|   
-quantity| DECIMAL| NO|   
-quoteOrderQty| DECIMAL| NO|   
-price| DECIMAL| NO|   
-cancelNewClientOrderId| STRING| NO| Used to uniquely identify this cancel. Automatically generated by default.  
-cancelOrigClientOrderId| STRING| NO| Either `cancelOrderId` or `cancelOrigClientOrderId` must be sent.   
-  
-If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are provided, the `cancelOrderId` is searched first, then the `cancelOrigClientOrderId` from that result is checked against that order.   
-  
-If both conditions are not met the request will be rejected.  
-cancelOrderId| LONG| NO| Either `cancelOrderId` or `cancelOrigClientOrderId` must be sent.   
-  
-If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are provided, the `cancelOrderId` is searched first, then the `cancelOrigClientOrderId` from that result is checked against that order.   
-  
-If both conditions are not met the request will be rejected.  
-newClientOrderId| STRING| NO| Used to identify the new order.  
-strategyId| LONG| NO|   
-strategyType| INT| NO| The value cannot be less than `1000000`.  
-stopPrice| DECIMAL| NO|   
-trailingDelta| LONG| NO| See [Trailing Stop order FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq)  
-icebergQty| DECIMAL| NO|   
-newOrderRespType| ENUM| NO| Allowed values:   
-`ACK`, `RESULT`, `FULL`   
-`MARKET` and `LIMIT` orders types default to `FULL`; all other orders default to `ACK`  
-selfTradePreventionMode| ENUM| NO| The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes).  
-cancelRestrictions| ENUM| NO| Supported values:   
-`ONLY_NEW` \- Cancel will succeed if the order status is `NEW`.  
-`ONLY_PARTIALLY_FILLED ` \- Cancel will succeed if order status is `PARTIALLY_FILLED`. For more information please refer to [Regarding `cancelRestrictions`](/docs/binance-spot-api-docs/rest-api/trading-endpoints#regarding-cancelrestrictions)  
-orderRateLimitExceededMode| ENUM| No| Supported values:   
-`DO_NOTHING` (default)- will only attempt to cancel the order if account has not exceeded the unfilled order rate limit  
-`CANCEL_ONLY` \- will always cancel the order  
-pegPriceType| ENUM| NO| `PRIMARY_PEG` or `MARKET_PEG`   
-See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetValue| INT| NO| Price level to peg the price to (max: 100)   
-See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetType| ENUM| NO| Only `PRICE_LEVEL` is supported   
-See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-Similar to `POST /api/v3/order`, additional mandatory parameters are determined by `type`.
 
-Response format varies depending on whether the processing of the message succeeded, partially succeeded, or failed.
+General Changes:
 
-**Data Source:** Matching Engine
+  * Fixed a bug that prevented orders from being placed when submitting OCOs on the `BUY` side without providing a `stopPrice`.
 
-Request | Response  
+  * `TAKE_PROFIT` and `TAKE_PROFIT_LIMIT` support has been added for OCOs.
+
+    * Previously OCOs could only be composed by the following order types: 
+      * `LIMIT_MAKER` \+ `STOP_LOSS`
+      * `LIMIT_MAKER` \+ `STOP_LOSS_LIMIT`
+    * Now OCOs can be composed of the following order types: 
+      * `LIMIT_MAKER` \+ `STOP_LOSS`
+      * `LIMIT_MAKER` \+ `STOP_LOSS_LIMIT`
+      * `TAKE_PROFIT` \+ `STOP_LOSS`
+      * `TAKE_PROFIT` \+ `STOP_LOSS_LIMIT`
+      * `TAKE_PROFIT_LIMIT` \+ `STOP_LOSS`
+      * `TAKE_PROFIT_LIMIT` \+ `STOP_LOSS_LIMIT`
+    * This is supported by the following requests: 
+      * `POST /api/v3/orderList/oco`
+      * `POST /api/v3/orderList/otoco`
+      * `orderList.place.oco`
+      * `orderList.place.otoco`
+      * `NewOrderList<E>`
+    * Error code `-1167` will be obsolete after this update and will be removed from the documentation in a later update.
+  * Timestamp parameters now reject values too far into the past or the future. To be specific, the parameter will be rejected if:
+
+    * `timestamp` before 2017-01-01 (less than 1483228800000)
+    * `timestamp` is more than 10 seconds after the current time (e.g., if current time is 1729745280000 then it is an error to use 1729745291000 or greater)
+  * If `startTime` and/or `endTime` values are outside of range, the values will be adjusted to fit the correct range.
+
+  * The field for quote order quantity (`origQuoteOrderQty`) has been added to responses that previously did not have it. Note that for order placement endpoints the field will only appear for requests with `newOrderRespType` set to `RESULT` or `FULL`.
+
+    * Please refer to the table for requests with `origQuoteOrderQty`:
+Service| Request  
 ---|---  
-`cancelReplaceMode` | `orderRateLimitExceededMode` | Unfilled Order Count | `cancelResult` | `newOrderResult` | `status`  
-`STOP_ON_FAILURE` | `DO_NOTHING` | Within Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `400`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-Exceeds Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | N/A  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | N/A  
-`CANCEL_ONLY` | Within Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `400`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-Exceeds Limits | ❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `429`  
-✅ `SUCCESS` | ❌ `FAILURE` | `429`  
-`ALLOW_FAILURE` | `DO_NOTHING` | Within Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | `409`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-Exceeds Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | N/A  
-❌ `FAILURE` | ❌ `FAILURE` | N/A  
-❌ `FAILURE` | ✅ `SUCCESS` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | N/A  
-`CANCEL_ONLY` | Within Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | `409`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-Exceeds Limits | ✅ `SUCCESS` | ✅ `SUCCESS` | `N/A`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-  
-**Response SUCCESS and account has not exceeded the unfilled order count:**
-    
-    
-    // Both the cancel order placement and new order placement succeeded.  
-    {  
-        "cancelResult": "SUCCESS",  
-        "newOrderResult": "SUCCESS",  
-        "cancelResponse": {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "DnLo3vTAQcjha43lAZhZ0y",  
-            "orderId": 9,  
-            "orderListId": -1,  
-            "clientOrderId": "osxN3JXAtJvKvCqGeMWMVR",  
-            "transactTime": 1684804350068,  
-            "price": "0.01000000",  
-            "origQty": "0.000100",  
-            "executedQty": "0.00000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.00000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "SELL",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        "newOrderResponse": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 10,  
-            "orderListId": -1,  
-            "clientOrderId": "wOceeeOzNORyLiQfw7jd8S",  
-            "transactTime": 1652928801803,  
-            "price": "0.02000000",  
-            "origQty": "0.040000",  
-            "executedQty": "0.00000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.00000000",  
-            "status": "NEW",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "workingTime": 1669277163808,  
-            "fills": [],  
-            "selfTradePreventionMode": "NONE"  
-        }  
-    }  
-    
-
-**Response when Cancel Order Fails with STOP_ON FAILURE and account has not exceeded their unfilled order count:**
-    
-    
-    {  
-        "code": -2022,  
-        "msg": "Order cancel-replace failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "NOT_ATTEMPTED",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": null  
-        }  
-    }  
-    
-
-**Response when Cancel Order Succeeds but New Order Placement Fails and account has not exceeded their unfilled order count:**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "SUCCESS",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "symbol": "BTCUSDT",  
-                "origClientOrderId": "86M8erehfExV8z2RC8Zo8k",  
-                "orderId": 3,  
-                "orderListId": -1,  
-                "clientOrderId": "G1kLo6aDv2KGNTFcjfTSFq",  
-                "transactTime": 1684804350068,  
-                "price": "0.006123",  
-                "origQty": "10000.000000",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            "newOrderResponse": {  
-                "code": -2010,  
-                "msg": "Order would immediately match and take."  
-            }  
-        }  
-    }  
-    
-
-**Response when Cancel Order fails with ALLOW_FAILURE and account has not exceeded their unfilled order count:**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "SUCCESS",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "orderListId": -1,  
-                "clientOrderId": "pfojJMg6IMNDKuJqDxvoxN",  
-                "transactTime": 1648540168818  
-            }  
-        }  
-    }  
-    
-
-**Response when both Cancel Order and New Order Placement fail using`cancelReplaceMode=ALLOW_FAILURE` and account has not exceeded their unfilled order count:**
-    
-    
-    {  
-        "code": -2022,  
-        "msg": "Order cancel-replace failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": {  
-                "code": -2010,  
-                "msg": "Order would immediately match and take."  
-            }  
-        }  
-    }  
-    
-
-**Response when using`orderRateLimitExceededMode=DO_NOTHING` and account's unfilled order count has been exceeded:**
-    
-    
-    {  
-        "code": -1015,  
-        "msg": "Too many new orders; current limit is 1 orders per 10 SECOND."  
-    }  
-    
-
-**Response when using`orderRateLimitExceededMode=CANCEL_ONLY` and account's unfilled order count has been exceeded:**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "SUCCESS",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "symbol": "LTCBNB",  
-                "origClientOrderId": "GKt5zzfOxRDSQLveDYCTkc",  
-                "orderId": 64,  
-                "orderListId": -1,  
-                "clientOrderId": "loehOJF3FjoreUBDmv739R",  
-                "transactTime": 1715779007228,  
-                "price": "1.00",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            "newOrderResponse": {  
-                "code": -1015,  
-                "msg": "Too many new orders; current limit is 1 orders per 10 SECOND."  
-            }  
-        }  
-    }  
-    
-
-**Notes:**
-
-  * The payload above does not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-  * The performance for canceling an order (single cancel or as part of a cancel-replace) is always better when only `orderId` is sent. Sending `origClientOrderId` or both `orderId` \+ `origClientOrderId` will be slower.
-
-
-
-### Order Amend Keep Priority (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#order-amend-keep-priority-trade "Direct link to Order Amend Keep Priority \(TRADE\)")
-    
-    
-    PUT /api/v3/order/amend/keepPriority  
-    
-
-Reduce the quantity of an existing open order.
-
-This adds 0 orders to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-
-Read [Order Amend Keep Priority FAQ](/docs/binance-spot-api-docs/faqs/order_amend_keep_priority) to learn more.
-
-**Weight** : 4
-
-**Unfilled Order Count:** 0
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-orderId| LONG| NO*| `orderId` or `origClientOrderId` must be sent  
-origClientOrderId| STRING| NO*| `orderId` or `origClientOrderId` must be sent  
-newClientOrderId| STRING| NO*| The new client order ID for the order after being amended.   
-If not sent, one will be randomly generated.   
-It is possible to reuse the current clientOrderId by sending it as the `newClientOrderId`.  
-newQty| DECIMAL| YES| `newQty` must be greater than 0 and less than the order's quantity.  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Data Source** : Matching Engine
-
-**Response:** Response for a single order:
-    
-    
-    {  
-        "transactTime": 1741926410255,  
-        "executionId": 75,  
-        "amendedOrder": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 33,  
-            "orderListId": -1,  
-            "origClientOrderId": "5xrgbMyg6z36NzBn2pbT8H",  
-            "clientOrderId": "PFaq6hIHxqFENGfdtn4J6Q",  
-            "price": "6.00000000",  
-            "qty": "5.00000000",  
-            "executedQty": "0.00000000",  
-            "preventedQty": "0.00000000",  
-            "quoteOrderQty": "0.00000000",  
-            "cumulativeQuoteQty": "0.00000000",  
-            "status": "NEW",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "SELL",  
-            "workingTime": 1741926410242,  
-            "selfTradePreventionMode": "NONE"  
-        }  
-    }  
-    
-
-Response for an order that is part of an Order list:
-    
-    
-    {  
-        "transactTime": 1741669661670,  
-        "executionId": 22,  
-        "amendedOrder": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 9,  
-            "orderListId": 1,  
-            "origClientOrderId": "W0fJ9fiLKHOJutovPK3oJp",  
-            "clientOrderId": "UQ1Np3bmQ71jJzsSDW9Vpi",  
-            "price": "0.00000000",  
-            "qty": "4.00000000",  
-            "executedQty": "0.00000000",  
-            "preventedQty": "0.00000000",  
-            "quoteOrderQty": "0.00000000",  
-            "cumulativeQuoteQty": "0.00000000",  
-            "status": "PENDING_NEW",  
-            "timeInForce": "GTC",  
-            "type": "MARKET",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        "listStatus": {  
-            "orderListId": 1,  
-            "contingencyType": "OTO",  
-            "listOrderStatus": "EXECUTING",  
-            "listClientOrderId": "AT7FTxZXylVSwRoZs52mt3",  
-            "symbol": "BTCUSDT",  
-            "orders": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 8,  
-                    "clientOrderId": "GkwwHZUUbFtZOoH1YsZk9Q"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 9,  
-                    "clientOrderId": "UQ1Np3bmQ71jJzsSDW9Vpi"  
-                }  
-            ]  
-        }  
-    }  
-    
-
-**Note:** The payloads above do not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-
-### Order lists[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#order-lists "Direct link to Order lists")
-
-#### New OCO - Deprecated (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-oco---deprecated-trade "Direct link to New OCO - Deprecated \(TRADE\)")
-    
-    
-    POST /api/v3/order/oco  
-    
-
-Send in a new OCO.
-
-  * Price Restrictions: 
-    * `SELL`: Limit Price > Last Price > Stop Price
-    * `BUY`: Limit Price < Last Price < Stop Price
-  * Quantity Restrictions: 
-    * Both legs must have the same quantity.
-    * `ICEBERG` quantities however do not have to be the same
-  * `OCO` adds **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-
-
-
-**Weight:** 1
-
-**Unfilled Order Count:** 2
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| A unique Id for the entire orderList  
-side| ENUM| YES|   
-quantity| DECIMAL| YES|   
-limitClientOrderId| STRING| NO| A unique Id for the limit order  
-price| DECIMAL| YES|   
-limitStrategyId| LONG| NO|   
-limitStrategyType| INT| NO| The value cannot be less than `1000000`.  
-limitIcebergQty| DECIMAL| NO| Used to make the `LIMIT_MAKER` leg an iceberg order.  
-trailingDelta| LONG| NO|   
-stopClientOrderId| STRING| NO| A unique Id for the stop loss/stop loss limit leg  
-stopPrice| DECIMAL| YES|   
-stopStrategyId| LONG| NO|   
-stopStrategyType| INT| NO| The value cannot be less than `1000000`.  
-stopLimitPrice| DECIMAL| NO| If provided, `stopLimitTimeInForce` is required.  
-stopIcebergQty| DECIMAL| NO| Used with `STOP_LOSS_LIMIT` leg to make an iceberg order.  
-stopLimitTimeInForce| ENUM| NO| Valid values are `GTC`/`FOK`/`IOC`  
-newOrderRespType| ENUM| NO| Set the response JSON.  
-selfTradePreventionMode| ENUM| NO| The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes).  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Data Source:** Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OCO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",  
-        "transactionTime": 1563417480525,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",  
-                "transactTime": 1563417480525,  
-                "price": "0.000000",  
-                "origQty": "0.624363",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS",  
-                "side": "BUY",  
-                "stopPrice": "0.960664",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",  
-                "transactTime": 1563417480525,  
-                "price": "0.036435",  
-                "origQty": "0.624363",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "BUY",  
-                "workingTime": 1563417480525,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-#### New Order list - OCO (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade "Direct link to New Order list - OCO \(TRADE\)")
-    
-    
-    POST /api/v3/orderList/oco  
-    
-
-Send in an one-cancels-the-other (OCO) pair, where activation of one order immediately cancels the other.
-
-  * An OCO has 2 orders called the **above order** and **below order**.
-  * One of the orders must be a `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` order and the other must be `STOP_LOSS` or `STOP_LOSS_LIMIT` order.
-  * Price restrictions 
-    * If the OCO is on the `SELL` side: 
-      * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-      * `TAKE_PROFIT stopPrice` > Last Traded Price > `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
-    * If the OCO is on the `BUY` side: 
-      * `LIMIT_MAKER/TAKE_PROFIT_LIMIT price` < Last Traded Price < `stopPrice`
-      * `TAKE_PROFIT stopPrice` < Last Traded Price < `STOP_LOSS/STOP_LOSS_LIMIT stopPrice`
-  * OCOs add **2 orders** to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-
-
-
-**Weight:** 1
-
-**Unfilled Order Count:** 2
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| Yes|   
-listClientOrderId| STRING| No| Arbitrary unique ID among open order lists. Automatically generated if not sent.   
-A new order list with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired.   
-`listClientOrderId` is distinct from the `aboveClientOrderId` and the `belowCLientOrderId`.  
-side| ENUM| Yes| `BUY` or `SELL`  
-quantity| DECIMAL| Yes| Quantity for both orders of the order list.  
-aboveType| ENUM| Yes| Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-aboveClientOrderId| STRING| No| Arbitrary unique ID among open orders for the above order. Automatically generated if not sent  
-aboveIcebergQty| LONG| No| Note that this can only be used if `aboveTimeInForce` is `GTC`.  
-abovePrice| DECIMAL| No| Can be used if `aboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.  
-aboveStopPrice| DECIMAL| No| Can be used if `aboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`.   
-Either `aboveStopPrice` or `aboveTrailingDelta` or both, must be specified.  
-aboveTrailingDelta| LONG| No| See [Trailing Stop order FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq).  
-aboveTimeInForce| ENUM| No| Required if `aboveType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`  
-aboveStrategyId| LONG| No| Arbitrary numeric value identifying the above order within an order strategy.  
-aboveStrategyType| INT| No| Arbitrary numeric value identifying the above order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-abovePegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-abovePegOffsetType| ENUM| NO|   
-abovePegOffsetValue| INT| NO|   
-belowType| ENUM| Yes| Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`,`TAKE_PROFIT_LIMIT`  
-belowClientOrderId| STRING| No| Arbitrary unique ID among open orders for the below order. Automatically generated if not sent  
-belowIcebergQty| LONG| No| Note that this can only be used if `belowTimeInForce` is `GTC`.  
-belowPrice| DECIMAL| No| Can be used if `belowType` is `STOP_LOSS_LIMIT`, `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.  
-belowStopPrice| DECIMAL| No| Can be used if `belowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` or `TAKE_PROFIT_LIMIT`   
-Either `belowStopPrice` or `belowTrailingDelta` or both, must be specified.  
-belowTrailingDelta| LONG| No| See [Trailing Stop order FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq).  
-belowTimeInForce| ENUM| No| Required if `belowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`.  
-belowStrategyId| LONG| No| Arbitrary numeric value identifying the below order within an order strategy.  
-belowStrategyType| INT| No| Arbitrary numeric value identifying the below order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-belowPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-belowPegOffsetType| ENUM| NO|   
-belowPegOffsetValue| INT| NO|   
-newOrderRespType| ENUM| No| Select response format: `ACK`, `RESULT`, `FULL`  
-selfTradePreventionMode| ENUM| No| The allowed enums is dependent on what is configured on the symbol. Supported values: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes)  
-recvWindow| DECIMAL| No| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| Yes|   
-  
-**Data Source:** Matching Engine
-
-**Response:**
-
-Response format for `orderReports` is selected using the `newOrderRespType` parameter. The following example is for the `RESULT` response type. See [`POST /api/v3/order`](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade) for more examples.
-    
-    
-    {  
-        "orderListId": 1,  
-        "contingencyType": "OCO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "lH1YDkuQKWiXVXHPSKYEIp",  
-        "transactionTime": 1710485608839,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 10,  
-                "clientOrderId": "44nZvqpemY7sVYgPYbvPih"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 11,  
-                "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 10,  
-                "orderListId": 1,  
-                "clientOrderId": "44nZvqpemY7sVYgPYbvPih",  
-                "transactTime": 1710485608839,  
-                "price": "1.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "1.00000000",  
-                "workingTime": -1,  
-                "icebergQty": "1.00000000",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 11,  
-                "orderListId": 1,  
-                "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK",  
-                "transactTime": 1710485608839,  
-                "price": "3.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "workingTime": 1710485608839,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-#### New Order list - OTO (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oto-trade "Direct link to New Order list - OTO \(TRADE\)")
-    
-    
-    POST /api/v3/orderList/oto  
-    
-
-Place an OTO.
-
-  * An OTO (One-Triggers-the-Other) is an order list comprised of 2 orders.
-  * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book.
-  * The second order is called the **pending order**. It can be any order type except for `MARKET` orders using parameter `quoteOrderQty`. The pending order is only placed on the order book when the working order gets **fully filled**.
-  * If either the working order or the pending order is cancelled individually, the other order in the order list will also be canceled or expired.
-  * When the order list is placed, if the working order gets **immediately fully filled** , the placement response will show the working order as `FILLED` but the pending order will still appear as `PENDING_NEW`. You need to query the status of the pending order again to see its updated status.
-  * OTOs add **2 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-
-
-
-**Weight:** 1
-
-**Unfilled Order Count:** 2
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| Arbitrary unique ID among open order lists. Automatically generated if not sent.   
-A new order list with the same listClientOrderId is accepted only when the previous one is filled or completely expired.   
-`listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.  
-newOrderRespType| ENUM| NO| Format of the JSON response. Supported values: [Order Response Type](/docs/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| The allowed values are dependent on what is configured on the symbol. Supported values: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| Supported values: `LIMIT`,`LIMIT_MAKER`  
-workingSide| ENUM| YES| Supported values: [Order Side](/docs/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the working order.  
-Automatically generated if not sent.  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES| Sets the quantity for the working order.  
-workingIcebergQty| DECIMAL| NO| This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.  
-workingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-workingStrategyId| LONG| NO| Arbitrary numeric value identifying the working order within an order strategy.  
-workingStrategyType| INT| NO| Arbitrary numeric value identifying the working order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-workingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingType| ENUM| YES| Supported values: [Order Types](/docs/binance-spot-api-docs/rest-api/trading-endpoints#order-type)  
-Note that `MARKET` orders using `quoteOrderQty` are not supported.  
-pendingSide| ENUM| YES| Supported values: [Order Side](/docs/binance-spot-api-docs/enums#side)  
-pendingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending order.  
-Automatically generated if not sent.  
-pendingPrice| DECIMAL| NO|   
-pendingStopPrice| DECIMAL| NO|   
-pendingTrailingDelta| DECIMAL| NO|   
-pendingQuantity| DECIMAL| YES| Sets the quantity for the pending order.  
-pendingIcebergQty| DECIMAL| NO| This can only be used if `pendingTimeInForce` is `GTC` or if `pendingType` is `LIMIT_MAKER`.  
-pendingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-pendingStrategyId| LONG| NO| Arbitrary numeric value identifying the pending order within an order strategy.  
-pendingStrategyType| INT| NO| Arbitrary numeric value identifying the pending order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-pendingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingPegOffsetType| ENUM| NO|   
-pendingPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Mandatory parameters based on`pendingType` or `workingType`**
-
-Depending on the `pendingType` or `workingType`, some optional parameters will become mandatory.
-
-Type| Additional mandatory parameters| Additional information  
----|---|---  
-`workingType` = `LIMIT`| `workingTimeInForce`|   
-`pendingType` = `LIMIT`| `pendingPrice`, `pendingTimeInForce`|   
-`pendingType` = `STOP_LOSS` or `TAKE_PROFIT`| `pendingStopPrice` and/or `pendingTrailingDelta`|   
-`pendingType` = `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT`| `pendingPrice`, `pendingStopPrice` and/or `pendingTrailingDelta`, `pendingTimeInForce`|   
-  
-**Data Source:**
-
-Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "yl2ERtcar1o25zcWtqVBTC",  
-        "transactionTime": 1712289389158,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 4,  
-                "clientOrderId": "Bq17mn9fP6vyCn75Jw1xya"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 5,  
-                "clientOrderId": "arLFo0zGJVDE69cvGBaU0d"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 4,  
-                "orderListId": 0,  
-                "clientOrderId": "Bq17mn9fP6vyCn75Jw1xya",  
-                "transactTime": 1712289389158,  
-                "price": "1.00000000",  
-                "origQty": "1.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "workingTime": 1712289389158,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 5,  
-                "orderListId": 0,  
-                "clientOrderId": "arLFo0zGJVDE69cvGBaU0d",  
-                "transactTime": 1712289389158,  
-                "price": "0.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "MARKET",  
-                "side": "BUY",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**Note:** The payload above does not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-
-#### New Order list - OTOCO (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---otoco-trade "Direct link to New Order list - OTOCO \(TRADE\)")
-    
-    
-    POST /api/v3/orderList/otoco  
-    
-
-Place an OTOCO.
-
-  * An OTOCO (One-Triggers-One-Cancels-the-Other) is an order list comprised of 3 orders.
-  * The first order is called the **working order** and must be `LIMIT` or `LIMIT_MAKER`. Initially, only the working order goes on the order book. 
-    * The behavior of the working order is the same as the [OTO](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oto-trade).
-  * OTOCO has 2 pending orders (pending above and pending below), forming an OCO pair. The pending orders are only placed on the order book when the working order gets **fully filled**. 
-    * The rules of the pending above and pending below follow the same rules as the [Order list OCO](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade).
-  * OTOCOs add **3 orders** to the `EXCHANGE_MAX_NUM_ORDERS` filter and `MAX_NUM_ORDERS` filter.
-
-
-
-**Weight:** 1
-
-**Unfilled Order Count:** 3
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| Arbitrary unique ID among open order lists. Automatically generated if not sent.   
-A new order list with the same listClientOrderId is accepted only when the previous one is filled or completely expired.   
-`listClientOrderId` is distinct from the `workingClientOrderId`, `pendingAboveClientOrderId`, and the `pendingBelowClientOrderId`.  
-newOrderRespType| ENUM| NO| Format of the JSON response. Supported values: [Order Response Type](/docs/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| The allowed values are dependent on what is configured on the symbol. Supported values: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| Supported values: `LIMIT`, `LIMIT_MAKER`  
-workingSide| ENUM| YES| Supported values: [Order side](/docs/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the working order.  
-Automatically generated if not sent.  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES|   
-workingIcebergQty| DECIMAL| NO| This can only be used if `workingTimeInForce` is `GTC` or if `workingType` is `LIMIT_MAKER`.  
-workingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-workingStrategyId| LONG| NO| Arbitrary numeric value identifying the working order within an order strategy.  
-workingStrategyType| INT| NO| Arbitrary numeric value identifying the working order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-workingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingSide| ENUM| YES| Supported values: [Order side](/docs/binance-spot-api-docs/enums#side)  
-pendingQuantity| DECIMAL| YES|   
-pendingAboveType| ENUM| YES| Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingAboveClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending above order.  
-Automatically generated if not sent.  
-pendingAbovePrice| DECIMAL| NO| Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.  
-pendingAboveStopPrice| DECIMAL| NO| Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingAboveTrailingDelta| DECIMAL| NO| See [Trailing Stop FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq)  
-pendingAboveIcebergQty| DECIMAL| NO| This can only be used if `pendingAboveTimeInForce` is `GTC` or if `pendingAboveType` is `LIMIT_MAKER`.  
-pendingAboveTimeInForce| ENUM| NO|   
-pendingAboveStrategyId| LONG| NO| Arbitrary numeric value identifying the pending above order within an order strategy.  
-pendingAboveStrategyType| INT| NO| Arbitrary numeric value identifying the pending above order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-pendingAbovePegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingAbovePegOffsetType| ENUM| NO|   
-pendingAbovePegOffsetValue| INT| NO|   
-pendingBelowType| ENUM| NO| Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`,`TAKE_PROFIT_LIMIT`  
-pendingBelowClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending below order.  
-Automatically generated if not sent.  
-pendingBelowPrice| DECIMAL| NO| Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify limit price.  
-pendingBelowStopPrice| DECIMAL| NO| Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, or `TAKE_PROFIT_LIMIT`.  
-Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.  
-pendingBelowTrailingDelta| DECIMAL| NO|   
-pendingBelowIcebergQty| DECIMAL| NO| This can only be used if `pendingBelowTimeInForce` is `GTC`, or if `pendingBelowType` is `LIMIT_MAKER`.  
-pendingBelowTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-pendingBelowStrategyId| LONG| NO| Arbitrary numeric value identifying the pending below order within an order strategy.  
-pendingBelowStrategyType| INT| NO| Arbitrary numeric value identifying the pending below order strategy.   
-Values smaller than 1000000 are reserved and cannot be used.  
-pendingBelowPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingBelowPegOffsetType| ENUM| NO|   
-pendingBelowPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Mandatory parameters based on`pendingAboveType`, `pendingBelowType` or `workingType`**
-
-Depending on the `pendingAboveType`/`pendingBelowType` or `workingType`, some optional parameters will become mandatory.
-
-Type| Additional mandatory parameters| Additional information  
----|---|---  
-`workingType` = `LIMIT`| `workingTimeInForce`|   
-`pendingAboveType`= `LIMIT_MAKER`| `pendingAbovePrice`|   
-`pendingAboveType` = `STOP_LOSS/TAKE_PROFIT`| `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`|   
-`pendingAboveType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`| `pendingAbovePrice`, `pendingAboveStopPrice` and/or `pendingAboveTrailingDelta`, `pendingAboveTimeInForce`|   
-`pendingBelowType`= `LIMIT_MAKER`| `pendingBelowPrice`|   
-`pendingBelowType= STOP_LOSS/TAKE_PROFIT`| `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`|   
-`pendingBelowType=STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`| `pendingBelowPrice`, `pendingBelowStopPrice` and/or `pendingBelowTrailingDelta`, `pendingBelowTimeInForce`|   
-  
-**Data Source:**
-
-Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "orderListId": 1,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "RumwQpBaDctlUu5jyG5rs0",  
-        "transactionTime": 1712291372842,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 6,  
-                "clientOrderId": "fM9Y4m23IFJVCQmIrlUmMK"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 7,  
-                "clientOrderId": "6pcQbFIzTXGZQ1e2MkGDq4"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 8,  
-                "clientOrderId": "r4JMv9cwAYYUwwBZfbussx"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 6,  
-                "orderListId": 1,  
-                "clientOrderId": "fM9Y4m23IFJVCQmIrlUmMK",  
-                "transactTime": 1712291372842,  
-                "price": "1.00000000",  
-                "origQty": "1.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "workingTime": 1712291372842,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 7,  
-                "orderListId": 1,  
-                "clientOrderId": "6pcQbFIzTXGZQ1e2MkGDq4",  
-                "transactTime": 1712291372842,  
-                "price": "1.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "IOC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "BUY",  
-                "stopPrice": "6.00000000",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 8,  
-                "orderListId": 1,  
-                "clientOrderId": "r4JMv9cwAYYUwwBZfbussx",  
-                "transactTime": 1712291372842,  
-                "price": "3.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "BUY",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**Note:** The payload above does not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-
-#### New Order List - OPO (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opo-trade "Direct link to New Order List - OPO \(TRADE\)")
-    
-    
-    POST /api/v3/orderList/opo  
-    
-
-Place an [OPO](/docs/binance-spot-api-docs/faqs/opo).
-
-  * OPOs add 2 orders to the EXCHANGE_MAX_NUM_ORDERS filter and MAX_NUM_ORDERS filter.
-
-
-
-**Weight:** 1
-
-**Unfilled Order Count:** 2
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same listClientOrderId is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId` and the `pendingClientOrderId`.  
-newOrderRespType| ENUM| NO| Format of the JSON response. Supported values: [Order Response Type](/docs/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| The allowed values are dependent on what is configured on the symbol. Supported values: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| Supported values: `LIMIT`,`LIMIT_MAKER`  
-workingSide| ENUM| YES| Supported values: [Order Side](/docs/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES| Sets the quantity for the working order.  
-workingIcebergQty| DECIMAL| NO| This can only be used if `workingTimeInForce` is `GTC`, or if `workingType` is `LIMIT_MAKER`.  
-workingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-workingStrategyId| LONG| NO| Arbitrary numeric value identifying the working order within an order strategy.  
-workingStrategyType| INT| NO| Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.  
-workingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingType| ENUM| YES| Supported values: [Order Types](/docs/binance-spot-api-docs/rest-api/trading-endpoints#order-type) Note that `MARKET` orders using `quoteOrderQty` are not supported.  
-pendingSide| ENUM| YES| Supported values: [Order Side](/docs/binance-spot-api-docs/enums#side)  
-pendingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending order. Automatically generated if not sent.  
-pendingPrice| DECIMAL| NO|   
-pendingStopPrice| DECIMAL| NO|   
-pendingTrailingDelta| DECIMAL| NO|   
-pendingIcebergQty| DECIMAL| NO| This can only be used if `pendingTimeInForce` is `GTC` or if `pendingType` is `LIMIT_MAKER`.  
-pendingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-pendingStrategyId| LONG| NO| Arbitrary numeric value identifying the pending order within an order strategy.  
-pendingStrategyType| INT| NO| Arbitrary numeric value identifying the pending order strategy. Values smaller than 1000000 are reserved and cannot be used.  
-pendingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingPegOffsetType| ENUM| NO|   
-pendingPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`. Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Data Source** : Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "H94qCqO27P74OEiO4X8HOG",  
-        "transactionTime": 1762998011671,  
-        "symbol": "BTCUSDT",  
-        "orders": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 2,  
-                "clientOrderId": "JX6xfdjo0wysiGumfHNmPu"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 3,  
-                "clientOrderId": "2ZJCY0IjOhuYIMLGN8kU8S"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "JX6xfdjo0wysiGumfHNmPu",  
-                "transactTime": 1762998011671,  
-                "price": "102264.00000000",  
-                "origQty": "0.00060000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "BUY",  
-                "workingTime": 1762998011671,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "2ZJCY0IjOhuYIMLGN8kU8S",  
-                "transactTime": 1762998011671,  
-                "price": "0.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "MARKET",  
-                "side": "SELL",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**Note:** The payload above does not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-
-#### New Order List - OPOCO (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---opoco-trade "Direct link to New Order List - OPOCO \(TRADE\)")
-    
-    
-    POST /api/v3/orderList/opoco  
-    
-
-Place an [OPOCO](/docs/binance-spot-api-docs/faqs/opo).
-
-**Weight** : 1
-
-**Unfilled Order Count:** 3
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| Arbitrary unique ID among open order lists. Automatically generated if not sent. A new order list with the same listClientOrderId is accepted only when the previous one is filled or completely expired. `listClientOrderId` is distinct from the `workingClientOrderId`, `pendingAboveClientOrderId`, and the `pendingBelowClientOrderId`.  
-newOrderRespType| ENUM| NO| Format of the JSON response. Supported values: [Order Response Type](/docs/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| The allowed values are dependent on what is configured on the symbol. Supported values: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| Supported values: `LIMIT`, `LIMIT_MAKER`  
-workingSide| ENUM| YES| Supported values: [Order side](/docs/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the working order. Automatically generated if not sent.  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES|   
-workingIcebergQty| DECIMAL| NO| This can only be used if `workingTimeInForce` is `GTC` or if `workingType` is `LIMIT_MAKER`.  
-workingTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-workingStrategyId| LONG| NO| Arbitrary numeric value identifying the working order within an order strategy.  
-workingStrategyType| INT| NO| Arbitrary numeric value identifying the working order strategy. Values smaller than 1000000 are reserved and cannot be used.  
-workingPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingSide| ENUM| YES| Supported values: [Order side](/docs/binance-spot-api-docs/enums#side)  
-pendingAboveType| ENUM| YES| Supported values: `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingAboveClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending above order. Automatically generated if not sent.  
-pendingAbovePrice| DECIMAL| NO| Can be used if `pendingAboveType` is `STOP_LOSS_LIMIT` , `LIMIT_MAKER`, or `TAKE_PROFIT_LIMIT` to specify the limit price.  
-pendingAboveStopPrice| DECIMAL| NO| Can be used if `pendingAboveType` is `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingAboveTrailingDelta| DECIMAL| NO| See [Trailing Stop FAQ](/docs/binance-spot-api-docs/faqs/trailing-stop-faq)  
-pendingAboveIcebergQty| DECIMAL| NO| This can only be used if `pendingAboveTimeInForce` is `GTC` or if `pendingAboveType` is `LIMIT_MAKER`.  
-pendingAboveTimeInForce| ENUM| NO|   
-pendingAboveStrategyId| LONG| NO| Arbitrary numeric value identifying the pending above order within an order strategy.  
-pendingAboveStrategyType| INT| NO| Arbitrary numeric value identifying the pending above order strategy. Values smaller than 1000000 are reserved and cannot be used.  
-pendingAbovePegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingAbovePegOffsetType| ENUM| NO|   
-pendingAbovePegOffsetValue| INT| NO|   
-pendingBelowType| ENUM| NO| Supported values: `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`,`TAKE_PROFIT_LIMIT`  
-pendingBelowClientOrderId| STRING| NO| Arbitrary unique ID among open orders for the pending below order. Automatically generated if not sent.  
-pendingBelowPrice| DECIMAL| NO| Can be used if `pendingBelowType` is `STOP_LOSS_LIMIT` or `TAKE_PROFIT_LIMIT` to specify limit price  
-pendingBelowStopPrice| DECIMAL| NO| Can be used if `pendingBelowType` is `STOP_LOSS`, `STOP_LOSS_LIMIT, TAKE_PROFIT or TAKE_PROFIT_LIMIT`. Either `pendingBelowStopPrice` or `pendingBelowTrailingDelta` or both, must be specified.  
-pendingBelowTrailingDelta| DECIMAL| NO|   
-pendingBelowIcebergQty| DECIMAL| NO| This can only be used if `pendingBelowTimeInForce` is `GTC`, or if `pendingBelowType` is `LIMIT_MAKER`.  
-pendingBelowTimeInForce| ENUM| NO| Supported values: [Time In Force](/docs/binance-spot-api-docs/enums#timeinforce)  
-pendingBelowStrategyId| LONG| NO| Arbitrary numeric value identifying the pending below order within an order strategy.  
-pendingBelowStrategyType| INT| NO| Arbitrary numeric value identifying the pending below order strategy. Values smaller than 1000000 are reserved and cannot be used.  
-pendingBelowPegPriceType| ENUM| NO| See [Pegged Orders](/docs/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingBelowPegOffsetType| ENUM| NO|   
-pendingBelowPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`. Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Response**
-    
-    
-    {  
-        "orderListId": 2,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "bcedxMpQG6nFrZUPQyshoL",  
-        "transactionTime": 1763000506354,  
-        "symbol": "BTCUSDT",  
-        "orders": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 9,  
-                "clientOrderId": "OLSBhMWaIlLSzZ9Zm7fnKB"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 10,  
-                "clientOrderId": "mfif39yPTHsB3C0FIXznR2"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "clientOrderId": "yINkaXSJeoi3bU5vWMY8Z8"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 9,  
-                "orderListId": 2,  
-                "clientOrderId": "OLSBhMWaIlLSzZ9Zm7fnKB",  
-                "transactTime": 1763000506354,  
-                "price": "102496.00000000",  
-                "origQty": "0.00170000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "BUY",  
-                "workingTime": 1763000506354,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 10,  
-                "orderListId": 2,  
-                "clientOrderId": "mfif39yPTHsB3C0FIXznR2",  
-                "transactTime": 1763000506354,  
-                "price": "101613.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "10100.00000000",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "orderListId": 2,  
-                "clientOrderId": "yINkaXSJeoi3bU5vWMY8Z8",  
-                "transactTime": 1763000506354,  
-                "price": "104261.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**Note:** The payload above does not show all fields that can appear. Please refer to [Conditional fields in Order Responses](/docs/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses).
-
-#### Cancel Order list (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-order-list-trade "Direct link to Cancel Order list \(TRADE\)")
-    
-    
-    DELETE /api/v3/orderList  
-    
-
-Cancel an entire Order list
-
-**Weight:** 1
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-orderListId| LONG| NO| Either `orderListId` or `listClientOrderId` must be provided  
-listClientOrderId| STRING| NO| Either `orderListId` or `listClientOrderId` must be provided  
-newClientOrderId| STRING| NO| Used to uniquely identify this cancel. Automatically generated by default  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Notes:**
-
-  * Canceling an individual order from an order list will cancel the entire order list.
-  * If both `orderListId` and `listClientOrderId` parameters are provided, the `orderListId` is searched first, then the `listClientOrderId` from that result is checked against that order. If both conditions are not met the request will be rejected.
-
-
-
-**Data Source:** Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OCO",  
-        "listStatusType": "ALL_DONE",  
-        "listOrderStatus": "ALL_DONE",  
-        "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",  
-        "transactionTime": 1574040868128,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "clientOrderId": "TXOvglzXuaubXAaENpaRCB"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",  
-                "transactTime": 1688005070874,  
-                "price": "1.00000000",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "1.00000000",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",  
-                "transactTime": 1688005070874,  
-                "price": "3.00000000",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-### SOR[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#sor "Direct link to SOR")
-
-#### New order using SOR (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-using-sor-trade "Direct link to New order using SOR \(TRADE\)")
-    
-    
-    POST /api/v3/sor/order  
-    
-
-Places an order using smart order routing (SOR).
-
-This adds 1 order to the `EXCHANGE_MAX_ORDERS` filter and the `MAX_NUM_ORDERS` filter.
-
-Read [SOR FAQ](/docs/binance-spot-api-docs/faqs/sor_faq) to learn more.
-
-**Weight:** 1
-
-**Unfilled Order Count:** 1
-
-**Parameters:**
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES|   
-type| ENUM| YES|   
-timeInForce| ENUM| NO|   
-quantity| DECIMAL| YES|   
-price| DECIMAL| NO|   
-newClientOrderId| STRING| NO| A unique id among open orders. Automatically generated if not sent.  
-Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.  
-strategyId| LONG| NO|   
-strategyType| INT| NO| The value cannot be less than `1000000`.  
-icebergQty| DECIMAL| NO| Used with `LIMIT` to create an iceberg order.  
-newOrderRespType| ENUM| NO| Set the response JSON. `ACK`, `RESULT`, or `FULL`. Default to `FULL`  
-selfTradePreventionMode| ENUM| NO| The allowed enums is dependent on what is configured on the symbol. The possible supported values are: [STP Modes](/docs/binance-spot-api-docs/enums#stpmodes).  
-recvWindow| DECIMAL| NO| The value cannot be greater than `60000`.   
-Supports up to three decimal places of precision (e.g., 6000.346) so that microseconds may be specified.  
-timestamp| LONG| YES|   
-  
-**Note:** `POST /api/v3/sor/order` only supports `LIMIT` and `MARKET` orders. `quoteOrderQty` is not supported.
-
-**Data Source:** Matching Engine
-
-**Response:**
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 2,  
-        "orderListId": -1,  
-        "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",  
-        "transactTime": 1689149087774,  
-        "price": "31000.00000000",  
-        "origQty": "0.50000000",  
-        "executedQty": "0.50000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "14000.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "LIMIT",  
-        "side": "BUY",  
-        "workingTime": 1689149087774,  
-        "fills": [  
-            {  
-                "matchType": "ONE_PARTY_TRADE_REPORT",  
-                "price": "28000.00000000",  
-                "qty": "0.50000000",  
-                "commission": "0.00000000",  
-                "commissionAsset": "BTC",  
-                "tradeId": -1,  
-                "allocId": 0  
-            }  
-        ],  
-        "workingFloor": "SOR",  
-        "selfTradePreventionMode": "NONE",  
-        "usedSor": true  
-    }  
-    
-
-#### Test new order using SOR (TRADE)[​](/docs/binance-spot-api-docs/rest-api/trading-endpoints#test-new-order-using-sor-trade "Direct link to Test new order using SOR \(TRADE\)")
-    
-    
-    POST /api/v3/sor/order/test  
-    
-
-Test new order creation and signature/recvWindow using smart order routing (SOR). Creates and validates a new order but does not send it into the matching engine.
-
-**Weight:**
-
-Condition| Request Weight  
----|---  
-Without `computeCommissionRates`| 1  
-With `computeCommissionRates`| 20  
-  
-**Parameters:**
-
-In addition to all parameters accepted by [`POST /api/v3/sor/order`](/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-using-sor-trade), the following optional parameters are also accepted:
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-computeCommissionRates| BOOLEAN| NO| Default: `false`  
-  
-**Data Source:** Memory
-
-**Response:**
-
-Without `computeCommissionRates`
-    
-    
-    {}  
-    
-
-With `computeCommissionRates`
-    
-    
-    {  
-        "standardCommissionForOrder": {   // Standard commission rates on trades from the order.  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "taxCommissionForOrder": {        // Tax commission rates for trades from the order  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "discount": {                     // Discount on standard commissions when paying in BNB.  
-            "enabledForAccount": true,  
-            "enabledForSymbol": true,  
-            "discountAsset": "BNB",  
-            "discount": "0.25000000"      // Standard commission is reduced by this rate when paying commission in BNB.  
-        }  
-    }
+REST| `POST /api/v3/order`  
+| `POST /api/v3/sor/order`  
+| `POST /api/v3/order/oco`  
+| `POST /api/v3/orderList/oco`  
+| `POST /api/v3/orderList/oto`  
+| `POST /api/v3/orderList/otoco`  
+| `DELETE /api/v3/order`  
+| `DELETE /api/v3/orderList`  
+| `POST /api/v3/order/cancelReplace`  
+WebSocket API| `order.place`  
+| `sor.order.place`  
+| `orderList.place`  
+| `orderList.place.oco`  
+| `orderList.place.oto`  
+| `orderList.place.otoco`  
+| `order.cancel`  
+| `orderList.cancel`  
+| `order.cancelReplace`  
+
+
+
+SBE
+
+  * A new schema 2:1 [spot_2_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_1.xml) has been released. The current schema 2:0 [spot_2_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_0.xml) will thus be deprecated, and retired from the API in 6 months as per our schema deprecation policy.
+  * Schema 2:1 is a backward compatible update of schema 2:0. You will always receive payloads in 2:1 format when you request either schema 2:0 or 2:1.
+  * Changes in SBE schema 2:1: 
+    * New field `origQuoteOrderQty` in order placement/cancellation responses (Note: Decoders generated using the 2:0 schema will skip this field.): 
+      * `NewOrderResultResponse`
+      * `NewOrderFullResponse`
+      * `CancelOrderResponse`
+      * `NewOrderListResultResponse`
+      * `NewOrderListFullResponse`
+      * `CancelOrderListResponse`
+    * WebSocket API only: New field `userDataStream` in session status responses: 
+      * `WebSocketSessionLogonResponse`
+      * `WebSocketSessionStatusResponse`
+      * `WebSocketSessionLogoutResponse`
+    * WebSocket API only: New messages for User Data Stream support: 
+      * `UserDataStreamSubscribeResponse`
+      * `UserDataStreamUnsubscribeResponse`
+      * `BalanceUpdateEvent`
+      * `EventStreamTerminatedEvent`
+      * `ExecutionReportEvent`
+      * `ExternalLockUpdateEvent`
+      * `ListStatusEvent`
+      * `OutboundAccountPositionEvent`
+
+
+
+WebSocket API
+
+  * You can now subscribe to User Data Stream events through your WebSocket API connection. 
+    * Note: This feature is only available for users of Ed25519 API keys.
+    * Note: New SBE schema 2:1 is required for User Data Stream subscriptions in SBE format.
+  * New requests: 
+    * `userDataStream.subscribe`
+    * `userDataStream.unsubscribe`
+  * Changes to `session.logon`, `session.status`, and `session.logout`
+    * Added a new field `userDataStream` indicating if the user data stream subscription is active.
+  * Fixed a bug where you wouldn't receive a new listenKey using `userDataStream.start` after `session.logon`
+
+
+
+User Data Stream
+
+  * WebSocket API only: New event `eventStreamTerminated` is emitted when you either logout from your WebSocket session or you have unsubscribed from the user data stream.
+  * New event `externalLockUpdate` is sent when your spot wallet balance is locked/unlocked by an external system.
+
+
+
+FIX API
+
+  * The [schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated with a new Administrative message News <B>, which can be used for all FIX services. Receiving this message indicates that your connection is about to be closed.
+  * **Note:** This message will be available in the live exchange at a later date.
+
+
+
+* * *
+
+### 2024-11-05[​](/docs/binance-spot-api-docs/testnet#2024-11-05 "Direct link to 2024-11-05")
+
+**Note:** This is in the process of being deployed. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+Changes to Exchange Information (i.e. [`GET /api/v3/exchangeInfo`](/docs/binance-spot-api-docs/testnet/rest-api/general-endpoints#exchangeInfo) from REST and [`exchangeInfo`](/docs/binance-spot-api-docs/testnet/websocket-api/general-requests#exchangeInfo) for WebSocket API).
+
+  * A new optional parameter `showPermissionSets` can be used to hide the permissions from `permissionsSets`; This can be used for a reduced payload size.
+  * A new optional parameter `symbolStatus` can now be used to only show symbols with the specified status. (e.g. `TRADING`, `HALT`, `BREAK`)
+
+
+
+* * *
+
+### 2024-10-02[​](/docs/binance-spot-api-docs/testnet#2024-10-02 "Direct link to 2024-10-02")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 1:0 schema will be disabled on 2024-10-04, [6 months after being deprecated](/docs/binance-spot-api-docs/faqs/sbe_faq), as per our SBE policy.
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2024-09-04[​](/docs/binance-spot-api-docs/testnet#2024-09-04 "Direct link to 2024-09-04")
+
+  * Spot Testnet now supports Unfilled Order Count. Please refer to this [page](/docs/binance-spot-api-docs/faqs/order_count_decrement) on how you can decrement your unfilled order count when placing orders.
+  * The documentation has been updated to reflect the wording.
+
+
+
+* * *
+
+### 2024-08-16[​](/docs/binance-spot-api-docs/testnet#2024-08-16 "Direct link to 2024-08-16")
+
+General Changes:
+
+  * New error messages have been added when quote quantity market orders (aka reverse market orders) are rejected in low-liquidity situations.
+
+
+
+* * *
+
+### 2024-08-07[​](/docs/binance-spot-api-docs/testnet#2024-08-07 "Direct link to 2024-08-07")
+
+  * The [QuickFIX schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been modified.
+
+
+
+* * *
+
+### 2024-07-23[​](/docs/binance-spot-api-docs/testnet#2024-07-23 "Direct link to 2024-07-23")
+
+**Note:** This will be deployed starting around 7am UTC. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+  * FIX Drop Copy sessions are now supported on the Spot Test Network.
+  * New API Key permission `FIX_API_READ_ONLY` has been introduced.
+
+
+
+* * *
+
+### 2024-07-17[​](/docs/binance-spot-api-docs/testnet#2024-07-17 "Direct link to 2024-07-17")
+
+General changes:
+
+  * Fixed a bug where klines had incorrect timestamps. 
+    * REST API: `GET /api/v3/klines` and `GET /api/v3/uiKlines` with `timeZone` parameter
+    * WebSocket API: `klines` and `uiKlines` with `timeZone` parameter
+    * WebSocket Streams: `<symbol>@kline_<interval>@+08:00` streams
+
+
+
+* * *
+
+### 2024-06-21[​](/docs/binance-spot-api-docs/testnet#2024-06-21 "Direct link to 2024-06-21")
+
+  * [FIX API](/docs/binance-spot-api-docs/testnet/fix-api) will be available today (2024-06-21) on the Spot Test Network. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion. 
+    * Using the FIX API requires an Ed25519 API Key with the `FIX_API` permission.
+    * The release date on the live exchange has not been determined.
+
+
+
+* * *
+
+### 2024-06-05[​](/docs/binance-spot-api-docs/testnet#2024-06-05 "Direct link to 2024-06-05")
+
+WebSocket Streams
+
+  * Buyer order ID (`b`) and Seller order ID (`a`) have been removed from the Trade streams. (i.e. `<symbol>@trade`)
+  * To monitor if your order was part of a trade, please listen to the [User Data Streams](/docs/binance-spot-api-docs/testnet/user-data-stream).
+
+
+
+* * *
+
+### 2024-05-30[​](/docs/binance-spot-api-docs/testnet#2024-05-30 "Direct link to 2024-05-30")
+
+WebSocket API
+
+  * `wss://ws-api.testnet.binance.vision/ws-api/v3` is now the primary URL for the Spot Testnet WebSocket API. Other URLs will be phased out over time.
+
+
+
+WebSocket Streams
+
+  * `wss://stream.testnet.binance.vision/ws` and `wss://stream.testnet.binance.vision/stream` are now the primary URLs for the Spot Testnet WebSocket Streams. Other URLs will be phased out over time.
+
+
+
+* * *
+
+### 2024-05-23[​](/docs/binance-spot-api-docs/testnet#2024-05-23 "Direct link to 2024-05-23")
+
+REST API
+
+  * `orderRateLimitExceededMode` has been added to `POST /api/v3/order/cancelReplace`
+
+
+
+WebSocket API
+
+  * `orderRateLimitExceededMode` has been added to `order.cancelReplace`
+
+
+
+WebSocket Streams
+
+  * Kline/Candlestick streams can now support a UTC+8:00 timezone offset. (e.g. `btcusdt@kline_1d@+08:00`)
+
+
+
+* * *
+
+### 2024-05-02[​](/docs/binance-spot-api-docs/testnet#2024-05-02 "Direct link to 2024-05-02")
+
+  * One-Triggers-the-Other (OTO) orders and One-Triggers-a-One-Cancels-The-Other (OTOCO) orders are now enabled.
+  * New requests have been added: 
+    * REST API: 
+      * `POST /api/v3/orderList/oto`
+      * `POST /api/v3/orderList/otoco`
+    * WebSocket API: 
+      * `orderList.place.oto`
+      * `orderList.place.otoco`
+
+
+
+* * *
+
+### 2024-04-04[​](/docs/binance-spot-api-docs/testnet#2024-04-04 "Direct link to 2024-04-04")
+
+General changes:
+
+  * Symbol permission information in Exchange Information responses has moved from field `permissions` to field `permissionSets`.
+  * Field `permissions` will be empty and will be removed in a future release.
+  * Previously, `"permissions":["SPOT","MARGIN"]` meant that you could place an order on the symbol if your account had `SPOT` or `MARGIN` permissions. The equivalent is `"permissionSets":[["SPOT","MARGIN"]]`. (Note the extra set of square brackets.) Each array of permissions inside the `permissionSets` array is called a "permission set".
+  * Symbol permissions can now be more complex. `"permissionSets":[["SPOT","MARGIN"],["TRD_GRP_004","TRD_GRP_005"]]` means that you may place an order on the symbol if your account has SPOT or MARGIN permissions **and** `TRD_GRP_004` or `TRD_GRP_005` permissions. There may be an arbitrary number of permission sets in a symbol's `permissionSets`.
+  * **The weight of the following requests has increased from 10 to 25** : 
+    * `GET /api/v3/trades`
+    * `GET /api/v3/historicalTrades`
+    * `trades.recent`
+    * `trades.historical`
+
+
+
+REST API
+
+  * The `POST /api/v3/order/oco` endpoint is now deprecated on the REST API. You should use the new `POST /api/v3/orderList/oco` endpoint instead. Note that this new endpoint uses different parameters.
+  * `POST /api/v3/order/oco` has been removed from the Rest API documentation for SPOT Testnet.
+  * `otoAllowed` will now appear on `GET /api/v3/exchangeInfo`, that indicates if One-Triggers-the-Other (OTO) orders are supported on that symbol.
+
+
+
+WebSocket API
+
+  * The `orderList.place` request is now deprecated on the WebSocket API. You should now use the new `orderList.place.oco` request instead. Note that this new request uses different parameters.
+  * `orderList.place` has been removed from the WebSocket API documentation for SPOT Testnet.
+  * `otoAllowed` will now appear on `exchangeInfo`, that indicates if One-Triggers-the-Other (OTO) orders are supported on that symbol.
+
+
+
+SBE
+
+  * A new schema 2:0 [spot_2_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_0.xml) has been released for SPOT Testnet. The current schema, 1:0 [spot_1_0.xml](https://github.com/binance/binance-spot-api-docs/blob/becd4d44a09d94821d2dc761ba9197aae8b495c3/sbe/schemas/spot_1_0.xml), will thus be deprecated and retired from the Testnet APIs in 6 months as per our schema deprecation policy.
+  * When using schema 1:0 on REST API or WebSocket API, group "permissions" in message "ExchangeInfoResponse" will always be empty. Upgrade to schema 2:0 to find permission information in group "permissionSets". See General changes above for more details.
+  * Responses for deprecated OCO requests are supported by both schema 1:0 and 2:0
+
+
+
+* * *
+
+### 2024-03-13[​](/docs/binance-spot-api-docs/testnet#2024-03-13 "Direct link to 2024-03-13")
+
+General changes:
+
+  * `GET /api/v3/account` has a new optional parameter `omitZeroBalances`, allowing to hide all zero balances
+  * `account.status` has a new optional parameter `omitZeroBalances` allowing to hide all zero balances.
+
+
+
+User Data Stream:
+
+  * New event `listenKeyExpired` is now emitted when a `listenKey` expires.
 
 ---
 
-# 交易接口
+# CHANGELOG for Binance SPOT Testnet
 
-### 下单 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#下单-trade "下单 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/order  
-    
+**Last Updated: 2026-06-24**
 
-这个请求会把1个订单添加到 `EXCHANGE_MAX_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
+**Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/). This is not always synced with the live exchange.
 
-**权重:** 1
+### 2026-06-24[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-24 "2026-06-24的直接链接")
 
-**未成交的订单计数:** 1
+  * Beginning at **2026-07-02 07:00 UTC** , [WebSocket Streams](/docs/zh-CN/binance-spot-api-docs/testnet/web-socket-streams) will undergo an infrastructure upgrade and will approximately take up to an hour.
+  * During the upgrade, your WebSocket connection may be disconnected; please reconnect to restore your connection.
 
-**参数:**
 
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES| 详见枚举定义：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-type| ENUM| YES| 详见枚举定义：[订单类型](/docs/zh-CN/binance-spot-api-docs/enums#ordertypes)  
-timeInForce| ENUM| NO| 详见枚举定义：[生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-quantity| DECIMAL| NO|   
-quoteOrderQty| DECIMAL| NO|   
-price| DECIMAL| NO|   
-newClientOrderId| STRING| NO| 用户自定义的orderid，如空缺系统会自动赋值。  
-strategyId| LONG| NO|   
-strategyType| INT| NO| 不能低于 `1000000`.  
-stopPrice| DECIMAL| NO| 仅 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT` 需要此参数。  
-trailingDelta| LONG| NO| 参见 [追踪止盈止损(Trailing Stop)订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)。  
-icebergQty| DECIMAL| NO| 仅有限价单(包括条件限价单与限价做事单)可以使用该参数，含义为创建冰山订单并指定冰山订单的数量。  
-newOrderRespType| ENUM| NO| 指定响应类型 `ACK`, `RESULT`, or `FULL`; `MARKET` 与 `LIMIT` 订单默认为`FULL`, 其他默认为`ACK`。  
-selfTradePreventionMode| ENUM| NO| 允许的 ENUM 取决于交易对的配置。支持的值有：[STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)。  
-pegPriceType| ENUM| NO| `PRIMARY_PEG` 或 `MARKET_PEG`。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetValue| INT| NO| 用于挂钩的价格水平（最大值：100）。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetType| ENUM| NO| 仅支持 `PRICE_LEVEL`。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
+
+* * *
+
+### 2026-06-22[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-22 "2026-06-22的直接链接")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 3:1 schema will be retired on 2026-06-29, [6 months after being deprecated](/docs/zh-CN/faqs/sbe_faq.md#regarding-legacy-support).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2026-06-10[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-10 "2026-06-10的直接链接")
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api "FIX API的直接链接")
+
+  * Documentation update: removed `LastFragment (893)` from [FIX API](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#marketdataincrementalrefresh). 
+    * As [previously announced](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-28), `MarketDataIncrementalRefresh <X>` messages stopped being fragmented on 2025-12-02, and the server no longer sends `LastFragment (893)`.
+    * The field has been removed from the [FIX API](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api) field list and from the corresponding [QuickFIX MD schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml).
+  * Documentation update: updated the [News `<B>`](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#news-b) message description to be consistent with the announcement from [2026-06-09](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-09).
+
+
+
+* * *
+
+### 2026-06-09[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-09 "2026-06-09的直接链接")
+
+**Update:**
+
+  * Updated the [Price Range Execution Rule FAQ](/docs/zh-CN/faqs/price_range_execution_rules.md#externalCalculationId1) with new External Reference Price Calculation Methods.
+
+
+
+The `serverShutdown` event will be sent when the **server is about to be shut down** ; when you receive this event, please disconnect and open a new connection.
+
+All mention of a fixed time before the server shuts down has been removed from the documentation.
+
+  * Documented the `serverShutdown` event in [SBE Market Data Streams](/docs/zh-CN/binance-spot-api-docs/testnet/sbe-market-data-streams#serverShutdown). 
+    * ~~`serverShutdown` event will be sent 10 minutes before disconnection.~~
+    * Please establish a new connection as soon as possible to prevent connection interruption.
+    * Note that you will receive `serverShutdown` events in JSON in WebSocket text frames.
+
+
+
+* * *
+
+### 2026-06-03[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-03 "2026-06-03的直接链接")
+
+#### Data reset[​](/docs/zh-CN/binance-spot-api-docs/testnet#data-reset "Data reset的直接链接")
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2026-05-11[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-05-11 "2026-05-11的直接链接")
+
+The following rollout will occur at **approximately 08:00 UTC today**.
+
+  * Added WebSocket Stream support for [Block Trades](https://www.binance.info/en/support/faq/detail/557f95eaf8fb4460aed0a891d42a1425). 
+    * New stream: 
+      * `<symbol>@blockTrade`
+
+
+
+* * *
+
+### 2026-05-06[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-05-06 "2026-05-06的直接链接")
+
+#### Data reset[​](/docs/zh-CN/binance-spot-api-docs/testnet#data-reset-1 "Data reset的直接链接")
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features "New Features的直接链接")
+
+**Notice: The following changes will take effect once the Spot Test Network is back online.**
+
+  * Added `serverShutdown` event to [WebSocket API](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/connection-events#serverShutdown) and [WebSocket Streams](/docs/zh-CN/binance-spot-api-docs/testnet/web-socket-streams#serverShutdown).
+
+    * `serverShutdown` event will be sent 10 minutes before disconnection.
+  * [`PERCENT_PRICE`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#percent_price), [`PERCENT_PRICE_BY_SIDE`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#percent_price_by_side), [`MIN_NOTIONAL`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#min_notional), and [`NOTIONAL`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#notional) filters now use [reference price](/docs/zh-CN/faqs/price_range_execution_rules.md) when it exists and is non-null. The filters fall back to their previous behavior when the reference price does not exist or is null.
+
+  * Market data for [Block Trades](https://www.binance.info/en/support/faq/detail/557f95eaf8fb4460aed0a891d42a1425).
+
+    * New Endpoints/Methods 
+      * REST API: 
+        * `GET /api/v3/historicalBlockTrades`
+      * WebSocket API: 
+        * `blockTrades.historical`
+  * Order query responses may include an [`expiryReason`](/docs/zh-CN/binance-spot-api-docs/testnet/enums#expiryreasons) field.
+
+    * This field is returned **only for expired orders** and helps users understand why an order expired, including cases where the order is expired due to the **execution price range rule**.
+    * This field is included in both JSON and SBE 3:4 responses.
+    * This applies to the following endpoint/method: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `GET /api/v3/allOrders`
+        * `GET /api/v3/orderList`
+        * `GET /api/v3/allOrderList`
+      * WebSocket API: 
+        * `order.status`
+        * `allOrders`
+        * `orderList.status`
+        * `allOrderLists`
+  * REST and WebSocket API SBE schema 3:4
+
+    * The current schema 3:3 [spot_3_3.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_3.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:4: 
+      * New message `BlockTradesResponse`
+      * New type `blockTradeId`
+      * New field `expiryReason` in `OrderResponse` and `OrdersResponse`
+
+
+
+* * *
+
+### 2026-04-28[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-04-28 "2026-04-28的直接链接")
+
+  * Corrected the JSON in the `Price Range Execution Rule FAQ` for the question [`How does the Price Range Execution Rule work?`](/docs/zh-CN/faqs/price_range_execution_rules.md#how-does-the-price-range-execution-rule-work).
+
+
+
+* * *
+
+### 2026-04-17[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-04-17 "2026-04-17的直接链接")
+
+The following will occur **today at approximately 10:00 UTC**.
+
+  * The update speed of the below SBE Market Data Streams has been changed **from 50ms to 25ms** : 
+    * SBE Market Data Streams: [Diff Depth Streams](/docs/zh-CN/binance-spot-api-docs/testnet/sbe-market-data-streams#diff-depth-streams)
+    * FIX SBE: [MarketDataIncrementalDepth](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#marketdataincrementaldepth)
+
+
+
+* * *
+
+### 2026-04-16[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-04-16 "2026-04-16的直接链接")
+
+  * Updated the documentation to clarify that if a symbol has never had a reference price set, an error code [`-2043`](/docs/zh-CN/binance-spot-api-docs/testnet/errors#-2043-no_reference_price) is returned when querying the reference price. This applies to the following endpoint/method: 
+    * REST API: `GET /api/v3/referencePrice`
+    * WebSocket API: `referencePrice`
+
+
+
+* * *
+
+### 2026-03-27[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-27 "2026-03-27的直接链接")
+
+The following will occur **today at approximately 07:00 UTC**.
+
+  * `RAW_REQUESTS` rate limit increases to 300,000 per 5 minutes.
+
+  * Request weights for the following endpoints and methods become 0 when the request is successful. Failed requests are still charged the documented weight.   
+IPs that only call these endpoints and methods successfully will never hit the `REQUEST_WEIGHT` rate limit.
+
+    * REST API 
+      * `POST /api/v3/order`
+      * `POST /api/v3/sor/order`
+      * `DELETE /api/v3/order`
+      * `DELETE /api/v3/openOrders`
+      * `POST /api/v3/order/cancelReplace`
+      * `POST /api/v3/order/oco`
+      * `POST /api/v3/orderList/oco`
+      * `POST /api/v3/orderList/oto`
+      * `POST /api/v3/orderList/otoco`
+      * `POST /api/v3/orderList/opo`
+      * `POST /api/v3/orderList/opoco`
+      * `DELETE /api/v3/orderList`
+      * `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API 
+      * `order.place`
+      * `sor.order.place`
+      * `order.cancel`
+      * `openOrders.cancelAll`
+      * `order.cancelReplace`
+      * `orderList.place`
+      * `orderList.place.oco`
+      * `orderList.place.oto`
+      * `orderList.place.otoco`
+      * `orderList.place.opo`
+      * `orderList.place.opoco`
+      * `orderList.cancel`
+      * `order.amend.keepPriority`
+  * [STP Transfer](/docs/zh-CN/faqs/stp_faq.md) will be allowed on all symbols **today at approximately 07:00 UTC**.
+
+
+
+
+* * *
+
+### 2026-03-16[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-16 "2026-03-16的直接链接")
+
+**Notice: This will be rolled out at approximately 9:00 UTC today.**
+
+  * Symbols `BTCUSDT` and `BROCCOLI714USDC` have [Price Range Execution Rule](/docs/zh-CN/faqs/price_range_execution_rules.md) enabled. The settings are for testing only and may not be indicative of settings on the live exchange.
+
+
+
+* * *
+
+### 2026-03-12[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-12 "2026-03-12的直接链接")
+
+  * The removal of `!ticker@arr` for Spot Testnet has been **moved to today at 07:30 UTC**.
+
+
+
+* * *
+
+### 2026-03-11[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-11 "2026-03-11的直接链接")
+
+**Notice:** FIX TLS Connectivity Update on **2026-03-17** , starting from **03:00 UTC** and will take about 1 hour to complete.
+
+**Action Required:**
+
+During the update window, existing FIX connections may drop intermittently. To ensure successful reconnections and new connections afterward, please verify before our update that your client sends SNI (Server Name Indication) during the TLS handshake and validates the certificate against the requested hostname.   
+Clients without SNI may receive an error message during handshake related to incorrect certificate during or after the update window, leading to TLS handshake or hostname verification failures. This can occur with some Node.js clients if SNI is not explicitly configured.  
+Please consult the [FIX API documentation](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#general-api-information) for full context.
+
+* * *
+
+### 2026-03-09[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-09 "2026-03-09的直接链接")
+
+**Notice:** The changes in this section will be gradually rolled out starting from **2026-03-11 02:00 UTC** and will be finished at approximately **2026-03-12 13:00 UTC**.
+
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-1 "New Features的直接链接")
+
+  * [Price Range Execution Rule](/docs/zh-CN/faqs/price_range_execution_rules.md)
+    * New Endpoints/Methods 
+      * REST API: 
+        * `GET /api/v3/executionRules`
+        * `GET /api/v3/referencePrice`
+        * `GET /api/v3/referencePrice/calculation`
+      * WebSocket API: 
+        * `executionRules`
+        * `referencePrice`
+        * `referencePrice.calculation`
+    * New JSON Stream: `<symbol>@referencePrice`
+  * REST and WebSocket API SBE schema 3:3 
+    * The current schema 3:2 [spot_3_2.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_2.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:3: 
+      * New message `ExecutionRulesResponse`
+      * New message `PriceRangeExecutionRule` (to be embedded in `ExecutionRulesResponse`)
+      * New message `ReferencePriceResponse`
+      * New message `ReferencePriceCalculationResponse`
+      * New enum `executionRuleType`
+      * New enum `expiryReason`
+      * New enum `calculationType`
+      * New field `expiryReason` in `NewOrderResultResponse`, `NewOrderFullResponse`, `NewOrderListResultResponse` and `NewOrderListFullResponse`
+      * New field `expiryReason` in `ExecutionReportEvent`
+      * New message `ServerShutdownEvent` for WebSocket API only
+  * FIX SBE schema 1:1 
+    * This will be used for FIX Order Entry, FIX Drop Copy, and FIX Market Data.
+    * The current FIX schema 1:0 [spot-fixsbe-1_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot-fixsbe-1_0.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 1:1: 
+      * New enum `expiryReason`
+      * New field `ExpiryReason` in `ExecutionReport`
+
+
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api-1 "FIX API的直接链接")
+
+  * ExpiryReason `<25056>` is optionally added to the ExecutionReport `<T>` message. 
+    * Updated QuickFIX Schema for FIX Market Data and FIX Order Entry.
+
+
+
+#### WebSocket API[​](/docs/zh-CN/binance-spot-api-docs/testnet#websocket-api "WebSocket API的直接链接")
+
+  * `serverShutdown` event added.
+
+
+
+#### General Changes[​](/docs/zh-CN/binance-spot-api-docs/testnet#general-changes "General Changes的直接链接")
+
+  * The responses to order placement and order list placement endpoints display the expiry reason depending on the value of `newOrderRespAck`: 
+    * If `newOrderRespType=ACK`, the expiry reason is not displayed.
+    * If `newOrderRespType=RESULT` or `newOrderRespType=FULL` mode, the expiry reason, if any, is displayed in field `expiryReason`.
+    * This affects the following endpoints/methods: 
+      * REST API 
+        * `POST /api/v3/order`
+        * `POST /api/v3/sor/order`
+        * `POST /api/v3/order/cancelReplace`
+        * `POST /api/v3/order/oco`
+        * `POST /api/v3/orderList/oco`
+        * `POST /api/v3/orderList/oto`
+        * `POST /api/v3/orderList/otoco`
+        * `POST /api/v3/orderList/opo`
+        * `POST /api/v3/orderList/opoco`
+      * WebSocket API 
+        * `order.place`
+        * `sor.order.place`
+        * `order.cancelReplace`
+        * `orderList.place`
+        * `orderList.place.oco`
+        * `orderList.place.oto`
+        * `orderList.place.otoco`
+        * `orderList.place.opo`
+        * `orderList.place.opoco`
+    * In User Data Streams, `executionReport` events have a new optional field, `eR`, which shows the expiry reason, if any.
+  * These endpoints have been deprecated for a long time and will be retired: 
+    * `GET /api/v1/ping`
+    * `GET /api/v1/time`
+    * `POST /api/v1/userDataStream`
+    * `PUT /api/v1/userDataStream`
+    * `GET /api/v1/ticker/bookTicker`
+    * `GET /api/v1/ticker/price`
+    * `GET /api/v1/klines`
+    * `GET /api/v1/historicalTrades`
+    * `GET /api/v1/depth`
+    * `GET /api/v1/aggTrades`
+    * `GET /api/v1/ticker/24hr`
+  * The following endpoints will be retired: 
+    * `GET /api/v1/userDataStream`
+    * `DELETE /api/v1/userDataStream`
+    * `GET /api/v1/trades`
+
+
+
+* * *
+
+### 2026-03-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-05 "2026-03-05的直接链接")
+
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-2 "New Features的直接链接")
+
+  * Users of the Spot Test Network can now choose to add commissions on their Testnet orders, if they want to test their integration of commission APIs and fields.
+
+
+
+* * *
+
+### 2026-02-24[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-02-24 "2026-02-24的直接链接")
+
+  * Following the announcement on [2025-11-28](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-28), `!ticker@arr` will be retired on **2026-03-26**
+  * [`ICEBERG_PARTS`](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 100 for all symbols starting 07:30 UTC.
+
+
+
+* * *
+
+### 2026-02-09[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-02-09 "2026-02-09的直接链接")
+
+  * Clarified exponent field requirements in [FIX SBE documentation](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#fix-sbe)
+
+
+
+* * *
+
+### 2026-02-04[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-02-04 "2026-02-04的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+REST and WebSocket API:
+
+  * Reminder that SBE 3:0 schema will be retired on 2026-02-06, [6 months after being deprecated](/docs/zh-CN/faqs/sbe_faq.md#regarding-legacy-support).
+
+
+
+* * *
+
+### 2026-02-02[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-02-02 "2026-02-02的直接链接")
+
+  * Documented that [FIX Drop Copy session](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#fix-api-drop-copy-sessions) data is delayed by 1 second. This has been the delay since the inception of the FIX API.
+
+
+
+* * *
+
+### 2026-01-27[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-01-27 "2026-01-27的直接链接")
+
+  * [ICEBERG_PARTS](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 50 for all symbols today.
+
+
+
+* * *
+
+### 2026-01-26[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-01-26 "2026-01-26的直接链接")
+
+  * Added undocumented `recvWindow` to `userDataStream.subscribe.signature`.
+
+
+
+* * *
+
+### 2026-01-21[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-01-21 "2026-01-21的直接链接")
+
+#### REST and WebSocket API[​](/docs/zh-CN/binance-spot-api-docs/testnet#rest-and-websocket-api "REST and WebSocket API的直接链接")
+
+Following the announcement from [2025-10-24](/docs/zh-CN/binance-spot-api-docs/testnet#2025-10-24), the following endpoints/methods will no longer be available starting from **2026-02-04, 07:00 UTC**
+
+REST API
+
+  * `POST /api/v3/userDataStream`
+  * `PUT /api/v3/userDataStream`
+  * `DELETE /api/v3/userDataStream`
+
+
+
+WebSocket API
+
+  * `userDataStream.start`
+  * `userDataStream.ping`
+  * `userDataStream.stop`
+
+
+
+* * *
+
+### 2026-01-07[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-01-07 "2026-01-07的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-12-18[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-12-18 "2025-12-18的直接链接")
+
+  * Updated [FIX SBE documentation](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#fix-sbe)
+  * Clarified User Data Stream documentation regarding [`eventStreamTerminated`](/docs/zh-CN/binance-spot-api-docs/testnet/user-data-stream#event-stream-terminated).
+  * Assets `这是测试币` and `456` and symbol `这是测试币456` have been added for testing endpoints/methods with a Unicode symbol. Balances for both assets have been distributed to all accounts.
+
+
+
+* * *
+
+### 2025-12-17[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-12-17 "2025-12-17的直接链接")
+
+#### REST API[​](/docs/zh-CN/binance-spot-api-docs/testnet#rest-api "REST API的直接链接")
+
+  * When calling endpoints that require signatures, percent-encode payloads before computing signatures. Requests that do not follow this order will be rejected with [`-1022 INVALID_SIGNATURE`](/docs/zh-CN/binance-spot-api-docs/testnet/errors#-1022-invalid_signature). Please review and update your signing logic accordingly.
+  * Updated documentation for REST API regarding [Signed Endpoints examples for placing an order](https://developers.binance.com/docs/binance-spot-api-docs/testnet/rest-api/request-security#signed-endpoint-examples-for-post-apiv3order)
+
+
+
+#### WebSocket API[​](/docs/zh-CN/binance-spot-api-docs/testnet#websocket-api-1 "WebSocket API的直接链接")
+
+  * Updated documentation for WebSocket API regarding [SIGNED request security](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/request-security#signed-request-security)
+
+
+
+* * *
+
+### 2025-12-15[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-12-15 "2025-12-15的直接链接")
+
+**Clarification Regarding UTF-8 Encoding:**
+
+  * In [FIX](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api), [REST](https://developers.binance.com/docs/binance-spot-api-docs/testnet/rest-api/general-api-information), and [WebSocket APIs](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/general-api-information), if your request contains a symbol name containing non-ASCII characters, then the response may contain non-ASCII characters encoded in UTF-8.
+  * In REST and WebSocket APIs, some endpoints/methods may return asset and/or symbol names containing non-ASCII characters encoded in UTF-8 even if the request did not contain non-ASCII characters.
+  * In [WebSocket Streams](/docs/zh-CN/binance-spot-api-docs/testnet/web-socket-streams), if your request contains a symbol name containing non-ASCII characters, then the stream events may contain non-ASCII characters encoded in UTF-8.
+  * In WebSocket Streams, [All Market Mini Tickers Stream](/docs/zh-CN/binance-spot-api-docs/testnet/web-socket-streams#all-market-mini-tickers-stream) and [All Market Rolling Window Statistics Streams](/docs/zh-CN/binance-spot-api-docs/testnet/web-socket-streams#all-market-rolling-window-statistics-streams) events may contain non-ASCII characters encoded in UTF-8.
+  * In [SBE Market Data Streams](/docs/zh-CN/binance-spot-api-docs/testnet/sbe-market-data-streams), if your request contains a symbol name containing non-ASCII characters, then the stream events may contain non-ASCII characters encoded in UTF-8.
+  * [UserDataStream events](/docs/zh-CN/binance-spot-api-docs/testnet/user-data-stream) may contain non-ASCII characters encoded in UTF-8 if you own or trade any assets or symbols whose names contain non-ASCII characters.
+  * For full compatibility with Binance APIs, please ensure your code is designed to handle UTF-8-encoded strings.
+
+
+
+* * *
+
+### 2025-12-09[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-12-09 "2025-12-09的直接链接")
+
+  * [Schema for FIX SBE](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot-fixsbe-1_0.xml) has been updated to use `smallGroupSize16Encoding` in `MarketDataSnapshot` and use `presence="optional"` for incremental book ticker/depth `MDEntrySize` fields.
+  * Updated documentation re: [FIX vs FIX SBE](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#fix-vs-fix-sbe)
+  * Added documentation in REST, and WebSocket APIs stating:   
+**Please avoid SQL keywords in requests** as they may trigger a security block by a WAF (Web Application Firewall) rule.   
+See <https://www.binance.com/en/support/faq/detail/360004492232> for more details.
+
+
+
+* * *
+
+### 2025-12-04[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-12-04 "2025-12-04的直接链接")
+
+  * [QuickFix Schema for FIX OE](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated to add `ExecutionReportType` and `SBESchemaVersionDeprecated` for FIX SBE support.
+  * [QuickFix Schema for FIX MD](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) has been updated to add `SBESchemaVersionDeprecated` for FIX SBE support.
+
+
+
+* * *
+
+### 2025-11-28[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-28 "2025-11-28的直接链接")
+
+**Notice: The following changes will be deployed starting from 2025-12-01 2:00 UTC and may take several hours to complete**
+
+#### General Changes[​](/docs/zh-CN/binance-spot-api-docs/testnet#general-changes-1 "General Changes的直接链接")
+
+  * Parameter `symbol` and `symbols` can now support Unicode values encoded in UTF-8.
+  * Following the announcement from [2025-11-14](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-14), all documentation related to `!ticker@arr` has been removed. 
+    * The feature will remain available until a future retirement announcement is made.
+    * Please use `<symbol>@ticker` or `!miniTicker@arr` instead.
+
+
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api-2 "FIX API的直接链接")
+
+  * Unicode values encoded in UTF-8 can now be accepted in FIX messages. This is allowed for the following tags only: 
+    * `Currency (15)`
+    * `MiscFeeCurr (138)`
+    * `Symbol (55)`
+    * `SecondarySymbol (25019)`
+    * `CounterSymbol (25028)`
+    * `SecurityDesc (107)`
+  * When Unicode is put in a tag value that is not one of the tags above, FIX API will now send back a `RefTagID (371)` tag in the Reject `<3>`, pointing to exactly which tag is not allowed to contain Unicode.
+  * NewOrderList `<E>` accepts `TriggerPriceDirection (1109)` without `TriggerPrice (1102)`.
+
+
+
+#### WebSocket Streams[​](/docs/zh-CN/binance-spot-api-docs/testnet#websocket-streams "WebSocket Streams的直接链接")
+
+  * WebSocket Market Streams supports URL-encoded urls.   
+
+
   
-根据 order `type`的不同，某些参数 有强制要求，具体如下:
-
-Type| 强制要求的参数| 其他信息  
----|---|---  
-`LIMIT`| `timeInForce`, `quantity`, `price`|   
-`MARKET`| `quantity`| 市价买卖单可用`quantity`参数来设置`base asset`数量.  
-例如：BTCUSDT 市价单，BTC 买卖数量取决于`quantity`参数.   
-  
-市价买卖单可用`quoteOrderQty`参数来设置`quote asset`数量. 正确的`quantity`取决于市场的流动性与`quoteOrderQty`  
-例如: 市价 `BUY` BTCUSDT，单子会基于`quoteOrderQty`\- USDT 的数量，购买 BTC.  
-市价 `SELL` BTCUSDT，单子会卖出 BTC 来满足`quoteOrderQty`\- USDT 的数量.  
-`STOP_LOSS`| `quantity`, `stopPrice`, `trailingDelta`| 条件满足后会下`MARKET`单子. (例如：达到`stopPrice`或`trailingDelta`被启动)  
-`STOP_LOSS_LIMIT`| `timeInForce`, `quantity`, `price`, `stopPrice`, `trailingDelta`|   
-`TAKE_PROFIT`| `quantity`, `stopPrice`, `trailingDelta`| 条件满足后会下`MARKET`单子. (例如：达到`stopPrice`或`trailingDelta`被启动)  
-`TAKE_PROFIT_LIMIT`| `timeInForce`, `quantity`, `price`, `stopPrice`, `trailingDelta`|   
-`LIMIT_MAKER`| `quantity`, `price`| 订单大部分情况下与普通的限价单没有区别，但是如果在当前价格会立即吃对手单并成交则下单会被拒绝。因此使用这个订单类型可以保证订单一定是挂单方，不会成为吃单方。  
-  
-关于挂钩订单参数的注意事项：
-
-  * 这些参数仅适用于 `LIMIT`， `LIMIT_MAKER`， `STOP_LOSS_LIMIT` 和 `TAKE_PROFIT_LIMIT` 订单。
-  * 如果使用了 `pegPriceType`， 那么 `price` 字段将是可选的。 否则，`price` 字段依旧是必须的。
-  * `pegPriceType=PRIMARY_PEG` 就是主要挂钩（`primary`），这是订单簿上与您的订单同一方向的最佳价格。
-  * `pegPriceType=MARKET_PEG` 就是市场挂钩（`market`），这是订单簿上与您的订单相反方向的最佳价格。
-  * 可以通过使用 `pegOffsetType` 和 `pegOffsetValue` 来获取最佳价格以外的价格水平。 这两个参数必须一起使用。
 
 
+**Notice: The following changes will occur at approximately 2025-12-02 11:00 UTC** :
 
-其他:
-
-  * 任何`LIMIT`或`LIMIT_MAKER`只要填`icebergQty`参数都可以下冰上订单。
-  * 冰山订单的 `timeInForce`必须设置为`GTC`。
-  * `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` 与 `TAKE_PROFIT` 单子都能同时填上`trailingDelta`与`stopPrice`。
-  * 填上`quoteOrderQty`的市价单不会触犯过滤器的`LOT_SIZE`限制。订单的`quantity`会尽量满足`quoteOrderQty`的数量。
-
-
-
-条件单的触发价格必须:
-
-  * 比下单时当前市价高: `STOP_LOSS` `BUY`, `TAKE_PROFIT` `SELL`
-  * 比下单时当前市价低: `STOP_LOSS` `SELL`, `TAKE_PROFIT` `BUY`
+  * [FIX SBE support](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api) becomes available.
+  * [One Pays the Other (OPO)](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/opo.md) becomes available on all symbols. 
+    * `opoAllowed` begins to appear in Exchange Information requests, indicating if One-Pays-the-Other (OPO) orders are supported on each symbol. 
+      * REST API: `GET /api/v3/exchangeInfo`
+      * WebSocket API: `exchangeInfo`
+    * New requests for OPO: 
+      * REST API: 
+        * `POST /api/v3/orderList/opo`
+        * `POST /api/v3/orderList/opoco`
+      * WebSocket API 
+        * `orderList.place.opo`
+        * `orderList.place.opoco`
+      * FIX API 
+        * NewOrderList `<E>` has field `OPO (25046)`. Please update to the latest QuickFIX Schema for OPO support.
+  * STP mode [`TRANSFER`](/docs/zh-CN/faqs/stp_faq.md) has been added. The exact date that STP `TRANSFER` will be enabled has not yet been determined.
+  * **SBE: A new schema 3:2 ([spot_3_2.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_2.xml)) is available.**
+    * The current schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in 3:2: 
+      * New enum variant `TRANSFER` for `selfTradePreventionMode` and `allowedSelfTradePreventionModes`.
+      * All schemas below 3:1 are unable to represent any response that could contain the STP mode `TRANSFER` (e.g. Exchange Information, order placement, order cancellation, or querying the status of an order).   
+When a response cannot be represented in the requested schema, an error is returned.
+  * FIX API changes: 
+    * `LastFragment (893)` becomes deprecated. 
+      * This means that the MarketIncrementalRefresh `<X>` messages will no longer be fragmented and may contain more than 10,000 entries.
+      * The documentation has been updated to reflect this change.
+    * ListStatus `<N>` will no longer emit the optional `symbol` field. 
+      * This applies to FIX Order Entry and FIX Drop Copy.
+      * The documentation has been updated to reflect this change.
 
 
 
-关于 newOrderRespType的三种选择
+* * *
 
-**数据源:** 撮合引擎
+### 2025-11-25[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-25 "2025-11-25的直接链接")
 
-**Response ACK:** 返回速度最快，不包含成交信息，信息量最少
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // 除非此单是订单列表的一部分, 否则此值为 -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595  
-    }  
-    
+  * [`ICEBERG_PARTS`](https://developers.binance.com/docs/binance-spot-api-docs/testnet/filters#iceberg_parts) will be increased to 25 for all symbols.
 
-**Response RESULT:** 返回速度居中，返回吃单成交的少量信息
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // 除非此单是订单列表的一部分, 否则此值为 -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595,  
-        "price": "1.00000000",  
-        "origQty": "10.00000000",  
-        "executedQty": "10.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "10.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "MARKET",  
-        "side": "SELL",  
-        "workingTime": 1507725176595,  
-        "selfTradePreventionMode": "NONE"  
-    }  
-    
 
-**Response FULL:** 返回速度最慢，返回吃单成交的详细信息
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 28,  
-        "orderListId": -1, // 除非此单是订单列表的一部分, 否则此值为 -1  
-        "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",  
-        "transactTime": 1507725176595,  
-        "price": "1.00000000",  
-        "origQty": "10.00000000",  
-        "executedQty": "10.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "10.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "MARKET",  
-        "side": "SELL",  
-        "workingTime": 1507725176595,  
-        "selfTradePreventionMode": "NONE",  
-        "fills": [  
-            {  
-                "price": "4000.00000000",  
-                "qty": "1.00000000",  
-                "commission": "4.00000000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 56  
-            },  
-            {  
-                "price": "3999.00000000",  
-                "qty": "5.00000000",  
-                "commission": "19.99500000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 57  
-            },  
-            {  
-                "price": "3998.00000000",  
-                "qty": "2.00000000",  
-                "commission": "7.99600000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 58  
-            },  
-            {  
-                "price": "3997.00000000",  
-                "qty": "1.00000000",  
-                "commission": "3.99700000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 59  
-            },  
-            {  
-                "price": "3995.00000000",  
-                "qty": "1.00000000",  
-                "commission": "3.99500000",  
-                "commissionAsset": "USDT",  
-                "tradeId": 60  
-            }  
-        ]  
-    }  
-    
 
-**订单响应中的特定条件时才会出现的字段**
+* * *
 
-订单响应中的有一些字段仅在满足特定条件时才会出现。这些订单响应可以来自下订单，查询订单或取消订单，并且可以包括订单列表类型。 下面列出了这些字段：
+### 2025-11-14[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-14 "2025-11-14的直接链接")
 
-名称| 描述| 显示的条件| 示例  
----|---|---|---  
-`icebergQty`| 冰山订单的数量。| 只有在请求中发送 `icebergQty` 参数时才会出现。| `"icebergQty": "0.00000000"`  
-`preventedMatchId`| 与 `symbol` 结合使用时，可用于查询因为 STP 导致订单失效的过期订单。| 只有在因为 STP 导致订单失效时可见。| `"preventedMatchId": 0`  
-`preventedQuantity`| 因为 STP 导致订单失效的数量。| 只有在因为 STP 导致订单失效时可见。| `"preventedQuantity": "1.200000"`  
-`stopPrice`| 用于设置逻辑订单中的触发价。| `STOP_LOSS`，`TAKE_PROFIT`，`STOP_LOSS_LIMIT` 和 `TAKE_PROFIT_LIMIT` 订单时可见。| `"stopPrice": "23500.00000000"`  
-`strategyId`| 策略单ID; 用以关联此订单对应的交易策略。| 如果在请求中添加了参数，则会出现。| `"strategyId": 37463720`  
-`strategyType`| 策略单类型; 用以显示此订单对应的交易策略。| 如果在请求中添加了参数，则会出现。| `"strategyType": 1000000`  
-`trailingDelta`| 用以定义追踪止盈止损订单被触发的价格差。| 出现在追踪止损订单中。| `"trailingDelta": 10`  
-`trailingTime`| 追踪单被激活和跟踪价格变化的时间。| 出现在追踪止损订单中。| `"trailingTime": -1`  
-`usedSor`| 用于确定订单是否使用SOR的字段| 在使用SOR下单时出现| `"usedSor": true` ｜  
-`workingFloor`| 用以定义订单是通过 SOR 还是由订单提交到的订单薄（order book）成交的。| 出现在使用了 SOR 的订单中。| `"workingFloor": "SOR"`  
-`pegPriceType`| 挂钩价格类型| 仅用于挂钩订单| `"pegPriceType": "PRIMARY_PEG"`  
-`pegOffsetType`| 挂钩价格偏移类型| 如若需要，仅用于挂钩订单| `"pegOffsetType": "PRICE_LEVEL"`  
-`pegOffsetValue`| 挂钩价格偏移值| 如若需要，仅用于挂钩订单| `"pegOffsetValue": 5`  
-`peggedPrice`| 订单对应的当前挂钩价格| 一旦确定，仅用于挂钩订单| `"peggedPrice": "87523.83710000"`  
-  
-### 测试下单接口 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#测试下单接口-trade "测试下单接口 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/order/test  
-    
+  * All Market Tickers Stream (`!ticker@arr`) has been deprecated; This means this will be removed both from the documentation and from our systems at a later date. More details to follow.
+  * Please use [`<symbol>@ticker`](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#individual-symbol-ticker-streams) or [`!miniTicker@arr`](https://developers.binance.com/docs/binance-spot-api-docs/web-socket-streams#all-market-mini-tickers-stream) instead.
 
-用于测试订单请求，但不会提交到撮合引擎
 
-**权重:**
 
-条件| 权重  
+* * *
+
+### 2025-11-12[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-12 "2025-11-12的直接链接")
+
+  * The steps on [how to manage a local order book correctly](https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-streams#how-to-manage-a-local-order-book-correctly) has been corrected.
+
+
+
+* * *
+
+### 2025-11-11[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-11 "2025-11-11的直接链接")
+
+#### SBE Market Data[​](/docs/zh-CN/binance-spot-api-docs/testnet#sbe-market-data "SBE Market Data的直接链接")
+
+  * **At 2025-11-11 07:00 UTC, the update speed of`<symbol>@depth` and `<symbol>@depth20` streams will be changed to 50ms**. 
+    * This change will apply automatically to all users of SBE Market Data and doesn't require any action.
+    * The total amount of data received per second will be increased (up to 2x).
+    * These new update speeds will take effect on the live exchange at **2025-11-26 07:00 UTC**.
+    * [SBE Market Data](/docs/zh-CN/binance-spot-api-docs/testnet/sbe-market-data-streams) has been updated to reflect these changes.
+
+
+
+* * *
+
+### 2025-11-10[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-10 "2025-11-10的直接链接")
+
+  * "Last Updated" dates will be removed from all documents except for CHANGELOG.
+  * Moving forward, CHANGELOG will be the source of reference for when changes were made to any document.
+
+
+
+* * *
+
+### 2025-11-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-11-05 "2025-11-05的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-10-24[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-10-24 "2025-10-24的直接链接")
+
+#### SBE[​](/docs/zh-CN/binance-spot-api-docs/testnet#sbe "SBE的直接链接")
+
+  * SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) has been updated to support [listenToken Subscription Methods](https://developers.binance.com/docs/margin_trading/trade-data-stream/Listen-Token-Websocket-API) for Margin Trading.
+
+
+
+#### REST and WebSocket API[​](/docs/zh-CN/binance-spot-api-docs/testnet#rest-and-websocket-api-1 "REST and WebSocket API的直接链接")
+
+Following the announcement from [2025-04-01](/docs/zh-CN/binance-spot-api-docs/testnet#2025-04-01), all documentation related with `listenKey` for use on `wss://stream.binance.com` has been removed.
+
+Please refer to the list of requests and methods below for more information.
+
+The features will remain available until a future retirement announcement is made.
+
+REST API
+
+  * `POST /api/v3/userDataStream`
+  * `PUT /api/v3/userDataStream`
+  * `DELETE /api/v3/userDataStream`
+
+
+
+WebSocket API
+
+  * `userDataStream.start`
+  * `userDataStream.ping`
+  * `userDataStream.stop`
+
+
+
+* * *
+
+### 2025-10-17[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-10-17 "2025-10-17的直接链接")
+
+**Notice: The following changes will be enabled at 2025-10-17 07:00 UTC**
+
+  * An optional parameter, `symbolStatus`, has been added to the following endpoints: 
+    * **REST API**
+      * `GET /api/v3/depth`
+      * `GET /api/v3/ticker/price`
+      * `GET /api/v3/ticker/bookTicker`
+      * `GET /api/v3/ticker/24hr`
+      * `GET /api/v3/ticker/tradingDay`
+      * `GET /api/v3/ticker`
+    * **WebSocket API**
+      * `depth`
+      * `ticker.price`
+      * `ticker.book`
+      * `ticker.24hr`
+      * `ticker.tradingDay`
+      * `ticker`
+  * When the parameter `symbolStatus=<STATUS>` is provided, only symbols whose trading status matches the specified `STATUS` will be included in the response: 
+    * If a single symbol is specified using the `symbol=<SYMBOL>` parameter and its trading status does not match the given `STATUS`, the endpoint will return error code [`-1220 SYMBOL_DOES_NOT_MATCH_STATUS`](/docs/zh-CN/binance-spot-api-docs/testnet/errors#-1220-symbol_does_not_match_status).
+    * If multiple symbols are specified using the `symbols=[...]` parameter, the response will be an array that excludes any symbols whose trading status does not match `STATUS`. If no symbols from the symbols parameter have a trading status that matches `STATUS`, the response is an empty array.
+    * For endpoints where the `symbol` and `symbols` parameters are optional, omitting these parameters is treated as if all symbols had been specified in the `symbols=[...]` parameter. See the previous line for the behavior of `symbolStatus=<STATUS>`.
+
+
+
+* * *
+
+### 2025-10-08[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-10-08 "2025-10-08的直接链接")
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api-3 "FIX API的直接链接")
+
+**Notice: The following changes will be enabled at 2025-10-08 07:00 UTC**
+
+  * Updated [QuickFIX Schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) for FIX Market Data: 
+    * Updated RecvWindow (25000) to reflect microsecond support announced on [2025-08-05](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-05).
+    * Updated [InstrumentList `<y>`](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#instrumentlist) message: 
+      * Added fields: `StartPriceRange`, `EndPriceRange`.
+      * Made the following fields optional: `MinTradeVol`, `MaxTradeVol`, `MinQtyIncrement`, `MarketMinTradeVol`, `MarketMaxTradeVol`, `MarketMinQtyIncrement`, `MinPriceIncrement`.
+    * The changes to InstrumentList `<y>` are breaking changes. Please update to the new schema.
+
+
+
+* * *
+
+### 2025-10-01[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-10-01 "2025-10-01的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+REST and WebSocket API:
+
+  * Reminder that SBE 2:1 schema will be retired on 2025-10-02, [6 months after being deprecated](/docs/zh-CN/faqs/sbe_faq.md#regarding-legacy-support).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2025-09-24[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-09-24 "2025-09-24的直接链接")
+
+**Notice: The following changes will be deployed on 2025-09-24, starting at 7:00 UTC and may take several hours to complete.**
+
+  * Added an endpoint to retrieve the list of filters relevant to an account on a given symbol. This is the only endpoint that shows if an account has `MAX_ASSET` filters applied to it. 
+    * REST API: [`GET /api/v3/myFilters`](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/account-endpoints#myFilters)
+    * WebSocket API: [`myFilters`](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/account-requests#myFilters)
+  * Comments in **SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml))** have been added, modified, and removed. Although there is no need for users of `3:1` to update to this version of the file, we advise updating to maintain consistency.
+  * Added documentation for filter [`MAX_ASSET`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#max_asset). 
+    * In `Testnet` only: all accounts have a `MAX_ASSET` filter for asset `JPY` with value set to `1000000`.
+
+
+
+* * *
+
+### 2025-09-18[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-09-18 "2025-09-18的直接链接")
+
+  * Updated documentation for `recvWindow` to reflect microsecond support announced on [2025-08-05](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-05). 
+    * REST API: [Timing Security](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/request-security#timingsecurity)
+    * WebSocket API: [Timing Security](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/request-security#timingsecurity)
+
+
+
+* * *
+
+### 2025-09-12[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-09-12 "2025-09-12的直接链接")
+
+  * The [QuickFix schema for FIX Order Entry](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated to support Pegged Orders.
+  * Updated FIX API Documentation for `RecvWindow` in 
+    * [Message Components](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#header)
+    * [Timing Security](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#timing-security)
+
+
+
+* * *
+
+### 2025-09-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-09-05 "2025-09-05的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
+
+* * *
+
+### 2025-08-28[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-28 "2025-08-28的直接链接")
+
+  * Updated SBE FAQ section [regarding legacy support](/docs/zh-CN/faqs/sbe_faq.md#regarding-legacy-support) to include more details on schema compatibility and explain `NonRepresentable` and `NonRepresentableMessage`.
+
+
+
+* * *
+
+### 2025-08-26[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-26 "2025-08-26的直接链接")
+
+  * Updated "Request Security" documentation for [REST API](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/request-security) and [WebSocket API](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/request-security) with no functional changes.
+
+
+
+* * *
+
+### 2025-08-25[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-25 "2025-08-25的直接链接")
+
+  * **SBE: schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml))** will be updated on **2025-08-25 at 05:00 UTC**
+    * The following fields have been renamed because the [SbeTool](/docs/zh-CN/faqs/sbe_faq.md#generate-sbe-decoders) code generator has been found to generate Java code that does not compile. 
+      * Although only users impacted by this issue need to update the schema, we advise all users to upgrade to the latest version to maintain consistency.
+      * Message `MaxAssetFilter`
+        * field `limitExponent` renamed to `qtyExponent`
+        * field `limit` renamed to `maxQty`
+
+
+
+* * *
+
+### 2025-08-19[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-19 "2025-08-19的直接链接")
+
+  * `userDataStream.subscribe` returns `subscriptionId` in the responses.   
+This was missed in a [previous](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-05) changelog entry.
+
+
+
+* * *
+
+### 2025-08-07[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-07 "2025-08-07的直接链接")
+
+  * Updated FIX API documentation 
+    * [FIX Market Data limits](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#connection-limits): The subscription limit has always been present but was undocumented.
+    * [On message processing order](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#on-message-processing-order): Reworded and reformatted.
+
+
+
+**Notice: The following will be enabled on 2025-08-08, 07:00 UTC**
+
+  * Filter [`MAX_NUM_ORDER_LISTS`](/docs/zh-CN/binance-spot-api-docs/testnet/filters#max_num_order_lists), is enabled with the limit of 20 per symbol.
+
+
+
+* * *
+
+### 2025-08-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-08-05 "2025-08-05的直接链接")
+
+**Notice: The following changes will be deployed on 2025-08-06, starting 7:00 UTC and may take several hours to complete.**   
+Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+#### General Changes[​](/docs/zh-CN/binance-spot-api-docs/testnet#general-changes-2 "General Changes的直接链接")
+
+  * The [pegged order](/docs/zh-CN/faqs/pegged_orders.md) functionality is now available. 
+    * Exchange Information requests emit the field `pegInstructionsAllowed`.
+    * The following conditional fields `pegPriceType`, `pegOffSetType`, `pegOffsetValues`, and `peggedPrice` appear in responses of the following requests if the order was a pegged order: 
+      * REST API 
+        * `GET /api/v3/order`
+        * `GET /api/v3/orderList`
+        * `GET /api/v3/openOrderList`
+        * `GET /api/v3/allOrders`
+        * `DELETE /api/v3/order`
+        * `DELETE /api/v3/orderList`
+        * `DELETE /api/v3/openOrders`
+        * `PUT /api/v3/order/amend/keepPriority`
+      * WebSocket API 
+        * `order.status`
+        * `orderList.status`
+        * `allOrders`
+        * `order.cancel`
+        * `orderList.cancel`
+        * `openOrders.cancelAll`
+        * `order.amend.keepPriority`
+    * FIX API 
+      * `OrdType(4)` supports new value `P(PEGGED)`
+      * Tags `PegOffsetValue(211)`, `PegPriceType(1094)`, `PegMoveType(835)`, and `PegOffsetType(836)` have been added to the following messages: 
+        * NewOrderSingle `<D>`
+        * NewOrderList `<E>`
+        * OrderCancelRequestAndNewOrderSingle `<XCN>`
+        * When placing an order, the `ExecutionReport` `<8>` message will echo back `PegInstructions`, with an extra optional field `PeggedPrice (839)`.
+    * New error messages for pegged orders are added. Please see the [Errors](/docs/zh-CN/binance-spot-api-docs/testnet/errors) document for more information.
+  * Changes with `recvWindow`: 
+    * A third check is made after your message leaves the message broker just before it is sent to the Matching Engine. 
+      * This does not cover potential delays inside the Matching Engine itself.
+    * `recvWindow` supports microseconds. 
+      * The value is still specified in milliseconds, but can now take a decimal component to specify it with higher precision.
+      * This means that the parameter supports a **maximum precision of 3 decimal places**. (e.g. 6000.346)
+      * APIs affected: 
+        * FIX API
+        * REST API
+        * WebSocket API
+  * The following requests have a new structure called `specialCommission`. See [Commission Rates](/docs/zh-CN/faqs/commission_faq.md). 
+    * REST API 
+      * `GET /api/v3/account/commission`
+      * `POST /api/v3/order/test` with `computeCommissionRates=true`
+      * `POST /api/v3/sor/order/test` with `computeCommissionRates=true`
+    * WebSocket API 
+      * `account.commission`
+      * `order.test` with `computeCommissionRates=true`
+      * `sor.order.test` with `computeCommissionRates=true`
+  * The new [`MAX_NUM_ORDER_AMENDS`](https://github.com/binance/binance-spot-api-docs/blob/master/testnet/filters.md#max_num_order_amends) filter is enabled with a limit of 10 amendments per order.
+  * New error codes `-1120` and `1211`. See [Errors](/docs/zh-CN/binance-spot-api-docs/testnet/errors) for more information.
+  * **SBE: A new schema 3:1 ([spot_3_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_1.xml)) is available.**
+    * The current schema 3:0 ([spot_3_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_0.xml)) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:1: 
+      * `ExchangeInfoResponse`: new field `pegInstructionsAllowed`
+      * `ExecutionReportEvent`: new fields `pricePeg`, `pricePegOffsetLevel`, `peggedPrice`
+      * `UserDataStreamSubscribeResponse`: new field `subscriptionId`
+      * New field `subscriptionId` for all user data stream events.
+      * Field `apiKey` renamed to `loggedOnApiKey` for `WebSocketSessionLogonResponse`, `WebSocketSessionStatusResponse` and WebSocketSessionLogoutResponse
+      * `OrderTestWithCommissionsResponse`: 2 new fields `specialCommissionForOrderMaker` and `specialCommissionForOrderTaker`
+      * `AccountCommissionResponse`: 4 new fields `specialCommissionMaker`, `specialCommissionTaker`, `specialCommissionBuyer` and `specialCommissionSeller`
+      * Support for `EXCHANGE_MAX_NUM_ORDER_LISTS`, `MAX_NUM_ORDER_LISTS`, and `MAX_NUM_ORDER_AMENDS` filters.
+      * `ExecutionReportEvent`: fields `rejectReason` and `origClientOrderId` now show their default values in SBE format to match the JSON format.
+      * `NonRepresentableMessage`: New message added to represent a message that cannot be represented in this schema ID and version. Receipt of this message indicates that something should be available, but it is not representable using the SBE schema currently in use.
+  * Query order lists requests will first query the data in the cache, and if it cannot be found will query the database. 
+    * REST API: `GET /api/v3/openOrderLists`
+    * WebSocket API: `openOrderLists.status`
+  * Orders with cumulative quantity of 0 in the final state `EXPIRED_IN_MATCH` (i.e. the order expired due to STP) will be archived after 90 days.
+  * Bug fix: The Matching Engine no longer accepts order lists that exceed the order count filter limits. Affected filters: 
+    * `MAX_NUM_ORDERS`
+    * `MAX_ALGO_ORDERS`
+    * `MAX_ICEBERG_ORDERS`
+    * `EXCHANGE_MAX_NUM_ORDERS`
+    * `EXCHANGE_MAX_ALGO_ORDERS`
+    * `EXCHANGE_MAX_ICEBERG_ORDERS`
+
+
+
+#### WebSocket API[​](/docs/zh-CN/binance-spot-api-docs/testnet#websocket-api-2 "WebSocket API的直接链接")
+
+  * A single WebSocket connection can subscribe to multiple User Data Streams at once. 
+    * Only one subscription per account is allowed on a single connection.
+  * Method `userDataStream.subscribe.signature` has been added that allows you to subscribe to the User Data Stream without needing to login first. 
+    * This also doesn’t require an Ed25519 API Key, and can work with any [API Key type](/docs/zh-CN/faqs/api_key_types.md).
+    * For [SBE support](/docs/zh-CN/faqs/sbe_faq.md) you need to use schema 3:1 at least.
+  * Method `session.subscriptions` has been added that lists all the subscriptions active for the current session.
+  * The meaning of the field `userDataStream` in the session requests has changed slightly. 
+    * Previously, this returned `true` if you were subscribed to the user data stream of your logged-on account.
+    * Now it returns `true` if you have at least one active user data stream subscription 
+      * `true` \- If there is at least one subscription active
+      * `false` \- If there are no active subscriptions
+  * `userDataStream.unsubscribe` supports closing multiple subscriptions. 
+    * When called with no parameter, this will close all subscriptions.
+    * When called with `subscriptionId`, this will attempt to close the subscription matching that Id, if it exists.
+    * The authorization for this request has been changed to `NONE`.
+
+
+
+#### User Data Stream[​](/docs/zh-CN/binance-spot-api-docs/testnet#user-data-stream "User Data Stream的直接链接")
+
+  * Field `subscriptionId` has been added to the User Data Stream events payload when listening through the [WebSocket API](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/user-data-stream-requests#user-data-stream-subscribe). This will identify which subscription the event is coming from.
+
+
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api-4 "FIX API的直接链接")
+
+  * When a client sends a reject message, the FIX API will no longer send the client back a Reject `<3>` message. Error messages are clearer when a tag is invalid, missing a value, or when the field value is empty or malformed 
+    * If the tag number was invalid, you will receive the error: 
+          
+          { "code": -1169, "msg": "Invalid tag number." }  
+          
+
+    * If a valid tag was specified without a value, you will receive the error: 
+          
+          { "code": -1177, "msg": "Tag specified without a value." }  
+          
+
+    * If the field value was empty or malformed, you will still receive the error: 
+          
+          { "code": -1102, "msg": "Field value was empty or malformed." }  
+          
+
+
+
+
+* * *
+
+### 2025-07-02[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-07-02 "2025-07-02的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. (see [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details)
+
+* * *
+
+### 2025-06-04[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-06-04 "2025-06-04的直接链接")
+
+**Data reset**
+
+All data on the Spot Test Network will be deleted today according to the periodic reset procedure. (see [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details)
+
+* * *
+
+### 2025-05-28[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-05-28 "2025-05-28的直接链接")
+
+  * Documented API timeout value and error under General API Information for each API: 
+    * [FIX](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#general-api-information)
+    * [REST](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/general-api-information)
+    * [WebSocket](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/general-api-information)
+
+
+
+* * *
+
+### 2025-05-22[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-05-22 "2025-05-22的直接链接")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 2:0 schema will be retired on 2025-05-28, [6 months after being deprecated](/docs/zh-CN/faqs/sbe_faq.md).
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2025-05-21[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-05-21 "2025-05-21的直接链接")
+
+**Notice: The following changes will happen at 2025-05-21 7:00 UTC.**
+
+  * The previous behavior of `recvWindow` on FIX, REST, and WebSocket APIs will be augmented by an additional check. 
+    * To review, the existing behavior is: 
+      * If `timestamp` is greater than `serverTime` \+ 1 second at receipt of the request, the request is rejected. Rejection by this check increments message limits (FIX API) and IP limits (REST and WebSocket APIs), but not Unfilled Order Count (order placement endpoints of all APIs).
+      * If the difference between `timestamp` and `serverTime` at receipt of the request is greater than `recvWindow`, the request is rejected. Rejection by this check increments message limits (FIX API) and IP limits (REST and WebSocket APIs) but not Unfilled Order Count (order placement endpoints of all APIs).
+    * The additional check is: 
+      * Just before a request is forwarded to the Matching Engine, if the difference between `timestamp` and the current `serverTime` is greater than `recvWindow`, the request is rejected. Rejection by this check increments message limits (FIX API), IP limits (REST and WebSocket APIs), and Unfilled Order Count (order placement endpoints of all APIs).
+    * The documentation for Timing security has been updated to reflect the additional check. 
+      * [REST API](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/request-security#timing-security)
+      * [WebSocket API](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/request-security#timing-security)
+      * [FIX API](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#timing-security)
+  * Fixed a bug in FIX Market Data message InstrumentList `<y>`. Previously, the value of `NoRelatedSym(146)` could have been incorrect.
+
+
+
+* * *
+
+### 2025-04-29[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-04-29 "2025-04-29的直接链接")
+
+  * Features that currently require an Ed25519 API key will soon be opened up to HMAC and RSA keys. 
+    * For example, subscribing to User Data Stream in WebSocket API will be possible with any API key type before listenKeys are removed.
+    * Users are still encouraged to migrate to Ed25519 API keys as they are more secure and performant on Binance Spot Trading.
+    * More details to come.
+
+
+
+* * *
+
+### 2025-04-25[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-04-25 "2025-04-25的直接链接")
+
+  * **Notice: The following changes will happen at 2025-04-25 09:00 UTC.**
+  * The following request weights will be increased from 1 to 4: 
+    * REST API: `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API: `order.amend.keepPriority`
+    * The documentation for both REST and WebSocket API has been updated to reflect the upcoming changes.
+  * Clarified that `SEQNUM` in the FIX-API is a 32-bit unsigned integer that rolls over. This has been the `SEQNUM` data type since the inception of the FIX-API.
+
+
+
+* * *
+
+### 2025-04-21[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-04-21 "2025-04-21的直接链接")
+
+  * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now enabled on all symbols.**
+  * **[Self-trade prevention mode`DECREMENT`](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/stp_faq.md) is now enabled on all symbols.**
+
+
+
+* * *
+
+### 2025-04-01[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-04-01 "2025-04-01的直接链接")
+
+**Notice:** The following changes will be deployed tomorrow **April 2, 2025 starting at 7:00 UTC** and may take several hours to complete.   
+Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-3 "New Features的直接链接")
+
+  * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now available.**
+    * FIX API: New Order Entry Messages **OrderAmendKeepPriorityRequest** and **OrderAmendReject**
+    * REST API: `PUT /api/v3/order/amend/keepPriority`
+    * WebSocket API: `order.amend.keepPriority`
+    * You can check the new `allowAmend` field in Exchange Information Requests to see if it's enabled on a given symbol: 
+      * REST API: `GET /api/v3/exchangeInfo`
+      * WebSocket API: `exchangeInfo`
+  * **Self-trade prevention mode`DECREMENT` is now available.**
+    * Instead of expiring one or both orders, `DECREMENT` mode decreases the available quantity of both orders by increasing the `prevented quantity` of both orders by the amount of the prevented match.
+    * This can expire the orders if their `filled quantity` \+ `prevented quantity` >= `order quantity`.
+    * You can check the `allowedSelfTradePreventionModes` field in Exchange Information Requests to see if this mode is enabled on a given symbol.
+
+
+
+#### General Changes[​](/docs/zh-CN/binance-spot-api-docs/testnet#general-changes-3 "General Changes的直接链接")
+
+  * **Important:** The following legacy URLs will be **removed in May 2025**. Please change to the new URLs as soon as possible:
+
+Legacy URL| Latest URL  
 ---|---  
-没有 `computeCommissionRates`| 1  
-有 `computeCommissionRates`| 20  
+`wss://testnet.binance.vision/ws-api/v3`| `wss://ws-api.testnet.binance.vision/ws-api/v3`  
+`wss://testnet.binance.vision/ws`| `wss://stream.testnet.binance.vision/ws`  
   
-**参数:**
+  * Behavior when querying and/or canceling with `orderId` and `origClientOrderId/cancelOrigClientOrderId`: 
+    * The behavior when both parameters were provided was not consistent across all endpoints.
+    * Moving forward, when both parameters are provided, the order is first searched for using its `orderId`, and if found, `origClientOrderId`/`cancelOrigClientOrderId` is checked against that order. If both conditions pass, the request succeeds. If both conditions are not met the request is rejected.
+    * Affected requests: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `DELETE /api/v3/order`
+        * `POST /api/v3/order/cancelReplace`
+      * WebSocket API: 
+        * `order.status`
+        * `order.cancel`
+        * `order.cancelReplace`
+      * FIX API 
+        * OrderCancelRequest `<F>`
+        * OrderCancelRequestAndNewOrderSingle `<XCN>`
+  * Behavior when canceling with `listOrderId` and `listClientOrderId`: 
+    * The behavior when both parameters were provided was not consistent across all endpoints.
+    * Moving forward, when both parameters are passed, the order list is first searched for using its `listOrderId`, and if found, `listClientOrderId` is checked against that order list. If both conditions are not met the request is rejected.
+    * Affected requests: 
+      * REST API 
+        * `DELETE /api/v3/orderList`
+      * WebSocket API 
+        * `orderList.cancel`
+  * Previously, the request weight for myTrades was 20 regardless of the parameters provided. Now, if you provide `orderId`, the request weight is 5. 
+    * REST API: `GET /api/v3/myTrades`
+    * WebSocket API: `myTrades`
+  * If the unfilled order count for `intervalNum:DAY` is exceeded, the unfilled order count for `intervalNum:SECOND` is no longer incremented.
+  * Change when querying and deleting orders: 
+    * When neither `orderId` nor `origClientOrderId` are present, the request is now rejected with `-1102` instead of `-1128`.
+    * Affected requests: 
+      * REST API: 
+        * `GET /api/v3/order`
+        * `DELETE /api/v3/order`
+      * WebSocket API 
+        * `order.status`
+        * `order.cancel`
+      * FIX API 
+        * OrderCancelRequest `<F>`
+  * New Error code `-2038` for order amend keep priority requests that fail.
+  * New messages for error code `-1034`.
 
-除了 [`POST /api/v3/order`](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#%E4%B8%8B%E5%8D%95-trade) 所有参数, 下面参数也支持:
 
-参数名| 类型| 是否必需| 描述  
----|---|---|---  
-computeCommissionRates| BOOLEAN| NO| 默认值: `false`   
-请参阅[佣金常见问题解答](/docs/zh-CN/binance-spot-api-docs/faqs/commission_faq#test-order-diferences) 了解更多信息。  
+
+#### FIX API[​](/docs/zh-CN/binance-spot-api-docs/testnet#fix-api-5 "FIX API的直接链接")
+
+  * The [QuickFix schema for FIX OE](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) is updated to support the Order Amend Keep Priority feature and new STP mode, `DECREMENT`.
+  * FIX Order Entry connection limits will be a maximum of 10 concurrent connections per account.
+  * The connection rate limits are now enforced. Note that these limits are checked independently for both the account and the IP address. 
+    * FIX Order Entry: 15 connection attempts within 30 seconds
+    * FIX Drop Copy: 15 connection attempts within 30 seconds
+    * FIX Market Data: 300 connection attempts within 300 seconds
+  * News `<B>` contains a countdown until disconnection in the Headline field. 
+    * Following the completion of this update, when the server enters maintenance, a `News` message will be sent to clients **every 10 seconds for 10 minutes**. After this period, clients will be logged out and their sessions will be closed.
+  * OrderCancelRequest `<F>` and OrderCancelRequestAndNewOrderSingle `<XCN>` will now allow both `orderId` and `clientOrderId`.
+  * FIX API verifies that `EncryptMethod(98)` is 0 at Logon `<A>`.
+
+
+
+#### User Data Streams[​](/docs/zh-CN/binance-spot-api-docs/testnet#user-data-streams "User Data Streams的直接链接")
+
+  * **Receiving user data streams on stream.testnet.binance.vision using a`listenKey` is now deprecated.**
+    * This feature will be removed from our systems at a later date.
+  * **Instead, you should get user data updates by subscribing to the[User Data Stream on the WebSocket API](https://developers.binance.com/docs/binance-spot-api-docs/testnet/websocket-api/user-data-stream-requests).**
+    * This should offer slightly better performance (lower latency).
+    * This requires the use of an Ed25519 API Key.
+  * In a future update, information about the base WebSocket endpoint for the User Data Streams will be removed.
+  * In a future update, the following requests will be removed from the documentation: 
+    * `POST /api/v3/userDataStream`
+    * `PUT /api/v3/userDataStream`
+    * `DELETE /api/v3/userDataStream`
+    * `userDataStream.start`
+    * `userDataStream.ping`
+    * `userDataStream.stop`
+  * The [User Data Stream documentation](/docs/zh-CN/binance-spot-api-docs/testnet/user-data-stream) will remain as reference for the payloads you can receive.
+
+
+
+#### SBE[​](/docs/zh-CN/binance-spot-api-docs/testnet#sbe-1 "SBE的直接链接")
+
+  * **A new schema 3:0 ([spot_3_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_0.xml)) is now available.**
+    * The current schema 2:1 ([spot_2_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_1.xml)) is now deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Note that trying to use schema 3:0 before it is released will result in an error.
+  * Changes in schema 3:0: 
+    * Support for Order Amend Keep Priority: 
+      * Added field `amendAllowed` to ExchangeInfoResponse.
+      * New Messages `OrderAmendmentsResponse` and `OrderAmendKeepPriorityResponse`
+    * Breaking changes: 
+      * All enums now have a `NON_REPRESENTABLE` variant. This will be used to encode new enum values in the future, which would be incompatible with 3:0.
+      * New enum variant `DECREMENT` for `selfTradePreventionMode` and `allowedSelfTradePreventionModes`
+      * `symbolStatus` enum values `AUCTION_MATCH`, `PRE_TRADING` and `POST_TRADING` have been removed.
+      * Fields `usedSor`, `orderCapacity`, `workingFloor`, `preventedQuantity`, and `matchType` are no longer optional.
+      * Field `orderCreationTime` in `ExecutionReportEvent` is now optional.
+  * When using deprecated schema 2:1 on the WebSocket API to listen to the User Data Stream: 
+    * `ListStatusEvent` field `listStatusType` will be rendered as `ExecStarted` when it should have been `Updated`. Upgrade to schema 3:0 to get the correct value.
+    * `ExecutionReportEvent` field `selfTradePreventionMode` will be rendered as `None` when it should have been `Decrement`. This only happens when `executionType` is `TradePrevention`.
+    * `ExecutionReportEvent` field `orderCreationTime` will be rendered as -1 when it has no value.
+  * All schemas below 3:0 are unable to represent responses for Order Amend Keep Priority requests and any response that could contain the STP mode `DECREMENT` (e.g. Exchange Information, order placement, order cancelation, or querying the status of your order). When a response cannot be represented in the requested schema, an error is returned.
+
+
+
+* * *
+
+### 2025-03-31[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-03-31 "2025-03-31的直接链接")
+
+  * Added a clarification on the performance of canceling an order.
+
+
+
+* * *
+
+### 2025-03-13[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-03-13 "2025-03-13的直接链接")
+
+  * **Notice: The following changes will happen on March 13,2025 at 05:00 UTC:**
+    * FIX Drop Copy sessions will have a limit of **60 messages per minute**.
+    * FIX Market Data sessions will have a limit of **2000 messages per minute**.
+    * The FIX API documentation has been updated to reflect the upcoming changes.
+
+
+
+* * *
+
+### 2025-03-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-03-05 "2025-03-05的直接链接")
+
+  * **Notice: This is in the process of being deployed. Please consult the Spot Test Network's[homepage](https://testnet.binance.vision/) to be informed of the release completion.**   
+The following request weights will be increased from 2 to 4: 
+    * REST API: `GET /api/v3/aggTrade`
+    * WebSocket API: `trades.aggregate`
+  * The documentation for both REST and WebSocket API has been updated to reflect the upcoming changes.
+
+
+
+* * *
+
+### 2025-02-28[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-02-28 "2025-02-28的直接链接")
+
+  * **SBE Market Data Streams** are now available. These streams offer a smaller payload and should offer better latency than the equivalent JSON streams for a subset of latency-sensitive market data streams.
+  * Streams available in SBE format: 
+    * Real-time: trade stream
+    * Real-time: best bid/ask
+    * Every 100 ms: diff. depth
+    * Every 100 ms: partial book depth
+  * For more information please refer to the [SBE Market Data Streams](/docs/zh-CN/binance-spot-api-docs/testnet/sbe-market-data-streams).
+
+
+
+* * *
+
+### 2025-02-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2025-02-05 "2025-02-05的直接链接")
+
+  * **Notice: These changes will be deployed starting at 7:00 UTC, and may take several hours to complete.** **The following changes will apply to WebSocket Market Data Streams, User Data Streams, and the WebSocket API:**
+    * Our WebSocket services will send a ping frame **every 20 seconds** instead of 3 minutes.
+    * The allowed pong delay will be **1 minute** instead of 10 minutes.
+    * The documentation for these services have been updated to reflect the change.
+  * `AggressorSide (2446)` is now rendered in the [FIX Market Data Trade Stream](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api#tradestream). The QuickFIX schema [file](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) has also been updated. Please download the latest schema before the Spot Testnet upgrade is completed.
+
+
+
+* * *
+
+### 2024-12-17[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-12-17 "2024-12-17的直接链接")
+
+  * FIX Market Data is now available. The [FIX API](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api) documentation for SPOT Testnet has been updated regarding this feature.
+  * Please refer to this [link](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-md.xml) for the QuickFIX Schema for FIX Market Data.
+
+
+
+* * *
+
+### 2024-11-27[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-11-27 "2024-11-27的直接链接")
+
+**Note:** These changes will be deployed live **starting 2024-11-28** and may take several hours for all features to work as intended.
+
+**New Feature: Microsecond support:**
+
+The system now supports microseconds in all related time and/or timestamp fields. Microsecond support is **opt-in** , by default the requests and responses still use milliseconds.  
   
-**数据源:** 缓存
+Examples in documentation are also using milliseconds for the foreseeable future.
 
-**响应:**
+WebSocket Streams
 
-没有 `computeCommissionRates`
-    
-    
-    {}  
-    
-
-有 `computeCommissionRates`
-    
-    
-    {  
-        "standardCommissionForOrder": {  // 订单交易的标准佣金率  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "specialCommissionForOrder": {   // 订单交易的特殊佣金率  
-            "maker": "0.05000000",  
-            "taker": "0.06000000"  
-        },  
-        "taxCommissionForOrder": {       // 订单交易的税率  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "discount": {                    // 以BNB支付时的标准佣金折扣。  
-            "enabledForAccount": true,  
-            "enabledForSymbol": true,  
-            "discountAsset": "BNB",  
-            "discount": "0.25000000"     // 当用BNB支付佣金时，在标准佣金上按此比率打折  
-        }  
-    }  
-    
-
-### 撤销订单 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#撤销订单-trade "撤销订单 \(TRADE\)的直接链接")
-    
-    
-    DELETE /api/v3/order  
-    
-
-**权重:** 1
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-orderId| LONG| NO|   
-origClientOrderId| STRING| NO|   
-newClientOrderId| STRING| NO| 用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。  
-cancelRestrictions| ENUM| NO| 支持的值:   
-`ONLY_NEW` \- 如果订单状态为 `NEW`，撤销将成功。  
-`ONLY_PARTIALLY_FILLED` \- 如果订单状态为 `PARTIALLY_FILLED`，撤销将成功。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**注意:**
-
-  * `orderId` 与 `origClientOrderId` 必须至少发送一个。
-  * 当同时提供 `orderId` 和 `origClientOrderId` 两个参数时，系统首先将会使用 `orderId` 来搜索订单。然后， 查找结果中的 `origClientOrderId` 的值将会被用来验证订单。如果两个条件都不满足，则请求将被拒绝。
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * For example: `/stream?streams=btcusdt@trade&timeUnit=millisecond`
+    * Supported values are: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**数据源:** 撮合引擎
+REST API
 
-**响应:**
-    
-    
-    {  
-        "symbol": "LTCBTC",  
-        "orderId": 28,  
-        "orderListId": -1, // 除非此单是订单列表的一部分, 否则此值为 -1  
-        "origClientOrderId": "myOrder1",  
-        "clientOrderId": "cancelMyOrder1",  
-        "transactTime": 1507725176595,  
-        "price": "1.00000000",  
-        "origQty": "10.00000000",  
-        "executedQty": "8.00000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "8.00000000",  
-        "status": "CANCELED",  
-        "timeInForce": "GTC",  
-        "type": "LIMIT",  
-        "side": "SELL",  
-        "selfTradePreventionMode": "NONE"  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-  * 当仅发送 `orderId` 时,取消订单的执行(单个 Cancel 或作为 Cancel-Replace 的一部分)总是更快。发送 `origClientOrderId` 或同时发送 `orderId` \+ `origClientOrderId` 会稍慢。
+  * A new optional header `X-MBX-TIME-UNIT` can be sent in the request to select the time unit. 
+    * Supported values: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * The time unit affects time-related parameters in requests (e.g, `startTime`, `endTime`, `timestamp`).
+    * The time unit affects timestamp fields in responses (e.g., `time`, `transactTime`).
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**关于`cancelRestrictions`**
+WebSocket API
 
-  * 如果 `cancelRestrictions` 值不是任何受支持的值，则错误将是：
-
-
-    
-    
-    {  
-        "code": -1145,  
-        "msg": "Invalid cancelRestrictions"  
-    }  
-    
-
-  * 如果订单没有通过 `cancelRestrictions` 的条件，错误将是：
-
-
-    
-    
-    {  
-        "code": -2011,  
-        "msg": "Order was not canceled due to cancel restrictions."  
-    }  
-    
-
-### 撤销单一交易对的所有挂单 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#撤销单一交易对的所有挂单-trade "撤销单一交易对的所有挂单 \(TRADE\)的直接链接")
-    
-    
-    DELETE /api/v3/openOrders  
-    
-
-撤销单一交易对下所有挂单。这也包括了来自订单列表的挂单。
-
-**权重:** 1
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**数据源:** 撮合引擎
-
-**响应:**
-    
-    
-    [  
-        {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "E6APeyTJvkMvLMYMqu1KQ4",  
-            "orderId": 11,  
-            "orderListId": -1,  
-            "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-            "transactTime": 1684804350068,  
-            "price": "0.089853",  
-            "origQty": "0.178622",  
-            "executedQty": "0.000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "A3EF2HCwxgZPFMrfwbgrhv",  
-            "orderId": 13,  
-            "orderListId": -1,  
-            "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-            "transactTime": 1684804350068,  
-            "price": "0.090430",  
-            "origQty": "0.178622",  
-            "executedQty": "0.000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        {  
-            "orderListId": 1929,  
-            "contingencyType": "OCO",  
-            "listStatusType": "ALL_DONE",  
-            "listOrderStatus": "ALL_DONE",  
-            "listClientOrderId": "2inzWQdDvZLHbbAmAozX2N",  
-            "transactionTime": 1585230948299,  
-            "symbol": "BTCUSDT",  
-            "orders": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 20,  
-                    "clientOrderId": "CwOOIPHSmYywx6jZX77TdL"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 21,  
-                    "clientOrderId": "461cPg51vQjV3zIMOXNz39"  
-                }  
-            ],  
-            "orderReports": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "origClientOrderId": "CwOOIPHSmYywx6jZX77TdL",  
-                    "orderId": 20,  
-                    "orderListId": 1929,  
-                    "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-                    "transactTime": 1684804350068,  
-                    "price": "0.668611",  
-                    "origQty": "0.690354",  
-                    "executedQty": "0.000000",  
-                    "origQuoteOrderQty": "0.000000",  
-                    "cummulativeQuoteQty": "0.000000",  
-                    "status": "CANCELED",  
-                    "timeInForce": "GTC",  
-                    "type": "STOP_LOSS_LIMIT",  
-                    "side": "BUY",  
-                    "stopPrice": "0.378131",  
-                    "icebergQty": "0.017083",  
-                    "selfTradePreventionMode": "NONE"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "origClientOrderId": "461cPg51vQjV3zIMOXNz39",  
-                    "orderId": 21,  
-                    "orderListId": 1929,  
-                    "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",  
-                    "transactTime": 1684804350068,  
-                    "price": "0.008791",  
-                    "origQty": "0.690354",  
-                    "executedQty": "0.000000",  
-                    "origQuoteOrderQty": "0.000000",  
-                    "cummulativeQuoteQty": "0.000000",  
-                    "status": "CANCELED",  
-                    "timeInForce": "GTC",  
-                    "type": "LIMIT_MAKER",  
-                    "side": "BUY",  
-                    "icebergQty": "0.639962",  
-                    "selfTradePreventionMode": "NONE"  
-                }  
-            ]  
-        }  
-    ]  
-    
-
-### 撤消挂单再下单 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#撤消挂单再下单-trade "撤消挂单再下单 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/order/cancelReplace  
-    
-
-  * 撤消同一交易对上的一个现有订单并重新下单。
-  * 在执行撤单和下单操作之前，会先评估过滤器和订单数量。
-  * 即使新订单未被尝试（即 `newOrderResult: NOT_ATTEMPTED`），未成交订单数量仍会增加1。
-  * 通过此接口只能撤消订单列表中的单个订单，但结果与撤消整个订单列表相同。
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * Supported values: 
+      * `MILLISECOND`
+      * `millisecond`
+      * `MICROSECOND`
+      * `microsecond`
+    * The time unit affects time-related parameters in requests (e.g, `startTime`, `endTime`, `timestamp`).
+    * The time unit affects timestamp fields in responses (e.g., `time`, `transactTime`).
+    * If the time unit is not selected, milliseconds will be used by default.
 
 
 
-**权重:** 1
+User Data Streams
 
-**未成交的订单计数:** 1
+  * A new optional parameter `timeUnit` can be used in the connection URL to select the time unit. 
+    * Supported values 
+      * `MILLISECOND`
+      * `MICROSECOND`.
+      * `microsecond`
+      * `millisecond`
 
-**参数:**
 
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES|   
-type| ENUM| YES|   
-cancelReplaceMode| ENUM| YES| 指定类型：`STOP_ON_FAILURE` \- 如果撤消订单失败将不会继续重新下单。  
-`ALLOW_FAILURE` \- 不管撤消订单是否成功都会继续重新下单。  
-timeInForce| ENUM| NO|   
-quantity| DECIMAL| NO|   
-quoteOrderQty| DECIMAL| NO|   
-price| DECIMAL| NO|   
-cancelNewClientOrderId| STRING| NO| 用户自定义的id，如空缺系统会自动赋值  
-cancelOrigClientOrderId| STRING| NO| 必须提供 `cancelOrderId` 或者 `cancelOrigClientOrderId`。   
-  
-当同时提供 `cancelOrderId` 和 `cancelOrigClientOrderId` 两个参数时，系统首先将会使用 `cancelOrderId` 来搜索订单。  
-  
-然后， 查找结果中的 `cancelOrigClientOrderId` 的值将会被用来验证订单。  
-  
-如果两个条件都不满足，则请求将被拒绝。  
-cancelOrderId| LONG| NO| 必须提供 `cancelOrderId` 或者 `cancelOrigClientOrderId`。   
-  
-当同时提供 `cancelOrderId` 和 `cancelOrigClientOrderId` 两个参数时，系统首先将会使用 `cancelOrderId` 来搜索订单。  
-  
-然后， 查找结果中的 `cancelOrigClientOrderId` 的值将会被用来验证订单。  
-  
-如果两个条件都不满足，则请求将被拒绝。  
-newClientOrderId| STRING| NO| 用于辨识新订单。  
-strategyId| LONG| NO|   
-strategyType| INT| NO| 不能低于 `1000000`。  
-stopPrice| DECIMAL| NO|   
-trailingDelta| LONG| NO| 参考 [追踪止盈止损(Trailing Stop)订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)  
-icebergQty| DECIMAL| NO|   
-newOrderRespType| ENUM| NO| 指定响应类型:   
-指定响应类型 `ACK`, `RESULT`, or `FULL`; `MARKET` 与 `LIMIT` 订单默认为`FULL`， 其他默认为`ACK`。  
-selfTradePreventionMode| ENUM| NO| 允许的 ENUM 取决于交易对的配置。支持的值有：[STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)。  
-cancelRestrictions| ENUM| NO| 支持的值:   
-`ONLY_NEW` \- 如果订单状态为 `NEW`，撤销将成功。  
-`ONLY_PARTIALLY_FILLED` \- 如果订单状态为 `PARTIALLY_FILLED`，撤销将成功。  
-orderRateLimitExceededMode| ENUM| NO| 支持的值：   
-  
-`DO_NOTHING`（默认值）- 仅在账户未超过未成交订单频率限制时，会尝试取消订单。  
-  
-`CANCEL_ONLY` \- 将始终取消订单。  
-pegPriceType| ENUM| NO| `PRIMARY_PEG` 或 `MARKET_PEG`。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetValue| INT| NO| 用于挂钩的价格水平（最大值：100）。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pegOffsetType| ENUM| NO| 仅支持 `PRICE_LEVEL`。   
-参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-如同 `POST /api/v3/order`，额外的强制参数取决于 `type` 。
 
-响应格式根据消息的处理是成功、部分成功还是失败而有所不同。
+General Changes:
 
-**数据来源:** 撮合引擎
+  * Fixed a bug that prevented orders from being placed when submitting OCOs on the `BUY` side without providing a `stopPrice`.
 
-请求 | 响应  
+  * `TAKE_PROFIT` and `TAKE_PROFIT_LIMIT` support has been added for OCOs.
+
+    * Previously OCOs could only be composed by the following order types: 
+      * `LIMIT_MAKER` \+ `STOP_LOSS`
+      * `LIMIT_MAKER` \+ `STOP_LOSS_LIMIT`
+    * Now OCOs can be composed of the following order types: 
+      * `LIMIT_MAKER` \+ `STOP_LOSS`
+      * `LIMIT_MAKER` \+ `STOP_LOSS_LIMIT`
+      * `TAKE_PROFIT` \+ `STOP_LOSS`
+      * `TAKE_PROFIT` \+ `STOP_LOSS_LIMIT`
+      * `TAKE_PROFIT_LIMIT` \+ `STOP_LOSS`
+      * `TAKE_PROFIT_LIMIT` \+ `STOP_LOSS_LIMIT`
+    * This is supported by the following requests: 
+      * `POST /api/v3/orderList/oco`
+      * `POST /api/v3/orderList/otoco`
+      * `orderList.place.oco`
+      * `orderList.place.otoco`
+      * `NewOrderList<E>`
+    * Error code `-1167` will be obsolete after this update and will be removed from the documentation in a later update.
+  * Timestamp parameters now reject values too far into the past or the future. To be specific, the parameter will be rejected if:
+
+    * `timestamp` before 2017-01-01 (less than 1483228800000)
+    * `timestamp` is more than 10 seconds after the current time (e.g., if current time is 1729745280000 then it is an error to use 1729745291000 or greater)
+  * If `startTime` and/or `endTime` values are outside of range, the values will be adjusted to fit the correct range.
+
+  * The field for quote order quantity (`origQuoteOrderQty`) has been added to responses that previously did not have it. Note that for order placement endpoints the field will only appear for requests with `newOrderRespType` set to `RESULT` or `FULL`.
+
+    * Please refer to the table for requests with `origQuoteOrderQty`:
+Service| Request  
 ---|---  
-`cancelReplaceMode` | `orderRateLimitExceededMode` | 未成交订单数 | `cancelResult` | `newOrderResult` | `status`  
-`STOP_ON_FAILURE` | `DO_NOTHING` | 在限制范围内 | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `400`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-超出限制范围 | ✅ `SUCCESS` | ✅ `SUCCESS` | N/A  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | N/A  
-`CANCEL_ONLY` | 在限制范围内 | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `400`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-超出限制范围 | ❌ `FAILURE` | ➖ `NOT_ATTEMPTED` | `429`  
-✅ `SUCCESS` | ❌ `FAILURE` | `429`  
-`ALLOW_FAILURE` | `DO_NOTHING` | 在限制范围内 | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | `409`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-超出限制范围 | ✅ `SUCCESS` | ✅ `SUCCESS` | N/A  
-❌ `FAILURE` | ❌ `FAILURE` | N/A  
-❌ `FAILURE` | ✅ `SUCCESS` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | N/A  
-`CANCEL_ONLY` | 在限制范围内 | ✅ `SUCCESS` | ✅ `SUCCESS` | `200`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | `409`  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-超出限制范围 | ✅ `SUCCESS` | ✅ `SUCCESS` | `N/A`  
-❌ `FAILURE` | ❌ `FAILURE` | `400`  
-❌ `FAILURE` | ✅ `SUCCESS` | N/A  
-✅ `SUCCESS` | ❌ `FAILURE` | `409`  
-  
-**响应：账户没有超出未成交订单计数时的 Response SUCCESS**
-    
-    
-    // 撤单和下单都成功  
-    {  
-        "cancelResult": "SUCCESS",  
-        "newOrderResult": "SUCCESS",  
-        "cancelResponse": {  
-            "symbol": "BTCUSDT",  
-            "origClientOrderId": "DnLo3vTAQcjha43lAZhZ0y",  
-            "orderId": 9,  
-            "orderListId": -1,  
-            "clientOrderId": "osxN3JXAtJvKvCqGeMWMVR",  
-            "transactTime": 1684804350068,  
-            "price": "0.01000000",  
-            "origQty": "0.000100",  
-            "executedQty": "0.00000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.00000000",  
-            "status": "CANCELED",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "SELL"  
-        },  
-        "newOrderResponse": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 10,  
-            "orderListId": -1,  
-            "clientOrderId": "wOceeeOzNORyLiQfw7jd8S",  
-            "transactTime": 1652928801803,  
-            "price": "0.02000000",  
-            "origQty": "0.040000",  
-            "executedQty": "0.00000000",  
-            "origQuoteOrderQty": "0.000000",  
-            "cummulativeQuoteQty": "0.00000000",  
-            "status": "NEW",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "BUY",  
-            "fills": []  
-        }  
-    }  
-    
-
-**响应：选择了`STOP_ON_FAILURE` 而且账户没有超出未成交订单计数时, 撤单出现错误**
-    
-    
-    {  
-        "code": -2022,  
-        "msg": "Order cancel-replace failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "NOT_ATTEMPTED",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": null  
-        }  
-    }  
-    
-
-**响应：撤单成功而且账户没有超出未成交订单计数时，下单失败**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "SUCCESS",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "symbol": "BTCUSDT",  
-                "origClientOrderId": "86M8erehfExV8z2RC8Zo8k",  
-                "orderId": 3,  
-                "orderListId": -1,  
-                "clientOrderId": "G1kLo6aDv2KGNTFcjfTSFq",  
-                "transactTime": 1684804350068,  
-                "price": "0.006123",  
-                "origQty": "10000.000000",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL"  
-            },  
-            "newOrderResponse": {  
-                "code": -2010,  
-                "msg": "Order would immediately match and take."  
-            }  
-        }  
-    }  
-    
-
-**响应：选择`ALLOW_FAILURE` 而且账户没有超出未成交订单计数时, 撤单出现错误**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "SUCCESS",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "orderListId": -1,  
-                "clientOrderId": "pfojJMg6IMNDKuJqDxvoxN",  
-                "transactTime": 1648540168818  
-            }  
-        }  
-    }  
-    
-
-**响应：选择`cancelReplaceMode=ALLOW_FAILURE` 而且账户没有超出未成交订单计数时, 撤单和下单失败**
-    
-    
-    {  
-        "code": -2022,  
-        "msg": "Order cancel-replace failed.",  
-        "data": {  
-            "cancelResult": "FAILURE",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "code": -2011,  
-                "msg": "Unknown order sent."  
-            },  
-            "newOrderResponse": {  
-                "code": -2010,  
-                "msg": "Order would immediately match and take."  
-            }  
-        }  
-    }  
-    
-
-**响应：选择`orderRateLimitExceededMode=DO_NOTHING` 而且账户超出未成交订单计数时**
-    
-    
-    {  
-        "code": -1015,  
-        "msg": "Too many new orders; current limit is 1 orders per 10 SECOND."  
-    }  
-    
-
-**响应：选择`orderRateLimitExceededMode=CANCEL_ONLY` 而且账户超出未成交订单计数时**
-    
-    
-    {  
-        "code": -2021,  
-        "msg": "Order cancel-replace partially failed.",  
-        "data": {  
-            "cancelResult": "SUCCESS",  
-            "newOrderResult": "FAILURE",  
-            "cancelResponse": {  
-                "symbol": "LTCBNB",  
-                "origClientOrderId": "GKt5zzfOxRDSQLveDYCTkc",  
-                "orderId": 64,  
-                "orderListId": -1,  
-                "clientOrderId": "loehOJF3FjoreUBDmv739R",  
-                "transactTime": 1715779007228,  
-                "price": "1.00",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            "newOrderResponse": {  
-                "code": -1015,  
-                "msg": "Too many new orders; current limit is 1 orders per 10 SECOND."  
-            }  
-        }  
-    }  
-    
-
-**注意:**
-
-  * 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-  * 当仅发送 `orderId` 时,取消订单的执行(单个 Cancel 或作为 Cancel-Replace 的一部分)总是更快。发送 `origClientOrderId` 或同时发送 `orderId` \+ `origClientOrderId` 会稍慢。
-
-
-
-### 修改订单并保留优先级 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#修改订单并保留优先级-trade "修改订单并保留优先级 \(TRADE\)的直接链接")
-    
-    
-    PUT /api/v3/order/amend/keepPriority  
-    
-
-由客户发送以减少其现有当前订单的原始数量。
-
-这个请求将添加0个订单到 `EXCHANGE_MAX_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
-
-请阅读 [保留优先权的修改订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/order_amend_keep_priority) 了解更多信息。
-
-**权重:** 4
-
-**未成交的订单计数:** 0
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-orderId| LONG| NO*| 需提供 `orderId` 或 `origClientOrderId`。  
-origClientOrderId| STRING| NO*| 需提供 `orderId` 或 `origClientOrderId`。  
-newClientOrderId| STRING| NO*| 订单在被修改后被赋予的新 client order ID。   
-如果未发送则自动生成。   
-可以将当前 clientOrderId 作为 `newClientOrderId` 发送来重用当前 clientOrderId 的值。  
-newQty| DECIMAL| YES| 交易的新数量。 `newQty` 必须大于0, 但是必须比订单的原始数量小。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**数据源:** 撮合引擎
-
-**来自单个订单的响应：**
-    
-    
-    {  
-        "transactTime": 1741926410255,  
-        "executionId": 75,  
-        "amendedOrder": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 33,  
-            "orderListId": -1,  
-            "origClientOrderId": "5xrgbMyg6z36NzBn2pbT8H",  
-            "clientOrderId": "PFaq6hIHxqFENGfdtn4J6Q",  
-            "price": "6.00000000",  
-            "qty": "5.00000000",  
-            "executedQty": "0.00000000",  
-            "preventedQty": "0.00000000",  
-            "quoteOrderQty": "0.00000000",  
-            "cumulativeQuoteQty": "0.00000000",  
-            "status": "NEW",  
-            "timeInForce": "GTC",  
-            "type": "LIMIT",  
-            "side": "SELL",  
-            "workingTime": 1741926410242,  
-            "selfTradePreventionMode": "NONE"  
-        }  
-    }  
-    
-
-**来自订单列表中单个订单的响应：**
-    
-    
-    {  
-        "transactTime": 1741669661670,  
-        "executionId": 22,  
-        "amendedOrder": {  
-            "symbol": "BTCUSDT",  
-            "orderId": 9,  
-            "orderListId": 1,  
-            "origClientOrderId": "W0fJ9fiLKHOJutovPK3oJp",  
-            "clientOrderId": "UQ1Np3bmQ71jJzsSDW9Vpi",  
-            "price": "0.00000000",  
-            "qty": "4.00000000",  
-            "executedQty": "0.00000000",  
-            "preventedQty": "0.00000000",  
-            "quoteOrderQty": "0.00000000",  
-            "cumulativeQuoteQty": "0.00000000",  
-            "status": "PENDING_NEW",  
-            "timeInForce": "GTC",  
-            "type": "MARKET",  
-            "side": "BUY",  
-            "selfTradePreventionMode": "NONE"  
-        },  
-        "listStatus": {  
-            "orderListId": 1,  
-            "contingencyType": "OTO",  
-            "listOrderStatus": "EXECUTING",  
-            "listClientOrderId": "AT7FTxZXylVSwRoZs52mt3",  
-            "symbol": "BTCUSDT",  
-            "orders": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 8,  
-                    "clientOrderId": "GkwwHZUUbFtZOoH1YsZk9Q"  
-                },  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": 9,  
-                    "clientOrderId": "UQ1Np3bmQ71jJzsSDW9Vpi"  
-                }  
-            ]  
-        }  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-### 订单列表（Order lists）[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#订单列表order-lists "订单列表（Order lists）的直接链接")
-
-#### 发送新 OCO 订单 - 已弃用 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#发送新-oco-订单---已弃用-trade "发送新 OCO 订单 - 已弃用 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/order/oco  
-    
-
-**权重:** 1
-
-**未成交的订单计数:** 2
-
-发送新的 OCO。
-
-  * 价格限制： 
-    * `SELL`： Limit price > 最后交易价格 > stop Price
-    * `BUY`： Limit price < 最后交易价格 < stop Price
-  * 数量限制： 
-    * 两条腿的数量必须相同。
-    * 不过， `冰山` 交易的数量不一定相同
-  * `OCO` 将**2个订单** 添加到 `EXCHANGE_MAX_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
-
-
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| 整个orderList的唯一ID  
-side| ENUM| YES| 详见枚举定义：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-quantity| DECIMAL| YES|   
-limitClientOrderId| STRING| NO| 限价单的唯一ID  
-price| DECIMAL| YES|   
-limitStrategyId| LONG| NO|   
-limitStrategyType| INT| NO| 不能低于 `1000000`  
-limitIcebergQty| DECIMAL| NO|   
-trailingDelta| LONG| NO|   
-stopClientOrderId| STRING| NO| 止损/止损限价单的唯一ID  
-stopPrice| DECIMAL| YES|   
-stopStrategyId| LONG| NO|   
-stopStrategyType| INT| NO| 不能低于 `1000000`  
-stopLimitPrice| DECIMAL| NO| 如果提供，须配合提交`stopLimitTimeInForce`  
-stopIcebergQty| DECIMAL| NO|   
-stopLimitTimeInForce| ENUM| NO| 有效值 `GTC`/`FOK`/`IOC`  
-newOrderRespType| ENUM| NO| 详见枚举定义：[订单返回类型](/docs/zh-CN/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| 允许的 ENUM 取决于交易对的配置。支持的值有：[STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**数据源:** 撮合引擎
-
-**响应**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OCO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",  
-        "transactionTime": 1563417480525,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",  
-                "transactTime": 1563417480525,  
-                "price": "0.000000",  
-                "origQty": "0.624363",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS",  
-                "side": "BUY",  
-                "stopPrice": "0.960664",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",  
-                "transactTime": 1563417480525,  
-                "price": "0.036435",  
-                "origQty": "0.624363",  
-                "executedQty": "0.000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "BUY",  
-                "workingTime": 1563417480525,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-#### 新订单列表 - OCO (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#新订单列表---oco-trade "新订单列表 - OCO \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/orderList/oco  
-    
-
-发送新 one-cancels-the-other (OCO) 订单，激活其中一个订单会立即取消另一个订单。
-
-  * OCO 包含了两个订单，分别被称为 **上方订单** 和 **下方订单** 。
-  * 其中一个订单必须是 `LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT` 订单，另一个订单必须是 `STOP_LOSS` 或 `STOP_LOSS_LIMIT` 订单。
-  * 针对价格限制： 
-    * 如果 OCO 订单方向是 `SELL`： 
-      * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` > 最后交易价格 > `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-      * `TAKE_PROFIT` `stopPrice` > 最后交易价格 > `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-    * 如果 OCO 订单方向是 `BUY`： 
-      * `LIMIT_MAKER/TAKE_PROFIT_LIMIT` `price` < 最后交易价格 < `stopPrice`
-      * `TAKE_PROFIT` `stopPrice` < 最后交易价格 < `STOP_LOSS/STOP_LOSS_LIMIT` `stopPrice`
-    * OCO 会添加 **2个订单** 到 `EXCHANGE_MAX_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
-
-
-
-**权重:** 1
-
-**未成交的订单计数:** 2
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| Yes|   
-listClientOrderId| STRING| No| 整个 OCO order list 的唯一ID。 如果未发送则自动生成。   
-仅当前一个订单已填满或完全过期时，才会接受具有相同的`listClientOrderId`。   
-`listClientOrderId` 与 `aboveClientOrderId` 和 `belowCLientOrderId` 不同。  
-side| ENUM| Yes| 订单方向：`BUY` or `SELL`  
-quantity| DECIMAL| Yes| 两个订单的数量。  
-aboveType| ENUM| Yes| 支持值：`STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`。  
-aboveClientOrderId| STRING| No| 上方订单的唯一ID。 如果未发送则自动生成。  
-aboveIcebergQty| LONG| No| 请注意，只有当 `aboveTimeInForce` 为 `GTC` 时才能使用。  
-abovePrice| DECIMAL| No| 当 `aboveType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。  
-aboveStopPrice| DECIMAL| No| 如果 `aboveType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。  
-必须指定 `aboveStopPrice` 或 `aboveTrailingDelta` 或两者。  
-aboveTrailingDelta| LONG| No| 请看 [追踪止盈止损(Trailing Stop)订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)。  
-aboveTimeInForce| ENUM| No| 如果 `aboveType` 是 `STOP_LOSS_LIMIT` 或 `TAKE_PROFIT_LIMIT`，则为必填项。  
-aboveStrategyId| LONG| No| 订单策略中上方订单的 ID。  
-aboveStrategyType| INT| No| 上方订单策略的任意数值。  
-小于 `1000000` 的值被保留，无法使用。  
-abovePegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-abovePegOffsetType| ENUM| NO|   
-abovePegOffsetValue| INT| NO|   
-belowType| ENUM| Yes| 支持值：`STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`,`TAKE_PROFIT_LIMIT`。  
-belowClientOrderId| STRING| No|   
-belowIcebergQty| LONG| No| 请注意，只有当 `belowTimeInForce` 为 `GTC` 时才能使用。  
-belowPrice| DECIMAL| No| 当 `belowType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。  
-belowStopPrice| DECIMAL| No| 如果 `belowType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 才能使用。  
-必须指定 `belowStopPrice` 或 `belowTrailingDelta` 或两者。  
-belowTrailingDelta| LONG| No| 请看 [追踪止盈止损(Trailing Stop)订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)。  
-belowTimeInForce| ENUM| No| 如果`belowType` 是 `STOP_LOSS_LIMIT` 或 `TAKE_PROFIT_LIMIT`，则为必须配合提交的值。  
-belowStrategyId| LONG| No| 订单策略中下方订单的 ID。  
-belowStrategyType| INT| No| 下方订单策略的任意数值。  
-小于 `1000000` 的值被保留，无法使用。  
-belowPegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-belowPegOffsetType| ENUM| NO|   
-belowPegOffsetValue| INT| NO|   
-newOrderRespType| ENUM| No| 响应格式可选值: `ACK`, `RESULT`, `FULL`。  
-selfTradePreventionMode| ENUM| No| 允许的 ENUM 取决于交易对上的配置。 支持值：[STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| Yes|   
-  
-**数据源:** 撮合引擎
-
-**响应:**
-
-使用 `newOrderRespType` 参数来选择 `orderReports` 的响应格式。以下示例适用于 `RESULT` 响应类型。 请参阅 [`POST /api/v3/order`](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#%E4%B8%8B%E5%8D%95-trade)了解更多 `orderReports` 的响应类型。
-    
-    
-    {  
-        "orderListId": 1,  
-        "contingencyType": "OCO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "lH1YDkuQKWiXVXHPSKYEIp",  
-        "transactionTime": 1710485608839,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 10,  
-                "clientOrderId": "44nZvqpemY7sVYgPYbvPih"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 11,  
-                "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 10,  
-                "orderListId": 1,  
-                "clientOrderId": "44nZvqpemY7sVYgPYbvPih",  
-                "transactTime": 1710485608839,  
-                "price": "1.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "1.00000000",  
-                "workingTime": -1,  
-                "icebergQty": "1.00000000",  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 11,  
-                "orderListId": 1,  
-                "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK",  
-                "transactTime": 1710485608839,  
-                "price": "3.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "workingTime": 1710485608839,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-#### 新订单列表 - OTO (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#新订单列表---oto-trade "新订单列表 - OTO \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/orderList/oto  
-    
-
-发送一个新的 OTO 订单。
-
-  * 一个 OTO 订单（One-Triggers-the-Other）是一个包含了两个订单的订单列表.
-  * 第一个订单被称为**生效订单** ，必须为 `LIMIT` 或 `LIMIT_MAKER` 类型的订单。最初，订单簿上只有生效订单。
-  * 第二个订单被称为**待处理订单** 。它可以是任何订单类型，但不包括使用参数 `quoteOrderQty` 的 `MARKET` 订单。只有当生效订单**完全成交** 时，待处理订单才会被自动下单。
-  * 如果生效订单或者待处理订单中的任意一个被单独取消，订单列表中剩余的那个订单也会被随之取消或过期。
-  * 如果生效订单在下订单列表后**立即完全成交** ，则可能会得到订单响应。其中，生效订单的状态为 `FILLED` ，但待处理订单的状态为 `PENDING_NEW`。针对这类情况，如果需要检查当前状态，您可以查询相关的待处理订单。
-  * `OTO` 订单将**2 个订单** 添加到 `EXCHANGE_MAX_NUM_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
-
-
-
-**权重:** 1
-
-**未成交的订单计数:** 2
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| 整个订单列表的唯一ID。 如果未发送则自动生成。   
-仅当前一个订单列表已填满或完全过期时，才会接受含有相同 `listClientOrderId` 值的新订单列表。   
-`listClientOrderId` 与 `workingClientOrderId` 和 `pendingClientOrderId` 不同。  
-newOrderRespType| ENUM| NO| 用于设置JSON响应的格式。 支持的数值： [订单返回类型](/docs/zh-CN/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| 允许的数值取决于交易对上的配置。参考 [STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| 支持的数值： `LIMIT`， `LIMIT_MAKER`  
-workingSide| ENUM| YES| 支持的数值： [订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| 用于标识生效订单的唯一ID。   
-如果未发送则自动生成。  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES| 用于设置生效订单的数量。  
-workingIcebergQty| DECIMAL| NO| 仅当 `workingTimeInForce` 为 `GTC` 或 `workingType` 为 `LIMIT_MAKER` 时，才能使用此功能。  
-workingTimeInForce| ENUM| NO| 支持的数值： [生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-workingStrategyId| LONG| NO| 订单策略中用于标识生效订单的 ID。  
-workingStrategyType| INT| NO| 用于标识生效订单策略的任意数值。  
-小于 `1000000` 的值被保留，无法使用。  
-pendingType| ENUM| YES| 支持的数值： [订单类型](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#order-type)  
-请注意，系统不支持使用 `quoteOrderQty` 的 `MARKET` 订单。  
-workingPegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingSide| ENUM| YES| 支持的数值： [订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-pendingClientOrderId| STRING| NO| 用于标识待处理订单的唯一ID。   
-如果未发送则自动生成。  
-pendingPrice| DECIMAL| NO|   
-pendingStopPrice| DECIMAL| NO|   
-pendingTrailingDelta| DECIMAL| NO|   
-pendingQuantity| DECIMAL| YES| 用于设置待处理订单的数量。  
-pendingIcebergQty| DECIMAL| NO| 只有当 `pendingTimeInForce` 为 `GTC` 或者当 `pendingType` 为 `LIMIT_MAKER` 时才能使用。  
-pendingTimeInForce| ENUM| NO| 支持的数值： [生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-pendingStrategyId| LONG| NO| 订单策略中用于标识待处理订单的 ID。  
-pendingStrategyType| INT| NO| 用于标识待处理订单策略的任意数值。   
-小于 `1000000` 的值被保留，无法使用。  
-pendingPegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingPegOffsetType| ENUM| NO|   
-pendingPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**根据`pendingType` 或者 `workingType` 的不同值，对于某些参数的强制要求**
-
-根据 `pendingType` 或者`workingType`的不同值，对于某些可选参数有强制要求，具体如下：
-
-类型| 强制要求的参数| 其他信息  
----|---|---  
-`workingType` = `LIMIT`| `workingTimeInForce`|   
-`pendingType` = `LIMIT`| `pendingPrice`， `pendingTimeInForce`|   
-`pendingType` = `STOP_LOSS` 或 `TAKE_PROFIT`| `pendingStopPrice` 与/或 `pendingTrailingDelta`|   
-`pendingType` = `STOP_LOSS_LIMIT` 或 `TAKE_PROFIT_LIMIT`| `pendingPrice`， `pendingStopPrice` 与/或 `pendingTrailingDelta`， `pendingTimeInForce`|   
-  
-**数据源:** 撮合引擎
-
-**响应:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "yl2ERtcar1o25zcWtqVBTC",  
-        "transactionTime": 1712289389158,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 4,  
-                "clientOrderId": "Bq17mn9fP6vyCn75Jw1xya"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 5,  
-                "clientOrderId": "arLFo0zGJVDE69cvGBaU0d"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 4,  
-                "orderListId": 0,  
-                "clientOrderId": "Bq17mn9fP6vyCn75Jw1xya",  
-                "transactTime": 1712289389158,  
-                "price": "1.00000000",  
-                "origQty": "1.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "workingTime": 1712289389158,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 5,  
-                "orderListId": 0,  
-                "clientOrderId": "arLFo0zGJVDE69cvGBaU0d",  
-                "transactTime": 1712289389158,  
-                "price": "0.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "MARKET",  
-                "side": "BUY",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-#### 新订单列表 - OTOCO (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#新订单列表---otoco-trade "新订单列表 - OTOCO \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/orderList/otoco  
-    
-
-发送一个新的 OTOCO 订单。
-
-  * 一个 OTOCO 订单（One-Triggers-One-Cancels-the-Other）是一个包含了三个订单的订单列表。
-  * 第一个订单被称为**生效订单** ，必须为 `LIMIT` 或 `LIMIT_MAKER` 类型的订单。最初，订单簿上只有生效订单。 
-    * 生效订单的行为与此一致 [OTO](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oto-trade)
-  * 一个OTOCO订单有两个待处理订单（pending above 和 pending below），它们构成了一个 OCO 订单列表。只有当生效订单**完全成交** 时，待处理订单们才会被自动下单。 
-    * 待处理上方(pending above)订单和待处理下方(pending below)订单都遵循与 OCO 订单列表相同的规则 [Order List OCO](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade)。
-  * `OTOCO` 在 `EXCHANGE_MAX_NUM_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器的基础上添加**3个订单** 。
-
-
-
-**权重:** 1
-
-**未成交的订单计数:** 3
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| 整个订单列表的唯一ID。 如果未发送则自动生成。   
-仅当前一个订单列表已填满或完全过期时，才会接受含有相同 `listClientOrderId` 值的新订单列表。   
-`listClientOrderId` 与 `workingClientOrderId`， `pendingAboveClientOrderId` 以及 `pendingBelowClientOrderId` 不同。  
-newOrderRespType| ENUM| NO| 用于设置JSON响应的格式。 支持的数值： [订单返回类型](/docs/zh-CN/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| 允许的数值取决于交易对上的配置。参考 [STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| 支持的数值： `LIMIT`， `LIMIT_MAKER`  
-workingSide| ENUM| YES| 支持的数值： [订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| 用于标识生效订单的唯一ID。   
-如果未发送则自动生成。  
-workingPrice| DECIMAL| YES|   
-workingQuantity| DECIMAL| YES|   
-workingIcebergQty| DECIMAL| NO| 仅当 `workingTimeInForce` 为 `GTC` 或 `workingType` 为 `LIMIT_MAKER` 时，才能使用此功能。  
-workingTimeInForce| ENUM| NO| 支持的数值： [生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-workingStrategyId| LONG| NO| 订单策略中用于标识生效订单的 ID。  
-workingStrategyType| INT| NO| 用于标识生效订单策略的任意数值。  
-小于 `1000000` 的值被保留，无法使用。  
-workingPegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingSide| ENUM| YES| 支持的数值： [订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-pendingQuantity| DECIMAL| YES|   
-pendingAboveType| ENUM| YES| 支持的数值： `STOP_LOSS_LIMIT`, `STOP_LOSS`, `LIMIT_MAKER`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingAboveClientOrderId| STRING| NO| 用于标识待处理上方订单的唯一ID。   
-如果未发送则自动生成。  
-pendingAbovePrice| DECIMAL| NO| 当 `pendingAboveType` 是 `STOP_LOSS_LIMIT`, `LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。  
-pendingAboveStopPrice| DECIMAL| NO| 如果 `pendingAboveType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT` 才能使用。  
-pendingAboveTrailingDelta| DECIMAL| NO| 参见 [追踪止盈止损(Trailing Stop)订单常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)  
-pendingAboveIcebergQty| DECIMAL| NO| 只有当 `pendingAboveTimeInForce` 为 `GTC` 时才能使用。  
-pendingAboveTimeInForce| ENUM| NO|   
-pendingAboveStrategyId| LONG| NO| 订单策略中用于标识待处理上方订单的 ID。  
-pendingAboveStrategyType| INT| NO| 用于标识待处理上方订单策略的任意数值。   
-小于 `1000000` 的值被保留，无法使用。  
-pendingAbovePegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingAbovePegOffsetType| ENUM| NO|   
-pendingAbovePegOffsetValue| INT| NO|   
-pendingBelowType| ENUM| NO| 支持的数值： `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT`  
-pendingBelowClientOrderId| STRING| NO| 用于标识待处理下方订单的唯一ID。   
-如果未发送则自动生成。  
-pendingBelowPrice| DECIMAL| NO| 当 `pendingBelowType` 是 `STOP_LOSS_LIMIT` 或 `TAKE_PROFIT_LIMIT` 时，可用以指定限价。  
-pendingBelowStopPrice| DECIMAL| NO| 如果 `pendingBelowType` 是 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, `TAKE_PROFIT_LIMIT` 才能使用。  
-必须指定 `pendingBelowStopPrice` 或 `pendingBelowTrailingDelta` 或两者。  
-pendingBelowTrailingDelta| DECIMAL| NO|   
-pendingBelowIcebergQty| DECIMAL| NO| 只有当 `pendingBelowTimeInForce` 为 `GTC` 时才能使用。  
-pendingBelowTimeInForce| ENUM| NO|   
-pendingBelowStrategyId| LONG| NO| 订单策略中用于标识待处理下方订单的 ID。  
-pendingBelowStrategyType| INT| NO| 用于标识待处理下方订单策略的任意数值。   
-小于 `1000000` 的值被保留，无法使用。  
-pendingBelowPegPriceType| ENUM| NO| 参阅 [关于挂钩订单参数的注意事项](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingBelowPegOffsetType| ENUM| NO|   
-pendingBelowPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**根据`pendingAboveType`， `pendingBelowType` 或者`workingType`的不同值，对于某些参数的强制要求**
-
-根据 `pendingAboveType`， `pendingBelowType` 或者`workingType`的不同值，对于某些可选参数有强制要求，具体如下：
-
-类型| 强制要求的参数| 其他信息  
----|---|---  
-`workingType` = `LIMIT`| `workingTimeInForce`|   
-`pendingAboveType` = `LIMIT_MAKER`| `pendingAbovePrice`|   
-`pendingAboveType` = `STOP_LOSS/TAKE_PROFIT`| `pendingAboveStopPrice` 与/或 `pendingAboveTrailingDelta`|   
-`pendingAboveType` = `STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`| `pendingAbovePrice`， `pendingAboveStopPrice` 与/或 `pendingAboveTrailingDelta`， `pendingAboveTimeInForce`|   
-`pendingBelowType` = `LIMIT_MAKER`| `pendingBelowPrice`|   
-`pendingBelowType` = `STOP_LOSS/TAKE_PROFIT`| `pendingBelowStopPrice` 与/或 `pendingBelowTrailingDelta`|   
-`pendingBelowType` = `STOP_LOSS_LIMIT/TAKE_PROFIT_LIMIT`| `pendingBelowPrice`， `pendingBelowStopPrice` 与/或 `pendingBelowTrailingDelta`， `pendingBelowTimeInForce`|   
-  
-**数据源:** 撮合引擎
-
-**响应:**
-    
-    
-    {  
-        "orderListId": 1,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "RumwQpBaDctlUu5jyG5rs0",  
-        "transactionTime": 1712291372842,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 6,  
-                "clientOrderId": "fM9Y4m23IFJVCQmIrlUmMK"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 7,  
-                "clientOrderId": "6pcQbFIzTXGZQ1e2MkGDq4"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 8,  
-                "clientOrderId": "r4JMv9cwAYYUwwBZfbussx"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 6,  
-                "orderListId": 1,  
-                "clientOrderId": "fM9Y4m23IFJVCQmIrlUmMK",  
-                "transactTime": 1712291372842,  
-                "price": "1.00000000",  
-                "origQty": "1.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "SELL",  
-                "workingTime": 1712291372842,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 7,  
-                "orderListId": 1,  
-                "clientOrderId": "6pcQbFIzTXGZQ1e2MkGDq4",  
-                "transactTime": 1712291372842,  
-                "price": "1.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "IOC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "BUY",  
-                "stopPrice": "6.00000000",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 8,  
-                "orderListId": 1,  
-                "clientOrderId": "r4JMv9cwAYYUwwBZfbussx",  
-                "transactTime": 1712291372842,  
-                "price": "3.00000000",  
-                "origQty": "5.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "BUY",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-#### 新订单列表 - OPO（TRADE）[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#新订单列表---opotrade "新订单列表 - OPO（TRADE）的直接链接")
-    
-    
-    POST /api/v3/orderList/opo  
-    
-
-发送一个新的 [OPO](/docs/zh-CN/binance-spot-api-docs/faqs/opo) 订单。
-
-  * OPO 会向 `EXCHANGE_MAX_NUM_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中添加 2 个订单。
-
-
-
-**权重:** 1
-
-**未成交订单计数:** 2
-
-**参数:**
-
-名称| 类型| 必填| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-listClientOrderId| STRING| NO| 订单列表中的唯一 ID。如果未发送，则自动生成。只有当之前的同一 `listClientOrderId` 的订单列表已成交或完全过期后，才接受新的同一 `listClientOrderId` 的订单列表。`listClientOrderId` 与 `workingClientOrderId` 和 `pendingClientOrderId` 不同。  
-newOrderRespType| ENUM| NO| JSON 响应格式。支持的数值：[订单返回类型](/docs/zh-CN/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| 允许的数值取决于交易对的配置。支持的数值：[STP模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| 支持的数值：`LIMIT`，`LIMIT_MAKER`  
-workingSide| ENUM| YES| 支持的数值：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| 生效订单中挂单的任意唯一 ID。如果未发送，则自动生成。  
-workingPrice| DECIMAL| YES| 生效订单价格  
-workingQuantity| DECIMAL| YES| 设置生效订单的数量  
-workingIcebergQty| DECIMAL| NO| 仅当 `workingTimeInForce` 为 `GTC` 或 `workingType` 为 `LIMIT_MAKER` 时可用  
-workingTimeInForce| ENUM| NO| 支持的数值：[生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-workingStrategyId| LONG| NO| 用于标识订单策略中生效订单的任意数字值  
-workingStrategyType| INT| NO| 用于标识生效订单策略的任意数字值。小于 1000000 的值为保留值，不能使用。  
-workingPegPriceType| ENUM| NO| 详见 [挂钩订单](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingType| ENUM| YES| 支持的数值：[订单类型](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#order-type)。注意，不支持使用 `quoteOrderQty` 的 `MARKET` 订单。  
-pendingSide| ENUM| YES| 支持的数值：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-pendingClientOrderId| STRING| NO| 待执行订单中挂单的任意唯一 ID。如果未发送，则自动生成。  
-pendingPrice| DECIMAL| NO| 待执行订单价格  
-pendingStopPrice| DECIMAL| NO| 待执行订单止损价格  
-pendingTrailingDelta| DECIMAL| NO| 待执行订单跟踪止损差值  
-pendingIcebergQty| DECIMAL| NO| 仅当 `pendingTimeInForce` 为 `GTC` 或 `pendingType` 为 `LIMIT_MAKER` 时可用  
-pendingTimeInForce| ENUM| NO| 支持的数值：[生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-pendingStrategyId| LONG| NO| 用于标识订单策略中待执行订单的任意数字值  
-pendingStrategyType| INT| NO| 用于标识待执行订单策略的任意数字值。小于 1000000 的值为保留值，不能使用。  
-pendingPegPriceType| ENUM| NO| 详见 [挂钩订单](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingPegOffsetType| ENUM| NO|   
-pendingPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| 该值不能大于 `60000`。支持最多三位小数精度（例如 6000.346），以便指定微秒。  
-timestamp| LONG| YES| 时间戳  
-  
-**数据来源** ：撮合引擎
-
-**响应示例:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "H94qCqO27P74OEiO4X8HOG",  
-        "transactionTime": 1762998011671,  
-        "symbol": "BTCUSDT",  
-        "orders": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 2,  
-                "clientOrderId": "JX6xfdjo0wysiGumfHNmPu"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 3,  
-                "clientOrderId": "2ZJCY0IjOhuYIMLGN8kU8S"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "JX6xfdjo0wysiGumfHNmPu",  
-                "transactTime": 1762998011671,  
-                "price": "102264.00000000",  
-                "origQty": "0.00060000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "BUY",  
-                "workingTime": 1762998011671,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "2ZJCY0IjOhuYIMLGN8kU8S",  
-                "transactTime": 1762998011671,  
-                "price": "0.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "MARKET",  
-                "side": "SELL",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-#### 新订单列表 - OPOCO (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#新订单列表---opoco-trade "新订单列表 - OPOCO \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/orderList/opoco  
-    
-
-发送一个 [OPOCO](/docs/zh-CN/binance-spot-api-docs/https://github.com/binance/binance-spot-api-docs/blob/master/faqs/opo) 订单。
-
-**权重** : 1
-
-**未成交订单计数:** 3
-
-**参数:**
-
-名称| 类型| 必填| 描述  
----|---|---|---  
-symbol| STRING| YES| 交易对符号  
-listClientOrderId| STRING| NO| 订单列表中的任意唯一 ID。如果未发送，则自动生成。只有当之前的同一 `listClientOrderId` 的订单列表已成交或完全过期时，才接受新的同一 `listClientOrderId` 的订单列表。`listClientOrderId` 与 `workingClientOrderId`、`pendingAboveClientOrderId` 和 `pendingBelowClientOrderId` 不同。  
-newOrderRespType| ENUM| NO| JSON 响应格式。支持的数值：[订单返回类型](/docs/zh-CN/binance-spot-api-docs/enums#orderresponsetype)  
-selfTradePreventionMode| ENUM| NO| 允许的值取决于交易对的配置。支持的数值：[STP模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)  
-workingType| ENUM| YES| 支持的数值：`LIMIT`，`LIMIT_MAKER`  
-workingSide| ENUM| YES| 支持的数值：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-workingClientOrderId| STRING| NO| 生效订单中挂单的任意唯一 ID。如果未发送，则自动生成。  
-workingPrice| DECIMAL| YES| 生效订单价格  
-workingQuantity| DECIMAL| YES| 生效订单数量  
-workingIcebergQty| DECIMAL| NO| 仅当 `workingTimeInForce` 为 `GTC` 或 `workingType` 为 `LIMIT_MAKER` 时可用  
-workingTimeInForce| ENUM| NO| 支持的数值：[生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-workingStrategyId| LONG| NO| 用于标识订单策略中生效订单的任意数字值  
-workingStrategyType| INT| NO| 用于标识生效订单策略的任意数字值。小于 1000000 的值为保留值，不能使用。  
-workingPegPriceType| ENUM| NO| 详见 [挂钩订单](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-workingPegOffsetType| ENUM| NO|   
-workingPegOffsetValue| INT| NO|   
-pendingSide| ENUM| YES| 支持的数值：[订单方向](/docs/zh-CN/binance-spot-api-docs/enums#side)  
-pendingAboveType| ENUM| YES| 支持的数值：`STOP_LOSS_LIMIT`，`STOP_LOSS`，`LIMIT_MAKER`，`TAKE_PROFIT`，`TAKE_PROFIT_LIMIT`  
-pendingAboveClientOrderId| STRING| NO| 待执行“上方”订单中开放订单的任意唯一 ID。如果未发送，则自动生成。  
-pendingAbovePrice| DECIMAL| NO| 当 `pendingAboveType` 为 `STOP_LOSS_LIMIT`、`LIMIT_MAKER` 或 `TAKE_PROFIT_LIMIT` 时，可用于指定限价。  
-pendingAboveStopPrice| DECIMAL| NO| 当 `pendingAboveType` 为 `STOP_LOSS`、`STOP_LOSS_LIMIT`、`TAKE_PROFIT`、`TAKE_PROFIT_LIMIT` 时可用。  
-pendingAboveTrailingDelta| DECIMAL| NO| 详见 [追踪止盈止损常见问题](/docs/zh-CN/binance-spot-api-docs/faqs/trailing-stop-faq)  
-pendingAboveIcebergQty| DECIMAL| NO| 仅当 `pendingAboveTimeInForce` 为 `GTC` 或 `pendingAboveType` 为 `LIMIT_MAKER` 时可用。  
-pendingAboveTimeInForce| ENUM| NO|   
-pendingAboveStrategyId| LONG| NO| 用于标识订单策略中待执行上方订单的任意数字值。  
-pendingAboveStrategyType| INT| NO| 用于标识待执行上方订单策略的任意数字值。小于 1000000 的值为保留值，不能使用。  
-pendingAbovePegPriceType| ENUM| NO| 详见 [挂钩订单](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingAbovePegOffsetType| ENUM| NO|   
-pendingAbovePegOffsetValue| INT| NO|   
-pendingBelowType| ENUM| NO| 支持的数值：`STOP_LOSS`，`STOP_LOSS_LIMIT`，`TAKE_PROFIT`，`TAKE_PROFIT_LIMIT`  
-pendingBelowClientOrderId| STRING| NO| 待执行“下方”订单中开放订单的任意唯一 ID。如果未发送，则自动生成。  
-pendingBelowPrice| DECIMAL| NO| 当 `pendingBelowType` 为 `STOP_LOSS_LIMIT` 或 `TAKE_PROFIT_LIMIT` 时，可用于指定限价。  
-pendingBelowStopPrice| DECIMAL| NO| 当 `pendingBelowType` 为 `STOP_LOSS`、`STOP_LOSS_LIMIT`、`TAKE_PROFIT` 或 `TAKE_PROFIT_LIMIT` 时可用。`pendingBelowStopPrice`、`pendingBelowTrailingDelta` 或两者之一必须被指定。  
-pendingBelowTrailingDelta| DECIMAL| NO|   
-pendingBelowIcebergQty| DECIMAL| NO| 仅当 `pendingBelowTimeInForce` 为 `GTC` 或 `pendingBelowType` 为 `LIMIT_MAKER` 时可用。  
-pendingBelowTimeInForce| ENUM| NO| 支持的数值：[生效时间](/docs/zh-CN/binance-spot-api-docs/enums_CN.md./general-endpoints#timeinforce)  
-pendingBelowStrategyId| LONG| NO| 用于标识订单策略中待执行下方订单的任意数字值。  
-pendingBelowStrategyType| INT| NO| 用于标识待执行下方订单策略的任意数字值。小于 1000000 为保留值，不能使用。  
-pendingBelowPegPriceType| ENUM| NO| 详见 [挂钩订单](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#pegged-orders-info)  
-pendingBelowPegOffsetType| ENUM| NO|   
-pendingBelowPegOffsetValue| INT| NO|   
-recvWindow| DECIMAL| NO| 该值不能大于 `60000`。支持最多三位小数精度（例如 6000.346），以便指定微秒。  
-timestamp| LONG| YES| 时间戳  
-  
-**响应:**
-    
-    
-    {  
-        "orderListId": 2,  
-        "contingencyType": "OTO",  
-        "listStatusType": "EXEC_STARTED",  
-        "listOrderStatus": "EXECUTING",  
-        "listClientOrderId": "bcedxMpQG6nFrZUPQyshoL",  
-        "transactionTime": 1763000506354,  
-        "symbol": "BTCUSDT",  
-        "orders": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 9,  
-                "clientOrderId": "OLSBhMWaIlLSzZ9Zm7fnKB"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 10,  
-                "clientOrderId": "mfif39yPTHsB3C0FIXznR2"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "clientOrderId": "yINkaXSJeoi3bU5vWMY8Z8"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 9,  
-                "orderListId": 2,  
-                "clientOrderId": "OLSBhMWaIlLSzZ9Zm7fnKB",  
-                "transactTime": 1763000506354,  
-                "price": "102496.00000000",  
-                "origQty": "0.00170000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT",  
-                "side": "BUY",  
-                "workingTime": 1763000506354,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 10,  
-                "orderListId": 2,  
-                "clientOrderId": "mfif39yPTHsB3C0FIXznR2",  
-                "transactTime": 1763000506354,  
-                "price": "101613.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "10100.00000000",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            },  
-            {  
-                "symbol": "BTCUSDT",  
-                "orderId": 11,  
-                "orderListId": 2,  
-                "clientOrderId": "yINkaXSJeoi3bU5vWMY8Z8",  
-                "transactTime": 1763000506354,  
-                "price": "104261.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.00000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "PENDING_NEW",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL",  
-                "workingTime": -1,  
-                "selfTradePreventionMode": "NONE"  
-            }  
-        ]  
-    }  
-    
-
-**注意:** 上面的 payload 没有显示所有可以出现的字段，更多请看 [订单响应中的特定条件时才会出现的字段](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#conditional-fields-in-order-responses) 部分。
-
-#### 取消订单列表 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#取消订单列表-trade "取消订单列表 \(TRADE\)的直接链接")
-    
-    
-    DELETE /api/v3/orderList  
-    
-
-取消整个订单列表。
-
-**权重:** 1
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-orderListId| LONG| NO| `orderListId` 或 `listClientOrderId` 必须被提供  
-listClientOrderId| STRING| NO| `orderListId` 或 `listClientOrderId` 必须被提供  
-newClientOrderId| STRING| NO| 用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-其他注意点:
-
-  * 取消订单列表中的单个订单将取消整个订单列表.
-  * 当同时提供 `orderListId` 和 `listClientOrderId` 两个参数时，系统首先将会使用 `orderListId` 来搜索订单。然后， 查找结果中的 `listClientOrderId` 的值将会被用来验证订单。如果两个条件都不满足，则请求将被拒绝。
-
-
-
-**数据源:** 撮合引擎
-
-**响应:**
-    
-    
-    {  
-        "orderListId": 0,  
-        "contingencyType": "OCO",  
-        "listStatusType": "ALL_DONE",  
-        "listOrderStatus": "ALL_DONE",  
-        "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",  
-        "transactionTime": 1574040868128,  
-        "symbol": "LTCBTC",  
-        "orders": [  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 2,  
-                "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "orderId": 3,  
-                "clientOrderId": "TXOvglzXuaubXAaENpaRCB"  
-            }  
-        ],  
-        "orderReports": [  
-            {  
-                "symbol": "LTCBTC",  
-                "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",  
-                "orderId": 2,  
-                "orderListId": 0,  
-                "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",  
-                "transactTime": 1688005070874,  
-                "price": "1.00000000",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "STOP_LOSS_LIMIT",  
-                "side": "SELL",  
-                "stopPrice": "1.00000000"  
-            },  
-            {  
-                "symbol": "LTCBTC",  
-                "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",  
-                "orderId": 3,  
-                "orderListId": 0,  
-                "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",  
-                "transactTime": 1688005070874,  
-                "price": "3.00000000",  
-                "origQty": "10.00000000",  
-                "executedQty": "0.00000000",  
-                "origQuoteOrderQty": "0.000000",  
-                "cummulativeQuoteQty": "0.00000000",  
-                "status": "CANCELED",  
-                "timeInForce": "GTC",  
-                "type": "LIMIT_MAKER",  
-                "side": "SELL"  
-            }  
-        ]  
-    }  
-    
-
-### SOR[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#sor "SOR的直接链接")
-
-#### 下 SOR 订单 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#下-sor-订单-trade "下 SOR 订单 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/sor/order  
-    
-
-发送使用智能订单路由 (SOR) 的新订单。
-
-这个请求会把1个订单添加到 `EXCHANGE_MAX_ORDERS` 过滤器和 `MAX_NUM_ORDERS` 过滤器中。
-
-参阅 [智能指令路由 (SOR)](/docs/zh-CN/binance-spot-api-docs/faqs/sor_faq) 了解更多详情。
-
-**权重:** 1
-
-**未成交的订单计数:** 1
-
-**参数:**
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES|   
-side| ENUM| YES|   
-type| ENUM| YES|   
-timeInForce| ENUM| NO|   
-quantity| DECIMAL| YES|   
-price| DECIMAL| NO|   
-newClientOrderId| STRING| NO| 用户自定义的orderid，如空缺系统会自动赋值。如果几个订单具有相同的 `newClientOrderID` 赋值，  
-那么只有在前一个订单成交后才可以接受下一个订单，否则该订单将被拒绝。  
-strategyId| LONG| NO|   
-strategyType| INT| NO| 赋值不能小于 `1000000`.  
-icebergQty| DECIMAL| NO| 仅有限价单可以使用该参数，含义为创建冰山订单并指定冰山订单的数量。  
-newOrderRespType| ENUM| NO| 指定响应类型:  
-指定响应类型 `ACK`, `RESULT` 或 `FULL`; 默认为 `FULL`。| | |   
-selfTradePreventionMode| ENUM| NO| 允许的 ENUM 取决于交易对的配置。支持的值有：[STP 模式](/docs/zh-CN/binance-spot-api-docs/enums#stpmodes)。  
-recvWindow| DECIMAL| NO| 最大值为 `60000` 毫秒。   
-支持最多三位小数的精度（例如 6000.346），以便可以指定微秒。  
-timestamp| LONG| YES|   
-  
-**请注意:** `POST /api/v3/sor/order` 只支持 `限价` 和 `市场` 单， 并不支持 `quoteOrderQty`。
-
-**数据源:** 撮合引擎
-
-**响应:**
-    
-    
-    {  
-        "symbol": "BTCUSDT",  
-        "orderId": 2,  
-        "orderListId": -1,  
-        "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",  
-        "transactTime": 1689149087774,  
-        "price": "31000.00000000",  
-        "origQty": "0.50000000",  
-        "executedQty": "0.50000000",  
-        "origQuoteOrderQty": "0.000000",  
-        "cummulativeQuoteQty": "14000.00000000",  
-        "status": "FILLED",  
-        "timeInForce": "GTC",  
-        "type": "LIMIT",  
-        "side": "BUY",  
-        "workingTime": 1689149087774,  
-        "fills": [  
-            {  
-                "matchType": "ONE_PARTY_TRADE_REPORT",  
-                "price": "28000.00000000",  
-                "qty": "0.50000000",  
-                "commission": "0.00000000",  
-                "commissionAsset": "BTC",  
-                "tradeId": -1,  
-                "allocId": 0  
-            }  
-        ],  
-        "workingFloor": "SOR",  
-        "selfTradePreventionMode": "NONE",  
-        "usedSor": true  
-    }  
-    
-
-#### 测试 SOR 下单接口 (TRADE)[​](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#测试-sor-下单接口-trade "测试 SOR 下单接口 \(TRADE\)的直接链接")
-    
-    
-    POST /api/v3/sor/order/test  
-    
-
-用于测试使用智能订单路由 (SOR) 的订单请求，但不会提交到撮合引擎
-
-**权重:**
-
-条件| 请求权重  
----|---  
-没有 `computeCommissionRates`| 1  
-有 `computeCommissionRates`| 20  
-  
-**参数:**
-
-除了 [`POST /api/v3/sor/order`](/docs/zh-CN/binance-spot-api-docs/rest-api/trading-endpoints#sor-order) 所有参数, 如下参数也接受:
-
-参数名| 类型| 是否必需| 描述  
----|---|---|---  
-computeCommissionRates| BOOLEAN| NO| 默认值: `false`  
-  
-**数据源:** 缓存
-
-**响应:**
-
-没有 `computeCommissionRates`
-    
-    
-    {}  
-    
-
-有 `computeCommissionRates`
-    
-    
-    {  
-        "standardCommissionForOrder": {  // 订单交易的标准佣金率。  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "taxCommissionForOrder": {       // 订单交易的税率。  
-            "maker": "0.00000112",  
-            "taker": "0.00000114"  
-        },  
-        "discount": {                    // 以BNB支付时的标准佣金折扣。  
-            "enabledForAccount": true,  
-            "enabledForSymbol": true,  
-            "discountAsset": "BNB",  
-            "discount": "0.25000000"     // 当用BNB支付佣金时，在标准佣金上按此比率打折。  
-        }  
-    }
+REST| `POST /api/v3/order`  
+| `POST /api/v3/sor/order`  
+| `POST /api/v3/order/oco`  
+| `POST /api/v3/orderList/oco`  
+| `POST /api/v3/orderList/oto`  
+| `POST /api/v3/orderList/otoco`  
+| `DELETE /api/v3/order`  
+| `DELETE /api/v3/orderList`  
+| `POST /api/v3/order/cancelReplace`  
+WebSocket API| `order.place`  
+| `sor.order.place`  
+| `orderList.place`  
+| `orderList.place.oco`  
+| `orderList.place.oto`  
+| `orderList.place.otoco`  
+| `order.cancel`  
+| `orderList.cancel`  
+| `order.cancelReplace`  
+
+
+
+SBE
+
+  * A new schema 2:1 [spot_2_1.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_1.xml) has been released. The current schema 2:0 [spot_2_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_0.xml) will thus be deprecated, and retired from the API in 6 months as per our schema deprecation policy.
+  * Schema 2:1 is a backward compatible update of schema 2:0. You will always receive payloads in 2:1 format when you request either schema 2:0 or 2:1.
+  * Changes in SBE schema 2:1: 
+    * New field `origQuoteOrderQty` in order placement/cancellation responses (Note: Decoders generated using the 2:0 schema will skip this field.): 
+      * `NewOrderResultResponse`
+      * `NewOrderFullResponse`
+      * `CancelOrderResponse`
+      * `NewOrderListResultResponse`
+      * `NewOrderListFullResponse`
+      * `CancelOrderListResponse`
+    * WebSocket API only: New field `userDataStream` in session status responses: 
+      * `WebSocketSessionLogonResponse`
+      * `WebSocketSessionStatusResponse`
+      * `WebSocketSessionLogoutResponse`
+    * WebSocket API only: New messages for User Data Stream support: 
+      * `UserDataStreamSubscribeResponse`
+      * `UserDataStreamUnsubscribeResponse`
+      * `BalanceUpdateEvent`
+      * `EventStreamTerminatedEvent`
+      * `ExecutionReportEvent`
+      * `ExternalLockUpdateEvent`
+      * `ListStatusEvent`
+      * `OutboundAccountPositionEvent`
+
+
+
+WebSocket API
+
+  * You can now subscribe to User Data Stream events through your WebSocket API connection. 
+    * Note: This feature is only available for users of Ed25519 API keys.
+    * Note: New SBE schema 2:1 is required for User Data Stream subscriptions in SBE format.
+  * New requests: 
+    * `userDataStream.subscribe`
+    * `userDataStream.unsubscribe`
+  * Changes to `session.logon`, `session.status`, and `session.logout`
+    * Added a new field `userDataStream` indicating if the user data stream subscription is active.
+  * Fixed a bug where you wouldn't receive a new listenKey using `userDataStream.start` after `session.logon`
+
+
+
+User Data Stream
+
+  * WebSocket API only: New event `eventStreamTerminated` is emitted when you either logout from your WebSocket session or you have unsubscribed from the user data stream.
+  * New event `externalLockUpdate` is sent when your spot wallet balance is locked/unlocked by an external system.
+
+
+
+FIX API
+
+  * The [schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been updated with a new Administrative message News <B>, which can be used for all FIX services. Receiving this message indicates that your connection is about to be closed.
+  * **Note:** This message will be available in the live exchange at a later date.
+
+
+
+* * *
+
+### 2024-11-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-11-05 "2024-11-05的直接链接")
+
+**Note:** This is in the process of being deployed. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+Changes to Exchange Information (i.e. [`GET /api/v3/exchangeInfo`](/docs/zh-CN/binance-spot-api-docs/testnet/rest-api/general-endpoints#exchangeInfo) from REST and [`exchangeInfo`](/docs/zh-CN/binance-spot-api-docs/testnet/websocket-api/general-requests#exchangeInfo) for WebSocket API).
+
+  * A new optional parameter `showPermissionSets` can be used to hide the permissions from `permissionsSets`; This can be used for a reduced payload size.
+  * A new optional parameter `symbolStatus` can now be used to only show symbols with the specified status. (e.g. `TRADING`, `HALT`, `BREAK`)
+
+
+
+* * *
+
+### 2024-10-02[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-10-02 "2024-10-02的直接链接")
+
+REST and WebSocket API:
+
+  * Reminder that SBE 1:0 schema will be disabled on 2024-10-04, [6 months after being deprecated](/docs/zh-CN/faqs/sbe_faq.md), as per our SBE policy.
+  * The [SBE lifecycle for Testnet](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/sbe_schema_lifecycle_testnet.json) has been updated to reflect this change.
+
+
+
+* * *
+
+### 2024-09-04[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-09-04 "2024-09-04的直接链接")
+
+  * Spot Testnet now supports Unfilled Order Count. Please refer to this [page](/docs/zh-CN/faqs/order_count_decrement.md) on how you can decrement your unfilled order count when placing orders.
+  * The documentation has been updated to reflect the wording.
+
+
+
+* * *
+
+### 2024-08-16[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-08-16 "2024-08-16的直接链接")
+
+General Changes:
+
+  * New error messages have been added when quote quantity market orders (aka reverse market orders) are rejected in low-liquidity situations.
+
+
+
+* * *
+
+### 2024-08-07[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-08-07 "2024-08-07的直接链接")
+
+  * The [QuickFIX schema](https://github.com/binance/binance-spot-api-docs/blob/master/fix/schemas/spot-fix-oe.xml) has been modified.
+
+
+
+* * *
+
+### 2024-07-23[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-07-23 "2024-07-23的直接链接")
+
+**Note:** This will be deployed starting around 7am UTC. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
+
+  * FIX Drop Copy sessions are now supported on the Spot Test Network.
+  * New API Key permission `FIX_API_READ_ONLY` has been introduced.
+
+
+
+* * *
+
+### 2024-07-17[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-07-17 "2024-07-17的直接链接")
+
+General changes:
+
+  * Fixed a bug where klines had incorrect timestamps. 
+    * REST API: `GET /api/v3/klines` and `GET /api/v3/uiKlines` with `timeZone` parameter
+    * WebSocket API: `klines` and `uiKlines` with `timeZone` parameter
+    * WebSocket Streams: `<symbol>@kline_<interval>@+08:00` streams
+
+
+
+* * *
+
+### 2024-06-21[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-06-21 "2024-06-21的直接链接")
+
+  * [FIX API](/docs/zh-CN/binance-spot-api-docs/testnet/fix-api) will be available today (2024-06-21) on the Spot Test Network. Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion. 
+    * Using the FIX API requires an Ed25519 API Key with the `FIX_API` permission.
+    * The release date on the live exchange has not been determined.
+
+
+
+* * *
+
+### 2024-06-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-06-05 "2024-06-05的直接链接")
+
+WebSocket Streams
+
+  * Buyer order ID (`b`) and Seller order ID (`a`) have been removed from the Trade streams. (i.e. `<symbol>@trade`)
+  * To monitor if your order was part of a trade, please listen to the [User Data Streams](/docs/zh-CN/binance-spot-api-docs/testnet/user-data-stream).
+
+
+
+* * *
+
+### 2024-05-30[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-05-30 "2024-05-30的直接链接")
+
+WebSocket API
+
+  * `wss://ws-api.testnet.binance.vision/ws-api/v3` is now the primary URL for the Spot Testnet WebSocket API. Other URLs will be phased out over time.
+
+
+
+WebSocket Streams
+
+  * `wss://stream.testnet.binance.vision/ws` and `wss://stream.testnet.binance.vision/stream` are now the primary URLs for the Spot Testnet WebSocket Streams. Other URLs will be phased out over time.
+
+
+
+* * *
+
+### 2024-05-23[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-05-23 "2024-05-23的直接链接")
+
+REST API
+
+  * `orderRateLimitExceededMode` has been added to `POST /api/v3/order/cancelReplace`
+
+
+
+WebSocket API
+
+  * `orderRateLimitExceededMode` has been added to `order.cancelReplace`
+
+
+
+WebSocket Streams
+
+  * Kline/Candlestick streams can now support a UTC+8:00 timezone offset. (e.g. `btcusdt@kline_1d@+08:00`)
+
+
+
+* * *
+
+### 2024-05-02[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-05-02 "2024-05-02的直接链接")
+
+  * One-Triggers-the-Other (OTO) orders and One-Triggers-a-One-Cancels-The-Other (OTOCO) orders are now enabled.
+  * New requests have been added: 
+    * REST API: 
+      * `POST /api/v3/orderList/oto`
+      * `POST /api/v3/orderList/otoco`
+    * WebSocket API: 
+      * `orderList.place.oto`
+      * `orderList.place.otoco`
+
+
+
+* * *
+
+### 2024-04-04[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-04-04 "2024-04-04的直接链接")
+
+General changes:
+
+  * Symbol permission information in Exchange Information responses has moved from field `permissions` to field `permissionSets`.
+  * Field `permissions` will be empty and will be removed in a future release.
+  * Previously, `"permissions":["SPOT","MARGIN"]` meant that you could place an order on the symbol if your account had `SPOT` or `MARGIN` permissions. The equivalent is `"permissionSets":[["SPOT","MARGIN"]]`. (Note the extra set of square brackets.) Each array of permissions inside the `permissionSets` array is called a "permission set".
+  * Symbol permissions can now be more complex. `"permissionSets":[["SPOT","MARGIN"],["TRD_GRP_004","TRD_GRP_005"]]` means that you may place an order on the symbol if your account has SPOT or MARGIN permissions **and** `TRD_GRP_004` or `TRD_GRP_005` permissions. There may be an arbitrary number of permission sets in a symbol's `permissionSets`.
+  * **The weight of the following requests has increased from 10 to 25** : 
+    * `GET /api/v3/trades`
+    * `GET /api/v3/historicalTrades`
+    * `trades.recent`
+    * `trades.historical`
+
+
+
+REST API
+
+  * The `POST /api/v3/order/oco` endpoint is now deprecated on the REST API. You should use the new `POST /api/v3/orderList/oco` endpoint instead. Note that this new endpoint uses different parameters.
+  * `POST /api/v3/order/oco` has been removed from the Rest API documentation for SPOT Testnet.
+  * `otoAllowed` will now appear on `GET /api/v3/exchangeInfo`, that indicates if One-Triggers-the-Other (OTO) orders are supported on that symbol.
+
+
+
+WebSocket API
+
+  * The `orderList.place` request is now deprecated on the WebSocket API. You should now use the new `orderList.place.oco` request instead. Note that this new request uses different parameters.
+  * `orderList.place` has been removed from the WebSocket API documentation for SPOT Testnet.
+  * `otoAllowed` will now appear on `exchangeInfo`, that indicates if One-Triggers-the-Other (OTO) orders are supported on that symbol.
+
+
+
+SBE
+
+  * A new schema 2:0 [spot_2_0.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_2_0.xml) has been released for SPOT Testnet. The current schema, 1:0 [spot_1_0.xml](https://github.com/binance/binance-spot-api-docs/blob/becd4d44a09d94821d2dc761ba9197aae8b495c3/sbe/schemas/spot_1_0.xml), will thus be deprecated and retired from the Testnet APIs in 6 months as per our schema deprecation policy.
+  * When using schema 1:0 on REST API or WebSocket API, group "permissions" in message "ExchangeInfoResponse" will always be empty. Upgrade to schema 2:0 to find permission information in group "permissionSets". See General changes above for more details.
+  * Responses for deprecated OCO requests are supported by both schema 1:0 and 2:0
+
+
+
+* * *
+
+### 2024-03-13[​](/docs/zh-CN/binance-spot-api-docs/testnet#2024-03-13 "2024-03-13的直接链接")
+
+General changes:
+
+  * `GET /api/v3/account` has a new optional parameter `omitZeroBalances`, allowing to hide all zero balances
+  * `account.status` has a new optional parameter `omitZeroBalances` allowing to hide all zero balances.
+
+
+
+User Data Stream:
+
+  * New event `listenKeyExpired` is now emitted when a `listenKey` expires.

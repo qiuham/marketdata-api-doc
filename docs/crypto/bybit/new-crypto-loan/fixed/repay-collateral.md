@@ -2,50 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/repay-collateral
 api_type: REST
-updated_at: 2026-05-27 19:18:52.181736
+updated_at: 2026-06-28 19:12:49.100779
 ---
 
-# Collateral Repayment
-
-> Permission: "Spot trade"  
->  UID rate limit: 1 req / second
-
-There are limits on the repayment amount in a single transaction. Please read this [announcement](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/) before repaying with collateral.   
-When repaying with collateral, Bybit will charge a repayment fee. The applicable fee rate is the higher of the repayment fee rates for the collateral asset and the debt asset. You can call this endpoint: [View fee rates by asset](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) to get "reapyFee" where "pledgeEnable" = 1 for coins' repayment fee rates.
+# Get Lending Market
 
 info
 
-**fixed currency offset logic**
+Does not need authentication.
 
-  *     1. From Currency Perspective 
-       * Orders with the closest maturity date will be sorted in descending order.
-       * If the maturity date is the same, the order with the higher interest rate will be prioritized.
-       * If the interest rates are the same, the order will be processed randomly.Orders will be processed sequentially. Within an order, interest will be repaid first, followed by principal.
-  *     2. From Order Perspective 
-       * Interest will be repaid first, followed by principal.
-
-
+If you want to supply, you can use this endpoint to check whether there are any suitable counterparty borrow orders available.
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-fixed/repay-collateral`
+GET`/v5/crypto-loan-fixed/supply-order-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanId| false| string| Loan contract ID. If not passed, the fixed currency offset logic will apply.  
-loanCurrency| **true**|  string| Loan coin name  
-collateralCoin| **true**|  string| Collateral currencies: Use commas to separate multiple collateral currencies  
-amount| **true**|  string| Repay amount  
+orderCurrency| **true**|  string| Coin name  
+term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+orderBy| **true**|  string| Order by, `apy`: annual rate; `term`; `quantity`  
+sort| false| integer| `0`: ascend, default; `1`: descend  
+limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+list| array| Object  
+> orderCurrency| string| Coin name  
+> term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+> annualRate| string| Annual rate  
+> qty| string| Quantity  
   
-None
-
 ### Request Example
 
   * HTTP
@@ -55,19 +46,8 @@ None
 
     
     
-    POST /v5/crypto-loan-fixed/repay-collateral HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752656296791  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 50  
-    {  
-      "loanCurrency": "ETH",  
-      "amount": "0.1",  
-      "collateralCoin":"USDT"  
-    }  
     
     
     
@@ -77,10 +57,9 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_fixed_crypto_loan(  
-        loanCurrency="ETH",  
-        amount="0.1",  
-        collateralCoin="USDT",  
+    print(session.get_lending_market_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderBy="apy",  
     ))  
     
     
@@ -94,54 +73,60 @@ None
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "list": [  
+                {  
+                    "annualRate": "0.02",  
+                    "orderCurrency": "USDT",  
+                    "qty": "1000.1234",  
+                    "term": 60  
+                },  
+                {  
+                    "annualRate": "0.022",  
+                    "orderCurrency": "USDT",  
+                    "qty": "212.1234",  
+                    "term": 7  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1756973819393  
+        "time": 1752652136224  
     }
 
 ---
 
-# 抵押品還款
-
-> 權限: "現貨"  
->  頻率: 1次/秒
-
-單筆還款金額有限制, 在使用抵押品還款前, 請仔細閱讀該[公告](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/)   
-使用抵押物還款時，Bybit 將收取還款手續費。適用的手續費率為抵押資產和債務資產的還款手續費率中較高的一個。 您可以調此接口：[按資產查看手續費率](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) 取得“reapyFee”，其中“pledgeEnable”= 1，以查看各幣種的還款手續費率。
+# 查詢可存市場
 
 信息
 
-**定期幣種沖銷邏輯**
+公共接口, 無需鑒權
 
-  *     1. 幣種緯度 
-       * 按到期日由近及遠的借款訂單.
-       * 如果到期日相同，則優先還借款利率高的訂單.
-       * 如果借款利率相同，則隨機處理。依訂單逐步處理，訂單內，優先還利息，再還本金.
-  *     2. 訂單緯度 
-       * 優先還款利息，再還款本金.
-
-
+如果您是存款方, 可通過該接口查詢到市場上可匹配的借款單報價
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-fixed/repay-collateral`
+GET`/v5/crypto-loan-fixed/supply-order-quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanId| false| string| 借款合同ID.如果不輸入，則按定期幣種沖銷邏輯來  
-loanCurrency| **true**|  string| 借款幣種  
-collateralCoin| **true**|  string| 抵押品幣種: 多個抵押品幣種使用英文逗號分開  
-amount| **true**|  string| 還款數量  
+orderCurrency| **true**|  string| 幣種名稱  
+term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+orderBy| **true**|  string| 排序依據，`apy`: 年化利率；`term`: 期限；`quantity`: 數量  
+sort| false| integer| `0`: 升序，預設；`1`: 降序  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+list| array| Object  
+> orderCurrency| string| 幣種名稱  
+> term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+> annualRate| string| 年化利率  
+> qty| string| 數量  
   
-無
-
 ### 請求示例
 
   * HTTP
@@ -151,19 +136,8 @@ amount| **true**|  string| 還款數量
 
     
     
-    POST /v5/crypto-loan-fixed/repay-collateral HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752656296791  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 50  
-    {  
-      "loanCurrency": "ETH",  
-      "amount": "0.1",  
-      "collateralCoin":"USDT"  
-    }  
     
     
     
@@ -173,10 +147,9 @@ amount| **true**|  string| 還款數量
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_fixed_crypto_loan(  
-        loanCurrency="ETH",  
-        amount="0.1",  
-        collateralCoin="USDT",  
+    print(session.get_lending_market_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderBy="apy",  
     ))  
     
     
@@ -190,7 +163,22 @@ amount| **true**|  string| 還款數量
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "list": [  
+                {  
+                    "annualRate": "0.02",  
+                    "orderCurrency": "USDT",  
+                    "qty": "1000.1234",  
+                    "term": 60  
+                },  
+                {  
+                    "annualRate": "0.022",  
+                    "orderCurrency": "USDT",  
+                    "qty": "212.1234",  
+                    "term": 7  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1756973819393  
+        "time": 1752652136224  
     }

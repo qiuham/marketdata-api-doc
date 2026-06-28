@@ -2,47 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/position
 api_type: REST
-updated_at: 2026-05-27 19:17:21.427862
+updated_at: 2026-06-28 19:11:04.843109
 ---
 
-# Get Daily Yield Records
+# Get Product Info
 
 ### HTTP Request
 
-GET`/v5/earn/token/yield`
+GET`/v5/earn/token/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
-startTime| false| integer| Start timestamp in seconds  
-endTime| false| integer| End timestamp in seconds  
-cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
-limit| false| integer| Number of items per page. Default: `5`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Daily yield record list  
-> yield| string| Base yield amount  
-> bonusYield| string| Bonus yield amount  
-> status| string| Status: `Success`, `Processing`  
-> createdTime| string| Record time, unix timestamp in seconds  
-nextPageCursor| string| Cursor for the next page. Empty string means no more data  
+productId| string| Product ID  
+coin| string| Token coin  
+mintFeeRateE8| string| Mint fee rate in e8 precision (e.g. `5000000` = 0.05%)  
+redeemFeeRateE8| string| Redeem fee rate in e8 precision  
+minInvestment| string| Minimum investment amount (in USDT)  
+userHolding| string| User's current byUSDT holdings. Return `""` without authentication  
+leftQuota| string| Remaining mintable quota. Return `""` without authentication  
+canMint| boolean| Whether minting is currently available. Return `false` without authentication  
+savingsBalance| string| User's USDT balance in Flexible Saving account (available for Mint). Return `""` without authentication  
+aprE8| string| Base APR in e8 precision. Divide by 10^8 to get the actual rate  
+bonusAprE8| string| Bonus APR in e8 precision (returned when user is eligible). Divide by 10^8 to get the actual rate  
+bonusMaxAmount| string| Maximum principal eligible for bonus APR. Principal exceeding this amount earns only the base APR  
+baseCoinPrecision| integer| Decimal precision for USDT amounts  
+tokenPrecision| integer| Decimal precision for byUSDT amounts  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
+    GET /v5/earn/token/product?coin=BYUSDT HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: XXXXXXX  
+    X-BAPI-TIMESTAMP: 1775179312802  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
     
 
 ### Response Example
@@ -50,62 +55,72 @@ nextPageCursor| string| Cursor for the next page. Empty string means no more dat
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "yield": "0.50",  
-                    "bonusYield": "0.20",  
-                    "status": "Success",  
-                    "createdTime": "1710691200"  
-                }  
-            ],  
-            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
+            "productId": "1",  
+            "coin": "BYUSDT",  
+            "mintFeeRateE8": "0",  
+            "redeemFeeRateE8": "100000",  
+            "minInvestment": "1",  
+            "userHolding": "588",  
+            "leftQuota": "999412",  
+            "canMint": true,  
+            "savingsBalance": "1412",  
+            "aprE8": "60000000",  
+            "bonusAprE8": "0",  
+            "bonusMaxAmount": "",  
+            "baseCoinPrecision": 4,  
+            "tokenPrecision": 4  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1775179313444  
     }
 
 ---
 
-# 查詢每日收益記錄
+# 查詢產品資訊
 
 ### HTTP 請求
 
-GET`/v5/earn/token/yield`
+GET`/v5/earn/token/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
-startTime| false| integer| 開始時間，秒級時間戳  
-endTime| false| integer| 結束時間，秒級時間戳  
-cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
-limit| false| integer| 每頁返回數量。預設：`5`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 每日收益記錄列表  
-> yield| string| 基礎收益金額  
-> bonusYield| string| 加成收益金額  
-> status| string| 狀態：`Success`（成功）、`Processing`（處理中）  
-> createdTime| string| 記錄時間，秒級 Unix 時間戳  
-nextPageCursor| string| 下一頁游標，為空表示無更多資料  
+productId| string| 產品 ID  
+coin| string| 代幣幣種  
+mintFeeRateE8| string| 鑄造手續費率（e8 精度，例如 `5000000` = 0.05%）  
+redeemFeeRateE8| string| 贖回手續費率（e8 精度）  
+minInvestment| string| 最低投資金額（以 USDT 計）  
+userHolding| string| 用戶當前 byUSDT 持倉量。未身份驗證時返回 `""`  
+leftQuota| string| 剩餘可鑄造額度。未身份驗證時返回 `""`  
+canMint| boolean| 當前是否可進行鑄造。未身份驗證時返回 `false`  
+savingsBalance| string| 用戶活期理財帳戶的 USDT 餘額（可用於鑄造）。未身份驗證時返回 `""`  
+aprE8| string| 基礎年化利率（e8 精度）。除以 10^8 可得實際利率  
+bonusAprE8| string| 加成年化利率（e8 精度，符合條件的用戶才返回）。除以 10^8 可得實際利率  
+bonusMaxAmount| string| 可享受加成年化利率的最大本金上限。超出部分僅享受基礎年化利率  
+baseCoinPrecision| integer| USDT 金額的小數精度  
+tokenPrecision| integer| byUSDT 金額的小數精度  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
+    GET /v5/earn/token/product?coin=BYUSDT HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: XXXXXXX  
+    X-BAPI-TIMESTAMP: 1775179312802  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
     
 
 ### 響應示例
@@ -113,18 +128,23 @@ nextPageCursor| string| 下一頁游標，為空表示無更多資料
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "yield": "0.50",  
-                    "bonusYield": "0.20",  
-                    "status": "Success",  
-                    "createdTime": "1710691200"  
-                }  
-            ],  
-            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
+            "productId": "1",  
+            "coin": "BYUSDT",  
+            "mintFeeRateE8": "0",  
+            "redeemFeeRateE8": "100000",  
+            "minInvestment": "1",  
+            "userHolding": "588",  
+            "leftQuota": "999412",  
+            "canMint": true,  
+            "savingsBalance": "1412",  
+            "aprE8": "60000000",  
+            "bonusAprE8": "0",  
+            "bonusMaxAmount": "",  
+            "baseCoinPrecision": 4,  
+            "tokenPrecision": 4  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1775179313444  
     }

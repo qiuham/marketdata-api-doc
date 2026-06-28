@@ -2,73 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-05-27 19:21:05.894475
+updated_at: 2026-06-28 19:13:32.426434
 ---
 
-# Get Closed Options Positions
+# Get Futures Leverage
 
-Query user's closed options positions, sorted by `closeTime` in descending order.
-
-info
-
-  * Only supports users to query closed options positions in the last 6 months.
-  * Fee and price are displayed with trailing zeroes up to 8 decimal places.
-
-
+Query isolated leverage setting for futures symbols. Unlike [Get Position Info](/docs/v5/position/v5/position), this endpoint does not require an open position to retrieve the leverage setting.
 
 ### HTTP Request
 
-GET`/v5/position/get-closed-positions`
+GET`/v5/position/symbol-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| `option`  
-symbol| false| string| Symbol name  
-startTime| false| integer| The start timestamp (ms) 
-
-  * startTime and endTime are not passed, return 1 days by default
-  * Only startTime is passed, return range between startTime and startTime+1 days
-  * Only endTime is passed, return range between endTime-1 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
-
-  
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
+symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
 [category](/docs/v5/enum#category)| string| Product type  
 list| array| Object  
 > symbol| string| Symbol name  
-> side| string| `Buy`, `Sell`  
-> totalOpenFee| string| Total open fee  
-> deliveryFee| string| Delivery fee  
-> totalCloseFee| string| Total close fee  
-> qty| string| Order qty  
-> closeTime| integer| The closed time (ms)  
-> avgExitPrice| string| Average exit price  
-> deliveryPrice| string| Delivery price  
-> openTime| integer| The opened time (ms)  
-> avgEntryPrice| string| Average entry price  
-> totalPnl| string| Total PnL  
+> leverage| string| Leverage  
+> side| string| Meaningless field, pls ignore. `Buy`, `Sell`, `""`  
+> positionIdx| integer| Position mode. `0`: one-way; `1`: two-way Buy; `2`: two-way Sell  
   
-* * *
+info
+
+Under Portfolio Margin mode, this endpoint returns an error.
 
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -77,16 +54,15 @@ list| array| Object
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
-    ))  
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### Response Example
@@ -96,107 +72,69 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "symbol": "MNTUSDT",  
+                    "leverage": "10",  
                     "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
+                    "positionIdx": 2  
                 },  
                 {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
+                    "symbol": "MNTUSDT",  
+                    "leverage": "10",  
+                    "side": "Sell",  
+                    "positionIdx": 1  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1749736532193  
+        "time": 1781518340920  
     }
 
 ---
 
-# 查詢期权平倉
+# 查詢合約槓桿
 
-獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
-
-信息
-
-  * 支持用户查询最近六个月期权平仓数据
-  * fee和price相關字段保留小数点后8位末尾0不省略
-
-
+查詢合約交易對的逐倉槓桿設置。與[查詢持倉](/docs/zh-TW/v5/position/v5/position)不同，此接口無需持有倉位即可查詢槓桿設置。
 
 ### HTTP 請求
 
-GET`/v5/position/get-closed-positions`
+GET`/v5/position/symbol-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| `option`  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
-
-  * startTime 和 endTime都不傳入, 則默認返回最近1天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+1天的數據
-  * 若只傳endTime，則查詢endTime-1天和endTime的數據
-
-  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`(USDT合約, USDC合約), `inverse`  
+symbol| false| string| 合約名稱，如 `BTCUSDT`，僅支持大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
 [category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
 list| array| Object  
 > symbol| string| 合約名稱  
-> side| string| 買賣方向 `Buy`, `Side`  
-> totalOpenFee| string| 开仓费用  
-> deliveryFee| string| 交割费用  
-> totalCloseFee| string| 平仓费用  
-> qty| string| 訂單數量  
-> closeTime| integer| 平仓時間 (毫秒)  
-> avgExitPrice| string| 平均出場價格  
-> deliveryPrice| string| 交割價格  
-> openTime| integer| 开仓時間 (毫秒)  
-> avgExitPrice| string| 平均出場價格  
-> totalPnl| string| 被平倉位的盈虧  
+> leverage| string| 槓桿倍數  
+> side| string| 無意義, 可以忽略 `Buy`, `Sell`, `""`  
+> positionIdx| integer| 持倉模式。`0`: 單向持倉；`1`: 雙向持倉-多頭；`2`: 雙向持倉-空頭  
   
+信息
+
+在組合保證金模式下，此接口會返回錯誤。
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -205,16 +143,15 @@ list| array| Object
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
-    ))  
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -224,39 +161,22 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "symbol": "MNTUSDT",  
+                    "leverage": "10",  
                     "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
+                    "positionIdx": 2  
                 },  
                 {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
+                    "symbol": "MNTUSDT",  
+                    "leverage": "10",  
+                    "side": "Sell",  
+                    "positionIdx": 1  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1749736532193  
+        "time": 1781518340920  
     }

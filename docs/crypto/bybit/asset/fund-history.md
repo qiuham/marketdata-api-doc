@@ -2,57 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fund-history
 api_type: REST
-updated_at: 2026-05-27 19:15:18.520095
+updated_at: 2026-06-28 19:08:54.368625
 ---
 
-# Get USDC Session Settlement
+# Funding Account Transaction History
 
-Query session settlement records of USDC perpetual and futures
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Return transaction log in Funding Account. This endpoint supports filtering by transaction type and time range.
 
 ### HTTP Request
 
-GET`/v5/asset/settlement-record`
+GET`/v5/asset/fundinghistory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDC contract)  
-symbol| false| string| Symbol name, like `BTCPERP`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
-
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime-30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
-
-  
-endTime| false| integer| The end time. timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+createTimeFrom| false| string| Start timestamp (seconds). Must be used together with `createTimeTo`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+createTimeTo| false| string| End timestamp (seconds). Must be used together with `createTimeFrom`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor, used for pagination  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> side| string| `Buy`,`Sell`  
-> size| string| Position size  
-> sessionAvgPrice| string| Settlement price  
-> markPrice| string| Mark price  
-> realisedPnl| string| Realised PnL  
-> createdTime| string| Created time (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/asset/settlement)
-
+nextPageCursor| string| Cursor for next page  
+list| array| Transaction list  
+> memberId| string| Member ID  
+> currency| string| Coin symbol  
+> ioDirection| string| Direction. `I`: In, `O`: Out  
+> txnAmt| string| Transaction amount  
+> afterAmt| string| Balance after transaction  
+> createTime| string| Create time (Unix seconds)  
+> showBusiType| string| Business type (localized key)  
+> showBusiTypeEn| string| Business type in English  
+> description| string| Description (localized key)  
+> descriptionEn| string| Description in English  
+  
 * * *
 
 ### Request Example
@@ -64,11 +50,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/asset/settlement-record?category=linear HTTP/1.1  
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284883483  
+    X-BAPI-TIMESTAMP: 1739433600000  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -79,28 +65,13 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_usdc_contract_settlement(  
-        category="linear",  
+    print(session.get_asset_overview(  
+        limit=1  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getSettlementRecords({ category: 'linear' })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -110,74 +81,62 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "116952%3A1%2C116952%3A1",  
-            "category": "linear",  
+            "nextPageCursor": "MTM3MTU3OTk=",  
             "list": [  
                 {  
-                    "realisedPnl": "-71.28",  
-                    "symbol": "BTCPERP",  
-                    "side": "Buy",  
-                    "markPrice": "16620",  
-                    "size": "1.5",  
-                    "createdTime": "1672214400000",  
-                    "sessionAvgPrice": "16620"  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672284884285  
+        "time": 1772699449372  
     }
 
 ---
 
-# 查詢USDC合約結算紀錄
+# 資金帳戶歷史記錄
 
-查詢USDC合約的結算紀錄
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+查詢資金帳戶的交易記錄，支持按交易類型和時間範圍進行篩選。
 
 ### HTTP 請求
 
-GET`/v5/asset/settlement-record`
+GET`/v5/asset/fundinghistory`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
-
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
-
-  
-endTime| false| integer| 結束時間 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
+createTimeFrom| false| string| 起始時間戳（秒）。須與 `createTimeTo` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+createTimeTo| false| string| 結束時間戳（秒）。須與 `createTimeFrom` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+limit| false| string| 每頁數據條數。[`1`, `100`]. 默認: `10`  
 cursor| false| string| 游標，用於翻頁  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> side| string| `Buy`,`Sell`  
-> size| string| 倉位大小  
-> sessionAvgPrice| string| 結算價格  
-> markPrice| string| 標記價格  
-> realisedPnl| string| 已實現盈虧  
-> createdTime| string| 結算時間 (毫秒)  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/asset/settlement)
-
+nextPageCursor| string| 下一頁游標  
+list| array| 交易記錄列表  
+> memberId| string| 用戶ID  
+> currency| string| 幣種  
+> ioDirection| string| 方向。`I`: 收入，`O`: 支出  
+> txnAmt| string| 交易金額  
+> afterAmt| string| 交易後餘額  
+> createTime| string| 創建時間（Unix 秒）  
+> showBusiType| string| 業務類型（本地化 key）  
+> showBusiTypeEn| string| 英文業務類型  
+> description| string| 描述（本地化 key）  
+> descriptionEn| string| 英文描述  
+  
 * * *
 
 ### 請求示例
@@ -189,43 +148,20 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/asset/settlement-record?category=linear HTTP/1.1  
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284883483  
+    X-BAPI-TIMESTAMP: 1739433600000  
     X-BAPI-RECV-WINDOW: 5000  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_usdc_contract_settlement(  
-        category="linear",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    
+    
+    
       
-    client  
-      .getSettlementRecords({ category: 'linear' })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -235,20 +171,22 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "116952%3A1%2C116952%3A1",  
-            "category": "linear",  
+            "nextPageCursor": "MTM3MTU3OTk=",  
             "list": [  
                 {  
-                    "realisedPnl": "-71.28",  
-                    "symbol": "BTCPERP",  
-                    "side": "Buy",  
-                    "markPrice": "16620",  
-                    "size": "1.5",  
-                    "createdTime": "1672214400000",  
-                    "sessionAvgPrice": "16620"  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672284884285  
+        "time": 1772699449372  
     }

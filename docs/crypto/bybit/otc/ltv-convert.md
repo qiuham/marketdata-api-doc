@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/ltv-convert
 api_type: REST
-updated_at: 2026-05-27 19:20:58.932340
+updated_at: 2026-06-28 19:13:26.014624
 ---
 
 # Get Product Info
@@ -101,6 +101,7 @@ marginProductInfo| array| Object
   
 >> symbol| string| Symbol name  
 >> leverage| string| Maximum leverage  
+> productType| string| Product type. `0`: Default, `1`: CTA, `2`: Hedge  
   
 ### Request Example
 
@@ -185,6 +186,7 @@ marginProductInfo| array| Object
                     "USDCContractLeverage": [],  
                     "deferredLiquidationLine":"",  
                     "deferredLiquidationTime":"",  
+                    "productType": "0"  
                 }  
             ]  
         },  
@@ -280,6 +282,7 @@ marginProductInfo| array| Object
   
 >> symbol| string| 合約名  
 >> leverage| string| 最高可開槓桿  
+> productType| string| 產品類型. `0`: 默認, `1`: CTA, `2`: 對沖  
   
 ### 請求示例
 
@@ -364,6 +367,7 @@ marginProductInfo| array| Object
                     "USDCContractLeverage": [],  
                     "deferredLiquidationLine":"",  
                     "deferredLiquidationTime":"",  
+                    "productType": "0"  
                 }  
             ]  
         },  

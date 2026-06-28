@@ -2,87 +2,41 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/connection-events
 api_type: WebSocket
-updated_at: 2026-05-27 18:55:02.113922
+updated_at: 2026-06-28 18:50:15.581017
 ---
 
-# Event format
+# Data sources
 
-[User Data Stream](/docs/binance-spot-api-docs/user-data-stream) events for non-SBE sessions are sent as JSON in **text frames** , one event per frame.
+* The API system is asynchronous. Some delay in the response is normal and expected.
 
-Events in [SBE sessions](/docs/binance-spot-api-docs/faqs/sbe_faq) will be sent as **binary frames**.
+  * Each method has a data source indicating where the data is coming from, and thus how up-to-date it is.
 
-Please refer to [`userDataStream.subscribe`](/docs/binance-spot-api-docs/websocket-api/user-data-stream-requests#user-data-stream-subscribe) for details on how to subscribe to User Data Stream in WebSocket API.
 
-Example of an event:
-    
-    
-    {  
-        "subscriptionId": 0,  
-        "event": {  
-            "e": "outboundAccountPosition",  
-            "E": 1728972148778,  
-            "u": 1728972148778,  
-            "B": [  
-                {  
-                    "a": "BTC",  
-                    "f": "11818.00000000",  
-                    "l": "182.00000000"  
-                },  
-                {  
-                    "a": "USDT",  
-                    "f": "10580.00000000",  
-                    "l": "70.00000000"  
-                }  
-            ]  
-        }  
-    }  
-    
+Data Source| Latency| Description  
+---|---|---  
+Matching Engine| lowest| The Matching Engine produces the response directly  
+Memory| low| Data is fetched from API server's local or external memory cache  
+Database| moderate| Data is retrieved from the database  
+  
+  * Some methods have more than one data source (e.g., Memory => Database).
 
-Event fields:
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-`event`| OBJECT| YES| Event payload. See [User Data Streams](/docs/binance-spot-api-docs/user-data-stream)  
-`subscriptionId`| INT| NO| Identifies which subscription the event is coming from. See [User Data Stream subscriptions](/docs/binance-spot-api-docs/websocket-api/event-format#general_info_user_data_stream_subscriptions)
+This means that the API will look for the latest data in that order: first in the cache, then in the database.
 
 ---
 
-# 事件格式
+# 数据源
 
-[用户数据流](/docs/zh-CN/binance-spot-api-docs/user-data-stream)中的非 SBE 会话事件以 JSON 格式在 **text 帧** 中发送，每帧一个事件。
+* API 系统是异步的。响应中一些延迟是正常和预期的。
 
-[SBE 会话](/docs/zh-CN/binance-spot-api-docs/faqs/sbe_faq)中的事件将作为 **二进制帧** 发送。
+  * 每种函数都会有一个数据源, 用来指示数据的来源，以及它的最新程度。
 
-有关如何在 WebSocket API 中订阅用户数据流的详细信息，请参阅 [`订阅用户数据流`](/docs/zh-CN/binance-spot-api-docs/websocket-api/user-data-stream-requests#user-data-stream-subscribe)。
 
-事件示例:
-    
-    
-    {  
-        "subscriptionId": 0,  
-        "event": {  
-            "e": "outboundAccountPosition",  
-            "E": 1728972148778,  
-            "u": 1728972148778,  
-            "B": [  
-                {  
-                    "a": "BTC",  
-                    "f": "11818.00000000",  
-                    "l": "182.00000000"  
-                },  
-                {  
-                    "a": "USDT",  
-                    "f": "10580.00000000",  
-                    "l": "70.00000000"  
-                }  
-            ]  
-        }  
-    }  
-    
+数据源| 延迟| 描述  
+---|---|---  
+撮合引擎| 最低| 表示撮合引擎直接产生响应  
+缓存| 低| 表示数据来源于内部或者外部的缓存  
+数据库| 中度| 表示数据直接来源于数据库  
+  
+  * 某些函数有多个数据源（例如，缓存 => 数据库）。
 
-事件字段:
-
-名称| 类型| 是否必须| 描述  
----|---|---|---  
-`event`| OBJECT| YES| 事件 payload。请看 [用户数据流](/docs/zh-CN/binance-spot-api-docs/user-data-stream)  
-`subscriptionId`| INT| NO| 用以标识事件来自于哪个订阅。详见 [用户数据流订阅](/docs/zh-CN/binance-spot-api-docs/websocket-api/event-format#general_info_user_data_stream_subscriptions)
+这代表 API 将按该顺序查找最新数据：首先是缓存，然后是数据库。

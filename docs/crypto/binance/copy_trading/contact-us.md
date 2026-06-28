@@ -2,27 +2,75 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/copy_trading/contact-us
 api_type: REST
-updated_at: 2026-05-27 19:00:22.546319
+updated_at: 2026-06-28 18:55:15.377195
 ---
 
-# Contact Us
+# Get Futures Lead Trader Status(TRADE)
 
-* [Binance API Telegram Group](https://t.me/binance_api_english)
-    * For any questions in sudden drop in performance with the API and/or Websockets.
-    * For any general questions about the API not covered in the documentation.
-  * [Binance Developers](https://dev.binance.vision/)
-    * For any questions on your code implementation with the API and/or Websockets.
-  * [Binance Customer Support](https://www.binance.com/en/support-center)
-    * For cases such as missing funds, help with 2FA, etc.
+## API Description[​](/docs/copy_trading/future-copy-trading#api-description "Direct link to API Description")
+
+Get Futures Lead Trader Status
+
+## HTTP Request[​](/docs/copy_trading/future-copy-trading#http-request "Direct link to HTTP Request")
+
+GET `/sapi/v1/copyTrading/futures/userStatus`
+
+## Request Weight(IP)[​](/docs/copy_trading/future-copy-trading#request-weightip "Direct link to Request Weight\(IP\)")
+
+**1**
+
+## Request Parameters[​](/docs/copy_trading/future-copy-trading#request-parameters "Direct link to Request Parameters")
+
+Name| Type| Mandatory| Description  
+---|---|---|---  
+recvWindow| LONG| NO| The value cannot be greater than 60000  
+timestamp| LONG| YES|   
+  
+## Response Example[​](/docs/copy_trading/future-copy-trading#response-example "Direct link to Response Example")
+    
+    
+    {  
+      "code": "000000",  
+      "message": "success",  
+      "data": {  
+         "isLeadTrader": true,  
+         "time": 1717382310843  
+       },  
+      "success": true  
+    }
 
 ---
 
-# 联系我们
+# 查询是否为带单员身份(TRADE)
 
-* [币安API电报群](https://t.me/Binance_api_Chinese)
-    * 咨询关于API或者Websockets性能方面的问题.
-    * 咨询文档中没有提及的API问题.
-  * [币安开发者社区](https://dev.binance.vision/)
-    * 咨询关于API/Websockets代码实现，或者任何API/Websockets的问题.
-  * [币安客服](https://www.binance.com/cn/support-center)
-    * 咨询关于账户，钱包，2FA等.
+## 接口描述[​](/docs/zh-CN/copy_trading/future-copy-trading#接口描述 "接口描述的直接链接")
+
+查询是否为带单员身份
+
+## HTTP请求[​](/docs/zh-CN/copy_trading/future-copy-trading#http请求 "HTTP请求的直接链接")
+
+GET `/sapi/v1/copyTrading/futures/userStatus`
+
+## 请求权重(IP)[​](/docs/zh-CN/copy_trading/future-copy-trading#请求权重ip "请求权重\(IP\)的直接链接")
+
+**1**
+
+## 请求参数[​](/docs/zh-CN/copy_trading/future-copy-trading#请求参数 "请求参数的直接链接")
+
+名称| 类型| 是否必需| 描述  
+---|---|---|---  
+recvWindow| LONG| NO| 此值不能大于 60000  
+timestamp| LONG| YES|   
+  
+## 响应示例[​](/docs/zh-CN/copy_trading/future-copy-trading#响应示例 "响应示例的直接链接")
+    
+    
+    {  
+      "code": "000000",  
+      "message": "success",  
+      "data": {  
+         "isLeadTrader": true,  
+         "time": 1717382310843  
+       },  
+      "success": true  
+    }

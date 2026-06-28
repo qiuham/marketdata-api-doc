@@ -2,52 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/loan-coin
 api_type: REST
-updated_at: 2026-05-27 19:19:05.745012
+updated_at: 2026-06-28 19:13:02.309354
 ---
 
-# Get Borrowable Coins
+# Obtain Max Loan Amount
 
-info
-
-Does not need authentication.
+> Permission: "Spot trade"  
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-common/loanable-data`
+POST`/v5/crypto-loan-common/max-loan`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-vipLevel| false| string| VIP level 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| Coin name, uppercase only  
+currency| **true**|  string| Coin to borrow  
+collateralList| false| array<object>|   
+> amount| **true**|  string| Collateral amount. Only check funding account balance  
+> ccy| **true**|  string| Collateral coin. Both `amount` & `ccy` are required, when you pass "collateralList"  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| Coin name  
-> fixedBorrowable| boolean| Whether support fixed loan  
-> fixedBorrowingAccuracy| integer| Coin precision for fixed loan  
-> flexibleBorrowable| boolean| Whether support flexible loan  
-> flexibleBorrowingAccuracy| integer| Coin precision for flexible loan  
-> maxBorrowingAmount| string| Max borrow limit  
-> minFixedBorrowingAmount| string| Minimum amount for each fixed loan order  
-> minFlexibleBorrowingAmount| string| Minimum amount for each flexible loan order  
-> vipLevel| string| VIP level  
-> flexibleAnnualizedInterestRate| integer| The annualized interest rate for flexible borrowing. If the loan currency does not support flexible borrowing, it will always be """"  
-> annualizedInterestRate7D| string| The lowest annualized interest rate for fixed borrowing for 7 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate14D| string| The lowest annualized interest rate for fixed borrowing for 14 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate30D| string| The lowest annualized interest rate for fixed borrowing for 30 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate60D| string| The lowest annualized interest rate for fixed borrowing for 60 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate90D| string| The lowest annualized interest rate for fixed borrowing for 90 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate180D| string| The lowest annualized interest rate for fixed borrowing for 180 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+currency| string| Coin to borrow  
+maxLoan| string| Based on your current collateral, and with the option to add more collateral, you can borrow up to `maxLoan`  
+notionalUsd| string| Nontional USD value  
+remainingQuota| string| The **remaining** individual platform borrowing limit (shared between main and sub accounts)  
   
 ### Request Example
 
@@ -58,16 +41,50 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
+    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1768532512103  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "currency": "BTC",  
+        "collateralList": [  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
+    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowable_coins_new_crypto_loan())  
+    print(session.get_max_loan_amount_new_crypto_loan(  
+        currency="BTC",  
+        collateralList=[  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
+    ))  
     
     
     
@@ -81,76 +98,43 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "currency": "ETH",  
-                    "fixedBorrowable": true,  
-                    "fixedBorrowingAccuracy": 6,  
-                    "flexibleBorrowable": true,  
-                    "flexibleBorrowingAccuracy": 4,  
-                    "maxBorrowingAmount": "1100",  
-                    "minFixedBorrowingAmount": "0.1",  
-                    "minFlexibleBorrowingAmount": "0.001",  
-                    "vipLevel": "VIP5",  
-                    "annualizedInterestRate14D": "0.08",  
-                    "annualizedInterestRate180D": "",  
-                    "annualizedInterestRate30D": "",  
-                    "annualizedInterestRate60D": "",  
-                    "annualizedInterestRate7D": "",  
-                    "annualizedInterestRate90D": "",  
-                    "flexibleAnnualizedInterestRate": "0.001429799316"  
-                }  
-            ]  
+            "currency": "BTC",  
+            "maxLoan": "0.1722",  
+            "notionalUsd": "16456.06",  
+            "remainingQuota": "9999999.9421"  
         },  
         "retExtInfo": {},  
-        "time": 1752573126653  
+        "time": 1768533990031  
     }
 
 ---
 
-# 查詢可借貸幣種
+# 獲取最大可借
 
-信息
-
-不需要鑒權
+> 權限: "現貨"  
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-common/loanable-data`
+POST`/v5/crypto-loan-common/max-loan`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-vipLevel| false| string| Vip等級 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| 幣種名稱  
+currency| **true**|  string| 借款幣種  
+collateralList| false| array<object>|   
+> amount| **true**|  string| 抵押品金額. 僅檢查資金錢包可用  
+> ccy| **true**|  string| 抵押品幣種. 當要傳入"collateralList"時, `amount` & `ccy`兩個參數必填  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| 幣種名稱  
-> fixedBorrowable| boolean| 是否支持定期借款  
-> fixedBorrowingAccuracy| integer| 定期借款的幣種精度  
-> flexibleBorrowable| boolean| 是否支持活期借款  
-> flexibleBorrowingAccuracy| integer| 活期借款的幣種精度  
-> maxBorrowingAmount| string| 最大借款限額  
-> minFixedBorrowingAmount| string| 每筆定期借款訂單的最低金額  
-> minFlexibleBorrowingAmount| string| 每筆活期借款訂單的最低金額  
-> vipLevel| string| VIP 等級  
-> flexibleAnnualizedInterestRate| integer| 活期年化借款利率。如果借貸幣種不支持活期, 則總是空字符串  
-> annualizedInterestRate7D| string| 市場目前可提供的7天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate14D| string| 市場目前可提供的14天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate30D| string| 市場目前可提供的30天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate60D| string| 市場目前可提供的60天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate90D| string| 市場目前可提供的90天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate180D| string| 市場目前可提供的180天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+currency| string| 借款幣種  
+maxLoan| string| 根據已抵押數額, 以及入參時是否新增抵押, 計算出最多可借金額  
+notionalUsd| string| 美元價值  
+remainingQuota| string| 該帳戶(母子帳戶共享)在平台上**剩餘** 可借額度  
   
 ### 請求示例
 
@@ -161,16 +145,32 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
+    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1768532512103  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "currency": "BTC",  
+        "collateralList": [  
+            {  
+                "ccy": "XRP",  
+                "amount": "1000"  
+            },  
+            {  
+                "ccy": "USDT",  
+                "amount": "1000"  
+            }  
+        ]  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_borrowable_coins_new_crypto_loan())  
+      
     
     
     
@@ -184,27 +184,11 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "currency": "ETH",  
-                    "fixedBorrowable": true,  
-                    "fixedBorrowingAccuracy": 6,  
-                    "flexibleBorrowable": true,  
-                    "flexibleBorrowingAccuracy": 4,  
-                    "maxBorrowingAmount": "1100",  
-                    "minFixedBorrowingAmount": "0.1",  
-                    "minFlexibleBorrowingAmount": "0.001",  
-                    "vipLevel": "VIP5",  
-                    "annualizedInterestRate14D": "0.08",  
-                    "annualizedInterestRate180D": "",  
-                    "annualizedInterestRate30D": "",  
-                    "annualizedInterestRate60D": "",  
-                    "annualizedInterestRate7D": "",  
-                    "annualizedInterestRate90D": "",  
-                    "flexibleAnnualizedInterestRate": "0.001429799316"  
-                }  
-            ]  
+            "currency": "BTC",  
+            "maxLoan": "0.1722",  
+            "notionalUsd": "16456.06",  
+            "remainingQuota": "9999999.9421"  
         },  
         "retExtInfo": {},  
-        "time": 1752573126653  
+        "time": 1768533990031  
     }

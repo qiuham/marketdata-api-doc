@@ -2,59 +2,65 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/delivery
 api_type: REST
-updated_at: 2026-05-27 19:14:58.855519
+updated_at: 2026-06-28 19:08:35.632017
 ---
 
-# Get Delivery Record
+# Get Internal Deposit Records (off-chain)
 
-Query delivery records of Invese Futures, USDC Futures, USDT Futures and Options, sorted by `deliveryTime` in descending order
+Query deposit records within the Bybit platform. These transactions are not on the blockchain.
 
-info
+Rules
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * The maximum difference between the start time and the end time is 30 days
+  * Support to get deposit records by Master or Sub Member Api Key
 
 
 
 ### HTTP Request
 
-GET`/v5/asset/delivery-record`
+GET`/v5/asset/deposit/query-internal-record`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `inverse`(inverse futures), `linear`(USDT/USDC futures), `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
-
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime - 30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
-
-  
-endTime| false| integer| The end timestamp (ms)  
-expDate| false| string| Expiry date. `25MAR22`. Default: return all  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+txID| false| string| Internal transfer transaction ID  
+startTime| false| integer| Start time (ms). Default value: 30 days before the current time  
+endTime| false| integer| End time (ms). Default value: current time  
+coin| false| string| Coin name: for example, BTC. Default value: all  
+cursor| false| string| Cursor, used for pagination  
+limit| false| integer| Number of items per page, [`1`, `50`]. Default value: 50  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> deliveryTime| number| Delivery time (ms)  
-> symbol| string| Symbol name  
-> side| string| `Buy`,`Sell`  
-> position| string| Executed size  
-> entryPrice| string| Avg entry price  
-> deliveryPrice| string| Delivery price  
-> strike| string| Exercise price  
-> fee| string| Trading fee  
-> deliveryRpl| string| Realized PnL of the delivery  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/asset/delivery)
+rows| array| Object  
+> id| string| ID  
+> type| integer| `1`: Internal deposit  
+> coin| string| Deposit coin  
+> amount| string| Deposit amount  
+> status| integer| 
+
+  * 1=Processing
+  * 2=Success
+  * 3=deposit failed
+
+  
+> address| string| Email address or phone number  
+> createdTime| string| Deposit created timestamp  
+> fromMemberId| string| Sender UID  
+> txID| string| Internal transfer transaction ID  
+> taxDepositRecordsId| string| This field is used for tax purposes by Bybit EU (Austria) users, declare tax id  
+> taxStatus| integer| This field is used for tax purposes by Bybit EU (Austria) users 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
+  
+nextPageCursor| string| cursor information: used for pagination. Default value: `""`  
+[](/docs/api-explorer/v5/asset/internal-deposit-record)
 
 * * *
 
@@ -67,12 +73,12 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
+    GET /v5/asset/deposit/query-internal-record HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1682099024473  
+    X-BAPI-RECV-WINDOW: 50000  
     
     
     
@@ -82,9 +88,9 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
+    print(session.get_internal_deposit_records(  
+        startTime=1667260800000,  
+        endTime=1667347200000,  
     ))  
     
     
@@ -98,7 +104,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
+      .getInternalDepositRecords({  
+        startTime: 1667260800000,  
+        endTime: 1667347200000,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -112,79 +121,88 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
+            "rows": [  
                 {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
+                    "id": "1103",  
+                    "amount": "0.1",  
+                    "type": 1,  
+                    "coin": "ETH",  
+                    "address": "xxxx***@gmail.com",  
+                    "status": 2,  
+                    "createdTime": "1705393280",  
+                    "fromMemberId": "118027304",  
+                    "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"，  
+                    "taxDepositRecordsId": "0",  
+                    "taxStatus": 0,  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"  
         },  
         "retExtInfo": {},  
-        "time": 1672362116184  
+        "time": 1705395632689  
     }
 
 ---
 
-# 查詢交割紀錄
+# 查詢充值記錄 (平台转账)
 
-查詢反向交割 / USDT交割 / USDC交割 / 期權的交割紀錄, 返回結果按照`deliveryTime`降序排列
+查詢Bybit平台內部充值紀錄
 
-信息
+規則
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 開始時間和截止時間差最大限制為30天
+  * 支持使用母、子帳戶的api key查詢各自的入金紀錄
 
 
 
 ### HTTP 請求
 
-GET`/v5/asset/delivery-record`
+GET`/v5/asset/deposit/query-internal-record`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `inverse`(反向交割), `linear`(USDT/USDC交割), `option`(期權交割)  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
-
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
-
+txID| false| string| 內部轉帳交易ID  
+startTime| false| integer| 開始時間 (精確到毫秒)。 默認為當前時間之前30天  
+endTime| false| integer| 結束時間 (精確到毫秒)。 默認為當前時間  
+coin| false| string| 幣種名：舉例，BTC。默認全部  
+cursor| false| string| 游標信息：用來分頁。 默認空  
+limit| false| integer| 每頁條數, [`1`, `50`] 默認為50  
   
-endTime| false| integer| 結束時間 (毫秒)  
-expDate| false| string| 過期日. 格式示例: `25MAR22`. 默認: 返回所有日期數據  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
-  
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> deliveryTime| number| 交割時間戳 (毫秒)  
-> symbol| string| 合約名稱  
-> side| string| `Buy`,`Sell`  
-> position| string| 交割數量  
-> entryPrice| string| 平均入場價  
-> deliveryPrice| string| 交割價格  
-> strike| string| 行權價  
-> fee| string| 手續費，正數表支出，負數表收取  
-> deliveryRpl| string| 交割已實現盈虧  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/asset/delivery)
+rows| array| Object  
+> id| string| ID  
+> type| integer| `1`: 內部充值  
+> coin| string| 充值的幣種  
+> amount| string| 充值的數量  
+> txID| string| 交易ID。充值失敗/取消充值：為空  
+> status| integer| 
+
+  * 1=處理中
+  * 2=已完成
+  * 3=充值失敗
+
+  
+> address| string| 郵箱地址或者手機號  
+> fromMemberId| string| 來源UID  
+> createdTime| string| 充值創建時間戳  
+txID| string| 內部轉帳交易ID  
+> taxDepositRecordsId| string| Bybit EU（奧地利）用戶用於稅務目的, 保稅記錄id  
+> taxStatus| integer| Bybit EU（奧地利）用戶用於稅務目的 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
+  
+nextPageCursor| string| 游標信息：用來分頁  
+[](/docs/zh-TW/api-explorer/v5/asset/internal-deposit-record)
 
 * * *
 
@@ -197,12 +215,12 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
+    GET /v5/asset/deposit/query-internal-record HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1682099024473  
+    X-BAPI-RECV-WINDOW: 50000  
     
     
     
@@ -212,9 +230,9 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
+    print(session.get_internal_deposit_records(  
+        startTime=1667260800000,  
+        endTime=1667347200000,  
     ))  
     
     
@@ -228,7 +246,10 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
+      .getInternalDepositRecords({  
+        startTime: 1667260800000,  
+        endTime: 1667347200000,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -242,23 +263,24 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
+            "rows": [  
                 {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
+                    "id": "1103",  
+                    "amount": "0.1",  
+                    "type": 1,  
+                    "coin": "ETH",  
+                    "address": "xxxx***@gmail.com",  
+                    "status": 2,  
+                    "createdTime": "1705393280",  
+                    "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"，  
+                    "taxDepositRecordsId": "0",  
+                    "taxStatus": 0,  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"  
         },  
         "retExtInfo": {},  
-        "time": 1672362116184  
+        "time": 1705395632689  
     }

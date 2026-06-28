@@ -2,240 +2,169 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/wallet-type
 api_type: REST
-updated_at: 2026-05-27 19:23:09.026660
+updated_at: 2026-06-28 19:15:41.625591
 ---
 
-# Get UID Wallet Type
+# Fast Execution
 
-Get available wallet types for the master account or sub account
+Fast execution stream significantly reduces data latency compared original "execution" stream. However, it pushes limited execution type of trades, and fewer data fields.
 
-tip
-
-  * Master api key: you can get master account and appointed sub account available wallet types, and support up to 200 sub UID in one request.
-  * Sub api key: you can get its own available wallet types
+**All-In-One Topic:** `execution.fast`  
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`  
 
 
+info
 
-### HTTP Request
+  * Supports all Perps, Futures, Spot and Options exceution
+  * You can only receive [execType](/docs/v5/enum#exectype)=Trade update
 
-GET`/v5/user/get-member-type`
 
-### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-memberIds| false| string| 
-
-  * Query itself wallet types when not passed
-  * When use master api key to query sub UID, master UID data is always returned in the top of the array
-  * Multiple sub UID are supported, separated by commas
-  * This param is ignored when you use sub account api key
-
-  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-accounts| array| Object  
-> uid| string| Master/Sub user Id  
-> [accountType](/docs/v5/enum#accounttype)| array| Wallets array. `FUND`,`UNIFIED`  
-[](/docs/api-explorer/v5/user/wallet-type)
+topic| string| Topic name  
+creationTime| number| Data created timestamp (ms)  
+data| array| Object  
+> [category](/docs/v5/enum#category)| string| Product type `linear`, `inverse`, `spot`, `option`  
+> symbol| string| Symbol name  
+> orderId| string| Order ID  
+> isMaker| boolean| `true`: Maker, `false`: Taker  
+> orderLinkId| string| User customized order ID 
 
-* * *
+  * maker trade is always `""`
+  * If a maker order in the orderbook is converted to taker (by price amend), orderLinkId is also `""`
+  * For option: maker trade is always `""`, taker trade is always orderLinkId
 
-### Request Example
+  
+> execId| string| Execution ID  
+> execPrice| string| Execution price  
+> execQty| string| Execution qty  
+> side| string| Side. `Buy`,`Sell`  
+> execTime| string| Executed timestamp (ms)  
+> seq| long| Cross sequence, used to associate each fill and each position update
 
-  * HTTP
-  * Python
-  * Node.js
+  * The seq will be the same when conclude multiple transactions at the same time
+  * Different symbols may have the same seq, please use seq + symbol to check unique
 
-
-    
-    
-    GET /v5/user/get-member-type HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686884973961  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_uid_wallet_type(  
-        memberIds="subUID1,subUID2"  
-    ))  
-    
-    
-    
-    // https://api.bybit.com/v5/user/get-member-type  
-      
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getUIDWalletType({  
-        memberIds: 'subUID1,subUID2',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### Response Example
+  
+  
+### Subscribe Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "accounts": [  
-                {  
-                    "uid": "533285",  
-                    "accountType": [  
-                        "UNIFIED",  
-                        "FUND"  
-                    ]  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1686884974151  
+        "op": "subscribe",  
+        "args": [  
+            "execution.fast"  
+        ]  
+    }  
+    
+
+### Stream Example
+    
+    
+    {  
+        "topic": "execution.fast",  
+        "creationTime": 1716800399338,  
+        "data": [  
+            {  
+                "category": "linear",  
+                "symbol": "ICPUSDT",  
+                "execId": "3510f361-0add-5c7b-a2e7-9679810944fc",  
+                "execPrice": "12.015",  
+                "execQty": "3000",  
+                "orderId": "443d63fa-b4c3-4297-b7b1-23bca88b04dc",  
+                "isMaker": false,  
+                "orderLinkId": "test-00001",  
+                "side": "Sell",  
+                "execTime": "1716800399334",  
+                "seq": 34771365464  
+            }  
+        ]  
     }
 
 ---
 
-# 查詢帳戶支持的錢包類型
+# 個人成交 (Fast)
 
-查詢母帳戶或者子帳戶下支持的錢包類型
+精簡版本的個人成交推送, 相比原始的快速成交流, 延遲更加低
 
 提示
 
-  * 使用母帳戶api key: 您可以查詢到母帳戶以及指定的子帳戶的錢包類型, 子帳戶的uid最多單次可查詢200個.
-  * 使用子帳戶api key: 僅能查詢自身的錢包類型
+  * 支持USDT永續, USDC永續, USDC交割, 反向永續, 反向交割, 現貨和期權的成交推送
+  * 僅推送[execType](/docs/zh-TW/v5/enum#exectype)=Trade的消息
 
 
 
-最佳實踐
-
-"FUND" - 這個資金錢包, 如果您從未存入或者轉入過資金, 該接口返回的數組裡將不會呈現該枚舉值, 但實際上您的帳戶總是擁有該錢包.
-
-  * `["SPOT","OPTION","FUND","CONTRACT"]` : 經典帳戶並且資金錢包曾經操作過
-  * `["SPOT","OPTION","CONTRACT"]` : 經典帳戶並且資金錢包不曾操作過
-  * `["SPOT","UNIFIED","FUND","CONTRACT"]` : UMA帳戶並且資金錢包曾經操作過. (等強制或主動升級到UTA後, 就沒有UMA帳戶的概念了)
-  * `["SPOT","UNIFIED","CONTRACT"]` : UMA帳戶並且資金錢包不曾操作過. (等強制或主動升級到UTA後, 就沒有UMA帳戶的概念了)
-  * `["UNIFIED""FUND","CONTRACT"]` : UTA帳戶並且資金錢包曾經操作過
-  * `["UNIFIED","CONTRACT"]` : UTA帳戶並且資金錢包不曾操作過
+**All-In-One Topic:** `execution.fast`  
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`  
 
 
-
-### HTTP 請求
-
-GET`/v5/user/get-member-type`
-
-### 請求參數
-
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-memberIds| false| string| 
-
-  * 不入参時, 僅查詢自身
-  * 當使用母帳戶api key查詢子uid時, 母帳戶的數據總是返回且在數組的第一個
-  * 支持輸入多個子uid, 用逗號隔開, 單次查詢最多支持200個
-  * 子帳戶api key查詢時, 該入参將會被忽略
-
-  
-  
-### 返回參數
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-accounts| array| Object  
-> uid| string| 母/子 uid  
-> [accountType](/docs/zh-TW/v5/enum#accounttype)| array| `SPOT`, `CONTRACT`, `FUND`, `OPTION`, `UNIFIED`. 請查閱上面的最佳實踐來理解返回的值  
-[](/docs/zh-TW/api-explorer/v5/user/wallet-type)
+topic| string| Topic名  
+creationTime| number| 消息數據創建時間  
+data| array| Object  
+> [category](/docs/zh-TW/v5/enum#category)| string| 產品類型 `linear`, `inverse`, `spot`, `option`  
+> symbol| string| 合約名稱  
+> orderId| string| 訂單ID  
+> isMaker| boolean| `true`: maker成交, `false`: taker成交  
+> orderLinkId| string| 用戶自定義訂單ID 
 
-* * *
+  * maker成交總是返回`""`
+  * 當maker訂單在訂單簿中轉化成了taker單(比如修改了價格), 這種情況orderLinkId也是`""`
+  * 期權: maker成交永遠返回`""`, taker成交永遠返回orderLinkId
 
-### 請求示例
+  
+> side| string| 訂單方向.買：`Buy`,賣：`Sell`  
+> execId| string| 成交Id  
+> execPrice| string| 成交價格  
+> execQty| string| 成交數量  
+> execTime| string| 成交時間（毫秒）  
+> seq| long| 序列號, 用於關聯成交和倉位的更新
 
-  * HTTP
-  * Python
-  * Node.js
+  * 同一時間有多筆成交, seq相同
+  * 不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別
 
-
-    
-    
-    GET /v5/user/get-member-type HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686884973961  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    
-    
-    
-      
-    
-    
-    
-    // https://api.bybit.com/v5/user/get-member-type  
-      
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getUIDWalletType({  
-        memberIds: 'subUID1,subUID2',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### 響應示例
+  
+  
+### 訂閱示例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "accounts": [  
-                {  
-                    "uid": "24617703",  
-                    "accountType": [  
-                        "SPOT",  
-                        "OPTION",  
-                        "FUND",  
-                        "CONTRACT"  
-                    ]  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1686895670002  
+        "op": "subscribe",  
+        "args": [  
+            "execution.fast"  
+        ]  
+    }  
+    
+    
+    
+      
+    
+
+### 推送示例
+    
+    
+    {  
+        "topic": "execution.fast",  
+        "creationTime": 1716800399338,  
+        "data": [  
+            {  
+                "category": "linear",  
+                "symbol": "ICPUSDT",  
+                "execId": "3510f361-0add-5c7b-a2e7-9679810944fc",  
+                "execPrice": "12.015",  
+                "execQty": "3000",  
+                "orderId": "443d63fa-b4c3-4297-b7b1-23bca88b04dc",  
+                "isMaker": false,  
+                "orderLinkId": "test-00001",  
+                "side": "Sell",  
+                "execTime": "1716800399334",  
+                "seq": 34771365464  
+            }  
+        ]  
     }

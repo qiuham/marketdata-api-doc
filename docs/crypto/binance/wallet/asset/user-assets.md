@@ -2,215 +2,196 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/asset/user-assets
 api_type: REST
-updated_at: 2026-05-27 18:59:23.891412
+updated_at: 2026-06-28 18:54:16.304575
 ---
 
-# All Coins' Information (USER_DATA)
+# User Asset (USER_DATA)
 
-## API Description[​](/docs/wallet/capital#api-description "Direct link to API Description")
+## API Description[​](/docs/wallet/asset/user-assets#api-description "Direct link to API Description")
 
-Get information of coins (available for deposit and withdraw) for user.
+Get user assets, just for positive data.
 
-## HTTP Request[​](/docs/wallet/capital#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/wallet/asset/user-assets#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/capital/config/getall`
+POST `/sapi/v3/asset/getUserAsset`
 
-## Request Weight(IP)[​](/docs/wallet/capital#request-weightip "Direct link to Request Weight\(IP\)")
+## Request Weight(IP)[​](/docs/wallet/asset/user-assets#request-weightip "Direct link to Request Weight\(IP\)")
 
-10
+**5**
 
-## Request Parameters[​](/docs/wallet/capital#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/wallet/asset/user-assets#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
+asset| STRING| NO| If asset is blank, then query all positive assets user have.  
+needBtcValuation| BOOLEAN| NO| Whether need btc valuation or not.  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## Response Example[​](/docs/wallet/capital#response-example "Direct link to Response Example")
+>   * If asset is set, then return this asset, otherwise return all assets positive.
+>   * If needBtcValuation is set, then return btcValudation.
+> 
+
+
+## Response Example[​](/docs/wallet/asset/user-assets#response-example "Direct link to Response Example")
     
     
     [  
         {  
-            "coin": "1MBABYDOGE",  
-            "depositAllEnable": true,  
-            "withdrawAllEnable": true,  
-            "name": "1M x BABYDOGE",  
-            "free": "34941.1",  
+            "asset": "AVAX",  
+            "free": "1",  
             "locked": "0",  
             "freeze": "0",  
             "withdrawing": "0",  
-            "ipoing": "0",  
             "ipoable": "0",  
-            "storage": "0",  
-            "isLegalMoney": false,  
-            "trading": true,  
-            "networkList": [  
-                {  
-                    "network": "BSC",  
-                    "coin": "1MBABYDOGE",  
-                    "withdrawIntegerMultiple": "0.01",  
-                    "isDefault": false,  
-                    "depositEnable": true,  
-                    "withdrawEnable": true,  
-                    "depositDesc": "",                                                   // shown only when "depositEnable" is false.  
-                    "withdrawDesc": "",                                                  // shown only when "withdrawEnable" is false.  
-                    "specialTips": "",  
-                    "specialWithdrawTips": "",  
-                    "name": "BNB Smart Chain (BEP20)",  
-                    "resetAddressStatus": false,  
-                    "addressRegex": "^(0x)[0-9A-Fa-f]{40}$",  
-                    "memoRegex": "",  
-                    "withdrawFee": "10",  
-                    "withdrawMin": "20",  
-                    "withdrawMax": "9999999999",  
-                    "withdrawInternalMin": "0.01",                                       // Minimum internal transfer amount  
-                    "depositDust": "0.01",  
-                    "minConfirm": 5,                                                     // min number for balance confirmation  
-                    "unLockConfirm": 0,                                                  // confirmation number for balance unlock  
-                    "sameAddress": false,                                                // Obsoleted, recomment to use withdrawTag  
-                    "withdrawTag": false,                                                // If the coin needs to provide memo to withdraw  
-                    "estimatedArrivalTime": 1,  
-                    "busy": false,  
-                    "contractAddressUrl": "https://bscscan.com/token/",  
-                    "contractAddress": "0xc748673057861a797275cd8a068abb95a902e8de",  
-                    "denomination": 1000000                                              // 1 1MBABYDOGE = 1000000 BABYDOGE  
-                },  
-                {  
-                    "network": "ETH",  
-                    "coin": "1MBABYDOGE",  
-                    "withdrawIntegerMultiple": "0.01",  
-                    "isDefault": true,  
-                    "depositEnable": true,  
-                    "withdrawEnable": true,  
-                    "depositDesc": "",  
-                    "withdrawDesc": "",  
-                    "specialTips": "",  
-                    "specialWithdrawTips": "",  
-                    "name": "Ethereum (ERC20)",  
-                    "resetAddressStatus": false,  
-                    "addressRegex": "^(0x)[0-9A-Fa-f]{40}$",  
-                    "memoRegex": "",  
-                    "withdrawFee": "1511",  
-                    "withdrawMin": "3022",  
-                    "withdrawMax": "9999999999",  
-                    "withdrawInternalMin": "0.01",  
-                    "depositDust": "0.01",  
-                    "minConfirm": 6,  
-                    "unLockConfirm": 64,  
-                    "sameAddress": false,  
-                    "withdrawTag": false,  
-                    "estimatedArrivalTime": 2,  
-                    "busy": false,  
-                    "contractAddressUrl": "https://etherscan.io/address/",  
-                    "contractAddress": "0xac57de9c1a09fec648e93eb98875b212db0d460b",  
-                    "denomination": 1000000  
-                }  
-            ]  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BCH",  
+            "free": "0.9",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BNB",  
+            "free": "887.47061626",  
+            "locked": "0",  
+            "freeze": "10.52",  
+            "withdrawing": "0.1",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BUSD",  
+            "free": "9999.7",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "SHIB",  
+            "free": "532.32",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "USDT",  
+            "free": "50300000001.44911105",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "WRZ",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
         }  
     ]
 
 ---
 
-# 获取所有币信息(USER_DATA)
+# 用户持仓(USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/wallet/capital#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/wallet/asset/user-assets#接口描述 "接口描述的直接链接")
 
-获取针对用户的所有(Binance支持充提操作的)币种信息。
+获取用户持仓，仅返回>0的数据。
 
-## HTTP请求[​](/docs/zh-CN/wallet/capital#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/wallet/asset/user-assets#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/capital/config/getall`
+POST `/sapi/v3/asset/getUserAsset`
 
-## 请求权重(IP)[​](/docs/zh-CN/wallet/capital#请求权重ip "请求权重\(IP\)的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/wallet/asset/user-assets#请求权重ip "请求权重\(IP\)的直接链接")
 
-**10**
+**5**
 
-## 请求参数[​](/docs/zh-CN/wallet/capital#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/wallet/asset/user-assets#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
+asset| STRING| NO| 如果资产为空，则查询用户所有的正资产。  
+needBtcValuation| BOOLEAN| NO| 是否需要返回兑换成BTC的估值  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/wallet/capital#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/wallet/asset/user-assets#响应示例 "响应示例的直接链接")
     
     
     [  
         {  
-            "coin": "1MBABYDOGE",  
-            "depositAllEnable": true,  
-            "withdrawAllEnable": true,  
-            "name": "1M x BABYDOGE",  
-            "free": "34941.1",  
+            "asset": "AVAX",  
+            "free": "1",  
             "locked": "0",  
             "freeze": "0",  
             "withdrawing": "0",  
-            "ipoing": "0",  
             "ipoable": "0",  
-            "storage": "0",  
-            "isLegalMoney": false,  
-            "trading": true,  
-            "networkList": [  
-                {  
-                    "network": "BSC",  
-                    "coin": "1MBABYDOGE",  
-                    "withdrawIntegerMultiple": "0.01",  
-                    "isDefault": false,  
-                    "depositEnable": true,  
-                    "withdrawEnable": true,  
-                    "depositDesc": "",                                                   // 仅在充值关闭时返回  
-                    "withdrawDesc": "",                                                  // 仅在提现关闭时返回  
-                    "specialTips": "",  
-                    "specialWithdrawTips": "",  
-                    "name": "BNB Smart Chain (BEP20)",  
-                    "resetAddressStatus": false,  
-                    "addressRegex": "^(0x)[0-9A-Fa-f]{40}$",  
-                    "memoRegex": "",  
-                    "withdrawFee": "10",  
-                    "withdrawMin": "20",  
-                    "withdrawMax": "9999999999",  
-                    "withdrawInternalMin": "0.01",                                       // 内部转账最小提现数  
-                    "depositDust": "0.01",  
-                    "minConfirm": 5,                                                     // 上账所需的最小确认数  
-                    "unLockConfirm": 0,                                                  // 解锁需要的确认数  
-                    "sameAddress": false,                                                // 过时字段，建议使用withdrawTag  
-                    "withdrawTag": false,                                                // 提现时是否需要memo  
-                    "estimatedArrivalTime": 1,  
-                    "busy": false,  
-                    "contractAddressUrl": "https://bscscan.com/token/",  
-                    "contractAddress": "0xc748673057861a797275cd8a068abb95a902e8de",  
-                    "denomination": 1000000                                              // 1 1MBABYDOGE = 1000000 BABYDOGE  
-                },  
-                {  
-                    "network": "ETH",  
-                    "coin": "1MBABYDOGE",  
-                    "withdrawIntegerMultiple": "0.01",  
-                    "isDefault": true,  
-                    "depositEnable": true,  
-                    "withdrawEnable": true,  
-                    "depositDesc": "",  
-                    "withdrawDesc": "",  
-                    "specialTips": "",  
-                    "specialWithdrawTips": "",  
-                    "name": "Ethereum (ERC20)",  
-                    "resetAddressStatus": false,  
-                    "addressRegex": "^(0x)[0-9A-Fa-f]{40}$",  
-                    "memoRegex": "",  
-                    "withdrawFee": "1511",  
-                    "withdrawMin": "3022",  
-                    "withdrawMax": "9999999999",  
-                    "withdrawInternalMin": "0.01",  
-                    "depositDust": "0.01",  
-                    "minConfirm": 6,  
-                    "unLockConfirm": 64,  
-                    "sameAddress": false,  
-                    "withdrawTag": false,  
-                    "estimatedArrivalTime": 2,  
-                    "busy": false,  
-                    "contractAddressUrl": "https://etherscan.io/address/",  
-                    "contractAddress": "0xac57de9c1a09fec648e93eb98875b212db0d460b",  
-                    "denomination": 1000000  
-                }  
-            ]  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BCH",  
+            "free": "0.9",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BNB",  
+            "free": "887.47061626",  
+            "locked": "0",  
+            "freeze": "10.52",  
+            "withdrawing": "0.1",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "BUSD",  
+            "free": "9999.7",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "SHIB",  
+            "free": "532.32",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "USDT",  
+            "free": "50300000001.44911105",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
+        },  
+        {  
+            "asset": "WRZ",  
+            "free": "1",  
+            "locked": "0",  
+            "freeze": "0",  
+            "withdrawing": "0",  
+            "ipoable": "0",  
+            "btcValuation": "0"  
         }  
     ]

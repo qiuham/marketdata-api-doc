@@ -2,32 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-delta-mode
 api_type: Account
-updated_at: 2026-05-27 19:14:13.057083
+updated_at: 2026-06-28 19:07:37.684416
 ---
 
-# Set Margin Mode
+# Set Delta Neutral Mode
 
-Default is regular margin mode
+Delta Neutral Mode is designed to enhance the trading experience for users running delta-neutral strategies. When enabled, positions that meet the Delta Neutral criteria are ranked lower in the ADL (Auto-Deleveraging) queue, reducing the risk of being auto-deleveraged during extreme market conditions. For more details, refer to the [Delta Neutral Mode](https://www.bybit.com/en/help-center/article?id=1772092051700) help article.
+
+You can turn on/off the Delta Neutral mode. To query the current status, use the [Get Trade Behaviour Config](/docs/v5/account/get-user-setting-config) endpoint and check the `deltaEnable` field in the response.
 
 ### HTTP Request
 
-POST`/v5/account/set-margin-mode`
+POST`/v5/account/set-delta-mode`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-setMarginMode| **true**|  string| `ISOLATED_MARGIN`, `REGULAR_MARGIN`(i.e. Cross margin), `PORTFOLIO_MARGIN`  
+deltaEnable| **true**|  string| `1`: Enable; `0`: Disable  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-reasons| array| Object. If requested successfully, it is an empty array  
-> reasonCode| string| Fail reason code  
-> reasonMsg| string| Fail reason msg  
-[](/docs/api-explorer/v5/account/set-margin-mode)
-
+resultStatus| integer| `success`;`failed`  
+  
 * * *
 
 ### Request Example
@@ -39,16 +38,17 @@ reasons| array| Object. If requested successfully, it is an empty array
 
     
     
-    POST /v5/account/set-margin-mode HTTP/1.1  
+    POST /v5/account/set-delta-mode HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672134396332  
+    X-BAPI-TIMESTAMP: 1773113846000  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 20  
       
     {  
-        "setMarginMode": "PORTFOLIO_MARGIN"  
+        "deltaEnable": "1"  
     }  
     
     
@@ -59,73 +59,50 @@ reasons| array| Object. If requested successfully, it is an empty array
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_margin_mode(  
-        setMarginMode="PORTFOLIO_MARGIN",  
+    print(session.set_delta_mode(  
+        deltaEnable="1"  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setMarginMode('PORTFOLIO_MARGIN')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
     
     
     {  
-        "retCode": 3400045,  
-        "retMsg": "Set margin mode failed",  
-        "result": {  
-            "reasons": [  
-                {  
-                    "reasonCode": "3400000",  
-                    "reasonMsg": "Equity needs to be equal to or greater than 1000 USDC"  
-                }  
-            ]  
-        }  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1773113846355  
     }
 
 ---
 
-# 設置保證金模式(帳戶)
+# 設置Delta中性模式
 
-用戶如果不設置，默認按全倉保證金
+Delta 中性模式旨在為執行 Delta 中性策略的用戶，提升交易體驗。啟用後，符合 Delta 中性標準的倉位在 ADL (自動減倉) 佇列中的排名會較低，從而降低在極端市場條件下被自動減倉的風險。 詳情請參考 [Delta 中性模式](https://www.bybit.com/en/help-center/article?id=1772092051700)幫助文章。
+
+您可以開啟或關閉 Delta 中性模式。如需查詢當前狀態，請使用 [查詢交易行為設置](/docs/zh-TW/v5/account/get-user-setting-config) 接口，並查看響應中的 `deltaEnable` 字段。
 
 ### HTTP 請求
 
-POST`/v5/account/set-margin-mode`
+POST`/v5/account/set-delta-mode`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-setMarginMode| **true**|  string| `ISOLATED_MARGIN`(逐倉保證金模式)  
-`REGULAR_MARGIN`（全倉保證金模式）  
-`PORTFOLIO_MARGIN`（組合保證金模式）  
+deltaEnable| **true**|  string| `1`: 開啟；`0`: 關閉  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-reasons| array| Object. 若請求提交成功, 則返回空數組  
-> reasonCode| string| 失敗錯誤碼  
-> reasonMsg| string| 失敗錯誤消息  
-[](/docs/zh-TW/api-explorer/v5/account/set-margin-mode)
-
+resultStatus| integer| `success`;`failed`  
+  
 * * *
 
 ### 請求示例
@@ -137,62 +114,35 @@ reasons| array| Object. 若請求提交成功, 則返回空數組
 
     
     
-    POST /v5/account/set-margin-mode HTTP/1.1  
+    POST /v5/account/set-delta-mode HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672134396332  
+    X-BAPI-TIMESTAMP: 1773113846000  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 20  
       
     {  
-        "setMarginMode": "PORTFOLIO_MARGIN"  
+        "deltaEnable": "1"  
     }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.set_margin_mode(  
-        setMarginMode="PORTFOLIO_MARGIN",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    
+    
+    
       
-    client  
-        .setMarginMode('PORTFOLIO_MARGIN')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
     
     
     {  
-        "retCode": 3400045,  
-        "retMsg": "Set margin mode failed",  
-        "result": {  
-            "reasons": [  
-                {  
-                    "reasonCode": "3400000",  
-                    "reasonMsg": "Equity needs to be equal to or greater than 1000 USDC"  
-                }  
-            ]  
-        }  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1773113846355  
     }

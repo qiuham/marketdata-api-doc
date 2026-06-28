@@ -2,137 +2,79 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2
 api_type: Account
-updated_at: 2026-05-27 19:01:59.777881
+updated_at: 2026-06-28 18:56:49.143838
 ---
 
-# Get Futures Position-Risk of Sub-account V2 (For Master Account) (USER_DATA)
+# Get IP Restriction for a Sub-account API Key (For Master Account) (USER_DATA)
 
-## API Description[​](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#api-description "Direct link to API Description")
+## API Description[​](/docs/sub_account/api-management#api-description "Direct link to API Description")
 
-Get Futures Position-Risk of Sub-account V2
+Get IP Restriction for a Sub-account API Key
 
-## HTTP Request[​](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/sub_account/api-management#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v2/sub-account/futures/positionRisk`
+GET `/sapi/v1/sub-account/subAccountApi/ipRestriction`
 
-## Request Weight(IP)[​](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#request-weightip "Direct link to Request Weight\(IP\)")
+## Request Weight(UID)[​](/docs/sub_account/api-management#request-weightuid "Direct link to Request Weight\(UID\)")
 
-**1**
+**3000**
 
-## Request Parameters[​](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/sub_account/api-management#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-email| STRING| YES| [Sub-account email](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#email-address)  
-futuresType| INT| YES| 1:USDT Margined Futures, 2:COIN Margined Futures  
+email| STRING| YES| [Sub-account email](/docs/sub_account/api-management#email-address)  
+subAccountApiKey| STRING| YES|   
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## Response Example[​](/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#response-example "Direct link to Response Example")
-
-> USDT Margined Futures：
+## Response Example[​](/docs/sub_account/api-management#response-example "Direct link to Response Example")
     
     
     {  
-      "futurePositionRiskVos": [  
-         {  
-            "entryPrice": "9975.12000",  
-            "leverage": "50",              // current initial leverage  
-            "maxNotional": "1000000",      // notional value limit of current initial leverage  
-            "liquidationPrice": "7963.54",  
-            "markPrice": "9973.50770517",  
-            "positionAmount": "0.010",  
-            "symbol": "BTCUSDT",  
-            "unrealizedProfit": "-0.01612295"  
-         }  
-       ]  
-    }  
-    
-
-> COIN Margined Futures：
-    
-    
-    {  
-      "deliveryPositionRiskVos": [  
-         {  
-            "entryPrice": "9975.12000",  
-            "markPrice": "9973.50770517",  
-            "leverage": "20",            
-            "isolated": "false",                  
-            "isolatedWallet": "9973.50770517",  
-            "isolatedMargin": "0.00000000",  
-            "isAutoAddMargin": "false",  
-            "positionSide": "BOTH",  
-            "positionAmount": "1.230",  
-            "symbol": "BTCUSD_201225",  
-            "unrealizedProfit": "-0.01612295"  
-         }  
-       ]  
+        "ipRestrict": "true",  
+        "ipList": [  
+            "69.210.67.14",  
+            "8.34.21.10"  
+        ],  
+        "updateTime": 1636371437000,  
+        "apiKey": "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"  
     }
 
 ---
 
-# 查询子账户合约持仓信息V2 (仅适用主账户) (USER_DATA)
+# 查询子账户API Key IP白名单 (适用母账户) (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/sub_account/api-management#接口描述 "接口描述的直接链接")
 
-查询子账户合约持仓信息
+查询子账户API Key IP白名单
 
-## HTTP请求[​](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/sub_account/api-management#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v2/sub-account/futures/positionRisk`
+GET `/sapi/v1/sub-account/subAccountApi/ipRestriction`
 
-## 请求权重(IP)[​](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#请求权重ip "请求权重\(IP\)的直接链接")
+## 请求权重(UID)[​](/docs/zh-CN/sub_account/api-management#请求权重uid "请求权重\(UID\)的直接链接")
 
-**1**
+**3000**
 
-## 请求参数[​](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/sub_account/api-management#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-email| STRING| YES| 子账户邮箱 [备注](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#request-email-address)  
-futuresType| INT| YES| 1:USDT Margined Futures, 2:COIN Margined Futures  
+email| STRING| YES| [Sub-account email](/docs/zh-CN/sub_account/api-management#email-address)  
+subAccountApiKey| STRING| YES|   
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2#响应示例 "响应示例的直接链接")
-
-> USDT Margined Futures：
+## 响应示例[​](/docs/zh-CN/sub_account/api-management#响应示例 "响应示例的直接链接")
     
     
     {  
-      "futurePositionRiskVos": [  
-         {  
-            "entryPrice": "9975.12000",  
-            "leverage": "50",              // current initial leverage  
-            "maxNotional": "1000000",      // notional value limit of current initial leverage  
-            "liquidationPrice": "7963.54",  
-            "markPrice": "9973.50770517",  
-            "positionAmount": "0.010",  
-            "symbol": "BTCUSDT",  
-            "unrealizedProfit": "-0.01612295"  
-         }  
-       ]  
-    }  
-    
-
-> COIN Margined Futures：
-    
-    
-    {  
-      "deliveryPositionRiskVos": [  
-         {  
-            "entryPrice": "9975.12000",  
-            "markPrice": "9973.50770517",  
-            "leverage": "20",            
-            "isolated": "false",                  
-            "isolatedWallet": "9973.50770517",  
-            "isolatedMargin": "0.00000000",  
-            "isAutoAddMargin": "false",  
-            "positionSide": "BOTH",  
-            "positionAmount": "1.230",  
-            "symbol": "BTCUSD_201225",  
-            "unrealizedProfit": "-0.01612295"  
-         }  
-       ]  
+        "ipRestrict": "true",  
+        "ipList": [  
+            "69.210.67.14",  
+            "8.34.21.10"  
+        ],  
+        "updateTime": 1636371437000,  
+        "apiKey": "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"  
     }

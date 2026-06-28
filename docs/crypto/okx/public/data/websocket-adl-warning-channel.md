@@ -3,16 +3,14 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-adl-warning-channel
 anchor_id: public-data-websocket-adl-warning-channel
 api_type: WebSocket
-updated_at: 2026-05-27 19:36:21.253276
+updated_at: 2026-06-28 19:38:07.009021
 ---
 
 # ADL warning channel
 
 Auto-deleveraging warning channel.
 
-In the `normal` state, data will be pushed once every minute to display the balance of security fund and etc.
-
-In the warning state or when there is ADL risk (`warning/adl`), data will be pushed every second to display information such as the real-time decline rate of security fund.
+Data is only pushed in the `warning` or `adl` state, once every second, displaying the security fund balance and related risk information. No data is pushed in the `normal` state.
 
 For more ADL details, please refer to [Introduction to Auto-deleveraging](https://www.okx.com/help/iv-introduction-to-auto-deleveraging-adl)
 
@@ -138,17 +136,20 @@ connId | String | Yes | WebSocket connection ID
        },
        "data":[
           {
-             "maxBal":"",
-             "adlRecBal":"8000.0",
-             "bal":"280784384.9564228289548144",
              "instType":"FUTURES",
-             "ccy": "USDT",
              "instFamily":"BTC-USDT",
+             "state":"warning",
+             "bal":"280784384.9564228289548144",
+             "ccy":"",
+             "maxBal":"",
              "maxBalTs":"",
              "adlType":"",
-             "state":"normal",
-             "adlBal":"0",
-             "ts":"1700210763001"
+             "adlBal":"",
+             "adlRecBal":"",
+             "ts":"1700210763001",
+             "decRate":"",
+             "adlRate":"",
+             "adlRecRate":""
           }
        ]
     }
@@ -168,22 +169,21 @@ data | Array of objects | Subscribed data
 > instType | String | Instrument type  
 > instFamily | String | Instrument family  
 > state | String | state   
-`normal`   
 `warning`   
 `adl`  
 > bal | String | Real-time security fund balance  
-> ccy | String | The corresponding currency of security fund balance  
-> maxBal | String | Maximum security fund balance in the past eight hours   
+> ccy | String | ~~The corresponding currency of security fund balance~~(Deprecated, returns `""`. To be removed in a future update)  
+> maxBal | String | ~~Maximum security fund balance in the past eight hours  
   
-Applicable when state is `warning` or `adl`  
-> maxBalTs | String | Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g. `1597026383085`  
-> adlType | String | ADL related events   
+Applicable when state is `warning` or `adl`~~(Deprecated, returns `""`. To be removed in a future update)  
+> maxBalTs | String | ~~Timestamp when security fund balance reached maximum in the past eight hours, Unix timestamp format in milliseconds, e.g.`1597026383085`~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlType | String | ~~ADL related events  
 `rate_adl_start`: ADL begins due to high security fund decline rate   
 `bal_adl_start`: ADL begins due to security fund balance falling   
 `pos_adl_start`：ADL begins due to the volume of liquidation orders falls to a certain level (only applicable to premarket symbols)   
-`adl_end`: ADL ends  
-> adlBal | String | security fund balance that triggers ADL  
-> adlRecBal | String | security fund balance that turns off ADL  
+`adl_end`: ADL ends~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlBal | String | ~~security fund balance that triggers ADL~~(Deprecated, returns `""`. To be removed in a future update)  
+> adlRecBal | String | ~~security fund balance that turns off ADL~~(Deprecated, returns `""`. To be removed in a future update)  
 > ts | String | Data push time, Unix timestamp format in milliseconds, e.g. `1597026383085`  
 > decRate | String | ~~Real-time security fund decline rate (compare bal and maxBal)  
   
@@ -197,9 +197,7 @@ Applicable when state is `warning` or `adl`~~(Deprecated)
 
 自动减仓预警。
 
-普通状态（`normal`）下，每分钟推送一次，展示风险保证金的余额等信息。
-
-预警状态下或有自动减仓风险（`warning/adl`）时，每1秒推送一次数据，展示风险保证金的实时下降率等信息。
+仅在 `warning` 或 `adl` 状态下推送数据，每1秒推送一次，展示风险保证金余额及相关风险信息。`normal` 状态下不再推送数据。
 
 更多自动减仓细节，请见[自动减仓机制介绍](https://www.okx.com/cn/help/iv-introduction-to-auto-deleveraging-adl)
 
@@ -324,17 +322,20 @@ connId | String | 是 | WebSocket连接ID
        },
        "data":[
           {
-             "maxBal":"",
-             "adlRecBal":"8000.0",
-             "bal":"280784384.9564228289548144",
              "instType":"FUTURES",
-             "ccy": "USDT",
              "instFamily":"BTC-USDT",
+             "state":"warning",
+             "bal":"280784384.9564228289548144",
+             "ccy":"",
+             "maxBal":"",
              "maxBalTs":"",
              "adlType":"",
-             "state":"normal",
-             "adlBal":"0",
-             "ts":"1700210763001"
+             "adlBal":"",
+             "adlRecBal":"",
+             "ts":"1700210763001",
+             "decRate":"",
+             "adlRate":"",
+             "adlRecRate":""
           }
        ]
     }
@@ -354,21 +355,20 @@ data | Array of objects | 订阅的数据
 > instType | String | 产品类型  
 > instFamily | String | 交易品种  
 > state | String | 状态   
-`normal`：普通状态   
 `warning`：预警状态   
 `adl`：已开启自动减仓  
 > bal | String | 实时风险保证金余额  
-> ccy | String | 风险保证金余额对应币种  
-> maxBal | String | 过去八小时内的风险保证金余额最大值   
-仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""  
-> maxBalTs | String | 过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
-> adlType | String | 关于自动减仓的事件  
+> ccy | String | ~~风险保证金余额对应币种~~ （已弃用，返回 `""`。将在后续更新中删除）  
+> maxBal | String | ~~过去八小时内的风险保证金余额最大值  
+仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""~~（已弃用，返回 `""`。将在后续更新中删除）  
+> maxBalTs | String | ~~过去八小时内风险保证金余额最大值对应的时间戳，Unix时间戳的毫秒数格式，如`1597026383085`~~（已弃用，返回 `""`。将在后续更新中删除）  
+> adlType | String | ~~关于自动减仓的事件  
 `rate_adl_start`：由于风险保证金下降率过高造成的自动减仓开始   
 `bal_adl_start`：由于风险保证金余额下降过高造成的自动减仓开始   
 `pos_adl_start`：由于强平单的规模积累到一定程度的自动减仓开始（仅适用于盘前交易市场）   
-`adl_end`：自动减仓结束  
-> adlBal | String | 触发自动减仓的风险保证金余额  
-> adlRecBal | String | 自动减仓结束的风险保证金余额  
+`adl_end`：自动减仓结束~~（已弃用，返回 `""`。将在后续更新中删除）  
+> adlBal | String | ~~触发自动减仓的风险保证金余额~~ （已弃用，返回 `""`。将在后续更新中删除）  
+> adlRecBal | String | ~~自动减仓结束的风险保证金余额~~ （已弃用，返回 `""`。将在后续更新中删除）  
 > ts | String | 数据更新时间，Unix时间戳的毫秒数格式，如 1597026383085  
 > decRate | String | ~~风险保证金实时下降率（bal与maxBal相比较）  
 仅在状态为`warning`及`adl`时推送，状态为`normal`时推送空字符串""~~（已弃用）  

@@ -2,289 +2,105 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/transfer
 api_type: REST
-updated_at: 2026-05-27 19:01:34.178133
+updated_at: 2026-06-28 18:56:20.500871
 ---
 
-# Query Risk Unit Forced Liquidation Transfer Records(USER_DATA)
+# Risk Unit Transfer(TRADE)
 
-#### API Description[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#api-description "Direct link to API Description")
+## API Description[​](/docs/institutional_loan/transfer#api-description "Direct link to API Description")
 
-Query the institution loan risk unit transfer records during forced liquidation. During the risk unit liquidation, funds from the collateral account may be transferred to the credit account to repay the principal and interest of institutional loans.This endpoint is accessible only with the credit account API key.
+When specified risk unit LTV thresholds and/or the relevant product transfer out rules are met, the Risk Unit Transfer API allows users to perform the following:
 
-#### HTTP Request[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#http-request "Direct link to HTTP Request")
+  * Transfer of assets from margin collateral/credit accounts to spot accounts with the same Spot UID. This endpoint is accessible via each of the credit/collateral accounts with its API Key or parent account .
 
-GET /sapi/v1/margin/loan-group/force-liquidation-transfer-record
 
-#### Request Weight[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#request-weight "Direct link to Request Weight")
+
+Please Note: To transfer funds out of the Institutional Loan Risk Unit, first transfer to the spot wallet using the dedicated Risk Unit Transfer API. After that, use the [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer) to move the assets to an account outside of the risk unit.
+
+For all other designated use cases shown below, please use the [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer).
+
+  * Transfer assets between Credit Account and other Margin Collateral Accounts within the risk unit without LTV restrictions. Please see [Universal Transfer API](https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer), this needs to be done via master account API key.
+  * Transfers between Spot collateral account and accounts outside of the risk unit.
+
+
+
+## HTTP Request[​](/docs/institutional_loan/transfer#http-request "Direct link to HTTP Request")
+
+POST /sapi/v1/margin/loan-group/transfer-out
+
+## Request Weight[​](/docs/institutional_loan/transfer#request-weight "Direct link to Request Weight")
 
 1(IP)
 
-#### Request Parameters[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/institutional_loan/transfer#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-startTime| LONG| NO|   
-endTime| LONG| NO|   
-current| LONG| NO| The currently querying page. Start from 1. Default:1  
-size| LONG| NO| Default:10 Max:100  
-recvWindow| LONG| NO| The value cannot be greater than 60000  
-timestamp| LONG| YES|   
+subEmail| STRING| NO| When the parent account calls this endpoint, the subEmail field is mandatory. If left empty, error code -27026 will be returned.  
+When a credit or collateral account calls this endpoint, the subEmail field may be omitted and will default to the account's own subEmail.  
+If the wrong subEmail is inputted, error code -3003 will be returned.  
+asset| STRING| YES| Asset Name , USDT or USDC  
+amount| DECIMAL| YES| Transfer amount of the asset. The real transferred amount = min(risk unit max transfer amount, collateral account max transfer amount).  
   
-  * Response in descending order
-  * If neither startTime nor endTime is sent, the recent 7-day data will be returned.
-  * If startTime is not sent, default is endTime - 7days. If endTime is not sent, current time will be returned by default.
-  * startTime set as endTime - 7days by default, endTime set as current time by default.
-  * The length between startTime and endTime cannot exceed 100 days, otherwise an error is reported and no record is returned.
+## Response Example[​](/docs/institutional_loan/transfer#response-example "Direct link to Response Example")
 
+None
 
+## Error Code Description:[​](/docs/institutional_loan/transfer#error-code-description "Direct link to Error Code Description:")
 
-#### Response Example[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#response-example "Direct link to Response Example")
-    
-    
-    {  
-        "total": 2,  
-        "rows": [  
-            {  
-                "liquidationId": 56,  
-                "liquidationTransferRecord": [  
-                    {  
-                        "transferTime": 1765378400855,  
-                        "fromUid": 1000277033525,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "17750.6316"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765378830528,  
-                        "fromUid": 1000277296026,  
-                        "fromAccountType": "SPOT",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "BTC",  
-                                "amount": "0.5"  
-                            }  
-                        ]  
-                    }  
-                ]  
-            },  
-            {  
-                "liquidationId": 55,  
-                "liquidationTransferRecord": [  
-                    {  
-                        "transferTime": 1765374361589,  
-                        "fromUid": 1000277033515,  
-                        "fromAccountType": "CROSS_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765375342535,  
-                        "fromUid": 1000277033518,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765375640990,  
-                        "fromUid": 1000277033525,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    }  
-                ]  
-            }  
-        ]  
-    }  
-      
-    
-
-#### Response detail desc:[​](/docs/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#response-detail-desc "Direct link to Response detail desc:")
-
-Name| Type| Description  
----|---|---  
-liquidationId| Long| Risk unit liquidation unique identifier  
-liquidationTransferRecord| Object Array| List of transfer records related to the liquidationId.  
-→transferTime| Long| Timestamp of the transfer event.  
-→fromUid| String| UID of the account transferring the assets.  
-→fromAccountType| String| SPOT or PORTFOLIO MARGIN or CROSS MARGIN ACCOUNT  
-→toUid| String| UID of the account receiving the assets.  
-→toAccountType| String| SPOT or PORTFOLIO MARGIN or CROSS MARGIN ACCOUNT  
-→status| String| Current status of the transfer.  
-assets| Object Array|   
-  
-→assetName| String| Name of the transferred token.  
-→amount| String| Amount of the token transferred.
+  * -27025 : Please try again until the previous transaction is completed.
+  * -27026 : Receiver UID is not within the Institutional Loan risk unit.
+  * -27027 : The receiver UID margin wallet has not been enabled.
+  * -27028 : Exceed the max transfer out amount, which is min(Risk Unit max transfer out, Collateral Account max transfer out). Risk Unit max transfer out can be checked via “Query Risk Unit Details (USER_DATA)” API endpoint.
+  * -27029 : Institution loan collateral accounts can only transfer assets to other collateral accounts’ margin accounts within the same risk unit.
 
 ---
 
-# 查询机构贷强制平仓划转记录 (USER_DATA)
+# 风险单位资金划转 (TRADE)
 
-#### 接口描述[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/institutional_loan/transfer#接口描述 "接口描述的直接链接")
 
-查询机构贷款风险单位在强制平仓期间的资金划转记录。在风险单位强制平仓期间，抵押账户中的资金可能会划转至放贷账户，用于偿还机构贷款的本金和利息。
+当达到特定的风险单位 LTV 阈值和/或相关产品的转出规则时，风险单位资金划转 API 允许用户执行以下操作：
 
-仅支持放贷账户调用该接口。
+  * 将资产从杠杆抵押账户或放贷账户转至相同现货 UID 下的现货账户， 此接口可支持单个抵押账户或放贷账户调用，也可由母账户调用。
 
-#### HTTP请求[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#http请求 "HTTP请求的直接链接")
 
-GET /sapi/v1/margin/loan-group/force-liquidation-transfer-record
 
-#### 请求权重[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#请求权重 "请求权重的直接链接")
+请注意：要将资金转出机构借贷风险单位，首先要使用机构借贷特定的转账 API 将资金转入现货钱包。然后，使用[万向转账 API](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)将资产转移到风险单元之外的账户。
+
+此外的划转场景，请您使用[万向转账 API操作。](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)
+
+  * 资金在放贷账户与风险单位内其他杠杆抵押账户之间划转，此划转不受转出 LTV 的限制。您可以查看[万向划转 API 文档](https://developers.binance.com/docs/zh-CN/sub_account/asset-management/Universal-Transfer)了解更多详情，此接口需要通过母账户 API Key 操作。
+  * 现货账户与风险单位外的账户之间转账。
+
+
+
+## HTTP请求[​](/docs/zh-CN/institutional_loan/transfer#http请求 "HTTP请求的直接链接")
+
+POST /sapi/v1/margin/loan-group/transfer-out
+
+## 请求权重[​](/docs/zh-CN/institutional_loan/transfer#请求权重 "请求权重的直接链接")
 
 1(IP)
 
-#### 请求参数[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/institutional_loan/transfer#请求参数 "请求参数的直接链接")
 
-Name| Type| 是否必须| 描述  
+名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-startTime| LONG| NO| 开始时间  
-endTime| LONG| NO| 结束时间  
-current| LONG| NO| 当前查询页。 开始值 1. 默认:1  
-size| LONG| NO| 默认:10 最大:100  
-recvWindow| LONG| NO|   
-timestamp| LONG| YES|   
+subEmail| STRING| NO| 抵押子账户或放贷子账户的邮箱地址  
+母账户调用该接口时，subEmail必填，为空则报错；  
+放贷账户或抵押账户调用该接口时，subEmail可为空，默认为其本身subEmail.  
+asset| STRING| YES| 资产名称，如 USDT 或 USDC  
+amount| DECIMAL| YES| 转出金额。 注意 实际可转出金额取值于 min(风险单位最大可转出金额, 抵押账号最大可转出金额)， 两者取小。  
   
-  * 响应返回为降序排列。
-  * 若startTime和endTime没传，则默认返回最近7天数据。
-  * startTime不传，默认endTime-7天；结束时间不传，默认当前时间。
-  * startTime和endTime时间长度不能超过100天，否则报错，无返回记录。
+## 响应示例[​](/docs/zh-CN/institutional_loan/transfer#响应示例 "响应示例的直接链接")
 
+无
 
+## 常见错误代码：[​](/docs/zh-CN/institutional_loan/transfer#常见错误代码 "常见错误代码：的直接链接")
 
-#### 响应示例[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#响应示例 "响应示例的直接链接")
-    
-    
-    {  
-        "total": 2,  
-        "rows": [  
-            {  
-                "liquidationId": 56,  
-                "liquidationTransferRecord": [  
-                    {  
-                        "transferTime": 1765378400855,  
-                        "fromUid": 1000277033525,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "17750.6316"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765378830528,  
-                        "fromUid": 1000277296026,  
-                        "fromAccountType": "SPOT",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "BTC",  
-                                "amount": "0.5"  
-                            }  
-                        ]  
-                    }  
-                ]  
-            },  
-            {  
-                "liquidationId": 55,  
-                "liquidationTransferRecord": [  
-                    {  
-                        "transferTime": 1765374361589,  
-                        "fromUid": 1000277033515,  
-                        "fromAccountType": "CROSS_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765375342535,  
-                        "fromUid": 1000277033518,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    },  
-                    {  
-                        "transferTime": 1765375640990,  
-                        "fromUid": 1000277033525,  
-                        "fromAccountType": "PORTFOLIO_MARGIN",  
-                        "toUid": 1000277033505,  
-                        "toAccountType": "PORTFOLIO_MARGIN",  
-                        "status": "CONFIRM",  
-                        "assets": [  
-                            {  
-                                "assetName": "USDT",  
-                                "amount": "999.999024"  
-                            }  
-                        ]  
-                    }  
-                ]  
-            }  
-        ]  
-    }  
-    
-
-#### 响应信息详解:[​](/docs/zh-CN/institutional_loan/transfer/Query-Institution-Loan-Forced-Liquidation-Transfer-Records#响应信息详解 "响应信息详解:的直接链接")
-
-名称| 类型| 详情  
----|---|---  
-liquidationId| Long| 唯一风险单位强制平仓标识符  
-liquidationTransferRecord| Object Array| 与liquidationId相关的划转记录列表  
-→transferTime| Long| 划转时间戳  
-→fromUid| String| 划出资产的账号UID  
-→fromAccountType| String| 现货账户或统一账户或全仓杠杆账户经典模式  
-→toUid| String| 接收划转资产的账号UID  
-→toAccountType| String| 现货账户或统一账户或全仓杠杆账户经典模式  
-→status| String| 划转状态  
-assets| Object Array|   
-  
-→assetName| String| 划转资产名称  
-→amount| String| 划转资产金额
+  1. -27025 : 前一笔交易还未完成，请稍后再试。
+  2. -27026 : 接收账号不在当前风险单位内。
+  3. -27027 : 接收账号没有开通杠杆账户。
+  4. -27028 : 超出最大可转出金额。实际最大可转出金额取值于 min(风险单位最大可转出金额, 抵押账号最大可转出金额)， 两者取小。请通过接口“查询风险单位详情”获取最大转出金额。
+  5. -27029 : 抵押账户只能划转资金到风险单位内其他杠杆账户对应的抵押账户。

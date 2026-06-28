@@ -2,95 +2,65 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Fee-Data
 api_type: Account
-updated_at: 2026-05-27 18:56:16.547294
+updated_at: 2026-06-28 18:51:25.934764
 ---
 
-# Query Cross Margin Fee Data (USER_DATA)
+# Query Enabled Isolated Margin Account Limit (USER_DATA)
 
-## API Description[​](/docs/margin_trading/account/Query-Cross-Margin-Fee-Data#api-description "Direct link to API Description")
+## API Description[​](/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#api-description "Direct link to API Description")
 
-Get cross margin fee data collection with any vip level or user's current specific data as <https://www.binance.com/en/margin-fee>
+Query enabled isolated margin account limit.
 
-## HTTP Request[​](/docs/margin_trading/account/Query-Cross-Margin-Fee-Data#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#http-request "Direct link to HTTP Request")
 
-GET `/sapi/v1/margin/crossMarginData`
+GET `/sapi/v1/margin/isolated/accountLimit`
 
-## Request Weight[​](/docs/margin_trading/account/Query-Cross-Margin-Fee-Data#request-weight "Direct link to Request Weight")
+## Request Weight[​](/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#request-weight "Direct link to Request Weight")
 
-**1 when coin is specified;(IP)** **5 when the coin parameter is omitted(IP)**
+**1(IP)**
 
-## Request Parameters[​](/docs/margin_trading/account/Query-Cross-Margin-Fee-Data#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-vipLevel| INT| NO| User's current specific margin data will be returned if vipLevel is omitted  
-coin| STRING| NO|   
-recvWindow| LONG| NO| No more than `60000`  
+recvWindow| LONG| NO| No more than 60000  
 timestamp| LONG| YES|   
   
-## Response Example[​](/docs/margin_trading/account/Query-Cross-Margin-Fee-Data#response-example "Direct link to Response Example")
+## Response Example[​](/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#response-example "Direct link to Response Example")
     
     
-    [  
-        {  
-            "vipLevel": 0,  
-            "coin": "BTC",  
-            "transferIn": true,  
-            "borrowable": true,  
-            "dailyInterest": "0.00026125",  
-            "yearlyInterest": "0.0953",  
-            "borrowLimit": "180",  
-            "marginablePairs": [  
-                "BNBBTC",  
-                "TRXBTC",  
-                "ETHBTC",  
-                "BTCUSDT"  
-            ]  
-        }  
-    ]
+    {  
+      "enabledAccount": 5,  
+      "maxAccount": 20  
+    }
 
 ---
 
-# 获取全仓杠杆利率及限额 (USER_DATA)
+# 查询杠杆逐仓账户启用限制 (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/margin_trading/account/Query-Cross-Margin-Fee-Data#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#接口描述 "接口描述的直接链接")
 
-通过VIP等级或用户当前VIP等级获取全仓杠杆利率及限额， 如：<https://www.binance.com/en/margin-fee>
+查询杠杆逐仓账户启用限制。
 
-## HTTP请求[​](/docs/zh-CN/margin_trading/account/Query-Cross-Margin-Fee-Data#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#http请求 "HTTP请求的直接链接")
 
-GET `/sapi/v1/margin/crossMarginData`
+GET `/sapi/v1/margin/isolated/accountLimit`
 
-## 请求权重[​](/docs/zh-CN/margin_trading/account/Query-Cross-Margin-Fee-Data#请求权重 "请求权重的直接链接")
+## 请求权重[​](/docs/zh-CN/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#请求权重 "请求权重的直接链接")
 
-**1 指定币种;(IP)** **5 币种参数缺失(IP)**
+**1(IP)**
 
-## 请求参数[​](/docs/zh-CN/margin_trading/account/Query-Cross-Margin-Fee-Data#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#请求参数 "请求�参数的直接链接")
 
-名称| 类型| 是否必须| 描述  
+名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-vipLevel| INT| NO| 默认为用户当前VIP等级  
-coin| STRING| NO|   
-recvWindow| LONG| NO| 赋值不能大于 `60000`  
+recvWindow| LONG| NO| 不能大于 `60000`  
 timestamp| LONG| YES|   
   
-## 响应示例[​](/docs/zh-CN/margin_trading/account/Query-Cross-Margin-Fee-Data#响应示例 "响应示例的直接链接")
+## 响应示例[​](/docs/zh-CN/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit#响应示例 "响应示例的直接链接")
     
     
-    [  
-        {  
-            "vipLevel": 0,  
-            "coin": "BTC",  
-            "transferIn": true,  
-            "borrowable": true,  
-            "dailyInterest": "0.00026125",  
-            "yearlyInterest": "0.0953",  
-            "borrowLimit": "180",  
-            "marginablePairs": [  
-                "BNBBTC",  
-                "TRXBTC",  
-                "ETHBTC",  
-                "BTCUSDT"  
-            ]  
-        }  
-    ]
+    {  
+      "enabledAccount": 5,  
+      "maxAccount": 20  
+    }

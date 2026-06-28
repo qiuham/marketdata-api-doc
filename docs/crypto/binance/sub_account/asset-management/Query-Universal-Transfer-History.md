@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/asset-management/Query-Universal-Transfer-History
 api_type: Account
-updated_at: 2026-05-27 19:02:38.192912
+updated_at: 2026-06-28 18:57:21.159920
 ---
 
 # Query Universal Transfer History (For Master Account) (USER_DATA)
@@ -69,7 +69,7 @@ timestamp| LONG| YES|
 
 查询子母账户万能划转历史
 
-## HTTP请求[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#http��请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/sub_account/asset-management/Query-Universal-Transfer-History#http请求 "HTTP请求的直接链接")
 
 GET `/sapi/v1/sub-account/universalTransfer`
 

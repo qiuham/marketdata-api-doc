@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-invitee-list
 anchor_id: affiliate-rest-api-get-invitee-list
 api_type: REST
-updated_at: 2026-05-27 19:37:04.141230
+updated_at: 2026-06-28 19:38:49.451931
 ---
 
 # Get invitee list

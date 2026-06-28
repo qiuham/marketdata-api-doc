@@ -2,68 +2,42 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/sub-deposit-record
 api_type: REST
-updated_at: 2026-05-27 19:15:05.825465
+updated_at: 2026-06-28 19:08:42.193474
 ---
 
-# Get Sub Deposit Records (on-chain)
+# Submit Deposit Originator Info
 
-Query subaccount's deposit records by **main** UID's API key.
+Submit the originator's compliance information when a deposit triggers a Travel Rule review. After submission, the vendor completes the review and returns the resulting status.
 
-tip
+info
 
-`endTime` \- `startTime` should be less than 30 days. Queries for the last 30 days worth of records by default.
+Call this endpoint when a deposit record hits the Travel Rule compliance policy and the current `travel_rule_status` is `1` (pending counterparty info submission).
 
 ### HTTP Request
 
-GET`/v5/asset/deposit/query-sub-member-record`
+POST`/v5/asset/travel-rule/deposit/submit`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| false| string| Internal ID: Can be used to uniquely identify and filter the deposit. When combined with other parameters, this field takes the highest priority  
-txID| false| string| Transaction ID: Please note that data generated before Jan 1, 2024 cannot be queried using txID  
-subMemberId| **true**|  string| Sub UID  
-coin| false| string| Coin, uppercase only  
-startTime| false| integer| The start timestamp (ms) _Note: the query logic is actually effective based on**second** level_  
-endTime| false| integer| The end timestamp (ms) _Note: the query logic is actually effective based on**second** level_  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+depositId| **true**|  integer| Deposit record ID obtained from the deposit query API  
+subAccountId| false| integer| Broker scenario: target sub-account UID. Pass `0` or omit to use the current account  
+questionnaire| **true**|  string| Travel Rule questionnaire info as a JSON string. Max 16384 bytes. Structure varies by compliance zone. See [Questionnaire](/docs/v5/asset/withdraw/questionnaire)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-rows| array| Object  
-> id| string| Unique ID  
-> coin| string| Coin  
-> chain| string| Chain  
-> amount| string| Amount  
-> txID| string| Transaction ID  
-> [status](/docs/v5/enum#depositstatus)| integer| Deposit status  
-> toAddress| string| Deposit target address  
-> tag| string| Tag of deposit target address  
-> depositFee| string| Deposit fee  
-> successAt| string| Deposit's success time  
-> confirmations| string| Number of confirmation blocks  
-> txIndex| string| Transaction sequence number  
-> blockHash| string| Hash number on the chain  
-> batchReleaseLimit| string| The deposit limit for this coin in this chain. `"-1"` means no limit  
-> depositType| string| The deposit type. `0`: normal deposit, `10`: the deposit reaches daily deposit limit, `20`: abnormal deposit  
-> fromAddress| string| From address of deposit, only shown when the deposit comes from on-chain and from address is unique, otherwise gives `""`  
-> taxDepositRecordsId| string| This field is used for tax purposes by Bybit EU (Austria) users, declare tax id  
-> taxStatus| integer| This field is used for tax purposes by Bybit EU (Austria) users 
+travelRuleStatus| integer| Travel Rule review status 
 
-  * 0: No reporting required
-  * 1: Reporting pending
-  * 2: Reporting completed
+  * `0`: Approved — review passed, proceed with subsequent flow
+  * `1`: CollectInfo — counterparty info required, re-submit questionnaire
+  * `2`: Pending — under review, poll the deposit query endpoint
+  * `3`: Rejected — rejected or failed (including cancelled)
 
   
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/asset/sub-deposit-record)
-
-* * *
-
+  
 ### Request Example
 
   * HTTP
@@ -73,12 +47,19 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/asset/deposit/query-sub-member-record?coin=USDT&limit=1&subMemberId=592334 HTTP/1.1  
+    POST /v5/asset/travel-rule/deposit/submit HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672192441294  
+    X-BAPI-TIMESTAMP: 1672197227732  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "deposit_id": 1234567890,  
+        "sub_account_id": 0,  
+        "questionnaire": "{\"walletType\":0,\"vaspCode\":\"BINANCEUS_VASP\",\"legalType\":\"individual\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"transactionPurpose\":\"Personal investment in long-term holdings\"}"  
+    }  
     
     
     
@@ -88,10 +69,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_deposit_records(  
-        coin="USDT",  
-        limit=1,  
-        subMemberId=592334,  
+    print(session.submit_deposit_originator_info(  
+        deposit_id=1234567890,  
+        sub_account_id=0,  
+        questionnaire='{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',  
     ))  
     
     
@@ -105,10 +86,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getSubAccountDepositRecords({  
-        coin: 'USDT',  
-        limit: 1,  
-        subMemberId: '592334',  
+      .submitDepositOriginatorInfo({  
+        deposit_id: 1234567890,  
+        sub_account_id: 0,  
+        questionnaire: '{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -123,78 +104,49 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "rows": [],  
-            "nextPageCursor": ""  
+            "travel_rule_status": 2  
         },  
         "retExtInfo": {},  
-        "time": 1672192441742  
+        "time": 1672197228408  
     }
 
 ---
 
-# 查詢子帳號的充值紀錄 (鏈上)
+# 提交入金發起人信息
 
-僅能通過**主帳號** 的API key來查詢子帳號的充值紀錄
+當入金記錄觸發 Travel Rule 審核時，由用戶提交發起人（Originator）合規信息，供應商完成審核後返回結果狀態。
 
-提示
+信息
 
-  * `endTime` \- `startTime` 需要小於等於30天. 默認查詢最近30天的紀錄
-
-
+當入金記錄命中合規策略且當前 `travel_rule_status` 為 `1`（待提交對手方信息）時調用本接口。
 
 ### HTTP 請求
 
-GET`/v5/asset/deposit/query-sub-member-record`
+POST`/v5/asset/travel-rule/deposit/submit`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-id| false| string| 內部ID: 可用於唯一篩選入金紀錄. 當跟其他參數組合時, 具有最高優先級  
-txID| false| string| 鏈上交易ID: 請注意2024年1月1日之前的入金紀錄, 無法通過txID來篩選  
-subMemberId| **true**|  string| 子帳號  
-coin| false| string| 幣種  
-startTime| false| integer| 開始時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_  
-endTime| false| integer| 結束時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+depositId| **true**|  integer| 入金記錄 ID，從入金查詢接口獲得，必須大於 `0`  
+subAccountId| false| integer| Broker 場景：目標子帳號 UID。傳 `0` 或不傳表示當前帳號本人  
+questionnaire| **true**|  string| Travel Rule 問卷信息，JSON 字符串，最大 16384 字節。不同合規區結構不同，詳見[問卷說明](/docs/zh-TW/v5/asset/withdraw/questionnaire)  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-rows| array| Object  
-> id| string| 內部ID, 唯一鍵  
-> coin| string| 幣種  
-> chain| string| 鏈名  
-> amount| string| 充值金額  
-> txID| string| 交易Id. 充值失敗或取消充值時為空  
-> [status](/docs/zh-TW/v5/enum#depositstatus)| integer| 充值狀態  
-> toAddress| string| 充值的目標地址  
-> tag| string| 充值目標地址的tag  
-> depositFee| string| 充值手續費  
-> successAt| string| 最後更新時間  
-> confirmations| string| 确认区块的数量  
-> txIndex| string| 交易序列号  
-> blockHash| string| 鏈上的哈希數  
-> batchReleaseLimit| string| 當前幣鏈每日充值限額. `"-1"`表示無限制  
-> depositType| string| 入金類型. `0`: 正常充值, `10`: 充值觸發每日限額, `20`: 異常充值  
-> fromAddress| string| 入金來源地址, 僅當入金來自鏈上且來源地址唯一時返回地址, 其餘則返回`""`  
-> taxDepositRecordsId| string| Bybit EU（奧地利）用戶用於稅務目的, 保稅記錄id  
-> taxStatus| integer| Bybit EU（奧地利）用戶用於稅務目的 
+travelRuleStatus| integer| Travel Rule 審核狀態 
 
-  * 0: No reporting required
-  * 1: Reporting pending
-  * 2: Reporting completed
+  * `0`: Approved — 已通過，可繼續後續流程
+  * `1`: CollectInfo — 需補充對手方信息，請重新提交問卷
+  * `2`: Pending — 審核中，請輪詢入金查詢接口
+  * `3`: Rejected — 已拒絕或失敗（含取消）
 
   
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/asset/sub-deposit-record)
-
-* * *
-
+  
 ### 請求示例
 
   * HTTP
@@ -204,12 +156,19 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/asset/deposit/query-sub-member-record?coin=USDT&limit=1&subMemberId=592334 HTTP/1.1  
+    POST /v5/asset/travel-rule/deposit/submit HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672192441294  
+    X-BAPI-TIMESTAMP: 1672197227732  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "depositId": 1234567890,  
+        "subAccountId": 0,  
+        "questionnaire": "{\"walletType\":0,\"vaspCode\":\"BINANCEUS_VASP\",\"legalType\":\"individual\",\"firstName\":\"John\",\"lastName\":\"Smith\",\"transactionPurpose\":\"Personal investment in long-term holdings\"}"  
+    }  
     
     
     
@@ -219,10 +178,10 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_deposit_records(  
-        coin="USDT",  
-        limit=1,  
-        subMemberId=592334,  
+    print(session.submit_deposit_originator_info(  
+        depositId=1234567890,  
+        subAccountId=0,  
+        questionnaire='{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',  
     ))  
     
     
@@ -236,10 +195,10 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-      .getSubAccountDepositRecords({  
-        coin: 'USDT',  
-        limit: 1,  
-        subMemberId: '592334',  
+      .submitDepositOriginatorInfo({  
+        depositId: 1234567890,  
+        subAccountId: 0,  
+        questionnaire: '{"walletType":0,"vaspCode":"BINANCEUS_VASP","legalType":"individual","firstName":"John","lastName":"Smith","transactionPurpose":"Personal investment in long-term holdings"}',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -254,11 +213,10 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "rows": [],  
-            "nextPageCursor": ""  
+            "travelRuleStatus": 2  
         },  
         "retExtInfo": {},  
-        "time": 1672192441742  
+        "time": 1672197228408  
     }

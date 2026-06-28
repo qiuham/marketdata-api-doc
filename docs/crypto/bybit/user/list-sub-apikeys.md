@@ -2,66 +2,79 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/list-sub-apikeys
 api_type: REST
-updated_at: 2026-05-27 19:22:58.662477
+updated_at: 2026-06-28 19:15:30.531534
 ---
 
-# Get Sub Account All API Keys
+# Modify Sub API Key
 
-Query all api keys information of a sub UID.
+Modify the settings of sub api key. Use the sub account api key pending to be modified to call the endpoint or use master account api key to manage its sub account api key.
 
 tip
 
-  * Any permission can access this endpoint
-  * Only master account can call this endpoint
+The API key must have one of the below permissions in order to call this endpoint
+
+  * sub API key: "Account Transfer", "Sub Member Transfer"
+  * master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
 
 
 
 ### HTTP Request
 
-GET`/v5/user/sub-apikeys`
+POST`/v5/user/update-sub-api`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subMemberId| **true**|  string| Sub UID  
-limit| false| integer| Limit for data size per page. [`1`, `20`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+apikey| false| string| Sub account api key 
+
+  * You must pass this param when you use master account manage sub account api key settings
+  * If you use corresponding sub uid api key call this endpoint, `apikey` param cannot be passed, otherwise throwing an error
+
+  
+readOnly| false| integer| `0` (default): Read and Write. `1`: Read only  
+ips| false| string| Set the IP bind. example: `"192.168.0.1,192.168.0.2"`**note:**
+
+  * don't pass ips or pass with `"*"` means no bind
+  * No ip bound api key will be **invalid after 90 days**
+  * api key will be invalid after **7 days** once the account password is changed
+
+  
+permissions| false| Object| Tick the types of permission. Don't send this param if you don't want to change the permission  
+> ContractTrade| false| array| Contract Trade. `["Order","Position"]`  
+> Spot| false| array| Spot Trade. `["SpotTrade"]`  
+> Wallet| false| array| Wallet. `["AccountTransfer", "SubMemberTransferList"]`  
+_Note: fund custodial account is not supported_  
+> Options| false| array| USDC Contract. `["OptionsTrade"]`  
+> Derivatives| false| array| `["DerivativesTrade"]`  
+> Exchange| false| array| Convert. `["ExchangeHistory"]`  
+> Earn| false| array| Earn product. `["Earn"]`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Object  
-> id| string| Unique ID. Internal use  
-> ips| array<string>| IP bound  
-> apiKey| string| Api key  
-> note| string| The remark  
-> status| integer| `1`: permanent, `2`: expired, `3`: within the validity period, `4`: expires soon (less than 7 days)  
-> expiredAt| datetime| The expiry day of the api key. Only for those api key with no IP bound or the password has been changed  
-> createdAt| datetime| The create day of the api key  
-> type| integer| The type of api key. `1`: personal, `2`: connected to the third-party app  
-> permissions| Object| The types of permission  
->> ContractTrade| array| Permission of contract trade `Order`, `Position`  
->> Spot| array| Permission of spot `SpotTrade`  
->> Wallet| array| Permission of wallet `AccountTransfer`, `SubMemberTransferList`  
->> Options| array| Permission of USDC Contract. It supports trade option and USDC perpetual. `OptionsTrade`  
->> Derivatives| array| `DerivativesTrade`  
->> Exchange| array| Permission of convert `ExchangeHistory`  
->> Earn| array| Permission of earn product `Earn`  
->> Affiliate| array| Not applicable to sub account, always `[]`  
->> BlockTrade| array| Not applicable to subaccount, always `[]`  
->> NFT| array| **Deprecated** , always `[]`  
->> CopyTrading| array| **Deprecated** , always `[]`  
-> secret| string| Always `"******"`  
-> readOnly| boolean| `true`, `false`  
-> deadlineDay| integer| The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed  
-> flag| string| Api key type  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/user/list-sub-apikeys)
-
-* * *
-
+id| string| Unique id. Internal used  
+note| string| The remark  
+apiKey| string| Api key  
+readOnly| integer| `0`: Read and Write. `1`: Read only  
+secret| string| Always `""`  
+permissions| Object| The types of permission  
+> ContractTrade| array| Permisson of contract trade  
+> Spot| array| Permisson of spot  
+> Wallet| array| Permisson of wallet  
+> Options| array| Permission of USDC Contract. It supports trade option and usdc perpetual.  
+> Derivatives| array| Permission of Unified account  
+> Exchange| array| Permission of convert  
+> Earn| array| Permission of Earn  
+> BlockTrade| array| Not applicable to sub account, always `[]`  
+> Affiliate| array| Not applicable to sub account, always `[]`  
+> FiatP2P| array| Not applicable to sub account, always `[]`  
+> FiatConvertBroker| array| Not applicable to sub account, always `[]`  
+> NFT| array| **Deprecated** , always `[]`  
+> CopyTrading| array| **Deprecated** , always `[]`  
+ips| array| IP bound  
+  
 ### Request Example
 
   * HTTP
@@ -71,13 +84,32 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/user/sub-apikeys?subMemberId=100400345 HTTP/1.1  
+    POST /v5/user/update-sub-api HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1699515251088  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676431795752  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+      
+    {  
+        "readOnly": 0,  
+        "ips": "*",  
+        "permissions": {  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            }  
+    }  
     
     
     
@@ -87,9 +119,24 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_all_sub_api_keys(  
-        subMemberId="100400345",  
-        limit=20  
+    print(session.modify_sub_api_key(  
+        readOnly=0,  
+        ips="*",  
+        permissions={  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "Derivatives": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            }  
     ))  
     
     
@@ -103,9 +150,20 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getSubAccountAllApiKeys({  
-        subMemberId: 'subUID',  
-        limit: 20,  
+      .updateSubApiKey({  
+        readOnly: 0,  
+        ips: ['*'],  
+        permissions: {  
+          ContractTrade: [],  
+          Spot: ['SpotTrade'],  
+          Wallet: ['AccountTransfer'],  
+          Options: [],  
+          Derivatives: [],  
+          CopyTrading: [],  
+          BlockTrade: [],  
+          Exchange: [],  
+          NFT: [],  
+        },  
       })  
       .then((response) => {  
         console.log(response);  
@@ -122,116 +180,105 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "result": [  
-                {  
-                    "id": "24828209",  
-                    "ips": [  
-                        "*"  
-                    ],  
-                    "apiKey": "XXXXXX",  
-                    "note": "UTA",  
-                    "status": 3,  
-                    "expiredAt": "2023-12-01T02:36:06Z",  
-                    "createdAt": "2023-08-25T06:42:39Z",  
-                    "type": 1,  
-                    "permissions": {  
-                        "ContractTrade": [  
-                            "Order",  
-                            "Position"  
-                        ],  
-                        "Spot": [  
-                            "SpotTrade"  
-                        ],  
-                        "Wallet": [  
-                            "AccountTransfer",  
-                            "SubMemberTransferList"  
-                        ],  
-                        "Options": [  
-                            "OptionsTrade"  
-                        ],  
-                        "Derivatives": [  
-                            "DerivativesTrade"  
-                        ],  
-                        "CopyTrading": [],  
-                        "BlockTrade": [],  
-                        "Exchange": [  
-                            "ExchangeHistory"  
-                        ],  
-                        "NFT": [],  
-                        "Affiliate": [],  
-                        "Earn": []  
-                    },  
-                    "secret": "******",  
-                    "readOnly": false,  
-                    "deadlineDay": 21,  
-                    "flag": "hmac"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "id": "16651472",  
+            "note": "testxxx",  
+            "apiKey": "xxxxxx",  
+            "readOnly": 0,  
+            "secret": "",  
+            "permissions": {  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "Derivatives": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            },  
+            "ips": [  
+                "*"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1699515251698  
+        "time": 1676431796263  
     }
 
 ---
 
-# 查詢子帳戶的所有API Key信息
+# 修改子帳戶的API Key設置
 
-查詢某個子帳戶下所有的api key
+修改子帳戶API key的設置, 支持母帳戶管理子帳戶key的設置, 或者子帳戶key直接修改本身。
 
 提示
 
-  * 任意權限可以訪問該接口
-  * 僅支持母帳戶調用
+在調用接口時，使用的API key至少需要擁有以下其中一種權限
+
+  * 子API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）"
+  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 
 
 
 ### HTTP 請求
 
-GET`/v5/user/sub-apikeys`
+POST`/v5/user/update-sub-api`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-subMemberId| **true**|  string| 子帳戶UID  
-limit| false| integer| 每頁數量限制. [`1`, `20`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
+apikey| false| string| 子帳戶的api key 
+
+  * 當您要使用母帳戶來管理子帳戶的key時, 該字段必傳
+  * 如果您是用對應的子帳戶api key修改本身, 該字段請不要傳入, 否則報錯
+
+  
+readOnly| false| integer| `0` (默認)：可讀可寫. `1`：只讀  
+ips| false| string| 綁定IP. 比如: "192.168.0.1,192.168.0.2"**注意:**
+
+  * 不傳參數ips 或者入参值為`"*"`意味著不綁定
+  * 不綁定IP的api key將有**90天的有效期限**
+  * 一旦帳戶密碼做了修改，帳戶下的非永久api key將在**7天後失效**
+
+  
+permissions| false| Object| 勾選api key權限. 如果不修改權限, 則不要傳入該參數  
+> ContractTrade| false| array| 合約. ["Order","Position"]  
+> Spot| false| array| 現貨. ["SpotTrade"]  
+> Wallet| false| array| 錢包. ["AccountTransfer","SubMemberTransferList"]  
+> Options| false| array| USDC合約和期權. ["OptionsTrade"]  
+> Derivatives| false| array| 統一帳戶權限. ["DerivativesTrade"]  
+> Exchange| false| array| 兌換. ["ExchangeHistory"]  
+> Earn| false| array| 理財產品的權限 ["Earn"]  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| Object  
-> id| string| 唯一id. 內部使用  
-> ips| array<string>| 綁定的IP, 未綁定IP則是`*`  
-> apiKey| string| Api key  
-> note| string| 備註  
-> status| integer| 當前狀態 `1`: 永久, `2`: 已過期, `3`: 仍在有效期內, `4`: 即將過期 (少於7天)  
-> expiredAt| datetime| API key的過期日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
-> createdAt| datetime| API key的創建日  
-> type| integer| Api key類型. `1`：個人使用, `2`：綁定到第三方應用  
-> permissions| Object| 權限類型  
->> ContractTrade| array| 合約交易的權限 `Order`, `Position`  
->> Spot| array| 現貨交易的權限 `SpotTrade`  
->> Wallet| array| 錢包的權限 `AccountTransfer`, `SubMemberTransferList`  
->> Options| array| USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 `OptionsTrade`  
->> Derivatives| array| 統一交易帳戶默認賦予的權限  
->> Exchange| array| 兌換的權限 `ExchangeHistory`  
->> Earn| array| 理財產品的權限 `Earn`  
->> Affiliate| array| 子帳戶暫不支持, 總是 `[]`  
->> BlockTrade| array| 子帳戶暫不支持，總是[]  
->> NFT| array| **廢棄** , 總是[]  
->> CopyTrading| array| **廢棄** , 總是[]  
-> secret| string| 總是`"******"`  
-> readOnly| boolean| `true`：可讀可寫. `false`：只讀  
-> deadlineDay| integer| API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
-> flag| string| API Key的類型  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/user/list-sub-apikeys)
-
-* * *
-
+id| string| 唯一id. 內部使用  
+note| string| 備註  
+apiKey| string| api key  
+readOnly| integer| `0`：可讀可寫. `1`：只讀  
+secret| string| 總是 `""`  
+permissions| Object| 權限類型  
+> ContractTrade| array| 合約交易的權限  
+> Spot| array| 現貨交易的權限  
+> Wallet| array| 錢包的權限  
+> Options| array| USDC合約和期權  
+> Derivatives| array| 統一帳戶權限  
+> Exchange| array| 兌換的權限  
+> Earn| array| 理財產品的權限 ["Earn"]  
+> BlockTrade| array| 子帳戶暫不支持，總是[]  
+> FiatP2P| array| 子帳戶暫不支持，總是[]  
+> FiatConvertBroker| array| 子帳戶暫不支持，總是[]  
+> Affiliate| array| 子帳戶暫不支持，總是[]  
+> NFT| array| **廢棄** , 總是[]  
+> CopyTrading| array| **廢棄** , 總是[]  
+ips| array| IP綁定  
+  
 ### 請求示例
 
   * HTTP
@@ -241,17 +288,60 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/user/sub-apikeys?subMemberId=100400345 HTTP/1.1  
+    POST /v5/user/update-sub-api HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1699515251088  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676431795752  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    
-    
-    
       
+    {  
+        "readOnly": 0,  
+        "ips": "*",  
+        "permissions": {  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            }  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.modify_sub_api_key(  
+        readOnly=0,  
+        ips=["*"],  
+        permissions={  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "Derivatives": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            }  
+    ))  
     
     
     
@@ -264,9 +354,20 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-      .getSubAccountAllApiKeys({  
-        subMemberId: 'subUID',  
-        limit: 20,  
+      .updateSubApiKey({  
+        readOnly: 0,  
+        ips: ['*'],  
+        permissions: {  
+          ContractTrade: [],  
+          Spot: ['SpotTrade'],  
+          Wallet: ['AccountTransfer'],  
+          Options: [],  
+          Derivatives: [],  
+          CopyTrading: [],  
+          BlockTrade: [],  
+          Exchange: [],  
+          NFT: [],  
+        },  
       })  
       .then((response) => {  
         console.log(response);  
@@ -283,52 +384,30 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "result": [  
-                {  
-                    "id": "24828209",  
-                    "ips": [  
-                        "*"  
-                    ],  
-                    "apiKey": "XXXXXX",  
-                    "note": "UTA",  
-                    "status": 3,  
-                    "expiredAt": "2023-12-01T02:36:06Z",  
-                    "createdAt": "2023-08-25T06:42:39Z",  
-                    "type": 1,  
-                    "permissions": {  
-                        "ContractTrade": [  
-                            "Order",  
-                            "Position"  
-                        ],  
-                        "Spot": [  
-                            "SpotTrade"  
-                        ],  
-                        "Wallet": [  
-                            "AccountTransfer",  
-                            "SubMemberTransferList"  
-                        ],  
-                        "Options": [  
-                            "OptionsTrade"  
-                        ],  
-                        "Derivatives": [  
-                            "DerivativesTrade"  
-                        ],  
-                        "CopyTrading": [],  
-                        "BlockTrade": [],  
-                        "Exchange": [  
-                            "ExchangeHistory"  
-                        ],  
-                        "NFT": [],  
-                        "Affiliate": []  
-                    },  
-                    "secret": "******",  
-                    "readOnly": false,  
-                    "deadlineDay": 21,  
-                    "flag": "hmac"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "id": "16651472",  
+            "note": "testxxx",  
+            "apiKey": "xxxxxx",  
+            "readOnly": 0,  
+            "secret": "",  
+            "permissions": {  
+                "ContractTrade": [],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
+                "Wallet": [  
+                    "AccountTransfer"  
+                ],  
+                "Options": [],  
+                "Derivatives": [],  
+                "CopyTrading": [],  
+                "BlockTrade": [],  
+                "Exchange": [],  
+                "NFT": []  
+            },  
+            "ips": [  
+                "*"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1699515251698  
+        "time": 1676431796263  
     }

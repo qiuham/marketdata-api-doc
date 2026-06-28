@@ -2,155 +2,159 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/discount-buy-offer
 api_type: WebSocket
-updated_at: 2026-05-27 19:17:11.705285
+updated_at: 2026-06-28 19:10:57.212934
 ---
 
-# Double Win Offers
-
-### WebSocket public URL
-
-  * **Mainnet:**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **Testnet:**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# Get History APR
 
 info
 
-  * Subscribing to this topic does not require authentication.
-  * This topic pushes **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Custom Product Quote](/docs/v5/finance/advanced-earn/double-win/leverage) to obtain a quote on demand.
-  * **Recommended usage** : call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) to refresh before re-subscribing.
+No authentication required
 
+### HTTP Request
 
+GET`/v5/earn/token/history-apr`
 
-### Topic: `earn.doublewin.offers`
+### Request Parameters
 
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
+range| **true**|  integer| Time range: `1` = 7 days, `2` = 30 days, `3` = 180 days  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name. `earn.doublewin.offers`  
-data| array| Object  
-> p| string| Product ID  
-> c| string| Current index price of the underlying asset  
-> l| string| Current maximum leverage multiplier  
-> m| string| Maximum single order amount at current quote  
-> e| string| Quote expiry time, Unix timestamp in ms  
+list| array| Historical APR list  
+> timestamp| string| Date, unix timestamp in seconds  
+> aprE8| string| APR value in e8 precision. Divide by 10^8 to get the actual rate  
   
-### Push Example
+* * *
+
+### Request Example
+    
+    
+    GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1  
+    Host: api.bybit.com  
+    
+
+### Response Example
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "list": [  
+                {  
+                    "timestamp": "1774569600",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774656000",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774742400",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774828800",  
+                    "aprE8": "52750000"  
+                },  
+                {  
+                    "timestamp": "1774915200",  
+                    "aprE8": "60000000"  
+                },  
+                {  
+                    "timestamp": "1775001600",  
+                    "aprE8": "108070000"  
+                },  
+                {  
+                    "timestamp": "1775088000",  
+                    "aprE8": "96290000"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1775180579207  
     }
 
 ---
 
-# 漲跌雙贏報價
-
-### WebSocket 公共頻道網址
-
-  * **主網：**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **測試網：**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# 查詢歷史年化利率
 
 信息
 
-  * 訂閱此頻道無需身份驗證。
-  * 本頻道**僅推送固定區間產品** （`isRfqProduct=false`）。RFQ 產品需調用[查詢自選區間產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/leverage)進行主動詢價。
-  * **推薦使用方式** ：初始化時調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)獲取當前報價，再訂閱本頻道保持即時更新。WebSocket 斷線後，請先調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)重新整理，再重新訂閱。
+無需身份驗證
 
+### HTTP 請求
 
+GET`/v5/earn/token/history-apr`
 
-### 頻道：`earn.doublewin.offers`
+### 請求參數
 
+參數| 必填| 類型| 說明  
+---|---|---|---  
+coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
+range| **true**|  integer| 時間範圍：`1` = 7 天，`2` = 30 天，`3` = 180 天  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| 頻道名稱，`earn.doublewin.offers`  
-data| array| 列表  
-> p| string| 產品 ID  
-> c| string| 標的資產當前指數價格  
-> l| string| 當前最大槓桿倍數  
-> m| string| 當前報價下的最大單筆下單金額  
-> e| string| 報價到期時間，毫秒級 Unix 時間戳  
+list| array| 歷史年化利率列表  
+> timestamp| string| 日期，秒級 Unix 時間戳  
+> aprE8| string| e8 精度的年化利率。除以 10^8 可得實際利率  
   
-### 推送示例
+* * *
+
+### 請求示例
+    
+    
+    GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1  
+    Host: api.bybit.com  
+    
+
+### 響應示例
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "list": [  
+                {  
+                    "timestamp": "1774569600",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774656000",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774742400",  
+                    "aprE8": "2000000"  
+                },  
+                {  
+                    "timestamp": "1774828800",  
+                    "aprE8": "52750000"  
+                },  
+                {  
+                    "timestamp": "1774915200",  
+                    "aprE8": "60000000"  
+                },  
+                {  
+                    "timestamp": "1775001600",  
+                    "aprE8": "108070000"  
+                },  
+                {  
+                    "timestamp": "1775088000",  
+                    "aprE8": "96290000"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1775180579207  
     }

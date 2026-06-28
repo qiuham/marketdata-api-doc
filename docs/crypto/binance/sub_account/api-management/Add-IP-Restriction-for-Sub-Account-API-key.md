@@ -2,89 +2,185 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/api-management/Add-IP-Restriction-for-Sub-Account-API-key
 api_type: Account
-updated_at: 2026-05-27 19:02:08.261555
+updated_at: 2026-06-28 18:56:55.983165
 ---
 
-# Delete IP List For a Sub-account API Key (For Master Account) (USER_DATA)
+# Get Detail on Sub-account's Futures Account V2 (For Master Account) (USER_DATA)
 
-## API Description[​](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#api-description "Direct link to API Description")
+## API Description[​](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#api-description "Direct link to API Description")
 
-Delete IP List For a Sub-account API Key
+Get Detail on Sub-account's Futures Account
 
-## HTTP Request[​](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#http-request "Direct link to HTTP Request")
+## HTTP Request[​](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#http-request "Direct link to HTTP Request")
 
-DELETE `/sapi/v1/sub-account/subAccountApi/ipRestriction/ipList`
+GET `/sapi/v2/sub-account/futures/account`
 
-## Request Weight(UID)[​](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#request-weightuid "Direct link to Request Weight\(UID\)")
+## Request Weight(IP)[​](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#request-weightip "Direct link to Request Weight\(IP\)")
 
-**3000**
+**1**
 
-## Request Parameters[​](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#request-parameters "Direct link to Request Parameters")
+## Request Parameters[​](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#request-parameters "Direct link to Request Parameters")
 
 Name| Type| Mandatory| Description  
 ---|---|---|---  
-email| STRING| YES| [Sub-account email](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#email-address)  
-subAccountApiKey| STRING| YES|   
-ipAddress| STRING| YES| IPs to be deleted. Can be added in batches, separated by commas  
+email| STRING| YES| [Sub-account email](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#email-address)  
+futuresType| INT| YES| 1:USDT Margined Futures, 2:COIN Margined Futures  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * You need to enable Enable Spot & Margin Trading option for the api key which requests this endpoint
-> 
+## Response Example[​](/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#response-example "Direct link to Response Example")
 
-
-## Response Example[​](/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#response-example "Direct link to Response Example")
+> USDT Margined Futures：
     
     
     {  
-      "ipRestrict": "true",  
-      "ipList": [  
-        "69.210.67.14",  
-        "8.34.21.10"  
-      ],  
-      "updateTime": 1636371437000,  
-      "apiKey": "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"  
+    	"futureAccountResp": {  
+    	"email": "abc@test.com",  
+    	"assets":[  
+    		{  
+    		  	"asset": "USDT",  
+    		   	"initialMargin": "0.00000000",  
+    		   	"maintenanceMargin": "0.00000000",  
+    		   	"marginBalance": "0.88308000",  
+    		   	"maxWithdrawAmount": "0.88308000",  
+    		   	"openOrderInitialMargin": "0.00000000",  
+    		   	"positionInitialMargin": "0.00000000",  
+    		   	"unrealizedProfit": "0.00000000",  
+    		   	"walletBalance": "0.88308000"  
+    		 }  
+    	],  
+    	"canDeposit": true,  
+    	"canTrade": true,  
+    	"canWithdraw": true,  
+    	"feeTier": 2,  
+    	"maxWithdrawAmount": "0.88308000",  
+    	"totalInitialMargin": "0.00000000",  
+    	"totalMaintenanceMargin": "0.00000000",  
+    	"totalMarginBalance": "0.88308000",  
+    	"totalOpenOrderInitialMargin": "0.00000000",  
+    	"totalPositionInitialMargin": "0.00000000",  
+    	"totalUnrealizedProfit": "0.00000000",  
+    	"totalWalletBalance": "0.88308000",  
+    	"updateTime": 1576756674610  
+     }  
+    }  
+    
+
+> COIN Margined Futures：
+    
+    
+    {  
+    	"deliveryAccountResp": {  
+            "email": "abc@test.com",  
+            "assets":[  
+                {  
+                    "asset": "BTC",  
+                    "initialMargin": "0.00000000",  
+                    "maintenanceMargin": "0.00000000",  
+                    "marginBalance": "0.88308000",  
+                    "maxWithdrawAmount": "0.88308000",  
+                    "openOrderInitialMargin": "0.00000000",  
+                    "positionInitialMargin": "0.00000000",  
+                    "unrealizedProfit": "0.00000000",  
+                    "walletBalance": "0.88308000"  
+                 }  
+            ],  
+            "canDeposit": true,  
+            "canTrade": true,  
+            "canWithdraw": true,  
+            "feeTier": 2,  
+            "updateTime": 1598959682001  
+        }  
     }
 
 ---
 
-# 删除子账户API Key IP白名单 (适用母账户) (USER_DATA)
+# 查询子账户Futures账户详情V2 (适用主账户) (USER_DATA)
 
-## 接口描述[​](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#接口描述 "接口描述的直接链接")
+## 接口描述[​](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#接口描述 "接口描述的直接链接")
 
-删除子账户API Key IP白名单
+查询子账户Futures账户详情
 
-## HTTP请求[​](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#http请求 "HTTP请求的直接链接")
+## HTTP请求[​](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#http请求 "HTTP请求的直接链接")
 
-DELETE `/sapi/v1/sub-account/subAccountApi/ipRestriction/ipList`
+GET `/sapi/v2/sub-account/futures/account`
 
-## 请求权重(UID)[​](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#请求权重uid "请求权重\(UID\)的直接链接")
+## 请求权重(IP)[​](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#请求权重ip "请求权重\(IP\)的直接链接")
 
-**3000**
+**1**
 
-## 请求参数[​](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#请求参数 "请求参数的直接链接")
+## 请求参数[​](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#请求参数 "请求参数的直接链接")
 
 名称| 类型| 是否必需| 描述  
 ---|---|---|---  
-email| STRING| YES| [Sub-account email](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#email-address)  
-subAccountApiKey| STRING| YES|   
-ipAddress| STRING| YES| 想删除的 IP。可批量删除，用逗号分隔  
+email| STRING| YES| 子账户邮箱 [备注](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#request-email-address)  
+futuresType| INT| YES| 1:USDT Margined Futures, 2:COIN Margined Futures  
 recvWindow| LONG| NO|   
 timestamp| LONG| YES|   
   
->   * 调用此端口前需要在api管理页开启允许现货及杠杆交易选项
-> 
+## 响应示例[​](/docs/zh-CN/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account-V2#响应示例 "响应示例的直接链接")
 
-
-## 响应示例[​](/docs/zh-CN/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key#响应示例 "响应示例的直接链接")
+> USDT Margined Futures：
     
     
     {  
-      "ipRestrict": "true",  
-      "ipList": [  
-        "69.210.67.14",  
-        "8.34.21.10"  
-      ],  
-      "updateTime": 1636371437000,  
-      "apiKey": "k5V49ldtn4tszj6W3hystegdfvmGbqDzjmkCtpTvC0G74WhK7yd4rfCTo4lShf"  
+    	"futureAccountResp": {  
+    	"email": "abc@test.com",  
+    	"assets":[  
+    		{  
+    		  	"asset": "USDT",  
+    		   	"initialMargin": "0.00000000",  
+    		   	"maintenanceMargin": "0.00000000",  
+    		   	"marginBalance": "0.88308000",  
+    		   	"maxWithdrawAmount": "0.88308000",  
+    		   	"openOrderInitialMargin": "0.00000000",  
+    		   	"positionInitialMargin": "0.00000000",  
+    		   	"unrealizedProfit": "0.00000000",  
+    		   	"walletBalance": "0.88308000"  
+    		 }  
+    	],  
+    	"canDeposit": true,  
+    	"canTrade": true,  
+    	"canWithdraw": true,  
+    	"feeTier": 2,  
+    	"maxWithdrawAmount": "0.88308000",  
+    	"totalInitialMargin": "0.00000000",  
+    	"totalMaintenanceMargin": "0.00000000",  
+    	"totalMarginBalance": "0.88308000",  
+    	"totalOpenOrderInitialMargin": "0.00000000",  
+    	"totalPositionInitialMargin": "0.00000000",  
+    	"totalUnrealizedProfit": "0.00000000",  
+    	"totalWalletBalance": "0.88308000",  
+    	"updateTime": 1576756674610  
+     }  
+    }  
+      
+    
+
+> COIN Margined Futures：
+    
+    
+      
+    {  
+    	"deliveryAccountResp": {  
+            "email": "abc@test.com",  
+            "assets":[  
+                {  
+                    "asset": "BTC",  
+                    "initialMargin": "0.00000000",  
+                    "maintenanceMargin": "0.00000000",  
+                    "marginBalance": "0.88308000",  
+                    "maxWithdrawAmount": "0.88308000",  
+                    "openOrderInitialMargin": "0.00000000",  
+                    "positionInitialMargin": "0.00000000",  
+                    "unrealizedProfit": "0.00000000",  
+                    "walletBalance": "0.88308000"  
+                 }  
+            ],  
+            "canDeposit": true,  
+            "canTrade": true,  
+            "canWithdraw": true,  
+            "feeTier": 2,  
+            "updateTime": 1598959682001  
+        }  
     }

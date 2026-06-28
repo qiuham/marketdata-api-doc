@@ -2,10 +2,10 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/ip-changelog
 api_type: REST
-updated_at: 2026-05-27 19:18:10.657943
+updated_at: 2026-06-28 19:12:04.163994
 ---
 
-# Get Institution IP Change Log
+# Get Institution Whitelist IP
 
 info
 
@@ -13,28 +13,20 @@ This endpoint must be requested with a main account API key.
 
 ### HTTP Request
 
-GET`/v5/ins/ip/changelog`
+GET`/v5/ins/whitelist/ip`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-startTime| false| string| Filter start time, Unix timestamp in milliseconds  
-endTime| false| string| Filter end time, Unix timestamp in milliseconds  
-limit| false| integer| Records per page. Range: [1, 50]. Default: 20  
-cursor| false| string| Pagination cursor. Use the `nextPageCursor` value from the previous response  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Array of IP change records  
-> operationType| string| Action type: `ADD`, `REMOVE`, `ENABLE`, or `DISABLE`  
-> ipAddress| string| The IP address affected by the operation  
-> domainType| string| Connection protocol. `GW` for HTTP hostname, `WS` for WebSocket hostname  
-> operator| string| Internal team member who performed the operation  
-> createdAt| string| Operation timestamp in UTC+0, ISO 8601 format  
-nextPageCursor| string| Opaque token for retrieving the next page of results  
+result| array| Object  
+> name| string| Client name  
+> endpointDomain| string| Dedicated hostname assigned exclusively to this client  
+> ipList| array| Array of whitelisted IP addresses  
   
 ### Request Example
 
@@ -43,7 +35,7 @@ nextPageCursor| string| Opaque token for retrieving the next page of results
 
     
     
-    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
+    GET /v5/ins/whitelist/ip HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -58,31 +50,31 @@ nextPageCursor| string| Opaque token for retrieving the next page of results
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "193.118.167.247",  
-                    "domainType": "WS",  
-                    "operator": "wood.liang1",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                },  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "18.99.43.128/25",  
-                    "domainType": "WS",  
-                    "operator": "wood.liang1",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                }  
-            ],  
-            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
-        },  
-        "time": 1779362027705  
+        "result": [  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1"  
+                ]  
+            },  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1",  
+                    "35.78.100.2"  
+                ]  
+            }  
+        ],  
+        "time": 1779362854157  
     }
 
 ---
 
-# 查詢機構 IP 變更記錄
+# 查詢機構 IP 白名單
 
 信息
 
@@ -90,28 +82,20 @@ nextPageCursor| string| Opaque token for retrieving the next page of results
 
 ### HTTP 請求
 
-GET`/v5/ins/ip/changelog`
+GET`/v5/ins/whitelist/ip`
 
 ### 請求參數
 
-參數| 是否必填| 類型| 說明  
----|---|---|---  
-startTime| false| string| 篩選起始時間，Unix 毫秒時間戳  
-endTime| false| string| 篩選結束時間，Unix 毫秒時間戳  
-limit| false| integer| 每頁記錄數。範圍: [1, 50]。預設: 20  
-cursor| false| string| 分頁游標。使用上一頁響應中的 `nextPageCursor` 值  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| IP 變更記錄列表  
-> operationType| string| 操作類型: `ADD`, `REMOVE`, `ENABLE`, 或 `DISABLE`  
-> ipAddress| string| 受該操作影響的 IP 位址  
-> domainType| string| 連接協議。`GW` 表示 HTTP hostname，`WS` 表示 WebSocket hostname  
-> operator| string| 執行該操作的內部團隊成員  
-> createdAt| string| 操作時間戳，UTC+0，ISO 8601 格式  
-nextPageCursor| string| 用於查詢下一頁的不透明 token  
+result| array| Object  
+> name| string| 客戶名稱  
+> endpointDomain| string| 分配給該客戶專用的 hostname  
+> ipList| array| 白名單 IP 位址列表  
   
 ### 請求示例
 
@@ -120,7 +104,7 @@ nextPageCursor| string| 用於查詢下一頁的不透明 token
 
     
     
-    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
+    GET /v5/ins/whitelist/ip HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -135,24 +119,24 @@ nextPageCursor| string| 用於查詢下一頁的不透明 token
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "193.118.167.247",  
-                    "domainType": "WS",  
-                    "operator": "wood.liang1",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                },  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "18.99.43.128/25",  
-                    "domainType": "WS",  
-                    "operator": "wood.liang1",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                }  
-            ],  
-            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
-        },  
-        "time": 1779362027705  
+        "result": [  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1"  
+                ]  
+            },  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1",  
+                    "35.78.100.2"  
+                ]  
+            }  
+        ],  
+        "time": 1779362854157  
     }

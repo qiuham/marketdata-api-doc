@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-private-channel-rfqs-channel
 anchor_id: block-trading-websocket-private-channel-rfqs-channel
 api_type: WebSocket
-updated_at: 2026-05-27 19:35:49.477266
+updated_at: 2026-06-28 19:37:35.720364
 ---
 
 # Rfqs channel

@@ -2,39 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/time
 api_type: Market Data
-updated_at: 2026-05-27 19:18:37.949296
+updated_at: 2026-06-28 19:12:32.729033
 ---
 
-# Adjust Collateral Amount
-
-You can increase or reduce your collateral amount. When you reduce, please obey the [Get Max. Allowed Collateral Reduction Amount](/docs/v5/new-crypto-loan/reduce-max-collateral-amt)
-
-> Permission: "Spot trade"  
->  UID rate limit: 1 req / second
+# Get Collateral Coins
 
 info
 
-  * The adjusted collateral amount will be returned to or deducted from the Funding wallet.
-
-
+Does not need authentication.
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-common/adjust-ltv`
+GET`/v5/crypto-loan-common/collateral-data`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| **true**|  string| Collateral coin  
-amount| **true**|  string| Adjustment amount  
-direction| **true**|  string| `0`: add collateral; `1`: reduce collateral  
+currency| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-adjustId| long| Collateral adjustment transaction ID  
+collateralRatioConfigList| array| Object  
+> collateralRatioList| array| Object  
+>> collateralRatio| string| Collateral ratio  
+>> maxValue| string| Max qty  
+>> minValue| string| Min qty  
+> currencies| string| Currenies with the same collateral ratio, e.g., `BTC,ETH,XRP`  
+currencyLiquidationList| array| Object  
+> currency| string| Coin name  
+> liquidationOrder| integer| Liquidation order  
   
 ### Request Example
 
@@ -45,30 +44,16 @@ adjustId| long| Collateral adjustment transaction ID
 
     
     
-    POST /v5/crypto-loan-common/adjust-ltv HTTP/1.1  
+    GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627997649  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 69  
-      
-    {  
-        "currency": "BTC",  
-        "amount": "0.08",  
-        "direction": "1"  
-    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.adjust_collateral_amount_new_crypto_loan(  
+    print(session.get_collateral_coins_new_crypto_loan(  
         currency="BTC",  
         amount="0.08",  
         direction="1",  
@@ -86,44 +71,75 @@ adjustId| long| Collateral adjustment transaction ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "adjustId": 27511  
+            "collateralRatioConfigList": [  
+                {  
+                    "collateralRatioList": [  
+                        {  
+                            "collateralRatio": "0.8",  
+                            "maxValue": "10000",  
+                            "minValue": "0"  
+                        },  
+                        {  
+                            "collateralRatio": "0.7",  
+                            "maxValue": "20000",  
+                            "minValue": "10000"  
+                        },  
+                        {  
+                            "collateralRatio": "0.5",  
+                            "maxValue": "30000",  
+                            "minValue": "20000"  
+                        },  
+                        {  
+                            "collateralRatio": "0.4",  
+                            "maxValue": "99999999999",  
+                            "minValue": "30000"  
+                        }  
+                    ],  
+                    "currencies": "ATOM,AAVE,BTC,BOB"  
+                }  
+            ],  
+            "currencyLiquidationList": [  
+                {  
+                    "currency": "BTC",  
+                    "liquidationOrder": 1  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752627997915  
+        "time": 1752627381571  
     }
 
 ---
 
-# 調整質押金額
-
-您可以增加或減少質押金額. 選擇減少時, 請先確認[允許減少的最大質押數量](/docs/zh-TW/v5/new-crypto-loan/reduce-max-collateral-amt)
-
-> 權限: "現貨"  
->  頻率: 1次/秒
+# 查詢質押幣種
 
 信息
 
-  * 調整的質押數量會在資金帳戶進行返還或者扣減
-
-
+不需要鑒權
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-common/adjust-ltv`
+GET`/v5/crypto-loan-common/collateral-data`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| **true**|  string| 質押幣種  
-amount| **true**|  string| 調整金額  
-direction| **true**|  string| `0`: 增加質押金; `1`: 減少質押金  
+currency| false| string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-adjustId| long| 質押金調整交易ID  
+collateralRatioConfigList| array| Object  
+> collateralRatioList| array| Object  
+>> collateralRatio| string| 抵押率  
+>> maxValue| string| 最大數量  
+>> minValue| string| 最小數量  
+> currencies| string| 具有相同抵押率的幣種，例如：`BTC,ETH,XRP`  
+currencyLiquidationList| array| Object  
+> currency| string| 幣種名稱  
+> liquidationOrder| integer| 清算順序  
   
 ### 請求示例
 
@@ -134,30 +150,16 @@ adjustId| long| 質押金調整交易ID
 
     
     
-    POST /v5/crypto-loan-common/adjust-ltv HTTP/1.1  
+    GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627997649  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 69  
-      
-    {  
-        "currency": "BTC",  
-        "amount": "0.08",  
-        "direction": "1"  
-    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.adjust_collateral_amount_new_crypto_loan(  
+    print(session.get_collateral_coins_new_crypto_loan(  
         currency="BTC",  
         amount="0.08",  
         direction="1",  
@@ -175,8 +177,40 @@ adjustId| long| 質押金調整交易ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "adjustId": 27511  
+            "collateralRatioConfigList": [  
+                {  
+                    "collateralRatioList": [  
+                        {  
+                            "collateralRatio": "0.8",  
+                            "maxValue": "10000",  
+                            "minValue": "0"  
+                        },  
+                        {  
+                            "collateralRatio": "0.7",  
+                            "maxValue": "20000",  
+                            "minValue": "10000"  
+                        },  
+                        {  
+                            "collateralRatio": "0.5",  
+                            "maxValue": "30000",  
+                            "minValue": "20000"  
+                        },  
+                        {  
+                            "collateralRatio": "0.4",  
+                            "maxValue": "99999999999",  
+                            "minValue": "30000"  
+                        }  
+                    ],  
+                    "currencies": "ATOM,AAVE,BTC,BOB"  
+                }  
+            ],  
+            "currencyLiquidationList": [  
+                {  
+                    "currency": "BTC",  
+                    "liquidationOrder": 1  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752627997915  
+        "time": 1752627381571  
     }

@@ -2,43 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/collateral-info
 api_type: Account
-updated_at: 2026-05-27 19:13:58.817684
+updated_at: 2026-06-28 19:07:24.151019
 ---
 
-# Get Fee Rate
-
-Get the trading fee rate.
+# Get MMP State
 
 ### HTTP Request
 
-GET`/v5/account/fee-rate`
+GET`/v5/account/mmp-state`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product type. `spot`, `linear`, `inverse`, `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only. Valid for `linear`, `inverse`, `spot`  
-baseCoin| false| string| Base coin, uppercase only. `SOL`, `BTC`, `ETH`. Valid for `option`  
+baseCoin| **true**|  string| Base coin, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type. `spot`, `option`. _Derivatives does not have this field_  
-list| array| Object  
-> symbol| string| Symbol name. Keeps `""` for Options  
-> baseCoin| string| Base coin. `SOL`, `BTC`, `ETH`
+result| array| Object  
+> baseCoin| string| Base coin  
+> mmpEnabled| boolean| Whether the account is enabled mmp  
+> window| string| Time window (ms)  
+> frozenPeriod| string| Frozen period (ms)  
+> qtyLimit| string| Trade qty limit  
+> deltaLimit| string| Delta limit  
+> vegaLimit| string| Vega limit  
+> mmpFrozenUntil| string| Unfreeze timestamp (ms)  
+> mmpFrozen| boolean| Whether the mmp is triggered. 
 
-  * Spot and Derivatives does not have this field
+  * `true`: mmpFrozenUntil is meaningful
+  * `false`: please ignore the value of mmpFrozenUntil
 
   
-> takerFeeRate| string| Taker fee rate  
-> makerFeeRate| string| Maker fee rate  
-[](/docs/api-explorer/v5/account/fee-rate)
-
-* * *
-
+  
 ### Request Example
 
   * HTTP
@@ -48,12 +46,17 @@ list| array| Object
 
     
     
-    GET /v5/account/fee-rate?symbol=ETHUSDT HTTP/1.1  
+    POST /v5/account/mmp-reset HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676360412362  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "baseCoin": "ETH"  
+    }  
     
     
     
@@ -63,8 +66,8 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fee_rates(  
-        symbol="ETHUSDT",  
+    print(session.get_mmp_state(  
+        baseCoin="ETH",  
     ))  
     
     
@@ -78,10 +81,7 @@ list| array| Object
     });  
       
     client  
-        .getFeeRate({  
-            category: 'linear',  
-            symbol: 'ETHUSDT',  
-        })  
+        .getMMPState('ETH')  
         .then((response) => {  
             console.log(response);  
         })  
@@ -97,50 +97,58 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "result": [  
                 {  
-                    "symbol": "ETHUSDT",  
-                    "takerFeeRate": "0.0006",  
-                    "makerFeeRate": "0.0001"  
+                    "baseCoin": "BTC",  
+                    "mmpEnabled": true,  
+                    "window": "5000",  
+                    "frozenPeriod": "100000",  
+                    "qtyLimit": "0.01",  
+                    "deltaLimit": "0.01",  
+                    "vegaLimit": "500000",  
+                    "mmpFrozenUntil": "1675760625519",  
+                    "mmpFrozen": false  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1676360412576  
+        "time": 1675843188984  
     }
 
 ---
 
-# 查詢手續費率
-
-查詢交易手續費率
+# 查詢市商保護配置信息
 
 ### HTTP 請求
 
-GET`/v5/account/fee-rate`參數| 是否必需| 類型| 說明  
+GET`/v5/account/mmp-state`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類型. `spot`, `linear`, `inverse`, `option`  
-symbol| false| string| 合約名稱. 僅`spot`, `linear`, `inverse`有效  
-baseCoin| false| string| 交易幣種. `SOL`, `BTC`, `ETH`.僅`option`有效  
+baseCoin| **true**|  string| Base coin  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型. `spot`, `option`. _期貨不返回該字段_  
-list| array| Object  
-> symbol| string| 合約名稱. 期權總是為`""`  
-> baseCoin| string| 交易幣種. `SOL`, `BTC`, `ETH`
+result| array| Object  
+> baseCoin| string| 交易幣種  
+> mmpEnabled| boolean| 帳戶是否開啟了mmp  
+> window| string| 時間窗口 (毫秒)  
+> frozenPeriod| string| 凍結時間長度 (毫秒)  
+> qtyLimit| string| 成交數量上限  
+> deltaLimit| string| Delta值上限  
+> vegaLimit| string| Vega 上限  
+> mmpFrozenUntil| string| 解凍時間戳 (毫秒)  
+> mmpFrozen| boolean| 當前是否觸發了mmp凍結. 
 
-  * 現貨和期貨不返回該字段
+  * `true`: mmpFrozenUntil的值有意義
+  * `false`: 請忽略mmpFrozenUntil字段的值
 
   
-> takerFeeRate| string| 吃單手續費率  
-> makerFeeRate| string| 掛單手續費率  
-[](/docs/zh-TW/api-explorer/v5/account/fee-rate)
-
-* * *
-
+  
 ### 請求示例
 
   * HTTP
@@ -150,12 +158,17 @@ list| array| Object
 
     
     
-    GET /v5/account/fee-rate?symbol=ETHUSDT HTTP/1.1  
+    POST /v5/account/mmp-reset HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676360412362  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "baseCoin": "ETH"  
+    }  
     
     
     
@@ -165,8 +178,8 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fee_rates(  
-        symbol="ETHUSDT",  
+    print(session.get_mmp_state(  
+        baseCoin="ETH",  
     ))  
     
     
@@ -180,10 +193,7 @@ list| array| Object
     });  
       
     client  
-        .getFeeRate({  
-            category: 'linear',  
-            symbol: 'ETHUSDT',  
-        })  
+        .getMMPState('ETH')  
         .then((response) => {  
             console.log(response);  
         })  
@@ -199,14 +209,20 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "result": [  
                 {  
-                    "symbol": "ETHUSDT",  
-                    "takerFeeRate": "0.0006",  
-                    "makerFeeRate": "0.0001"  
+                    "baseCoin": "BTC",  
+                    "mmpEnabled": true,  
+                    "window": "5000",  
+                    "frozenPeriod": "100000",  
+                    "qtyLimit": "0.01",  
+                    "deltaLimit": "0.01",  
+                    "vegaLimit": "500000",  
+                    "mmpFrozenUntil": "1675760625519",  
+                    "mmpFrozen": false  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1676360412576  
+        "time": 1675843188984  
     }

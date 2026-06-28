@@ -2,63 +2,59 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/query-trade-history
 api_type: REST
-updated_at: 2026-05-27 19:15:12.798685
+updated_at: 2026-06-28 19:08:51.898590
 ---
 
-# Get Convert History
+# Funding Account Transaction History
 
-Returns all the convert history
+Return transaction log in Funding Account. This endpoint supports filtering by transaction type and time range.
 
 ### HTTP Request
 
-GET`/v5/fiat/query-trade-history`
+GET`/v5/asset/fundinghistory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-index| false| integer| Page number,started from 1, default 1  
-limit| false| integer| Page Size [20-100] 20 records by default,up to 100 records, return 100 when exceeds 100  
-startTime| false| string| Query start time(Millisecond timestamp)  
-endTime| false| string| Query end time(Millisecond timestamp)  
+createTimeFrom| false| string| Start timestamp (seconds). Must be used together with `createTimeTo`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+createTimeTo| false| string| End timestamp (seconds). Must be used together with `createTimeFrom`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor, used for pagination  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Array of quotes  
-> tradeNo| string| Trade order No  
-> status| string| Trade status:
-
-  * processing
-  * success
-  * failed
-
+nextPageCursor| string| Cursor for next page  
+list| array| Transaction list  
+> memberId| string| Member ID  
+> currency| string| Coin symbol  
+> ioDirection| string| Direction. `I`: In, `O`: Out  
+> txnAmt| string| Transaction amount  
+> afterAmt| string| Balance after transaction  
+> createTime| string| Create time (Unix seconds)  
+> showBusiType| string| Business type (localized key)  
+> showBusiTypeEn| string| Business type in English  
+> description| string| Description (localized key)  
+> descriptionEn| string| Description in English  
   
-> quoteTxId| string| Quote transaction ID. It is system generated, and it is used to confirm quote  
-> exchangeRate| string| Exchange rate  
-> fromCoin| string| Convert from coin (coin to sell)  
-> fromCoinType| string| From coin type. `fiat` or `crypto`  
-> toCoin| string| Convert to coin (coin to buy)  
-> toCoinType| string| To coin type. `fiat` or `crypto`  
-> fromAmount| string| From coin amount (amount to sell)  
-> toAmount| string| To coin amount (amount to buy according to exchange rate)  
-> createdAt| string| Trade created timee (Millisecond timestamp)  
-> subUserId| string| The user's sub userId in bybit  
-  
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/fiat/trade-query-history HTTP/1.1  
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720074159814  
+    X-BAPI-TIMESTAMP: 1739433600000  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -69,7 +65,13 @@ result| array| Array of quotes
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fiat_convert_history())  
+    print(session.get_asset_overview(  
+        limit=1  
+    ))  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -77,79 +79,89 @@ result| array| Array of quotes
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": [  
-            {  
-                "tradeNo": "TradeNo123456",  
-                "status": "success",  
-                "quoteTaxId": "QuoteTaxId123456",  
-                "exchangeRate": "1.0",  
-                "fromCoin": "GEL",  
-                "fromCoinType": "fiat",  
-                "toCoin": "USDT",  
-                "toCoinType": "crypto",  
-                "fromAmount": "100",  
-                "toAmount": "100",  
-                "createdAt": "1764560093588",  
-                "subUserId": "123456"  
-            }  
-        ]  
+        "retMsg": "OK",  
+        "result": {  
+            "nextPageCursor": "MTM3MTU3OTk=",  
+            "list": [  
+                {  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1772699449372  
     }
 
 ---
 
-# 查詢兌換歷史
+# 資金帳戶歷史記錄
+
+查詢資金帳戶的交易記錄，支持按交易類型和時間範圍進行篩選。
 
 ### HTTP 請求
 
-GET`/v5/fiat/query-trade-history`
+GET`/v5/asset/fundinghistory`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-index| false| integer| 頁碼，默認為 1  
-limit| false| integer| 每頁記錄數量，[20-100]，默認為 20 條，最大支持 100 條，超過 100 條時返回 100 條  
-startTime| false| string| 查詢開始時間（毫秒級時間戳）  
-endTime| false| string| 查詢結束時間（毫秒級時間戳）  
+createTimeFrom| false| string| 起始時間戳（秒）。須與 `createTimeTo` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+createTimeTo| false| string| 結束時間戳（秒）。須與 `createTimeFrom` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
+limit| false| string| 每頁數據條數。[`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於翻頁  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| 報價記錄數組  
-> tradeNo| string| 交易訂單號  
-> status| string| 交易狀態：
-
-  * processing
-  * success
-  * failed
-
+nextPageCursor| string| 下一頁游標  
+list| array| 交易記錄列表  
+> memberId| string| 用戶ID  
+> currency| string| 幣種  
+> ioDirection| string| 方向。`I`: 收入，`O`: 支出  
+> txnAmt| string| 交易金額  
+> afterAmt| string| 交易後餘額  
+> createTime| string| 創建時間（Unix 秒）  
+> showBusiType| string| 業務類型（本地化 key）  
+> showBusiTypeEn| string| 英文業務類型  
+> description| string| 描述（本地化 key）  
+> descriptionEn| string| 英文描述  
   
-> quoteTxId| string| 報價交易 ID，系統生成，用於確認報價  
-> exchangeRate| string| 匯率  
-> fromCoin| string| 轉換前的幣種（賣出的幣種）  
-> fromCoinType| string| 轉換前的幣種類型：`fiat` 或 `crypto`  
-> toCoin| string| 轉換後的幣種（買入的幣種）  
-> toCoinType| string| 轉換後的幣種類型：`fiat` 或 `crypto`  
-> fromAmount| string| 轉換前的幣種數量（賣出數量）  
-> toAmount| string| 轉換後的幣種數量（根據匯率買入的數量）  
-> createdAt| string| 交易創建時間（毫秒級時間戳）  
-> subUserId| string| 用戶在 Bybit 平台的子用戶 ID  
-  
+* * *
+
 ### 請求示例
 
   * HTTP
+  * Python
+  * Node.js
 
 
     
     
-    GET /v5/fiat/trade-query-history HTTP/1.1    
-    Host: api-testnet.bybit.com    
-    X-BAPI-SIGN: XXXXXX    
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
-    X-BAPI-TIMESTAMP: 1720074159814    
-    X-BAPI-RECV-WINDOW: 5000    
+    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1739433600000  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -157,21 +169,24 @@ result| array| 報價記錄數組
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": [  
-            {  
-                "tradeNo": "TradeNo123456",  
-                "status": "success",  
-                "quoteTaxId": "QuoteTaxId123456",  
-                "exchangeRate": "1.0",  
-                "fromCoin": "GEL",  
-                "fromCoinType": "fiat",  
-                "toCoin": "USDT",  
-                "toCoinType": "crypto",  
-                "fromAmount": "100",  
-                "toAmount": "100",  
-                "createdAt": "1764560093588",  
-                "subUserId": "123456"  
-            }  
-        ]  
+        "retMsg": "OK",  
+        "result": {  
+            "nextPageCursor": "MTM3MTU3OTk=",  
+            "list": [  
+                {  
+                    "memberId": "290118",  
+                    "currency": "BTC",  
+                    "ioDirection": "I",  
+                    "txnAmt": "0.00003561",  
+                    "afterAmt": "7.5547230662687035",  
+                    "createTime": "1772669763",  
+                    "showBusiType": "fundingAccountRecordEarn",  
+                    "showBusiTypeEn": "Earn",  
+                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
+                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1772699449372  
     }

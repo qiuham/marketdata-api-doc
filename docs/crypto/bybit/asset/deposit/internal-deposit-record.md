@@ -2,37 +2,65 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/internal-deposit-record
 api_type: REST
-updated_at: 2026-05-27 19:15:01.797293
+updated_at: 2026-06-28 19:08:36.874182
 ---
 
-# Get Master Deposit Address
+# Get Internal Deposit Records (off-chain)
 
-Query the deposit address information of MASTER account.
+Query deposit records within the Bybit platform. These transactions are not on the blockchain.
+
+Rules
+
+  * The maximum difference between the start time and the end time is 30 days
+  * Support to get deposit records by Master or Sub Member Api Key
+
+
 
 ### HTTP Request
 
-GET`/v5/asset/deposit/query-address`
+GET`/v5/asset/deposit/query-internal-record`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| **true**|  string| Coin, uppercase only  
-chainType| false| string| Please use the value of `>> chain` from [coin-info](/docs/v5/asset/coin-info) endpoint  
+txID| false| string| Internal transfer transaction ID  
+startTime| false| integer| Start time (ms). Default value: 30 days before the current time  
+endTime| false| integer| End time (ms). Default value: current time  
+coin| false| string| Coin name: for example, BTC. Default value: all  
+cursor| false| string| Cursor, used for pagination  
+limit| false| integer| Number of items per page, [`1`, `50`]. Default value: 50  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-coin| string| Coin  
-chains| array| Object  
-> chainType| string| Chain type  
-> addressDeposit| string| The address for deposit  
-> tagDeposit| string| Tag of deposit  
-> chain| string| Chain  
-> batchReleaseLimit| string| The deposit limit for this coin in this chain. `"-1"` means no limit  
-> contractAddress| string| The contract address of the coin. Only display last 6 characters, if there is no contract address, it shows `""`  
-[](/docs/api-explorer/v5/asset/master-deposit-addr)
+rows| array| Object  
+> id| string| ID  
+> type| integer| `1`: Internal deposit  
+> coin| string| Deposit coin  
+> amount| string| Deposit amount  
+> status| integer| 
+
+  * 1=Processing
+  * 2=Success
+  * 3=deposit failed
+
+  
+> address| string| Email address or phone number  
+> createdTime| string| Deposit created timestamp  
+> fromMemberId| string| Sender UID  
+> txID| string| Internal transfer transaction ID  
+> taxDepositRecordsId| string| This field is used for tax purposes by Bybit EU (Austria) users, declare tax id  
+> taxStatus| integer| This field is used for tax purposes by Bybit EU (Austria) users 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
+  
+nextPageCursor| string| cursor information: used for pagination. Default value: `""`  
+[](/docs/api-explorer/v5/asset/internal-deposit-record)
 
 * * *
 
@@ -45,12 +73,12 @@ chains| array| Object
 
     
     
-    GET /v5/asset/deposit/query-address?coin=USDT&chainType=ETH HTTP/1.1  
+    GET /v5/asset/deposit/query-internal-record HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672192792371  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1682099024473  
+    X-BAPI-RECV-WINDOW: 50000  
     
     
     
@@ -60,9 +88,9 @@ chains| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_master_deposit_address(  
-        coin="USDT",  
-        chainType="ETH",  
+    print(session.get_internal_deposit_records(  
+        startTime=1667260800000,  
+        endTime=1667347200000,  
     ))  
     
     
@@ -76,7 +104,10 @@ chains| array| Object
     });  
       
     client  
-      .getMasterDepositAddress('USDT', 'ETH')  
+      .getInternalDepositRecords({  
+        startTime: 1667260800000,  
+        endTime: 1667347200000,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -92,54 +123,86 @@ chains| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "coin": "USDT",  
-            "chains": [  
+            "rows": [  
                 {  
-                    "chainType": "Ethereum (ERC20)",  
-                    "addressDeposit": "XXXXXX",  
-                    "tagDeposit": "",  
-                    "chain": "ETH",  
-                    "batchReleaseLimit": "-1",  
-                    "contractAddress": "831ec7"  
+                    "id": "1103",  
+                    "amount": "0.1",  
+                    "type": 1,  
+                    "coin": "ETH",  
+                    "address": "xxxx***@gmail.com",  
+                    "status": 2,  
+                    "createdTime": "1705393280",  
+                    "fromMemberId": "118027304",  
+                    "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"，  
+                    "taxDepositRecordsId": "0",  
+                    "taxStatus": 0,  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"  
         },  
         "retExtInfo": {},  
-        "time": 1736394811459  
+        "time": 1705395632689  
     }
 
 ---
 
-# 查詢主帳號充值地址
+# 查詢充值記錄 (平台转账)
 
-警告
+查詢Bybit平台內部充值紀錄
 
-僅支持母帳號API key
+規則
+
+  * 開始時間和截止時間差最大限制為30天
+  * 支持使用母、子帳戶的api key查詢各自的入金紀錄
+
+
 
 ### HTTP 請求
 
-GET`/v5/asset/deposit/query-address`
+GET`/v5/asset/deposit/query-internal-record`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-coin| **true**|  string| 幣種  
-chainType| false| string| 請使用[查詢幣種信息](/docs/zh-TW/v5/asset/coin-info)響應字段`>> chain`作為這個字段的輸入  
+txID| false| string| 內部轉帳交易ID  
+startTime| false| integer| 開始時間 (精確到毫秒)。 默認為當前時間之前30天  
+endTime| false| integer| 結束時間 (精確到毫秒)。 默認為當前時間  
+coin| false| string| 幣種名：舉例，BTC。默認全部  
+cursor| false| string| 游標信息：用來分頁。 默認空  
+limit| false| integer| 每頁條數, [`1`, `50`] 默認為50  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-coin| string| 幣種  
-chains| array| Object  
-> chainType| string| 鏈類型  
-> addressDeposit| string| 充值地址  
-> tagDeposit| string| 地址的tag  
-> chain| string| 鏈名  
-> batchReleaseLimit| string| 當前幣鏈每日充值限額. `"-1"`表示無限制  
-> contractAddress| string| 合約地址, 僅展示後6位. 如果沒有合約地址, 則為空字符串`""`  
-[](/docs/zh-TW/api-explorer/v5/asset/master-deposit-addr)
+rows| array| Object  
+> id| string| ID  
+> type| integer| `1`: 內部充值  
+> coin| string| 充值的幣種  
+> amount| string| 充值的數量  
+> txID| string| 交易ID。充值失敗/取消充值：為空  
+> status| integer| 
+
+  * 1=處理中
+  * 2=已完成
+  * 3=充值失敗
+
+  
+> address| string| 郵箱地址或者手機號  
+> fromMemberId| string| 來源UID  
+> createdTime| string| 充值創建時間戳  
+txID| string| 內部轉帳交易ID  
+> taxDepositRecordsId| string| Bybit EU（奧地利）用戶用於稅務目的, 保稅記錄id  
+> taxStatus| integer| Bybit EU（奧地利）用戶用於稅務目的 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
+  
+nextPageCursor| string| 游標信息：用來分頁  
+[](/docs/zh-TW/api-explorer/v5/asset/internal-deposit-record)
 
 * * *
 
@@ -152,12 +215,12 @@ chains| array| Object
 
     
     
-    GET /v5/asset/deposit/query-address?coin=USDT&chainType=ETH HTTP/1.1  
+    GET /v5/asset/deposit/query-internal-record HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672192792371  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1682099024473  
+    X-BAPI-RECV-WINDOW: 50000  
     
     
     
@@ -167,9 +230,9 @@ chains| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_master_deposit_address(  
-        coin="USDT",  
-        chainType="ETH",  
+    print(session.get_internal_deposit_records(  
+        startTime=1667260800000,  
+        endTime=1667347200000,  
     ))  
     
     
@@ -183,7 +246,10 @@ chains| array| Object
     });  
       
     client  
-      .getMasterDepositAddress('USDT', 'ETH')  
+      .getInternalDepositRecords({  
+        startTime: 1667260800000,  
+        endTime: 1667347200000,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -199,18 +265,22 @@ chains| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "coin": "USDT",  
-            "chains": [  
+            "rows": [  
                 {  
-                    "chainType": "Ethereum (ERC20)",  
-                    "addressDeposit": "XXXXXX",  
-                    "tagDeposit": "",  
-                    "chain": "ETH",  
-                    "batchReleaseLimit": "-1",  
-                    "contractAddress": "831ec7"  
+                    "id": "1103",  
+                    "amount": "0.1",  
+                    "type": 1,  
+                    "coin": "ETH",  
+                    "address": "xxxx***@gmail.com",  
+                    "status": 2,  
+                    "createdTime": "1705393280",  
+                    "txID": "77c37e5c-d9fa-41e5-bd13-c9b59d95"，  
+                    "taxDepositRecordsId": "0",  
+                    "taxStatus": 0,  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTEwMywibWF4SUQiOjExMDN9"  
         },  
         "retExtInfo": {},  
-        "time": 1736394811459  
+        "time": 1705395632689  
     }
