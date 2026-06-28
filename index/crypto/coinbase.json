@@ -8,7 +8,7 @@
   "provider_name": "Coinbase",
   "product": "api",
   "status": "active",
-  "docs_dir": "docs/crypto/exchanges/coinbase",
+  "docs_dir": "docs/crypto/coinbase",
   "total": 71,
   "updated_at": "2026-05-27 18:47:39.755809",
   "documents_by_type": {
@@ -16,7 +16,7 @@
       {
         "id": "get-account",
         "title": "Get Account",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/accounts/get-account.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/accounts/get-account.md",
         "filename": "get-account.md",
         "api_type": "Account",
         "source_type": "",
@@ -28,7 +28,7 @@
       {
         "id": "list-accounts",
         "title": "List Accounts",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/accounts/list-accounts.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/accounts/list-accounts.md",
         "filename": "list-accounts.md",
         "api_type": "Account",
         "source_type": "",
@@ -40,7 +40,7 @@
       {
         "id": "allocate-portfolio",
         "title": "Allocate Portfolio",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio.md",
         "filename": "allocate-portfolio.md",
         "api_type": "Account",
         "source_type": "",
@@ -52,7 +52,7 @@
       {
         "id": "get-perpetuals-portfolio-summary",
         "title": "Get Perpetuals Portfolio Summary",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary.md",
         "filename": "get-perpetuals-portfolio-summary.md",
         "api_type": "Account",
         "source_type": "",
@@ -64,7 +64,7 @@
       {
         "id": "get-portfolio-balances",
         "title": "Get Portfolios Balances",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances.md",
         "filename": "get-portfolio-balances.md",
         "api_type": "Account",
         "source_type": "",
@@ -76,7 +76,7 @@
       {
         "id": "create-portfolio",
         "title": "Create Portfolio",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio.md",
         "filename": "create-portfolio.md",
         "api_type": "Account",
         "source_type": "",
@@ -88,7 +88,7 @@
       {
         "id": "delete-portfolio",
         "title": "Delete Portfolio",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio.md",
         "filename": "delete-portfolio.md",
         "api_type": "Account",
         "source_type": "",
@@ -100,7 +100,7 @@
       {
         "id": "edit-portfolio",
         "title": "Edit Portfolio",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio.md",
         "filename": "edit-portfolio.md",
         "api_type": "Account",
         "source_type": "",
@@ -112,7 +112,7 @@
       {
         "id": "get-portfolio-breakdown",
         "title": "Get Portfolio Breakdown",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown.md",
         "filename": "get-portfolio-breakdown.md",
         "api_type": "Account",
         "source_type": "",
@@ -124,7 +124,7 @@
       {
         "id": "list-portfolios",
         "title": "List Portfolios",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios.md",
         "filename": "list-portfolios.md",
         "api_type": "Account",
         "source_type": "",
@@ -136,7 +136,7 @@
       {
         "id": "move-portfolios-funds",
         "title": "Move Portfolio Funds",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds.md",
         "filename": "move-portfolios-funds.md",
         "api_type": "Account",
         "source_type": "",
@@ -150,7 +150,7 @@
       {
         "id": "commit-convert-trade",
         "title": "Commit Convert Trade",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade.md",
         "filename": "commit-convert-trade.md",
         "api_type": "Trading",
         "source_type": "",
@@ -162,7 +162,7 @@
       {
         "id": "create-convert-quote",
         "title": "Create Convert Quote",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote.md",
         "filename": "create-convert-quote.md",
         "api_type": "Trading",
         "source_type": "",
@@ -174,7 +174,7 @@
       {
         "id": "get-convert-trade",
         "title": "Get Convert Trade",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade.md",
         "filename": "get-convert-trade.md",
         "api_type": "Trading",
         "source_type": "",
@@ -186,7 +186,7 @@
       {
         "id": "cancel-order",
         "title": "Cancel Orders",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/cancel-order.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/cancel-order.md",
         "filename": "cancel-order.md",
         "api_type": "Trading",
         "source_type": "",
@@ -198,7 +198,7 @@
       {
         "id": "close-position",
         "title": "Close Position",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/close-position.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/close-position.md",
         "filename": "close-position.md",
         "api_type": "Trading",
         "source_type": "",
@@ -210,7 +210,7 @@
       {
         "id": "create-order",
         "title": "Create Order",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/create-order.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/create-order.md",
         "filename": "create-order.md",
         "api_type": "Trading",
         "source_type": "",
@@ -222,7 +222,7 @@
       {
         "id": "edit-order-preview",
         "title": "Edit Order Preview",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview.md",
         "filename": "edit-order-preview.md",
         "api_type": "Trading",
         "source_type": "",
@@ -234,7 +234,7 @@
       {
         "id": "edit-order",
         "title": "Edit Order",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order.md",
         "filename": "edit-order.md",
         "api_type": "Trading",
         "source_type": "",
@@ -246,7 +246,7 @@
       {
         "id": "get-order",
         "title": "Get Order",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/get-order.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/get-order.md",
         "filename": "get-order.md",
         "api_type": "Trading",
         "source_type": "",
@@ -258,7 +258,7 @@
       {
         "id": "list-fills",
         "title": "List Fills",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-fills.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-fills.md",
         "filename": "list-fills.md",
         "api_type": "Trading",
         "source_type": "",
@@ -270,7 +270,7 @@
       {
         "id": "list-orders",
         "title": "List Orders",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-orders.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-orders.md",
         "filename": "list-orders.md",
         "api_type": "Trading",
         "source_type": "",
@@ -282,7 +282,7 @@
       {
         "id": "preview-orders",
         "title": "Preview Order",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/preview-orders.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/preview-orders.md",
         "filename": "preview-orders.md",
         "api_type": "Trading",
         "source_type": "",
@@ -294,7 +294,7 @@
       {
         "id": "api-reference",
         "title": "Welcome to Coinbase Advanced Trade API",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/api-reference.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/api-reference.md",
         "filename": "api-reference.md",
         "api_type": "Trading",
         "source_type": "",
@@ -306,7 +306,7 @@
       {
         "id": "postman-files",
         "title": "Advanced Trade Postman Files",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/postman-files.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/postman-files.md",
         "filename": "postman-files.md",
         "api_type": "Trading",
         "source_type": "",
@@ -318,7 +318,7 @@
       {
         "id": "rest-api",
         "title": "Advanced Trade API Endpoints",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/rest-api.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/rest-api.md",
         "filename": "rest-api.md",
         "api_type": "Trading",
         "source_type": "",
@@ -330,7 +330,7 @@
       {
         "id": "sandbox",
         "title": "Advanced Trade API Sandbox",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/sandbox.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/sandbox.md",
         "filename": "sandbox.md",
         "api_type": "Trading",
         "source_type": "",
@@ -344,7 +344,7 @@
       {
         "id": "get-api-key-permissions",
         "title": "Get API Key Permissions",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions.md",
         "filename": "get-api-key-permissions.md",
         "api_type": "REST",
         "source_type": "",
@@ -356,7 +356,7 @@
       {
         "id": "get-transaction-summary",
         "title": "Get Transaction Summary",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary.md",
         "filename": "get-transaction-summary.md",
         "api_type": "REST",
         "source_type": "",
@@ -368,7 +368,7 @@
       {
         "id": "cancel-pending-futures-sweep",
         "title": "Cancel Pending US Derivatives Sweep",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep.md",
         "filename": "cancel-pending-futures-sweep.md",
         "api_type": "REST",
         "source_type": "",
@@ -380,7 +380,7 @@
       {
         "id": "get-current-margin-window",
         "title": "Get Current Margin Window",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window.md",
         "filename": "get-current-margin-window.md",
         "api_type": "REST",
         "source_type": "",
@@ -392,7 +392,7 @@
       {
         "id": "get-futures-balance-summary",
         "title": "Get US Derivatives Balance Summary",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary.md",
         "filename": "get-futures-balance-summary.md",
         "api_type": "REST",
         "source_type": "",
@@ -404,7 +404,7 @@
       {
         "id": "get-futures-position",
         "title": "Get US Derivatives Position",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-position.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-position.md",
         "filename": "get-futures-position.md",
         "api_type": "REST",
         "source_type": "",
@@ -416,7 +416,7 @@
       {
         "id": "get-intraday-margin-setting",
         "title": "Get Intraday Margin Setting",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting.md",
         "filename": "get-intraday-margin-setting.md",
         "api_type": "REST",
         "source_type": "",
@@ -428,7 +428,7 @@
       {
         "id": "list-futures-positions",
         "title": "List US Derivatives Positions",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions.md",
         "filename": "list-futures-positions.md",
         "api_type": "REST",
         "source_type": "",
@@ -440,7 +440,7 @@
       {
         "id": "list-futures-sweeps",
         "title": "List US Derivatives Sweeps",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps.md",
         "filename": "list-futures-sweeps.md",
         "api_type": "REST",
         "source_type": "",
@@ -452,7 +452,7 @@
       {
         "id": "schedule-futures-sweep",
         "title": "Schedule US Derivatives Sweep",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep.md",
         "filename": "schedule-futures-sweep.md",
         "api_type": "REST",
         "source_type": "",
@@ -464,7 +464,7 @@
       {
         "id": "set-intraday-margin-settings",
         "title": "Set Intraday Margin Setting",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings.md",
         "filename": "set-intraday-margin-settings.md",
         "api_type": "REST",
         "source_type": "",
@@ -476,7 +476,7 @@
       {
         "id": "introduction",
         "title": "Welcome to Coinbase Advanced Trade API",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/introduction.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/introduction.md",
         "filename": "introduction.md",
         "api_type": "REST",
         "source_type": "",
@@ -488,7 +488,7 @@
       {
         "id": "get-payment-method",
         "title": "Get Payment Method",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method.md",
         "filename": "get-payment-method.md",
         "api_type": "REST",
         "source_type": "",
@@ -500,7 +500,7 @@
       {
         "id": "list-payment-methods",
         "title": "List Payment Methods",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods.md",
         "filename": "list-payment-methods.md",
         "api_type": "REST",
         "source_type": "",
@@ -512,7 +512,7 @@
       {
         "id": "get-perpetuals-position",
         "title": "Get Perpetuals Position",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position.md",
         "filename": "get-perpetuals-position.md",
         "api_type": "REST",
         "source_type": "",
@@ -524,7 +524,7 @@
       {
         "id": "list-perpetuals-positions",
         "title": "List Perpetuals Positions",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions.md",
         "filename": "list-perpetuals-positions.md",
         "api_type": "REST",
         "source_type": "",
@@ -536,7 +536,7 @@
       {
         "id": "opt-in-or-out",
         "title": "Opt In or Out of Multi Asset Collateral",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out.md",
         "filename": "opt-in-or-out.md",
         "api_type": "REST",
         "source_type": "",
@@ -548,7 +548,7 @@
       {
         "id": "get-server-time",
         "title": "Get Server Time",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-server-time.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-server-time.md",
         "filename": "get-server-time.md",
         "api_type": "REST",
         "source_type": "",
@@ -560,7 +560,7 @@
       {
         "id": "sdk",
         "title": "Python SDK Overview",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/sdk.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/sdk.md",
         "filename": "sdk.md",
         "api_type": "REST",
         "source_type": "",
@@ -574,7 +574,7 @@
       {
         "id": "get-best-bid-ask",
         "title": "Get Best Bid/Ask",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask.md",
         "filename": "get-best-bid-ask.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -586,7 +586,7 @@
       {
         "id": "get-market-trades",
         "title": "Get Market Trades",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-market-trades.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-market-trades.md",
         "filename": "get-market-trades.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -598,7 +598,7 @@
       {
         "id": "get-product-book",
         "title": "Get Product Book",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-book.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-book.md",
         "filename": "get-product-book.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -610,7 +610,7 @@
       {
         "id": "get-product-candles",
         "title": "Get Product Candles",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-candles.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-candles.md",
         "filename": "get-product-candles.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -622,7 +622,7 @@
       {
         "id": "get-product",
         "title": "Get Product",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product.md",
         "filename": "get-product.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -634,7 +634,7 @@
       {
         "id": "list-products",
         "title": "List Products",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/list-products.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/list-products.md",
         "filename": "list-products.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -646,7 +646,7 @@
       {
         "id": "get-public-market-trades",
         "title": "Get Public Market Trades",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades.md",
         "filename": "get-public-market-trades.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -658,7 +658,7 @@
       {
         "id": "get-public-product-book",
         "title": "Get Public Product Book",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-book.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-book.md",
         "filename": "get-public-product-book.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -670,7 +670,7 @@
       {
         "id": "get-public-product-candles",
         "title": "Get Public Product Candles",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles.md",
         "filename": "get-public-product-candles.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -682,7 +682,7 @@
       {
         "id": "get-public-product",
         "title": "Get Public Product",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product.md",
         "filename": "get-public-product.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -694,7 +694,7 @@
       {
         "id": "list-public-products",
         "title": "List Public Products",
-        "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/list-public-products.md",
+        "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/list-public-products.md",
         "filename": "list-public-products.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -708,7 +708,7 @@
       {
         "id": "faq",
         "title": "Advanced Trade API FAQ",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/faq.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/faq.md",
         "filename": "faq.md",
         "api_type": "Guide",
         "source_type": "",
@@ -720,7 +720,7 @@
       {
         "id": "futures",
         "title": "Advanced Trade US Derivatives",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/futures.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/futures.md",
         "filename": "futures.md",
         "api_type": "Guide",
         "source_type": "",
@@ -732,7 +732,7 @@
       {
         "id": "oauth-access",
         "title": "OAuth Portfolio Access",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/oauth-access.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/oauth-access.md",
         "filename": "oauth-access.md",
         "api_type": "Guide",
         "source_type": "",
@@ -744,7 +744,7 @@
       {
         "id": "orders",
         "title": "Advanced API Order Management",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/orders.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/orders.md",
         "filename": "orders.md",
         "api_type": "Guide",
         "source_type": "",
@@ -756,7 +756,7 @@
       {
         "id": "perpetual",
         "title": "Advanced Trade International Derivatives",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/perpetual.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/perpetual.md",
         "filename": "perpetual.md",
         "api_type": "Guide",
         "source_type": "",
@@ -768,7 +768,7 @@
       {
         "id": "portfolios",
         "title": "Advanced Trade Portfolios",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/portfolios.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/portfolios.md",
         "filename": "portfolios.md",
         "api_type": "Guide",
         "source_type": "",
@@ -780,7 +780,7 @@
       {
         "id": "sdk-rest-api",
         "title": "Make Your First Trade with the REST SDK",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-rest-api.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-rest-api.md",
         "filename": "sdk-rest-api.md",
         "api_type": "Guide",
         "source_type": "",
@@ -792,7 +792,7 @@
       {
         "id": "overview",
         "title": "Welcome to Advanced Trade API",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/overview.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/overview.md",
         "filename": "overview.md",
         "api_type": "Guide",
         "source_type": "",
@@ -806,7 +806,7 @@
       {
         "id": "sdk-websocket",
         "title": "Listen for Order Updates with the WebSocket SDK",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-websocket.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-websocket.md",
         "filename": "sdk-websocket.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -818,7 +818,7 @@
       {
         "id": "websocket",
         "title": "Advanced Trade WebSockets. Setup, Authentication, and Subscriptions",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/websocket.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/websocket.md",
         "filename": "websocket.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -830,7 +830,7 @@
       {
         "id": "websocket-authentication",
         "title": "Advanced Trade WebSocket Authentication",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-authentication.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-authentication.md",
         "filename": "websocket-authentication.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -842,7 +842,7 @@
       {
         "id": "websocket-channels",
         "title": "Advanced Trade WebSocket Channels",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-channels.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-channels.md",
         "filename": "websocket-channels.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -854,7 +854,7 @@
       {
         "id": "websocket-overview",
         "title": "Advanced Trade WebSocket Overview",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-overview.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-overview.md",
         "filename": "websocket-overview.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -866,7 +866,7 @@
       {
         "id": "websocket-rate-limits",
         "title": "Advanced Trade WebSocket Rate Limits",
-        "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits.md",
+        "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits.md",
         "filename": "websocket-rate-limits.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -881,7 +881,7 @@
     {
       "id": "allocate-portfolio",
       "title": "Allocate Portfolio",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio.md",
       "filename": "allocate-portfolio.md",
       "api_type": "Account",
       "source_type": "",
@@ -893,7 +893,7 @@
     {
       "id": "create-portfolio",
       "title": "Create Portfolio",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio.md",
       "filename": "create-portfolio.md",
       "api_type": "Account",
       "source_type": "",
@@ -905,7 +905,7 @@
     {
       "id": "delete-portfolio",
       "title": "Delete Portfolio",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio.md",
       "filename": "delete-portfolio.md",
       "api_type": "Account",
       "source_type": "",
@@ -917,7 +917,7 @@
     {
       "id": "edit-portfolio",
       "title": "Edit Portfolio",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio.md",
       "filename": "edit-portfolio.md",
       "api_type": "Account",
       "source_type": "",
@@ -929,7 +929,7 @@
     {
       "id": "get-account",
       "title": "Get Account",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/accounts/get-account.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/accounts/get-account.md",
       "filename": "get-account.md",
       "api_type": "Account",
       "source_type": "",
@@ -941,7 +941,7 @@
     {
       "id": "get-perpetuals-portfolio-summary",
       "title": "Get Perpetuals Portfolio Summary",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary.md",
       "filename": "get-perpetuals-portfolio-summary.md",
       "api_type": "Account",
       "source_type": "",
@@ -953,7 +953,7 @@
     {
       "id": "get-portfolio-breakdown",
       "title": "Get Portfolio Breakdown",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown.md",
       "filename": "get-portfolio-breakdown.md",
       "api_type": "Account",
       "source_type": "",
@@ -965,7 +965,7 @@
     {
       "id": "get-portfolio-balances",
       "title": "Get Portfolios Balances",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances.md",
       "filename": "get-portfolio-balances.md",
       "api_type": "Account",
       "source_type": "",
@@ -977,7 +977,7 @@
     {
       "id": "list-accounts",
       "title": "List Accounts",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/accounts/list-accounts.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/accounts/list-accounts.md",
       "filename": "list-accounts.md",
       "api_type": "Account",
       "source_type": "",
@@ -989,7 +989,7 @@
     {
       "id": "list-portfolios",
       "title": "List Portfolios",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios.md",
       "filename": "list-portfolios.md",
       "api_type": "Account",
       "source_type": "",
@@ -1001,7 +1001,7 @@
     {
       "id": "move-portfolios-funds",
       "title": "Move Portfolio Funds",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds.md",
       "filename": "move-portfolios-funds.md",
       "api_type": "Account",
       "source_type": "",
@@ -1013,7 +1013,7 @@
     {
       "id": "orders",
       "title": "Advanced API Order Management",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/orders.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/orders.md",
       "filename": "orders.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1025,7 +1025,7 @@
     {
       "id": "faq",
       "title": "Advanced Trade API FAQ",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/faq.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/faq.md",
       "filename": "faq.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1037,7 +1037,7 @@
     {
       "id": "perpetual",
       "title": "Advanced Trade International Derivatives",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/perpetual.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/perpetual.md",
       "filename": "perpetual.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1049,7 +1049,7 @@
     {
       "id": "portfolios",
       "title": "Advanced Trade Portfolios",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/portfolios.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/portfolios.md",
       "filename": "portfolios.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1061,7 +1061,7 @@
     {
       "id": "futures",
       "title": "Advanced Trade US Derivatives",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/futures.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/futures.md",
       "filename": "futures.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1073,7 +1073,7 @@
     {
       "id": "sdk-rest-api",
       "title": "Make Your First Trade with the REST SDK",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-rest-api.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-rest-api.md",
       "filename": "sdk-rest-api.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1085,7 +1085,7 @@
     {
       "id": "oauth-access",
       "title": "OAuth Portfolio Access",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/oauth-access.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/oauth-access.md",
       "filename": "oauth-access.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1097,7 +1097,7 @@
     {
       "id": "overview",
       "title": "Welcome to Advanced Trade API",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/overview.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/overview.md",
       "filename": "overview.md",
       "api_type": "Guide",
       "source_type": "",
@@ -1109,7 +1109,7 @@
     {
       "id": "get-best-bid-ask",
       "title": "Get Best Bid/Ask",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask.md",
       "filename": "get-best-bid-ask.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1121,7 +1121,7 @@
     {
       "id": "get-market-trades",
       "title": "Get Market Trades",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-market-trades.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-market-trades.md",
       "filename": "get-market-trades.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1133,7 +1133,7 @@
     {
       "id": "get-product",
       "title": "Get Product",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product.md",
       "filename": "get-product.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1145,7 +1145,7 @@
     {
       "id": "get-product-book",
       "title": "Get Product Book",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-book.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-book.md",
       "filename": "get-product-book.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1157,7 +1157,7 @@
     {
       "id": "get-product-candles",
       "title": "Get Product Candles",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-candles.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/get-product-candles.md",
       "filename": "get-product-candles.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1169,7 +1169,7 @@
     {
       "id": "get-public-market-trades",
       "title": "Get Public Market Trades",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades.md",
       "filename": "get-public-market-trades.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1181,7 +1181,7 @@
     {
       "id": "get-public-product",
       "title": "Get Public Product",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product.md",
       "filename": "get-public-product.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1193,7 +1193,7 @@
     {
       "id": "get-public-product-book",
       "title": "Get Public Product Book",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-book.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-book.md",
       "filename": "get-public-product-book.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1205,7 +1205,7 @@
     {
       "id": "get-public-product-candles",
       "title": "Get Public Product Candles",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles.md",
       "filename": "get-public-product-candles.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1217,7 +1217,7 @@
     {
       "id": "list-products",
       "title": "List Products",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/products/list-products.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/products/list-products.md",
       "filename": "list-products.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1229,7 +1229,7 @@
     {
       "id": "list-public-products",
       "title": "List Public Products",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/list-public-products.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/list-public-products.md",
       "filename": "list-public-products.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -1241,7 +1241,7 @@
     {
       "id": "cancel-pending-futures-sweep",
       "title": "Cancel Pending US Derivatives Sweep",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep.md",
       "filename": "cancel-pending-futures-sweep.md",
       "api_type": "REST",
       "source_type": "",
@@ -1253,7 +1253,7 @@
     {
       "id": "get-api-key-permissions",
       "title": "Get API Key Permissions",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions.md",
       "filename": "get-api-key-permissions.md",
       "api_type": "REST",
       "source_type": "",
@@ -1265,7 +1265,7 @@
     {
       "id": "get-current-margin-window",
       "title": "Get Current Margin Window",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window.md",
       "filename": "get-current-margin-window.md",
       "api_type": "REST",
       "source_type": "",
@@ -1277,7 +1277,7 @@
     {
       "id": "get-intraday-margin-setting",
       "title": "Get Intraday Margin Setting",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting.md",
       "filename": "get-intraday-margin-setting.md",
       "api_type": "REST",
       "source_type": "",
@@ -1289,7 +1289,7 @@
     {
       "id": "get-payment-method",
       "title": "Get Payment Method",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method.md",
       "filename": "get-payment-method.md",
       "api_type": "REST",
       "source_type": "",
@@ -1301,7 +1301,7 @@
     {
       "id": "get-perpetuals-position",
       "title": "Get Perpetuals Position",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position.md",
       "filename": "get-perpetuals-position.md",
       "api_type": "REST",
       "source_type": "",
@@ -1313,7 +1313,7 @@
     {
       "id": "get-server-time",
       "title": "Get Server Time",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/public/get-server-time.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/public/get-server-time.md",
       "filename": "get-server-time.md",
       "api_type": "REST",
       "source_type": "",
@@ -1325,7 +1325,7 @@
     {
       "id": "get-transaction-summary",
       "title": "Get Transaction Summary",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary.md",
       "filename": "get-transaction-summary.md",
       "api_type": "REST",
       "source_type": "",
@@ -1337,7 +1337,7 @@
     {
       "id": "get-futures-balance-summary",
       "title": "Get US Derivatives Balance Summary",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary.md",
       "filename": "get-futures-balance-summary.md",
       "api_type": "REST",
       "source_type": "",
@@ -1349,7 +1349,7 @@
     {
       "id": "get-futures-position",
       "title": "Get US Derivatives Position",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-position.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/get-futures-position.md",
       "filename": "get-futures-position.md",
       "api_type": "REST",
       "source_type": "",
@@ -1361,7 +1361,7 @@
     {
       "id": "list-payment-methods",
       "title": "List Payment Methods",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods.md",
       "filename": "list-payment-methods.md",
       "api_type": "REST",
       "source_type": "",
@@ -1373,7 +1373,7 @@
     {
       "id": "list-perpetuals-positions",
       "title": "List Perpetuals Positions",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions.md",
       "filename": "list-perpetuals-positions.md",
       "api_type": "REST",
       "source_type": "",
@@ -1385,7 +1385,7 @@
     {
       "id": "list-futures-positions",
       "title": "List US Derivatives Positions",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions.md",
       "filename": "list-futures-positions.md",
       "api_type": "REST",
       "source_type": "",
@@ -1397,7 +1397,7 @@
     {
       "id": "list-futures-sweeps",
       "title": "List US Derivatives Sweeps",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps.md",
       "filename": "list-futures-sweeps.md",
       "api_type": "REST",
       "source_type": "",
@@ -1409,7 +1409,7 @@
     {
       "id": "opt-in-or-out",
       "title": "Opt In or Out of Multi Asset Collateral",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out.md",
       "filename": "opt-in-or-out.md",
       "api_type": "REST",
       "source_type": "",
@@ -1421,7 +1421,7 @@
     {
       "id": "sdk",
       "title": "Python SDK Overview",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/sdk.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/sdk.md",
       "filename": "sdk.md",
       "api_type": "REST",
       "source_type": "",
@@ -1433,7 +1433,7 @@
     {
       "id": "schedule-futures-sweep",
       "title": "Schedule US Derivatives Sweep",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep.md",
       "filename": "schedule-futures-sweep.md",
       "api_type": "REST",
       "source_type": "",
@@ -1445,7 +1445,7 @@
     {
       "id": "set-intraday-margin-settings",
       "title": "Set Intraday Margin Setting",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings.md",
       "filename": "set-intraday-margin-settings.md",
       "api_type": "REST",
       "source_type": "",
@@ -1457,7 +1457,7 @@
     {
       "id": "introduction",
       "title": "Welcome to Coinbase Advanced Trade API",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/introduction.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/introduction.md",
       "filename": "introduction.md",
       "api_type": "REST",
       "source_type": "",
@@ -1469,7 +1469,7 @@
     {
       "id": "rest-api",
       "title": "Advanced Trade API Endpoints",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/rest-api.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/rest-api.md",
       "filename": "rest-api.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1481,7 +1481,7 @@
     {
       "id": "sandbox",
       "title": "Advanced Trade API Sandbox",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/sandbox.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/sandbox.md",
       "filename": "sandbox.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1493,7 +1493,7 @@
     {
       "id": "postman-files",
       "title": "Advanced Trade Postman Files",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/postman-files.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/postman-files.md",
       "filename": "postman-files.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1505,7 +1505,7 @@
     {
       "id": "cancel-order",
       "title": "Cancel Orders",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/cancel-order.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/cancel-order.md",
       "filename": "cancel-order.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1517,7 +1517,7 @@
     {
       "id": "close-position",
       "title": "Close Position",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/close-position.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/close-position.md",
       "filename": "close-position.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1529,7 +1529,7 @@
     {
       "id": "commit-convert-trade",
       "title": "Commit Convert Trade",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade.md",
       "filename": "commit-convert-trade.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1541,7 +1541,7 @@
     {
       "id": "create-convert-quote",
       "title": "Create Convert Quote",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote.md",
       "filename": "create-convert-quote.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1553,7 +1553,7 @@
     {
       "id": "create-order",
       "title": "Create Order",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/create-order.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/create-order.md",
       "filename": "create-order.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1565,7 +1565,7 @@
     {
       "id": "edit-order",
       "title": "Edit Order",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order.md",
       "filename": "edit-order.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1577,7 +1577,7 @@
     {
       "id": "edit-order-preview",
       "title": "Edit Order Preview",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview.md",
       "filename": "edit-order-preview.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1589,7 +1589,7 @@
     {
       "id": "get-convert-trade",
       "title": "Get Convert Trade",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade.md",
       "filename": "get-convert-trade.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1601,7 +1601,7 @@
     {
       "id": "get-order",
       "title": "Get Order",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/get-order.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/get-order.md",
       "filename": "get-order.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1613,7 +1613,7 @@
     {
       "id": "list-fills",
       "title": "List Fills",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-fills.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-fills.md",
       "filename": "list-fills.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1625,7 +1625,7 @@
     {
       "id": "list-orders",
       "title": "List Orders",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-orders.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/list-orders.md",
       "filename": "list-orders.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1637,7 +1637,7 @@
     {
       "id": "preview-orders",
       "title": "Preview Order",
-      "path": "docs/crypto/exchanges/coinbase/api-reference/advanced-trade-api/rest-api/orders/preview-orders.md",
+      "path": "docs/crypto/coinbase/api-reference/advanced-trade-api/rest-api/orders/preview-orders.md",
       "filename": "preview-orders.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1649,7 +1649,7 @@
     {
       "id": "api-reference",
       "title": "Welcome to Coinbase Advanced Trade API",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/api-reference.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/api-reference.md",
       "filename": "api-reference.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1661,7 +1661,7 @@
     {
       "id": "websocket-authentication",
       "title": "Advanced Trade WebSocket Authentication",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-authentication.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-authentication.md",
       "filename": "websocket-authentication.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1673,7 +1673,7 @@
     {
       "id": "websocket-channels",
       "title": "Advanced Trade WebSocket Channels",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-channels.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-channels.md",
       "filename": "websocket-channels.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1685,7 +1685,7 @@
     {
       "id": "websocket-overview",
       "title": "Advanced Trade WebSocket Overview",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-overview.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-overview.md",
       "filename": "websocket-overview.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1697,7 +1697,7 @@
     {
       "id": "websocket-rate-limits",
       "title": "Advanced Trade WebSocket Rate Limits",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits.md",
       "filename": "websocket-rate-limits.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1709,7 +1709,7 @@
     {
       "id": "websocket",
       "title": "Advanced Trade WebSockets. Setup, Authentication, and Subscriptions",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/websocket.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/websocket.md",
       "filename": "websocket.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1721,7 +1721,7 @@
     {
       "id": "sdk-websocket",
       "title": "Listen for Order Updates with the WebSocket SDK",
-      "path": "docs/crypto/exchanges/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-websocket.md",
+      "path": "docs/crypto/coinbase/coinbase-app/advanced-trade-apis/guides/sdk-websocket.md",
       "filename": "sdk-websocket.md",
       "api_type": "WebSocket",
       "source_type": "",

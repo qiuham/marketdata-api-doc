@@ -15,7 +15,7 @@ source:
   legacy_exchange: binance
   concurrency: 5
 output:
-  docs_dir: docs/crypto/exchanges/binance
+  docs_dir: docs/crypto/binance
   index_file: index/crypto/binance.json
 metadata_defaults:
   api_type: reference

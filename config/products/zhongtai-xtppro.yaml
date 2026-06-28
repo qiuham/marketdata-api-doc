@@ -17,7 +17,7 @@ source:
   base_url: https://xtp.zts.com.cn/xtp-pro/
   content_selector: main .vp-doc
 output:
-  docs_dir: docs/cn/stock/gateways/zhongtai/xtppro
+  docs_dir: docs/cn/stock/zhongtai/xtppro
   index_file: index/cn/stock/zhongtai-xtppro.json
   clean_before_crawl: true
 metadata_defaults:

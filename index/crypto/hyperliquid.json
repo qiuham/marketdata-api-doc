@@ -8,7 +8,7 @@
   "provider_name": "Hyperliquid",
   "product": "api",
   "status": "active",
-  "docs_dir": "docs/crypto/exchanges/hyperliquid",
+  "docs_dir": "docs/crypto/hyperliquid",
   "total": 34,
   "updated_at": "2026-05-27 18:53:14.424784",
   "documents_by_type": {
@@ -16,7 +16,7 @@
       {
         "id": "activation-gas-fee",
         "title": "Activation gas fee",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/activation-gas-fee.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/activation-gas-fee.md",
         "filename": "activation-gas-fee.md",
         "api_type": "REST",
         "source_type": "",
@@ -28,7 +28,7 @@
       {
         "id": "asset-ids",
         "title": "Asset IDs",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/asset-ids.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/asset-ids.md",
         "filename": "asset-ids.md",
         "api_type": "REST",
         "source_type": "",
@@ -40,7 +40,7 @@
       {
         "id": "bridge2",
         "title": "Bridge2",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/bridge2.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/bridge2.md",
         "filename": "bridge2.md",
         "api_type": "REST",
         "source_type": "",
@@ -52,7 +52,7 @@
       {
         "id": "deploying-hip-1-and-hip-2-assets",
         "title": "Deploying HIP-1 and HIP-2 assets",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/deploying-hip-1-and-hip-2-assets.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/deploying-hip-1-and-hip-2-assets.md",
         "filename": "deploying-hip-1-and-hip-2-assets.md",
         "api_type": "REST",
         "source_type": "",
@@ -64,7 +64,7 @@
       {
         "id": "error-responses",
         "title": "Error responses",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/error-responses.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/error-responses.md",
         "filename": "error-responses.md",
         "api_type": "REST",
         "source_type": "",
@@ -76,7 +76,7 @@
       {
         "id": "exchange-endpoint",
         "title": "Exchange endpoint",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/exchange-endpoint.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/exchange-endpoint.md",
         "filename": "exchange-endpoint.md",
         "api_type": "REST",
         "source_type": "",
@@ -88,7 +88,7 @@
       {
         "id": "hip-3-deployer-actions",
         "title": "HIP-3 deployer actions",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/hip-3-deployer-actions.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/hip-3-deployer-actions.md",
         "filename": "hip-3-deployer-actions.md",
         "api_type": "REST",
         "source_type": "",
@@ -100,7 +100,7 @@
       {
         "id": "perpetuals",
         "title": "Perpetuals",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint/perpetuals.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint/perpetuals.md",
         "filename": "perpetuals.md",
         "api_type": "REST",
         "source_type": "",
@@ -112,7 +112,7 @@
       {
         "id": "spot",
         "title": "Spot",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint/spot.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint/spot.md",
         "filename": "spot.md",
         "api_type": "REST",
         "source_type": "",
@@ -124,7 +124,7 @@
       {
         "id": "info-endpoint",
         "title": "Info endpoint",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint.md",
         "filename": "info-endpoint.md",
         "api_type": "REST",
         "source_type": "",
@@ -136,7 +136,7 @@
       {
         "id": "nonces-and-api-wallets",
         "title": "Nonces and API wallets",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/nonces-and-api-wallets.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/nonces-and-api-wallets.md",
         "filename": "nonces-and-api-wallets.md",
         "api_type": "REST",
         "source_type": "",
@@ -148,7 +148,7 @@
       {
         "id": "notation",
         "title": "Notation",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/notation.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/notation.md",
         "filename": "notation.md",
         "api_type": "REST",
         "source_type": "",
@@ -160,7 +160,7 @@
       {
         "id": "optimizing-latency",
         "title": "Optimizing latency",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/optimizing-latency.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/optimizing-latency.md",
         "filename": "optimizing-latency.md",
         "api_type": "REST",
         "source_type": "",
@@ -172,7 +172,7 @@
       {
         "id": "priority-fees",
         "title": "Priority fees",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/priority-fees.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/priority-fees.md",
         "filename": "priority-fees.md",
         "api_type": "REST",
         "source_type": "",
@@ -184,7 +184,7 @@
       {
         "id": "rate-limits-and-user-limits",
         "title": "Rate limits and user limits",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/rate-limits-and-user-limits.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/rate-limits-and-user-limits.md",
         "filename": "rate-limits-and-user-limits.md",
         "api_type": "REST",
         "source_type": "",
@@ -196,7 +196,7 @@
       {
         "id": "signing",
         "title": "Signing",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/signing.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/signing.md",
         "filename": "signing.md",
         "api_type": "REST",
         "source_type": "",
@@ -208,7 +208,7 @@
       {
         "id": "tick-and-lot-size",
         "title": "Tick and lot size",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/tick-and-lot-size.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/tick-and-lot-size.md",
         "filename": "tick-and-lot-size.md",
         "api_type": "REST",
         "source_type": "",
@@ -220,7 +220,7 @@
       {
         "id": "api",
         "title": "API",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api.md",
         "filename": "api.md",
         "api_type": "REST",
         "source_type": "",
@@ -232,7 +232,7 @@
       {
         "id": "dual-block-architecture",
         "title": "Dual-block architecture",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/dual-block-architecture.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/dual-block-architecture.md",
         "filename": "dual-block-architecture.md",
         "api_type": "REST",
         "source_type": "",
@@ -244,7 +244,7 @@
       {
         "id": "hypercore-less-than-greater-than-hyperevm-transfers",
         "title": "HyperCore <> HyperEVM transfers",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers.md",
         "filename": "hypercore-less-than-greater-than-hyperevm-transfers.md",
         "api_type": "REST",
         "source_type": "",
@@ -256,7 +256,7 @@
       {
         "id": "interacting-with-hypercore",
         "title": "Interacting with HyperCore",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/interacting-with-hypercore.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/interacting-with-hypercore.md",
         "filename": "interacting-with-hypercore.md",
         "api_type": "REST",
         "source_type": "",
@@ -268,7 +268,7 @@
       {
         "id": "interaction-timings",
         "title": "Interaction timings",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/interaction-timings.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/interaction-timings.md",
         "filename": "interaction-timings.md",
         "api_type": "REST",
         "source_type": "",
@@ -280,7 +280,7 @@
       {
         "id": "json-rpc",
         "title": "JSON-RPC",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/json-rpc.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/json-rpc.md",
         "filename": "json-rpc.md",
         "api_type": "REST",
         "source_type": "",
@@ -292,7 +292,7 @@
       {
         "id": "raw-hyperevm-block-data",
         "title": "Raw HyperEVM block data",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/raw-hyperevm-block-data.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/raw-hyperevm-block-data.md",
         "filename": "raw-hyperevm-block-data.md",
         "api_type": "REST",
         "source_type": "",
@@ -304,7 +304,7 @@
       {
         "id": "wrapped-hype",
         "title": "Wrapped HYPE",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/wrapped-hype.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm/wrapped-hype.md",
         "filename": "wrapped-hype.md",
         "api_type": "REST",
         "source_type": "",
@@ -316,7 +316,7 @@
       {
         "id": "hyperevm",
         "title": "HyperEVM",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm.md",
+        "path": "docs/crypto/hyperliquid/for-developers/hyperevm.md",
         "filename": "hyperevm.md",
         "api_type": "REST",
         "source_type": "",
@@ -328,7 +328,7 @@
       {
         "id": "foundation-non-validating-node",
         "title": "Foundation non-validating node",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes/foundation-non-validating-node.md",
+        "path": "docs/crypto/hyperliquid/for-developers/nodes/foundation-non-validating-node.md",
         "filename": "foundation-non-validating-node.md",
         "api_type": "REST",
         "source_type": "",
@@ -340,7 +340,7 @@
       {
         "id": "l1-data-schemas",
         "title": "L1 data schemas",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes/l1-data-schemas.md",
+        "path": "docs/crypto/hyperliquid/for-developers/nodes/l1-data-schemas.md",
         "filename": "l1-data-schemas.md",
         "api_type": "REST",
         "source_type": "",
@@ -352,7 +352,7 @@
       {
         "id": "nodes",
         "title": "Nodes",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes.md",
+        "path": "docs/crypto/hyperliquid/for-developers/nodes.md",
         "filename": "nodes.md",
         "api_type": "REST",
         "source_type": "",
@@ -364,7 +364,7 @@
       {
         "id": "for-developers",
         "title": "API",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers.md",
+        "path": "docs/crypto/hyperliquid/for-developers.md",
         "filename": "for-developers.md",
         "api_type": "REST",
         "source_type": "",
@@ -378,7 +378,7 @@
       {
         "id": "post-requests",
         "title": "Post requests",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/post-requests.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/websocket/post-requests.md",
         "filename": "post-requests.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -390,7 +390,7 @@
       {
         "id": "subscriptions",
         "title": "Subscriptions",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/subscriptions.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/websocket/subscriptions.md",
         "filename": "subscriptions.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -402,7 +402,7 @@
       {
         "id": "timeouts-and-heartbeats",
         "title": "Timeouts and heartbeats",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/timeouts-and-heartbeats.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/websocket/timeouts-and-heartbeats.md",
         "filename": "timeouts-and-heartbeats.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -414,7 +414,7 @@
       {
         "id": "websocket",
         "title": "Websocket",
-        "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket.md",
+        "path": "docs/crypto/hyperliquid/for-developers/api/websocket.md",
         "filename": "websocket.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -429,7 +429,7 @@
     {
       "id": "api",
       "title": "API",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api.md",
       "filename": "api.md",
       "api_type": "REST",
       "source_type": "",
@@ -441,7 +441,7 @@
     {
       "id": "for-developers",
       "title": "API",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers.md",
+      "path": "docs/crypto/hyperliquid/for-developers.md",
       "filename": "for-developers.md",
       "api_type": "REST",
       "source_type": "",
@@ -453,7 +453,7 @@
     {
       "id": "activation-gas-fee",
       "title": "Activation gas fee",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/activation-gas-fee.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/activation-gas-fee.md",
       "filename": "activation-gas-fee.md",
       "api_type": "REST",
       "source_type": "",
@@ -465,7 +465,7 @@
     {
       "id": "asset-ids",
       "title": "Asset IDs",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/asset-ids.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/asset-ids.md",
       "filename": "asset-ids.md",
       "api_type": "REST",
       "source_type": "",
@@ -477,7 +477,7 @@
     {
       "id": "bridge2",
       "title": "Bridge2",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/bridge2.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/bridge2.md",
       "filename": "bridge2.md",
       "api_type": "REST",
       "source_type": "",
@@ -489,7 +489,7 @@
     {
       "id": "deploying-hip-1-and-hip-2-assets",
       "title": "Deploying HIP-1 and HIP-2 assets",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/deploying-hip-1-and-hip-2-assets.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/deploying-hip-1-and-hip-2-assets.md",
       "filename": "deploying-hip-1-and-hip-2-assets.md",
       "api_type": "REST",
       "source_type": "",
@@ -501,7 +501,7 @@
     {
       "id": "dual-block-architecture",
       "title": "Dual-block architecture",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/dual-block-architecture.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/dual-block-architecture.md",
       "filename": "dual-block-architecture.md",
       "api_type": "REST",
       "source_type": "",
@@ -513,7 +513,7 @@
     {
       "id": "error-responses",
       "title": "Error responses",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/error-responses.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/error-responses.md",
       "filename": "error-responses.md",
       "api_type": "REST",
       "source_type": "",
@@ -525,7 +525,7 @@
     {
       "id": "exchange-endpoint",
       "title": "Exchange endpoint",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/exchange-endpoint.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/exchange-endpoint.md",
       "filename": "exchange-endpoint.md",
       "api_type": "REST",
       "source_type": "",
@@ -537,7 +537,7 @@
     {
       "id": "foundation-non-validating-node",
       "title": "Foundation non-validating node",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes/foundation-non-validating-node.md",
+      "path": "docs/crypto/hyperliquid/for-developers/nodes/foundation-non-validating-node.md",
       "filename": "foundation-non-validating-node.md",
       "api_type": "REST",
       "source_type": "",
@@ -549,7 +549,7 @@
     {
       "id": "hip-3-deployer-actions",
       "title": "HIP-3 deployer actions",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/hip-3-deployer-actions.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/hip-3-deployer-actions.md",
       "filename": "hip-3-deployer-actions.md",
       "api_type": "REST",
       "source_type": "",
@@ -561,7 +561,7 @@
     {
       "id": "hypercore-less-than-greater-than-hyperevm-transfers",
       "title": "HyperCore <> HyperEVM transfers",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/hypercore-less-than-greater-than-hyperevm-transfers.md",
       "filename": "hypercore-less-than-greater-than-hyperevm-transfers.md",
       "api_type": "REST",
       "source_type": "",
@@ -573,7 +573,7 @@
     {
       "id": "hyperevm",
       "title": "HyperEVM",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm.md",
       "filename": "hyperevm.md",
       "api_type": "REST",
       "source_type": "",
@@ -585,7 +585,7 @@
     {
       "id": "info-endpoint",
       "title": "Info endpoint",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint.md",
       "filename": "info-endpoint.md",
       "api_type": "REST",
       "source_type": "",
@@ -597,7 +597,7 @@
     {
       "id": "interacting-with-hypercore",
       "title": "Interacting with HyperCore",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/interacting-with-hypercore.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/interacting-with-hypercore.md",
       "filename": "interacting-with-hypercore.md",
       "api_type": "REST",
       "source_type": "",
@@ -609,7 +609,7 @@
     {
       "id": "interaction-timings",
       "title": "Interaction timings",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/interaction-timings.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/interaction-timings.md",
       "filename": "interaction-timings.md",
       "api_type": "REST",
       "source_type": "",
@@ -621,7 +621,7 @@
     {
       "id": "json-rpc",
       "title": "JSON-RPC",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/json-rpc.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/json-rpc.md",
       "filename": "json-rpc.md",
       "api_type": "REST",
       "source_type": "",
@@ -633,7 +633,7 @@
     {
       "id": "l1-data-schemas",
       "title": "L1 data schemas",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes/l1-data-schemas.md",
+      "path": "docs/crypto/hyperliquid/for-developers/nodes/l1-data-schemas.md",
       "filename": "l1-data-schemas.md",
       "api_type": "REST",
       "source_type": "",
@@ -645,7 +645,7 @@
     {
       "id": "nodes",
       "title": "Nodes",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/nodes.md",
+      "path": "docs/crypto/hyperliquid/for-developers/nodes.md",
       "filename": "nodes.md",
       "api_type": "REST",
       "source_type": "",
@@ -657,7 +657,7 @@
     {
       "id": "nonces-and-api-wallets",
       "title": "Nonces and API wallets",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/nonces-and-api-wallets.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/nonces-and-api-wallets.md",
       "filename": "nonces-and-api-wallets.md",
       "api_type": "REST",
       "source_type": "",
@@ -669,7 +669,7 @@
     {
       "id": "notation",
       "title": "Notation",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/notation.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/notation.md",
       "filename": "notation.md",
       "api_type": "REST",
       "source_type": "",
@@ -681,7 +681,7 @@
     {
       "id": "optimizing-latency",
       "title": "Optimizing latency",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/optimizing-latency.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/optimizing-latency.md",
       "filename": "optimizing-latency.md",
       "api_type": "REST",
       "source_type": "",
@@ -693,7 +693,7 @@
     {
       "id": "perpetuals",
       "title": "Perpetuals",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint/perpetuals.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint/perpetuals.md",
       "filename": "perpetuals.md",
       "api_type": "REST",
       "source_type": "",
@@ -705,7 +705,7 @@
     {
       "id": "priority-fees",
       "title": "Priority fees",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/priority-fees.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/priority-fees.md",
       "filename": "priority-fees.md",
       "api_type": "REST",
       "source_type": "",
@@ -717,7 +717,7 @@
     {
       "id": "rate-limits-and-user-limits",
       "title": "Rate limits and user limits",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/rate-limits-and-user-limits.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/rate-limits-and-user-limits.md",
       "filename": "rate-limits-and-user-limits.md",
       "api_type": "REST",
       "source_type": "",
@@ -729,7 +729,7 @@
     {
       "id": "raw-hyperevm-block-data",
       "title": "Raw HyperEVM block data",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/raw-hyperevm-block-data.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/raw-hyperevm-block-data.md",
       "filename": "raw-hyperevm-block-data.md",
       "api_type": "REST",
       "source_type": "",
@@ -741,7 +741,7 @@
     {
       "id": "signing",
       "title": "Signing",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/signing.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/signing.md",
       "filename": "signing.md",
       "api_type": "REST",
       "source_type": "",
@@ -753,7 +753,7 @@
     {
       "id": "spot",
       "title": "Spot",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/info-endpoint/spot.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/info-endpoint/spot.md",
       "filename": "spot.md",
       "api_type": "REST",
       "source_type": "",
@@ -765,7 +765,7 @@
     {
       "id": "tick-and-lot-size",
       "title": "Tick and lot size",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/tick-and-lot-size.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/tick-and-lot-size.md",
       "filename": "tick-and-lot-size.md",
       "api_type": "REST",
       "source_type": "",
@@ -777,7 +777,7 @@
     {
       "id": "wrapped-hype",
       "title": "Wrapped HYPE",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/hyperevm/wrapped-hype.md",
+      "path": "docs/crypto/hyperliquid/for-developers/hyperevm/wrapped-hype.md",
       "filename": "wrapped-hype.md",
       "api_type": "REST",
       "source_type": "",
@@ -789,7 +789,7 @@
     {
       "id": "post-requests",
       "title": "Post requests",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/post-requests.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/websocket/post-requests.md",
       "filename": "post-requests.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -801,7 +801,7 @@
     {
       "id": "subscriptions",
       "title": "Subscriptions",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/subscriptions.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/websocket/subscriptions.md",
       "filename": "subscriptions.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -813,7 +813,7 @@
     {
       "id": "timeouts-and-heartbeats",
       "title": "Timeouts and heartbeats",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket/timeouts-and-heartbeats.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/websocket/timeouts-and-heartbeats.md",
       "filename": "timeouts-and-heartbeats.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -825,7 +825,7 @@
     {
       "id": "websocket",
       "title": "Websocket",
-      "path": "docs/crypto/exchanges/hyperliquid/for-developers/api/websocket.md",
+      "path": "docs/crypto/hyperliquid/for-developers/api/websocket.md",
       "filename": "websocket.md",
       "api_type": "WebSocket",
       "source_type": "",

@@ -20,7 +20,7 @@ source:
   download_page_url: https://xtp.zts.com.cn/service/download
   download_api_url: https://xtp.zts.com.cn/jeecg-boot/xtp/ProductDocument
 output:
-  docs_dir: docs/cn/stock/gateways/zhongtai/xtp
+  docs_dir: docs/cn/stock/zhongtai/xtp
   index_file: index/cn/stock/zhongtai-xtp.json
   clean_before_crawl: true
 metadata_defaults:

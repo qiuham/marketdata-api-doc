@@ -15,7 +15,7 @@ source:
   legacy_exchange: gateio
   concurrency: 2
 output:
-  docs_dir: docs/crypto/exchanges/gateio
+  docs_dir: docs/crypto/gateio
   index_file: index/crypto/gateio.json
 metadata_defaults:
   api_type: reference

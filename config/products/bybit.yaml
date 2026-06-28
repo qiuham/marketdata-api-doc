@@ -15,7 +15,7 @@ source:
   legacy_exchange: bybit
   concurrency: 5
 output:
-  docs_dir: docs/crypto/exchanges/bybit
+  docs_dir: docs/crypto/bybit
   index_file: index/crypto/bybit.json
 metadata_defaults:
   api_type: reference

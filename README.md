@@ -1,11 +1,11 @@
 # MarketData API Docs
 
-多市场交易、行情和极速柜台 API 文档库。这个仓库参考 `crypto-api-docs` 的组织方式，但抽象为更大的接口文档体系：`cn`、`us`、`crypto` 作为顶层范围，范围下面再区分股票、期货、期权、交易所、券商和极速柜台等。
+多市场交易、行情和极速柜台 API 文档库。这个仓库参考 `crypto-api-docs` 的组织方式，但抽象为更大的接口文档体系：`cn`、`us`、`crypto` 作为顶层范围；传统市场在范围下按资产类别组织，crypto 直接按提供方组织。
 
 ## 设计原则
 
 - **范围优先**：顶层按 `cn`、`us`、`crypto` 组织；`cn` / `us` 下面再按 `stock`、`futures`、`options` 等资产类别分层。
-- **业务域分层**：资产类别下面再按 `gateways`、`brokers`、`exchanges`、`data-vendors` 等业务域分层。
+- **路径保持短**：传统市场路径采用 `范围/资产/提供方/产品`，crypto 路径采用 `crypto/提供方`；业务类型如 `gateways`、`exchanges`、`brokers`、`data-vendors` 放在元数据和索引里。
 - **产品独立**：每个接入对象都有独立 `product_id`，例如 `zhongtai-xtp`、`zhongtai-xtppro`。
 - **文档统一**：落地为 Markdown，并使用 YAML frontmatter 记录来源、范围、资产类别、提供方、产品、接口类型和更新时间。
 - **索引友好**：每个产品生成独立 JSON 索引，同时生成全局 `index/catalog.json`，方便 AI、搜索和后续工具读取。
@@ -17,15 +17,15 @@
 
 | 范围 | 资产 | 业务域 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|------|--------|--------|------|------|----------|----------|
-| cn | stock | gateways | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/gateways/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
-| cn | stock | gateways | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/gateways/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
-| crypto | digital_asset | exchanges | Binance | [Binance](./docs/crypto/exchanges/binance/) | ✅ | 821 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Bybit | [Bybit](./docs/crypto/exchanges/bybit/) | ✅ | 454 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Coinbase | [Coinbase](./docs/crypto/exchanges/coinbase/) | ✅ | 71 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Gate.io | [Gate.io](./docs/crypto/exchanges/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Hyperliquid | [Hyperliquid](./docs/crypto/exchanges/hyperliquid/) | ✅ | 34 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Kraken | [Kraken](./docs/crypto/exchanges/kraken/) | ✅ | 243 | 2026-05-27 |
-| crypto | digital_asset | exchanges | OKX | [OKX](./docs/crypto/exchanges/okx/) | ✅ | 509 | 2026-05-27 |
+| cn | stock | gateways | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
+| cn | stock | gateways | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
+| crypto | digital_asset | exchanges | Binance | [Binance](./docs/crypto/binance/) | ✅ | 821 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 454 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 71 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 34 | 2026-05-27 |
+| crypto | digital_asset | exchanges | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-05-27 |
+| crypto | digital_asset | exchanges | OKX | [OKX](./docs/crypto/okx/) | ✅ | 509 | 2026-05-27 |
 
 ## 快速开始
 
@@ -83,19 +83,17 @@ marketdata-api-doc/
 ├── docs/                 # Markdown 文档
 │   ├── cn/
 │   │   └── stock/
-│   │       └── gateways/
-│   │           └── zhongtai/
-│   │               ├── xtp/                        # 36 Markdown docs
-│   │               └── xtppro/                     # 21 Markdown docs
+│   │       └── zhongtai/
+│   │           ├── xtp/                            # 36 Markdown docs
+│   │           └── xtppro/                         # 21 Markdown docs
 │   ├── crypto/
-│   │   └── exchanges/
-│   │       ├── binance/                            # 821 Markdown docs
-│   │       ├── bybit/                              # 454 Markdown docs
-│   │       ├── coinbase/                           # 71 Markdown docs
-│   │       ├── gateio/                             # 66 Markdown docs
-│   │       ├── hyperliquid/                        # 34 Markdown docs
-│   │       ├── kraken/                             # 243 Markdown docs
-│   │       └── okx/                                # 509 Markdown docs
+│   │   ├── binance/                                # 821 Markdown docs
+│   │   ├── bybit/                                  # 454 Markdown docs
+│   │   ├── coinbase/                               # 71 Markdown docs
+│   │   ├── gateio/                                 # 66 Markdown docs
+│   │   ├── hyperliquid/                            # 34 Markdown docs
+│   │   ├── kraken/                                 # 243 Markdown docs
+│   │   └── okx/                                    # 509 Markdown docs
 │   └── us/
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
@@ -149,7 +147,7 @@ updated_at: 2026-05-18
 
 ## 已接入范围
 
-- `cn/stock/gateways/zhongtai/xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
-- `cn/stock/gateways/zhongtai/xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
-- `crypto/exchanges/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
+- `cn/stock/zhongtai/xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
+- `cn/stock/zhongtai/xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
+- `crypto/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

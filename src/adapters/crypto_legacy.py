@@ -30,7 +30,7 @@ class LegacyCryptoAdapter(ProductAdapter):
         legacy_config = load_config(legacy_config_path)
         legacy_config.setdefault("name", legacy_exchange)
         legacy_config["output"] = {
-            "base_dir": "docs/crypto/exchanges",
+            "base_dir": "docs/crypto",
             "dir_name": legacy_exchange,
         }
 

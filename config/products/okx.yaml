@@ -15,7 +15,7 @@ source:
   legacy_exchange: okx
   concurrency: 5
 output:
-  docs_dir: docs/crypto/exchanges/okx
+  docs_dir: docs/crypto/okx
   index_file: index/crypto/okx.json
 metadata_defaults:
   api_type: reference

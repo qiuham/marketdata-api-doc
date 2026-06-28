@@ -15,7 +15,7 @@ source:
   legacy_exchange: coinbase
   concurrency: 5
 output:
-  docs_dir: docs/crypto/exchanges/coinbase
+  docs_dir: docs/crypto/coinbase
   index_file: index/crypto/coinbase.json
 metadata_defaults:
   api_type: reference

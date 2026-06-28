@@ -8,7 +8,7 @@
   "provider_name": "Gate.io",
   "product": "api",
   "status": "active",
-  "docs_dir": "docs/crypto/exchanges/gateio",
+  "docs_dir": "docs/crypto/gateio",
   "total": 66,
   "updated_at": "2026-05-27 20:19:18.388031",
   "documents_by_type": {
@@ -16,7 +16,7 @@
       {
         "id": "en",
         "title": "Gate for AI Developer Guide",
-        "path": "docs/crypto/exchanges/gateio/agent/en.md",
+        "path": "docs/crypto/gateio/agent/en.md",
         "filename": "en.md",
         "api_type": "REST",
         "source_type": "",
@@ -28,7 +28,7 @@
       {
         "id": "zh_CN",
         "title": "Gate for AI 开发者指南",
-        "path": "docs/crypto/exchanges/gateio/agent/zh_CN.md",
+        "path": "docs/crypto/gateio/agent/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "REST",
         "source_type": "",
@@ -40,7 +40,7 @@
       {
         "id": "bot",
         "title": "Bot",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/bot.md",
+        "path": "docs/crypto/gateio/apiv4/en/bot.md",
         "filename": "bot.md",
         "api_type": "REST",
         "source_type": "",
@@ -52,7 +52,7 @@
       {
         "id": "flash-swap",
         "title": "Flash_swap",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/flash-swap.md",
+        "path": "docs/crypto/gateio/apiv4/en/flash-swap.md",
         "filename": "flash-swap.md",
         "api_type": "REST",
         "source_type": "",
@@ -64,7 +64,7 @@
       {
         "id": "isolated-margin",
         "title": "Isolated-Margin",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/isolated-margin.md",
+        "path": "docs/crypto/gateio/apiv4/en/isolated-margin.md",
         "filename": "isolated-margin.md",
         "api_type": "REST",
         "source_type": "",
@@ -76,7 +76,7 @@
       {
         "id": "multi-collateral-loan",
         "title": "Multi-collateral-loan",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/multi-collateral-loan.md",
+        "path": "docs/crypto/gateio/apiv4/en/multi-collateral-loan.md",
         "filename": "multi-collateral-loan.md",
         "api_type": "REST",
         "source_type": "",
@@ -88,7 +88,7 @@
       {
         "id": "otc",
         "title": "OTC",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/otc.md",
+        "path": "docs/crypto/gateio/apiv4/en/otc.md",
         "filename": "otc.md",
         "api_type": "REST",
         "source_type": "",
@@ -100,7 +100,7 @@
       {
         "id": "p2p",
         "title": "P2p",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/p2p.md",
+        "path": "docs/crypto/gateio/apiv4/en/p2p.md",
         "filename": "p2p.md",
         "api_type": "REST",
         "source_type": "",
@@ -112,7 +112,7 @@
       {
         "id": "en",
         "title": "Gate API v4.106.88",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en.md",
+        "path": "docs/crypto/gateio/apiv4/en.md",
         "filename": "en.md",
         "api_type": "REST",
         "source_type": "",
@@ -124,7 +124,7 @@
       {
         "id": "bot",
         "title": "Bot",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/bot.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/bot.md",
         "filename": "bot.md",
         "api_type": "REST",
         "source_type": "",
@@ -136,7 +136,7 @@
       {
         "id": "flash-swap",
         "title": "Flash_swap",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/flash-swap.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/flash-swap.md",
         "filename": "flash-swap.md",
         "api_type": "REST",
         "source_type": "",
@@ -148,7 +148,7 @@
       {
         "id": "isolated-margin",
         "title": "Isolated-Margin",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/isolated-margin.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/isolated-margin.md",
         "filename": "isolated-margin.md",
         "api_type": "REST",
         "source_type": "",
@@ -160,7 +160,7 @@
       {
         "id": "multi-collateral-loan",
         "title": "Multi-collateral-loan",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/multi-collateral-loan.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/multi-collateral-loan.md",
         "filename": "multi-collateral-loan.md",
         "api_type": "REST",
         "source_type": "",
@@ -172,7 +172,7 @@
       {
         "id": "otc",
         "title": "OTC",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/otc.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/otc.md",
         "filename": "otc.md",
         "api_type": "REST",
         "source_type": "",
@@ -184,7 +184,7 @@
       {
         "id": "p2p",
         "title": "P2p",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/p2p.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/p2p.md",
         "filename": "p2p.md",
         "api_type": "REST",
         "source_type": "",
@@ -196,7 +196,7 @@
       {
         "id": "zh_CN",
         "title": "Gate API v4.106.88",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "REST",
         "source_type": "",
@@ -210,7 +210,7 @@
       {
         "id": "en",
         "title": "Gate Alpha API v1.1.1",
-        "path": "docs/crypto/exchanges/gateio/alpha/en.md",
+        "path": "docs/crypto/gateio/alpha/en.md",
         "filename": "en.md",
         "api_type": "Trading",
         "source_type": "",
@@ -222,7 +222,7 @@
       {
         "id": "zh_CN",
         "title": "Gate Alpha API v1.1.1",
-        "path": "docs/crypto/exchanges/gateio/alpha/zh_CN.md",
+        "path": "docs/crypto/gateio/alpha/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "Trading",
         "source_type": "",
@@ -234,7 +234,7 @@
       {
         "id": "crossex",
         "title": "CrossEx",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/crossex.md",
+        "path": "docs/crypto/gateio/apiv4/en/crossex.md",
         "filename": "crossex.md",
         "api_type": "Trading",
         "source_type": "",
@@ -246,7 +246,7 @@
       {
         "id": "delivery",
         "title": "Delivery",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/delivery.md",
+        "path": "docs/crypto/gateio/apiv4/en/delivery.md",
         "filename": "delivery.md",
         "api_type": "Trading",
         "source_type": "",
@@ -258,7 +258,7 @@
       {
         "id": "futures",
         "title": "Futures",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/futures.md",
+        "path": "docs/crypto/gateio/apiv4/en/futures.md",
         "filename": "futures.md",
         "api_type": "Trading",
         "source_type": "",
@@ -270,7 +270,7 @@
       {
         "id": "options",
         "title": "Options",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/options.md",
+        "path": "docs/crypto/gateio/apiv4/en/options.md",
         "filename": "options.md",
         "api_type": "Trading",
         "source_type": "",
@@ -282,7 +282,7 @@
       {
         "id": "spot",
         "title": "Spot",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/spot.md",
+        "path": "docs/crypto/gateio/apiv4/en/spot.md",
         "filename": "spot.md",
         "api_type": "Trading",
         "source_type": "",
@@ -294,7 +294,7 @@
       {
         "id": "tradfi",
         "title": "TradFi",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/tradfi.md",
+        "path": "docs/crypto/gateio/apiv4/en/tradfi.md",
         "filename": "tradfi.md",
         "api_type": "Trading",
         "source_type": "",
@@ -306,7 +306,7 @@
       {
         "id": "crossex",
         "title": "CrossEx",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/crossex.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/crossex.md",
         "filename": "crossex.md",
         "api_type": "Trading",
         "source_type": "",
@@ -318,7 +318,7 @@
       {
         "id": "delivery",
         "title": "Delivery",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/delivery.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/delivery.md",
         "filename": "delivery.md",
         "api_type": "Trading",
         "source_type": "",
@@ -330,7 +330,7 @@
       {
         "id": "futures",
         "title": "Futures",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/futures.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/futures.md",
         "filename": "futures.md",
         "api_type": "Trading",
         "source_type": "",
@@ -342,7 +342,7 @@
       {
         "id": "options",
         "title": "Options",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/options.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/options.md",
         "filename": "options.md",
         "api_type": "Trading",
         "source_type": "",
@@ -354,7 +354,7 @@
       {
         "id": "spot",
         "title": "Spot",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/spot.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/spot.md",
         "filename": "spot.md",
         "api_type": "Trading",
         "source_type": "",
@@ -366,7 +366,7 @@
       {
         "id": "tradfi",
         "title": "TradFi",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/tradfi.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/tradfi.md",
         "filename": "tradfi.md",
         "api_type": "Trading",
         "source_type": "",
@@ -378,7 +378,7 @@
       {
         "id": "en",
         "title": "Gate CrossEx API v1.0.1",
-        "path": "docs/crypto/exchanges/gateio/crossex/en.md",
+        "path": "docs/crypto/gateio/crossex/en.md",
         "filename": "en.md",
         "api_type": "Trading",
         "source_type": "",
@@ -390,7 +390,7 @@
       {
         "id": "zh_CN",
         "title": "Gate CrossEx API v1.0.1",
-        "path": "docs/crypto/exchanges/gateio/crossex/zh_CN.md",
+        "path": "docs/crypto/gateio/crossex/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "Trading",
         "source_type": "",
@@ -404,7 +404,7 @@
       {
         "id": "en",
         "title": "Gate Announcement WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/announcements/ws/en.md",
+        "path": "docs/crypto/gateio/announcements/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -416,7 +416,7 @@
       {
         "id": "zh_CN",
         "title": "Gate Announcement WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/announcements/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/announcements/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -428,7 +428,7 @@
       {
         "id": "en",
         "title": "Spot WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/apiv4/ws/en.md",
+        "path": "docs/crypto/gateio/apiv4/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -440,7 +440,7 @@
       {
         "id": "zh_CN",
         "title": "Spot WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/apiv4/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/apiv4/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -452,7 +452,7 @@
       {
         "id": "en",
         "title": "CrossEx WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/crossex/ws/en.md",
+        "path": "docs/crypto/gateio/crossex/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -464,7 +464,7 @@
       {
         "id": "zh_CN",
         "title": "CrossEx WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/crossex/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/crossex/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -476,7 +476,7 @@
       {
         "id": "en",
         "title": "Gate Delivery WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/delivery/ws/en.md",
+        "path": "docs/crypto/gateio/delivery/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -488,7 +488,7 @@
       {
         "id": "zh_CN",
         "title": "Gate Delivery WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/delivery/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/delivery/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -500,7 +500,7 @@
       {
         "id": "en",
         "title": "Gate Futures WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/futures/ws/en.md",
+        "path": "docs/crypto/gateio/futures/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -512,7 +512,7 @@
       {
         "id": "zh_CN",
         "title": "Gate Futures WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/futures/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/futures/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -524,7 +524,7 @@
       {
         "id": "en",
         "title": "Gate Options WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/options/ws/en.md",
+        "path": "docs/crypto/gateio/options/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -536,7 +536,7 @@
       {
         "id": "zh_CN",
         "title": "Gate 期权 WebSocket v4.0.0",
-        "path": "docs/crypto/exchanges/gateio/options/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/options/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -548,7 +548,7 @@
       {
         "id": "en",
         "title": "Gate TradFi WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/tradfi/ws/en.md",
+        "path": "docs/crypto/gateio/tradfi/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -560,7 +560,7 @@
       {
         "id": "zh_CN",
         "title": "Gate TradFi WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/tradfi/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/tradfi/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -572,7 +572,7 @@
       {
         "id": "en",
         "title": "Gate Unified WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/unified/ws/en.md",
+        "path": "docs/crypto/gateio/unified/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -584,7 +584,7 @@
       {
         "id": "zh_CN",
         "title": "Gate 统一账户 WebSocket v1.0.0",
-        "path": "docs/crypto/exchanges/gateio/unified/ws/zh_CN.md",
+        "path": "docs/crypto/gateio/unified/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -596,7 +596,7 @@
       {
         "id": "en",
         "title": "General",
-        "path": "docs/crypto/exchanges/gateio/websocket/en.md",
+        "path": "docs/crypto/gateio/websocket/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -608,7 +608,7 @@
       {
         "id": "zh_CN",
         "title": "摘要",
-        "path": "docs/crypto/exchanges/gateio/websocket/zh_CN.md",
+        "path": "docs/crypto/gateio/websocket/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -622,7 +622,7 @@
       {
         "id": "account",
         "title": "Account",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/account.md",
+        "path": "docs/crypto/gateio/apiv4/en/account.md",
         "filename": "account.md",
         "api_type": "Account",
         "source_type": "",
@@ -634,7 +634,7 @@
       {
         "id": "subaccount",
         "title": "SubAccount",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/subaccount.md",
+        "path": "docs/crypto/gateio/apiv4/en/subaccount.md",
         "filename": "subaccount.md",
         "api_type": "Account",
         "source_type": "",
@@ -646,7 +646,7 @@
       {
         "id": "unified",
         "title": "Unified",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/unified.md",
+        "path": "docs/crypto/gateio/apiv4/en/unified.md",
         "filename": "unified.md",
         "api_type": "Account",
         "source_type": "",
@@ -658,7 +658,7 @@
       {
         "id": "wallet",
         "title": "Wallet",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/wallet.md",
+        "path": "docs/crypto/gateio/apiv4/en/wallet.md",
         "filename": "wallet.md",
         "api_type": "Account",
         "source_type": "",
@@ -670,7 +670,7 @@
       {
         "id": "withdrawal",
         "title": "Withdrawal",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/withdrawal.md",
+        "path": "docs/crypto/gateio/apiv4/en/withdrawal.md",
         "filename": "withdrawal.md",
         "api_type": "Account",
         "source_type": "",
@@ -682,7 +682,7 @@
       {
         "id": "account",
         "title": "Account",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/account.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/account.md",
         "filename": "account.md",
         "api_type": "Account",
         "source_type": "",
@@ -694,7 +694,7 @@
       {
         "id": "subaccount",
         "title": "SubAccount",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/subaccount.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/subaccount.md",
         "filename": "subaccount.md",
         "api_type": "Account",
         "source_type": "",
@@ -706,7 +706,7 @@
       {
         "id": "unified",
         "title": "Unified",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/unified.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/unified.md",
         "filename": "unified.md",
         "api_type": "Account",
         "source_type": "",
@@ -718,7 +718,7 @@
       {
         "id": "wallet",
         "title": "Wallet",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/wallet.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/wallet.md",
         "filename": "wallet.md",
         "api_type": "Account",
         "source_type": "",
@@ -730,7 +730,7 @@
       {
         "id": "withdrawal",
         "title": "Withdrawal",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/withdrawal.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/withdrawal.md",
         "filename": "withdrawal.md",
         "api_type": "Account",
         "source_type": "",
@@ -744,7 +744,7 @@
       {
         "id": "earn",
         "title": "Earn",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/earn.md",
+        "path": "docs/crypto/gateio/apiv4/en/earn.md",
         "filename": "earn.md",
         "api_type": "Earn",
         "source_type": "",
@@ -756,7 +756,7 @@
       {
         "id": "earnuni",
         "title": "EarnUni",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/earnuni.md",
+        "path": "docs/crypto/gateio/apiv4/en/earnuni.md",
         "filename": "earnuni.md",
         "api_type": "Earn",
         "source_type": "",
@@ -768,7 +768,7 @@
       {
         "id": "rebate",
         "title": "Rebate",
-        "path": "docs/crypto/exchanges/gateio/apiv4/en/rebate.md",
+        "path": "docs/crypto/gateio/apiv4/en/rebate.md",
         "filename": "rebate.md",
         "api_type": "Earn",
         "source_type": "",
@@ -780,7 +780,7 @@
       {
         "id": "earn",
         "title": "Earn",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/earn.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/earn.md",
         "filename": "earn.md",
         "api_type": "Earn",
         "source_type": "",
@@ -792,7 +792,7 @@
       {
         "id": "earnuni",
         "title": "EarnUni",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/earnuni.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/earnuni.md",
         "filename": "earnuni.md",
         "api_type": "Earn",
         "source_type": "",
@@ -804,7 +804,7 @@
       {
         "id": "rebate",
         "title": "Rebate",
-        "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/rebate.md",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/rebate.md",
         "filename": "rebate.md",
         "api_type": "Earn",
         "source_type": "",
@@ -819,7 +819,7 @@
     {
       "id": "account",
       "title": "Account",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/account.md",
+      "path": "docs/crypto/gateio/apiv4/en/account.md",
       "filename": "account.md",
       "api_type": "Account",
       "source_type": "",
@@ -831,7 +831,7 @@
     {
       "id": "account",
       "title": "Account",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/account.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/account.md",
       "filename": "account.md",
       "api_type": "Account",
       "source_type": "",
@@ -843,7 +843,7 @@
     {
       "id": "subaccount",
       "title": "SubAccount",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/subaccount.md",
+      "path": "docs/crypto/gateio/apiv4/en/subaccount.md",
       "filename": "subaccount.md",
       "api_type": "Account",
       "source_type": "",
@@ -855,7 +855,7 @@
     {
       "id": "subaccount",
       "title": "SubAccount",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/subaccount.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/subaccount.md",
       "filename": "subaccount.md",
       "api_type": "Account",
       "source_type": "",
@@ -867,7 +867,7 @@
     {
       "id": "unified",
       "title": "Unified",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/unified.md",
+      "path": "docs/crypto/gateio/apiv4/en/unified.md",
       "filename": "unified.md",
       "api_type": "Account",
       "source_type": "",
@@ -879,7 +879,7 @@
     {
       "id": "unified",
       "title": "Unified",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/unified.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/unified.md",
       "filename": "unified.md",
       "api_type": "Account",
       "source_type": "",
@@ -891,7 +891,7 @@
     {
       "id": "wallet",
       "title": "Wallet",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/wallet.md",
+      "path": "docs/crypto/gateio/apiv4/en/wallet.md",
       "filename": "wallet.md",
       "api_type": "Account",
       "source_type": "",
@@ -903,7 +903,7 @@
     {
       "id": "wallet",
       "title": "Wallet",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/wallet.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/wallet.md",
       "filename": "wallet.md",
       "api_type": "Account",
       "source_type": "",
@@ -915,7 +915,7 @@
     {
       "id": "withdrawal",
       "title": "Withdrawal",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/withdrawal.md",
+      "path": "docs/crypto/gateio/apiv4/en/withdrawal.md",
       "filename": "withdrawal.md",
       "api_type": "Account",
       "source_type": "",
@@ -927,7 +927,7 @@
     {
       "id": "withdrawal",
       "title": "Withdrawal",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/withdrawal.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/withdrawal.md",
       "filename": "withdrawal.md",
       "api_type": "Account",
       "source_type": "",
@@ -939,7 +939,7 @@
     {
       "id": "earn",
       "title": "Earn",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/earn.md",
+      "path": "docs/crypto/gateio/apiv4/en/earn.md",
       "filename": "earn.md",
       "api_type": "Earn",
       "source_type": "",
@@ -951,7 +951,7 @@
     {
       "id": "earn",
       "title": "Earn",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/earn.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/earn.md",
       "filename": "earn.md",
       "api_type": "Earn",
       "source_type": "",
@@ -963,7 +963,7 @@
     {
       "id": "earnuni",
       "title": "EarnUni",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/earnuni.md",
+      "path": "docs/crypto/gateio/apiv4/en/earnuni.md",
       "filename": "earnuni.md",
       "api_type": "Earn",
       "source_type": "",
@@ -975,7 +975,7 @@
     {
       "id": "earnuni",
       "title": "EarnUni",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/earnuni.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/earnuni.md",
       "filename": "earnuni.md",
       "api_type": "Earn",
       "source_type": "",
@@ -987,7 +987,7 @@
     {
       "id": "rebate",
       "title": "Rebate",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/rebate.md",
+      "path": "docs/crypto/gateio/apiv4/en/rebate.md",
       "filename": "rebate.md",
       "api_type": "Earn",
       "source_type": "",
@@ -999,7 +999,7 @@
     {
       "id": "rebate",
       "title": "Rebate",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/rebate.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/rebate.md",
       "filename": "rebate.md",
       "api_type": "Earn",
       "source_type": "",
@@ -1011,7 +1011,7 @@
     {
       "id": "bot",
       "title": "Bot",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/bot.md",
+      "path": "docs/crypto/gateio/apiv4/en/bot.md",
       "filename": "bot.md",
       "api_type": "REST",
       "source_type": "",
@@ -1023,7 +1023,7 @@
     {
       "id": "bot",
       "title": "Bot",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/bot.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/bot.md",
       "filename": "bot.md",
       "api_type": "REST",
       "source_type": "",
@@ -1035,7 +1035,7 @@
     {
       "id": "flash-swap",
       "title": "Flash_swap",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/flash-swap.md",
+      "path": "docs/crypto/gateio/apiv4/en/flash-swap.md",
       "filename": "flash-swap.md",
       "api_type": "REST",
       "source_type": "",
@@ -1047,7 +1047,7 @@
     {
       "id": "flash-swap",
       "title": "Flash_swap",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/flash-swap.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/flash-swap.md",
       "filename": "flash-swap.md",
       "api_type": "REST",
       "source_type": "",
@@ -1059,7 +1059,7 @@
     {
       "id": "en",
       "title": "Gate API v4.106.88",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en.md",
+      "path": "docs/crypto/gateio/apiv4/en.md",
       "filename": "en.md",
       "api_type": "REST",
       "source_type": "",
@@ -1071,7 +1071,7 @@
     {
       "id": "zh_CN",
       "title": "Gate API v4.106.88",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "REST",
       "source_type": "",
@@ -1083,7 +1083,7 @@
     {
       "id": "en",
       "title": "Gate for AI Developer Guide",
-      "path": "docs/crypto/exchanges/gateio/agent/en.md",
+      "path": "docs/crypto/gateio/agent/en.md",
       "filename": "en.md",
       "api_type": "REST",
       "source_type": "",
@@ -1095,7 +1095,7 @@
     {
       "id": "zh_CN",
       "title": "Gate for AI 开发者指南",
-      "path": "docs/crypto/exchanges/gateio/agent/zh_CN.md",
+      "path": "docs/crypto/gateio/agent/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "REST",
       "source_type": "",
@@ -1107,7 +1107,7 @@
     {
       "id": "isolated-margin",
       "title": "Isolated-Margin",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/isolated-margin.md",
+      "path": "docs/crypto/gateio/apiv4/en/isolated-margin.md",
       "filename": "isolated-margin.md",
       "api_type": "REST",
       "source_type": "",
@@ -1119,7 +1119,7 @@
     {
       "id": "isolated-margin",
       "title": "Isolated-Margin",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/isolated-margin.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/isolated-margin.md",
       "filename": "isolated-margin.md",
       "api_type": "REST",
       "source_type": "",
@@ -1131,7 +1131,7 @@
     {
       "id": "multi-collateral-loan",
       "title": "Multi-collateral-loan",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/multi-collateral-loan.md",
+      "path": "docs/crypto/gateio/apiv4/en/multi-collateral-loan.md",
       "filename": "multi-collateral-loan.md",
       "api_type": "REST",
       "source_type": "",
@@ -1143,7 +1143,7 @@
     {
       "id": "multi-collateral-loan",
       "title": "Multi-collateral-loan",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/multi-collateral-loan.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/multi-collateral-loan.md",
       "filename": "multi-collateral-loan.md",
       "api_type": "REST",
       "source_type": "",
@@ -1155,7 +1155,7 @@
     {
       "id": "otc",
       "title": "OTC",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/otc.md",
+      "path": "docs/crypto/gateio/apiv4/en/otc.md",
       "filename": "otc.md",
       "api_type": "REST",
       "source_type": "",
@@ -1167,7 +1167,7 @@
     {
       "id": "otc",
       "title": "OTC",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/otc.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/otc.md",
       "filename": "otc.md",
       "api_type": "REST",
       "source_type": "",
@@ -1179,7 +1179,7 @@
     {
       "id": "p2p",
       "title": "P2p",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/p2p.md",
+      "path": "docs/crypto/gateio/apiv4/en/p2p.md",
       "filename": "p2p.md",
       "api_type": "REST",
       "source_type": "",
@@ -1191,7 +1191,7 @@
     {
       "id": "p2p",
       "title": "P2p",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/p2p.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/p2p.md",
       "filename": "p2p.md",
       "api_type": "REST",
       "source_type": "",
@@ -1203,7 +1203,7 @@
     {
       "id": "crossex",
       "title": "CrossEx",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/crossex.md",
+      "path": "docs/crypto/gateio/apiv4/en/crossex.md",
       "filename": "crossex.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1215,7 +1215,7 @@
     {
       "id": "crossex",
       "title": "CrossEx",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/crossex.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/crossex.md",
       "filename": "crossex.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1227,7 +1227,7 @@
     {
       "id": "delivery",
       "title": "Delivery",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/delivery.md",
+      "path": "docs/crypto/gateio/apiv4/en/delivery.md",
       "filename": "delivery.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1239,7 +1239,7 @@
     {
       "id": "delivery",
       "title": "Delivery",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/delivery.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/delivery.md",
       "filename": "delivery.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1251,7 +1251,7 @@
     {
       "id": "futures",
       "title": "Futures",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/futures.md",
+      "path": "docs/crypto/gateio/apiv4/en/futures.md",
       "filename": "futures.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1263,7 +1263,7 @@
     {
       "id": "futures",
       "title": "Futures",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/futures.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/futures.md",
       "filename": "futures.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1275,7 +1275,7 @@
     {
       "id": "en",
       "title": "Gate Alpha API v1.1.1",
-      "path": "docs/crypto/exchanges/gateio/alpha/en.md",
+      "path": "docs/crypto/gateio/alpha/en.md",
       "filename": "en.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1287,7 +1287,7 @@
     {
       "id": "zh_CN",
       "title": "Gate Alpha API v1.1.1",
-      "path": "docs/crypto/exchanges/gateio/alpha/zh_CN.md",
+      "path": "docs/crypto/gateio/alpha/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1299,7 +1299,7 @@
     {
       "id": "en",
       "title": "Gate CrossEx API v1.0.1",
-      "path": "docs/crypto/exchanges/gateio/crossex/en.md",
+      "path": "docs/crypto/gateio/crossex/en.md",
       "filename": "en.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1311,7 +1311,7 @@
     {
       "id": "zh_CN",
       "title": "Gate CrossEx API v1.0.1",
-      "path": "docs/crypto/exchanges/gateio/crossex/zh_CN.md",
+      "path": "docs/crypto/gateio/crossex/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1323,7 +1323,7 @@
     {
       "id": "options",
       "title": "Options",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/options.md",
+      "path": "docs/crypto/gateio/apiv4/en/options.md",
       "filename": "options.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1335,7 +1335,7 @@
     {
       "id": "options",
       "title": "Options",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/options.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/options.md",
       "filename": "options.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1347,7 +1347,7 @@
     {
       "id": "spot",
       "title": "Spot",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/spot.md",
+      "path": "docs/crypto/gateio/apiv4/en/spot.md",
       "filename": "spot.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1359,7 +1359,7 @@
     {
       "id": "spot",
       "title": "Spot",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/spot.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/spot.md",
       "filename": "spot.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1371,7 +1371,7 @@
     {
       "id": "tradfi",
       "title": "TradFi",
-      "path": "docs/crypto/exchanges/gateio/apiv4/en/tradfi.md",
+      "path": "docs/crypto/gateio/apiv4/en/tradfi.md",
       "filename": "tradfi.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1383,7 +1383,7 @@
     {
       "id": "tradfi",
       "title": "TradFi",
-      "path": "docs/crypto/exchanges/gateio/apiv4/zh_CN/tradfi.md",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/tradfi.md",
       "filename": "tradfi.md",
       "api_type": "Trading",
       "source_type": "",
@@ -1395,7 +1395,7 @@
     {
       "id": "en",
       "title": "CrossEx WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/crossex/ws/en.md",
+      "path": "docs/crypto/gateio/crossex/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1407,7 +1407,7 @@
     {
       "id": "zh_CN",
       "title": "CrossEx WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/crossex/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/crossex/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1419,7 +1419,7 @@
     {
       "id": "en",
       "title": "Gate Announcement WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/announcements/ws/en.md",
+      "path": "docs/crypto/gateio/announcements/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1431,7 +1431,7 @@
     {
       "id": "zh_CN",
       "title": "Gate Announcement WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/announcements/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/announcements/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1443,7 +1443,7 @@
     {
       "id": "en",
       "title": "Gate Delivery WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/delivery/ws/en.md",
+      "path": "docs/crypto/gateio/delivery/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1455,7 +1455,7 @@
     {
       "id": "zh_CN",
       "title": "Gate Delivery WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/delivery/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/delivery/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1467,7 +1467,7 @@
     {
       "id": "en",
       "title": "Gate Futures WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/futures/ws/en.md",
+      "path": "docs/crypto/gateio/futures/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1479,7 +1479,7 @@
     {
       "id": "zh_CN",
       "title": "Gate Futures WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/futures/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/futures/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1491,7 +1491,7 @@
     {
       "id": "en",
       "title": "Gate Options WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/options/ws/en.md",
+      "path": "docs/crypto/gateio/options/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1503,7 +1503,7 @@
     {
       "id": "en",
       "title": "Gate TradFi WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/tradfi/ws/en.md",
+      "path": "docs/crypto/gateio/tradfi/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1515,7 +1515,7 @@
     {
       "id": "zh_CN",
       "title": "Gate TradFi WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/tradfi/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/tradfi/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1527,7 +1527,7 @@
     {
       "id": "en",
       "title": "Gate Unified WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/unified/ws/en.md",
+      "path": "docs/crypto/gateio/unified/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1539,7 +1539,7 @@
     {
       "id": "zh_CN",
       "title": "Gate 期权 WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/options/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/options/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1551,7 +1551,7 @@
     {
       "id": "zh_CN",
       "title": "Gate 统一账户 WebSocket v1.0.0",
-      "path": "docs/crypto/exchanges/gateio/unified/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/unified/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1563,7 +1563,7 @@
     {
       "id": "en",
       "title": "General",
-      "path": "docs/crypto/exchanges/gateio/websocket/en.md",
+      "path": "docs/crypto/gateio/websocket/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1575,7 +1575,7 @@
     {
       "id": "en",
       "title": "Spot WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/apiv4/ws/en.md",
+      "path": "docs/crypto/gateio/apiv4/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1587,7 +1587,7 @@
     {
       "id": "zh_CN",
       "title": "Spot WebSocket v4.0.0",
-      "path": "docs/crypto/exchanges/gateio/apiv4/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/apiv4/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -1599,7 +1599,7 @@
     {
       "id": "zh_CN",
       "title": "摘要",
-      "path": "docs/crypto/exchanges/gateio/websocket/zh_CN.md",
+      "path": "docs/crypto/gateio/websocket/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",

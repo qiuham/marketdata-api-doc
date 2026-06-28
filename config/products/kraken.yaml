@@ -15,7 +15,7 @@ source:
   legacy_exchange: kraken
   concurrency: 2
 output:
-  docs_dir: docs/crypto/exchanges/kraken
+  docs_dir: docs/crypto/kraken
   index_file: index/crypto/kraken.json
 metadata_defaults:
   api_type: reference

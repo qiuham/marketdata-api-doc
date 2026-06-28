@@ -8,7 +8,7 @@
   "provider_name": "中泰证券",
   "product": "xtppro",
   "status": "active",
-  "docs_dir": "docs/cn/stock/gateways/zhongtai/xtppro",
+  "docs_dir": "docs/cn/stock/zhongtai/xtppro",
   "total": 21,
   "updated_at": "2026-06-23",
   "documents_by_type": {
@@ -16,7 +16,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro-api常见问题",
         "title": "XTP Pro API常见问题",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/API常见问题/API常见问题.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/API常见问题/API常见问题.md",
         "filename": "API常见问题.md",
         "api_type": "guide",
         "source_type": "vitepress",
@@ -28,7 +28,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro交易xtrader-api使用示例说明",
         "title": "XTP-Pro交易XTrader-API使用示例说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/交易XTrader-API使用指南QuickStart.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/交易XTrader-API使用指南QuickStart.md",
         "filename": "交易XTrader-API使用指南QuickStart.md",
         "api_type": "guide",
         "source_type": "vitepress",
@@ -40,7 +40,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro算法交易xalgo-api使用示例说明",
         "title": "XTP Pro算法交易XAlgo-API使用示例说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法XAlgo-API使用指南QuickStart.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/算法XAlgo-API使用指南QuickStart.md",
         "filename": "算法XAlgo-API使用指南QuickStart.md",
         "api_type": "guide",
         "source_type": "vitepress",
@@ -52,7 +52,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro行情xquote-api使用示例说明",
         "title": "XTP-Pro行情XQuote-API使用示例说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情XQuote-API使用指南QuickStart.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/行情XQuote-API使用指南QuickStart.md",
         "filename": "行情XQuote-API使用指南QuickStart.md",
         "api_type": "guide",
         "source_type": "vitepress",
@@ -66,7 +66,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro-api接口说明",
         "title": "XTP-Pro API接口说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/API接口说明与示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/API接口说明与示例代码.md",
         "filename": "API接口说明与示例代码.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -78,7 +78,7 @@
       {
         "id": "zhongtai-xtppro-boostpython编译库说明",
         "title": "boost.python编译库说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/SDK编译库说明/Python版本SDK编译库说明.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/SDK编译库说明/Python版本SDK编译库说明.md",
         "filename": "Python版本SDK编译库说明.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -90,7 +90,7 @@
       {
         "id": "zhongtai-xtppro-新股申购逻辑示例代码",
         "title": "新股申购逻辑示例代码",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/新股申购逻辑示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/新股申购逻辑示例代码.md",
         "filename": "新股申购逻辑示例代码.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -102,7 +102,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro-algo-api接口说明",
         "title": "XTP Pro Algo API接口说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法API接口说明与示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/算法API接口说明与示例代码.md",
         "filename": "算法API接口说明与示例代码.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -114,7 +114,7 @@
       {
         "id": "zhongtai-xtppro-算法流控及母单参数示例",
         "title": "算法流控及母单参数示例 ​",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数示例.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数示例.md",
         "filename": "算法流控及母单参数示例.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -126,7 +126,7 @@
       {
         "id": "zhongtai-xtppro-参数类型说明",
         "title": "参数类型说明 ​",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数类型说明.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数类型说明.md",
         "filename": "算法流控及母单参数类型说明.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -138,7 +138,7 @@
       {
         "id": "zhongtai-xtppro-配股逻辑示例代码",
         "title": "配股逻辑示例代码",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/配股逻辑示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/配股逻辑示例代码.md",
         "filename": "配股逻辑示例代码.md",
         "api_type": "reference",
         "source_type": "vitepress",
@@ -152,7 +152,7 @@
       {
         "id": "zhongtai-xtppro-pro行情旧版配置文件的参数说明",
         "title": "Pro行情旧版配置文件的参数说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/Pro行情旧版配置文件参数说明.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/Pro行情旧版配置文件参数说明.md",
         "filename": "Pro行情旧版配置文件参数说明.md",
         "api_type": "market_data",
         "source_type": "vitepress",
@@ -164,7 +164,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro关于l2行情数据回补功能的使用说明",
         "title": "XTP-Pro关于L2行情数据回补功能的使用说明",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/关于L2行情数据回补功能的使用说明.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/关于L2行情数据回补功能的使用说明.md",
         "filename": "关于L2行情数据回补功能的使用说明.md",
         "api_type": "market_data",
         "source_type": "vitepress",
@@ -176,7 +176,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro行情xquote-api断线后应对措施",
         "title": "XTP-Pro行情XQuote-API断线后应对措施",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情XQuote-API断线后应对措施.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/行情XQuote-API断线后应对措施.md",
         "filename": "行情XQuote-API断线后应对措施.md",
         "api_type": "market_data",
         "source_type": "vitepress",
@@ -188,7 +188,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro行情服务接入前指引",
         "title": "XTP Pro行情服务接入前指引",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情服务接入前指引/行情服务接入前指引.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/行情服务接入前指引/行情服务接入前指引.md",
         "filename": "行情服务接入前指引.md",
         "api_type": "market_data",
         "source_type": "vitepress",
@@ -202,7 +202,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro交易分页查询示例代码",
         "title": "XTP-Pro交易分页查询示例代码",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/交易分页查询示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/交易分页查询示例代码.md",
         "filename": "交易分页查询示例代码.md",
         "api_type": "trade",
         "source_type": "vitepress",
@@ -214,7 +214,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro订单的状态机图",
         "title": "XTP Pro订单的状态机图",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/订单的状态机图/订单的状态机图.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/订单的状态机图/订单的状态机图.md",
         "filename": "订单的状态机图.md",
         "api_type": "trade",
         "source_type": "vitepress",
@@ -226,7 +226,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro资金划拨接口的示例代码",
         "title": "XTP-Pro资金划拨接口的示例代码",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/资金划拨接口的示例代码.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/资金划拨接口的示例代码.md",
         "filename": "资金划拨接口的示例代码.md",
         "api_type": "trade",
         "source_type": "vitepress",
@@ -240,7 +240,7 @@
       {
         "id": "zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化",
         "title": "从XTP交易到XTP-Pro交易API的变化",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/从XTP交易到XTP-Pro交易API的变化/从XTP交易到XTP-Pro交易API的变化.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/从XTP交易到XTP-Pro交易API的变化/从XTP交易到XTP-Pro交易API的变化.md",
         "filename": "从XTP交易到XTP-Pro交易API的变化.md",
         "api_type": "migration",
         "source_type": "vitepress",
@@ -252,7 +252,7 @@
       {
         "id": "zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化",
         "title": "从XTP行情到XTP Pro行情API的变化",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/从XTP行情到XTP-Pro行情API的变化/从XTP行情到XTP-Pro行情API的变化.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/从XTP行情到XTP-Pro行情API的变化/从XTP行情到XTP-Pro行情API的变化.md",
         "filename": "从XTP行情到XTP-Pro行情API的变化.md",
         "api_type": "migration",
         "source_type": "vitepress",
@@ -266,7 +266,7 @@
       {
         "id": "zhongtai-xtppro-xtp-pro错误代码速查表",
         "title": "XTP-Pro错误代码速查表",
-        "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/错误代码速查表/错误代码速查表.md",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/错误代码速查表/错误代码速查表.md",
         "filename": "错误代码速查表.md",
         "api_type": "error_code",
         "source_type": "vitepress",
@@ -281,7 +281,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro错误代码速查表",
       "title": "XTP-Pro错误代码速查表",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/错误代码速查表/错误代码速查表.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/错误代码速查表/错误代码速查表.md",
       "filename": "错误代码速查表.md",
       "api_type": "error_code",
       "source_type": "vitepress",
@@ -293,7 +293,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro-api常见问题",
       "title": "XTP Pro API常见问题",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/API常见问题/API常见问题.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/API常见问题/API常见问题.md",
       "filename": "API常见问题.md",
       "api_type": "guide",
       "source_type": "vitepress",
@@ -305,7 +305,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro算法交易xalgo-api使用示例说明",
       "title": "XTP Pro算法交易XAlgo-API使用示例说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法XAlgo-API使用指南QuickStart.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/算法XAlgo-API使用指南QuickStart.md",
       "filename": "算法XAlgo-API使用指南QuickStart.md",
       "api_type": "guide",
       "source_type": "vitepress",
@@ -317,7 +317,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro交易xtrader-api使用示例说明",
       "title": "XTP-Pro交易XTrader-API使用示例说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/交易XTrader-API使用指南QuickStart.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/交易XTrader-API使用指南QuickStart.md",
       "filename": "交易XTrader-API使用指南QuickStart.md",
       "api_type": "guide",
       "source_type": "vitepress",
@@ -329,7 +329,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro行情xquote-api使用示例说明",
       "title": "XTP-Pro行情XQuote-API使用示例说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情XQuote-API使用指南QuickStart.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/行情XQuote-API使用指南QuickStart.md",
       "filename": "行情XQuote-API使用指南QuickStart.md",
       "api_type": "guide",
       "source_type": "vitepress",
@@ -341,7 +341,7 @@
     {
       "id": "zhongtai-xtppro-pro行情旧版配置文件的参数说明",
       "title": "Pro行情旧版配置文件的参数说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/Pro行情旧版配置文件参数说明.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/Pro行情旧版配置文件参数说明.md",
       "filename": "Pro行情旧版配置文件参数说明.md",
       "api_type": "market_data",
       "source_type": "vitepress",
@@ -353,7 +353,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro行情服务接入前指引",
       "title": "XTP Pro行情服务接入前指引",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情服务接入前指引/行情服务接入前指引.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/行情服务接入前指引/行情服务接入前指引.md",
       "filename": "行情服务接入前指引.md",
       "api_type": "market_data",
       "source_type": "vitepress",
@@ -365,7 +365,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro关于l2行情数据回补功能的使用说明",
       "title": "XTP-Pro关于L2行情数据回补功能的使用说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/关于L2行情数据回补功能的使用说明.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/关于L2行情数据回补功能的使用说明.md",
       "filename": "关于L2行情数据回补功能的使用说明.md",
       "api_type": "market_data",
       "source_type": "vitepress",
@@ -377,7 +377,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro行情xquote-api断线后应对措施",
       "title": "XTP-Pro行情XQuote-API断线后应对措施",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/行情XQuote-API断线后应对措施.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/行情XQuote-API断线后应对措施.md",
       "filename": "行情XQuote-API断线后应对措施.md",
       "api_type": "market_data",
       "source_type": "vitepress",
@@ -389,7 +389,7 @@
     {
       "id": "zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化",
       "title": "从XTP交易到XTP-Pro交易API的变化",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/从XTP交易到XTP-Pro交易API的变化/从XTP交易到XTP-Pro交易API的变化.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/从XTP交易到XTP-Pro交易API的变化/从XTP交易到XTP-Pro交易API的变化.md",
       "filename": "从XTP交易到XTP-Pro交易API的变化.md",
       "api_type": "migration",
       "source_type": "vitepress",
@@ -401,7 +401,7 @@
     {
       "id": "zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化",
       "title": "从XTP行情到XTP Pro行情API的变化",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/从XTP行情到XTP-Pro行情API的变化/从XTP行情到XTP-Pro行情API的变化.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/从XTP行情到XTP-Pro行情API的变化/从XTP行情到XTP-Pro行情API的变化.md",
       "filename": "从XTP行情到XTP-Pro行情API的变化.md",
       "api_type": "migration",
       "source_type": "vitepress",
@@ -413,7 +413,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro-algo-api接口说明",
       "title": "XTP Pro Algo API接口说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法API接口说明与示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/算法API接口说明与示例代码.md",
       "filename": "算法API接口说明与示例代码.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -425,7 +425,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro-api接口说明",
       "title": "XTP-Pro API接口说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/API接口说明与示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/API接口说明与示例代码.md",
       "filename": "API接口说明与示例代码.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -437,7 +437,7 @@
     {
       "id": "zhongtai-xtppro-boostpython编译库说明",
       "title": "boost.python编译库说明",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/SDK编译库说明/Python版本SDK编译库说明.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/SDK编译库说明/Python版本SDK编译库说明.md",
       "filename": "Python版本SDK编译库说明.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -449,7 +449,7 @@
     {
       "id": "zhongtai-xtppro-参数类型说明",
       "title": "参数类型说明 ​",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数类型说明.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数类型说明.md",
       "filename": "算法流控及母单参数类型说明.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -461,7 +461,7 @@
     {
       "id": "zhongtai-xtppro-新股申购逻辑示例代码",
       "title": "新股申购逻辑示例代码",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/新股申购逻辑示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/新股申购逻辑示例代码.md",
       "filename": "新股申购逻辑示例代码.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -473,7 +473,7 @@
     {
       "id": "zhongtai-xtppro-算法流控及母单参数示例",
       "title": "算法流控及母单参数示例 ​",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数示例.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/算法流控及母单参数示例/算法流控及母单参数示例.md",
       "filename": "算法流控及母单参数示例.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -485,7 +485,7 @@
     {
       "id": "zhongtai-xtppro-配股逻辑示例代码",
       "title": "配股逻辑示例代码",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/配股逻辑示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/配股逻辑示例代码.md",
       "filename": "配股逻辑示例代码.md",
       "api_type": "reference",
       "source_type": "vitepress",
@@ -497,7 +497,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro订单的状态机图",
       "title": "XTP Pro订单的状态机图",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/订单的状态机图/订单的状态机图.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/订单的状态机图/订单的状态机图.md",
       "filename": "订单的状态机图.md",
       "api_type": "trade",
       "source_type": "vitepress",
@@ -509,7 +509,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro交易分页查询示例代码",
       "title": "XTP-Pro交易分页查询示例代码",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/交易分页查询示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/交易分页查询示例代码.md",
       "filename": "交易分页查询示例代码.md",
       "api_type": "trade",
       "source_type": "vitepress",
@@ -521,7 +521,7 @@
     {
       "id": "zhongtai-xtppro-xtp-pro资金划拨接口的示例代码",
       "title": "XTP-Pro资金划拨接口的示例代码",
-      "path": "docs/cn/stock/gateways/zhongtai/xtppro/API4/资金划拨接口的示例代码.md",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/资金划拨接口的示例代码.md",
       "filename": "资金划拨接口的示例代码.md",
       "api_type": "trade",
       "source_type": "vitepress",

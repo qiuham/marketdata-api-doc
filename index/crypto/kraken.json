@@ -8,7 +8,7 @@
   "provider_name": "Kraken",
   "product": "api",
   "status": "active",
-  "docs_dir": "docs/crypto/exchanges/kraken",
+  "docs_dir": "docs/crypto/kraken",
   "total": 243,
   "updated_at": "2026-05-27 20:13:06.681244",
   "documents_by_type": {
@@ -16,7 +16,7 @@
       {
         "id": "er-fix",
         "title": "Execution Report",
-        "path": "docs/crypto/exchanges/kraken/fix-api/er-fix.md",
+        "path": "docs/crypto/kraken/fix-api/er-fix.md",
         "filename": "er-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -28,7 +28,7 @@
       {
         "id": "logon-fix",
         "title": "Logon",
-        "path": "docs/crypto/exchanges/kraken/fix-api/logon-fix.md",
+        "path": "docs/crypto/kraken/fix-api/logon-fix.md",
         "filename": "logon-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -40,7 +40,7 @@
       {
         "id": "logout-fix",
         "title": "Logout",
-        "path": "docs/crypto/exchanges/kraken/fix-api/logout-fix.md",
+        "path": "docs/crypto/kraken/fix-api/logout-fix.md",
         "filename": "logout-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -52,7 +52,7 @@
       {
         "id": "nos-fix",
         "title": "New Order Single",
-        "path": "docs/crypto/exchanges/kraken/fix-api/nos-fix.md",
+        "path": "docs/crypto/kraken/fix-api/nos-fix.md",
         "filename": "nos-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -64,7 +64,7 @@
       {
         "id": "ocr-fix",
         "title": "Order Cancel Request",
-        "path": "docs/crypto/exchanges/kraken/fix-api/ocr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/ocr-fix.md",
         "filename": "ocr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -76,7 +76,7 @@
       {
         "id": "ocrr-fix",
         "title": "Order Cancel Replace Request (Spot only)",
-        "path": "docs/crypto/exchanges/kraken/fix-api/ocrr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/ocrr-fix.md",
         "filename": "ocrr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -88,7 +88,7 @@
       {
         "id": "omcr-fix",
         "title": "Order Mass Cancel Request",
-        "path": "docs/crypto/exchanges/kraken/fix-api/omcr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/omcr-fix.md",
         "filename": "omcr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -100,7 +100,7 @@
       {
         "id": "osr-fix",
         "title": "Order Status Request ( Spot Only )",
-        "path": "docs/crypto/exchanges/kraken/fix-api/osr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/osr-fix.md",
         "filename": "osr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -112,7 +112,7 @@
       {
         "id": "reject-business_level-fix",
         "title": "Reject - Business Level",
-        "path": "docs/crypto/exchanges/kraken/fix-api/reject-business_level-fix.md",
+        "path": "docs/crypto/kraken/fix-api/reject-business_level-fix.md",
         "filename": "reject-business_level-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -124,7 +124,7 @@
       {
         "id": "reject-session_level-fix",
         "title": "Reject - Session Level",
-        "path": "docs/crypto/exchanges/kraken/fix-api/reject-session_level-fix.md",
+        "path": "docs/crypto/kraken/fix-api/reject-session_level-fix.md",
         "filename": "reject-session_level-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -136,7 +136,7 @@
       {
         "id": "sequence-reset-fix",
         "title": "Sequence Reset",
-        "path": "docs/crypto/exchanges/kraken/fix-api/sequence-reset-fix.md",
+        "path": "docs/crypto/kraken/fix-api/sequence-reset-fix.md",
         "filename": "sequence-reset-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -148,7 +148,7 @@
       {
         "id": "session-fix",
         "title": "Header & Trailer",
-        "path": "docs/crypto/exchanges/kraken/fix-api/session-fix.md",
+        "path": "docs/crypto/kraken/fix-api/session-fix.md",
         "filename": "session-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -160,7 +160,7 @@
       {
         "id": "sl-fix",
         "title": "Instrument List",
-        "path": "docs/crypto/exchanges/kraken/fix-api/sl-fix.md",
+        "path": "docs/crypto/kraken/fix-api/sl-fix.md",
         "filename": "sl-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -172,7 +172,7 @@
       {
         "id": "slr-fix",
         "title": "Instrument List Request",
-        "path": "docs/crypto/exchanges/kraken/fix-api/slr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/slr-fix.md",
         "filename": "slr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -184,7 +184,7 @@
       {
         "id": "tss-fix",
         "title": "Trading Session Status (Spot only)",
-        "path": "docs/crypto/exchanges/kraken/fix-api/tss-fix.md",
+        "path": "docs/crypto/kraken/fix-api/tss-fix.md",
         "filename": "tss-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -196,7 +196,7 @@
       {
         "id": "tssr-fix",
         "title": "Trading Session Status Request (Spot only)",
-        "path": "docs/crypto/exchanges/kraken/fix-api/tssr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/tssr-fix.md",
         "filename": "tssr-fix.md",
         "api_type": "REST",
         "source_type": "",
@@ -208,7 +208,7 @@
       {
         "id": "api-keys",
         "title": "API Keys",
-        "path": "docs/crypto/exchanges/kraken/futures-api/auth/api-keys.md",
+        "path": "docs/crypto/kraken/futures-api/auth/api-keys.md",
         "filename": "api-keys.md",
         "api_type": "REST",
         "source_type": "",
@@ -220,7 +220,7 @@
       {
         "id": "check-v-3-api-key",
         "title": "Check v3 API key",
-        "path": "docs/crypto/exchanges/kraken/futures-api/auth/check-v-3-api-key.md",
+        "path": "docs/crypto/kraken/futures-api/auth/check-v-3-api-key.md",
         "filename": "check-v-3-api-key.md",
         "api_type": "REST",
         "source_type": "",
@@ -232,7 +232,7 @@
       {
         "id": "analytics",
         "title": "Analytics",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/analytics.md",
+        "path": "docs/crypto/kraken/futures-api/charts/analytics.md",
         "filename": "analytics.md",
         "api_type": "REST",
         "source_type": "",
@@ -244,7 +244,7 @@
       {
         "id": "liquidity-pool-stats",
         "title": "Get liquidity pool statistic",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/liquidity-pool-stats.md",
+        "path": "docs/crypto/kraken/futures-api/charts/liquidity-pool-stats.md",
         "filename": "liquidity-pool-stats.md",
         "api_type": "REST",
         "source_type": "",
@@ -256,7 +256,7 @@
       {
         "id": "resolutions",
         "title": "Resolutions",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/resolutions.md",
+        "path": "docs/crypto/kraken/futures-api/charts/resolutions.md",
         "filename": "resolutions.md",
         "api_type": "REST",
         "source_type": "",
@@ -268,7 +268,7 @@
       {
         "id": "tick-types",
         "title": "Tick Types",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/tick-types.md",
+        "path": "docs/crypto/kraken/futures-api/charts/tick-types.md",
         "filename": "tick-types.md",
         "api_type": "REST",
         "source_type": "",
@@ -280,7 +280,7 @@
       {
         "id": "account-history",
         "title": "Account History",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/account-history.md",
+        "path": "docs/crypto/kraken/futures-api/history/account-history.md",
         "filename": "account-history.md",
         "api_type": "REST",
         "source_type": "",
@@ -292,7 +292,7 @@
       {
         "id": "account-log-csv",
         "title": "Account log (CSV)",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/account-log-csv.md",
+        "path": "docs/crypto/kraken/futures-api/history/account-log-csv.md",
         "filename": "account-log-csv.md",
         "api_type": "REST",
         "source_type": "",
@@ -304,7 +304,7 @@
       {
         "id": "account-log",
         "title": "Get account log",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/account-log.md",
+        "path": "docs/crypto/kraken/futures-api/history/account-log.md",
         "filename": "account-log.md",
         "api_type": "REST",
         "source_type": "",
@@ -316,7 +316,7 @@
       {
         "id": "get-execution-events",
         "title": "Get execution events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-execution-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-execution-events.md",
         "filename": "get-execution-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -328,7 +328,7 @@
       {
         "id": "get-order-events",
         "title": "Get order events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-order-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-order-events.md",
         "filename": "get-order-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -340,7 +340,7 @@
       {
         "id": "get-position-events",
         "title": "Get position update events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-position-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-position-events.md",
         "filename": "get-position-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -352,7 +352,7 @@
       {
         "id": "get-public-execution-events",
         "title": "Get public execution events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-execution-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-public-execution-events.md",
         "filename": "get-public-execution-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -364,7 +364,7 @@
       {
         "id": "get-public-order-events",
         "title": "Get public order events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-order-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-public-order-events.md",
         "filename": "get-public-order-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -376,7 +376,7 @@
       {
         "id": "get-public-price-events",
         "title": "Get public mark price events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-price-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-public-price-events.md",
         "filename": "get-public-price-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -388,7 +388,7 @@
       {
         "id": "get-trigger-events",
         "title": "Get trigger events",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/get-trigger-events.md",
+        "path": "docs/crypto/kraken/futures-api/history/get-trigger-events.md",
         "filename": "get-trigger-events.md",
         "api_type": "REST",
         "source_type": "",
@@ -400,7 +400,7 @@
       {
         "id": "accept-rfq-offer",
         "title": "Accept an offer on an open RFQ",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/accept-rfq-offer.md",
+        "path": "docs/crypto/kraken/futures-api/trading/accept-rfq-offer.md",
         "filename": "accept-rfq-offer.md",
         "api_type": "REST",
         "source_type": "",
@@ -412,7 +412,7 @@
       {
         "id": "account-information",
         "title": "Account Information",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/account-information.md",
+        "path": "docs/crypto/kraken/futures-api/trading/account-information.md",
         "filename": "account-information.md",
         "api_type": "REST",
         "source_type": "",
@@ -424,7 +424,7 @@
       {
         "id": "add-assignment-program",
         "title": "Add assignment preference",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/add-assignment-program.md",
+        "path": "docs/crypto/kraken/futures-api/trading/add-assignment-program.md",
         "filename": "add-assignment-program.md",
         "api_type": "REST",
         "source_type": "",
@@ -436,7 +436,7 @@
       {
         "id": "assignment-program",
         "title": "Assignment Program",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/assignment-program.md",
+        "path": "docs/crypto/kraken/futures-api/trading/assignment-program.md",
         "filename": "assignment-program.md",
         "api_type": "REST",
         "source_type": "",
@@ -448,7 +448,7 @@
       {
         "id": "cancel-all-orders-after",
         "title": "Dead man's switch",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-all-orders-after.md",
+        "path": "docs/crypto/kraken/futures-api/trading/cancel-all-orders-after.md",
         "filename": "cancel-all-orders-after.md",
         "api_type": "REST",
         "source_type": "",
@@ -460,7 +460,7 @@
       {
         "id": "cancel-all-orders",
         "title": "Cancel all orders",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-all-orders.md",
+        "path": "docs/crypto/kraken/futures-api/trading/cancel-all-orders.md",
         "filename": "cancel-all-orders.md",
         "api_type": "REST",
         "source_type": "",
@@ -472,7 +472,7 @@
       {
         "id": "cancel-order",
         "title": "Cancel order",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-order.md",
+        "path": "docs/crypto/kraken/futures-api/trading/cancel-order.md",
         "filename": "cancel-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -484,7 +484,7 @@
       {
         "id": "cancel-rfq-offer",
         "title": "Cancel open offer on open RFQ",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-rfq-offer.md",
+        "path": "docs/crypto/kraken/futures-api/trading/cancel-rfq-offer.md",
         "filename": "cancel-rfq-offer.md",
         "api_type": "REST",
         "source_type": "",
@@ -496,7 +496,7 @@
       {
         "id": "cancel-user-rfq",
         "title": "Cancel an open RFQ",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-user-rfq.md",
+        "path": "docs/crypto/kraken/futures-api/trading/cancel-user-rfq.md",
         "filename": "cancel-user-rfq.md",
         "api_type": "REST",
         "source_type": "",
@@ -508,7 +508,7 @@
       {
         "id": "create-user-rfq",
         "title": "Create a new RFQ",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/create-user-rfq.md",
+        "path": "docs/crypto/kraken/futures-api/trading/create-user-rfq.md",
         "filename": "create-user-rfq.md",
         "api_type": "REST",
         "source_type": "",
@@ -520,7 +520,7 @@
       {
         "id": "delete-assignment-program",
         "title": "Deletes assignment preference",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/delete-assignment-program.md",
+        "path": "docs/crypto/kraken/futures-api/trading/delete-assignment-program.md",
         "filename": "delete-assignment-program.md",
         "api_type": "REST",
         "source_type": "",
@@ -532,7 +532,7 @@
       {
         "id": "edit-order-spring",
         "title": "Edit order",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/edit-order-spring.md",
+        "path": "docs/crypto/kraken/futures-api/trading/edit-order-spring.md",
         "filename": "edit-order-spring.md",
         "api_type": "REST",
         "source_type": "",
@@ -544,7 +544,7 @@
       {
         "id": "fee-schedules",
         "title": "Fee Schedules",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/fee-schedules.md",
+        "path": "docs/crypto/kraken/futures-api/trading/fee-schedules.md",
         "filename": "fee-schedules.md",
         "api_type": "REST",
         "source_type": "",
@@ -556,7 +556,7 @@
       {
         "id": "general",
         "title": "General",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/general.md",
+        "path": "docs/crypto/kraken/futures-api/trading/general.md",
         "filename": "general.md",
         "api_type": "REST",
         "source_type": "",
@@ -568,7 +568,7 @@
       {
         "id": "get-accounts",
         "title": "Get wallets",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-accounts.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-accounts.md",
         "filename": "get-accounts.md",
         "api_type": "REST",
         "source_type": "",
@@ -580,7 +580,7 @@
       {
         "id": "get-assignment-program-current",
         "title": "List assignment programs",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-assignment-program-current.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-assignment-program-current.md",
         "filename": "get-assignment-program-current.md",
         "api_type": "REST",
         "source_type": "",
@@ -592,7 +592,7 @@
       {
         "id": "get-assignment-program-history",
         "title": "List assignment preferences history",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-assignment-program-history.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-assignment-program-history.md",
         "filename": "get-assignment-program-history.md",
         "api_type": "REST",
         "source_type": "",
@@ -604,7 +604,7 @@
       {
         "id": "get-closed-rfq-offers",
         "title": "List offers placed by the account on closed RFQs",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-closed-rfq-offers.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-closed-rfq-offers.md",
         "filename": "get-closed-rfq-offers.md",
         "api_type": "REST",
         "source_type": "",
@@ -616,7 +616,7 @@
       {
         "id": "get-fee-schedules-v-3",
         "title": "Get fee schedules",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-fee-schedules-v-3.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-fee-schedules-v-3.md",
         "filename": "get-fee-schedules-v-3.md",
         "api_type": "REST",
         "source_type": "",
@@ -628,7 +628,7 @@
       {
         "id": "get-fills",
         "title": "Get your fills",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-fills.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-fills.md",
         "filename": "get-fills.md",
         "api_type": "REST",
         "source_type": "",
@@ -640,7 +640,7 @@
       {
         "id": "get-history",
         "title": "Get trade history",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-history.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-history.md",
         "filename": "get-history.md",
         "api_type": "REST",
         "source_type": "",
@@ -652,7 +652,7 @@
       {
         "id": "get-instruments",
         "title": "Get instruments",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-instruments.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-instruments.md",
         "filename": "get-instruments.md",
         "api_type": "REST",
         "source_type": "",
@@ -664,7 +664,7 @@
       {
         "id": "get-leverage-setting",
         "title": "Get leverage settings",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-leverage-setting.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-leverage-setting.md",
         "filename": "get-leverage-setting.md",
         "api_type": "REST",
         "source_type": "",
@@ -676,7 +676,7 @@
       {
         "id": "get-notifications",
         "title": "Get notifications",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-notifications.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-notifications.md",
         "filename": "get-notifications.md",
         "api_type": "REST",
         "source_type": "",
@@ -688,7 +688,7 @@
       {
         "id": "get-open-orders",
         "title": "Get open orders",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-orders.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-open-orders.md",
         "filename": "get-open-orders.md",
         "api_type": "REST",
         "source_type": "",
@@ -700,7 +700,7 @@
       {
         "id": "get-open-positions",
         "title": "Get open positions",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-positions.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-open-positions.md",
         "filename": "get-open-positions.md",
         "api_type": "REST",
         "source_type": "",
@@ -712,7 +712,7 @@
       {
         "id": "get-open-rfq-offers",
         "title": "List open offers on open RFQs",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfq-offers.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-open-rfq-offers.md",
         "filename": "get-open-rfq-offers.md",
         "api_type": "REST",
         "source_type": "",
@@ -724,7 +724,7 @@
       {
         "id": "get-open-rfqs-for-account",
         "title": "List open RFQs for account",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfqs-for-account.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-open-rfqs-for-account.md",
         "filename": "get-open-rfqs-for-account.md",
         "api_type": "REST",
         "source_type": "",
@@ -736,7 +736,7 @@
       {
         "id": "get-open-rfqs",
         "title": "List all open RFQs",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfqs.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-open-rfqs.md",
         "filename": "get-open-rfqs.md",
         "api_type": "REST",
         "source_type": "",
@@ -748,7 +748,7 @@
       {
         "id": "get-order-status",
         "title": "Get Specific Orders' Status",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-order-status.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-order-status.md",
         "filename": "get-order-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -760,7 +760,7 @@
       {
         "id": "get-orderbook",
         "title": "Get orderbook",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-orderbook.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-orderbook.md",
         "filename": "get-orderbook.md",
         "api_type": "REST",
         "source_type": "",
@@ -772,7 +772,7 @@
       {
         "id": "get-pnl-currency-preference",
         "title": "Get PNL currency preferences",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-pnl-currency-preference.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-pnl-currency-preference.md",
         "filename": "get-pnl-currency-preference.md",
         "api_type": "REST",
         "source_type": "",
@@ -784,7 +784,7 @@
       {
         "id": "get-portfolio-margining-parameters",
         "title": "Get portfolio margin parameters",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-portfolio-margining-parameters.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-portfolio-margining-parameters.md",
         "filename": "get-portfolio-margining-parameters.md",
         "api_type": "REST",
         "source_type": "",
@@ -796,7 +796,7 @@
       {
         "id": "get-rfq",
         "title": "Retrieve a single RFQ (open or recently closed)",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-rfq.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-rfq.md",
         "filename": "get-rfq.md",
         "api_type": "REST",
         "source_type": "",
@@ -808,7 +808,7 @@
       {
         "id": "get-self-trade-strategy",
         "title": "Get self trade strategy",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-self-trade-strategy.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-self-trade-strategy.md",
         "filename": "get-self-trade-strategy.md",
         "api_type": "REST",
         "source_type": "",
@@ -820,7 +820,7 @@
       {
         "id": "get-subaccount-trading-capability",
         "title": "Check subaccount trading status",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-subaccount-trading-capability.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-subaccount-trading-capability.md",
         "filename": "get-subaccount-trading-capability.md",
         "api_type": "REST",
         "source_type": "",
@@ -832,7 +832,7 @@
       {
         "id": "get-ticker",
         "title": "Get ticker by symbol",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-ticker.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-ticker.md",
         "filename": "get-ticker.md",
         "api_type": "REST",
         "source_type": "",
@@ -844,7 +844,7 @@
       {
         "id": "get-tickers",
         "title": "Get tickers",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-tickers.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-tickers.md",
         "filename": "get-tickers.md",
         "api_type": "REST",
         "source_type": "",
@@ -856,7 +856,7 @@
       {
         "id": "get-trading-instruments",
         "title": "Get trading instruments",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-trading-instruments.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-trading-instruments.md",
         "filename": "get-trading-instruments.md",
         "api_type": "REST",
         "source_type": "",
@@ -868,7 +868,7 @@
       {
         "id": "get-unwind-queue",
         "title": "Get position percentile of unwind queue",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-unwind-queue.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-unwind-queue.md",
         "filename": "get-unwind-queue.md",
         "api_type": "REST",
         "source_type": "",
@@ -880,7 +880,7 @@
       {
         "id": "get-user-fee-schedule-volumes-v-3",
         "title": "Get fee schedule volumes",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-user-fee-schedule-volumes-v-3.md",
+        "path": "docs/crypto/kraken/futures-api/trading/get-user-fee-schedule-volumes-v-3.md",
         "filename": "get-user-fee-schedule-volumes-v-3.md",
         "api_type": "REST",
         "source_type": "",
@@ -892,7 +892,7 @@
       {
         "id": "historical-data",
         "title": "Historical Data",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/historical-data.md",
+        "path": "docs/crypto/kraken/futures-api/trading/historical-data.md",
         "filename": "historical-data.md",
         "api_type": "REST",
         "source_type": "",
@@ -904,7 +904,7 @@
       {
         "id": "historical-funding-rates",
         "title": "Historical funding rates",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/historical-funding-rates.md",
+        "path": "docs/crypto/kraken/futures-api/trading/historical-funding-rates.md",
         "filename": "historical-funding-rates.md",
         "api_type": "REST",
         "source_type": "",
@@ -916,7 +916,7 @@
       {
         "id": "instrument-details",
         "title": "Instrument Details",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/instrument-details.md",
+        "path": "docs/crypto/kraken/futures-api/trading/instrument-details.md",
         "filename": "instrument-details.md",
         "api_type": "REST",
         "source_type": "",
@@ -928,7 +928,7 @@
       {
         "id": "instrument-status",
         "title": "Get instrument status",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/instrument-status.md",
+        "path": "docs/crypto/kraken/futures-api/trading/instrument-status.md",
         "filename": "instrument-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -940,7 +940,7 @@
       {
         "id": "instruments-status",
         "title": "Get instrument status list",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/instruments-status.md",
+        "path": "docs/crypto/kraken/futures-api/trading/instruments-status.md",
         "filename": "instruments-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -952,7 +952,7 @@
       {
         "id": "list-subaccounts",
         "title": "Get subaccounts",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/list-subaccounts.md",
+        "path": "docs/crypto/kraken/futures-api/trading/list-subaccounts.md",
         "filename": "list-subaccounts.md",
         "api_type": "REST",
         "source_type": "",
@@ -964,7 +964,7 @@
       {
         "id": "multi-collateral",
         "title": "Multi-Collateral",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/multi-collateral.md",
+        "path": "docs/crypto/kraken/futures-api/trading/multi-collateral.md",
         "filename": "multi-collateral.md",
         "api_type": "REST",
         "source_type": "",
@@ -976,7 +976,7 @@
       {
         "id": "order-management",
         "title": "Order Management",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/order-management.md",
+        "path": "docs/crypto/kraken/futures-api/trading/order-management.md",
         "filename": "order-management.md",
         "api_type": "REST",
         "source_type": "",
@@ -988,7 +988,7 @@
       {
         "id": "place-rfq-offer",
         "title": "Place new offer on an open RFQ",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/place-rfq-offer.md",
+        "path": "docs/crypto/kraken/futures-api/trading/place-rfq-offer.md",
         "filename": "place-rfq-offer.md",
         "api_type": "REST",
         "source_type": "",
@@ -1000,7 +1000,7 @@
       {
         "id": "rf-qs",
         "title": "RFQs",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/rf-qs.md",
+        "path": "docs/crypto/kraken/futures-api/trading/rf-qs.md",
         "filename": "rf-qs.md",
         "api_type": "REST",
         "source_type": "",
@@ -1012,7 +1012,7 @@
       {
         "id": "send-batch-order",
         "title": "Batch order management",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/send-batch-order.md",
+        "path": "docs/crypto/kraken/futures-api/trading/send-batch-order.md",
         "filename": "send-batch-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1024,7 +1024,7 @@
       {
         "id": "send-order",
         "title": "Send order",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/send-order.md",
+        "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
         "filename": "send-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1036,7 +1036,7 @@
       {
         "id": "set-leverage-setting",
         "title": "Set leverage settings",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-leverage-setting.md",
+        "path": "docs/crypto/kraken/futures-api/trading/set-leverage-setting.md",
         "filename": "set-leverage-setting.md",
         "api_type": "REST",
         "source_type": "",
@@ -1048,7 +1048,7 @@
       {
         "id": "set-pnl-currency-preference",
         "title": "Set PNL currency preference",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-pnl-currency-preference.md",
+        "path": "docs/crypto/kraken/futures-api/trading/set-pnl-currency-preference.md",
         "filename": "set-pnl-currency-preference.md",
         "api_type": "REST",
         "source_type": "",
@@ -1060,7 +1060,7 @@
       {
         "id": "set-self-trade-strategy",
         "title": "Update self trade strategy",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-self-trade-strategy.md",
+        "path": "docs/crypto/kraken/futures-api/trading/set-self-trade-strategy.md",
         "filename": "set-self-trade-strategy.md",
         "api_type": "REST",
         "source_type": "",
@@ -1072,7 +1072,7 @@
       {
         "id": "simulate-portfolio",
         "title": "Calculate portfolio margin, pnl and greeks",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/simulate-portfolio.md",
+        "path": "docs/crypto/kraken/futures-api/trading/simulate-portfolio.md",
         "filename": "simulate-portfolio.md",
         "api_type": "REST",
         "source_type": "",
@@ -1084,7 +1084,7 @@
       {
         "id": "sub-account-transfer",
         "title": "Initiate sub account transfer",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/sub-account-transfer.md",
+        "path": "docs/crypto/kraken/futures-api/trading/sub-account-transfer.md",
         "filename": "sub-account-transfer.md",
         "api_type": "REST",
         "source_type": "",
@@ -1096,7 +1096,7 @@
       {
         "id": "subaccounts",
         "title": "Subaccounts",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/subaccounts.md",
+        "path": "docs/crypto/kraken/futures-api/trading/subaccounts.md",
         "filename": "subaccounts.md",
         "api_type": "REST",
         "source_type": "",
@@ -1108,7 +1108,7 @@
       {
         "id": "trading-settings",
         "title": "Trading Settings",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/trading-settings.md",
+        "path": "docs/crypto/kraken/futures-api/trading/trading-settings.md",
         "filename": "trading-settings.md",
         "api_type": "REST",
         "source_type": "",
@@ -1120,7 +1120,7 @@
       {
         "id": "transfer",
         "title": "Initiate wallet transfer",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/transfer.md",
+        "path": "docs/crypto/kraken/futures-api/trading/transfer.md",
         "filename": "transfer.md",
         "api_type": "REST",
         "source_type": "",
@@ -1132,7 +1132,7 @@
       {
         "id": "transfers",
         "title": "Transfers",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/transfers.md",
+        "path": "docs/crypto/kraken/futures-api/trading/transfers.md",
         "filename": "transfers.md",
         "api_type": "REST",
         "source_type": "",
@@ -1144,7 +1144,7 @@
       {
         "id": "update-subaccount-trading-capability",
         "title": "Update subaccount trading status",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/update-subaccount-trading-capability.md",
+        "path": "docs/crypto/kraken/futures-api/trading/update-subaccount-trading-capability.md",
         "filename": "update-subaccount-trading-capability.md",
         "api_type": "REST",
         "source_type": "",
@@ -1156,7 +1156,7 @@
       {
         "id": "withdrawal",
         "title": "Initiate withdrawal to Spot wallet",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/withdrawal.md",
+        "path": "docs/crypto/kraken/futures-api/trading/withdrawal.md",
         "filename": "withdrawal.md",
         "api_type": "REST",
         "source_type": "",
@@ -1168,7 +1168,7 @@
       {
         "id": "account-transfer",
         "title": "Account Transfer",
-        "path": "docs/crypto/exchanges/kraken/rest-api/account-transfer.md",
+        "path": "docs/crypto/kraken/rest-api/account-transfer.md",
         "filename": "account-transfer.md",
         "api_type": "REST",
         "source_type": "",
@@ -1180,7 +1180,7 @@
       {
         "id": "add-export",
         "title": "Request Export Report",
-        "path": "docs/crypto/exchanges/kraken/rest-api/add-export.md",
+        "path": "docs/crypto/kraken/rest-api/add-export.md",
         "filename": "add-export.md",
         "api_type": "REST",
         "source_type": "",
@@ -1192,7 +1192,7 @@
       {
         "id": "add-order-batch",
         "title": "Add Order Batch",
-        "path": "docs/crypto/exchanges/kraken/rest-api/add-order-batch.md",
+        "path": "docs/crypto/kraken/rest-api/add-order-batch.md",
         "filename": "add-order-batch.md",
         "api_type": "REST",
         "source_type": "",
@@ -1204,7 +1204,7 @@
       {
         "id": "add-order",
         "title": "Add Order",
-        "path": "docs/crypto/exchanges/kraken/rest-api/add-order.md",
+        "path": "docs/crypto/kraken/rest-api/add-order.md",
         "filename": "add-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1216,7 +1216,7 @@
       {
         "id": "allocate-strategy",
         "title": "Allocate Earn Funds",
-        "path": "docs/crypto/exchanges/kraken/rest-api/allocate-strategy.md",
+        "path": "docs/crypto/kraken/rest-api/allocate-strategy.md",
         "filename": "allocate-strategy.md",
         "api_type": "REST",
         "source_type": "",
@@ -1228,7 +1228,7 @@
       {
         "id": "amend-order",
         "title": "Amend Order",
-        "path": "docs/crypto/exchanges/kraken/rest-api/amend-order.md",
+        "path": "docs/crypto/kraken/rest-api/amend-order.md",
         "filename": "amend-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1240,7 +1240,7 @@
       {
         "id": "cancel-all-orders-after",
         "title": "Cancel All Orders After X",
-        "path": "docs/crypto/exchanges/kraken/rest-api/cancel-all-orders-after.md",
+        "path": "docs/crypto/kraken/rest-api/cancel-all-orders-after.md",
         "filename": "cancel-all-orders-after.md",
         "api_type": "REST",
         "source_type": "",
@@ -1252,7 +1252,7 @@
       {
         "id": "cancel-all-orders",
         "title": "Cancel All Orders",
-        "path": "docs/crypto/exchanges/kraken/rest-api/cancel-all-orders.md",
+        "path": "docs/crypto/kraken/rest-api/cancel-all-orders.md",
         "filename": "cancel-all-orders.md",
         "api_type": "REST",
         "source_type": "",
@@ -1264,7 +1264,7 @@
       {
         "id": "cancel-order-batch",
         "title": "Cancel Order Batch",
-        "path": "docs/crypto/exchanges/kraken/rest-api/cancel-order-batch.md",
+        "path": "docs/crypto/kraken/rest-api/cancel-order-batch.md",
         "filename": "cancel-order-batch.md",
         "api_type": "REST",
         "source_type": "",
@@ -1276,7 +1276,7 @@
       {
         "id": "cancel-order",
         "title": "Cancel Order",
-        "path": "docs/crypto/exchanges/kraken/rest-api/cancel-order.md",
+        "path": "docs/crypto/kraken/rest-api/cancel-order.md",
         "filename": "cancel-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1288,7 +1288,7 @@
       {
         "id": "cancel-withdrawal",
         "title": "Request Withdrawal Cancellation",
-        "path": "docs/crypto/exchanges/kraken/rest-api/cancel-withdrawal.md",
+        "path": "docs/crypto/kraken/rest-api/cancel-withdrawal.md",
         "filename": "cancel-withdrawal.md",
         "api_type": "REST",
         "source_type": "",
@@ -1300,7 +1300,7 @@
       {
         "id": "create-subaccount",
         "title": "Create Subaccount",
-        "path": "docs/crypto/exchanges/kraken/rest-api/create-subaccount.md",
+        "path": "docs/crypto/kraken/rest-api/create-subaccount.md",
         "filename": "create-subaccount.md",
         "api_type": "REST",
         "source_type": "",
@@ -1312,7 +1312,7 @@
       {
         "id": "deallocate-strategy",
         "title": "Deallocate Earn Funds",
-        "path": "docs/crypto/exchanges/kraken/rest-api/deallocate-strategy.md",
+        "path": "docs/crypto/kraken/rest-api/deallocate-strategy.md",
         "filename": "deallocate-strategy.md",
         "api_type": "REST",
         "source_type": "",
@@ -1324,7 +1324,7 @@
       {
         "id": "edit-order",
         "title": "Edit Order",
-        "path": "docs/crypto/exchanges/kraken/rest-api/edit-order.md",
+        "path": "docs/crypto/kraken/rest-api/edit-order.md",
         "filename": "edit-order.md",
         "api_type": "REST",
         "source_type": "",
@@ -1336,7 +1336,7 @@
       {
         "id": "export-status",
         "title": "Get Export Report Status",
-        "path": "docs/crypto/exchanges/kraken/rest-api/export-status.md",
+        "path": "docs/crypto/kraken/rest-api/export-status.md",
         "filename": "export-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -1348,7 +1348,7 @@
       {
         "id": "get-account-balance",
         "title": "Get Account Balance",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-account-balance.md",
+        "path": "docs/crypto/kraken/rest-api/get-account-balance.md",
         "filename": "get-account-balance.md",
         "api_type": "REST",
         "source_type": "",
@@ -1360,7 +1360,7 @@
       {
         "id": "get-allocate-strategy-status",
         "title": "Get Allocation Status",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-allocate-strategy-status.md",
+        "path": "docs/crypto/kraken/rest-api/get-allocate-strategy-status.md",
         "filename": "get-allocate-strategy-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -1372,7 +1372,7 @@
       {
         "id": "get-api-key-info",
         "title": "Get API Key Info",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-api-key-info.md",
+        "path": "docs/crypto/kraken/rest-api/get-api-key-info.md",
         "filename": "get-api-key-info.md",
         "api_type": "REST",
         "source_type": "",
@@ -1384,7 +1384,7 @@
       {
         "id": "get-asset-info",
         "title": "Get Asset Info",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-asset-info.md",
+        "path": "docs/crypto/kraken/rest-api/get-asset-info.md",
         "filename": "get-asset-info.md",
         "api_type": "REST",
         "source_type": "",
@@ -1396,7 +1396,7 @@
       {
         "id": "get-closed-orders",
         "title": "Get Closed Orders",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-closed-orders.md",
+        "path": "docs/crypto/kraken/rest-api/get-closed-orders.md",
         "filename": "get-closed-orders.md",
         "api_type": "REST",
         "source_type": "",
@@ -1408,7 +1408,7 @@
       {
         "id": "get-credit-lines",
         "title": "Get Credit Lines",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-credit-lines.md",
+        "path": "docs/crypto/kraken/rest-api/get-credit-lines.md",
         "filename": "get-credit-lines.md",
         "api_type": "REST",
         "source_type": "",
@@ -1420,7 +1420,7 @@
       {
         "id": "get-deallocate-strategy-status",
         "title": "Get Deallocation Status",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-deallocate-strategy-status.md",
+        "path": "docs/crypto/kraken/rest-api/get-deallocate-strategy-status.md",
         "filename": "get-deallocate-strategy-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -1432,7 +1432,7 @@
       {
         "id": "get-deposit-addresses",
         "title": "Get Deposit Addresses",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-deposit-addresses.md",
+        "path": "docs/crypto/kraken/rest-api/get-deposit-addresses.md",
         "filename": "get-deposit-addresses.md",
         "api_type": "REST",
         "source_type": "",
@@ -1444,7 +1444,7 @@
       {
         "id": "get-deposit-methods",
         "title": "Get Deposit Methods",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-deposit-methods.md",
+        "path": "docs/crypto/kraken/rest-api/get-deposit-methods.md",
         "filename": "get-deposit-methods.md",
         "api_type": "REST",
         "source_type": "",
@@ -1456,7 +1456,7 @@
       {
         "id": "get-extended-balance",
         "title": "Get Extended Balance",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-extended-balance.md",
+        "path": "docs/crypto/kraken/rest-api/get-extended-balance.md",
         "filename": "get-extended-balance.md",
         "api_type": "REST",
         "source_type": "",
@@ -1468,7 +1468,7 @@
       {
         "id": "get-grouped-order-book",
         "title": "Get Grouped Order Book",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-grouped-order-book.md",
+        "path": "docs/crypto/kraken/rest-api/get-grouped-order-book.md",
         "filename": "get-grouped-order-book.md",
         "api_type": "REST",
         "source_type": "",
@@ -1480,7 +1480,7 @@
       {
         "id": "get-ledgers-info",
         "title": "Query Ledgers",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-ledgers-info.md",
+        "path": "docs/crypto/kraken/rest-api/get-ledgers-info.md",
         "filename": "get-ledgers-info.md",
         "api_type": "REST",
         "source_type": "",
@@ -1492,7 +1492,7 @@
       {
         "id": "get-ledgers",
         "title": "Get Ledgers Info",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-ledgers.md",
+        "path": "docs/crypto/kraken/rest-api/get-ledgers.md",
         "filename": "get-ledgers.md",
         "api_type": "REST",
         "source_type": "",
@@ -1504,7 +1504,7 @@
       {
         "id": "get-level-3-order-book",
         "title": "Query L3 Order Book",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-level-3-order-book.md",
+        "path": "docs/crypto/kraken/rest-api/get-level-3-order-book.md",
         "filename": "get-level-3-order-book.md",
         "api_type": "REST",
         "source_type": "",
@@ -1516,7 +1516,7 @@
       {
         "id": "get-ohlc-data",
         "title": "Get OHLC Data",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-ohlc-data.md",
+        "path": "docs/crypto/kraken/rest-api/get-ohlc-data.md",
         "filename": "get-ohlc-data.md",
         "api_type": "REST",
         "source_type": "",
@@ -1528,7 +1528,7 @@
       {
         "id": "get-open-orders",
         "title": "Get Open Orders",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-open-orders.md",
+        "path": "docs/crypto/kraken/rest-api/get-open-orders.md",
         "filename": "get-open-orders.md",
         "api_type": "REST",
         "source_type": "",
@@ -1540,7 +1540,7 @@
       {
         "id": "get-open-positions",
         "title": "Get Open Positions",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-open-positions.md",
+        "path": "docs/crypto/kraken/rest-api/get-open-positions.md",
         "filename": "get-open-positions.md",
         "api_type": "REST",
         "source_type": "",
@@ -1552,7 +1552,7 @@
       {
         "id": "get-order-amends",
         "title": "Get Order Amends",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-order-amends.md",
+        "path": "docs/crypto/kraken/rest-api/get-order-amends.md",
         "filename": "get-order-amends.md",
         "api_type": "REST",
         "source_type": "",
@@ -1564,7 +1564,7 @@
       {
         "id": "get-order-book",
         "title": "Get Order Book",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-order-book.md",
+        "path": "docs/crypto/kraken/rest-api/get-order-book.md",
         "filename": "get-order-book.md",
         "api_type": "REST",
         "source_type": "",
@@ -1576,7 +1576,7 @@
       {
         "id": "get-orders-info",
         "title": "Query Orders Info",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-orders-info.md",
+        "path": "docs/crypto/kraken/rest-api/get-orders-info.md",
         "filename": "get-orders-info.md",
         "api_type": "REST",
         "source_type": "",
@@ -1588,7 +1588,7 @@
       {
         "id": "get-post-trade",
         "title": "Post-Trade Data",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-post-trade.md",
+        "path": "docs/crypto/kraken/rest-api/get-post-trade.md",
         "filename": "get-post-trade.md",
         "api_type": "REST",
         "source_type": "",
@@ -1600,7 +1600,7 @@
       {
         "id": "get-pre-trade",
         "title": "Pre-Trade Data",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-pre-trade.md",
+        "path": "docs/crypto/kraken/rest-api/get-pre-trade.md",
         "filename": "get-pre-trade.md",
         "api_type": "REST",
         "source_type": "",
@@ -1612,7 +1612,7 @@
       {
         "id": "get-recent-spreads",
         "title": "Get Recent Spreads",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-recent-spreads.md",
+        "path": "docs/crypto/kraken/rest-api/get-recent-spreads.md",
         "filename": "get-recent-spreads.md",
         "api_type": "REST",
         "source_type": "",
@@ -1624,7 +1624,7 @@
       {
         "id": "get-recent-trades",
         "title": "Get Recent Trades",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-recent-trades.md",
+        "path": "docs/crypto/kraken/rest-api/get-recent-trades.md",
         "filename": "get-recent-trades.md",
         "api_type": "REST",
         "source_type": "",
@@ -1636,7 +1636,7 @@
       {
         "id": "get-server-time",
         "title": "Get Server Time",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-server-time.md",
+        "path": "docs/crypto/kraken/rest-api/get-server-time.md",
         "filename": "get-server-time.md",
         "api_type": "REST",
         "source_type": "",
@@ -1648,7 +1648,7 @@
       {
         "id": "get-status-recent-deposits",
         "title": "Get Status of Recent Deposits",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-status-recent-deposits.md",
+        "path": "docs/crypto/kraken/rest-api/get-status-recent-deposits.md",
         "filename": "get-status-recent-deposits.md",
         "api_type": "REST",
         "source_type": "",
@@ -1660,7 +1660,7 @@
       {
         "id": "get-status-recent-withdrawals",
         "title": "Get Status of Recent Withdrawals",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-status-recent-withdrawals.md",
+        "path": "docs/crypto/kraken/rest-api/get-status-recent-withdrawals.md",
         "filename": "get-status-recent-withdrawals.md",
         "api_type": "REST",
         "source_type": "",
@@ -1672,7 +1672,7 @@
       {
         "id": "get-system-status",
         "title": "Get System Status",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-system-status.md",
+        "path": "docs/crypto/kraken/rest-api/get-system-status.md",
         "filename": "get-system-status.md",
         "api_type": "REST",
         "source_type": "",
@@ -1684,7 +1684,7 @@
       {
         "id": "get-ticker-information",
         "title": "Get Ticker Information",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-ticker-information.md",
+        "path": "docs/crypto/kraken/rest-api/get-ticker-information.md",
         "filename": "get-ticker-information.md",
         "api_type": "REST",
         "source_type": "",
@@ -1696,7 +1696,7 @@
       {
         "id": "get-tradable-asset-pairs",
         "title": "Get Tradable Asset Pairs",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-tradable-asset-pairs.md",
+        "path": "docs/crypto/kraken/rest-api/get-tradable-asset-pairs.md",
         "filename": "get-tradable-asset-pairs.md",
         "api_type": "REST",
         "source_type": "",
@@ -1708,7 +1708,7 @@
       {
         "id": "get-trade-balance",
         "title": "Get Trade Balance",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-balance.md",
+        "path": "docs/crypto/kraken/rest-api/get-trade-balance.md",
         "filename": "get-trade-balance.md",
         "api_type": "REST",
         "source_type": "",
@@ -1720,7 +1720,7 @@
       {
         "id": "get-trade-history",
         "title": "Get Trades History",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-history.md",
+        "path": "docs/crypto/kraken/rest-api/get-trade-history.md",
         "filename": "get-trade-history.md",
         "api_type": "REST",
         "source_type": "",
@@ -1732,7 +1732,7 @@
       {
         "id": "get-trade-volume",
         "title": "Get Trade Volume",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-volume.md",
+        "path": "docs/crypto/kraken/rest-api/get-trade-volume.md",
         "filename": "get-trade-volume.md",
         "api_type": "REST",
         "source_type": "",
@@ -1744,7 +1744,7 @@
       {
         "id": "get-trades-info",
         "title": "Query Trades Info",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-trades-info.md",
+        "path": "docs/crypto/kraken/rest-api/get-trades-info.md",
         "filename": "get-trades-info.md",
         "api_type": "REST",
         "source_type": "",
@@ -1756,7 +1756,7 @@
       {
         "id": "get-withdrawal-addresses",
         "title": "Get Withdrawal Addresses",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-addresses.md",
+        "path": "docs/crypto/kraken/rest-api/get-withdrawal-addresses.md",
         "filename": "get-withdrawal-addresses.md",
         "api_type": "REST",
         "source_type": "",
@@ -1768,7 +1768,7 @@
       {
         "id": "get-withdrawal-information",
         "title": "Get Withdrawal Information",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-information.md",
+        "path": "docs/crypto/kraken/rest-api/get-withdrawal-information.md",
         "filename": "get-withdrawal-information.md",
         "api_type": "REST",
         "source_type": "",
@@ -1780,7 +1780,7 @@
       {
         "id": "get-withdrawal-methods",
         "title": "Get Withdrawal Methods",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-methods.md",
+        "path": "docs/crypto/kraken/rest-api/get-withdrawal-methods.md",
         "filename": "get-withdrawal-methods.md",
         "api_type": "REST",
         "source_type": "",
@@ -1792,7 +1792,7 @@
       {
         "id": "list-allocations",
         "title": "List Earn Allocations",
-        "path": "docs/crypto/exchanges/kraken/rest-api/list-allocations.md",
+        "path": "docs/crypto/kraken/rest-api/list-allocations.md",
         "filename": "list-allocations.md",
         "api_type": "REST",
         "source_type": "",
@@ -1804,7 +1804,7 @@
       {
         "id": "list-strategies",
         "title": "List Earn Strategies",
-        "path": "docs/crypto/exchanges/kraken/rest-api/list-strategies.md",
+        "path": "docs/crypto/kraken/rest-api/list-strategies.md",
         "filename": "list-strategies.md",
         "api_type": "REST",
         "source_type": "",
@@ -1816,7 +1816,7 @@
       {
         "id": "remove-export",
         "title": "Delete Export Report",
-        "path": "docs/crypto/exchanges/kraken/rest-api/remove-export.md",
+        "path": "docs/crypto/kraken/rest-api/remove-export.md",
         "filename": "remove-export.md",
         "api_type": "REST",
         "source_type": "",
@@ -1828,7 +1828,7 @@
       {
         "id": "retrieve-export",
         "title": "Retrieve Data Export",
-        "path": "docs/crypto/exchanges/kraken/rest-api/retrieve-export.md",
+        "path": "docs/crypto/kraken/rest-api/retrieve-export.md",
         "filename": "retrieve-export.md",
         "api_type": "REST",
         "source_type": "",
@@ -1840,7 +1840,7 @@
       {
         "id": "wallet-transfer",
         "title": "Request Wallet Transfer",
-        "path": "docs/crypto/exchanges/kraken/rest-api/wallet-transfer.md",
+        "path": "docs/crypto/kraken/rest-api/wallet-transfer.md",
         "filename": "wallet-transfer.md",
         "api_type": "REST",
         "source_type": "",
@@ -1852,7 +1852,7 @@
       {
         "id": "withdraw-funds",
         "title": "Withdraw Funds",
-        "path": "docs/crypto/exchanges/kraken/rest-api/withdraw-funds.md",
+        "path": "docs/crypto/kraken/rest-api/withdraw-funds.md",
         "filename": "withdraw-funds.md",
         "api_type": "REST",
         "source_type": "",
@@ -1866,7 +1866,7 @@
       {
         "id": "mdir-fix",
         "title": "Market Data Incremental Refresh",
-        "path": "docs/crypto/exchanges/kraken/fix-api/mdir-fix.md",
+        "path": "docs/crypto/kraken/fix-api/mdir-fix.md",
         "filename": "mdir-fix.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1878,7 +1878,7 @@
       {
         "id": "mdr-fix",
         "title": "Market Data Request",
-        "path": "docs/crypto/exchanges/kraken/fix-api/mdr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/mdr-fix.md",
         "filename": "mdr-fix.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1890,7 +1890,7 @@
       {
         "id": "mdrr-fix",
         "title": "Market Data Request Reject",
-        "path": "docs/crypto/exchanges/kraken/fix-api/mdrr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/mdrr-fix.md",
         "filename": "mdrr-fix.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1902,7 +1902,7 @@
       {
         "id": "mdsfr-fix",
         "title": "Market Data Snapshot Full Refresh",
-        "path": "docs/crypto/exchanges/kraken/fix-api/mdsfr-fix.md",
+        "path": "docs/crypto/kraken/fix-api/mdsfr-fix.md",
         "filename": "mdsfr-fix.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1914,7 +1914,7 @@
       {
         "id": "candles",
         "title": "Market Candles",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/candles.md",
+        "path": "docs/crypto/kraken/futures-api/charts/candles.md",
         "filename": "candles.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1926,7 +1926,7 @@
       {
         "id": "market-analytics",
         "title": "Market Analytics",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/market-analytics.md",
+        "path": "docs/crypto/kraken/futures-api/charts/market-analytics.md",
         "filename": "market-analytics.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1938,7 +1938,7 @@
       {
         "id": "symbols",
         "title": "Markets",
-        "path": "docs/crypto/exchanges/kraken/futures-api/charts/symbols.md",
+        "path": "docs/crypto/kraken/futures-api/charts/symbols.md",
         "filename": "symbols.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1950,7 +1950,7 @@
       {
         "id": "market-history",
         "title": "Market History",
-        "path": "docs/crypto/exchanges/kraken/futures-api/history/market-history.md",
+        "path": "docs/crypto/kraken/futures-api/history/market-history.md",
         "filename": "market-history.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1962,7 +1962,7 @@
       {
         "id": "market-data",
         "title": "Market Data",
-        "path": "docs/crypto/exchanges/kraken/futures-api/trading/market-data.md",
+        "path": "docs/crypto/kraken/futures-api/trading/market-data.md",
         "filename": "market-data.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1974,7 +1974,7 @@
       {
         "id": "spot-l3-data",
         "title": "Spot Level 3 Market Data",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-l3-data.md",
+        "path": "docs/crypto/kraken/guides/spot-l3-data.md",
         "filename": "spot-l3-data.md",
         "api_type": "Market Data",
         "source_type": "",
@@ -1988,7 +1988,7 @@
       {
         "id": "account_log",
         "title": "Account Log",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/account_log.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/account_log.md",
         "filename": "account_log.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2000,7 +2000,7 @@
       {
         "id": "balances",
         "title": "Balances",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/balances.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/balances.md",
         "filename": "balances.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2012,7 +2012,7 @@
       {
         "id": "book",
         "title": "Book",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/book.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/book.md",
         "filename": "book.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2024,7 +2024,7 @@
       {
         "id": "challenge",
         "title": "Challenge",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/challenge.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/challenge.md",
         "filename": "challenge.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2036,7 +2036,7 @@
       {
         "id": "fills",
         "title": "Fills",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/fills.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/fills.md",
         "filename": "fills.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2048,7 +2048,7 @@
       {
         "id": "heartbeat",
         "title": "Heartbeat",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/heartbeat.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/heartbeat.md",
         "filename": "heartbeat.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2060,7 +2060,7 @@
       {
         "id": "notifications",
         "title": "Notification",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/notifications.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/notifications.md",
         "filename": "notifications.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2072,7 +2072,7 @@
       {
         "id": "open_orders",
         "title": "Open Orders",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_orders.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/open_orders.md",
         "filename": "open_orders.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2084,7 +2084,7 @@
       {
         "id": "open_orders_verbose",
         "title": "Open Orders (verbose)",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_orders_verbose.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/open_orders_verbose.md",
         "filename": "open_orders_verbose.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2096,7 +2096,7 @@
       {
         "id": "open_position",
         "title": "Open Position",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_position.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/open_position.md",
         "filename": "open_position.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2108,7 +2108,7 @@
       {
         "id": "ticker",
         "title": "Ticker",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/ticker.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/ticker.md",
         "filename": "ticker.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2120,7 +2120,7 @@
       {
         "id": "ticker_lite",
         "title": "Ticker Lite",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/ticker_lite.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/ticker_lite.md",
         "filename": "ticker_lite.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2132,7 +2132,7 @@
       {
         "id": "trade",
         "title": "Trade",
-        "path": "docs/crypto/exchanges/kraken/futures-api/websocket/trade.md",
+        "path": "docs/crypto/kraken/futures-api/websocket/trade.md",
         "filename": "trade.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2144,7 +2144,7 @@
       {
         "id": "futures-websockets",
         "title": "Futures Websockets",
-        "path": "docs/crypto/exchanges/kraken/guides/futures-websockets.md",
+        "path": "docs/crypto/kraken/guides/futures-websockets.md",
         "filename": "futures-websockets.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2156,7 +2156,7 @@
       {
         "id": "spot-ws-auth",
         "title": "Spot Websockets Authentication",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ws-auth.md",
+        "path": "docs/crypto/kraken/guides/spot-ws-auth.md",
         "filename": "spot-ws-auth.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2168,7 +2168,7 @@
       {
         "id": "spot-ws-book-v1",
         "title": "Spot Websockets (v1) Book Checksum",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ws-book-v1.md",
+        "path": "docs/crypto/kraken/guides/spot-ws-book-v1.md",
         "filename": "spot-ws-book-v1.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2180,7 +2180,7 @@
       {
         "id": "spot-ws-book-v2",
         "title": "Spot Websockets (v2) Book Checksum",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ws-book-v2.md",
+        "path": "docs/crypto/kraken/guides/spot-ws-book-v2.md",
         "filename": "spot-ws-book-v2.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2192,7 +2192,7 @@
       {
         "id": "spot-ws-intro",
         "title": "Spot Websockets Introduction",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ws-intro.md",
+        "path": "docs/crypto/kraken/guides/spot-ws-intro.md",
         "filename": "spot-ws-intro.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2204,7 +2204,7 @@
       {
         "id": "spot-ws-l3-v2",
         "title": "Spot Websockets (v2) Level3 Checksum",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ws-l3-v2.md",
+        "path": "docs/crypto/kraken/guides/spot-ws-l3-v2.md",
         "filename": "spot-ws-l3-v2.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2216,7 +2216,7 @@
       {
         "id": "get-websockets-token",
         "title": "Get Websockets Token",
-        "path": "docs/crypto/exchanges/kraken/rest-api/get-websockets-token.md",
+        "path": "docs/crypto/kraken/rest-api/get-websockets-token.md",
         "filename": "get-websockets-token.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2228,7 +2228,7 @@
       {
         "id": "addorder",
         "title": "Add Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/addorder.md",
+        "path": "docs/crypto/kraken/websocket-v1/addorder.md",
         "filename": "addorder.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2240,7 +2240,7 @@
       {
         "id": "amendorder",
         "title": "Amend Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/amendorder.md",
+        "path": "docs/crypto/kraken/websocket-v1/amendorder.md",
         "filename": "amendorder.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2252,7 +2252,7 @@
       {
         "id": "book",
         "title": "Book (Level 2)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/book.md",
+        "path": "docs/crypto/kraken/websocket-v1/book.md",
         "filename": "book.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2264,7 +2264,7 @@
       {
         "id": "cancelall",
         "title": "Cancel All",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelall.md",
+        "path": "docs/crypto/kraken/websocket-v1/cancelall.md",
         "filename": "cancelall.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2276,7 +2276,7 @@
       {
         "id": "cancelallordersafter",
         "title": "Cancel on Disconnect",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelallordersafter.md",
+        "path": "docs/crypto/kraken/websocket-v1/cancelallordersafter.md",
         "filename": "cancelallordersafter.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2288,7 +2288,7 @@
       {
         "id": "cancelorder",
         "title": "Cancel Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelorder.md",
+        "path": "docs/crypto/kraken/websocket-v1/cancelorder.md",
         "filename": "cancelorder.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2300,7 +2300,7 @@
       {
         "id": "editorder",
         "title": "Edit Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/editorder.md",
+        "path": "docs/crypto/kraken/websocket-v1/editorder.md",
         "filename": "editorder.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2312,7 +2312,7 @@
       {
         "id": "heartbeat",
         "title": "Heartbeat",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/heartbeat.md",
+        "path": "docs/crypto/kraken/websocket-v1/heartbeat.md",
         "filename": "heartbeat.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2324,7 +2324,7 @@
       {
         "id": "ohlc",
         "title": "Candles (OHLC)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/ohlc.md",
+        "path": "docs/crypto/kraken/websocket-v1/ohlc.md",
         "filename": "ohlc.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2336,7 +2336,7 @@
       {
         "id": "openorders",
         "title": "Open Orders",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/openorders.md",
+        "path": "docs/crypto/kraken/websocket-v1/openorders.md",
         "filename": "openorders.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2348,7 +2348,7 @@
       {
         "id": "owntrades",
         "title": "Own Trades",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/owntrades.md",
+        "path": "docs/crypto/kraken/websocket-v1/owntrades.md",
         "filename": "owntrades.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2360,7 +2360,7 @@
       {
         "id": "ping",
         "title": "Ping",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/ping.md",
+        "path": "docs/crypto/kraken/websocket-v1/ping.md",
         "filename": "ping.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2372,7 +2372,7 @@
       {
         "id": "spread",
         "title": "Spreads",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/spread.md",
+        "path": "docs/crypto/kraken/websocket-v1/spread.md",
         "filename": "spread.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2384,7 +2384,7 @@
       {
         "id": "subscriptionstatus",
         "title": "Subscription Status",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/subscriptionstatus.md",
+        "path": "docs/crypto/kraken/websocket-v1/subscriptionstatus.md",
         "filename": "subscriptionstatus.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2396,7 +2396,7 @@
       {
         "id": "systemstatus",
         "title": "System Status",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/systemstatus.md",
+        "path": "docs/crypto/kraken/websocket-v1/systemstatus.md",
         "filename": "systemstatus.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2408,7 +2408,7 @@
       {
         "id": "ticker",
         "title": "Ticker (Level 1)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/ticker.md",
+        "path": "docs/crypto/kraken/websocket-v1/ticker.md",
         "filename": "ticker.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2420,7 +2420,7 @@
       {
         "id": "trade",
         "title": "Trade",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/trade.md",
+        "path": "docs/crypto/kraken/websocket-v1/trade.md",
         "filename": "trade.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2432,7 +2432,7 @@
       {
         "id": "unsubscribe",
         "title": "Unsubscribe",
-        "path": "docs/crypto/exchanges/kraken/websocket-v1/unsubscribe.md",
+        "path": "docs/crypto/kraken/websocket-v1/unsubscribe.md",
         "filename": "unsubscribe.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2444,7 +2444,7 @@
       {
         "id": "add_order",
         "title": "Add Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/add_order.md",
+        "path": "docs/crypto/kraken/websocket-v2/add_order.md",
         "filename": "add_order.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2456,7 +2456,7 @@
       {
         "id": "amend_order",
         "title": "Amend Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/amend_order.md",
+        "path": "docs/crypto/kraken/websocket-v2/amend_order.md",
         "filename": "amend_order.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2468,7 +2468,7 @@
       {
         "id": "balances",
         "title": "Balances",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/balances.md",
+        "path": "docs/crypto/kraken/websocket-v2/balances.md",
         "filename": "balances.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2480,7 +2480,7 @@
       {
         "id": "batch_add",
         "title": "Batch Add",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/batch_add.md",
+        "path": "docs/crypto/kraken/websocket-v2/batch_add.md",
         "filename": "batch_add.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2492,7 +2492,7 @@
       {
         "id": "batch_cancel",
         "title": "Batch Cancel",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/batch_cancel.md",
+        "path": "docs/crypto/kraken/websocket-v2/batch_cancel.md",
         "filename": "batch_cancel.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2504,7 +2504,7 @@
       {
         "id": "book",
         "title": "Book (Level 2)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/book.md",
+        "path": "docs/crypto/kraken/websocket-v2/book.md",
         "filename": "book.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2516,7 +2516,7 @@
       {
         "id": "cancel_after",
         "title": "Cancel on Disconnect",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_after.md",
+        "path": "docs/crypto/kraken/websocket-v2/cancel_after.md",
         "filename": "cancel_after.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2528,7 +2528,7 @@
       {
         "id": "cancel_all",
         "title": "Cancel All",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_all.md",
+        "path": "docs/crypto/kraken/websocket-v2/cancel_all.md",
         "filename": "cancel_all.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2540,7 +2540,7 @@
       {
         "id": "cancel_order",
         "title": "Cancel Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_order.md",
+        "path": "docs/crypto/kraken/websocket-v2/cancel_order.md",
         "filename": "cancel_order.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2552,7 +2552,7 @@
       {
         "id": "edit_order",
         "title": "Edit Order",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/edit_order.md",
+        "path": "docs/crypto/kraken/websocket-v2/edit_order.md",
         "filename": "edit_order.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2564,7 +2564,7 @@
       {
         "id": "executions",
         "title": "Executions",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/executions.md",
+        "path": "docs/crypto/kraken/websocket-v2/executions.md",
         "filename": "executions.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2576,7 +2576,7 @@
       {
         "id": "heartbeat",
         "title": "Heartbeat",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/heartbeat.md",
+        "path": "docs/crypto/kraken/websocket-v2/heartbeat.md",
         "filename": "heartbeat.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2588,7 +2588,7 @@
       {
         "id": "instrument",
         "title": "Instruments",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/instrument.md",
+        "path": "docs/crypto/kraken/websocket-v2/instrument.md",
         "filename": "instrument.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2600,7 +2600,7 @@
       {
         "id": "level3",
         "title": "Orders (Level 3)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/level3.md",
+        "path": "docs/crypto/kraken/websocket-v2/level3.md",
         "filename": "level3.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2612,7 +2612,7 @@
       {
         "id": "ohlc",
         "title": "Candles (OHLC)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/ohlc.md",
+        "path": "docs/crypto/kraken/websocket-v2/ohlc.md",
         "filename": "ohlc.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2624,7 +2624,7 @@
       {
         "id": "ping",
         "title": "Ping",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/ping.md",
+        "path": "docs/crypto/kraken/websocket-v2/ping.md",
         "filename": "ping.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2636,7 +2636,7 @@
       {
         "id": "status",
         "title": "Status",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/status.md",
+        "path": "docs/crypto/kraken/websocket-v2/status.md",
         "filename": "status.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2648,7 +2648,7 @@
       {
         "id": "ticker",
         "title": "Ticker (Level 1)",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/ticker.md",
+        "path": "docs/crypto/kraken/websocket-v2/ticker.md",
         "filename": "ticker.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2660,7 +2660,7 @@
       {
         "id": "trade",
         "title": "Trades",
-        "path": "docs/crypto/exchanges/kraken/websocket-v2/trade.md",
+        "path": "docs/crypto/kraken/websocket-v2/trade.md",
         "filename": "trade.md",
         "api_type": "WebSocket",
         "source_type": "",
@@ -2674,7 +2674,7 @@
       {
         "id": "custody-rest-auth",
         "title": "Custody REST Authentication",
-        "path": "docs/crypto/exchanges/kraken/guides/custody-rest-auth.md",
+        "path": "docs/crypto/kraken/guides/custody-rest-auth.md",
         "filename": "custody-rest-auth.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2686,7 +2686,7 @@
       {
         "id": "custody-rest-ratelimits",
         "title": "Custody Rate Limits",
-        "path": "docs/crypto/exchanges/kraken/guides/custody-rest-ratelimits.md",
+        "path": "docs/crypto/kraken/guides/custody-rest-ratelimits.md",
         "filename": "custody-rest-ratelimits.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2698,7 +2698,7 @@
       {
         "id": "embed-custom-orders",
         "title": "Embed: Custom Orders",
-        "path": "docs/crypto/exchanges/kraken/guides/embed-custom-orders.md",
+        "path": "docs/crypto/kraken/guides/embed-custom-orders.md",
         "filename": "embed-custom-orders.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2710,7 +2710,7 @@
       {
         "id": "embed-deposits-and-withdrawals",
         "title": "Embed: Deposits & Withdrawals",
-        "path": "docs/crypto/exchanges/kraken/guides/embed-deposits-and-withdrawals.md",
+        "path": "docs/crypto/kraken/guides/embed-deposits-and-withdrawals.md",
         "filename": "embed-deposits-and-withdrawals.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2722,7 +2722,7 @@
       {
         "id": "embed-first-trade",
         "title": "Embed: Your First Trade",
-        "path": "docs/crypto/exchanges/kraken/guides/embed-first-trade.md",
+        "path": "docs/crypto/kraken/guides/embed-first-trade.md",
         "filename": "embed-first-trade.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2734,7 +2734,7 @@
       {
         "id": "embed-rest-auth",
         "title": "Embed REST Authentication",
-        "path": "docs/crypto/exchanges/kraken/guides/embed-rest-auth.md",
+        "path": "docs/crypto/kraken/guides/embed-rest-auth.md",
         "filename": "embed-rest-auth.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2746,7 +2746,7 @@
       {
         "id": "fix-auth",
         "title": "FIX Authentication",
-        "path": "docs/crypto/exchanges/kraken/guides/fix-auth.md",
+        "path": "docs/crypto/kraken/guides/fix-auth.md",
         "filename": "fix-auth.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2758,7 +2758,7 @@
       {
         "id": "fix-checksums",
         "title": "FIX Checksums",
-        "path": "docs/crypto/exchanges/kraken/guides/fix-checksums.md",
+        "path": "docs/crypto/kraken/guides/fix-checksums.md",
         "filename": "fix-checksums.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2770,7 +2770,7 @@
       {
         "id": "fix-intro",
         "title": "FIX Introduction",
-        "path": "docs/crypto/exchanges/kraken/guides/fix-intro.md",
+        "path": "docs/crypto/kraken/guides/fix-intro.md",
         "filename": "fix-intro.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2782,7 +2782,7 @@
       {
         "id": "futures-introduction",
         "title": "Futures Introduction",
-        "path": "docs/crypto/exchanges/kraken/guides/futures-introduction.md",
+        "path": "docs/crypto/kraken/guides/futures-introduction.md",
         "filename": "futures-introduction.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2794,7 +2794,7 @@
       {
         "id": "futures-rate-limits",
         "title": "Futures Rate Limits",
-        "path": "docs/crypto/exchanges/kraken/guides/futures-rate-limits.md",
+        "path": "docs/crypto/kraken/guides/futures-rate-limits.md",
         "filename": "futures-rate-limits.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2806,7 +2806,7 @@
       {
         "id": "futures-rest",
         "title": "Futures REST",
-        "path": "docs/crypto/exchanges/kraken/guides/futures-rest.md",
+        "path": "docs/crypto/kraken/guides/futures-rest.md",
         "filename": "futures-rest.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2818,7 +2818,7 @@
       {
         "id": "global-intro",
         "title": "Kraken APIs",
-        "path": "docs/crypto/exchanges/kraken/guides/global-intro.md",
+        "path": "docs/crypto/kraken/guides/global-intro.md",
         "filename": "global-intro.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2830,7 +2830,7 @@
       {
         "id": "spot-amends",
         "title": "Spot Atomic Amends",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-amends.md",
+        "path": "docs/crypto/kraken/guides/spot-amends.md",
         "filename": "spot-amends.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2842,7 +2842,7 @@
       {
         "id": "spot-clordid",
         "title": "Spot Client Order Identifiers",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-clordid.md",
+        "path": "docs/crypto/kraken/guides/spot-clordid.md",
         "filename": "spot-clordid.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2854,7 +2854,7 @@
       {
         "id": "spot-errors",
         "title": "Spot Error Messages",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-errors.md",
+        "path": "docs/crypto/kraken/guides/spot-errors.md",
         "filename": "spot-errors.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2866,7 +2866,7 @@
       {
         "id": "spot-examples",
         "title": "Spot Example Clients",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-examples.md",
+        "path": "docs/crypto/kraken/guides/spot-examples.md",
         "filename": "spot-examples.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2878,7 +2878,7 @@
       {
         "id": "spot-ratelimits",
         "title": "Spot Trading Limits",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-ratelimits.md",
+        "path": "docs/crypto/kraken/guides/spot-ratelimits.md",
         "filename": "spot-ratelimits.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2890,7 +2890,7 @@
       {
         "id": "spot-rest-auth",
         "title": "Spot REST Authentication",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-rest-auth.md",
+        "path": "docs/crypto/kraken/guides/spot-rest-auth.md",
         "filename": "spot-rest-auth.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2902,7 +2902,7 @@
       {
         "id": "spot-rest-earn",
         "title": "Spot REST Earn",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-rest-earn.md",
+        "path": "docs/crypto/kraken/guides/spot-rest-earn.md",
         "filename": "spot-rest-earn.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2914,7 +2914,7 @@
       {
         "id": "spot-rest-intro",
         "title": "Spot REST Introduction",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-rest-intro.md",
+        "path": "docs/crypto/kraken/guides/spot-rest-intro.md",
         "filename": "spot-rest-intro.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2926,7 +2926,7 @@
       {
         "id": "spot-rest-ratelimits",
         "title": "Spot REST Rate Limits",
-        "path": "docs/crypto/exchanges/kraken/guides/spot-rest-ratelimits.md",
+        "path": "docs/crypto/kraken/guides/spot-rest-ratelimits.md",
         "filename": "spot-rest-ratelimits.md",
         "api_type": "Guide",
         "source_type": "",
@@ -2941,7 +2941,7 @@
     {
       "id": "custody-rest-auth",
       "title": "Custody REST Authentication",
-      "path": "docs/crypto/exchanges/kraken/guides/custody-rest-auth.md",
+      "path": "docs/crypto/kraken/guides/custody-rest-auth.md",
       "filename": "custody-rest-auth.md",
       "api_type": "Guide",
       "source_type": "",
@@ -2953,7 +2953,7 @@
     {
       "id": "custody-rest-ratelimits",
       "title": "Custody Rate Limits",
-      "path": "docs/crypto/exchanges/kraken/guides/custody-rest-ratelimits.md",
+      "path": "docs/crypto/kraken/guides/custody-rest-ratelimits.md",
       "filename": "custody-rest-ratelimits.md",
       "api_type": "Guide",
       "source_type": "",
@@ -2965,7 +2965,7 @@
     {
       "id": "embed-rest-auth",
       "title": "Embed REST Authentication",
-      "path": "docs/crypto/exchanges/kraken/guides/embed-rest-auth.md",
+      "path": "docs/crypto/kraken/guides/embed-rest-auth.md",
       "filename": "embed-rest-auth.md",
       "api_type": "Guide",
       "source_type": "",
@@ -2977,7 +2977,7 @@
     {
       "id": "embed-custom-orders",
       "title": "Embed: Custom Orders",
-      "path": "docs/crypto/exchanges/kraken/guides/embed-custom-orders.md",
+      "path": "docs/crypto/kraken/guides/embed-custom-orders.md",
       "filename": "embed-custom-orders.md",
       "api_type": "Guide",
       "source_type": "",
@@ -2989,7 +2989,7 @@
     {
       "id": "embed-deposits-and-withdrawals",
       "title": "Embed: Deposits & Withdrawals",
-      "path": "docs/crypto/exchanges/kraken/guides/embed-deposits-and-withdrawals.md",
+      "path": "docs/crypto/kraken/guides/embed-deposits-and-withdrawals.md",
       "filename": "embed-deposits-and-withdrawals.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3001,7 +3001,7 @@
     {
       "id": "embed-first-trade",
       "title": "Embed: Your First Trade",
-      "path": "docs/crypto/exchanges/kraken/guides/embed-first-trade.md",
+      "path": "docs/crypto/kraken/guides/embed-first-trade.md",
       "filename": "embed-first-trade.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3013,7 +3013,7 @@
     {
       "id": "fix-auth",
       "title": "FIX Authentication",
-      "path": "docs/crypto/exchanges/kraken/guides/fix-auth.md",
+      "path": "docs/crypto/kraken/guides/fix-auth.md",
       "filename": "fix-auth.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3025,7 +3025,7 @@
     {
       "id": "fix-checksums",
       "title": "FIX Checksums",
-      "path": "docs/crypto/exchanges/kraken/guides/fix-checksums.md",
+      "path": "docs/crypto/kraken/guides/fix-checksums.md",
       "filename": "fix-checksums.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3037,7 +3037,7 @@
     {
       "id": "fix-intro",
       "title": "FIX Introduction",
-      "path": "docs/crypto/exchanges/kraken/guides/fix-intro.md",
+      "path": "docs/crypto/kraken/guides/fix-intro.md",
       "filename": "fix-intro.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3049,7 +3049,7 @@
     {
       "id": "futures-introduction",
       "title": "Futures Introduction",
-      "path": "docs/crypto/exchanges/kraken/guides/futures-introduction.md",
+      "path": "docs/crypto/kraken/guides/futures-introduction.md",
       "filename": "futures-introduction.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3061,7 +3061,7 @@
     {
       "id": "futures-rest",
       "title": "Futures REST",
-      "path": "docs/crypto/exchanges/kraken/guides/futures-rest.md",
+      "path": "docs/crypto/kraken/guides/futures-rest.md",
       "filename": "futures-rest.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3073,7 +3073,7 @@
     {
       "id": "futures-rate-limits",
       "title": "Futures Rate Limits",
-      "path": "docs/crypto/exchanges/kraken/guides/futures-rate-limits.md",
+      "path": "docs/crypto/kraken/guides/futures-rate-limits.md",
       "filename": "futures-rate-limits.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3085,7 +3085,7 @@
     {
       "id": "global-intro",
       "title": "Kraken APIs",
-      "path": "docs/crypto/exchanges/kraken/guides/global-intro.md",
+      "path": "docs/crypto/kraken/guides/global-intro.md",
       "filename": "global-intro.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3097,7 +3097,7 @@
     {
       "id": "spot-amends",
       "title": "Spot Atomic Amends",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-amends.md",
+      "path": "docs/crypto/kraken/guides/spot-amends.md",
       "filename": "spot-amends.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3109,7 +3109,7 @@
     {
       "id": "spot-clordid",
       "title": "Spot Client Order Identifiers",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-clordid.md",
+      "path": "docs/crypto/kraken/guides/spot-clordid.md",
       "filename": "spot-clordid.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3121,7 +3121,7 @@
     {
       "id": "spot-errors",
       "title": "Spot Error Messages",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-errors.md",
+      "path": "docs/crypto/kraken/guides/spot-errors.md",
       "filename": "spot-errors.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3133,7 +3133,7 @@
     {
       "id": "spot-examples",
       "title": "Spot Example Clients",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-examples.md",
+      "path": "docs/crypto/kraken/guides/spot-examples.md",
       "filename": "spot-examples.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3145,7 +3145,7 @@
     {
       "id": "spot-rest-auth",
       "title": "Spot REST Authentication",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-rest-auth.md",
+      "path": "docs/crypto/kraken/guides/spot-rest-auth.md",
       "filename": "spot-rest-auth.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3157,7 +3157,7 @@
     {
       "id": "spot-rest-earn",
       "title": "Spot REST Earn",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-rest-earn.md",
+      "path": "docs/crypto/kraken/guides/spot-rest-earn.md",
       "filename": "spot-rest-earn.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3169,7 +3169,7 @@
     {
       "id": "spot-rest-intro",
       "title": "Spot REST Introduction",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-rest-intro.md",
+      "path": "docs/crypto/kraken/guides/spot-rest-intro.md",
       "filename": "spot-rest-intro.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3181,7 +3181,7 @@
     {
       "id": "spot-rest-ratelimits",
       "title": "Spot REST Rate Limits",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-rest-ratelimits.md",
+      "path": "docs/crypto/kraken/guides/spot-rest-ratelimits.md",
       "filename": "spot-rest-ratelimits.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3193,7 +3193,7 @@
     {
       "id": "spot-ratelimits",
       "title": "Spot Trading Limits",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ratelimits.md",
+      "path": "docs/crypto/kraken/guides/spot-ratelimits.md",
       "filename": "spot-ratelimits.md",
       "api_type": "Guide",
       "source_type": "",
@@ -3205,7 +3205,7 @@
     {
       "id": "market-analytics",
       "title": "Market Analytics",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/market-analytics.md",
+      "path": "docs/crypto/kraken/futures-api/charts/market-analytics.md",
       "filename": "market-analytics.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3217,7 +3217,7 @@
     {
       "id": "candles",
       "title": "Market Candles",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/candles.md",
+      "path": "docs/crypto/kraken/futures-api/charts/candles.md",
       "filename": "candles.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3229,7 +3229,7 @@
     {
       "id": "market-data",
       "title": "Market Data",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/market-data.md",
+      "path": "docs/crypto/kraken/futures-api/trading/market-data.md",
       "filename": "market-data.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3241,7 +3241,7 @@
     {
       "id": "mdir-fix",
       "title": "Market Data Incremental Refresh",
-      "path": "docs/crypto/exchanges/kraken/fix-api/mdir-fix.md",
+      "path": "docs/crypto/kraken/fix-api/mdir-fix.md",
       "filename": "mdir-fix.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3253,7 +3253,7 @@
     {
       "id": "mdr-fix",
       "title": "Market Data Request",
-      "path": "docs/crypto/exchanges/kraken/fix-api/mdr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/mdr-fix.md",
       "filename": "mdr-fix.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3265,7 +3265,7 @@
     {
       "id": "mdrr-fix",
       "title": "Market Data Request Reject",
-      "path": "docs/crypto/exchanges/kraken/fix-api/mdrr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/mdrr-fix.md",
       "filename": "mdrr-fix.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3277,7 +3277,7 @@
     {
       "id": "mdsfr-fix",
       "title": "Market Data Snapshot Full Refresh",
-      "path": "docs/crypto/exchanges/kraken/fix-api/mdsfr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/mdsfr-fix.md",
       "filename": "mdsfr-fix.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3289,7 +3289,7 @@
     {
       "id": "market-history",
       "title": "Market History",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/market-history.md",
+      "path": "docs/crypto/kraken/futures-api/history/market-history.md",
       "filename": "market-history.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3301,7 +3301,7 @@
     {
       "id": "symbols",
       "title": "Markets",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/symbols.md",
+      "path": "docs/crypto/kraken/futures-api/charts/symbols.md",
       "filename": "symbols.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3313,7 +3313,7 @@
     {
       "id": "spot-l3-data",
       "title": "Spot Level 3 Market Data",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-l3-data.md",
+      "path": "docs/crypto/kraken/guides/spot-l3-data.md",
       "filename": "spot-l3-data.md",
       "api_type": "Market Data",
       "source_type": "",
@@ -3325,7 +3325,7 @@
     {
       "id": "api-keys",
       "title": "API Keys",
-      "path": "docs/crypto/exchanges/kraken/futures-api/auth/api-keys.md",
+      "path": "docs/crypto/kraken/futures-api/auth/api-keys.md",
       "filename": "api-keys.md",
       "api_type": "REST",
       "source_type": "",
@@ -3337,7 +3337,7 @@
     {
       "id": "accept-rfq-offer",
       "title": "Accept an offer on an open RFQ",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/accept-rfq-offer.md",
+      "path": "docs/crypto/kraken/futures-api/trading/accept-rfq-offer.md",
       "filename": "accept-rfq-offer.md",
       "api_type": "REST",
       "source_type": "",
@@ -3349,7 +3349,7 @@
     {
       "id": "account-history",
       "title": "Account History",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/account-history.md",
+      "path": "docs/crypto/kraken/futures-api/history/account-history.md",
       "filename": "account-history.md",
       "api_type": "REST",
       "source_type": "",
@@ -3361,7 +3361,7 @@
     {
       "id": "account-information",
       "title": "Account Information",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/account-information.md",
+      "path": "docs/crypto/kraken/futures-api/trading/account-information.md",
       "filename": "account-information.md",
       "api_type": "REST",
       "source_type": "",
@@ -3373,7 +3373,7 @@
     {
       "id": "account-transfer",
       "title": "Account Transfer",
-      "path": "docs/crypto/exchanges/kraken/rest-api/account-transfer.md",
+      "path": "docs/crypto/kraken/rest-api/account-transfer.md",
       "filename": "account-transfer.md",
       "api_type": "REST",
       "source_type": "",
@@ -3385,7 +3385,7 @@
     {
       "id": "account-log-csv",
       "title": "Account log (CSV)",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/account-log-csv.md",
+      "path": "docs/crypto/kraken/futures-api/history/account-log-csv.md",
       "filename": "account-log-csv.md",
       "api_type": "REST",
       "source_type": "",
@@ -3397,7 +3397,7 @@
     {
       "id": "add-order",
       "title": "Add Order",
-      "path": "docs/crypto/exchanges/kraken/rest-api/add-order.md",
+      "path": "docs/crypto/kraken/rest-api/add-order.md",
       "filename": "add-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3409,7 +3409,7 @@
     {
       "id": "add-order-batch",
       "title": "Add Order Batch",
-      "path": "docs/crypto/exchanges/kraken/rest-api/add-order-batch.md",
+      "path": "docs/crypto/kraken/rest-api/add-order-batch.md",
       "filename": "add-order-batch.md",
       "api_type": "REST",
       "source_type": "",
@@ -3421,7 +3421,7 @@
     {
       "id": "add-assignment-program",
       "title": "Add assignment preference",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/add-assignment-program.md",
+      "path": "docs/crypto/kraken/futures-api/trading/add-assignment-program.md",
       "filename": "add-assignment-program.md",
       "api_type": "REST",
       "source_type": "",
@@ -3433,7 +3433,7 @@
     {
       "id": "allocate-strategy",
       "title": "Allocate Earn Funds",
-      "path": "docs/crypto/exchanges/kraken/rest-api/allocate-strategy.md",
+      "path": "docs/crypto/kraken/rest-api/allocate-strategy.md",
       "filename": "allocate-strategy.md",
       "api_type": "REST",
       "source_type": "",
@@ -3445,7 +3445,7 @@
     {
       "id": "amend-order",
       "title": "Amend Order",
-      "path": "docs/crypto/exchanges/kraken/rest-api/amend-order.md",
+      "path": "docs/crypto/kraken/rest-api/amend-order.md",
       "filename": "amend-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3457,7 +3457,7 @@
     {
       "id": "analytics",
       "title": "Analytics",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/analytics.md",
+      "path": "docs/crypto/kraken/futures-api/charts/analytics.md",
       "filename": "analytics.md",
       "api_type": "REST",
       "source_type": "",
@@ -3469,7 +3469,7 @@
     {
       "id": "assignment-program",
       "title": "Assignment Program",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/assignment-program.md",
+      "path": "docs/crypto/kraken/futures-api/trading/assignment-program.md",
       "filename": "assignment-program.md",
       "api_type": "REST",
       "source_type": "",
@@ -3481,7 +3481,7 @@
     {
       "id": "send-batch-order",
       "title": "Batch order management",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/send-batch-order.md",
+      "path": "docs/crypto/kraken/futures-api/trading/send-batch-order.md",
       "filename": "send-batch-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3493,7 +3493,7 @@
     {
       "id": "simulate-portfolio",
       "title": "Calculate portfolio margin, pnl and greeks",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/simulate-portfolio.md",
+      "path": "docs/crypto/kraken/futures-api/trading/simulate-portfolio.md",
       "filename": "simulate-portfolio.md",
       "api_type": "REST",
       "source_type": "",
@@ -3505,7 +3505,7 @@
     {
       "id": "cancel-all-orders",
       "title": "Cancel All Orders",
-      "path": "docs/crypto/exchanges/kraken/rest-api/cancel-all-orders.md",
+      "path": "docs/crypto/kraken/rest-api/cancel-all-orders.md",
       "filename": "cancel-all-orders.md",
       "api_type": "REST",
       "source_type": "",
@@ -3517,7 +3517,7 @@
     {
       "id": "cancel-all-orders-after",
       "title": "Cancel All Orders After X",
-      "path": "docs/crypto/exchanges/kraken/rest-api/cancel-all-orders-after.md",
+      "path": "docs/crypto/kraken/rest-api/cancel-all-orders-after.md",
       "filename": "cancel-all-orders-after.md",
       "api_type": "REST",
       "source_type": "",
@@ -3529,7 +3529,7 @@
     {
       "id": "cancel-order",
       "title": "Cancel Order",
-      "path": "docs/crypto/exchanges/kraken/rest-api/cancel-order.md",
+      "path": "docs/crypto/kraken/rest-api/cancel-order.md",
       "filename": "cancel-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3541,7 +3541,7 @@
     {
       "id": "cancel-order-batch",
       "title": "Cancel Order Batch",
-      "path": "docs/crypto/exchanges/kraken/rest-api/cancel-order-batch.md",
+      "path": "docs/crypto/kraken/rest-api/cancel-order-batch.md",
       "filename": "cancel-order-batch.md",
       "api_type": "REST",
       "source_type": "",
@@ -3553,7 +3553,7 @@
     {
       "id": "cancel-all-orders",
       "title": "Cancel all orders",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-all-orders.md",
+      "path": "docs/crypto/kraken/futures-api/trading/cancel-all-orders.md",
       "filename": "cancel-all-orders.md",
       "api_type": "REST",
       "source_type": "",
@@ -3565,7 +3565,7 @@
     {
       "id": "cancel-user-rfq",
       "title": "Cancel an open RFQ",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-user-rfq.md",
+      "path": "docs/crypto/kraken/futures-api/trading/cancel-user-rfq.md",
       "filename": "cancel-user-rfq.md",
       "api_type": "REST",
       "source_type": "",
@@ -3577,7 +3577,7 @@
     {
       "id": "cancel-rfq-offer",
       "title": "Cancel open offer on open RFQ",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-rfq-offer.md",
+      "path": "docs/crypto/kraken/futures-api/trading/cancel-rfq-offer.md",
       "filename": "cancel-rfq-offer.md",
       "api_type": "REST",
       "source_type": "",
@@ -3589,7 +3589,7 @@
     {
       "id": "cancel-order",
       "title": "Cancel order",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-order.md",
+      "path": "docs/crypto/kraken/futures-api/trading/cancel-order.md",
       "filename": "cancel-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3601,7 +3601,7 @@
     {
       "id": "get-subaccount-trading-capability",
       "title": "Check subaccount trading status",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-subaccount-trading-capability.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-subaccount-trading-capability.md",
       "filename": "get-subaccount-trading-capability.md",
       "api_type": "REST",
       "source_type": "",
@@ -3613,7 +3613,7 @@
     {
       "id": "check-v-3-api-key",
       "title": "Check v3 API key",
-      "path": "docs/crypto/exchanges/kraken/futures-api/auth/check-v-3-api-key.md",
+      "path": "docs/crypto/kraken/futures-api/auth/check-v-3-api-key.md",
       "filename": "check-v-3-api-key.md",
       "api_type": "REST",
       "source_type": "",
@@ -3625,7 +3625,7 @@
     {
       "id": "create-subaccount",
       "title": "Create Subaccount",
-      "path": "docs/crypto/exchanges/kraken/rest-api/create-subaccount.md",
+      "path": "docs/crypto/kraken/rest-api/create-subaccount.md",
       "filename": "create-subaccount.md",
       "api_type": "REST",
       "source_type": "",
@@ -3637,7 +3637,7 @@
     {
       "id": "create-user-rfq",
       "title": "Create a new RFQ",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/create-user-rfq.md",
+      "path": "docs/crypto/kraken/futures-api/trading/create-user-rfq.md",
       "filename": "create-user-rfq.md",
       "api_type": "REST",
       "source_type": "",
@@ -3649,7 +3649,7 @@
     {
       "id": "cancel-all-orders-after",
       "title": "Dead man's switch",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/cancel-all-orders-after.md",
+      "path": "docs/crypto/kraken/futures-api/trading/cancel-all-orders-after.md",
       "filename": "cancel-all-orders-after.md",
       "api_type": "REST",
       "source_type": "",
@@ -3661,7 +3661,7 @@
     {
       "id": "deallocate-strategy",
       "title": "Deallocate Earn Funds",
-      "path": "docs/crypto/exchanges/kraken/rest-api/deallocate-strategy.md",
+      "path": "docs/crypto/kraken/rest-api/deallocate-strategy.md",
       "filename": "deallocate-strategy.md",
       "api_type": "REST",
       "source_type": "",
@@ -3673,7 +3673,7 @@
     {
       "id": "remove-export",
       "title": "Delete Export Report",
-      "path": "docs/crypto/exchanges/kraken/rest-api/remove-export.md",
+      "path": "docs/crypto/kraken/rest-api/remove-export.md",
       "filename": "remove-export.md",
       "api_type": "REST",
       "source_type": "",
@@ -3685,7 +3685,7 @@
     {
       "id": "delete-assignment-program",
       "title": "Deletes assignment preference",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/delete-assignment-program.md",
+      "path": "docs/crypto/kraken/futures-api/trading/delete-assignment-program.md",
       "filename": "delete-assignment-program.md",
       "api_type": "REST",
       "source_type": "",
@@ -3697,7 +3697,7 @@
     {
       "id": "edit-order",
       "title": "Edit Order",
-      "path": "docs/crypto/exchanges/kraken/rest-api/edit-order.md",
+      "path": "docs/crypto/kraken/rest-api/edit-order.md",
       "filename": "edit-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -3709,7 +3709,7 @@
     {
       "id": "edit-order-spring",
       "title": "Edit order",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/edit-order-spring.md",
+      "path": "docs/crypto/kraken/futures-api/trading/edit-order-spring.md",
       "filename": "edit-order-spring.md",
       "api_type": "REST",
       "source_type": "",
@@ -3721,7 +3721,7 @@
     {
       "id": "er-fix",
       "title": "Execution Report",
-      "path": "docs/crypto/exchanges/kraken/fix-api/er-fix.md",
+      "path": "docs/crypto/kraken/fix-api/er-fix.md",
       "filename": "er-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -3733,7 +3733,7 @@
     {
       "id": "fee-schedules",
       "title": "Fee Schedules",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/fee-schedules.md",
+      "path": "docs/crypto/kraken/futures-api/trading/fee-schedules.md",
       "filename": "fee-schedules.md",
       "api_type": "REST",
       "source_type": "",
@@ -3745,7 +3745,7 @@
     {
       "id": "general",
       "title": "General",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/general.md",
+      "path": "docs/crypto/kraken/futures-api/trading/general.md",
       "filename": "general.md",
       "api_type": "REST",
       "source_type": "",
@@ -3757,7 +3757,7 @@
     {
       "id": "get-api-key-info",
       "title": "Get API Key Info",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-api-key-info.md",
+      "path": "docs/crypto/kraken/rest-api/get-api-key-info.md",
       "filename": "get-api-key-info.md",
       "api_type": "REST",
       "source_type": "",
@@ -3769,7 +3769,7 @@
     {
       "id": "get-account-balance",
       "title": "Get Account Balance",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-account-balance.md",
+      "path": "docs/crypto/kraken/rest-api/get-account-balance.md",
       "filename": "get-account-balance.md",
       "api_type": "REST",
       "source_type": "",
@@ -3781,7 +3781,7 @@
     {
       "id": "get-allocate-strategy-status",
       "title": "Get Allocation Status",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-allocate-strategy-status.md",
+      "path": "docs/crypto/kraken/rest-api/get-allocate-strategy-status.md",
       "filename": "get-allocate-strategy-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -3793,7 +3793,7 @@
     {
       "id": "get-asset-info",
       "title": "Get Asset Info",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-asset-info.md",
+      "path": "docs/crypto/kraken/rest-api/get-asset-info.md",
       "filename": "get-asset-info.md",
       "api_type": "REST",
       "source_type": "",
@@ -3805,7 +3805,7 @@
     {
       "id": "get-closed-orders",
       "title": "Get Closed Orders",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-closed-orders.md",
+      "path": "docs/crypto/kraken/rest-api/get-closed-orders.md",
       "filename": "get-closed-orders.md",
       "api_type": "REST",
       "source_type": "",
@@ -3817,7 +3817,7 @@
     {
       "id": "get-credit-lines",
       "title": "Get Credit Lines",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-credit-lines.md",
+      "path": "docs/crypto/kraken/rest-api/get-credit-lines.md",
       "filename": "get-credit-lines.md",
       "api_type": "REST",
       "source_type": "",
@@ -3829,7 +3829,7 @@
     {
       "id": "get-deallocate-strategy-status",
       "title": "Get Deallocation Status",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-deallocate-strategy-status.md",
+      "path": "docs/crypto/kraken/rest-api/get-deallocate-strategy-status.md",
       "filename": "get-deallocate-strategy-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -3841,7 +3841,7 @@
     {
       "id": "get-deposit-addresses",
       "title": "Get Deposit Addresses",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-deposit-addresses.md",
+      "path": "docs/crypto/kraken/rest-api/get-deposit-addresses.md",
       "filename": "get-deposit-addresses.md",
       "api_type": "REST",
       "source_type": "",
@@ -3853,7 +3853,7 @@
     {
       "id": "get-deposit-methods",
       "title": "Get Deposit Methods",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-deposit-methods.md",
+      "path": "docs/crypto/kraken/rest-api/get-deposit-methods.md",
       "filename": "get-deposit-methods.md",
       "api_type": "REST",
       "source_type": "",
@@ -3865,7 +3865,7 @@
     {
       "id": "export-status",
       "title": "Get Export Report Status",
-      "path": "docs/crypto/exchanges/kraken/rest-api/export-status.md",
+      "path": "docs/crypto/kraken/rest-api/export-status.md",
       "filename": "export-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -3877,7 +3877,7 @@
     {
       "id": "get-extended-balance",
       "title": "Get Extended Balance",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-extended-balance.md",
+      "path": "docs/crypto/kraken/rest-api/get-extended-balance.md",
       "filename": "get-extended-balance.md",
       "api_type": "REST",
       "source_type": "",
@@ -3889,7 +3889,7 @@
     {
       "id": "get-grouped-order-book",
       "title": "Get Grouped Order Book",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-grouped-order-book.md",
+      "path": "docs/crypto/kraken/rest-api/get-grouped-order-book.md",
       "filename": "get-grouped-order-book.md",
       "api_type": "REST",
       "source_type": "",
@@ -3901,7 +3901,7 @@
     {
       "id": "get-ledgers",
       "title": "Get Ledgers Info",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-ledgers.md",
+      "path": "docs/crypto/kraken/rest-api/get-ledgers.md",
       "filename": "get-ledgers.md",
       "api_type": "REST",
       "source_type": "",
@@ -3913,7 +3913,7 @@
     {
       "id": "get-ohlc-data",
       "title": "Get OHLC Data",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-ohlc-data.md",
+      "path": "docs/crypto/kraken/rest-api/get-ohlc-data.md",
       "filename": "get-ohlc-data.md",
       "api_type": "REST",
       "source_type": "",
@@ -3925,7 +3925,7 @@
     {
       "id": "get-open-orders",
       "title": "Get Open Orders",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-open-orders.md",
+      "path": "docs/crypto/kraken/rest-api/get-open-orders.md",
       "filename": "get-open-orders.md",
       "api_type": "REST",
       "source_type": "",
@@ -3937,7 +3937,7 @@
     {
       "id": "get-open-positions",
       "title": "Get Open Positions",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-open-positions.md",
+      "path": "docs/crypto/kraken/rest-api/get-open-positions.md",
       "filename": "get-open-positions.md",
       "api_type": "REST",
       "source_type": "",
@@ -3949,7 +3949,7 @@
     {
       "id": "get-order-amends",
       "title": "Get Order Amends",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-order-amends.md",
+      "path": "docs/crypto/kraken/rest-api/get-order-amends.md",
       "filename": "get-order-amends.md",
       "api_type": "REST",
       "source_type": "",
@@ -3961,7 +3961,7 @@
     {
       "id": "get-order-book",
       "title": "Get Order Book",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-order-book.md",
+      "path": "docs/crypto/kraken/rest-api/get-order-book.md",
       "filename": "get-order-book.md",
       "api_type": "REST",
       "source_type": "",
@@ -3973,7 +3973,7 @@
     {
       "id": "get-pnl-currency-preference",
       "title": "Get PNL currency preferences",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-pnl-currency-preference.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-pnl-currency-preference.md",
       "filename": "get-pnl-currency-preference.md",
       "api_type": "REST",
       "source_type": "",
@@ -3985,7 +3985,7 @@
     {
       "id": "get-recent-spreads",
       "title": "Get Recent Spreads",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-recent-spreads.md",
+      "path": "docs/crypto/kraken/rest-api/get-recent-spreads.md",
       "filename": "get-recent-spreads.md",
       "api_type": "REST",
       "source_type": "",
@@ -3997,7 +3997,7 @@
     {
       "id": "get-recent-trades",
       "title": "Get Recent Trades",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-recent-trades.md",
+      "path": "docs/crypto/kraken/rest-api/get-recent-trades.md",
       "filename": "get-recent-trades.md",
       "api_type": "REST",
       "source_type": "",
@@ -4009,7 +4009,7 @@
     {
       "id": "get-server-time",
       "title": "Get Server Time",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-server-time.md",
+      "path": "docs/crypto/kraken/rest-api/get-server-time.md",
       "filename": "get-server-time.md",
       "api_type": "REST",
       "source_type": "",
@@ -4021,7 +4021,7 @@
     {
       "id": "get-order-status",
       "title": "Get Specific Orders' Status",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-order-status.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-order-status.md",
       "filename": "get-order-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -4033,7 +4033,7 @@
     {
       "id": "get-status-recent-deposits",
       "title": "Get Status of Recent Deposits",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-status-recent-deposits.md",
+      "path": "docs/crypto/kraken/rest-api/get-status-recent-deposits.md",
       "filename": "get-status-recent-deposits.md",
       "api_type": "REST",
       "source_type": "",
@@ -4045,7 +4045,7 @@
     {
       "id": "get-status-recent-withdrawals",
       "title": "Get Status of Recent Withdrawals",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-status-recent-withdrawals.md",
+      "path": "docs/crypto/kraken/rest-api/get-status-recent-withdrawals.md",
       "filename": "get-status-recent-withdrawals.md",
       "api_type": "REST",
       "source_type": "",
@@ -4057,7 +4057,7 @@
     {
       "id": "get-system-status",
       "title": "Get System Status",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-system-status.md",
+      "path": "docs/crypto/kraken/rest-api/get-system-status.md",
       "filename": "get-system-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -4069,7 +4069,7 @@
     {
       "id": "get-ticker-information",
       "title": "Get Ticker Information",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-ticker-information.md",
+      "path": "docs/crypto/kraken/rest-api/get-ticker-information.md",
       "filename": "get-ticker-information.md",
       "api_type": "REST",
       "source_type": "",
@@ -4081,7 +4081,7 @@
     {
       "id": "get-tradable-asset-pairs",
       "title": "Get Tradable Asset Pairs",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-tradable-asset-pairs.md",
+      "path": "docs/crypto/kraken/rest-api/get-tradable-asset-pairs.md",
       "filename": "get-tradable-asset-pairs.md",
       "api_type": "REST",
       "source_type": "",
@@ -4093,7 +4093,7 @@
     {
       "id": "get-trade-balance",
       "title": "Get Trade Balance",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-balance.md",
+      "path": "docs/crypto/kraken/rest-api/get-trade-balance.md",
       "filename": "get-trade-balance.md",
       "api_type": "REST",
       "source_type": "",
@@ -4105,7 +4105,7 @@
     {
       "id": "get-trade-volume",
       "title": "Get Trade Volume",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-volume.md",
+      "path": "docs/crypto/kraken/rest-api/get-trade-volume.md",
       "filename": "get-trade-volume.md",
       "api_type": "REST",
       "source_type": "",
@@ -4117,7 +4117,7 @@
     {
       "id": "get-trade-history",
       "title": "Get Trades History",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-trade-history.md",
+      "path": "docs/crypto/kraken/rest-api/get-trade-history.md",
       "filename": "get-trade-history.md",
       "api_type": "REST",
       "source_type": "",
@@ -4129,7 +4129,7 @@
     {
       "id": "get-withdrawal-addresses",
       "title": "Get Withdrawal Addresses",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-addresses.md",
+      "path": "docs/crypto/kraken/rest-api/get-withdrawal-addresses.md",
       "filename": "get-withdrawal-addresses.md",
       "api_type": "REST",
       "source_type": "",
@@ -4141,7 +4141,7 @@
     {
       "id": "get-withdrawal-information",
       "title": "Get Withdrawal Information",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-information.md",
+      "path": "docs/crypto/kraken/rest-api/get-withdrawal-information.md",
       "filename": "get-withdrawal-information.md",
       "api_type": "REST",
       "source_type": "",
@@ -4153,7 +4153,7 @@
     {
       "id": "get-withdrawal-methods",
       "title": "Get Withdrawal Methods",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-withdrawal-methods.md",
+      "path": "docs/crypto/kraken/rest-api/get-withdrawal-methods.md",
       "filename": "get-withdrawal-methods.md",
       "api_type": "REST",
       "source_type": "",
@@ -4165,7 +4165,7 @@
     {
       "id": "account-log",
       "title": "Get account log",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/account-log.md",
+      "path": "docs/crypto/kraken/futures-api/history/account-log.md",
       "filename": "account-log.md",
       "api_type": "REST",
       "source_type": "",
@@ -4177,7 +4177,7 @@
     {
       "id": "get-execution-events",
       "title": "Get execution events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-execution-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-execution-events.md",
       "filename": "get-execution-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4189,7 +4189,7 @@
     {
       "id": "get-user-fee-schedule-volumes-v-3",
       "title": "Get fee schedule volumes",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-user-fee-schedule-volumes-v-3.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-user-fee-schedule-volumes-v-3.md",
       "filename": "get-user-fee-schedule-volumes-v-3.md",
       "api_type": "REST",
       "source_type": "",
@@ -4201,7 +4201,7 @@
     {
       "id": "get-fee-schedules-v-3",
       "title": "Get fee schedules",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-fee-schedules-v-3.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-fee-schedules-v-3.md",
       "filename": "get-fee-schedules-v-3.md",
       "api_type": "REST",
       "source_type": "",
@@ -4213,7 +4213,7 @@
     {
       "id": "instrument-status",
       "title": "Get instrument status",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/instrument-status.md",
+      "path": "docs/crypto/kraken/futures-api/trading/instrument-status.md",
       "filename": "instrument-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -4225,7 +4225,7 @@
     {
       "id": "instruments-status",
       "title": "Get instrument status list",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/instruments-status.md",
+      "path": "docs/crypto/kraken/futures-api/trading/instruments-status.md",
       "filename": "instruments-status.md",
       "api_type": "REST",
       "source_type": "",
@@ -4237,7 +4237,7 @@
     {
       "id": "get-instruments",
       "title": "Get instruments",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-instruments.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-instruments.md",
       "filename": "get-instruments.md",
       "api_type": "REST",
       "source_type": "",
@@ -4249,7 +4249,7 @@
     {
       "id": "get-leverage-setting",
       "title": "Get leverage settings",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-leverage-setting.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-leverage-setting.md",
       "filename": "get-leverage-setting.md",
       "api_type": "REST",
       "source_type": "",
@@ -4261,7 +4261,7 @@
     {
       "id": "liquidity-pool-stats",
       "title": "Get liquidity pool statistic",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/liquidity-pool-stats.md",
+      "path": "docs/crypto/kraken/futures-api/charts/liquidity-pool-stats.md",
       "filename": "liquidity-pool-stats.md",
       "api_type": "REST",
       "source_type": "",
@@ -4273,7 +4273,7 @@
     {
       "id": "get-notifications",
       "title": "Get notifications",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-notifications.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-notifications.md",
       "filename": "get-notifications.md",
       "api_type": "REST",
       "source_type": "",
@@ -4285,7 +4285,7 @@
     {
       "id": "get-open-orders",
       "title": "Get open orders",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-orders.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-open-orders.md",
       "filename": "get-open-orders.md",
       "api_type": "REST",
       "source_type": "",
@@ -4297,7 +4297,7 @@
     {
       "id": "get-open-positions",
       "title": "Get open positions",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-positions.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-open-positions.md",
       "filename": "get-open-positions.md",
       "api_type": "REST",
       "source_type": "",
@@ -4309,7 +4309,7 @@
     {
       "id": "get-order-events",
       "title": "Get order events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-order-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-order-events.md",
       "filename": "get-order-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4321,7 +4321,7 @@
     {
       "id": "get-orderbook",
       "title": "Get orderbook",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-orderbook.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-orderbook.md",
       "filename": "get-orderbook.md",
       "api_type": "REST",
       "source_type": "",
@@ -4333,7 +4333,7 @@
     {
       "id": "get-portfolio-margining-parameters",
       "title": "Get portfolio margin parameters",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-portfolio-margining-parameters.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-portfolio-margining-parameters.md",
       "filename": "get-portfolio-margining-parameters.md",
       "api_type": "REST",
       "source_type": "",
@@ -4345,7 +4345,7 @@
     {
       "id": "get-unwind-queue",
       "title": "Get position percentile of unwind queue",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-unwind-queue.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-unwind-queue.md",
       "filename": "get-unwind-queue.md",
       "api_type": "REST",
       "source_type": "",
@@ -4357,7 +4357,7 @@
     {
       "id": "get-position-events",
       "title": "Get position update events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-position-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-position-events.md",
       "filename": "get-position-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4369,7 +4369,7 @@
     {
       "id": "get-public-execution-events",
       "title": "Get public execution events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-execution-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-public-execution-events.md",
       "filename": "get-public-execution-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4381,7 +4381,7 @@
     {
       "id": "get-public-price-events",
       "title": "Get public mark price events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-price-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-public-price-events.md",
       "filename": "get-public-price-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4393,7 +4393,7 @@
     {
       "id": "get-public-order-events",
       "title": "Get public order events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-public-order-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-public-order-events.md",
       "filename": "get-public-order-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4405,7 +4405,7 @@
     {
       "id": "get-self-trade-strategy",
       "title": "Get self trade strategy",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-self-trade-strategy.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-self-trade-strategy.md",
       "filename": "get-self-trade-strategy.md",
       "api_type": "REST",
       "source_type": "",
@@ -4417,7 +4417,7 @@
     {
       "id": "list-subaccounts",
       "title": "Get subaccounts",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/list-subaccounts.md",
+      "path": "docs/crypto/kraken/futures-api/trading/list-subaccounts.md",
       "filename": "list-subaccounts.md",
       "api_type": "REST",
       "source_type": "",
@@ -4429,7 +4429,7 @@
     {
       "id": "get-ticker",
       "title": "Get ticker by symbol",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-ticker.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-ticker.md",
       "filename": "get-ticker.md",
       "api_type": "REST",
       "source_type": "",
@@ -4441,7 +4441,7 @@
     {
       "id": "get-tickers",
       "title": "Get tickers",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-tickers.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-tickers.md",
       "filename": "get-tickers.md",
       "api_type": "REST",
       "source_type": "",
@@ -4453,7 +4453,7 @@
     {
       "id": "get-history",
       "title": "Get trade history",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-history.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-history.md",
       "filename": "get-history.md",
       "api_type": "REST",
       "source_type": "",
@@ -4465,7 +4465,7 @@
     {
       "id": "get-trading-instruments",
       "title": "Get trading instruments",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-trading-instruments.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-trading-instruments.md",
       "filename": "get-trading-instruments.md",
       "api_type": "REST",
       "source_type": "",
@@ -4477,7 +4477,7 @@
     {
       "id": "get-trigger-events",
       "title": "Get trigger events",
-      "path": "docs/crypto/exchanges/kraken/futures-api/history/get-trigger-events.md",
+      "path": "docs/crypto/kraken/futures-api/history/get-trigger-events.md",
       "filename": "get-trigger-events.md",
       "api_type": "REST",
       "source_type": "",
@@ -4489,7 +4489,7 @@
     {
       "id": "get-accounts",
       "title": "Get wallets",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-accounts.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-accounts.md",
       "filename": "get-accounts.md",
       "api_type": "REST",
       "source_type": "",
@@ -4501,7 +4501,7 @@
     {
       "id": "get-fills",
       "title": "Get your fills",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-fills.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-fills.md",
       "filename": "get-fills.md",
       "api_type": "REST",
       "source_type": "",
@@ -4513,7 +4513,7 @@
     {
       "id": "session-fix",
       "title": "Header & Trailer",
-      "path": "docs/crypto/exchanges/kraken/fix-api/session-fix.md",
+      "path": "docs/crypto/kraken/fix-api/session-fix.md",
       "filename": "session-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4525,7 +4525,7 @@
     {
       "id": "historical-data",
       "title": "Historical Data",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/historical-data.md",
+      "path": "docs/crypto/kraken/futures-api/trading/historical-data.md",
       "filename": "historical-data.md",
       "api_type": "REST",
       "source_type": "",
@@ -4537,7 +4537,7 @@
     {
       "id": "historical-funding-rates",
       "title": "Historical funding rates",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/historical-funding-rates.md",
+      "path": "docs/crypto/kraken/futures-api/trading/historical-funding-rates.md",
       "filename": "historical-funding-rates.md",
       "api_type": "REST",
       "source_type": "",
@@ -4549,7 +4549,7 @@
     {
       "id": "sub-account-transfer",
       "title": "Initiate sub account transfer",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/sub-account-transfer.md",
+      "path": "docs/crypto/kraken/futures-api/trading/sub-account-transfer.md",
       "filename": "sub-account-transfer.md",
       "api_type": "REST",
       "source_type": "",
@@ -4561,7 +4561,7 @@
     {
       "id": "transfer",
       "title": "Initiate wallet transfer",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/transfer.md",
+      "path": "docs/crypto/kraken/futures-api/trading/transfer.md",
       "filename": "transfer.md",
       "api_type": "REST",
       "source_type": "",
@@ -4573,7 +4573,7 @@
     {
       "id": "withdrawal",
       "title": "Initiate withdrawal to Spot wallet",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/withdrawal.md",
+      "path": "docs/crypto/kraken/futures-api/trading/withdrawal.md",
       "filename": "withdrawal.md",
       "api_type": "REST",
       "source_type": "",
@@ -4585,7 +4585,7 @@
     {
       "id": "instrument-details",
       "title": "Instrument Details",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/instrument-details.md",
+      "path": "docs/crypto/kraken/futures-api/trading/instrument-details.md",
       "filename": "instrument-details.md",
       "api_type": "REST",
       "source_type": "",
@@ -4597,7 +4597,7 @@
     {
       "id": "sl-fix",
       "title": "Instrument List",
-      "path": "docs/crypto/exchanges/kraken/fix-api/sl-fix.md",
+      "path": "docs/crypto/kraken/fix-api/sl-fix.md",
       "filename": "sl-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4609,7 +4609,7 @@
     {
       "id": "slr-fix",
       "title": "Instrument List Request",
-      "path": "docs/crypto/exchanges/kraken/fix-api/slr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/slr-fix.md",
       "filename": "slr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4621,7 +4621,7 @@
     {
       "id": "list-allocations",
       "title": "List Earn Allocations",
-      "path": "docs/crypto/exchanges/kraken/rest-api/list-allocations.md",
+      "path": "docs/crypto/kraken/rest-api/list-allocations.md",
       "filename": "list-allocations.md",
       "api_type": "REST",
       "source_type": "",
@@ -4633,7 +4633,7 @@
     {
       "id": "list-strategies",
       "title": "List Earn Strategies",
-      "path": "docs/crypto/exchanges/kraken/rest-api/list-strategies.md",
+      "path": "docs/crypto/kraken/rest-api/list-strategies.md",
       "filename": "list-strategies.md",
       "api_type": "REST",
       "source_type": "",
@@ -4645,7 +4645,7 @@
     {
       "id": "get-open-rfqs",
       "title": "List all open RFQs",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfqs.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-open-rfqs.md",
       "filename": "get-open-rfqs.md",
       "api_type": "REST",
       "source_type": "",
@@ -4657,7 +4657,7 @@
     {
       "id": "get-assignment-program-history",
       "title": "List assignment preferences history",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-assignment-program-history.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-assignment-program-history.md",
       "filename": "get-assignment-program-history.md",
       "api_type": "REST",
       "source_type": "",
@@ -4669,7 +4669,7 @@
     {
       "id": "get-assignment-program-current",
       "title": "List assignment programs",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-assignment-program-current.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-assignment-program-current.md",
       "filename": "get-assignment-program-current.md",
       "api_type": "REST",
       "source_type": "",
@@ -4681,7 +4681,7 @@
     {
       "id": "get-closed-rfq-offers",
       "title": "List offers placed by the account on closed RFQs",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-closed-rfq-offers.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-closed-rfq-offers.md",
       "filename": "get-closed-rfq-offers.md",
       "api_type": "REST",
       "source_type": "",
@@ -4693,7 +4693,7 @@
     {
       "id": "get-open-rfqs-for-account",
       "title": "List open RFQs for account",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfqs-for-account.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-open-rfqs-for-account.md",
       "filename": "get-open-rfqs-for-account.md",
       "api_type": "REST",
       "source_type": "",
@@ -4705,7 +4705,7 @@
     {
       "id": "get-open-rfq-offers",
       "title": "List open offers on open RFQs",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-open-rfq-offers.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-open-rfq-offers.md",
       "filename": "get-open-rfq-offers.md",
       "api_type": "REST",
       "source_type": "",
@@ -4717,7 +4717,7 @@
     {
       "id": "logon-fix",
       "title": "Logon",
-      "path": "docs/crypto/exchanges/kraken/fix-api/logon-fix.md",
+      "path": "docs/crypto/kraken/fix-api/logon-fix.md",
       "filename": "logon-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4729,7 +4729,7 @@
     {
       "id": "logout-fix",
       "title": "Logout",
-      "path": "docs/crypto/exchanges/kraken/fix-api/logout-fix.md",
+      "path": "docs/crypto/kraken/fix-api/logout-fix.md",
       "filename": "logout-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4741,7 +4741,7 @@
     {
       "id": "multi-collateral",
       "title": "Multi-Collateral",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/multi-collateral.md",
+      "path": "docs/crypto/kraken/futures-api/trading/multi-collateral.md",
       "filename": "multi-collateral.md",
       "api_type": "REST",
       "source_type": "",
@@ -4753,7 +4753,7 @@
     {
       "id": "nos-fix",
       "title": "New Order Single",
-      "path": "docs/crypto/exchanges/kraken/fix-api/nos-fix.md",
+      "path": "docs/crypto/kraken/fix-api/nos-fix.md",
       "filename": "nos-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4765,7 +4765,7 @@
     {
       "id": "ocrr-fix",
       "title": "Order Cancel Replace Request (Spot only)",
-      "path": "docs/crypto/exchanges/kraken/fix-api/ocrr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/ocrr-fix.md",
       "filename": "ocrr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4777,7 +4777,7 @@
     {
       "id": "ocr-fix",
       "title": "Order Cancel Request",
-      "path": "docs/crypto/exchanges/kraken/fix-api/ocr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/ocr-fix.md",
       "filename": "ocr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4789,7 +4789,7 @@
     {
       "id": "order-management",
       "title": "Order Management",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/order-management.md",
+      "path": "docs/crypto/kraken/futures-api/trading/order-management.md",
       "filename": "order-management.md",
       "api_type": "REST",
       "source_type": "",
@@ -4801,7 +4801,7 @@
     {
       "id": "omcr-fix",
       "title": "Order Mass Cancel Request",
-      "path": "docs/crypto/exchanges/kraken/fix-api/omcr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/omcr-fix.md",
       "filename": "omcr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4813,7 +4813,7 @@
     {
       "id": "osr-fix",
       "title": "Order Status Request ( Spot Only )",
-      "path": "docs/crypto/exchanges/kraken/fix-api/osr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/osr-fix.md",
       "filename": "osr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4825,7 +4825,7 @@
     {
       "id": "place-rfq-offer",
       "title": "Place new offer on an open RFQ",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/place-rfq-offer.md",
+      "path": "docs/crypto/kraken/futures-api/trading/place-rfq-offer.md",
       "filename": "place-rfq-offer.md",
       "api_type": "REST",
       "source_type": "",
@@ -4837,7 +4837,7 @@
     {
       "id": "get-post-trade",
       "title": "Post-Trade Data",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-post-trade.md",
+      "path": "docs/crypto/kraken/rest-api/get-post-trade.md",
       "filename": "get-post-trade.md",
       "api_type": "REST",
       "source_type": "",
@@ -4849,7 +4849,7 @@
     {
       "id": "get-pre-trade",
       "title": "Pre-Trade Data",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-pre-trade.md",
+      "path": "docs/crypto/kraken/rest-api/get-pre-trade.md",
       "filename": "get-pre-trade.md",
       "api_type": "REST",
       "source_type": "",
@@ -4861,7 +4861,7 @@
     {
       "id": "get-level-3-order-book",
       "title": "Query L3 Order Book",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-level-3-order-book.md",
+      "path": "docs/crypto/kraken/rest-api/get-level-3-order-book.md",
       "filename": "get-level-3-order-book.md",
       "api_type": "REST",
       "source_type": "",
@@ -4873,7 +4873,7 @@
     {
       "id": "get-ledgers-info",
       "title": "Query Ledgers",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-ledgers-info.md",
+      "path": "docs/crypto/kraken/rest-api/get-ledgers-info.md",
       "filename": "get-ledgers-info.md",
       "api_type": "REST",
       "source_type": "",
@@ -4885,7 +4885,7 @@
     {
       "id": "get-orders-info",
       "title": "Query Orders Info",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-orders-info.md",
+      "path": "docs/crypto/kraken/rest-api/get-orders-info.md",
       "filename": "get-orders-info.md",
       "api_type": "REST",
       "source_type": "",
@@ -4897,7 +4897,7 @@
     {
       "id": "get-trades-info",
       "title": "Query Trades Info",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-trades-info.md",
+      "path": "docs/crypto/kraken/rest-api/get-trades-info.md",
       "filename": "get-trades-info.md",
       "api_type": "REST",
       "source_type": "",
@@ -4909,7 +4909,7 @@
     {
       "id": "rf-qs",
       "title": "RFQs",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/rf-qs.md",
+      "path": "docs/crypto/kraken/futures-api/trading/rf-qs.md",
       "filename": "rf-qs.md",
       "api_type": "REST",
       "source_type": "",
@@ -4921,7 +4921,7 @@
     {
       "id": "reject-business_level-fix",
       "title": "Reject - Business Level",
-      "path": "docs/crypto/exchanges/kraken/fix-api/reject-business_level-fix.md",
+      "path": "docs/crypto/kraken/fix-api/reject-business_level-fix.md",
       "filename": "reject-business_level-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4933,7 +4933,7 @@
     {
       "id": "reject-session_level-fix",
       "title": "Reject - Session Level",
-      "path": "docs/crypto/exchanges/kraken/fix-api/reject-session_level-fix.md",
+      "path": "docs/crypto/kraken/fix-api/reject-session_level-fix.md",
       "filename": "reject-session_level-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -4945,7 +4945,7 @@
     {
       "id": "add-export",
       "title": "Request Export Report",
-      "path": "docs/crypto/exchanges/kraken/rest-api/add-export.md",
+      "path": "docs/crypto/kraken/rest-api/add-export.md",
       "filename": "add-export.md",
       "api_type": "REST",
       "source_type": "",
@@ -4957,7 +4957,7 @@
     {
       "id": "wallet-transfer",
       "title": "Request Wallet Transfer",
-      "path": "docs/crypto/exchanges/kraken/rest-api/wallet-transfer.md",
+      "path": "docs/crypto/kraken/rest-api/wallet-transfer.md",
       "filename": "wallet-transfer.md",
       "api_type": "REST",
       "source_type": "",
@@ -4969,7 +4969,7 @@
     {
       "id": "cancel-withdrawal",
       "title": "Request Withdrawal Cancellation",
-      "path": "docs/crypto/exchanges/kraken/rest-api/cancel-withdrawal.md",
+      "path": "docs/crypto/kraken/rest-api/cancel-withdrawal.md",
       "filename": "cancel-withdrawal.md",
       "api_type": "REST",
       "source_type": "",
@@ -4981,7 +4981,7 @@
     {
       "id": "resolutions",
       "title": "Resolutions",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/resolutions.md",
+      "path": "docs/crypto/kraken/futures-api/charts/resolutions.md",
       "filename": "resolutions.md",
       "api_type": "REST",
       "source_type": "",
@@ -4993,7 +4993,7 @@
     {
       "id": "retrieve-export",
       "title": "Retrieve Data Export",
-      "path": "docs/crypto/exchanges/kraken/rest-api/retrieve-export.md",
+      "path": "docs/crypto/kraken/rest-api/retrieve-export.md",
       "filename": "retrieve-export.md",
       "api_type": "REST",
       "source_type": "",
@@ -5005,7 +5005,7 @@
     {
       "id": "get-rfq",
       "title": "Retrieve a single RFQ (open or recently closed)",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/get-rfq.md",
+      "path": "docs/crypto/kraken/futures-api/trading/get-rfq.md",
       "filename": "get-rfq.md",
       "api_type": "REST",
       "source_type": "",
@@ -5017,7 +5017,7 @@
     {
       "id": "send-order",
       "title": "Send order",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/send-order.md",
+      "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
       "filename": "send-order.md",
       "api_type": "REST",
       "source_type": "",
@@ -5029,7 +5029,7 @@
     {
       "id": "sequence-reset-fix",
       "title": "Sequence Reset",
-      "path": "docs/crypto/exchanges/kraken/fix-api/sequence-reset-fix.md",
+      "path": "docs/crypto/kraken/fix-api/sequence-reset-fix.md",
       "filename": "sequence-reset-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -5041,7 +5041,7 @@
     {
       "id": "set-pnl-currency-preference",
       "title": "Set PNL currency preference",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-pnl-currency-preference.md",
+      "path": "docs/crypto/kraken/futures-api/trading/set-pnl-currency-preference.md",
       "filename": "set-pnl-currency-preference.md",
       "api_type": "REST",
       "source_type": "",
@@ -5053,7 +5053,7 @@
     {
       "id": "set-leverage-setting",
       "title": "Set leverage settings",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-leverage-setting.md",
+      "path": "docs/crypto/kraken/futures-api/trading/set-leverage-setting.md",
       "filename": "set-leverage-setting.md",
       "api_type": "REST",
       "source_type": "",
@@ -5065,7 +5065,7 @@
     {
       "id": "subaccounts",
       "title": "Subaccounts",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/subaccounts.md",
+      "path": "docs/crypto/kraken/futures-api/trading/subaccounts.md",
       "filename": "subaccounts.md",
       "api_type": "REST",
       "source_type": "",
@@ -5077,7 +5077,7 @@
     {
       "id": "tick-types",
       "title": "Tick Types",
-      "path": "docs/crypto/exchanges/kraken/futures-api/charts/tick-types.md",
+      "path": "docs/crypto/kraken/futures-api/charts/tick-types.md",
       "filename": "tick-types.md",
       "api_type": "REST",
       "source_type": "",
@@ -5089,7 +5089,7 @@
     {
       "id": "tss-fix",
       "title": "Trading Session Status (Spot only)",
-      "path": "docs/crypto/exchanges/kraken/fix-api/tss-fix.md",
+      "path": "docs/crypto/kraken/fix-api/tss-fix.md",
       "filename": "tss-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -5101,7 +5101,7 @@
     {
       "id": "tssr-fix",
       "title": "Trading Session Status Request (Spot only)",
-      "path": "docs/crypto/exchanges/kraken/fix-api/tssr-fix.md",
+      "path": "docs/crypto/kraken/fix-api/tssr-fix.md",
       "filename": "tssr-fix.md",
       "api_type": "REST",
       "source_type": "",
@@ -5113,7 +5113,7 @@
     {
       "id": "trading-settings",
       "title": "Trading Settings",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/trading-settings.md",
+      "path": "docs/crypto/kraken/futures-api/trading/trading-settings.md",
       "filename": "trading-settings.md",
       "api_type": "REST",
       "source_type": "",
@@ -5125,7 +5125,7 @@
     {
       "id": "transfers",
       "title": "Transfers",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/transfers.md",
+      "path": "docs/crypto/kraken/futures-api/trading/transfers.md",
       "filename": "transfers.md",
       "api_type": "REST",
       "source_type": "",
@@ -5137,7 +5137,7 @@
     {
       "id": "set-self-trade-strategy",
       "title": "Update self trade strategy",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/set-self-trade-strategy.md",
+      "path": "docs/crypto/kraken/futures-api/trading/set-self-trade-strategy.md",
       "filename": "set-self-trade-strategy.md",
       "api_type": "REST",
       "source_type": "",
@@ -5149,7 +5149,7 @@
     {
       "id": "update-subaccount-trading-capability",
       "title": "Update subaccount trading status",
-      "path": "docs/crypto/exchanges/kraken/futures-api/trading/update-subaccount-trading-capability.md",
+      "path": "docs/crypto/kraken/futures-api/trading/update-subaccount-trading-capability.md",
       "filename": "update-subaccount-trading-capability.md",
       "api_type": "REST",
       "source_type": "",
@@ -5161,7 +5161,7 @@
     {
       "id": "withdraw-funds",
       "title": "Withdraw Funds",
-      "path": "docs/crypto/exchanges/kraken/rest-api/withdraw-funds.md",
+      "path": "docs/crypto/kraken/rest-api/withdraw-funds.md",
       "filename": "withdraw-funds.md",
       "api_type": "REST",
       "source_type": "",
@@ -5173,7 +5173,7 @@
     {
       "id": "account_log",
       "title": "Account Log",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/account_log.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/account_log.md",
       "filename": "account_log.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5185,7 +5185,7 @@
     {
       "id": "addorder",
       "title": "Add Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/addorder.md",
+      "path": "docs/crypto/kraken/websocket-v1/addorder.md",
       "filename": "addorder.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5197,7 +5197,7 @@
     {
       "id": "add_order",
       "title": "Add Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/add_order.md",
+      "path": "docs/crypto/kraken/websocket-v2/add_order.md",
       "filename": "add_order.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5209,7 +5209,7 @@
     {
       "id": "amendorder",
       "title": "Amend Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/amendorder.md",
+      "path": "docs/crypto/kraken/websocket-v1/amendorder.md",
       "filename": "amendorder.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5221,7 +5221,7 @@
     {
       "id": "amend_order",
       "title": "Amend Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/amend_order.md",
+      "path": "docs/crypto/kraken/websocket-v2/amend_order.md",
       "filename": "amend_order.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5233,7 +5233,7 @@
     {
       "id": "balances",
       "title": "Balances",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/balances.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/balances.md",
       "filename": "balances.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5245,7 +5245,7 @@
     {
       "id": "balances",
       "title": "Balances",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/balances.md",
+      "path": "docs/crypto/kraken/websocket-v2/balances.md",
       "filename": "balances.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5257,7 +5257,7 @@
     {
       "id": "batch_add",
       "title": "Batch Add",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/batch_add.md",
+      "path": "docs/crypto/kraken/websocket-v2/batch_add.md",
       "filename": "batch_add.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5269,7 +5269,7 @@
     {
       "id": "batch_cancel",
       "title": "Batch Cancel",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/batch_cancel.md",
+      "path": "docs/crypto/kraken/websocket-v2/batch_cancel.md",
       "filename": "batch_cancel.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5281,7 +5281,7 @@
     {
       "id": "book",
       "title": "Book",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/book.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/book.md",
       "filename": "book.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5293,7 +5293,7 @@
     {
       "id": "book",
       "title": "Book (Level 2)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/book.md",
+      "path": "docs/crypto/kraken/websocket-v1/book.md",
       "filename": "book.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5305,7 +5305,7 @@
     {
       "id": "book",
       "title": "Book (Level 2)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/book.md",
+      "path": "docs/crypto/kraken/websocket-v2/book.md",
       "filename": "book.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5317,7 +5317,7 @@
     {
       "id": "cancelall",
       "title": "Cancel All",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelall.md",
+      "path": "docs/crypto/kraken/websocket-v1/cancelall.md",
       "filename": "cancelall.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5329,7 +5329,7 @@
     {
       "id": "cancel_all",
       "title": "Cancel All",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_all.md",
+      "path": "docs/crypto/kraken/websocket-v2/cancel_all.md",
       "filename": "cancel_all.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5341,7 +5341,7 @@
     {
       "id": "cancelorder",
       "title": "Cancel Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelorder.md",
+      "path": "docs/crypto/kraken/websocket-v1/cancelorder.md",
       "filename": "cancelorder.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5353,7 +5353,7 @@
     {
       "id": "cancel_order",
       "title": "Cancel Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_order.md",
+      "path": "docs/crypto/kraken/websocket-v2/cancel_order.md",
       "filename": "cancel_order.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5365,7 +5365,7 @@
     {
       "id": "cancelallordersafter",
       "title": "Cancel on Disconnect",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/cancelallordersafter.md",
+      "path": "docs/crypto/kraken/websocket-v1/cancelallordersafter.md",
       "filename": "cancelallordersafter.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5377,7 +5377,7 @@
     {
       "id": "cancel_after",
       "title": "Cancel on Disconnect",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/cancel_after.md",
+      "path": "docs/crypto/kraken/websocket-v2/cancel_after.md",
       "filename": "cancel_after.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5389,7 +5389,7 @@
     {
       "id": "ohlc",
       "title": "Candles (OHLC)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/ohlc.md",
+      "path": "docs/crypto/kraken/websocket-v1/ohlc.md",
       "filename": "ohlc.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5401,7 +5401,7 @@
     {
       "id": "ohlc",
       "title": "Candles (OHLC)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/ohlc.md",
+      "path": "docs/crypto/kraken/websocket-v2/ohlc.md",
       "filename": "ohlc.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5413,7 +5413,7 @@
     {
       "id": "challenge",
       "title": "Challenge",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/challenge.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/challenge.md",
       "filename": "challenge.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5425,7 +5425,7 @@
     {
       "id": "editorder",
       "title": "Edit Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/editorder.md",
+      "path": "docs/crypto/kraken/websocket-v1/editorder.md",
       "filename": "editorder.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5437,7 +5437,7 @@
     {
       "id": "edit_order",
       "title": "Edit Order",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/edit_order.md",
+      "path": "docs/crypto/kraken/websocket-v2/edit_order.md",
       "filename": "edit_order.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5449,7 +5449,7 @@
     {
       "id": "executions",
       "title": "Executions",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/executions.md",
+      "path": "docs/crypto/kraken/websocket-v2/executions.md",
       "filename": "executions.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5461,7 +5461,7 @@
     {
       "id": "fills",
       "title": "Fills",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/fills.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/fills.md",
       "filename": "fills.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5473,7 +5473,7 @@
     {
       "id": "futures-websockets",
       "title": "Futures Websockets",
-      "path": "docs/crypto/exchanges/kraken/guides/futures-websockets.md",
+      "path": "docs/crypto/kraken/guides/futures-websockets.md",
       "filename": "futures-websockets.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5485,7 +5485,7 @@
     {
       "id": "get-websockets-token",
       "title": "Get Websockets Token",
-      "path": "docs/crypto/exchanges/kraken/rest-api/get-websockets-token.md",
+      "path": "docs/crypto/kraken/rest-api/get-websockets-token.md",
       "filename": "get-websockets-token.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5497,7 +5497,7 @@
     {
       "id": "heartbeat",
       "title": "Heartbeat",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/heartbeat.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/heartbeat.md",
       "filename": "heartbeat.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5509,7 +5509,7 @@
     {
       "id": "heartbeat",
       "title": "Heartbeat",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/heartbeat.md",
+      "path": "docs/crypto/kraken/websocket-v1/heartbeat.md",
       "filename": "heartbeat.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5521,7 +5521,7 @@
     {
       "id": "heartbeat",
       "title": "Heartbeat",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/heartbeat.md",
+      "path": "docs/crypto/kraken/websocket-v2/heartbeat.md",
       "filename": "heartbeat.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5533,7 +5533,7 @@
     {
       "id": "instrument",
       "title": "Instruments",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/instrument.md",
+      "path": "docs/crypto/kraken/websocket-v2/instrument.md",
       "filename": "instrument.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5545,7 +5545,7 @@
     {
       "id": "notifications",
       "title": "Notification",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/notifications.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/notifications.md",
       "filename": "notifications.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5557,7 +5557,7 @@
     {
       "id": "open_orders",
       "title": "Open Orders",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_orders.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/open_orders.md",
       "filename": "open_orders.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5569,7 +5569,7 @@
     {
       "id": "openorders",
       "title": "Open Orders",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/openorders.md",
+      "path": "docs/crypto/kraken/websocket-v1/openorders.md",
       "filename": "openorders.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5581,7 +5581,7 @@
     {
       "id": "open_orders_verbose",
       "title": "Open Orders (verbose)",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_orders_verbose.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/open_orders_verbose.md",
       "filename": "open_orders_verbose.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5593,7 +5593,7 @@
     {
       "id": "open_position",
       "title": "Open Position",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/open_position.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/open_position.md",
       "filename": "open_position.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5605,7 +5605,7 @@
     {
       "id": "level3",
       "title": "Orders (Level 3)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/level3.md",
+      "path": "docs/crypto/kraken/websocket-v2/level3.md",
       "filename": "level3.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5617,7 +5617,7 @@
     {
       "id": "owntrades",
       "title": "Own Trades",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/owntrades.md",
+      "path": "docs/crypto/kraken/websocket-v1/owntrades.md",
       "filename": "owntrades.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5629,7 +5629,7 @@
     {
       "id": "ping",
       "title": "Ping",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/ping.md",
+      "path": "docs/crypto/kraken/websocket-v1/ping.md",
       "filename": "ping.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5641,7 +5641,7 @@
     {
       "id": "ping",
       "title": "Ping",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/ping.md",
+      "path": "docs/crypto/kraken/websocket-v2/ping.md",
       "filename": "ping.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5653,7 +5653,7 @@
     {
       "id": "spot-ws-book-v1",
       "title": "Spot Websockets (v1) Book Checksum",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ws-book-v1.md",
+      "path": "docs/crypto/kraken/guides/spot-ws-book-v1.md",
       "filename": "spot-ws-book-v1.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5665,7 +5665,7 @@
     {
       "id": "spot-ws-book-v2",
       "title": "Spot Websockets (v2) Book Checksum",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ws-book-v2.md",
+      "path": "docs/crypto/kraken/guides/spot-ws-book-v2.md",
       "filename": "spot-ws-book-v2.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5677,7 +5677,7 @@
     {
       "id": "spot-ws-l3-v2",
       "title": "Spot Websockets (v2) Level3 Checksum",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ws-l3-v2.md",
+      "path": "docs/crypto/kraken/guides/spot-ws-l3-v2.md",
       "filename": "spot-ws-l3-v2.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5689,7 +5689,7 @@
     {
       "id": "spot-ws-auth",
       "title": "Spot Websockets Authentication",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ws-auth.md",
+      "path": "docs/crypto/kraken/guides/spot-ws-auth.md",
       "filename": "spot-ws-auth.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5701,7 +5701,7 @@
     {
       "id": "spot-ws-intro",
       "title": "Spot Websockets Introduction",
-      "path": "docs/crypto/exchanges/kraken/guides/spot-ws-intro.md",
+      "path": "docs/crypto/kraken/guides/spot-ws-intro.md",
       "filename": "spot-ws-intro.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5713,7 +5713,7 @@
     {
       "id": "spread",
       "title": "Spreads",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/spread.md",
+      "path": "docs/crypto/kraken/websocket-v1/spread.md",
       "filename": "spread.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5725,7 +5725,7 @@
     {
       "id": "status",
       "title": "Status",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/status.md",
+      "path": "docs/crypto/kraken/websocket-v2/status.md",
       "filename": "status.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5737,7 +5737,7 @@
     {
       "id": "subscriptionstatus",
       "title": "Subscription Status",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/subscriptionstatus.md",
+      "path": "docs/crypto/kraken/websocket-v1/subscriptionstatus.md",
       "filename": "subscriptionstatus.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5749,7 +5749,7 @@
     {
       "id": "systemstatus",
       "title": "System Status",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/systemstatus.md",
+      "path": "docs/crypto/kraken/websocket-v1/systemstatus.md",
       "filename": "systemstatus.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5761,7 +5761,7 @@
     {
       "id": "ticker",
       "title": "Ticker",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/ticker.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/ticker.md",
       "filename": "ticker.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5773,7 +5773,7 @@
     {
       "id": "ticker",
       "title": "Ticker (Level 1)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/ticker.md",
+      "path": "docs/crypto/kraken/websocket-v1/ticker.md",
       "filename": "ticker.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5785,7 +5785,7 @@
     {
       "id": "ticker",
       "title": "Ticker (Level 1)",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/ticker.md",
+      "path": "docs/crypto/kraken/websocket-v2/ticker.md",
       "filename": "ticker.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5797,7 +5797,7 @@
     {
       "id": "ticker_lite",
       "title": "Ticker Lite",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/ticker_lite.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/ticker_lite.md",
       "filename": "ticker_lite.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5809,7 +5809,7 @@
     {
       "id": "trade",
       "title": "Trade",
-      "path": "docs/crypto/exchanges/kraken/futures-api/websocket/trade.md",
+      "path": "docs/crypto/kraken/futures-api/websocket/trade.md",
       "filename": "trade.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5821,7 +5821,7 @@
     {
       "id": "trade",
       "title": "Trade",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/trade.md",
+      "path": "docs/crypto/kraken/websocket-v1/trade.md",
       "filename": "trade.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5833,7 +5833,7 @@
     {
       "id": "trade",
       "title": "Trades",
-      "path": "docs/crypto/exchanges/kraken/websocket-v2/trade.md",
+      "path": "docs/crypto/kraken/websocket-v2/trade.md",
       "filename": "trade.md",
       "api_type": "WebSocket",
       "source_type": "",
@@ -5845,7 +5845,7 @@
     {
       "id": "unsubscribe",
       "title": "Unsubscribe",
-      "path": "docs/crypto/exchanges/kraken/websocket-v1/unsubscribe.md",
+      "path": "docs/crypto/kraken/websocket-v1/unsubscribe.md",
       "filename": "unsubscribe.md",
       "api_type": "WebSocket",
       "source_type": "",
