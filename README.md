@@ -15,17 +15,17 @@
 
 > 此表由 `src/utils/readme_updater.py` 根据 `config/products/*.yaml` 和 `index/**/*.json` 自动生成。
 
-| 范围 | 资产 | 业务域 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
-|------|------|--------|--------|------|------|----------|----------|
-| cn | stock | gateways | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
-| cn | stock | gateways | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
-| crypto | digital_asset | exchanges | Binance | [Binance](./docs/crypto/binance/) | ✅ | 821 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 454 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 71 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 34 | 2026-05-27 |
-| crypto | digital_asset | exchanges | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-05-27 |
-| crypto | digital_asset | exchanges | OKX | [OKX](./docs/crypto/okx/) | ✅ | 509 | 2026-05-27 |
+| 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
+|------|--------|------|------|----------|----------|
+| cn | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-05-18 |
+| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 21 | 2026-06-23 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 821 | 2026-05-27 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 454 | 2026-05-27 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 71 | 2026-05-27 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 34 | 2026-05-27 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-05-27 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 509 | 2026-05-27 |
 
 ## 快速开始
 

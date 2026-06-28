@@ -27,8 +27,8 @@ class ReadmeUpdater:
         lines = [
             "> 此表由 `src/utils/readme_updater.py` 根据 `config/products/*.yaml` 和 `index/**/*.json` 自动生成。",
             "",
-            "| 范围 | 资产 | 业务域 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |",
-            "|------|------|--------|--------|------|------|----------|----------|",
+            "| 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |",
+            "|------|--------|------|------|----------|----------|",
         ]
         for product in products:
             index_data = self._load_index(product)
@@ -41,9 +41,9 @@ class ReadmeUpdater:
             display_name = product.get("display_name", product.get("id", ""))
             product_link = f"[{display_name}](./{docs_dir}/)" if docs_dir else str(display_name)
             lines.append(
-                f"| {product.get('scope', product.get('market', ''))} | {product.get('asset_class', '')} | "
-                f"{product.get('domain', '')} | {provider.get('display_name', provider.get('id', ''))} | "
-                f"{product_link} | {status} | {total} | {updated_at or '-'} |"
+                f"| {product.get('scope', product.get('market', ''))} | "
+                f"{provider.get('display_name', provider.get('id', ''))} | {product_link} | "
+                f"{status} | {total} | {updated_at or '-'} |"
             )
         return "\n".join(lines)
 
