@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/internal-deposit-record
 api_type: REST
-updated_at: 2026-06-28 19:08:36.874182
+updated_at: 2026-06-29 19:25:46.526834
 ---
 
 # Get Internal Deposit Records (off-chain)

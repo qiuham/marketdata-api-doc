@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Snapshot
 api_type: Account
-updated_at: 2026-06-28 18:57:50.086949
+updated_at: 2026-06-29 19:15:13.084686
 ---
 
 # Withdrawl Assets From The Managed Sub-account (For Investor Master Account) (USER_DATA)

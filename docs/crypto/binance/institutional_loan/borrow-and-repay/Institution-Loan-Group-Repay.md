@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/borrow-and-repay/Institution-Loan-Group-Repay
 api_type: REST
-updated_at: 2026-06-28 18:56:11.129007
+updated_at: 2026-06-29 19:13:40.274008
 ---
 
 # Public API Definitions

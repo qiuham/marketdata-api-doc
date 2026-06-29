@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/alpha/market-data/general-info
 api_type: WebSocket
-updated_at: 2026-06-28 18:56:31.650737
+updated_at: 2026-06-29 19:14:00.956954
 ---
 
 # WebSocket Market Data API

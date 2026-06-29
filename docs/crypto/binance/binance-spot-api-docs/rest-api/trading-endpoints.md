@@ -2,14 +2,32 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints
 api_type: REST
-updated_at: 2026-06-28 18:49:53.447867
+updated_at: 2026-06-29 19:07:43.079377
 ---
 
 # CHANGELOG for Binance SPOT Testnet
 
-**Last Updated: 2026-06-24**
+**Last Updated: 2026-06-29**
 
 **Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/). This is not always synced with the live exchange.
+
+### 2026-06-29[​](/docs/binance-spot-api-docs/testnet#2026-06-29 "Direct link to 2026-06-29")
+
+**Notice:** The changes in this section will be gradually rolled out and will take approximately 2 days to complete.
+
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features "Direct link to New Features")
+
+  * The new `symbolStatus` value `CANCEL_ONLY` can appear in Exchange Information responses. 
+    * REST API: `GET /api/v3/exchangeInfo`
+    * WebSocket API: `exchangeInfo`
+  * REST and WebSocket API SBE schema [spot_3_5.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_5.xml)
+    * The current schema 3:4 [spot_3_4.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_4.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:5: 
+      * Updated `symbolStatus` enum: new variant `CANCEL_ONLY`
+
+
+
+* * *
 
 ### 2026-06-24[​](/docs/binance-spot-api-docs/testnet#2026-06-24 "Direct link to 2026-06-24")
 
@@ -91,7 +109,7 @@ The following rollout will occur at **approximately 08:00 UTC today**.
 
 All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
 
-#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features "Direct link to New Features")
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-1 "Direct link to New Features")
 
 **Notice: The following changes will take effect once the Spot Test Network is back online.**
 
@@ -242,7 +260,7 @@ Please consult the [FIX API documentation](/docs/binance-spot-api-docs/testnet/f
 
 **Notice:** The changes in this section will be gradually rolled out starting from **2026-03-11 02:00 UTC** and will be finished at approximately **2026-03-12 13:00 UTC**.
 
-#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-1 "Direct link to New Features")
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-2 "Direct link to New Features")
 
   * [Price Range Execution Rule](/docs/binance-spot-api-docs/faqs/price_range_execution_rules)
     * New Endpoints/Methods 
@@ -340,7 +358,7 @@ Please consult the [FIX API documentation](/docs/binance-spot-api-docs/testnet/f
 
 ### 2026-03-05[​](/docs/binance-spot-api-docs/testnet#2026-03-05 "Direct link to 2026-03-05")
 
-#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-2 "Direct link to New Features")
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-3 "Direct link to New Features")
 
   * Users of the Spot Test Network can now choose to add commissions on their Testnet orders, if they want to test their integration of commission APIs and fields.
 
@@ -1045,7 +1063,7 @@ REST and WebSocket API:
 **Notice:** The following changes will be deployed tomorrow **April 2, 2025 starting at 7:00 UTC** and may take several hours to complete.   
 Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
 
-#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-3 "Direct link to New Features")
+#### New Features[​](/docs/binance-spot-api-docs/testnet#new-features-4 "Direct link to New Features")
 
   * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now available.**
     * FIX API: New Order Entry Messages **OrderAmendKeepPriorityRequest** and **OrderAmendReject**
@@ -1621,9 +1639,27 @@ User Data Stream:
 
 # CHANGELOG for Binance SPOT Testnet
 
-**Last Updated: 2026-06-24**
+**Last Updated: 2026-06-29**
 
 **Note:** All features here will only apply to the [SPOT Testnet](https://testnet.binance.vision/). This is not always synced with the live exchange.
+
+### 2026-06-29[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-29 "2026-06-29的直接链接")
+
+**Notice:** The changes in this section will be gradually rolled out and will take approximately 2 days to complete.
+
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features "New Features的直接链接")
+
+  * The new `symbolStatus` value `CANCEL_ONLY` can appear in Exchange Information responses. 
+    * REST API: `GET /api/v3/exchangeInfo`
+    * WebSocket API: `exchangeInfo`
+  * REST and WebSocket API SBE schema [spot_3_5.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_5.xml)
+    * The current schema 3:4 [spot_3_4.xml](https://github.com/binance/binance-spot-api-docs/blob/master/sbe/schemas/spot_3_4.xml) is deprecated and will be retired in 6 months as per our schema deprecation policy.
+    * Changes in schema 3:5: 
+      * Updated `symbolStatus` enum: new variant `CANCEL_ONLY`
+
+
+
+* * *
 
 ### 2026-06-24[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-24 "2026-06-24的直接链接")
 
@@ -1705,7 +1741,7 @@ The following rollout will occur at **approximately 08:00 UTC today**.
 
 All data on the Spot Test Network will be deleted today according to the periodic reset procedure. See [General Info](/docs/zh-CN/binance-spot-api-docs/testnet/general-info#faq-periodic-reset) for more details.
 
-#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features "New Features的直接链接")
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-1 "New Features的直接链接")
 
 **Notice: The following changes will take effect once the Spot Test Network is back online.**
 
@@ -1856,7 +1892,7 @@ Please consult the [FIX API documentation](/docs/zh-CN/binance-spot-api-docs/tes
 
 **Notice:** The changes in this section will be gradually rolled out starting from **2026-03-11 02:00 UTC** and will be finished at approximately **2026-03-12 13:00 UTC**.
 
-#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-1 "New Features的直接链接")
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-2 "New Features的直接链接")
 
   * [Price Range Execution Rule](/docs/zh-CN/faqs/price_range_execution_rules.md)
     * New Endpoints/Methods 
@@ -1954,7 +1990,7 @@ Please consult the [FIX API documentation](/docs/zh-CN/binance-spot-api-docs/tes
 
 ### 2026-03-05[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-03-05 "2026-03-05的直接链接")
 
-#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-2 "New Features的直接链接")
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-3 "New Features的直接链接")
 
   * Users of the Spot Test Network can now choose to add commissions on their Testnet orders, if they want to test their integration of commission APIs and fields.
 
@@ -2659,7 +2695,7 @@ REST and WebSocket API:
 **Notice:** The following changes will be deployed tomorrow **April 2, 2025 starting at 7:00 UTC** and may take several hours to complete.   
 Please consult the Spot Test Network's [homepage](https://testnet.binance.vision/) to be informed of the release completion.
 
-#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-3 "New Features的直接链接")
+#### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features-4 "New Features的直接链接")
 
   * **[Order Amend Keep Priority](https://github.com/binance/binance-spot-api-docs/blob/master/faqs/order_amend_keep_priority.md) is now available.**
     * FIX API: New Order Entry Messages **OrderAmendKeepPriorityRequest** and **OrderAmendReject**

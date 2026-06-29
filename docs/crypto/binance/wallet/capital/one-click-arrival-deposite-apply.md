@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/capital/one-click-arrival-deposite-apply
 api_type: REST
-updated_at: 2026-06-28 18:54:29.044041
+updated_at: 2026-06-29 19:12:02.316761
 ---
 
 # Withdraw History (supporting network) (USER_DATA)

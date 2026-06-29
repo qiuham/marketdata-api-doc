@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/account/daily-account-snapshoot
 api_type: Account
-updated_at: 2026-06-28 18:53:51.540329
+updated_at: 2026-06-29 19:11:27.368492
 ---
 
 # Toggle BNB Burn On Spot Trade And Margin Interest (USER_DATA)

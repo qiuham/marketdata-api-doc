@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-underlying
 anchor_id: public-data-rest-api-get-underlying
 api_type: REST
-updated_at: 2026-06-28 19:37:58.462021
+updated_at: 2026-06-29 19:57:17.868015
 ---
 
 # Get underlying

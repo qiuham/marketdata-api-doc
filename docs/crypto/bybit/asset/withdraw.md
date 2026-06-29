@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw
 api_type: REST
-updated_at: 2026-06-28 19:09:06.273873
+updated_at: 2026-06-29 19:26:21.370119
 ---
 
 # Withdraw

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-06-28 19:11:27.635172
+updated_at: 2026-06-29 19:29:02.411013
 ---
 
 # Get All Fund Orders

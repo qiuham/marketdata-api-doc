@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook
 api_type: WebSocket
-updated_at: 2026-06-28 19:15:59.496815
+updated_at: 2026-06-29 19:34:10.326469
 ---
 
 # Trade

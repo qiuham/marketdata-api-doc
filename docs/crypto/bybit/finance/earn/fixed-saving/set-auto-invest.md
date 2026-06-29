@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-06-28 19:11:27.017976
+updated_at: 2026-06-29 19:29:01.789625
 ---
 
 # Get All Fund Orders

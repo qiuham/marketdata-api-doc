@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-position
 api_type: REST
-updated_at: 2026-06-28 19:25:22.378931
+updated_at: 2026-06-29 19:44:46.569970
 ---
 
 # Get US Derivatives Position

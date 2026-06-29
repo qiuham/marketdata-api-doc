@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/execution
 api_type: REST
-updated_at: 2026-06-28 19:13:48.843829
+updated_at: 2026-06-29 19:31:43.262585
 ---
 
 # Get Pre-upgrade Transaction Log

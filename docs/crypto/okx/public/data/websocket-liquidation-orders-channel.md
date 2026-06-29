@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-liquidation-orders-channel
 anchor_id: public-data-websocket-liquidation-orders-channel
 api_type: WebSocket
-updated_at: 2026-06-28 19:38:06.692657
+updated_at: 2026-06-29 19:57:26.201545
 ---
 
 # Liquidation orders channel
