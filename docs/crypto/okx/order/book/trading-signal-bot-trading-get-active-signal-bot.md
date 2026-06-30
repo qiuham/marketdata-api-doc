@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-get-active-signal-bot
 anchor_id: order-book-trading-signal-bot-trading-get-active-signal-bot
 api_type: API
-updated_at: 2026-06-29 19:56:20.406320
+updated_at: 2026-06-30 19:54:52.291454
 ---
 
 # GET / Active signal bot

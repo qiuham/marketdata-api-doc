@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/sub-uid-list
 api_type: REST
-updated_at: 2026-06-29 19:26:12.934211
+updated_at: 2026-06-30 19:23:59.946099
 ---
 
 # Create Internal Transfer

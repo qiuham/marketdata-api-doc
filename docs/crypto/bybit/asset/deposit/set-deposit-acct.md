@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/set-deposit-acct
 api_type: REST
-updated_at: 2026-06-29 19:25:51.477036
+updated_at: 2026-06-30 19:23:38.410447
 ---
 
 # Submit Deposit Originator Info

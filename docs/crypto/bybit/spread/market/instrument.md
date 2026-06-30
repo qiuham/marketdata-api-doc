@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/instrument
 api_type: Market Data
-updated_at: 2026-06-29 19:32:57.953617
+updated_at: 2026-06-30 19:31:08.982786
 ---
 
 # Get Orderbook

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/travel-rule/address-verification-list
 api_type: REST
-updated_at: 2026-06-29 19:12:16.680041
+updated_at: 2026-06-30 19:09:45.066171
 ---
 
 # Submit Deposit Questionnaire (For local entities that require travel rule) (supporting network) (USER_DATA)

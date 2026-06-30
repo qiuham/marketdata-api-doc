@@ -3,13 +3,15 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-create-quote
 anchor_id: block-trading-rest-api-create-quote
 api_type: REST
-updated_at: 2026-06-29 19:56:50.626999
+updated_at: 2026-06-30 19:55:22.693042
 ---
 
 # Create Quote
 
-Allows the user to Quote an RFQ that they are a counterparty to. The user MUST quote the entire RFQ and not part of the legs or part of the quantity. Partial quoting is not allowed.   
+Allows the user to Quote an RFQ that they are a counterparty to. The user MUST quote the entire RFQ and not part of the legs or part of the quantity. Partial quoting is not allowed.  
   
+Only one active quote is allowed per RFQ at a time. Submitting a new quote for the same `rfqId` will automatically cancel the existing active quote before the new one is created.
+
 #### Rate Limit: 50 requests per 2 seconds
 
 #### Rate limit rule: User ID
@@ -225,6 +227,8 @@ The default value is the quote currency of the instId, for example: for `BTC-USD
 
 允许询价单指定的报价方进行报价，需要对整个询价单报价，不允许部分报价。  
   
+同一询价单（`rfqId`）下同一时间只能有一个有效报价单。针对同一 `rfqId` 提交新的报价单，会自动取消当前已有的有效报价单。
+
 #### 限速: 50次/2s
 
 #### 限速规则：User ID

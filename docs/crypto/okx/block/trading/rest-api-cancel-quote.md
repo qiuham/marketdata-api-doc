@@ -3,13 +3,15 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-quote
 anchor_id: block-trading-rest-api-cancel-quote
 api_type: REST
-updated_at: 2026-06-29 19:56:50.939006
+updated_at: 2026-06-30 19:55:23.006212
 ---
 
 # Cancel Quote
 
 Cancels an existing active Quote you have created in response to an RFQ.  
   
+If a new `create-quote` for the same `rfqId` is processed before this cancel request arrives, the original quote will already be in `canceled` state and this request will return error `70400`. This can occur when requests are sent from different connections or processes, which do not guarantee ordering. To ensure strict create→cancel sequencing, wait for the create-quote response before issuing the cancel, using a single connection.
+
 #### Rate Limit: 50 requests per 2 seconds
 
 #### Rate limit rule: User ID
@@ -93,6 +95,8 @@ data | Array of objects | Array of objects containing the results
 
 取消一个报价单。  
   
+如果在本次取消请求到达之前，系统已处理了针对同一 `rfqId` 的新建报价单请求，则原报价单将已处于 `canceled` 状态，本请求将返回错误 `70400`。当请求通过不同连接或进程发出时可能发生此情况，因为不同连接间不保证请求的处理顺序。如需确保严格的创建→取消顺序，请在收到创建报价单的响应后，通过同一连接再发出取消请求。
+
 #### 限速: 50次/2s
 
 #### 限速规则：User ID

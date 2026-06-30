@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/market-data/Get-Limit-Price-Pairs
 api_type: Market Data
-updated_at: 2026-06-29 19:09:40.329072
+updated_at: 2026-06-30 19:07:08.550997
 ---
 
 # Get list Schedule (MARKET_DATA)

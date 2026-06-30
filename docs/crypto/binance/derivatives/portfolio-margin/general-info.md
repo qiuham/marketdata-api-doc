@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/derivatives/portfolio-margin/general-info
 api_type: REST
-updated_at: 2026-06-29 19:08:48.136860
+updated_at: 2026-06-30 19:06:15.994745
 ---
 
 # General Info

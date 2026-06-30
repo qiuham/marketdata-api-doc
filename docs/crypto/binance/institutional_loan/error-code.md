@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/error-code
 api_type: REST
-updated_at: 2026-06-29 19:13:47.380354
+updated_at: 2026-06-30 19:11:16.322509
 ---
 
 # Risk Unit Transfer(TRADE)

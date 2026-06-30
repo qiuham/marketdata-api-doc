@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/trade/Liquidation-Loan-Repay
 api_type: Trading
-updated_at: 2026-06-29 19:10:13.138223
+updated_at: 2026-06-30 19:07:41.247961
 ---
 
 # Margin Account Cancel OCO (TRADE)

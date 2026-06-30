@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/change-log
 api_type: REST
-updated_at: 2026-06-29 19:13:42.203728
+updated_at: 2026-06-30 19:11:10.970872
 ---
 
 # Public API Definitions

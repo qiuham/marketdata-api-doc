@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/change-log
 api_type: REST
-updated_at: 2026-06-29 19:09:27.392084
+updated_at: 2026-06-30 19:06:54.933841
 ---
 
 # Change Log

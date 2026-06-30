@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2
 api_type: Account
-updated_at: 2026-06-29 19:14:17.533636
+updated_at: 2026-06-30 19:11:46.786359
 ---
 
 # Get IP Restriction for a Sub-account API Key (For Master Account) (USER_DATA)

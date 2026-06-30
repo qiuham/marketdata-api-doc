@@ -3,13 +3,13 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-index-tickers-channel
 anchor_id: public-data-websocket-index-tickers-channel
 api_type: WebSocket
-updated_at: 2026-06-29 19:57:25.253088
+updated_at: 2026-06-30 19:55:57.567588
 ---
 
 # Index tickers channel
 
-Retrieve index tickers data. Push data every 100ms if there are any changes, otherwise push once a minute.  
-  
+Retrieve index tickers data. Push data every 100ms if there are any changes, otherwise push once a minute.
+
 #### URL Path
 
 /ws/v5/public
@@ -154,8 +154,8 @@ data | Array of objects | Subscribed data
 
 # 指数行情频道
 
-获取指数的行情数据。每100ms有变化就推送一次数据，否则一分钟推一次。  
-  
+获取指数的行情数据。每100ms有变化就推送一次数据，否则一分钟推一次。
+
 #### URL Path
 
 /ws/v5/public

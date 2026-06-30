@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/collateral-coin
 api_type: REST
-updated_at: 2026-06-29 19:30:17.358356
+updated_at: 2026-06-30 19:28:17.058367
 ---
 
 # Get Collateral Coins

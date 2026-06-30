@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/algo/future-algo
 api_type: REST
-updated_at: 2026-06-29 19:10:55.468582
+updated_at: 2026-06-30 19:08:23.893951
 ---
 
 # Volume Participation(VP) New Order (TRADE)

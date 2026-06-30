@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-position-mode
 anchor_id: trading-account-rest-api-set-position-mode
 api_type: REST
-updated_at: 2026-06-29 19:55:32.842018
+updated_at: 2026-06-30 19:54:03.986257
 ---
 
 # Set position mode

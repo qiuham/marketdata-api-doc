@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-collateral-assets
 anchor_id: trading-account-rest-api-get-collateral-assets
 api_type: REST
-updated_at: 2026-06-29 19:55:42.544892
+updated_at: 2026-06-30 19:54:13.712162
 ---
 
 # Get collateral assets

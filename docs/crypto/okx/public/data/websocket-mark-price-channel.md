@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-mark-price-channel
 anchor_id: public-data-websocket-mark-price-channel
 api_type: WebSocket
-updated_at: 2026-06-29 19:57:24.936243
+updated_at: 2026-06-30 19:55:57.249618
 ---
 
 # Mark price channel
@@ -142,7 +142,8 @@ data | Array of objects | Subscribed data
 > instType | String | Instrument type  
 > instId | String | Instrument ID  
 > markPx | String | Mark price  
-> ts | String | Price update time, Unix timestamp format in milliseconds, e.g. `1597026383085`
+> ts | String | Price update time, Unix timestamp format in milliseconds, e.g. `1597026383085`  
+In rare cases, two mark price messages with the same timestamp may be received within a short window. This can occur during scheduled system maintenance or deployments and is not persistent. When this happens, clients should use the later-received message as the authoritative value. The difference between the two values will be negligible and will not materially affect trading strategies.
 
 ---
 
@@ -279,4 +280,5 @@ data | Array of objects | 订阅的数据
 > instType | String | 交易品种  
 > instId | String | 产品ID  
 > markPx | String | 标记价格  
-> ts | String | 标记价格数据更新时间 ，Unix时间戳的毫秒数格式，如 `1597026383085`
+> ts | String | 标记价格数据更新时间 ，Unix时间戳的毫秒数格式，如 `1597026383085`  
+在极少数情况下，客户端可能在短时间内收到两条时间戳相同的标记价格消息。这可能发生在系统维护或服务发布期间，且不会持续出现。当出现此情况时，客户端应以后收到的消息作为权威值。两条消息的差值可忽略不计，不会对交易策略产生实质性影响。

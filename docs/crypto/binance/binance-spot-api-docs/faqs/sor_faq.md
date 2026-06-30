@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/faqs/sor_faq
 api_type: REST
-updated_at: 2026-06-29 19:07:21.247863
+updated_at: 2026-06-30 19:04:47.455701
 ---
 
 # Spot Trailing Stop order FAQ

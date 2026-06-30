@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-post-purchase
 anchor_id: financial-product-sol-staking-post-purchase
 api_type: API
-updated_at: 2026-06-29 19:57:56.618891
+updated_at: 2026-06-30 19:56:29.191540
 ---
 
 # POST / Purchase

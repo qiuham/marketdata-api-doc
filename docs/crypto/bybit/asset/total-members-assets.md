@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/total-members-assets
 api_type: REST
-updated_at: 2026-06-29 19:26:13.557166
+updated_at: 2026-06-30 19:24:00.570003
 ---
 
 # Create Internal Transfer

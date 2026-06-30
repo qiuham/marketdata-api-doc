@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/convert/trade
 api_type: Trading
-updated_at: 2026-06-29 19:13:10.314766
+updated_at: 2026-06-30 19:10:38.836943
 ---
 
 # Accept Quote (TRADE)

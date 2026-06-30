@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/create-strategy
 api_type: REST
-updated_at: 2026-06-29 19:33:22.855535
+updated_at: 2026-06-30 19:31:34.228151
 ---
 
 # Get System Status

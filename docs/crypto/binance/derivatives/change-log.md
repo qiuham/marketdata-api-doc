@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/derivatives/change-log
 api_type: REST
-updated_at: 2026-06-29 19:08:32.737584
+updated_at: 2026-06-30 19:05:59.448266
 ---
 
 # Error Codes
@@ -1281,7 +1281,7 @@ Codes are universal,but messages can vary.
 
 
 
-### -1130 INVALID_PARAMETER[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-1130-invalid_parameter "-1130 INVALID_PARAMETER的直接链接")
+### -1130 INVALID_PARAMETER[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-1130-invalid_parameter "-1130 INVALID_PARAMETER的�直接链接")
 
   * Invalid data sent for a parameter.
   * 发送的参数为无效数据。
@@ -1655,7 +1655,7 @@ Codes are universal,but messages can vary.
 
 
 
-### -4032 EXCEED_MAX_CANCEL_ORDER_SIZE[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4032-exceed_max_cancel_order_size "-4032 EXCEED_MAX_CANCEL_ORDER_SIZE的直��接链接")
+### -4032 EXCEED_MAX_CANCEL_ORDER_SIZE[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4032-exceed_max_cancel_order_size "-4032 EXCEED_MAX_CANCEL_ORDER_SIZE的直接链接")
 
   * Exceed maximum cancel order size.
   * 超过可以取消的最大订单量。
@@ -1746,7 +1746,7 @@ Codes are universal,but messages can vary.
 
 
 
-### -4055 AMOUNT_MUST_BE_POSITIVE[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4055-amount_must_be_positive "-4055 AMOUNT_MUST_BE_POSITIVE的�直接链接")
+### -4055 AMOUNT_MUST_BE_POSITIVE[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4055-amount_must_be_positive "-4055 AMOUNT_MUST_BE_POSITIVE的直接链接")
 
   * Amount must be positive.
   * 数量必须是正整数
@@ -2019,7 +2019,7 @@ Codes are universal,but messages can vary.
 
 
 
-### -4195 ADJUST_LEVERAGE_ONE_MONTH_FAILED[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4195-adjust_leverage_one_month_failed "-4195 ADJUST_LEVERAGE_ONE_MONTH_FAILED的直接链接")
+### -4195 ADJUST_LEVERAGE_ONE_MONTH_FAILED[​](/docs/zh-CN/derivatives/coin-margined-futures/error-code#-4195-adjust_leverage_one_month_failed "-4195 ADJUST_LEVERAGE_ONE_MONTH_FAILED的直接��链接")
 
   * More than 20x leverage is available one month after account registration.
   * 开户不到1个月的用户无法使用20x杠杆

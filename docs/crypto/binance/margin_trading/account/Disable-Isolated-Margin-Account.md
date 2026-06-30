@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/account/Disable-Isolated-Margin-Account
 api_type: Account
-updated_at: 2026-06-29 19:09:05.888696
+updated_at: 2026-06-30 19:06:33.312932
 ---
 
 # Get BNB Burn Status (USER_DATA)

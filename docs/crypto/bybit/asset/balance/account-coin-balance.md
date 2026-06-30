@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/account-coin-balance
 api_type: REST
-updated_at: 2026-06-29 19:25:24.990617
+updated_at: 2026-06-30 19:23:08.714648
 ---
 
 # Asset Overview
