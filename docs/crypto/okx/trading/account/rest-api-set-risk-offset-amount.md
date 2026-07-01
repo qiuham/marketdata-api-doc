@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-risk-offset-amount
 anchor_id: trading-account-rest-api-set-risk-offset-amount
 api_type: REST
-updated_at: 2026-06-30 19:54:10.901628
+updated_at: 2026-07-01 19:53:32.893250
 ---
 
 # Set risk offset amount

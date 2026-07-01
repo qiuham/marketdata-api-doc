@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-public-channel
 anchor_id: block-trading-websocket-public-channel
 api_type: WebSocket
-updated_at: 2026-06-30 19:55:27.824286
+updated_at: 2026-07-01 19:54:49.724406
 ---
 
 # WebSocket Public Channel

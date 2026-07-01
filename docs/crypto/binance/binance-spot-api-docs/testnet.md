@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/testnet
 api_type: REST
-updated_at: 2026-06-30 19:05:10.482864
+updated_at: 2026-07-01 19:06:31.394057
 ---
 
 # CHANGELOG for Binance SPOT Testnet
@@ -13,7 +13,7 @@ updated_at: 2026-06-30 19:05:10.482864
 
 ### 2026-06-29[​](/docs/binance-spot-api-docs/testnet#2026-06-29 "Direct link to 2026-06-29")
 
-**Notice:** The changes in this section will be gradually rolled out and will take approximately 2 days to complete.
+**Notice:** The changes in this section will be gradually rolled out and will take approximately 3 days to complete.
 
 #### New Features[​](/docs/binance-spot-api-docs/testnet#new-features "Direct link to New Features")
 
@@ -1645,7 +1645,7 @@ User Data Stream:
 
 ### 2026-06-29[​](/docs/zh-CN/binance-spot-api-docs/testnet#2026-06-29 "2026-06-29的直接链接")
 
-**Notice:** The changes in this section will be gradually rolled out and will take approximately 2 days to complete.
+**Notice:** The changes in this section will be gradually rolled out and will take approximately 3 days to complete.
 
 #### New Features[​](/docs/zh-CN/binance-spot-api-docs/testnet#new-features "New Features的直接链接")
 

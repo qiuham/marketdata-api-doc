@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/binance-spot-api-docs/rest-api/limits
 api_type: REST
-updated_at: 2026-06-30 19:05:02.934366
+updated_at: 2026-07-01 19:06:22.657762
 ---
 
 # LIMITS

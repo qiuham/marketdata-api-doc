@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/inter-transfer-list
 api_type: REST
-updated_at: 2026-06-30 19:24:05.481662
+updated_at: 2026-07-01 19:26:36.287004
 ---
 
 # Withdraw

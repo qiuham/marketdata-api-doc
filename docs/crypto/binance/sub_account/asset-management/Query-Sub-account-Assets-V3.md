@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Assets-V3
 api_type: Account
-updated_at: 2026-06-30 19:12:09.744584
+updated_at: 2026-07-01 19:14:13.893733
 ---
 
 # Query Sub-account Assets (For Master Account) (USER_DATA)

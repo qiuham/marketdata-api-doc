@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#get-instruments
 anchor_id: get-instruments
 api_type: API
-updated_at: 2026-06-30 19:56:50.766551
+updated_at: 2026-07-01 19:56:12.443364
 ---
 
 # get-instruments

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/open-order
 api_type: Trading
-updated_at: 2026-06-30 19:29:08.686632
+updated_at: 2026-07-01 19:30:47.773606
 ---
 
 # Bind Or Unbind UID

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/institutional_loan/account/Query-Institution-Loan-Group_Activated
 api_type: Account
-updated_at: 2026-06-30 19:11:02.439615
+updated_at: 2026-07-01 19:12:59.840896
 ---
 
 # Query Loan Group Max Borrowable (USER_DATA)

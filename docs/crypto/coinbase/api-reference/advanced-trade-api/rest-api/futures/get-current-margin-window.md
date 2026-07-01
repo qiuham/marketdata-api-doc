@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window
 api_type: REST
-updated_at: 2026-06-30 19:43:26.595516
+updated_at: 2026-07-01 19:42:46.413787
 ---
 
 # Get Current Margin Window

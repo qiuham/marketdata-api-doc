@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-06-30 19:30:54.273165
+updated_at: 2026-07-01 19:32:10.526821
 ---
 
 # Get Max Borrowable Amount

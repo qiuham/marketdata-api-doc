@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/reward/voucher
 api_type: REST
-updated_at: 2026-06-30 19:25:06.079766
+updated_at: 2026-07-01 19:27:24.609699
 ---
 
 # Query Point Balance

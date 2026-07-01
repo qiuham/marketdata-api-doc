@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/create-subuid-apikey
 api_type: REST
-updated_at: 2026-06-30 19:31:42.669887
+updated_at: 2026-07-01 19:32:53.152699
 ---
 
 # Get Friend Referrals

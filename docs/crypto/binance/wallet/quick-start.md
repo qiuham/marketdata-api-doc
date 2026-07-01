@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/quick-start
 api_type: REST
-updated_at: 2026-06-30 19:09:44.444942
+updated_at: 2026-07-01 19:11:32.895311
 ---
 
 # Submit Deposit Questionnaire (For local entities that require travel rule) (supporting network) (USER_DATA)

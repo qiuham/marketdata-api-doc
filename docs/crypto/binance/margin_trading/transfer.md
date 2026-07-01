@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/transfer
 api_type: REST
-updated_at: 2026-06-30 19:08:11.178713
+updated_at: 2026-07-01 19:09:49.045909
 ---
 
 # Query Max Transfer-Out Amount (USER_DATA)

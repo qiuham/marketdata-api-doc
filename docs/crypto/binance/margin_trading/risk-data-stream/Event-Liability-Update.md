@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/margin_trading/risk-data-stream/Event-Liability-Update
 api_type: REST
-updated_at: 2026-06-30 19:07:21.154165
+updated_at: 2026-07-01 19:08:53.076247
 ---
 
 # Keepalive User Data Stream (USER_STREAM)

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-06-30 19:29:11.176441
+updated_at: 2026-07-01 19:30:50.266798
 ---
 
 # Bind Or Unbind UID

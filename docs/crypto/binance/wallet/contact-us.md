@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/docs/wallet/contact-us
 api_type: REST
-updated_at: 2026-06-30 19:09:37.444032
+updated_at: 2026-07-01 19:11:24.506363
 ---
 
 # Get symbols delist schedule for spot (MARKET_DATA)
