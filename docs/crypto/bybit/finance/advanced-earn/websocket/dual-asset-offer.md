@@ -2,159 +2,229 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/dual-asset-offer
 api_type: WebSocket
-updated_at: 2026-07-01 19:28:28.479965
+updated_at: 2026-07-02 19:17:46.405598
 ---
 
-# Get History APR
+# Dual Asset Offers
 
-info
+### WebSocket public URL
 
-No authentication required
+  * **Mainnet:**  
+Earn: `wss://stream.bybit.com/v5/public/fp`  
 
-### HTTP Request
 
-GET`/v5/earn/token/history-apr`
+  * **Testnet:**  
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
 
-### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
-range| **true**|  integer| Time range: `1` = 7 days, `2` = 30 days, `3` = 180 days  
-  
+
+
+
+### Desc
+
+  * Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
+
+  * Push scope: **Full snapshot of all online product quotes**
+
+  * Recommended usage pattern:
+
+    1. Call [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) to get initial quotes
+    2. Subscribe to the WebSocket topic for real-time updates
+    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
+    4. If WebSocket disconnects, fallback to the REST endpoint 
+
+
+
+### Topic: `earn.dualassets.offers`
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Historical APR list  
-> timestamp| string| Date, unix timestamp in seconds  
-> aprE8| string| APR value in e8 precision. Divide by 10^8 to get the actual rate  
+topic| string| Topic name  
+data| array| Object  
+> p| int64| Product ID  
+> c| string| Current price  
+> b| array of objects| Buy low price list  
+>> s| string| Selected price  
+>> a| int64| Annualized yield, e8 precision  
+>> m| string| Max investment amount at this price point  
+>> x| string| Quote expiration time,Unix timestamp in ms  
+> s| array of objects| Sell high price list  
+>> s| string| Selected price  
+>> a| int64| Annualized yield, e8 precision  
+>> m| string| Max investment amount at this price point  
+>> x| string| Quote expiration time,Unix timestamp in ms  
   
-* * *
-
-### Request Example
-    
-    
-    GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1  
-    Host: api.bybit.com  
-    
-
-### Response Example
+### Subscribe Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "list": [  
-                {  
-                    "timestamp": "1774569600",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774656000",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774742400",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774828800",  
-                    "aprE8": "52750000"  
-                },  
-                {  
-                    "timestamp": "1774915200",  
-                    "aprE8": "60000000"  
-                },  
-                {  
-                    "timestamp": "1775001600",  
-                    "aprE8": "108070000"  
-                },  
-                {  
-                    "timestamp": "1775088000",  
-                    "aprE8": "96290000"  
-                }  
-            ]  
+        "op": "subscribe",  
+        "args": [  
+            "earn.dualassets.offers"  
+        ]  
+    }  
+    
+
+### Stream Example
+    
+    
+    {  
+      "topic": "earn.dualassets.offers",  
+      "data": [  
+        {  
+          "p": "36352",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775180579207  
+        {  
+          "p": "36382",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
+        }  
+      ]  
     }
 
 ---
 
-# 查詢歷史年化利率
+# 雙幣投資報價
 
-信息
+### WebSocket URL
 
-無需身份驗證
+  * **主網 (Mainnet):**  
+理財 (Earn): `wss://stream.bybit.com/v5/public/fp`  
 
-### HTTP 請求
 
-GET`/v5/earn/token/history-apr`
+  * **測試網 (Testnet):**  
+理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`  
 
-### 請求參數
 
-參數| 必填| 類型| 說明  
----|---|---|---  
-coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
-range| **true**|  integer| 時間範圍：`1` = 7 天，`2` = 30 天，`3` = 180 天  
-  
-### 響應參數
+
+
+
+### 描述 (Desc)
+
+  * 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
+
+  * 推播範圍：**所有上線產品報價的完整快照**
+
+  * 建議使用方式：
+
+    1. 使用 [獲取產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote) 以獲取初始報價
+    2. 訂閱 WebSocket 主題以獲取即時更新
+    3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
+    4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
+
+
+
+### 主題 (Topic): `earn.dualassets.offers`
+
+### 回應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 歷史年化利率列表  
-> timestamp| string| 日期，秒級 Unix 時間戳  
-> aprE8| string| e8 精度的年化利率。除以 10^8 可得實際利率  
+topic| string| 主題名稱  
+data| array| 列表  
+> p| int64| 產品 ID  
+> c| string| 當前價格  
+> b| array of objects| 低買價格列表  
+>> s| string| 所選價格  
+>> a| int64| 年化收益率，e8 精度  
+>> m| string| 該價位的最大投資金額  
+>> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
+> s| array of objects| 高賣價格列表  
+>> s| string| 所選價格  
+>> a| int64| 年化收益率，e8 精度  
+>> m| string| 該價位的最大投資金額  
+>> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
   
-* * *
-
-### 請求示例
-    
-    
-    GET /v5/earn/token/history-apr?coin=BYUSDT&range=1 HTTP/1.1  
-    Host: api.bybit.com  
-    
-
-### 響應示例
+### 訂閱範例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "list": [  
-                {  
-                    "timestamp": "1774569600",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774656000",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774742400",  
-                    "aprE8": "2000000"  
-                },  
-                {  
-                    "timestamp": "1774828800",  
-                    "aprE8": "52750000"  
-                },  
-                {  
-                    "timestamp": "1774915200",  
-                    "aprE8": "60000000"  
-                },  
-                {  
-                    "timestamp": "1775001600",  
-                    "aprE8": "108070000"  
-                },  
-                {  
-                    "timestamp": "1775088000",  
-                    "aprE8": "96290000"  
-                }  
-            ]  
+        "op": "subscribe",  
+        "args": [  
+            "earn.dualassets.offers"  
+        ]  
+    }  
+    
+
+### 推播範例
+    
+    
+    {  
+      "topic": "earn.dualassets.offers",  
+      "data": [  
+        {  
+          "p": "36352",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775180579207  
+        {  
+          "p": "36382",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
+        }  
+      ]  
     }

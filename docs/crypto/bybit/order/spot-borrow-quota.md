@@ -2,46 +2,71 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-07-01 19:30:49.644677
+updated_at: 2026-07-02 19:20:09.263983
 ---
 
-# Bind Or Unbind UID
+# Get LTV
 
-For the institutional loan product, you can bind new UIDs to the risk unit or unbind UID from the risk unit.
+Get your loan-to-value (LTV) ratio.
 
-info
+important
 
-  * The risk unit designated UID cannot be unbound.
-  * The UID you want to bind must be upgraded to UTA Pro.
+  * In cases where an institutional user makes frequent transfers, LTV calculations may become inaccurate, and this endpoint will return retCode = 100016, retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
+  * If you encounter this error, it is recommended to reduce the transfer frequency first and retry
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * When a user is in a state such as liquidation, transfer, or manual repayment, LTV is not calculated. We have added a new `liqStatus` to represent these states. When `liqStatus` != 0, `ltvInfo` returns empty strings for `ltv`, `unpaidAmount` and `balance`, and `unpaidInfo` and `balanceInfo` return empty arrays.
 
 
 
 ### HTTP Request
 
-POST`/v5/ins-loan/association-uid`
+GET`/v5/ins-loan/ltv-convert`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-uid| **true**|  string| UID 
+None
 
-  * **Bind**  
-a) the key used must be from one of UIDs in the risk unit;   
-b) input UID must not have an INS loan
-  * **Unbind**  
-a) the key used must be from one of UIDs in the risk unit;   
-b) input UID cannot be the same as the UID used to access the API
-
-  
-operate| **true**|  string| `0`: bind, `1`: unbind  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-uid| string| UID  
-operate| string| `0`: bind, `1`: unbind  
+ltvInfo| array| Object  
+> ltv| string| Risk rate 
+
+  * ltv is calculated in real time
+  * If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)
+
+. When `liqStatus` != 0, empty string is returned.  
+> rst| string| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. When `liqStatus` != 0, empty string is returned.  
+> parentUid| string| The designated Risk Unit ID that was used to bind with the INS loan  
+> subAccountUids| array| Bound user ID  
+> unpaidAmount| string| Total debt(USDT). When `liqStatus` != 0, empty string is returned.  
+> unpaidInfo| array| Debt details. When `liqStatus` != 0, empty array is returned.  
+>> token| string| coin  
+>> unpaidQty| string| Unpaid principle  
+>> unpaidInterest| string| Useless field, please ignore this for now  
+> balance| string| Total asset (margin coins converted to USDT). Please read [here](https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending) to understand the calculation. When `liqStatus` != 0, empty string is returned.  
+> balanceInfo| array| Asset details. When `liqStatus` != 0, empty array is returned.  
+>> token| string| Margin coin  
+>> price| string| Margin coin price  
+>> qty| string| Margin coin quantity  
+>> convertedAmount| string| Margin conversion amount  
+> liqStatus| integer| Liquidation status. 
+
+  * `0`: Normal
+  * `1`: Under liquidation
+  * `2`: Manual repayment in progress
+  * `3`: Transfer in progress
+
+  
+liqStatus| integer| Liquidation status. 
+
+  * `0`: Normal
+  * `1`: Under liquidation
+  * `2`: Manual repayment in progress
+  * `3`: Transfer in progress
+
+  
   
 ### Request Example
 
@@ -52,19 +77,12 @@ operate| string| `0`: bind, `1`: unbind
 
     
     
-    POST /v5/ins-loan/association-uid HTTP/1.1  
+    GET /v5/ins-loan/ltv-convert HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1699257853101  
+    X-BAPI-TIMESTAMP: 1686638165351  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-    Content-Length: 43  
-      
-    {  
-        "uid": "592324",  
-        "operate": "0"  
-    }  
     
     
     
@@ -74,7 +92,7 @@ operate| string| `0`: bind, `1`: unbind
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.bind_or_unbind_uid(uid="592324", operate="0"))  
+    print(session.get_ltv())  
     
     
     
@@ -87,10 +105,7 @@ operate| string| `0`: bind, `1`: unbind
     });  
       
     client  
-      .bindOrUnbindUID({  
-        uid: 'yourUID',  
-        operate: '0', // 0 for bind, 1 for unbind  
-      })  
+      .getInstitutionalLendingLTVWithLadderConversionRate()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -104,54 +119,129 @@ operate| string| `0`: bind, `1`: unbind
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "uid": "592324",  
-            "operate": "0"  
+            "ltvInfo": [  
+                {  
+                    "ltv": "0.75",  
+                    "rst": "",  
+                    "parentUid": "xxxxx",  
+                    "subAccountUids": [  
+                        "60568258"  
+                    ],  
+                    "unpaidAmount": "30",  
+                    "unpaidInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "unpaidQty": "30",  
+                            "unpaidInterest": "0"  
+                        }  
+                    ],  
+                    "balance": "40",  
+                    "balanceInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "price": "1",  
+                            "qty": "40",  
+                            "convertedAmount": "40"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1699257746135  
+        "time": 1686638166323  
+    }  
+      
+    When `liqStatus` != 0:  
+    {  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "ltvInfo": [  
+                {  
+                    "ltv": "",  
+                    "parentUid": "100331354",  
+                    "subAccountUids": [  
+                        "100334094",  
+                        "100334098"  
+                    ],  
+                    "unpaidAmount": "",  
+                    "unpaidInfo": [],  
+                    "balance": "",  
+                    "balanceInfo": [],  
+                    "rst": "",  
+                    "liqStatus": 3  
+                }  
+            ],  
+            "liqStatus": 3  
+        },  
+        "retExtInfo": {},  
+        "time": 1766462020703  
     }
 
 ---
 
-# 綁定/解綁UID
+# 查詢風險率
 
-對於場外借貸產品, 您可以自行綁定新的UID到風險單元內或者解綁某個UID
+important
 
-信息
-
-  * 風險單元的主UID不能解綁
-  * 綁定的UID必須升級到了UTA Pro
+  * 如果機構用戶頻繁轉帳，LTV 計算可能會變得不準確，此端點將返回 retCode = 100016，retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
+  * 遇到這個報錯，建議先減少轉帳頻率，再重試
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 當用戶發生強平、劃轉、手工還款等過程中的狀態時，LTV不進行計算。我們新增了一個`liqStatus`來表示這些狀態。當`liqStatus`!=0時，此時`ltvInfo`裡`ltv`、`unpaidAmount`、`balance`都是空字串，`unpaidInfo`、`balanceInfo`都是空數組。
 
 
 
 ### HTTP 請求
 
-POST`/v5/ins-loan/association-uid`
+GET`/v5/ins-loan/ltv-convert`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-uid| **true**|  string| UID
+無
 
-  * **綁定**  
-a) 調用接口的key必須來自風險單元內的任意uid;   
-b) 目標帳戶不能有機構借貸
-  * **解綁**  
-a) 調用接口的key必須來自風險單元內的任意uid;   
-b) 準備解綁的uid不能和調用接口的uid一樣
-
-  
-operate| **true**|  string| `0`: 綁定, `1`: 解綁  
-  
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-uid| string| UID  
-operate| string| `0`: 綁定, `1`: 解綁  
+ltvInfo| array| Object  
+> ltv| string| 風險率 
+
+  * 該數據是實時計算
+  * 如果持有機構借貸, 強烈建議每秒查詢一次ltv。當達到0.9 (90%)時即觸發強平
+
+. 當 `liqStatus` != 0 時，傳回空字串。  
+> rst| string| 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。當 `liqStatus` != 0 時，傳回空字串。  
+> parentUid| string| 被指定綁定為機構借貸產品的風險單元Id  
+> subAccountUids| array| 綁定場外借貸產品的UID  
+> unpaidAmount| string| 總負債 (USDT)。當 `liqStatus` != 0 時，傳回空字串。  
+> unpaidInfo| array| 負債明細。 當 `liqStatus` != 0 時，傳回空數組。  
+>> token| string| 幣種  
+>> unpaidQty| string| 未還本金  
+>> unpaidInterest| string| 該字段無效, 暫時請忽略  
+> balance| string| 總資產(保證金幣種資產折算為USDT資產). 可以參考[這裡](https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending)了解詳細計算。當 `liqStatus` != 0 時，傳回空字串。  
+> balanceInfo| array| 資產明細。當 `liqStatus` != 0 時，傳回空數組。  
+>> token| string| 保證金幣種  
+>> price| string| 保證金幣種價格  
+>> qty| string| 保證金數量  
+>> convertedAmount| string| 保證金折算金額  
+> liqStatus| integer| 清算狀態。 
+
+  * `0`: 正常
+  * `1`: 強平
+  * `2`: 手工還款
+  * `3`: 劃轉
+
+  
+liqStatus| integer| 清算狀態。 
+
+  * `0`: 正常
+  * `1`: 強平
+  * `2`: 手工還款
+  * `3`: 劃轉
+
+  
   
 ### 請求示例
 
@@ -162,19 +252,12 @@ operate| string| `0`: 綁定, `1`: 解綁
 
     
     
-    POST /v5/ins-loan/association-uid HTTP/1.1  
+    GET /v5/ins-loan/ltv-convert HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1699257853101  
+    X-BAPI-TIMESTAMP: 1686638165351  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-    Content-Length: 43  
-      
-    {  
-        "uid": "592324",  
-        "operate": "0"  
-    }  
     
     
     
@@ -184,7 +267,7 @@ operate| string| `0`: 綁定, `1`: 解綁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.bind_or_unbind_uid(uid="592324", operate="0"))  
+    print(session.get_ltv())  
     
     
     
@@ -197,10 +280,7 @@ operate| string| `0`: 綁定, `1`: 解綁
     });  
       
     client  
-      .bindOrUnbindUID({  
-        uid: 'yourUID',  
-        operate: '0', // 0 for bind, 1 for unbind  
-      })  
+      .getInstitutionalLendingLTVWithLadderConversionRate()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -214,11 +294,63 @@ operate| string| `0`: 綁定, `1`: 解綁
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "uid": "592324",  
-            "operate": "0"  
+            "ltvInfo": [  
+                {  
+                    "ltv": "0.75",  
+                    "rst": "",  
+                    "parentUid": "xxxxx",  
+                    "subAccountUids": [  
+                        "60568258"  
+                    ],  
+                    "unpaidAmount": "30",  
+                    "unpaidInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "unpaidQty": "30",  
+                            "unpaidInterest": "0"  
+                        }  
+                    ],  
+                    "balance": "40",  
+                    "balanceInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "price": "1",  
+                            "qty": "40",  
+                            "convertedAmount": "40"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1699257746135  
+        "time": 1686638166323  
+    }  
+      
+    When `liqStatus` != 0:  
+    {  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "ltvInfo": [  
+                {  
+                    "ltv": "",  
+                    "parentUid": "100331354",  
+                    "subAccountUids": [  
+                        "100334094",  
+                        "100334098"  
+                    ],  
+                    "unpaidAmount": "",  
+                    "unpaidInfo": [],  
+                    "balance": "",  
+                    "balanceInfo": [],  
+                    "rst": "",  
+                    "liqStatus": 3  
+                }  
+            ],  
+            "liqStatus": 3  
+        },  
+        "retExtInfo": {},  
+        "time": 1766462020703  
     }

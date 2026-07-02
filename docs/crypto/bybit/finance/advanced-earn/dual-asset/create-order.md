@@ -2,53 +2,54 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/create-order
 api_type: REST
-updated_at: 2026-07-01 19:28:00.981153
+updated_at: 2026-07-02 19:17:21.882044
 ---
 
-# Place Order
+# Get Product Info
 
 info
 
-  * Need authentication. **Up to 5 requests** per second.
-  * Requires Earn permission on the API key.
-  * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](/docs/v5/finance/advanced-earn/dual-asset/order) to track the order status (Pending → Success).
-  * The `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) or the WebSocket channel. Stale quotes will be rejected.
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
+Does not need authentication. **Up to 50 requests** per second per IP .
 
-
+[Bybit Dual Asset FAQ](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
 
 ### HTTP Request
 
-POST `/v5/earn/advance/place-order`
+GET `/v5/earn/advance/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product type, e.g. `DualAssets`  
-productId| **true**|  string| Product ID  
-orderType| **true**|  string| Order type: `Stake`  
-amount| **true**|  string| Order amount (decimal string)  
-accountType| **true**|  string| Account type: `FUND`, `UNIFIED`  
-coin| **true**|  string| Coin name  
-orderLinkId| **true**|  string| User customised order ID (max 36 characters)  
-dualAssetsExtra| **true**|  Object| Dual Assets specific parameters  
-> orderDirection| **true**|  string| Direction: `BuyLow`, `SellHigh`  
-> selectPrice| **true**|  string| Target price selected by user. Must match a valid quote  
-> apyE8| **true**|  int64| Expected APY in e8 precision. Order fails if the confirmed APY is less than this value  
-interestCard| false| Object| Interest bonus card  
-> awardId| **true**|  int64| Interest bonus card unique ID  
-> specCode| **true**|  string| Spec_code of the interest bonus card  
+[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product category,`DualAssets`  
+coin| false| string| Coin name, uppercase only  
+duration| false| string| Product duration, eg:8h, 1d, 3d, 6d, 12d  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User customised order ID  
+[category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
+list| array| Object  
+> [category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
+> productId| string| Product ID  
+> baseCoin| string| Base Coin  
+> quoteCoin| string| Quote Coin  
+> expectReceiveAt| string| Expected time to receive the transfer, Unix timestamp in milliseconds  
+> duration| string| Product duration, eg:8h, 1d, 3d  
+> [status](/docs/v5/enum#advanced-earn-product-status)| string| `Available`,`NotAvailable`  
+> isVipProduct| boolean| Whether it is a VIP product  
+> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> applyStartAt| string| Interest accrual start time, Unix timestamp in ms  
+> settlementTime| string| Interest accrual end time, Unix timestamp in ms  
+> minPurchaseQuoteAmount| string| Minimum purchase amount in quote currency  
+> minPurchaseBaseAmount| string| Minimum purchase amount in base currency  
+> remainingAmountQuote| string| Remaining quota for Buy Low direction  
+> remainingAmountBase| string| Remaining quota for Sell High direction  
+> orderPrecisionDigitalQuote| int| Precision for Buy Low direction  
+> orderPrecisionDigitalBase| int| Precision for Sell High direction  
   
-* * *
-
 ### Request Example
 
   * HTTP
@@ -56,29 +57,8 @@ orderLinkId| string| User customised order ID
 
     
     
-    POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "DualAssets",  
-        "productId": 36320,  
-        "orderType": "Stake",  
-        "amount": "20",  
-        "accountType": "UNIFIED",  
-        "coin": "USDT",  
-        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
-        "dualAssetsExtra": {  
-            "orderDirection": "BuyLow",  
-            "selectPrice": "2325",  
-            "apyE8": 857565000  
-        }  
-    }  
-      
     
 
 ### Response Example
@@ -88,59 +68,81 @@ orderLinkId| string| User customised order ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
+            "category": "DualAssets",  
+            "list": [  
+                {  
+                    "category": "DualAssets",  
+                    "productId": "36340",  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "expectReceiveAt": "1773908399000",  
+                    "duration": "1d",  
+                    "status": "Available",  
+                    "isVipProduct": false,  
+                    "subscribeStartAt": "1773734400000",  
+                    "subscribeEndAt": "1773820799000",  
+                    "applyStartAt": "1773734400000",  
+                    "settlementTime": "1773907199000",  
+                    "minPurchaseQuoteAmount": "10",  
+                    "minPurchaseBaseAmount": "10",  
+                    "remainingAmountQuote": "1000000",  
+                    "remainingAmountBase": "10000",  
+                    "orderPrecisionDigitalQuote": 4,  
+                    "orderPrecisionDigitalBase": 2  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1773814359231  
     }
 
 ---
 
-# 創建訂單
+# 查詢產品資訊
 
 信息
 
-  * 需要身份驗證。每秒**最多 5 次請求** 。
-  * API 金鑰需要具備 Earn (理財) 權限。
-  * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/order)來追蹤訂單狀態（Pending → Success）。
-  * `selectPrice` 和 `apyE8` 必須與[查詢產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote)或 WebSocket 頻道的有效報價相匹配。過期的報價將被拒絕。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
-
+[Bybit 雙幣投資常見問題解答](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
 
 ### HTTP 請求
 
-POST `/v5/earn/advance/place-order`
+GET `/v5/earn/advance/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類型，例如 `DualAssets`  
-productId| **true**|  string| 產品 ID  
-orderType| **true**|  string| 訂單類型：`Stake` (申購)  
-amount| **true**|  string| 訂單數量（字串格式的數字）  
-accountType| **true**|  string| 帳戶類型：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)  
-coin| **true**|  string| 幣種名稱  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 36 個字元）  
-dualAssetsExtra| **true**|  Object| 雙幣投資專屬參數  
-> orderDirection| **true**|  string| 方向：`BuyLow` (低買), `SellHigh` (高賣)  
-> selectPrice| **true**|  string| 用戶選擇的目標價格（掛鉤價）。必須與有效報價相匹配  
-> apyE8| **true**|  int64| 預期年化收益率（e8 精度）。如果確認的 APY 低於此數值，訂單將會失敗  
-interestCard| false| Object| 加息券 (Interest bonus card)  
-> awardId| **true**|  int64| 加息券唯一 ID  
-> specCode| **true**|  string| 加息券的特殊代碼 (Spec_code)  
+[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類別，`DualAssets`  
+coin| false| string| 幣種名稱，僅限大寫  
+duration| false| string| 產品期限，例如：8h, 1d, 3d, 6d, 12d  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID  
-orderLinkId| string| 用戶自定義訂單 ID  
+[category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
+list| array| 列表  
+> [category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
+> productId| string| 產品 ID  
+> baseCoin| string| 基礎幣種 (Base Coin)  
+> quoteCoin| string| 計價幣種 (Quote Coin)  
+> expectReceiveAt| string| 預計到帳時間，毫秒級 Unix 時間戳  
+> duration| string| 產品期限，例如：8h, 1d, 3d  
+> [status](/docs/zh-TW/v5/enum#advanced-earn-product-status)| string| `Available` (可用), `NotAvailable` (不可用)  
+> isVipProduct| boolean| 是否為 VIP 產品  
+> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
+> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> applyStartAt| string| 計息開始時間，毫秒級 Unix 時間戳  
+> settlementTime| string| 計息結束時間（結算時間），毫秒級 Unix 時間戳  
+> minPurchaseQuoteAmount| string| 計價幣種的最小申購金額  
+> minPurchaseBaseAmount| string| 基礎幣種的最小申購金額  
+> remainingAmountQuote| string| 低買 (Buy Low) 方向的剩餘額度  
+> remainingAmountBase| string| 高賣 (Sell High) 方向的剩餘額度  
+> orderPrecisionDigitalQuote| int| 低買方向的訂單精度  
+> orderPrecisionDigitalBase| int| 高賣方向的訂單精度  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -148,28 +150,8 @@ orderLinkId| string| 用戶自定義訂單 ID
 
     
     
-    POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "DualAssets",  
-        "productId": 36320,  
-        "orderType": "Stake",  
-        "amount": "20",  
-        "accountType": "UNIFIED",  
-        "coin": "USDT",  
-        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
-        "dualAssetsExtra": {  
-            "orderDirection": "BuyLow",  
-            "selectPrice": "2325",  
-            "apyE8": 857565000  
-        }  
-    }  
     
 
 ### 響應示例
@@ -179,9 +161,30 @@ orderLinkId| string| 用戶自定義訂單 ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
+            "category": "DualAssets",  
+            "list": [  
+                {  
+                    "category": "DualAssets",  
+                    "productId": "36340",  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "expectReceiveAt": "1773908399000",  
+                    "duration": "1d",  
+                    "status": "Available",  
+                    "isVipProduct": false,  
+                    "subscribeStartAt": "1773734400000",  
+                    "subscribeEndAt": "1773820799000",  
+                    "applyStartAt": "1773734400000",  
+                    "settlementTime": "1773907199000",  
+                    "minPurchaseQuoteAmount": "10",  
+                    "minPurchaseBaseAmount": "10",  
+                    "remainingAmountQuote": "1000000",  
+                    "remainingAmountBase": "10000",  
+                    "orderPrecisionDigitalQuote": 4,  
+                    "orderPrecisionDigitalBase": 2  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1773814359231  
     }

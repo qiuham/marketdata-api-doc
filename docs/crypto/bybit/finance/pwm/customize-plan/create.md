@@ -2,42 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/create
 api_type: REST
-updated_at: 2026-07-01 19:29:09.292325
+updated_at: 2026-07-02 19:18:26.444999
 ---
 
-# Fund Transfer Between Sub-Accounts
+# Create Customize Investment Plan
 
 info
 
-This endpoint must be called using the API key of the fund custodian sub-account.
+The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/fund-transfer`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-transferId| **true**|  string| Transfer request ID  
-fromUserId| **true**|  int64| Source UID. Must be a custodian sub-account of the current fund  
-toUserId| **true**|  int64| Destination UID. Must be a custodian sub-account of the current fund  
-amount| **true**|  string| Transfer amount  
-coin| **true**|  string| Coin name  
+accountType| false| string| Source account type. Default: `FUND`  
+products| **true**|  array| Product configuration list. At least 1 item required  
+> category| **true**|  string| Pass through from product query result. Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| Pass through from product query result. May be `0`  
+> fundName| **true**|  string| Pass through from product query result. May be empty  
+> amount| **true**|  string| Subscription amount (base coin)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-transferId| string| Transfer ID  
-status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
+planId| string| Newly created investment plan ID  
+planName| string| Investment plan name, auto-generated in the format `PWM-{planId}`  
+status| string| Plan status. Created and subscribed in one step — `Active` upon success  
+orderLinkId| string| User-defined order ID  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -46,11 +49,21 @@ status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`
     Content-Type: application/json  
       
     {  
-        "transferId": "4fdf-re-4343-frewr",  
-        "fromUserId": 800001,  
-        "toUserId": 800002,  
-        "amount": "1.00",  
-        "coin": "BTC"  
+        "accountType": "FUND",  
+        "products": [  
+            {  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
+            },  
+            {  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
+            }  
+        ]  
     }  
     
 
@@ -59,48 +72,52 @@ status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS"  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }
 
 ---
 
-# 基金托管子賬號間資金劃轉
+# 創建自定義投資計劃（直客模式）
 
 信息
 
-此接口必須使用基金托管子賬號的 API Key 操作。
+當前用戶 **Active** （運行中）和 **Pending** （待處理）狀態的計劃總數不能超過 **20** 個。
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/fund-transfer`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-transferId| **true**|  string| 劃轉請求ID  
-fromUserId| **true**|  int64| 資金劃出UID（必須是當前基金的基金托管賬號）  
-toUserId| **true**|  int64| 資金劃入UID（必須是當前基金的基金托管賬號）  
-amount| **true**|  string| 劃轉金額  
-coin| **true**|  string| 幣種名稱  
+accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
+products| **true**|  array| 產品配置列表，至少 1 個  
+> category| **true**|  string| 透傳product查詢結果，產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
+> fundName| **true**|  string| 透傳product查詢結果，可能為空  
+> amount| **true**|  string| 申購金額（本位幣）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-transferId| string| 劃轉ID  
-status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
+planId| string| 新創建的投資計劃ID  
+planName| string| 投資計劃名稱，自動生成格式為 `PWM-{planId}`  
+status| string| 計劃狀態，創建即申購，成功後為 `Active`  
+orderLinkId| string| 用戶自定義訂單ID  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -109,11 +126,21 @@ status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失
     Content-Type: application/json  
       
     {  
-        "transferId": "4fdf-re-4343-frewr",  
-        "fromUserId": 800001,  
-        "toUserId": 800002,  
-        "amount": "1.00",  
-        "coin": "BTC"  
+        "accountType": "FUND",  
+        "products": [  
+            {  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
+            },  
+            {  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
+            }  
+        ]  
     }  
     
 
@@ -122,9 +149,10 @@ status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS"  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }

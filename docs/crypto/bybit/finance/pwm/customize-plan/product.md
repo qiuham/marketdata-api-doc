@@ -2,42 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/product
 api_type: REST
-updated_at: 2026-07-01 19:29:09.909679
+updated_at: 2026-07-02 19:18:29.714232
 ---
 
-# Fund Transfer Between Sub-Accounts
-
-info
-
-This endpoint must be called using the API key of the fund custodian sub-account.
+# Claim Withdrawable Funds
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/fund-transfer`
+POST`/v5/earn/pwm/investment-plan/claim`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-transferId| **true**|  string| Transfer request ID  
-fromUserId| **true**|  int64| Source UID. Must be a custodian sub-account of the current fund  
-toUserId| **true**|  int64| Destination UID. Must be a custodian sub-account of the current fund  
-amount| **true**|  string| Transfer amount  
-coin| **true**|  string| Coin name  
+planId| **true**|  string| Investment plan ID. Must be in `Active` status  
+toAccountType| false| string| Target account type. Default: `FUND`  
+orderLinkId| **true**|  string| User-defined order ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-transferId| string| Transfer ID  
-status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
+planId| string| Investment plan ID  
+toAccountType| int| Target account type for the transfer  
+status| string| Claim status: `Success` / `processing`  
+createdTime| string| Claim timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -46,11 +42,9 @@ status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`
     Content-Type: application/json  
       
     {  
-        "transferId": "4fdf-re-4343-frewr",  
-        "fromUserId": 800001,  
-        "toUserId": 800002,  
-        "amount": "1.00",  
-        "coin": "BTC"  
+        "planId": "10001",  
+        "toAccountType": "FUND",  
+        "orderLinkId": "claim-order-001"  
     }  
     
 
@@ -59,48 +53,45 @@ status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS"  
+            "planId": "10001",  
+            "toAccountType": 6,  
+            "status": "Success",  
+            "createdTime": "1701400000000"  
         }  
     }
 
 ---
 
-# 基金托管子賬號間資金劃轉
-
-信息
-
-此接口必須使用基金托管子賬號的 API Key 操作。
+# 領取可提取資金
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/fund-transfer`
+POST`/v5/earn/pwm/investment-plan/claim`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-transferId| **true**|  string| 劃轉請求ID  
-fromUserId| **true**|  int64| 資金劃出UID（必須是當前基金的基金托管賬號）  
-toUserId| **true**|  int64| 資金劃入UID（必須是當前基金的基金托管賬號）  
-amount| **true**|  string| 劃轉金額  
-coin| **true**|  string| 幣種名稱  
+planId| **true**|  string| 投資計劃ID，須為 `Active` 狀態  
+toAccountType| false| string| 目標賬戶類型，默認 `FUND`  
+orderLinkId| **true**|  string| 用戶自定義訂單ID，最長36字符，用於防重  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-transferId| string| 劃轉ID  
-status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
+planId| string| 投資計劃ID  
+toAccountType| int| 到賬目標賬戶類型  
+status| string| 提取狀態：`Success`（成功）/ `processing`（處理中）  
+createdTime| string| 提取時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -109,11 +100,9 @@ status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失
     Content-Type: application/json  
       
     {  
-        "transferId": "4fdf-re-4343-frewr",  
-        "fromUserId": 800001,  
-        "toUserId": 800002,  
-        "amount": "1.00",  
-        "coin": "BTC"  
+        "planId": "10001",  
+        "toAccountType": "FUND",  
+        "orderLinkId": "claim-order-001"  
     }  
     
 
@@ -122,9 +111,10 @@ status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS"  
+            "planId": "10001",  
+            "toAccountType": 6,  
+            "status": "Success",  
+            "createdTime": "1701400000000"  
         }  
     }

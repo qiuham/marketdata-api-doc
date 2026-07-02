@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-add-investment
 anchor_id: order-book-trading-grid-trading-post-add-investment
 api_type: API
-updated_at: 2026-07-01 19:54:03.612353
+updated_at: 2026-07-02 19:43:27.712598
 ---
 
 # POST / Add investment

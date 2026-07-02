@@ -2,66 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/create-strategy
 api_type: REST
-updated_at: 2026-07-01 19:32:45.215359
+updated_at: 2026-07-02 19:22:01.332987
 ---
 
-# Get System Status
+# Stop Strategy
 
-Get the system status when there is a platform maintenance or service incident.
+Stop a running strategy. Once stopped, the strategy cannot be resumed.
 
-info
+**Effects upon stopping:**
 
-Please note currently system maintenance that may result in short interruption (lasting less than 10 seconds) or websocket disconnection (users can immediately reconnect) will not be announced.
+  * Strategy status changes to `Terminated`
+  * Unfilled orders are automatically canceled
+  * Partially filled orders have their remaining quantity canceled
+  * Already-filled orders are not affected
+
+
 
 ### HTTP Request
 
-GET`/v5/system/status`
+POST`/v5/strategy/stop`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| false| string| id. Unique identifier  
-[state](/docs/v5/enum#state)| false| string| system state  
+strategyId| **true**|  string| ID of the strategy to stop  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> id| string| Id. Unique identifier  
-> title| string| Title of system maintenance  
-> [state](/docs/v5/enum#state)| string| System state  
-> begin| string| Start time of system maintenance, timestamp in milliseconds  
-> end| string| End time of system maintenance, timestamp in milliseconds. Before maintenance is completed, it is the expected end time; After maintenance is completed, it will be changed to the actual end time.  
-> href| string| Hyperlink to system maintenance details. Default value is empty string  
-> [serviceTypes](/docs/v5/enum#servicetypes)| array<int>| Service Type  
-> [product](/docs/v5/enum#product)| array<int>| Product  
-> uidSuffix| array<int>| Affected UID tail number  
-> [maintainType](/docs/v5/enum#maintaintype)| string| Maintenance type  
-> [env](/docs/v5/enum#env)| string| Environment  
+strategyId| string| ID of the stopped strategy  
   
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/system/status HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/strategy/stop HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-    ))  
+      
+    
+    
+    
+      
     
 
 ### Response Example
@@ -69,197 +69,73 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t06",  
-                    "state": "completed",  
-                    "begin": "1751596902000",  
-                    "end": "1751597011000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t05",  
-                    "state": "completed",  
-                    "begin": "1751254200000",  
-                    "end": "1751254500000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        4  
-                    ],  
-                    "product": [  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t04",  
-                    "state": "completed",  
-                    "begin": "1751017967000",  
-                    "end": "1751018096000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2  
-                    ],  
-                    "product": [  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t03",  
-                    "state": "completed",  
-                    "begin": "1751017532000",  
-                    "end": "1751017658000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
-                    "title": "t02",  
-                    "state": "completed",  
-                    "begin": "1751013817000",  
-                    "end": "1751013890000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "product": [  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
-                    "title": "t01",  
-                    "state": "completed",  
-                    "begin": "1751012688000",  
-                    "end": "1751012760000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2,  
-                        3,  
-                        4  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 2  
-                }  
-            ]  
+            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
         },  
         "retExtInfo": {},  
-        "time": 1751858399649  
+        "time": 1773711467052  
     }
 
 ---
 
-# 取得系統狀態
+# 停止策略
 
-大型平台維護或服務故障時取得系統狀態
+停止正在執行的策略。一旦停止，策略無法恢復。
 
-信息
+**停止後效果：**
 
-請注意，目前有些情況下, 服務發佈導致短暫停頓（持續時間少於 10 秒）或 WebSocket 中斷（使用者可立即重連），此類情況不會在此通知。
+  * 策略狀態變更為 `Terminated`（已終止）
+  * 未成交訂單自動取消
+  * 部分成交訂單的剩餘數量取消
+  * 已成交訂單不受影響
+
+
 
 ### HTTP 請求
 
-GET`/v5/system/status`
+POST`/v5/strategy/stop`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-id| false| string| Id, 唯一標識  
-[state](/docs/zh-TW/v5/enum#state)| false| string| 系統的狀態  
+strategyId| **true**|  string| 要停止的策略 ID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> id| string| Id, 唯一標識  
-> title| string| 系統維​​護說明的標題  
-> [state](/docs/zh-TW/v5/enum#state)| string| 系統的狀態  
-> begin| string| 系統維​​護的開始時間，Unix時間戳記的毫秒數格式  
-> end| string| 交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間  
-> href| string| 系統維​​護詳情的超級連結,若無回傳值，預設值為空  
-> [serviceTypes](/docs/zh-TW/v5/enum#servicetypes)| array<int>| 服務類型  
-> [product](/docs/zh-TW/v5/enum#product)| array<int>| 產品  
-> uidSuffix| array<int>| 維護期間受影響的UID尾號  
-> [maintainType](/docs/zh-TW/v5/enum#maintaintype)| string| 維護類型  
-> [env](/docs/zh-TW/v5/enum#env)| string| 環境  
+strategyId| string| 已停止的策略 ID  
   
 ### 請求示例
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/system/status HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/strategy/stop HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-    ))  
+      
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -267,134 +143,10 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t06",  
-                    "state": "completed",  
-                    "begin": "1751596902000",  
-                    "end": "1751597011000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t05",  
-                    "state": "completed",  
-                    "begin": "1751254200000",  
-                    "end": "1751254500000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        4  
-                    ],  
-                    "product": [  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t04",  
-                    "state": "completed",  
-                    "begin": "1751017967000",  
-                    "end": "1751018096000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2  
-                    ],  
-                    "product": [  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t03",  
-                    "state": "completed",  
-                    "begin": "1751017532000",  
-                    "end": "1751017658000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
-                    "title": "t02",  
-                    "state": "completed",  
-                    "begin": "1751013817000",  
-                    "end": "1751013890000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "product": [  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
-                    "title": "t01",  
-                    "state": "completed",  
-                    "begin": "1751012688000",  
-                    "end": "1751012760000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2,  
-                        3,  
-                        4  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 2  
-                }  
-            ]  
+            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
         },  
         "retExtInfo": {},  
-        "time": 1751858399649  
+        "time": 1773711467052  
     }

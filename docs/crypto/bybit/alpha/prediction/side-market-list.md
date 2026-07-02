@@ -1,0 +1,252 @@
+---
+exchange: bybit
+source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/side-market-list
+api_type: REST
+updated_at: 2026-07-02 19:14:54.061289
+---
+
+# Get Sports Group Stage Detail
+
+Query the group stage standings and match schedule detail for a sports prediction event. Returns all groups with team standings (points, goal difference, W/D/L) and associated matches.
+
+### HTTP Request
+
+POST`/v5/alpha/prediction/sports/group-stage-detail`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+eventType| **true**|  integer| Sports event type. Refer to [predictionEventType](/docs/v5/enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)  
+groupName| false| string| Filter by group name (e.g., `A`, `B`, … `L` for FIFA 2026)  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+groups| array| Group stage data  
+> groupName| string| Group identifier (e.g., `A`)  
+> standings| array| Team standings for this group, sorted by rank  
+>> rank| integer| Current rank within the group  
+>> teamName| string| Team name  
+>> played| integer| Matches played  
+>> won| integer| Matches won  
+>> drawn| integer| Matches drawn  
+>> lost| integer| Matches lost  
+>> goalsFor| integer| Goals scored  
+>> goalsAgainst| integer| Goals conceded  
+>> goalDifference| integer| Goal difference (goalsFor − goalsAgainst)  
+>> points| integer| Total points  
+> matches| array| Matches in this group  
+>> matchId| string| Match ID  
+>> homeTeam| string| Home team name  
+>> awayTeam| string| Away team name  
+>> matchTime| integer| Match start timestamp (UTC milliseconds)  
+>> status| integer| Match status. Refer to [predictionMatchStatus](/docs/v5/enum#predictionmatchstatus-prediction-market--match-status)  
+>> homeScore| integer| Home team score (`-1` if not yet played)  
+>> awayScore| integer| Away team score (`-1` if not yet played)  
+>> eventId| string| Linked prediction event ID (if markets are available)  
+  
+### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "eventType": 1,  
+        "groupName": "A"  
+    }  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "groups": [  
+                {  
+                    "groupName": "A",  
+                    "standings": [  
+                        {  
+                            "rank": 1,  
+                            "teamName": "Argentina",  
+                            "played": 3,  
+                            "won": 3,  
+                            "drawn": 0,  
+                            "lost": 0,  
+                            "goalsFor": 7,  
+                            "goalsAgainst": 1,  
+                            "goalDifference": 6,  
+                            "points": 9  
+                        },  
+                        {  
+                            "rank": 2,  
+                            "teamName": "Brazil",  
+                            "played": 3,  
+                            "won": 2,  
+                            "drawn": 0,  
+                            "lost": 1,  
+                            "goalsFor": 5,  
+                            "goalsAgainst": 3,  
+                            "goalDifference": 2,  
+                            "points": 6  
+                        }  
+                    ],  
+                    "matches": [  
+                        {  
+                            "matchId": "match_001",  
+                            "homeTeam": "Argentina",  
+                            "awayTeam": "Brazil",  
+                            "matchTime": 1750000000000,  
+                            "status": 3,  
+                            "homeScore": 2,  
+                            "awayScore": 0,  
+                            "eventId": "event_123"  
+                        }  
+                    ]  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1704067200000  
+    }
+
+---
+
+# 獲取小組賽詳情
+
+查詢體育預測賽事的小組賽積分榜及賽程詳情，返回所有小組的球隊排名（積分、淨勝球、勝/平/負）及關聯比賽列表。
+
+### HTTP 請求
+
+POST`/v5/alpha/prediction/sports/group-stage-detail`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+eventType| **true**|  integer| 體育賽事類型。參考 [predictionEventType](/docs/zh-TW/v5/enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）  
+groupName| false| string| 按小組名稱篩選（如 `A`、`B`……`L`，適用於 FIFA 2026）  
+  
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+groups| array| 小組賽數據  
+> groupName| string| 小組標識（如 `A`）  
+> standings| array| 該小組球隊積分榜，按排名升序  
+>> rank| integer| 小組內當前排名  
+>> teamName| string| 球隊名稱  
+>> played| integer| 已參賽場數  
+>> won| integer| 勝場數  
+>> drawn| integer| 平場數  
+>> lost| integer| 負場數  
+>> goalsFor| integer| 進球數  
+>> goalsAgainst| integer| 失球數  
+>> goalDifference| integer| 淨勝球（進球數 − 失球數）  
+>> points| integer| 總積分  
+> matches| array| 該小組的比賽列表  
+>> matchId| string| 比賽 ID  
+>> homeTeam| string| 主隊名稱  
+>> awayTeam| string| 客隊名稱  
+>> matchTime| integer| 比賽開始時間戳（UTC 毫秒）  
+>> status| integer| 賽事狀態。參考 [predictionMatchStatus](/docs/zh-TW/v5/enum#predictionmatchstatus-prediction-market--match-status)  
+>> homeScore| integer| 主隊得分（未開始為 `-1`）  
+>> awayScore| integer| 客隊得分（未開始為 `-1`）  
+>> eventId| string| 關聯的預測賽事 ID（如有開放市場）  
+  
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "eventType": 1,  
+        "groupName": "A"  
+    }  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "groups": [  
+                {  
+                    "groupName": "A",  
+                    "standings": [  
+                        {  
+                            "rank": 1,  
+                            "teamName": "Argentina",  
+                            "played": 3,  
+                            "won": 3,  
+                            "drawn": 0,  
+                            "lost": 0,  
+                            "goalsFor": 7,  
+                            "goalsAgainst": 1,  
+                            "goalDifference": 6,  
+                            "points": 9  
+                        }  
+                    ],  
+                    "matches": [  
+                        {  
+                            "matchId": "match_001",  
+                            "homeTeam": "Argentina",  
+                            "awayTeam": "Brazil",  
+                            "matchTime": 1750000000000,  
+                            "status": 3,  
+                            "homeScore": 2,  
+                            "awayScore": 0,  
+                            "eventId": "event_123"  
+                        }  
+                    ]  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1704067200000  
+    }

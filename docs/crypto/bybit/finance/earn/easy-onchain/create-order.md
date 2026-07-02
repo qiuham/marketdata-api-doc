@@ -2,49 +2,53 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/create-order
 api_type: REST
-updated_at: 2026-07-01 19:28:40.962461
+updated_at: 2026-07-02 19:18:01.024305
 ---
 
-# Get Hourly Yield History
+# Get Staked Position
 
 info
 
 API key needs "Earn" permission
 
+note
+
+For Flexible Saving, fully redeemed position is also returned in the response For Onchain, only active position will be returned in the response
+
 ### HTTP Request
 
-GET`/v5/earn/hourly-yield`
+GET`/v5/earn/position`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
 productId| false| string| Product ID  
-startTime| false| integer| The start timestamp (ms).
-
-  * 1\. If both are not provided, the default is to return data from the last 7 days.
-  * 2\. If both are provided, the difference between the endTime and startTime must be less than or equal to 7 days. 
-
-  
-endTime| false| integer| The endTime timestamp (ms)  
-limit| false| integer| Limit for data size per page. Range: [1, 100]. Default: 50  
-cursor| false| string| Cursor, use the returned `nextPageCursor` to query data for the next page.  
+coin| false| string| Coin name  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
 list| array| Object  
+> coin| string| Coin name  
 > productId| string| Product ID  
-> coin| string| Coin name: "BTC", "ETH"  
-> id| string| Unique key (guaranteed to be unique only under the same user)  
-> amount| string| Yield Amount. Example: 10  
-> effectiveStakingAmount| string| Effective staking amount, e.g., 1000.00  
-> status| string| Order status: `Pending`, `Success`, `Fail`  
-> hourlyDate| string| Hourly yield time(ms) eg: 1755478800000  
-> createdAt| string| Order creation time in milliseconds, e.g., 1684738540561  
+> amount| string| Total staked amount  
+> totalPnl| string| Return the profit of the current position. Only has value in Onchain non-LST mode  
+> claimableYield| string| Yield accrues on an hourly basis and is distributed at 00:30 UTC daily. If you unstake your assets before yield distribution, any undistributed yield will be credited to your account along with your principal. Onchain products do not return values  
+> id| string| Position Id. Only for Onchain  
+> status| string| `Processing`,`Active`. Only for Onchain  
+> orderId| string| Order Id. Only for Onchain  
+> estimateRedeemTime| string| Estimate redeem time, in milliseconds. Only for Onchain  
+> estimateStakeTime| string| Estimate stake time, in milliseconds. Only for Onchain  
+> estimateInterestCalculationTime| string| Estimated Interest accrual time, in milliseconds. Only for Onchain  
+> settlementTime| string| Settlement time, in milliseconds. Only has value for Onchain `Fixed` product  
+> autoReinvest| string| Auto-reinvest status. `Enable`: enabled, `Disable`: disabled. See [Modify Position](/docs/v5/finance/earn/easy-onchain/modify-position)  
+> availableAmount| string| Redeemable amount  
+> freezeDetails| array| Freeze detail list  
+>> amount| string| Frozen amount  
+>> description| string| Reason for freeze  
   
 ### Request Example
 
@@ -55,11 +59,11 @@ list| array| Object
 
     
     
-    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
+    GET /v5/earn/position?category=FlexibleSaving&coin=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1739944576277  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     
@@ -71,8 +75,9 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_hourly_yield(  
-        category="FlexibleSaving"  
+    print(session.get_staked_position(  
+        category="FlexibleSaving",  
+        coin="USDT",  
     ))  
     
     
@@ -89,63 +94,79 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "productId": "428",  
-                    "coin": "USDT",  
-                    "amount": "0.060810502283105022",  
-                    "effectiveStakingAmount": "1000",  
-                    "hourlyDate": "1759989600000",  
-                    "status": "Success",  
-                    "createdAt": "1759989603000"  
+                    "coin": "BTC",  
+                    "productId": "8",  
+                    "amount": "0.1",  
+                    "totalPnl": "0.000027397260273973",  
+                    "claimableYield": "0",  
+                    "id": "326",  
+                    "status": "Active",  
+                    "orderId": "1a5a8945-e042-4dd5-a93f-c0f0577377ad",  
+                    "estimateRedeemTime": "",  
+                    "estimateStakeTime": "",  
+                    "estimateInterestCalculationTime": "1744243200000",  
+                    "settlementTime": "1744675200000",  
+                    "autoReinvest": "Enable",  
+                    "availableAmount": "4900",  
+                    "freezeDetails": [  
+                        {  
+                            "amount": "100",  
+                            "description": "Locked in Fixed-Rate Loan"  
+                        }  
+                    ]  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1759993045287  
+        "time": 1739944577575  
     }
 
 ---
 
-# 查詢每小時收益歷史
+# 查詢理財持倉
 
 信息
 
 API key需要"理財""權限
 
+備註
+
+對於活期儲蓄，返回訊息裡也返回完全贖回的部分 對於鏈上賺幣，返回訊息中僅返回當前的部分
+
 ### HTTP 請求
 
-GET`/v5/earn/hourly-yield`
+GET`/v5/earn/position`
 
 ### 請求參數
 
-參數名稱| 必填| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`  
-productId| false| string| 產品 ID  
-startTime| false| integer| 開始時間戳 (ms)。
-
-  * 1\. 如果未提供 startTime 和 endTime，默認返回最近 7 天的數據。
-  * 2\. 如果提供了 startTime 和 endTime，則結束時間與開始時間的差值必須小於或等於 7 天。
-
-  
-endTime| false| integer| 結束時間戳 (ms)  
-limit| false| integer| 每頁數據大小限制。範圍：[1, 100]。默認值：50  
-cursor| false| string| 游標，使用返回的 `nextPageCursor` 查詢下一頁的數據。  
+category| **true**|  string| 產品類別：`FlexibleSaving`,`OnChain`  
+productId| false| string| 持倉對應的產品 ID  
+coin| false| string| 幣種名稱  
   
 ### 響應參數
 
-參數名稱| 類型| 說明  
+參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
-list| array|   
-> productId| string| 產品 ID  
-> coin| string| 幣種名稱："BTC", "ETH"  
-> id| string| 唯一鍵（僅在同一用戶下保證唯一）  
-> amount| string| 收益金額  
->effectiveStakingAmount| string| 有效持倉金額，例如：1000.00  
-> status| string| 訂單狀態：`Pending`，`Success`，`Fail`  
-> hourlyDate| string| 每小時收益時間 (ms)，例如：1755478800000  
-> createdAt| string| 訂單創建時間 (ms)，例如：1684738540561  
+list| array| Object  
+> coin| string| 幣種名稱  
+> productId| string| 持倉對應的產品 ID  
+> amount| string| 持倉金額  
+> totalPnl| string| 持倉總收益。僅在 OnChain 非 LST 模式下有價值  
+> claimableYield| string| 收益按小時累計，並於每天 UTC 時間 00:30 分發。如果您在收益分配之前取消質押資產，任何未分配的收益將與您的本金一起記入您的帳戶。  
+> id| string| 持倉ID. 僅適用於 OnChain  
+> status| string| `Processing`,`Active`. 僅適用於 OnChain  
+> orderId| string| 訂單編號. 僅適用於 OnChain  
+> estimateRedeemTime| string| 預計贖回時間。以毫秒為單位.僅適用於 OnChain  
+> estimateStakeTime| string| 預計質押時間。以毫秒為單位.僅適用於 OnChain  
+> estimateInterestCalculationTime| string| 預計計息時間。以毫秒為單位.僅適用於 OnChain  
+> settlementTime| string| 結算時間。以毫秒為單位.僅對 OnChain `Fixed`產品有價值  
+> autoReinvest| string| 自動複投狀態。`Enable`：已開啟，`Disable`：已關閉。參考 [修改持倉設置](/docs/zh-TW/v5/finance/earn/easy-onchain/modify-position)  
+> availableAmount| string| 可贖回金額  
+> freezeDetails| array| 凍結明細列表  
+>> amount| string| 凍結金額  
+>> description| string| 凍結原因  
   
 ### 請求示例
 
@@ -156,17 +177,26 @@ list| array|
 
     
     
-    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
+    GET /v5/earn/position?category=FlexibleSaving&coin=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1739944576277  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_staked_position(  
+        category="FlexibleSaving",  
+        coin="USDT",  
+    ))  
     
     
     
@@ -182,17 +212,29 @@ list| array|
         "result": {  
             "list": [  
                 {  
-                    "productId": "428",  
-                    "coin": "USDT",  
-                    "amount": "0.060810502283105022",  
-                    "effectiveStakingAmount": "1000",  
-                    "hourlyDate": "1759989600000",  
-                    "status": "Success",  
-                    "createdAt": "1759989603000"  
+                    "coin": "BTC",  
+                    "productId": "8",  
+                    "amount": "0.1",  
+                    "totalPnl": "0.000027397260273973",  
+                    "claimableYield": "0",  
+                    "id": "326",  
+                    "status": "Active",  
+                    "orderId": "1a5a8945-e042-4dd5-a93f-c0f0577377ad",  
+                    "estimateRedeemTime": "",  
+                    "estimateStakeTime": "",  
+                    "estimateInterestCalculationTime": "1744243200000",  
+                    "settlementTime": "1744675200000",  
+                    "autoReinvest": "Enable",  
+                    "availableAmount": "4900",  
+                    "freezeDetails": [  
+                        {  
+                            "amount": "100",  
+                            "description": "Locked in Fixed-Rate Loan"  
+                        }  
+                    ]  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1759993045287  
+        "time": 1739944577575  
     }

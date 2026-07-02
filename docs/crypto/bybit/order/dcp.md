@@ -2,111 +2,90 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/dcp
 api_type: Trading
-updated_at: 2026-07-01 19:30:43.661617
+updated_at: 2026-07-02 19:20:03.493114
 ---
 
-# Get Trade History
+# Pre Check Order
 
-Query users' execution records, sorted by `execTime` in descending order.
+This endpoint is used to calculate the changes in IMR and MMR of UTA account before and after placing an order.
 
-tip
+info
 
-  * Response items will have sorting issues when 'execTime' is the same, it is recommended to sort according to `execId+OrderId+leavesQty`. If you want to receive real-time execution information, Use the [websocket stream](/docs/v5/websocket/private/execution) (recommended).
-  * You may have multiple executions in a single order.
-  * You can query by symbol, baseCoin, orderId and orderLinkId, and if you pass multiple params, the system will process them according to this priority: orderId > orderLinkId > symbol > baseCoin. orderId and orderLinkId have a higher priority and as long as these two parameters are in the input parameters, other input parameters will be ignored.
+  1. This endpoint supports orders with category = `inverse`,`linear`,`option`.   
+
+  2. Only Cross Margin mode and Portfolio Margin mode are supported, isolated margin mode is not supported.  
+
+  3. category = `inverse` is not supported in Cross Margin mode.  
+
+  4. Conditional order is not supported.  
+
+  5. If `retCode` is neither 0 nor 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id` will be displayed in the `retExtInfo` json.
+  6. If `retCode` is 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id`, `post_imr_e4`, and `post_mmr_e4` will be displayed in the `retExtInfo` json.
 
 
 
 ### HTTP Request
 
-GET`/v5/execution/list`
+POST`/v5/order/pre-check`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`, `spot`, `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-orderId| false| string| Order ID  
-orderLinkId| false| string| User customised order ID  
-baseCoin| false| string| Base coin, uppercase only. For type `option`, default value is BTC  
-settleCoin| false| string| Settle coin, uppercase only. Only for `linear`, `inverse`,`option`  
-startTime| false| integer| The start timestamp (ms) 
+refer to [create order request](/docs/v5/order/create-order#request-parameters)
 
-  * startTime and endTime are not passed, return 7 days by default
-  * Only startTime is passed, return range between startTime and startTime+7 days
-  * Only endTime is passed, return range between endTime-7 days and endTime  
-If both are passed, the rule is endTime - startTime <= 7 days
-
-  
-endTime| false| integer| The end timestamp (ms)  
-[execType](/docs/v5/enum#exectype)| false| string| Execution type  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-[category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> orderId| string| Order ID  
-> orderLinkId| string| User customized order ID  
-> side| string| Side. `Buy`,`Sell`  
-> orderPrice| string| Order price  
-> orderQty| string| Order qty  
-> leavesQty| string| The remaining qty not executed  
-> [createType](/docs/v5/enum#createtype)| string| Order create type 
-* Spot does not have this key  
-> [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
-> [stopOrderType](/docs/v5/enum#stopordertype)| string| Stop order type. If the order is not stop order, it either returns `UNKNOWN` or `""`  
-> execFee| string| Executed trading fee. You can get spot fee currency instruction [here](/docs/v5/enum#spot-fee-currency-instruction)  
-> execFeeV2| string| Spot leg transaction fee, only works for execType=`FutureSpread`  
-> execId| string| Execution ID  
-> execPrice| string| Execution price  
-> execQty| string| Execution qty  
-> [execType](/docs/v5/enum#exectype)| string| Executed type  
-> execValue| string| Executed order value  
-> execTime| string| Executed timestamp (ms)  
-> feeCurrency| string| Trading fee currency  
-> isMaker| boolean| Is maker order. `true`: maker, `false`: taker  
-> feeRate| string| Trading fee rate  
-> tradeIv| string| Implied volatility. _Valid for`option`_  
-> markIv| string| Implied volatility of mark price. _Valid for`option`_  
-> markPrice| string| The mark price of the symbol when executing  
-> indexPrice| string| The index price of the symbol when executing. _Valid for`option` only_  
-> underlyingPrice| string| The underlying price of the symbol when executing. _Valid for`option`_  
-> blockTradeId| string| Paradigm block trade ID  
-> closedSize| string| Closed position size  
-> seq| long| Cross sequence, used to associate each fill and each position update
-
-  * The seq will be the same when conclude multiple transactions at the same time
-  * Different symbols may have the same seq, please use seq + symbol to check unique
-
+orderId| string| Order ID  
+orderLinkId| string| User customised order ID  
+preImrE4| int| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+preMmrE4| int| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+postImrE4| int| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+postMmrE4| int| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
   
-> extraFees| string| Trading fee rate information. Currently, this data is returned only for kyc=Indian user or spot orders placed on the Indonesian site or spot fiat currency orders placed on the EU site. In other cases, an empty string is returned. Enum: [feeType](/docs/v5/enum#extrafeesfeetype), [subFeeType](/docs/v5/enum#extrafeessubfeetype)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/position/execution)
-
 * * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/execution/list?category=linear&limit=1 HTTP/1.1  
+    POST /v5/order/pre-check HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672283754132  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -116,44 +95,23 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_executions(  
-        category="linear",  
-        limit=1,  
+    print(session.pre_check_order(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var tradeHistoryRequest = TradeOrderRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").execType(ExecType.Trade).limit(100).build();  
-    System.out.println(client.getTradeHistory(tradeHistoryRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .getExecutionList({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            margin: '10',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
@@ -163,151 +121,100 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "132766%3A2%2C132766%3A2",  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "orderType": "Market",  
-                    "underlyingPrice": "",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "indexPrice": "",  
-                    "orderId": "8c065341-7b52-4ca9-ac2c-37e31ac55c94",  
-                    "stopOrderType": "UNKNOWN",  
-                    "leavesQty": "0",  
-                    "execTime": "1672282722429",  
-                    "feeCurrency": "",  
-                    "isMaker": false,  
-                    "execFee": "0.071409",  
-                    "feeRate": "0.0006",  
-                    "execId": "e0cbe81d-0f18-5866-9415-cf319b5dab3b",  
-                    "tradeIv": "",  
-                    "blockTradeId": "",  
-                    "markPrice": "1183.54",  
-                    "execPrice": "1190.15",  
-                    "markIv": "",  
-                    "orderQty": "0.1",  
-                    "orderPrice": "1236.9",  
-                    "execValue": "119.015",  
-                    "execType": "Trade",  
-                    "execQty": "0.1",  
-                    "closedSize": "",  
-                    "extraFees": "",  
-                    "seq": 4688002127  
-                }  
-            ]  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
         },  
         "retExtInfo": {},  
-        "time": 1672283754510  
+        "time": 1749541599589  
     }
 
 ---
 
-# 查詢成交紀錄
+# 預下單
 
-獲取用戶成交紀錄，返回結果按`execTime`降序排列
+此接口用於計算UTA帳戶下單前後IMR、MMR的變化。
 
-提示
+信息
 
-  * 儅execTime相同時,返回會有排序問題，此問題已在優化中, 目前建議依照`execId+OrderId+leavesQty`進行排序, 如果您想獲取實時成交信息建議使用[websocket stream](/docs/zh-TW/v5/websocket/private/execution).
-  * 單筆訂單可能會有多次成交.
-  * 您可以通過指定symbol, baseCoin, orderId 和 orderLinkId字段來查詢。如果您使用多字段組合，系統的查詢優先級如下: orderId > orderLinkId > symbol > baseCoin. orderId 和 orderLinkId 優先權較高，只要輸入參數中有這兩個參數，其他輸入參數將被忽略。
+  1. 此接口只支持期貨和期權的訂單。   
+
+  2. 僅支持全倉模式和組合保證金模式，不支援逐倉模式。   
+
+  3. 全倉模式下不支持反向訂單。   
+
+  4. 不支持條件訂單。   
+
+  5. 如果`retCode`既不是0也不是110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id` 會顯示在`retExtInfo`這個json裡。
+  6. 如果`retCode` 是 110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id`，`post_imr_e4`，`post_mmr_e4`會顯示在`retExtInfo`這個json裡。
 
 
 
-### HTTP 請求
+### HTTP請求
 
-GET`/v5/execution/list`
+POST`/v5/order/pre-check`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`, `linear`, `inverse`, `option`  
-symbol| false| string| 合約名稱  
-orderId| false| string| 訂單Id  
-orderLinkId| false| string| 用戶自定義訂單id  
-baseCoin| false| string| 交易幣種. 對於期權來說，默认是BTC  
-settleCoin| false| string| 结算幣種. 只支持 `linear`, `inverse`,`option`  
-startTime| false| integer| 開始時間戳 (毫秒) 
+參考 [create order request](/docs/zh-TW/v5/order/create-order#request-parameters)
 
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime ≤ 7天
-  * 若只傳startTime, 則查詢startTime和startTime+7天的數據
-  * 若只傳endTime, 則查詢endTime-7天和endTime的數據
-
-  
-endTime| false| integer| 結束時間戳 (毫秒)  
-[execType](/docs/zh-TW/v5/enum#exectype)| false| string| 執行類型  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
-  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> orderId| string| 訂單Id  
-> orderLinkId| string| 用戶自定義訂單id  
-> side| string| 訂單方向.買： `Buy`,賣：`Sell`  
-> orderPrice| string| 訂單價格  
-> orderQty| string| 訂單數量  
-> leavesQty| string| 剩餘委託未成交數量  
-> [createType](/docs/zh-TW/v5/enum#createtype)| string| 訂單創建類型
-* 現貨不返回該字段  
-> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. 市價單：`Market`,限價單：`Limit`  
-> [stopOrderType](/docs/zh-TW/v5/enum#stopordertype)| string| 条件单的订单类型。如果该订单不是条件单，则可能返回`""`或者`UNKNOWN`.  
-> execFee| string| 交易手續費. 您可以從[這裡](/docs/zh-TW/v5/enum#%E7%8F%BE%E8%B2%A8%E4%BA%A4%E6%98%93%E6%89%8B%E7%BA%8C%E8%B2%BB%E5%B9%A3%E7%A8%AE%E8%AA%AA%E6%98%8E)了解現貨手續費幣種信息  
-> execFeeV2| string| 價差交易下現貨單腿的交易手續費  
-> execId| string| 成交Id  
-> execPrice| string| 成交價格  
-> execQty| string| 成交數量  
-> [execType](/docs/zh-TW/v5/enum#exectype)| string| 交易類型  
-> execValue| string| 成交價值.  
-> execTime| string| 成交時間（毫秒）  
-> feeCurrency| string| 手續費幣種  
-> isMaker| Bool| 是否是 Maker 訂單,`true` 為 maker 訂單，`false` 為 taker 訂單  
-> feeRate| string| 手續費率  
-> tradeIv| string| 隱含波動率，僅期權有效  
-> markIv| string| 標記價格的隱含波動率，僅期權有效  
-> markPrice| string| 成交執行時，該 symbol 當時的標記價格  
-> indexPrice| string| 成交執行時，該 symbol 當時的指數價格   
-僅期權業務有效  
-> underlyingPrice| string| 成交執行時，該 symbol 當時的底層資產價格  
-僅期權有效  
-> blockTradeId| string| 大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID  
-> closedSize| string| 平倉數量  
-> seq| long| 序列號, 用於關聯成交和倉位的更新
-
-  * 同一時間有多筆成交, seq相同
-  * 不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別
-
+orderId| string| 訂單ID  
+orderLinkId| string| 用戶自定義訂單ID  
+preImrE4| int| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
+preMmrE4| int| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+postImrE4| int| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
+postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
   
-> extraFees| string| 交易費率。目前，僅針對kyc=Indian用戶或在印尼網站的現貨訂單或在歐盟站的現貨法定貨幣訂單返回此數據。在其他情況下，傳回空字串。字段枚舉: [feeType](/docs/zh-TW/v5/enum#extrafeesfeetype), [subFeeType](/docs/zh-TW/v5/enum#extrafeessubfeetype)  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/position/execution)
-
 * * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/execution/list?category=linear&limit=1 HTTP/1.1  
+    POST /v5/order/pre-check HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672283754132  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -317,44 +224,23 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_executions(  
-        category="linear",  
-        limit=1,  
+    print(session.pre_check_order(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var tradeHistoryRequest = TradeOrderRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").execType(ExecType.Trade).limit(100).build();  
-    System.out.println(client.getTradeHistory(tradeHistoryRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .getExecutionList({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            margin: '10',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
@@ -364,41 +250,13 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "132766%3A2%2C132766%3A2",  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "orderType": "Market",  
-                    "underlyingPrice": "",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "indexPrice": "",  
-                    "orderId": "8c065341-7b52-4ca9-ac2c-37e31ac55c94",  
-                    "stopOrderType": "UNKNOWN",  
-                    "leavesQty": "0",  
-                    "execTime": "1672282722429",  
-                    "feeCurrency": "",  
-                    "isMaker": false,  
-                    "execFee": "0.071409",  
-                    "feeRate": "0.0006",  
-                    "execId": "e0cbe81d-0f18-5866-9415-cf319b5dab3b",  
-                    "tradeIv": "",  
-                    "blockTradeId": "",  
-                    "markPrice": "1183.54",  
-                    "execPrice": "1190.15",  
-                    "markIv": "",  
-                    "orderQty": "0.1",  
-                    "orderPrice": "1236.9",  
-                    "execValue": "119.015",  
-                    "execType": "Trade",  
-                    "execQty": "0.1",  
-                    "closedSize": "0.1",  
-                    "seq": 4688002127,  
-                    "extraFees":""  
-                }  
-            ]  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
         },  
         "retExtInfo": {},  
-        "time": 1672283754510  
+        "time": 1749541599589  
     }

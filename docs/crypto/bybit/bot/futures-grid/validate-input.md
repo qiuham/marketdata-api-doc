@@ -2,91 +2,72 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-grid/validate-input
 api_type: REST
-updated_at: 2026-07-01 19:26:59.855817
+updated_at: 2026-07-02 19:16:18.923016
 ---
 
-# Get Bot Parameter Limit
+# Create Martingale Bot
 
-Validate futures Martingale bot input parameters and return allowable ranges. Use before creating a Martingale bot to ensure parameters are within valid bounds.
+Create a new futures Martingale trading bot. The bot opens an initial position and adds to it when price moves against the position, then takes profit when price reverses.
 
 info
 
-  * **When to call:**  
-Always call this endpoint before [Create Futures Martingale Bot](/docs/v5/bot/futures-martingale/create).
+  * **How it works:**  
+The bot opens an initial position and scales into it when price moves adversely by `price_float_percent`. Each add multiplies the base position size by `add_position_percent`. When the accumulated position reaches the round take-profit (`round_tp_percent`), the bot closes and optionally restarts.
 
-  * **`check_code`:**  
-`F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED` = all parameters are valid. Any other value identifies the specific parameter out of range.
+  * **Mode (`martingale_mode`):**  
+`1`: Long — buys on dips, profits on price reversal up  
+`2`: Short — sells on rallies, profits on price reversal down
+
+  * **Auto-cycle (`auto_cycle_toggle`):**  
+`1`: Enable — restart after each round take-profit  
+`2`: Disable — stop after a single round take-profit
+
+  * **Prerequisites:**  
+Call [Get Futures Martingale Limit](/docs/v5/bot/futures-martingale/get-limit) before this endpoint to validate parameter ranges.
 
   * **Rate limit:**  
-100 requests per second per IP.
+10 requests per second per UID.
+
+  * **Subject to compliance wall, GEO IP check, and KYC verification.**
 
 
 
 
 ### HTTP Request
 
-POST`/v5/fmartingalebot/getlimit`
+POST`/v5/fmartingalebot/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| **true**|  string| Trading pair symbol, uppercase only (e.g. `BTCUSDT`)  
-martingale_mode| **true**|  integer| Strategy direction: `1` Long, `2` Short  
+martingale_mode| **true**|  integer| Strategy direction: `1` Long (buy dips), `2` Short (sell rallies)  
 leverage| **true**|  string| Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1  
-price_float_percent| false| string| Price movement trigger as percentage (e.g. `"0.015"` means 1.5%)  
-add_position_percent| false| string| Position add scaling as percentage of base position (e.g. `"1"` = 1x)  
-add_position_num| false| integer| Maximum number of position adds per round  
-init_margin| false| string| Initial investment in quote currency (decimal string)  
-round_tp_percent| false| string| Single round take-profit as percentage (e.g. `"0.03"` means 3%)  
-sl_percent| false| string| Stop-loss as percentage (e.g. `"0.2"` means 20%)  
-entry_price| false| string| Entry trigger price (decimal string)  
-need_to_slippage| false| boolean| Whether to include slippage calculation  
+price_float_percent| **true**|  string| Price movement percentage to trigger a position add (e.g. `"0.015"` means add when price moves 1.5% against the position)  
+add_position_percent| **true**|  string| Position add scaling as percentage of base position size (e.g. `"1.1"` = 1.1x base; `"2"` = 2x base)  
+add_position_num| **true**|  integer| Maximum number of position adds per round  
+init_margin| **true**|  string| Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)  
+round_tp_percent| **true**|  string| Single round take-profit as percentage (e.g. `"0.03"` means close when profit reaches 3%)  
+auto_cycle_toggle| false| integer| Auto-cycle mode: `1` Enable (restart after TP), `2` Disable (stop after single TP)  
+sl_percent| false| string| Stop-loss as percentage of total margin (e.g. `"0.2"` means close when loss reaches 20%). Leave empty if not set  
+entry_price| false| string| Entry trigger price as absolute price (decimal string). Leave empty if not set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-status_code| integer| `0` = success, non-zero = error  
+status_code| integer| `0` = success, `421` = user banned  
+bot_id| integer| Unique bot ID. Use for [Get Detail](/docs/v5/bot/futures-martingale/get-detail) and [Close](/docs/v5/bot/futures-martingale/close)  
+ban_reason_text| string| Ban reason in user's locale. Returned only when `status_code=421`  
 debug_msg| string| Debug message (testnet only)  
-check_code| string| Validation result. See check code table below  
-price_float_percent| object| Acceptable price float percentage range (`min` / `max`)  
-add_position_percent| object| Acceptable add position percentage range (`min` / `max`)  
-add_position_num| object| Acceptable add position count range (`min` / `max`)  
-init_margin| object| Acceptable initial margin range (`min` / `max`, decimal strings in quote currency)  
-round_tp_percent| object| Acceptable round take-profit percentage range (`min` / `max`)  
-sl_percent| object| Acceptable stop-loss percentage range (`min` / `max`)  
-entry_price| object| Acceptable entry price range (`min` / `max`)  
-leverage| object| Acceptable leverage range (`min` / `max`)  
-  
-#### Check Code Values
-
-check_code| Description  
----|---  
-`F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED`| OK — no error  
-`F_MART_LIMIT_CHECK_CODE_F_MART_PRICE_FLOAT_PERCENT_TOO_HIGH`| Price float percentage too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_PRICE_FLOAT_PERCENT_TOO_LOW`| Price float percentage too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_PERCENT_TOO_HIGH`| Add position percentage too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_PERCENT_TOO_LOW`| Add position percentage too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_NUM_TOO_HIGH`| Add position count too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_NUM_TOO_LOW`| Add position count too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_INIT_MARGIN_TOO_HIGH`| Initial margin too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_INIT_MARGIN_TOO_LOW`| Initial margin too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ROUND_TARGET_TP_PERCENT_TOO_HIGH`| Round TP percentage too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ROUND_TARGET_TP_PERCENT_TOO_LOW`| Round TP percentage too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_SL_PER_TOO_HIGH`| Stop-loss percentage too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_SL_PER_TOO_LOW`| Stop-loss percentage too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ENTRY_PRICE_TOO_HIGH`| Entry price too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ENTRY_PRICE_TOO_LOW`| Entry price too low  
-`F_MART_LIMIT_CHECK_CODE_F_MART_LEVERAGE_TOO_HIGH`| Leverage too high  
-`F_MART_LIMIT_CHECK_CODE_F_MART_LEVERAGE_TOO_LOW`| Leverage too low  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/fmartingalebot/getlimit HTTP/1.1  
+    POST /v5/fmartingalebot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -102,8 +83,9 @@ check_code| Description
         "add_position_percent": "1.8",  
         "add_position_num": 5,  
         "round_tp_percent": "0.1",  
-        "init_margin": "1000",  
+        "init_margin": "650",  
         "sl_percent": "0.5",  
+        "entry_price": "0.56",  
         "auto_cycle_toggle": 2  
     }  
     
@@ -117,128 +99,78 @@ check_code| Description
         "result": {  
             "status_code": 0,  
             "debug_msg": "",  
-            "check_code": "F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED",  
-            "price_float_percent": {  
-                "max": "0.199",  
-                "min": "0.001"  
-            },  
-            "add_position_percent": {  
-                "max": "2",  
-                "min": "1"  
-            },  
-            "add_position_num": {  
-                "max": "10",  
-                "min": "1"  
-            },  
-            "init_margin": {  
-                "max": "34004.22",  
-                "min": "0.7682"  
-            },  
-            "round_tp_percent": {  
-                "max": "4.45",  
-                "min": "0.01"  
-            },  
-            "sl_percent": {  
-                "max": "1",  
-                "min": "0"  
-            },  
-            "entry_price": {  
-                "max": "0.7086",  
-                "min": "0.2105"  
-            },  
-            "leverage": {  
-                "max": "20",  
-                "min": "1"  
-            }  
+            "ban_reason_text": "",  
+            "bot_id": "612335280740902531"  
         },  
         "retExtInfo": {},  
-        "time": 1774510798514  
+        "time": 1774509868961  
     }
 
 ---
 
-# 查詢機器人限制參數
+# 創建馬丁格爾機器人
 
-驗證合約馬丁格爾機器人的輸入參數並返回允許的範圍。在創建馬丁格爾機器人之前調用，以確保參數在有效範圍內。
+創建一個新的合約馬丁格爾交易機器人。機器人建立初始倉位，當價格逆勢移動時加倉，反轉後止盈。
 
 信息
 
-  * **何時調用：**  
-在調用[創建合約馬丁格爾機器人](/docs/zh-TW/v5/bot/futures-martingale/create)之前，務必先調用此端點。
+  * **運作方式：**  
+機器人開立初始倉位，當價格逆勢移動 `price_float_percent` 時追加倉位。每次追加倉位以 `add_position_percent` 倍基礎倉位規模擴大。當累計倉位達到單輪止盈目標（`round_tp_percent`）時，機器人平倉並可選擇重新啟動。
 
-  * **`check_code`：**  
-`F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED` = 所有參數均有效。其他值表示超出範圍的具體參數。
+  * **模式（`martingale_mode`）：**  
+`1`：做多 — 逢跌買入，價格反彈時獲利  
+`2`：做空 — 逢漲賣出，價格回落時獲利
+
+  * **自動循環（`auto_cycle_toggle`）：**  
+`1`：啓用 — 每輪止盈後重新啟動  
+`2`：停用 — 單輪止盈後停止
+
+  * **前置條件：**  
+在調用本端點前，請先調用[查詢合約馬丁格爾限制參數](/docs/zh-TW/v5/bot/futures-martingale/get-limit)，驗證參數範圍。
 
   * **頻率限制：**  
-每個 IP 每秒最多 100 次請求。
+每個 UID 每秒最多 10 次請求。
+
+  * **受合規管控、地理位置 IP 限制及 KYC 驗證約束。**
 
 
 
 
 ### HTTP請求
 
-POST`/v5/fmartingalebot/getlimit`
+POST`/v5/fmartingalebot/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| **true**|  string| 交易對名稱，僅大寫（例如 `BTCUSDT`）  
-martingale_mode| **true**|  integer| 策略方向：`1` 做多，`2` 做空  
+martingale_mode| **true**|  integer| 策略方向：`1` 做多（逢跌買入），`2` 做空（逢漲賣出）  
 leverage| **true**|  string| 倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1  
-price_float_percent| false| string| 觸發追加倉位的價格變動百分比（例如 `"0.015"` 表示 1.5%）  
-add_position_percent| false| string| 追加倉位規模，以基礎倉位規模百分比計（例如 `"1"` = 1 倍）  
-add_position_num| false| integer| 每輪最大追加倉位次數  
-init_margin| false| string| 初始投資金額，以報價幣種計（小數字符串）  
-round_tp_percent| false| string| 單輪止盈百分比（例如 `"0.03"` 表示 3%）  
-sl_percent| false| string| 止損百分比（例如 `"0.2"` 表示 20%）  
-entry_price| false| string| 入場觸發價格（小數字符串）  
-need_to_slippage| false| boolean| 是否包含滑點計算  
+price_float_percent| **true**|  string| 觸發追加倉位的價格變動百分比（例如 `"0.015"` 表示逆勢移動 1.5% 時追加）  
+add_position_percent| **true**|  string| 追加倉位規模，以基礎倉位規模百分比計（例如 `"1.1"` = 1.1 倍基礎倉位；`"2"` = 2 倍基礎倉位）  
+add_position_num| **true**|  integer| 每輪最大追加倉位次數  
+init_margin| **true**|  string| 初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）  
+round_tp_percent| **true**|  string| 單輪止盈百分比（例如 `"0.03"` 表示盈利達 3% 時平倉）  
+auto_cycle_toggle| false| integer| 自動循環模式：`1` 啓用（止盈後重啓），`2` 停用（單輪止盈後停止）  
+sl_percent| false| string| 止損百分比，以總保證金為基準（例如 `"0.2"` 表示虧損達 20% 時平倉）。不設置請留空  
+entry_price| false| string| 入場觸發價格，以絕對價格計（小數字符串）。不設置請留空  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-status_code| integer| `0` = 成功，非零 = 錯誤  
+status_code| integer| `0` = 成功，`421` = 用戶被封禁  
+bot_id| integer| 唯一機器人 ID，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-martingale/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-martingale/close)  
+ban_reason_text| string| 用戶語言的封禁原因，僅當 `status_code=421` 時返回  
 debug_msg| string| 調試信息（僅測試網）  
-check_code| string| 驗證結果，詳見下方校驗碼表  
-price_float_percent| object| 可接受的價格浮動百分比範圍（`min` / `max`）  
-add_position_percent| object| 可接受的追加倉位百分比範圍（`min` / `max`）  
-add_position_num| object| 可接受的追加倉位次數範圍（`min` / `max`）  
-init_margin| object| 可接受的初始保證金範圍（`min` / `max`，報價幣種小數字符串）  
-round_tp_percent| object| 可接受的單輪止盈百分比範圍（`min` / `max`）  
-sl_percent| object| 可接受的止損百分比範圍（`min` / `max`）  
-entry_price| object| 可接受的入場價格範圍（`min` / `max`）  
-leverage| object| 可接受的槓桿範圍（`min` / `max`）  
-  
-#### 校驗碼說明
-
-check_code| 說明  
----|---  
-`F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED`| 正常 — 無錯誤  
-`F_MART_LIMIT_CHECK_CODE_F_MART_PRICE_FLOAT_PERCENT_TOO_HIGH`| 價格浮動百分比過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_PRICE_FLOAT_PERCENT_TOO_LOW`| 價格浮動百分比過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_PERCENT_TOO_HIGH`| 追加倉位百分比過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_PERCENT_TOO_LOW`| 追加倉位百分比過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_NUM_TOO_HIGH`| 追加倉位次數過多  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ADD_POSITION_NUM_TOO_LOW`| 追加倉位次數過少  
-`F_MART_LIMIT_CHECK_CODE_F_MART_INIT_MARGIN_TOO_HIGH`| 初始保證金過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_INIT_MARGIN_TOO_LOW`| 初始保證金過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ROUND_TARGET_TP_PERCENT_TOO_HIGH`| 單輪止盈百分比過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ROUND_TARGET_TP_PERCENT_TOO_LOW`| 單輪止盈百分比過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_SL_PER_TOO_HIGH`| 止損百分比過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_SL_PER_TOO_LOW`| 止損百分比過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ENTRY_PRICE_TOO_HIGH`| 入場價格過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_ENTRY_PRICE_TOO_LOW`| 入場價格過低  
-`F_MART_LIMIT_CHECK_CODE_F_MART_LEVERAGE_TOO_HIGH`| 槓桿過高  
-`F_MART_LIMIT_CHECK_CODE_F_MART_LEVERAGE_TOO_LOW`| 槓桿過低  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/fmartingalebot/getlimit HTTP/1.1  
+    POST /v5/fmartingalebot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -254,8 +186,9 @@ check_code| 說明
         "add_position_percent": "1.8",  
         "add_position_num": 5,  
         "round_tp_percent": "0.1",  
-        "init_margin": "1000",  
+        "init_margin": "650",  
         "sl_percent": "0.5",  
+        "entry_price": "0.56",  
         "auto_cycle_toggle": 2  
     }  
     
@@ -269,40 +202,9 @@ check_code| 說明
         "result": {  
             "status_code": 0,  
             "debug_msg": "",  
-            "check_code": "F_MART_LIMIT_CHECK_CODE_F_MART_CHECK_CODE_SUCCESS_UNSPECIFIED",  
-            "price_float_percent": {  
-                "max": "0.199",  
-                "min": "0.001"  
-            },  
-            "add_position_percent": {  
-                "max": "2",  
-                "min": "1"  
-            },  
-            "add_position_num": {  
-                "max": "10",  
-                "min": "1"  
-            },  
-            "init_margin": {  
-                "max": "34004.22",  
-                "min": "0.7682"  
-            },  
-            "round_tp_percent": {  
-                "max": "4.45",  
-                "min": "0.01"  
-            },  
-            "sl_percent": {  
-                "max": "1",  
-                "min": "0"  
-            },  
-            "entry_price": {  
-                "max": "0.7086",  
-                "min": "0.2105"  
-            },  
-            "leverage": {  
-                "max": "20",  
-                "min": "1"  
-            }  
+            "ban_reason_text": "",  
+            "bot_id": "612335280740902531"  
         },  
         "retExtInfo": {},  
-        "time": 1774510798514  
+        "time": 1774509868961  
     }

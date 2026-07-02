@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-unit-convert
 anchor_id: public-data-rest-api-unit-convert
 api_type: REST
-updated_at: 2026-07-01 19:55:12.592017
+updated_at: 2026-07-02 19:44:36.496207
 ---
 
 # Unit convert

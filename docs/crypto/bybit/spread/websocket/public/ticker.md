@@ -2,129 +2,151 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-07-01 19:32:41.178206
+updated_at: 2026-07-02 19:22:00.099600
 ---
 
-# Trade
+# Stop Strategy
 
-Subscribe to the public trades stream.
+Stop a running strategy. Once stopped, the strategy cannot be resumed.
 
-After subscription, you will be pushed trade messages in real-time.
+**Effects upon stopping:**
 
-Push frequency: **real-time**
+  * Strategy status changes to `Terminated`
+  * Unfilled orders are automatically canceled
+  * Partially filled orders have their remaining quantity canceled
+  * Already-filled orders are not affected
 
-**Topic:**  
-`publicTrade.{symbol}`
 
+
+### HTTP Request
+
+POST`/v5/strategy/stop`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+strategyId| **true**|  string| ID of the strategy to stop  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name  
-type| string| Data type. `snapshot`  
-ts| number| The timestamp (ms) that the system generates the data  
-data| array| Object. Sorted by the time the trade was matched in ascending order  
-> T| number| The timestamp (ms) that the order is filled  
-> s| string| Symbol name  
-> S| string| Side of taker. `Buy`,`Sell`  
-> v| string| Trade size  
-> p| string| Trade price  
-> [L](/docs/v5/enum#tickdirection)| string| Direction of price change  
-> i| string| Trade ID  
-> seq| integer| Cross sequence  
+strategyId| string| ID of the stopped strategy  
   
-### Subscribe Example
+### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
+    POST /v5/strategy/stop HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
     {  
-        "op": "subscribe",  
-        "id": "test-001-perp",  
-        "args": [  
-            "publicTrade.SOLUSDT_SOL/USDT"  
-        ]  
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
     }  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### Response Example
     
     
     {  
-        "topic": "publicTrade.SOLUSDT_SOL/USDT",  
-        "ts": 1744170142723,  
-        "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1744170142720,  
-                "s": "SOLUSDT_SOL/USDT",  
-                "S": "Sell",  
-                "v": "2.5",  
-                "p": "19.3928",  
-                "L": "MinusTick",  
-                "i": "31d0fc58-933b-57b3-8378-f73da06da843",  
-                "seq": 1783284617  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
+        },  
+        "retExtInfo": {},  
+        "time": 1773711467052  
     }
 
 ---
 
-# 平台成交
+# 停止策略
 
-訂閱Bybit平台上價差交易最近成交的推送.  
-從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
+停止正在執行的策略。一旦停止，策略無法恢復。
 
-推送頻率: **real-time**
+**停止後效果：**
 
-**Topic:**  
-`publicTrade.{symbol}`  
+  * 策略狀態變更為 `Terminated`（已終止）
+  * 未成交訂單自動取消
+  * 部分成交訂單的剩餘數量取消
+  * 已成交訂單不受影響
 
 
+
+### HTTP 請求
+
+POST`/v5/strategy/stop`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+strategyId| **true**|  string| 要停止的策略 ID  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| Topic名  
-type| string| 數據類型. `snapshot`  
-ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| array| Object. 如有多條, 則數組中的元素按照匹配時間升序排序  
-> T| number| 成交時間戳 (毫秒)  
-> s| array| 合約名稱  
-> S| string| 吃單方向. `Buy`,`Sell`  
-> v| string| 成交數量  
-> p| string| 成交價格  
-> [L](/docs/zh-TW/v5/enum#tickdirection)| string| 價格變化的方向. _期權沒有該字段_  
-> i| string| 成交Id  
-> seq| integer| 撮合版本號  
+strategyId| string| 已停止的策略 ID  
   
-### 訂閱示例
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
+    POST /v5/strategy/stop HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
     {  
-        "op": "subscribe",  
-        "id": "test-001-perp",  
-        "args": [  
-            "publicTrade.SOLUSDT_SOL/USDT"  
-        ]  
+        "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
     }  
     
+    
+    
+      
+    
+    
+    
+      
+    
 
-### 推送示例
+### 響應示例
     
     
     {  
-        "topic": "publicTrade.SOLUSDT_SOL/USDT",  
-        "ts": 1744170142723,  
-        "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1744170142720,  
-                "s": "SOLUSDT_SOL/USDT",  
-                "S": "Sell",  
-                "v": "2.5",  
-                "p": "19.3928",  
-                "L": "MinusTick",  
-                "i": "31d0fc58-933b-57b3-8378-f73da06da843",  
-                "seq": 1783284617  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82"  
+        },  
+        "retExtInfo": {},  
+        "time": 1773711467052  
     }

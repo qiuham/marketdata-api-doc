@@ -2,31 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/accept-other-quote
 api_type: Trading
-updated_at: 2026-07-01 19:31:30.460624
+updated_at: 2026-07-02 19:20:49.655660
 ---
 
-# Cancel All Quotes
+# Cancel RFQ
 
-Cancel all active quotes. **Up to 50 requests per second**
+Cancel RFQ. **Up to 50 requests per second**
+
+info
+
+  * You must pass either rfqId or rfqLinkId.
+  * If both rfqId and rfqLinkId are passed, only rfqId is considered.
+
+
 
 ### HTTP Request
 
-POST`/v5/rfq/cancel-all-quotes`
+POST`/v5/rfq/cancel-rfq`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+rfqId|  _false_|  string| Inquiry ID  
+rfqLinkId|  _false_|  string| Custom inquiry ID  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| Object|   
-> rfqId| string| Inquiry ID  
-> quoteId| string| Quote ID  
-> quoteLinkId| string| Custom quote ID  
-> code| string| Whether or not cancellation was a success, `0`: success  
-> msg| string| Cancellation failure reason  
+rfqId| string| Inquiry ID  
+rfqLinkId| string| Custom inquiry ID  
   
 ### Request Example
 
@@ -36,7 +42,7 @@ result| Object|
 
     
     
-    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
+    POST /v5/rfq/cancel-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -44,6 +50,10 @@ result| Object|
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
+      
+    {  
+        "rfqId": "1756871488168105512459181956436945"  
+    }  
     
     
     
@@ -53,7 +63,9 @@ result| Object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_all_quotes())  
+    print(session.cancel_rfq(  
+        rfqId="1756871488168105512459181956436945"  
+    ))  
     
 
 ### Response Example
@@ -62,49 +74,49 @@ result| Object|
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "rfqId": "175740723913299909861293671607573",  
-                "quoteLinkId": "",  
-                "quoteId": "1757407497684679708210572531298710",  
-                "code": 0,  
-                "msg": ""  
-            }  
-        ],  
+        "result": {  
+            "rfqId": "1756871488168105512459181956436945",  
+            "rfqLinkId": ""  
+        },  
         "retExtInfo": {},  
-        "time": 1757407503982  
+        "time": 1756871494507  
     }
 
 ---
 
-# 取消所有報價單
+# 取消詢價單
 
-取消所有報價單。**每秒最多 50 次請求**
+取消詢價單。**每秒最多 50 次請求**
+
+信息
+
+  * 至少需傳遞 rfqId 或 rfqLinkId。
+  * 若同時傳遞 rfqId 和 rfqLinkId，則以 rfqId 為準。
+
+
 
 ### HTTP 請求
 
-POST`/v5/rfq/cancel-all-quotes`
+POST`/v5/rfq/cancel-rfq`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+rfqId| **false**|  string| 詢價單 ID  
+rfqLinkId| **false**|  string| 詢價單自定義 ID  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-> data| Array of object|   
->> rfqId| string| 詢價單 ID  
->> quoteId| string| 報價單 ID  
->> quoteLinkId| string| 報價單自定義 ID  
->> code| string| 取消成功或失敗，0 表示取消成功  
->> msg| string| 取消失敗原因  
+rfqId| string| 詢價單 ID  
+rfqLinkId| string| 詢價單自定義 ID  
   
 ### 請求示例
     
     
-    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
+    POST /v5/rfq/cancel-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -112,6 +124,10 @@ result| object|
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
+      
+    {  
+        "rfqId": "1756871488168105512459181956436945"  
+    }  
     
 
 ### 響應示例
@@ -120,15 +136,10 @@ result| object|
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "rfqId": "175740723913299909861293671607573",  
-                "quoteLinkId": "",  
-                "quoteId": "1757407497684679708210572531298710",  
-                "code": 0,  
-                "msg": ""  
-            }  
-        ],  
+        "result": {  
+            "rfqId": "1756871488168105512459181956436945",  
+            "rfqLinkId": ""  
+        },  
         "retExtInfo": {},  
-        "time": 1757407503982  
+        "time": 1756871494507  
     }

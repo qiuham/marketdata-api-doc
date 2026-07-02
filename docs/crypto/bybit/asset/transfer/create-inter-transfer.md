@@ -2,16 +2,26 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/create-inter-transfer
 api_type: REST
-updated_at: 2026-07-01 19:26:32.903849
+updated_at: 2026-07-02 19:15:55.331687
 ---
 
-# Create Internal Transfer
+# Create Universal Transfer
 
-Create the internal transfer between different [account types](/docs/v5/enum#accounttype) under the same UID.
+Transfer between sub-sub or main-sub.
+
+tip
+
+  * Use master or sub acct api key to request 
+    * To use sub acct api key, it must have "SubMemberTransferList" permission
+    * When use sub acct api key, it can only transfer to main account
+  * If you encounter errorCode: `131228` and msg: `your balance is not enough`, please go to [Get Single Coin Balance](/docs/v5/asset/balance/account-coin-balance) to check transfer safe amount.
+  * You can not transfer between the same UID.
+
+
 
 ### HTTP Request
 
-POST`/v5/asset/transfer/inter-transfer`
+POST`/v5/asset/transfer/universal-transfer`
 
 ### Request Parameters
 
@@ -20,6 +30,8 @@ Parameter| Required| Type| Comments
 transferId| **true**|  string| [UUID](https://www.uuidgenerator.net/dev-corner). Please manually generate a UUID  
 coin| **true**|  string| Coin, uppercase only  
 amount| **true**|  string| Amount  
+fromMemberId| **true**|  integer| From UID  
+toMemberId| **true**|  integer| To UID  
 [fromAccountType](/docs/v5/enum#accounttype)| **true**|  string| From account type  
 [toAccountType](/docs/v5/enum#accounttype)| **true**|  string| To account type  
   
@@ -36,7 +48,7 @@ status| string| Transfer status
   * `FAILED`
 
   
-[](/docs/api-explorer/v5/asset/create-inter-transfer)
+[](/docs/api-explorer/v5/asset/unitransfer)
 
 * * *
 
@@ -49,19 +61,23 @@ status| string| Transfer status
 
     
     
-    POST v5/asset/transfer/inter-transfer HTTP/1.1  
+    POST /v5/asset/transfer/universal-transfer HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1670986690556  
-    X-BAPI-RECV-WINDOW: 50000  
+    X-BAPI-TIMESTAMP: 1672189449697  
+    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
+      
     {  
-        "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",  
-        "coin": "BTC",  
-        "amount": "0.05",  
-        "fromAccountType": "UNIFIED",  
-        "toAccountType": "CONTRACT"  
+        "transferId": "be7a2462-1138-4e27-80b1-62653f24925e",  
+        "coin": "ETH",  
+        "amount": "0.5",  
+        "fromMemberId": 592334,  
+        "toMemberId": 691355,  
+        "fromAccountType": "CONTRACT",  
+        "toAccountType": "UNIFIED"  
+      
     }  
     
     
@@ -72,12 +88,14 @@ status| string| Transfer status
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_internal_transfer(  
-        transferId="42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",  
-        coin="BTC",  
-        amount="0.05",  
-        fromAccountType="UNIFIED",  
-        toAccountType="CONTRACT",  
+    print(session.create_universal_transfer(  
+        transferId="be7a2462-1138-4e27-80b1-62653f24925e",  
+        coin="ETH",  
+        amount="0.5",  
+        fromMemberId=592334,  
+        toMemberId=691355,  
+        fromAccountType="CONTRACT",  
+        toAccountType="UNIFIED",  
     ))  
     
     
@@ -91,13 +109,15 @@ status| string| Transfer status
     });  
       
     client  
-      .createInternalTransfer(  
-        '42c0cfb0-6bca-c242-bc76-4e6df6cbcb16',  
-        'BTC',  
-        '0.05',  
-        'UNIFIED',  
-        'CONTRACT',  
-      )  
+      .createUniversalTransfer({  
+        transferId: 'be7a2462-1138-4e27-80b1-62653f24925e',  
+        coin: 'ETH',  
+        amount: '0.5',  
+        fromMemberId: 592334,  
+        toMemberId: 691355,  
+        fromAccountType: 'CONTRACT',  
+        toAccountType: 'UNIFIED',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -113,38 +133,45 @@ status| string| Transfer status
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbab16",  
+            "transferId": "be7a2462-1138-4e27-80b1-62653f24925e",  
             "status": "SUCCESS"  
         },  
         "retExtInfo": {},  
-        "time": 1670986962783  
+        "time": 1672189450195  
     }
 
 ---
 
-# 劃轉 (單帳號內)
+# 創建萬能劃轉
 
-創建單帳號下[帳戶類型](/docs/zh-TW/v5/enum#accounttype)間的劃轉操作
+支持子子帳戶間劃轉或母子帳號間劃轉。
 
 提示
 
-  * 每個帳戶類型有其可接受的幣種限制, 詳情請參考[可劃轉幣種](/docs/zh-TW/v5/asset/transfer/transferable-coin)接口.
+  * 支持使用母帳戶或者子帳號api key請求
+    * 若要使用子帳號api key, 需要有"母子帳戶劃轉"(SubMemberTransferList)權限
+    * 當使用子帳號api key劃轉時, 僅能劃轉到母帳號下
+  * 如果您遇到錯誤碼是`131228`並且錯誤信息是`your balance is not enough`, 請前往[查詢賬戶單個幣種余額](/docs/zh-TW/v5/asset/balance/account-coin-balance)接口確認安全限額.
+  * 不支持同一個uid之間的劃轉.
+  * 資金賬戶轉出目前僅支持加密貨幣轉賬，不支持法定貨幣劃轉.
 
 
 
 ### HTTP 請求
 
-POST`/v5/asset/transfer/inter-transfer`
+POST`/v5/asset/transfer/universal-transfer`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-transferId| **true**|  string| UUID. 請自行手動生成UUID  
+transferId| **true**|  string| UUID. 請求手動生成UUID  
 coin| **true**|  string| 幣種  
-amount| **true**|  string| 劃入數量  
-[fromAccountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 轉出賬戶類型  
-[toAccountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 轉入賬戶類型  
+amount| **true**|  string| 劃轉金額  
+fromMemberId| **true**|  integer| 轉出UID  
+toMemberId| **true**|  integer| 轉入UID  
+[fromAccountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 轉出帳戶類型  
+[toAccountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 轉入帳戶類型  
   
 ### 響應參數
 
@@ -159,7 +186,7 @@ status| string| 劃轉狀態
   * `FAILED`
 
   
-[](/docs/zh-TW/api-explorer/v5/asset/create-inter-transfer)
+[](/docs/zh-TW/api-explorer/v5/asset/unitransfer)
 
 * * *
 
@@ -172,19 +199,23 @@ status| string| 劃轉狀態
 
     
     
-    POST v5/asset/transfer/inter-transfer HTTP/1.1  
+    POST /v5/asset/transfer/universal-transfer HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1670986690556  
-    X-BAPI-RECV-WINDOW: 50000  
+    X-BAPI-TIMESTAMP: 1672189449697  
+    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
+      
     {  
-        "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",  
-        "coin": "BTC",  
-        "amount": "0.05",  
-        "fromAccountType": "UNIFIED",  
-        "toAccountType": "CONTRACT"  
+        "transferId": "be7a2462-1138-4e27-80b1-62653f24925e",  
+        "coin": "ETH",  
+        "amount": "0.5",  
+        "fromMemberId": 592334,  
+        "toMemberId": 691355,  
+        "fromAccountType": "CONTRACT",  
+        "toAccountType": "UNIFIED"  
+      
     }  
     
     
@@ -195,12 +226,14 @@ status| string| 劃轉狀態
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_internal_transfer(  
-        transferId="42c0cfb0-6bca-c242-bc76-4e6df6cbcb16",  
-        coin="BTC",  
-        amount="0.05",  
-        fromAccountType="UNIFIED",  
-        toAccountType="CONTRACT",  
+    print(session.create_universal_transfer(  
+        transferId="be7a2462-1138-4e27-80b1-62653f24925e",  
+        coin="ETH",  
+        amount="0.5",  
+        fromMemberId=592334,  
+        toMemberId=691355,  
+        fromAccountType="CONTRACT",  
+        toAccountType="UNIFIED",  
     ))  
     
     
@@ -214,13 +247,15 @@ status| string| 劃轉狀態
     });  
       
     client  
-      .createInternalTransfer(  
-        '42c0cfb0-6bca-c242-bc76-4e6df6cbcb16',  
-        'BTC',  
-        '0.05',  
-        'UNIFIED',  
-        'CONTRACT',  
-      )  
+      .createUniversalTransfer({  
+        transferId: 'be7a2462-1138-4e27-80b1-62653f24925e',  
+        coin: 'ETH',  
+        amount: '0.5',  
+        fromMemberId: 592334,  
+        toMemberId: 691355,  
+        fromAccountType: 'CONTRACT',  
+        toAccountType: 'UNIFIED',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -236,9 +271,9 @@ status| string| 劃轉狀態
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "transferId": "42c0cfb0-6bca-c242-bc76-4e6df6cbab16",  
+            "transferId": "be7a2462-1138-4e27-80b1-62653f24925e",  
             "status": "SUCCESS"  
         },  
         "retExtInfo": {},  
-        "time": 1670986962783  
+        "time": 1672189450195  
     }

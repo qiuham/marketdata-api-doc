@@ -2,66 +2,133 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/strategy-list
 api_type: REST
-updated_at: 2026-07-01 19:32:47.110929
+updated_at: 2026-07-02 19:22:05.927394
 ---
 
-# Get System Status
+# Create Sub UID
 
-Get the system status when there is a platform maintenance or service incident.
+Create a new sub user id. Use **master** account's api key.
 
-info
+tip
 
-Please note currently system maintenance that may result in short interruption (lasting less than 10 seconds) or websocket disconnection (users can immediately reconnect) will not be announced.
+The API key must have one of the below permissions in order to call this endpoint
+
+  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+
+
 
 ### HTTP Request
 
-GET`/v5/system/status`
+POST`/v5/user/create-sub-member`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| false| string| id. Unique identifier  
-[state](/docs/v5/enum#state)| false| string| system state  
+username| **true**|  string| Username of the new sub user. 
+
+  * 6-16 characters, must include both numbers and letters.
+  * Cannot be the same as the existing or deleted usernames.
+
+  
+password| false| string| Password for the new sub user. 
+
+  * 8-30 characters, must include numbers, upper and lowercase letters.
+
+  
+memberType| **true**|  integer| `1`: normal subaccount, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683)  
+switch| false| integer| 
+
+  * `0`: turn off quick login (default)
+  * `1`: turn on quick login.
+
+  
+isUta| false| boolean| **Deprecated** param, always UTA account  
+note| false| string| Set a remark  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> id| string| Id. Unique identifier  
-> title| string| Title of system maintenance  
-> [state](/docs/v5/enum#state)| string| System state  
-> begin| string| Start time of system maintenance, timestamp in milliseconds  
-> end| string| End time of system maintenance, timestamp in milliseconds. Before maintenance is completed, it is the expected end time; After maintenance is completed, it will be changed to the actual end time.  
-> href| string| Hyperlink to system maintenance details. Default value is empty string  
-> [serviceTypes](/docs/v5/enum#servicetypes)| array<int>| Service Type  
-> [product](/docs/v5/enum#product)| array<int>| Product  
-> uidSuffix| array<int>| Affected UID tail number  
-> [maintainType](/docs/v5/enum#maintaintype)| string| Maintenance type  
-> [env](/docs/v5/enum#env)| string| Environment  
+uid| string| Sub user Id  
+username| string| Username of the new sub user. 
+
+  * 6-16 characters, must include both numbers and letters.
+  * Cannot be the same as the existing or deleted usernames.
+
+  
+memberType| integer| `1`: normal subaccount, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683)  
+status| integer| The status of the user account
+
+  * `1`: normal
+  * `2`: login banned
+  * `4`: frozen 
+
+  
+remark| string| The remark  
   
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/system/status HTTP/1.1  
+    POST /v5/user/create-sub-member HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676429344202  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "username": "xxxxx",  
+        "memberType": 1,  
+        "switch": 1,  
+        "note": "test"  
+    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
+    print(session.create_sub_uid(  
+        username="xxxxx",  
+        memberType=1,  
+        switch=1,  
+        note="test",  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .createSubMember({  
+        username: 'xxxxx',  
+        memberType: 1,  
+        switch: 1,  
+        note: 'test',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -71,195 +138,142 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t06",  
-                    "state": "completed",  
-                    "begin": "1751596902000",  
-                    "end": "1751597011000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t05",  
-                    "state": "completed",  
-                    "begin": "1751254200000",  
-                    "end": "1751254500000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        4  
-                    ],  
-                    "product": [  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t04",  
-                    "state": "completed",  
-                    "begin": "1751017967000",  
-                    "end": "1751018096000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2  
-                    ],  
-                    "product": [  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t03",  
-                    "state": "completed",  
-                    "begin": "1751017532000",  
-                    "end": "1751017658000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
-                    "title": "t02",  
-                    "state": "completed",  
-                    "begin": "1751013817000",  
-                    "end": "1751013890000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "product": [  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
-                    "title": "t01",  
-                    "state": "completed",  
-                    "begin": "1751012688000",  
-                    "end": "1751012760000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2,  
-                        3,  
-                        4  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 2  
-                }  
-            ]  
+            "uid": "53888000",  
+            "username": "xxxxx",  
+            "memberType": 1,  
+            "status": 1,  
+            "remark": "test"  
         },  
         "retExtInfo": {},  
-        "time": 1751858399649  
+        "time": 1676429344734  
     }
 
 ---
 
-# 取得系統狀態
+# 新建子帳戶
 
-大型平台維護或服務故障時取得系統狀態
+創建新的子帳戶。需使用**母** 帳戶的API key。
 
-信息
+提示
 
-請注意，目前有些情況下, 服務發佈導致短暫停頓（持續時間少於 10 秒）或 WebSocket 中斷（使用者可立即重連），此類情況不會在此通知。
+在調用接口時，使用的API key至少需要擁有以下其中一種權限
+
+  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+
+
 
 ### HTTP 請求
 
-GET`/v5/system/status`
+POST`/v5/user/create-sub-member`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-id| false| string| Id, 唯一標識  
-[state](/docs/zh-TW/v5/enum#state)| false| string| 系統的狀態  
+username| **true**|  string| 給新的子帳戶創建一個用戶名。
+
+  * 6-16位字符，須同時含有數字和字母。
+  * 不能與已存在或已刪除的帳戶用戶名重複。
+
   
-### 響應參數
+password| false| string| 給新的子帳戶設置一個密碼。
+
+  * 8-30位字符，須同時含有數字和大小寫字母。
+
+  
+memberType| **true**|  integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+switch| false| integer| 
+
+  * `0`: 關閉快捷登陸 (默認關閉)
+  * `1`: 打開快捷登陸.
+
+  
+isUta| false| boolean| **廢棄** , 總是創建UTA子帳戶  
+note| false| string| 設置備註  
+  
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> id| string| Id, 唯一標識  
-> title| string| 系統維​​護說明的標題  
-> [state](/docs/zh-TW/v5/enum#state)| string| 系統的狀態  
-> begin| string| 系統維​​護的開始時間，Unix時間戳記的毫秒數格式  
-> end| string| 交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間  
-> href| string| 系統維​​護詳情的超級連結,若無回傳值，預設值為空  
-> [serviceTypes](/docs/zh-TW/v5/enum#servicetypes)| array<int>| 服務類型  
-> [product](/docs/zh-TW/v5/enum#product)| array<int>| 產品  
-> uidSuffix| array<int>| 維護期間受影響的UID尾號  
-> [maintainType](/docs/zh-TW/v5/enum#maintaintype)| string| 維護類型  
-> [env](/docs/zh-TW/v5/enum#env)| string| 環境  
+uid| string| 子帳戶userId  
+username| string| 給新的子帳戶創建一個用戶名 
+
+  * 6-16位字符，須同時含有數字和字母。
+  * 不能與已存在或已刪除的帳戶用戶名重複。
+
+  
+memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+status| integer| 帳戶狀態
+
+  * `1`: 正常
+  * `2`: 登陸封禁
+  * `4`: 凍結 
+
+  
+remark| string| 設置的備註  
   
 ### 請求示例
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/system/status HTTP/1.1  
+    POST /v5/user/create-sub-member HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676429344202  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "username": "xxxxx",  
+        "memberType": 1,  
+        "switch": 1,  
+        "note": "test"  
+    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
+    print(session.create_sub_uid(  
+        username="xxxxx",  
+        memberType=1,  
+        switch=1,  
+        note="test",  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .createSubMember({  
+        username: 'xxxxx',  
+        memberType: 1,  
+        switch: 1,  
+        note: 'test',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -269,132 +283,12 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t06",  
-                    "state": "completed",  
-                    "begin": "1751596902000",  
-                    "end": "1751597011000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t05",  
-                    "state": "completed",  
-                    "begin": "1751254200000",  
-                    "end": "1751254500000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        4  
-                    ],  
-                    "product": [  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t04",  
-                    "state": "completed",  
-                    "begin": "1751017967000",  
-                    "end": "1751018096000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        2  
-                    ],  
-                    "product": [  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 1,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
-                    "title": "t03",  
-                    "state": "completed",  
-                    "begin": "1751017532000",  
-                    "end": "1751017658000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4  
-                    ],  
-                    "product": [  
-                        1,  
-                        2  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
-                    "title": "t02",  
-                    "state": "completed",  
-                    "begin": "1751013817000",  
-                    "end": "1751013890000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        5,  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "product": [  
-                        4,  
-                        3,  
-                        2,  
-                        1  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 2,  
-                    "env": 1  
-                },  
-                {  
-                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
-                    "title": "t01",  
-                    "state": "completed",  
-                    "begin": "1751012688000",  
-                    "end": "1751012760000",  
-                    "href": "",  
-                    "serviceTypes": [  
-                        1,  
-                        2,  
-                        3,  
-                        4,  
-                        5  
-                    ],  
-                    "product": [  
-                        1,  
-                        2,  
-                        3,  
-                        4  
-                    ],  
-                    "uidSuffix": [],  
-                    "maintainType": 3,  
-                    "env": 2  
-                }  
-            ]  
+            "uid": "53888000",  
+            "username": "xxxxx",  
+            "memberType": 1,  
+            "status": 1,  
+            "remark": "test"  
         },  
         "retExtInfo": {},  
-        "time": 1751858399649  
+        "time": 1676429344734  
     }

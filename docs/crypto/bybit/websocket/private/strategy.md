@@ -2,334 +2,283 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/strategy
 api_type: WebSocket
-updated_at: 2026-07-01 19:33:16.658983
+updated_at: 2026-07-02 19:22:34.682838
 ---
 
-# Wallet
+# Full Orderbook
 
-Subscribe to the wallet stream to see changes to your wallet in **real-time**.
+Subscribe to the full orderbook stream. Delivers **delta-only** updates for deep, full-depth market data.
+
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
 
 info
 
-  * There is no snapshot event given at the time when the subscription is successful
-  * The unrealised PnL change does not trigger an event
-  * Under the new logic of UTA manual borrow, `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
-Old `walletBalance` = New `walletBalance` \- `spotBorrow`
+  * [Retail Price Improvement (RPI)](https://www.bybit.com/en/help-center/article/Retail-Price-Improvement-RPI-Order) orders will not be included in the messages.
+  * This stream pushes **delta updates only** — there is no initial snapshot message. You must initialize your local order book via the [REST full orderbook snapshot](/docs/v5/market/full-ob) before applying deltas.
 
 
 
-**Topic:** `wallet`
+## Release Schedule
 
+Product| Testnet| Mainnet  
+---|---|---  
+Spot| July 6, 2026| July 16, 2026  
+Futures (linear & inverse)| Est.July 13, 2026| not determined  
+  
+### Push frequency
+
+**Linear, inverse & spot:**  
+Full depth data, push frequency: **200ms**  
+
+
+**Topic:**  
+`orderbook.full.{symbol}` e.g., `orderbook.full.BTCUSDT`
+
+Reset scenarios (`u=1`)
+
+Scenario| WS payload| REST snapshot| Client action  
+---|---|---|---  
+Service restart| `u=1`| `u` may also reset to `1`| Overwrite local book with snapshot  
+Symbol delist| `u=1`, `b=[]`, `a=[]`| Returns empty| Clear local book, mark as **unavailable**  
+Before pre-market auction| `u=1`, delta empty| May return empty| Keep book empty, treat as **NO_BOOK**  
+Auction → continuous trading| `u=1`, delta empty| Returns valid snapshot| Pull snapshot, then continue with deltas  
+Lot / tick configuration change| `u=1`, delta can be empty| Snapshot ready when applicable| Clear and re-sync local book  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Message ID  
 topic| string| Topic name  
-creationTime| number| Data created timestamp (ms)  
-data| array| Object  
-> accountType| string| Account type `UNIFIED`  
-> accountIMRate| string| Account IM rate 
+type| string| Data type. Always `delta`  
+ts| number| The timestamp (ms) that the system generates the data  
+data| object| Object  
+> s| string| Symbol name  
+> b| array| Bid delta entries. Sorted by price in descending order  
+>> b[0]| string| Bid price  
+>> b[1]| string| Bid size. `0` means this price level should be deleted  
+> a| array| Ask delta entries. Sorted by price in ascending order  
+>> a[0]| string| Ask price  
+>> a[1]| string| Ask size. `0` means this price level should be deleted  
+> u| integer| Update ID
 
-  * You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning
-  * All account wide fields are **not** applicable to isolated margin
-
-  
-> accountMMRate| string| Account MM rate  
-> totalEquity| string| Account total equity (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| Account margin balance (USD): totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| Account available balance (USD), 
-
-  * Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.
-  * Porfolio Margin: total Equity - Haircut - totalInitialMargin 
+  * Always incremental within a session
+  * When `u=1`, it is a re-initialization signal — overwrite your local order book with a fresh [REST snapshot](/docs/v5/market/full-ob)
 
   
-> totalPerpUPL| string| Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| Account initial margin (USD): ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| You can **ignore** this field, and refer to `accountIMRate`, which has the same calculation  
-> accountMMRateByMp| string| You can **ignore** this field, and refer to `accountMMRate`, which has the same calculation  
-> totalInitialMarginByMp| string| You can **ignore** this field, and refer to `totalInitialMargin`, which has the same calculation  
-> totalMaintenanceMarginByMp| string| You can **ignore** this field, and refer to `totalMaintenanceMargin`, which has the same calculation  
-> accountLTV| string| **Deprecated** field  
-> coin| array| Object  
->> coin| string| Coin name, such as BTC, ETH, USDT, USDC  
->> equity| string| Equity of coin. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| USD value of coin. If this coin cannot be collateral, then it is 0  
->> walletBalance| string| Wallet balance of coin  
->> locked| string| Locked balance due to the Spot open order  
->> spotHedgingQty| string| The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default  
->> borrowAmount| string| Borrow amount of coin = spot liabilities + derivatives liabilities  
->> accruedInterest| string| Accrued interest  
->> totalOrderIM| string| Pre-occupied margin for order. For portfolio margin mode, it returns ""  
->> totalPositionIM| string| Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns ""  
->> totalPositionMM| string| Sum of maintenance margin for all positions. For portfolio margin mode, it returns ""  
->> unrealisedPnl| string| Unrealised P&L  
->> cumRealisedPnl| string| Cumulative Realised P&L  
->> bonus| string| Bonus  
->> collateralSwitch| boolean| Whether it can be used as a margin collateral currency (platform) 
-
-  * When marginCollateral=false, then collateralSwitch is meaningless
-
-  
->> marginCollateral| boolean| Whether the collateral is turned on by user (user) 
-
-  * When marginCollateral=true, then collateralSwitch is meaningful
-
-  
->> colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
->> spotBorrow| string| Borrow amount by spot margin trade and manual borrow amount(does not include borrow amount by spot margin active order). `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **Deprecated** since there is no Spot wallet any more  
->> availableToBorrow| string| **Deprecated** field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](/docs/v5/account/collateral-info)  
->> availableToWithdraw| string| **Deprecated** for `accountType=UNIFIED` from 9 Jan, 2025 
-
-  * Transferable balance: you can use [Get Transferable Amount (Unified)](/docs/v5/account/unified-trans-amnt) or [Get All Coins Balance](/docs/v5/asset/balance/all-balance) instead
-  * Derivatives available balance:   
-**isolated margin** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**cross & portfolio margin**: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price
-  * Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](/docs/v5/order/spot-borrow-quota)
-
-  
+> seq| integer| Cross sequence. Use this to compare across different orderbook levels — a smaller `seq` means the data was generated earlier  
+cts| number| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/websocket/public/trade)  
   
 ### Subscribe Example
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "wallet"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.wallet_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
+      
     
 
-### Stream Example
+### Response Example
     
     
-    {  
-        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
-        "topic": "wallet",  
-        "creationTime": 1700034722104,  
-        "data": [  
-            {  
-                "accountIMRate": "0",  
-                "accountIMRateByMp": "0",  
-                "accountMMRate": "0",  
-                "accountMMRateByMp": "0",  
-                "totalEquity": "10262.91335023",  
-                "totalWalletBalance": "9684.46297164",  
-                "totalMarginBalance": "9684.46297164",  
-                "totalAvailableBalance": "9556.6056555",  
-                "totalPerpUPL": "0",  
-                "totalInitialMargin": "0",  
-                "totalInitialMarginByMp": "0",  
-                "totalMaintenanceMargin": "0",  
-                "totalMaintenanceMarginByMp": "0",  
-                "coin": [  
-                    {  
-                        "coin": "BTC",  
-                        "equity": "0.00102964",  
-                        "usdValue": "36.70759517",  
-                        "walletBalance": "0.00102964",  
-                        "availableToWithdraw": "0.00102964",  
-                        "availableToBorrow": "",  
-                        "borrowAmount": "0",  
-                        "accruedInterest": "0",  
-                        "totalOrderIM": "",  
-                        "totalPositionIM": "",  
-                        "totalPositionMM": "",  
-                        "unrealisedPnl": "0",  
-                        "cumRealisedPnl": "-0.00000973",  
-                        "bonus": "0",  
-                        "collateralSwitch": true,  
-                        "marginCollateral": true,  
-                        "locked": "0",  
-                        "spotHedgingQty": "0.01592413",  
-                        "spotBorrow": "0"  
-                    }  
-                ],  
-                "accountLTV": "0",  
-                "accountType": "UNIFIED"  
-            }  
-        ]  
-    }
+      
+    
+
+### Full Order Book Synchronization Procedure
+
+Use the REST endpoint to fetch an Order Book (OB) snapshot, then subscribe to OB delta updates via WebSocket to maintain a complete local order book. Both the OB snapshot and OB delta messages include two fields — `seq` and `u` — for data matching and sequencing.
+
+  * `seq`: The matching engine version number. It is monotonically increasing but not guaranteed to be consecutive — adjacent delta packets for the same symbol may have non-contiguous `seq` values.
+  * `u`: The update ID. It is consecutive — the `u` value of each delta packet increments by one from the previous (`u+1`). However, when the system restarts or the tick size is adjusted, `u` resets to `1` and delta numbering starts over.
+
+
+  1. Open a market data WebSocket connection and subscribe to the full-depth order book channel.
+  2. Buffer all deltas received from the stream, recording the `seq` and `u` values of the first delta.
+
+
+  * If a discontinuity in `u` is detected, clear the buffer and restart buffering.
+  * If `seq` is detected to have decreased, discard that delta packet.
+
+
+  3. Fetch the [full-depth order book snapshot](/docs/v5/market/full-ob) from the REST endpoint.
+  4. Compare the snapshot's `seq` and `u` against the buffered deltas:
+
+
+  * If the snapshot's `seq` is strictly less than the first buffered delta's `seq`, repeat step 3 until a sufficiently recent snapshot is obtained.
+  * In the buffered deltas, discard all deltas whose `seq` is less than the snapshot's `seq`.
+  * If the snapshot's `seq` equals the delta's `seq` but their `u` values differ, repeat step 3 until a sufficiently recent snapshot is obtained.
+
+
+  5. Once the snapshot's `seq` and `u` both match the delta's `seq` and `u`, initialize the local order book with the snapshot. Set the local order book version to the snapshot's `u` value.
+  6. Apply all remaining buffered deltas to the local order book as described below, then continue processing subsequent real-time deltas.
+
+
+
+#### Order Book Update Procedure
+
+For each incoming delta event:
+
+  1. Validate Event Continuity
+
+
+  * If the event's `u` is less than the local order book's `u`, ignore the event.
+  * If the event's `u` is greater than the local order book's `u` \+ 1, one or more events have been missed. In this case:
+    * Discard the local order book.
+    * Restart the synchronization process from the beginning.
+  * Under normal circumstances, the next event's u should equal the previous event's u + 1.
+  * If the event's `u` = 1, then restart the sync procedure
+
+
+  2. Apply Price Level Updates
+
+
+
+For every price level in bids (b) and asks (a):
+
+  * If the price level does not exist in the local order book, insert it with the specified quantity.
+  * If the quantity is zero, remove the price level from the local order book.
+  * Otherwise, update the quantity of the existing price level.
+
+
+
+info
+
+The REST snapshot endpoint returns a maximum of 10,000 price levels per side. As a result, price levels outside the initial snapshot range are unknown unless they subsequently appear in delta updates.
+
+Therefore, quantities for levels beyond the snapshot depth may not represent the complete state of the order book. For most trading and market analysis use cases, however, the available depth (typically more than 10,000 levels per side) is sufficient to provide an accurate view of market liquidity and trading conditions.
 
 ---
 
-# 錢包
+# 全深度訂單簿
 
-訂閱錢包數據推送
+訂閱全深度訂單簿推送。僅推送**增量（delta）** 數據，提供深度全量行情。
 
-**Topic:** `wallet`
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向合約**
 
 信息
 
-  * 在訂閱成功後不會立馬推送快照數據, 只有當餘額發生變化時, 才會觸發推送
-  * 浮動盈虧的變化不會觸發推送
+  * 零售價格優化（RPI）訂單不會包含在推送消息中。
+  * 此頻道**僅推送增量數據** ，不會推送初始全量快照。請先通過 [REST 全深度訂單簿接口](/docs/zh-TW/v5/market/full-ob) 初始化本地訂單簿，再應用增量更新。
 
 
 
+## 上線時間表
+
+產品| 測試網| 主網  
+---|---|---  
+現貨| 2026年7月6日| 2026年7月16日  
+期貨（線性 & 反向）| 預計2026年7月13日| 未定  
+  
+### 推送頻率
+
+**USDT合約、反向合約 & 現貨:**  
+全深度數據，推送頻率: **200ms**  
+
+
+**Topic:**  
+`orderbook.full.{symbol}` 例如, `orderbook.full.BTCUSDT`
+
+重置場景 (`u=1`)
+
+場景| WebSocket 推送| REST 快照| 客戶端處理  
+---|---|---|---  
+服務重啟| `u=1`| `u` 也可能重置為 `1`| 以 REST 快照覆蓋本地訂單簿  
+合約下架| `u=1`, `b=[]`, `a=[]`| 返回空數據| 清空本地訂單簿，標記為**不可用**  
+盤前競價期間（無訂單簿）| `u=1`，delta 為空| 可能返回空| 保持本地訂單簿為空，標記為 **NO_BOOK**  
+競價 → 連續競價| `u=1`，delta 為空| 返回有效快照| 拉取 REST 快照後繼續應用增量  
+精度等配置變更| `u=1`，delta 可為空| 就緒後返回快照| 清空並重新同步本地訂單簿  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 消息id  
 topic| string| Topic名  
-creationTime| number| 消息數據創建時間  
-data| array| Object  
-> accountType| string| 帳戶類型 `UNIFIED`  
-> accountIMRate| string| 帳戶初始保證金率 
+type| string| 數據類型. 固定為 `delta`  
+ts| number| 行情服務生成數據的時間戳（毫秒）  
+data| object| Object  
+> s| string| 合約名稱  
+> b| array| Bid 增量, 買方. 按照價格從大到小  
+>> b[0]| string| 買方報價  
+>> b[1]| string| 買方數量. `0` 表示該價位應被刪除  
+> a| array| Ask 增量, 賣方. 按照價格從小到大  
+>> a[0]| string| 賣方報價  
+>> a[1]| string| 賣方數量. `0` 表示該價位應被刪除  
+> u| integer| 更新id 
 
-  * 您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式
-  * 下面所有帳戶維度的字段都不適用於逐倉模式
-
-  
-> accountMMRate| string| 帳戶維持保證金率  
-> totalEquity| string| 總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| 賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| 賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| 賬戶維度換算成usd的可用餘額: 
-
-  * 全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.
-  * 組合保證金: total Equity - Haircut - totalInitialMargin 
+  * 在同一會話內始終遞增
+  * 當 `u=1` 時，為重置信號——請立即拉取 [REST 快照](/docs/zh-TW/v5/market/full-ob) 並覆蓋本地訂單簿
 
   
-> totalPerpUPL| string| 賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| 賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| 賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| 可**忽略** , 可以使用`accountIMRate`, 算法和值保持一致  
-> accountMMRateByMp| string| 可**忽略** , 可以使用`accountMMRate`, 算法和值保持一致  
-> totalInitialMarginByMp| string| 可**忽略** , 可以使用`totalInitialMargin`, 算法和值保持一致  
-> totalMaintenanceMarginByMp| string| 可**忽略** , 可以使用`totalMaintenanceMargin`, 算法和值保持一致  
-> accountLTV| string| **廢棄** 字段  
-> coin| array| Object. 幣種列表  
->> coin| string| 幣種名稱，例如 BTC, ETH, USDT, USDC  
->> equity| string| 當前幣種的資產淨值: Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| 當前幣種折算成 usd 的價值, 如果該幣種不能作為保證金的抵押品, 則該數值為0  
->> walletBalance| string| 當前幣種的錢包餘額 = 現貨負債 + 合約浮虧導致借幣產生的借幣負債  
->> locked| string| 現貨掛單凍結金額  
->> spotHedgingQty| string| 用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0  
->> borrowAmount| string| 當前幣種的已用借貸額度  
->> accruedInterest| string| 當前幣種的預計要在下一個利息週期收取的利息金額  
->> totalOrderIM| string| 以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串  
->> totalPositionIM| string| 以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費. 組合保證金模式下，該字段返回空字符串  
->> totalPositionMM| string| 以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串  
->> unrealisedPnl| string| 以當前幣種結算的所有倉位的未結盈虧之和  
->> cumRealisedPnl| string| 以當前幣種結算的所有倉位的累計已結盈虧之和  
->> bonus| string| 體驗金  
->> marginCollateral| boolean| 是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 
-
-  * 當marginCollateral=false時, 則collateralSwitch無意義
-
-  
->> collateralSwitch| boolean| 用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 
-
-  * 僅當marginCollateral=true時, 才能主動選擇開關抵押
-
-  
->> colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
->> spotBorrow| string| 現貨槓桿交易借入金額以及手工借貸金額（不包含現貨槓桿活躍訂單借入金額）。現貨負債對應的`spotBorrow`, 請詳見[公告](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **廢棄** , 不再有現貨錢包  
->> availableToWithdraw| string| 該字段從2025年1月9日起已經**廢棄**
-
-  * 可劃轉餘額: 可以使用[查詢可劃轉餘額(统一账户)](/docs/zh-TW/v5/websocket/v5/account/unified-trans-amnt) 或 [查詢賬戶所有幣種余額](/docs/zh-TW/v5/websocket/v5/asset/balance/all-balance)
-  * 合約可用餘額:   
-**逐倉** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**全倉/組合保證金** : 使用字段`totalAvailableBalance`(USD), 但需要通過index price来轉換成對應幣種的可用餘額
-  * 現貨(槓桿)可用餘額: 可以使用[查詢用戶可用額度 (現貨)](/docs/zh-TW/v5/websocket/v5/order/spot-borrow-quota)
-
-  
->> availableToBorrow| string| **廢棄** , 由於母子共享借貸限額, 總是返回`""`. 請通過[查詢抵押品信息](/docs/zh-TW/v5/websocket/v5/account/collateral-info)接口查詢`availableToBorrow`  
+> seq| integer| 撮合版本號. 可用於關聯不同檔位的 orderbook，值越小說明數據生成越早  
+cts| number| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](/docs/zh-TW/v5/websocket/public/trade)頻道中的`T`進行關聯  
   
 ### 訂閱示例
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "wallet"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.wallet_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
+      
     
 
-### 推送示例
+### 響應示例
     
     
-    {  
-        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
-        "topic": "wallet",  
-        "creationTime": 1700034722104,  
-        "data": [  
-            {  
-                "accountIMRate": "0",  
-                "accountIMRateByMp": "0",  
-                "accountMMRate": "0",  
-                "accountMMRateByMp": "0",  
-                "totalEquity": "10262.91335023",  
-                "totalWalletBalance": "9684.46297164",  
-                "totalMarginBalance": "9684.46297164",  
-                "totalAvailableBalance": "9556.6056555",  
-                "totalPerpUPL": "0",  
-                "totalInitialMargin": "0",  
-                "totalInitialMarginByMp": "0",  
-                "totalMaintenanceMargin": "0",  
-                "totalMaintenanceMarginByMp": "0",  
-                "coin": [  
-                    {  
-                        "coin": "BTC",  
-                        "equity": "0.00102964",  
-                        "usdValue": "36.70759517",  
-                        "walletBalance": "0.00102964",  
-                        "availableToWithdraw": "0.00102964",  
-                        "availableToBorrow": "",  
-                        "borrowAmount": "0",  
-                        "accruedInterest": "0",  
-                        "totalOrderIM": "",  
-                        "totalPositionIM": "",  
-                        "totalPositionMM": "",  
-                        "unrealisedPnl": "0",  
-                        "cumRealisedPnl": "-0.00000973",  
-                        "bonus": "0",  
-                        "collateralSwitch": true,  
-                        "marginCollateral": true,  
-                        "locked": "0",  
-                        "spotHedgingQty": "0.01592413"  
-                    }  
-                ],  
-                "accountLTV": "0",  
-                "accountType": "UNIFIED"  
-            }  
-        ]  
-    }
+      
+    
+
+### 全深度訂單簿同步流程
+
+提供了 REST 請求查詢 Order Book（OB）快照，並透過 WebSocket 訂閱 Order Book 增量資料，以維護完整的 Order Book。於 OB 快照與 OB 增量資料中，均提供 seq 與 u 兩個欄位，用於資料匹配與定位。
+
+  * seq：撮合版本號，具備單調遞增特性，但不保證連續性。也就是說，同一交易對的相鄰增量資料包，其 seq 值可能不連續。
+  * u：更新 ID，具備連續性，相鄰增量資料包的 u 值會依序遞增（u+1）。但當系統重啟或調整 Tick Size 時，u 會重置為 1，並重新對增量資料進行編號。
+
+
+  1. 開啟行情 WebSocket 連接並訂閱全深度訂單簿頻道。
+  2. 緩存從串流中接收到的所有增量，記錄第一個增量的 `seq` 与 `u` 值。
+
+
+  * 若偵測到 `u` 不連續，清空緩存區並重新開始緩存。
+  * 若偵測到 `seq` 变小，丢弃该增量包。
+
+
+  3. 從Rest接口獲取[全深度訂單簿快照](/docs/zh-TW/v5/market/full-ob)
+  4. 將快照的 `seq`，`u` 與緩存增量進行比對：
+
+
+  * 若快照的 `seq` 嚴格小於第一個緩存增量的 seq，重複步驟 3，直到獲得足夠新的快照。
+  * 在緩存增量中，丟棄所有 `seq` 小於快照 `seq` 的增量。
+  * 若快照的seq与增量的seq相等，但u不相等，重複步驟 3，直到獲得足夠新的快照。
+
+
+  5. 直到获取快照的seq，u与增量的seq，u都相同时，使用快照初始化本地訂單簿，本地訂單簿版本應設定為快照的u值。
+  6. 按照以下的說明將所有剩餘的緩存增量應用至本地訂單簿，然後繼續處理後續到來的即時增量。
+
+
+
+#### 訂單簿更新流程
+
+針對每個收到的增量（delta）事件：
+
+  1. 驗證增量連續性
+
+
+  * 若增量的 `u` 小於本地訂單簿的 `u`，忽略該增量。
+  * 若增量的 `u` 大於本地訂單簿的 `u` \+ 1，表示遺漏了一個或多個增量，此時：
+    * 丟棄本地訂單簿。
+    * 從頭重新啟動同步流程。
+  * 正常情況下，下一個增量的 u 應等於上一個增量的 u + 1。
+  * 若增量的 `u` 變成1，則重新啟動同步流程。
+
+
+  2. 應用價位更新
+
+
+
+對買方（b）和賣方（a）中的每個價位：
+
+  * 若該價位不存在於本地訂單簿中，以指定數量插入該價位。
+  * 若數量為零，從本地訂單簿中移除該價位。
+  * 否則，更新現有價位的數量。
+
+
+
+信息
+
+REST 快照接口每側最多返回 10,000 個價位。因此，超出初始快照範圍的價位在增量更新中出現之前，其狀態是未知的。
+
+這意味著超出快照深度的價位數量，可能無法完整反映訂單簿的實際狀態。不過，對於大多數交易和市場分析場景而言，可用深度（每側通常超過 10,000 個價位）已足以提供準確的市場流動性與交易狀況視圖。

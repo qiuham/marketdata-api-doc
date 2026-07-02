@@ -2,51 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/order-price-limit
 api_type: Market Data
-updated_at: 2026-07-01 19:29:55.034291
+updated_at: 2026-07-02 19:19:12.595734
 ---
 
-# Get Risk Limit
+# Get Premium Index Price Kline
 
-Query for the [risk limit](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-Futures) margin parameters. This information is also displayed on the website [here](https://www.bybit.com/en/announcement-info/margin-parameters/).
+Query for historical [premium index](https://www.bybit.com/data/basic/linear/index-price/premium-index?symbol=BTCUSDT) klines. Charts are returned in groups based on the requested interval.
 
-> **Covers: USDT contract / USDC contract / Inverse contract**
-
-info
-
-  * category=`linear` returns a data set of 15 symbols in each response. Please use the `cursor` param to get the next data set.
-  * `symbol` support `Trading` status and `PreLaunch` [Pre-Market contracts](https://www.bybit.com/en/help-center/article/Introduction-to-Pre-Market-Perpetual) status trading pairs.
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+> **Covers: USDT and USDC perpetual**
 
 ### HTTP Request
 
-GET`/v5/market/risk-limit`
+GET`/v5/market/premium-index-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the data set  
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`W`,`M`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `200`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> id| integer| Risk ID  
-> symbol| string| Symbol name  
-> riskLimitValue| string| Position limit  
-> maintenanceMargin| number| Maintain margin rate  
-> initialMargin| number| Initial margin rate  
-> isLowestRisk| integer| `1`: true, `0`: false  
-> maxLeverage| string| Allowed max leverage  
-> mmDeduction| string| The maintenance margin deduction value when risk limit tier changed  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/market/risk-limit)
+[category](/docs/v5/enum#category)| string| Product type  
+symbol| string| Symbol name  
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `start`
+
+  
+> list[0]| string| Start time of the candle (ms)  
+> list[1]| string| Open price  
+> list[2]| string| Highest price  
+> list[3]| string| Lowest price  
+> list[4]| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/premium-index-kline)
 
 * * *
 
@@ -54,23 +51,26 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/premium-index-price-kline?category=linear&symbol=BTCUSDT&interval=D&start=1652112000000&end=1652544000000 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_risk_limit(  
-        category="inverse",  
-        symbol="BTCUSD",  
+    session = HTTP()  
+    print(session.get_premium_index_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        inverval="D",  
+        start=1652112000000,  
+        end=1652544000000,  
     ))  
     
     
@@ -81,17 +81,18 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketRiskLimits(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetPremiumIndexPriceKline(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var riskMimitRequest = MarketDataRequest.builder().category(CategoryType.INVERSE).symbol("ADAUSD").build();  
-    client.getRiskLimit(riskMimitRequest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getPremiumIndexPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -102,9 +103,12 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-        .getRiskLimit({  
-            category: 'inverse',  
-            symbol: 'BTCUSD',  
+        .getPremiumIndexPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            interval: 'D',  
+            start: 1652112000000,  
+            end: 1652544000000,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -121,73 +125,74 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "inverse",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "id": 1,  
-                    "symbol": "BTCUSD",  
-                    "riskLimitValue": "150",  
-                    "maintenanceMargin": "0.5",  
-                    "initialMargin": "1",  
-                    "isLowestRisk": 1,  
-                    "maxLeverage": "100.00",  
-                    "mmDeduction": ""  
-                },  
-            ....  
+                [  
+                    "1652486400000",  
+                    "-0.000587",  
+                    "-0.000344",  
+                    "-0.000480",  
+                    "-0.000344"  
+                ],  
+                [  
+                    "1652400000000",  
+                    "-0.000989",  
+                    "-0.000561",  
+                    "-0.000587",  
+                    "-0.000587"  
+                ]  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672054488010  
+        "time": 1672765216291  
     }
 
 ---
 
-# 查詢合約風險限額
+# 查詢溢價指數價格K線數據
 
-查詢期貨合約的風險限額表
+查詢溢價指數價格K線數據
 
-> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
-
-提示
-
-什麼是風險限額？[風險限額(USDT合約)](https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164)
-
-信息
-
-  * 當category=`linear`, 每次請求返回15個symbol的風險限額數據, 請通過cursor來實現翻頁查詢下一組15個symbol的數據。
-  * `symbol`支持`Trading`線上可交易狀態，及`PreLaunch`[盤前交易](https://www.bybit.com/en/help-center/article/Introduction-to-Pre-Market-Perpetual)狀態的交易對。
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+> **覆蓋範圍: USDT和USDC永續**
 
 ### HTTP請求
 
-GET`/v5/market/risk-limit`
+GET`/v5/market/premium-index-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
-symbol| false| string| 合約名稱  
-cursor| false| string| 游標，用於翻頁  
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`
+
+  * 當`category`不指定時, 默認是`linear`
+
+  
+symbol| **true**|  string| 合約名稱  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `1000`]. 默認: `200`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> id| integer| 風險限額id  
-> symbol| string| 合約名稱  
-> riskLimitValue| string| 風險限制額度  
-> maintenanceMargin| number| 維持保證金率  
-> initialMargin| number| 初始保證金率  
-> isLowestRisk| integer| 是否是最低風險限額. `1`: true, `0`: false  
-> maxLeverage| string| 該風險限額允許的最大槓桿  
-> mmDeduction| string| 維持保證金扣減額  
-nextPageCursor| string| 下一頁游標, 配合`cursor`使用  
-[](/docs/zh-TW/api-explorer/v5/market/risk-limit)
+[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
+symbol| string| 合約名稱  
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
+  
+> list[0]| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]| string| 開始價格  
+> list[2]| string| 最高價格  
+> list[3]| string| 最低價格  
+> list[4]| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/premium-index-kline)
 
 * * *
 
@@ -195,23 +200,26 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/premium-index-price-kline?category=linear&symbol=BTCUSDT&interval=D&start=1652112000000&end=1652544000000 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_risk_limit(  
-        category="inverse",  
-        symbol="BTCUSD",  
+    session = HTTP()  
+    print(session.get_premium_index_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        inverval="D",  
+        start=1652112000000,  
+        end=1652544000000,  
     ))  
     
     
@@ -222,17 +230,18 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketRiskLimits(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetPremiumIndexPriceKline(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var riskMimitRequest = MarketDataRequest.builder().category(CategoryType.INVERSE).symbol("ADAUSD").build();  
-    client.getRiskLimit(riskMimitRequest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getPremiumIndexPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -243,9 +252,12 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
     });  
       
     client  
-        .getRiskLimit({  
-            category: 'inverse',  
-            symbol: 'BTCUSD',  
+        .getPremiumIndexPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            interval: 'D',  
+            start: 1652112000000,  
+            end: 1652544000000,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -262,21 +274,25 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "inverse",  
+            "symbol": "BTCPERP",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "id": 1,  
-                    "symbol": "BTCUSD",  
-                    "riskLimitValue": "150",  
-                    "maintenanceMargin": "0.5",  
-                    "initialMargin": "1",  
-                    "isLowestRisk": 1,  
-                    "maxLeverage": "100.00",  
-                    "mmDeduction": ""  
-                },  
-            ....  
-            ]  
+                [  
+                    "1672026540000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000"  
+                ],  
+                [  
+                    "1672026480000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000"  
+                ]  
+                ]  
         },  
         "retExtInfo": {},  
-        "time": 1672054488010  
+        "time": 1672026605042  
     }

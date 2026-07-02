@@ -2,121 +2,229 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/product-info
 api_type: REST
-updated_at: 2026-07-01 19:28:23.413090
+updated_at: 2026-07-02 19:17:43.924887
 ---
 
-# Get Product Quote
+# Dual Asset Offers
 
-info
+### WebSocket public URL
 
-Does not need authentication. **Up to 50 requests** per second per IP.
+  * **Mainnet:**  
+Earn: `wss://stream.bybit.com/v5/public/fp`  
 
-### HTTP Request
 
-GET`/v5/earn/advance/product-extra-info`
+  * **Testnet:**  
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
 
-### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-category| **true**|  string| Product category. `SmartLeverage`  
-productId| **true**|  string| Product ID  
-  
+
+
+
+### Desc
+
+  * Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
+
+  * Push scope: **Full snapshot of all online product quotes**
+
+  * Recommended usage pattern:
+
+    1. Call [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) to get initial quotes
+    2. Subscribe to the WebSocket topic for real-time updates
+    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
+    4. If WebSocket disconnects, fallback to the REST endpoint 
+
+
+
+### Topic: `earn.dualassets.offers`
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| `SmartLeverage`  
-productId| string| Product ID  
-breakevenPrice| string| Breakeven price — the best available institutional quote. Empty if no active quote  
-currentPrice| string| Current market price of the underlying asset. Used as reference for `initialPrice`  
-expireAt| string| Quote expiry time, Unix timestamp in ms. Empty if no active quote  
-maxInvestmentAmount| string| Maximum single order amount at current quote. Empty if no active quote  
+topic| string| Topic name  
+data| array| Object  
+> p| int64| Product ID  
+> c| string| Current price  
+> b| array of objects| Buy low price list  
+>> s| string| Selected price  
+>> a| int64| Annualized yield, e8 precision  
+>> m| string| Max investment amount at this price point  
+>> x| string| Quote expiration time,Unix timestamp in ms  
+> s| array of objects| Sell high price list  
+>> s| string| Selected price  
+>> a| int64| Annualized yield, e8 precision  
+>> m| string| Max investment amount at this price point  
+>> x| string| Quote expiration time,Unix timestamp in ms  
   
-note
-
-`breakevenPrice`, `expireAt`, and `maxInvestmentAmount` may be empty when no institutional quote is available. `currentPrice` is sourced directly from the market feed and is always present.
-
-### Request Example
-    
-    
-    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-
-### Response Example
+### Subscribe Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "productId": "12999",  
-            "breakevenPrice": "68650.62",  
-            "expireAt": "1775036984839",  
-            "maxInvestmentAmount": "1000",  
-            "currentPrice": "68403.67",  
-            "category": "SmartLeverage"  
+        "op": "subscribe",  
+        "args": [  
+            "earn.dualassets.offers"  
+        ]  
+    }  
+    
+
+### Stream Example
+    
+    
+    {  
+      "topic": "earn.dualassets.offers",  
+      "data": [  
+        {  
+          "p": "36352",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775036429311  
+        {  
+          "p": "36382",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
+        }  
+      ]  
     }
 
 ---
 
-# 查詢產品報價
+# 雙幣投資報價
 
-信息
+### WebSocket URL
 
-無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
+  * **主網 (Mainnet):**  
+理財 (Earn): `wss://stream.bybit.com/v5/public/fp`  
 
-### HTTP 請求
 
-GET`/v5/earn/advance/product-extra-info`
+  * **測試網 (Testnet):**  
+理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`  
 
-### 請求參數
 
-參數| 必填| 類型| 說明  
----|---|---|---  
-category| **true**|  string| 產品類別，`SmartLeverage`  
-productId| **true**|  string| 產品 ID  
-  
-### 響應參數
+
+
+
+### 描述 (Desc)
+
+  * 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
+
+  * 推播範圍：**所有上線產品報價的完整快照**
+
+  * 建議使用方式：
+
+    1. 使用 [獲取產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote) 以獲取初始報價
+    2. 訂閱 WebSocket 主題以獲取即時更新
+    3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
+    4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
+
+
+
+### 主題 (Topic): `earn.dualassets.offers`
+
+### 回應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| `SmartLeverage`  
-productId| string| 產品 ID  
-breakevenPrice| string| 損益平衡價格——最優機構報價。若無有效報價則為空  
-currentPrice| string| 標的資產的當前市場價格。用作 `initialPrice` 的參考  
-expireAt| string| 報價到期時間，毫秒級 Unix 時間戳。若無有效報價則為空  
-maxInvestmentAmount| string| 當前報價下的最大單筆訂單金額。若無有效報價則為空  
+topic| string| 主題名稱  
+data| array| 列表  
+> p| int64| 產品 ID  
+> c| string| 當前價格  
+> b| array of objects| 低買價格列表  
+>> s| string| 所選價格  
+>> a| int64| 年化收益率，e8 精度  
+>> m| string| 該價位的最大投資金額  
+>> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
+> s| array of objects| 高賣價格列表  
+>> s| string| 所選價格  
+>> a| int64| 年化收益率，e8 精度  
+>> m| string| 該價位的最大投資金額  
+>> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
   
-備註
-
-當無機構報價時，`breakevenPrice`、`expireAt` 和 `maxInvestmentAmount` 可能為空。`currentPrice` 直接來自市場行情，始終存在。
-
-### 請求示例
-    
-    
-    GET /v5/earn/advance/product-extra-info?category=SmartLeverage&productId=12999 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-
-### 響應示例
+### 訂閱範例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "productId": "12999",  
-            "breakevenPrice": "68650.62",  
-            "expireAt": "1775036984839",  
-            "maxInvestmentAmount": "1000",  
-            "currentPrice": "68403.67",  
-            "category": "SmartLeverage"  
+        "op": "subscribe",  
+        "args": [  
+            "earn.dualassets.offers"  
+        ]  
+    }  
+    
+
+### 推播範例
+    
+    
+    {  
+      "topic": "earn.dualassets.offers",  
+      "data": [  
+        {  
+          "p": "36352",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "979209000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775036429311  
+        {  
+          "p": "36382",  
+          "c": "74168.46",  
+          "b": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "2000",  
+              "x": "1773825237781"  
+            }  
+          ],  
+          "s": [  
+            {  
+              "s": "74142",  
+              "a": "890190000",  
+              "m": "0.02697492",  
+              "x": "1773825237781"  
+            }  
+          ]  
+        }  
+      ]  
     }

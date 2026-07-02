@@ -2,105 +2,69 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/create-order
 api_type: REST
-updated_at: 2026-07-01 19:28:18.322520
+updated_at: 2026-07-02 19:17:38.938235
 ---
 
-# Place Order
+# Get Position Info
 
 info
 
-  * Need authentication. **Up to 5 requests** per second.
-  * Requires Earn permission on the API key.
-  * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](/docs/v5/finance/advanced-earn/smart-lvg/order) to track the order status (Pending → Success).
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-  * **Stake** : must pass `smartLeverageStakeExtra` with `initialPrice` and `breakevenPrice`. Stake slippage protection is enforced: order fails if actual price deviates more than ±5% from `initialPrice` (error code 180030).
-  * **Redeem** : must call [Get Redeem Estimated Amount](/docs/v5/finance/advanced-earn/smart-lvg/est-redeem) first to obtain `estRedeemAmount`. The result is cached for 10 minutes and validated server-side when placing the redeem order.
+  * Need authentication. **Up to 10 requests** per second.
+  * Query your active positions. Requires Earn permission on the API key.
 
 
 
 ### HTTP Request
 
-POST`/v5/earn/advance/place-order`
+GET`/v5/earn/advance/position`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 category| **true**|  string| Product type. `SmartLeverage`  
-productId| **true**|  string| Product ID  
-orderType| **true**|  string| Order type: `Stake` (subscribe), `Redeem` (early redemption)  
-amount| false| string| Order amount. **Required** for `Stake`  
-accountType| **true**|  string| Account type: `FUND`, `UNIFIED`  
-coin| **true**|  string| Coin name. Not required for `Redeem` orders  
-orderLinkId| **true**|  string| User customised order ID (max 36 characters)  
-smartLeverageStakeExtra| false| Object| Required when `orderType=Stake`  
-> initialPrice| **true**|  string| Underlying asset price at order time, used for slippage protection (±5%). Recommend using `currentPrice` from [Get Product Quote](/docs/v5/finance/advanced-earn/smart-lvg/product-quote)  
-> breakevenPrice| **true**|  string| Breakeven price selected by user. Obtain from [Get Product Quote](/docs/v5/finance/advanced-earn/smart-lvg/product-quote)  
-smartLeverageRedeemExtra| false| Object| Required when `orderType=Redeem`  
-> positionId| **true**|  string| Position ID to redeem  
-> estRedeemAmount| **true**|  string| Estimated redeem amount, obtained from the Get Redeem Estimated Amount API. Cached for 10 minutes server-side  
-> isSlippageProtected| false| bool| Whether to enable slippage protection for redemption. Default: `false`. If enabled, the redeem order fails when the actual redeem amount deviates significantly from `estRedeemAmount`  
+productId| false| string| Product ID  
+coin| false| string| Underlying asset to filter by, e.g. `BTC`, `ETH`  
+limit| false| int| Number of items per page. Default: 20, Max: 20  
+cursor| false| string| Pagination cursor. Use nextPageCursor from previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User customised order ID  
+category| string| Product category  
+nextPageCursor| string| Cursor for the next page. Empty string if no more data  
+list| array| Object  
+> positionId| string| Position ID  
+> productId| string| Product ID  
+> category| string| Product category  
+> investCoin| string| Investment coin  
+> amount| string| Position amount, unit is investCoin  
+> duration| string| Product term, e.g. `1d`, `2d`, `3d`  
+> settlementTime| string| Settlement time, unix timestamp in ms  
+> accountType| string| Staking account: `FUND`, `UNIFIED`  
+> orderId| string| Staking order ID  
+> underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
+> direction| string| `Long`, `Short`  
+> leverage| string| Fixed leverage multiplier, e.g. `3`, `5`  
+> breakevenPrice| string| Breakeven price (precision-adjusted)  
+> initialPrice| string| Underlying asset price at position creation (precision-adjusted)  
+> status| string| `Active`: Staking, `Redeeming`: Redeeming, `Settled`: Settled  
+> createdTime| string| Position creation time, unix timestamp in ms  
+> redeemable| bool| Whether the position can be redeemed now. `false` if: global redemption is disabled, a pending redeem order exists, or less than 60 minutes remain until settlement  
+> orderLinkId| string| User customised order ID  
   
 * * *
 
 ### Request Example
-
-**Stake**
     
     
-     POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/position?category=SmartLeverage&productId=12959 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-TIMESTAMP: 1672280218882  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "SmartLeverage",  
-        "productId": "12999",  
-        "coin": "USDT",  
-        "orderType": "Stake",  
-        "amount": "100",  
-        "accountType": "FUND",  
-        "orderLinkId": "usdt-earn-007",  
-        "smartLeverageStakeExtra": {  
-            "initialPrice": "68403",  
-            "breakevenPrice": "68650"  
-        }  
-    }  
-    
-
-**Redeem**
-    
-    
-     POST /v5/earn/advance/place-order HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "SmartLeverage",  
-        "productId": "12999",  
-        "orderType": "Redeem",  
-        "accountType": "FUND",  
-        "orderLinkId": "usdt-earn-008",  
-        "smartLeverageRedeemExtra": {  
-            "positionId": "1277",  
-            "estRedeemAmount": "77.8469",  
-            "isSlippageProtected": true  
-        }  
-    }  
     
 
 ### Response Example
@@ -110,111 +74,97 @@ orderLinkId| string| User customised order ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "usdt-earn-004"  
+            "category": "SmartLeverage",  
+            "list": [  
+                {  
+                    "positionId": "1252",  
+                    "productId": "12959",  
+                    "category": "SmartLeverage",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "direction": "Long",  
+                    "leverage": "50",  
+                    "amount": "1000",  
+                    "breakevenPrice": "67367.16",  
+                    "initialPrice": "67243.31",  
+                    "duration": "1d",  
+                    "settlementTime": "1774944000000",  
+                    "createdTime": "1774838832000",  
+                    "status": "Active",  
+                    "redeemable": false,  
+                    "accountType": "FUND",  
+                    "orderLinkId": "",  
+                    "orderId": "d7be0f06-af7b-4ae8-bd2f-37000d67edf2"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1775038447882  
     }
 
 ---
 
-# 創建訂單
+# 查詢倉位資訊
 
 信息
 
-  * 需要身份驗證。每秒**最多 5 次請求** 。
-  * API 金鑰需要具備 Earn（理財）權限。
-  * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/smart-lvg/order)來追蹤訂單狀態（Pending → Success）。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-  * **申購（Stake）** ：必須傳入 `smartLeverageStakeExtra`，包含 `initialPrice` 和 `breakevenPrice`。系統將強制執行申購滑點保護：若實際價格與 `initialPrice` 偏差超過 ±5%，訂單將失敗（錯誤代碼 180030）。
-  * **贖回（Redeem）** ：必須先通過[查詢贖回預估金額](/docs/zh-TW/v5/finance/advanced-earn/smart-lvg/est-redeem)獲取 `estRedeemAmount`。結果在服務端快取 10 分鐘，並在提交贖回訂單時進行驗證。
+  * 需要身份驗證。每秒**最多 10 次請求** 。
+  * 查詢持倉中的倉位。API 金鑰需要具備 Earn（理財）權限。
 
 
 
 ### HTTP 請求
 
-POST`/v5/earn/advance/place-order`
+GET`/v5/earn/advance/position`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 category| **true**|  string| 產品類型，`SmartLeverage`  
-productId| **true**|  string| 產品 ID  
-orderType| **true**|  string| 訂單類型：`Stake`（申購），`Redeem`（提前贖回）  
-amount| false| string| 訂單金額。`Stake` 訂單必填  
-accountType| **true**|  string| 帳戶類型：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）  
-coin| **true**|  string| 幣種名稱。`Redeem` 訂單無需填寫  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 36 個字元）  
-smartLeverageStakeExtra| false| Object| `orderType=Stake` 時必填  
-> initialPrice| **true**|  string| 下單時的標的資產價格，用於滑點保護（±5%）。建議使用[查詢產品報價](/docs/zh-TW/v5/finance/advanced-earn/smart-lvg/product-quote)中的 `currentPrice`  
-> breakevenPrice| **true**|  string| 用戶選擇的損益平衡價格。從[查詢產品報價](/docs/zh-TW/v5/finance/advanced-earn/smart-lvg/product-quote)獲取  
-smartLeverageRedeemExtra| false| Object| `orderType=Redeem` 時必填  
-> positionId| **true**|  string| 要贖回的倉位 ID  
-> estRedeemAmount| **true**|  string| 預估贖回金額，從查詢贖回預估金額 API 獲取。服務端快取 10 分鐘  
-> isSlippageProtected| false| bool| 是否啟用贖回滑點保護。預設值：`false`。啟用後，當實際贖回金額與 `estRedeemAmount` 偏差過大時，贖回訂單將失敗  
+productId| false| string| 產品 ID  
+coin| false| string| 標的資產篩選，例如：`BTC`, `ETH`  
+limit| false| int| 每頁返回數量。預設：20，最大：20  
+cursor| false| string| 分頁游標。使用上次響應中的 nextPageCursor  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID  
-orderLinkId| string| 用戶自定義訂單 ID  
+category| string| 產品類別  
+nextPageCursor| string| 下一頁游標，為空字串表示無更多資料  
+list| array| 列表  
+> positionId| string| 倉位 ID  
+> productId| string| 產品 ID  
+> category| string| 產品類別  
+> investCoin| string| 投資幣種  
+> amount| string| 倉位金額，單位為 investCoin  
+> duration| string| 產品期限，例如：`1d`, `2d`, `3d`  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> accountType| string| 申購帳戶：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）  
+> orderId| string| 申購訂單 ID  
+> underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
+> direction| string| `Long`（多頭），`Short`（空頭）  
+> leverage| string| 固定槓桿倍數，例如：`3`, `5`  
+> breakevenPrice| string| 損益平衡價格（精度調整後）  
+> initialPrice| string| 創建倉位時的標的資產價格（精度調整後）  
+> status| string| `Active`：持倉中，`Redeeming`：贖回中，`Settled`：已結算  
+> createdTime| string| 倉位創建時間，毫秒級 Unix 時間戳  
+> redeemable| bool| 是否可立即贖回。若全域贖回已禁用、存在待處理的贖回訂單，或距結算時間不足 60 分鐘，則為 `false`  
+> orderLinkId| string| 用戶自定義訂單 ID  
   
 * * *
 
 ### 請求示例
-
-**申購（Stake）**
     
     
-     POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/position?category=SmartLeverage&productId=12959 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-TIMESTAMP: 1672280218882  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "SmartLeverage",  
-        "productId": "12999",  
-        "coin": "USDT",  
-        "orderType": "Stake",  
-        "amount": "100",  
-        "accountType": "FUND",  
-        "orderLinkId": "usdt-earn-007",  
-        "smartLeverageStakeExtra": {  
-            "initialPrice": "68403",  
-            "breakevenPrice": "68650"  
-        }  
-    }  
-    
-
-**贖回（Redeem）**
-    
-    
-     POST /v5/earn/advance/place-order HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "SmartLeverage",  
-        "productId": "12999",  
-        "orderType": "Redeem",  
-        "accountType": "FUND",  
-        "orderLinkId": "usdt-earn-008",  
-        "smartLeverageRedeemExtra": {  
-            "positionId": "1277",  
-            "estRedeemAmount": "77.8469",  
-            "isSlippageProtected": true  
-        }  
-    }  
     
 
 ### 響應示例
@@ -224,9 +174,31 @@ orderLinkId| string| 用戶自定義訂單 ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "usdt-earn-004"  
+            "category": "SmartLeverage",  
+            "list": [  
+                {  
+                    "positionId": "1252",  
+                    "productId": "12959",  
+                    "category": "SmartLeverage",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "direction": "Long",  
+                    "leverage": "50",  
+                    "amount": "1000",  
+                    "breakevenPrice": "67367.16",  
+                    "initialPrice": "67243.31",  
+                    "duration": "1d",  
+                    "settlementTime": "1774944000000",  
+                    "createdTime": "1774838832000",  
+                    "status": "Active",  
+                    "redeemable": false,  
+                    "accountType": "FUND",  
+                    "orderLinkId": "",  
+                    "orderId": "d7be0f06-af7b-4ae8-bd2f-37000d67edf2"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1775038447882  
     }

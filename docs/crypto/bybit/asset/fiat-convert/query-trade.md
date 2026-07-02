@@ -2,47 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/query-trade
 api_type: REST
-updated_at: 2026-07-01 19:26:21.305575
+updated_at: 2026-07-02 19:15:43.982208
 ---
 
-# Get Convert Status
-
-Returns the details of this convert.
+# Get Reference Price
 
 ### HTTP Request
 
-GET`/v5/fiat/trade-query`
+GET`/v5/fiat/reference-price`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-tradeNo| false| string| Trade order No,tradeNo or merchantRequestId must be provided  
-merchantRequestId| false| string| Customised request ID,tradeNo or merchantRequestId must be provided  
+symbol| **true**|  string| Coin Pair, such as EUR-USDT  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object| object  
-> tradeNo| string| Trade order No  
-> status| string| Trade status:
-
-  * processing
-  * success
-  * failed
-
-  
-> quoteTxId| string| Quote transaction ID. It is system generated, and it is used to confirm quote  
-> exchangeRate| string| Exchange rate  
-> fromCoin| string| Convert from coin (coin to sell)  
-> fromCoinType| string| From coin type. `fiat` or `crypto`  
-> toCoin| string| Convert to coin (coin to buy)  
-> toCoinType| string| To coin type. `fiat` or `crypto`  
-> fromAmount| string| From coin amount (amount to sell)  
-> toAmount| string| To coin amount (amount to buy according to exchange rate)  
-> createdAt| string| Trade created time  
-> subUserId| string| The user's sub userId in bybit  
+result| array| Array of quotes  
+> symbol| string| Trading pair symbol  
+> fiat| string| Fiat currency of the trading pair (e.g: "EUR")  
+> crypto| string| Cryptocurrency of the trading pair (e.g:"USDT")  
+> timestamp| string| Unix timestamp  
+> buys| array| Array of buy quote objects  
+>> unitPrice| string| unitPrice: 1 crypto=x fiat  
+>> paymentMethod| string| From coin type. `fiat` or `crypto`  
+> sells| array| Array of sell quote objects  
+>> unitPrice| string| unitPrice: 1 crypto=x fiat  
+>> paymentMethod| string| From coin type. `fiat` or `crypto`  
   
 ### Request Example
 
@@ -52,7 +41,7 @@ result| object| object
 
     
     
-    GET /v5/fiat/trade-query?tradeNo=TradeNo123456 HTTP/1.1    
+    GET /v5/fiat/reference-price HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -67,8 +56,8 @@ result| object| object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fiat_convert_status(  
-        tradeNo="TradeNo123456"  
+    print(session.get_fiat_reference_price(  
+        symbol="EUR-USDT"  
     ))  
     
 
@@ -77,61 +66,84 @@ result| object| object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "status": "success",  
-            "quoteTaxId": "QuoteTaxId123456",  
-            "exchangeRate": "1.0",  
-            "fromCoin": "GEL",  
-            "fromCoinType": "fiat",  
-            "toCoin": "USDT",  
-            "toCoinType": "crypto",  
-            "fromAmount": "100",  
-            "toAmount": "100",  
-            "createdAt": "1764558832014",  
-            "subUserId": "123456"  
+            "symbol": "EUR-USDT",  
+            "fiat": "EUR",  
+            "crypto": "USDT",  
+            "timestamp": "1765181161",  
+            "buys": [  
+                {  
+                    "unitPrice": "0.8581",  
+                    "paymentMethod": "Cash Balance"  
+                },  
+                {  
+                    "unitPrice": "0.9297487",  
+                    "paymentMethod": "Credit Card"  
+                },  
+                {  
+                    "unitPrice": "0.9807915",  
+                    "paymentMethod": "Apple Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8631747",  
+                    "paymentMethod": "Google Pay"  
+                }  
+            ],  
+            "sells": [  
+                {  
+                    "unitPrice": "0.8581",  
+                    "paymentMethod": "Cash Balance"  
+                },  
+                {  
+                    "unitPrice": "0.9297487",  
+                    "paymentMethod": "Credit Card"  
+                },  
+                {  
+                    "unitPrice": "0.9807915",  
+                    "paymentMethod": "Apple Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8631747",  
+                    "paymentMethod": "Google Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8584759",  
+                    "paymentMethod": "SEPA"  
+                }  
+            ]  
         }  
     }
 
 ---
 
-# 查詢報價單狀態
+# 獲取報價
 
 ### HTTP 請求
 
-GET`/v5/fiat/trade-query`
+GET`/v5/fiat/reference-price`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-tradeNo| 否| string| 交易訂單號，`tradeNo` 或 `merchantRequestId` 必須提供一個  
-merchantRequestId| 否| string| 自定義請求 ID，`tradeNo` 或 `merchantRequestId` 必須提供一個  
+symbol| **true**|  string| 幣種交易對，例如 EUR-USDT  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object| object  
-> tradeNo| string| 交易訂單號  
-> status| string| 交易狀態：
-
-  * processing
-  * success
-  * failed
-
-  
-> quoteTxId| string| 報價交易 ID，系統生成，用於確認報價  
-> exchangeRate| string| 匯率  
-> fromCoin| string| 轉換前的幣種（賣出的幣種）  
-> fromCoinType| string| 轉換前的幣種類型：`fiat` 或 `crypto`  
-> toCoin| string| 轉換後的幣種（買入的幣種）  
-> toCoinType| string| 轉換後的幣種類型：`fiat` 或 `crypto`  
-> fromAmount| string| 轉換前的幣種數量（賣出數量）  
-> toAmount| string| 轉換後的幣種數量（根據匯率買入的數量）  
-> createdAt| string| 交易創建時間  
-> subUserId| string| 用戶在 Bybit 平台的子用戶 ID  
+result| array| 報價列表  
+> symbol| string| 幣種交易對  
+> fiat| string| 交易對中的法幣（例如："EUR"）  
+> crypto| string| 交易對中的加密貨幣（例如："USDT"）  
+> timestamp| string| Unix 時間戳  
+> buys| array| 買入報價列表  
+>> unitPrice| string| 單價：1 crypto = x fiat  
+>> paymentMethod| string| 支付方式,`fiat` 或 `crypto`  
+> sells| array| 賣出報價列表  
+>> unitPrice| string| 單價：1 crypto = x fiat  
+>> paymentMethod| string| 支付方式,`fiat` 或 `crypto`  
   
 ### 請求示例
 
@@ -140,12 +152,12 @@ result| object| object
 
     
     
-    GET /v5/fiat/trade-query?tradeNo=TradeNo123456 HTTP/1.1    
-    Host: api-testnet.bybit.com    
-    X-BAPI-SIGN: XXXXXX    
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
-    X-BAPI-TIMESTAMP: 1720074159814    
-    X-BAPI-RECV-WINDOW: 5000    
+    GET /v5/fiat/reference-price HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1720074159814  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -153,19 +165,51 @@ result| object| object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "status": "success",  
-            "quoteTaxId": "QuoteTaxId123456",  
-            "exchangeRate": "1.0",  
-            "fromCoin": "GEL",  
-            "fromCoinType": "fiat",  
-            "toCoin": "USDT",  
-            "toCoinType": "crypto",  
-            "fromAmount": "100",  
-            "toAmount": "100",  
-            "createdAt": "1764558832014",  
-            "subUserId": "123456"  
+            "symbol": "EUR-USDT",  
+            "fiat": "EUR",  
+            "crypto": "USDT",  
+            "timestamp": "1765181161",  
+            "buys": [  
+                {  
+                    "unitPrice": "0.8581",  
+                    "paymentMethod": "Cash Balance"  
+                },  
+                {  
+                    "unitPrice": "0.9297487",  
+                    "paymentMethod": "Credit Card"  
+                },  
+                {  
+                    "unitPrice": "0.9807915",  
+                    "paymentMethod": "Apple Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8631747",  
+                    "paymentMethod": "Google Pay"  
+                }  
+            ],  
+            "sells": [  
+                {  
+                    "unitPrice": "0.8581",  
+                    "paymentMethod": "Cash Balance"  
+                },  
+                {  
+                    "unitPrice": "0.9297487",  
+                    "paymentMethod": "Credit Card"  
+                },  
+                {  
+                    "unitPrice": "0.9807915",  
+                    "paymentMethod": "Apple Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8631747",  
+                    "paymentMethod": "Google Pay"  
+                },  
+                {  
+                    "unitPrice": "0.8584759",  
+                    "paymentMethod": "SEPA"  
+                }  
+            ]  
         }  
     }

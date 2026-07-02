@@ -2,43 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/trade-notify
 api_type: REST
-updated_at: 2026-07-01 19:26:26.374666
+updated_at: 2026-07-02 19:15:49.088577
 ---
 
-# Funding Account Transaction History
+# Get Sub UID
 
-Return transaction log in Funding Account. This endpoint supports filtering by transaction type and time range.
+Query the sub UIDs under a main UID. It returns up to 2000 sub accounts, if you need more, please call this [endpoint](/docs/v5/user/page-subuid).
+
+info
+
+Query by the master UID's api key **only**
 
 ### HTTP Request
 
-GET`/v5/asset/fundinghistory`
+GET`/v5/asset/transfer/query-sub-member-list`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-createTimeFrom| false| string| Start timestamp (seconds). Must be used together with `createTimeTo`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
-createTimeTo| false| string| End timestamp (seconds). Must be used together with `createTimeFrom`. The interval between `createTimeFrom` and `createTimeTo` cannot exceed 7 days. If neither is provided, defaults to the last 7 days  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor, used for pagination  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Cursor for next page  
-list| array| Transaction list  
-> memberId| string| Member ID  
-> currency| string| Coin symbol  
-> ioDirection| string| Direction. `I`: In, `O`: Out  
-> txnAmt| string| Transaction amount  
-> afterAmt| string| Balance after transaction  
-> createTime| string| Create time (Unix seconds)  
-> showBusiType| string| Business type (localized key)  
-> showBusiTypeEn| string| Business type in English  
-> description| string| Description (localized key)  
-> descriptionEn| string| Description in English  
-  
+subMemberIds| array<string>| All sub UIDs under the main UID  
+transferableSubMemberIds| array<string>| All sub UIDs that have universal transfer enabled  
+[](/docs/api-explorer/v5/asset/sub-uid-list)
+
 * * *
 
 ### Request Example
@@ -50,11 +40,11 @@ list| array| Transaction list
 
     
     
-    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
+    GET /v5/asset/transfer/query-sub-member-list HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739433600000  
+    X-BAPI-TIMESTAMP: 1672147239931  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -65,13 +55,26 @@ list| array| Transaction list
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_asset_overview(  
-        limit=1  
-    ))  
+    print(session.get_sub_uid())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSubUID()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -79,64 +82,51 @@ list| array| Transaction list
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "MTM3MTU3OTk=",  
-            "list": [  
-                {  
-                    "memberId": "290118",  
-                    "currency": "BTC",  
-                    "ioDirection": "I",  
-                    "txnAmt": "0.00003561",  
-                    "afterAmt": "7.5547230662687035",  
-                    "createTime": "1772669763",  
-                    "showBusiType": "fundingAccountRecordEarn",  
-                    "showBusiTypeEn": "Earn",  
-                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
-                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
-                }  
+            "subMemberIds": [  
+                "554117",  
+                "592324",  
+                "592334",  
+                "1055262",  
+                "1072055",  
+                "1119352"  
+            ],  
+            "transferableSubMemberIds": [  
+                "554117",  
+                "592324"  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1772699449372  
+        "time": 1672147241320  
     }
 
 ---
 
-# 資金帳戶歷史記錄
+# 查詢子帳號列表
 
-查詢資金帳戶的交易記錄，支持按交易類型和時間範圍進行篩選。
+查詢某個母帳戶的子帳號列表, 返回至多2000個子帳戶, 如果您有更多, 可以調用這個[接口](/docs/zh-TW/v5/user/page-subuid).
+
+信息
+
+僅支持母帳號API key
 
 ### HTTP 請求
 
-GET`/v5/asset/fundinghistory`
+GET`/v5/asset/transfer/query-sub-member-list`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-createTimeFrom| false| string| 起始時間戳（秒）。須與 `createTimeTo` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
-createTimeTo| false| string| 結束時間戳（秒）。須與 `createTimeFrom` 同時傳入，兩者相差不可超過 7 天。若兩者均不傳，默認查詢最近 7 天  
-limit| false| string| 每頁數據條數。[`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於翻頁  
-  
-### 返回參數
+無
+
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 下一頁游標  
-list| array| 交易記錄列表  
-> memberId| string| 用戶ID  
-> currency| string| 幣種  
-> ioDirection| string| 方向。`I`: 收入，`O`: 支出  
-> txnAmt| string| 交易金額  
-> afterAmt| string| 交易後餘額  
-> createTime| string| 創建時間（Unix 秒）  
-> showBusiType| string| 業務類型（本地化 key）  
-> showBusiTypeEn| string| 英文業務類型  
-> description| string| 描述（本地化 key）  
-> descriptionEn| string| 英文描述  
-  
+subMemberIds| array<string>| 所有子帳號  
+transferableSubMemberIds| array<string>| 已經開啟了萬能劃轉的子帳號  
+[](/docs/zh-TW/api-explorer/v5/asset/sub-uid-list)
+
 * * *
 
 ### 請求示例
@@ -148,20 +138,41 @@ list| array| 交易記錄列表
 
     
     
-    GET /v5/asset/fundinghistory?limit=1&cursor=MTM3MTU3OTk= HTTP/1.1  
+    GET /v5/asset/transfer/query-sub-member-list HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739433600000  
+    X-BAPI-TIMESTAMP: 1672147239931  
     X-BAPI-RECV-WINDOW: 5000  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_uid())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+      .getSubUID()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -169,24 +180,21 @@ list| array| 交易記錄列表
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "MTM3MTU3OTk=",  
-            "list": [  
-                {  
-                    "memberId": "290118",  
-                    "currency": "BTC",  
-                    "ioDirection": "I",  
-                    "txnAmt": "0.00003561",  
-                    "afterAmt": "7.5547230662687035",  
-                    "createTime": "1772669763",  
-                    "showBusiType": "fundingAccountRecordEarn",  
-                    "showBusiTypeEn": "Earn",  
-                    "description": "fundingAccountRecordFlexSavingInterestDistribution",  
-                    "descriptionEn": "Easy Earn | Flexible Interest Distribution"  
-                }  
+            "subMemberIds": [  
+                "554117",  
+                "592324",  
+                "592334",  
+                "1055262",  
+                "1072055",  
+                "1119352"  
+            ],  
+            "transferableSubMemberIds": [  
+                "554117",  
+                "592324"  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1772699449372  
+        "time": 1672147241320  
     }

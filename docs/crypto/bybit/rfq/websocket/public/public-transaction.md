@@ -2,970 +2,921 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/public/public-transaction
 api_type: WebSocket
-updated_at: 2026-07-01 19:31:52.922162
+updated_at: 2026-07-02 19:21:09.129200
 ---
 
-# SBE Public Trade Integration
+# SBE BBO Integration
 
 ## Overview
 
   * **Channel:** Private MM WebSocket only (not available on public WS).
-  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
   * **Format:** SBE binary frames (`opcode = 2`), little-endian.
-  * **Push frequency** : real-time
-  * Messages are delivered in-order per symbol group. A single packet may contain 1–1024 trades
+  * **Depth:** Real-time Level 1 Orderbook data.
+  * **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
 
 
 
-## Flow
+## Connection
 
-### Ping / Pong (JSON control frames)
+  * Field `u` increases **monotonically**.
+  * Field `u` **does not reset** , unless there is a system restart or precision change, `u` would be reset to **1**.
+  * If BBO does not change within **3 seconds** , the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
+  * Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, continuity of `u` is **not guaranteed**.
 
-**Send Ping**
+
+
+## Subscription Flow
+
+### Send subscription request
     
     
-    {"req_id": "100001", "op": "ping"}  
+    {  
+      "op": "subscribe",  
+      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+    }  
     
 
-**Receive Pong**
+  * Topic format: `ob.rpi.1.sbe.<symbol>`
+  * Example symbols: `BTCUSDT`, `ETHUSDT`, etc.
+
+
+
+### Subscription confirmation
     
     
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    {  
+      "success": true,  
+      "ret_msg": "",  
+      "conn_id": "d30fdpbboasp1pjbe7r0",  
+      "req_id": "xxx",  
+      "op": "subscribe"  
+    }  
     
 
-### Subscribe
-
-  * Topic format: `publicTrade.sbe.<symbol>`
-
-
-
-**Subscribe request**
+### Receive data
     
     
-    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
     
 
-**Subscription confirmation**
+### Decode example
     
     
-    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    {  
+      "header": {  
+        "block_length": 82,  
+        "template_id": 20000,  
+        "schema_id": 1,  
+        "version": 0  
+      },  
+      "seq": 1808827611,  
+      "cts": 1757497309030,  
+      "price_exponent": 2,  
+      "size_exponent": 6,  
+      "ask_price": 1060342500,  
+      "ask_normal_size": 776935000000,  
+      "ask_rpi_size": 0,  
+      "bid_price": 1060250000,  
+      "bid_normal_size": 20000000000,  
+      "bid_rpi_size": 0,  
+      "u": 312,  
+      "ts": 1757497309814,  
+      "symbol": "BTCUSDT",  
+      "parsed_length": 98  
+    }  
     
 
-## SBE XML Template (Public Trade)
+* * *
 
-[sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+## SBE Message Structure
 
-## Field Reference
+### SBE XML Schema
 
-**Message:** `PublicTradeEvent` (id = 20002)
+  * The `templateId = 20000` identifies the message type.
+  * Validate that `templateId = 20000` to confirm it is a Level 1 Orderbook event.
+  * [sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
 
-Field Name| ID| SBE Type| Unit / Format| Notes  
----|---|---|---|---  
-ts| 1| int64| µs| System generation time at market data service.  
-priceExponent| 2| int8| exponent| Decimal places for price. Display price = priceMantissa × 10^`priceExponent`.  
-sizeExponent| 3| int8| exponent| Decimal places for size. Display size = sizeMantissa × 10^`sizeExponent`.  
-tradeItems| 40| group(`groupSize16Encoding`)| -| Repeating trade items  
-symbol| 55| varString8| UTF-8| 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.  
+
+
+### Message Structure Details
+
+#### Message Header (8 bytes)
+
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+blockLength| uint16| 2| Message body length  
+templateId| uint16| 2| Fixed = 20000  
+schemaId| uint16| 2| Fixed = 1  
+version| uint16| 2| Fixed = 0  
   
-### Each tradeItems[i] entry
+#### Message Body (`BestOBRpiEvent`)
 
-Field (id)| Type| Description  
+ID| Field| Type| Description  
+---|---|---|---  
+1| ts| int64| Snapshot timestamp (µs)  
+2| seq| int64| Unique message sequence number  
+3| cts| int64| Trade timestamp (µs)  
+4| u| int64| Update ID  
+5| askNormalPrice| int64| Best ask price mantissa  
+6| askNormalSize| int64| Best ask size (normal) mantissa  
+7| askRpiPrice| int64| Best RPI ask price mantissa  
+8| askRpiSize| int64| Best RPI ask size mantissa  
+9| bidNormalPrice| int64| Best bid price mantissa  
+10| bidNormalSize| int64| Best bid size (normal) mantissa  
+11| bidRpiPrice| int64| Best bid price (RPI) mantissa  
+12| bidRpiSize| int64| Best bid size (RPI) mantissa  
+13| priceExponent| int8| Price exponent  
+14| sizeExponent| int8| Size exponent  
+55| symbol| varStr| Trading pair (e.g., `BTCUSDT`)  
+  
+* * *
+
+## Optimisation
+
+New field definitions (sell side as example; buy side is analogous):
+
+Field| Definition  
+---|---  
+askNormalPrice| No RPI order best ask price  
+askNormalSize| No RPI order best ask size  
+askRpiPrice| RPI order best ask price  
+askRpiSize| RPI order best ask size  
+  
+The current logic might result in:
+
+Price| normalQty| rpiQty  
 ---|---|---  
-fillTime (1)| int64| Trade fill timestamp(µs)  
-price (2)| int64| Apply priceExponent. Display ask size = `size × 10^sizeExponent`.  
-size (3)| int64| Apply sizeExponent. Display ask size = `size × 10^sizeExponent`.  
-seq (4)| int64| Cross sequence id  
-side (5)| SideType(uint8)| Side of taker  
-isBlockTrade (6)| BoolEnum(uint8)| IsBlockTrade(0 = not blockTrade, 1 = blockTrade)  
-isRPI (7)| BoolEnum(uint8)| IsRPI (0 = not RPI, 1 = RPI)  
-execId (100)| varString8| Trade ID  
+1000| 0| 100  
   
-#### SideType
+This means that users without RPI permissions won't know at what price they can take their orders, making this message useless. To address this, we adjust the message content as follows.
 
-  * `0`: UNKOWN
-  * `1`: BUY
-  * `2`: SELL
-  * `254`: NON_REPRESENTABLE
+#### Case 1: `askNormalSize != 0 && askRpiSize != 0`
 
+This is a normal response based on the actual situation. This case conveys the same meaning as the original message.
 
+Example:
 
-#### BoolEnum
+Field| Definition| Example  
+---|---|---  
+askNormalPrice| No RPI order best ask price| 1000  
+askNormalSize| No RPI order best ask size| 200  
+askRpiPrice| RPI order best ask price| 1000  
+askRpiSize| RPI order best ask size| 300  
+  
+#### Case 2: `askNormalSize != 0 && askRpiSize == 0`
 
-  * `0`: FALSE
-  * `1`: TRUE
-  * `254`: NON_REPRESENTABLE
+`askRpiPrice` is assigned the value `askNormalPrice`, and `askRpiSize = 0`.  
+In this case, the `askRpiPrice` value will not be searched further.
 
+Example:
 
+Field| Definition| Example| Note  
+---|---|---|---  
+askNormalPrice| No RPI order best ask price| 1000|   
+askNormalSize| No RPI order best ask size| 200|   
+askRpiPrice| RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
+askRpiSize| RPI order best ask size| 0|   
+  
+#### Case 3: `askNormalSize == 0 && askRpiSize != 0`
 
-## Integration Script
+`askNormalPrice =` the actual non-RPI asking price.  
+In this case, `askNormalPrice` is retrieved and returned.
 
-### Python
+Example:
+
+Field| Definition| Example  
+---|---|---  
+askNormalPrice| No RPI order best ask price| 1200  
+askNormalSize| No RPI order best ask size| 100  
+askRpiPrice| RPI order best ask price| 1000  
+askRpiSize| RPI order best ask size| 20  
+  
+#### Case 4
+
+When the market is so bad that there is no liquidity, **no message is pushed**.
+
+* * *
+
+## Integration Example
     
     
     import json  
+    import logging  
     import struct  
+    import threading  
+    import time  
+    from datetime import datetime  
+    from typing import Dict, Any  
+      
     import websocket  
-    from typing import Tuple  
       
+    logging.basicConfig(  
+        filename="logfile_wrapper.log",  
+        level=logging.INFO,  
+        format="%(asctime)s %(levelname)s %(message)s",  
+    )  
+      
+    # Change symbol/topic as you wish  
+    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
     WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-    SYMBOL = "BTCUSDT"  
-    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
       
       
-    # ---------------- SBE helpers ----------------  
-    def apply_exp(mantissa: int, exp: int) -> float:  
-        # display = mantissa * 10^exp  
-        # exp can be negative  
-        return mantissa * (10.0**exp)  
+    class SBEBestOBRpiParser:  
+        """  
+        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
       
+        ts(int64), seq(int64), cts(int64), u(int64),  
+        askNormalPrice(int64), askNormalSize(int64),  
+        askRpiPrice(int64), askRpiSize(int64),  
+        bidNormalPrice(int64), bidNormalSize(int64),  
+        bidRpiPrice(int64), bidRpiSize(int64),  
+        priceExponent(int8), sizeExponent(int8),  
+        symbol(varString8)  
       
-    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
-        if off + 1 > len(buf):  
-            raise ValueError("varString8: missing length")  
+        All values are little-endian.  
+        """  
       
-        ln = buf[off]  
-        off += 1  
+        def __init__(self) -> None:  
+            # Header: blockLength, templateId, schemaId, version  
+            self.header_fmt = "<HHHH"  
+            self.header_sz = struct.calcsize(self.header_fmt)  
       
-        if off + ln > len(buf):  
-            raise ValueError("varString8: out of range")  
+            # 12 x int64 + 2 x int8:  
+            # ts, seq, cts, u,  
+            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
+            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
+            # priceExponent, sizeExponent  
+            self.body_fmt = "<" + ("q" * 12) + "bb"  
+            self.body_sz = struct.calcsize(self.body_fmt)  
       
-        s = buf[off : off + ln].decode("utf-8", errors="replace")  
-        off += ln  
-        return s, off  
+            self.target_template_id = 20000  
       
+        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
+            if len(data) < self.header_sz:  
+                raise ValueError("insufficient data for SBE header")  
       
-    def parse_public_trade_event(buf: bytes) -> dict:  
-        # messageHeader: <HHHH  
-        if len(buf) < 8:  
-            raise ValueError("too short for header")  
-      
-        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
-        off = 8  
-      
-        if template_id != 20002:  
-            raise ValueError(f"unexpected templateId={template_id}")  
-      
-        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
-        if len(buf) < off + 8 + 1 + 1:  
-            raise ValueError("too short for fixed fields")  
-      
-        ts = struct.unpack_from("<q", buf, off)[0]  
-        off += 8  
-      
-        price_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        size_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        # group header: blockLength(uint16), numInGroup(uint16)  
-        if len(buf) < off + 4:  
-            raise ValueError("too short for group header")  
-      
-        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
-        off += 4  
-      
-        trades = []  
-        for _ in range(num_in_group):  
-            entry_start = off  
-      
-            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
-            fill_time = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            price_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            size_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            seq = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            side = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_block = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_rpi = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            # Skip any future extension bytes in fixed part  
-            fixed_consumed = off - entry_start  
-            if fixed_consumed < grp_block_len:  
-                off += grp_block_len - fixed_consumed  
-            elif fixed_consumed > grp_block_len:  
-                # schema mismatch vs blockLength  
-                raise ValueError(  
-                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
-                )  
-            exec_id, off = read_varstring8(buf, off)  
-            trades.append(  
-                {  
-                    "fillTime": fill_time,  
-                    "priceMantissa": price_m,  
-                    "sizeMantissa": size_m,  
-                    "price": apply_exp(price_m, price_exp),  
-                    "size": apply_exp(size_m, size_exp),  
-                    "seq": seq,  
-                    "side": side,  
-                    "isBlockTrade": bool(is_block),  
-                    "isRPI": bool(is_rpi),  
-                    "execId": exec_id,  
-                }  
+            block_length, template_id, schema_id, version = struct.unpack_from(  
+                self.header_fmt, data, 0  
             )  
       
-        symbol, off = read_varstring8(buf, off)  
-      
-        return {  
-            "header": {  
-                "blockLength": block_len,  
-                "templateId": template_id,  
-                "schemaId": schema_id,  
+            return {  
+                "block_length": block_length,  
+                "template_id": template_id,  
+                "schema_id": schema_id,  
                 "version": version,  
-            },  
-            "ts": ts,  
-            "priceExponent": price_exp,  
-            "sizeExponent": size_exp,  
-            "symbol": symbol,  
-            "tradeItems": trades,  
-            "parsed_length": off,  
-        }  
+            }  
+      
+        @staticmethod  
+        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
+            if offset + 1 > len(data):  
+                raise ValueError("insufficient data for varString8 length")  
+      
+            (length,) = struct.unpack_from("<B", data, offset)  
+            offset += 1  
+      
+            if offset + length > len(data):  
+                raise ValueError("insufficient data for varString8 bytes")  
+      
+            s = data[offset : offset + length].decode("utf-8")  
+            offset += length  
+            return s, offset  
+      
+        @staticmethod  
+        def _apply_exponent(value: int, exponent: int) -> float:  
+            # Exponent is for decimal point positioning.  
+            # If exponent = 2 and value=1060342500 -> 10603425.00  
+            return value / (10 ** exponent) if exponent >= 0 else value * (  
+                10 ** (-exponent)  
+            )  
+      
+        def parse(self, data: bytes) -> Dict[str, Any]:  
+            hdr = self._parse_header(data)  
+            if hdr["template_id"] != self.target_template_id:  
+                raise NotImplementedError(  
+                    f"unsupported template_id={hdr['template_id']}"  
+                )  
+      
+            if len(data) < self.header_sz + self.body_sz:  
+                raise ValueError("insufficient data for BestOBRpiEvent body")  
+      
+            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
+            (  
+                ts,  
+                seq,  
+                cts,  
+                u,  
+                ask_np_m,  
+                ask_ns_m,  
+                ask_rp_m,  
+                ask_rs_m,  
+                bid_np_m,  
+                bid_ns_m,  
+                bid_rp_m,  
+                bid_rs_m,  
+                price_exp,  
+                size_exp,  
+            ) = fields  
+      
+            offset = self.header_sz + self.body_sz  
+            symbol, offset = self._parse_varstring8(data, offset)  
+      
+            # Apply exponents  
+            ask_np = self._apply_exponent(ask_np_m, price_exp)  
+            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
+            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
+            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
+            bid_np = self._apply_exponent(bid_np_m, price_exp)  
+            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
+            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
+            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
+      
+            return {  
+                "header": hdr,  
+                "ts": ts,  
+                "seq": seq,  
+                "cts": cts,  
+                "u": u,  
+                "price_exponent": price_exp,  
+                "size_exponent": size_exp,  
+                "symbol": symbol,  
+                # Normal book (best)  
+                "ask_normal_price": ask_np,  
+                "ask_normal_size": ask_ns,  
+                "bid_normal_price": bid_np,  
+                "bid_normal_size": bid_ns,  
+                # RPI book (best)  
+                "ask_rpi_price": ask_rp,  
+                "ask_rpi_size": ask_rs,  
+                "bid_rpi_price": bid_rp,  
+                "bid_rpi_size": bid_rs,  
+                "parsed_length": offset,  
+            }  
       
       
-    # ---------------- WS handlers ----------------  
-    def on_open(ws):  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("subscribed:", TOPIC)  
+    parser = SBEBestOBRpiParser()  
       
+      
+    # --------------------------- WebSocket handlers ---------------------------  
       
     def on_message(ws, message):  
-        if isinstance(message, (bytes, bytearray)):  
-            evt = parse_public_trade_event(message)  
-      
-            # print first trade only (example)  
-            if evt["tradeItems"]:  
-                t0 = evt["tradeItems"][0]  
-                print(  
-                    evt["symbol"],  
-                    "trades=",  
-                    len(evt["tradeItems"]),  
-                    "first:",  
-                    t0["price"],  
-                    "@",  
-                    t0["size"],  
-                    "seq=",  
-                    t0["seq"],  
+        try:  
+            # Binary SBE frames; text frames for control/acks/errors  
+            if isinstance(message, (bytes, bytearray)):  
+                decoded = parser.parse(message)  
+                logging.info(  
+                    "SBE %s seq=%s u=%s "  
+                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
+                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
+                    decoded["symbol"],  
+                    decoded["seq"],  
+                    decoded["u"],  
+                    decoded["bid_normal_price"],  
+                    decoded["bid_normal_size"],  
+                    decoded["ask_normal_price"],  
+                    decoded["ask_normal_size"],  
+                    decoded["bid_rpi_price"],  
+                    decoded["bid_rpi_size"],  
+                    decoded["ask_rpi_price"],  
+                    decoded["ask_rpi_size"],  
+                    decoded["ts"],  
                 )  
-        else:  
-            print("TEXT:", message)  
+                print(  
+                    f"{decoded['symbol']} u={decoded['u']} "  
+                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
+                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
+                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
+                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
+                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
+                )  
+            else:  
+                try:  
+                    obj = json.loads(message)  
+                    logging.info("TEXT %s", obj)  
+                    print(obj)  
+                except json.JSONDecodeError:  
+                    logging.warning("non-JSON text frame: %r", message)  
+        except Exception as e:  
+            logging.exception("decode error: %s", e)  
+            print("decode error:", e)  
       
       
-    def on_error(ws, err):  
-        print("WS error:", err)  
+    def on_error(ws, error):  
+        print("WS error:", error)  
+        logging.error("WS error: %s", error)  
       
       
     def on_close(ws, *_):  
-        print("closed")  
+        print("### connection closed ###")  
+        logging.info("connection closed")  
       
       
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
+    def on_open(ws):  
+        print("opened")  
+        sub = {"op": "subscribe", "args": [TOPIC]}  
+        ws.send(json.dumps(sub))  
+        print("subscribed:", TOPIC)  
+      
+        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
+        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
+      
+      
+    def manage_subscription(ws):  
+        # demo: unsubscribe/resubscribe once  
+        time.sleep(20)  
+        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
+        print("unsubscribed:", TOPIC)  
+        time.sleep(5)  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("resubscribed:", TOPIC)  
+      
+      
+    def ping_per(ws):  
+        while True:  
+            try:  
+                ws.send(json.dumps({"op": "ping"}))  
+            except Exception:  
+                return  
+            time.sleep(10)  
+      
+      
+    def on_pong(ws, *_):  
+        print("pong received")  
+      
+      
+    def on_ping(ws, *_):  
+        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
+      
+      
+    def connWS():  
         ws = websocket.WebSocketApp(  
             WS_URL,  
             on_open=on_open,  
             on_message=on_message,  
             on_error=on_error,  
             on_close=on_close,  
+            on_ping=on_ping,  
+            on_pong=on_pong,  
         )  
         ws.run_forever(ping_interval=20, ping_timeout=10)  
-    
-
-### Golang
-    
-    
-    package main  
-      
-    import (  
-            "encoding/binary"  
-            "encoding/json"  
-            "fmt"  
-            "log"  
-            "math"  
-            "time"  
-      
-            "github.com/gorilla/websocket"  
-    )  
-      
-    const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-            Symbol = "BTCUSDT"  
-            Topic  = "publicTrade.sbe." + Symbol  
-    )  
-      
-    func applyExp(mantissa int64, exp int8) float64 {  
-            return float64(mantissa) * math.Pow10(int(exp))  
-    }  
-      
-    func readVarString8(buf []byte, off int) (string, int, error) {  
-            if off+1 > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: missing length")  
-            }  
-            ln := int(buf[off])  
-            off++  
-            if off+ln > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: out of range")  
-            }  
-            s := string(buf[off : off+ln])  
-            off += ln  
-            return s, off, nil  
-    }  
-      
-    type TradeItem struct {  
-            FillTime     int64   `json:"fillTime"`  
-            PriceMant    int64   `json:"priceMantissa"`  
-            SizeMant     int64   `json:"sizeMantissa"`  
-            Price        float64 `json:"price"`  
-            Size         float64 `json:"size"`  
-            Seq          int64   `json:"seq"`  
-            Side         uint8   `json:"side"`  
-            IsBlockTrade bool    `json:"isBlockTrade"`  
-            IsRPI        bool    `json:"isRPI"`  
-            ExecID       string   `json:"execId"`  
-    }  
-      
-    type PublicTradeEvent struct {  
-            Header struct {  
-                    BlockLength uint16 `json:"blockLength"`  
-                    TemplateID  uint16 `json:"templateId"`  
-                    SchemaID    uint16 `json:"schemaId"`  
-                    Version     uint16 `json:"version"`  
-            } `json:"header"`  
-      
-            Ts            int64       `json:"ts"`  
-            PriceExponent int8        `json:"priceExponent"`  
-            SizeExponent  int8        `json:"sizeExponent"`  
-            TradeItems    []TradeItem `json:"tradeItems"`  
-            Symbol        string      `json:"symbol"`  
-            ParsedLength  int         `json:"parsed_length"`  
-    }  
-      
-    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
-            if len(buf) < 8 {  
-                    return nil, fmt.Errorf("too short for header")  
-            }  
-            off := 0  
-            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
-            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
-            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
-            off += 8  
-      
-            if tid != 20002 {  
-                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
-            }  
-            if off+8+1+1 > len(buf) {  
-                    return nil, fmt.Errorf("too short for fixed fields")  
-            }  
-            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
-            off += 8  
-            priceExp := int8(buf[off])  
-            off++  
-            sizeExp := int8(buf[off])  
-            off++  
-      
-            // group header  
-            if off+4 > len(buf) {  
-                    return nil, fmt.Errorf("too short for group header")  
-            }  
-            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
-            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            off += 4  
-      
-            items := make([]TradeItem, 0, int(numInGroup))  
-            for i := 0; i < int(numInGroup); i++ {  
-                    entryStart := off  
-      
-                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
-                    if off+needMin > len(buf) {  
-                            return nil, fmt.Errorf("too short for trade entry %d", i)  
-                    }  
-      
-                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-      
-                    side := uint8(buf[off]); off++  
-                    isBlock := uint8(buf[off]); off++  
-                    isRpi := uint8(buf[off]); off++  
-      
-                    fixedConsumed := off - entryStart  
-                    if fixedConsumed < int(grpBlockLen) {  
-                            off += int(grpBlockLen) - fixedConsumed  
-                    } else if fixedConsumed > int(grpBlockLen) {  
-                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
-                    }  
-      
-                     execID, off2, err := readVarString8(buf, off)  
-                    if err != nil {  
-                            return nil, err  
-                    }  
-                    off = off2  
       
       
-                    items = append(items, TradeItem{  
-                            FillTime:     fillTime,  
-                            PriceMant:    priceM,  
-                            SizeMant:     sizeM,  
-                            Price:        applyExp(priceM, priceExp),  
-                            Size:         applyExp(sizeM, sizeExp),  
-                            Seq:          seq,  
-                            Side:         side,  
-                            IsBlockTrade: isBlock != 0,  
-                            IsRPI:        isRpi != 0,  
-                            ExecID:       execID,  
-                    })  
-            }  
-      
-            symbol, off2, err := readVarString8(buf, off)  
-            if err != nil {  
-                    return nil, err  
-            }  
-            off = off2  
-      
-            evt := &PublicTradeEvent{  
-                    Ts:            ts,  
-                    PriceExponent: priceExp,  
-                    SizeExponent:  sizeExp,  
-                    TradeItems:    items,  
-                    Symbol:        symbol,  
-                    ParsedLength:  off,  
-            }  
-            evt.Header.BlockLength = blk  
-            evt.Header.TemplateID = tid  
-            evt.Header.SchemaID = sid  
-            evt.Header.Version = ver  
-            return evt, nil  
-    }  
-      
-    func main() {  
-            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
-            c, _, err := d.Dial(WSURL, nil)  
-            if err != nil {  
-                    log.Fatal(err)  
-            }  
-            defer c.Close()  
-      
-            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
-            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
-                    log.Fatal(err)  
-            }  
-            log.Println("subscribed:", Topic)  
-      
-            for {  
-                    mt, msg, err := c.ReadMessage()  
-                    if err != nil {  
-                            log.Fatal(err)  
-                    }  
-                    if mt == websocket.BinaryMessage {  
-                            evt, err := parsePublicTradeEvent(msg)  
-                            if err != nil {  
-                                    log.Println("decode error:", err)  
-                                    continue  
-                            }  
-                            if len(evt.TradeItems) > 0 {  
-                                    t0 := evt.TradeItems[0]  
-                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
-                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
-                            }  
-                    } else {  
-                            log.Println("TEXT:", string(msg))  
-                    }  
-            }  
-    }
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        connWS()
 
 ---
 
-# SBE Public Trade 接入指南
+# SBE BBO 接入指南
 
 ## 總覽
 
-  * **Channel:** 僅支援MMWS域名
-  * **Topic:** `publicTrade.sbe.<symbol>`.
+  * **Channel:** 僅支援私有 MMWS, 不開放於 public WS.
+  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
   * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-  * **推送頻率** :即時 
-  * 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
+  * **Depth:** 提供即時 Level 1 訂單簿資料.
+  * **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
 
 
 
-## 流程
+## 連接
 
-### Ping / Pong (JSON 控制 frame)
+  * 字段 `u` 總是**單調遞增**.
+  * 字段 `u` 通常**不會重置** , 除非系統重啟或精度 (precision) 改變, 則重置成**1**.
+  * 如果 3 秒內BBO沒有變化, 會強推一個 snapshot 信息, 字段 `u` 會與前一則信息保持相同。
+  * 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
 
-**Send Ping**
+
+
+## 訂閱流程(JSON 控制 frame)
+
+### 送出訂閱請求
     
     
-    {"req_id": "100001", "op": "ping"}  
+    {  
+      "op": "subscribe",  
+      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+    }  
     
 
-**Receive Pong**
+  * Topic 格式: `ob.rpi.1.sbe.<symbol>`
+  * 範例 symbol: `BTCUSDT`, `ETHUSDT` 等。
+
+
+
+### 訂閱確認
     
     
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    {  
+      "success": true,  
+      "ret_msg": "",  
+      "conn_id": "d30fdpbboasp1pjbe7r0",  
+      "req_id": "xxx",  
+      "op": "subscribe"  
+    }  
     
 
-### 訂閱
-
-  * Topic format: `publicTrade.sbe.<symbol>`
-
-
-
-**訂閱示例**
+### 接收數據
     
     
-    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
+    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
     
 
-**訂閱回報**
+### 解碼示例
     
     
-    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
+    {  
+      "header": {  
+        "block_length": 82,  
+        "template_id": 20000,  
+        "schema_id": 1,  
+        "version": 0  
+      },  
+      "seq": 1808827611,  
+      "cts": 1757497309030,  
+      "price_exponent": 2,  
+      "size_exponent": 6,  
+      "ask_price": 1060342500,  
+      "ask_normal_size": 776935000000,  
+      "ask_rpi_size": 0,  
+      "bid_price": 1060250000,  
+      "bid_normal_size": 20000000000,  
+      "bid_rpi_size": 0,  
+      "u": 312,  
+      "ts": 1757497309814,  
+      "symbol": "BTCUSDT",  
+      "parsed_length": 98  
+    }  
     
 
-## SBE XML 模板 (Public Trade)
+## SBE 信息結構
 
-[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
+### SBE XML Schema
 
-## 欄位參考
+  * `templateId = 20000` 用來識別信息型別。
+  * 驗證 `templateId = 20000` 以確認這是一則 Level 1 訂單簿事件。
+  * [sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
 
-**Message:** `PublicTradeEvent` (id = 20002)
 
-欄位名稱| ID| SBE 型別| 單位 / 格式| 備註  
----|---|---|---|---  
-ts| 1| int64| µs| 行情服务產生資料的系統時間戳  
-priceExponent| 2| int8| exponent| 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent`  
-sizeExponent| 3| int8| exponent| 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent`  
-tradeItems| 40| group  
-(`groupSize16Encoding`)| -| 重複的成交項目(Repeating trade items)  
-symbol| 55| varString8| UTF-8| 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"`  
+
+### 信息結構細節
+
+#### 信息標頭 (8 bytes)
+
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+blockLength| uint16| 2| 信息主體長度 Message body length  
+templateId| uint16| 2| 固定值 = 20000 Fixed = 20000  
+schemaId| uint16| 2| 固定值 = 1 Fixed = 1  
+version| uint16| 2| 固定值 = 0 Fixed = 0  
   
-### 每個 tradeItems[i] 條目
+#### 信息主體 (`BestOBRpiEvent`)
 
-欄位(id)| 型別| 說明  
+ID| Field| Type| Description  
+---|---|---|---  
+1| ts| int64| Snapshot 時間戳 (µs) Snapshot timestamp (µs)  
+2| seq| int64| 唯一信息序號 Unique message sequence number  
+3| cts| int64| 交易時間戳 (µs) Trade timestamp (µs)  
+4| u| int64| 更新 ID Update ID  
+5| askNormalPrice| int64| 最佳賣價 mantissa Best ask price mantissa  
+6| askNormalSize| int64| 最佳賣量 (normal) mantissa Best ask size (normal) mantissa  
+7| askRpiPrice| int64| 最佳 RPI 賣價 mantissa Best RPI ask price mantissa  
+8| askRpiSize| int64| 最佳 RPI 賣量 mantissa Best RPI ask size mantissa  
+9| bidNormalPrice| int64| 最佳買價 mantissa Best bid price mantissa  
+10| bidNormalSize| int64| 最佳買量 (normal) mantissa Best bid size (normal) mantissa  
+11| bidRpiPrice| int64| 最佳買價 (RPI) mantissa Best bid price (RPI) mantissa  
+12| bidRpiSize| int64| 最佳買量 (RPI) mantissa Best bid size (RPI) mantissa  
+13| priceExponent| int8| 價格 exponent Price exponent  
+14| sizeExponent| int8| 數量 exponent Size exponent  
+55| symbol| varStr| 交易對 (例如 `BTCUSDT`) Trading pair (e.g., `BTCUSDT`)  
+  
+## 相關優化
+
+新的欄位定義 (以賣方為例, 買方邏輯相同):
+
+Field| Definition  
+---|---  
+askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price  
+askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size  
+askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price  
+askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size  
+  
+目前的邏輯可能出現以下狀況:
+
+Price| normalQty| rpiQty  
 ---|---|---  
-fillTime(1)| int64| 成交撮合時間戳(µs)  
-price(2)| int64| 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。  
-size(3)| int64| 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。  
-seq(4)| int64| 撮合序列 ID  
-side(5)| SideType(uint8)| taker單方向  
-isBlockTrade(6)| BoolEnum(uint8)| 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade)  
-isRPI(7)| BoolEnum(uint8)| 是否為 RPI(0 = 非 RPI,1 = RPI)  
-execId(100)| varString8| 成交 ID  
+1000| 0| 100  
   
-#### SideType
+這表示沒有 RPI 權限的使用者無法得知實際可成交的價格, 導致這則信息對他們沒有實際意義。為了解決此問題, 我們對信息內容做了上述調整。
 
-  * `0`: UNKOWN
-  * `1`: BUY
-  * `2`: SELL
-  * `254`: NON_REPRESENTABLE
+#### 情況 1: `askNormalSize != 0 && askRpiSize != 0`
 
+這是基於實際市場情況的正常回應, 與原先信息表達的含義相同。
 
+示例:
 
-#### BoolEnum
+Field| Definition| Example  
+---|---|---  
+askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000  
+askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200  
+askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
+askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 300  
+  
+#### 情況 2: `askNormalSize != 0 && askRpiSize == 0`
 
-  * `0`: FALSE
-  * `1`: TRUE
-  * `254`: NON_REPRESENTABLE
+`askRpiPrice` 會被指定為 `askNormalPrice`, 並且 `askRpiSize = 0`。  
+在此情況下, 不會再向更深的價位搜尋 `askRpiPrice`。
 
+示例:
 
+Field| Definition| Example| Note  
+---|---|---|---  
+askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000|   
+askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200|   
+askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
+askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 0|   
+  
+#### 情況 3: `askNormalSize == 0 && askRpiSize != 0`
+
+此時 `askNormalPrice =` 真正的非 RPI 最佳賣價。  
+在這種情況下, 會回傳並使用 `askNormalPrice`。
+
+示例:
+
+Field| Definition| Example  
+---|---|---  
+askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1200  
+askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 100  
+askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
+askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 20  
+  
+#### 情況 4
+
+當市場極度冷清, 完全沒有流動性時, **不會推送任何 BBO 信息** 。
 
 ## 接入示例
-
-### Python
     
     
     import json  
+    import logging  
     import struct  
+    import threading  
+    import time  
+    from datetime import datetime  
+    from typing import Dict, Any  
+      
     import websocket  
-    from typing import Tuple  
       
+    logging.basicConfig(  
+        filename="logfile_wrapper.log",  
+        level=logging.INFO,  
+        format="%(asctime)s %(levelname)s %(message)s",  
+    )  
+      
+    # Change symbol/topic as you wish  
+    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
     WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-    SYMBOL = "BTCUSDT"  
-    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
       
       
-    # ---------------- SBE helpers ----------------  
-    def apply_exp(mantissa: int, exp: int) -> float:  
-        # display = mantissa * 10^exp  
-        # exp can be negative  
-        return mantissa * (10.0**exp)  
+    class SBEBestOBRpiParser:  
+        """  
+        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
       
+        ts(int64), seq(int64), cts(int64), u(int64),  
+        askNormalPrice(int64), askNormalSize(int64),  
+        askRpiPrice(int64), askRpiSize(int64),  
+        bidNormalPrice(int64), bidNormalSize(int64),  
+        bidRpiPrice(int64), bidRpiSize(int64),  
+        priceExponent(int8), sizeExponent(int8),  
+        symbol(varString8)  
       
-    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
-        if off + 1 > len(buf):  
-            raise ValueError("varString8: missing length")  
+        All values are little-endian.  
+        """  
       
-        ln = buf[off]  
-        off += 1  
+        def __init__(self) -> None:  
+            # Header: blockLength, templateId, schemaId, version  
+            self.header_fmt = "<HHHH"  
+            self.header_sz = struct.calcsize(self.header_fmt)  
       
-        if off + ln > len(buf):  
-            raise ValueError("varString8: out of range")  
+            # 12 x int64 + 2 x int8:  
+            # ts, seq, cts, u,  
+            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
+            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
+            # priceExponent, sizeExponent  
+            self.body_fmt = "<" + ("q" * 12) + "bb"  
+            self.body_sz = struct.calcsize(self.body_fmt)  
       
-        s = buf[off : off + ln].decode("utf-8", errors="replace")  
-        off += ln  
-        return s, off  
+            self.target_template_id = 20000  
       
+        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
+            if len(data) < self.header_sz:  
+                raise ValueError("insufficient data for SBE header")  
       
-    def parse_public_trade_event(buf: bytes) -> dict:  
-        # messageHeader: <HHHH  
-        if len(buf) < 8:  
-            raise ValueError("too short for header")  
-      
-        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
-        off = 8  
-      
-        if template_id != 20002:  
-            raise ValueError(f"unexpected templateId={template_id}")  
-      
-        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
-        if len(buf) < off + 8 + 1 + 1:  
-            raise ValueError("too short for fixed fields")  
-      
-        ts = struct.unpack_from("<q", buf, off)[0]  
-        off += 8  
-      
-        price_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        size_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        # group header: blockLength(uint16), numInGroup(uint16)  
-        if len(buf) < off + 4:  
-            raise ValueError("too short for group header")  
-      
-        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
-        off += 4  
-      
-        trades = []  
-        for _ in range(num_in_group):  
-            entry_start = off  
-      
-            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
-            fill_time = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            price_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            size_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            seq = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            side = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_block = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_rpi = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            # Skip any future extension bytes in fixed part  
-            fixed_consumed = off - entry_start  
-            if fixed_consumed < grp_block_len:  
-                off += grp_block_len - fixed_consumed  
-            elif fixed_consumed > grp_block_len:  
-                # schema mismatch vs blockLength  
-                raise ValueError(  
-                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
-                )  
-            exec_id, off = read_varstring8(buf, off)  
-            trades.append(  
-                {  
-                    "fillTime": fill_time,  
-                    "priceMantissa": price_m,  
-                    "sizeMantissa": size_m,  
-                    "price": apply_exp(price_m, price_exp),  
-                    "size": apply_exp(size_m, size_exp),  
-                    "seq": seq,  
-                    "side": side,  
-                    "isBlockTrade": bool(is_block),  
-                    "isRPI": bool(is_rpi),  
-                    "execId": exec_id,  
-                }  
+            block_length, template_id, schema_id, version = struct.unpack_from(  
+                self.header_fmt, data, 0  
             )  
       
-        symbol, off = read_varstring8(buf, off)  
-      
-        return {  
-            "header": {  
-                "blockLength": block_len,  
-                "templateId": template_id,  
-                "schemaId": schema_id,  
+            return {  
+                "block_length": block_length,  
+                "template_id": template_id,  
+                "schema_id": schema_id,  
                 "version": version,  
-            },  
-            "ts": ts,  
-            "priceExponent": price_exp,  
-            "sizeExponent": size_exp,  
-            "symbol": symbol,  
-            "tradeItems": trades,  
-            "parsed_length": off,  
-        }  
+            }  
+      
+        @staticmethod  
+        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
+            if offset + 1 > len(data):  
+                raise ValueError("insufficient data for varString8 length")  
+      
+            (length,) = struct.unpack_from("<B", data, offset)  
+            offset += 1  
+      
+            if offset + length > len(data):  
+                raise ValueError("insufficient data for varString8 bytes")  
+      
+            s = data[offset : offset + length].decode("utf-8")  
+            offset += length  
+            return s, offset  
+      
+        @staticmethod  
+        def _apply_exponent(value: int, exponent: int) -> float:  
+            # Exponent is for decimal point positioning.  
+            # If exponent = 2 and value=1060342500 -> 10603425.00  
+            return value / (10 ** exponent) if exponent >= 0 else value * (  
+                10 ** (-exponent)  
+            )  
+      
+        def parse(self, data: bytes) -> Dict[str, Any]:  
+            hdr = self._parse_header(data)  
+            if hdr["template_id"] != self.target_template_id:  
+                raise NotImplementedError(  
+                    f"unsupported template_id={hdr['template_id']}"  
+                )  
+      
+            if len(data) < self.header_sz + self.body_sz:  
+                raise ValueError("insufficient data for BestOBRpiEvent body")  
+      
+            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
+            (  
+                ts,  
+                seq,  
+                cts,  
+                u,  
+                ask_np_m,  
+                ask_ns_m,  
+                ask_rp_m,  
+                ask_rs_m,  
+                bid_np_m,  
+                bid_ns_m,  
+                bid_rp_m,  
+                bid_rs_m,  
+                price_exp,  
+                size_exp,  
+            ) = fields  
+      
+            offset = self.header_sz + self.body_sz  
+            symbol, offset = self._parse_varstring8(data, offset)  
+      
+            # Apply exponents  
+            ask_np = self._apply_exponent(ask_np_m, price_exp)  
+            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
+            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
+            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
+            bid_np = self._apply_exponent(bid_np_m, price_exp)  
+            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
+            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
+            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
+      
+            return {  
+                "header": hdr,  
+                "ts": ts,  
+                "seq": seq,  
+                "cts": cts,  
+                "u": u,  
+                "price_exponent": price_exp,  
+                "size_exponent": size_exp,  
+                "symbol": symbol,  
+                # Normal book (best)  
+                "ask_normal_price": ask_np,  
+                "ask_normal_size": ask_ns,  
+                "bid_normal_price": bid_np,  
+                "bid_normal_size": bid_ns,  
+                # RPI book (best)  
+                "ask_rpi_price": ask_rp,  
+                "ask_rpi_size": ask_rs,  
+                "bid_rpi_price": bid_rp,  
+                "bid_rpi_size": bid_rs,  
+                "parsed_length": offset,  
+            }  
       
       
-    # ---------------- WS handlers ----------------  
-    def on_open(ws):  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("subscribed:", TOPIC)  
+    parser = SBEBestOBRpiParser()  
       
+      
+    # --------------------------- WebSocket handlers ---------------------------  
       
     def on_message(ws, message):  
-        if isinstance(message, (bytes, bytearray)):  
-            evt = parse_public_trade_event(message)  
-      
-            # print first trade only (example)  
-            if evt["tradeItems"]:  
-                t0 = evt["tradeItems"][0]  
-                print(  
-                    evt["symbol"],  
-                    "trades=",  
-                    len(evt["tradeItems"]),  
-                    "first:",  
-                    t0["price"],  
-                    "@",  
-                    t0["size"],  
-                    "seq=",  
-                    t0["seq"],  
+        try:  
+            # Binary SBE frames; text frames for control/acks/errors  
+            if isinstance(message, (bytes, bytearray)):  
+                decoded = parser.parse(message)  
+                logging.info(  
+                    "SBE %s seq=%s u=%s "  
+                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
+                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
+                    decoded["symbol"],  
+                    decoded["seq"],  
+                    decoded["u"],  
+                    decoded["bid_normal_price"],  
+                    decoded["bid_normal_size"],  
+                    decoded["ask_normal_price"],  
+                    decoded["ask_normal_size"],  
+                    decoded["bid_rpi_price"],  
+                    decoded["bid_rpi_size"],  
+                    decoded["ask_rpi_price"],  
+                    decoded["ask_rpi_size"],  
+                    decoded["ts"],  
                 )  
-        else:  
-            print("TEXT:", message)  
+                print(  
+                    f"{decoded['symbol']} u={decoded['u']} "  
+                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
+                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
+                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
+                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
+                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
+                )  
+            else:  
+                try:  
+                    obj = json.loads(message)  
+                    logging.info("TEXT %s", obj)  
+                    print(obj)  
+                except json.JSONDecodeError:  
+                    logging.warning("non-JSON text frame: %r", message)  
+        except Exception as e:  
+            logging.exception("decode error: %s", e)  
+            print("decode error:", e)  
       
       
-    def on_error(ws, err):  
-        print("WS error:", err)  
+    def on_error(ws, error):  
+        print("WS error:", error)  
+        logging.error("WS error: %s", error)  
       
       
     def on_close(ws, *_):  
-        print("closed")  
+        print("### connection closed ###")  
+        logging.info("connection closed")  
       
       
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
+    def on_open(ws):  
+        print("opened")  
+        sub = {"op": "subscribe", "args": [TOPIC]}  
+        ws.send(json.dumps(sub))  
+        print("subscribed:", TOPIC)  
+      
+        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
+        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
+      
+      
+    def manage_subscription(ws):  
+        # demo: unsubscribe/resubscribe once  
+        time.sleep(20)  
+        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
+        print("unsubscribed:", TOPIC)  
+        time.sleep(5)  
+        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
+        print("resubscribed:", TOPIC)  
+      
+      
+    def ping_per(ws):  
+        while True:  
+            try:  
+                ws.send(json.dumps({"op": "ping"}))  
+            except Exception:  
+                return  
+            time.sleep(10)  
+      
+      
+    def on_pong(ws, *_):  
+        print("pong received")  
+      
+      
+    def on_ping(ws, *_):  
+        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
+      
+      
+    def connWS():  
         ws = websocket.WebSocketApp(  
             WS_URL,  
             on_open=on_open,  
             on_message=on_message,  
             on_error=on_error,  
             on_close=on_close,  
+            on_ping=on_ping,  
+            on_pong=on_pong,  
         )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)    
-    
-
-### Golang
-    
-    
-    package main  
-      
-    import (  
-            "encoding/binary"  
-            "encoding/json"  
-            "fmt"  
-            "log"  
-            "math"  
-            "time"  
-      
-            "github.com/gorilla/websocket"  
-    )  
-      
-    const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-            Symbol = "BTCUSDT"  
-            Topic  = "publicTrade.sbe." + Symbol  
-    )  
-      
-    func applyExp(mantissa int64, exp int8) float64 {  
-            return float64(mantissa) * math.Pow10(int(exp))  
-    }  
-      
-    func readVarString8(buf []byte, off int) (string, int, error) {  
-            if off+1 > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: missing length")  
-            }  
-            ln := int(buf[off])  
-            off++  
-            if off+ln > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: out of range")  
-            }  
-            s := string(buf[off : off+ln])  
-            off += ln  
-            return s, off, nil  
-    }  
-      
-    type TradeItem struct {  
-            FillTime     int64   `json:"fillTime"`  
-            PriceMant    int64   `json:"priceMantissa"`  
-            SizeMant     int64   `json:"sizeMantissa"`  
-            Price        float64 `json:"price"`  
-            Size         float64 `json:"size"`  
-            Seq          int64   `json:"seq"`  
-            Side         uint8   `json:"side"`  
-            IsBlockTrade bool    `json:"isBlockTrade"`  
-            IsRPI        bool    `json:"isRPI"`  
-            ExecID       string   `json:"execId"`  
-    }  
-      
-    type PublicTradeEvent struct {  
-            Header struct {  
-                    BlockLength uint16 `json:"blockLength"`  
-                    TemplateID  uint16 `json:"templateId"`  
-                    SchemaID    uint16 `json:"schemaId"`  
-                    Version     uint16 `json:"version"`  
-            } `json:"header"`  
-      
-            Ts            int64       `json:"ts"`  
-            PriceExponent int8        `json:"priceExponent"`  
-            SizeExponent  int8        `json:"sizeExponent"`  
-            TradeItems    []TradeItem `json:"tradeItems"`  
-            Symbol        string      `json:"symbol"`  
-            ParsedLength  int         `json:"parsed_length"`  
-    }  
-      
-    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
-            if len(buf) < 8 {  
-                    return nil, fmt.Errorf("too short for header")  
-            }  
-            off := 0  
-            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
-            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
-            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
-            off += 8  
-      
-            if tid != 20002 {  
-                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
-            }  
-            if off+8+1+1 > len(buf) {  
-                    return nil, fmt.Errorf("too short for fixed fields")  
-            }  
-            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
-            off += 8  
-            priceExp := int8(buf[off])  
-            off++  
-            sizeExp := int8(buf[off])  
-            off++  
-      
-            // group header  
-            if off+4 > len(buf) {  
-                    return nil, fmt.Errorf("too short for group header")  
-            }  
-            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
-            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            off += 4  
-      
-            items := make([]TradeItem, 0, int(numInGroup))  
-            for i := 0; i < int(numInGroup); i++ {  
-                    entryStart := off  
-      
-                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
-                    if off+needMin > len(buf) {  
-                            return nil, fmt.Errorf("too short for trade entry %d", i)  
-                    }  
-      
-                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-      
-                    side := uint8(buf[off]); off++  
-                    isBlock := uint8(buf[off]); off++  
-                    isRpi := uint8(buf[off]); off++  
-      
-                    fixedConsumed := off - entryStart  
-                    if fixedConsumed < int(grpBlockLen) {  
-                            off += int(grpBlockLen) - fixedConsumed  
-                    } else if fixedConsumed > int(grpBlockLen) {  
-                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
-                    }  
-      
-                     execID, off2, err := readVarString8(buf, off)  
-                    if err != nil {  
-                            return nil, err  
-                    }  
-                    off = off2  
+        ws.run_forever(ping_interval=20, ping_timeout=10)  
       
       
-                    items = append(items, TradeItem{  
-                            FillTime:     fillTime,  
-                            PriceMant:    priceM,  
-                            SizeMant:     sizeM,  
-                            Price:        applyExp(priceM, priceExp),  
-                            Size:         applyExp(sizeM, sizeExp),  
-                            Seq:          seq,  
-                            Side:         side,  
-                            IsBlockTrade: isBlock != 0,  
-                            IsRPI:        isRpi != 0,  
-                            ExecID:       execID,  
-                    })  
-            }  
-      
-            symbol, off2, err := readVarString8(buf, off)  
-            if err != nil {  
-                    return nil, err  
-            }  
-            off = off2  
-      
-            evt := &PublicTradeEvent{  
-                    Ts:            ts,  
-                    PriceExponent: priceExp,  
-                    SizeExponent:  sizeExp,  
-                    TradeItems:    items,  
-                    Symbol:        symbol,  
-                    ParsedLength:  off,  
-            }  
-            evt.Header.BlockLength = blk  
-            evt.Header.TemplateID = tid  
-            evt.Header.SchemaID = sid  
-            evt.Header.Version = ver  
-            return evt, nil  
-    }  
-      
-    func main() {  
-            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
-            c, _, err := d.Dial(WSURL, nil)  
-            if err != nil {  
-                    log.Fatal(err)  
-            }  
-            defer c.Close()  
-      
-            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
-            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
-                    log.Fatal(err)  
-            }  
-            log.Println("subscribed:", Topic)  
-      
-            for {  
-                    mt, msg, err := c.ReadMessage()  
-                    if err != nil {  
-                            log.Fatal(err)  
-                    }  
-                    if mt == websocket.BinaryMessage {  
-                            evt, err := parsePublicTradeEvent(msg)  
-                            if err != nil {  
-                                    log.Println("decode error:", err)  
-                                    continue  
-                            }  
-                            if len(evt.TradeItems) > 0 {  
-                                    t0 := evt.TradeItems[0]  
-                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
-                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
-                            }  
-                    } else {  
-                            log.Println("TEXT:", string(msg))  
-                    }  
-            }  
-    }
+    if __name__ == "__main__":  
+        websocket.enableTrace(False)  
+        connWS()

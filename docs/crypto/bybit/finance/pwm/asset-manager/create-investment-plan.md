@@ -2,51 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-investment-plan
 api_type: REST
-updated_at: 2026-07-01 19:29:02.920270
+updated_at: 2026-07-02 19:18:19.991369
 ---
 
-# Manage Investment Plan
+# Create Fund Sub-Account
 
 info
 
-  1. Fund configuration (`updateFunds`) can only be modified when the plan is in **`Init`** , **`PendingSubscription`** , or **`Active`** status.
-  2. Plans in **`Deleted`** or **`Closed`** status do not allow adding new funds.
-  3. Any fund being added or updated must be in **`PendingSubscribe`** (pending subscription) status.
+  1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](/docs/v5/finance/pwm/asset-manager/all-funds), which returns the list of sub-account UIDs associated with the fund.
+  2. The fund must be in **Active (Running)** status before a sub-account can be created.
+  3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
+  4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
 
 
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/manage-investment-plan`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID  
-updateStatus| false| string| Update plan status. Options: `Closed` / `Deleted`. Status is unchanged if omitted  
-updateFunds| false| array| Fund list to update. If a matching `fundId` exists, the amount is updated; otherwise a new fund is added. Max 10 entries. Returns an error if duplicate `fundId` entries are present  
-> fundId| **true**|  string| Fund ID  
-> amount| **true**|  string| Configured amount (base coin)  
-reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
+fundId| **true**|  string| Fund ID  
+reqLinkId| **true**|  string| User-defined request ID, used to prevent duplicate creation  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-status| string| Current plan status: `PendingSubscription` / `Active` / `Closed` / `Deleted`  
-updatedTime| string| Status update timestamp (milliseconds)  
-updateFunds| array| Fund configuration bound to the investment plan after the update  
-> fundId| string| Fund ID  
-> amount| string| Configured amount (base coin)  
+fundId| string| Fund ID  
+subAccountUid| string| UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`  
+createdTime| string| Creation timestamp (milliseconds)  
+status| string| Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -55,19 +50,8 @@ updateFunds| array| Fund configuration bound to the investment plan after the up
     Content-Type: application/json  
       
     {  
-        "planId": "10088",  
-        "updateStatus": "Closed",  
-        "updateFunds": [  
-            {  
-                "fundId": "430",  
-                "amount": "100000"  
-            },  
-            {  
-                "fundId": "2005",  
-                "amount": "270000"  
-            }  
-        ],  
-        "reqLinkId": "manage-plan-001"  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
     }  
     
 
@@ -78,66 +62,52 @@ updateFunds| array| Fund configuration bound to the investment plan after the up
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "status": "Closed",  
-            "updateFunds": [  
-                {  
-                    "fundId": "430",  
-                    "amount": "100000"  
-                },  
-                {  
-                    "fundId": "2005",  
-                    "amount": "270000"  
-                }  
-            ],  
-            "updatedTime": "1701700000000"  
+            "fundId": "100001",  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }
 
 ---
 
-# 編輯投資計劃狀態和基金配置
+# 創建基金子賬戶
 
 信息
 
-  1. 僅在投資計劃狀態為 **`Init`** 、**`PendingSubscription`** 或 **`Active`** 時，才能修改基金配置（`updateFunds`）。
-  2. 狀態為 **`Deleted`** 或 **`Closed`** 的投資計劃不允許添加基金。
-  3. 添加或更新的基金必須處於 **`PendingSubscribe`** （待申購）狀態。
+  1. 子賬戶創建為異步操作。第一次調用時，`status` 返回 `pending`，`subAccountUid` 返回 `"0"`。後台創建完成後，使用相同參數再次調用該接口，將返回 `"status": "Active"`，新建子賬戶的 UID 會顯示在 `subAccountUid` 字段中。也可以通過 [查詢機構管轄的基金列表](/docs/zh-TW/v5/finance/pwm/asset-manager/all-funds) 查看基金下關聯的子賬戶列表，以確認子賬戶是否創建成功。
+  2. 基金必須為 **Active（運行中）** 狀態才能創建子賬戶。
+  3. 每個基金最多支持 **30 個子賬戶** （不包括已銷毀的）。
+  4. 如果當前有處於 `pending` 狀態的子賬戶正在創建，則不允許創建新的子賬戶，需等待當前創建完成後再操作。
 
 
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/manage-investment-plan`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID  
-updateStatus| false| string| 更新投資計劃狀態，可選值：`Closed` / `Deleted`，不傳則不修改狀態  
-updateFunds| false| array| 更新的基金列表。若有對應 `fundId` 則更新 amount；若沒有則添加新基金。最多10條，若包含重複 `fundId` 直接報錯  
-> fundId| **true**|  string| 基金ID  
-> amount| **true**|  string| 配置金額（本位幣）  
-reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於防重  
+fundId| **true**|  string| 基金ID  
+reqLinkId| **true**|  string| 用戶自定義請求ID，用於防止重複調用創建  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-status| string| 當前計劃狀態：`PendingSubscription`（待申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除）  
-updatedTime| string| 狀態更新時間戳（毫秒）  
-updateFunds| array| 更新後投資計劃綁定的基金信息  
-> fundId| string| 基金ID  
-> amount| string| 配置金額（本位幣）  
+fundId| string| 基金ID  
+subAccountUid| string| 新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID  
+createdTime| string| 創建時間戳（毫秒）  
+status| string| 創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -146,19 +116,8 @@ updateFunds| array| 更新後投資計劃綁定的基金信息
     Content-Type: application/json  
       
     {  
-        "planId": "10088",  
-        "updateStatus": "Closed",  
-        "updateFunds": [  
-            {  
-                "fundId": "430",  
-                "amount": "100000"  
-            },  
-            {  
-                "fundId": "2005",  
-                "amount": "270000"  
-            }  
-        ],  
-        "reqLinkId": "manage-plan-001"  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
     }  
     
 
@@ -169,18 +128,9 @@ updateFunds| array| 更新後投資計劃綁定的基金信息
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "status": "Closed",  
-            "updateFunds": [  
-                {  
-                    "fundId": "430",  
-                    "amount": "100000"  
-                },  
-                {  
-                    "fundId": "2005",  
-                    "amount": "270000"  
-                }  
-            ],  
-            "updatedTime": "1701700000000"  
+            "fundId": "100001",  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }

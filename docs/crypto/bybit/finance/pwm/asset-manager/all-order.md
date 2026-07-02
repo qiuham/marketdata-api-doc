@@ -2,64 +2,57 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/all-order
 api_type: REST
-updated_at: 2026-07-01 19:28:58.951761
+updated_at: 2026-07-02 19:18:18.758322
 ---
 
-# Get All Fund Orders
+# Create Fund Sub-Account
+
+info
+
+  1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](/docs/v5/finance/pwm/asset-manager/all-funds), which returns the list of sub-account UIDs associated with the fund.
+  2. The fund must be in **Active (Running)** status before a sub-account can be created.
+  3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
+  4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
+
+
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/asset-manager/all-order`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-fundId| false| string| Filter by fund ID. Returns orders for all managed funds if omitted  
-orderType| false| string| Order type filter: `Subscribe` / `Redeem`. Returns all if omitted  
-status| false| string| Order status filter: `Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`. Returns all if omitted  
-startTime| false| integer| Start time in milliseconds. See time range rules below  
-endTime| false| integer| End time in milliseconds. See time range rules below  
-limit| false| integer| Page size. Default: `20`, max: `50`  
-cursor| false| string| Pagination cursor (uses order `orderId` as cursor)  
+fundId| **true**|  string| Fund ID  
+reqLinkId| **true**|  string| User-defined request ID, used to prevent duplicate creation  
   
-Time Range Rules
-
-  * Neither `startTime` nor `endTime` passed: returns data from the last 7 days
-  * Both passed: returns data from `max(endTime - 7 days, startTime)` to `endTime`
-  * Only `startTime` passed: returns data from `startTime` to `startTime + 7 days`
-  * Only `endTime` passed: returns data from `endTime - 7 days` to `endTime`
-
-
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Order list  
-> orderId| string| Unique order identifier  
-> fundId| string| Fund ID  
-> fundName| string| Fund name  
-> accountUid| string| Fund main sub-account UID  
-> orderType| string| Order type: `Subscribe` / `Redeem`  
-> coin| string| Coin  
-> amount| string| Order amount (base coin). Subscription orders only; empty for redemption orders  
-> shares| string| Order shares. Redemption orders only; empty for subscription orders  
-> status| string| Order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`  
-> createdTime| string| Order creation timestamp (milliseconds)  
-nextPageCursor| string| Next page cursor. Empty string indicates no more data  
+fundId| string| Fund ID  
+subAccountUid| string| UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`  
+createdTime| string| Creation timestamp (milliseconds)  
+status| string| Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
+    }  
     
 
 ### Response Example
@@ -69,93 +62,63 @@ nextPageCursor| string| Next page cursor. Empty string indicates no more data
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "orderId": "768",  
-                    "fundId": "100001",  
-                    "fundName": "Alpha BTC Strategy Fund",  
-                    "accountUid": "800001",  
-                    "orderType": "Subscribe",  
-                    "coin": "BTC",  
-                    "amount": "10.00000000",  
-                    "shares": "",  
-                    "status": "Completed",  
-                    "createdTime": "1700000000000"  
-                },  
-                {  
-                    "orderId": "769",  
-                    "fundId": "100001",  
-                    "fundName": "Alpha BTC Strategy Fund",  
-                    "accountUid": "800002",  
-                    "orderType": "Redeem",  
-                    "coin": "BTC",  
-                    "amount": "",  
-                    "shares": "5000.00",  
-                    "status": "Pending Review",  
-                    "createdTime": "1700100000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "fundId": "100001",  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }
 
 ---
 
-# 查詢機構相關基金全部訂單列表
+# 創建基金子賬戶
+
+信息
+
+  1. 子賬戶創建為異步操作。第一次調用時，`status` 返回 `pending`，`subAccountUid` 返回 `"0"`。後台創建完成後，使用相同參數再次調用該接口，將返回 `"status": "Active"`，新建子賬戶的 UID 會顯示在 `subAccountUid` 字段中。也可以通過 [查詢機構管轄的基金列表](/docs/zh-TW/v5/finance/pwm/asset-manager/all-funds) 查看基金下關聯的子賬戶列表，以確認子賬戶是否創建成功。
+  2. 基金必須為 **Active（運行中）** 狀態才能創建子賬戶。
+  3. 每個基金最多支持 **30 個子賬戶** （不包括已銷毀的）。
+  4. 如果當前有處於 `pending` 狀態的子賬戶正在創建，則不允許創建新的子賬戶，需等待當前創建完成後再操作。
+
+
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/asset-manager/all-order`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-fundId| false| string| 篩選基金ID，不傳返回所有管轄基金的訂單  
-orderType| false| string| 訂單類型篩選：`Subscribe` / `Redeem`，不傳返回全部  
-status| false| string| 訂單狀態篩選：`Pending Review` / `Processing` / `Completed` / `Rejected` / `Failed`，不傳返回全部  
-startTime| false| integer| 起始時間毫秒時間戳，時間範圍規則見下方說明  
-endTime| false| integer| 結束時間毫秒時間戳，時間範圍規則見下方說明  
-limit| false| integer| 每頁數量，默認 `20`，最大 `50`  
-cursor| false| string| 分頁游標（使用訂單 `orderId` 作為游標）  
+fundId| **true**|  string| 基金ID  
+reqLinkId| **true**|  string| 用戶自定義請求ID，用於防止重複調用創建  
   
-時間範圍規則
-
-  * `startTime` 和 `endTime` 都不傳：默認返回最近7天數據
-  * 都傳入：查詢 `max(endTime - 7天, startTime)` 到 `endTime` 的數據
-  * 只傳 `startTime`：查詢 `startTime` 到 `startTime + 7天` 的數據
-  * 只傳 `endTime`：查詢 `endTime - 7天` 到 `endTime` 的數據
-
-
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 訂單列表  
-> orderId| string| 訂單唯一標識  
-> fundId| string| 基金ID  
-> fundName| string| 基金名稱  
-> accountUid| string| 基金主子賬戶UID  
-> orderType| string| 訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）  
-> coin| string| 幣種  
-> amount| string| 訂單金額（本位幣），僅申購訂單有值，贖回訂單為空  
-> shares| string| 訂單份額，僅贖回訂單有值，申購訂單為空  
-> status| string| 訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）  
-> createdTime| string| 訂單創建時間戳（毫秒）  
-nextPageCursor| string| 下一頁游標，為空表示無更多數據  
+fundId| string| 基金ID  
+subAccountUid| string| 新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID  
+createdTime| string| 創建時間戳（毫秒）  
+status| string| 創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/asset-manager/all-order?fundId=100001&limit=20 HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
+    }  
     
 
 ### 響應示例
@@ -165,32 +128,9 @@ nextPageCursor| string| 下一頁游標，為空表示無更多數據
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "orderId": "768",  
-                    "fundId": "100001",  
-                    "fundName": "Alpha BTC Strategy Fund",  
-                    "accountUid": "800001",  
-                    "orderType": "Subscribe",  
-                    "coin": "BTC",  
-                    "amount": "10.00000000",  
-                    "shares": "",  
-                    "status": "Completed",  
-                    "createdTime": "1700000000000"  
-                },  
-                {  
-                    "orderId": "769",  
-                    "fundId": "100001",  
-                    "fundName": "Alpha BTC Strategy Fund",  
-                    "accountUid": "800002",  
-                    "orderType": "Redeem",  
-                    "coin": "BTC",  
-                    "amount": "",  
-                    "shares": "5000.00",  
-                    "status": "Pending Review",  
-                    "createdTime": "1700100000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "fundId": "100001",  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }

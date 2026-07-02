@@ -2,63 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/est-redeem
 api_type: REST
-updated_at: 2026-07-01 19:27:54.220833
+updated_at: 2026-07-02 19:17:15.563168
 ---
 
-# Get Custom Product Quote
+# Get Product Info
 
 info
 
-  * Requires Earn permission on the API key.
-  * This endpoint is **only for RFQ products** (`isRfqProduct=true`). For fixed price range products, use [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) or subscribe to the WebSocket topic [`earn.doublewin.offers`](/docs/v5/finance/advanced-earn/websocket/double-win-offer).
-
-
-
-tip
-
-**How to use RFQ custom price range:**
-
-  1. Call [Get Product Info](/docs/v5/finance/advanced-earn/double-win/product-info) to obtain `priceTickSize`, `minDeviationRatio`, and `maxDeviationRatio`.
-  2. Choose a `lowerPrice` and `upperPrice` within the allowed deviation range, both must be multiples of `priceTickSize`.
-  3. Call this endpoint with the chosen prices to get a `leverage` quote and its `expireTime`.
-  4. Place the order before `expireTime` using the returned `leverage`.
-
-
+Does not need authentication
 
 ### HTTP Request
 
-GET`/v5/earn/advance/double-win-leverage`
+GET`/v5/earn/advance/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  string| Product ID  
-initialPrice| **true**|  string| Current index price of the underlying asset  
-lowerPrice| **true**|  string| Custom lower bound of price range. Must be a multiple of `priceTickSize` and less than `initialPrice`  
-upperPrice| **true**|  string| Custom upper bound of price range. Must be a multiple of `priceTickSize` and greater than `initialPrice`  
+category| **true**|  string| Product category. `DoubleWin`  
+coin| false| string| Underlying asset to filter by, uppercase only, e.g. `BTC`, `ETH`  
+duration| false| string| Product duration, e.g. `1d`, `2d`, `3d`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-productId| string| Product ID  
-initialPrice| string| Echo back of the submitted `initialPrice`  
-lowerPrice| string| Echo back of the submitted `lowerPrice`  
-upperPrice| string| Echo back of the submitted `upperPrice`  
-leverage| string| Leverage multiplier for the given price range, e.g. `"3.2"`  
-expireTime| string| Quote expiry time, Unix timestamp in ms. The order must be placed before this time  
-maxInvestmentAmount| string| Maximum single order amount for this quote  
+category| string| Product category. `DoubleWin`  
+list| array| Object  
+> category| string| Product category  
+> productId| string| Product ID  
+> investCoin| string| Investment coin, e.g. `USDT`  
+> underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
+> duration| string| Product duration, e.g. `1d`, `2d`, `3d`  
+> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> settlementTime| string| Settlement time, Unix timestamp in ms  
+> expectReceiveAt| string| Expected time to receive settlement funds, Unix timestamp in ms  
+> minPurchaseAmount| string| Minimum single order amount  
+> orderPrecisionDigital| int| Order amount precision (decimal places)  
+> isRfqProduct| bool| `false`: fixed price range product; `true`: RFQ custom price range product  
+> lowerPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Lower price buffer offset. Actual lower price = `initialPrice - lowerPriceBuffer`  
+> upperPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Upper price buffer offset. Actual upper price = `initialPrice + upperPriceBuffer`  
+> minDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Minimum allowed deviation ratio of the custom price from current price  
+> maxDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Maximum allowed deviation ratio of the custom price from current price  
+> priceTickSize| string| **RFQ only** (`isRfqProduct=true`). Price tick size. Custom lower/upper prices must be a multiple of this value  
   
 ### Request Example
     
     
-    GET /v5/earn/advance/double-win-leverage?productId=14092&initialPrice=66333.94&lowerPrice=63000&upperPrice=70000 HTTP/1.1  
+    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -68,74 +61,82 @@ maxInvestmentAmount| string| Maximum single order amount for this quote
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "productId": "14092",  
-            "initialPrice": "66333.94",  
-            "lowerPrice": "63000",  
-            "upperPrice": "70000",  
-            "leverage": "241.15",  
-            "expireTime": "1775106748000",  
-            "maxInvestmentAmount": "10000"  
+            "category": "DoubleWin",  
+            "list": [  
+                {  
+                    "category": "DoubleWin",  
+                    "productId": "14092",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "duration": "2d",  
+                    "expectReceiveAt": "1775290500000",  
+                    "minPurchaseAmount": "10",  
+                    "subscribeStartAt": "1775088000000",  
+                    "subscribeEndAt": "1775174399000",  
+                    "settlementTime": "1775289600000",  
+                    "orderPrecisionDigital": 4,  
+                    "isRfqProduct": true,  
+                    "lowerPriceBuffer": "",  
+                    "upperPriceBuffer": "",  
+                    "minDeviationRatio": "0.01",  
+                    "maxDeviationRatio": "0.15",  
+                    "priceTickSize": "500"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1775106718961  
+        "time": 1775100184409  
     }
 
 ---
 
-# 查詢自選區間產品報價
+# 查詢產品資訊
 
 信息
 
-  * API 金鑰需要具備 Earn（理財）權限。
-  * 此接口**僅適用於 RFQ 產品** （`isRfqProduct=true`）。固定區間產品請使用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)，或訂閱 WebSocket 頻道 [`earn.doublewin.offers`](/docs/zh-TW/v5/finance/advanced-earn/websocket/double-win-offer)。
-
-
-
-提示
-
-**RFQ 自選區間使用流程：**
-
-  1. 通過[查詢產品資訊](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-info)獲取 `priceTickSize`、`minDeviationRatio` 和 `maxDeviationRatio`。
-  2. 在允許的偏離範圍內選擇 `lowerPrice` 和 `upperPrice`，兩者均須為 `priceTickSize` 的整數倍。
-  3. 攜帶所選價格調用本接口，獲取 `leverage` 報價及其 `expireTime`。
-  4. 在 `expireTime` 前使用返回的 `leverage` 完成下單。
-
-
+無需身份驗證
 
 ### HTTP 請求
 
-GET`/v5/earn/advance/double-win-leverage`
+GET`/v5/earn/advance/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  string| 產品 ID  
-initialPrice| **true**|  string| 標的資產當前指數價格  
-lowerPrice| **true**|  string| 自選價格區間下限，須為 `priceTickSize` 的整數倍，且小於 `initialPrice`  
-upperPrice| **true**|  string| 自選價格區間上限，須為 `priceTickSize` 的整數倍，且大於 `initialPrice`  
+category| **true**|  string| 產品類別，`DoubleWin`  
+coin| false| string| 標的資產篩選，僅限大寫，例如：`BTC`, `ETH`  
+duration| false| string| 產品期限篩選，例如：`1d`, `2d`, `3d`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-productId| string| 產品 ID  
-initialPrice| string| 請求中傳入的 `initialPrice`（原值返回）  
-lowerPrice| string| 請求中傳入的 `lowerPrice`（原值返回）  
-upperPrice| string| 請求中傳入的 `upperPrice`（原值返回）  
-leverage| string| 對應所選價格區間的槓桿倍數，例如：`"241.15"`  
-expireTime| string| 報價到期時間，毫秒級 Unix 時間戳，須在此時間前完成下單  
-maxInvestmentAmount| string| 本次報價下的最大單筆下單金額  
+category| string| 產品類別，`DoubleWin`  
+list| array| 列表  
+> category| string| 產品類別  
+> productId| string| 產品 ID  
+> investCoin| string| 投資幣種，例如：`USDT`  
+> underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
+> duration| string| 產品期限，例如：`1d`, `2d`, `3d`  
+> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
+> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> expectReceiveAt| string| 預計結算資金到帳時間，毫秒級 Unix 時間戳  
+> minPurchaseAmount| string| 最小單筆申購金額  
+> orderPrecisionDigital| int| 訂單金額精度（小數位數）  
+> isRfqProduct| bool| `false`：固定區間產品；`true`：RFQ 自選區間產品  
+> lowerPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（下限），實際下限價格 = `initialPrice - lowerPriceBuffer`  
+> upperPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（上限），實際上限價格 = `initialPrice + upperPriceBuffer`  
+> minDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最小允許比例  
+> maxDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最大允許比例  
+> priceTickSize| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。價格步長，自選下限/上限價格須為此值的整數倍  
   
 ### 請求示例
     
     
-    GET /v5/earn/advance/double-win-leverage?productId=14092&initialPrice=66333.94&lowerPrice=63000&upperPrice=70000 HTTP/1.1  
+    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -145,14 +146,29 @@ maxInvestmentAmount| string| 本次報價下的最大單筆下單金額
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "productId": "14092",  
-            "initialPrice": "66333.94",  
-            "lowerPrice": "63000",  
-            "upperPrice": "70000",  
-            "leverage": "241.15",  
-            "expireTime": "1775106748000",  
-            "maxInvestmentAmount": "10000"  
+            "category": "DoubleWin",  
+            "list": [  
+                {  
+                    "category": "DoubleWin",  
+                    "productId": "14092",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "duration": "2d",  
+                    "expectReceiveAt": "1775290500000",  
+                    "minPurchaseAmount": "10",  
+                    "subscribeStartAt": "1775088000000",  
+                    "subscribeEndAt": "1775174399000",  
+                    "settlementTime": "1775289600000",  
+                    "orderPrecisionDigital": 4,  
+                    "isRfqProduct": true,  
+                    "lowerPriceBuffer": "",  
+                    "upperPriceBuffer": "",  
+                    "minDeviationRatio": "0.01",  
+                    "maxDeviationRatio": "0.15",  
+                    "priceTickSize": "500"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1775106718961  
+        "time": 1775100184409  
     }

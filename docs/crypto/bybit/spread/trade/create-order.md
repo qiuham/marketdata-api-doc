@@ -2,68 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/create-order
 api_type: Trading
-updated_at: 2026-07-01 19:32:33.536994
+updated_at: 2026-07-02 19:21:49.862949
 ---
 
-# Get Trade History
+# Get Open Orders
 
 info
 
-  * In self-trade cases, both the maker and taker single-leg trades will be returned in the same request.
-  * Single leg executions can also be found with "execType"=`FutureSpread` via [Get Trade History](/docs/v5/order/execution)
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-GET`/v5/spread/execution/list`
+GET`/v5/spread/order/realtime`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| false| string| Spread combination symbol name  
+baseCoin| false| string| Base coin  
 orderId| false| string| Spread combination order ID  
 orderLinkId| false| string| User customised order ID  
-startTime| false| long| The start timestamp (ms)
-
-  * startTime and endTime are not passed, return 7 days by default
-  * Only startTime is passed, return range between startTime and startTime+7 days
-  * Only endTime is passed, return range between endTime-7 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
-
-  
-endTime| false| long| The end timestamp (ms)  
-limit| false| integer| Limit for parent order data size per page. [`1`, `50`]. Default: `20`  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
 cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Trade info  
+list| array<object>| Order info  
 > symbol| string| Spread combination symbol name  
+> baseCoin| string| Base coin  
+> orderType| string| Order type, `Market`, `Limit`  
 > orderLinkId| string| User customised order ID  
 > side| string| Side, `Buy`, `Sell`  
+> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
 > orderId| string| Spread combination order ID  
-> execPrice| string| Combo Exec price  
-> execTime| string| Combo exec timestamp (ms)  
-> execType| string| Combo exec type, `Trade`  
-> execQty| string| Combo exec qty  
-> execId| string| Combo exec ID  
-> legs| array<object>| Legs execution info  
->> symbol| string| Leg symbol name  
->> side| string| Leg order side, `Buy`, `Sell`  
->> execPrice| string| Leg exec price  
->> execTime| string| Leg exec timestamp (ms)  
->> execValue| string| Leg exec value  
->> [execType](/docs/v5/enum#exectype)| string| Leg exec type  
->> category| string| Leg category, `linear`, `spot`  
->> execQty| string| Leg exec qty  
->> execFee| string| Leg exec fee, deprecated for Spot leg  
->> execFeeV2| string| Leg exec fee, used for Spot leg only  
->> feeCurrency| string| Leg fee currency  
->> execId| string| Leg exec ID  
+> leavesQty| string| The remaining qty not executed  
+> orderStatus| string| Order status, `New`, `PartiallyFilled`  
+> cumExecQty| string| Cumulative executed order qty  
+> price| string| Order price  
+> qty| string| Order qty  
+> createdTime| string| Order created timestamp (ms)  
+> updatedTime| string| Order updated timestamp (ms)  
 nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
@@ -74,11 +57,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
+    GET /v5/spread/order/realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1744105738529  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744096099520  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     
@@ -90,9 +73,7 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_trade_history(  
-        orderId="5e010c35-2b44-4f03-8081-8fa31fb73376"  
-    ))  
+    print(session.spread_get_open_orders())  
     
 
 ### Response Example
@@ -100,84 +81,54 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
+            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
             "list": [  
                 {  
                     "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderType": "Limit",  
+                    "updatedTime": "1744096099771",  
                     "orderLinkId": "",  
                     "side": "Buy",  
-                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
-                    "execPrice": "21",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Buy",  
-                            "execPrice": "124.1",  
-                            "execTime": "1744104992224",  
-                            "execValue": "248.2",  
-                            "execType": "FutureSpread",  
-                            "category": "linear",  
-                            "execQty": "2",  
-                            "execFee": "0.039712",  
-                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Sell",  
-                            "execPrice": "103.1152",  
-                            "execTime": "1744104992224",  
-                            "execValue": "206.2304",  
-                            "execType": "FutureSpread",  
-                            "category": "spot",  
-                            "execQty": "2",  
-                            "execFee": "0.06186912",  
-                            "execId": "2110000000061481958"  
-                        }  
-                    ],  
-                    "execTime": "1744104992220",  
-                    "execType": "Trade",  
-                    "execQty": "2",  
-                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
+                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
+                    "leavesQty": "0.1",  
+                    "orderStatus": "New",  
+                    "cumExecQty": "0",  
+                    "price": "-4",  
+                    "qty": "0.1",  
+                    "createdTime": "1744096099767",  
+                    "timeInForce": "PostOnly",  
+                    "baseCoin": "SOL"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1744105105169  
+        "time": 1744096103435  
     }
 
 ---
 
-# 查詢價差成交歷史
+# 查詢價差活動單
 
 信息
 
-  * 在自成交場景下, 單腿成交的maker和taker的兩筆成交都會返回, 他們的execId一樣
-  * 單腿的成交信息也會出現[查詢成交歷史](/docs/zh-TW/v5/order/order-list)接口中, 標記是"execType"=`FutureSpread`
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
 ### HTTP請求
 
-GET`/v5/spread/execution/list`
+GET`/v5/spread/order/realtime`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| false| string| 價差產品名稱  
+baseCoin| false| string| 交易幣種  
 orderId| false| string| 價差訂單ID  
 orderLinkId| false| string| 用戶自定義ID  
-startTime| false| long| 開始時間戳 (毫秒)
-
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+7天的數據
-  * 若只傳endTime，則查詢endTime-7天和endTime的數據
-
-  
-endTime| false| long| 結束時間戳 (毫秒)  
 limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
 cursor| false| string| 游標，用於翻頁  
   
@@ -185,39 +136,31 @@ cursor| false| string| 游標，用於翻頁
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 成交信息  
+list| array<object>| 訂單信息  
 > symbol| string| 價差產品名稱  
+> orderType| string| 訂單類型, `Market`, `Limit`  
+> updatedTime| string| 訂單更新時間 (毫秒)  
+> orderId| string| 價差訂單ID  
 > orderLinkId| string| 用戶自定義ID  
 > side| string| 訂單方向, `Buy`, `Sell`  
-> orderId| string| 價差訂單ID  
-> execPrice| string| 價差訂單成交價格  
-> execTime| string| 價差訂單成交時間(毫秒)  
-> execType| string| 價差訂單成交類型, `Trade`  
-> execQty| string| 價差訂單成交數量  
-> execId| string| 價差訂單成交ID  
-> legs| array<object>| 單腿成交信息  
->> symbol| string| 單腿合約名稱  
->> side| string| 單腿訂單方向 `Buy`, `Sell`  
->> execPrice| string| 單腿成交價格  
->> execTime| string| 單腿成交時間 (毫秒)  
->> execValue| string| 單腿成交價值  
->> [execType](/docs/zh-TW/v5/enum#exectype)| string| 單腿成交類型  
->> category| string| 單腿合約類型 `linear`: 合約, `spot`: 現貨  
->> execQty| string| 單腿成交數量  
->> execFee| string| 單腿交易手續費用  
->> execFeeV2| string| 僅用於現貨單腿交易手續費用  
->> feeCurrency| string| 單腿交易手續費幣種  
->> execId| string| 單腿成交ID  
+> leavesQty| string| 剩餘未成交數量  
+> orderStatus| string| 訂單狀態, `New`, `PartiallyFilled`  
+> cumExecQty| string| 累計成交數量  
+> price| string| 訂單價格  
+> qty| string| 訂單數量  
+> createdTime| string| 訂單創建時間 (毫秒)  
+> timeInForce| string| 訂單執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
+> baseCoin| string| 交易幣種  
 nextPageCursor| string| 游標，用於翻頁  
   
 ### 請求示例
     
     
-    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
+    GET /v5/spread/order/realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1744105738529  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744096099520  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     
@@ -227,49 +170,28 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
+            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
             "list": [  
                 {  
                     "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderType": "Limit",  
+                    "updatedTime": "1744096099771",  
                     "orderLinkId": "",  
                     "side": "Buy",  
-                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
-                    "execPrice": "21",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Buy",  
-                            "execPrice": "124.1",  
-                            "execTime": "1744104992224",  
-                            "execValue": "248.2",  
-                            "execType": "FutureSpread",  
-                            "category": "linear",  
-                            "execQty": "2",  
-                            "execFee": "0.039712",  
-                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Sell",  
-                            "execPrice": "103.1152",  
-                            "execTime": "1744104992224",  
-                            "execValue": "206.2304",  
-                            "execType": "FutureSpread",  
-                            "category": "spot",  
-                            "execQty": "2",  
-                            "execFee": "0.06186912",  
-                            "execId": "2110000000061481958"  
-                        }  
-                    ],  
-                    "execTime": "1744104992220",  
-                    "execType": "Trade",  
-                    "execQty": "2",  
-                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
+                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
+                    "leavesQty": "0.1",  
+                    "orderStatus": "New",  
+                    "cumExecQty": "0",  
+                    "price": "-4",  
+                    "qty": "0.1",  
+                    "createdTime": "1744096099767",  
+                    "timeInForce": "PostOnly",  
+                    "baseCoin": "SOL"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1744105105169  
+        "time": 1744096103435  
     }

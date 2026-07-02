@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-balance
 anchor_id: funding-account-rest-api-get-balance
 api_type: REST
-updated_at: 2026-07-01 19:55:28.224518
+updated_at: 2026-07-02 19:44:52.090467
 ---
 
 # Get balance

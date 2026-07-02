@@ -2,50 +2,74 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/yield
 api_type: REST
-updated_at: 2026-07-01 19:28:39.103856
+updated_at: 2026-07-02 19:17:56.551648
 ---
 
-# Get Hourly Yield History
+# Get Coupon List
 
 info
 
-API key needs "Earn" permission
+  * Authentication required.
+  * **Rate Limit:** 10 req/s (UID)
+
+
+
+Query the user's interest-rate coupons (`interestCards`) and Dual Assets reward cards (`awardCards`, e.g. trial funds / zero-cost vouchers) for the given product category.
+
+Returned cards include all states: `InUse`, `NotUse`, `Expired`, and `AlreadyUsed`.
+
+To apply a coupon when placing an order, pass its `awardId` and `specCode` in the `interestCard` field of the corresponding place-order request:
+
+  * `FlexibleSaving` → [Place Order](/docs/v5/finance/earn/easy-onchain/create-order)
+  * `DualAssets` → [Place Order](/docs/v5/finance/advanced-earn/dual-asset/create-order)
+
+
 
 ### HTTP Request
 
-GET`/v5/earn/hourly-yield`
+GET`/v5/earn/coupons`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`  
-productId| false| string| Product ID  
-startTime| false| integer| The start timestamp (ms).
-
-  * 1\. If both are not provided, the default is to return data from the last 7 days.
-  * 2\. If both are provided, the difference between the endTime and startTime must be less than or equal to 7 days. 
-
-  
-endTime| false| integer| The endTime timestamp (ms)  
-limit| false| integer| Limit for data size per page. Range: [1, 100]. Default: 50  
-cursor| false| string| Cursor, use the returned `nextPageCursor` to query data for the next page.  
+category| **true**|  string| Product category: `FlexibleSaving`, `DualAssets`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-list| array| Object  
-> productId| string| Product ID  
-> coin| string| Coin name: "BTC", "ETH"  
-> id| string| Unique key (guaranteed to be unique only under the same user)  
-> amount| string| Yield Amount. Example: 10  
-> effectiveStakingAmount| string| Effective staking amount, e.g., 1000.00  
-> status| string| Order status: `Pending`, `Success`, `Fail`  
-> hourlyDate| string| Hourly yield time(ms) eg: 1755478800000  
-> createdAt| string| Order creation time in milliseconds, e.g., 1684738540561  
+interestCards| array| Interest-rate coupon list  
+> awardId| integer| Coupon unique ID  
+> specCode| string| Coupon spec code  
+> coin| string| Coin name, e.g. `USDT`, `BTC`  
+> apy| string| Bonus APY rate as a decimal string, e.g. `"0.03"` = 3%  
+> duration| integer| Coupon validity period (days)  
+> claimedAt| integer| Claim time (Unix seconds)  
+> expireAt| integer| Expiry time (Unix seconds)  
+> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
+> status| string| Coupon status. `InUse`: currently in use, `NotUse`: claimed but not yet used, `Expired`: expired without being used, `AlreadyUsed`: used and settled  
+> currentPnl| string| Bonus interest accrued so far  
+> limitPnl| string| Bonus interest cap  
+> positionEffectiveAmount| string| Effective principal amount for the bonus calculation  
+> productId| integer| Linked product ID; populated for `InUse` / `AlreadyUsed`, `0` otherwise  
+> category| string| Product category the coupon applies to: `FlexibleSaving`, `DualAssets`  
+awardCards| array| Dual Assets reward card list (trial fund / zero-cost voucher)  
+> awardId| integer| Reward card unique ID  
+> specCode| string| Reward card spec code  
+> claimedAt| integer| Claim time (Unix seconds)  
+> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
+> expireAt| integer| Expiry time (Unix seconds)  
+> status| string| Card status. Same semantics as `interestCards > status`  
+> amount| string| Trial / zero-cost voucher amount  
+> limitPnlPercentage| string| PnL percentage cap, e.g. `"0.23"` = 23%  
+> baseCoin| string| Base coin name  
+> quoteCoin| string| Quote coin name  
+> direction| integer| Dual Assets direction: `1` = BuyLow, `2` = SellHigh  
+> category| string| Product category the card applies to: `FlexibleSaving`, `DualAssets`  
   
+* * *
+
 ### Request Example
 
   * HTTP
@@ -55,25 +79,16 @@ list| array| Object
 
     
     
-    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1759983699446  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_hourly_yield(  
-        category="FlexibleSaving"  
-    ))  
+      
     
     
     
@@ -85,68 +100,99 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "interestCards": [  
                 {  
-                    "productId": "428",  
+                    "awardId": 1001,  
+                    "specCode": "FS_APY_3PCT_30D",  
                     "coin": "USDT",  
-                    "amount": "0.060810502283105022",  
-                    "effectiveStakingAmount": "1000",  
-                    "hourlyDate": "1759989600000",  
-                    "status": "Success",  
-                    "createdAt": "1759989603000"  
+                    "apy": "0.03",  
+                    "duration": 30,  
+                    "claimedAt": 1759900800,  
+                    "expireAt": 1762492800,  
+                    "usedAt": 0,  
+                    "status": "NotUse",  
+                    "currentPnl": "0",  
+                    "limitPnl": "100",  
+                    "positionEffectiveAmount": "0",  
+                    "productId": 0,  
+                    "category": "FlexibleSaving"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "awardCards": []  
         },  
         "retExtInfo": {},  
-        "time": 1759993045287  
+        "time": 1759983699446  
     }
 
 ---
 
-# 查詢每小時收益歷史
+# 查詢優惠券列表
 
 信息
 
-API key需要"理財""權限
+  * 需要身份驗證。
+  * **頻率限制：** 10 次/秒（UID）
+
+
+
+查詢用戶在指定產品類別下的利率優惠券（`interestCards`）和雙幣投資獎勵卡（`awardCards`，如體驗金/零成本券）。
+
+返回所有狀態的卡券：`InUse`（使用中）、`NotUse`（未使用）、`Expired`（已過期）、`AlreadyUsed`（已使用）。
+
+下單時如需使用優惠券，請在對應下單請求的 `interestCard` 字段中傳入 `awardId` 和 `specCode`：
+
+  * `FlexibleSaving` → [下單](/docs/zh-TW/v5/finance/earn/easy-onchain/create-order)
+  * `DualAssets` → [下單](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/create-order)
+
+
 
 ### HTTP 請求
 
-GET`/v5/earn/hourly-yield`
+GET`/v5/earn/coupons`
 
 ### 請求參數
 
-參數名稱| 必填| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`  
-productId| false| string| 產品 ID  
-startTime| false| integer| 開始時間戳 (ms)。
-
-  * 1\. 如果未提供 startTime 和 endTime，默認返回最近 7 天的數據。
-  * 2\. 如果提供了 startTime 和 endTime，則結束時間與開始時間的差值必須小於或等於 7 天。
-
-  
-endTime| false| integer| 結束時間戳 (ms)  
-limit| false| integer| 每頁數據大小限制。範圍：[1, 100]。默認值：50  
-cursor| false| string| 游標，使用返回的 `nextPageCursor` 查詢下一頁的數據。  
+category| **true**|  string| 產品類別：`FlexibleSaving`、`DualAssets`  
   
 ### 響應參數
 
-參數名稱| 類型| 說明  
+參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
-list| array|   
-> productId| string| 產品 ID  
-> coin| string| 幣種名稱："BTC", "ETH"  
-> id| string| 唯一鍵（僅在同一用戶下保證唯一）  
-> amount| string| 收益金額  
->effectiveStakingAmount| string| 有效持倉金額，例如：1000.00  
-> status| string| 訂單狀態：`Pending`，`Success`，`Fail`  
-> hourlyDate| string| 每小時收益時間 (ms)，例如：1755478800000  
-> createdAt| string| 訂單創建時間 (ms)，例如：1684738540561  
+interestCards| array| 利率優惠券列表  
+> awardId| integer| 優惠券唯一ID  
+> specCode| string| 優惠券規格碼  
+> coin| string| 幣種名稱，如 `USDT`、`BTC`  
+> apy| string| 加成APY（小數字符串），如 `"0.03"` = 3%  
+> duration| integer| 優惠券有效期（天）  
+> claimedAt| integer| 領取時間（Unix秒）  
+> expireAt| integer| 到期時間（Unix秒）  
+> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
+> status| string| 狀態。`InUse`：使用中，`NotUse`：未使用，`Expired`：已過期，`AlreadyUsed`：已使用  
+> currentPnl| string| 已累計加成利息  
+> limitPnl| string| 加成利息上限  
+> positionEffectiveAmount| string| 計算加成的有效本金  
+> productId| integer| 關聯產品ID；`InUse`/`AlreadyUsed` 時有值，否則為 `0`  
+> category| string| 優惠券適用的產品類別：`FlexibleSaving`、`DualAssets`  
+awardCards| array| 雙幣投資獎勵卡列表（體驗金/零成本券）  
+> awardId| integer| 獎勵卡唯一ID  
+> specCode| string| 獎勵卡規格碼  
+> claimedAt| integer| 領取時間（Unix秒）  
+> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
+> expireAt| integer| 到期時間（Unix秒）  
+> status| string| 狀態，語義同 `interestCards > status`  
+> amount| string| 體驗金/零成本券金額  
+> limitPnlPercentage| string| 收益上限比例，如 `"0.23"` = 23%  
+> baseCoin| string| 標的幣種  
+> quoteCoin| string| 計價幣種  
+> direction| integer| 雙幣方向：`1` = 低買（BuyLow），`2` = 高賣（SellHigh）  
+> category| string| 獎勵卡適用的產品類別：`FlexibleSaving`、`DualAssets`  
   
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -156,13 +202,12 @@ list| array|
 
     
     
-    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1759983699446  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
@@ -178,21 +223,28 @@ list| array|
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "interestCards": [  
                 {  
-                    "productId": "428",  
+                    "awardId": 1001,  
+                    "specCode": "FS_APY_3PCT_30D",  
                     "coin": "USDT",  
-                    "amount": "0.060810502283105022",  
-                    "effectiveStakingAmount": "1000",  
-                    "hourlyDate": "1759989600000",  
-                    "status": "Success",  
-                    "createdAt": "1759989603000"  
+                    "apy": "0.03",  
+                    "duration": 30,  
+                    "claimedAt": 1759900800,  
+                    "expireAt": 1762492800,  
+                    "usedAt": 0,  
+                    "status": "NotUse",  
+                    "currentPnl": "0",  
+                    "limitPnl": "100",  
+                    "positionEffectiveAmount": "0",  
+                    "productId": 0,  
+                    "category": "FlexibleSaving"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "awardCards": []  
         },  
         "retExtInfo": {},  
-        "time": 1759993045287  
+        "time": 1759983699446  
     }

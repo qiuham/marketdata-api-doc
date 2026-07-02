@@ -2,51 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/get-investment-plan
 api_type: REST
-updated_at: 2026-07-01 19:29:04.160369
+updated_at: 2026-07-02 19:18:23.961896
 ---
 
-# Manage Investment Plan
+# Create Customize Investment Plan
 
 info
 
-  1. Fund configuration (`updateFunds`) can only be modified when the plan is in **`Init`** , **`PendingSubscription`** , or **`Active`** status.
-  2. Plans in **`Deleted`** or **`Closed`** status do not allow adding new funds.
-  3. Any fund being added or updated must be in **`PendingSubscribe`** (pending subscription) status.
-
-
+The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/manage-investment-plan`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID  
-updateStatus| false| string| Update plan status. Options: `Closed` / `Deleted`. Status is unchanged if omitted  
-updateFunds| false| array| Fund list to update. If a matching `fundId` exists, the amount is updated; otherwise a new fund is added. Max 10 entries. Returns an error if duplicate `fundId` entries are present  
-> fundId| **true**|  string| Fund ID  
-> amount| **true**|  string| Configured amount (base coin)  
-reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
+accountType| false| string| Source account type. Default: `FUND`  
+products| **true**|  array| Product configuration list. At least 1 item required  
+> category| **true**|  string| Pass through from product query result. Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| Pass through from product query result. May be `0`  
+> fundName| **true**|  string| Pass through from product query result. May be empty  
+> amount| **true**|  string| Subscription amount (base coin)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-status| string| Current plan status: `PendingSubscription` / `Active` / `Closed` / `Deleted`  
-updatedTime| string| Status update timestamp (milliseconds)  
-updateFunds| array| Fund configuration bound to the investment plan after the update  
-> fundId| string| Fund ID  
-> amount| string| Configured amount (base coin)  
+planId| string| Newly created investment plan ID  
+planName| string| Investment plan name, auto-generated in the format `PWM-{planId}`  
+status| string| Plan status. Created and subscribed in one step — `Active` upon success  
+orderLinkId| string| User-defined order ID  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -55,19 +49,21 @@ updateFunds| array| Fund configuration bound to the investment plan after the up
     Content-Type: application/json  
       
     {  
-        "planId": "10088",  
-        "updateStatus": "Closed",  
-        "updateFunds": [  
+        "accountType": "FUND",  
+        "products": [  
             {  
-                "fundId": "430",  
-                "amount": "100000"  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
             },  
             {  
-                "fundId": "2005",  
-                "amount": "270000"  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
             }  
-        ],  
-        "reqLinkId": "manage-plan-001"  
+        ]  
     }  
     
 
@@ -76,68 +72,52 @@ updateFunds| array| Fund configuration bound to the investment plan after the up
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "status": "Closed",  
-            "updateFunds": [  
-                {  
-                    "fundId": "430",  
-                    "amount": "100000"  
-                },  
-                {  
-                    "fundId": "2005",  
-                    "amount": "270000"  
-                }  
-            ],  
-            "updatedTime": "1701700000000"  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }
 
 ---
 
-# 編輯投資計劃狀態和基金配置
+# 創建自定義投資計劃（直客模式）
 
 信息
 
-  1. 僅在投資計劃狀態為 **`Init`** 、**`PendingSubscription`** 或 **`Active`** 時，才能修改基金配置（`updateFunds`）。
-  2. 狀態為 **`Deleted`** 或 **`Closed`** 的投資計劃不允許添加基金。
-  3. 添加或更新的基金必須處於 **`PendingSubscribe`** （待申購）狀態。
-
-
+當前用戶 **Active** （運行中）和 **Pending** （待處理）狀態的計劃總數不能超過 **20** 個。
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/manage-investment-plan`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID  
-updateStatus| false| string| 更新投資計劃狀態，可選值：`Closed` / `Deleted`，不傳則不修改狀態  
-updateFunds| false| array| 更新的基金列表。若有對應 `fundId` 則更新 amount；若沒有則添加新基金。最多10條，若包含重複 `fundId` 直接報錯  
-> fundId| **true**|  string| 基金ID  
-> amount| **true**|  string| 配置金額（本位幣）  
-reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於防重  
+accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
+products| **true**|  array| 產品配置列表，至少 1 個  
+> category| **true**|  string| 透傳product查詢結果，產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
+> fundName| **true**|  string| 透傳product查詢結果，可能為空  
+> amount| **true**|  string| 申購金額（本位幣）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-status| string| 當前計劃狀態：`PendingSubscription`（待申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除）  
-updatedTime| string| 狀態更新時間戳（毫秒）  
-updateFunds| array| 更新後投資計劃綁定的基金信息  
-> fundId| string| 基金ID  
-> amount| string| 配置金額（本位幣）  
+planId| string| 新創建的投資計劃ID  
+planName| string| 投資計劃名稱，自動生成格式為 `PWM-{planId}`  
+status| string| 計劃狀態，創建即申購，成功後為 `Active`  
+orderLinkId| string| 用戶自定義訂單ID  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/manage-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -146,19 +126,21 @@ updateFunds| array| 更新後投資計劃綁定的基金信息
     Content-Type: application/json  
       
     {  
-        "planId": "10088",  
-        "updateStatus": "Closed",  
-        "updateFunds": [  
+        "accountType": "FUND",  
+        "products": [  
             {  
-                "fundId": "430",  
-                "amount": "100000"  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
             },  
             {  
-                "fundId": "2005",  
-                "amount": "270000"  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
             }  
-        ],  
-        "reqLinkId": "manage-plan-001"  
+        ]  
     }  
     
 
@@ -167,20 +149,10 @@ updateFunds| array| 更新後投資計劃綁定的基金信息
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "status": "Closed",  
-            "updateFunds": [  
-                {  
-                    "fundId": "430",  
-                    "amount": "100000"  
-                },  
-                {  
-                    "fundId": "2005",  
-                    "amount": "270000"  
-                }  
-            ],  
-            "updatedTime": "1701700000000"  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }

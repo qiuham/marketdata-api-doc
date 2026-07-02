@@ -2,37 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-07-01 19:29:50.455169
+updated_at: 2026-07-02 19:19:07.949574
 ---
 
-# Get Open Interest
+# Get Mark Price Kline
 
-Get the [open interest](https://www.bybit.com/en-US/help-center/s/article/Glossary-Bybit-Trading-Terms) of each symbol.
+Query for historical [mark price](https://www.bybit.com/en-US/help-center/s/article/Glossary-Bybit-Trading-Terms) klines. Charts are returned in groups based on the requested interval.
 
-> **Covers: USDT contract / USDC contract / Inverse contract**
-
-info
-
-  * The upper limit time you can query is the launch time of the symbol.
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+> **Covers: USDT contract / USDC contract / Inverse contract / Options**
 
 ### HTTP Request
 
-GET`/v5/market/open-interest`
+GET`/v5/market/mark-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`,`inverse`, `option`
+
+  * When `category` is not passed, use `linear` by default
+
+  
 symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-[intervalTime](/docs/v5/enum#intervaltime)| **true**|  string| Interval time. `5min`,`15min`,`30min`,`1h`,`4h`,`1d`  
-startTime| false| integer| The start timestamp (ms)  
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `200`]. Default: `50`  
-cursor| false| string| Cursor. Used to paginate  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. futures: [`1`, `1000`], option: [`1`, `500`]. Default: `200`  
   
 ### Response Parameters
 
@@ -40,14 +36,18 @@ Parameter| Type| Comments
 ---|---|---  
 category| string| Product type  
 symbol| string| Symbol name  
-list| array| Object  
-> openInterest| string| Open interest. The value is the sum of both sides.   
-The unit of value, e.g., BTCUSD(inverse) is USD, BTCUSDT(linear) is BTC  
-> singleOpenInterest| string| Open interest. The value is the single side.   
-The unit of value, e.g., BTCUSD(inverse) is USD, BTCUSDT(linear) is BTC  
-> timestamp| string| The timestamp (ms)  
-nextPageCursor| string| Used to paginate  
-[](/docs/api-explorer/v5/market/open-interest)
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `startTime`
+
+  
+> list[0]: startTime| string| Start time of the candle (ms)  
+> list[1]: openPrice| string| Open price  
+> list[2]: highPrice| string| Highest price  
+> list[3]: lowPrice| string| Lowest price  
+> list[4]: closePrice| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/mark-kline)
 
 * * *
 
@@ -55,26 +55,27 @@ nextPageCursor| string| Used to paginate
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/open-interest?limit=5&category=inverse&intervalTime=1d&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_open_interest(  
-        category="inverse",  
-        symbol="BTCUSD",  
-        intervalTime="5min",  
-        startTime=1669571100000,  
-        endTime=1669571400000,  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
@@ -85,8 +86,8 @@ nextPageCursor| string| Used to paginate
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetOpenInterests(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
     
     
     
@@ -95,8 +96,8 @@ nextPageCursor| string| Used to paginate
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var openInterest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.FIVE_MINUTES).build();  
-    client.getOpenInterest(openInterest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -107,12 +108,13 @@ nextPageCursor| string| Used to paginate
     });  
       
     client  
-        .getOpenInterest({  
-            category: 'inverse',  
+        .getMarkPriceKline({  
+            category: 'linear',  
             symbol: 'BTCUSD',  
-            intervalTime: '5min',  
-            startTime: 1669571100000,  
-            endTime: 1669571400000,  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -129,71 +131,48 @@ nextPageCursor| string| Used to paginate
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "symbol": "BTCUSD",  
-            "category": "inverse",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780963200000"  
-                },  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780876800000"  
-                },  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780790400000"  
-                },  
-                {  
-                    "openInterest": "63942311.00000000",  
-                    "singleOpenInterest": "31971156",  
-                    "timestamp": "1780704000000"  
-                },  
-                {  
-                    "openInterest": "63942311.00000000",  
-                    "singleOpenInterest": "31971156",  
-                    "timestamp": "1780617600000"  
-                }  
-            ],  
-            "nextPageCursor": "lastid%3D19408935%26lasttime%3D1780617600"  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1780994051392  
+        "time": 1672026361839  
     }
 
 ---
 
-# 查詢未平倉合約持倉數量
+# 查詢標記價格K線數據
 
-查詢各個合約市場內所有未平倉的數量
+查詢標記價格K線
 
-> **覆蓋範圍: USDT永續 / USDC永續 / USDC交割 / 反向合約**
-
-信息
-
-  * 最久可以查詢到自合約上線開始的數據
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
 
 ### HTTP請求
 
-GET`/v5/market/open-interest`
+GET`/v5/market/mark-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`,`inverse`,`option`
+
+  * 當`category`不指定時, 默認是`linear`
+
+  
 symbol| **true**|  string| 合約名稱  
-[intervalTime](/docs/zh-TW/v5/enum#intervaltime)| **true**|  string| 時間粒度. `5min` `15min` `30min` `1h` `4h` `1d`  
-startTime| false| integer| 開始時間戳 (毫秒)  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `200`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. 合約: [`1`, `1000`], 期權: [`1`, `500`]. 默認: `200`  
   
 ### 響應參數
 
@@ -201,14 +180,18 @@ cursor| false| string| 游標，用於翻頁
 ---|---|---  
 category| string| 產品類型  
 symbol| string| 合約名稱  
-list| array| Object  
-> openInterest| string| 未平倉合約數量, 數值為雙邊的和  
-這個數值的單位是, 比如, BTCUSDT永續是BTC, BTCUSD反向合約是USD  
-> singleOpenInterest| string| 未平倉合約數量, 數值為單邊的值  
-這個數值的單位是, 比如, BTCUSDT永續是BTC, BTCUSD反向合約是USD  
-> timestamp| string| 數據產生的時間戳（毫秒）  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/market/open-interest)
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
+  
+> list[0]: startTime| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]: openPrice| string| 開始價格  
+> list[2]: highPrice| string| 最高價格  
+> list[3]: lowPrice| string| 最低價格  
+> list[4]: closePrice| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/mark-kline)
 
 * * *
 
@@ -216,26 +199,27 @@ nextPageCursor| string| 游標，用於翻頁
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/open-interest?limit=5&category=inverse&intervalTime=1d&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_open_interest(  
-        category="inverse",  
-        symbol="BTCUSD",  
-        intervalTime="5min",  
-        startTime=1669571100000,  
-        endTime=1669571400000,  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
@@ -246,8 +230,8 @@ nextPageCursor| string| 游標，用於翻頁
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetOpenInterests(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
     
     
     
@@ -256,8 +240,8 @@ nextPageCursor| string| 游標，用於翻頁
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var openInterest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.FIVE_MINUTES).build();  
-    client.getOpenInterest(openInterest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -268,12 +252,13 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-        .getOpenInterest({  
-            category: 'inverse',  
+        .getMarkPriceKline({  
+            category: 'linear',  
             symbol: 'BTCUSD',  
-            intervalTime: '5min',  
-            startTime: 1669571100000,  
-            endTime: 1669571400000,  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -290,37 +275,18 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "symbol": "BTCUSD",  
-            "category": "inverse",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780963200000"  
-                },  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780876800000"  
-                },  
-                {  
-                    "openInterest": "63910691.00000000",  
-                    "singleOpenInterest": "31955346",  
-                    "timestamp": "1780790400000"  
-                },  
-                {  
-                    "openInterest": "63942311.00000000",  
-                    "singleOpenInterest": "31971156",  
-                    "timestamp": "1780704000000"  
-                },  
-                {  
-                    "openInterest": "63942311.00000000",  
-                    "singleOpenInterest": "31971156",  
-                    "timestamp": "1780617600000"  
-                }  
-            ],  
-            "nextPageCursor": "lastid%3D19408935%26lasttime%3D1780617600"  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1780994051392  
+        "time": 1672026361839  
     }

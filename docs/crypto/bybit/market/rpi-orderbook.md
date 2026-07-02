@@ -2,66 +2,87 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/rpi-orderbook
 api_type: Market Data
-updated_at: 2026-07-01 19:30:00.819306
+updated_at: 2026-07-02 19:19:18.392979
 ---
 
-# Get Collateral Coins
+# Get Bybit Server Time
 
 info
 
-Does not need authentication.
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-common/collateral-data`
+GET`/v5/market/time`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| false| string| Coin name, uppercase only  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-collateralRatioConfigList| array| Object  
-> collateralRatioList| array| Object  
->> collateralRatio| string| Collateral ratio  
->> maxValue| string| Max qty  
->> minValue| string| Min qty  
-> currencies| string| Currenies with the same collateral ratio, e.g., `BTC,ETH,XRP`  
-currencyLiquidationList| array| Object  
-> currency| string| Coin name  
-> liquidationOrder| integer| Liquidation order  
-  
+timeSecond| string| Bybit server timestamp (sec)  
+timeNano| string| Bybit server timestamp (nano)  
+[](/docs/api-explorer/v5/market/time)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Go
   * Node.js
 
 
     
     
-    GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/market/time HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
+    session = HTTP(testnet=True)  
+    print(session.get_server_time())  
+    
+    
+    
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    client.getServerTime(System.out::println);  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
-    print(session.get_collateral_coins_new_crypto_loan(  
-        currency="BTC",  
-        amount="0.08",  
-        direction="1",  
-    ))  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getServerTime()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -69,105 +90,97 @@ currencyLiquidationList| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "collateralRatioConfigList": [  
-                {  
-                    "collateralRatioList": [  
-                        {  
-                            "collateralRatio": "0.8",  
-                            "maxValue": "10000",  
-                            "minValue": "0"  
-                        },  
-                        {  
-                            "collateralRatio": "0.7",  
-                            "maxValue": "20000",  
-                            "minValue": "10000"  
-                        },  
-                        {  
-                            "collateralRatio": "0.5",  
-                            "maxValue": "30000",  
-                            "minValue": "20000"  
-                        },  
-                        {  
-                            "collateralRatio": "0.4",  
-                            "maxValue": "99999999999",  
-                            "minValue": "30000"  
-                        }  
-                    ],  
-                    "currencies": "ATOM,AAVE,BTC,BOB"  
-                }  
-            ],  
-            "currencyLiquidationList": [  
-                {  
-                    "currency": "BTC",  
-                    "liquidationOrder": 1  
-                }  
-            ]  
+            "timeSecond": "1688639403",  
+            "timeNano": "1688639403423213947"  
         },  
         "retExtInfo": {},  
-        "time": 1752627381571  
+        "time": 1688639403423  
     }
 
 ---
 
-# 查詢質押幣種
+# Bybit服務器時間
+
+獲取Bybit服務器時間
 
 信息
 
-不需要鑒權
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+
+
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-common/collateral-data`
+GET`/v5/market/time`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| false| string| 幣種名稱  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-collateralRatioConfigList| array| Object  
-> collateralRatioList| array| Object  
->> collateralRatio| string| 抵押率  
->> maxValue| string| 最大數量  
->> minValue| string| 最小數量  
-> currencies| string| 具有相同抵押率的幣種，例如：`BTC,ETH,XRP`  
-currencyLiquidationList| array| Object  
-> currency| string| 幣種名稱  
-> liquidationOrder| integer| 清算順序  
-  
+timeSecond| string| Bybit服務器時間戳 (秒)  
+timeNano| string| Bybit 服務器時間戳 (微秒)  
+[](/docs/zh-TW/api-explorer/v5/market/time)
+
+* * *
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Go
+  * Java
   * Node.js
 
 
     
     
-    GET /v5/crypto-loan-common/collateral-data?currency=BTC HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/market/time HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
+    session = HTTP(testnet=True)  
+    print(session.get_server_time())  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
-    print(session.get_collateral_coins_new_crypto_loan(  
-        currency="BTC",  
-        amount="0.08",  
-        direction="1",  
-    ))  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
     
     
     
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    client.getServerTime(System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getServerTime()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -175,42 +188,11 @@ currencyLiquidationList| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "collateralRatioConfigList": [  
-                {  
-                    "collateralRatioList": [  
-                        {  
-                            "collateralRatio": "0.8",  
-                            "maxValue": "10000",  
-                            "minValue": "0"  
-                        },  
-                        {  
-                            "collateralRatio": "0.7",  
-                            "maxValue": "20000",  
-                            "minValue": "10000"  
-                        },  
-                        {  
-                            "collateralRatio": "0.5",  
-                            "maxValue": "30000",  
-                            "minValue": "20000"  
-                        },  
-                        {  
-                            "collateralRatio": "0.4",  
-                            "maxValue": "99999999999",  
-                            "minValue": "30000"  
-                        }  
-                    ],  
-                    "currencies": "ATOM,AAVE,BTC,BOB"  
-                }  
-            ],  
-            "currencyLiquidationList": [  
-                {  
-                    "currency": "BTC",  
-                    "liquidationOrder": 1  
-                }  
-            ]  
+            "timeSecond": "1688639403",  
+            "timeNano": "1688639403423213947"  
         },  
         "retExtInfo": {},  
-        "time": 1752627381571  
+        "time": 1688639403423  
     }

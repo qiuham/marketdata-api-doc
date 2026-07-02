@@ -2,171 +2,131 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/spot-grid/validate-input
 api_type: REST
-updated_at: 2026-07-01 19:27:07.838123
+updated_at: 2026-07-02 19:16:29.348804
 ---
 
-# Broker Connection
+# Get Broker Whitelist IP
 
-Broker Dedicated Connection is a dedicated connectivity solution for approved brokers and qualified high-volume API users. It is designed for faster and more reliable API access in latency-sensitive trading environments.
+info
 
-The service uses dedicated routing and optimized infrastructure to improve connection stability, reduce latency fluctuations, and support consistent execution during periods of high traffic.
+This endpoint must be queried from a whitelisted IP address.
 
-## Benefits
+### HTTP Request
 
-  * Lower and more stable latency compared with shared public API routes.
-  * Improved execution consistency for order placement, amendments, and cancellations.
-  * Better private WebSocket push delivery.
-  * Improved access to low-latency market data during high-traffic periods.
-  * Support for SBE order entry and SBE market data workflows.
+GET`/v5/broker/whitelist/ip`
 
+### Request Parameters
 
+None
 
-## Supported products and paths
+### Response Parameters
 
-Broker Dedicated Connection supports Spot, Linear Futures, Inverse Futures, and Options.
-
-Version| Path  
----|---  
-V5| `/v5/private/*`  
-V5| `/v5/private-sbe/*`  
-V5| `/v5/trade`  
-V5| `/v5/trade-sbe`  
-V5| `/v5/public/*`  
-V5| `/v5/public-sbe/*`  
+Parameter| Type| Comments  
+---|---|---  
+result| array| Object  
+> name| string| Client name  
+> endpointDomain| string| Dedicated hostname assigned exclusively to this client  
+> ipList| array| Array of whitelisted IP addresses  
   
-Use the dedicated hostname provided by Bybit with the same V5 WebSocket path structure:
+### Request Example
+
+  * HTTP
+
+
     
     
-    wss://{dedicated hostname}/v5/trade  
-    wss://{dedicated hostname}/v5/private  
-    wss://{dedicated hostname}/v5/public-sbe/linear  
+    GET /v5/broker/whitelist/ip HTTP/1.1  
+    Host: api.bybit.com  
     
 
-## Eligibility
-
-Broker Dedicated Connection is available to approved brokers and qualified high-volume API users.
-
-Applicants must meet at least one of the following requirements:
-
-  * Monthly Spot trading volume of 10,000,000 USDT or equivalent.
-  * Monthly Derivatives trading volume of 500,000,000 USDT or equivalent.
-  * At least 60 referred users.
-
-
-
-For questions about broker eligibility, contact `broker_program@bybit.com`.
-
-## Application process
-
-After approval from your Broker Account Manager, contact `api_services@bybit.com` or your dedicated broker support group with:
-
-  * Entity name
-  * Main UID
-  * Estimated API throughput
-  * IP addresses or CIDR ranges, up to 10 entries
-
-
-
-Applications are typically reviewed within 3 business days.
-
-## Integration steps
-
-  1. Confirm the products and V5 paths your system will route through the dedicated connection.
-  2. Prepare the source IP addresses or CIDR ranges used by your production infrastructure.
-  3. Submit the application details through your Broker Account Manager, `api_services@bybit.com`, or your dedicated broker support group.
-  4. After approval, replace the public hostname with the dedicated hostname provided by Bybit for supported paths.
-  5. Keep the same authentication, signing, retry, and reconnect logic required by each standard V5 API path.
-  6. Monitor latency variation, reconnect behavior, private push delivery, and order workflow consistency after migration.
-
-
-
-## Operational notes
-
-  * Keep assigned dedicated hostnames confidential.
-  * Update the IP whitelist before changing production egress IPs.
-  * Route unsupported paths through the standard API hostname.
-  * For broker OAuth setup, see [OAuth Integration Guidance](/docs/v5/broker/api-broker/guidance).
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": [  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1"  
+                ]  
+            },  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1",  
+                    "35.78.100.2"  
+                ]  
+            }  
+        ],  
+        "time": 1779362854157  
+    }
 
 ---
 
-# 經紀商專屬鏈路連線
+# 查詢經紀商 IP 白名單
 
-Broker Dedicated Connection 是面向已批准經紀商與符合條件的高交易量 API 用戶的專屬連線解決方案。它適用於對延遲敏感的交易環境，提供更快速且更可靠的 API 接入。
+信息
 
-該服務透過專屬路由與優化基礎設施，提高連線穩定性，降低延遲波動，並支援高流量期間更一致的執行表現。
+此接口必須從白名單 IP 位址發起請求。
 
-## 優勢
+### HTTP 請求
 
-  * 相較共享 stream.bybit.com 路由，延遲更低且更穩定。
-  * 提升下單、改單與撤單的執行一致性。
-  * 改善私有 WebSocket 推送交付。
-  * 在高流量期間改善低延遲行情資料接入。
-  * 支援 SBE 下單與 SBE 行情資料流程。
+GET`/v5/broker/whitelist/ip`
 
+### 請求參數
 
+無
 
-## 支援產品與路徑
+### 響應參數
 
-Broker Dedicated Connection 支援現貨、USDT/USDC 合約、幣本位合約與期權。
-
-版本| 路徑  
----|---  
-V5| `/v5/private/*`  
-V5| `/v5/private-sbe/*`  
-V5| `/v5/trade`  
-V5| `/v5/trade-sbe`（6月主網）  
-V5| `/v5/public/*`  
-V5| `/v5/public-sbe/*`  
+參數| 類型| 說明  
+---|---|---  
+result| array| Object  
+> name| string| 客戶名稱  
+> endpointDomain| string| 分配給該客戶專用的 hostname  
+> ipList| array| 白名單 IP 位址列表  
   
-使用 Bybit 提供的專屬 hostname，並保持相同的 V5 WebSocket 路徑結構:
+### 請求示例
+
+  * HTTP
+
+
     
     
-    wss://{dedicated hostname}/v5/trade  
-    wss://{dedicated hostname}/v5/private  
-    wss://{dedicated hostname}/v5/public-sbe/linear  
+    GET /v5/broker/whitelist/ip HTTP/1.1  
+    Host: api.bybit.com  
     
 
-## 申請資格
-
-Broker Dedicated Connection 面向已批准經紀商與符合條件的高交易量 API 用戶開放。
-
-申請人必須至少滿足以下任一要求:
-
-  * 月現貨交易量達 10,000,000 USDT 或等值資產。
-  * 月衍生品交易量達 500,000,000 USDT 或等值資產。
-  * 至少有 60 名邀請用戶。
-
-
-
-如需諮詢經紀商資格，請聯繫 `broker_program@bybit.com`。
-
-## 申請流程
-
-經 Broker Account Manager 批准後，請聯繫 `api_services@bybit.com` 或您的專屬經紀商支援群組，並提供以下資料:
-
-  * 實體名稱
-  * 主 UID
-  * 預估 API 吞吐量
-  * IP 位址或 CIDR 範圍，最多 10 個條目
-
-
-
-申請通常會在 3 個工作日內完成審核。
-
-## 接入步驟
-
-  1. 確認系統將透過專屬連線路由的產品與 V5 路徑。
-  2. 準備生產基礎設施使用的源 IP 位址或 CIDR 範圍。
-  3. 透過您的 Broker Account Manager、`api_services@bybit.com` 或專屬經紀商支援群組提交申請資料。
-  4. 審核通過後，針對支援路徑，將公共 hostname 替換為 Bybit 提供的專屬 hostname。
-  5. 保持每個標準 V5 API 路徑要求的相同鑑權、簽名、重試與重連邏輯。
-  6. 遷移後監控延遲波動、重連行為、私有推送交付以及訂單流程一致性。
-
-
-
-## 運維注意事項
-
-  * 對已分配的專屬 hostname 保密。
-  * 在生產出口 IP 變更前，請先更新 IP 白名單。
-  * 將不支援的路徑路由至標準 API hostname。
-  * 關於經紀商 OAuth 配置，請參考 [OAuth 接入文檔](/docs/zh-TW/v5/broker/api-broker/guidance)。
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": [  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1"  
+                ]  
+            },  
+            {  
+                "name": "CoinXXX",  
+                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
+                "ipList": [  
+                    "13.112.01.101",  
+                    "35.78.100.1",  
+                    "35.78.100.2"  
+                ]  
+            }  
+        ],  
+        "time": 1779362854157  
+    }

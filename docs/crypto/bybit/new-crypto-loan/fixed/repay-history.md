@@ -2,40 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/repay-history
 api_type: REST
-updated_at: 2026-07-01 19:30:18.853822
+updated_at: 2026-07-02 19:19:36.199462
 ---
 
-# Get Lending Market
+# Create Supply Order
 
-info
-
-Does not need authentication.
-
-If you want to supply, you can use this endpoint to check whether there are any suitable counterparty borrow orders available.
+> Permission: "Spot trade"  
+>  UID rate limit: 1 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/supply-order-quote`
+POST`/v5/crypto-loan-fixed/supply`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Coin name  
-term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-orderBy| **true**|  string| Order by, `apy`: annual rate; `term`; `quantity`  
-sort| false| integer| `0`: ascend, default; `1`: descend  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `10`  
+orderCurrency| **true**|  string| Currency to supply  
+orderAmount| **true**|  string| Amount to supply  
+annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
+term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+availableSource| false| string| Source account for supply. `0`: Funding Account; `1`: Earn Flexible Account; `2`: ALL. Default: `0`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| Coin name  
-> term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-> annualRate| string| Annual rate  
-> qty| string| Quantity  
+orderId| string| Supply order ID  
   
 ### Request Example
 
@@ -46,8 +39,21 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
+    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 104  
+      
+    {  
+        "orderCurrency": "USDT",  
+        "orderAmount": "2002.21",  
+        "annualRate": "0.35",  
+        "term": "7"  
+    }  
     
     
     
@@ -57,9 +63,11 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_lending_market_fixed_crypto_loan(  
+    print(session.create_lending_order_fixed_crypto_loan(  
         orderCurrency="USDT",  
-        orderBy="apy",  
+        orderAmount="2002.21",  
+        annualRate="0.35",  
+        term="7",  
     ))  
     
     
@@ -74,58 +82,38 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "annualRate": "0.02",  
-                    "orderCurrency": "USDT",  
-                    "qty": "1000.1234",  
-                    "term": 60  
-                },  
-                {  
-                    "annualRate": "0.022",  
-                    "orderCurrency": "USDT",  
-                    "qty": "212.1234",  
-                    "term": 7  
-                }  
-            ]  
+            "orderId": "13007"  
         },  
         "retExtInfo": {},  
-        "time": 1752652136224  
+        "time": 1752633650147  
     }
 
 ---
 
-# 查詢可存市場
+# 創建存款單
 
-信息
-
-公共接口, 無需鑒權
-
-如果您是存款方, 可通過該接口查詢到市場上可匹配的借款單報價
+> 權限: "現貨"  
+>  頻率: 1次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/supply-order-quote`
+POST`/v5/crypto-loan-fixed/supply`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 幣種名稱  
-term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-orderBy| **true**|  string| 排序依據，`apy`: 年化利率；`term`: 期限；`quantity`: 數量  
-sort| false| integer| `0`: 升序，預設；`1`: 降序  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+orderCurrency| **true**|  string| 出借幣種  
+orderAmount| **true**|  string| 出借金額  
+annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
+term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+availableSource| false| string| 出借資金來源帳戶。`0`: 資金帳戶；`1`: 靈活賺幣帳戶；`2`: 全部。預設值：`0`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| 幣種名稱  
-> term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-> annualRate| string| 年化利率  
-> qty| string| 數量  
+orderId| string| 存款單ID  
   
 ### 請求示例
 
@@ -136,8 +124,21 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
+    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 104  
+      
+    {  
+        "orderCurrency": "USDT",  
+        "orderAmount": "2002.21",  
+        "annualRate": "0.35",  
+        "term": "7"  
+    }  
     
     
     
@@ -147,9 +148,11 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_lending_market_fixed_crypto_loan(  
+    print(session.create_lending_order_fixed_crypto_loan(  
         orderCurrency="USDT",  
-        orderBy="apy",  
+        orderAmount="2002.21",  
+        annualRate="0.35",  
+        term="7",  
     ))  
     
     
@@ -164,21 +167,8 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "annualRate": "0.02",  
-                    "orderCurrency": "USDT",  
-                    "qty": "1000.1234",  
-                    "term": 60  
-                },  
-                {  
-                    "annualRate": "0.022",  
-                    "orderCurrency": "USDT",  
-                    "qty": "212.1234",  
-                    "term": 7  
-                }  
-            ]  
+            "orderId": "13007"  
         },  
         "retExtInfo": {},  
-        "time": 1752652136224  
+        "time": 1752633650147  
     }

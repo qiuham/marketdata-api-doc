@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual
 api_type: Guide
-updated_at: 2026-07-01 19:42:50.816931
+updated_at: 2026-07-02 19:32:18.132486
 ---
 
 # Advanced Trade International Derivatives (INTX) — Deprecated

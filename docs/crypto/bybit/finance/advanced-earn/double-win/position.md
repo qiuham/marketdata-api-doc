@@ -2,83 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/position
 api_type: REST
-updated_at: 2026-07-01 19:27:59.114455
+updated_at: 2026-07-02 19:17:17.423724
 ---
 
-# Place Order
+# Get Product Info
 
 info
 
-  * Need authentication. **Up to 5 requests** per second.
-  * Requires Earn permission on the API key.
-  * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](/docs/v5/finance/advanced-earn/dual-asset/order) to track the order status (Pending → Success).
-  * The `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) or the WebSocket channel. Stale quotes will be rejected.
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-
-
+Does not need authentication
 
 ### HTTP Request
 
-POST `/v5/earn/advance/place-order`
+GET`/v5/earn/advance/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product type, e.g. `DualAssets`  
-productId| **true**|  string| Product ID  
-orderType| **true**|  string| Order type: `Stake`  
-amount| **true**|  string| Order amount (decimal string)  
-accountType| **true**|  string| Account type: `FUND`, `UNIFIED`  
-coin| **true**|  string| Coin name  
-orderLinkId| **true**|  string| User customised order ID (max 36 characters)  
-dualAssetsExtra| **true**|  Object| Dual Assets specific parameters  
-> orderDirection| **true**|  string| Direction: `BuyLow`, `SellHigh`  
-> selectPrice| **true**|  string| Target price selected by user. Must match a valid quote  
-> apyE8| **true**|  int64| Expected APY in e8 precision. Order fails if the confirmed APY is less than this value  
-interestCard| false| Object| Interest bonus card  
-> awardId| **true**|  int64| Interest bonus card unique ID  
-> specCode| **true**|  string| Spec_code of the interest bonus card  
+category| **true**|  string| Product category. `DoubleWin`  
+coin| false| string| Underlying asset to filter by, uppercase only, e.g. `BTC`, `ETH`  
+duration| false| string| Product duration, e.g. `1d`, `2d`, `3d`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User customised order ID  
+category| string| Product category. `DoubleWin`  
+list| array| Object  
+> category| string| Product category  
+> productId| string| Product ID  
+> investCoin| string| Investment coin, e.g. `USDT`  
+> underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
+> duration| string| Product duration, e.g. `1d`, `2d`, `3d`  
+> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> settlementTime| string| Settlement time, Unix timestamp in ms  
+> expectReceiveAt| string| Expected time to receive settlement funds, Unix timestamp in ms  
+> minPurchaseAmount| string| Minimum single order amount  
+> orderPrecisionDigital| int| Order amount precision (decimal places)  
+> isRfqProduct| bool| `false`: fixed price range product; `true`: RFQ custom price range product  
+> lowerPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Lower price buffer offset. Actual lower price = `initialPrice - lowerPriceBuffer`  
+> upperPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Upper price buffer offset. Actual upper price = `initialPrice + upperPriceBuffer`  
+> minDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Minimum allowed deviation ratio of the custom price from current price  
+> maxDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Maximum allowed deviation ratio of the custom price from current price  
+> priceTickSize| string| **RFQ only** (`isRfqProduct=true`). Price tick size. Custom lower/upper prices must be a multiple of this value  
   
-* * *
-
 ### Request Example
-
-  * HTTP
-
-
     
     
-    POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "DualAssets",  
-        "productId": 36320,  
-        "orderType": "Stake",  
-        "amount": "20",  
-        "accountType": "UNIFIED",  
-        "coin": "USDT",  
-        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
-        "dualAssetsExtra": {  
-            "orderDirection": "BuyLow",  
-            "selectPrice": "2325",  
-            "apyE8": 857565000  
-        }  
-    }  
-      
     
 
 ### Response Example
@@ -88,88 +61,82 @@ orderLinkId| string| User customised order ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
+            "category": "DoubleWin",  
+            "list": [  
+                {  
+                    "category": "DoubleWin",  
+                    "productId": "14092",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "duration": "2d",  
+                    "expectReceiveAt": "1775290500000",  
+                    "minPurchaseAmount": "10",  
+                    "subscribeStartAt": "1775088000000",  
+                    "subscribeEndAt": "1775174399000",  
+                    "settlementTime": "1775289600000",  
+                    "orderPrecisionDigital": 4,  
+                    "isRfqProduct": true,  
+                    "lowerPriceBuffer": "",  
+                    "upperPriceBuffer": "",  
+                    "minDeviationRatio": "0.01",  
+                    "maxDeviationRatio": "0.15",  
+                    "priceTickSize": "500"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1775100184409  
     }
 
 ---
 
-# 創建訂單
+# 查詢產品資訊
 
 信息
 
-  * 需要身份驗證。每秒**最多 5 次請求** 。
-  * API 金鑰需要具備 Earn (理財) 權限。
-  * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/order)來追蹤訂單狀態（Pending → Success）。
-  * `selectPrice` 和 `apyE8` 必須與[查詢產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote)或 WebSocket 頻道的有效報價相匹配。過期的報價將被拒絕。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-
-
+無需身份驗證
 
 ### HTTP 請求
 
-POST `/v5/earn/advance/place-order`
+GET`/v5/earn/advance/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類型，例如 `DualAssets`  
-productId| **true**|  string| 產品 ID  
-orderType| **true**|  string| 訂單類型：`Stake` (申購)  
-amount| **true**|  string| 訂單數量（字串格式的數字）  
-accountType| **true**|  string| 帳戶類型：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)  
-coin| **true**|  string| 幣種名稱  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 36 個字元）  
-dualAssetsExtra| **true**|  Object| 雙幣投資專屬參數  
-> orderDirection| **true**|  string| 方向：`BuyLow` (低買), `SellHigh` (高賣)  
-> selectPrice| **true**|  string| 用戶選擇的目標價格（掛鉤價）。必須與有效報價相匹配  
-> apyE8| **true**|  int64| 預期年化收益率（e8 精度）。如果確認的 APY 低於此數值，訂單將會失敗  
-interestCard| false| Object| 加息券 (Interest bonus card)  
-> awardId| **true**|  int64| 加息券唯一 ID  
-> specCode| **true**|  string| 加息券的特殊代碼 (Spec_code)  
+category| **true**|  string| 產品類別，`DoubleWin`  
+coin| false| string| 標的資產篩選，僅限大寫，例如：`BTC`, `ETH`  
+duration| false| string| 產品期限篩選，例如：`1d`, `2d`, `3d`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID  
-orderLinkId| string| 用戶自定義訂單 ID  
+category| string| 產品類別，`DoubleWin`  
+list| array| 列表  
+> category| string| 產品類別  
+> productId| string| 產品 ID  
+> investCoin| string| 投資幣種，例如：`USDT`  
+> underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
+> duration| string| 產品期限，例如：`1d`, `2d`, `3d`  
+> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
+> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> expectReceiveAt| string| 預計結算資金到帳時間，毫秒級 Unix 時間戳  
+> minPurchaseAmount| string| 最小單筆申購金額  
+> orderPrecisionDigital| int| 訂單金額精度（小數位數）  
+> isRfqProduct| bool| `false`：固定區間產品；`true`：RFQ 自選區間產品  
+> lowerPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（下限），實際下限價格 = `initialPrice - lowerPriceBuffer`  
+> upperPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（上限），實際上限價格 = `initialPrice + upperPriceBuffer`  
+> minDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最小允許比例  
+> maxDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最大允許比例  
+> priceTickSize| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。價格步長，自選下限/上限價格須為此值的整數倍  
   
-* * *
-
 ### 請求示例
-
-  * HTTP
-
-
     
     
-    POST /v5/earn/advance/place-order HTTP/1.1  
+    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "DualAssets",  
-        "productId": 36320,  
-        "orderType": "Stake",  
-        "amount": "20",  
-        "accountType": "UNIFIED",  
-        "coin": "USDT",  
-        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
-        "dualAssetsExtra": {  
-            "orderDirection": "BuyLow",  
-            "selectPrice": "2325",  
-            "apyE8": 857565000  
-        }  
-    }  
     
 
 ### 響應示例
@@ -179,9 +146,29 @@ orderLinkId| string| 用戶自定義訂單 ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
-            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
+            "category": "DoubleWin",  
+            "list": [  
+                {  
+                    "category": "DoubleWin",  
+                    "productId": "14092",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "duration": "2d",  
+                    "expectReceiveAt": "1775290500000",  
+                    "minPurchaseAmount": "10",  
+                    "subscribeStartAt": "1775088000000",  
+                    "subscribeEndAt": "1775174399000",  
+                    "settlementTime": "1775289600000",  
+                    "orderPrecisionDigital": 4,  
+                    "isRfqProduct": true,  
+                    "lowerPriceBuffer": "",  
+                    "upperPriceBuffer": "",  
+                    "minDeviationRatio": "0.01",  
+                    "maxDeviationRatio": "0.15",  
+                    "priceTickSize": "500"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1773815412459  
+        "time": 1775100184409  
     }

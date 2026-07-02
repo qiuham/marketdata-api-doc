@@ -2,38 +2,27 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-07-01 19:31:01.985712
+updated_at: 2026-07-02 19:20:21.760591
 ---
 
-# Get Futures Leverage
+# Confirm New Risk Limit
 
-Query isolated leverage setting for futures symbols. Unlike [Get Position Info](/docs/v5/position/v5/position), this endpoint does not require an open position to retrieve the leverage setting.
+It is only applicable when the user is marked as only reducing positions (please see the isReduceOnly field in the [Get Position Info](/docs/v5/position) interface). After the user actively adjusts the risk level, this interface is called to try to calculate the adjusted risk level, and if it passes (retCode=0), the system will remove the position reduceOnly mark. You are recommended to call [Get Position Info](/docs/v5/position) to check `isReduceOnly` field.
 
 ### HTTP Request
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/confirm-pending-mmr`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-[category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> leverage| string| Leverage  
-> side| string| Meaningless field, pls ignore. `Buy`, `Sell`, `""`  
-> positionIdx| integer| Position mode. `0`: one-way; `1`: two-way Buy; `2`: two-way Sell  
-  
-info
-
-Under Portfolio Margin mode, this endpoint returns an error.
+None
 
 ### Request Example
 
@@ -45,20 +34,42 @@ Under Portfolio Margin mode, this endpoint returns an error.
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/confirm-pending-mmr HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1698051123673  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
+    Content-Length: 53  
       
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT"  
+    }  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.confirm_new_risk_limit(  
+        category="linear",  
+        symbol="BTCUSDT"  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var confirmNewRiskRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").build();  
+    client.confirmPositionRiskLimit(confirmNewRiskRequest, System.out::println);  
     
     
     
@@ -71,58 +82,31 @@ Under Portfolio Margin mode, this endpoint returns an error.
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1698051124588  
     }
 
 ---
 
-# 查詢合約槓桿
+# 確認新的風險限額
 
-查詢合約交易對的逐倉槓桿設置。與[查詢持倉](/docs/zh-TW/v5/position/v5/position)不同，此接口無需持有倉位即可查詢槓桿設置。
+僅適用於當用戶被標記為僅減倉 (請看[持倉](/docs/zh-TW/v5/position)接口中的isReduceOnly字段) 時, 在用戶主動調整風險水位後, 調用該接口來試算調整後的風 險水平, 若通過(retCode=0), 則系統會移除僅減倉標記, 推薦自行再調用下倉位接口確認`isReduceOnly`字段是否變成false
 
 ### HTTP 請求
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/confirm-pending-mmr`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`(USDT合約, USDC合約), `inverse`  
-symbol| false| string| 合約名稱，如 `BTCUSDT`，僅支持大寫  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
+symbol| **true**|  string| 合約名稱  
   
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> leverage| string| 槓桿倍數  
-> side| string| 無意義, 可以忽略 `Buy`, `Sell`, `""`  
-> positionIdx| integer| 持倉模式。`0`: 單向持倉；`1`: 雙向持倉-多頭；`2`: 雙向持倉-空頭  
-  
-信息
-
-在組合保證金模式下，此接口會返回錯誤。
+無
 
 ### 請求示例
 
@@ -134,12 +118,19 @@ list| array| Object
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/confirm-pending-mmr HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1698051123673  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 53  
+      
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT"  
+    }  
     
     
     
@@ -147,7 +138,13 @@ list| array| Object
     
     
     
-      
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var confirmNewRiskRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").build();  
+    client.confirmPositionRiskLimit(confirmNewRiskRequest, System.out::println);  
     
     
     
@@ -160,23 +157,7 @@ list| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1698051124588  
     }

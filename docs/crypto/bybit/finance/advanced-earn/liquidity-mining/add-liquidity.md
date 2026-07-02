@@ -2,64 +2,57 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/add-liquidity
 api_type: REST
-updated_at: 2026-07-01 19:28:06.770821
+updated_at: 2026-07-02 19:17:27.500920
 ---
 
-# Add Liquidity
+# Get Liquidation Records
 
 info
 
-  * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
-  * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order Info](/docs/v5/finance/advanced-earn/liquidity-mining/order) to track order status (`Processing` → `Success`).
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-  * At least one of `quoteAmount` or `baseAmount` must be provided.
+  * Need authentication. **Up to 10 requests** per second per UID. Requires Earn permission on the API key.
+  * Returns historical liquidation records for your leveraged liquidity mining positions.
 
 
 
 ### HTTP Request
 
-POST`/v5/earn/liquidity-mining/add-liquidity`
+GET`/v5/earn/liquidity-mining/liquidation-records`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  string| Product ID  
-orderLinkId| **true**|  string| User-customised order ID (max 40 characters)  
-quoteAmount| false| string| Amount of quoteCoin to inject (e.g. USDT). At least one of `quoteAmount` or `baseAmount` is required  
-baseAmount| false| string| Amount of baseCoin to inject (e.g. BTC). At least one of `quoteAmount` or `baseAmount` is required  
-quoteAccountType| false| string| Source account for quoteCoin: `FUND`, `UNIFIED`. Required when providing `quoteAmount`  
-baseAccountType| false| string| Source account for baseCoin: `FUND`, `UNIFIED`. Required when providing `baseAmount`  
-leverage| false| string| Leverage multiplier. Defaults to `1` (no leverage) if not provided  
+baseCoin| false| string| Filter by base coin, e.g. `BTC`, `ETH`  
+quoteCoin| false| string| Filter by quote coin, e.g. `USDT`  
+startTime| false| string| Start time, unix timestamp in milliseconds  
+endTime| false| string| End time, unix timestamp in milliseconds  
+limit| false| integer| Number of items per page. Default: `20`, Max: `50`  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User-customised order ID  
+records| array| Liquidation record list  
+> baseCoin| string| Base coin of the pool, e.g. `BTC`  
+> quoteCoin| string| Quote coin of the pool, e.g. `USDT`  
+> baseAmount| string| Returned baseCoin amount after liquidation  
+> quoteAmount| string| Returned quoteCoin amount after liquidation  
+> liquidationPrice| string| Liquidation price (baseCoin priced in quoteCoin)  
+> liquidationTime| string| Liquidation time, unix timestamp in milliseconds  
+nextPageCursor| string| Cursor for next page. Empty string means no more data  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/liquidity-mining/add-liquidity HTTP/1.1  
+    GET /v5/earn/liquidity-mining/liquidation-records?baseCoin=BTC&limit=20 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "productId": "36",  
-        "coin": "USDT",  
-        "quoteAmount": "200",  
-        "quoteAccountType": "FUND",  
-        "orderLinkId": "lm-001",  
-        "leverage": "2"  
-    }  
     
 
 ### Response Example
@@ -67,72 +60,74 @@ orderLinkId| string| User-customised order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "5e651d09-6169-4f72-a609-8622ff421d19",  
-            "orderLinkId": "lm-001"  
+            "records": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "baseAmount": "0.05234",  
+                    "quoteAmount": "1580.21",  
+                    "liquidationPrice": "30200.00",  
+                    "liquidationTime": "1741824000000"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1775123507299  
+        "time": 1741824100000  
     }
 
 ---
 
-# 增加流動性
+# 查詢爆倉記錄
 
 信息
 
-  * 需要身份驗證。每個 UID 每秒**最多 5 次請求** 。API 金鑰需要具備 Earn（理財）權限。
-  * 訂單為非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/order)追蹤訂單狀態（`Processing` → `Success`）。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-  * `quoteAmount` 與 `baseAmount` 至少須提供其中一個。
+  * 需要身份驗證。每個 UID 每秒**最多 10 次請求** 。API 金鑰需要具備 Earn（理財）權限。
+  * 返回槓桿流動性挖礦持倉的歷史強制平倉記錄。
 
 
 
 ### HTTP 請求
 
-POST`/v5/earn/liquidity-mining/add-liquidity`
+GET`/v5/earn/liquidity-mining/liquidation-records`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  string| 產品 ID  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 40 個字元）  
-quoteAmount| false| string| 注入的計價幣種金額（例如 USDT）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個  
-baseAmount| false| string| 注入的基礎幣種金額（例如 BTC）。`quoteAmount` 與 `baseAmount` 至少須提供其中一個  
-quoteAccountType| false| string| 計價幣種來源帳戶：`FUND`、`UNIFIED`。提供 `quoteAmount` 時必填  
-baseAccountType| false| string| 基礎幣種來源帳戶：`FUND`、`UNIFIED`。提供 `baseAmount` 時必填  
-leverage| false| string| 槓桿倍數。不提供時預設為 `1`（不使用槓桿）  
+baseCoin| false| string| 按基礎幣種篩選，例如：`BTC`, `ETH`  
+quoteCoin| false| string| 按計價幣種篩選，例如：`USDT`  
+startTime| false| string| 開始時間，毫秒級 Unix 時間戳  
+endTime| false| string| 結束時間，毫秒級 Unix 時間戳  
+limit| false| integer| 每頁返回數量。預設：`20`，最大：`50`  
+cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID  
-orderLinkId| string| 用戶自定義訂單 ID  
+records| array| 強制平倉記錄列表  
+> baseCoin| string| 流動性池的基礎幣種，例如：`BTC`  
+> quoteCoin| string| 流動性池的計價幣種，例如：`USDT`  
+> baseAmount| string| 強制平倉後返還的基礎幣種金額  
+> quoteAmount| string| 強制平倉後返還的計價幣種金額  
+> liquidationPrice| string| 強制平倉價格（基礎幣種以計價幣種計價）  
+> liquidationTime| string| 強制平倉時間，毫秒級 Unix 時間戳  
+nextPageCursor| string| 下一頁游標，為空表示無更多資料  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/liquidity-mining/add-liquidity HTTP/1.1  
+    GET /v5/earn/liquidity-mining/liquidation-records?baseCoin=BTC&limit=20 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "productId": "36",  
-        "coin": "USDT",  
-        "quoteAmount": "200",  
-        "quoteAccountType": "FUND",  
-        "orderLinkId": "lm-001",  
-        "leverage": "2"  
-    }  
     
 
 ### 響應示例
@@ -140,11 +135,20 @@ orderLinkId| string| 用戶自定義訂單 ID
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "5e651d09-6169-4f72-a609-8622ff421d19",  
-            "orderLinkId": "lm-001"  
+            "records": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "baseAmount": "0.05234",  
+                    "quoteAmount": "1580.21",  
+                    "liquidationPrice": "30200.00",  
+                    "liquidationTime": "1741824000000"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1775123507299  
+        "time": 1741824100000  
     }

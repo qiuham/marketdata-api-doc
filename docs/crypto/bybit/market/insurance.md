@@ -2,49 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/insurance
 api_type: Market Data
-updated_at: 2026-07-01 19:29:45.185020
+updated_at: 2026-07-02 19:19:05.441744
 ---
 
-# Get Historical Volatility
+# Get Mark Price Kline
 
-Query option historical volatility
+Query for historical [mark price](https://www.bybit.com/en-US/help-center/s/article/Glossary-Bybit-Trading-Terms) klines. Charts are returned in groups based on the requested interval.
 
-> **Covers: Option**
-
-info
-
-  * The data is hourly.
-  * If both `startTime` and `endTime` are not specified, it will return the most recent 1 hours worth of data.
-  * `startTime` and `endTime` are a pair of params. Either both are passed or they are not passed at all.
-  * This endpoint can query the last 2 years worth of data, but make sure [`endTime` \- `startTime`] <= 30 days.
-
-
+> **Covers: USDT contract / USDC contract / Inverse contract / Options**
 
 ### HTTP Request
 
-GET`/v5/market/historical-volatility`
+GET`/v5/market/mark-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product type. `option`  
-baseCoin| false| string| Base coin, uppercase only. Default: return BTC data  
-quoteCoin| false| string| Quote coin, `USD` or `USDT`. Default: return quoteCoin=USD  
-[period](/docs/v5/enum#optionperiod)| false| integer| Period. If not specified, it will return data with a 7-day average by default  
-startTime| false| integer| The start timestamp (ms)  
-endTime| false| integer| The end timestamp (ms)  
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`,`inverse`, `option`
+
+  * When `category` is not passed, use `linear` by default
+
+  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. futures: [`1`, `1000`], option: [`1`, `500`]. Default: `200`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 category| string| Product type  
-list| array| Object  
-> period| integer| Period  
-> value| string| Volatility  
-> time| string| Timestamp (ms)  
-[](/docs/api-explorer/v5/market/iv)
+symbol| string| Symbol name  
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `startTime`
+
+  
+> list[0]: startTime| string| Start time of the candle (ms)  
+> list[1]: openPrice| string| Open price  
+> list[2]: highPrice| string| Highest price  
+> list[3]: lowPrice| string| Lowest price  
+> list[4]: closePrice| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/mark-kline)
 
 * * *
 
@@ -52,24 +55,39 @@ list| array| Object
 
   * HTTP
   * Python
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_historical_volatility(  
-        category="option",  
-        baseCoin="ETH",  
-        period=30,  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
     
     
     
@@ -78,8 +96,8 @@ list| array| Object
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
-    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -90,10 +108,13 @@ list| array| Object
     });  
       
     client  
-        .getHistoricalVolatility({  
-            category: 'option',  
-            baseCoin: 'ETH',  
-            period: 30,  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -108,59 +129,69 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "SUCCESS",  
-        "category": "option",  
-        "result": [  
-            {  
-                "period": 30,  
-                "value": "0.45024716",  
-                "time": "1672052400000"  
-            }  
-        ]  
+        "retMsg": "OK",  
+        "result": {  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
+            "list": [  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1672026361839  
     }
 
 ---
 
-# 查詢期權波動率
+# 查詢標記價格K線數據
 
-獲取期權的歷史波動率數據
+查詢標記價格K線
 
-> **覆蓋範圍: 期權**
-
-信息
-
-  * 數據為每小時數據.
-  * 若沒有入参時間，則默認返回最近1小時的數據，即最近的一條數據.
-  * `starTime` 和 `endTime` 要麼都傳，要麼都不傳
-  * 接口支持查詢過去2年的數據, 但確保[`endTime` \- `startTime`] 小於等於30天.
-
-
+> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
 
 ### HTTP請求
 
-GET`/v5/market/historical-volatility`
+GET`/v5/market/mark-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類型. `option`  
-baseCoin| false| string| 交易幣種. 不傳則默認返回BTC數據  
-quoteCoin| false| string| 報價幣種, `USD` 或 `USDT`. 不傳則默認返回quoteCoin=USD數據  
-[period](/docs/zh-TW/v5/enum#optionperiod)| false| string| 週期. 不傳則默認返回7天加權的數據  
-startTime| false| integer| 開始時間戳 (毫秒)  
-endTime| false| integer| 結束時間戳 (毫秒)  
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`,`inverse`,`option`
+
+  * 當`category`不指定時, 默認是`linear`
+
+  
+symbol| **true**|  string| 合約名稱  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. 合約: [`1`, `1000`], 期權: [`1`, `500`]. 默認: `200`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 category| string| 產品類型  
-list| array| Object  
-> period| string| 週期  
-> value| string| 波動率  
-> time| string| 數據生成時間戳 (毫秒)  
-[](/docs/zh-TW/api-explorer/v5/market/iv)
+symbol| string| 合約名稱  
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
+  
+> list[0]: startTime| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]: openPrice| string| 開始價格  
+> list[2]: highPrice| string| 最高價格  
+> list[3]: lowPrice| string| 最低價格  
+> list[4]: closePrice| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/mark-kline)
 
 * * *
 
@@ -168,24 +199,27 @@ list| array| Object
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/historical-volatility?category=option&baseCoin=ETH&period=30 HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_historical_volatility(  
-        category="option",  
-        baseCoin="ETH",  
-        period=30,  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
@@ -196,8 +230,8 @@ list| array| Object
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "option", "baseCoin": "BTC"}  
-    client.NewUtaBybitServiceWithParams(params).GetHistoryVolatility(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
     
     
     
@@ -206,8 +240,8 @@ list| array| Object
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var historicalVolatilityRequest = MarketDataRequest.builder().category(CategoryType.OPTION).optionPeriod(7).build();  
-    client.getHistoricalVolatility(historicalVolatilityRequest, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -218,10 +252,13 @@ list| array| Object
     });  
       
     client  
-        .getHistoricalVolatility({  
-            category: 'option',  
-            baseCoin: 'ETH',  
-            period: 30,  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -236,13 +273,20 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "SUCCESS",  
-        "category": "option",  
-        "result": [  
-            {  
-                "period": 7,  
-                "value": "0.27545620",  
-                "time": "1672232400000"  
-            }  
-        ]  
+        "retMsg": "OK",  
+        "result": {  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
+            "list": [  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1672026361839  
     }

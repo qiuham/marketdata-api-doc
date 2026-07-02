@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/position-list
 api_type: REST
-updated_at: 2026-07-01 19:25:39.445852
+updated_at: 2026-07-02 19:14:37.181993
 ---
 
 # Execute LP Redeem
@@ -13,7 +13,7 @@ info
 
   * Must call Get LP Position List to get a valid `positionId` before redeeming
   * Must display redemption details (amount, expected tokens, fees) to user and obtain explicit confirmation before calling this endpoint
-  * `200` response is only an ACK — use [Get Order List](/docs/v5/alpha/order-list) to check redemption status
+  * `200` response is only an ACK — use [Get Order List](/docs/v5/alpha/trade/order-list) to check redemption status
   * Redeemed tokens are returned to user's wallet after on-chain confirmation (typically 10–60 seconds)
   * Partial or full redemption supported via `dercRatio`
   * **Rate Limit:** 1 req/s (per user), 2000 req/s (global)
@@ -37,7 +37,7 @@ receiveTokenCode| false| string| Token code for receiving the redeemed amount
 
 Parameter| Type| Comments  
 ---|---|---  
-orderNo| string| Order number for this redemption operation. Use this to track status via [Get Order List](/docs/v5/alpha/order-list)  
+orderNo| string| Order number for this redemption operation. Use this to track status via [Get Order List](/docs/v5/alpha/trade/order-list)  
   
 * * *
 
@@ -96,7 +96,7 @@ orderNo| string| Order number for this redemption operation. Use this to track s
 
   * 贖回前必須先調用查詢 LP 倉位列表接口獲取有效的 `positionId`
   * 必須向用戶展示贖回詳情（金額、預期代幣、費用）並獲得明確確認後，才能調用此接口
-  * `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](/docs/zh-TW/v5/alpha/order-list) 確認最終贖回狀態
+  * `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 確認最終贖回狀態
   * 鏈上確認後代幣將返回至用戶錢包（通常需要 10–60 秒）
   * 支持部分或全部倉位贖回（通過 `dercRatio` 指定比例）
   * **頻率限制：** 1 次/秒（用戶），2000 次/秒（全局）
@@ -120,7 +120,7 @@ receiveTokenCode| false| string| 接收贖回金額的代幣代碼
 
 參數| 類型| 說明  
 ---|---|---  
-orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表](/docs/zh-TW/v5/alpha/order-list) 跟蹤狀態  
+orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 跟蹤狀態  
   
 * * *
 
