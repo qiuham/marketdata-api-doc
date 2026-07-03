@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/new-delivery-price
 api_type: Market Data
-updated_at: 2026-07-02 19:19:11.339112
+updated_at: 2026-07-03 19:14:20.132041
 ---
 
 # Get Premium Index Price Kline

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-funds-transfer-state
 anchor_id: funding-account-rest-api-get-funds-transfer-state
 api_type: REST
-updated_at: 2026-07-02 19:44:53.342301
+updated_at: 2026-07-03 19:40:50.621231
 ---
 
 # Get funds transfer state

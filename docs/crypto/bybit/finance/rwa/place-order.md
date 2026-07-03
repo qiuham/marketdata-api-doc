@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/place-order
 api_type: REST
-updated_at: 2026-07-02 19:18:46.719337
+updated_at: 2026-07-03 19:13:54.580768
 ---
 
 # MMWS Integration

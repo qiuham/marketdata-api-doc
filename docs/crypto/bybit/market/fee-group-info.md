@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/fee-group-info
 api_type: Market Data
-updated_at: 2026-07-02 19:18:56.049833
+updated_at: 2026-07-03 19:14:04.089937
 ---
 
 # Get Fee Group Structure

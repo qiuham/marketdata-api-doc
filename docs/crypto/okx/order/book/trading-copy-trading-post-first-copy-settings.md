@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-first-copy-settings
 anchor_id: order-book-trading-copy-trading-post-first-copy-settings
 api_type: API
-updated_at: 2026-07-02 19:43:50.018815
+updated_at: 2026-07-03 19:39:47.091534
 ---
 
 # POST / First copy settings

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-finance
 anchor_id: error-code-rest-api-finance
 api_type: REST
-updated_at: 2026-07-02 19:45:32.155997
+updated_at: 2026-07-03 19:41:30.757273
 ---
 
 # Finance
@@ -44,7 +44,19 @@ Error Code | HTTP Status Code | Error Message
 51759 | 200 | You've exceed the temporary limit. Try again later.  
 51760 | 200 | Flexible Loan isn’t available to accounts using delta neutral strategy.  
 51761 | 200 | Failed to verify sub-account strategy type.  
-51762 | 200 | Redemption partially processed and can't be cancelled
+51762 | 200 | Redemption partially processed and can't be cancelled  
+51763 | 200 | Your account does not meet the VIP tier requirement for this product  
+51764 | 200 | Insufficient balance  
+51765 | 200 | Exceed your remaining daily quota of {x} USDT  
+51766 | 200 | Platform daily subscription limit reached  
+51767 | 200 | System maintenance, please retry  
+51768 | 200 | Exceed your remaining fast redemption quota of {x} OKUSD  
+51769 | 200 | Platform fast redemption limit reached  
+51770 | 200 | Exceed your remaining standard redemption quota of {x} OKUSD  
+51771 | 200 | Platform standard redemption limit reached  
+51772 | 200 | Instant redemption pool insufficient  
+51773 | 200 | Feature not available in your region  
+51774 | 200 | OKUSD API is under maintenance
 
 ---
 
@@ -86,4 +98,16 @@ Error Code | HTTP Status Code | Error Message
 51759 | 200 | 已超出临时限额，请稍后再试。  
 51760 | 200 | 使用中性套利策略的账户无法开通活期借币  
 51761 | 200 | 无法验证子账户的策略类型  
-51762 | 200 | 已部分赎回的订单无法取消
+51762 | 200 | 已部分赎回的订单无法取消  
+51763 | 200 | 您的账户不满足该产品的 VIP 等级准入要求  
+51764 | 200 | 余额不足  
+51765 | 200 | 超出您当日剩余配额 {x} USDT  
+51766 | 200 | 平台当日申购限额已达上限  
+51767 | 200 | 系统维护中，请稍后重试  
+51768 | 200 | 超出您当日剩余即时赎回配额 {x} OKUSD  
+51769 | 200 | 平台即时赎回限额已达上限  
+51770 | 200 | 超出您当日剩余标准赎回配额 {x} OKUSD  
+51771 | 200 | 平台标准赎回限额已达上限  
+51772 | 200 | 即时赎回池余额不足  
+51773 | 200 | 该功能在您所在地区暂不可用  
+51774 | 200 | OKUSD API 正在维护中

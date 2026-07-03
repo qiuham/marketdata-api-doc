@@ -3,13 +3,13 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-07-02 19:44:40.459310
+updated_at: 2026-07-03 19:40:37.713456
 ---
 
 # WebSocket
 
-### Instruments channel
-
+### Instruments channel  
+  
 The triggering scenarios for incremental data are:  
 1\. When there is any change to the instrument’s state (such as delivery of FUTURES, exercise of OPTION, listing of new contracts / trading pairs, trading suspension, etc.)  
 2\. When the trading parameters change (tickSz,minSz,maxMktSz)  
@@ -2391,8 +2391,8 @@ Only applicable when revision happens
 
 # WebSocket
 
-### 产品频道 
-
+### 产品频道   
+  
 增量数据的触发场景有：  
 1\. 当有产品状态 state 变化时（如期货交割、期权行权、新合约/币对上线、人工暂停/恢复交易等）  
 2\. 当交易参数变更（tickSz,minSz,maxMktSz）时  

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/ltv-adjust-history
 api_type: REST
-updated_at: 2026-07-02 19:19:51.508198
+updated_at: 2026-07-03 19:15:02.936865
 ---
 
 # Batch Amend Order

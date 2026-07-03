@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api
 anchor_id: public-data-rest-api
 api_type: REST
-updated_at: 2026-07-02 19:44:29.925544
+updated_at: 2026-07-03 19:40:26.923975
 ---
 
 # REST API
@@ -274,6 +274,12 @@ instCategory | String | The asset category of the instrument’s base asset (the
 `5`: Forex   
 `6`: Bonds   
 `""`: Not available  
+initPxLmtPct | String | Initial price-limit band applied during the first 10 minutes after contract listing, e.g. `0.05` represents 5%. Use GET /api/v5/public/price-limit for the computed price limits.  
+Only applicable to `SPOT`/`MARGIN`/`SWAP`/`FUTURES`, returns `""` for `OPTION` and `EVENTS`.  
+floatPxLmtPct | String | Floating price-limit band during normal trading, e.g. `0.03` represents 3%. Use GET /api/v5/public/price-limit for the computed price limits.  
+Only applicable to `SPOT`/`MARGIN`/`SWAP`/`FUTURES`, returns `""` for `OPTION` and `EVENTS`.  
+maxPxLmtPct | String | Maximum price-limit cap (hard ceiling on order-price deviation from the index price), e.g. `0.15` represents 15%. Use GET /api/v5/public/price-limit for the computed price limits.  
+Only applicable to `SPOT`/`MARGIN`/`SWAP`/`FUTURES`, returns `""` for `OPTION` and `EVENTS`.  
 upcChg | Array of objects | Upcoming changes. It is [] when there is no upcoming change.  
 > param | String | The parameter name to be updated.   
 `tickSz`  
@@ -2926,7 +2932,89 @@ details | Array |
 • **Exception:** When module = 6 & instType = OPTION, only data for the day specified by the end is returned  **Timezone specifications for timestamp parsing**  
 When converting Unix timestamps to dates, the following timezone conventions are applied to all timestamp fields (begin, end, dateRangeStart, dateRangeEnd, dataTs):  
 • **Orderbook data** (modules 4, 5, 6): UTC+0  
-• **All other data modules** (modules 1, 2, 3, 11): UTC+8
+• **All other data modules** (modules 1, 2, 3, 11): UTC+8 
+
+### Get MM instrument types
+
+Retrieve the list of MM Program instrument type classifications for SPOT and SWAP instruments.
+
+#### Rate Limit: 5 requests per 2 seconds
+
+#### Rate limit rule: IP
+
+#### HTTP Request
+
+`GET /api/v5/public/mm-instrument-types`
+
+> Request Example
+    
+    
+    GET /api/v5/public/mm-instrument-types?instType=SWAP
+    
+    
+    
+    import okx.PublicData as PublicData
+    
+    flag = "0"  # Production trading: 0, Demo trading: 1
+    
+    publicDataAPI = PublicData.PublicAPI(flag=flag)
+    
+    # Retrieve the list of MM Program instrument type classifications
+    result = publicDataAPI.get_mm_instrument_types(
+        instType="SWAP"
+    )
+    print(result)
+    
+
+#### Request Parameters
+
+Parameter | Type | Required | Description  
+---|---|---|---  
+instType | String | No | Instrument type.  
+`SPOT`  
+`SWAP`  
+When not specified, returns all types.  
+instId | String | No | Instrument ID, e.g. `BTC-USDT`, `BTC-USDT-SWAP`.  
+When specified, returns at most one record.  
+  
+> Response Example
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "instId": "BTC-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "A"
+            },
+            {
+                "instId": "ETH-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "A"
+            },
+            {
+                "instId": "XAU-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "B-TradFi"
+            }
+        ]
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+instId | String | Instrument ID, e.g. `BTC-USDT-SWAP`  
+instType | String | Instrument type.  
+`SPOT`  
+`SWAP`  
+pairType | String | MM Program classification type.  
+`A`: High liquidity tier  
+`B-Crypto`: Medium/low liquidity crypto assets  
+`B-TradFi`: Traditional finance instruments (SWAP only)
 
 ---
 
@@ -3181,6 +3269,12 @@ instCategory | String | 标的资产类别（产品ID的第一部分）。例如
 `5`: 外汇   
 `6`: 债券   
 `""` 当值不可用时返回空字符串  
+initPxLmtPct | String | 合约上线后前 10 分钟内的初始价格限制区间，小数百分比，例如 `0.05` 代表 5%。通过 GET /api/v5/public/price-limit 可获取对应价格限制。  
+适用于 `SPOT`/`MARGIN`/`SWAP`/`FUTURES`；`OPTION` 和 `EVENTS` 返回 `""`。  
+floatPxLmtPct | String | 常规交易期间的浮动价格限制区间，小数百分比，例如 `0.03` 代表 3%。通过 GET /api/v5/public/price-limit 可获取对应价格限制。  
+适用于 `SPOT`/`MARGIN`/`SWAP`/`FUTURES`；`OPTION` 和 `EVENTS` 返回 `""`。  
+maxPxLmtPct | String | 最大价格限制上限（下单价格相对指数价格偏离的硬性上限），小数百分比，例如 `0.15` 代表 15%。通过 GET /api/v5/public/price-limit 可获取对应价格限制。  
+适用于 `SPOT`/`MARGIN`/`SWAP`/`FUTURES`；`OPTION` 和 `EVENTS` 返回 `""`。  
 upcChg | Array of objects | 即将变更的参数列表。当没有即将变更的参数时，返回空数组 []  
 > param | String | 即将变更的参数名称。  
 `tickSz`  
@@ -5809,4 +5903,86 @@ details | Array |
 • **例外：** 当 module = 6 且 instType = OPTION 时，仅返回 end 指定日期的数据  **时间戳解析的时区规范**  
 将Unix时间戳转换为日期时，以下时区约定适用于所有时间戳字段（begin, end, dateRangeStart, dateRangeEnd, dataTs）：  
 • **深度数据** （模块4、5、6）：UTC+0  
-• **其他数据模块** （模块1、2、3、11）：UTC+8
+• **其他数据模块** （模块1、2、3、11）：UTC+8 
+
+### 获取 MM 币对分类类型 
+
+获取当前做市商（MM）计划 SPOT 和 SWAP 产品的币对分类类型列表。
+
+#### 限速：每2秒5次请求
+
+#### 限速规则：IP
+
+#### HTTP请求
+
+`GET /api/v5/public/mm-instrument-types`
+
+> 请求示例
+    
+    
+    GET /api/v5/public/mm-instrument-types?instType=SWAP
+    
+    
+    
+    import okx.PublicData as PublicData
+    
+    flag = "0"  # 实盘:0 , 模拟盘：1
+    
+    publicDataAPI = PublicData.PublicAPI(flag=flag)
+    
+    # 获取 MM 币对分类类型
+    result = publicDataAPI.get_mm_instrument_types(
+        instType="SWAP"
+    )
+    print(result)
+    
+
+#### 请求参数
+
+参数名 | 类型 | 是否必须 | 描述  
+---|---|---|---  
+instType | String | 否 | 产品类型  
+`SPOT`  
+`SWAP`  
+未指定时返回全部类型  
+instId | String | 否 | 产品ID，如 `BTC-USDT`、`BTC-USDT-SWAP`  
+指定时返回至多一条记录  
+  
+> 返回结果
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "instId": "BTC-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "A"
+            },
+            {
+                "instId": "ETH-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "A"
+            },
+            {
+                "instId": "XAU-USDT-SWAP",
+                "instType": "SWAP",
+                "pairType": "B-TradFi"
+            }
+        ]
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+instId | String | 产品ID，如 `BTC-USDT-SWAP`  
+instType | String | 产品类型  
+`SPOT`  
+`SWAP`  
+pairType | String | MM 计划分类类型  
+`A`：高流动性品种  
+`B-Crypto`：中低流动性加密资产  
+`B-TradFi`：传统金融品种（仅 SWAP）

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/ip-changelog
 api_type: REST
-updated_at: 2026-07-02 19:18:52.809960
+updated_at: 2026-07-03 19:14:00.895283
 ---
 
 # Get Fee Group Structure
