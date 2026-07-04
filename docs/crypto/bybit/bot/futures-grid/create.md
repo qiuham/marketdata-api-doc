@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-grid/create
 api_type: REST
-updated_at: 2026-07-03 19:11:15.711350
+updated_at: 2026-07-04 19:04:22.747581
 ---
 
 # Create Martingale Bot

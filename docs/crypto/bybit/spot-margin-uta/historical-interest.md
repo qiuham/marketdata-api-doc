@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
 api_type: REST
-updated_at: 2026-07-03 19:16:44.435554
+updated_at: 2026-07-04 19:10:47.001581
 ---
 
 # Get Historical Interest Rate

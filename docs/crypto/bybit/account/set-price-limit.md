@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-price-limit
 api_type: Account
-updated_at: 2026-07-03 19:09:08.381354
+updated_at: 2026-07-04 19:01:53.641145
 ---
 
 # Get SMP Group ID

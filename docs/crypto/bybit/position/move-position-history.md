@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position-history
 api_type: Position
-updated_at: 2026-07-03 19:15:41.517874
+updated_at: 2026-07-04 19:09:33.587992
 ---
 
 # Switch Position Mode

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pool-info
 api_type: REST
-updated_at: 2026-07-03 19:09:26.016398
+updated_at: 2026-07-04 19:02:14.317473
 ---
 
 # Execute LP Redeem

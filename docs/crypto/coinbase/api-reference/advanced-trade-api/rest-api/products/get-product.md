@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product
 api_type: Market Data
-updated_at: 2026-07-03 19:28:10.249862
+updated_at: 2026-07-04 19:26:34.764545
 ---
 
 # Get Product

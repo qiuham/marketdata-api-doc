@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-07-03 19:40:37.713456
+updated_at: 2026-07-04 19:39:01.824136
 ---
 
 # WebSocket

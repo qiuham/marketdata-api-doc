@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/public/public-transaction
 api_type: WebSocket
-updated_at: 2026-07-03 19:16:24.174283
+updated_at: 2026-07-04 19:10:22.364948
 ---
 
 # SBE BBO Integration

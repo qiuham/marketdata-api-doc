@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/index-components
 api_type: Market Data
-updated_at: 2026-07-03 19:14:09.045636
+updated_at: 2026-07-04 19:07:47.268784
 ---
 
 # Get Instruments Info

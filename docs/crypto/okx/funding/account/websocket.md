@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-websocket
 anchor_id: funding-account-websocket
 api_type: WebSocket
-updated_at: 2026-07-03 19:41:00.043621
+updated_at: 2026-07-04 19:39:24.182682
 ---
 
 # WebSocket

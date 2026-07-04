@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-estimate-quote
 anchor_id: funding-account-rest-api-estimate-quote
 api_type: REST
-updated_at: 2026-07-03 19:40:55.020974
+updated_at: 2026-07-04 19:39:19.156843
 ---
 
 # Estimate quote

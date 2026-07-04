@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/order-list
 api_type: REST
-updated_at: 2026-07-03 19:17:20.077732
+updated_at: 2026-07-04 19:11:32.803066
 ---
 
 # Stop Strategy
