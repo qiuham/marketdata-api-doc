@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-open-interest
 anchor_id: public-data-rest-api-get-open-interest
 api_type: REST
-updated_at: 2026-07-04 19:38:54.458604
+updated_at: 2026-07-05 19:34:54.483999
 ---
 
 # Get open interest

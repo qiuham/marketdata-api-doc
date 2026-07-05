@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/stop-strategy
 api_type: REST
-updated_at: 2026-07-04 19:11:33.420854
+updated_at: 2026-07-05 19:12:29.496666
 ---
 
 # Stop Strategy

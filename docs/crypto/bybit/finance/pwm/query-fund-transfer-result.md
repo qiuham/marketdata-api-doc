@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/query-fund-transfer-result
 api_type: REST
-updated_at: 2026-07-04 19:07:23.788442
+updated_at: 2026-07-05 19:09:09.490025
 ---
 
 # Get Order List

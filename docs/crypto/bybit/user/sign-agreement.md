@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/sign-agreement
 api_type: REST
-updated_at: 2026-07-04 19:11:58.813109
+updated_at: 2026-07-05 19:12:50.661617
 ---
 
 # Dcp

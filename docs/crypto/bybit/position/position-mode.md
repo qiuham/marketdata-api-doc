@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/position-mode
 api_type: Position
-updated_at: 2026-07-04 19:09:34.214586
+updated_at: 2026-07-05 19:10:56.015483
 ---
 
 # Switch Position Mode

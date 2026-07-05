@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/order-record
 api_type: REST
-updated_at: 2026-07-04 19:01:16.024164
+updated_at: 2026-07-05 19:04:20.059162
 ---
 
 # Set Risk Limit
