@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/exchange-earning
 api_type: REST
-updated_at: 2026-07-05 19:07:03.638193
+updated_at: 2026-07-06 19:25:43.367260
 ---
 
 # Get Rate Limit Cap

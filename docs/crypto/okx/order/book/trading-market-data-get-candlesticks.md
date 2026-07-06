@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-candlesticks
 anchor_id: order-book-trading-market-data-get-candlesticks
 api_type: API
-updated_at: 2026-07-05 19:34:17.538738
+updated_at: 2026-07-06 19:53:26.669695
 ---
 
 # GET / Candlesticks

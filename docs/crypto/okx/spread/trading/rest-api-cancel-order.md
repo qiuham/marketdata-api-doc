@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-cancel-order
 anchor_id: spread-trading-rest-api-cancel-order
 api_type: REST
-updated_at: 2026-07-05 19:34:41.237534
+updated_at: 2026-07-06 19:53:50.466628
 ---
 
 # Cancel order

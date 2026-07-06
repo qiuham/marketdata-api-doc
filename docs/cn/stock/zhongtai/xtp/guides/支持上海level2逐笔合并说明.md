@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2056206187820535810
+id: zhongtai-xtp-2074064397487140865
 title: 支持上海Level2逐笔合并说明
-doc_id: 2056206187820535810
+doc_id: 2074064397487140865
 doc_category: 使用建议
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187820535810'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397487140865'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-05-18
+updated_at: 2026-07-06
 ---
 
 # 支持上海Level2逐笔合并说明
@@ -29,7 +29,7 @@ updated_at: 2026-05-18
 #### 1.逐笔合并后新增逐笔状态消息
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2056206187820535810&imagePath=1.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397487140865&imagePath=1.png)
 
 上交所逐笔合并行情中，逐笔消息类型有三种：逐笔成交、逐笔委托以及新增的逐笔状态消息，QuoteAPI中的**逐笔状态类型XTPTickByTickStatus结构体**就是用于表示逐笔状态消息。
 
@@ -62,7 +62,7 @@ XTPTickByTickStatus由三个字段组成：
 
 
 逐笔合并后，上交所推送的逐笔消息中新增了逐笔状态消息，在处理通过QuoteSPI的回调函数OnTickByTick()推送的逐笔数据时，可以先根据XTPTBT.type字段判断消息类型，然后**增加处理逐笔状态消息的代码**，比如新增红框case处理语句处理逐笔状态消息。
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2056206187820535810&imagePath=2-3.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397487140865&imagePath=2-3.png)
 
 #### 4.修改判断丢包逻辑
 

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/execution
 api_type: Trading
-updated_at: 2026-07-05 19:10:30.898667
+updated_at: 2026-07-06 19:29:16.072632
 ---
 
 # Pre Check Order

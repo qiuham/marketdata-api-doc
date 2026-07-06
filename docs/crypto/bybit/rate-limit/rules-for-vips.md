@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-vips
 api_type: REST
-updated_at: 2026-07-05 19:11:12.521530
+updated_at: 2026-07-06 19:29:58.512394
 ---
 
 # Basic Workflow

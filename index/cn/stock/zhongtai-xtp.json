@@ -10,885 +10,885 @@
   "status": "active",
   "docs_dir": "docs/cn/stock/zhongtai/xtp",
   "total": 36,
-  "updated_at": "2026-05-18",
+  "updated_at": "2026-07-06",
   "documents_by_type": {
     "market_data": [
       {
-        "id": "zhongtai-xtp-2056206185257816066",
+        "id": "zhongtai-xtp-2074064395868139522",
         "title": "QuoteApi",
         "path": "docs/cn/stock/zhongtai/xtp/api-reference/quoteapi.md",
         "filename": "quoteapi.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185257816066",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395868139522",
         "doc_category": "详细接口使用说明",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206185383645185",
+        "id": "zhongtai-xtp-2074064395947831298",
         "title": "QuoteSpi",
         "path": "docs/cn/stock/zhongtai/xtp/api-reference/quotespi.md",
         "filename": "quotespi.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185383645185",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395947831298",
         "doc_category": "详细接口使用说明",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186344140802",
+        "id": "zhongtai-xtp-2074064396551811074",
         "title": "关于L2行情数据回补功能的使用说明",
         "path": "docs/cn/stock/zhongtai/xtp/examples/关于l2行情数据回补功能的使用说明.md",
         "filename": "关于l2行情数据回补功能的使用说明.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186344140802",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396551811074",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206185022935042",
+        "id": "zhongtai-xtp-2074064395721338882",
         "title": "行情Quote-API断线后应对措施",
         "path": "docs/cn/stock/zhongtai/xtp/examples/行情quote-api断线后应对措施.md",
         "filename": "行情quote-api断线后应对措施.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185022935042",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395721338882",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188281909250",
+        "id": "zhongtai-xtp-2074064397751382017",
         "title": "逐笔数据结构体字段说明",
         "path": "docs/cn/stock/zhongtai/xtp/examples/逐笔数据结构体字段说明.md",
         "filename": "逐笔数据结构体字段说明.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188281909250",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397751382017",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187405299714",
+        "id": "zhongtai-xtp-2074064397231288321",
         "title": "QuoteAPI使用UDP常见问题",
         "path": "docs/cn/stock/zhongtai/xtp/guides/quoteapi使用udp常见问题.md",
         "filename": "quoteapi使用udp常见问题.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187405299714",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397231288321",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187505963010",
+        "id": "zhongtai-xtp-2074064397302591489",
         "title": "上交所新债券Level2行情说明",
         "path": "docs/cn/stock/zhongtai/xtp/guides/上交所新债券level2行情说明.md",
         "filename": "上交所新债券level2行情说明.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187505963010",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397302591489",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187820535810",
+        "id": "zhongtai-xtp-2074064397487140865",
         "title": "支持上海Level2逐笔合并说明",
         "path": "docs/cn/stock/zhongtai/xtp/guides/支持上海level2逐笔合并说明.md",
         "filename": "支持上海level2逐笔合并说明.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187820535810",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397487140865",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187912810498",
+        "id": "zhongtai-xtp-2074064397550055425",
         "title": "支持上海Level2逐笔委托说明",
         "path": "docs/cn/stock/zhongtai/xtp/guides/支持上海level2逐笔委托说明.md",
         "filename": "支持上海level2逐笔委托说明.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187912810498",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397550055425",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188164468738",
+        "id": "zhongtai-xtp-2074064397680078850",
         "title": "行情服务接入前指引文档",
         "path": "docs/cn/stock/zhongtai/xtp/help/行情服务接入前指引文档.md",
         "filename": "行情服务接入前指引文档.md",
         "api_type": "market_data",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188164468738",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397680078850",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ],
     "trade": [
       {
-        "id": "zhongtai-xtp-2056206185543028738",
+        "id": "zhongtai-xtp-2074064396069466114",
         "title": "TraderApi",
         "path": "docs/cn/stock/zhongtai/xtp/api-reference/traderapi.md",
         "filename": "traderapi.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185543028738",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396069466114",
         "doc_category": "详细接口使用说明",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206185769521153",
+        "id": "zhongtai-xtp-2074064396203683842",
         "title": "TraderSpi",
         "path": "docs/cn/stock/zhongtai/xtp/api-reference/traderspi.md",
         "filename": "traderspi.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185769521153",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396203683842",
         "doc_category": "详细接口使用说明",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187615014913",
+        "id": "zhongtai-xtp-2074064397373894658",
         "title": "交易业务报单接口及参数说明",
         "path": "docs/cn/stock/zhongtai/xtp/examples/交易业务报单接口及参数说明.md",
         "filename": "交易业务报单接口及参数说明.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187615014913",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397373894658",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186235088897",
+        "id": "zhongtai-xtp-2074064396480507905",
         "title": "交易分页查询示例代码",
         "path": "docs/cn/stock/zhongtai/xtp/examples/交易分页查询示例代码.md",
         "filename": "交易分页查询示例代码.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186235088897",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396480507905",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186469969922",
+        "id": "zhongtai-xtp-2074064396635697153",
         "title": "报单接口示例代码文档",
         "path": "docs/cn/stock/zhongtai/xtp/examples/报单接口示例代码文档.md",
         "filename": "报单接口示例代码文档.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186469969922",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396635697153",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187011035138",
+        "id": "zhongtai-xtp-2074064396975435778",
         "title": "资金划拨接口的示例代码",
         "path": "docs/cn/stock/zhongtai/xtp/examples/资金划拨接口的示例代码.md",
         "filename": "资金划拨接口的示例代码.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187011035138",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396975435778",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188621647874",
+        "id": "zhongtai-xtp-2074064397940125698",
         "title": "订单的状态机图",
         "path": "docs/cn/stock/zhongtai/xtp/help/订单的状态机图.md",
         "filename": "订单的状态机图.md",
         "api_type": "trade",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188621647874",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397940125698",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ],
     "guide": [
       {
-        "id": "zhongtai-xtp-2056206186579021825",
+        "id": "zhongtai-xtp-2074064396707000322",
         "title": "新债申购逻辑示例代码",
         "path": "docs/cn/stock/zhongtai/xtp/examples/新债申购逻辑示例代码.md",
         "filename": "新债申购逻辑示例代码.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186579021825",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396707000322",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186683879426",
+        "id": "zhongtai-xtp-2074064396769914881",
         "title": "新股申购逻辑示例代码",
         "path": "docs/cn/stock/zhongtai/xtp/examples/新股申购逻辑示例代码.md",
         "filename": "新股申购逻辑示例代码.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186683879426",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396769914881",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186906177537",
+        "id": "zhongtai-xtp-2074064396916715522",
         "title": "配股逻辑示例代码",
         "path": "docs/cn/stock/zhongtai/xtp/examples/配股逻辑示例代码.md",
         "filename": "配股逻辑示例代码.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186906177537",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396916715522",
         "doc_category": "范例和教程",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206187728261121",
+        "id": "zhongtai-xtp-2074064397436809217",
         "title": "撤单建议",
         "path": "docs/cn/stock/zhongtai/xtp/guides/撤单建议.md",
         "filename": "撤单建议.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187728261121",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397436809217",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188013473794",
+        "id": "zhongtai-xtp-2074064397617164290",
         "title": "模拟测试环境常见问题",
         "path": "docs/cn/stock/zhongtai/xtp/guides/模拟测试环境常见问题.md",
         "filename": "模拟测试环境常见问题.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188013473794",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397617164290",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188999135233",
+        "id": "zhongtai-xtp-2074064398233726977",
         "title": "测试环境模拟撮合规则",
         "path": "docs/cn/stock/zhongtai/xtp/guides/测试环境模拟撮合规则.md",
         "filename": "测试环境模拟撮合规则.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188999135233",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398233726977",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206189095604226",
+        "id": "zhongtai-xtp-2074064398292447234",
         "title": "算法流控及母单参数示例",
         "path": "docs/cn/stock/zhongtai/xtp/help/算法流控及母单参数示例.md",
         "filename": "算法流控及母单参数示例.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206189095604226",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398292447234",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206189158518786",
+        "id": "zhongtai-xtp-2074064398321807361",
         "title": "算法流控及母单参数类型说明",
         "path": "docs/cn/stock/zhongtai/xtp/help/算法流控及母单参数类型说明.md",
         "filename": "算法流控及母单参数类型说明.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206189158518786",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398321807361",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188382572545",
+        "id": "zhongtai-xtp-2074064397810102273",
         "title": "金融风控指标",
         "path": "docs/cn/stock/zhongtai/xtp/help/金融风控指标.md",
         "filename": "金融风控指标.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188382572545",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397810102273",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206184888717314",
+        "id": "zhongtai-xtp-2074064395633258497",
         "title": "交易Trader-API使用指南QuickStart",
         "path": "docs/cn/stock/zhongtai/xtp/quickstart/交易trader-api使用指南quickstart.md",
         "filename": "交易trader-api使用指南quickstart.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206184888717314",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395633258497",
         "doc_category": "XTP API 快速入门",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186797125634",
+        "id": "zhongtai-xtp-2074064396849606658",
         "title": "行情Quote-API使用指南QuickStart",
         "path": "docs/cn/stock/zhongtai/xtp/quickstart/行情quote-api使用指南quickstart.md",
         "filename": "行情quote-api使用指南quickstart.md",
         "api_type": "guide",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186797125634",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396849606658",
         "doc_category": "XTP API 快速入门",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ],
     "error_code": [
       {
-        "id": "zhongtai-xtp-2056206188810391553",
+        "id": "zhongtai-xtp-2074064398040788993",
         "title": "公网测试环境模拟撮合错误代码表",
         "path": "docs/cn/stock/zhongtai/xtp/guides/公网测试环境模拟撮合错误代码表.md",
         "filename": "公网测试环境模拟撮合错误代码表.md",
         "api_type": "error_code",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188810391553",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398040788993",
         "doc_category": "使用建议",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206188500013057",
+        "id": "zhongtai-xtp-2074064397860433922",
         "title": "错误代码速查表",
         "path": "docs/cn/stock/zhongtai/xtp/help/错误代码速查表.md",
         "filename": "错误代码速查表.md",
         "api_type": "error_code",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188500013057",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397860433922",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ],
     "reference": [
       {
-        "id": "zhongtai-xtp-2056206187128475650",
+        "id": "zhongtai-xtp-2074064397042544642",
         "title": "API常见问题",
         "path": "docs/cn/stock/zhongtai/xtp/help/api常见问题.md",
         "filename": "api常见问题.md",
         "api_type": "reference",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187128475650",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397042544642",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206185937293314",
+        "id": "zhongtai-xtp-2074064396321124353",
         "title": "头文件",
         "path": "docs/cn/stock/zhongtai/xtp/overview/头文件.md",
         "filename": "头文件.md",
         "api_type": "reference",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185937293314",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396321124353",
         "doc_category": "XTP API简介",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186004402178",
+        "id": "zhongtai-xtp-2074064396350484481",
         "title": "支持平台",
         "path": "docs/cn/stock/zhongtai/xtp/overview/支持平台.md",
         "filename": "支持平台.md",
         "api_type": "reference",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186004402178",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396350484481",
         "doc_category": "XTP API简介",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186138619906",
+        "id": "zhongtai-xtp-2074064396417593346",
         "title": "类库文件",
         "path": "docs/cn/stock/zhongtai/xtp/overview/类库文件.md",
         "filename": "类库文件.md",
         "api_type": "reference",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186138619906",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396417593346",
         "doc_category": "XTP API简介",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ],
     "changelog": [
       {
-        "id": "zhongtai-xtp-2056206187300442113",
+        "id": "zhongtai-xtp-2074064397168373761",
         "title": "Python版本SDK编译库说明",
         "path": "docs/cn/stock/zhongtai/xtp/help/python版本sdk编译库说明.md",
         "filename": "python版本sdk编译库说明.md",
         "api_type": "changelog",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187300442113",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397168373761",
         "doc_category": "其他帮助文档",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       },
       {
-        "id": "zhongtai-xtp-2056206186063122434",
+        "id": "zhongtai-xtp-2074064396379844609",
         "title": "版本更新介绍",
         "path": "docs/cn/stock/zhongtai/xtp/overview/版本更新介绍.md",
         "filename": "版本更新介绍.md",
         "api_type": "changelog",
         "source_type": "http_api",
-        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186063122434",
+        "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396379844609",
         "doc_category": "XTP API简介",
         "version": "XTP 3.0",
-        "updated_at": "2026-05-18"
+        "updated_at": "2026-07-06"
       }
     ]
   },
   "all_documents": [
     {
-      "id": "zhongtai-xtp-2056206187300442113",
+      "id": "zhongtai-xtp-2074064397168373761",
       "title": "Python版本SDK编译库说明",
       "path": "docs/cn/stock/zhongtai/xtp/help/python版本sdk编译库说明.md",
       "filename": "python版本sdk编译库说明.md",
       "api_type": "changelog",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187300442113",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397168373761",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186063122434",
+      "id": "zhongtai-xtp-2074064396379844609",
       "title": "版本更新介绍",
       "path": "docs/cn/stock/zhongtai/xtp/overview/版本更新介绍.md",
       "filename": "版本更新介绍.md",
       "api_type": "changelog",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186063122434",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396379844609",
       "doc_category": "XTP API简介",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188810391553",
+      "id": "zhongtai-xtp-2074064398040788993",
       "title": "公网测试环境模拟撮合错误代码表",
       "path": "docs/cn/stock/zhongtai/xtp/guides/公网测试环境模拟撮合错误代码表.md",
       "filename": "公网测试环境模拟撮合错误代码表.md",
       "api_type": "error_code",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188810391553",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398040788993",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188500013057",
+      "id": "zhongtai-xtp-2074064397860433922",
       "title": "错误代码速查表",
       "path": "docs/cn/stock/zhongtai/xtp/help/错误代码速查表.md",
       "filename": "错误代码速查表.md",
       "api_type": "error_code",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188500013057",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397860433922",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206184888717314",
+      "id": "zhongtai-xtp-2074064395633258497",
       "title": "交易Trader-API使用指南QuickStart",
       "path": "docs/cn/stock/zhongtai/xtp/quickstart/交易trader-api使用指南quickstart.md",
       "filename": "交易trader-api使用指南quickstart.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206184888717314",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395633258497",
       "doc_category": "XTP API 快速入门",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187728261121",
+      "id": "zhongtai-xtp-2074064397436809217",
       "title": "撤单建议",
       "path": "docs/cn/stock/zhongtai/xtp/guides/撤单建议.md",
       "filename": "撤单建议.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187728261121",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397436809217",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186579021825",
+      "id": "zhongtai-xtp-2074064396707000322",
       "title": "新债申购逻辑示例代码",
       "path": "docs/cn/stock/zhongtai/xtp/examples/新债申购逻辑示例代码.md",
       "filename": "新债申购逻辑示例代码.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186579021825",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396707000322",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186683879426",
+      "id": "zhongtai-xtp-2074064396769914881",
       "title": "新股申购逻辑示例代码",
       "path": "docs/cn/stock/zhongtai/xtp/examples/新股申购逻辑示例代码.md",
       "filename": "新股申购逻辑示例代码.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186683879426",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396769914881",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188013473794",
+      "id": "zhongtai-xtp-2074064397617164290",
       "title": "模拟测试环境常见问题",
       "path": "docs/cn/stock/zhongtai/xtp/guides/模拟测试环境常见问题.md",
       "filename": "模拟测试环境常见问题.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188013473794",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397617164290",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188999135233",
+      "id": "zhongtai-xtp-2074064398233726977",
       "title": "测试环境模拟撮合规则",
       "path": "docs/cn/stock/zhongtai/xtp/guides/测试环境模拟撮合规则.md",
       "filename": "测试环境模拟撮合规则.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188999135233",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398233726977",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206189095604226",
+      "id": "zhongtai-xtp-2074064398292447234",
       "title": "算法流控及母单参数示例",
       "path": "docs/cn/stock/zhongtai/xtp/help/算法流控及母单参数示例.md",
       "filename": "算法流控及母单参数示例.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206189095604226",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398292447234",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206189158518786",
+      "id": "zhongtai-xtp-2074064398321807361",
       "title": "算法流控及母单参数类型说明",
       "path": "docs/cn/stock/zhongtai/xtp/help/算法流控及母单参数类型说明.md",
       "filename": "算法流控及母单参数类型说明.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206189158518786",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064398321807361",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186797125634",
+      "id": "zhongtai-xtp-2074064396849606658",
       "title": "行情Quote-API使用指南QuickStart",
       "path": "docs/cn/stock/zhongtai/xtp/quickstart/行情quote-api使用指南quickstart.md",
       "filename": "行情quote-api使用指南quickstart.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186797125634",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396849606658",
       "doc_category": "XTP API 快速入门",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186906177537",
+      "id": "zhongtai-xtp-2074064396916715522",
       "title": "配股逻辑示例代码",
       "path": "docs/cn/stock/zhongtai/xtp/examples/配股逻辑示例代码.md",
       "filename": "配股逻辑示例代码.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186906177537",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396916715522",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188382572545",
+      "id": "zhongtai-xtp-2074064397810102273",
       "title": "金融风控指标",
       "path": "docs/cn/stock/zhongtai/xtp/help/金融风控指标.md",
       "filename": "金融风控指标.md",
       "api_type": "guide",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188382572545",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397810102273",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187405299714",
+      "id": "zhongtai-xtp-2074064397231288321",
       "title": "QuoteAPI使用UDP常见问题",
       "path": "docs/cn/stock/zhongtai/xtp/guides/quoteapi使用udp常见问题.md",
       "filename": "quoteapi使用udp常见问题.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187405299714",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397231288321",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185257816066",
+      "id": "zhongtai-xtp-2074064395868139522",
       "title": "QuoteApi",
       "path": "docs/cn/stock/zhongtai/xtp/api-reference/quoteapi.md",
       "filename": "quoteapi.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185257816066",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395868139522",
       "doc_category": "详细接口使用说明",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185383645185",
+      "id": "zhongtai-xtp-2074064395947831298",
       "title": "QuoteSpi",
       "path": "docs/cn/stock/zhongtai/xtp/api-reference/quotespi.md",
       "filename": "quotespi.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185383645185",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395947831298",
       "doc_category": "详细接口使用说明",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187505963010",
+      "id": "zhongtai-xtp-2074064397302591489",
       "title": "上交所新债券Level2行情说明",
       "path": "docs/cn/stock/zhongtai/xtp/guides/上交所新债券level2行情说明.md",
       "filename": "上交所新债券level2行情说明.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187505963010",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397302591489",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186344140802",
+      "id": "zhongtai-xtp-2074064396551811074",
       "title": "关于L2行情数据回补功能的使用说明",
       "path": "docs/cn/stock/zhongtai/xtp/examples/关于l2行情数据回补功能的使用说明.md",
       "filename": "关于l2行情数据回补功能的使用说明.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186344140802",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396551811074",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187820535810",
+      "id": "zhongtai-xtp-2074064397487140865",
       "title": "支持上海Level2逐笔合并说明",
       "path": "docs/cn/stock/zhongtai/xtp/guides/支持上海level2逐笔合并说明.md",
       "filename": "支持上海level2逐笔合并说明.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187820535810",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397487140865",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187912810498",
+      "id": "zhongtai-xtp-2074064397550055425",
       "title": "支持上海Level2逐笔委托说明",
       "path": "docs/cn/stock/zhongtai/xtp/guides/支持上海level2逐笔委托说明.md",
       "filename": "支持上海level2逐笔委托说明.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187912810498",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397550055425",
       "doc_category": "使用建议",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185022935042",
+      "id": "zhongtai-xtp-2074064395721338882",
       "title": "行情Quote-API断线后应对措施",
       "path": "docs/cn/stock/zhongtai/xtp/examples/行情quote-api断线后应对措施.md",
       "filename": "行情quote-api断线后应对措施.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185022935042",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064395721338882",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188164468738",
+      "id": "zhongtai-xtp-2074064397680078850",
       "title": "行情服务接入前指引文档",
       "path": "docs/cn/stock/zhongtai/xtp/help/行情服务接入前指引文档.md",
       "filename": "行情服务接入前指引文档.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188164468738",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397680078850",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188281909250",
+      "id": "zhongtai-xtp-2074064397751382017",
       "title": "逐笔数据结构体字段说明",
       "path": "docs/cn/stock/zhongtai/xtp/examples/逐笔数据结构体字段说明.md",
       "filename": "逐笔数据结构体字段说明.md",
       "api_type": "market_data",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188281909250",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397751382017",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187128475650",
+      "id": "zhongtai-xtp-2074064397042544642",
       "title": "API常见问题",
       "path": "docs/cn/stock/zhongtai/xtp/help/api常见问题.md",
       "filename": "api常见问题.md",
       "api_type": "reference",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187128475650",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397042544642",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185937293314",
+      "id": "zhongtai-xtp-2074064396321124353",
       "title": "头文件",
       "path": "docs/cn/stock/zhongtai/xtp/overview/头文件.md",
       "filename": "头文件.md",
       "api_type": "reference",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185937293314",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396321124353",
       "doc_category": "XTP API简介",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186004402178",
+      "id": "zhongtai-xtp-2074064396350484481",
       "title": "支持平台",
       "path": "docs/cn/stock/zhongtai/xtp/overview/支持平台.md",
       "filename": "支持平台.md",
       "api_type": "reference",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186004402178",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396350484481",
       "doc_category": "XTP API简介",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186138619906",
+      "id": "zhongtai-xtp-2074064396417593346",
       "title": "类库文件",
       "path": "docs/cn/stock/zhongtai/xtp/overview/类库文件.md",
       "filename": "类库文件.md",
       "api_type": "reference",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186138619906",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396417593346",
       "doc_category": "XTP API简介",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185543028738",
+      "id": "zhongtai-xtp-2074064396069466114",
       "title": "TraderApi",
       "path": "docs/cn/stock/zhongtai/xtp/api-reference/traderapi.md",
       "filename": "traderapi.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185543028738",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396069466114",
       "doc_category": "详细接口使用说明",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206185769521153",
+      "id": "zhongtai-xtp-2074064396203683842",
       "title": "TraderSpi",
       "path": "docs/cn/stock/zhongtai/xtp/api-reference/traderspi.md",
       "filename": "traderspi.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185769521153",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396203683842",
       "doc_category": "详细接口使用说明",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187615014913",
+      "id": "zhongtai-xtp-2074064397373894658",
       "title": "交易业务报单接口及参数说明",
       "path": "docs/cn/stock/zhongtai/xtp/examples/交易业务报单接口及参数说明.md",
       "filename": "交易业务报单接口及参数说明.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187615014913",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397373894658",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186235088897",
+      "id": "zhongtai-xtp-2074064396480507905",
       "title": "交易分页查询示例代码",
       "path": "docs/cn/stock/zhongtai/xtp/examples/交易分页查询示例代码.md",
       "filename": "交易分页查询示例代码.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186235088897",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396480507905",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206186469969922",
+      "id": "zhongtai-xtp-2074064396635697153",
       "title": "报单接口示例代码文档",
       "path": "docs/cn/stock/zhongtai/xtp/examples/报单接口示例代码文档.md",
       "filename": "报单接口示例代码文档.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206186469969922",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396635697153",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206188621647874",
+      "id": "zhongtai-xtp-2074064397940125698",
       "title": "订单的状态机图",
       "path": "docs/cn/stock/zhongtai/xtp/help/订单的状态机图.md",
       "filename": "订单的状态机图.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206188621647874",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397940125698",
       "doc_category": "其他帮助文档",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     },
     {
-      "id": "zhongtai-xtp-2056206187011035138",
+      "id": "zhongtai-xtp-2074064396975435778",
       "title": "资金划拨接口的示例代码",
       "path": "docs/cn/stock/zhongtai/xtp/examples/资金划拨接口的示例代码.md",
       "filename": "资金划拨接口的示例代码.md",
       "api_type": "trade",
       "source_type": "http_api",
-      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206187011035138",
+      "source_url": "https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064396975435778",
       "doc_category": "范例和教程",
       "version": "XTP 3.0",
-      "updated_at": "2026-05-18"
+      "updated_at": "2026-07-06"
     }
   ]
 }

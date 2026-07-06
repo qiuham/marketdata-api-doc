@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/collateral-info
 api_type: Account
-updated_at: 2026-07-05 19:04:30.698079
+updated_at: 2026-07-06 19:23:04.480232
 ---
 
 # Get MMP State
