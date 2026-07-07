@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-api常见问题
 title: XTP Pro API常见问题
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-15
+updated_at: 2026-07-03
 ---
 
 # XTP Pro API常见问题
@@ -153,7 +153,8 @@ updated_at: 2026-06-15
 >  (1) 在[md.normal]下开启 enable = ON，修改 local_ip 为20开头的网卡ip，如果绑核，需修改 parse_cpu_id、recv_cpu_id；  
 >  (2) 在[md.fpga]下开启 enable = ON，修改 local_ip 为20开头的网卡ip，如果绑核，需修改 recv_cpu_id；  
 >  (3) 在[subscribe_quote_type]下开启 sh_level2_md_stock = ON、sz_level2_md_stock = ON；  
->  注意：为避免丢包，还需做好参数调优，可参考：行情参数优化_XTP Pro版本.txt。
+>  注意：  
+>  为避免丢包，还需做好参数调优，可参考：行情配置及参数调优。
 
 **2.1.3. 问：如果在一个程序里，要同时接收Level1和Level2快照行情，或者在南方机房同时接收沪深OB行情，也只需要创建一个QuoteApi吗？**
 
@@ -256,9 +257,12 @@ updated_at: 2026-06-15
     
     [ERROR]Unable to parse config file D:/XTPApiDemo/api/quote_config.ini
 
-> 答：应该是quote_config.ini文件格式不对。linux下文件是LF格式，windows下文件是CRLF格式，而且必须是UTF-8编码。  
->  windows下，可用记事本打开查看底部显示的格式：Windows(CRLF) 或 Unix(LF)；  
->  Linux下，可使用 file 命令快速识别，执行：file quote_config.ini 查看是哪种换行符格式。
+> 答：应该是quote_config.ini文件格式不对。文件编码及换行符格式要求如下：  
+>  （1）文件必须是UTF-8编码，不能是UTF-8 BOM编码。  
+>  （2）linux下的文件换行符是LF格式，windows下的文件换行符是CRLF格式。  
+>  查看文件格式：  
+>  （1）windows下，可用记事本打开查看底部显示的格式：Windows(CRLF) 或 Unix(LF)。  
+>  （2）linux下，可执行：file quote_config.ini 查看是哪种换行符格式。
 
 **2.1.26. 问：配置好了quote_config.ini，在Login()之前也调用了SetConfigFile()，但是xtpxquote.log中有以下报错，是什么原因呢？**
     
@@ -794,12 +798,12 @@ updated_at: 2026-06-15
 
 **2.2.30. 问：快照行情中的ETF基金实时参考净值，XTPMarketDataStockExData.iopv只是沪市有推送数据吗？**
 
-> 答：目前深交所和上交所通过Level-1/Level-2发布ETF的iopv数据，是通过OnDepthMarketData()、OnETFIOPVData()回调返回iopv值。  
->  但是，后续上交所ETF的iopv改造后，取消Level-1/Level-2通过OnDepthMarketData()推送iopv值，启用Level1的OnETFIOPVData()回调推送iopv值。
+> 答：自20260706日起，上交所Level-2行情不再提供IOPV数据，可订阅Level-1行情的ETF快照，通过OnETFIOPVData()回调接收IOPV数据，原OnDepthMarketData()不再推送IOPV数据。  
+>  深交所还是Level-1/Level-2发布ETF的iopv数据，订阅ETF快照后，通过OnDepthMarketData()、OnETFIOPVData()回调返回iopv值。
 
 **2.2.31. 问：XTP中有提供ETF基金T-1日的净值数据吗？**
 
-> 答：快照返回的基金T-1日净值，XTPMarketDataStockExData.pre_iopv 仅深市有值，上交所没有提供值。
+> 答：快照返回的基金T-1日净值，XTPMarketDataStockExData.pre_iopv 仅深市有值，上交所没有提供。
 
 **2.2.32. 问：OnDepthMarketData()股票快照行情数据，更新频率是怎样的？**
 
@@ -826,8 +830,8 @@ updated_at: 2026-06-15
 
 **2.2.37. 问：Level2行情订阅快照行情后，为什么收不到沪市ETF的OnETFIOPVData()回调？**
 
-> 答：目前上交所和深交所Level1、Level2行情都能收到OnETFIOPVData()回调，quote_config.ini配置中，Level1设置 sz_level1_md_index = ON，Level2设置 sz_level2_md_index = ON。  
->  后续上交所ETF的iopv改造后，仅Level1行情能收到ETF的iopv值，quote_config.ini中需设置 sh_level1_md_index = ON，OnETFIOPVData()回调会收到iopv数据。
+> 答：自20260706日起，上交所ETF的iopv改造后，仅Level1行情能收到ETF的iopv值，quote_config.ini中需设置 sh_level1_md_index = ON，OnETFIOPVData()回调会收到iopv数据。  
+>  深交所Level1、Level2行情都能收到OnETFIOPVData()回调，quote_config.ini配置中，Level1设置 sz_level1_md_index = ON，Level2设置 sz_level2_md_index = ON。
 
 **2.2.38. 问：实盘上订阅了订单薄行情，为什么OnOrderBook()没有回调推送数据呢？**
 
@@ -2195,7 +2199,7 @@ updated_at: 2026-06-15
 > 答：您订阅合约的数量超限了。因为公网环境下带宽有限，而且是TCP连接，订阅太多时会造成网路堵塞，所以我们做了订阅数量限制。
 > 
 >   * 如果是单订阅，单市场是100只，沪深2个市场总共200只。
->   * 如果是全市场订阅，只推送7只合约：000002、600000、159901、300002、399001、510050、688001。
+>   * 如果是全市场订阅，只推送16只合约： 000002,600000,688001,510050,010609,399001,300002,159901,131800,204001,111012,118011,113673,123188,127078,128142。
 > 
 
 

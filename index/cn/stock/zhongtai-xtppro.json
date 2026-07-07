@@ -9,8 +9,8 @@
   "product": "xtppro",
   "status": "active",
   "docs_dir": "docs/cn/stock/zhongtai/xtppro",
-  "total": 21,
-  "updated_at": "2026-06-23",
+  "total": 22,
+  "updated_at": "2026-07-03",
   "documents_by_type": {
     "guide": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-06-15"
+        "updated_at": "2026-07-03"
       },
       {
         "id": "zhongtai-xtppro-xtp-pro交易xtrader-api使用示例说明",
@@ -35,7 +35,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93XTrader-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-xtp-pro算法交易xalgo-api使用示例说明",
@@ -59,7 +59,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-06-30"
       }
     ],
     "reference": [
@@ -85,7 +85,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/SDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E/Python%E7%89%88%E6%9C%ACSDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-新股申购逻辑示例代码",
@@ -97,7 +97,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E6%96%B0%E8%82%A1%E7%94%B3%E8%B4%AD%E9%80%BB%E8%BE%91%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-xtp-pro-algo-api接口说明",
@@ -145,7 +145,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E9%85%8D%E8%82%A1%E9%80%BB%E8%BE%91%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       }
     ],
     "market_data": [
@@ -183,7 +183,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E6%96%AD%E7%BA%BF%E5%90%8E%E5%BA%94%E5%AF%B9%E6%8E%AA%E6%96%BD.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-xtp-pro行情服务接入前指引",
@@ -195,7 +195,19 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%85%A5%E5%89%8D%E6%8C%87%E5%BC%95/%E8%A1%8C%E6%83%85%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%85%A5%E5%89%8D%E6%8C%87%E5%BC%95.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-06-15"
+        "updated_at": "2026-07-02"
+      },
+      {
+        "id": "zhongtai-xtppro-行情配置及参数调优",
+        "title": "行情配置及参数调优",
+        "path": "docs/cn/stock/zhongtai/xtppro/API4/行情配置及参数调优/行情配置及参数调优.md",
+        "filename": "行情配置及参数调优.md",
+        "api_type": "market_data",
+        "source_type": "vitepress",
+        "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98/%E8%A1%8C%E6%83%85%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98.html",
+        "doc_category": "",
+        "version": "XTP Pro",
+        "updated_at": "2026-07-03"
       }
     ],
     "trade": [
@@ -209,7 +221,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-xtp-pro订单的状态机图",
@@ -247,7 +259,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-05-20"
+        "updated_at": "2026-05-21"
       },
       {
         "id": "zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化",
@@ -259,7 +271,7 @@
         "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96.html",
         "doc_category": "",
         "version": "XTP Pro",
-        "updated_at": "2026-06-23"
+        "updated_at": "2026-06-30"
       }
     ],
     "error_code": [
@@ -300,7 +312,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-06-15"
+      "updated_at": "2026-07-03"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro算法交易xalgo-api使用示例说明",
@@ -324,7 +336,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93XTrader-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro行情xquote-api使用示例说明",
@@ -336,7 +348,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-06-30"
     },
     {
       "id": "zhongtai-xtppro-pro行情旧版配置文件的参数说明",
@@ -360,7 +372,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%85%A5%E5%89%8D%E6%8C%87%E5%BC%95/%E8%A1%8C%E6%83%85%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%85%A5%E5%89%8D%E6%8C%87%E5%BC%95.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-06-15"
+      "updated_at": "2026-07-02"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro关于l2行情数据回补功能的使用说明",
@@ -384,7 +396,19 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E6%96%AD%E7%BA%BF%E5%90%8E%E5%BA%94%E5%AF%B9%E6%8E%AA%E6%96%BD.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
+    },
+    {
+      "id": "zhongtai-xtppro-行情配置及参数调优",
+      "title": "行情配置及参数调优",
+      "path": "docs/cn/stock/zhongtai/xtppro/API4/行情配置及参数调优/行情配置及参数调优.md",
+      "filename": "行情配置及参数调优.md",
+      "api_type": "market_data",
+      "source_type": "vitepress",
+      "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98/%E8%A1%8C%E6%83%85%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98.html",
+      "doc_category": "",
+      "version": "XTP Pro",
+      "updated_at": "2026-07-03"
     },
     {
       "id": "zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化",
@@ -396,7 +420,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化",
@@ -408,7 +432,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-06-23"
+      "updated_at": "2026-06-30"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro-algo-api接口说明",
@@ -444,7 +468,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/SDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E/Python%E7%89%88%E6%9C%ACSDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-参数类型说明",
@@ -468,7 +492,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E6%96%B0%E8%82%A1%E7%94%B3%E8%B4%AD%E9%80%BB%E8%BE%91%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-算法流控及母单参数示例",
@@ -492,7 +516,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E9%85%8D%E8%82%A1%E9%80%BB%E8%BE%91%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro订单的状态机图",
@@ -516,7 +540,7 @@
       "source_url": "https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html",
       "doc_category": "",
       "version": "XTP Pro",
-      "updated_at": "2026-05-20"
+      "updated_at": "2026-05-21"
     },
     {
       "id": "zhongtai-xtppro-xtp-pro资金划拨接口的示例代码",

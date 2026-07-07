@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro行情xquote-api断线后应对措施
 title: XTP-Pro行情XQuote-API断线后应对措施
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E6%96%AD%E7%BA%BF%E5%90%8E%E5%BA%94%E5%AF%B9%E6%8E%AA%E6%96%BD.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-20
+updated_at: 2026-05-21
 ---
 
 # XTP-Pro行情XQuote-API断线后应对措施

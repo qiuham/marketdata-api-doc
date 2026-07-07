@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-07-06 19:30:29.428838
+updated_at: 2026-07-07 19:15:54.229459
 ---
 
 # SBE Order Entry Integration
@@ -289,7 +289,7 @@ ID| Field| Type| Size (bytes)| Description
 14| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
 15| mmp| BoolEnum| 1| Market Maker Protection  
 16| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
-17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE; added in schema version 2; this feature is currently in a gradual rollout phase and will be fully available on 12 June. See [announcement](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
+17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE; added in schema version 2; See [announcement](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
   
 #### `CreateOrderRespV5` (id=6, blockLength=364)
 
@@ -1094,7 +1094,7 @@ ID| Field| Type| Size (bytes)| Description
 14| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
 15| mmp| BoolEnum| 1| 造市商保護 Market Maker Protection  
 16| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
-17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE；schema version 2 新增 added in schema version 2；目前灰度中, 6月12日全量; 相關[公告](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
+17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE；schema version 2 新增 added in schema version 2；相關[公告](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
   
 #### `CreateOrderRespV5` (id=6, blockLength=364)
 

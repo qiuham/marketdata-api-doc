@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/long-short-ratio
 api_type: Market Data
-updated_at: 2026-07-06 19:28:18.001315
+updated_at: 2026-07-07 19:13:44.471483
 ---
 
 # Get Mark Price Kline

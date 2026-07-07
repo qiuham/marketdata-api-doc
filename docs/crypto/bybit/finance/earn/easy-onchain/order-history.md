@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/order-history
 api_type: REST
-updated_at: 2026-07-06 19:27:12.273818
+updated_at: 2026-07-07 19:12:39.748064
 ---
 
 # Get Staked Position

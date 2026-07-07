@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-07-06 19:32:01.711873
+updated_at: 2026-07-07 19:17:25.840590
 ---
 
 # Connect
@@ -64,6 +64,7 @@ USDT/USDC Options: `wss://stream-testnet.bybit.com/v5/public/option`
 info
 
   * If your account is registered from [www.bybit.tr](http://www.bybit.tr), please use `stream.bybit.tr` for mainnet access
+  * If your account is registered from [www.bybit.id](http://www.bybit.id), please use `stream.bybit.id` for mainnet access
   * If your account is registered from [www.bybit.kz](http://www.bybit.kz), please use `stream.bybit.kz` for mainnet access
   * If your account is registered from [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge), please use `stream.bybitgeorgia.ge` for mainnet access
 
@@ -394,9 +395,10 @@ RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`
 
 信息
 
-  * 如果您的帳戶是在 [www.bybit.tr](http://www.bybit.tr) 註冊, 請使用`stream.bybit.tr`進行主網連接
-  * 如果您的帳戶是在 [www.bybit.kz](http://www.bybit.kz), 請使用 `stream.bybit.kz` 進行主網連接
-  * 如果您的帳戶是在 [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge) 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
+  * 土耳其站：如果您的帳戶是在 [www.bybit.tr](http://www.bybit.tr) 註冊, 請使用`stream.bybit.tr`進行主網連接
+  * 印尼站：如果您的帳戶是在 [www.bybit.id](http://www.bybit.id) 註冊, 請使用`stream.bybit.id`進行主網連接
+  * 哈薩克斯坦站：如果您的帳戶是在 [www.bybit.kz](http://www.bybit.kz), 請使用 `stream.bybit.kz` 進行主網連接
+  * 喬治亞站：如果您的帳戶是在 [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge) 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
 
 
 

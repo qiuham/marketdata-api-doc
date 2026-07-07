@@ -2,12 +2,10 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-channels
 api_type: WebSocket
-updated_at: 2026-07-06 19:41:52.314486
+updated_at: 2026-07-07 19:30:07.661628
 ---
 
 # Advanced Trade WebSocket Channels
-
-Use heartbeats to keep all subscriptions openMost channels close within 60-90 seconds if no updates are sent. Subscribe to heartbeats to keep all subscriptions open.
 
 The Coinbase Advanced Trade Market Data WebSocket feed provides the following channels:
 
@@ -23,11 +21,16 @@ user| Only sends messages that include the authenticated user|  _Yes_
 market_trades| Real-time updates every time a market trade happens| No  
 futures_balance_summary| Real-time updates every time a user’s futures balance changes|  _Yes_  
   
-Refer to the documentation on [subscribing to a WebSocket channel](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#subscribing).
+### Working with websockets
 
-For the most reliable connection, authenticate with a CDP API key when subscribing to any channel.
+  * **Keep subscriptions open with heartbeats.** Most channels close within 60-90 seconds when no updates are sent. Subscribe to the heartbeats channel alongside your other channels to keep all subscriptions open — especially useful for illiquid pairs.
+  * **Authenticate for a reliable connection.** For the most reliable connection, authenticate with a CDP API key when subscribing to any channel.
+  * **USDC products.** Subscribing to `-USDC` products is only available on the user channel. Other channels return the same data as the corresponding `-USD` products. `USDT-USDC` and `EURC-USDC` are available on all channels.
 
-Subscribing to “-USDC” based products are only available on the user channel. Other channels will return the same data as the corresponding “-USD” based products. USDT-USDC and EURC-USDC are available on all channels.
+For more detail, see:
+
+  * [Subscribing to a WebSocket channel](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#subscribing)
+  * [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction) for the full WebSocket specs
 
 ## Heartbeats Channel
 
@@ -49,14 +52,12 @@ A heartbeats message is of the type `heartbeats` as seen below.
     
     // Heartbeats Message
     {
-      "channel": "heartbeats",
-      "client_id": "",
-      "timestamp": "2023-06-23T20:31:26.122969572Z",
+      "channel": "heartbeats",  "timestamp": "2023-06-23T20:31:26.122969572Z",
       "sequence_num": 0,
       "events": [
         {
           "current_time": "2023-06-23 20:31:56.121961769 +0000 UTC m=+91717.525857105",
-          "heartbeat_counter": "3049"
+          "heartbeat_counter": 3049
         }
       ]
     }
@@ -88,9 +89,7 @@ A candles message is of the type `candles` and some of its parameters include:
     
     // Candles Message
     {
-      "channel": "candles",
-      "client_id": "",
-      "timestamp": "2023-06-09T20:19:35.39625135Z",
+      "channel": "candles",  "timestamp": "2023-06-09T20:19:35.39625135Z",
       "sequence_num": 0,
       "events": [
         {
@@ -130,9 +129,7 @@ A market trades message is of the type `snapshot` or `update`, and contains an a
     
     // Market Trades Message
     {
-      "channel": "market_trades",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:19:35.39625135Z",
+      "channel": "market_trades",  "timestamp": "2023-02-09T20:19:35.39625135Z",
       "sequence_num": 0,
       "events": [
         {
@@ -171,9 +168,7 @@ The `status` channel, like most channels, closes within 60-90 seconds when there
     
     // Status Message
     {
-      "channel": "status",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:29:49.753424311Z",
+      "channel": "status",  "timestamp": "2023-02-09T20:29:49.753424311Z",
       "sequence_num": 0,
       "events": [
         {
@@ -214,9 +209,7 @@ The `ticker` channel provides real-time price updates every time a match happens
     
     // Ticker message
     {
-      "channel": "ticker",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:30:37.167359596Z",
+      "channel": "ticker",  "timestamp": "2023-02-09T20:30:37.167359596Z",
       "sequence_num": 0,
       "events": [
         {
@@ -280,9 +273,7 @@ The `new_quantity` property is the updated size at that price level, not a delta
     
     // Example:
     {
-      "channel": "l2_data",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:32:50.714964855Z",
+      "channel": "l2_data",  "timestamp": "2023-02-09T20:32:50.714964855Z",
       "sequence_num": 0,
       "events": [
         {
@@ -329,9 +320,7 @@ Subscribing to the User channel returns all `OPEN` orders, batched by 50, in the
     
     // User message
     {
-      "channel": "user",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:33:57.609931463Z",
+      "channel": "user",  "timestamp": "2023-02-09T20:33:57.609931463Z",
       "sequence_num": 0,
       "events": [
         {
@@ -400,7 +389,8 @@ Subscribing to the User channel returns all `OPEN` orders, batched by 50, in the
                 "unrealized_pnl": "-21.199999999999932",
                 "entry_price": "64150"
               }
-            ]
+            ],
+            "prediction_market_positions": []
           }
         }
       ]
@@ -574,6 +564,8 @@ Field| Description
 `unrealized_pnl`| Your current unrealized PnL for your position  
 `entry_price`| The average entry price at which you entered your current position  
   
+The `positions` object also includes a `prediction_market_positions` array. This field is in beta.
+
 ## Futures Balance Summary Channel
 
 The `futures_balance_summary` channel sends updates on all of a user’s futures balances, including all subsequent updates of those balances.
@@ -590,9 +582,7 @@ The `futures_balance_summary` channel sends updates on all of a user’s futures
     
     // Futures Balance Summary Message:
     {
-      "channel": "futures_balance_summary",
-      "client_id": "",
-      "timestamp": "2023-02-09T20:33:57.609931463Z",
+      "channel": "futures_balance_summary",  "timestamp": "2023-02-09T20:33:57.609931463Z",
       "sequence_num": 0,
       "events": [
         {

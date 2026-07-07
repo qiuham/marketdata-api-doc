@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-markets
 anchor_id: public-data-rest-api-get-markets
 api_type: REST
-updated_at: 2026-07-06 19:54:01.636700
+updated_at: 2026-07-07 19:43:02.722466
 ---
 
 # Get markets

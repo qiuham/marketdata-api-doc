@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-cancel-signal-bots
 anchor_id: order-book-trading-signal-bot-trading-post-cancel-signal-bots
 api_type: API
-updated_at: 2026-07-06 19:53:06.740925
+updated_at: 2026-07-07 19:42:08.175803
 ---
 
 # POST / Cancel signal bots

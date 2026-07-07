@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro交易xtrader-api使用示例说明
 title: XTP-Pro交易XTrader-API使用示例说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93XTrader-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-20
+updated_at: 2026-05-21
 ---
 
 # XTP-Pro交易XTrader-API使用示例说明

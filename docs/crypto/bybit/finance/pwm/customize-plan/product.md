@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/product
 api_type: REST
-updated_at: 2026-07-06 19:27:39.551021
+updated_at: 2026-07-07 19:13:06.624693
 ---
 
 # Claim Withdrawable Funds

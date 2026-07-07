@@ -13,7 +13,7 @@ id: zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化
 title: 从XTP交易到XTP-Pro交易API的变化
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-20
+updated_at: 2026-05-21
 ---
 
 # 从XTP交易到XTP-Pro交易API的变化

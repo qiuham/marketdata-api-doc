@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/subuid-list
 api_type: REST
-updated_at: 2026-07-06 19:31:39.230517
+updated_at: 2026-07-07 19:17:03.611684
 ---
 
 # Dcp
@@ -33,7 +33,7 @@ To sum up, for those private connections subscribing "dcp" topic are all dead, t
 
 ---
 
-# 斷線保護 (期權)
+# 斷線保護
 
 通過訂閱DCP流來觸發功能
 

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
 api_type: REST
-updated_at: 2026-07-06 19:30:53.362817
+updated_at: 2026-07-07 19:16:17.941029
 ---
 
 # Get VIP Margin Data

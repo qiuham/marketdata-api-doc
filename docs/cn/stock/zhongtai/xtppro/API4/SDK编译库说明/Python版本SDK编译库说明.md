@@ -13,7 +13,7 @@ id: zhongtai-xtppro-boostpython编译库说明
 title: boost.python编译库说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/SDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E/Python%E7%89%88%E6%9C%ACSDK%E7%BC%96%E8%AF%91%E5%BA%93%E8%AF%B4%E6%98%8E.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-20
+updated_at: 2026-05-21
 ---
 
 # boost.python编译库说明

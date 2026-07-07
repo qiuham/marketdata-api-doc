@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro行情xquote-api使用示例说明
 title: XTP-Pro行情XQuote-API使用示例说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-20
+updated_at: 2026-06-30
 ---
 
 # XTP-Pro行情XQuote-API使用示例说明
@@ -133,83 +133,89 @@ quote_config.ini配置文件设置参数参考如下：
 cpp
     
     
-    [md]
-    decode_flag = 1  #1表示解码的快照数据，目前api提供的只有解码的行情数据
-    parse_cpu_id = 2 #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
+    [md]              #快照行情的参数设置(港股通和指数通行情与快照用同一个md设置)
+    decode_flag = 1   #1表示解码的快照数据，目前api提供的只有解码的行情数据
+    parse_cpu_id = 2  #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
     [md.normal]
-    enable = ON  #ON 表示启用软件行情的快照， OFF表示不启用
+    enable = ON          #ON 表示启用软件行情的快照， OFF表示不启用
     local_ip = 127.0.0.1  #接收快照所在组播组的网段的网卡地址
-    recv_cpu_id = 3  #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
-    enable_efvi = OFF #基于solarflare网卡的一种api标识
-    L1_buf_capacity = 256 #一级缓存的大小，最小为256k个缓存单元
-    L2_buf_capacity = 8  #二级缓存的大小，最小为8k个缓存单元
+    recv_cpu_id = 3       #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable_efvi = OFF     #基于solarflare网卡的一种api标识
+    L1_buf_capacity = 512 #一级缓存的大小，最小为256k个缓存单元
+    L2_buf_capacity = 64   #二级缓存的大小，最小为8k个缓存单元
+    busy_wait = ON        #ON 表示开启接收线程忙等状态， OFF表示关闭接收线程忙等状态
     [md.fpga]
-    enable = OFF #ON表示启用硬件行情的快照，OFF表示不启用
-    local_ip = 127.0.0.1 #接收快照所在组播组的网段的网卡地址
-    recv_cpu_id = 3 #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable = OFF      #ON表示启用硬件行情的快照，OFF表示不启用
+    local_ip = 127.0.0.1   #接收快照所在组播组的网段的网卡地址
+    recv_cpu_id = 3      #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable_efvi = OFF    #基于solarflare网卡的一种api标识
+    L1_buf_capacity = 512 #一级缓存的大小，最小为256k个缓存单元
+    L2_buf_capacity = 64   #二级缓存的大小，最小为8k个缓存单元
+    busy_wait = ON        #ON 表示开启接收线程忙等状态， OFF表示关闭接收线程忙等状态
     
-    enable_efvi = OFF #基于solarflare网卡的一种api标识
-    L1_buf_capacity = 256 #一级缓存的大小，最小为256k个缓存单元
-    L2_buf_capacity = 8   #二级缓存的大小，最小为8k个缓存单元
-     
-    [tbt]
-    decode_flag = 1   #1表示解码的逐笔数据，目前api提供的只有解码的行情数据
-    parse_cpu_id = 4  #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
+    [tbt]            #逐笔行情的参数设置
+    decode_flag = 1  #1表示解码的逐笔数据，目前api提供的只有解码的行情数据
+    parse_cpu_id = 4 #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
     [tbt.normal]
-    enable = ON  #ON表示启用软件行情的逐笔，OFF表示不启用
-    local_ip = 127.0.0.1 #接收逐笔数据所在组播组的网段的网卡地址
-    recv_cpu_id = 5   #接收线程绑核的cpu核id(逻辑核),0表示不绑核
-    enable_efvi = OFF  #基于solarflare网卡的一种api标识
-    L1_buf_capacity = 256  #一级缓存的大小，最小为256k个缓存单元
-    L2_buf_capacity = 8  #二级缓存的大小，最小为8k个缓存单元
-    [tbt.fpga]
-    enable = OFF   #ON表示启用硬件行情的逐笔，OFF表示不启用
-    local_ip = 127.0.0.1 #接收逐笔数据所在组播组的网段的网卡地址
-    recv_cpu_id = 5  #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
-    enable_efvi = OFF  #基于solarflare网卡的一种api标识
-    L1_buf_capacity = 256  #一级缓存的大小，最小为256k个缓存单元
-    L2_buf_capacity = 8   #二级缓存的大小，最小为8k个缓存单元
-    
-    [ob]
-    decode_flag = 1    #1表示解码的订单簿数据，目前api提供的只有解码的行情数据。
-    parse_cpu_id = 6    #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
-    [ob.normal]
-    enable = ON  #ON表示启用软件行情的订单簿，OFF表示不启用
-    local_ip = 127.0.0.1  #接收订单簿所在组播组的网段的网卡地址
-    recv_cpu_id = 7     #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable = ON    #ON表示启用软件行情的逐笔，OFF表示不启用
+    local_ip = 127.0.0.1  #接收逐笔数据所在组播组的网段的网卡地址
+    recv_cpu_id = 5     #接收线程绑核的cpu核id(逻辑核),0表示不绑核
     enable_efvi = OFF   #基于solarflare网卡的一种api标识
-    L1_buf_capacity = 256  #一级缓存的大小，最小为256k个缓存单元
+    L1_buf_capacity = 512 #一级缓存的大小，最小为256k个缓存单元
     L2_buf_capacity = 8   #二级缓存的大小，最小为8k个缓存单元
+    busy_wait = ON     #ON 表示开启接收线程忙等状态， OFF表示关闭接收线程忙等状态
+    [tbt.fpga]
+    enable = OFF         #ON表示启用硬件行情的逐笔，OFF表示不启用
+    local_ip = 127.0.0.1 #接收逐笔数据所在组播组的网段的网卡地址
+    recv_cpu_id = 5      #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable_efvi = OFF    #基于solarflare网卡的一种api标识
+    L1_buf_capacity = 512 #一级缓存的大小，最小为256k个缓存单元
+    L2_buf_capacity = 8   #二级缓存的大小，最小为8k个缓存单元
+    busy_wait = ON        #ON 表示开启接收线程忙等状态， OFF表示关闭接收线程忙等状态
+    
+    [ob]              #订单簿行情的参数设置
+    decode_flag = 1   #1表示解码的订单簿数据，目前api提供的只有解码的行情数据。
+    parse_cpu_id = 6  #解析线程绑核的cpu核id(逻辑核)，0表示不绑核
+    [ob.normal]
+    enable = ON      #ON表示启用软件行情的订单簿，OFF表示不启用
+    local_ip = 127.0.0.1  #接收订单簿所在组播组的网段的网卡地址
+    recv_cpu_id = 7       #接收线程绑核的cpu核id(逻辑核)，0表示不绑核
+    enable_efvi = OFF     #基于solarflare网卡的一种api标识
+    L1_buf_capacity = 512 #一级缓存的大小，最小为256k个缓存单元
+    L2_buf_capacity = 8   #二级缓存的大小，最小为8k个缓存单元
+    busy_wait = ON        #ON 表示开启接收线程忙等状态， OFF表示关闭接收线程忙等状态
     
     [subscribe_quote_type]
-    sh_ob = OFF          #上海订单簿行情是否打开标志，OFF:关闭，ON：打开
-    sz_ob = OFF          #深圳订单簿行情是否打开标志，OFF:关闭，ON：打开
-    sh_level1_rawtxt = OFF  #L1沪市指数通行情是否打开标识
-    sh_level1_md_index = ON #L1沪市指数快照行情是否打开标识
-    sh_level1_md_stock = ON #L1 沪市股票快照行情是否打开标识
-    sh_level1_md_option = ON  #L1 沪市期权快照行情是否打开标识
+    sh_ob = OFF            #上海订单簿行情是否打开标志，OFF:关闭，ON：打开
+    sz_ob = OFF            #深圳订单簿行情是否打开标志，OFF:关闭，ON：打开
+    sh_level1_md_index = ON  #L1沪市指数(指数、IOPV)快照行情是否打开标识
+    sh_level1_md_stock = ON  #L1 沪市股票(股票、基金、债券)快照行情是否打开标识
+    sh_level1_md_option = ON #L1 沪市期权快照行情是否打开标识
     sh_level2_md_index = ON  #L2 沪市指数快照行情是否打开标识
-    sh_level2_md_stock = ON  #L2 沪市股票快照行情是否打开标识
-    sh_level2_md_bond = ON  #L2 沪市债券快照行情是否打开标识
-    sh_level2_tbt_stock = ON  #L2 沪市股票逐笔行情是否打开标识
-    sh_level2_tbt_bond = ON  #L2 沪市债券逐笔行情是否打开标识
-    sz_level1_md_index = ON  #L1 深市指数快照行情是否打开标识
-    sz_level1_md_stock = ON  #L1 深市股票快照行情是否打开标识
-    sz_level1_md_option = ON  #L1 深市期权快照行情是否打开标识
-    sz_level1_md_bond = ON  #L1 深市债券行情是否打开标识
-    sz_level2_md_index = ON  #L2 深市指数快照行情是否打开标识
-    sz_level2_md_stock = ON  #L2 深市股票快照行情是否打开标识
-    sz_level2_md_bond = ON  #L2 深市债券快照行情是否打开标识
-    sz_level2_tbt_stock = ON  #L2 深市股票逐笔行情是否打开标识
-    sz_level2_tbt_bond = ON  #L2 深市债券逐笔行情是否打开标识
-    nq_rawtxt = OFF       #新三板指数通行情是否打开标识
-    nq_md_bond = OFF    #新三板债券快照行情是否打开标识
-    nq_tbt_bond = OFF    #新三板债券逐笔行情是否打开标识
+    sh_level2_md_stock = ON  #L2 沪市股票(股票、基金)快照行情是否打开标识
+    sh_level2_md_bond = ON   #L2 沪市债券(可转债、国债逆回购等债券)快照行情是否打开标识
+    sh_level2_tbt_stock = ON #L2 沪市股票(股票、基金)逐笔行情是否打开标识
+    sh_level2_tbt_bond = ON  #L2 沪市债券(可转债、国债逆回购等债券)逐笔行情是否打开标识
+    sz_level1_md_index = ON  #L1 深市指数(指数、IOPV)快照行情是否打开标识
+    sz_level1_md_stock = ON  #L1 深市股票(股票、基金、可转债)快照行情是否打开标识
+    sz_level1_md_option = ON #L1 深市期权快照行情是否打开标识
+    sz_level1_md_bond = ON   #L1 深市债券(国债逆回购等其它债券)行情是否打开标识
+    sz_level2_md_index = ON  #L2 深市指数(指数、IOPV)快照行情是否打开标识
+    sz_level2_md_stock = ON  #L2 深市股票(股票、基金，可转债)快照行情是否打开标识
+    sz_level2_md_bond = ON   #L2 深市债券(国债逆回购等其它债券)快照行情是否打开标识
+    sz_level2_tbt_stock = ON #L2 深市股票(股票、基金、可转债)逐笔行情是否打开标识
+    sz_level2_tbt_bond = ON  #L2 深市债券(国债逆回购等其它债券)逐笔行情是否打开标识
+    nq_rawtxt = OFF        #新三板股票行情是否打开标识
+    nq_md_bond = OFF       #新三板债券快照行情是否打开标识
+    nq_tbt_bond = OFF      #新三板债券逐笔行情是否打开标识
+    
     #以下为指数通indexpress订阅配置
     sh_level1_rawtxt = ON
     #以下为港股通hkc相关订阅配置
     sz_level1_md_hkc = ON
     sz_level1_md_hkcsta = ON
+
+备注：上述参数配置是API版本1.2.1及其以上版本支持的参数格式。
 
 ### 2.3. 创建Spi类 ​
 

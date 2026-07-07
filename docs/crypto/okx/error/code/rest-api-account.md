@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-account
 anchor_id: error-code-rest-api-account
 api_type: REST
-updated_at: 2026-07-06 19:55:06.422152
+updated_at: 2026-07-07 19:44:07.179699
 ---
 
 # Account

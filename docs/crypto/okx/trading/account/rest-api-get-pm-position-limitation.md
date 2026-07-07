@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-pm-position-limitation
 anchor_id: trading-account-rest-api-get-pm-position-limitation
 api_type: REST
-updated_at: 2026-07-06 19:52:27.328662
+updated_at: 2026-07-07 19:41:29.409264
 ---
 
 # Get PM position limitation
