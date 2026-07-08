@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/adjust-collateral
 api_type: REST
-updated_at: 2026-07-07 19:14:00.070687
+updated_at: 2026-07-08 19:01:53.477799
 ---
 
 # Get Borrow Contract Info

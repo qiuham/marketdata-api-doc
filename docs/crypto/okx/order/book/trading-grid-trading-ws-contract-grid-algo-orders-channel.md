@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-ws-contract-grid-algo-orders-channel
 anchor_id: order-book-trading-grid-trading-ws-contract-grid-algo-orders-channel
 api_type: WebSocket
-updated_at: 2026-07-07 19:42:01.427781
+updated_at: 2026-07-08 19:27:41.327049
 ---
 
 # WS / Contract grid algo orders channel

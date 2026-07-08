@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-series
 anchor_id: public-data-rest-api-get-series
 api_type: REST
-updated_at: 2026-07-07 19:43:02.097558
+updated_at: 2026-07-08 19:28:42.177568
 ---
 
 # Get series
@@ -65,12 +65,15 @@ freq | String | Frequency of the series
 `fifteen_min`  
 `hourly`  
 `daily`  
+`monthly`  
 title | String | Series title  
 category | String | Category which this series belongs to, e.g. `Crypto`  
 settlement | Object | Settlement information  
 > method | String | Settlement method.  
 `price_up_down`: Price up/down  
 `price_above`: Price above  
+`hit`: Hit (price touches strike level, settles immediately)  
+`between`: Between (settle price within [floorStrike, capStrike) range)  
 > closeEarly | Boolean | Whether the market can be settled earlier than the expiration time.  
 `true`  
 `false`  
@@ -138,12 +141,15 @@ freq | String | 系列频率
 `fifteen_min`  
 `hourly`  
 `daily`  
+`monthly`  
 title | String | 系列标题  
 category | String | 所属分类，如 `Crypto`  
 settlement | Object | 结算信息  
 > method | String | 结算方式。  
 `price_up_down`：价格涨跌  
 `price_above`：价格高于  
+`hit`：触及（价格触达行权价格，立即结算）  
+`between`：区间（结算价格在 [floorStrike, capStrike) 范围内）  
 > closeEarly | Boolean | 是否可以在到期时间前提前结算。  
 `true`  
 `false`  

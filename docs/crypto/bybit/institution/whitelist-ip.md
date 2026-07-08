@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/whitelist-ip
 api_type: REST
-updated_at: 2026-07-07 19:13:30.761876
+updated_at: 2026-07-08 19:01:20.931197
 ---
 
 # Get Fee Group Structure

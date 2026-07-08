@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-grid-ai-parameter-public
 anchor_id: order-book-trading-grid-trading-get-grid-ai-parameter-public
 api_type: API
-updated_at: 2026-07-07 19:41:59.516492
+updated_at: 2026-07-08 19:27:39.414866
 ---
 
 # GET / Grid AI parameter (public)

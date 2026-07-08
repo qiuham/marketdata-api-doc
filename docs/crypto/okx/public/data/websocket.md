@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-07-07 19:43:12.322857
+updated_at: 2026-07-08 19:28:52.355420
 ---
 
 # WebSocket
@@ -455,8 +455,10 @@ connId | String | WebSocket connection ID
                 "state": "live",
                 "outcome": "0",
                 "floorStrike": "120000",
+                "capStrike": "",
                 "settleValue": "",
-                "disputed": false
+                "disputed": false,
+                "hitDir": ""
             }
         ]
     }
@@ -486,11 +488,17 @@ data | Array of objects | Subscribed data
 `2`: NO.  
 `1`/`2` only applicable when state is `expired`  
 > floorStrike | String | Minimum expiration value that leads to a YES outcome  
+> capStrike | String | Maximum expiration value that leads to a YES outcome for `between` method. `"INF"` indicates no upper bound (the topmost bracket).  
+Returns `""` for non-`between` methods.  
 > settleValue | String | Settlement value  
 Only return when the state is `expired`  
 > disputed | Boolean | Whether the market has been disputed.  
 `true`  
 `false`  
+> hitDir | String | Hit direction. Only applicable when the settlement method is `hit`.  
+`up`: price hit from below  
+`dn`: price hit from above  
+`""`: not applicable (non-`hit` methods)  
   
 ### Open interest channel
 
@@ -2023,7 +2031,7 @@ Applicable to `FUTURES`/`SWAP`
 `long`: Hedge mode long  
 `short`: Hedge mode short  
 `net`: Net mode  
->> bkPx | String | Bankruptcy price. The price of the transaction with the system's liquidation account, only applicable to `FUTURES`/`SWAP`  
+>> bkPx | String | Liquidation mark price. The price of the transaction with the system's liquidation account, only applicable to `FUTURES`/`SWAP`  
 >> sz | String | Quantity of liquidation, only applicable to `MARGIN`/`FUTURES`/`SWAP`.  
 For `MARGIN`, the unit is base currency.   
 For `FUTURES/SWAP`, the unit is contract.  
@@ -2822,8 +2830,10 @@ connId | String | WebSocket 连接 ID
                 "state": "live",
                 "outcome": "0",
                 "floorStrike": "120000",
+                "capStrike": "",
                 "settleValue": "",
-                "disputed": false
+                "disputed": false,
+                "hitDir": ""
             }
         ]
     }
@@ -2853,11 +2863,17 @@ data | Array of objects | 订阅数据
 `2`：NO。  
 `1`/`2` 仅在 state 为 `expired` 时适用  
 > floorStrike | String | 导致 YES 结果的最低到期价格  
+> capStrike | String | `between` 结算方式中导致 YES 结果的最大到期值。`"INF"` 表示无上限（最高区间）。  
+非 `between` 方式返回 `""`。  
 > settleValue | String | 结算价格。  
 仅在 state 为 `expired` 时返回  
 > disputed | Boolean | 是否存在争议。  
 `true`  
 `false`  
+> hitDir | String | 触及方向。仅在结算方式为 `hit` 时适用。  
+`up`：价格从下方触及  
+`dn`：价格从上方触及  
+`""`：不适用（非 `hit` 方式）  
   
 ### 持仓总量频道 
 
@@ -4359,7 +4375,7 @@ data | Array of objects | 订阅的数据
 `long`：开平仓模式开多  
 `short`：开平仓模式开空  
 `net`：买卖模式  
->> bkPx | String | 破产价格，与系统爆仓账号委托成交的价格，仅适用于`交割/永续`  
+>> bkPx | String | 强平标记价格，与系统爆仓账号委托成交的价格，仅适用于`交割/永续`  
 >> sz | String | 强平数量  
 适用于`杠杆`/`交割`/`永续`  
 对于`杠杆`，单位为交易货币。  

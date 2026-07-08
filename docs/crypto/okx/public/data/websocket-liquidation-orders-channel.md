@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-liquidation-orders-channel
 anchor_id: public-data-websocket-liquidation-orders-channel
 api_type: WebSocket
-updated_at: 2026-07-07 19:43:16.150797
+updated_at: 2026-07-08 19:28:56.196726
 ---
 
 # Liquidation orders channel
@@ -127,7 +127,7 @@ Applicable to `FUTURES`/`SWAP`
 `long`: Hedge mode long  
 `short`: Hedge mode short  
 `net`: Net mode  
->> bkPx | String | Bankruptcy price. The price of the transaction with the system's liquidation account, only applicable to `FUTURES`/`SWAP`  
+>> bkPx | String | Liquidation mark price. The price of the transaction with the system's liquidation account, only applicable to `FUTURES`/`SWAP`  
 >> sz | String | Quantity of liquidation, only applicable to `MARGIN`/`FUTURES`/`SWAP`.  
 For `MARGIN`, the unit is base currency.   
 For `FUTURES/SWAP`, the unit is contract.  
@@ -259,7 +259,7 @@ data | Array of objects | 订阅的数据
 `long`：开平仓模式开多  
 `short`：开平仓模式开空  
 `net`：买卖模式  
->> bkPx | String | 破产价格，与系统爆仓账号委托成交的价格，仅适用于`交割/永续`  
+>> bkPx | String | 强平标记价格，与系统爆仓账号委托成交的价格，仅适用于`交割/永续`  
 >> sz | String | 强平数量  
 适用于`杠杆`/`交割`/`永续`  
 对于`杠杆`，单位为交易货币。  

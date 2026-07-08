@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-rest-api
 api_type: Guide
-updated_at: 2026-07-07 19:30:05.422766
+updated_at: 2026-07-08 19:16:24.902444
 ---
 
 # Make Your First Trade with the REST SDK

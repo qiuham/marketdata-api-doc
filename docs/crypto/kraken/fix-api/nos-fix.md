@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-07-07 19:40:43.735994
+updated_at: 2026-07-08 19:26:24.427300
 ---
 
 # Send order
@@ -16,6 +16,55 @@ Send order
       --header 'Authent: <api-key>'
     
     
+    import requests  
+      
+    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"  
+      
+    headers = {  
+        "APIKey": "<api-key>",  
+        "Authent": "<api-key>"  
+    }  
+      
+    response = requests.post(url, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};  
+      
+    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"  
+      
+    	req, _ := http.NewRequest("POST", url, nil)  
+      
+    	req.Header.Add("APIKey", "<api-key>")  
+    	req.Header.Add("Authent", "<api-key>")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
     {
       "result": "success",
       "sendStatus": {
@@ -27,8 +76,9 @@ Send order
             "type": "PLACE",
             "order": {
               "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+              "cliOrdId": null,
               "type": "lmt",
-              "symbol": "PF_XBTUSD",
+              "symbol": "PI_XBTUSD",
               "side": "buy",
               "quantity": 10000,
               "filled": 0,
@@ -36,7 +86,8 @@ Send order
               "reduceOnly": false,
               "timestamp": "2019-09-05T16:33:50.734Z",
               "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
-            }
+            },
+            "reducedQuantity": null
           }
         ]
       },
@@ -58,6 +109,55 @@ Send order
       --header 'Authent: <api-key>'
     
     
+    import requests  
+      
+    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"  
+      
+    headers = {  
+        "APIKey": "<api-key>",  
+        "Authent": "<api-key>"  
+    }  
+      
+    response = requests.post(url, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};  
+      
+    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"  
+      
+    	req, _ := http.NewRequest("POST", url, nil)  
+      
+    	req.Header.Add("APIKey", "<api-key>")  
+    	req.Header.Add("Authent", "<api-key>")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
     {
       "result": "success",
       "sendStatus": {
@@ -69,8 +169,9 @@ Send order
             "type": "PLACE",
             "order": {
               "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
+              "cliOrdId": null,
               "type": "lmt",
-              "symbol": "PF_XBTUSD",
+              "symbol": "PI_XBTUSD",
               "side": "buy",
               "quantity": 10000,
               "filled": 0,
@@ -78,7 +179,8 @@ Send order
               "reduceOnly": false,
               "timestamp": "2019-09-05T16:33:50.734Z",
               "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
-            }
+            },
+            "reducedQuantity": null
           }
         ]
       },
@@ -106,6 +208,14 @@ header
 required
 
 Authentication string
+
+#### Headers
+
+algoId
+
+string
+
+ID of the algorithm that is making the request.
 
 #### Query Parameters
 
@@ -155,8 +265,6 @@ The order type:
 
   * `fok` \- fill-or-kill order
 
-`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
-
 Available options:
 
 `lmt`,
@@ -173,9 +281,7 @@ Available options:
 
 `trailing_stop`,
 
-`fok`,
-
-`unknown`
+`fok`
 
 symbol
 
@@ -191,17 +297,13 @@ enum<string>
 
 required
 
-The direction of the order. The direction of the order.
-
-`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
+The direction of the order.
 
 Available options:
 
 `buy`,
 
-`sell`,
-
-`unknown`
+`sell`
 
 size
 
@@ -277,15 +379,11 @@ Required if the order type is `trailing_stop`.
 
 This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% below the trigger signal. Similarly, if the deviation is 100, the unit is 'QUOTE_CURRENCY', the underlying order is a sell, and the contract is quoted in USD, then the trigger price will never be more than $100 below the trigger signal.
 
-`unknown` is returned when the source value couldn't be decoded; this will be replaced with a real value as soon as possible.
-
 Available options:
 
 `PERCENT`,
 
-`QUOTE_CURRENCY`,
-
-`unknown`
+`QUOTE_CURRENCY`
 
 limitPriceOffsetValue
 
@@ -307,13 +405,11 @@ Available options:
 
 broker
 
-string
+string<iiban>
 
-Valid Broker identifier on whose behalf the order is sent.
+Valid Broker IIBAN on whose behalf the order is sent. The format must follow the usual IIBAN pattern `XXXX YYYY ZZZZ WWWW` or machine pattern `XXXXYYYYZZZZWWWW`.
 
 Note: This is currently available exclusively in the Kraken pre-prod environments.
-
-Maximum string length: `100`
 
 #### Response
 

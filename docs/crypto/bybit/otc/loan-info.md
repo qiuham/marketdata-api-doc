@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/loan-info
 api_type: REST
-updated_at: 2026-07-07 19:14:48.694940
+updated_at: 2026-07-08 19:02:47.094153
 ---
 
 # Get LTV

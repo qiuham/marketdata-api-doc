@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading-get-dca-cycle-list
 anchor_id: order-book-trading-dca-trading-get-dca-cycle-list
 api_type: API
-updated_at: 2026-07-07 19:42:05.908122
+updated_at: 2026-07-08 19:27:45.811104
 ---
 
 # GET / DCA cycle list

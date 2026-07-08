@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-public
 anchor_id: error-code-rest-api-public
 api_type: REST
-updated_at: 2026-07-07 19:44:04.982887
+updated_at: 2026-07-08 19:29:45.193749
 ---
 
 # Public
@@ -615,6 +615,7 @@ Error Code | HTTP Status code | Error Message
 54078 | 200 | If the main order is a buy order, the TP ratio must be greater than 0, while the SL ratio must be between -1 and 0. If the main order is a sell order, the TP ratio must be between -1 and 0, and the SL ratio must be greater than 0. Additionally, the ratio must be multiples of 0.0001.  
 54079 | 200 | Dynamic change is available only for futures trading in futures mode or multi-currency mode. Note that when selecting dynamic change, the trigger price can only be calculated using the last price.  
 54092 | 200 | Action Required: Please accept the TradFi Perps disclaimer on Web or App by attempting to place a TradFi Perp trade via the frontend. Each account, including sub-accounts, must separately accept the disclaimer before API trading is enabled  
+54094 | 200 | Order rejected. The cool-off period is active for the current instId.  
   
 #### Data class
 
@@ -1227,6 +1228,7 @@ e.g. clOrdId 已存在
 54078 | 200 | 当主单为买入订单时，止盈涨跌幅应高于 0，止损涨跌幅应处于 -1 ~ 0 之间；当主单为卖出订单时，止盈涨跌幅应处于 -1 ~ 0 之间，止损涨跌幅应高于 0。请注意，涨跌幅应为 0.0001 的整倍数。  
 54079 | 200 | 仅支持合约模式和跨币种保证金模式下的合约交易设置动态涨跌幅。请注意，若设置为动态涨跌幅，触发价将以最新价为参考。  
 54092 | 200 | 操作要求：请通过网页端或 App 前端尝试下单 TradFi 永续合约（TradFi Perps）交易，并完成免责声明确认。每个主账户及子账户都必须单独接受免责声明后，方可启用 API 交易功能。  
+54094 | 200 | 下单失败，当前交易产品处于冷静期内，暂不支持下单。  
   
 #### 数据类
 

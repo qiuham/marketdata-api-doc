@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/close-position
 api_type: Trading
-updated_at: 2026-07-07 19:29:31.648766
+updated_at: 2026-07-08 19:16:22.781304
 ---
 
 # Close Position
@@ -24,6 +24,126 @@ Places an order to close any open positions for a specified `product_id`.
       "size": 3
     }
     '
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/orders/close_position"  
+      
+    payload = {  
+        "client_order_id": "0000-00000-000000",  
+        "product_id": "BIT-28JUL23-CDE",  
+        "size": 3  
+    }  
+    headers = {  
+        "Authorization": "Bearer <token>",  
+        "Content-Type": "application/json"  
+    }  
+      
+    response = requests.post(url, json=payload, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {  
+      method: 'POST',  
+      headers: {Authorization: 'Bearer <token>', 'Content-Type': 'application/json'},  
+      body: JSON.stringify({client_order_id: '0000-00000-000000', product_id: 'BIT-28JUL23-CDE', size: 3})  
+    };  
+      
+    fetch('https://api.coinbase.com/api/v3/brokerage/orders/close_position', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    <?php  
+      
+    $curl = curl_init();  
+      
+    curl_setopt_array($curl, [  
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/orders/close_position",  
+      CURLOPT_RETURNTRANSFER => true,  
+      CURLOPT_ENCODING => "",  
+      CURLOPT_MAXREDIRS => 10,  
+      CURLOPT_TIMEOUT => 30,  
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
+      CURLOPT_CUSTOMREQUEST => "POST",  
+      CURLOPT_POSTFIELDS => json_encode([  
+        'client_order_id' => '0000-00000-000000',  
+        'product_id' => 'BIT-28JUL23-CDE',  
+        'size' => 3  
+      ]),  
+      CURLOPT_HTTPHEADER => [  
+        "Authorization: Bearer <token>",  
+        "Content-Type: application/json"  
+      ],  
+    ]);  
+      
+    $response = curl_exec($curl);  
+    $err = curl_error($curl);  
+      
+    curl_close($curl);  
+      
+    if ($err) {  
+      echo "cURL Error #:" . $err;  
+    } else {  
+      echo $response;  
+    }
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"strings"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://api.coinbase.com/api/v3/brokerage/orders/close_position"  
+      
+    	payload := strings.NewReader("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BIT-28JUL23-CDE\",\n  \"size\": 3\n}")  
+      
+    	req, _ := http.NewRequest("POST", url, payload)  
+      
+    	req.Header.Add("Authorization", "Bearer <token>")  
+    	req.Header.Add("Content-Type", "application/json")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
+    HttpResponse<String> response = Unirest.post("https://api.coinbase.com/api/v3/brokerage/orders/close_position")  
+      .header("Authorization", "Bearer <token>")  
+      .header("Content-Type", "application/json")  
+      .body("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BIT-28JUL23-CDE\",\n  \"size\": 3\n}")  
+      .asString();
+    
+    
+    require 'uri'  
+    require 'net/http'  
+      
+    url = URI("https://api.coinbase.com/api/v3/brokerage/orders/close_position")  
+      
+    http = Net::HTTP.new(url.host, url.port)  
+    http.use_ssl = true  
+      
+    request = Net::HTTP::Post.new(url)  
+    request["Authorization"] = 'Bearer <token>'  
+    request["Content-Type"] = 'application/json'  
+    request.body = "{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BIT-28JUL23-CDE\",\n  \"size\": 3\n}"  
+      
+    response = http.request(request)  
+    puts response.read_body
     
     
     {
@@ -133,6 +253,19 @@ Places an order to close any open positions for a specified `product_id`.
           "size_ratio": "<string>"
         }
       }
+    }
+    
+    
+    {  
+      "error": "<string>",  
+      "code": 123,  
+      "message": "<string>",  
+      "details": [  
+        {  
+          "type_url": "<string>",  
+          "value": "aSDinaTvuI8gbWludGxpZnk="  
+        }  
+      ]  
     }
 
 #### Authorizations

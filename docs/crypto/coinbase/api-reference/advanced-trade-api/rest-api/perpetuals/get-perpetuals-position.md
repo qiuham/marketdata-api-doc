@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position
 api_type: REST
-updated_at: 2026-07-07 19:29:35.091258
+updated_at: 2026-07-08 19:16:23.639600
 ---
 
 # Get Perpetuals Position
@@ -16,6 +16,100 @@ Get a specific open position on Intx
     curl --request GET \
       --url https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol} \
       --header 'Authorization: Bearer <token>'
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}"  
+      
+    headers = {"Authorization": "Bearer <token>"}  
+      
+    response = requests.get(url, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};  
+      
+    fetch('https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    <?php  
+      
+    $curl = curl_init();  
+      
+    curl_setopt_array($curl, [  
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}",  
+      CURLOPT_RETURNTRANSFER => true,  
+      CURLOPT_ENCODING => "",  
+      CURLOPT_MAXREDIRS => 10,  
+      CURLOPT_TIMEOUT => 30,  
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
+      CURLOPT_CUSTOMREQUEST => "GET",  
+      CURLOPT_HTTPHEADER => [  
+        "Authorization: Bearer <token>"  
+      ],  
+    ]);  
+      
+    $response = curl_exec($curl);  
+    $err = curl_error($curl);  
+      
+    curl_close($curl);  
+      
+    if ($err) {  
+      echo "cURL Error #:" . $err;  
+    } else {  
+      echo $response;  
+    }
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}"  
+      
+    	req, _ := http.NewRequest("GET", url, nil)  
+      
+    	req.Header.Add("Authorization", "Bearer <token>")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}")  
+      .header("Authorization", "Bearer <token>")  
+      .asString();
+    
+    
+    require 'uri'  
+    require 'net/http'  
+      
+    url = URI("https://api.coinbase.com/api/v3/brokerage/intx/positions/{portfolio_uuid}/{symbol}")  
+      
+    http = Net::HTTP.new(url.host, url.port)  
+    http.use_ssl = true  
+      
+    request = Net::HTTP::Get.new(url)  
+    request["Authorization"] = 'Bearer <token>'  
+      
+    response = http.request(request)  
+    puts response.read_body
     
     
     {
@@ -68,6 +162,19 @@ Get a specific open position on Intx
           "currency": "<string>"
         }
       }
+    }
+    
+    
+    {  
+      "error": "<string>",  
+      "code": 123,  
+      "message": "<string>",  
+      "details": [  
+        {  
+          "type_url": "<string>",  
+          "value": "aSDinaTvuI8gbWludGxpZnk="  
+        }  
+      ]  
     }
 
 **Deprecated — retires September 9, 2026.** This INTX perpetuals endpoint is being replaced by the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). Migrate before the cutover — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).

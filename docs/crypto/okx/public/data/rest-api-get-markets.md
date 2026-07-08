@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-markets
 anchor_id: public-data-rest-api-get-markets
 api_type: REST
-updated_at: 2026-07-07 19:43:02.722466
+updated_at: 2026-07-08 19:28:42.802518
 ---
 
 # Get markets
@@ -58,8 +58,10 @@ after | String | No | Pagination. Returns records earlier than the requested `ex
                 "fixTime": "",
                 "outcome": "0",
                 "floorStrike": "120000",
+                "capStrike": "",
                 "settleValue": "",
-                "disputed": false
+                "disputed": false,
+                "hitDir": ""
             }
         ],
         "msg": ""
@@ -90,8 +92,14 @@ outcome | String | Market outcome.
 `2`: NO.  
 `1`/`2` only applicable when state is `expired`  
 floorStrike | String | Minimum expiration value that leads to a YES outcome  
+capStrike | String | Maximum expiration value that leads to a YES outcome for `between` method. `"INF"` indicates no upper bound (the topmost bracket).  
+Returns `""` for non-`between` methods.  
 settleValue | String | Settlement value  
-Only return when the state is `expired`
+Only return when the state is `expired`  
+hitDir | String | Hit direction. Only applicable when the settlement method is `hit`.  
+`up`: price hit from below  
+`dn`: price hit from above  
+`""`: not applicable (non-`hit` methods)
 
 ---
 
@@ -147,8 +155,10 @@ after | String | 否 | 分页，返回晚于请求 `expTime` 的更旧记录，�
                 "fixTime": "",
                 "outcome": "0",
                 "floorStrike": "120000",
+                "capStrike": "",
                 "settleValue": "",
-                "disputed": false
+                "disputed": false,
+                "hitDir": ""
             }
         ],
         "msg": ""
@@ -179,5 +189,11 @@ outcome | String | 市场结果。
 `2`：NO。  
 `1`/`2` 仅在 state 为 `expired` 时适用  
 floorStrike | String | 导致 YES 结果的最低到期价格  
+capStrike | String | `between` 结算方式中导致 YES 结果的最大到期值。`"INF"` 表示无上限（最高区间）。  
+非 `between` 方式返回 `""`。  
 settleValue | String | 结算价格。  
-仅在 state 为 `expired` 时返回
+仅在 state 为 `expired` 时返回  
+hitDir | String | 触及方向。仅在结算方式为 `hit` 时适用。  
+`up`：价格从下方触及  
+`dn`：价格从上方触及  
+`""`：不适用（非 `hit` 方式）
