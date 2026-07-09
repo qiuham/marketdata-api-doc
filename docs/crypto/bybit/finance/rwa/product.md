@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/product
 api_type: REST
-updated_at: 2026-07-08 19:01:14.647699
+updated_at: 2026-07-09 19:09:04.814479
 ---
 
 # MMWS Integration

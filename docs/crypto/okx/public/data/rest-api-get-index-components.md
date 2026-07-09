@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-index-components
 anchor_id: public-data-rest-api-get-index-components
 api_type: REST
-updated_at: 2026-07-08 19:28:50.930066
+updated_at: 2026-07-09 19:38:20.214797
 ---
 
 # Get index components
