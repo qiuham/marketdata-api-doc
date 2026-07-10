@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview
 api_type: Trading
-updated_at: 2026-07-09 19:25:36.962016
+updated_at: 2026-07-10 19:19:30.583162
 ---
 
 # Edit Order Preview
@@ -512,7 +512,340 @@ Preview an edit order request with a specified new `size`, or new `price`.
     request = Net::HTTP::Post.new(url)  
     request["Authorization"] = 'Bearer <token>'  
     request["Content-Type"] = 'application/json'  
-    request.body = "{\n  \"order_id\": \"<string>\",\n  \"price\": \"19000.00\",\n  \"size\": \"0.001\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"cancel_attached_order\": \"true\",\n  \"stop_price\": \"17000.00\",\n  \"average_entry_price\": \"18000.00\"\n}"  
+    request.body = "{\n  \"order_id\": \"<string>\",\n  \"price\": \"19000.00\",\n  \"size\": \"0.001\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\"Orders
+    
+    # Edit Order Preview
+    
+    Preview an edit order request with a specified new size, or new price.
+    
+    POST
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    orders
+    
+    /
+    
+    edit_preview
+    
+    Edit Order Preview
+    
+    
+    curl --request POST \
+      --url https://api.coinbase.com/api/v3/brokerage/orders/edit_preview \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '
+    {
+      "order_id": "<string>",
+      "price": "19000.00",
+      "size": "0.001",
+      "attached_order_configuration": {
+        "market_market_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "market_market_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "sor_limit_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "limit_limit_gtc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "post_only": false,
+          "rfq_disabled": true
+        },
+        "limit_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "post_only": false
+        },
+        "limit_limit_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "twap_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "start_time": "2021-05-31T07:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "limit_price": "10000.00",
+          "number_buckets": "5",
+          "bucket_size": "2.00",
+          "bucket_duration": "300s"
+        },
+        "stop_limit_stop_limit_gtc": {
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "stop_direction": "20000.00"
+        },
+        "stop_limit_stop_limit_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "stop_direction": "20000.00"
+        },
+        "trigger_bracket_gtc": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00"
+        },
+        "trigger_bracket_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z"
+        },
+        "scaled_limit_gtc": {
+          "orders": [
+            {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00",
+              "post_only": false,
+              "rfq_disabled": true
+            }
+          ],
+          "quote_size": "<string>",
+          "base_size": "<string>",
+          "num_orders": 123,
+          "min_price": "<string>",
+          "max_price": "<string>",
+          "price_distribution": "FLAT",
+          "size_distribution": "UNKNOWN_DISTRIBUTION",
+          "size_diff": "<string>",
+          "size_ratio": "<string>"
+        }
+      },
+      "cancel_attached_order": "true",
+      "stop_price": "17000.00",
+      "average_entry_price": "18000.00"
+    }
+    '
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/orders/edit_preview"  
+      
+    payload = {  
+        "order_id": "<string>",  
+        "price": "19000.00",  
+        "size": "0.001",  
+        "attached_order_configuration": {  
+            "market_market_ioc": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "rfq_disabled": True  
+            },  
+            "market_market_fok": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "rfq_disabled": True  
+            },  
+            "sor_limit_ioc": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "limit_price": "10000.00",  
+                "rfq_disabled": True  
+            },  
+            "limit_limit_gtc": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "limit_price": "10000.00",  
+                "post_only": False,  
+                "rfq_disabled": True  
+            },  
+            "limit_limit_gtd": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "limit_price": "10000.00",  
+                "end_time": "2021-05-31T09:59:59.000Z",  
+                "post_only": False  
+            },  
+            "limit_limit_fok": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "limit_price": "10000.00",  
+                "rfq_disabled": True  
+            },  
+            "twap_limit_gtd": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "start_time": "2021-05-31T07:59:59.000Z",  
+                "end_time": "2021-05-31T09:59:59.000Z",  
+                "limit_price": "10000.00",  
+                "number_buckets": "5",  
+                "bucket_size": "2.00",  
+                "bucket_duration": "300s"  
+            },  
+            "stop_limit_stop_limit_gtc": {  
+                "base_size": "0.001",  
+                "limit_price": "10000.00",  
+                "stop_price": "20000.00",  
+                "stop_direction": "20000.00"  
+            },  
+            "stop_limit_stop_limit_gtd": {  
+                "base_size": 0.001,  
+                "limit_price": "10000.00",  
+                "stop_price": "20000.00",  
+                "end_time": "2021-05-31T09:59:59.000Z",  
+                "stop_direction": "20000.00"  
+            },  
+            "trigger_bracket_gtc": {  
+                "base_size": 0.001,  
+                "limit_price": "10000.00",  
+                "stop_trigger_price": "20000.00"  
+            },  
+            "trigger_bracket_gtd": {  
+                "base_size": 0.001,  
+                "limit_price": "10000.00",  
+                "stop_trigger_price": "20000.00",  
+                "end_time": "2021-05-31T09:59:59.000Z"  
+            },  
+            "scaled_limit_gtc": {  
+                "orders": [  
+                    {  
+                        "quote_size": "10.00",  
+                        "base_size": "0.001",  
+                        "limit_price": "10000.00",  
+                        "post_only": False,  
+                        "rfq_disabled": True  
+                    }  
+                ],  
+                "quote_size": "<string>",  
+                "base_size": "<string>",  
+                "num_orders": 123,  
+                "min_price": "<string>",  
+                "max_price": "<string>",  
+                "price_distribution": : true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price"FLAT",  
+                "size_distribution": "UNKNOWN_DISTRIBUTION",  
+                "size_diff": "<string>",  
+                "size_ratio": "<string>"  
+            }  
+        },  
+        "cancel_attached_order": "true",  
+        "stop_price": "17000.00",  
+        "average_entry_price": "18000.00"  
+    }  
+    headers = {  
+        "Authorization": "Bearer <token>",  
+        "Content-Type": "application/json"  
+    }  
+      
+    response = requests.post(url, json=payload, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {  
+      method: 'POST',  
+      headers: {Authorization: 'Bearer <token>', 'Content-Type': 'application/json'},  
+      body: JSON.stringify({  
+        order_id: '<string>',  
+        price: '19000.00',  
+        size: '0.001',  
+        attached_order_configuration: {  
+          market_market_ioc: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
+          market_market_fok: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
+          sor_limit_ioc: {  
+            quote_size: '10.00',  
+            base_size: '0.001',  
+            limit_price: '10000.00',  
+            rfq_disabled: true  
+          },  
+          limit_limit_gtc: {  
+            quote_size: '10.00',  
+            base_size: '0.001',  
+            limit_price: '10000.00',  
+            post_only: false,  
+            rfq_disabled: true  
+          },  
+          limit_limit_gtd: {  
+            quote_size: '10.00',  
+            base_size: '0.001',  
+            limit_price: '10000.00',  
+            end_time: '2021-05-31T09:59:59.000Z',  
+            post_only: false  
+          },  
+          limit_limit_fok: {  
+            quote_size: '10.00',  
+            base_size: '0.001',  
+            limit_price: '10000.00',  
+            rfq_disabled: true  
+          },  
+          twap_limit_gtd: {  
+            quote_size: '10.00',  
+            base_size: '0.001',  
+            start_time: '2021-05-31T07:59:59.000Z',  
+            end_time: '2021-05-31T09:59:59.000Z',  
+            limit_price: '10000.00',  
+            number_buckets: '5',  
+            bucket_size: '2.00',  
+            bucket_duration: '300s'  
+          },  
+          stop_limit_stop_limit_gtc: {  
+            base_size: '0.001',  
+            limit_price: '10000.00',  
+            stop_price: '20000.00',  
+            stop_direction: '20000.00'  
+          },  
+          stop_limit_stop_limit_gtd: {  
+            base_size: 0.001,  
+            limit_price: '10000.00',  
+            stop_price: '20000.00',  
+            end_time: '2021-05-31T09:59:59.000Z',  
+            stop_direction: '20000.00'  
+          },  
+          trigger_bracket_gtc: {base_size: 0.001, limit_price: '10000.00', stop_trigger_price: '20000.00'},  
+          trigger_bracket_gtd: {  
+            base_size: 0.001,  
+            limit_price: '10000.00',  
+            stop_trigger_price: '20000.00',  
+            end_time: '2021-05-31T09:59:59.000Z'  
+          },  
+          scaled_limit_gtc: {  
+            orders: [  
+              {  
+                quote_size: '10.00',  
+                base_size: '0.001',  
+                limit_price: '10000.00',  
+                post_only: false,  
+                rfq_disabled: true  
+              }  
+            ],  
+            quote_size: '<string>',  
+            base_size: '<string>',  
+            num_orders: 123,  
+            min_price: '<string>',  
+            max_price: '<string>',\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"cancel_attached_order\": \"true\",\n  \"stop_price\": \"17000.00\",\n  \"average_entry_price\": \"18000.00\"\n}"  
       
     response = http.request(request)  
     puts response.read_body
@@ -541,7 +874,97 @@ Preview an edit order request with a specified new `size`, or new `price`.
         "client_commission": "<string>",
         "venue_commission": "<string>",
         "regulatory_commission": "<string>",
-        "clearing_commission": "<string>"
+      
+            price_distribution: 'FLAT',  
+            size_distribution: 'UNKNOWN_DISTRIBUTION',  
+            size_diff: '<string>',  
+            size_ratio: '<string>'  
+          }  
+        },  
+        cancel_attached_order: 'true',  
+        stop_price: '17000.00',  
+        average_entry_price: '18000.00'  
+      })  
+    };  
+      
+    fetch('https://api.coinbase.com/api/v3/brokerage/orders/edit_preview', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    <?php  
+      
+    $curl = curl_init();  
+      
+    curl_setopt_array($curl, [  
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/orders/edit_preview",  
+      CURLOPT_RETURNTRANSFER => true,  
+      CURLOPT_ENCODING => "",  
+      CURLOPT_MAXREDIRS => 10,  
+      CURLOPT_TIMEOUT => 30,  
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
+      CURLOPT_CUSTOMREQUEST => "POST",  
+      CURLOPT_POSTFIELDS => json_encode([  
+        'order_id' => '<string>',  
+        'price' => '19000.00',  
+        'size' => '0.001',  
+        'attached_order_configuration' => [  
+            'market_market_ioc' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'rfq_disabled' => true  
+            ],  
+            'market_market_fok' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'rfq_disabled' => true  
+            ],  
+            'sor_limit_ioc' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'limit_price' => '10000.00',  
+                    'rfq_disabled' => true  
+            ],  
+            'limit_limit_gtc' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'limit_price' => '10000.00',  
+                    'post_only' => false,  
+                    'rfq_disabled' => true  
+            ],  
+            'limit_limit_gtd' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'limit_price' => '10000.00',  
+                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'post_only' => false  
+            ],  
+            'limit_limit_fok' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'limit_price' => '10000.00',  
+                    'rfq_disabled' => true  
+            ],  
+            'twap_limit_gtd' => [  
+                    'quote_size' => '10.00',  
+                    'base_size' => '0.001',  
+                    'start_time' => '2021-05-31T07:59:59.000Z',  
+                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'limit_price' => '10000.00',  
+                    'number_buckets' => '5',  
+                    'bucket_size' => '2.00',  
+                    'bucket_duration' => '300s'  
+            ],  
+            'stop_limit_stop_limit_gtc' => [  
+                    'base_size' => '0.001',  
+                    'limit_price' => '10000.00',  
+                    'stop_price' => '20000.00',  
+                    'stop_direction' => '20000.00'  
+            ],  
+            'stop_limit_stop_limit_gtd' => [  
+                    'base_size' => 0.001,  
+                    'limit_price' =>    "clearing_commission": "<string>"
       },
       "pnl_configuration": {
         "trigger_bracket_pnl": {
@@ -652,68 +1075,160 @@ Example:
 
 A successful response.
 
-errors
+ '10000.00',  
+'stop_price' => '20000.00',  
+'end_time' => '2021-05-31T09:59:59.000Z',  
+'stop_direction' => '20000.00'  
+],  
+'trigger_bracket_gtc' => [  
+'base_size' => 0.001,  
+'limit_price' => '10000.00',  
+'stop_trigger_price' => '20000.00'  
+],  
+'trigger_bracket_gtd' => [  
+'base_size' => 0.001,  
+'limit_price' => '10000.00',  
+'stop_trigger_price' => '20000.00',  
+'end_time' => '2021-05-31T09:59:59.000Z'  
+],  
+'scaled_limit_gtc' => [  
+'orders' => [  
+[  
+'quote_size' => '10.00',  
+'base_size' => '0.001',  
+'limit_price' => '10000.00',  
+'post_only' => false,  
+'rfq_disabled' => true  
+]  
+],  
+'quote_size' => '<string>',  
+'base_size' => '<string>',  
+'num_orders' => 123,  
+'min_price' => '<string>',  
+'max_price' => '<string>',  
+'price_distribution' => 'FLAT',  
+'size_distribution' => 'UNKNOWN_DISTRIBUTION',  
+'size_diff' => '<string>',  
+'size_ratio' => '<string>'  
+]  
+],  
+'cancel_attached_order' => 'true',  
+'stop_price' => '17000.00',  
+'average_entry_price' => '18000.00'  
+]),  
+CURLOPT_HTTPHEADER => [  
+"Authorization: Bearer <token>",  
+"Content-Type: application/json"  
+],  
+]);  
+  
+$response = curl_exec($curl);  
+$err = curl_error($curl);  
+  
+curl_close($curl);  
+  
+if ($err) {  
+echo "cURL Error #:" . $err;  
+} else {  
+echo $response;  
+}`
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"strings"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://api.coinbase.com/api/v3/brokerage/orders/edit_preview"  
+      
+    	payload := strings.NewReader("{\n  \"order_id\": \"<string>\",\n  \"price\": \"19000.00\",\n  \"
+    
+    errors
+    
+    object[]
+    
+    required
 
-object[]
+    slippage
+    
+    string
+    
+    
+    
+    order_total
+    
+    string
+    
+    
+    
+    commission_total
+    
+    string
+    
+    
+    
+    quote_size
+    
+    string
+    
+    The amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.
+    
+    Example:
+    
+    10
+    
+    
+    
+    base_size
+    
+    string
+    
+    The amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.
+    
+    Example:
+    
+    0.001
+    
+    
+    
+    best_bid
+    
+    string
+    
+    
+    
+    best_ask
+    
+    string
+    
+    
+    
+    average_filled_price
+    
+    string
+    
+    
+    
+    order_margin_total
+    
+    string
+    
+    
+    
+    commission_detail_total
+    
+    CommissionDetailTotal contains the breakdown of commission charges for an order · object
+    
+    Breakdown of commission charges for the order
 
-required
-
-slippage
-
-string
-
-order_total
-
-string
-
-commission_total
-
-string
-
-quote_size
-
-string
-
-The amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.
-
-Example:
-
-`10`
-
-base_size
-
-string
-
-The amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.
-
-Example:
-
-`0.001`
-
-best_bid
-
-string
-
-best_ask
-
-string
-
-average_filled_price
-
-string
-
-order_margin_total
-
-string
-
-commission_detail_total
-
-CommissionDetailTotal contains the breakdown of commission charges for an order · object
-
-Breakdown of commission charges for the order
-
-pnl_configuration
-
-object
-
-Expected PNL of an order. This value is an estimate and does not take into account fees and slippage.
+    pnl_configuration
+    
+    object
+    
+    Expected PNL of an order. This value is an estimate and does not take into account fees and slippage.

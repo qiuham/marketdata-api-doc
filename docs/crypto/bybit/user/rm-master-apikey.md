@@ -2,45 +2,55 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-master-apikey
 api_type: REST
-updated_at: 2026-07-09 19:13:18.127275
+updated_at: 2026-07-10 19:07:11.575864
 ---
 
-# Delete Sub API Key
+# Get Sub UID List (Limited)
 
-Delete the api key of sub account. Use the sub api key pending to be delete to call the endpoint or use the master api key to delete corresponding sub account api key
+Get at most 1,000 sub UID of master account, please use [Get Sub UID List (Unlimited)](/docs/v5/user/page-subuid) if you have more subaccounts. Use **master user's api key** **only**.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint.
+The API key must have one of the below permissions in order to call this endpoint..
 
-  * sub API key: "Account Transfer", "Sub Member Transfer"
-  * master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
-
+  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
 
-danger
-
-BE CAREFUL! The Sub account API key will be invalid immediately after calling the endpoint.
 
 ### HTTP Request
 
-POST`/v5/user/delete-sub-api`
+GET`/v5/user/query-sub-members`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-apikey| false| string| Sub account api key 
-
-  * You must pass this param when you use master account manage sub account api key settings
-  * If you use corresponding sub uid api key call this endpoint, `apikey` param cannot be passed, otherwise throwing an error
-
-  
-  
-### Response Parameters
-
 None
 
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+subMembers| array| Object  
+> uid| string| Sub user Id  
+> username| string| Username  
+> memberType| integer| `1`: normal subaccount, `6`: custodial sub account  
+> status| integer| The status of the user account
+
+  * `1`: normal
+  * `2`: login banned
+  * `4`: frozen 
+
+  
+> accountMode| integer| The account mode of the user account
+
+  * `1`: Classic Account
+  * `3`: UTA1.0
+  * `4`: UTA1.0 Pro
+  * `5`: UTA2.0
+  * `6`: UTA2.0 Pro
+
+  
+> remark| string| The remark  
+  
 ### Request Example
 
   * HTTP
@@ -50,17 +60,12 @@ None
 
     
     
-    POST /v5/user/delete-sub-api HTTP/1.1  
+    GET /v5/user/query-sub-members HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431922953  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-      
-    {  
-      
-    }  
     
     
     
@@ -70,7 +75,7 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.delete_sub_api_key())  
+    print(session.get_sub_uid())  
     
     
     
@@ -83,7 +88,7 @@ None
     });  
       
     client  
-      .deleteSubApiKey()  
+      .getSubUIDList()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -98,49 +103,78 @@ None
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "subMembers": [  
+                {  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
+                },  
+                {  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1676431924719  
+        "time": 1760388036728  
     }
 
 ---
 
-# 刪除子帳戶下的API Key
+# 查詢子帳戶UID列表 (限制)
 
-刪除子帳戶下的api key。使用待刪除的子帳戶api key調用接口或者使用母帳戶調用刪除指定api key
+最多返回1000個子帳戶, 適合子帳戶較少的母帳戶調用, 需使用**母** 帳戶的API key。如您有較多的子帳戶, 請使用[查詢子帳戶UID列表 (無限制)](/docs/zh-TW/v5/user/page-subuid)接口。
 
 提示
 
 在調用接口時，使用的API key至少需要擁有以下其中一種權限
 
-  * 子API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）"
   * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 
 
 
-危險
-
-當心! 用於調用本接口後, 對應的子帳戶api key會立馬失效。
-
 ### HTTP 請求
 
-POST`/v5/user/delete-sub-api`
+GET`/v5/user/query-sub-members`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-apikey| false| string| 子帳戶的api key 
-
-  * 當您要使用母帳戶來管理子帳戶的key時, 該字段必傳
-  * 如果您是用對應的子帳戶api key修改本身, 該字段請不要傳入, 否則報錯
-
-  
-  
-### 返回參數
-
 無
 
+### 返回參數
+
+參數| 類型| 說明  
+---|---|---  
+subMembers| array| Object  
+> uid| string| 子帳戶userId  
+> username| string| 用戶名  
+> memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+> status| integer| 帳戶狀態.
+
+  * `1`: 正常
+  * `2`: 登陸封禁
+  * `4`: 凍結 
+
+  
+> accountMode| integer| 帳戶模式.
+
+  * `1`: 經典帳戶
+  * `3`: UTA帳戶
+  * `4`: UTA1.0 Pro 帳戶
+  * `5`: UTA2.0 帳戶
+  * `6`: UTA2.0 Pro 帳戶
+
+  
+> remark| string| 備註  
+  
 ### 請求示例
 
   * HTTP
@@ -150,17 +184,12 @@ apikey| false| string| 子帳戶的api key
 
     
     
-    POST /v5/user/delete-sub-api HTTP/1.1  
+    GET /v5/user/query-sub-members HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431922953  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-      
-    {  
-      
-    }  
     
     
     
@@ -170,7 +199,7 @@ apikey| false| string| 子帳戶的api key
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.delete_sub_api_key())  
+    print(session.get_sub_uid())  
     
     
     
@@ -183,7 +212,7 @@ apikey| false| string| 子帳戶的api key
     });  
       
     client  
-      .deleteSubApiKey()  
+      .getSubUIDList()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -198,7 +227,26 @@ apikey| false| string| 子帳戶的api key
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "subMembers": [  
+                {  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
+                },  
+                {  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1676431924719  
+        "time": 1760388036728  
     }

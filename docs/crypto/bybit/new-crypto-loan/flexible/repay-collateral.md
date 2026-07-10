@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/repay-collateral
 api_type: REST
-updated_at: 2026-07-09 19:10:10.313477
+updated_at: 2026-07-10 19:03:52.744877
 ---
 
 # Get Borrowable Coins

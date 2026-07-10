@@ -2,52 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/create-order
 api_type: Trading
-updated_at: 2026-07-09 19:12:41.636028
+updated_at: 2026-07-10 19:06:27.902468
 ---
 
-# Get Open Orders
+# Create Order
 
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Place a spread combination order. **Up to 50 open orders** per account.
 
 ### HTTP Request
 
-GET`/v5/spread/order/realtime`
+POST`/v5/spread/order/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| false| string| Spread combination symbol name  
-baseCoin| false| string| Base coin  
-orderId| false| string| Spread combination order ID  
-orderLinkId| false| string| User customised order ID  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+symbol| **true**|  string| Spread combination symbol name  
+side| **true**|  string| Order side. `Buy`, `Sell`  
+orderType| **true**|  string| `Limit`, `Market`  
+qty| **true**|  string| Order qty  
+price| false| string| Order price  
+orderLinkId| false| string| User customised order ID, a max of 45 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.  
+timeInForce| false| string| [Time in force](https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK). `IOC`, `FOK`, `GTC`, `PostOnly`  
   
+info
+
+The acknowledgement of an place order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Order info  
-> symbol| string| Spread combination symbol name  
-> baseCoin| string| Base coin  
-> orderType| string| Order type, `Market`, `Limit`  
-> orderLinkId| string| User customised order ID  
-> side| string| Side, `Buy`, `Sell`  
-> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> orderId| string| Spread combination order ID  
-> leavesQty| string| The remaining qty not executed  
-> orderStatus| string| Order status, `New`, `PartiallyFilled`  
-> cumExecQty| string| Cumulative executed order qty  
-> price| string| Order price  
-> qty| string| Order qty  
-> createdTime| string| Order created timestamp (ms)  
-> updatedTime| string| Order updated timestamp (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+orderId| string| Spread combination order ID  
+orderLinkId| string| User customised order ID  
   
 ### Request Example
 
@@ -57,13 +44,24 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/spread/order/realtime HTTP/1.1  
+    POST /v5/spread/order/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744096099520  
+    X-BAPI-TIMESTAMP: 1744079410023  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 191  
+      
+    {  
+        "symbol": "SOLUSDT_SOL/USDT",  
+        "side": "Buy",  
+        "orderType": "Limit",  
+        "qty": "0.1",  
+        "price": "21",  
+        "orderLinkId": "1744072052193428479",  
+        "timeInForce": "PostOnly"  
+    }  
     
     
     
@@ -73,7 +71,15 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_open_orders())  
+    print(session.spread_place_order(  
+        symbol="SOLUSDT_SOL/USDT",  
+        side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="21",  
+        orderLinkId="1744072052193428479",  
+        timeInForce="PostOnly"  
+    ))  
     
 
 ### Response Example
@@ -83,86 +89,63 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "orderType": "Limit",  
-                    "updatedTime": "1744096099771",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
-                    "leavesQty": "0.1",  
-                    "orderStatus": "New",  
-                    "cumExecQty": "0",  
-                    "price": "-4",  
-                    "qty": "0.1",  
-                    "createdTime": "1744096099767",  
-                    "timeInForce": "PostOnly",  
-                    "baseCoin": "SOL"  
-                }  
-            ]  
+            "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",  
+            "orderLinkId": "1744072052193428479"  
         },  
         "retExtInfo": {},  
-        "time": 1744096103435  
+        "time": 1744075839332  
     }
 
 ---
 
-# 查詢價差活動單
+# 創建價差委托單
 
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+每個帳戶最多支持50個活動單
 
 ### HTTP請求
 
-GET`/v5/spread/order/realtime`
+POST`/v5/spread/order/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| false| string| 價差產品名稱  
-baseCoin| false| string| 交易幣種  
-orderId| false| string| 價差訂單ID  
-orderLinkId| false| string| 用戶自定義ID  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
+symbol| **true**|  string| 價差產品名稱  
+side| **true**|  string| 訂單方向, `Buy`, `Sell`  
+orderType| **true**|  string| 訂單類型 `Limit`, `Market`  
+qty| **true**|  string| 訂單數量  
+price| **true**|  string| 訂單價格  
+orderLinkId| **true**|  string| 用戶自定義訂單ID, 最多 45 個字元。支援數字、字母（大寫和小寫）、破折號和底線的組合  
+timeInForce| **true**|  string| [訂單執行策略](https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK) `IOC`, `FOK`, `GTC`, `PostOnly`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 訂單信息  
-> symbol| string| 價差產品名稱  
-> orderType| string| 訂單類型, `Market`, `Limit`  
-> updatedTime| string| 訂單更新時間 (毫秒)  
-> orderId| string| 價差訂單ID  
-> orderLinkId| string| 用戶自定義ID  
-> side| string| 訂單方向, `Buy`, `Sell`  
-> leavesQty| string| 剩餘未成交數量  
-> orderStatus| string| 訂單狀態, `New`, `PartiallyFilled`  
-> cumExecQty| string| 累計成交數量  
-> price| string| 訂單價格  
-> qty| string| 訂單數量  
-> createdTime| string| 訂單創建時間 (毫秒)  
-> timeInForce| string| 訂單執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> baseCoin| string| 交易幣種  
-nextPageCursor| string| 游標，用於翻頁  
+orderId| string| 價差訂單ID  
+orderLinkId| string| 用戶自定義訂單ID  
   
 ### 請求示例
     
     
-    GET /v5/spread/order/realtime HTTP/1.1  
+    POST /v5/spread/order/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744096099520  
+    X-BAPI-TIMESTAMP: 1744079410023  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 191  
+      
+    {  
+        "symbol": "SOLUSDT_SOL/USDT",  
+        "side": "Buy",  
+        "orderType": "Limit",  
+        "qty": "0.1",  
+        "price": "21",  
+        "orderLinkId": "1744072052193428479",  
+        "timeInForce": "PostOnly"  
+    }  
     
 
 ### 響應示例
@@ -172,26 +155,9 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "orderType": "Limit",  
-                    "updatedTime": "1744096099771",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
-                    "leavesQty": "0.1",  
-                    "orderStatus": "New",  
-                    "cumExecQty": "0",  
-                    "price": "-4",  
-                    "qty": "0.1",  
-                    "createdTime": "1744096099767",  
-                    "timeInForce": "PostOnly",  
-                    "baseCoin": "SOL"  
-                }  
-            ]  
+            "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",  
+            "orderLinkId": "1744072052193428479"  
         },  
         "retExtInfo": {},  
-        "time": 1744096103435  
+        "time": 1744075839332  
     }

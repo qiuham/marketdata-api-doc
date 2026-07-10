@@ -2,44 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/recent-trade
 api_type: Market Data
-updated_at: 2026-07-09 19:12:33.696573
+updated_at: 2026-07-10 19:06:21.437311
 ---
 
-# Amend Order
+# Get Recent Public Trades
 
-info
-
-You can only modify **unfilled** or **partially filled** orders.
+Query recent public spread trading history in Bybit.
 
 ### HTTP Request
 
-POST`/v5/spread/order/amend`
+GET`/v5/spread/recent-trade`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| **true**|  string| Spread combination symbol name  
-orderId| false| string| Spread combination order ID. Either `orderId` or `orderLinkId` is **required**  
-orderLinkId| false| string| User customised order ID. Either `orderId` or `orderLinkId` is **required**  
-qty| false| string| Order quantity after modification. Either `qty` or `price` is **required**  
-price| false| string| Order price after modification 
-
-  * Either `qty` or `price` is **required**
-  * price="" means the price remains unchanged, while price="0" updates the price to 0.
-
+limit| false| integer| Limit for data size per page [`1`,`1000`], default: `500`  
   
-  
-info
-
-The acknowledgement of an amend order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Order ID  
-orderLinkId| string| User customised order ID  
+list| array<object>| Public trade info  
+> execId| string| Execution ID  
+> symbol| string| Spread combination symbol name  
+> price| string| Trade price  
+> size| string| Trade size  
+> side| string| Side of taker `Buy`, `Sell`  
+> time| string| Trade time (ms)  
+> seq| string| Cross sequence  
   
 ### Request Example
 
@@ -49,21 +41,8 @@ orderLinkId| string| User customised order ID
 
     
     
-    POST /v5/spread/order/amend HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-    {  
-        "symbol": "SOLUSDT_SOL/USDT",  
-        "orderLinkId": "1744072052193428475",  
-        "price": "14",  
-        "qty": "0.2"  
-    }  
     
     
     
@@ -73,11 +52,9 @@ orderLinkId| string| User customised order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_amend_order(  
+    print(session.spread_get_public_trade_history(  
         symbol="SOLUSDT_SOL/USDT",  
-        orderLinkId="1744072052193428475",  
-        price="14",  
-        qty="0.2"  
+        limit=2  
     ))  
     
 
@@ -86,75 +63,66 @@ orderLinkId| string| User customised order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
-            "orderId": "b0e6c938-9731-4122-8552-01e6dc06b303",  
-            "orderLinkId": "1744072052193428475"  
+            "list": [  
+                {  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744083952599  
+        "time": 1744078324682  
     }
 
 ---
 
-# 修改價差委託單
-
-信息
-
-您只能修改那些 _未成交_ 或者 _部分成交_ 的訂單。
+# 查詢最近公共成交
 
 ### HTTP請求
 
-POST`/v5/spread/order/amend`
+GET`/v5/spread/recent-trade`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| **true**|  string| 價差產品名稱  
-orderId| false| string| 價差訂單ID. `orderId` 和 `orderLinkId` 必傳其中一個  
-orderLinkId| false| string| 用戶自定義訂單ID. `orderId` 和 `orderLinkId` 必傳其中一個  
-qty| false| string| 訂單數量 
-
-  * `qty`和`price`必須傳其中一個
-
+limit| false| integer| 每頁數量限制 [1,1000], 默認: `500`  
   
-price| false| string| 訂單價格
-
-  * `qty`和`price`必須傳其中一個
-  * 傳price="" 表示價格不變, 如果設置price="0" 表示價格將修改為0.
-
-  
-  
-信息
-
-ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 價差訂單ID  
-orderLinkId| string| 用戶自定義訂單ID  
+list| array<object>| 成交信息  
+> execId| string| 成交id  
+> symbol| string| 價差產品名稱  
+> price| string| 成交價格  
+> size| string| 成交數量  
+> side| string| 吃單方向 `Buy`, `Sell`  
+> time| string| 成交時間戳 (毫秒)  
+> seq| string| 撮合版本號  
   
 ### 請求示例
     
     
-    POST /v5/spread/order/amend HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-    {  
-        "symbol": "SOLUSDT_SOL/USDT",  
-        "orderLinkId": "1744072052193428475",  
-        "price": "14",  
-        "qty": "0.2"  
-    }  
     
 
 ### 響應示例
@@ -162,11 +130,29 @@ orderLinkId| string| 用戶自定義訂單ID
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
-            "orderId": "b0e6c938-9731-4122-8552-01e6dc06b303",  
-            "orderLinkId": "1744072052193428475"  
+            "list": [  
+                {  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744083952599  
+        "time": 1744078324682  
     }

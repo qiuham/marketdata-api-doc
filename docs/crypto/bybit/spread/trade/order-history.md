@@ -2,176 +2,263 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/order-history
 api_type: Trading
-updated_at: 2026-07-09 19:12:48.027115
+updated_at: 2026-07-10 19:06:34.866290
 ---
 
-# Orderbook
+# Execution
 
-Subscribe to the spread orderbook stream.
+**Topic:** `spread.execution`  
 
-### Depths
-
-Level 25 data, push frequency: **20ms**
-
-**Topic:**  
-`orderbook.{depth}.{symbol}` e.g., orderbook.25.SOLUSDT_SOL/USDT
-
-### Process snapshot/delta
-
-To process `snapshot` and `delta` messages, please follow these rules:
-
-Once you have subscribed successfully, you will receive a `snapshot`. The WebSocket will keep pushing `delta` messages every time the orderbook changes. If you receive a new `snapshot` message, you will have to reset your local orderbook. If there is a problem on Bybit's end, a `snapshot` will be re-sent, which is guaranteed to contain the latest data.
-
-To apply `delta` updates:
-
-  * If you receive an amount that is `0`, delete the entry
-  * If you receive an amount that does not exist, insert it
-  * If the entry exists, you simply update the value
-
-
-
-See working code examples of this logic in the [FAQ](https://bybit-exchange.github.io/docs/faq#how-can-i-process-websocket-snapshot-and-delta-messages).
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+id| string| Message ID  
 topic| string| Topic name  
-type| string| Data type. `snapshot`,`delta`  
-ts| number| The timestamp (ms) that the system generates the data  
-data| map| Object  
-> s| string| Symbol name  
-> b| array| Bids. For `snapshot` stream. Sorted by price in descending order  
->> b[0]| string| Bid price  
->> b[1]| string| Bid size 
-
-  * The delta data has size=0, which means that all quotations for this price have been filled or cancelled
-
-  
-> a| array| Asks. For `snapshot` stream. Sorted by price in ascending order  
->> a[0]| string| Ask price  
->> a[1]| string| Ask size 
-
-  * The delta data has size=0, which means that all quotations for this price have been filled or cancelled
-
-  
-> u| integer| Update ID
-
-  * Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook
-
-  
-> seq| integer| Cross sequence  
-cts| number| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/spread/websocket/public/trade)  
+creationTime| number| Data created timestamp (ms)  
+data| array<object>|   
+> category| string| Combo or single leg, `combination`, `spot_leg`, `future_leg`  
+> symbol| string| Combo or leg symbol name  
+> isLeverage| string| Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.  
+> orderId| string| Order ID, leg is ""  
+> orderLinkId| string| User customized order ID, leg is ""  
+> side| string| Side. `Buy`,`Sell`  
+> orderPrice| string| Order price  
+> orderQty| string| Order qty  
+> leavesQty| string| The remaining qty not executed  
+> [createType](/docs/v5/enum#createtype)| string| Order create type  
+> orderType| string| Order type. `Market`,`Limit`  
+> execFee| string| Leg exec fee, deprecated for Spot leg  
+> execFeeV2| string| Leg exec fee, used for Spot leg only  
+> feeCoin| string| Leg fee currency  
+> parentExecId| string| Combo's Execution ID, leg's event has the value  
+> execId| string| Execution ID  
+> execPrice| string| Execution price  
+> execQty| string| Execution qty  
+> execPnl| string| Profit and Loss for each close position execution  
+> [execType](/docs/v5/enum#exectype)| string| Executed type  
+> execValue| string| Executed order value  
+> execTime| string| Executed timestamp (ms)  
+> isMaker| boolean| Is maker order. `true`: maker, `false`: taker  
+> feeRate| string| Trading fee rate  
+> markPrice| string| The mark price of the symbol when executing  
+> closedSize| string| Closed position size  
+> seq| long| Cross sequence  
   
 ### Subscribe Example
     
     
     {  
         "op": "subscribe",  
-        "args": ["orderbook.25.SOLUSDT_SOL/USDT"]  
+        "args": [  
+            "spread.execution"  
+        ]  
     }  
     
 
-### Event Example
+### Stream Example
     
     
+    // Combo execution  
     {  
-        "topic": "orderbook.25.SOLUSDT_SOL/USDT",  
-        "ts": 1744165512257,  
-        "type": "delta",  
-        "data": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [],  
-            "a": [  
-                [  
-                    "22.3755",  
-                    "4.7"  
-                ]  
-            ],  
-            "u": 64892,  
-            "seq": 299084  
-        },  
-        "cts": 1744165512234  
+         "topic": "spread.execution",  
+         "id": "cvqes8141ilt347i9l20",  
+         "creationTime": 1744104992226,  
+         "data": [  
+              {  
+                   "category": "combination",  
+                   "symbol": "SOLUSDT_SOL/USDT",  
+                   "closedSize": "",  
+                   "execFee": "",  
+                   "execId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "parentExecId": "",  
+                   "execPrice": "20.9848",  
+                   "execQty": "2",  
+                   "execType": "Trade",  
+                   "execValue": "",  
+                   "feeRate": "",  
+                   "markPrice": "",  
+                   "leavesQty": "0",  
+                   "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                   "orderLinkId": "",  
+                   "orderPrice": "21",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992220",  
+                   "isLeverage": "",  
+                   "isMaker": false,  
+                   "seq": 241321,  
+                   "createType": "CreateByUser",  
+                   "execPnl": ""  
+              }  
+         ]  
+    }  
+      
+    //Future leg execution  
+    {  
+         "topic": "spread.execution",  
+         "id": "1448939_SOLUSDT_28731107101",  
+         "creationTime": 1744104992229,  
+         "data": [  
+              {  
+                   "category": "future_leg",  
+                   "symbol": "SOLUSDT",  
+                   "closedSize": "0",  
+                   "execFee": "0.039712",  
+                   "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc",  
+                   "parentExecId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "execPrice": "124.1",  
+                   "execQty": "2",  
+                   "execType": "FutureSpread",  
+                   "execValue": "248.2",  
+                   "feeRate": "0.00016",  
+                   "markPrice": "119",  
+                   "leavesQty": "0",  
+                   "orderId": "",  
+                   "orderLinkId": "",  
+                   "orderPrice": "124.1",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992224",  
+                   "isLeverage": "0",  
+                   "isMaker": false,  
+                   "seq": 28731107101,  
+                   "createType": "CreateByFutureSpread",  
+                   "execPnl": "0"  
+              }  
+         ]  
     }
 
 ---
 
-# 深度
+# 個人成交
 
-訂閱深度的推送
+訂閱價差交易發生的成交
 
-**Topic:**  
-`orderbook.{depth}.{symbol}` e.g., orderbook.25.SOLUSDT_SOL/USDT
-
-25 檔數據, 推送頻率: **20ms**
-
-信息
-
-  * 訂閱成功後，會立即得到一個當前快照包的推送消息.
-  * websocket將會繼續推送這些增量數據. 收到snapshot的報文，就需要重置本地的orderbook.
-  * `snapshot`=全量orderbook, `delta`=增量orderbook
-  * 如果因為Bybit服務原因，會重新發送snapshot報文，該報文已保證是最新且準確的.
-
+**Topic:** `spread.execution`  
 
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+id| string| 消息ID  
 topic| string| Topic名  
-type| string| 數據類型. `snapshot`,`delta`  
-ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| map| Object  
-> s| string| 價差產品名稱  
-> b| array| Bid, 買方. `snapshot`數據，是按照價格從大到小  
->> b[0]| string| 買方報價  
->> b[1]| string| 買方數量 
-
-  * 增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷
-
-  
-> a| array| Ask, 賣方. `snapshot`數據，是按照價格從小到大  
->> a[0]| string| 賣方報價  
->> a[1]| string| 賣方數量 
-
-  * 增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷
-
-  
-> u| integer| 更新id 
-
-  * 一般情況下該id是連續的。偶爾會因後台的重啟而發送"u"=1的全量數據，接收到後請覆蓋本地保存的orderbook
-
-  
-> seq| integer| 撮合版本號  
-cts| number| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](/docs/zh-TW/v5/spread/websocket/public/trade)頻道中的`T`進行關聯  
+creationTime| number| 消息數據創建時間 (ms)  
+data| array<object>|   
+> category| string| 組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿  
+> symbol| string| 組合或單腿的合約名稱  
+> isLeverage| string| 帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"  
+> orderId| string| 組合訂單ID, 單腿展示""  
+> orderLinkId| string| 組合訂單IDD, 單腿展示""  
+> side| string| 組合或單腿訂單方向. `Buy`,`Sell`  
+> orderPrice| string| 組合或單腿的訂單價格  
+> orderQty| string| 組合或單腿的訂單數量  
+> leavesQty| string| 剩餘未成交數量  
+> [createType](/docs/zh-TW/v5/enum#createtype)| string| 訂單創建類型  
+> orderType| string| 訂單類型. `Market`,`Limit`  
+> execFee| string| 手續費, 組合暫時為""  
+> execFeeV2| string| 現貨單腿手續費  
+> feeCoin| string| 單腿交易手續費幣種  
+> parentExecId| string| 單腿的母成交ID, 即對應組合的成交ID, 組合暫時""  
+> execId| string| 成交ID  
+> execPrice| string| 成交價格  
+> execQty| string| 成交數量  
+> execPnl| string| 每筆平倉成交的盈虧, 僅合約單腿成交有效  
+> [execType](/docs/zh-TW/v5/enum#exectype)| string| 成交類型, 組合總是`Trade`  
+> execValue| string| 成交價值, 僅適用於單腿成交  
+> execTime| string| 成交時間（ms）  
+> isMaker| boolean| 是否是maker成交. `true`: maker, `false`: taker  
+> feeRate| string| 手續費率, 僅適用於單腿成交  
+> markPrice| string| 成交執行時, 該 symbol 當時的標記價格, markPrice  
+> closedSize| string| 平倉數量, 僅適用於單腿成交  
+> seq| long| 序列號, 用於關聯成交和倉位的更新  
   
 ### 訂閱示例
     
     
     {  
         "op": "subscribe",  
-        "args": ["orderbook.25.SOLUSDT_SOL/USDT"]  
+        "args": [  
+            "spread.execution"  
+        ]  
     }  
     
 
 ### 推送示例
     
     
+    // Combo execution  
     {  
-        "topic": "orderbook.25.SOLUSDT_SOL/USDT",  
-        "ts": 1744165512257,  
-        "type": "delta",  
-        "data": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [],  
-            "a": [  
-                [  
-                    "22.3755",  
-                    "4.7"  
-                ]  
-            ],  
-            "u": 64892,  
-            "seq": 299084  
-        },  
-        "cts": 1744165512234  
+         "topic": "spread.execution",  
+         "id": "cvqes8141ilt347i9l20",  
+         "creationTime": 1744104992226,  
+         "data": [  
+              {  
+                   "category": "combination",  
+                   "symbol": "SOLUSDT_SOL/USDT",  
+                   "closedSize": "",  
+                   "execFee": "",  
+                   "execId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "parentExecId": "",  
+                   "execPrice": "20.9848",  
+                   "execQty": "2",  
+                   "execType": "Trade",  
+                   "execValue": "",  
+                   "feeRate": "",  
+                   "markPrice": "",  
+                   "leavesQty": "0",  
+                   "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                   "orderLinkId": "",  
+                   "orderPrice": "21",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992220",  
+                   "isLeverage": "",  
+                   "isMaker": false,  
+                   "seq": 241321,  
+                   "createType": "CreateByUser",  
+                   "execPnl": ""  
+              }  
+         ]  
+    }  
+      
+    //Future leg execution  
+    {  
+         "topic": "spread.execution",  
+         "id": "1448939_SOLUSDT_28731107101",  
+         "creationTime": 1744104992229,  
+         "data": [  
+              {  
+                   "category": "future_leg",  
+                   "symbol": "SOLUSDT",  
+                   "closedSize": "0",  
+                   "execFee": "0.039712",  
+                   "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc",  
+                   "parentExecId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "execPrice": "124.1",  
+                   "execQty": "2",  
+                   "execType": "FutureSpread",  
+                   "execValue": "248.2",  
+                   "feeRate": "0.00016",  
+                   "markPrice": "119",  
+                   "leavesQty": "0",  
+                   "orderId": "",  
+                   "orderLinkId": "",  
+                   "orderPrice": "124.1",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992224",  
+                   "isLeverage": "0",  
+                   "isMaker": false,  
+                   "seq": 28731107101,  
+                   "createType": "CreateByFutureSpread",  
+                   "execPnl": "0"  
+              }  
+         ]  
     }

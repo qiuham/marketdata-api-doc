@@ -2,53 +2,42 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/position-tiers
 api_type: REST
-updated_at: 2026-07-09 19:12:20.146785
+updated_at: 2026-07-10 19:06:08.497444
 ---
 
-# Set Auto Repay Mode
-
-Set spot automatic repayment mode
+# Get Position Tiers
 
 info
 
-  1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
-  2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
-  3. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency. 
-  4. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay)
+  * If `currency` is passed in the input parameter, query by currency; if `currency` is not passed in the input parameter, query all configured currencies
 
 
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/position-tiers`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.  
-autoRepayMode| **true**|  string| 
-
-  * `1`: On
-  * `0`: Off
-
+currency| false| string| Coin name, uppercase only  
   
-  
-* * *
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-data| array| Object  
-> currency| string| Coin name, uppercase only.  
-> autoRepayMode| string| 
-
-  * `1`: On
-  * `0`: Off
-
+list| array| Object  
+> currency| string| Coin name, uppercase only  
+> positionTiersRatioList| string| Object  
+>> tier| string| Tiers. Display from small to large  
+>> borrowLimit| string| Tiers Accumulation Borrow limit  
+>> positionMMR| string| Loan Maintenance Margin Rate. Precision 8 decimal places  
+>> positionIMR| string| Loan Initial Margin Rate. Precision 8 decimal places  
+>> maxLeverage| string| Max Loan Leverage  
   
-  
+* * *
+
 ### Request Example
 
   * HTTP
@@ -58,18 +47,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/position-tiers?currency=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -79,9 +62,8 @@ data| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_repay_mode(  
-        currency="ETH",  
-        autoRepayMode="1"  
+    print(session.spot_margin_trade_get_position_tiers(  
+        currency="BTC"  
     ))  
     
     
@@ -94,65 +76,83 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
+            "list": [  
                 {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
+                    "currency": "BTC",  
+                    "positionTiersRatioList": [  
+                        {  
+                            "tier": "1",  
+                            "borrowLimit": "390",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.2",  
+                            "maxLeverage": "5"  
+                        },  
+                        {  
+                            "tier": "2",  
+                            "borrowLimit": "391",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.25",  
+                            "maxLeverage": "4"  
+                        },  
+                        {  
+                            "tier": "3",  
+                            "borrowLimit": "392",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.33333333",  
+                            "maxLeverage": "3"  
+                        },  
+                        {  
+                            "tier": "4",  
+                            "borrowLimit": "393",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.5",  
+                            "maxLeverage": "2"  
+                        }  
+                    ]  
                 }  
             ]  
         },  
-        "retExtInfo": {},  
-        "time": 1766976677678  
+        "retExtInfo": "{}",  
+        "time": 1756272543440  
     }
 
 ---
 
-# 設定現貨自動還款模式
-
-設定現貨自動還款模式
+# 查詢借貸倉位風險訊息
 
 信息
 
-  1. 若未指定`currency`參數，則所有幣種均啟用自動還款。
-  2. 如果將某幣種的`autoRepayMode`設定為 1，系統將每小時 0 分鐘和 30 分鐘自動以該幣種進行非資產轉換還款。
-  3. 無損還款金額為該貨幣的現貨可用餘額與該貨幣的負債中的較小者。
-  4. 如果你錯過了0分和30分的自動還款批次，你可以手動調接口進行還款。
+  * 如果輸入參數中傳入了 `currency`，則按幣查詢；如果輸入參數中沒有傳入 `currency`，則查詢所有已配置的幣
 
 
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/position-tiers`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| 幣名稱，僅限大寫. 若未指定`currency`參數，則所有幣種均啟用自動還款。  
-autoRepayMode| **true**|  string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
+currency| false| string| 幣名稱，僅限大寫  
   
-  
-* * *
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-data| array| Object  
-> currency| string| 幣名稱，僅限大寫.  
-> autoRepayMode| string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
+list| array| Object  
+> currency| string| 幣名稱，僅限大寫  
+> positionTiersRatioList| string| Object  
+>> tier| string| 等級。從小到大顯示  
+>> borrowLimit| string| 等級累積借款限額  
+>> positionMMR| string| 借款佔用維持保證金比率。精確到8位小數  
+>> positionIMR| string| 借款佔用初始保證金比率。精確到8位小數  
+>> maxLeverage| string| 最大借貸槓桿  
   
-  
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -162,18 +162,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/position-tiers?currency=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -189,15 +183,44 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
+            "list": [  
                 {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
+                    "currency": "BTC",  
+                    "positionTiersRatioList": [  
+                        {  
+                            "tier": "1",  
+                            "borrowLimit": "390",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.2",  
+                            "maxLeverage": "5"  
+                        },  
+                        {  
+                            "tier": "2",  
+                            "borrowLimit": "391",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.25",  
+                            "maxLeverage": "4"  
+                        },  
+                        {  
+                            "tier": "3",  
+                            "borrowLimit": "392",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.33333333",  
+                            "maxLeverage": "3"  
+                        },  
+                        {  
+                            "tier": "4",  
+                            "borrowLimit": "393",  
+                            "positionMMR": "0.04",  
+                            "positionIMR": "0.5",  
+                            "maxLeverage": "2"  
+                        }  
+                    ]  
                 }  
             ]  
         },  
-        "retExtInfo": {},  
-        "time": 1766976677678  
+        "retExtInfo": "{}",  
+        "time": 1756272543440  
     }

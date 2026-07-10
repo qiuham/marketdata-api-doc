@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-07-09 19:10:38.471200
+updated_at: 2026-07-10 19:04:22.646748
 ---
 
 # Get LTV
@@ -40,7 +40,7 @@ ltvInfo| array| Object
 > rst| string| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. When `liqStatus` != 0, empty string is returned.  
 > parentUid| string| The designated Risk Unit ID that was used to bind with the INS loan  
 > subAccountUids| array| Bound user ID  
-> unpaidAmount| string| Total debt(USDT). When `liqStatus` != 0, empty string is returned.  
+> unpaidAmount| string| Total debt(USD). When `liqStatus` != 0, empty string is returned.  
 > unpaidInfo| array| Debt details. When `liqStatus` != 0, empty array is returned.  
 >> token| string| coin  
 >> unpaidQty| string| Unpaid principle  
@@ -215,7 +215,7 @@ ltvInfo| array| Object
 > rst| string| 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。當 `liqStatus` != 0 時，傳回空字串。  
 > parentUid| string| 被指定綁定為機構借貸產品的風險單元Id  
 > subAccountUids| array| 綁定場外借貸產品的UID  
-> unpaidAmount| string| 總負債 (USDT)。當 `liqStatus` != 0 時，傳回空字串。  
+> unpaidAmount| string| 總負債 (USD)。當 `liqStatus` != 0 時，傳回空字串。  
 > unpaidInfo| array| 負債明細。 當 `liqStatus` != 0 時，傳回空數組。  
 >> token| string| 幣種  
 >> unpaidQty| string| 未還本金  

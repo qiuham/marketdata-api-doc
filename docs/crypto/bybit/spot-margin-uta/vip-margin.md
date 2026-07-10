@@ -2,56 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
 api_type: REST
-updated_at: 2026-07-09 19:12:27.978553
+updated_at: 2026-07-10 19:06:19.573026
 ---
 
-# Get VIP Margin Data
+# Get Recent Public Trades
 
-This margin data is for **Unified account** in particular.
-
-info
-
-Does not need authentication.
+Query recent public spread trading history in Bybit.
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/data`
+GET`/v5/spread/recent-trade`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[vipLevel](/docs/v5/enum#viplevel)| false| string| VIP level  
-currency| false| string| Coin name, uppercase only  
+symbol| **true**|  string| Spread combination symbol name  
+limit| false| integer| Limit for data size per page [`1`,`1000`], default: `500`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-vipCoinList| array| Object  
-> list| array| Object  
->> borrowable| boolean| Whether it is allowed to be borrowed  
->> collateralRatio| string| Due to the new Tiered Collateral value logic, this field will no longer be accurate starting on February 19, 2025. Please refer to [Get Tiered Collateral Ratio](/docs/v5/spot-margin-uta/tier-collateral-ratio)  
->> currency| string| Coin name  
->> hourlyBorrowRate| string| Borrow interest rate per hour  
->> liquidationOrder| string| Liquidation order  
->> marginCollateral| boolean| Whether it can be used as a margin collateral currency  
->> maxBorrowingAmount| string| Max borrow amount  
-> vipLevel| string| VIP level  
-[](/docs/api-explorer/v5/spot-margin-uta/vip-margin)
-
-* * *
-
+list| array<object>| Public trade info  
+> execId| string| Execution ID  
+> symbol| string| Spread combination symbol name  
+> price| string| Trade price  
+> size| string| Trade size  
+> side| string| Side of taker `Buy`, `Sell`  
+> time| string| Trade time (ms)  
+> seq| string| Cross sequence  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-margin-trade/data?vipLevel=No VIP&currency=BTC HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -62,29 +52,10 @@ vipCoinList| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_vip_margin_data())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getVIPMarginData({  
-        vipLevel: 'No VIP',  
-        currency: 'BTC',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    print(session.spread_get_public_trade_history(  
+        symbol="SOLUSDT_SOL/USDT",  
+        limit=2  
+    ))  
     
 
 ### Response Example
@@ -92,109 +63,66 @@ vipCoinList| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "Success",  
         "result": {  
-            "vipCoinList": [  
+            "list": [  
                 {  
-                    "list": [  
-                        {  
-                            "borrowable": true,  
-                            "collateralRatio": "0.95",  
-                            "currency": "BTC",  
-                            "hourlyBorrowRate": "0.0000015021220000",  
-                            "liquidationOrder": "11",  
-                            "marginCollateral": true,  
-                            "maxBorrowingAmount": "3"  
-                        }  
-                    ],  
-                    "vipLevel": "No VIP"  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
                 }  
             ]  
-        }  
+        },  
+        "retExtInfo": {},  
+        "time": 1744078324682  
     }
 
 ---
 
-# 查詢不同VIP的槓桿數據
+# 查詢最近公共成交
 
-查詢**統一帳戶** 下不同VIP等級的槓桿數據
+### HTTP請求
 
-信息
-
-不需要鑒權
-
-### HTTP 請求
-
-GET`/v5/spot-margin-trade/data`
+GET`/v5/spread/recent-trade`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[vipLevel](/docs/zh-TW/v5/enum#viplevel)| false| string| VIP 等級  
-currency| false| string| 幣種名稱  
+symbol| **true**|  string| 價差產品名稱  
+limit| false| integer| 每頁數量限制 [1,1000], 默認: `500`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-vipCoinList| array| Object  
-> list| array| Object  
->> borrowable| boolean| 幣種是否支持借貸  
->> collateralRatio| string| 由於新的階梯價值率邏輯, 該字段從2025年2月19日開始不再準確。請使用[查詢階梯價值率](/docs/zh-TW/v5/spot-margin-uta/tier-collateral-ratio)  
->> currency| string| 幣種名稱  
->> hourlyBorrowRate| string| 每小時借貸利率  
->> liquidationOrder| string| 強平順序  
->> marginCollateral| boolean| 幣種是否支持作為保證金  
->> maxBorrowingAmount| string| 最大借貸額度  
-> vipLevel| string| VIP 等級  
-[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/vip-margin)
-
-* * *
-
+list| array<object>| 成交信息  
+> execId| string| 成交id  
+> symbol| string| 價差產品名稱  
+> price| string| 成交價格  
+> size| string| 成交數量  
+> side| string| 吃單方向 `Buy`, `Sell`  
+> time| string| 成交時間戳 (毫秒)  
+> seq| string| 撮合版本號  
+  
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/spot-margin-trade/data?vipLevel=No VIP&currency=BTC HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.spot_margin_trade_get_vip_margin_data())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getVIPMarginData({  
-        vipLevel: 'No VIP',  
-        currency: 'BTC',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -202,23 +130,29 @@ vipCoinList| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "Success",  
         "result": {  
-            "vipCoinList": [  
+            "list": [  
                 {  
-                    "list": [  
-                        {  
-                            "borrowable": true,  
-                            "collateralRatio": "0.95",  
-                            "currency": "BTC",  
-                            "hourlyBorrowRate": "0.0000015020640000",  
-                            "liquidationOrder": "11",  
-                            "marginCollateral": true,  
-                            "maxBorrowingAmount": "3"  
-                        }  
-                    ],  
-                    "vipLevel": "No VIP"  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
                 }  
             ]  
-        }  
+        },  
+        "retExtInfo": {},  
+        "time": 1744078324682  
     }

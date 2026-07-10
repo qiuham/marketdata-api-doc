@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-asset-bills-history
 anchor_id: funding-account-rest-api-asset-bills-history
 api_type: REST
-updated_at: 2026-07-09 19:38:34.800574
+updated_at: 2026-07-10 19:32:18.172818
 ---
 
 # Asset bills history

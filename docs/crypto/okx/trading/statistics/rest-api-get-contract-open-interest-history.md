@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-contract-open-interest-history
 anchor_id: trading-statistics-rest-api-get-contract-open-interest-history
 api_type: REST
-updated_at: 2026-07-09 19:38:27.288817
+updated_at: 2026-07-10 19:32:10.458313
 ---
 
 # Get contract open interest history
