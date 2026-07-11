@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/list-accounts
 api_type: Account
-updated_at: 2026-07-10 19:19:29.101566
+updated_at: 2026-07-11 19:01:25.645815
 ---
 
 # List Accounts
@@ -69,7 +69,55 @@ Get a list of authenticated accounts for the current user.
     package main  
       
     import (  
-    	"fmt"  
+    	"fmt"Accounts
+    
+    # List Accounts
+    
+    Get a list of authenticated accounts for the current user.
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    accounts
+    
+    List Accounts
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/accounts \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/accounts"  
+      
+    headers = {"Authorization": "Bearer <token>"}  
+      
+    response = requests.get(url, headers=headers)  
+      
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};  
+      
+    fetch('https://api.coinbase.com/api/v3/brokerage/accounts', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch  
     	"net/http"  
     	"io"  
     )  
@@ -145,15 +193,92 @@ Get a list of authenticated accounts for the current user.
     
     {  
       "error": "<string>",  
-      "code": 123,  
-      "message": "<string>",  
-      "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
-      ]  
+      "code": 123,(err => console.error(err));
+    
+    
+    <?php  
+      
+    $curl = curl_init();  
+      
+    curl_setopt_array($curl, [  
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/accounts",  
+      CURLOPT_RETURNTRANSFER => true,  
+      CURLOPT_ENCODING => "",  
+      CURLOPT_MAXREDIRS => 10,  
+      CURLOPT_TIMEOUT => 30,  
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
+      CURLOPT_CUSTOMREQUEST => "GET",  
+      CURLOPT_HTTPHEADER => [  
+        "Authorization: Bearer <token>"  
+      ],  
+    ]);  
+      
+    $response = curl_exec($curl);  
+    $err = curl_error($curl);  
+      
+    curl_close($curl);  
+      
+    if ($err) {  
+      echo "cURL Error #:" . $err;  
+    } else {  
+      echo $response;  
     }
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://api.coinbase.com/api/v3/brokerage/accounts"  
+      
+    	req, _ := http.NewRequest("GET", url, nil)  
+      
+    	req.Header.Add("Authorization", "Bearer <token>")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/accounts")  
+      .header("Authorization", "Bearer <token>")  
+      .asString();
+    
+    
+    require 'uri'  
+    require 'net/http'  
+      
+    url = URI("https://api.coinbase.com/api/v3/brokerage/accounts")  
+      
+    http = Net::HTTP.new(url.host, url.port)  
+    http.use_ssl = true  
+      
+    request = Net::HTTP::Get.new(url)  
+    request["Authorization"] = 'Bearer <token>'  
+      
+    response = http.request(request)  
+    puts response.read_body
+
+  
+"message": "<string>",  
+"details": [  
+{  
+"type_url": "<string>",  
+"value": "aSDinaTvuI8gbWludGxpZnk="  
+}  
+]  
+}`
 
 #### Authorizations
 

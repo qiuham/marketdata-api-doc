@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
 api_type: REST
-updated_at: 2026-07-10 19:06:06.626521
+updated_at: 2026-07-11 18:50:36.675517
 ---
 
 # Get Position Tiers

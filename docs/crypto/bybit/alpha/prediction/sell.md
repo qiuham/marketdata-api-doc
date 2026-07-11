@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sell
 api_type: REST
-updated_at: 2026-07-10 18:57:38.361807
+updated_at: 2026-07-11 18:43:56.349569
 ---
 
 # Get Sports Group Stage Detail

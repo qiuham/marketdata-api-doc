@@ -2,18 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders
 api_type: Trading
-updated_at: 2026-07-10 19:19:30.649162
+updated_at: 2026-07-11 19:01:27.468185
 ---
 
 # List Orders
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/batch`
 
-Orders
-    
-    # List Orders
-    
-    Get a list of orders filtered by optional query parameters (product_id, order_status, etc).
+
+Get a list of orders filtered by optional query parameters (`product_id`, `order_status`, etc).
     
     
     curl --request GET \

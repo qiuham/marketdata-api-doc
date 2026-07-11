@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rate-limits
 anchor_id: overview-rate-limits
 api_type: API
-updated_at: 2026-07-10 19:30:06.194875
+updated_at: 2026-07-11 19:12:00.433941
 ---
 
 # Rate Limits
