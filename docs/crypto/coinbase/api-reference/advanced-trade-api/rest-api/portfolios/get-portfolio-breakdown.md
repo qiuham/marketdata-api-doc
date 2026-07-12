@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown
 api_type: Account
-updated_at: 2026-07-11 19:01:28.397385
+updated_at: 2026-07-12 19:04:37.028012
 ---
 
 # Get Portfolio Breakdown
@@ -378,7 +378,7 @@ Get the breakdown of a portfolio.
 
 Authorization
 
-stringPortfolios
+string
 
 header
 

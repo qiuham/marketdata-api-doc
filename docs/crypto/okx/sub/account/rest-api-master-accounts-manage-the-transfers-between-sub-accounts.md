@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 anchor_id: sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 api_type: REST
-updated_at: 2026-07-11 19:14:26.327669
+updated_at: 2026-07-12 19:17:26.552092
 ---
 
 # Master accounts manage the transfers between sub-accounts

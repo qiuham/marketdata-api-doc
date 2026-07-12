@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-api-resources-and-support-python-libraries
 anchor_id: overview-api-resources-and-support-python-libraries
 api_type: API
-updated_at: 2026-07-11 19:11:52.704315
+updated_at: 2026-07-12 19:14:52.928944
 ---
 
 # Python libraries

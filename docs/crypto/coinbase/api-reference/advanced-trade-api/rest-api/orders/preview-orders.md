@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/preview-orders
 api_type: Trading
-updated_at: 2026-07-11 19:01:27.676342
+updated_at: 2026-07-12 19:04:36.662654
 ---
 
 # Preview Order
@@ -1399,206 +1399,498 @@ Available options:
 
 `PREVIEW_INVALID_NBBO_ASK_PRICE`,
 
-`PREVIEW_NOTIONAL_SIZE_BREACHES_FRACTIONAL_MINIMUM`,
-
-`PREVIEW_MARKET_ORDERS_PROHIBITED_DURING_NON_CORE_SESSION`,
-
-`PREVIEW_NOTIONAL_ORDERS_PROHIBITED_DURING_NON_CORE_SESSION`,
-
-`PREVIEW_MAX_NOTIONAL_PER_ORDER_BREACHED_15C35_CHECK`,
-
-`PREVIEW_MAX_SHARES_PER_ORDER_BREACHED_15C35_CHECK`,
-
-`PREVIEW_INVALID_EQUITY_TRADING_SESSION`,
-
-`PREVIEW_PRODUCT_TRADING_HALTED`,
-
-`PREVIEW_TRADING_DISABLED`,
-
-`PREVIEW_INVALID_BRACKET_LIMIT_PRICE_PRECISION`,
-
-`PREVIEW_SCALED_PARAM_DISCREPANCY`,
-
-`PREVIEW_STOP_LOSS_PRICE_TOO_LOW`,
-
-`PREVIEW_PREDICTIONS_QUOTE_SIZE_BELOW_MIN_CONTRACT_PRICE`,
-
-`PREVIEW_PREDICTIONS_HIGH_PRICE_CONTRACTS_BLOCKED`,
-
-`PREVIEW_ATTACHED_STOP_LOSS_PRICE_TOO_LOW`,
-
-`PREVIEW_BREACHED_RISK_LIMIT`,
-
-`PREVIEW_STOP_LOSS_PRICE_TOO_HIGH`,
-
-`PREVIEW_ATTACHED_STOP_LOSS_PRICE_TOO_HIGH`,
-
-`PREVIEW_TAKE_PROFIT_PRICE_TOO_HIGH`,
-
-`PREVIEW_ATTACHED_TAKE_PROFIT_PRICE_TOO_HIGH`,
-
-`PREVIEW_TAKE_PROFIT_PRICE_TOO_LOW`,
-
-`PREVIEW_ATTACHED_TAKE_PROFIT_PRICE_TOO_LOW`
-
-warning
-
-enum<string>[]
-
-required
-
-Available options:
-
-`UNKNOWN`,
-
-`BIG_ORDER`,
-
-`SMALL_ORDER`,
-
-`DURATION_EXTENDED_BY_MARKET_CLOSE`,
-
-`OPEN_ORDERS_EXCEED_COMPLIANCE_PURCHASE_LIMIT_MAY_CANCEL`
-
-quote_size
-
-string
-
-required
-
-The amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.
-
-Example:
-
-`10`
-
-base_size
-
-string
-
-required
-
-The amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.
-
-Example:
-
-`0.001`
-
-best_bid
-
-string
-
-required
-
-best_ask
-
-string
-
-required
-
-is_max
-
-boolean
-
-required
-
-Indicates whether tradable_balance should be set to the maximum amount.
-
-order_margin_total
-
-string
-
-leverage
-
-string
-
-The amount of leverage for the order (default is 1.0).
-
-Example:
-
-`"2.0"`
-
-long_leverage
-
-string
-
-short_leverage
-
-string
-
-slippage
-
-string
-
-preview_id
-
-string
-
-current_liquidation_buffer
-
-string
-
-projected_liquidation_buffer
-
-string
-
-max_leverage
-
-string
-
-pnl_configuration
-
-object
-
-Expected PNL of an order. This value is an estimate and does not take into account fees and slippage.
-
-twap_bucket_metadata
-
-Twap bucket metadata - size/duration of each suborder into which twap is broken into · object
-
-position_notional_limit
-
-string
-
-max_notional_at_requested_leverage
-
-string
-
-margin_ratio_data
-
-New margin ratio fields replacing current_liquidation_buffer and projected_liquidation_buffer · object
-
-commission_detail_total
-
-CommissionDetailTotal contains the breakdown of commission charges for an order · object
-
-Breakdown of commission charges for the order
-
-scaled_metadata
-
-a list of scaled order distributions · object
-
-Metadata for scaled orders containing the order distribution
-
-compliance_limit_data
-
-Compliance Limit service data · object
-
-Optional compliance limit data
-
-est_average_filled_price
-
-string
-
-Estimated fill price for order.
-
-prediction_order_metadata
-
-Prediction market-specific metadata for the order preview response · object
-
-Metadata specific to prediction market orders.
-
-predicted_liquidation_price
-
-string
-
-Predicted liquidation price for FCM orders.
+`Orders
+
+# Preview Order
+
+Preview an order.
+
+POST
+
+/
+
+api
+
+/
+
+v3
+
+/
+
+brokerage
+
+/
+
+orders
+
+/
+
+preview
+
+Preview Order
+    
+    
+    curl --request POST \
+      --url https://api.coinbase.com/api/v3/brokerage/orders/preview \
+      --header 'Authorization: Bearer <token>' \
+      --header 'Content-Type: application/json' \
+      --data '
+    {
+      "product_id": "<string>",
+      "side": "",
+      "order_configuration": {
+        "market_market_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "market_market_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "sor_limit_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "limit_limit_gtc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "post_only": false,
+          "rfq_disabled": true
+        },
+        "limit_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "post_only": false
+        },
+        "limit_limit_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "twap_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "start_time": "2021-05-31T07:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "limit_price": "10000.00",
+          "number_buckets": "5",
+          "bucket_size": "2.00",
+          "bucket_duration": "300s"
+        },
+        "stop_limit_stop_limit_gtc": {
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "stop_direction": "20000.00"
+        },
+        "stop_limit_stop_limit_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "stop_direction": "20000.00"
+        },
+        "trigger_bracket_gtc": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00"
+        },
+        "trigger_bracket_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z"
+        },
+        "scaled_limit_gtc": {
+          "orders": [
+            {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+    PREVIEW_NOTIONAL_SIZE_BREACHES_FRACTIONAL_MINIMUM, 
+    
+    PREVIEW_MARKET_ORDERS_PROHIBITED_DURING_NON_CORE_SESSION, 
+    
+    PREVIEW_NOTIONAL_ORDERS_PROHIBITED_DURING_NON_CORE_SESSION, 
+    
+    PREVIEW_MAX_NOTIONAL_PER_ORDER_BREACHED_15C35_CHECK, 
+    
+    PREVIEW_MAX_SHARES_PER_ORDER_BREACHED_15C35_CHECK, 
+    
+    PREVIEW_INVALID_EQUITY_TRADING_SESSION, 
+    
+    PREVIEW_PRODUCT_TRADING_HALTED, 
+    
+    PREVIEW_TRADING_DISABLED, 
+    
+    PREVIEW_INVALID_BRACKET_LIMIT_PRICE_PRECISION, 
+    
+    PREVIEW_SCALED_PARAM_DISCREPANCY, 
+    
+    PREVIEW_STOP_LOSS_PRICE_TOO_LOW, 
+    
+    PREVIEW_PREDICTIONS_QUOTE_SIZE_BELOW_MIN_CONTRACT_PRICE, 
+    
+    PREVIEW_PREDICTIONS_HIGH_PRICE_CONTRACTS_BLOCKED, 
+    
+    PREVIEW_ATTACHED_STOP_LOSS_PRICE_TOO_LOW, 
+    
+    PREVIEW_BREACHED_RISK_LIMIT, 
+    
+    PREVIEW_STOP_LOSS_PRICE_TOO_HIGH, 
+    
+    PREVIEW_ATTACHED_STOP_LOSS_PRICE_TOO_HIGH, 
+    
+    PREVIEW_TAKE_PROFIT_PRICE_TOO_HIGH, 
+    
+    PREVIEW_ATTACHED_TAKE_PROFIT_PRICE_TOO_HIGH, 
+    
+    PREVIEW_TAKE_PROFIT_PRICE_TOO_LOW, 
+    
+    PREVIEW_ATTACHED_TAKE_PROFIT_PRICE_TOO_LOW 
+    
+    
+    
+    warning
+    
+    enum<string>[]
+    
+    required
+    
+    Available options: 
+    
+    UNKNOWN, 
+    
+    BIG_ORDER, 
+    
+    SMALL_ORDER, 
+    
+    DURATION_EXTENDED_BY_MARKET_CLOSE, 
+    
+    OPEN_ORDERS_EXCEED_COMPLIANCE_PURCHASE_LIMIT_MAY_CANCEL 
+    
+    
+    
+    quote_size
+    
+    string
+    
+    required
+    
+    The amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.
+    
+    Example:
+    
+    10
+    
+    
+    
+    base_size
+    
+    string
+    
+    required
+    
+    The amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.
+    
+    Example:
+    
+    0.001
+    
+    
+    
+    best_bid
+    
+    string
+    
+    required
+    
+    
+    
+    best_ask
+    
+    string
+    
+    required
+    
+    
+    
+    is_max
+    
+    boolean
+    
+    required
+    
+    Indicates whether tradable_balance should be set to the maximum amount.
+    
+    
+    
+    order_margin_total
+    
+    string
+    
+    
+    
+    leverage
+    
+    string
+    
+    The amount of leverage for the order (default is 1.0).
+    
+    Example:
+    
+    "2.0"
+    
+    
+    
+    long_leverage
+    
+    string
+    
+    
+    
+    short_leverage
+    
+    string
+    
+    
+    
+    slippage
+    
+    string
+    
+    
+    
+    preview_id
+    
+    string
+    
+    
+    
+    current_liquidation_buffer
+    
+    string
+    
+    
+    
+    projected_liquidation_buffer
+    
+    string
+    
+    
+    
+    max_leverage
+    
+    string
+    
+    
+    
+    pnl_configuration
+    
+    object
+    
+    Expected PNL of an order. This value is an estimate and does not take into account fees and slippage.
+
+              "limit_price": "10000.00",
+              "post_only": false,
+              "rfq_disabled": true
+            }
+          ],
+          "quote_size": "<string>",
+          "base_size": "<string>",
+          "num_orders": 123,
+          "min_price": "<string>",
+          "max_price": "<string>",
+          "price_distribution": "FLAT",
+          "size_distribution": "UNKNOWN_DISTRIBUTION",
+          "size_diff": "<string>",
+          "size_ratio": "<string>"
+        }
+      },
+      "leverage": "2.0",
+      "margin_type": "",
+      "retail_portfolio_id": "11111111-1111-1111-1111-111111111111",
+      "attached_order_configuration": {
+        "market_market_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "market_market_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "rfq_disabled": true
+        },
+        "sor_limit_ioc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "limit_limit_gtc": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "post_only": false,
+          "rfq_disabled": true
+        },
+        "limit_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "post_only": false
+        },
+        "limit_limit_fok": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "rfq_disabled": true
+        },
+        "twap_limit_gtd": {
+          "quote_size": "10.00",
+          "base_size": "0.001",
+          "start_time": "2021-05-31T07:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "limit_price": "10000.00",
+          "number_buckets": "5",
+          "bucket_size": "2.00",
+          "bucket_duration": "300s"
+        },
+        "stop_limit_stop_limit_gtc": {
+          "base_size": "0.001",
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "stop_direction": "20000.00"
+        },
+        "stop_limit_stop_limit_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z",
+          "stop_direction": "20000.00"
+        },
+        "trigger_bracket_gtc": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00"
+        },
+        "trigger_bracket_gtd": {
+          "base_size": 0.001,
+          "limit_price": "10000.00",
+          "stop_trigger_price": "20000.00",
+          "end_time": "2021-05-31T09:59:59.000Z"
+        },
+        "scaled_limit_gtc": {
+          "orders": [
+            {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00",
+              "post_only": false,
+              "rfq_disabled": true
+            }
+          ],
+          "quote_size": "<string>",
+          "base_size": "<string>",
+          "num_orders": 123,
+          "min_price": "<string>",
+          "max_price": "<string>",
+          "price_distribution": "FLAT",
+          "size_distribution": "UNKNOWN_DISTRIBUTION",
+          "size_diff": "<string>",
+          "size_ratio": "<string>"
+        }
+      },
+      "prediction_metadata": {
+        "prediction_side": "PREDICTION_SIDE_UNKNOWN",
+        "preview_order_est_average_filled_price": "<string>",
+        "supports_fractional_base_size": true
+      },
+      "cost_basis_method": "COST_BASIS_METHOD_UNSPECIFIED"
+    }
+    '
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/orders/preview"  
+      
+    payload = {  
+        "product_id": "<string>",  
+        "side": "",  
+        "order_configuration": {  
+            "market_market_ioc": {  
+                "quote_size": "10.00",  
+                "base_size": "0.001",  
+                "rfq_disabled": True  
+            },  
+            "market_market_fok": {  
+                "quote_size": "10.00",
+    
+    
+    
+    twap_bucket_metadata
+    
+    Twap bucket metadata - size/duration of each suborder into which twap is broken into · object
+
+    position_notional_limit
+    
+    string
+    
+    
+    
+    max_notional_at_requested_leverage
+    
+    string
+    
+    
+    
+    margin_ratio_data
+    
+    New margin ratio fields replacing current_liquidation_buffer and projected_liquidation_buffer · object
+
+    commission_detail_total
+    
+    CommissionDetailTotal contains the breakdown of commission charges for an order · object
+    
+    Breakdown of commission charges for the order
+
+    scaled_metadata
+    
+    a list of scaled order distributions · object
+    
+    Metadata for scaled orders containing the order distribution
+
+    compliance_limit_data
+    
+    Compliance Limit service data · object
+    
+    Optional compliance limit data
+
+    est_average_filled_price
+    
+    string
+    
+    Estimated fill price for order.
+    
+    
+    
+    prediction_order_metadata
+    
+    Prediction market-specific metadata for the order preview response · object
+    
+    Metadata specific to prediction market orders.
+
+    predicted_liquidation_price
+    
+    string
+    
+    Predicted liquidation price for FCM orders.

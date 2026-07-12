@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-get-product-info
 anchor_id: financial-product-sol-staking-get-product-info
 api_type: API
-updated_at: 2026-07-11 19:14:32.902239
+updated_at: 2026-07-12 19:17:33.113366
 ---
 
 # GET / Product info

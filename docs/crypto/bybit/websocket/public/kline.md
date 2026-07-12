@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/kline
 api_type: WebSocket
-updated_at: 2026-07-11 18:51:46.619597
+updated_at: 2026-07-12 18:53:47.616055
 ---
 
 # Order Price Limit

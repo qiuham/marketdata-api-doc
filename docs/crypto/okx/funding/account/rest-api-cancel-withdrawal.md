@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-cancel-withdrawal
 anchor_id: funding-account-rest-api-cancel-withdrawal
 api_type: REST
-updated_at: 2026-07-11 19:14:13.610804
+updated_at: 2026-07-12 19:17:13.829378
 ---
 
 # Cancel withdrawal

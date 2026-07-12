@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting
 api_type: REST
-updated_at: 2026-07-11 19:01:26.439737
+updated_at: 2026-07-12 19:04:35.783184
 ---
 
 # Get Intraday Margin Setting
@@ -93,7 +93,41 @@ Get the futures intraday margin setting
     
     
     HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/cfm/intraday/margin_setting")  
-      .header("Authorization", "Bearer <token>")  
+      .header(US Derivatives
+    
+    # Get Intraday Margin Setting
+    
+    Get the futures intraday margin setting
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    cfm
+    
+    /
+    
+    intraday
+    
+    /
+    
+    margin_setting
+    
+    Get Intraday Margin Setting
+    
+    "Authorization", "Bearer <token>")  
       .asString();
     
     

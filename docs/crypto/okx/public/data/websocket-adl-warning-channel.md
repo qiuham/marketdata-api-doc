@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-adl-warning-channel
 anchor_id: public-data-websocket-adl-warning-channel
 api_type: WebSocket
-updated_at: 2026-07-11 19:14:02.873569
+updated_at: 2026-07-12 19:17:03.117997
 ---
 
 # ADL warning channel
