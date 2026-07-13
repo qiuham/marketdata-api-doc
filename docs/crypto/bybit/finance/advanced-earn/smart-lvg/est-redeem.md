@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/est-redeem
 api_type: REST
-updated_at: 2026-07-12 18:48:08.138155
+updated_at: 2026-07-13 19:00:29.351466
 ---
 
 # Get Position Info

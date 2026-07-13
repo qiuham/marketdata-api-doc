@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2074064397168373761
+id: zhongtai-xtp-2076482918452084737
 title: Python版本SDK编译库说明
-doc_id: 2074064397168373761
+doc_id: 2076482918452084737
 doc_category: 其他帮助文档
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397168373761'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2076482918452084737'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-07-06
+updated_at: 2026-07-13
 ---
 
 # Python版本SDK编译库说明
@@ -74,7 +74,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 ~]# whereis python
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=1.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=1.png)
 
 
 显示python在/usr/bin目录中。
@@ -87,7 +87,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 bin]# ll python*
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=2.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=2.png)
 
 
 如果没有安装python3.9.13，则需要按如下步骤安装。
@@ -100,7 +100,7 @@ boost_1_80_0(tar.gz)
  centos下默认的gcc、g++版本是4.8.5。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=m_1.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=m_1.png)
 
 
 但如果系统没有gcc、g++，则需要安装:
@@ -115,7 +115,7 @@ boost_1_80_0(tar.gz)
 
      [root@centos7 Downloads]# cmake -version
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=m_2.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=m_2.png)
 
 
 说明已安装cmake-3.4.1。
@@ -138,7 +138,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 cmake-3.4.1]# ./configure
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=m_3.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=m_3.png)
 
 
 (3) 编译、安装cmake：
@@ -167,7 +167,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 bin]# yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=3.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=3.png)
 
 
 如果不安装相关依赖包，在安装python3时会报找不到zlib、SSL等一连串错误！
@@ -184,7 +184,7 @@ boost_1_80_0(tar.gz)
 可手动下载到Downloads文件夹，下载链接：https://www.python.org/downloads/source/
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=4.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=4.png)
 
 
 或者wget命令下载到Downloads文件夹：
@@ -217,7 +217,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 Python-3.9.13]# ./configure --prefix=/usr/local/python3
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=5.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=5.png)
 
 
 ##### 注意：
@@ -246,7 +246,7 @@ boost_1_80_0(tar.gz)
 
 执行完毕，就可以切换到/usr/local/python3/bin目录去查看了。
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=6.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=6.png)
 
 
 ##### 步骤四：创建软链接
@@ -266,7 +266,7 @@ boost_1_80_0(tar.gz)
 
      [root@centos7 bin]# ln -s /usr/local/python3/bin/python3.9 /usr/bin/python
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=7.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=7.png)
 
 
 ##### #3. 检查python版本
@@ -275,7 +275,7 @@ boost_1_80_0(tar.gz)
  [root@centos7 bin]# python -V  
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=8.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=8.png)
 
 
 软链接创建成功。
@@ -295,7 +295,7 @@ boost_1_80_0(tar.gz)
 
 下载链接：https://www.boost.org/users/history/version_1_80_0.html
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=9.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=9.png)
 
 
 或者wget命令下载到Downloads文件夹：
@@ -327,7 +327,7 @@ boost_1_80_0(tar.gz)
      [root@centos7 boost_1_80_0]# ./bootstrap.sh --with-python=/usr/local/python3
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=10.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=10.png)
 
 
 ##### 步骤四：安装
@@ -339,19 +339,19 @@ boost_1_80_0(tar.gz)
      [root@centos7 boost_1_80_0]# ./b2 --toolset=gcc-4.8.5 --with-python include="/usr/local/python3/include/python3.9/" --with-system --with-thread --with-date_time --with-chrono
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=11.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=11.png)
 
 
 ##### boost目录下会生成stage文件夹，/stage/lib就是C++所需的python3的lib文件。至此boost.python3库编译完成。如下图所示：
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=12.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=12.png)
 
 
 ##### 编译生成的 /usr/local/boost_1_80_0/stage/lib文件，如下图所示：
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=13.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=13.png)
 
 
 ### 4. 编译source
@@ -375,7 +375,7 @@ xtp_api_python-master/source下有封装api的python源码。
 注意：设置python目录及boost库目录要正确，必须为解压缩后的路径。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=14.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=14.png)
 
 
 ##### 步骤二. 执行build.sh
@@ -390,13 +390,13 @@ xtp_api_python-master/source下有封装api的python源码。
  [root@centos7 xtp_python3_2.2.39.3]# ./build.sh
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=15.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=15.png)
 
 
 ##### 执行完毕后，该目录会生成vnxtpquote.so和vnxtptrader.so库文件。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=16.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=16.png)
 
 
 ### 5. 运行Demo
@@ -417,13 +417,13 @@ xtp_api_python-master/source下有封装api的python源码。
  （3）最后将/bin/test中的两个脚本文件 quotetest.py 和 tradertest.py 拷贝至 运行平台路径下。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=17.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=17.png)
 
 
  （4）如果测试行情，则修改quotetest.py文件，改为实际使用的 ip、port、user、password、local_ip，然后运行quotetest.py。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=18.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=18.png)
 
 
 ###### 命令提示符方式如下：
@@ -473,19 +473,19 @@ boost_1_80_0 (64位.7z)
 说明：python3开始使用的是Anaconda3，但是在编译boost时提示错误，无法完成编译，所以最终选择的是64位python3.9.13。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_1.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_1.png)
 
 
 ##### 步骤二：安装python
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_2.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_2.png)
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_3.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_3.png)
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_4.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_4.png)
 
 
 ##### 步骤三：查看python版本
@@ -493,7 +493,7 @@ boost_1_80_0 (64位.7z)
 
 安装成功后，打开cmd进入命令提示符，输入：python --version
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_5.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_5.png)
 
 
 ### 3. 安装64位boost_1_80_0
@@ -508,7 +508,7 @@ boost_1_80_0 (64位.7z)
 ##### #1. 官网选择历史版本
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_6.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_6.png)
 
 
 或直接从官网链接下载
@@ -534,7 +534,7 @@ boost_1_80_0 (64位.7z)
 以VS2015版本64位为例，打开64位的编译终端，注意：以“管理员身份运行”。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_7.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_7.png)
 
 
 ##### 步骤一：执行bootstrap.bat
@@ -563,10 +563,10 @@ boost_1_80_0 (64位.7z)
 注意：较高版本的boost，运行成功只会生成b2.exe，不会生成bjam.exe。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_8.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_8.png)
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_9.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_9.png)
 
 
 ##### 步骤二： 编译，生成64位的静态库
@@ -578,7 +578,7 @@ boost_1_80_0 (64位.7z)
      D:\MyThird\boost_1_80_0>b2 --toolset=msvc-14.0 --with-python --with-thread --with-date_time --build-type=complete address-model=64
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_10.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_10.png)
 
 
 说明：
@@ -593,13 +593,13 @@ boost_1_80_0 (64位.7z)
 
 （4） --with-python，系统要能找安装的python3版本，直接在cmd里面输入python能弹出python3的具体版本信息。
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_11.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_11.png)
 
 
 ##### 执行成功后，在boost_1_80_0/stage/lib/下就是C++所需python的lib文件。至此boost.python库编译完成。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_12.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_12.png)
 
 
 ### 6. 使用CMake生成工程
@@ -623,7 +623,7 @@ boost_1_80_0 (64位.7z)
 ##### 步骤二：修改CMakeLists.txt
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_13.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_13.png)
 
 
 ##### 步骤三：Cmake配置
@@ -638,7 +638,7 @@ boost_1_80_0 (64位.7z)
 （3）点击Configure按钮，选择VS版本，同编译boost.python库的vs版本一致。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_14.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_14.png)
 
 
 ##### 步骤四：Cmake生成工程
@@ -647,7 +647,7 @@ boost_1_80_0 (64位.7z)
 点击Genertate按钮，执行成功后，可进入build文件夹查看生成的C++工程。
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397168373761&imagePath=w_15.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918452084737&imagePath=w_15.png)
 
 
 ### 7. 编译source

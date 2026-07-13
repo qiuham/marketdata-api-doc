@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2074064397231288321
+id: zhongtai-xtp-2076482918556942337
 title: QuoteAPI使用UDP常见问题
-doc_id: 2074064397231288321
+doc_id: 2076482918556942337
 doc_category: 使用建议
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397231288321'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2076482918556942337'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-07-06
+updated_at: 2026-07-13
 ---
 
 # QuoteAPI使用UDP常见问题

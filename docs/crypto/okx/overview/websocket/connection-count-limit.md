@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-websocket-connection-count-limit
 anchor_id: overview-websocket-connection-count-limit
 api_type: WebSocket
-updated_at: 2026-07-12 19:14:56.648557
+updated_at: 2026-07-13 19:26:52.395113
 ---
 
 # Connection count limit

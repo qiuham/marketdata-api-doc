@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-history-of-sub-account-transfer
 anchor_id: sub-account-rest-api-get-history-of-sub-account-transfer
 api_type: REST
-updated_at: 2026-07-12 19:17:25.927037
+updated_at: 2026-07-13 19:29:21.265762
 ---
 
 # Get history of sub-account transfer

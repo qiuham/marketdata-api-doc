@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2074064397302591489
+id: zhongtai-xtp-2076482918653411329
 title: 上交所新债券Level2行情说明
-doc_id: 2074064397302591489
+doc_id: 2076482918653411329
 doc_category: 使用建议
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2074064397302591489'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2076482918653411329'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-07-06
+updated_at: 2026-07-13
 ---
 
 # 上交所新债券Level2行情说明
@@ -27,11 +27,11 @@ updated_at: 2026-07-06
 ### 1.1 快照结构体
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=1.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=1.jpg)
 #### （1）新增快照数据类型 XTP_MARKETDATA_TYPE_V2
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=2.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=2.jpg)
 
 此字段在原有的快照数据类型基础上做了更详细的划分，以便于客户使用。
 
@@ -50,7 +50,7 @@ XTPMD.data_type_v2 = XTP_MARKETDATA_V2_BOND 时，XTPMD.bond 有效；
 
 仅在 XTPMD.data_type_v2 = XTP_MARKETDATA_V2_BOND 时生效。
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=3.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=3.jpg)
 
 ### 1.2 XTPMD.ticker_status 含义变化
 
@@ -105,16 +105,16 @@ XTPMD.data_type_v2 = XTP_MARKETDATA_V2_BOND 时，XTPMD.bond 有效；
 ### 2.1 逐笔结构体
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=4.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=4.jpg)
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=5.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=5.jpg)
 
 逐笔行情结构体 XTPTBT 中新增了逐笔状态订单 XTPTBT.state
 
 ### 2.2 逐笔数据枚举类型
 
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2074064397302591489&imagePath=6.jpg)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2076482918653411329&imagePath=6.jpg)
 
 XTP_TBT_TYPE 新增了逐笔状态订单类型
 
