@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-cancel-order
 anchor_id: order-book-trading-trade-post-cancel-order
 api_type: API
-updated_at: 2026-07-13 19:27:22.279152
+updated_at: 2026-07-14 19:18:58.153515
 ---
 
 # POST / Cancel order
@@ -89,7 +89,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Timestamp when the order request processing is finished by our system, Unix timestamp format in milliseconds, e.g. `1597026383085`  
+> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
 inTime | String | Timestamp at REST gateway when the request is received, Unix timestamp format in microseconds, e.g. `1597026383085123`   
@@ -181,7 +181,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 客户自定义订单ID  
-> ts | String | 系统完成订单请求处理的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
+> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  
 inTime | String | REST网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`   

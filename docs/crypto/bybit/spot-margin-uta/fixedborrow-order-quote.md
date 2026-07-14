@@ -2,12 +2,12 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-quote
 api_type: REST
-updated_at: 2026-07-13 19:04:31.203359
+updated_at: 2026-07-14 18:56:51.605874
 ---
 
 # Get Flexible Available Inventory
 
-Retrieve the flexible available inventory for a specified cryptocurrency in spot margin trading. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit).
+Retrieve the flexible available inventory for a specified cryptocurrency in spot margin trading. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers)).
 
 info
 
@@ -30,7 +30,7 @@ currency| **true**|  string| Coin name, uppercase only. e.g. `BTC`
 Parameter| Type| Comments  
 ---|---|---  
 currency| string| Coin name  
-availableInventory| string| Available inventory for the specified coin. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit)  
+availableInventory| string| Available inventory for the specified coin. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers))  
 updateTime| string| Last update timestamp in milliseconds  
   
 * * *
@@ -79,7 +79,7 @@ updateTime| string| Last update timestamp in milliseconds
 
 # 查詢靈活借貸可借額度
 
-查詢現貨槓桿交易中指定幣種的靈活借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限）。
+查詢現貨槓桿交易中指定幣種的靈活借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`）。
 
 信息
 
@@ -102,7 +102,7 @@ currency| **true**|  string| 幣種名稱，僅大寫。如 `BTC`
 參數| 類型| 說明  
 ---|---|---  
 currency| string| 幣種名稱  
-availableInventory| string| 指定幣種的可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限）  
+availableInventory| string| 指定幣種的可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`）  
 updateTime| string| 最後更新時間戳（毫秒）  
   
 * * *

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-instruments-channel
 anchor_id: public-data-websocket-instruments-channel
 api_type: WebSocket
-updated_at: 2026-07-13 19:28:54.679027
+updated_at: 2026-07-14 19:20:28.711619
 ---
 
 # Instruments channel
@@ -206,40 +206,32 @@ data | Array of objects | Subscribed data
 Only applicable to `FUTURES`/`SWAP`/`OPTION`  
 > groupId | String | Instrument trading fee group ID  
 Spot:  
-`1`: Spot USDT  
-`2`: Spot USDC & Crypto  
 `3`: Spot TRY  
-`4`: Spot EUR  
 `5`: Spot BRL  
 `7`: Spot AED  
 `8`: Spot AUD  
-`9`: Spot USD  
 `10`: Spot SGD  
 `11`: Spot zero  
 `12`: Spot group one  
 `13`: Spot group two  
 `14`: Spot group three  
 `15`: Spot special rule  
+`17`: Spot stablecoin  
   
 Expiry futures:  
-`1`: Expiry futures crypto-margined  
-`2`: Expiry futures USDT-margined  
-`3`: Expiry futures USDC-margined  
-`4`: Expiry futures premarket  
 `5`: Expiry futures group one  
 `6`: Expiry futures group two  
+`8`: XPERP group two  
+`10`: XPERP RWA group two  
   
 Perpetual futures:  
-`1`: Perpetual futures crypto-margined  
-`2`: Perpetual futures USDT-margined  
-`3`: Perpetual futures USDC-margined  
 `4`: Perpetual futures group one  
 `5`: Perpetual futures group two  
-`6`: Stock perpetual futures   
+`6`: SWAP RWA group one  
+`7`: SWAP RWA group two  
   
 Options:  
 `1`: Options crypto-margined  
-`2`: Options USDC-margined  
   
 **instType and groupId should be used together to determine a trading fee group. Users should use this endpoint together with[fee rates endpoint](/docs-v5/en/#trading-account-rest-api-get-fee-rates) to get the trading fee of a specific symbol.**   
   
@@ -559,40 +551,32 @@ data | Array of objects | 订阅的数据
 > uly | String | 标的指数，如 `BTC-USD`，仅适用于`交割`/`永续`/`期权`  
 > groupId | String | 交易产品手续费分组ID  
 现货：  
-`1`：USDT现货  
-`2`：USDC及Crypto现货  
 `3`：TRY现货  
-`4`：EUR现货  
 `5`：BRL现货  
 `7`：AED现货  
 `8`：AUD现货  
-`9`：USD现货  
 `10`：SGD现货  
 `11`：零手续费现货  
 `12`：现货分组一  
 `13`：现货分组二  
 `14`：现货分组三  
 `15`: 现货特别分组  
+`17`：现货稳定币分组  
   
 交割合约：  
-`1`：币本位交割合约  
-`2`：USDT本位交割合约  
-`3`：USDC本位交割合约  
-`4`：盘前交易交割合约  
 `5`：交割合约分组一  
 `6`：交割合约分组二  
+`8`：XPERP分组二  
+`10`：XPERP RWA分组二  
   
 永续合约：  
-`1`：币本位永续合约  
-`2`：USDT本位永续合约  
-`3`：USDC本位永续合约  
 `4`：永续合约分组一  
 `5`：永续合约分组二  
-`6`：股票永续合约  
+`6`：SWAP RWA分组一  
+`7`：SWAP RWA分组二  
   
 期权：  
 `1`：币本位期权  
-`2`：USDC本位期权  
   
 **用户需要同时使用instType和groupId来确定一个交易产品的交易手续费分组；用户应该将此接口和[获取当前账户交易手续费费率](/docs-v5/zh/#trading-account-rest-api-get-fee-rates)一起使用，以获取特定交易产品的手续费率**   
   

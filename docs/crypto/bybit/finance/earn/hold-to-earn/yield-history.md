@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/yield-history
 api_type: REST
-updated_at: 2026-07-13 19:01:07.450292
+updated_at: 2026-07-14 18:53:37.284183
 ---
 
 # Get Airdrop Daily PnL Records

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-amend-multiple-orders
 anchor_id: order-book-trading-trade-post-amend-multiple-orders
 api_type: API
-updated_at: 2026-07-13 19:27:23.230991
+updated_at: 2026-07-14 19:18:59.095479
 ---
 
 # POST / Amend multiple orders
@@ -189,7 +189,7 @@ msg | String | The error message, empty if the code is 0
 data | Array of objects | Array of objects contains the response results  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Timestamp when the order request processing is finished by our system, Unix timestamp format in milliseconds, e.g. `1597026383085`  
+> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
 > reqId | String | Client Request ID as assigned by the client for order amendment.  
 > sCode | String | The code of the event execution result, `0` means success.  
 > sMsg | String | Rejection message if the request is unsuccessful.  
@@ -379,7 +379,7 @@ msg | String | 错误信息，代码为0时，该字段为空
 data | Array of objects | 包含结果的对象数组  
 > ordId | String | 订单ID  
 > clOrdId | String | 用户自定义ID  
-> ts | String | 系统完成订单请求处理的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
+> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
 > reqId | String | 用户自定义修改事件ID  
 > sCode | String | 事件执行结果的code，0代表成功  
 > sMsg | String | 事件执行失败时的msg  

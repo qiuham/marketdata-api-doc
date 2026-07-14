@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-mmp
 anchor_id: trading-account-rest-api-set-mmp
 api_type: REST
-updated_at: 2026-07-13 19:27:14.058090
+updated_at: 2026-07-14 19:18:50.743537
 ---
 
 # Set MMP
@@ -18,7 +18,7 @@ What is MMP?
 Market Maker Protection (MMP) is an automated mechanism for market makers to pull their quotes when their executions exceed a certain threshold(`qtyLimit`) within a certain time frame(`timeInterval`). Once mmp is triggered, any pre-existing mmp pending orders(`mmp` and `mmp_and_post_only` orders) will be automatically canceled, and new orders tagged as MMP will be rejected for a specific duration(`frozenInterval`), or until manual reset by makers.  
   
 How to enable MMP?  
-Please send an email to institutional@okx.com or contact your business development (BD) manager to apply for MMP. The initial threshold will be upon your request. 
+Please send an email to institutional@okx.com or contact your business development (BD) manager to apply for MMP. The initial threshold will be upon your request.  MMP is configured individually per instrument family (`instFamily`). Enabling MMP for one instrument family does **not** automatically extend to others. For example, setting up MMP for `BTC-USD` does not cover `ETH-USD` or `SOL-USD` — each must be configured separately via this endpoint. 
 
 #### Rate Limit: 2 requests per 10 seconds
 
@@ -94,7 +94,7 @@ qtyLimit | String | Trade qty limit in number of contracts
 做市商保护(MMP)机制保护做市商在一定时间内成交过多。当做市商保护触发时，即做市商在一定时间内(`timeInterval`)成交超过某阈值(`qtyLimit`)，系统会自动撤销所有MMP挂单(`mmp`和`mmp_and_post_only`挂单)，拒绝任何新的MMP订单直到某个时间(MMP最近一次触发时间+`frozenInterval`)或做市商主动重置。  
   
 如何申请MMP?  
-请发邮件至 institutional@okx.com 或者联系您的客户经理进行申请。 
+请发邮件至 institutional@okx.com 或者联系您的客户经理进行申请。  MMP 按交易品种（`instFamily`）单独配置。为某一交易品种启用 MMP **不会** 自动延伸至其他品种。例如，为 `BTC-USD` 配置 MMP 并不涵盖 `ETH-USD` 或 `SOL-USD`，需分别调用此接口为每个品种单独设置。 
 
 #### 限速：2次/10s
 

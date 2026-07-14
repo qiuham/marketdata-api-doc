@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-historical-market-data
 anchor_id: public-data-rest-api-get-historical-market-data
 api_type: REST
-updated_at: 2026-07-13 19:28:53.558427
+updated_at: 2026-07-14 19:20:27.603078
 ---
 
 # Get historical market data

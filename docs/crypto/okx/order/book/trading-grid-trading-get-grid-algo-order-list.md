@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-grid-algo-order-list
 anchor_id: order-book-trading-grid-trading-get-grid-algo-order-list
 api_type: API
-updated_at: 2026-07-13 19:27:38.609620
+updated_at: 2026-07-14 19:19:14.171132
 ---
 
 # GET / Grid algo order list

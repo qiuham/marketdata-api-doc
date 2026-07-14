@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-on-chain-earn
 anchor_id: financial-product-on-chain-earn
 api_type: API
-updated_at: 2026-07-13 19:29:23.419513
+updated_at: 2026-07-14 19:20:56.795651
 ---
 
 # On-chain earn

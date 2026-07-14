@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-reset-mmp-status
 anchor_id: trading-account-rest-api-reset-mmp-status
 api_type: REST
-updated_at: 2026-07-13 19:27:13.748210
+updated_at: 2026-07-14 19:18:50.432551
 ---
 
 # Reset MMP Status
@@ -12,6 +12,8 @@ You can unfreeze by this endpoint once MMP is triggered.
   
   
 Only applicable to Option in Portfolio Margin mode, and MMP privilege is required.
+
+In the demo trading environment, MMP configurations may be periodically reset by the system. If your MMP status is unexpectedly reset in demo trading, please contact your BD manager or reach out to institutional@okx.com. 
 
 #### Rate Limit: 5 requests per 2 seconds
 
@@ -70,6 +72,8 @@ result | Boolean | Result of the request `true`, `false`
 一旦 MMP 被触发，可以使用该接口解冻。  
 仅适用于组合保证金账户模式下的期权订单，且有 MMP 权限。  
   
+在模拟盘环境中，MMP 配置可能会被系统定期重置。若您的模拟盘 MMP 状态被意外重置，请联系您的客户经理或发邮件至 institutional@okx.com。 
+
 #### 限速：5次/2s
 
 #### 限速规则：User ID

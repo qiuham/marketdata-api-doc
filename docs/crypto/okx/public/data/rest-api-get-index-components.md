@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-index-components
 anchor_id: public-data-rest-api-get-index-components
 api_type: REST
-updated_at: 2026-07-13 19:28:52.924452
+updated_at: 2026-07-14 19:20:26.976288
 ---
 
 # Get index components
@@ -99,9 +99,9 @@ ts | String | Data generation time, Unix timestamp format in milliseconds, e.g. 
 components | Array of objects | Components  
 > exch | String | Name of Exchange  
 > symbol | String | Name of Exchange Trading Pairs  
-> symPx | String | Price of Exchange Trading Pairs  
+> symPx | String | Price of the exchange trading pair  
 > wgt | String | Weights  
-> cnvPx | String | Price converted to index
+> cnvPx | String | Component price used for index calculation. Derived from `symPx` after configured processing, which may include quote currency conversion, multiplier adjustment (e.g. ×10 or ×0.1), or EMA smoothing. May differ from `symPx`.
 
 ---
 
@@ -200,4 +200,4 @@ components | String | 成分
 > symbol | String | 采集的币对名称  
 > symPx | String | 采集的币对价格  
 > wgt | String | 权重  
-> cnvPx | String | 换算成指数后的价格
+> cnvPx | String | 参与指数计算的成分价格，由 `symPx` 经配置处理后得出，处理可能包括报价单位换算、倍数调整（如 ×10 或 ×0.1）或 EMA 平滑，因此可能与 `symPx` 不同

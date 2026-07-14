@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account
 anchor_id: trading-account
 api_type: API
-updated_at: 2026-07-13 19:26:59.132125
+updated_at: 2026-07-14 19:18:36.132055
 ---
 
 # Trading Account
@@ -116,6 +116,9 @@ instId | String | No | Instrument ID
                 "uly": "",
                 "instIdCode": 1000000000,   
                 "instCategory": "1",
+                "initPxLmtPct": "0.05",
+                "floatPxLmtPct": "0.03",
+                "maxPxLmtPct": "0.15",
                 "upcChg": [
                     {
                         "param": "tickSz",
@@ -140,40 +143,32 @@ uly | String | Underlying, e.g. `BTC-USD`
 Only applicable to `MARGIN/FUTURES`/`SWAP`/`OPTION`  
 groupId | String | Instrument trading fee group ID  
 Spot:  
-`1`: Spot USDT  
-`2`: Spot USDC & Crypto  
 `3`: Spot TRY  
-`4`: Spot EUR  
 `5`: Spot BRL  
 `7`: Spot AED  
 `8`: Spot AUD  
-`9`: Spot USD  
 `10`: Spot SGD  
 `11`: Spot zero  
 `12`: Spot group one  
 `13`: Spot group two  
 `14`: Spot group three  
 `15`: Spot special rule  
+`17`: Spot stablecoin  
   
 Expiry futures:  
-`1`: Expiry futures crypto-margined  
-`2`: Expiry futures USDT-margined  
-`3`: Expiry futures USDC-margined  
-`4`: Expiry futures premarket  
 `5`: Expiry futures group one  
 `6`: Expiry futures group two  
+`8`: XPERP group two  
+`10`: XPERP RWA group two  
   
 Perpetual futures:  
-`1`: Perpetual futures crypto-margined  
-`2`: Perpetual futures USDT-margined  
-`3`: Perpetual futures USDC-margined  
 `4`: Perpetual futures group one  
-`5`: Perpetual futures group two   
-`6`: Stock perpetual futures   
+`5`: Perpetual futures group two  
+`6`: SWAP RWA group one  
+`7`: SWAP RWA group two  
   
 Options:  
 `1`: Options crypto-margined  
-`2`: Options USDC-margined  
   
 **instType and groupId should be used together to determine a trading fee group. Users should use this endpoint together with[fee rates endpoint](/docs-v5/en/#trading-account-rest-api-get-fee-rates) to get the trading fee of a specific symbol.**   
   
@@ -5302,6 +5297,8 @@ You can unfreeze by this endpoint once MMP is triggered.
 
 Only applicable to Option in Portfolio Margin mode, and MMP privilege is required.
 
+In the demo trading environment, MMP configurations may be periodically reset by the system. If your MMP status is unexpectedly reset in demo trading, please contact your BD manager or reach out to institutional@okx.com. 
+
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
@@ -5363,7 +5360,7 @@ What is MMP?
 Market Maker Protection (MMP) is an automated mechanism for market makers to pull their quotes when their executions exceed a certain threshold(`qtyLimit`) within a certain time frame(`timeInterval`). Once mmp is triggered, any pre-existing mmp pending orders(`mmp` and `mmp_and_post_only` orders) will be automatically canceled, and new orders tagged as MMP will be rejected for a specific duration(`frozenInterval`), or until manual reset by makers.  
   
 How to enable MMP?  
-Please send an email to institutional@okx.com or contact your business development (BD) manager to apply for MMP. The initial threshold will be upon your request. 
+Please send an email to institutional@okx.com or contact your business development (BD) manager to apply for MMP. The initial threshold will be upon your request.  MMP is configured individually per instrument family (`instFamily`). Enabling MMP for one instrument family does **not** automatically extend to others. For example, setting up MMP for `BTC-USD` does not cover `ETH-USD` or `SOL-USD` — each must be configured separately via this endpoint. 
 
 #### Rate Limit: 2 requests per 10 seconds
 
@@ -7976,6 +7973,9 @@ instId | String | 否 | 产品ID
                 "uly": "",
                 "instIdCode": 1000000000,
                 "instCategory": "1",
+                "initPxLmtPct": "0.05",
+                "floatPxLmtPct": "0.03",
+                "maxPxLmtPct": "0.15",
                 "upcChg": [
                     {
                         "param": "tickSz",
@@ -7999,40 +7999,32 @@ instId | String | 产品id， 如 `BTC-USDT`
 uly | String | 标的指数，如 `BTC-USD`，仅适用于`杠杆/交割/永续/期权`  
 groupId | String | 交易产品手续费分组ID  
 现货：  
-`1`：USDT现货  
-`2`：USDC及Crypto现货  
 `3`：TRY现货  
-`4`：EUR现货  
 `5`：BRL现货  
 `7`：AED现货  
 `8`：AUD现货  
-`9`：USD现货  
 `10`：SGD现货  
 `11`：零手续费现货  
 `12`：现货分组一  
 `13`：现货分组二  
 `14`：现货分组三  
 `15`: 现货特别分组  
+`17`：现货稳定币分组  
   
 交割合约：  
-`1`：币本位交割合约  
-`2`：USDT本位交割合约  
-`3`：USDC本位交割合约  
-`4`：盘前交易交割合约  
 `5`：交割合约分组一  
 `6`：交割合约分组二  
+`8`：XPERP分组二  
+`10`：XPERP RWA分组二  
   
 永续合约：  
-`1`：币本位永续合约  
-`2`：USDT本位永续合约  
-`3`：USDC本位永续合约  
 `4`：永续合约分组一  
 `5`：永续合约分组二  
-`6`：股票永续合约  
+`6`：SWAP RWA分组一  
+`7`：SWAP RWA分组二  
   
 期权：  
 `1`：币本位期权  
-`2`：USDC本位期权  
   
 **用户需要同时使用instType和groupId来确定一个交易产品的交易手续费分组；用户应该将此接口和[获取当前账户交易手续费费率](/docs-v5/zh/#trading-account-rest-api-get-fee-rates)一起使用，以获取特定交易产品的手续费率**   
   
@@ -13187,6 +13179,8 @@ collateralEnabled | Boolean | 是否为质押币
 一旦 MMP 被触发，可以使用该接口解冻。  
 仅适用于组合保证金账户模式下的期权订单，且有 MMP 权限。
 
+在模拟盘环境中，MMP 配置可能会被系统定期重置。若您的模拟盘 MMP 状态被意外重置，请联系您的客户经理或发邮件至 institutional@okx.com。 
+
 #### 限速：5次/2s
 
 #### 限速规则：User ID
@@ -13249,7 +13243,7 @@ false：重置失败
 做市商保护(MMP)机制保护做市商在一定时间内成交过多。当做市商保护触发时，即做市商在一定时间内(`timeInterval`)成交超过某阈值(`qtyLimit`)，系统会自动撤销所有MMP挂单(`mmp`和`mmp_and_post_only`挂单)，拒绝任何新的MMP订单直到某个时间(MMP最近一次触发时间+`frozenInterval`)或做市商主动重置。  
   
 如何申请MMP?  
-请发邮件至 institutional@okx.com 或者联系您的客户经理进行申请。 
+请发邮件至 institutional@okx.com 或者联系您的客户经理进行申请。  MMP 按交易品种（`instFamily`）单独配置。为某一交易品种启用 MMP **不会** 自动延伸至其他品种。例如，为 `BTC-USD` 配置 MMP 并不涵盖 `ETH-USD` 或 `SOL-USD`，需分别调用此接口为每个品种单独设置。 
 
 #### 限速：2次/10s
 

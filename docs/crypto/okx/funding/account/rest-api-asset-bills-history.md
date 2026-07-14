@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-asset-bills-history
 anchor_id: funding-account-rest-api-asset-bills-history
 api_type: REST
-updated_at: 2026-07-13 19:29:07.864910
+updated_at: 2026-07-14 19:20:41.570571
 ---
 
 # Asset bills history
@@ -201,6 +201,9 @@ type | String | No | Bill type
 `408`: Auto earn interest (USDG earn)  
 `476`: Transferred out to Cloud Exchange  
 `477`: Transferred in from Cloud Exchange  
+`509`: [OKUSD] Subscription  
+`511`: [OKUSD] Redemption  
+`516`: [OKUSD] Earnings  
 thirdPartyType | String | No | Third-party custody type. If not specified, defaults to `1` (for backward compatibility).  
 `1`: Copper  
 `2`: Komainu  
@@ -447,6 +450,9 @@ type | String | 否 | 账单类型
 `408`：自动赚币（USDG赚币）利息  
 `476`：云交易所转出  
 `477`：云交易所转入  
+`509`：[OKUSD] 申购  
+`511`：[OKUSD] 赎回  
+`516`：[OKUSD] 收益  
 thirdPartyType | String | 否 | 第三方托管类型。不填则默认为 `1`（向后兼容）。  
 `1`：Copper  
 `2`：Komainu  

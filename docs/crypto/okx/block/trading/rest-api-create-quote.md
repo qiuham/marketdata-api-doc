@@ -3,14 +3,14 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-create-quote
 anchor_id: block-trading-rest-api-create-quote
 api_type: REST
-updated_at: 2026-07-13 19:28:22.027698
+updated_at: 2026-07-14 19:19:56.749121
 ---
 
 # Create Quote
 
 Allows the user to Quote an RFQ that they are a counterparty to. The user MUST quote the entire RFQ and not part of the legs or part of the quantity. Partial quoting is not allowed.  
   
-Only one active quote is allowed per RFQ at a time. Submitting a new quote for the same `rfqId` will automatically cancel the existing active quote before the new one is created.
+Only one active quote is allowed per RFQ at a time. Submitting a new quote for the same `rfqId` will automatically cancel the existing active quote before the new one is created. Two-sided quoting (providing simultaneous bid and ask for the same RFQ) is not supported — only the most recently submitted quote remains active.
 
 #### Rate Limit: 50 requests per 2 seconds
 
@@ -227,7 +227,7 @@ The default value is the quote currency of the instId, for example: for `BTC-USD
 
 允许询价单指定的报价方进行报价，需要对整个询价单报价，不允许部分报价。  
   
-同一询价单（`rfqId`）下同一时间只能有一个有效报价单。针对同一 `rfqId` 提交新的报价单，会自动取消当前已有的有效报价单。
+同一询价单（`rfqId`）下同一时间只能有一个有效报价单。针对同一 `rfqId` 提交新的报价单，会自动取消当前已有的有效报价单。不支持双边报价（即同时持有买卖两个方向的有效报价），仅最新提交的报价单保持有效。
 
 #### 限速: 50次/2s
 

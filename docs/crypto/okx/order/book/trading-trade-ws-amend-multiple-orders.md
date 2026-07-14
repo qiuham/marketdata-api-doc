@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-amend-multiple-orders
 anchor_id: order-book-trading-trade-ws-amend-multiple-orders
 api_type: WebSocket
-updated_at: 2026-07-13 19:27:32.195084
+updated_at: 2026-07-14 19:19:07.901623
 ---
 
 # WS / Amend multiple orders
@@ -204,7 +204,7 @@ msg | String | Error message
 data | Array of objects | Data  
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
-> ts | String | Timestamp when the order request processing is finished by our system, Unix timestamp format in milliseconds, e.g. `1597026383085`  
+> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
 > reqId | String | Client Request ID as assigned by the client for order amendment   
 If the user provides reqId in the request, the corresponding reqId will be returned  
 > sCode | String | Order status code, `0` means success  
@@ -407,7 +407,7 @@ msg | String | 消息
 data | Array of objects | 请求成功后返回的数据  
 > ordId | String | 订单ID  
 > clOrdId | String | 由用户设置的订单ID  
-> ts | String | 系统完成订单请求处理的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
+> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
 > reqId | String | 用户提供的请求ID  
 如果用户在请求中提供reqId，则返回相应reqId  
 > sCode | String | 订单状态码，0 代表成功  

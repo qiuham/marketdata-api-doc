@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-07-13 19:03:21.478994
+updated_at: 2026-07-14 18:55:45.357779
 ---
 
 # Confirm New Risk Limit

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-place-multiple-orders
 anchor_id: order-book-trading-trade-ws-place-multiple-orders
 api_type: WebSocket
-updated_at: 2026-07-13 19:27:30.917045
+updated_at: 2026-07-14 19:19:06.648204
 ---
 
 # WS / Place multiple orders
@@ -267,7 +267,7 @@ data | Array of objects | Data
 > ordId | String | Order ID  
 > clOrdId | String | Client Order ID as assigned by the client  
 > tag | String | Order tag  
-> ts | String | Timestamp when the order request processing is finished by our system, Unix timestamp format in milliseconds, e.g. `1597026383085`  
+> ts | String | Order creation time. Unix timestamp format in milliseconds, e.g. `1597026383085`. Equivalent to `cTime` in the order channel.  
 > sCode | String | Order status code, `0` means success  
 > sMsg | String | Rejection or success message of event execution.  
 > subCode | String | Sub-code of sCode.  
@@ -526,7 +526,7 @@ data | Array of objects | 请求成功后返回的数据
 > ordId | String | 订单ID  
 > clOrdId | String | 由用户设置的订单ID  
 > tag | String | 订单标签  
-> ts | String | 系统完成订单请求处理的时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`  
+> ts | String | 订单创建时间，Unix时间戳的毫秒数格式，如 `1597026383085`。与订单频道中的 `cTime` 相同。  
 > sCode | String | 订单状态码，0 代表成功  
 > sMsg | String | 事件执行失败或成功时的msg  
 > subCode | String | sCode 的子码。  

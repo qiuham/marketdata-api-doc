@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-websocket-positions-channel
 anchor_id: trading-account-websocket-positions-channel
 api_type: WebSocket
-updated_at: 2026-07-13 19:27:17.696155
+updated_at: 2026-07-14 19:18:54.296705
 ---
 
 # Positions channel
