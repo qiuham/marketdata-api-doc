@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-reset-the-api-key-of-a-sub-account
 anchor_id: sub-account-rest-api-reset-the-api-key-of-a-sub-account
 api_type: REST
-updated_at: 2026-07-14 19:20:53.236687
+updated_at: 2026-07-15 19:20:31.503080
 ---
 
 # Reset the API Key of a sub-account

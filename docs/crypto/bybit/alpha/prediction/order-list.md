@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/order-list
 api_type: REST
-updated_at: 2026-07-14 18:50:00.471507
+updated_at: 2026-07-15 18:48:29.980743
 ---
 
 # Get Position History

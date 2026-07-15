@@ -2,15 +2,18 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills
 api_type: Trading
-updated_at: 2026-07-14 19:08:02.341210
+updated_at: 2026-07-15 19:07:36.871471
 ---
 
 # List Fills
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/fills`
 
-
-Get a list of fills filtered by optional query parameters (`product_id`, `order_id`, etc).
+Orders
+    
+    # List Fills
+    
+    Get a list of fills filtered by optional query parameters (product_id, order_id, etc).
     
     
     curl --request GET \
