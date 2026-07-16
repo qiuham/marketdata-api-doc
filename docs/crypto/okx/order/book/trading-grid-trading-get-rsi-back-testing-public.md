@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-rsi-back-testing-public
 anchor_id: order-book-trading-grid-trading-get-rsi-back-testing-public
 api_type: API
-updated_at: 2026-07-15 19:18:54.300401
+updated_at: 2026-07-16 19:20:01.197876
 ---
 
 # GET / RSI back testing (public)
@@ -13,8 +13,6 @@ Authentication is not required for this public endpoint.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -80,8 +78,6 @@ triggerNum | String | Trigger number
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

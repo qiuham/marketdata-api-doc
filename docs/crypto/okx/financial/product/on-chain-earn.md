@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-on-chain-earn
 anchor_id: financial-product-on-chain-earn
 api_type: API
-updated_at: 2026-07-15 19:20:35.211492
+updated_at: 2026-07-16 19:21:42.397473
 ---
 
 # On-chain earn
@@ -15,8 +15,6 @@ Only the assets in the funding account can be used for purchase. [More details](
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -136,8 +134,6 @@ If fast redemption is not supported, it will return ''.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/purchase`
@@ -225,8 +221,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/redeem`
@@ -305,8 +299,6 @@ After cancelling, returning funds will go to the funding account.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/cancel`
@@ -376,8 +368,6 @@ tag | String | Order tag
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -570,8 +560,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/staking-defi/orders-history`
@@ -690,8 +678,6 @@ tag | String | Order tag
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -812,8 +798,6 @@ fastRedemptionDailyLimit | String | 快速赎回每日最高限额
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/purchase`
@@ -901,8 +885,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/redeem`
@@ -981,8 +963,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/cancel`
@@ -1052,8 +1032,6 @@ tag | String | 订单标签
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -1245,8 +1223,6 @@ tag | String | 订单标签
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

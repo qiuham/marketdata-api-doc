@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#announcement-get-announcement-types
 anchor_id: announcement-get-announcement-types
 api_type: API
-updated_at: 2026-07-15 19:20:56.680537
+updated_at: 2026-07-16 19:22:03.857299
 ---
 
 # GET / Announcement types
@@ -16,8 +16,6 @@ The response is restricted based on your request IP.
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -72,8 +70,6 @@ annTypeDesc | String | Announcement type description
 #### 限速：1次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

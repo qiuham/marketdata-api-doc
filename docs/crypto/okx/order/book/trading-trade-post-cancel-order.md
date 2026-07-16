@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-cancel-order
 anchor_id: order-book-trading-trade-post-cancel-order
 api_type: API
-updated_at: 2026-07-15 19:18:34.489982
+updated_at: 2026-07-16 19:19:41.366935
 ---
 
 # POST / Cancel order
@@ -15,8 +15,6 @@ Cancel an incomplete order.
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -108,8 +106,6 @@ Cancel order returns with sCode equal to 0. It is not strictly considered that t
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-amend-order
 anchor_id: spread-trading-rest-api-amend-order
 api_type: REST
-updated_at: 2026-07-15 19:19:46.312995
+updated_at: 2026-07-16 19:20:53.352612
 ---
 
 # Amend order
@@ -13,8 +13,6 @@ Amend an incomplete order.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -89,8 +87,6 @@ It is not strictly considered that the order has been amended. It only means tha
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

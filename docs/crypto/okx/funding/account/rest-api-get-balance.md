@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-balance
 anchor_id: funding-account-rest-api-get-balance
 api_type: REST
-updated_at: 2026-07-15 19:20:17.879118
+updated_at: 2026-07-16 19:21:25.025149
 ---
 
 # Get balance
@@ -15,8 +15,6 @@ Only asset information of a currency with a balance greater than 0 will be retur
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -89,8 +87,6 @@ availBal | String | Available balance
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

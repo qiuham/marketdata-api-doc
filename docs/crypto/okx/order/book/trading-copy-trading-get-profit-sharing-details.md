@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-profit-sharing-details
 anchor_id: order-book-trading-copy-trading-get-profit-sharing-details
 api_type: API
-updated_at: 2026-07-15 19:19:13.880265
+updated_at: 2026-07-16 19:20:20.762565
 ---
 
 # GET / Profit sharing details
@@ -13,8 +13,6 @@ The leading trader gets profits shared details for the last 3 months.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -89,8 +87,6 @@ ts | String | Profit sharing time.
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

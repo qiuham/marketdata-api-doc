@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-request-for-redeem-quote
 anchor_id: financial-product-dual-investment-post-request-for-redeem-quote
 api_type: API
-updated_at: 2026-07-15 19:20:51.231388
+updated_at: 2026-07-16 19:21:58.432592
 ---
 
 # POST / Request for redeem quote
@@ -13,8 +13,6 @@ Requests an early redemption quote for a live dual investment order. This is ste
 #### Rate Limit: 10 requests per 60 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -75,8 +73,6 @@ validUntil | String | Redeem quote valid until, Unix timestamp format in millise
 #### 限速：10次/60s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

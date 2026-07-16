@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-max-grid-quantity-public
 anchor_id: order-book-trading-grid-trading-get-max-grid-quantity-public
 api_type: API
-updated_at: 2026-07-15 19:18:54.610835
+updated_at: 2026-07-16 19:20:01.508673
 ---
 
 # GET / Max grid quantity (public)
@@ -16,8 +16,6 @@ Maximum grid quantity can be retrieved from this endpoint. Minimum grid quantity
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -76,8 +74,6 @@ maxGridQty | String | Maximum grid quantity
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

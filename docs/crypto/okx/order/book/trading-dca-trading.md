@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading
 anchor_id: order-book-trading-dca-trading
 api_type: API
-updated_at: 2026-07-15 19:18:56.657352
+updated_at: 2026-07-16 19:20:03.504876
 ---
 
 # DCA Trading
@@ -16,8 +16,6 @@ The API endpoints of `DCA Trading` require authentication.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -150,8 +148,6 @@ sMsg | String | Rejection message if the request is unsuccessful
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/amend-order-algo`
@@ -252,8 +248,6 @@ sMsg | String | Error message if the event execution failed
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/stop`
@@ -313,8 +307,6 @@ sMsg | String | Rejection message if the request is unsuccessful
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -478,8 +470,6 @@ Only applicable to `spot_dca`
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -650,8 +640,6 @@ Only applicable to `spot_dca`
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/dca/orders`
@@ -759,8 +747,6 @@ Only applicable to `spot_dca`
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/orders/manual-buy`
@@ -836,8 +822,6 @@ sMsg | String | Rejection message if the request is unsuccessful
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/settings/reinvestment`
@@ -897,8 +881,6 @@ sMsg | String | Rejection message if the request is unsuccessful
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/settings/take-profit`
@@ -956,8 +938,6 @@ sMsg | String | Error message if the event execution failed
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1053,8 +1033,6 @@ Only applicable to `spot_dca`
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/dca/cycle-list`
@@ -1124,8 +1102,6 @@ tpPx | String | Take-profit price
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/dca/margin/add`
@@ -1180,8 +1156,6 @@ sMsg | String | Error message if the event execution failed
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1246,8 +1220,6 @@ sMsg | String | Error message if the event execution failed
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1382,8 +1354,6 @@ sMsg | String | 事件执行失败时的msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/amend-order-algo`
@@ -1484,8 +1454,6 @@ sMsg | String | 事件执行失败时的msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/stop`
@@ -1545,8 +1513,6 @@ sMsg | String | 事件执行失败时的msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1709,8 +1675,6 @@ tradeQuoteCcy | String | 指定交易计价货币
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1880,8 +1844,6 @@ tradeQuoteCcy | String | 指定交易计价货币
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/dca/orders`
@@ -1988,8 +1950,6 @@ tradeQuoteCcy | String | 指定交易计价货币
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/orders/manual-buy`
@@ -2065,8 +2025,6 @@ sMsg | String | 事件执行失败时的 msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/settings/reinvestment`
@@ -2126,8 +2084,6 @@ sMsg | String | 事件执行失败时的 msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/settings/take-profit`
@@ -2185,8 +2141,6 @@ sMsg | String | 事件执行失败时的 msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2282,8 +2236,6 @@ tradeQuoteCcy | String | 指定交易计价货币
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/dca/cycle-list`
@@ -2352,8 +2304,6 @@ tpPx | String | 止盈价格
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/dca/margin/add`
@@ -2408,8 +2358,6 @@ sMsg | String | 事件执行失败时的 msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

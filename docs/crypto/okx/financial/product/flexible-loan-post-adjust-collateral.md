@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-adjust-collateral
 anchor_id: financial-product-flexible-loan-post-adjust-collateral
 api_type: API
-updated_at: 2026-07-15 19:20:48.373402
+updated_at: 2026-07-16 19:21:55.599181
 ---
 
 # POST / Adjust collateral
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:48.373402
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -82,8 +80,6 @@ code = `0` means your request has been accepted (It doesn't mean the request has
 #### 限速：5次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

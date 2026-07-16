@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-manual-borrow-repay
 anchor_id: trading-account-rest-api-manual-borrow-repay
 api_type: REST
-updated_at: 2026-07-15 19:18:21.427349
+updated_at: 2026-07-16 19:19:28.229299
 ---
 
 # Manual borrow / repay
@@ -13,8 +13,6 @@ Only applicable to `Spot mode` (enabled borrowing)
 #### Rate Limit: 1 request per 3 seconds
 
 #### Rate limit rule: Master Account User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -92,8 +90,6 @@ amt | String | Actual amount
 #### 限速：1次/3s
 
 #### 限速规则：Master Account User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

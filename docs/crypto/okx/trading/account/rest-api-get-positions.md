@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-positions
 anchor_id: trading-account-rest-api-get-positions
 api_type: REST
-updated_at: 2026-07-15 19:18:13.276734
+updated_at: 2026-07-16 19:19:19.855135
 ---
 
 # Get positions
@@ -13,8 +13,6 @@ Retrieve information on your positions. When the account is in `net` mode, `net`
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -258,8 +256,6 @@ As for portfolio margin account, the IMR and MMR of the position are calculated 
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

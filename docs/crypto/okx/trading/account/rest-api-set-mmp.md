@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-mmp
 anchor_id: trading-account-rest-api-set-mmp
 api_type: REST
-updated_at: 2026-07-15 19:18:26.665498
+updated_at: 2026-07-16 19:19:33.249519
 ---
 
 # Set MMP
@@ -23,8 +23,6 @@ Please send an email to institutional@okx.com or contact your business developme
 #### Rate Limit: 2 requests per 10 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -99,8 +97,6 @@ qtyLimit | String | Trade qty limit in number of contracts
 #### 限速：2次/10s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

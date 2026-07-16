@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-one-click-repay-history
 anchor_id: order-book-trading-trade-get-one-click-repay-history
 api_type: API
-updated_at: 2026-07-15 19:18:39.570002
+updated_at: 2026-07-16 19:19:46.464723
 ---
 
 # GET / One-click repay history
@@ -13,8 +13,6 @@ Get the history and status of one-click repay trades in the past 7 days. Only ap
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -93,8 +91,6 @@ uTime | String | Trade time, Unix timestamp format in milliseconds, e.g. 1597026
 #### 限速：1次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

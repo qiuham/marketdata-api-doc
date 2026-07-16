@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-account-configuration
 anchor_id: trading-account-rest-api-get-account-configuration
 api_type: REST
-updated_at: 2026-07-15 19:18:15.805972
+updated_at: 2026-07-16 19:19:22.393160
 ---
 
 # Get account configuration
@@ -13,8 +13,6 @@ Retrieve current account configuration.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -190,8 +188,6 @@ settleCcyList | String | Current account's USD-margined contract settle currency
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

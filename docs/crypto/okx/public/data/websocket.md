@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-07-15 19:20:06.263135
+updated_at: 2026-07-16 19:21:13.346427
 ---
 
 # WebSocket
@@ -261,8 +261,8 @@ Only applicable to `FUTURES`/`SWAP`/`OPTION`
 Only applicable to `SPOT` that are listed through call auctions, return "" in other cases (deprecated, use contTdSwTime)~~  
 > contTdSwTime | String | Continuous trading switch time. The switch time from call auction, prequote to continuous trading, Unix timestamp format in milliseconds. e.g. `1597026383085`.  
 Only applicable to `SPOT`/`MARGIN` that are listed through call auction or prequote, return "" in other cases.  
-> preMktSwTime | String | The time premarket swap switched to normal swap, Unix timestamp format in milliseconds, e.g. `1597026383085`.   
-Only applicable premarket `SWAP`  
+> preMktSwTime | String | The time a pre-market instrument switched to normal trading, Unix timestamp format in milliseconds, e.g. `1597026383085`.   
+Only applicable to pre-market `SWAP` and pre-market X-Perp `FUTURES`. Populated when a pre-market X-Perp converts to a normal X-Perp  
 > openType | String | Open type  
 `fix_price`: fix price opening  
 `pre_quote`: pre-quote  
@@ -305,9 +305,9 @@ Only applicable to `FUTURES`
 `settling`: Settling, only applicable to `EVENTS`  
 > ruleType | String | Trading rule types  
 `normal`: normal trading  
-`pre_market`: pre-market trading  
+`pre_market`: pre-market trading, including pre-market X-Perp `FUTURES`  
 `rebase_contract`: pre-market rebase contract  
-`xperp`: perpetual-style futures, only applicable to certain `FUTURES` contracts  
+`xperp`: perpetual-style futures, only applicable to certain `FUTURES` contracts. A pre-market X-Perp changes from `pre_market` to `xperp` after it converts to a normal X-Perp  
 > maxLmtSz | String | The maximum order quantity of a single limit order.  
 If it is a derivatives contract, the value is the number of contracts.  
 If it is `SPOT`/`MARGIN`, the value is the quantity in `base currency`.  
@@ -2636,8 +2636,8 @@ data | Array of objects | 订阅的数据
 仅适用于通过集合竞价方式上线的`币币`，其余情况返回""（已废弃，请使用contTdSwTime）~~  
 > contTdSwTime | String | 连续交易开始时间，从集合竞价、提前挂单切换到连续交易的时间，Unix时间戳格式，单位为毫秒。e.g. `1597026383085`。  
 仅适用于通过集合竞价或提前挂单上线的`SPOT`/`MARGIN`，在其他情况下返回""。  
-> preMktSwTime | String | 盘前永续合约转为普通永续合约的时间，Unix时间戳的毫秒数格式，如 `1597026383085`  
-仅适用于盘前`SWAP`  
+> preMktSwTime | String | 盘前交易产品切换为正常交易的时间，Unix时间戳的毫秒数格式，如 `1597026383085`  
+仅适用于盘前`SWAP` 与盘前 X-Perp `FUTURES`。当盘前 X-Perp 转换为正常 X-Perp 时填充  
 > openType | String | 开盘类型  
 `fix_price`: 定价开盘  
 `pre_quote`: 提前挂单  
@@ -2678,9 +2678,9 @@ data | Array of objects | 订阅的数据
 `settling`：结算中，仅适用于 `EVENTS`  
 > ruleType | String | 交易规则类型  
 `normal`：普通交易  
-`pre_market`：盘前交易  
+`pre_market`：盘前交易，含盘前 X-Perp `FUTURES`  
 `rebase_contract`：盘前变基合约  
-`xperp`：永续合约风格的交割合约，仅适用于部分 `FUTURES` 合约  
+`xperp`：永续合约风格的交割合约，仅适用于部分 `FUTURES` 合约。盘前 X-Perp 转换为正常 X-Perp 后，由 `pre_market` 变为 `xperp`  
 > maxLmtSz | String | 限价单的单笔最大委托数量  
 合约的数量单位是`张`，现货的数量单位是`交易货币`  
 > maxMktSz | String | 市价单的单笔最大委托数量  

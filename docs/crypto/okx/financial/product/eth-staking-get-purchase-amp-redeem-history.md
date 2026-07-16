@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-get-purchase-amp-redeem-history
 anchor_id: financial-product-eth-staking-get-purchase-amp-redeem-history
 api_type: API
-updated_at: 2026-07-15 19:20:39.278945
+updated_at: 2026-07-16 19:21:46.475018
 ---
 
 # GET / Purchase&Redeem history
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:39.278945
 #### Rate Limit: 6 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -102,8 +100,6 @@ estCompletedTime | String | Estimated completed time of redeem settlement, Unix 
 #### 限速：6 次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

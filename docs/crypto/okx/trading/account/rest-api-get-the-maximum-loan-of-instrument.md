@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-the-maximum-loan-of-instrument
 anchor_id: trading-account-rest-api-get-the-maximum-loan-of-instrument
 api_type: REST
-updated_at: 2026-07-15 19:18:18.306922
+updated_at: 2026-07-16 19:19:24.904371
 ---
 
 # Get the maximum loan of instrument
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:18.306922
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -119,8 +117,6 @@ side | String | Order side
 #### 限速：20 次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

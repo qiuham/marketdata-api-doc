@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-funds-transfer-state
 anchor_id: funding-account-rest-api-get-funds-transfer-state
 api_type: REST
-updated_at: 2026-07-15 19:20:19.132002
+updated_at: 2026-07-16 19:21:26.281173
 ---
 
 # Get funds transfer state
@@ -13,8 +13,6 @@ Retrieve the transfer state data of the last 2 weeks.
 #### Rate Limit: 10 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -125,8 +123,6 @@ state | String | Transfer state
 #### 限速：10 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

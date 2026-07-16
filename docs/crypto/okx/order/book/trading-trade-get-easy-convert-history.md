@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-easy-convert-history
 anchor_id: order-book-trading-trade-get-easy-convert-history
 api_type: API
-updated_at: 2026-07-15 19:18:38.633904
+updated_at: 2026-07-16 19:19:45.527324
 ---
 
 # GET / Easy convert history
@@ -13,8 +13,6 @@ Get the history and status of easy convert trades in the past 7 days.
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -106,8 +104,6 @@ uTime | String | Trade time, Unix timestamp format in milliseconds, e.g. `159702
 #### 限速：1次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

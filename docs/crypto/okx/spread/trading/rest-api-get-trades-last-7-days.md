@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-trades-last-7-days
 anchor_id: spread-trading-rest-api-get-trades-last-7-days
 api_type: REST
-updated_at: 2026-07-15 19:19:47.891066
+updated_at: 2026-07-16 19:20:54.935938
 ---
 
 # Get trades (last 7 days)
@@ -13,8 +13,6 @@ Retrieve historical transaction details **for the last 7 days**. Results are ret
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -145,8 +143,6 @@ msg | String | Error Message, the default is ""
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

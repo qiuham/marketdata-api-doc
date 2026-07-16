@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-create-quote
 anchor_id: block-trading-rest-api-create-quote
 api_type: REST
-updated_at: 2026-07-15 19:19:34.136712
+updated_at: 2026-07-16 19:20:41.099656
 ---
 
 # Create Quote
@@ -15,8 +15,6 @@ Only one active quote is allowed per RFQ at a time. Submitting a new quote for t
 #### Rate Limit: 50 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -232,8 +230,6 @@ The default value is the quote currency of the instId, for example: for `BTC-USD
 #### 限速: 50次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

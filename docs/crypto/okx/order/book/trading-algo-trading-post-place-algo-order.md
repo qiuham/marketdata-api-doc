@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-post-place-algo-order
 anchor_id: order-book-trading-algo-trading-post-place-algo-order
 api_type: API
-updated_at: 2026-07-15 19:18:45.436162
+updated_at: 2026-07-16 19:19:52.384740
 ---
 
 # POST / Place algo order
@@ -17,8 +17,6 @@ The algo order includes `trigger` order, `oco` order, `chase` order, `conditiona
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -438,8 +436,6 @@ tag | String | Order tag
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-buy-sell-quote
 anchor_id: funding-account-rest-api-get-buy-sell-quote
 api_type: REST
-updated_at: 2026-07-15 19:20:27.594832
+updated_at: 2026-07-16 19:21:34.752760
 ---
 
 # Get buy/sell quote
@@ -15,8 +15,6 @@ updated_at: 2026-07-15 19:20:27.594832
 #### Rate Limit: 1 request per 5 seconds
 
 #### Rate limit rule: Instrument ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -140,8 +138,6 @@ This feature is only available to Bahamas institutional users at the moment.
 #### 限速：1次/5s
 
 #### 限速规则：Instrument ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

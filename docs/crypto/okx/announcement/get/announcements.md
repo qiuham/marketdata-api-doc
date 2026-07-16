@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#announcement-get-announcements
 anchor_id: announcement-get-announcements
 api_type: API
-updated_at: 2026-07-15 19:20:56.370984
+updated_at: 2026-07-16 19:22:03.547559
 ---
 
 # GET / Announcements
@@ -28,8 +28,6 @@ For private endpoint, the response is restricted based on your country of reside
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID(Private) or IP(Public)
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -115,8 +113,6 @@ details | Array of objects | List of announcements
 #### 限速：5次/2s
 
 #### 限速规则：User ID(私有接口时) 或者 IP (公共接口时)
-
-#### 权限：读取
 
 #### HTTP请求
 

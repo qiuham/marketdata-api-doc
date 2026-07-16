@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-okusd
 anchor_id: financial-product-okusd
 api_type: API
-updated_at: 2026-07-15 19:20:43.347117
+updated_at: 2026-07-16 19:21:50.555562
 ---
 
 # OKUSD
@@ -18,8 +18,6 @@ Retrieve your remaining daily OKUSD subscription quota and both fast and standar
 #### Rate Limit: 2 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -102,8 +100,6 @@ Subscribe USDT to receive OKUSD at a 1:1 rate with no subscription fee. OKUSD is
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/okusd/subscribe`
@@ -165,8 +161,6 @@ Redeem OKUSD back to USDT. Choose between fast redemption (real-time settlement)
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -268,8 +262,6 @@ OKUSD 是 OKX 以 1:1 汇率发行的稳定币凭证，用户以 USDT 申购后�
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/okusd/limits`
@@ -351,8 +343,6 @@ ts | String | 服务器时间戳，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/okusd/subscribe`
@@ -414,8 +404,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 #### 限速：1次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

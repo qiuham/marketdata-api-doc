@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-post-redeem
 anchor_id: financial-product-eth-staking-post-redeem
 api_type: API
-updated_at: 2026-07-15 19:20:38.346459
+updated_at: 2026-07-16 19:21:45.541415
 ---
 
 # POST / Redeem
@@ -13,8 +13,6 @@ Only the assets in the funding account can be used. If your BETH is in your trad
 #### Rate Limit: 2 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -76,8 +74,6 @@ code = `0` means your request has been successfully handled.
 #### 限速：2次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

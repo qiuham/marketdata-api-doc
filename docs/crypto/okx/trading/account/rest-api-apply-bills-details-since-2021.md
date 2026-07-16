@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-apply-bills-details-since-2021
 anchor_id: trading-account-rest-api-apply-bills-details-since-2021
 api_type: REST
-updated_at: 2026-07-15 19:18:14.861442
+updated_at: 2026-07-16 19:19:21.447648
 ---
 
 # Apply bills details (since 2021)
@@ -13,8 +13,6 @@ Apply for bill data since 1 February, 2021 except for the current quarter.
 #### Rate Limit: 1 request per 10 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -78,8 +76,6 @@ During peak demand, data generation may take longer. If the file link is still u
 #### 限速：1次/10s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

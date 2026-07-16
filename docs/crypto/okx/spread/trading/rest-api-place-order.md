@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-place-order
 anchor_id: spread-trading-rest-api-place-order
 api_type: REST
-updated_at: 2026-07-15 19:19:45.380548
+updated_at: 2026-07-16 19:20:52.419286
 ---
 
 # Place order
@@ -13,8 +13,6 @@ Place a new order
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -116,8 +114,6 @@ The sz unit for inverse spreads is USD in Nitro Spread, as opposed to contract i
 #### 限速:：20次/ 2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

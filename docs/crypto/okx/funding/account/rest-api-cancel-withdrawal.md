@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-cancel-withdrawal
 anchor_id: funding-account-rest-api-cancel-withdrawal
 api_type: REST
-updated_at: 2026-07-15 19:20:21.037104
+updated_at: 2026-07-16 19:21:28.195423
 ---
 
 # Cancel withdrawal
@@ -13,8 +13,6 @@ You can cancel normal withdrawal requests, but you cannot cancel withdrawal requ
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -85,8 +83,6 @@ If the code is equal to 0, it cannot be strictly considered that the withdrawal 
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

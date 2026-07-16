@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-convert-trade
 anchor_id: funding-account-rest-api-convert-trade
 api_type: REST
-updated_at: 2026-07-15 19:20:23.847414
+updated_at: 2026-07-16 19:21:31.000671
 ---
 
 # Convert trade
@@ -15,8 +15,6 @@ Only assets in the trading account supported convert.
 #### Rate Limit: 10 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 For the same side (buy/sell), there's a trading limit of 1 request per 5 seconds.
 
@@ -115,8 +113,6 @@ ts | String | Convert trade time, Unix timestamp format in milliseconds, e.g. `1
 #### 限速：10次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 同一方向(buy/sell) 1次/5s 交易限制
 

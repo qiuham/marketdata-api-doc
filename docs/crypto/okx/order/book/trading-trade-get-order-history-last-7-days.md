@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-history-last-7-days
 anchor_id: order-book-trading-trade-get-order-history-last-7-days
 api_type: API
-updated_at: 2026-07-15 19:18:36.732476
+updated_at: 2026-07-16 19:19:43.620826
 ---
 
 # GET / Order history (last 7 days)
@@ -16,8 +16,6 @@ The incomplete orders that have been canceled are only reserved for 2 hours.
 #### Rate Limit: 40 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -326,8 +324,6 @@ Only applicable to `EVENTS`
 #### 限速：40次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

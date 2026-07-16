@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-convert-currency-pair
 anchor_id: funding-account-rest-api-get-convert-currency-pair
 api_type: REST
-updated_at: 2026-07-15 19:20:23.221221
+updated_at: 2026-07-16 19:21:30.374084
 ---
 
 # Get convert currency pair
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:23.221221
 #### Rate Limit: 6 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -73,8 +71,6 @@ quoteCcyMin | String | Minimum amount of quote currency
 #### 限速：6次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

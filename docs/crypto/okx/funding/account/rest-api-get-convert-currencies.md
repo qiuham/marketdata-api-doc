@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-convert-currencies
 anchor_id: funding-account-rest-api-get-convert-currencies
 api_type: REST
-updated_at: 2026-07-15 19:20:22.910232
+updated_at: 2026-07-16 19:21:30.063213
 ---
 
 # Get convert currencies
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:22.910232
 #### Rate Limit: 6 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -65,8 +63,6 @@ max | String | Maximum amount to convert ( Deprecated )
 #### 限速：6次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

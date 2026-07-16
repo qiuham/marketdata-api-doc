@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-delete-the-api-key-of-sub-accounts
 anchor_id: sub-account-rest-api-delete-the-api-key-of-sub-accounts
 api_type: REST
-updated_at: 2026-07-15 19:20:31.813021
+updated_at: 2026-07-16 19:21:39.012882
 ---
 
 # Delete the API Key of sub-accounts
@@ -13,8 +13,6 @@ Applies to master accounts only and master accounts API Key must be linked to IP
 #### Rate limit：1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -65,8 +63,6 @@ subAcct | String | Sub-account name
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

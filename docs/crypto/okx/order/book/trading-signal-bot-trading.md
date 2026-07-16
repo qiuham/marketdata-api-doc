@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading
 anchor_id: order-book-trading-signal-bot-trading
 api_type: API
-updated_at: 2026-07-15 19:19:01.116563
+updated_at: 2026-07-16 19:20:07.985879
 ---
 
 # Signal bot trading
@@ -15,8 +15,6 @@ Create and customize your own signals while gaining access to a diverse selectio
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -69,8 +67,6 @@ signalChanToken | String | User identify when placing orders via signal
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -133,8 +129,6 @@ signalSourceType | String | Signal source type
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -236,8 +230,6 @@ A maximum of 10 orders can be stopped per request.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/signal/stop-order-algo`
@@ -291,8 +283,6 @@ algoClOrdId | String | Client-supplied Algo ID
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -349,8 +339,6 @@ algoId | String | Algo ID
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -409,8 +397,6 @@ algoId | String | Algo ID
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/signal/set-instruments`
@@ -462,8 +448,6 @@ algoId | String | Algo ID
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -599,8 +583,6 @@ signalSourceType | String | Signal source type
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -738,8 +720,6 @@ signalSourceType | String | Signal source type
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/signal/orders-algo-history`
@@ -874,8 +854,6 @@ signalSourceType | String | Signal source type
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/signal/positions`
@@ -968,8 +946,6 @@ Retrieve the updated position data for the last 3 months. Return in reverse chro
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/signal/positions-history`
@@ -1038,8 +1014,6 @@ Close the position of an instrument via a market order.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/signal/close-position`
@@ -1090,8 +1064,6 @@ You can place an order only if you have sufficient funds.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1160,8 +1132,6 @@ Cancel an incomplete order.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/signal/cancel-sub-order`
@@ -1219,8 +1189,6 @@ Cancel order returns with sCode equal to 0. It is not strictly considered that t
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1352,8 +1320,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/signal/event-history`
@@ -1432,8 +1398,6 @@ triggeredOrdData | Array of objects | Triggered sub order data
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/create-signal`
@@ -1485,8 +1449,6 @@ signalChanToken | String | 信号单的用户身份标识
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1549,8 +1511,6 @@ signalSourceType | String | 信号来源类型
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1650,8 +1610,6 @@ sMsg | String | 事件执行失败时的msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/stop-order-algo`
@@ -1707,8 +1665,6 @@ algoClOrdId | String | 客户自定义订单ID
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/margin-balance`
@@ -1762,8 +1718,6 @@ algoId | String | 策略ID
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1820,8 +1774,6 @@ algoId | String | 策略ID
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/set-instruments`
@@ -1873,8 +1825,6 @@ algoId | String | 策略ID
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2012,8 +1962,6 @@ signalSourceType | String | 信号来源类型
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2155,8 +2103,6 @@ signalSourceType | String | 信号来源类型
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/signal/orders-algo-history`
@@ -2293,8 +2239,6 @@ signalSourceType | String | 信号来源类型
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/signal/positions`
@@ -2387,8 +2331,6 @@ markPx | String | 标记价格
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/signal/positions-history`
@@ -2457,8 +2399,6 @@ uly | String | 标的指数
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/close-position`
@@ -2507,8 +2447,6 @@ algoId | String | 策略ID
   
 
 #### 限速：20次/2s
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -2581,8 +2519,6 @@ sz 指合约张数。  reduceOnly
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/signal/cancel-sub-order`
@@ -2640,8 +2576,6 @@ data | Array of objects | 包含结果的对象数组
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2773,8 +2707,6 @@ tag | String | 订单标签
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

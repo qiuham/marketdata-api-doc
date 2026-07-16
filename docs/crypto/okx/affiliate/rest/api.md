@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api
 anchor_id: affiliate-rest-api
 api_type: REST
-updated_at: 2026-07-15 19:20:52.909900
+updated_at: 2026-07-16 19:22:00.071336
 ---
 
 # REST API
@@ -15,8 +15,6 @@ Aggregated affiliate performance metrics for a specified time period.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -111,8 +109,6 @@ details | Array of objects | One entry per instrument bucket.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/affiliate/invitee/detail`
@@ -192,8 +188,6 @@ Paginated invitee list with trading stats and KYC info.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -306,8 +300,6 @@ Paginated affiliate invite links with commission rates and stats.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/affiliate/link/list`
@@ -390,8 +382,6 @@ Co-inviter links where the authenticated user is the co-inviter.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -499,8 +489,6 @@ Paginated sub-affiliates under current user.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/affiliate/sub-affiliate/list`
@@ -597,8 +585,6 @@ totalCommission | String | Your commission earned from this sub-affiliate's invi
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/affiliate/performance/summary`
@@ -692,8 +678,6 @@ details | Array of objects | 按业务类别拆分的明细，每个类别一条
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/affiliate/invitee/detail`
@@ -773,8 +757,6 @@ affiliateCode | String | 节点邀请码
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -887,8 +869,6 @@ isCompliant | Boolean | 该直客是否符合区域合规要求。
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/affiliate/link/list`
@@ -971,8 +951,6 @@ linkStatus | String | 链接状态。
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1079,8 +1057,6 @@ linkStatus | String | 链接状态。
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

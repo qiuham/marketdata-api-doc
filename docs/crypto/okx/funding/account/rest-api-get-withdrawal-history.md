@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-withdrawal-history
 anchor_id: funding-account-rest-api-get-withdrawal-history
 api_type: REST
-updated_at: 2026-07-15 19:20:21.351761
+updated_at: 2026-07-16 19:21:28.511287
 ---
 
 # Get withdrawal history
@@ -14,8 +14,6 @@ Websocket API is also available, refer to [Withdrawal info channel](/docs-v5/en/
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -144,8 +142,6 @@ note | String | Withdrawal note
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

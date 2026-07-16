@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-list
 anchor_id: sub-account-rest-api-get-sub-account-list
 api_type: REST
-updated_at: 2026-07-15 19:20:30.255095
+updated_at: 2026-07-16 19:21:37.451489
 ---
 
 # Get sub-account list
@@ -13,8 +13,6 @@ Applies to master accounts only
 #### Rate limit：20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -131,8 +129,6 @@ ifDma | Boolean | Whether it is dma broker sub-account.
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

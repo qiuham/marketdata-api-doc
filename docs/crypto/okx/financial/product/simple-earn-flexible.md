@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-simple-earn-flexible
 anchor_id: financial-product-simple-earn-flexible
 api_type: API
-updated_at: 2026-07-15 19:20:44.611238
+updated_at: 2026-07-16 19:21:51.826435
 ---
 
 # Simple earn flexible
@@ -15,8 +15,6 @@ Simple earn flexible (saving) is earned by lending to leveraged trading users in
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -90,8 +88,6 @@ Only the assets in the funding account can be used for saving.
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -173,8 +169,6 @@ rate | String | Annual purchase rate, e.g. `0.1` represents `10%`
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/savings/set-lending-rate`
@@ -242,8 +236,6 @@ Return data in the past month.
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -458,8 +450,6 @@ ts | String | Time, Unix timestamp format in milliseconds, e.g. `1597026383085`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/savings/balance`
@@ -532,8 +522,6 @@ redemptAmt | String | ~~赎回中的数量~~ （已废弃）
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -613,8 +601,6 @@ rate | String | 申购年利率，如 `0.1`代表`10%`
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/savings/set-lending-rate`
@@ -682,8 +668,6 @@ rate | String | 贷出年利率
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-leverage
 anchor_id: trading-account-rest-api-set-leverage
 api_type: REST
-updated_at: 2026-07-15 19:18:16.431646
+updated_at: 2026-07-16 19:19:23.019738
 ---
 
 # Set leverage
@@ -29,8 +29,6 @@ Please refer to the request examples on the right for each case.
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -244,8 +242,6 @@ When setting leverage for `cross` `FUTURES`/`SWAP` at the underlying level, pass
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-cancel-signal-bots
 anchor_id: order-book-trading-signal-bot-trading-post-cancel-signal-bots
 api_type: API
-updated_at: 2026-07-15 19:19:02.362646
+updated_at: 2026-07-16 19:20:09.234209
 ---
 
 # POST / Cancel signal bots
@@ -13,8 +13,6 @@ A maximum of 10 orders can be stopped per request.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -73,8 +71,6 @@ algoClOrdId | String | Client-supplied Algo ID
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

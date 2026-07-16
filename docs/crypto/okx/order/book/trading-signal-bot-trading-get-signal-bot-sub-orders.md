@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-get-signal-bot-sub-orders
 anchor_id: order-book-trading-signal-bot-trading-get-signal-bot-sub-orders
 api_type: API
-updated_at: 2026-07-15 19:19:06.121080
+updated_at: 2026-07-16 19:20:13.002747
 ---
 
 # GET / Signal bot sub orders
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:06.121080
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -145,8 +143,6 @@ tag | String | Order tag
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

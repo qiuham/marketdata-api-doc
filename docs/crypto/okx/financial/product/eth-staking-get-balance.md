@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-get-balance
 anchor_id: financial-product-eth-staking-get-balance
 api_type: API
-updated_at: 2026-07-15 19:20:38.966747
+updated_at: 2026-07-16 19:21:46.162192
 ---
 
 # GET / Balance
@@ -13,8 +13,6 @@ The balance represents the real-time total BETH holdings across the entire accou
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -83,8 +81,6 @@ ts | String | Query data time, Unix timestamp format in milliseconds, e.g. `1597
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

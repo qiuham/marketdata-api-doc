@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-order-details
 anchor_id: spread-trading-rest-api-get-order-details
 api_type: REST
-updated_at: 2026-07-15 19:19:46.628222
+updated_at: 2026-07-16 19:20:53.668701
 ---
 
 # Get order details
@@ -13,8 +13,6 @@ Retrieve order details.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -137,8 +135,6 @@ Order sizes equation: pendingFillSz + canceledSz + accFillSz = sz
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

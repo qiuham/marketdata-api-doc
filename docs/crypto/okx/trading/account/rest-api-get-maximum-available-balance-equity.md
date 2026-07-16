@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-maximum-available-balance-equity
 anchor_id: trading-account-rest-api-get-maximum-available-balance-equity
 api_type: REST
-updated_at: 2026-07-15 19:18:17.056246
+updated_at: 2026-07-16 19:19:23.645415
 ---
 
 # Get maximum available balance/equity
@@ -13,8 +13,6 @@ Available balance for isolated margin positions and SPOT, available equity for c
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -105,8 +103,6 @@ In the case of MARGIN with cross tdMode, both availBuy and availSell are in the 
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

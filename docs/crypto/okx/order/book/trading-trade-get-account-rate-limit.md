@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-account-rate-limit
 anchor_id: order-book-trading-trade-get-account-rate-limit
 api_type: API
-updated_at: 2026-07-15 19:18:41.440958
+updated_at: 2026-07-16 19:19:48.337490
 ---
 
 # GET / Account rate limit
@@ -86,8 +86,6 @@ For users with trading fee tier < VIP 5, the current timestamp will be returned.
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

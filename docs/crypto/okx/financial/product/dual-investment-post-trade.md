@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-trade
 anchor_id: financial-product-dual-investment-post-trade
 api_type: API
-updated_at: 2026-07-15 19:20:50.920209
+updated_at: 2026-07-16 19:21:58.121619
 ---
 
 # POST / Trade
@@ -13,8 +13,6 @@ Places a dual investment order using a valid quote.
 #### Rate Limit: 2 requests per 60 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -73,8 +71,6 @@ state | String | Order state
 #### 限速：2次/60s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

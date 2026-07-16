@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-counterparties
 anchor_id: block-trading-rest-api-get-counterparties
 api_type: REST
-updated_at: 2026-07-15 19:19:30.679698
+updated_at: 2026-07-16 19:20:37.630167
 ---
 
 # Get Counterparties
@@ -13,8 +13,6 @@ Retrieves the list of counterparties that the user is permitted to trade with.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -81,8 +79,6 @@ type | String | The counterparty type. `LP` refers to API connected auto market 
 #### 限速: 5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

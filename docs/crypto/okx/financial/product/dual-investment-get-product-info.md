@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-get-product-info
 anchor_id: financial-product-dual-investment-get-product-info
 api_type: API
-updated_at: 2026-07-15 19:20:50.297441
+updated_at: 2026-07-16 19:21:57.499194
 ---
 
 # GET / Product info
@@ -13,8 +13,6 @@ Return dual investment product list.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -103,8 +101,6 @@ strike | String | Strike price
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

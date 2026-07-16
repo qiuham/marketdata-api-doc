@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-collateral-assets
 anchor_id: trading-account-rest-api-get-collateral-assets
 api_type: REST
-updated_at: 2026-07-15 19:18:25.831824
+updated_at: 2026-07-16 19:19:32.629996
 ---
 
 # Get collateral assets
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:25.831824
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -64,8 +62,6 @@ collateralEnabled | Boolean | Whether or not to be a collateral asset
 #### 限速：5次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

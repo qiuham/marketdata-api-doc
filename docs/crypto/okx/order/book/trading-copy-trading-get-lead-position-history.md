@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-position-history
 anchor_id: order-book-trading-copy-trading-get-lead-position-history
 api_type: API
-updated_at: 2026-07-15 19:19:12.325742
+updated_at: 2026-07-16 19:20:19.206467
 ---
 
 # GET / Lead position history
@@ -14,8 +14,6 @@ Returns reverse chronological order with `subPosId`.
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -139,8 +137,6 @@ type | String | The type of closing position
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

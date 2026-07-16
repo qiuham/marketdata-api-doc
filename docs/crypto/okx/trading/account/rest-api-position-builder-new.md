@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-position-builder-new
 anchor_id: trading-account-rest-api-position-builder-new
 api_type: REST
-updated_at: 2026-07-15 19:18:22.391424
+updated_at: 2026-07-16 19:19:29.199090
 ---
 
 # Position builder (new)
@@ -14,8 +14,6 @@ You can add up to 200 virtual positions and 200 virtual assets in one request.
 #### Rate Limit: 2 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -504,8 +502,6 @@ If `instType` is `SWAP`/`FUTURES`/`OPTION`, it is a valid parameter, else it wil
 #### 限速：2次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

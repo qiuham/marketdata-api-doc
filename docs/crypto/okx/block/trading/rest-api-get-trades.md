@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-trades
 anchor_id: block-trading-rest-api-get-trades
 api_type: REST
-updated_at: 2026-07-15 19:19:36.342003
+updated_at: 2026-07-16 19:20:43.313024
 ---
 
 # Get trades
@@ -13,8 +13,6 @@ Retrieves the executed trades that the user is a counterparty to (either as the 
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -183,8 +181,6 @@ Group RFQ introduction
 #### 限速: 5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP Requests
 

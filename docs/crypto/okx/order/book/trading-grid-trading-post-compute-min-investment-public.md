@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-compute-min-investment-public
 anchor_id: order-book-trading-grid-trading-post-compute-min-investment-public
 api_type: API
-updated_at: 2026-07-15 19:18:53.989562
+updated_at: 2026-07-16 19:20:00.886883
 ---
 
 # POST / Compute min investment (public)
@@ -13,8 +13,6 @@ Authentication is not required for this public endpoint.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -124,8 +122,6 @@ In terms of `contract grid`, the unit is `contract`
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

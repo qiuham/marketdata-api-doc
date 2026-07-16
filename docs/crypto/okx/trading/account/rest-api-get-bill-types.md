@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-bill-types
 anchor_id: trading-account-rest-api-get-bill-types
 api_type: REST
-updated_at: 2026-07-15 19:18:15.487583
+updated_at: 2026-07-16 19:19:22.073774
 ---
 
 # Get bill types
@@ -13,8 +13,6 @@ Get all bill types, and the mapping of bill type and subType.
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: UserId
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -76,8 +74,6 @@ subTypeDetails | Array of objects | Sub-type details
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards-get-apy-history
 anchor_id: financial-product-stable-rewards-get-apy-history
 api_type: API
-updated_at: 2026-07-15 19:20:43.024758
+updated_at: 2026-07-16 19:21:50.230620
 ---
 
 # GET / APY history
@@ -13,8 +13,6 @@ Retrieve the historical daily APY of the specified stablecoin. The returned rate
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -64,8 +62,6 @@ ts | String | Snapshot time (UTC+0), Unix timestamp format in milliseconds, e.g.
 #### 限速：6次/s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP 请求
 

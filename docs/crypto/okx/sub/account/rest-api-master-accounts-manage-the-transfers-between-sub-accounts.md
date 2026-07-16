@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 anchor_id: sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 api_type: REST
-updated_at: 2026-07-15 19:20:33.701048
+updated_at: 2026-07-16 19:21:40.906770
 ---
 
 # Master accounts manage the transfers between sub-accounts
@@ -15,8 +15,6 @@ Only API keys with `Trade` privilege can call this endpoint.
 #### Rate limit：1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -112,8 +110,6 @@ transId | String | Transfer ID
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

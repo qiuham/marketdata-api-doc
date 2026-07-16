@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-link-list
 anchor_id: affiliate-rest-api-get-link-list
 api_type: REST
-updated_at: 2026-07-15 19:20:54.164643
+updated_at: 2026-07-16 19:22:01.330703
 ---
 
 # Get link list
@@ -13,8 +13,6 @@ Paginated affiliate invite links with commission rates and stats.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -100,8 +98,6 @@ linkStatus | String | Link status.
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

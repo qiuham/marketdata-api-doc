@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-place-recurring-buy-order
 anchor_id: order-book-trading-recurring-buy-post-place-recurring-buy-order
 api_type: API
-updated_at: 2026-07-15 19:19:07.136111
+updated_at: 2026-07-16 19:20:14.033695
 ---
 
 # POST / Place recurring buy order
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:07.136111
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -127,8 +125,6 @@ tag | String | Order tag
 #### 限速：20次/2s  
   
 #### 限速规则 ：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

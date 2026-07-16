@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-position-builder-trend-graph
 anchor_id: trading-account-rest-api-position-builder-trend-graph
 api_type: REST
-updated_at: 2026-07-15 19:18:22.715180
+updated_at: 2026-07-16 19:19:29.512847
 ---
 
 # Position builder trend graph
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:22.715180
 #### Rate limit: 1 request per 5 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -127,8 +125,6 @@ Return data in shockFactor ascending order
 #### 限速：1次/5s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

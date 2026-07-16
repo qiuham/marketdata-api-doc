@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-amend-multiple-orders
 anchor_id: order-book-trading-trade-post-amend-multiple-orders
 api_type: API
-updated_at: 2026-07-15 19:18:35.440757
+updated_at: 2026-07-16 19:19:42.322517
 ---
 
 # POST / Amend multiple orders
@@ -17,8 +17,6 @@ Amend incomplete orders in batches. Maximum 20 orders can be amended per request
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 Rate limit of this endpoint will also be affected by the rules [Sub-account rate limit](/docs-v5/en/#overview-rate-limits-sub-account-rate-limit) and [Fill ratio based sub-account rate limit](/docs-v5/en/#overview-rate-limits-fill-ratio-based-sub-account-rate-limit).
 
@@ -213,8 +211,6 @@ If the new quantity of the order is less than or equal to the filled quantity wh
 #### 跟单交易带单员带单产品的限速：4个/2s
 
 #### 限速规则：User ID + Instrument ID
-
-#### 权限：交易
 
 该接口限速同时受到 [子账户限速](/docs-v5/log_zh/#upcoming-changes-sub-account-rate-limit) 及 [基于成交比率的子账户限速](/docs-v5/log_zh/#upcoming-changes-fill-ratio-based-sub-account-rate-limit) 限速规则的影响。
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-set-mmp
 anchor_id: block-trading-rest-api-set-mmp
 api_type: REST
-updated_at: 2026-07-15 19:19:33.505273
+updated_at: 2026-07-16 19:20:40.465367
 ---
 
 # Set MMP
@@ -14,8 +14,6 @@ This endpoint is used to set MMP configure and only applicable to block trading 
 #### Rate Limit: 1 request per 10 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -81,8 +79,6 @@ For RFQ makers, the execution attempt of group RFQ will only count once towards 
 #### 限速：1次/10s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

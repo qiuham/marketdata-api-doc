@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-get-position-history
 anchor_id: order-book-trading-signal-bot-trading-get-position-history
 api_type: API
-updated_at: 2026-07-15 19:19:04.873194
+updated_at: 2026-07-16 19:20:11.752191
 ---
 
 # GET / Position history
@@ -13,8 +13,6 @@ Retrieve the updated position data for the last 3 months. Return in reverse chro
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -85,8 +83,6 @@ uly | String | Underlying
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

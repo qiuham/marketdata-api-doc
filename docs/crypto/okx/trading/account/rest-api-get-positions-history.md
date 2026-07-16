@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-positions-history
 anchor_id: trading-account-rest-api-get-positions-history
 api_type: REST
-updated_at: 2026-07-15 19:18:13.594985
+updated_at: 2026-07-16 19:19:20.174902
 ---
 
 # Get positions history
@@ -13,8 +13,6 @@ Retrieve the updated position data for the last 3 months. Return in reverse chro
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -160,8 +158,6 @@ ccy | String | Currency used for margin
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

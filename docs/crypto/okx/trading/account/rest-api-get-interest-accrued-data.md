@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-interest-accrued-data
 anchor_id: trading-account-rest-api-get-interest-accrued-data
 api_type: REST
-updated_at: 2026-07-15 19:18:18.937513
+updated_at: 2026-07-16 19:19:25.736580
 ---
 
 # Get interest accrued data
@@ -13,8 +13,6 @@ Get the interest accrued data for the past year
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -125,8 +123,6 @@ ts | String | Timestamp for interest accrued, Unix timestamp format in milliseco
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

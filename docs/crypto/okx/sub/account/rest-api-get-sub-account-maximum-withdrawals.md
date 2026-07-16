@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-maximum-withdrawals
 anchor_id: sub-account-rest-api-get-sub-account-maximum-withdrawals
 api_type: REST
-updated_at: 2026-07-15 19:20:32.764162
+updated_at: 2026-07-16 19:21:39.968210
 ---
 
 # Get sub-account maximum withdrawals
@@ -13,8 +13,6 @@ Retrieve the maximum withdrawal information of a sub-account via the master acco
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -87,8 +85,6 @@ Applicable to `Portfolio margin`
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

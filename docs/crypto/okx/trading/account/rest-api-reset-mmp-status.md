@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-reset-mmp-status
 anchor_id: trading-account-rest-api-reset-mmp-status
 api_type: REST
-updated_at: 2026-07-15 19:18:26.141619
+updated_at: 2026-07-16 19:19:32.938735
 ---
 
 # Reset MMP Status
@@ -18,8 +18,6 @@ In the demo trading environment, MMP configurations may be periodically reset by
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -77,8 +75,6 @@ result | Boolean | Result of the request `true`, `false`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

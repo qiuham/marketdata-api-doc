@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-stop-copying
 anchor_id: order-book-trading-copy-trading-post-stop-copying
 api_type: API
-updated_at: 2026-07-15 19:19:16.366981
+updated_at: 2026-07-16 19:20:23.253789
 ---
 
 # POST / Stop copying
@@ -13,8 +13,6 @@ You need to use this endpoint to stop copy trading
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -76,8 +74,6 @@ result | Boolean | The result of setting
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

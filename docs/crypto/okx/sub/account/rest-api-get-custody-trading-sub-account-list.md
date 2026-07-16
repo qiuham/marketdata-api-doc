@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-custody-trading-sub-account-list
 anchor_id: sub-account-rest-api-get-custody-trading-sub-account-list
 api_type: REST
-updated_at: 2026-07-15 19:20:34.322596
+updated_at: 2026-07-16 19:21:41.529771
 ---
 
 # Get custody trading sub-account list
@@ -13,8 +13,6 @@ The trading team uses this interface to view the list of sub-accounts currently 
 #### Rate limit：1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -82,8 +80,6 @@ subAcct | String | Sub-account name
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

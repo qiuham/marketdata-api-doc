@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment
 anchor_id: financial-product-dual-investment
 api_type: API
-updated_at: 2026-07-15 19:20:49.658025
+updated_at: 2026-07-16 19:21:56.875029
 ---
 
 # Dual investment
@@ -15,8 +15,6 @@ Returns available dual investment currency pairs.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -67,8 +65,6 @@ Return dual investment product list.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -156,8 +152,6 @@ Requests a real-time quote for a dual investment product. The quote has a TTL an
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/quote`
@@ -226,8 +220,6 @@ Places a dual investment order using a valid quote.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/trade`
@@ -283,8 +275,6 @@ Requests an early redemption quote for a live dual investment order. This is ste
 #### Rate Limit: 10 requests per 60 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -344,8 +334,6 @@ Confirms early redemption using a valid redeem quote. This is step 2 of the two-
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/redeem`
@@ -402,8 +390,6 @@ Returns the current state of a dual investment order.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/sfp/dcd/order-status`
@@ -456,8 +442,6 @@ Return dual investment history orders
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -573,8 +557,6 @@ uTime | String | Last update time, Unix timestamp format in milliseconds, e.g. `
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/sfp/dcd/currency-pair`
@@ -624,8 +606,6 @@ uly | String | 标的
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -713,8 +693,6 @@ strike | String | 行权价
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/quote`
@@ -783,8 +761,6 @@ idxPx | String | 指数价格
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/trade`
@@ -840,8 +816,6 @@ state | String | 订单状态
 #### 限速：10次/60s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -901,8 +875,6 @@ validUntil | String | 赎回报价有效期，Unix时间戳的毫秒数格式，
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/redeem`
@@ -959,8 +931,6 @@ state | String | 订单状态
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/sfp/dcd/order-status`
@@ -1013,8 +983,6 @@ state | String | 订单状态
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

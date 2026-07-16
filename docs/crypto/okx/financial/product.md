@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product
 anchor_id: financial-product
 api_type: API
-updated_at: 2026-07-15 19:20:34.869951
+updated_at: 2026-07-16 19:21:42.050826
 ---
 
 # Financial Product
@@ -17,8 +17,6 @@ Only the assets in the funding account can be used for purchase. [More details](
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -138,8 +136,6 @@ If fast redemption is not supported, it will return ''.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/purchase`
@@ -227,8 +223,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/redeem`
@@ -307,8 +301,6 @@ After cancelling, returning funds will go to the funding account.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/cancel`
@@ -378,8 +370,6 @@ tag | String | Order tag
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -572,8 +562,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/staking-defi/orders-history`
@@ -693,8 +681,6 @@ Stake to receive BETH for liquidity at 1:1 ratio and earn daily BETH rewards
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/staking-defi/eth/product-info`
@@ -758,8 +744,6 @@ Only the assets in the funding account can be used.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/eth/purchase`
@@ -819,8 +803,6 @@ Only the assets in the funding account can be used. If your BETH is in your trad
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/eth/redeem`
@@ -878,8 +860,6 @@ code = `0` means your request has been successfully handled.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/eth/cancel-redeem`
@@ -927,8 +907,6 @@ The balance represents the real-time total BETH holdings across the entire accou
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -993,8 +971,6 @@ ts | String | Query data time, Unix timestamp format in milliseconds, e.g. `1597
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1152,8 +1128,6 @@ Stake SOL on Solana to receive OKSOL at a 1:1 ratio for liquidity
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/staking-defi/sol/product-info`
@@ -1203,8 +1177,6 @@ Only the assets in the funding account can be used.
 #### Rate Limit: 2 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1266,8 +1238,6 @@ Only the assets in the funding account can be used. If your OKSOL is in your tra
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/sol/redeem`
@@ -1327,8 +1297,6 @@ The balance represents the real-time total OKSOL holdings across the entire acco
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1392,8 +1360,6 @@ totalInterestAccrual | String | Total interest accrual
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1554,8 +1520,6 @@ Retrieve product-level information for the specified stablecoin, including all c
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/stable-rewards/product-info`
@@ -1641,8 +1605,6 @@ Retrieve the real-time Stable Rewards balance across the account (trading accoun
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/stable-rewards/balance`
@@ -1703,8 +1665,6 @@ Retrieve the historical daily APY of the specified stablecoin. The returned rate
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/stable-rewards/apy-history`
@@ -1756,8 +1716,6 @@ Retrieve your remaining daily OKUSD subscription quota and both fast and standar
 #### Rate Limit: 2 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1840,8 +1798,6 @@ Subscribe USDT to receive OKUSD at a 1:1 rate with no subscription fee. OKUSD is
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/okusd/subscribe`
@@ -1903,8 +1859,6 @@ Redeem OKUSD back to USDT. Choose between fast redemption (real-time settlement)
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -2001,8 +1955,6 @@ Simple earn flexible (saving) is earned by lending to leveraged trading users in
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/savings/balance`
@@ -2075,8 +2027,6 @@ Only the assets in the funding account can be used for saving.
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -2158,8 +2108,6 @@ rate | String | Annual purchase rate, e.g. `0.1` represents `10%`
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/savings/set-lending-rate`
@@ -2227,8 +2175,6 @@ Return data in the past month.
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -2443,8 +2389,6 @@ Get borrowable currencies
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/borrow-currencies`
@@ -2500,8 +2444,6 @@ Get collateral assets in funding account.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -2582,8 +2524,6 @@ assets | Array of objects | Collateral assets data
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `POST /api/v5/finance/flexible-loan/max-loan`
@@ -2659,8 +2599,6 @@ remainingQuota | String | Remaining quota, unit in `borrowCcy`
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/max-collateral-redeem-amount`
@@ -2723,8 +2661,6 @@ maxRedeemAmt | String | Maximum collateral redeem amount
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -2792,8 +2728,6 @@ code = `0` means your request has been accepted (It doesn't mean the request has
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -2906,8 +2840,6 @@ If your loan reaches liquidation LTV, it'll trigger forced liquidation. When thi
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/loan-history`
@@ -2992,8 +2924,6 @@ Retrieves the interest accrual history for flexible loans over the past 30 days.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/interest-accrued`
@@ -3070,8 +3000,6 @@ Returns available dual investment currency pairs.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/sfp/dcd/currency-pair`
@@ -3121,8 +3049,6 @@ Return dual investment product list.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -3210,8 +3136,6 @@ Requests a real-time quote for a dual investment product. The quote has a TTL an
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/quote`
@@ -3280,8 +3204,6 @@ Places a dual investment order using a valid quote.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/trade`
@@ -3337,8 +3259,6 @@ Requests an early redemption quote for a live dual investment order. This is ste
 #### Rate Limit: 10 requests per 60 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -3398,8 +3318,6 @@ Confirms early redemption using a valid redeem quote. This is step 2 of the two-
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/sfp/dcd/redeem`
@@ -3456,8 +3374,6 @@ Returns the current state of a dual investment order.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/sfp/dcd/order-status`
@@ -3510,8 +3426,6 @@ Return dual investment history orders
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -3628,8 +3542,6 @@ uTime | String | Last update time, Unix timestamp format in milliseconds, e.g. `
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -3750,8 +3662,6 @@ fastRedemptionDailyLimit | String | 快速赎回每日最高限额
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/purchase`
@@ -3839,8 +3749,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/redeem`
@@ -3919,8 +3827,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/cancel`
@@ -3990,8 +3896,6 @@ tag | String | 订单标签
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -4184,8 +4088,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/staking-defi/orders-history`
@@ -4305,8 +4207,6 @@ ETH 质押，也称为以太坊质押，是参与以太坊区块链权益证明 
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/staking-defi/eth/product-info`
@@ -4370,8 +4270,6 @@ minAmt | String | BETH 最低申购数量
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/eth/purchase`
@@ -4431,8 +4329,6 @@ code = `0`代表请求已被成功处理
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/eth/redeem`
@@ -4490,8 +4386,6 @@ code = `0`代表请求已被成功处理
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/eth/cancel-redeem`
@@ -4539,8 +4433,6 @@ ordId | String | 订单ID
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -4606,8 +4498,6 @@ ts | String | 快照时间，值为时间戳，Unix时间戳为毫秒数格式�
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -4765,8 +4655,6 @@ ts | String | 时间，值为时间戳，Unix时间戳为毫秒数格式，如 `
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/staking-defi/sol/product-info`
@@ -4816,8 +4704,6 @@ minAmt | String | OKSOL 最低申购数量
 #### 限速：2次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 
@@ -4879,8 +4765,6 @@ code = `0`代表请求已被成功处理
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/sol/redeem`
@@ -4940,8 +4824,6 @@ code = `0`代表请求已被成功处理
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -5006,8 +4888,6 @@ totalInterestAccrual | String | 历史总收益
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -5168,8 +5048,6 @@ OKX Stable Rewards 自动为持有合格稳定币（如 `USDG`）的用户每日
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/stable-rewards/product-info`
@@ -5255,8 +5133,6 @@ ts | String | 数据查询时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/stable-rewards/balance`
@@ -5317,8 +5193,6 @@ ts | String | 数据查询时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/stable-rewards/apy-history`
@@ -5370,8 +5244,6 @@ OKUSD 是 OKX 以 1:1 汇率发行的稳定币凭证，用户以 USDT 申购后�
 #### 限速：2次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -5454,8 +5326,6 @@ ts | String | 服务器时间戳，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/okusd/subscribe`
@@ -5517,8 +5387,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 #### 限速：1次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 
@@ -5615,8 +5483,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/savings/balance`
@@ -5689,8 +5555,6 @@ redemptAmt | String | ~~赎回中的数量~~ （已废弃）
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -5770,8 +5634,6 @@ rate | String | 申购年利率，如 `0.1`代表`10%`
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/savings/set-lending-rate`
@@ -5839,8 +5701,6 @@ rate | String | 贷出年利率
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -6055,8 +5915,6 @@ ts | String | 时间，Unix时间戳的毫秒数格式，如 `1597026383085`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/borrow-currencies`
@@ -6112,8 +5970,6 @@ borrowCcy | String | 可借币种，如 `BTC`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -6194,8 +6050,6 @@ assets | Array of objects | 可抵押资产信息
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `POST /api/v5/finance/flexible-loan/max-loan`
@@ -6271,8 +6125,6 @@ remainingQuota | String | 剩余可借额度，单位为`borrowCcy`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/max-collateral-redeem-amount`
@@ -6335,8 +6187,6 @@ maxRedeemAmt | String | 抵押物最大可赎回数量
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -6404,8 +6254,6 @@ code = `0` 代表请求已被接受(不代表处理成功)
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -6518,8 +6366,6 @@ liqLTV | String | 强平质押率，如 `0.1`代表`10%`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/loan-history`
@@ -6604,8 +6450,6 @@ ts | String | 操作发生时间，Unix 时间戳为毫秒数格式，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/interest-accrued`
@@ -6682,8 +6526,6 @@ ts | String | 计息时间，Unix 时间戳为毫秒数格式，如 `15970263830
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/sfp/dcd/currency-pair`
@@ -6733,8 +6575,6 @@ uly | String | 标的
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -6822,8 +6662,6 @@ strike | String | 行权价
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/quote`
@@ -6892,8 +6730,6 @@ idxPx | String | 指数价格
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/trade`
@@ -6949,8 +6785,6 @@ state | String | 订单状态
 #### 限速：10次/60s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -7010,8 +6844,6 @@ validUntil | String | 赎回报价有效期，Unix时间戳的毫秒数格式，
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/finance/sfp/dcd/redeem`
@@ -7068,8 +6900,6 @@ state | String | 订单状态
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/sfp/dcd/order-status`
@@ -7122,8 +6952,6 @@ state | String | 订单状态
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

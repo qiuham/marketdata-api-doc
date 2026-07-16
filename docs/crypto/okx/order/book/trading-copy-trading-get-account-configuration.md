@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-account-configuration
 anchor_id: order-book-trading-copy-trading-get-account-configuration
 api_type: API
-updated_at: 2026-07-15 19:19:15.432291
+updated_at: 2026-07-16 19:20:22.317396
 ---
 
 # GET / Account configuration
@@ -13,8 +13,6 @@ Retrieve current account configuration related to copy/lead trading.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -93,8 +91,6 @@ Only applicable to lead trader, or it will be "". 0.1 represents 10%
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-history-last-3-months
 anchor_id: order-book-trading-trade-get-order-history-last-3-months
 api_type: API
-updated_at: 2026-07-15 19:18:37.058677
+updated_at: 2026-07-16 19:19:43.948789
 ---
 
 # GET / Order history (last 3 months)
@@ -14,8 +14,6 @@ Get completed orders which are placed in the last 3 months, including those plac
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -320,8 +318,6 @@ As far as OPTION orders that are complete, pxVol and pxUsd will update in time f
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

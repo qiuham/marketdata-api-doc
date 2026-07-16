@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api
 anchor_id: spread-trading-rest-api
 api_type: REST
-updated_at: 2026-07-15 19:19:45.066846
+updated_at: 2026-07-16 19:20:52.105004
 ---
 
 # REST API
@@ -15,8 +15,6 @@ Place a new order
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -117,8 +115,6 @@ Cancel an incomplete order.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/sprd/cancel-order`
@@ -193,8 +189,6 @@ Cancel all pending orders.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/sprd/mass-cancel`
@@ -260,8 +254,6 @@ Amend an incomplete order.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -334,8 +326,6 @@ Retrieve order details.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -456,8 +446,6 @@ Retrieve all incomplete orders under the current account.
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -584,8 +572,6 @@ Retrieve the completed order data for the last 21 days, and the incomplete order
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -715,8 +701,6 @@ Retrieve the completed order data for the last 3 months, including those placed 
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/sprd/orders-history-archive`
@@ -833,8 +817,6 @@ Retrieve historical transaction details **for the last 7 days**. Results are ret
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -963,8 +945,6 @@ Retrieve all available spreads based on the request parameters.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1110,8 +1090,6 @@ Retrieve the order book of the spread.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1265,8 +1243,6 @@ Retrieve the recent transactions of an instrument (at most 500 records per reque
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1496,8 +1472,6 @@ Cancel all pending orders after the countdown timeout. Only applicable to spread
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/sprd/cancel-all-after`
@@ -1554,8 +1528,6 @@ Users are recommended to send a request to the exchange every second. When the c
 #### 限速:：20次/ 2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1658,8 +1630,6 @@ ioc：立即成交并取消剩余  sz
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/sprd/cancel-order`
@@ -1735,8 +1705,6 @@ sMsg | String | 事件执行失败时的msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/sprd/mass-cancel`
@@ -1806,8 +1774,6 @@ result | Boolean | 请求结果`true`, `false`
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/sprd/amend-order`
@@ -1875,8 +1841,6 @@ newSz
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1998,8 +1962,6 @@ cTime | String | 订单创建时间，Unix时间戳的毫秒数格式， 如 `15
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2131,8 +2093,6 @@ cTime | String | 订单创建时间，Unix时间戳的毫秒数格式，如：`1
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/sprd/orders-history`
@@ -2263,8 +2223,6 @@ cTime | String | 订单创建时间，Unix时间戳的毫秒数格式， 如 ：
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/sprd/orders-history-archive`
@@ -2382,8 +2340,6 @@ cTime | String | 订单创建时间，Unix时间戳的毫秒数格式， 如 ：
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2517,8 +2473,6 @@ msg | String | 错误提示，默认 ""
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2673,8 +2627,6 @@ legs | array of objects | 腿
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/sprd/books`
@@ -2827,8 +2779,6 @@ ts | String | 数据产生时间，Unix时间戳的毫秒数格式，如 1597026
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3055,8 +3005,6 @@ confirm | String | K线状态
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

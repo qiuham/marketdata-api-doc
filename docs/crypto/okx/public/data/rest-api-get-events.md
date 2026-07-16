@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-events
 anchor_id: public-data-rest-api-get-events
 api_type: REST
-updated_at: 2026-07-15 19:19:56.430917
+updated_at: 2026-07-16 19:21:03.477767
 ---
 
 # Get events
@@ -13,8 +13,6 @@ Get events for a series in OKX prediction markets. Returns all event records, in
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Public
 
 #### HTTP Request
 
@@ -81,8 +79,6 @@ state | String | Event state.
 #### 限速：10次/2s
 
 #### 限速规则：IP
-
-#### 权限：公共
 
 #### HTTP请求
 

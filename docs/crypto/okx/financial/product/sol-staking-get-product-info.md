@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-get-product-info
 anchor_id: financial-product-sol-staking-get-product-info
 api_type: API
-updated_at: 2026-07-15 19:20:40.221465
+updated_at: 2026-07-16 19:21:47.421092
 ---
 
 # GET / Product info
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:40.221465
 #### Rate Limit: 3 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -62,8 +60,6 @@ minAmt | String | Minimum subscription amount of OKSOL
 #### 限速：3 次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

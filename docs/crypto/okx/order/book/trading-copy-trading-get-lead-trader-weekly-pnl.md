@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-weekly-pnl
 anchor_id: order-book-trading-copy-trading-get-lead-trader-weekly-pnl
 api_type: API
-updated_at: 2026-07-15 19:19:17.928931
+updated_at: 2026-07-16 19:20:24.818093
 ---
 
 # GET / Lead trader weekly pnl
@@ -13,8 +13,6 @@ Public endpoint. Retrieve lead trader weekly pnl. Results are returned in counte
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -74,8 +72,6 @@ pnlRatio | String | Pnl ratio on that week
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

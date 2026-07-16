@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-convert-history
 anchor_id: funding-account-rest-api-get-convert-history
 api_type: REST
-updated_at: 2026-07-15 19:20:24.159346
+updated_at: 2026-07-16 19:21:31.312706
 ---
 
 # Get convert history
@@ -86,8 +86,6 @@ ts | String | Convert trade time, Unix timestamp format in milliseconds, e.g. `1
 #### 限速：6次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

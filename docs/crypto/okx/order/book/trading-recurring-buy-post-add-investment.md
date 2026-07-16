@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-add-investment
 anchor_id: order-book-trading-recurring-buy-post-add-investment
 api_type: API
-updated_at: 2026-07-15 19:19:10.279345
+updated_at: 2026-07-16 19:20:17.184215
 ---
 
 # POST / Add investment
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:10.279345
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate Limit Rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -67,8 +65,6 @@ sMsg | String | Error message if the event execution failed
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

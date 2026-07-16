@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-fee-type
 anchor_id: trading-account-rest-api-set-fee-type
 api_type: REST
-updated_at: 2026-07-15 19:18:19.557833
+updated_at: 2026-07-16 19:19:26.357042
 ---
 
 # Set fee type
@@ -15,8 +15,6 @@ fee type selection is only effective for Spot.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -74,8 +72,6 @@ feeType | String | Fee type
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

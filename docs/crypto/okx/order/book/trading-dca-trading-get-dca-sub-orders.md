@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading-get-dca-sub-orders
 anchor_id: order-book-trading-dca-trading-get-dca-sub-orders
 api_type: API
-updated_at: 2026-07-15 19:18:58.548598
+updated_at: 2026-07-16 19:20:05.399168
 ---
 
 # GET / DCA sub orders
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:58.548598
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate Limit Rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -122,8 +120,6 @@ Only applicable to `spot_dca`
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-risk-offset-amount
 anchor_id: trading-account-rest-api-set-risk-offset-amount
 api_type: REST
-updated_at: 2026-07-15 19:18:23.026119
+updated_at: 2026-07-16 19:19:29.822915
 ---
 
 # Set risk offset amount
@@ -13,8 +13,6 @@ Set risk offset amount. This does not represent the actual spot risk offset amou
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -71,8 +69,6 @@ clSpotInUseAmt | String | Spot risk offset amount defined by users
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

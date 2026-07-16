@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-currency-preferences
 anchor_id: order-book-trading-copy-trading-get-lead-trader-currency-preferences
 api_type: API
-updated_at: 2026-07-15 19:19:18.861374
+updated_at: 2026-07-16 19:20:25.751733
 ---
 
 # GET / Lead trader currency preferences
@@ -13,8 +13,6 @@ Public endpoint. The most frequently traded crypto of this lead trader. Results 
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -75,8 +73,6 @@ ratio | String | Ratio. 0.1 represents 10%
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

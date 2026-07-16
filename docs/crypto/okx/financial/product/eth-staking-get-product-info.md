@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-get-product-info
 anchor_id: financial-product-eth-staking-get-product-info
 api_type: API
-updated_at: 2026-07-15 19:20:37.726449
+updated_at: 2026-07-16 19:21:44.921035
 ---
 
 # GET / Product info
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:37.726449
 #### Rate Limit: 3 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -75,8 +73,6 @@ minAmt | String | Minimum subscription amount of BETH
 #### 限速：3 次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-amend-tpsl
 anchor_id: order-book-trading-signal-bot-trading-post-amend-tpsl
 api_type: API
-updated_at: 2026-07-15 19:19:02.984151
+updated_at: 2026-07-16 19:20:09.856220
 ---
 
 # POST / Amend TPSL
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:02.984151
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -72,8 +70,6 @@ algoId | String | Algo ID
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

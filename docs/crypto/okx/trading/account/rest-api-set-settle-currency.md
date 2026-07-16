@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-settle-currency
 anchor_id: trading-account-rest-api-set-settle-currency
 api_type: REST
-updated_at: 2026-07-15 19:18:28.236696
+updated_at: 2026-07-16 19:19:34.819577
 ---
 
 # Set settle currency
@@ -13,8 +13,6 @@ Only applicable to USD-margined contract.
 #### Rate limit: 20 times per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trading
 
 #### HTTP Request
 
@@ -66,8 +64,6 @@ settleCcy | String | USD-margined contract settle currency
 #### 限速：20 次/2 秒
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-order-book-public
 anchor_id: spread-trading-rest-api-get-order-book-public
 api_type: REST
-updated_at: 2026-07-15 19:19:48.519235
+updated_at: 2026-07-16 19:20:55.565754
 ---
 
 # Get order book (Public)
@@ -13,8 +13,6 @@ Retrieve the order book of the spread.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -101,8 +99,6 @@ An example of the array of asks and bids values: ["411.8", "10", "4"]
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

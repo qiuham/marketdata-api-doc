@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-greeks
 anchor_id: trading-account-rest-api-get-greeks
 api_type: REST
-updated_at: 2026-07-15 19:18:23.338456
+updated_at: 2026-07-16 19:19:30.136272
 ---
 
 # Get Greeks
@@ -13,8 +13,6 @@ Retrieve a greeks list of all assets in the account.
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -101,8 +99,6 @@ ts | String | Time of getting Greeks, Unix timestamp format in milliseconds, e.g
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

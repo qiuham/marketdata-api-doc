@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-current-lead-positions
 anchor_id: order-book-trading-copy-trading-get-lead-trader-current-lead-positions
 api_type: API
-updated_at: 2026-07-15 19:19:19.174210
+updated_at: 2026-07-16 19:20:26.065141
 ---
 
 # GET / Lead trader current lead positions
@@ -13,8 +13,6 @@ Public endpoint. Get current leading positions of lead trader
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -101,8 +99,6 @@ ccy | String | Currency
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

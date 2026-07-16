@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-funding-balance
 anchor_id: sub-account-rest-api-get-sub-account-funding-balance
 api_type: REST
-updated_at: 2026-07-15 19:20:32.453049
+updated_at: 2026-07-16 19:21:39.656515
 ---
 
 # Get sub-account funding balance
@@ -13,8 +13,6 @@ Query detailed balance info of Funding Account of a sub-account via the master a
 #### Rate limit：6 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -87,8 +85,6 @@ availBal | String | Available balance
 #### 限速：6次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

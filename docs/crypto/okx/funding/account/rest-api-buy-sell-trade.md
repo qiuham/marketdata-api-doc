@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-buy-sell-trade
 anchor_id: funding-account-rest-api-buy-sell-trade
 api_type: REST
-updated_at: 2026-07-15 19:20:27.907815
+updated_at: 2026-07-16 19:21:35.066456
 ---
 
 # Buy/sell trade
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:27.907815
 #### Rate Limit: 1 request per 5 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -119,8 +117,6 @@ This feature is only available to Bahamas institutional users at the moment.
 #### 限速：1次/5s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

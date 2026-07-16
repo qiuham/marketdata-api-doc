@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-query-the-api-key-of-a-sub-account
 anchor_id: sub-account-rest-api-query-the-api-key-of-a-sub-account
 api_type: REST
-updated_at: 2026-07-15 19:20:31.190408
+updated_at: 2026-07-16 19:21:38.388775
 ---
 
 # Query the API Key of a sub-account
@@ -13,8 +13,6 @@ Applies to master accounts only
 #### Rate limit：20 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -78,8 +76,6 @@ ts | String | Creation time
 #### 限速：20次/2秒
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

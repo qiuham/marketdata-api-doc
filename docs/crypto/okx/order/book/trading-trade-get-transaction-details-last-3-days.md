@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-transaction-details-last-3-days
 anchor_id: order-book-trading-trade-get-transaction-details-last-3-days
 api_type: API
-updated_at: 2026-07-15 19:18:37.378813
+updated_at: 2026-07-16 19:19:44.269869
 ---
 
 # GET / Transaction details (last 3 days)
@@ -13,8 +13,6 @@ Retrieve recently-filled transaction details in the last 3 day.
 #### Rate Limit: 60 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -215,8 +213,6 @@ Client-supplied order ID, always "" for block trading.
 #### 限速：60次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

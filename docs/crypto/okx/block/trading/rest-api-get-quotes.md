@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-quotes
 anchor_id: block-trading-rest-api-get-quotes
 api_type: REST
-updated_at: 2026-07-15 19:19:36.023464
+updated_at: 2026-07-16 19:20:42.992030
 ---
 
 # Get quotes
@@ -13,8 +13,6 @@ Retrieve all Quotes that the user is a counterparty to (either as the creator or
 #### Rate Limit: 2 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -156,8 +154,6 @@ The default value is the quote currency of the instId, for example: for `BTC-USD
 #### 限速: 2次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP Requests
 

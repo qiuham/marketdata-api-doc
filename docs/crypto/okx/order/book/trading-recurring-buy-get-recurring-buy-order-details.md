@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-get-recurring-buy-order-details
 anchor_id: order-book-trading-recurring-buy-get-recurring-buy-order-details
 api_type: API
-updated_at: 2026-07-15 19:19:08.709688
+updated_at: 2026-07-16 19:20:15.610171
 ---
 
 # GET / Recurring buy order details
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:08.709688
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -158,8 +156,6 @@ recurringTimeMinutes | String | Recurring buy time in minutes, integer of [0,59]
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

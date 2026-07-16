@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-get-currency-pairs
 anchor_id: financial-product-dual-investment-get-currency-pairs
 api_type: API
-updated_at: 2026-07-15 19:20:49.975624
+updated_at: 2026-07-16 19:21:57.185333
 ---
 
 # GET / Currency pairs
@@ -13,8 +13,6 @@ Returns available dual investment currency pairs.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -67,8 +65,6 @@ uly | String | Underlying
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

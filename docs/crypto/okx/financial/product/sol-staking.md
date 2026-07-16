@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking
 anchor_id: financial-product-sol-staking
 api_type: API
-updated_at: 2026-07-15 19:20:39.911428
+updated_at: 2026-07-16 19:21:47.110643
 ---
 
 # SOL staking
@@ -17,8 +17,6 @@ Stake SOL on Solana to receive OKSOL at a 1:1 ratio for liquidity
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -69,8 +67,6 @@ Only the assets in the funding account can be used.
 #### Rate Limit: 2 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -132,8 +128,6 @@ Only the assets in the funding account can be used. If your OKSOL is in your tra
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/finance/staking-defi/sol/redeem`
@@ -193,8 +187,6 @@ The balance represents the real-time total OKSOL holdings across the entire acco
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -258,8 +250,6 @@ totalInterestAccrual | String | Total interest accrual
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -417,8 +407,6 @@ ts | String | Data time, Unix timestamp format in milliseconds, e.g. `1597026383
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/staking-defi/sol/product-info`
@@ -468,8 +456,6 @@ minAmt | String | OKSOL 最低申购数量
 #### 限速：2次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 
@@ -531,8 +517,6 @@ code = `0`代表请求已被成功处理
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP 请求
 
 `POST /api/v5/finance/staking-defi/sol/redeem`
@@ -592,8 +576,6 @@ code = `0`代表请求已被成功处理
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -658,8 +640,6 @@ totalInterestAccrual | String | 历史总收益
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

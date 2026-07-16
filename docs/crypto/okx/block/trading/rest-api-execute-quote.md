@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-execute-quote
 anchor_id: block-trading-rest-api-execute-quote
 api_type: REST
-updated_at: 2026-07-15 19:19:32.257663
+updated_at: 2026-07-16 19:20:39.215667
 ---
 
 # Execute Quote
@@ -13,8 +13,6 @@ Executes a Quote. It is only used by the creator of the RFQ
 #### Rate Limit: 2 requests per 3 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -166,8 +164,6 @@ Group RFQ introduction
 #### 限速: 2次/3s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

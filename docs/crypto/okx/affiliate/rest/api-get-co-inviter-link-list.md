@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-co-inviter-link-list
 anchor_id: affiliate-rest-api-get-co-inviter-link-list
 api_type: REST
-updated_at: 2026-07-15 19:20:54.479745
+updated_at: 2026-07-16 19:22:01.647866
 ---
 
 # Get co-inviter link list
@@ -13,8 +13,6 @@ Co-inviter links where the authenticated user is the co-inviter.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -123,8 +121,6 @@ linkStatus | String | Link status.
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

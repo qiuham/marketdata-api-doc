@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-grid-algo-order-history
 anchor_id: order-book-trading-grid-trading-get-grid-algo-order-history
 api_type: API
-updated_at: 2026-07-15 19:18:51.166304
+updated_at: 2026-07-16 19:19:58.051115
 ---
 
 # GET / Grid algo order history
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:51.166304
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -255,8 +253,6 @@ tradeQuoteCcy | String | The quote currency for trading.
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

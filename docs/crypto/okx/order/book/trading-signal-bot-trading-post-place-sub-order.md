@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-place-sub-order
 anchor_id: order-book-trading-signal-bot-trading-post-place-sub-order
 api_type: API
-updated_at: 2026-07-15 19:19:05.494538
+updated_at: 2026-07-16 19:20:12.374251
 ---
 
 # POST / Place sub order
@@ -15,8 +15,6 @@ You can place an order only if you have sufficient funds.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -86,8 +84,6 @@ When placing an order with this parameter set to true, it means that the order w
   
   
 #### 限速：20次/2s
-
-#### 权限：交易
 
 #### HTTP请求
 

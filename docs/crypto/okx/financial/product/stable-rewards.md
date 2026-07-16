@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards
 anchor_id: financial-product-stable-rewards
 api_type: API
-updated_at: 2026-07-15 19:20:42.091309
+updated_at: 2026-07-16 19:21:49.295233
 ---
 
 # Stable Rewards
@@ -22,8 +22,6 @@ Retrieve product-level information for the specified stablecoin, including all c
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -110,8 +108,6 @@ Retrieve the real-time Stable Rewards balance across the account (trading accoun
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/stable-rewards/balance`
@@ -172,8 +168,6 @@ Retrieve the historical daily APY of the specified stablecoin. The returned rate
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/stable-rewards/apy-history`
@@ -231,8 +225,6 @@ OKX Stable Rewards 自动为持有合格稳定币（如 `USDG`）的用户每日
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 
@@ -319,8 +311,6 @@ ts | String | 数据查询时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP 请求
 
 `GET /api/v5/finance/stable-rewards/balance`
@@ -380,8 +370,6 @@ ts | String | 数据查询时间，Unix 时间戳，单位为毫秒，如 `15970
 #### 限速：6次/s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP 请求
 

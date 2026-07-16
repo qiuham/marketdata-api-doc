@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-sub-affiliate-list
 anchor_id: affiliate-rest-api-get-sub-affiliate-list
 api_type: REST
-updated_at: 2026-07-15 19:20:54.792747
+updated_at: 2026-07-16 19:22:01.961952
 ---
 
 # Get sub-affiliate list
@@ -13,8 +13,6 @@ Paginated sub-affiliates under current user.
 #### Rate Limit: 3 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -109,8 +107,6 @@ totalCommission | String | Your commission earned from this sub-affiliate's invi
 #### 限速：3次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

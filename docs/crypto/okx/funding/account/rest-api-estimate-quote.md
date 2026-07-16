@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-estimate-quote
 anchor_id: funding-account-rest-api-estimate-quote
 api_type: REST
-updated_at: 2026-07-15 19:20:23.534263
+updated_at: 2026-07-16 19:21:30.687022
 ---
 
 # Estimate quote
@@ -15,8 +15,6 @@ updated_at: 2026-07-15 19:20:23.534263
 #### Rate Limit: 1 request per 5 seconds
 
 #### Rate limit rule: Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -108,8 +106,6 @@ quoteSz | String | Convert amount of quote currency
 #### 限速：1次/5s
 
 #### 限速规则：Instrument ID
-
-#### 权限：交易
 
 #### HTTP请求
 

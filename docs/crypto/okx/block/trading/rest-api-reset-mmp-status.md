@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-reset-mmp-status
 anchor_id: block-trading-rest-api-reset-mmp-status
 api_type: REST
-updated_at: 2026-07-15 19:19:33.194921
+updated_at: 2026-07-16 19:20:40.154630
 ---
 
 # Reset MMP status
@@ -13,8 +13,6 @@ Reset the MMP status to be inactive.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -80,8 +78,6 @@ data | Array of objects | Array of objects containing the results.
 #### 限速: 5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

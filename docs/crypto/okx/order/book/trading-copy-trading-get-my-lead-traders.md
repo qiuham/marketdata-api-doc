@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-my-lead-traders
 anchor_id: order-book-trading-copy-trading-get-my-lead-traders
 api_type: API
-updated_at: 2026-07-15 19:19:16.992588
+updated_at: 2026-07-16 19:20:23.880327
 ---
 
 # GET / My lead traders
@@ -13,8 +13,6 @@ Retrieve my lead traders.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -85,8 +83,6 @@ leadMode | String | Lead mode `public` `private`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

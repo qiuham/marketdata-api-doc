@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-asset-bills-details
 anchor_id: funding-account-rest-api-asset-bills-details
 api_type: REST
-updated_at: 2026-07-15 19:20:19.449797
+updated_at: 2026-07-16 19:21:26.600388
 ---
 
 # Asset bills details
@@ -13,8 +13,6 @@ Query the billing record in the past month.
 #### Rate Limit: 6 Requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -254,8 +252,6 @@ ts | String | Creation time, Unix timestamp format in milliseconds, e.g.`1597026
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

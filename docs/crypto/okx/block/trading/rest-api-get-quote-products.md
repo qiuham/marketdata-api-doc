@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-quote-products
 anchor_id: block-trading-rest-api-get-quote-products
 api_type: REST
-updated_at: 2026-07-15 19:19:32.571323
+updated_at: 2026-07-16 19:20:39.530038
 ---
 
 # Get Quote products
@@ -13,8 +13,6 @@ Retrieve the products which makers want to quote and receive RFQs for, and the c
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -128,8 +126,6 @@ If Ask price < Mark - 1 tick, It will be stopped
 #### 限速: 5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP Requests
 

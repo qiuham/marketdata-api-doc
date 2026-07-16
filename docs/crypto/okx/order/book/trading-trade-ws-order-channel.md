@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-order-channel
 anchor_id: order-book-trading-trade-ws-order-channel
 api_type: WebSocket
-updated_at: 2026-07-15 19:18:42.104223
+updated_at: 2026-07-16 19:19:49.008584
 ---
 
 # WS / Order channel
@@ -501,8 +501,7 @@ Valid values and the corresponding meanings are:
 > amendSource | String | Source of the order amendation.   
 `1`: Order amended by user  
 `2`: Order amended by user, but the order quantity is overriden by system due to reduce-only  
-`3`: New order placed by user, but the order quantity is overriden by system due to reduce-only  
-`4`: Order amended by system due to other pending orders  
+`4`: Order quantity amended by system due to reduce-only, including a new order placed by the user whose quantity is overriden by the system, and an existing pending order amended by the system due to other pending orders  
 `5`: Order modification due to changes in options px, pxVol, or pxUsd as a result of following variations. For example, when iv = 60, USD and px are anchored at iv = 60, the changes in USD or px lead to modification.  
 > category | String | Category   
 `normal`   
@@ -1029,8 +1028,7 @@ data | Array of objects | 订阅的数据
 > amendSource | String | 订单修改的来源  
 `1`: 用户主动改单，改单成功  
 `2`: 用户主动改单，并且当前这笔订单被只减仓修改，改单成功  
-`3`: 用户主动下单，并且当前这笔订单被只减仓修改，改单成功  
-`4`: 用户当前已存在的挂单（非当前操作的订单），被只减仓修改，改单成功  
+`4`: 订单数量被系统按只减仓修改，改单成功，包括：用户主动下单后当前这笔订单被只减仓修改，以及用户当前已存在的挂单（非当前操作的订单）被只减仓修改  
 `5`：期权 px, pxVol 或 pxUsd 的跟随变动导致的改单，比如 iv=60，USD，px 锚定iv=60 时，USD, px 产生变动时的改单  
 > category | String | 订单种类分类  
 `normal`：普通委托订单种类   

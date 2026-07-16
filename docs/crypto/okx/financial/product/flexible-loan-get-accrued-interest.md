@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-accrued-interest
 anchor_id: financial-product-flexible-loan-get-accrued-interest
 api_type: REST
-updated_at: 2026-07-15 19:20:49.324739
+updated_at: 2026-07-16 19:21:56.538525
 ---
 
 # GET / Accrued interest
@@ -13,8 +13,6 @@ Retrieves the interest accrual history for flexible loans over the past 30 days.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -91,8 +89,6 @@ ts | String | Timestamp to calculated interest, Unix timestamp format in millise
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

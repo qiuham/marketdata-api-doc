@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-monthly-statement-last-year
 anchor_id: funding-account-rest-api-get-monthly-statement-last-year
 api_type: REST
-updated_at: 2026-07-15 19:20:22.600325
+updated_at: 2026-07-16 19:21:29.753287
 ---
 
 # Get monthly statement (last year)
@@ -13,8 +13,6 @@ Retrieve monthly statement in the past year.
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -67,8 +65,6 @@ state | String | Download link status
 #### 限速：10 次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP Request
 

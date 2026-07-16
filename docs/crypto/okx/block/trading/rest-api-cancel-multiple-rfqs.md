@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-multiple-rfqs
 anchor_id: block-trading-rest-api-cancel-multiple-rfqs
 api_type: REST
-updated_at: 2026-07-15 19:19:31.631430
+updated_at: 2026-07-16 19:20:38.587419
 ---
 
 # Cancel multiple RFQs
@@ -13,8 +13,6 @@ Cancel one or multiple active RFQ(s) in a single batch. Maximum 100 RFQ orders c
 #### Rate Limit: 2 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -187,8 +185,6 @@ data | Array of objects | Array of objects containing the results
 #### 限速: 2次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-ranks
 anchor_id: order-book-trading-copy-trading-get-lead-trader-ranks
 api_type: API
-updated_at: 2026-07-15 19:19:17.618415
+updated_at: 2026-07-16 19:20:24.507527
 ---
 
 # GET / Lead trader ranks
@@ -13,8 +13,6 @@ Public endpoint. Retrieve lead trader ranks.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -140,8 +138,6 @@ ranks | Array of objects | The rank information of lead traders
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

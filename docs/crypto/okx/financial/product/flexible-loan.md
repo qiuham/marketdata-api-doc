@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan
 anchor_id: financial-product-flexible-loan
 api_type: API
-updated_at: 2026-07-15 19:20:46.818036
+updated_at: 2026-07-16 19:21:54.043959
 ---
 
 # Flexible loan
@@ -17,8 +17,6 @@ Get borrowable currencies
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -75,8 +73,6 @@ Get collateral assets in funding account.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -157,8 +153,6 @@ assets | Array of objects | Collateral assets data
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `POST /api/v5/finance/flexible-loan/max-loan`
@@ -234,8 +228,6 @@ remainingQuota | String | Remaining quota, unit in `borrowCcy`
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/max-collateral-redeem-amount`
@@ -298,8 +290,6 @@ maxRedeemAmt | String | Maximum collateral redeem amount
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -367,8 +357,6 @@ code = `0` means your request has been accepted (It doesn't mean the request has
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -481,8 +469,6 @@ If your loan reaches liquidation LTV, it'll trigger forced liquidation. When thi
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/loan-history`
@@ -567,8 +553,6 @@ Retrieves the interest accrual history for flexible loans over the past 30 days.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/flexible-loan/interest-accrued`
@@ -649,8 +633,6 @@ ts | String | Timestamp to calculated interest, Unix timestamp format in millise
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/borrow-currencies`
@@ -706,8 +688,6 @@ borrowCcy | String | 可借币种，如 `BTC`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -788,8 +768,6 @@ assets | Array of objects | 可抵押资产信息
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `POST /api/v5/finance/flexible-loan/max-loan`
@@ -865,8 +843,6 @@ remainingQuota | String | 剩余可借额度，单位为`borrowCcy`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/max-collateral-redeem-amount`
@@ -929,8 +905,6 @@ maxRedeemAmt | String | 抵押物最大可赎回数量
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -998,8 +972,6 @@ code = `0` 代表请求已被接受(不代表处理成功)
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1112,8 +1084,6 @@ liqLTV | String | 强平质押率，如 `0.1`代表`10%`
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/finance/flexible-loan/loan-history`
@@ -1197,8 +1167,6 @@ ts | String | 操作发生时间，Unix 时间戳为毫秒数格式，如 `15970
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

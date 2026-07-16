@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-amend-leading-instruments
 anchor_id: order-book-trading-copy-trading-post-amend-leading-instruments
 api_type: API
-updated_at: 2026-07-15 19:19:13.568534
+updated_at: 2026-07-16 19:20:20.450456
 ---
 
 # POST / Amend leading instruments
@@ -14,8 +14,6 @@ All non-leading instruments can't have position or pending orders for the curren
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -78,8 +76,6 @@ enabled | Boolean | Whether you set it successfully
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-close-positions
 anchor_id: order-book-trading-trade-post-close-positions
 api_type: API
-updated_at: 2026-07-15 19:18:35.753248
+updated_at: 2026-07-16 19:19:42.635299
 ---
 
 # POST / Close positions
@@ -15,8 +15,6 @@ Close the position of an instrument via a market order.
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -111,8 +109,6 @@ if there are any pending orders for closing out and the orders do not need to be
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 #### HTTP请求
 

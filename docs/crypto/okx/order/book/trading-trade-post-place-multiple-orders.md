@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-multiple-orders
 anchor_id: order-book-trading-trade-post-place-multiple-orders
 api_type: API
-updated_at: 2026-07-15 19:18:34.177467
+updated_at: 2026-07-16 19:19:41.053284
 ---
 
 # POST / Place multiple orders
@@ -18,8 +18,6 @@ Request parameters should be passed in the form of an array. Orders will be plac
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 Rate limit of this endpoint will also be affected by the rules [Sub-account rate limit](/docs-v5/en/#overview-rate-limits-sub-account-rate-limit) and [Fill ratio based sub-account rate limit](/docs-v5/en/#overview-rate-limits-fill-ratio-based-sub-account-rate-limit).
 
@@ -282,8 +280,6 @@ clOrdId must be unique among all pending orders and the current request.  Rate l
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 该接口限速同时受到 [子账户限速](/docs-v5/log_zh/#upcoming-changes-sub-account-rate-limit) 及 [基于成交比率的子账户限速](/docs-v5/log_zh/#upcoming-changes-fill-ratio-based-sub-account-rate-limit) 限速规则的影响。
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-set-permission-of-transfer-out
 anchor_id: sub-account-rest-api-set-permission-of-transfer-out
 api_type: REST
-updated_at: 2026-07-15 19:20:34.012142
+updated_at: 2026-07-16 19:21:41.218579
 ---
 
 # Set permission of transfer out
@@ -13,8 +13,6 @@ Set permission of transfer out for sub-account (only applicable to master accoun
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -98,8 +96,6 @@ canTransOut | Boolean | Whether the sub-account has the right to transfer out.
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards-get-product-info
 anchor_id: financial-product-stable-rewards-get-product-info
 api_type: API
-updated_at: 2026-07-15 19:20:42.404109
+updated_at: 2026-07-16 19:21:49.608959
 ---
 
 # GET / Product info
@@ -13,8 +13,6 @@ Retrieve product-level information for the specified stablecoin, including all c
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -102,8 +100,6 @@ ts | String | Data query time, Unix timestamp format in milliseconds, e.g. `1597
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

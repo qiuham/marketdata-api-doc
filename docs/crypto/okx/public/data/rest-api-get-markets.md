@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-markets
 anchor_id: public-data-rest-api-get-markets
 api_type: REST
-updated_at: 2026-07-15 19:19:56.751877
+updated_at: 2026-07-16 19:21:03.791942
 ---
 
 # Get markets
@@ -13,8 +13,6 @@ Get markets for events in OKX prediction markets. Return data in expTime and flo
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Public
 
 #### HTTP Request
 
@@ -110,8 +108,6 @@ hitDir | String | Hit direction. Only applicable when the settlement method is `
 #### 限速：10次/2s
 
 #### 限速规则：IP
-
-#### 权限：公共
 
 #### HTTP请求
 

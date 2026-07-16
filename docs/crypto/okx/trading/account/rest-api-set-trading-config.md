@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-trading-config
 anchor_id: trading-account-rest-api-set-trading-config
 api_type: REST
-updated_at: 2026-07-15 19:18:28.546658
+updated_at: 2026-07-16 19:19:35.129641
 ---
 
 # Set trading config
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:28.546658
 #### Rate limit: 1 request per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -71,8 +69,6 @@ stgyType | String | Strategy type
 #### **限速：1次/2s**  
   
 #### **限速规则：User ID**
-
-#### 权限：交易
 
 #### **HTTP请求**
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-cancel-all-orders
 anchor_id: spread-trading-rest-api-cancel-all-orders
 api_type: REST
-updated_at: 2026-07-15 19:19:46.001872
+updated_at: 2026-07-16 19:20:53.041373
 ---
 
 # Cancel All orders
@@ -13,8 +13,6 @@ Cancel all pending orders.
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -83,8 +81,6 @@ Getting a response with result=true means your request has been successfully rec
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

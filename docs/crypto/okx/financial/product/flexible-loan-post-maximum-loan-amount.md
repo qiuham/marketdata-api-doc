@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-maximum-loan-amount
 anchor_id: financial-product-flexible-loan-post-maximum-loan-amount
 api_type: API
-updated_at: 2026-07-15 19:20:47.751923
+updated_at: 2026-07-16 19:21:54.978203
 ---
 
 # POST / Maximum loan amount
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:47.751923
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -90,8 +88,6 @@ remainingQuota | String | Remaining quota, unit in `borrowCcy`
 #### 限速：5次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

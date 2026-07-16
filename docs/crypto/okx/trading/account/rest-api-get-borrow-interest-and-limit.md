@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-borrow-interest-and-limit
 anchor_id: trading-account-rest-api-get-borrow-interest-and-limit
 api_type: REST
-updated_at: 2026-07-15 19:18:21.116074
+updated_at: 2026-07-16 19:19:27.917720
 ---
 
 # Get borrow interest and limit
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:21.116074
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -138,8 +136,6 @@ only applicable to `VIP loans`~~Deprecated
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

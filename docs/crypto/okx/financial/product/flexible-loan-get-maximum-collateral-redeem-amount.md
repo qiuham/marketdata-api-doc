@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-maximum-collateral-redeem-amount
 anchor_id: financial-product-flexible-loan-get-maximum-collateral-redeem-amount
 api_type: API
-updated_at: 2026-07-15 19:20:48.062648
+updated_at: 2026-07-16 19:21:55.288883
 ---
 
 # GET / Maximum collateral redeem amount
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:48.062648
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -78,8 +76,6 @@ maxRedeemAmt | String | Maximum collateral redeem amount
 #### 限速：5次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

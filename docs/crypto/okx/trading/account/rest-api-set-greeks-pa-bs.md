@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-greeks-pa-bs
 anchor_id: trading-account-rest-api-set-greeks-pa-bs
 api_type: REST
-updated_at: 2026-07-15 19:18:19.868168
+updated_at: 2026-07-16 19:19:26.667713
 ---
 
 # Set greeks (PA/BS)
@@ -13,8 +13,6 @@ Set the display type of Greeks.
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -83,8 +81,6 @@ greeksType | String | Display type of Greeks.
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

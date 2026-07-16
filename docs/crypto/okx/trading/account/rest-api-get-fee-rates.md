@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fee-rates
 anchor_id: trading-account-rest-api-get-fee-rates
 api_type: REST
-updated_at: 2026-07-15 19:18:18.623966
+updated_at: 2026-07-16 19:19:25.421951
 ---
 
 # Get fee rates
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:18.623966
 #### Rate Limit: 5 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -150,8 +148,6 @@ Exception: The values for delivery and exercise are positive numbers, representi
 #### 限速：5次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

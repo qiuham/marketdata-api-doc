@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-account-and-position-risk
 anchor_id: trading-account-rest-api-get-account-and-position-risk
 api_type: REST
-updated_at: 2026-07-15 19:18:13.910458
+updated_at: 2026-07-16 19:19:20.490904
 ---
 
 # Get account and position risk
@@ -15,8 +15,6 @@ Obtain basic information about accounts and positions on the same time snapshot
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -140,8 +138,6 @@ posData | Array of objects | Detailed position information in all currencies
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

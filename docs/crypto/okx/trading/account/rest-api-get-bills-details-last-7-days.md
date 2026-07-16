@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-bills-details-last-7-days
 anchor_id: trading-account-rest-api-get-bills-details-last-7-days
 api_type: REST
-updated_at: 2026-07-15 19:18:14.229934
+updated_at: 2026-07-16 19:19:20.810969
 ---
 
 # Get bills details (last 7 days)
@@ -13,8 +13,6 @@ Retrieve the bills of the account. The bill refers to all transaction records th
 #### Rate Limit: 5 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -212,8 +210,6 @@ You may refer to "pnl" for the fee payment
 #### 限速：5次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

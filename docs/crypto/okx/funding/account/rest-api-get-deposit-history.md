@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-deposit-history
 anchor_id: funding-account-rest-api-get-deposit-history
 api_type: REST
-updated_at: 2026-07-15 19:20:20.395280
+updated_at: 2026-07-16 19:21:27.549507
 ---
 
 # Get deposit history
@@ -14,8 +14,6 @@ Websocket API is also available, refer to [Deposit info channel](/docs-v5/en/#fu
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -141,8 +139,6 @@ About deposit state
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

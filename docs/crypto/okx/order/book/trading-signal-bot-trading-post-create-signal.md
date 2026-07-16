@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-create-signal
 anchor_id: order-book-trading-signal-bot-trading-post-create-signal
 api_type: API
-updated_at: 2026-07-15 19:19:01.427521
+updated_at: 2026-07-16 19:20:08.297184
 ---
 
 # POST / Create signal
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:19:01.427521
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -67,8 +65,6 @@ signalChanToken | String | User identify when placing orders via signal
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-instant-trigger-grid-algo-order
 anchor_id: order-book-trading-grid-trading-post-instant-trigger-grid-algo-order
 api_type: API
-updated_at: 2026-07-15 19:18:50.520302
+updated_at: 2026-07-16 19:19:57.400089
 ---
 
 # POST / Instant trigger grid algo order
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:50.520302
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -65,8 +63,6 @@ algoClOrdId | String | Client-supplied Algo ID
 #### 限速：20次/2s  
   
 #### 限速规则：User ID + Instrument ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-request-for-quote
 anchor_id: financial-product-dual-investment-post-request-for-quote
 api_type: API
-updated_at: 2026-07-15 19:20:50.609427
+updated_at: 2026-07-16 19:21:57.811126
 ---
 
 # POST / Request for quote
@@ -13,8 +13,6 @@ Requests a real-time quote for a dual investment product. The quote has a TTL an
 #### Rate Limit: 10 requests per 60 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -85,8 +83,6 @@ idxPx | String | Index price
 #### 限速：10次/60s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

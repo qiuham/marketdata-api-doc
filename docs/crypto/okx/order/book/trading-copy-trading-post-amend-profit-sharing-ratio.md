@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-amend-profit-sharing-ratio
 anchor_id: order-book-trading-copy-trading-post-amend-profit-sharing-ratio
 api_type: API
-updated_at: 2026-07-15 19:19:15.120907
+updated_at: 2026-07-16 19:20:22.005830
 ---
 
 # POST / Amend profit sharing ratio
@@ -13,8 +13,6 @@ It is used to amend profit sharing ratio.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -71,8 +69,6 @@ result | Boolean | The result of setting
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

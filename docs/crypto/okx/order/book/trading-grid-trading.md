@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading
 anchor_id: order-book-trading-grid-trading
 api_type: API
-updated_at: 2026-07-15 19:18:48.335081
+updated_at: 2026-07-16 19:19:55.166744
 ---
 
 # Grid Trading
@@ -16,8 +16,6 @@ The API endpoints of `Grid Trading` require authentication.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -198,8 +196,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/amend-algo-basic-param`
@@ -267,8 +263,6 @@ maxTopupAmount | String | Contract grid only. Max top up investment amount to ed
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -382,8 +376,6 @@ A maximum of 10 orders can be stopped per request.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/stop-order-algo`
@@ -452,8 +444,6 @@ Close position when the contract grid stop type is 'keep position'.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/close-position`
@@ -514,8 +504,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/cancel-close-order`
@@ -570,8 +558,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID + Instrument ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/order-instant-trigger`
@@ -621,8 +607,6 @@ algoClOrdId | String | Client-supplied Algo ID
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -864,8 +848,6 @@ tradeQuoteCcy | String | The quote currency for trading.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/grid/orders-algo-history`
@@ -1105,8 +1087,6 @@ tradeQuoteCcy | String | The quote currency for trading.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1374,8 +1354,6 @@ tradeQuoteCcy | String | The quote currency for trading.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/grid/sub-orders`
@@ -1496,8 +1474,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/grid/positions`
@@ -1588,8 +1564,6 @@ markPx | String | Mark price
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/withdraw-income`
@@ -1639,8 +1613,6 @@ profit | String | Withdraw profit
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1694,8 +1666,6 @@ lever | String | Leverage after adjustment of margin balance
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1753,8 +1723,6 @@ It is used to add investment and only applicable to contract gird.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/grid/adjust-investment`
@@ -1806,8 +1774,6 @@ Authentication is not required for this public endpoint.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1898,8 +1864,6 @@ Authentication is not required for this public endpoint.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -2008,8 +1972,6 @@ Authentication is not required for this public endpoint.
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/public/rsi-back-testing`
@@ -2075,8 +2037,6 @@ Maximum grid quantity can be retrieved from this endpoint. Minimum grid quantity
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/grid/grid-quantity`
@@ -2127,8 +2087,6 @@ maxGridQty | String | Maximum grid quantity
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -3271,8 +3229,6 @@ Only applicable to `FUTURES`/`SWAP`/`OPTION`
 
 #### 限速规则：User ID + Instrument ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/order-algo`
@@ -3451,8 +3407,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/amend-algo-basic-param`
@@ -3520,8 +3474,6 @@ maxTopupAmount | String | 仅限合约网格。编辑网格参数时的最大追
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -3635,8 +3587,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/stop-order-algo`
@@ -3705,8 +3655,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/close-position`
@@ -3767,8 +3715,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/cancel-close-order`
@@ -3823,8 +3769,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID + Instrument ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/order-instant-trigger`
@@ -3873,8 +3817,6 @@ algoClOrdId | String | 用户自定义策略ID
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -4116,8 +4058,6 @@ tradeQuoteCcy | String | 用于交易的计价币种。
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/grid/orders-algo-history`
@@ -4357,8 +4297,6 @@ tradeQuoteCcy | String | 用于交易的计价币种。
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -4626,8 +4564,6 @@ tradeQuoteCcy | String | 用于交易的计价币种。
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/grid/sub-orders`
@@ -4750,8 +4686,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/grid/positions`
@@ -4842,8 +4776,6 @@ markPx | String | 标记价格
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/withdraw-income`
@@ -4893,8 +4825,6 @@ profit | String | 提取的利润
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -4948,8 +4878,6 @@ lever | String | 调整保证金后的杠杠倍数
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -5007,8 +4935,6 @@ algoClOrdId | String | 用户自定义策略ID
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/grid/adjust-investment`
@@ -5060,8 +4986,6 @@ algoId | String | 策略订单ID
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -5151,8 +5075,6 @@ sourceCcy | String | 来源币种
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -5259,8 +5181,6 @@ singleAmt | String | 单网格买卖量
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/public/rsi-back-testing`
@@ -5326,8 +5246,6 @@ triggerNum | String | 触发次数
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/grid/grid-quantity`
@@ -5378,8 +5296,6 @@ maxGridQty | String | 最大网格数量
 #### 限速：20次/2s
 
 #### 限速规则：User ID + Instrument ID
-
-#### 权限：交易
 
 #### HTTP请求
 

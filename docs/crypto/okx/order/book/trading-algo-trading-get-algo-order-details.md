@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-get-algo-order-details
 anchor_id: order-book-trading-algo-trading-get-algo-order-details
 api_type: API
-updated_at: 2026-07-15 19:18:46.388316
+updated_at: 2026-07-16 19:19:53.339349
 ---
 
 # GET / Algo order details
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:46.388316
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -242,8 +240,6 @@ tradeQuoteCcy | String | The quote currency used for trading.
 #### 限速：20次/2s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

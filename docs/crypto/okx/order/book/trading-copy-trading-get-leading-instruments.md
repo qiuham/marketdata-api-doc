@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-leading-instruments
 anchor_id: order-book-trading-copy-trading-get-leading-instruments
 api_type: API
-updated_at: 2026-07-15 19:19:13.258274
+updated_at: 2026-07-16 19:20:20.140051
 ---
 
 # GET / Leading instruments
@@ -13,8 +13,6 @@ Retrieve instruments that are supported to lead by the platform. Retrieve instru
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -74,8 +72,6 @@ enabled | Boolean | Whether instrument is a lead instrument. `true` or `false`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

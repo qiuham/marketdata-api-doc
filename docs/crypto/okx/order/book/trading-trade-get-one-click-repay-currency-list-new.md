@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-one-click-repay-currency-list-new
 anchor_id: order-book-trading-trade-get-one-click-repay-currency-list-new
 api_type: API
-updated_at: 2026-07-15 19:18:39.882199
+updated_at: 2026-07-16 19:19:46.777079
 ---
 
 # GET / One-click repay currency list (New)
@@ -13,8 +13,6 @@ Get list of debt currency data and repay currencies. Only applicable to `SPOT mo
 #### Rate Limit: 1 request per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -102,8 +100,6 @@ repayData | Array of objects | Repay currency data list
 #### 限速：1次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-list
 anchor_id: order-book-trading-trade-get-order-list
 api_type: API
-updated_at: 2026-07-15 19:18:36.406541
+updated_at: 2026-07-16 19:19:43.292636
 ---
 
 # GET / Order List
@@ -13,8 +13,6 @@ Retrieve all incomplete orders under the current account.
 #### Rate Limit: 60 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -301,8 +299,6 @@ Only applicable to `EVENTS`
 #### 限速：60次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-cancel-all-after
 anchor_id: order-book-trading-trade-post-cancel-all-after
 api_type: API
-updated_at: 2026-07-15 19:18:41.130511
+updated_at: 2026-07-16 19:19:48.026749
 ---
 
 # POST / Cancel All After
@@ -14,8 +14,6 @@ Cancel all pending orders after the countdown timeout. Applicable to all trading
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID + tag
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -99,8 +97,6 @@ Users can run a maximum of 20 tag level CAAs simultaneously under the same sub-a
 #### 限速：1次/s
 
 #### 限速规则：User ID + tag
-
-#### 权限：交易
 
 #### HTTP请求
 

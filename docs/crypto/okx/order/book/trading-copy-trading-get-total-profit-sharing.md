@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-total-profit-sharing
 anchor_id: order-book-trading-copy-trading-get-total-profit-sharing
 api_type: API
-updated_at: 2026-07-15 19:19:14.190281
+updated_at: 2026-07-16 19:20:21.072695
 ---
 
 # GET / Total profit sharing
@@ -13,8 +13,6 @@ The leading trader gets the total amount of profit shared since joining the plat
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -69,8 +67,6 @@ instType | String | Instrument type
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

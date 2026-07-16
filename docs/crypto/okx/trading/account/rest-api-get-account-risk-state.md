@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-account-risk-state
 anchor_id: trading-account-rest-api-get-account-risk-state
 api_type: REST
-updated_at: 2026-07-15 19:18:20.801229
+updated_at: 2026-07-16 19:19:27.601846
 ---
 
 # Get account risk state
@@ -13,8 +13,6 @@ Only applicable to Portfolio margin account
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -80,8 +78,6 @@ ts | String | Unix timestamp format in milliseconds, e.g.`1597026383085`
 #### 限速：10次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

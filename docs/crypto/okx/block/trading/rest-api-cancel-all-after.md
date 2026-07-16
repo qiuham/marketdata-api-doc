@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-all-after
 anchor_id: block-trading-rest-api-cancel-all-after
 api_type: REST
-updated_at: 2026-07-15 19:19:35.384735
+updated_at: 2026-07-16 19:20:42.349181
 ---
 
 # Cancel All After
@@ -13,8 +13,6 @@ Cancel all quotes after the countdown timeout.
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -71,8 +69,6 @@ Users are recommended to send a request to the exchange every second. When the c
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

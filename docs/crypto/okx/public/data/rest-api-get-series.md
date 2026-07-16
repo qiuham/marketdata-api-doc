@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-series
 anchor_id: public-data-rest-api-get-series
 api_type: REST
-updated_at: 2026-07-15 19:19:56.118291
+updated_at: 2026-07-16 19:21:03.166244
 ---
 
 # Get series
@@ -13,8 +13,6 @@ Retrieve the list of series for OKX prediction markets.
 #### Rate Limit: 10 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Public
 
 #### HTTP Request
 
@@ -89,8 +87,6 @@ settlement | Object | Settlement information
 #### 限速：10次/2s
 
 #### 限速规则：IP
-
-#### 权限：公共
 
 #### HTTP请求
 

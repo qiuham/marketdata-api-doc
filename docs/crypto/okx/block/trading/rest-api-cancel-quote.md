@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-quote
 anchor_id: block-trading-rest-api-cancel-quote
 api_type: REST
-updated_at: 2026-07-15 19:19:34.449275
+updated_at: 2026-07-16 19:20:41.412616
 ---
 
 # Cancel Quote
@@ -15,8 +15,6 @@ If a new `create-quote` for the same `rfqId` is processed before this cancel req
 #### Rate Limit: 50 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -100,8 +98,6 @@ data | Array of objects | Array of objects containing the results
 #### 限速: 50次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

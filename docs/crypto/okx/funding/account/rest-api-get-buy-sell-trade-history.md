@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-buy-sell-trade-history
 anchor_id: funding-account-rest-api-get-buy-sell-trade-history
 api_type: REST
-updated_at: 2026-07-15 19:20:28.220498
+updated_at: 2026-07-16 19:21:35.379585
 ---
 
 # Get buy/sell trade history
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:28.220498
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -99,8 +97,6 @@ This feature is only available to Bahamas institutional users at the moment.
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

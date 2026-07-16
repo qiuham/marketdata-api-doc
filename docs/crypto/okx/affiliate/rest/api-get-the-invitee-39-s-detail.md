@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-the-invitee-39-s-detail
 anchor_id: affiliate-rest-api-get-the-invitee-39-s-detail
 api_type: REST
-updated_at: 2026-07-15 19:20:53.536250
+updated_at: 2026-07-16 19:22:00.700008
 ---
 
 # Get the invitee's detail
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:53.536250
 #### Rate Limit: 3 requests per second  
   
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -93,8 +91,6 @@ affiliateCode | String | Affiliate invite code that the invitee registered/recal
 #### 限速：3次/s  
   
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

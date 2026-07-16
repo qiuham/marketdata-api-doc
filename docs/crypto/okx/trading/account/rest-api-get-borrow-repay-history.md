@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-borrow-repay-history
 anchor_id: trading-account-rest-api-get-borrow-repay-history
 api_type: REST
-updated_at: 2026-07-15 19:18:22.050014
+updated_at: 2026-07-16 19:19:28.852630
 ---
 
 # Get borrow/repay history
@@ -13,8 +13,6 @@ Retrieve the borrow/repay history under `Spot mode`
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -96,8 +94,6 @@ ts | String | Timestamp for the event, Unix timestamp format in milliseconds, e.
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

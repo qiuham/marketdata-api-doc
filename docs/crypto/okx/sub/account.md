@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account
 anchor_id: sub-account
 api_type: API
-updated_at: 2026-07-15 19:20:29.563333
+updated_at: 2026-07-16 19:21:36.745471
 ---
 
 # Sub-account
@@ -19,8 +19,6 @@ Applies to master accounts only
 #### Rate limit：20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -136,8 +134,6 @@ Applies to master accounts only and master accounts API Key must be linked to IP
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/users/subaccount/create-subaccount`
@@ -227,8 +223,6 @@ Applies to master accounts only and master accounts API Key must be linked to IP
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/users/subaccount/apikey`
@@ -301,8 +295,6 @@ Applies to master accounts only
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/users/subaccount/apikey`
@@ -363,8 +355,6 @@ Applies to master accounts only and master accounts API Key must be linked to IP
 #### Rate limit：1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -457,8 +447,6 @@ Applies to master accounts only and master accounts API Key must be linked to IP
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/users/subaccount/delete-apikey`
@@ -506,8 +494,6 @@ Query detailed balance info of Trading Account of a sub-account via the master a
 #### Rate limit：6 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -783,8 +769,6 @@ Query detailed balance info of Funding Account of a sub-account via the master a
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/asset/subaccount/balances`
@@ -855,8 +839,6 @@ Retrieve the maximum withdrawal information of a sub-account via the master acco
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/account/subaccount/max-withdrawal`
@@ -926,8 +908,6 @@ This endpoint is only available for master accounts. Transfer records are availa
 #### Rate limit：6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1007,8 +987,6 @@ Only applicable to the trading team's master account to getting transfer records
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/asset/subaccount/managed-subaccount-bills`
@@ -1072,8 +1050,6 @@ Only API keys with `Trade` privilege can call this endpoint.
 #### Rate limit：1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -1166,8 +1142,6 @@ Set permission of transfer out for sub-account (only applicable to master accoun
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/users/subaccount/set-transfer-out`
@@ -1249,8 +1223,6 @@ The trading team uses this interface to view the list of sub-accounts currently 
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/users/entrust-subaccount-list`
@@ -1323,8 +1295,6 @@ subAcct | String | Sub-account name
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1440,8 +1410,6 @@ ifDma | Boolean | 是否为 DMA 经济商子账号。
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/users/subaccount/create-subaccount`
@@ -1509,8 +1477,6 @@ ts | String | 创建时间
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1583,8 +1549,6 @@ ts | String | 创建时间
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/users/subaccount/apikey`
@@ -1646,8 +1610,6 @@ ts | String | 创建时间
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1738,8 +1700,6 @@ ts | String | 创建时间
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/users/subaccount/delete-apikey`
@@ -1787,8 +1747,6 @@ subAcct | String | 子账户名称
 #### 限速：6次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2062,8 +2020,6 @@ details | Array of objects | 各币种资产详细信息
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/asset/subaccount/balances`
@@ -2135,8 +2091,6 @@ availBal | String | 可用余额
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/account/subaccount/max-withdrawal`
@@ -2207,8 +2161,6 @@ spotOffsetMaxWdEx | String | 现货对冲支持借币的最大可转数量
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2288,8 +2240,6 @@ ts | String | 账单ID创建时间，Unix时间戳的毫秒数格式，如 `1597
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/asset/subaccount/managed-subaccount-bills`
@@ -2353,8 +2303,6 @@ ts | String | 账单ID创建时间，Unix时间戳的毫秒数格式，如 `1597
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -2447,8 +2395,6 @@ transId | String | 划转ID
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/users/subaccount/set-transfer-out`
@@ -2529,8 +2475,6 @@ canTransOut | Boolean | 是否可以主动转出
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-get-order-history
 anchor_id: financial-product-dual-investment-get-order-history
 api_type: API
-updated_at: 2026-07-15 19:20:52.167788
+updated_at: 2026-07-16 19:21:59.369370
 ---
 
 # GET / Order history
@@ -13,8 +13,6 @@ Return dual investment history orders
 #### Rate Limit: 1 request per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -127,8 +125,6 @@ uTime | String | Last update time, Unix timestamp format in milliseconds, e.g. `
 #### 限速：1次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

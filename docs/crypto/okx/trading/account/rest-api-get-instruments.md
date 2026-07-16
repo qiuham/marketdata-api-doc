@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-instruments
 anchor_id: trading-account-rest-api-get-instruments
 api_type: REST
-updated_at: 2026-07-15 19:18:12.610539
+updated_at: 2026-07-16 19:19:19.180063
 ---
 
 # Get instruments
@@ -13,8 +13,6 @@ Retrieve available instruments info of current account.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID + Instrument Type
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -190,8 +188,8 @@ auctionEndTime | String | ~~The end time of call auction, Unix timestamp format 
 Only applicable to `SPOT` that are listed through call auctions, return "" in other cases (deprecated, use contTdSwTime)~~  
 contTdSwTime | String | Continuous trading switch time. The switch time from call auction, prequote to continuous trading, Unix timestamp format in milliseconds. e.g. `1597026383085`.  
 Only applicable to `SPOT`/`MARGIN` that are listed through call auction or prequote, return "" in other cases.  
-preMktSwTime | String | The time premarket swap switched to normal swap, Unix timestamp format in milliseconds, e.g. `1597026383085`.   
-Only applicable premarket `SWAP`  
+preMktSwTime | String | The time a pre-market instrument switched to normal trading, Unix timestamp format in milliseconds, e.g. `1597026383085`.   
+Only applicable to pre-market `SWAP` and pre-market X-Perp `FUTURES`. Populated when a pre-market X-Perp converts to a normal X-Perp  
 openType | String | Open type  
 `fix_price`: fix price opening  
 `pre_quote`: pre-quote  
@@ -229,9 +227,9 @@ state | String | Instrument status
 `settling`: Settling, only applicable to `EVENTS`  
 ruleType | String | Trading rule types  
 `normal`: normal trading  
-`pre_market`: pre-market trading  
+`pre_market`: pre-market trading, including pre-market X-Perp `FUTURES`  
 `rebase_contract`: pre-market rebase contract  
-`xperp`: perpetual-style futures, only applicable to certain `FUTURES` contracts  
+`xperp`: perpetual-style futures, only applicable to certain `FUTURES` contracts. A pre-market X-Perp changes from `pre_market` to `xperp` after it converts to a normal X-Perp  
 posLmtAmt | String | Maximum position value (USD) for this instrument at the user level (shared across master and sub-accounts), based on the notional value of all same-direction open positions and resting orders. The effective user limit is max(posLmtAmt, oiUSD × posLmtPct). Applicable to `SWAP`/`FUTURES`.  
 posLmtPct | String | Maximum position ratio (e.g., 30 for 30%) a user (shared across master and sub-accounts) may hold relative to the platform's current total position value. The effective user limit is max(posLmtAmt, oiUSD × posLmtPct). Applicable to `SWAP`/`FUTURES`.  
 maxPlatOILmt | String | Platform-wide maximum position value (USD) for this instrument. If the platform total open interest (USD) reaches or exceeds this value, all users’ new opening orders for this instrument are rejected; otherwise, orders pass.  
@@ -303,8 +301,6 @@ When a product is going to be delisted (e.g. when a FUTURES contract is settled 
 #### 限速：20次/2s
 
 #### 限速规则：User ID + Instrument Type
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -470,8 +466,8 @@ auctionEndTime | String | ~~集合竞价结束时间，Unix时间戳的毫秒数
 仅适用于通过集合竞价方式上线的`币币`，其余情况返回""（已废弃，请使用contTdSwTime）~~  
 contTdSwTime | String | 连续交易开始时间，从集合竞价、提前挂单切换到连续交易的时间，Unix时间戳格式，单位为毫秒。e.g. `1597026383085`。  
 仅适用于通过集合竞价或提前挂单上线的`SPOT`/`MARGIN`，在其他情况下返回""。  
-preMktSwTime | String | 盘前永续合约转为普通永续合约的时间，Unix时间戳的毫秒数格式，如 `1597026383085`  
-仅适用于盘前`SWAP`  
+preMktSwTime | String | 盘前交易产品切换为正常交易的时间，Unix时间戳的毫秒数格式，如 `1597026383085`  
+仅适用于盘前`SWAP` 与盘前 X-Perp `FUTURES`。当盘前 X-Perp 转换为正常 X-Perp 时填充  
 openType | String | 开盘类型  
 `fix_price`: 定价开盘  
 `pre_quote`: 提前挂单  
@@ -506,9 +502,9 @@ state | String | 产品状态
 `settling`：结算中，仅适用于 `EVENTS`  
 ruleType | String | 交易规则类型  
 `normal`：普通交易  
-`pre_market`：盘前交易  
+`pre_market`：盘前交易，含盘前 X-Perp `FUTURES`  
 `rebase_contract`：盘前变基合约  
-`xperp`：永续合约风格的交割合约，仅适用于部分 `FUTURES` 合约  
+`xperp`：永续合约风格的交割合约，仅适用于部分 `FUTURES` 合约。盘前 X-Perp 转换为正常 X-Perp 后，由 `pre_market` 变为 `xperp`  
 posLmtAmt | String | 单一用户（母子账户共享）层面的该产品最大持仓名义价值（USD），按同方向已持仓与挂单的美元名义价值计算。单用户有效上限为 max(posLmtAmt, oiUSD × posLmtPct)。适用于 `SWAP`/`FUTURES`。  
 posLmtPct | String | 单一用户（母子账户共享）相对于平台当前总持仓名义价值可持有的最大比例（如 30 表示 30%）。单用户有效上限为 max(posLmtAmt, oiUSD × posLmtPct)。适用于 `SWAP`/`FUTURES`。  
 maxPlatOILmt | String | 该产品的全平台最大持仓名义价值（USD）。当平台总持仓量（USD）达到或超过该值时，系统将拒绝所有用户对该产品的新开仓委托；否则订单通过校验。  

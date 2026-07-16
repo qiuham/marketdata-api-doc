@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-get-balance
 anchor_id: financial-product-sol-staking-get-balance
 api_type: API
-updated_at: 2026-07-15 19:20:41.151781
+updated_at: 2026-07-16 19:21:48.352863
 ---
 
 # GET / Balance
@@ -13,8 +13,6 @@ The balance represents the real-time total OKSOL holdings across the entire acco
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -82,8 +80,6 @@ totalInterestAccrual | String | Total interest accrual
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

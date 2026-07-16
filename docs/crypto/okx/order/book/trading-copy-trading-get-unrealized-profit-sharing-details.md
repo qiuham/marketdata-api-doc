@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-unrealized-profit-sharing-details
 anchor_id: order-book-trading-copy-trading-get-unrealized-profit-sharing-details
 api_type: API
-updated_at: 2026-07-15 19:19:14.501396
+updated_at: 2026-07-16 19:20:21.385414
 ---
 
 # GET / Unrealized profit sharing details
@@ -14,8 +14,6 @@ The unrealized profit sharing details will update once there copy position is cl
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -85,8 +83,6 @@ ts | String | Update time.
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

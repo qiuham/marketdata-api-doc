@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-mmp-config
 anchor_id: block-trading-rest-api-get-mmp-config
 api_type: REST
-updated_at: 2026-07-15 19:19:33.815316
+updated_at: 2026-07-16 19:20:40.775705
 ---
 
 # Get MMP Config
@@ -13,8 +13,6 @@ This endpoint is used to get MMP configure information and only applicable to bl
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -69,8 +67,6 @@ mmpFrozenUntil | String | If frozenInterval is not "0" and mmpFrozen = True, it 
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

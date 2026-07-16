@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-auto-loan
 anchor_id: trading-account-rest-api-set-auto-loan
 api_type: REST
-updated_at: 2026-07-15 19:18:24.268895
+updated_at: 2026-07-16 19:19:31.065873
 ---
 
 # Set auto loan
@@ -13,8 +13,6 @@ Only applicable to `Multi-currency margin` and `Portfolio margin`
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -65,8 +63,6 @@ autoLoan | Boolean | Whether to automatically make loans
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-spreads-public
 anchor_id: spread-trading-rest-api-get-spreads-public
 api_type: REST
-updated_at: 2026-07-15 19:19:48.207506
+updated_at: 2026-07-16 19:20:55.253510
 ---
 
 # Get Spreads (Public)
@@ -13,8 +13,6 @@ Retrieve all available spreads based on the request parameters.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -162,8 +160,6 @@ legs | array of objects |
 #### 限速：20次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

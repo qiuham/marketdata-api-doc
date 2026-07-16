@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-increase-decrease-margin
 anchor_id: trading-account-rest-api-increase-decrease-margin
 api_type: REST
-updated_at: 2026-07-15 19:18:17.368579
+updated_at: 2026-07-16 19:19:23.964636
 ---
 
 # Increase/decrease margin
@@ -13,8 +13,6 @@ Increase or decrease the margin of the isolated position. Margin reduction may r
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -111,8 +109,6 @@ The value of the margin initially assigned to the isolated position must be grea
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

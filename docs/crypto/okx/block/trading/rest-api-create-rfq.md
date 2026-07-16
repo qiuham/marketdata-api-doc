@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-create-rfq
 anchor_id: block-trading-rest-api-create-rfq
 api_type: REST
-updated_at: 2026-07-15 19:19:31.004930
+updated_at: 2026-07-16 19:20:37.958954
 ---
 
 # Create RFQ
@@ -19,8 +19,6 @@ To learn more, please visit [Support center > FAQ > Trading > Liquid marketplace
 #### Rate Limit: 5 requests per 2 seconds; 80 requests per 12 hours
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -297,8 +295,6 @@ Group RFQ introduction
 #### 限速: 5次/2s；80次/12h
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP Requests
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading
 anchor_id: order-book-trading-copy-trading
 api_type: API
-updated_at: 2026-07-15 19:19:11.691602
+updated_at: 2026-07-16 19:20:18.559878
 ---
 
 # Copy Trading
@@ -56,8 +56,6 @@ Returns reverse chronological order with `openTime`
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -182,8 +180,6 @@ Returns reverse chronological order with `subPosId`.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/subpositions-history`
@@ -305,8 +301,6 @@ Set TP/SL for the current lead position that are not closed.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/copytrading/algo-order`
@@ -384,8 +378,6 @@ It is required to pass subPosId which can get from [Get existing leading positio
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/copytrading/close-subposition`
@@ -448,8 +440,6 @@ Retrieve instruments that are supported to lead by the platform. Retrieve instru
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/instruments`
@@ -507,8 +497,6 @@ All non-leading instruments can't have position or pending orders for the curren
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -568,8 +556,6 @@ The leading trader gets profits shared details for the last 3 months.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -643,8 +629,6 @@ The leading trader gets the total amount of profit shared since joining the plat
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/total-profit-sharing`
@@ -697,8 +681,6 @@ The unrealized profit sharing details will update once there copy position is cl
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -766,8 +748,6 @@ The leading trader gets the total unrealized amount of profit shared.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/total-unrealized-profit-sharing`
@@ -815,8 +795,6 @@ It is used to amend profit sharing ratio.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -871,8 +849,6 @@ Retrieve current account configuration related to copy/lead trading.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -949,8 +925,6 @@ The first copy settings for the certain lead trader. You need to first copy sett
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -1040,8 +1014,6 @@ You need to use this endpoint to amend copy settings
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/copytrading/amend-copy-settings`
@@ -1130,8 +1102,6 @@ You need to use this endpoint to stop copy trading
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP request
 
 `POST /api/v5/copytrading/stop-copy-trading`
@@ -1189,8 +1159,6 @@ Retrieve the copy settings about certain lead trader.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1289,8 +1257,6 @@ Retrieve my lead traders.
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/current-lead-traders`
@@ -1359,8 +1325,6 @@ Public endpoint. Retrieve copy trading parameter configuration information of co
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/public-config`
@@ -1418,8 +1382,6 @@ Public endpoint. Retrieve lead trader ranks.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1544,8 +1506,6 @@ Public endpoint. Retrieve lead trader weekly pnl. Results are returned in counte
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/public-weekly-pnl`
@@ -1602,8 +1562,6 @@ Public endpoint. Retrieve lead trader daily pnl. Results are returned in counter
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1666,8 +1624,6 @@ Public endpoint. Key data related to lead trader performance.
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1734,8 +1690,6 @@ Public endpoint. The most frequently traded crypto of this lead trader. Results 
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/public-preference-currency`
@@ -1793,8 +1747,6 @@ Public endpoint. Get current leading positions of lead trader
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -1880,8 +1832,6 @@ Returns reverse chronological order with `subPosId`.
 
 #### Rate limit rule: IP
 
-#### Permission: Read
-
 #### HTTP request
 
 `GET /api/v5/copytrading/public-subpositions-history`
@@ -1966,8 +1916,6 @@ Public endpoint. Retrieve copy trader coming from certain lead trader. Return ac
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -2251,8 +2199,6 @@ data | Array of objects | Subscribed data
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/current-subpositions`
@@ -2376,8 +2322,6 @@ availSubPos | String | 可平张数/币数
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/subpositions-history`
@@ -2500,8 +2444,6 @@ type | String | 平仓类型
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/copytrading/algo-order`
@@ -2582,8 +2524,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/copytrading/close-subposition`
@@ -2646,8 +2586,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/instruments`
@@ -2705,8 +2643,6 @@ enabled | Boolean | 是否设置了带单 `true` 或 `false`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -2767,8 +2703,6 @@ enabled | Boolean | `true` 或 `false`
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2844,8 +2778,6 @@ ts | String | 分润时间
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/total-profit-sharing`
@@ -2900,8 +2832,6 @@ SWAP：永续合约
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2971,8 +2901,6 @@ ts | String | 数据更新时间
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/total-unrealized-profit-sharing`
@@ -3021,8 +2949,6 @@ totalUnrealizedProfitSharingAmt | String | 待分润总额
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -3076,8 +3002,6 @@ result | Boolean | 设置结果
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3152,8 +3076,6 @@ details | Array of objects | 详情
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -3242,8 +3164,6 @@ result | Boolean | 设置结果
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/copytrading/amend-copy-settings`
@@ -3331,8 +3251,6 @@ result | Boolean | 设置结果
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/copytrading/stop-copy-trading`
@@ -3391,8 +3309,6 @@ result | Boolean | 设置结果
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3492,8 +3408,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/current-lead-traders`
@@ -3564,8 +3478,6 @@ leadMode | String | 带单模式
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/public-config`
@@ -3623,8 +3535,6 @@ maxSlRatio | String | 单笔最大止损比率，最小为 0
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3750,8 +3660,6 @@ ranks | Array of objects | 交易员排名信息
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/public-weekly-pnl`
@@ -3808,8 +3716,6 @@ pnlRatio | String | 当周收益率
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3872,8 +3778,6 @@ pnlRatio | String | 累计收益率
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3940,8 +3844,6 @@ ccy | String | 保证金币种
 
 #### 限速规则：IP
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/copytrading/public-preference-currency`
@@ -3999,8 +3901,6 @@ ratio | String | 占比，0.1 代表 10%
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -4084,8 +3984,6 @@ ccy | String | 币种
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -4172,8 +4070,6 @@ uniqueCode | String | 交易员唯一标识代码
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

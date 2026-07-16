@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-close-position-for-contract-grid
 anchor_id: order-book-trading-grid-trading-post-close-position-for-contract-grid
 api_type: API
-updated_at: 2026-07-15 19:18:49.899898
+updated_at: 2026-07-16 19:19:56.779398
 ---
 
 # POST / Close position for contract grid
@@ -13,8 +13,6 @@ Close position when the contract grid stop type is 'keep position'.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -79,8 +77,6 @@ tag | String | Order tag
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-deposit-address
 anchor_id: funding-account-rest-api-get-deposit-address
 api_type: REST
-updated_at: 2026-07-15 19:20:20.081256
+updated_at: 2026-07-16 19:21:27.234495
 ---
 
 # Get deposit address
@@ -13,8 +13,6 @@ Retrieve the deposit addresses of currencies, including previously-used addresse
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -118,8 +116,6 @@ ctAddr | String | Last 6 digits of contract address
 #### 限速：6次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

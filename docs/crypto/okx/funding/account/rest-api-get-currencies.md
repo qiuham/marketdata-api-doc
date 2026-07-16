@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-currencies
 anchor_id: funding-account-rest-api-get-currencies
 api_type: REST
-updated_at: 2026-07-15 19:20:17.568225
+updated_at: 2026-07-16 19:21:24.713834
 ---
 
 # Get currencies
@@ -13,8 +13,6 @@ Retrieve a list of all currencies available which are related to the current acc
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -161,8 +159,6 @@ depQuoteDailyLayer2 | String | The layer2 network daily deposit limit
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

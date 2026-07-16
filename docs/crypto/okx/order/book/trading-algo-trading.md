@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading
 anchor_id: order-book-trading-algo-trading
 api_type: API
-updated_at: 2026-07-15 19:18:45.103230
+updated_at: 2026-07-16 19:19:52.047369
 ---
 
 # Algo Trading
@@ -19,8 +19,6 @@ The algo order includes `trigger` order, `oco` order, `chase` order, `conditiona
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -437,8 +435,6 @@ Cancel unfilled algo orders. A maximum of 10 orders can be canceled per request.
 
 #### Rate limit rule (Options only): User ID + Instrument Family
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/trade/cancel-algos`
@@ -529,8 +525,6 @@ Amend unfilled algo orders (Support Stop order and Trigger order only, not inclu
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -671,8 +665,6 @@ sMsg | String | Rejection message if the request is unsuccessful.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -902,8 +894,6 @@ Retrieve a list of untriggered Algo orders under the current account.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1189,8 +1179,6 @@ Retrieve a list of all algo orders under the current account in the last 3 month
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -2237,8 +2225,6 @@ Only applicable to `trigger order`, `trailing order` and `twap order`
 
 #### 限速规则（只限期权）：User ID + Instrument Family
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/trade/order-algo`
@@ -2660,8 +2646,6 @@ tag | String | 订单标签
 
 #### 限速规则（只限期权）：User ID + Instrument Family
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/trade/cancel-algos`
@@ -2753,8 +2737,6 @@ tag | String | ~~订单标签~~ （已废弃）
 #### 限速：20次/2s
 
 #### 限速规则：User ID + Instrument ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -2889,8 +2871,6 @@ sMsg | String | 事件执行失败时的msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3114,8 +3094,6 @@ tradeQuoteCcy | String | 用于交易的计价币种。
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -3402,8 +3380,6 @@ tradeQuoteCcy | String | 用于交易的计价币种。
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

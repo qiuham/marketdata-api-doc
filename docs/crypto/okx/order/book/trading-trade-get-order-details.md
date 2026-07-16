@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-details
 anchor_id: order-book-trading-trade-get-order-details
 api_type: API
-updated_at: 2026-07-15 19:18:36.081112
+updated_at: 2026-07-16 19:19:42.965432
 ---
 
 # GET / Order details
@@ -15,8 +15,6 @@ Retrieve order details.
 #### Rate limit rule (except Options): User ID + Instrument ID
 
 #### Rate limit rule (Options only): User ID + Instrument Family
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -299,8 +297,6 @@ Only applicable to `EVENTS`
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：读取
 
 #### HTTP请求
 

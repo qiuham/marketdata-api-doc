@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading-post-place-dca-algo-order
 anchor_id: order-book-trading-dca-trading-post-place-dca-algo-order
 api_type: API
-updated_at: 2026-07-15 19:18:56.975016
+updated_at: 2026-07-16 19:20:03.821800
 ---
 
 # POST / Place dca algo order
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:18:56.975016
 #### Rate Limit: 20 requests per 2 seconds  
   
 #### Rate limit rule: User ID + Instrument ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -148,8 +146,6 @@ sMsg | String | Rejection message if the request is unsuccessful
 #### 限速规则（期权以外）：User ID + Instrument ID
 
 #### 限速规则（只限期权）：User ID + Instrument Family
-
-#### 权限：交易
 
 #### HTTP请求
 

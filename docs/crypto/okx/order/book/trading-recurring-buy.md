@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy
 anchor_id: order-book-trading-recurring-buy
 api_type: API
-updated_at: 2026-07-15 19:19:06.821519
+updated_at: 2026-07-16 19:20:13.718147
 ---
 
 # Recurring Buy
@@ -16,8 +16,6 @@ The API endpoints of `Recurring buy` require authentication.
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -131,8 +129,6 @@ tag | String | Order tag
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/amend-order-algo`
@@ -189,8 +185,6 @@ A maximum of 10 orders can be stopped per request.
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/stop-order-algo`
@@ -246,8 +240,6 @@ tag | String | ~~Order tag~~(Deprecated)
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -380,8 +372,6 @@ recurringTimeMinutes | String | Recurring buy time in minutes, integer of [0,59]
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/tradingBot/recurring/orders-algo-history`
@@ -507,8 +497,6 @@ recurringTimeMinutes | String | Recurring buy time in minutes, integer of [0,59]
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -652,8 +640,6 @@ recurringTimeMinutes | String | Recurring buy time in minutes, integer of [0,59]
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -1007,8 +993,6 @@ e.g. "8" representing UTC+8 (East 8 District), Beijing Time
 
 #### Rate limit rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/amend-recurring-time`
@@ -1084,8 +1068,6 @@ sMsg | String | Error message if the event execution failed
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/amend-recurring-amount`
@@ -1137,8 +1119,6 @@ sMsg | String | Error message if the event execution failed
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1192,8 +1172,6 @@ sMsg | String | Error message if the event execution failed
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/pause`
@@ -1244,8 +1222,6 @@ sMsg | String | Error message if the event execution failed
 
 #### Rate Limit Rule: User ID
 
-#### Permission: Trade
-
 #### HTTP Request
 
 `POST /api/v5/tradingBot/recurring/restart`
@@ -1295,8 +1271,6 @@ sMsg | String | Error message if the event execution failed
 #### Rate Limit: 20 requests per 2 seconds
 
 #### Rate Limit Rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -1365,8 +1339,6 @@ sMsg | String | Error message if the event execution failed
 #### 限速：20次/2s
 
 #### 限速规则 ：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -1480,8 +1452,6 @@ tag | String | 订单标签
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/amend-order-algo`
@@ -1538,8 +1508,6 @@ sMsg | String | 事件执行失败时的msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/stop-order-algo`
@@ -1595,8 +1563,6 @@ tag | String | ~~订单标签~~ （已废弃）
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -1731,8 +1697,6 @@ recurringTimeMinutes | String | 定投时间（分钟），取值范围是 [0,59
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/tradingBot/recurring/orders-algo-history`
@@ -1860,8 +1824,6 @@ recurringTimeMinutes | String | 定投时间（分钟），取值范围是 [0,59
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2007,8 +1969,6 @@ recurringTimeMinutes | String | 定投时间（分钟），取值范围是 [0,59
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
@@ -2366,8 +2326,6 @@ data | Array of objects | 订阅的数据
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/amend-recurring-time`
@@ -2444,8 +2402,6 @@ sMsg | String | 事件执行失败时的 msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/amend-recurring-amount`
@@ -2497,8 +2453,6 @@ sMsg | String | 事件执行失败时的 msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
@@ -2552,8 +2506,6 @@ sMsg | String | 事件执行失败时的 msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/pause`
@@ -2604,8 +2556,6 @@ sMsg | String | 事件执行失败时的 msg
 
 #### 限速规则：User ID
 
-#### 权限：交易
-
 #### HTTP请求
 
 `POST /api/v5/tradingBot/recurring/restart`
@@ -2655,8 +2605,6 @@ sMsg | String | 事件执行失败时的 msg
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

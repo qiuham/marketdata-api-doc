@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-copy-trading-configuration
 anchor_id: order-book-trading-copy-trading-get-copy-trading-configuration
 api_type: API
-updated_at: 2026-07-15 19:19:17.303520
+updated_at: 2026-07-16 19:20:24.191494
 ---
 
 # GET / Copy trading configuration
@@ -13,8 +13,6 @@ Public endpoint. Retrieve copy trading parameter configuration information of co
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: IP
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -75,8 +73,6 @@ maxSlRatio | String | Maximum ratio of stopping loss per order, the minimum is 0
 #### 限速：5次/2s
 
 #### 限速规则：IP
-
-#### 权限：读取
 
 #### HTTP请求
 

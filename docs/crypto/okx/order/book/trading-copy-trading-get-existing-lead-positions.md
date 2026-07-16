@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-existing-lead-positions
 anchor_id: order-book-trading-copy-trading-get-existing-lead-positions
 api_type: API
-updated_at: 2026-07-15 19:19:12.008945
+updated_at: 2026-07-16 19:20:18.878259
 ---
 
 # GET / Existing lead positions
@@ -16,8 +16,6 @@ Returns reverse chronological order with `openTime`
 #### Rate limit: 20 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP request
 
@@ -145,8 +143,6 @@ availSubPos | String | Quantity of positions that can be closed
 #### 限速：20次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 

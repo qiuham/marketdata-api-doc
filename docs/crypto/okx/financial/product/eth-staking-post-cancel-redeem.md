@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-post-cancel-redeem
 anchor_id: financial-product-eth-staking-post-cancel-redeem
 api_type: API
-updated_at: 2026-07-15 19:20:38.655971
+updated_at: 2026-07-16 19:21:45.850896
 ---
 
 # POST / Cancel redeem
@@ -11,8 +11,6 @@ updated_at: 2026-07-15 19:20:38.655971
 #### Rate Limit: 2 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -61,8 +59,6 @@ ordId | String | Order ID
 #### 限速：2 次/s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP 请求
 

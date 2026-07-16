@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-first-copy-settings
 anchor_id: order-book-trading-copy-trading-post-first-copy-settings
 api_type: API
-updated_at: 2026-07-15 19:19:15.744524
+updated_at: 2026-07-16 19:20:22.630446
 ---
 
 # POST / First copy settings
@@ -13,8 +13,6 @@ The first copy settings for the certain lead trader. You need to first copy sett
 #### Rate limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP request
 
@@ -106,8 +104,6 @@ result | Boolean | The result of setting
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 

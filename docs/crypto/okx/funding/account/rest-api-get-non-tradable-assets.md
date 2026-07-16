@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-non-tradable-assets
 anchor_id: funding-account-rest-api-get-non-tradable-assets
 api_type: REST
-updated_at: 2026-07-15 19:20:18.193542
+updated_at: 2026-07-16 19:21:25.340099
 ---
 
 # Get non-tradable assets
@@ -13,8 +13,6 @@ Retrieve the funding account balances of all the assets and the amount that is a
 #### Rate Limit: 6 requests per second
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -122,8 +120,6 @@ needTag | Boolean | Whether tag/memo information is required for withdrawal
 #### 限速：6 次/s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP 请求
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-isolated-margin-trading-settings
 anchor_id: trading-account-rest-api-isolated-margin-trading-settings
 api_type: REST
-updated_at: 2026-07-15 19:18:20.178984
+updated_at: 2026-07-16 19:19:26.978784
 ---
 
 # Isolated margin trading settings
@@ -13,8 +13,6 @@ You can set the currency margin and futures/perpetual Isolated margin trading mo
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Trade
 
 #### HTTP Request
 
@@ -96,8 +94,6 @@ Auto transfers: Automatically borrow and return coins when opening and closing p
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：交易
 
 #### HTTP请求
 
