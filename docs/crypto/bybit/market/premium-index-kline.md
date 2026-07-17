@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/premium-index-kline
 api_type: Market Data
-updated_at: 2026-07-16 18:54:09.183853
+updated_at: 2026-07-17 18:50:59.236277
 ---
 
 # Get Premium Index Price Kline

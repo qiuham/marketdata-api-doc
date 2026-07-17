@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-api-resources-and-support
 anchor_id: overview-api-resources-and-support
 api_type: API
-updated_at: 2026-07-16 19:19:07.020835
+updated_at: 2026-07-17 19:15:30.531977
 ---
 
 # API Resources and Support

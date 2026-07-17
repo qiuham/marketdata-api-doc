@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-07-16 19:07:57.154230
+updated_at: 2026-07-17 19:04:54.960616
 ---
 
 # International Derivatives Overview
@@ -56,7 +56,7 @@ This guide covers the timeline, new products, order types, margin models, and th
 
 The implementation reference: authentication, endpoint and schema mapping, and spec references.
 
-![https://mintcdn.com/coinbase-prod/phXOVZOc62bKg-Ju/icons/deribit.svg?fit=max&auto=format&n=phXOVZOc62bKg-Ju&q=85&s=2835c105c3254cb649486413884d36c0](https://mintcdn.com/coinbase-prod/phXOVZOc62bKg-Ju/icons/deribit.svg?fit=max&auto=format&n=phXOVZOc62bKg-Ju&q=85&s=2835c105c3254cb649486413884d36c0)
+![](https://mintcdn.com/coinbase-prod/phXOVZOc62bKg-Ju/icons/deribit.svg?fit=max&auto=format&n=phXOVZOc62bKg-Ju&q=85&s=2835c105c3254cb649486413884d36c0)
 
 ## Deribit Partners Guide
 

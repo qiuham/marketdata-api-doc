@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-auto-earn
 anchor_id: trading-account-rest-api-set-auto-earn
 api_type: REST
-updated_at: 2026-07-16 19:19:34.509926
+updated_at: 2026-07-17 19:15:57.919831
 ---
 
 # Set auto earn

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-spot-grid-withdraw-income
 anchor_id: order-book-trading-grid-trading-post-spot-grid-withdraw-income
 api_type: API
-updated_at: 2026-07-16 19:19:59.321437
+updated_at: 2026-07-17 19:16:22.439734
 ---
 
 # POST / Spot grid withdraw income
