@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/insurance-pool
 api_type: WebSocket
-updated_at: 2026-07-17 18:54:39.057874
+updated_at: 2026-07-18 19:10:22.582835
 ---
 
 # Order Price Limit

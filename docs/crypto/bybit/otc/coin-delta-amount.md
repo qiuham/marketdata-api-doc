@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-07-17 18:51:59.276678
+updated_at: 2026-07-18 19:04:11.521796
 ---
 
 # Get LTV
