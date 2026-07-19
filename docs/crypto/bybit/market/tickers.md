@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/tickers
 api_type: Market Data
-updated_at: 2026-07-18 19:02:41.426283
+updated_at: 2026-07-19 18:50:22.392590
 ---
 
 # Get Bybit Server Time

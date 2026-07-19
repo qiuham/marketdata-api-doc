@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-product-info
 api_type: REST
-updated_at: 2026-07-18 19:04:53.903455
+updated_at: 2026-07-19 18:51:22.103004
 ---
 
 # Get Position Info

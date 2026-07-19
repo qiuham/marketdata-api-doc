@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-manual-borrow-repay
 anchor_id: trading-account-rest-api-manual-borrow-repay
 api_type: REST
-updated_at: 2026-07-18 20:02:59.162949
+updated_at: 2026-07-19 19:14:45.474690
 ---
 
 # Manual borrow / repay

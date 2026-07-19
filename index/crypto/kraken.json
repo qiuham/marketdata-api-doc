@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/kraken",
   "total": 243,
-  "updated_at": "2026-07-18 20:02:24.584880",
+  "updated_at": "2026-07-19 19:14:11.212632",
   "documents_by_type": {
     "REST": [
       {
@@ -59,7 +59,7 @@
         "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:16.966382"
+        "updated_at": "2026-07-19 19:14:04.151316"
       },
       {
         "id": "ocr-fix",
@@ -1031,7 +1031,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:17.779101"
+        "updated_at": "2026-07-19 19:14:04.962744"
       },
       {
         "id": "set-leverage-setting",
@@ -1203,7 +1203,7 @@
       },
       {
         "id": "add-order",
-        "title": "Error loading page",
+        "title": "Add Order",
         "path": "docs/crypto/kraken/rest-api/add-order.md",
         "filename": "add-order.md",
         "api_type": "REST",
@@ -1211,7 +1211,7 @@
         "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:23.819612"
+        "updated_at": "2026-07-19 19:14:10.389676"
       },
       {
         "id": "allocate-strategy",
@@ -2019,7 +2019,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:19.887520"
+        "updated_at": "2026-07-19 19:14:07.048035"
       },
       {
         "id": "challenge",
@@ -2443,7 +2443,7 @@
       },
       {
         "id": "add_order",
-        "title": "Error loading page",
+        "title": "Add Order",
         "path": "docs/crypto/kraken/websocket-v2/add_order.md",
         "filename": "add_order.md",
         "api_type": "WebSocket",
@@ -2451,7 +2451,7 @@
         "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:24.584880"
+        "updated_at": "2026-07-19 19:14:11.212632"
       },
       {
         "id": "amend_order",
@@ -2825,7 +2825,7 @@
         "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-07-18 20:02:20.668206"
+        "updated_at": "2026-07-19 19:14:07.828786"
       },
       {
         "id": "spot-amends",
@@ -3020,7 +3020,7 @@
       "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-07-18 20:02:20.668206"
+      "updated_at": "2026-07-19 19:14:07.828786"
     },
     {
       "id": "fix-auth",
@@ -3395,6 +3395,18 @@
       "updated_at": "2026-05-27 19:45:58.426252"
     },
     {
+      "id": "add-order",
+      "title": "Add Order",
+      "path": "docs/crypto/kraken/rest-api/add-order.md",
+      "filename": "add-order.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-07-19 19:14:10.389676"
+    },
+    {
       "id": "add-order-batch",
       "title": "Add Order Batch",
       "path": "docs/crypto/kraken/rest-api/add-order-batch.md",
@@ -3705,18 +3717,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:48:22.754896"
-    },
-    {
-      "id": "add-order",
-      "title": "Error loading page",
-      "path": "docs/crypto/kraken/rest-api/add-order.md",
-      "filename": "add-order.md",
-      "api_type": "REST",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-07-18 20:02:23.819612"
     },
     {
       "id": "er-fix",
@@ -5012,7 +5012,7 @@
       "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-07-18 20:02:16.966382"
+      "updated_at": "2026-07-19 19:14:04.151316"
     },
     {
       "id": "send-order",
@@ -5024,7 +5024,7 @@
       "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-07-18 20:02:17.779101"
+      "updated_at": "2026-07-19 19:14:04.962744"
     },
     {
       "id": "sequence-reset-fix",
@@ -5193,6 +5193,18 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 20:08:48.990284"
+    },
+    {
+      "id": "add_order",
+      "title": "Add Order",
+      "path": "docs/crypto/kraken/websocket-v2/add_order.md",
+      "filename": "add_order.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-07-19 19:14:11.212632"
     },
     {
       "id": "amendorder",
@@ -5423,18 +5435,6 @@
       "updated_at": "2026-05-27 20:12:02.295409"
     },
     {
-      "id": "add_order",
-      "title": "Error loading page",
-      "path": "docs/crypto/kraken/websocket-v2/add_order.md",
-      "filename": "add_order.md",
-      "api_type": "WebSocket",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-07-18 20:02:24.584880"
-    },
-    {
       "id": "book",
       "title": "Exchange overview",
       "path": "docs/crypto/kraken/futures-api/websocket/book.md",
@@ -5444,7 +5444,7 @@
       "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-07-18 20:02:19.887520"
+      "updated_at": "2026-07-19 19:14:07.048035"
     },
     {
       "id": "executions",

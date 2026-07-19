@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method
 api_type: REST
-updated_at: 2026-07-18 19:52:13.309747
+updated_at: 2026-07-19 19:04:06.893957
 ---
 
 # Get Payment Method

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-07-18 20:02:49.772878
+updated_at: 2026-07-19 19:14:36.246403
 ---
 
 # REST API

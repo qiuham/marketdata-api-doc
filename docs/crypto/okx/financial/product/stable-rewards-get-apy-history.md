@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards-get-apy-history
 anchor_id: financial-product-stable-rewards-get-apy-history
 api_type: API
-updated_at: 2026-07-18 20:05:20.895219
+updated_at: 2026-07-19 19:17:06.140881
 ---
 
 # GET / APY history
