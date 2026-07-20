@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data
 anchor_id: public-data
 api_type: API
-updated_at: 2026-07-19 19:16:18.308470
+updated_at: 2026-07-20 19:36:48.100342
 ---
 
 # Public Data
@@ -147,6 +147,7 @@ Spot:
 `14`: Spot group three  
 `15`: Spot special rule  
 `17`: Spot stablecoin  
+`22`: Spot RWA group two  
   
 Expiry futures:  
 `5`: Expiry futures group one  
@@ -3232,6 +3233,7 @@ Spot:
 `14`: Spot group three  
 `15`: Spot special rule  
 `17`: Spot stablecoin  
+`22`: Spot RWA group two  
   
 Expiry futures:  
 `5`: Expiry futures group one  
@@ -5542,6 +5544,7 @@ groupId | String | 交易产品手续费分组ID
 `14`：现货分组三  
 `15`: 现货特别分组  
 `17`：现货稳定币分组  
+`22`：现货RWA分组二  
   
 交割合约：  
 `5`：交割合约分组一  
@@ -8587,6 +8590,7 @@ data | Array of objects | 订阅的数据
 `14`：现货分组三  
 `15`: 现货特别分组  
 `17`：现货稳定币分组  
+`22`：现货RWA分组二  
   
 交割合约：  
 `5`：交割合约分组一  

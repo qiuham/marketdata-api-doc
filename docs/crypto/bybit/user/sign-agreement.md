@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/sign-agreement
 api_type: REST
-updated_at: 2026-07-19 18:53:39.331929
+updated_at: 2026-07-20 19:14:33.419916
 ---
 
 # Get Sub UID List (Limited)

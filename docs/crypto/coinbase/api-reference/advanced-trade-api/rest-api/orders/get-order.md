@@ -2,18 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order
 api_type: Trading
-updated_at: 2026-07-19 19:04:06.437131
+updated_at: 2026-07-20 19:24:35.048345
 ---
 
 # Get Order
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/{order_id}`
 
-: {Orders
-    
-    # Get Order
-    
-    Get a single order by order ID.
+
+Get a single order by order ID.
     
     
     curl --request GET \

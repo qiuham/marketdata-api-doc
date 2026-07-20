@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/delivery-price
 api_type: Market Data
-updated_at: 2026-07-19 18:49:57.574337
+updated_at: 2026-07-20 19:11:00.747335
 ---
 
 # Get Fee Group Structure

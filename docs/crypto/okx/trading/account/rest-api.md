@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-07-19 19:14:36.246403
+updated_at: 2026-07-20 19:35:04.786468
 ---
 
 # REST API
@@ -148,6 +148,7 @@ Spot:
 `14`: Spot group three  
 `15`: Spot special rule  
 `17`: Spot stablecoin  
+`22`: Spot RWA group two  
   
 Expiry futures:  
 `5`: Expiry futures group one  
@@ -6221,6 +6222,7 @@ groupId | String | 交易产品手续费分组ID
 `14`：现货分组三  
 `15`: 现货特别分组  
 `17`：现货稳定币分组  
+`22`：现货RWA分组二  
   
 交割合约：  
 `5`：交割合约分组一  

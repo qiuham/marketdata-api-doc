@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/time
 api_type: Market Data
-updated_at: 2026-07-19 18:50:23.013125
+updated_at: 2026-07-20 19:11:25.384108
 ---
 
 # Get Bybit Server Time
