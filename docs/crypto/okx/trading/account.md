@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account
 anchor_id: trading-account
 api_type: API
-updated_at: 2026-07-20 19:35:04.055649
+updated_at: 2026-07-21 19:25:10.935998
 ---
 
 # Trading Account

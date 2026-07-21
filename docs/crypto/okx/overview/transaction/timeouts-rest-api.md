@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-transaction-timeouts-rest-api
 anchor_id: overview-transaction-timeouts-rest-api
 api_type: REST
-updated_at: 2026-07-20 19:35:00.715193
+updated_at: 2026-07-21 19:25:07.640394
 ---
 
 # REST API

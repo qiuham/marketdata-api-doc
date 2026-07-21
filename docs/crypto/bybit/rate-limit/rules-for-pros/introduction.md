@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/introduction
 api_type: REST
-updated_at: 2026-07-20 19:12:51.259972
+updated_at: 2026-07-21 19:00:32.105333
 ---
 
 # Basic Workflow

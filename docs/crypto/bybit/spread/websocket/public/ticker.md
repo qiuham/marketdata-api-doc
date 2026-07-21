@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-07-20 19:14:09.261939
+updated_at: 2026-07-21 19:01:48.460576
 ---
 
 # Create Strategy Order

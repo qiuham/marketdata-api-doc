@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-07-20 19:24:37.871660
+updated_at: 2026-07-21 19:14:44.553533
 ---
 
 # International Derivatives Overview
