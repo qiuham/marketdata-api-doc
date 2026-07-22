@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/position
 api_type: WebSocket
-updated_at: 2026-07-21 19:02:22.400972
+updated_at: 2026-07-22 18:57:54.243639
 ---
 
 # ADL Alert

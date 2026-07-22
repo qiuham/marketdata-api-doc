@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios
 api_type: Account
-updated_at: 2026-07-21 19:14:41.714667
+updated_at: 2026-07-22 19:08:08.036263
 ---
 
 # List Portfolios

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-delivery-exercise-history
 anchor_id: public-data-rest-api-get-delivery-exercise-history
 api_type: REST
-updated_at: 2026-07-21 19:26:56.800157
+updated_at: 2026-07-22 19:20:26.042882
 ---
 
 # Get delivery/exercise history

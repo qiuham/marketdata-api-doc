@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio
 api_type: Account
-updated_at: 2026-07-21 19:14:41.351681
+updated_at: 2026-07-22 19:08:07.748970
 ---
 
 # Delete Portfolio

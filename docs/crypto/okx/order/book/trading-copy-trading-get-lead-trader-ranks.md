@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-ranks
 anchor_id: order-book-trading-copy-trading-get-lead-trader-ranks
 api_type: API
-updated_at: 2026-07-21 19:26:17.093909
+updated_at: 2026-07-22 19:19:46.382531
 ---
 
 # GET / Lead trader ranks
