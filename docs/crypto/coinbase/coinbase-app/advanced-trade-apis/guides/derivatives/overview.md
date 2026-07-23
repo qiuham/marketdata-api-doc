@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-07-22 19:08:09.391964
+updated_at: 2026-07-23 19:10:11.505557
 ---
 
 # International Derivatives Overview
@@ -137,10 +137,10 @@ Order type| Current value| New gateway value| Notes
 **Market**| `MARKET`| `market`| Direct equivalent  
 **Stop (market)**| `STOP`| `stop_market`| Same behaviour, new name  
 **Stop limit**| `STOP_LIMIT`| `stop_limit`| Creates two order IDs (pre- and post-trigger)  
-**Take-profit / stop-loss**| `TAKE_PROFIT_STOP_LOSS`| `take_limit` + `take_market`| Model change — see the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical#attaching-a-take-profit--stop-loss-otoco)  
+**Take-profit / stop-loss**| `TAKE_PROFIT_STOP_LOSS`| `take_limit` \+ `take_market`| Model change — see the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical#attaching-a-take-profit--stop-loss-otoco)  
 **Market limit**|  —| `market_limit`| New: fills like market, remainder rests as limit  
 **Trailing stop**|  —| `trailing_stop`| New: stop tracks price by offset  
-**Iceberg**|  —| `limit` + `display_amount`| New: hides part of a resting limit order; the visible slice refreshes as it fills  
+**Iceberg**|  —| `limit` \+ `display_amount`| New: hides part of a resting limit order; the visible slice refreshes as it fills  
   
 ### Time-in-force
 

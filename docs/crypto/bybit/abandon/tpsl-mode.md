@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/tpsl-mode
 api_type: REST
-updated_at: 2026-07-22 18:48:51.456925
+updated_at: 2026-07-23 18:51:26.113170
 ---
 
 # Get Borrow History

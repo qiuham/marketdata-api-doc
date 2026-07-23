@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-get-algo-order-details
 anchor_id: order-book-trading-algo-trading-get-algo-order-details
 api_type: API
-updated_at: 2026-07-22 19:19:15.315819
+updated_at: 2026-07-23 19:21:22.144884
 ---
 
 # GET / Algo order details
@@ -110,7 +110,8 @@ instId | String | Instrument ID
 ccy | String | Margin currency   
 Applicable to all `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`, `FUTURES` and `SWAP` contracts.  
 ordId | String | Latest order ID. It will be deprecated soon  
-ordIdList | Array of strings | Order ID list. There will be multiple order IDs when there is TP/SL splitting order.  
+ordIdList | Array of strings | Order ID list. There will be multiple order IDs when there is TP/SL splitting order. Empty for a trigger+chase (the spawned order is an algo — see `subAlgoIdList`).  
+subAlgoIdList | Array of strings | `algoId`(s) of the algo order(s) spawned when the trigger fires. For `advanceOrdType` `chase`, holds the spawned chase order's `algoId` after the trigger fires; empty before then. Mirrors `ordIdList`, which records spawned regular orders.  
 algoId | String | Algo ID  
 clOrdId | String | Client Order ID as assigned by the client  
 sz | String | Quantity to buy or sell  
@@ -151,10 +152,16 @@ triggerPxType | String | trigger price type.
 `index`: index price  
 `mark`: mark price  
 ordPx | String | Order price for the trigger order  
-advanceOrdType | String | Trigger order type  
+advanceOrdType | String | Sub-order type for trigger orders.  
 `fok`: Fill-or-kill order  
 `ioc`: Immediate-or-cancel order  
-Default is "", limit or market (controlled by orderPx)  
+`chase`: Chase limit order  
+Default is "".  
+advChaseParams | Array of objects | Chase parameters. Present when `advanceOrdType` is `chase`.  
+> chaseType | String | Chase distance unit. `distance` or `ratio`.  
+> chaseVal | String | Chase value. `0` tracks the best bid/ask directly; `>0` is a distance.  
+> maxChaseType | String | Maximum chase distance unit. `distance` or `ratio`.  
+> maxChaseVal | String | Maximum chase distance value.  
 actualSz | String | Actual order quantity  
 actualPx | String | Actual order price  
 tag | String | Order tag  
@@ -338,7 +345,8 @@ instType | String | 产品类型
 instId | String | 产品ID  
 ccy | String | 保证金币种，适用于`逐仓杠杆`及`合约模式`下的`全仓杠杆`订单以及交割、永续和期权合约订单。  
 ordId | String | 最新一笔订单ID，即将废弃。  
-ordIdList | Array of strings | 订单ID列表，当止盈止损存在市价拆单时，会有多个。  
+ordIdList | Array of strings | 订单ID列表，当止盈止损存在市价拆单时，会有多个。 对于追逐委托（trigger+chase），该字段为空——生成的订单为策略委托，参见 `subAlgoIdList`。  
+subAlgoIdList | Array of strings | 计划委托触发时生成的策略委托单 `algoId`。当 `advanceOrdType` 为 `chase` 时，在触发后存放生成的追逐委托 `algoId`，触发前为空。与 `ordIdList` 对应，后者记录生成的普通订单。  
 algoId | String | 策略委托单ID  
 clOrdId | String | 客户自定义订单ID  
 sz | String | 委托数量  
@@ -378,7 +386,16 @@ triggerPxType | String | 计划委托触发价格类型
 `index`：指数价格  
 `mark`：标记价格  
 ordPx | String | 计划委托单的委托价格  
-advanceOrdType | String | 计划委托订单类型  
+advanceOrdType | String | 计划委托的子订单类型。  
+`fok`：全部成交或立即取消  
+`ioc`：立即成交并取消剩余  
+`chase`：追逐限价委托  
+默认为空。  
+advChaseParams | Array of objects | 追逐参数。当 `advanceOrdType` 为 `chase` 时返回。  
+> chaseType | String | 追逐距离单位。`distance` 或 `ratio`。  
+> chaseVal | String | 追逐值。`0` 表示直接跟随买一价/卖一价；大于 `0` 表示距离。  
+> maxChaseType | String | 最大追逐距离单位。`distance` 或 `ratio`。  
+> maxChaseVal | String | 最大追逐距离值。  
 actualSz | String | 实际委托量  
 actualPx | String | 实际委托价  
 actualSide | String | 实际触发方向  

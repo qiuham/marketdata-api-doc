@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/asset-records
 api_type: REST
-updated_at: 2026-07-22 18:51:50.455049
+updated_at: 2026-07-23 18:54:19.565113
 ---
 
 # Query Point Records

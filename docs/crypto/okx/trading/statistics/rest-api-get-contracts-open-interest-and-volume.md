@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-contracts-open-interest-and-volume
 anchor_id: trading-statistics-rest-api-get-contracts-open-interest-and-volume
 api_type: REST
-updated_at: 2026-07-22 19:20:43.221282
+updated_at: 2026-07-23 19:22:48.601010
 ---
 
 # Get contracts open interest and volume

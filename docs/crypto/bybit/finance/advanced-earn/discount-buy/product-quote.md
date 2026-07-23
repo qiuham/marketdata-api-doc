@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/discount-buy/product-quote
 api_type: REST
-updated_at: 2026-07-22 18:52:16.365863
+updated_at: 2026-07-23 18:54:44.575340
 ---
 
 # Place Order

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-account-configuration
 anchor_id: trading-account-rest-api-get-account-configuration
 api_type: REST
-updated_at: 2026-07-22 19:18:44.784731
+updated_at: 2026-07-23 19:20:51.983153
 ---
 
 # Get account configuration

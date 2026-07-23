@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-post-place-algo-order
 anchor_id: order-book-trading-algo-trading-post-place-algo-order
 api_type: API
-updated_at: 2026-07-22 19:19:14.365682
+updated_at: 2026-07-23 19:21:21.202738
 ---
 
 # POST / Place algo order
@@ -269,11 +269,20 @@ learn more about [Trigger Order](/help/11015447687437)
 Parameter | Type | Required | Description  
 ---|---|---|---  
 triggerPx | String | Yes | The price level that activates this algo order. Unit: same as `px` for the instrument. Which price feed is compared depends on `triggerPxType` (default: last trade price). Direction: for a sell stop-loss, trigger must be below orderPx; for a buy stop, above orderPx. Error codes 51046–51049 are returned for direction violations.  
-orderPx | String | Yes | Price of the order submitted when `triggerPx` is reached. This is separate from `triggerPx` (which determines when the algo activates). Set to `-1` to submit a market order when triggered; set to a specific price to submit a limit order.  
-advanceOrdType | String | No | Trigger order type  
+orderPx | String | Conditional | Price of the order submitted when `triggerPx` is reached. This is separate from `triggerPx` (which determines when the algo activates). Set to `-1` to submit a market order when triggered; set to a specific price to submit a limit order. Not applicable when `advanceOrdType` is `chase` (a chase has no fixed price).  
+advanceOrdType | String | No | Sub-order type for trigger orders.  
 `fok`: Fill-or-kill order  
 `ioc`: Immediate-or-cancel order  
-Default is "", limit or market (controlled by orderPx)  
+`chase`: Chase limit order. Only applicable to FUTURES and SWAP.  
+Default is "", limit or market (controlled by `orderPx`).  
+advChaseParams | Array of objects | Conditional | Chase parameters. Required when `advanceOrdType` is `chase`.  
+> chaseType | String | Conditional | Chase distance unit.  
+`distance` (default): absolute price distance from the best bid/ask, in settlement currency.  
+`ratio`: percentage.  
+> chaseVal | String | Conditional | Chase value. When `chaseType` is `distance`, the distance from the best bid/ask in settlement currency; when `ratio`, `0.1` = 10%.  
+Default `0` tracks the best bid/ask directly; a value `>0` sets a distance.  
+> maxChaseType | String | Conditional | Maximum chase distance unit. `distance` or `ratio`. Must pair with `maxChaseVal`.  
+> maxChaseVal | String | Conditional | Maximum chase distance value. Positive. Must pair with `maxChaseType`. The chase auto-cancels when its deviation reaches this value.  
 triggerPxType | String | No | Trigger price type:  
 `last`: triggers when any trade occurs at or beyond `triggerPx` — most responsive but vulnerable to brief price wicks in thin markets.  
 `index`: triggers on the underlying multi-exchange composite index — stable, not affected by OKX-specific wicks.  
@@ -281,6 +290,7 @@ triggerPxType | String | No | Trigger price type:
 `last` is the only option available for SPOT instruments. The default is `last`.  
 attachAlgoOrds | Array of objects | No | Attached SL/TP orders info  
 Applicable to `Futures mode/Multi-currency margin/Portfolio margin`  
+Not applicable when `advanceOrdType` is `chase`.  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order attaching TP/SL.  
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 It will be posted to algoClOrdId when placing TP/SL order once the general order is filled completely.  
@@ -694,11 +704,20 @@ reduceOnly | Boolean | 否 | 是否只减仓，`true` 或 `false`，默认`false
 参数名 | 类型 | 是否必须 | 描述  
 ---|---|---|---  
 triggerPx | String | 是 | 触发该策略订单的价格阈值，单位与该产品的 `px` 相同。具体使用哪种价格源取决于 `triggerPxType`（默认为最新成交价）。方向：做空止损单的触发价须低于 orderPx；做多止损单的触发价须高于 orderPx。方向违规将返回错误码 51046–51049。  
-orderPx | String | 是 | 触发后提交的委托价格，与 `triggerPx`（决定何时激活）相互独立。设为 `-1` 表示触发后以市价委托；设置具体价格表示触发后以限价委托。  
-advanceOrdType | String | 否 | 计划委托订单类型  
+orderPx | String | 条件必填 | 触发后提交的委托价格，与 `triggerPx`（决定何时激活）相互独立。设为 `-1` 表示触发后以市价委托；设置具体价格表示触发后以限价委托。当 `advanceOrdType` 为 `chase` 时不适用（追逐委托无固定价格）。  
+advanceOrdType | String | 否 | 计划委托的子订单类型。  
 `fok`：全部成交或立即取消  
 `ioc`：立即成交并取消剩余  
-默认为 ""，限价或者市价（由 orderPx 控制）  
+`chase`：追逐限价委托。仅适用于 FUTURES 和 SWAP。  
+默认为空（按 `orderPx` 下发限价或市价单）。  
+advChaseParams | Array of objects | 条件必填 | 追逐参数。当 `advanceOrdType` 为 `chase` 时必填。  
+> chaseType | String | 条件必填 | 追逐距离单位。  
+`distance`（默认）：与买一价/卖一价的绝对价格距离，以结算货币计。  
+`ratio`：百分比。  
+> chaseVal | String | 条件必填 | 追逐值。当 `chaseType` 为 `distance` 时，为与买一价/卖一价的距离（以结算货币计）；当 `ratio` 时，`0.1` 表示 10%。  
+默认值 `0` 表示直接跟随买一价/卖一价；大于 `0` 表示设置一个距离。  
+> maxChaseType | String | 条件必填 | 最大追逐距离单位。`distance` 或 `ratio`。须与 `maxChaseVal` 成对出现。  
+> maxChaseVal | String | 条件必填 | 最大追逐距离值。须为正数。须与 `maxChaseType` 成对出现。当偏离达到该值时，追逐委托自动撤单。  
 triggerPxType | String | 否 | 触发价格类型：  
 `last`：任意成交价达到或超过 `triggerPx` 时触发——响应最快，但在流动性较差市场中易受短暂插针影响。  
 `index`：基于多交易所合成指数触发——稳定，不受OKX自身插针影响。  
@@ -706,6 +725,7 @@ triggerPxType | String | 否 | 触发价格类型：
 现货产品仅支持 `last`。默认为 `last`。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损信息  
 适用于`合约模式/跨币种保证金模式/组合保证金模式`  
+当 `advanceOrdType` 为 `chase` 时不适用。  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损时，客户自定义的策略订单ID，字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 订单完全成交，下止盈止损委托单时，该值会传给algoClOrdId。  
 > tpTriggerPx | String | 否 | 止盈触发价，如果填写此参数，必须填写`止盈委托价`  

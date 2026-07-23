@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/risk-limit
 api_type: Market Data
-updated_at: 2026-07-22 18:54:28.400481
+updated_at: 2026-07-23 18:56:52.857307
 ---
 
 # Get Bybit Server Time

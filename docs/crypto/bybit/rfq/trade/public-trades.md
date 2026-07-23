@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/public-trades
 api_type: Trading
-updated_at: 2026-07-22 18:56:12.113661
+updated_at: 2026-07-23 18:58:34.515774
 ---
 
 # Get Quotes
