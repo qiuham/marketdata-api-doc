@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-07-23 19:00:31.932019
+updated_at: 2026-07-24 19:06:14.409052
 ---
 
 # Connect
@@ -67,6 +67,7 @@ info
   * If your account is registered from [www.bybit.id](http://www.bybit.id), please use `stream.bybit.id` for mainnet access
   * If your account is registered from [www.bybit.kz](http://www.bybit.kz), please use `stream.bybit.kz` for mainnet access
   * If your account is registered from [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge), please use `stream.bybitgeorgia.ge` for mainnet access
+  * If your account is registered from [www.manepa.jp](http://www.manepa.jp), please use `stream.manepa.jp` for mainnet access
 
 
 
@@ -399,6 +400,7 @@ RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`
   * 印尼站：如果您的帳戶是在 [www.bybit.id](http://www.bybit.id) 註冊, 請使用`stream.bybit.id`進行主網連接
   * 哈薩克斯坦站：如果您的帳戶是在 [www.bybit.kz](http://www.bybit.kz), 請使用 `stream.bybit.kz` 進行主網連接
   * 喬治亞站：如果您的帳戶是在 [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge) 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
+  * 日本站：如果您的帳戶是在 [www.manepa.jp](http://www.manepa.jp) 註冊, 請使用 `stream.manepa.jp` 進行主網連接
 
 
 

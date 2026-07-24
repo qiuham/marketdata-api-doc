@@ -13,7 +13,7 @@ id: zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化
 title: 从XTP行情到XTP Pro行情API的变化
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-30
+updated_at: 2026-07-15
 ---
 
 # 从XTP行情到XTP Pro行情API的变化
@@ -640,22 +640,15 @@ cpp
   * parse_cpu_id和recv_cpu_id是设置绑核的cpu，如绑定cpu第二个逻辑核，设置为1，建议绑定后面的逻辑核。
   * L1_buf_capacity和L2_buf_capacity缓存单元的大小跟数据类型有关。
   * 对于cpu核数不多的用户，可以将接收线程共用相同的核，或者不绑核，并且将对应接收线程的忙等状态busy_wait设置OFF，只有行情API版本是1.2.1及其以上版本支持该设置。
-  * 使用API版本是1.2.0及其以下版本的用户，其使用的配置文件参数说明，可以参考官网上技术文档《旧版行情配置文件参数说明》。
+  * 使用API版本是1.2.0及其以下版本的用户，其使用的配置文件参数说明，可以参考官网上技术文档《Pro行情旧版配置文件参数说明》。
   * 升级为高版本行情API(如1.2.1版本及以上)的用户，可以不替换旧版本的配置文件quote_config.ini，API是兼容旧版本的quote_config.ini配置设置。
 
 
 
 #### 3.1.2 配置文件的参数项busy_wait的特别说明 ​
 
-考虑到之前行情版本中用户反馈线程高占比使用CPU，导致核数不够用，因此在API版本1.2.1及其以上版本，新增了配置项busy_wait，默认值是ON，也就是开启接收线程的忙等状态。用户在CPU核数实在不足的情况，可将多个接收线程绑定到相同CPU核上，同时将对应的busy_wait设置OFF，但同时也带来弊端就是行情延迟会增大。用户根据以下利弊情况慎重修改参数busy_wait值。
-
-| busy_wait=ON| busy_wait=OFF  
----|---|---  
-使用情况| CPU核数充足| CPU核数不足  
-优点| 可以提高接收行情速度| 减少CPU核数使用数  
-缺点| 高占比CPU使用率| 行情延迟会增大  
-  
-备注：建议用户在CPU核数充足的情况下，请保持参数busy_wait默认值ON即可。
+考虑到此前行情版本中，用户反馈线程CPU占比过高，引发核心资源不足的问题，自API版本1.2.1起，系统新增配置项‌busy_wait‌，默认取值为ON，即默认开启接收线程的忙等机制。  
+若用户实际部署环境中CPU核心资源确有不足，可将多个接收线程绑定至同一CPU核心，同时将对应线程的busy_wait参数设置为OFF；该操作的弊端为会导致行情数据延迟上升。请用户结合自身业务场景的利弊权衡，审慎调整busy_wait参数的取值。
 
 ### 3.2. 新增回调接口OnXTPQuoteNQFullInfo() ​
 
@@ -697,22 +690,24 @@ XTP Pro版本新增了指数通行情功能，如果用户需要订阅，配置�
     
     
     ......
-    [idxpress]
+    [md]
     decode_flag = 1
     parse_cpu_id = 10
-    [idxpress.normal]
+    [md.normal]
     enable = ON
     local_ip = 127.0.0.1
     recv_cpu_id = 11
     enable_efvi = OFF
     L1_buf_capacity = 256
     L2_buf_capacity = 8
+    busy_wait = ON
     [subscribe_quote_type]
+    ........
     #L1沪市指数通行情是否打开标识
     sh_level1_rawtxt = ON  
     ........
 
-用户配置好相关参数后，再调用订阅接口，指数通行情相关接口详情如下：
+API是1.2.1及其以上版本，指数通行情配置跟[md]合并，配置好相关参数后，再调用订阅接口，指数通行情相关接口详情如下：
 
   * SubscribeAllIndexPress
 
@@ -820,23 +815,25 @@ XTP Pro版本新增了港股通行情功能，如果用户需要订阅，配置�
     
     
     .........
-    [hkc]
+    [md]
     decode_flag = 1
-    parse_cpu_id = 8
-    [hkc.normal]
+    parse_cpu_id = 10
+    [md.normal]
     enable = ON
     local_ip = 127.0.0.1
-    recv_cpu_id = 9
+    recv_cpu_id = 11
     enable_efvi = OFF
     L1_buf_capacity = 256
     L2_buf_capacity = 8
+    busy_wait = ON
     [subscribe_quote_type]
+    ............
     #以下为港股通hkc相关订阅配置
     sz_level1_md_hkc = ON
     sz_level1_md_hkcsta = ON
     ............
 
-用户配置好相关参数后，再调用订阅接口，港股通行情相关接口如下：
+API是1.2.1及其以上版本，港股通行情配置跟[md]合并，配置好相关参数后，再调用订阅接口，港股通行情相关接口如下：
 
   * SubscribeAllHKCMarketData
 

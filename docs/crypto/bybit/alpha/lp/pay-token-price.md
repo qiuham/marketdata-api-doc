@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pay-token-price
 api_type: REST
-updated_at: 2026-07-23 18:52:06.475259
+updated_at: 2026-07-24 18:56:52.559825
 ---
 
 # Execute LP Redeem

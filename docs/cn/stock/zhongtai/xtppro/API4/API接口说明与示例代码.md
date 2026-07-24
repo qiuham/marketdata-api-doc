@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-api接口说明
 title: XTP-Pro API接口说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/API%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E%E4%B8%8E%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-23
+updated_at: 2026-07-21
 ---
 
 # XTP-Pro API接口说明
@@ -9980,10 +9980,10 @@ cpp
     			virtual void OnDisconnected(uint64_t session_id, int reason) { (void)session_id; (void)reason; };
     
     			///当登录成功后，中途出现某个服务（资金划拨或者查询）服务状态改变时，该方法将被调用。
-    			///@param session_id 资金账户对应的session_id，登录时得到
-    			///@param server_type 服务类型，1-资金划拨服务，2-查询服务
-    			///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
-    			///@remark 用户登录成功时，默认服务可用。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
+                ///@param session_id 资金账户对应的session_id，登录时得到
+                ///@param server_type 服务类型，1-资金划拨服务，2-查询服务
+                ///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
+                ///@remark 用户登录成功时，默认查询服务可用，资金划拨服务是否可用得等待此回调函数通知。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
     			virtual void OnServerStatusNotification(uint64_t session_id, uint32_t server_type, bool status) { (void)session_id; (void)server_type; (void)status; };
     
     			///错误应答

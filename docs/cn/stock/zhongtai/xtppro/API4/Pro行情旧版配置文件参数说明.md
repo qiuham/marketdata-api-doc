@@ -13,7 +13,7 @@ id: zhongtai-xtppro-pro行情旧版配置文件的参数说明
 title: Pro行情旧版配置文件的参数说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/Pro%E8%A1%8C%E6%83%85%E6%97%A7%E7%89%88%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-23
+updated_at: 2026-07-08
 ---
 
 # Pro行情旧版配置文件的参数说明
@@ -28,7 +28,7 @@ updated_at: 2026-06-23
   
 行情配置文件quote_config.ini是XTP Pro版本实盘udp连接方式所必须设置的参数配置项，用户在Login之前调用接口SetConfigFile()进行设置。 
 
-行情API版本是1.2.0及其以下版本时，行情配置文件quote_config.ini的参数格式参照文本的说明，而使用行情API版本是1.2.1及其以上版本的请参照官网上的技术文档《从XTP行情到XTP Pro行情API的变化》里的说明。
+行情API版本是1.2.0及其以下版本时，行情配置文件quote_config.ini的参数格式参照文本的说明，而使用行情API版本是1.2.1及其以上版本的请参照官网上的技术文档《从XTP行情到XTP-Pro行情API的变化》里的说明。
 
 ## **1\. 旧版配置文件的参数格式** ​
 

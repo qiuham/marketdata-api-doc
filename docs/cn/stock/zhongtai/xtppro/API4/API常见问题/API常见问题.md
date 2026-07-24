@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-api常见问题
 title: XTP Pro API常见问题
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-03
+updated_at: 2026-07-20
 ---
 
 # XTP Pro API常见问题
@@ -136,6 +136,10 @@ updated_at: 2026-07-03
 > 
 
 
+**1.2.10. 问：行情API更新至1.2.1版本，旧版配置文件quote_config.ini不更换可以吗？**
+
+> 答：可以的，API新版本是兼容旧版本的配置文件的格式的。但需要注意，因港股通和指数通行情参数配置和[md]合并，不再单独配置，如果订阅港股通或者指数通行情的话，需要将[md.normal]的enable设置ON，否则会收不到港股通或指数通的行情。
+
 ## **2\. 行情FAQ** ​
 
 ### 2.1. 行情Quote-Api ​
@@ -222,7 +226,8 @@ updated_at: 2026-07-03
 
 **2.1.18. 问：心跳检测是dll自己维护的吗？如果调整心跳时间是在哪里设置呢？**
 
-> 答：API可以设定心跳检测时间，默认是15秒，如果您要调大心跳值，可调用SetHeartBeatInterval()接口设置，注意：此函数必须在Login()之前调用才生效。
+> 答：API可以设定心跳检测时间，默认是15秒，如果您要调大心跳值，可调用SetHeartBeatInterval()接口设置。  
+>  注意：此函数必须在Login()之前调用才生效。
 
 **2.1.19. 问：如何判断程序中的心跳是否正常？建议SetHeartBeatInterval()设置心跳多长时间？**
 
@@ -317,7 +322,7 @@ updated_at: 2026-07-03
 
 **2.1.35. 问：调用SetUDPThreadAffinityArray()接口绑核，只要在调用Login()前调用就行吗？设置的cpu集合数组如何对应绑定的是哪种行情类型？**
 
-> 答：如果调用该接口，必须在调用Login()前且完成SetConfigFile设置后调用，否则配置将无法生效。在绑核分配环节，Api会按数组从前往后的核序号依次分配给配置文件中md、ob、tbt、idxpress、hkc这些CPU设置项（enable为OFF的不会分配）。
+> 答：如果调用该接口，必须在调用Login()前且完成SetConfigFile设置后调用，否则配置将无法生效。在绑核分配环节，Api会按数组从前往后的核序号依次分配给配置文件中md、ob、tbt这些CPU设置项（enable为OFF的不会分配）。
 
 **2.1.36. 问：使用UDP接收行情时，设置接收行情线程绑定的CPU，这个是逻辑CPU还是物理CPU呢？**
 
@@ -340,7 +345,7 @@ updated_at: 2026-07-03
     
     [FATAL]recv_thread_efvi exit, ef_driver_open failed. rc[-2], [No such file or directory]..
 
-> 答：这个报错显示efvi驱动异常，应该是没有安装驱动。启用efvi接收行情，需要先安装onload驱动，驱动版本建议比8.1.2稍高一点，如果已安装相应版本的驱动，可能驱动没装好需要重装，但是不需要使用onload启动程序。
+> 答：这个报错显示efvi驱动异常，启用efvi接收行情，需要先安装onload驱动，驱动版本建议比8.1.2稍高一点，如果已安装相应版本的驱动，可能驱动没装好，需要重新加载或者重装驱动。
 
 **2.1.41. 问：使用SF网卡，onload驱动安装的7.1版本，使用的.so库是onload-8.1.2.26版本，开启efvi收不到行情，xtpxquote.log 中报错：**
     
@@ -530,11 +535,15 @@ updated_at: 2026-07-03
 
 **2.1.81. 问：idxpress是什么行情呢，调用哪个接口可获取该类行情？**
 
-> 答：idxpress是指数通行情，包括各种核心指数行情，但是不包括所有的指数行情。在UDP连接下，可修改quote_config.ini配置文件，将[idxpress]设置enable = ON开启订阅，并调用SubscribeAllIndexPress()接口订阅，接收指数通行情是OnIndexPress()回调接口。
+> 答：idxpress是指数通行情，包括各种核心指数行情，但是不包括所有的指数行情。  
+>  在UDP连接下，修改quote_config.ini配置及接口调用，以Api-1.2.1及其以上版本为例：  
+>  (1) 在[md]下 设置 enable = ON，开启快照订阅。  
+>  (2) 在[subscribe_quote_type]下设置 sh_level1_rawtxt = ON，开启指数通订阅。  
+>  (3) 调用SubscribeAllIndexPress()接口订阅指数通行情，回调OnIndexPress()接口推送指数通数据。
 
-**2.1.82. 问：如果关掉[idxpress]设置enable = OFF，是否还能接收沪深快照里的指数行情？**
+**2.1.82. 问：更新API版本后，原本能收到的指数通行情，现在收不到了，是什么原因呢？**
 
-> 答：还能接收，关掉[idxpress]不影响接收沪深指数快照，沪深指数快照的开关是[subscribe_quote_type]下的_md_index。
+> 答：看下API版本，如果是1.2.1及其以上版本，quote_config.ini里指数通行情的配置参数与[md]合并，不再单独配置，需要在[md.normal]下设置 enable = ON，并且在[subscribe_quote_type]下设置 sh_level1_rawtxt = ON 开启订阅。
 
 **2.1.83. 问：调用了SubscribeAllMarketData()订阅指数快照行情，还需要再调用SubscribeAllIndexPress()吗？**
 
@@ -542,7 +551,7 @@ updated_at: 2026-07-03
 
 **2.1.84. 问：调用了SubscribeAllMarketData()订阅指数快照行情，可以调用UnSubscribeAllIndexPress()取消订阅指数通行情吗？**
 
-> 答：不可以，订阅/退订要配对使用，SubscribeAllMarketData()和UnSubscribeAllMarketData，SubscribeAllIndexPress()和UnSubscribeAllIndexPress()才有效。
+> 答：不可以，订阅/退订要配对使用，SubscribeAllMarketData()和UnSubscribeAllMarketData()，SubscribeAllIndexPress()和UnSubscribeAllIndexPress()才有效。
 
 **2.1.85. 问：在TCP连接下，调用SubscribeAllHKCMarketData()，为什么没有推送行情数据呢？**
 
@@ -739,7 +748,7 @@ updated_at: 2026-07-03
 > 深圳市场| 0-9:15| 9:15-9:25| 9:25-9:30| 9:30-11:30| 11:30-13:00| 13:00-14:57| 14:57-15:00| 15:00-  
 > ---|---|---|---|---|---|---|---|---  
 > 非停牌| S0| C0| B0| T0| B0| T0| C0| E0  
-> 停牌| S1| C1| B1| T1| B1| T1| C1| E1  
+> 停牌| S1| O1| B1| T1| B1| T1| C1| E1  
   
 >   2. 对于债券，标志含义同股票/基金字段说明，具体如下：
 > 
@@ -807,17 +816,17 @@ updated_at: 2026-07-03
 
 **2.2.32. 问：OnDepthMarketData()股票快照行情数据，更新频率是怎样的？**
 
-> 答：在连续竞价期间，沪深股票，行情有变化时 3 秒一次，无变化时 60 秒一次；  
->  在集合竞价期间，沪市股票，行情有变化时 3秒一次，无变化时 60秒一次更新；深市股票，60秒一次更新。  
+> 答：在连续竞价期间，沪深股票，行情有变化时 3 秒一次推送，无变化时，沪市是 30 秒一次，深市是 60 秒一次；  
+>  在集合竞价期间，沪市股票 30秒 一次推送；深市股票 60秒 一次推送。  
 >  具体请参见：行情服务接入前指引。
 
-**2.2.33. 问：北交所股票的快照行情，跟沪深股票快照行情的推送频率一样吗**
+**2.2.33. 问：北交所股票的快照行情，跟沪深股票快照行情的推送频率一样吗？**
 
 > 答：不一样，北交所股票不是主动推送的，是XTP行情服务器每间隔120ms去读取一次dbf格式的行情文件，再将当前读取的文件数据对比前一次的文件数据，如果行情数据有变化，则马上推送，如果数据没变化，则60秒推送一次。
 
 **2.2.34. 问：OnDepthMarketData()推送上海行情，每条都收了两遍，是哪里配置有问题么？**
 
-> 答：如果同时开启L1和L2的快照，并且在同一个QuoteApi里接收时，深市会过滤只推送更快的1路快照数据，但是沪市不做过滤会推送2路快照数据。  
+> 答：如果同时开启沪深L1和L2的快照，并且在同一个QuoteApi里接收时，深市会过滤只推送更快的1路快照数据，但是沪市不做过滤会推送2路快照数据。  
 >  如果您需要接收完整的L1和L2快照数据，就要配置2份quote_config.ini，创建2个QuoteAPI实例，分别读取配置、login()登录成功后订阅，分别在2个OnDepthMarketData()里接收快照数据。
 
 **2.2.35. 问：XTP快照行情XTPMarketDataStruct.pre_close_price字段，是除权前的收盘价格吗？**
@@ -847,7 +856,7 @@ updated_at: 2026-07-03
 
 **2.2.40. 问：OnTickByTick()推送的逐笔行情，9:15为什么收不到沪市的逐笔数据呢？**
 
-> 答：深市是9:15就开始推送逐笔委托数据，9:25再开始推送逐笔成交数据，但是沪市要9:25才开始推送逐笔委托和逐笔成交数据。
+> 答：是否过滤了沪市的逐笔状态数据？沪市大概在9:14先推送一笔逐笔状态，9:25再开始推送逐笔委托和逐笔成交数据，不像深市是9:15就开始推送逐笔委托数据，9:25再开始推送逐笔成交数据。
 
 **2.2.41. 问：OnTickByTick()中，逐笔成交如何对应到逐笔委托？**
 
@@ -904,9 +913,9 @@ updated_at: 2026-07-03
 
 > 答：UDP组播不保证顺序，可能会乱序，但是Api在推送行情时，在一定程度上是对消息保序的。
 
-**2.2.52. 问：实盘上使用Onload开启2个程序同时接收Level2行情，一个程序能正常收到逐笔行情，另一个同样的程序收不到逐笔行情，这是什么原因呢？**
+**2.2.52. 问：实盘上使用efvi开启2个程序同时接收Level2行情，一个程序能正常收到逐笔行情，另一个同样的程序收不到逐笔行情，这是什么原因呢？**
 
-> 答：如果是用的solarflare网卡，通过Onload启动的行情程序，并且一台机器上开启了多个程序接收Level2行情，那么每个程序都要开onload，或者每个都不开。如果只是部分开启onload，会导致没开onload的程序收不到行情。
+> 答：如果是用的solarflare网卡，设置enable_efvi = ON开启efvi接收行情，并且一台机器上开启了多个程序接收Level2行情，那么每个程序都要开启efvi，或者每个都不开。如果只是部分开启efvi，会导致没开efvi的程序收不到行情。
 
 **2.2.53. 问：接收Level2全市场的[tbt.normal]逐笔行情数据时，CPU占用率一直保持在200%左右，即使盘后没有收到任何行情数据也是这样，请问正常吗？**
 
@@ -1020,7 +1029,7 @@ updated_at: 2026-07-03
 
 **3.1.10. 问：XTP-Pro有获取交易日历的接口吗？**
 
-> 答：获取不到日历，只能获取当天的交易日GetTradingDay()。
+> 答：API没有获取交易日历的接口，您可以根据交易所官方公告的交易日历来设置。
 
 **3.1.11. 问：每个账户对应一个TraderSpi吗？我登录两个账号注册了2个TraderSpi，好像没有生效？**
 
@@ -1377,7 +1386,13 @@ updated_at: 2026-07-03
 
 **3.1.79. 问：调用CancelOrder()撤单，一般在什么情况下会撤单失败？**
 
-> 答：一般来说，以下情况会撤单失败： (1) 撤单时传入的订单号order_xtp_id错误； (2) 订单已经成交，或者已经撤单； (3) 对废单发起撤单请求； (4) 新股申购、现券还券，不允许撤单； (5) 当前时段不允许撤单； (6) 原单发往了交易所，但是交易所还没有确认时（初始状态），此时撤单也会失败；
+> 答：一般来说，以下情况会撤单失败：  
+>  (1) 撤单时传入的订单号order_xtp_id错误；  
+>  (2) 订单已经成交，或者已经撤单；  
+>  (3) 对废单发起撤单请求；  
+>  (4) 新股申购、现券还券，不允许撤单；  
+>  (5) 当前时段不允许撤单；  
+>  (6) 原单发往了交易所，但是交易所还没有确认时（初始状态），此时撤单也会失败；
 
 **3.1.80. 问：进行ETF申赎时，在休市期间调用CancelOrder()撤单报错，为什么呢？**
 
@@ -1526,51 +1541,62 @@ updated_at: 2026-07-03
     ///未知类型
     constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 4;
 
-**3.1.107. 问：现货账户申赎沪市交易型货币基金ETF，为何报错 11000306, error_msg = Service not supported？**
+**3.1.107. 问：实盘环境，在8:40登录交易成功后，调用QueryOtherServerFund() 和 FundTransfer() 接口，为何报错 10210407, error_msg = TSS offline.？**  
+xtpxtrade.log中日志如下：
+
+cpp
+    
+    
+    [ERROR:10210407]Failed to query other sever fund, fund transfer service is unavailable.    
+    [ERROR:10210407]Failed to send fund transfer to xgw, fundtransfer service is unavailable.
+
+> 答：登录成功并不代表划拨服务可用，在登录成功后，要等待收到 OnServerStatusNotification() 资金划拨或者查询可用的通知时，再做资金划拨和查询其他节点可用资金。
+
+**3.1.108. 问：现货账户申赎沪市交易型货币基金ETF，为何报错 11000306, error_msg = Service not supported？**
 
 > 答：现货账户可申赎的ETF不包括交易型货币基金，您可以先调用QueryETF()来查询当前支持的可申赎的ETF清单，再根据返回的ETF代码来报单ETF申赎。
 
-**3.1.108. 问：调用QueryETF()查询所有市场的ETF合约信息，设置query_param参数为NULL，为什么报参数错误呢？**
+**3.1.109. 问：调用QueryETF()查询所有市场的ETF合约信息，设置query_param参数为NULL，为什么报参数错误呢？**
 
 > 答：query_param参数需要使用memset初始化为0，如果结构体变量不做初始化，windows下可能是默认为0，但是linux下可能是随机值。
 
-**3.1.109. 问：XTP支持场外ETF申赎吗？**
+**3.1.110. 问：XTP支持场外ETF申赎吗？**
 
 > 答：不支持，XTP支持的可申赎ETF列表请参见：<https://xtp.zts.com.cn/doc/api/business> 。
 
-**3.1.110. 问：信用账户报单ETF申赎时，为何报错 11000308, error_msg = Business type not match with security type？**
+**3.1.111. 问：信用账户报单ETF申赎时，为何报错 11000308, error_msg = Business type not match with security type？**
 
 > 答：信用账户不支持ETF申赎，但是可以买卖沪市交易型货币基金。名单公告请参见：[https://www.zts.com.cn/hqzx/infoDetail.aspx?doc_id=d6%2FPCP7A4ZB7h4xoDJ%2Fnjg%3D%3D。](https://www.zts.com.cn/hqzx/infoDetail.aspx?doc_id=d6%2fPCP7A4ZB7h4xoDJ%2fnjg%3d%3d%E3%80%82)
 
-**3.1.111. 问：ETF的成分股数据从哪里查询到？XTP中是否有对应的查询接口**
+**3.1.112. 问：ETF的成分股数据从哪里查询到？XTP中是否有对应的查询接口**
 
 > 答：可调用QueryETFTickerBasket()查询ETF股票篮的成份股列表。
 
-**3.1.112. 问：QueryETFTickerBasket()查询ETF股票篮，请求参数query_param可以为NULL吗？**
+**3.1.113. 问：QueryETFTickerBasket()查询ETF股票篮，请求参数query_param可以为NULL吗？**
 
 > 答：不可以为NULL，该接口是查询ETF合约的成分股信息，ETF合约代码（ETF买卖代码）不可以为空，market字段也必须指定。
 
-**3.1.113. 问：XTP中报单新股申购，如何得到申购代码ticker呢？**
+**3.1.114. 问：XTP中报单新股申购，如何得到申购代码ticker呢？**
 
 > 答：可调用QueryIPOInfoList()获取申购代码。
 
-**3.1.114. 问：报单新股申购时，报错：11000373，Failed to get new stock apply info in specified market!**
+**3.1.115. 问：报单新股申购时，报错：11000373，Failed to get new stock apply info in specified market!**
 
 > 答：报单的账号没有科创板权限，申购科创板股票也需要开通科创板权限。个人户可以在中泰齐富通开通，产品户只能临柜开通，T+1日在XTP柜台生效。
 
-**3.1.115. 问：新股申购，如何获取申购数量呢？**
+**3.1.116. 问：新股申购，如何获取申购数量呢？**
 
 > 答：今日可申购新股信息，可调用QueryIPOInfoList()查询最大允许申购数量，调用QueryIPOQuotaInfo()查询可申购额度，那么所能申购的最大数量为：min（新股可申购额度，最大允许申购数量）。
 
-**3.1.116. 问：今天查询新股申购额度QueryIPOQuotaInfo()，在信用账户和普通账户上都有申购额度，请问两个申购委托是独立的吗？**
+**3.1.117. 问：今天查询新股申购额度QueryIPOQuotaInfo()，在信用账户和普通账户上都有申购额度，请问两个申购委托是独立的吗？**
 
 > 答：不是独立的，两个账户是共享额度的。同一个一码通下的股东账户，如果重复申购了，交易所是按首笔申购报单计算的，后续的申购在报单时不会报错，但是清算时会报错。
 
-**3.1.117. 问：查询可转债申购是哪个接口？申购单位是手还是张？**
+**3.1.118. 问：查询可转债申购是哪个接口？申购单位是手还是张？**
 
 > 答：QueryBondIPOInfoList()接口查询今日可转债申购列表，申购最小单位为10张（1000元），申购数量应当为10张或10张的整数倍。注意：在OnQueryBondIPOInfoList()回调中，证券类型 参见 ticker_type 字段，债券是 XTP_TICKER_TYPE_BOND。
 
-**3.1.118. 问：可转债转股后的股票证券代码、转股价格，是调用哪个接口查询？**
+**3.1.119. 问：可转债转股后的股票证券代码、转股价格，是调用哪个接口查询？**
 
 > 答：可调用QueryBondSwapStockInfo()查询可转债转股的基本信息，但是深交所没有转股价格，XTPQueryBondSwapStockRsp.swap_price赋值是0。
 
@@ -1594,8 +1620,8 @@ updated_at: 2026-07-03
 
 **3.2.5. 问：OnServerStatusNotification()什么时候会被回调？会频繁回调吗**
 
-> 答：login()登录成功后会有一条回调，在收到OnServerStatusNotification()通知服务可用时，才能发起资金划拨或查询服务，否则会因为服务不可用而报错。  
->  之后，只是在交易网关或者api跟服务器断连的时候，会收到服务不可用的通知，当服务恢复重连上后，会收到服务可用通知。  
+> 答：login()登录成功后会有一条回调，在收到OnServerStatusNotification()通知服务可用时，才能发起资金划拨或查询资金服务，否则会因为服务不可用而报错。  
+>  之后，只是在交易网关或者Api跟服务器断连的时候，会收到服务不可用的通知，当服务恢复重连上后，会收到服务可用通知。  
 >  一般来说，不会频繁回调的，除非您的交易程序有很多异常的断线。
 
 **3.2.6. 问：OnError()什么时候会被回调？**
@@ -2184,11 +2210,11 @@ updated_at: 2026-07-03
 
 **5.2.1. 问：公网测试环境，可测试的时间段有哪些？**
 
-> 答：XTP-Pro 4.0环境，登录的连通性测试和报单测试，是从早上9点~22点，但是接收行情是从9点~16:30，交易所不推送行情就没有数据了。
+> 答：XTP-Pro 4.0 测试环境，服务器在每日的23:20关闭，在次日9:00开启，在开启期间除了必要的维护时间，其余时间段，都可以测试。
 
 **5.2.2. 问：公网测试环境，行情数据更新频率是怎样的？**
 
-> 答：公网测试环境行情来自于交易所的转发数据，推送频率跟实盘一致。XTP-Pro收盘后没有循环回放行情，如果要测试行情数据，请注意尽量在交易时段9:10~15:30测试。
+> 答：公网测试环境行情来自于交易所的转发数据，推送频率跟实盘一致。XTP-Pro收盘后也有循环回放行情可以测试。
 
 **5.2.3. 问：公网测试环境，行情数据有的时候为什么不动了？**
 

@@ -13,7 +13,7 @@ id: zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化
 title: 从XTP交易到XTP-Pro交易API的变化
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-05-21
+updated_at: 2026-07-21
 ---
 
 # 从XTP交易到XTP-Pro交易API的变化
@@ -331,7 +331,7 @@ cpp
 
 ### 1.9. 服务状态改变时的通知 ​
 
-XTP-Pro版本新增的OnServerStatusNotification()回调函数，核心作用是实时推送资金划拨服务、查询服务的可用状态变化，帮助用户及时感知服务的可用性，避免因服务不可用导致操作失败。当用户Login后，默认服务都是可用的，当收到服务不可用的通知时，之前没有完成的查询，不再推送后续消息，需等待查询服务恢复后重新查询。回调函数详情如下：
+XTP Pro版本新增的OnServerStatusNotification()回调函数，核心作用是实时推送资金划拨服务、查询服务的可用状态变化，帮助用户及时感知服务的可用性，避免因服务不可用导致操作失败。当用户Login后，默认查询服务是可用的，资金划拨服务是否可用要等待回调通知。当收到服务不可用的通知时，之前没有完成的查询，不再推送后续消息，需等待查询服务恢复后重新查询。回调函数详情如下：
 
 cpp
     
@@ -340,8 +340,10 @@ cpp
     ///@param session_id 资金账户对应的session_id，登录时得到
     ///@param server_type 服务类型，1-资金划拨服务，2-查询服务
     ///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
-    ///@remark 用户登录成功时，默认服务可用。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
+    ///@remark 用户登录成功时，默认查询服务可用，资金划拨服务是否可用得等待此回调函数通知。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
     virtual void OnServerStatusNotification(uint64_t session_id, uint32_t server_type, bool status) { (void)session_id; (void)server_type; (void)status; };
+
+注意：对于XTP Pro API是1.0.15及其以下版本的，当用户Login成功后，资金划拨服务连接成功时会收不到OnServerStatusNotification()的回调通知，连接失败才有回调通知。 如果用户Login后立即要操作资金划拨，需要更新XTP Pro API为1.1.0及其以上版本，Login成功后收到回调OnServerStatusNotification()的通知，且资金划拨服务为可用的状态时，方可进行资金划拨操作，用户可参考官网上文档《资金划拨接口的示例代码》的示例。
 
 ## **2\. 已去除接口** ​
 
