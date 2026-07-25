@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-positions
 anchor_id: trading-account-rest-api-get-positions
 api_type: REST
-updated_at: 2026-07-24 19:27:24.364400
+updated_at: 2026-07-25 19:13:50.776213
 ---
 
 # Get positions

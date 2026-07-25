@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-comprehensive-api-workflow-submitting-an-order
 anchor_id: spread-trading-comprehensive-api-workflow-submitting-an-order
 api_type: API
-updated_at: 2026-07-24 19:28:55.158317
+updated_at: 2026-07-25 19:15:21.465305
 ---
 
 # Submitting an Order

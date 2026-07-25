@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/adl-alert
 api_type: WebSocket
-updated_at: 2026-07-24 19:05:58.567099
+updated_at: 2026-07-25 18:53:37.225751
 ---
 
 # ADL Alert

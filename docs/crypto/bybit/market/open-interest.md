@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/open-interest
 api_type: Market Data
-updated_at: 2026-07-24 19:02:06.705208
+updated_at: 2026-07-25 18:50:08.251064
 ---
 
 # Get Premium Index Price Kline

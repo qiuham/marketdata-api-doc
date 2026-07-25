@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-set-permission-of-transfer-out
 anchor_id: sub-account-rest-api-set-permission-of-transfer-out
 api_type: REST
-updated_at: 2026-07-24 19:29:46.193757
+updated_at: 2026-07-25 19:16:12.221837
 ---
 
 # Set permission of transfer out

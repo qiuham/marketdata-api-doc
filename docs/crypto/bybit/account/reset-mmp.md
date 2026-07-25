@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/reset-mmp
 api_type: Account
-updated_at: 2026-07-24 18:56:27.705348
+updated_at: 2026-07-25 18:45:04.758717
 ---
 
 # Set Delta Neutral Mode

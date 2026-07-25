@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-all-quotes
 anchor_id: block-trading-rest-api-cancel-all-quotes
 api_type: REST
-updated_at: 2026-07-24 19:28:46.967829
+updated_at: 2026-07-25 19:15:13.347802
 ---
 
 # Cancel all Quotes

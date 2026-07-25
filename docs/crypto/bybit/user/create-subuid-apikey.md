@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/create-subuid-apikey
 api_type: REST
-updated_at: 2026-07-24 19:05:31.000440
+updated_at: 2026-07-25 18:53:12.638591
 ---
 
 # Freeze Sub UID

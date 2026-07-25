@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio
 api_type: Account
-updated_at: 2026-07-24 19:16:57.391470
+updated_at: 2026-07-25 19:03:29.502091
 ---
 
 # Edit Portfolio

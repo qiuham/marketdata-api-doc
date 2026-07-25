@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation
 api_type: WebSocket
-updated_at: 2026-07-24 19:06:02.633537
+updated_at: 2026-07-25 18:53:40.607078
 ---
 
 # Order Price Limit
