@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/order-price-limit
 api_type: Market Data
-updated_at: 2026-07-25 18:50:08.877071
+updated_at: 2026-07-26 18:51:46.242975
 ---
 
 # Get Premium Index Price Kline

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/adl-alert
 api_type: Market Data
-updated_at: 2026-07-25 18:49:50.528160
+updated_at: 2026-07-26 18:51:27.311991
 ---
 
 # Get Fee Group Structure

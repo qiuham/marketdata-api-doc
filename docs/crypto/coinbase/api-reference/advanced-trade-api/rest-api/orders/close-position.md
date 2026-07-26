@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/close-position
 api_type: Trading
-updated_at: 2026-07-25 19:03:28.417126
+updated_at: 2026-07-26 19:05:39.713060
 ---
 
 # Close Position

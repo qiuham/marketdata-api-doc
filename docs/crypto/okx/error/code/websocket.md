@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-websocket
 anchor_id: error-code-websocket
 api_type: WebSocket
-updated_at: 2026-07-25 19:16:41.027991
+updated_at: 2026-07-26 19:19:02.629049
 ---
 
 # WebSocket

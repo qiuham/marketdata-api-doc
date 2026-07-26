@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-pnl
 api_type: Position
-updated_at: 2026-07-25 18:51:20.085002
+updated_at: 2026-07-26 18:53:00.142746
 ---
 
 # Confirm New Risk Limit

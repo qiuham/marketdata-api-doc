@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-quotes
 anchor_id: block-trading-rest-api-get-quotes
 api_type: REST
-updated_at: 2026-07-25 19:15:14.295580
+updated_at: 2026-07-26 19:17:35.453758
 ---
 
 # Get quotes

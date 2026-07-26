@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills
 api_type: Trading
-updated_at: 2026-07-25 19:03:28.771002
+updated_at: 2026-07-26 19:05:40.260503
 ---
 
 # List Fills
@@ -80,7 +80,51 @@ Get a list of fills filtered by optional query parameters (`product_id`, `order_
       
     	req, _ := http.NewRequest("GET", url, nil)  
       
-    	req.Header.Add("Authorization", "Bearer <token>")  
+    	reqOrders
+    
+    # List Fills
+    
+    Get a list of fills filtered by optional query parameters (product_id, order_id, etc).
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    orders
+    
+    /
+    
+    historical
+    
+    /
+    
+    fills
+    
+    List Fills
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/orders/historical/fills \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests  
+      
+    url = "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills"  
+      
+    headers = {.Header.Add("Authorization", "Bearer <token>")  
       
     	res, _ := http.DefaultClient.Do(req)  
       
@@ -260,90 +304,180 @@ Only returns fills for orders matching the specified order types (e.g. 'MARKET',
   * LIQUIDATION: LIQUIDATION is a special order type that is used to liquidate a position
   * SCALED: SCALED order is an order that is split into multiple child orders at incrementally increasing or decreasing prices
 
-Available options:
+"Authorization": "Bearer <token>"}  
+  
+response = requests.get(url, headers=headers)  
+  
+print(response.text)`
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};  
+      
+    fetch('https://api.coinbase.com/api/v3/brokerage/orders/historical/fills', options)  
+      .then(res => res.json())  
+      .then(res => console.log(res))  
+      .catch(err => console.error(err));
+    
+    
+    <?php  
+      
+    $curl = curl_init();  
+      
+    curl_setopt_array($curl, [  
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills",  
+      CURLOPT_RETURNTRANSFER => true,  
+      CURLOPT_ENCODING => "",  
+      CURLOPT_MAXREDIRS => 10,  
+      CURLOPT_TIMEOUT => 30,  
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
+      CURLOPT_CUSTOMREQUEST => "GET",  
+      CURLOPT_HTTPHEADER => [  
+        "Authorization: Bearer <token>"  
+      ],  
+    ]);  
+      
+    $response = curl_exec($curl);  
+    $err = curl_error($curl);  
+      
+    curl_close($curl);  
+      
+    if ($err) {  
+      echo "cURL Error #:" . $err;  
+    } else {  
+      echo $response;  
+    }
+    
+    
+    package main  
+      
+    import (  
+    	"fmt"  
+    	"net/http"  
+    	"io"  
+    )  
+      
+    func main() {  
+      
+    	url := "https://api.coinbase.com/api/v3/brokerage/orders/historical/fills"  
+      
+    	req, _ := http.NewRequest("GET", url, nil)  
+      
+    	req.Header.Add("Authorization", "Bearer <token>")  
+      
+    	res, _ := http.DefaultClient.Do(req)  
+      
+    	defer res.Body.Close()  
+    	body, _ := io.ReadAll(res.Body)  
+      
+    	fmt.Println(string(body))  
+      
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/orders/historical/fills")  
+      .header("Authorization", "Bearer <token>")  
+      .asString();
+    
+    
+    require 'uri'  
+    require 'net/http'  
+      
+    url
+    
+    Available options: 
+    
+    UNKNOWN_ORDER_TYPE, 
+    
+    MARKET, 
+    
+    LIMIT, 
+    
+    STOP, 
+    
+    STOP_LIMIT, 
+    
+    BRACKET, 
+    
+    TWAP, 
+    
+    ROLL_OPEN, 
+    
+    ROLL_CLOSE, 
+    
+    LIQUIDATION, 
+    
+    SCALED 
+    
+    
+    
+    order_side
+    
+    enum<string>
+    
+    default:""
+    
+    Only returns fills for orders matching the specified side ('BUY' or 'SELL'). By default, returns all sides.
+    
+    Available options: 
+    
+    BUY, 
+    
+    SELL 
+    
+    
+    
+    product_types
+    
+    enum<string>[]
+    
+    Only returns fills for orders matching the specified product types (e.g. 'SPOT', 'FUTURE'). By default, returns all product types.
+    
+    Available options: 
+    
+    UNKNOWN_PRODUCT_TYPE, 
+    
+    SPOT, 
+    
+    FUTURE 
+    
+    
+    
+    proof_token
+    
+    string
+    
+    Optional proof token for 2FA validation when accessing transaction history (EU SCA compliance).
+    
+    #### Response
+    
+    A successful response.
+    
+    
+    
+    fills
+    
+    Represents a fill for an order in the system · object[]
+    
+    All fills matching the filters.
 
-`UNKNOWN_ORDER_TYPE`,
-
-`MARKET`,
-
-`LIMIT`,
-
-`STOP`,
-
-`STOP_LIMIT`,
-
-`BRACKET`,
-
-`TWAP`,
-
-`ROLL_OPEN`,
-
-`ROLL_CLOSE`,
-
-`LIQUIDATION`,
-
-`SCALED`
-
-order_side
-
-enum<string>
-
-default:""
-
-Only returns fills for orders matching the specified side ('BUY' or 'SELL'). By default, returns all sides.
-
-Available options:
-
-`BUY`,
-
-`SELL`
-
-product_types
-
-enum<string>[]
-
-Only returns fills for orders matching the specified product types (e.g. 'SPOT', 'FUTURE'). By default, returns all product types.
-
-Available options:
-
-`UNKNOWN_PRODUCT_TYPE`,
-
-`SPOT`,
-
-`FUTURE`
-
-proof_token
-
-string
-
-Optional proof token for 2FA validation when accessing transaction history (EU SCA compliance).
-
-#### Response
-
-A successful response.
-
-fills
-
-Represents a fill for an order in the system · object[]
-
-All fills matching the filters.
-
-cursor
-
-string
-
-For paginated responses, returns all responses that come after this value.
-
-Example:
-
-`"789100"`
-
-proof_token_required
-
-boolean
-
-Indicates that a valid proof token is required to access this data (EU SCA compliance).
-
-Example:
-
-`true`
+    cursor
+    
+    string
+    
+    For paginated responses, returns all responses that come after this value.
+    
+    Example:
+    
+    "789100"
+    
+    
+    
+    proof_token_required
+    
+    boolean
+    
+    Indicates that a valid proof token is required to access this data (EU SCA compliance).
+    
+    Example:
+    
+    true

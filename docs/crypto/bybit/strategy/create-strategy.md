@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/create-strategy
 api_type: REST
-updated_at: 2026-07-25 18:53:02.136379
+updated_at: 2026-07-26 18:54:46.047361
 ---
 
 # Create Strategy Order
