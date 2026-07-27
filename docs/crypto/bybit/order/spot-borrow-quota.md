@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-07-26 18:52:46.745634
+updated_at: 2026-07-27 19:03:37.501885
 ---
 
 # Get LTV

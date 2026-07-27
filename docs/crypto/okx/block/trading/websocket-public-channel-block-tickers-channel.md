@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-public-channel-block-tickers-channel
 anchor_id: block-trading-websocket-public-channel-block-tickers-channel
 api_type: WebSocket
-updated_at: 2026-07-26 19:17:39.655889
+updated_at: 2026-07-27 19:30:20.929550
 ---
 
 # Block tickers channel

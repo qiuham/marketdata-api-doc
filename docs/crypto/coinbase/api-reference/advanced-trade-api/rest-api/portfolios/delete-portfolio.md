@@ -2,18 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio
 api_type: Account
-updated_at: 2026-07-26 19:05:41.498287
+updated_at: 2026-07-27 19:18:33.540302
 ---
 
 # Delete Portfolio
 
 **Endpoint:** `DELETE https://api.coinbase.com/api/v3/brokerage/portfolios/{portfolio_uuid}`
 
-logPortfolios
-    
-    # Delete Portfolio
-    
-    Delete portfolio.
+
+Delete portfolio.
     
     
     curl --request DELETE \

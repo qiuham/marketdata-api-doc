@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-07-26 18:53:00.763257
+updated_at: 2026-07-27 19:03:54.156675
 ---
 
 # Confirm New Risk Limit

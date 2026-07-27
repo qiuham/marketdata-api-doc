@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-mm-instrument-types
 anchor_id: public-data-rest-api-get-mm-instrument-types
 api_type: REST
-updated_at: 2026-07-26 19:18:05.379471
+updated_at: 2026-07-27 19:30:46.115204
 ---
 
 # Get MM instrument types

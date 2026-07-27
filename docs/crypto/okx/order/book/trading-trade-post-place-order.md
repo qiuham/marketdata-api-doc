@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-order
 anchor_id: order-book-trading-trade-post-place-order
 api_type: API
-updated_at: 2026-07-26 19:16:33.039500
+updated_at: 2026-07-27 19:29:15.644149
 ---
 
 # POST / Place order
@@ -103,8 +103,6 @@ ordType | String | Yes | Order type
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
-speedBump | String | Conditional | Speed bump  
-`1`: Event contract speed bumps (the delay duration will be changed subject to adjustment without prior notice). Required for non-post-only orders of `EVENTS` symbols.  
 outcome | String | Conditional | The market outcome users trade on.  
 `yes`  
 `no`  
@@ -436,8 +434,6 @@ ordType | String | 是 | 订单类型
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
-speedBump | String | 可选 | 减速带  
-`1`：事件合约速度限制（延迟可能因市场情况调整，不提前通知）。对 `EVENTS` 产品的非只挂单操作为必填。  
 outcome | String | 可选 | 用户交易的市场结果方向。  
 `yes`  
 `no`  
