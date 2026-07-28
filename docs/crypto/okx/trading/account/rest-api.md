@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-07-27 19:28:54.230579
+updated_at: 2026-07-28 19:27:46.429679
 ---
 
 # REST API
@@ -73,6 +73,7 @@ instId | String | No | Instrument ID
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
                 "elp": "0",
+                "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
                 "groupId": "4",
@@ -204,6 +205,12 @@ elp | String | ELP maker permission
 `2`: ELP is enabled for this symbol, and current users have permission to place ELP orders for it.   
   
 It doesn't mean there will be ELP liquidity when elp is `1/2`.  
+rpi | String | RPI maker permission.  
+`0`: not enabled for this instrument  
+`1`: enabled, but the current user has no permission to place RPI orders  
+`2`: enabled and permitted  
+A `1`/`2` value does not imply RPI liquidity is present.  
+`elp` remains accepted as an alias until October 31, 2026.  
 expTime | String | Expiry time   
 Applicable to `SPOT`/`MARGIN`/`FUTURES`/`SWAP`/`OPTION`. For `FUTURES`/`OPTION`, it is natural delivery/exercise time. It is the instrument offline time when there is `SPOT/MARGIN/FUTURES/SWAP/` manual offline. Update once change.  
 lever | String | Max Leverage,   
@@ -2840,6 +2847,7 @@ Users can use instruments endpoint to fetch the mapping of an instrument ID and 
                 "feeGroup": [
                     {
                         "elpMaker": "-0.0008",
+                        "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
                         "taker": "-0.001"
@@ -2877,6 +2885,8 @@ K2 parameter for `EVENTS` maker fee formula: `K2 × C × (P × (1-P))` (C = numb
   
 **instType and groupId should be used together to determine a trading fee group. Users should use this endpoint together with[instruments endpoint](/docs-v5/en/#trading-account-rest-api-get-instruments) to get the trading fee of a specific symbol.**  
 > elpMaker | String | ELP Maker effective fee rate. Returns `""` if ELP is not applicable to the instrument.  
+> rpiMaker | String | RPI maker effective fee rate. Returns `""` if RPI is not applicable to the instrument.  
+`elpMaker` remains accepted as an alias until October 31, 2026.  
 delivery | String | Delivery fee rate  
 exercise | String | Fee rate for exercising the option  
 instType | String | Instrument type  
@@ -6365,6 +6375,7 @@ instId | String | 否 | 产品ID
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
                 "elp": "0",
+                "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
                 "groupId": "4",
@@ -6487,6 +6498,12 @@ elp | String | ELP 下单权限
 `2`：该币对支持 ELP 且用户有权限为其下 ELP 订单  
   
 `1/2`不代表深度中一定有 ELP 挂单  
+rpi | String | RPI 做市商权限。  
+`0`：该产品未开通 RPI  
+`1`：该产品已开通 RPI，但当前用户无权下 RPI 订单  
+`2`：已开通且有权限  
+`1`/`2` 不代表当前存在 RPI 流动性。  
+`elp` 在 2026年10月31日前作为别名继续被接受。  
 expTime | String | 产品下线时间  
 适用于`币币/杠杆/交割/永续/期权`，对于 `交割/期权`，为交割/行权日期；亦可以为产品下线时间，有变动就会推送。  
 lever | String | 该`instId`支持的最大杠杆倍数，不适用于`币币`、`期权`  
@@ -9144,6 +9161,7 @@ groupId 和 instId/instFamily 只能传入其一
                 "feeGroup": [
                     {
                         "elpMaker": "-0.0008",
+                        "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
                         "taker": "-0.001"
@@ -9181,6 +9199,8 @@ feeGroup | Array of objects | 手续费分组
   
 **用户需要同时使用instType和groupId来确定一个交易产品的交易手续费分组；用户应该将此接口和[获取交易产品基础信息](/docs-v5/zh/#trading-account-rest-api-get-instruments)一起使用，以获取特定交易产品的手续费率**  
 > elpMaker | String | ELP Maker 有效费率。若 ELP 不适用于该交易产品，则返回 `""`。  
+> rpiMaker | String | RPI 做市商有效费率。若 RPI 不适用于该产品，返回 `""`。  
+`elpMaker` 在 2026年10月31日前作为别名继续被接受。  
 delivery | String | 交割手续费率  
 exercise | String | 行权手续费率  
 instType | String | 产品类型  

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-book
 api_type: Market Data
-updated_at: 2026-07-27 19:18:34.363151
+updated_at: 2026-07-28 19:16:38.779325
 ---
 
 # Get Public Product Book
@@ -141,10 +141,7 @@ Get a list of bids/asks for a single product. The amount of detail shown can be 
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

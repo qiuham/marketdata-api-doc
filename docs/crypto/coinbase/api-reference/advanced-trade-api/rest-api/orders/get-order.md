@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order
 api_type: Trading
-updated_at: 2026-07-27 19:18:32.877963
+updated_at: 2026-07-28 19:16:37.478386
 ---
 
 # Get Order
@@ -11,6 +11,8 @@ updated_at: 2026-07-27 19:18:32.877963
 
 
 Get a single order by order ID.
+
+**Equities:** The response identifies equity orders with `product_type: EQUITY`. Use `displayed_order_config` for the equity time in force and `equity_trading_session` for the session in which the order is eligible to execute.
     
     
     curl --request GET \
@@ -121,44 +123,51 @@ Get a single order by order ID.
           "market_market_ioc": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "rfq_disabled": true
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "market_market_fok": {
             "quote_size": "10.00",
-            "base_size": "0.001",
-            "rfq_disabled": true
+            "base_size": "0.001"
           },
           "sor_limit_ioc": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "limit_price": "10000.00",
-            "rfq_disabled": true
+            "limit_price": "10000.00"
           },
           "limit_limit_gtc": {
             "quote_size": "10.00",
             "base_size": "0.001",
             "limit_price": "10000.00",
             "post_only": false,
-            "rfq_disabled": true
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "limit_limit_gtd": {
             "quote_size": "10.00",
             "base_size": "0.001",
             "limit_price": "10000.00",
-            "end_time": "2021-05-31T09:59:59.000Z",
-            "post_only": false
+            "end_time": "2021-05-31T09:59:59Z",
+            "post_only": false,
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "limit_limit_fok": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "limit_price": "10000.00",
-            "rfq_disabled": true
+            "limit_price": "10000.00"
           },
           "twap_limit_gtd": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "start_time": "2021-05-31T07:59:59.000Z",
-            "end_time": "2021-05-31T09:59:59.000Z",
+            "start_time": "2021-05-31T07:59:59Z",
+            "end_time": "2021-05-31T09:59:59Z",
             "limit_price": "10000.00",
             "number_buckets": "5",
             "bucket_size": "2.00",
@@ -174,7 +183,7 @@ Get a single order by order ID.
             "base_size": 0.001,
             "limit_price": "10000.00",
             "stop_price": "20000.00",
-            "end_time": "2021-05-31T09:59:59.000Z",
+            "end_time": "2021-05-31T09:59:59Z",
             "stop_direction": "20000.00"
           },
           "trigger_bracket_gtc": {
@@ -186,7 +195,7 @@ Get a single order by order ID.
             "base_size": 0.001,
             "limit_price": "10000.00",
             "stop_trigger_price": "20000.00",
-            "end_time": "2021-05-31T09:59:59.000Z"
+            "end_time": "2021-05-31T09:59:59Z"
           },
           "scaled_limit_gtc": {
             "orders": [
@@ -195,7 +204,10 @@ Get a single order by order ID.
                 "base_size": "0.001",
                 "limit_price": "10000.00",
                 "post_only": false,
-                "rfq_disabled": true
+                "currency_size": {
+                  "value": "1.23",
+                  "currency": "BTC"
+                }
               }
             ],
             "quote_size": "<string>",
@@ -212,7 +224,7 @@ Get a single order by order ID.
         "side": "",
         "client_order_id": "11111-000000-000000",
         "status": "PENDING",
-        "created_time": "2021-05-31T09:59:59.000Z",
+        "created_time": "2021-05-31T09:59:59Z",
         "completion_percentage": "50",
         "average_filled_price": "50",
         "number_of_fills": "2",
@@ -252,44 +264,51 @@ Get a single order by order ID.
           "market_market_ioc": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "rfq_disabled": true
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "market_market_fok": {
             "quote_size": "10.00",
-            "base_size": "0.001",
-            "rfq_disabled": true
+            "base_size": "0.001"
           },
           "sor_limit_ioc": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "limit_price": "10000.00",
-            "rfq_disabled": true
+            "limit_price": "10000.00"
           },
           "limit_limit_gtc": {
             "quote_size": "10.00",
             "base_size": "0.001",
             "limit_price": "10000.00",
             "post_only": false,
-            "rfq_disabled": true
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "limit_limit_gtd": {
             "quote_size": "10.00",
             "base_size": "0.001",
             "limit_price": "10000.00",
-            "end_time": "2021-05-31T09:59:59.000Z",
-            "post_only": false
+            "end_time": "2021-05-31T09:59:59Z",
+            "post_only": false,
+            "currency_size": {
+              "value": "1.23",
+              "currency": "BTC"
+            }
           },
           "limit_limit_fok": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "limit_price": "10000.00",
-            "rfq_disabled": true
+            "limit_price": "10000.00"
           },
           "twap_limit_gtd": {
             "quote_size": "10.00",
             "base_size": "0.001",
-            "start_time": "2021-05-31T07:59:59.000Z",
-            "end_time": "2021-05-31T09:59:59.000Z",
+            "start_time": "2021-05-31T07:59:59Z",
+            "end_time": "2021-05-31T09:59:59Z",
             "limit_price": "10000.00",
             "number_buckets": "5",
             "bucket_size": "2.00",
@@ -305,7 +324,7 @@ Get a single order by order ID.
             "base_size": 0.001,
             "limit_price": "10000.00",
             "stop_price": "20000.00",
-            "end_time": "2021-05-31T09:59:59.000Z",
+            "end_time": "2021-05-31T09:59:59Z",
             "stop_direction": "20000.00"
           },
           "trigger_bracket_gtc": {
@@ -317,7 +336,7 @@ Get a single order by order ID.
             "base_size": 0.001,
             "limit_price": "10000.00",
             "stop_trigger_price": "20000.00",
-            "end_time": "2021-05-31T09:59:59.000Z"
+            "end_time": "2021-05-31T09:59:59Z"
           },
           "scaled_limit_gtc": {
             "orders": [
@@ -326,7 +345,10 @@ Get a single order by order ID.
                 "base_size": "0.001",
                 "limit_price": "10000.00",
                 "post_only": false,
-                "rfq_disabled": true
+                "currency_size": {
+                  "value": "1.23",
+                  "currency": "BTC"
+                }
               }
             ],
             "quote_size": "<string>",
@@ -367,7 +389,19 @@ Get a single order by order ID.
         "displayed_order_config": "UNKNOWN_DISPLAYED_ORDER_CONFIG",
         "equity_trading_session": "UNKNOWN_EQUITY_TRADING_SESSION",
         "prediction_side": "PREDICTION_SIDE_UNKNOWN",
-        "last_update_time": "<string>"
+        "last_update_time": "<string>",
+        "total_value_after_fees_native": {
+          "value": "1.23",
+          "currency": "BTC"
+        },
+        "outstanding_hold_amount_native": {
+          "value": "1.23",
+          "currency": "BTC"
+        },
+        "total_fees_native": {
+          "value": "1.23",
+          "currency": "BTC"
+        }
       }
     }
     
@@ -377,10 +411,7 @@ Get a single order by order ID.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

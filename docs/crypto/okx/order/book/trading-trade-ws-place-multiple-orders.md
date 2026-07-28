@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-place-multiple-orders
 anchor_id: order-book-trading-trade-ws-place-multiple-orders
 api_type: WebSocket
-updated_at: 2026-07-27 19:29:24.768758
+updated_at: 2026-07-28 19:28:18.081668
 ---
 
 # WS / Place multiple orders
@@ -90,7 +90,8 @@ Only applicable to `FUTURES`/`SWAP`.
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures)  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > sz | String | Yes | Quantity to buy or sell.  
 > px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -129,11 +130,12 @@ Range: `0` to `0.05` (0% to 5%, inclusive). Up to 2 decimal places of the percen
 If not specified or empty, defaults to `0.00%`.  
 Slippage cannot be modified on an existing order. Cancel and resubmit to change the slippage setting.  
 Only applicable to `SPOT` and `SPOT margin` `market` orders.  
-> isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 > stpMode | String | No | Self trade prevention mode.   
 `cancel_maker`,`cancel_taker`, `cancel_both`  
 Cancel both does not support FOK.   
@@ -277,7 +279,7 @@ inTime | String | Timestamp at Websocket gateway when the request is received, U
 outTime | String | Timestamp at Websocket gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as isElpTakerAccess:true  
+clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket
 
@@ -362,7 +364,8 @@ args | Array of objects | 是 | 请求参数
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > sz | String | 是 | 委托数量  
 > px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -403,11 +406,12 @@ args | Array of objects | 是 | 请求参数
 Cancel both不支持FOK   
   
 默认使用账户层面的acctStpMode进行下单，该字段的默认值为`cancel_maker`，用户可通过母账户登录网页修改该配置；用户亦可以通过下单接口的stpMode参数指定订单的STP模式。  
-> isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 全部成功返回示例
@@ -535,6 +539,6 @@ data | Array of objects | 请求成功后返回的数据
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 outTime | String | WebSocket 网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  isElpTakerAccess:true订单限速  
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享

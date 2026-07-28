@@ -2,36 +2,34 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-quote
 api_type: REST
-updated_at: 2026-07-27 19:05:10.729680
+updated_at: 2026-07-28 19:04:18.770734
 ---
 
-# Get Flexible Available Inventory
-
-Retrieve the flexible available inventory for a specified cryptocurrency in spot margin trading. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers)).
-
-info
-
-  * Unified account only
-
-
+# Get Fixed-Rate Borrow Order Quote
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/flexible-available-inventory`
+GET`/v5/spot-margin-trade/fixedborrow-order-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| **true**|  string| Coin name, uppercase only. e.g. `BTC`  
+orderCurrency| **true**|  string| Coin name  
+term| false| string| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+orderBy| false| string| Sort field. `apy`: annual rate; `term`: term; `quantity`: quantity  
+sort| false| integer| Sort direction. `0`: ascending (default); `1`: descending  
+limit| false| integer| Limit for data size per page. [1, 100]. Default: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-currency| string| Coin name  
-availableInventory| string| Available inventory for the specified coin. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers))  
-updateTime| string| Last update timestamp in milliseconds  
+list| array| Object  
+> orderCurrency| string| Coin name  
+> term| integer| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+> annualRate| string| Annual rate  
+> qty| string| Quantity  
   
 * * *
 
@@ -44,16 +42,26 @@ updateTime| string| Last update timestamp in milliseconds
 
     
     
-    GET /v5/spot-margin-trade/flexible-available-inventory?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1756261353733  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spot_margin_trade_get_fixed_borrow_order_quote(  
+        orderCurrency="ETH",  
+        orderBy="apy",  
+        limit=10  
+    ))  
     
     
     
@@ -65,45 +73,72 @@ updateTime| string| Last update timestamp in milliseconds
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "success",  
         "result": {  
-            "currency": "BTC",  
-            "availableInventory": "17.54689892",  
-            "updateTime": "1756261353733"  
+            "list": [  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 30,  
+                    "annualRate": "0.026",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 60,  
+                    "annualRate": "0.033",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 90,  
+                    "annualRate": "0.038",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 30,  
+                    "annualRate": "0.1",  
+                    "qty": "0.6"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 60,  
+                    "annualRate": "0.1",  
+                    "qty": "0.1"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1775617874744  
     }
 
 ---
 
-# 查詢靈活借貸可借額度
-
-查詢現貨槓桿交易中指定幣種的靈活借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`）。
-
-信息
-
-  * 僅支持統一帳戶
-
-
+# 查詢固定利率借款掛單報價
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/flexible-available-inventory`
+GET`/v5/spot-margin-trade/fixedborrow-order-quote`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| **true**|  string| 幣種名稱，僅大寫。如 `BTC`  
+orderCurrency| **true**|  string| 幣種名稱  
+term| false| string| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
+orderBy| false| string| 排序字段。`apy`：年化利率；`term`：期限；`quantity`：數量  
+sort| false| integer| 排序方向。`0`：升序（默認）；`1`：降序  
+limit| false| integer| 每頁返回數量，[1, 100]，默認：`10`  
   
-### 返回參數
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-currency| string| 幣種名稱  
-availableInventory| string| 指定幣種的可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`）  
-updateTime| string| 最後更新時間戳（毫秒）  
+list| array| Object  
+> orderCurrency| string| 幣種名稱  
+> term| integer| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
+> annualRate| string| 年化利率  
+> qty| string| 數量  
   
 * * *
 
@@ -116,12 +151,12 @@ updateTime| string| 最後更新時間戳（毫秒）
 
     
     
-    GET /v5/spot-margin-trade/flexible-available-inventory?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1756261353733  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
@@ -132,17 +167,46 @@ updateTime| string| 最後更新時間戳（毫秒）
       
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "success",  
         "result": {  
-            "currency": "BTC",  
-            "availableInventory": "17.54689892",  
-            "updateTime": "1756261353733"  
+            "list": [  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 30,  
+                    "annualRate": "0.026",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 60,  
+                    "annualRate": "0.033",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 90,  
+                    "annualRate": "0.038",  
+                    "qty": "0.1"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 30,  
+                    "annualRate": "0.1",  
+                    "qty": "0.6"  
+                },  
+                {  
+                    "orderCurrency": "ETH",  
+                    "term": 60,  
+                    "annualRate": "0.1",  
+                    "qty": "0.1"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1775617874744  
     }

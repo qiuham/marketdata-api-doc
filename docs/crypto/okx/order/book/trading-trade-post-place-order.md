@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-order
 anchor_id: order-book-trading-trade-post-place-order
 api_type: API
-updated_at: 2026-07-27 19:29:15.644149
+updated_at: 2026-07-28 19:28:08.826956
 ---
 
 # POST / Place order
@@ -99,7 +99,8 @@ ordType | String | Yes | Order type
 `optimal_limit_ioc`: Places a limit order at the maximum buy price (upper price limit) for buy orders, or the minimum sell price (lower price limit) for sell orders, as defined by the exchange's price limit bands. Any unfilled portion is immediately cancelled (IOC). Applicable only to Expiry Futures and Perpetual Futures.  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)   
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -141,11 +142,12 @@ stpMode | String | No | Self trade prevention mode.
 Cancel both does not support FOK   
   
 The account-level acctStpMode will be used to place orders by default. The default value of this field is `cancel_maker`. Users can log in to the webpage through the master account to modify this configuration. Users can also utilize the stpMode request parameter of the placing order endpoint to determine the stpMode of a certain order.  
-isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
@@ -331,7 +333,7 @@ There are three STP modes. The STP mode is always taken based on the configurati
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
 3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode. Combining stpMode=cancel_both with ordType=`fok` returns error 50016.  tradeQuoteCcy  
 For users in specific countries and regions, this parameter must be filled out for a successful order. Otherwise, the system will use the quote currency of instId as the default value, then error code 51000 will occur.  
-The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as isElpTakerAccess:true  
+The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket
 
@@ -430,7 +432,8 @@ ordType | String | 是 | 订单类型
 `optimal_limit_ioc`：以价格限制区间的最高买价（买单）或最低卖价（卖单）挂限价单，未成交部分立即取消（IOC）。仅适用交割、永续合约，订单不会以超出当前价格限制边界的价格成交  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -468,11 +471,12 @@ stpMode | String | 否 | 自成交保护模式
 Cancel both不支持FOK   
   
 默认使用账户层面的acctStpMode进行下单，该字段的默认值为`cancel_maker`，用户可通过母账户登录网页修改该配置；用户亦可以通过下单接口的stpMode参数指定订单的STP模式。  
-isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
@@ -659,6 +663,6 @@ optimal_limit_ioc：以价格限制区间的最高买价（买单）或最低卖
 tradeQuoteCcy  
 对于特定国家和地区的用户，下单成功需要填写该参数，否则会取 `instId` 的计价币种为默认值，报错 51000。  
 传值必须取 tradeQuoteCcyList 的枚举值，tradeQuoteCcyList 来自获取交易产品基础信息(GET /api/v5/account/instruments) 接口。  
-isElpTakerAccess:true订单限速  
+rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享

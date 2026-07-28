@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/get-account
 api_type: Account
-updated_at: 2026-07-27 19:18:30.976511
+updated_at: 2026-07-28 19:16:36.318894
 ---
 
 # Get Account
@@ -123,9 +123,9 @@ Get a list of information about an account, given an account UUID.
         },
         "default": false,
         "active": true,
-        "created_at": "2021-05-31T09:59:59.000Z",
-        "updated_at": "2021-05-31T09:59:59.000Z",
-        "deleted_at": "2021-05-31T09:59:59.000Z",
+        "created_at": "2021-05-31T09:59:59Z",
+        "updated_at": "2021-05-31T09:59:59Z",
+        "deleted_at": "2021-05-31T09:59:59Z",
         "type": "FIAT",
         "ready": true,
         "hold": {
@@ -143,10 +143,7 @@ Get a list of information about an account, given an account UUID.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

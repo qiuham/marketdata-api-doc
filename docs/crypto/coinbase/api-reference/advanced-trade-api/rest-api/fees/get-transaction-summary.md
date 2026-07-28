@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary
 api_type: REST
-updated_at: 2026-07-27 19:18:31.491601
+updated_at: 2026-07-28 19:16:36.651997
 ---
 
 # Get Transaction Summary
@@ -147,7 +147,113 @@ Get a summary of transactions with fee tiers, total volume, and fees.
           "volume": 1000
         }
       ],
-      "has_cost_plus_commission": false
+      "has_cost_plus_commission": false,
+      "fee_tier_without_promotion": {
+        "pricing_tier": "Advanced 3",
+        "qualification_type": "FEE_TIER_QUALIFICATION_TYPE_UNKNOWN",
+        "current_value": "25000",
+        "next_tier_threshold": "50000",
+        "current_tier": {
+          "pricing_tier": "<$10k",
+          "taker_fee_rate": "0.0010",
+          "maker_fee_rate": "0.0020",
+          "aop_from": "0",
+          "aop_to": "10000",
+          "volume_types_and_range": [
+            {
+              "volume_types": [
+                "VOLUME_TYPE_SPOT",
+                "VOLUME_TYPE_US_DERIVATIVES"
+              ],
+              "vol_from": "0",
+              "vol_to": "50000"
+            }
+          ]
+        },
+        "next_tier": {
+          "pricing_tier": "<$10k",
+          "taker_fee_rate": "0.0010",
+          "maker_fee_rate": "0.0020",
+          "aop_from": "0",
+          "aop_to": "10000",
+          "volume_types_and_range": [
+            {
+              "volume_types": [
+                "VOLUME_TYPE_SPOT",
+                "VOLUME_TYPE_US_DERIVATIVES"
+              ],
+              "vol_from": "0",
+              "vol_to": "50000"
+            }
+          ]
+        },
+        "current_tier_threshold": "10000"
+      },
+      "deribit_venue_data": {
+        "perps": {
+          "total_volume": 1000,
+          "total_fees": 25,
+          "fee_tier": {
+            "pricing_tier": "<$10k",
+            "taker_fee_rate": "0.0010",
+            "maker_fee_rate": "0.0020",
+            "aop_from": "0",
+            "aop_to": "10000",
+            "volume_types_and_range": [
+              {
+                "volume_types": [
+                  "VOLUME_TYPE_SPOT",
+                  "VOLUME_TYPE_US_DERIVATIVES"
+                ],
+                "vol_from": "0",
+                "vol_to": "50000"
+              }
+            ]
+          }
+        },
+        "dated_futures": {
+          "total_volume": 1000,
+          "total_fees": 25,
+          "fee_tier": {
+            "pricing_tier": "<$10k",
+            "taker_fee_rate": "0.0010",
+            "maker_fee_rate": "0.0020",
+            "aop_from": "0",
+            "aop_to": "10000",
+            "volume_types_and_range": [
+              {
+                "volume_types": [
+                  "VOLUME_TYPE_SPOT",
+                  "VOLUME_TYPE_US_DERIVATIVES"
+                ],
+                "vol_from": "0",
+                "vol_to": "50000"
+              }
+            ]
+          }
+        },
+        "options": {
+          "total_volume": 1000,
+          "total_fees": 25,
+          "fee_tier": {
+            "pricing_tier": "<$10k",
+            "taker_fee_rate": "0.0010",
+            "maker_fee_rate": "0.0020",
+            "aop_from": "0",
+            "aop_to": "10000",
+            "volume_types_and_range": [
+              {
+                "volume_types": [
+                  "VOLUME_TYPE_SPOT",
+                  "VOLUME_TYPE_US_DERIVATIVES"
+                ],
+                "vol_from": "0",
+                "vol_to": "50000"
+              }
+            ]
+          }
+        }
+      }
     }
     
     
@@ -156,10 +262,7 @@ Get a summary of transactions with fee tiers, total volume, and fees.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -191,7 +294,13 @@ Available options:
 
 `SPOT`,
 
-`FUTURE`
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
 
 contract_expiry_type
 
@@ -340,3 +449,15 @@ Indicates whether the user uses cost plus commission pricing model.
 Example:
 
 `false`
+
+fee_tier_without_promotion
+
+object
+
+The fee tier the user qualifies for based purely on their volume or AOP, ignoring any promotional fees or incentives. Includes current and next `FeeTier` rows, which dimension qualifies them, their current value for that dimension, and the threshold needed to reach the next tier.
+
+deribit_venue_data
+
+object
+
+Transaction summary for each INTX derivatives product type (perps, dated futures, options), resolved together by the shared fee data pipeline. Only populated for INTX derivatives requests.

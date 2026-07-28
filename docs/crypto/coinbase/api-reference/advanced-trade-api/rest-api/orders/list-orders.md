@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders
 api_type: Trading
-updated_at: 2026-07-27 19:18:32.925231
+updated_at: 2026-07-28 19:16:37.540224
 ---
 
 # List Orders
@@ -10,7 +10,9 @@ updated_at: 2026-07-27 19:18:32.925231
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/batch`
 
 
-Get a list of orders filtered by optional query parameters (`product_id`, `order_status`, etc).
+Get a list of orders filtered by optional query parameters (`product_ids`, `order_status`, etc.).
+
+**Equities:** Set `product_type` to `EQUITY` to return only equity orders. Each equity order includes its time in force in `displayed_order_config` and execution session in `equity_trading_session`.
     
     
     curl --request GET \
@@ -122,44 +124,51 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
             "market_market_ioc": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "rfq_disabled": true
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "market_market_fok": {
               "quote_size": "10.00",
-              "base_size": "0.001",
-              "rfq_disabled": true
+              "base_size": "0.001"
             },
             "sor_limit_ioc": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "limit_price": "10000.00",
-              "rfq_disabled": true
+              "limit_price": "10000.00"
             },
             "limit_limit_gtc": {
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
               "post_only": false,
-              "rfq_disabled": true
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "limit_limit_gtd": {
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
-              "end_time": "2021-05-31T09:59:59.000Z",
-              "post_only": false
+              "end_time": "2021-05-31T09:59:59Z",
+              "post_only": false,
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "limit_limit_fok": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "limit_price": "10000.00",
-              "rfq_disabled": true
+              "limit_price": "10000.00"
             },
             "twap_limit_gtd": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "start_time": "2021-05-31T07:59:59.000Z",
-              "end_time": "2021-05-31T09:59:59.000Z",
+              "start_time": "2021-05-31T07:59:59Z",
+              "end_time": "2021-05-31T09:59:59Z",
               "limit_price": "10000.00",
               "number_buckets": "5",
               "bucket_size": "2.00",
@@ -175,7 +184,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
               "base_size": 0.001,
               "limit_price": "10000.00",
               "stop_price": "20000.00",
-              "end_time": "2021-05-31T09:59:59.000Z",
+              "end_time": "2021-05-31T09:59:59Z",
               "stop_direction": "20000.00"
             },
             "trigger_bracket_gtc": {
@@ -187,7 +196,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
               "base_size": 0.001,
               "limit_price": "10000.00",
               "stop_trigger_price": "20000.00",
-              "end_time": "2021-05-31T09:59:59.000Z"
+              "end_time": "2021-05-31T09:59:59Z"
             },
             "scaled_limit_gtc": {
               "orders": [
@@ -196,7 +205,10 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
                   "base_size": "0.001",
                   "limit_price": "10000.00",
                   "post_only": false,
-                  "rfq_disabled": true
+                  "currency_size": {
+                    "value": "1.23",
+                    "currency": "BTC"
+                  }
                 }
               ],
               "quote_size": "<string>",
@@ -213,7 +225,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
           "side": "",
           "client_order_id": "11111-000000-000000",
           "status": "PENDING",
-          "created_time": "2021-05-31T09:59:59.000Z",
+          "created_time": "2021-05-31T09:59:59Z",
           "completion_percentage": "50",
           "average_filled_price": "50",
           "number_of_fills": "2",
@@ -253,44 +265,51 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
             "market_market_ioc": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "rfq_disabled": true
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "market_market_fok": {
               "quote_size": "10.00",
-              "base_size": "0.001",
-              "rfq_disabled": true
+              "base_size": "0.001"
             },
             "sor_limit_ioc": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "limit_price": "10000.00",
-              "rfq_disabled": true
+              "limit_price": "10000.00"
             },
             "limit_limit_gtc": {
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
               "post_only": false,
-              "rfq_disabled": true
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "limit_limit_gtd": {
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
-              "end_time": "2021-05-31T09:59:59.000Z",
-              "post_only": false
+              "end_time": "2021-05-31T09:59:59Z",
+              "post_only": false,
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             },
             "limit_limit_fok": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "limit_price": "10000.00",
-              "rfq_disabled": true
+              "limit_price": "10000.00"
             },
             "twap_limit_gtd": {
               "quote_size": "10.00",
               "base_size": "0.001",
-              "start_time": "2021-05-31T07:59:59.000Z",
-              "end_time": "2021-05-31T09:59:59.000Z",
+              "start_time": "2021-05-31T07:59:59Z",
+              "end_time": "2021-05-31T09:59:59Z",
               "limit_price": "10000.00",
               "number_buckets": "5",
               "bucket_size": "2.00",
@@ -306,7 +325,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
               "base_size": 0.001,
               "limit_price": "10000.00",
               "stop_price": "20000.00",
-              "end_time": "2021-05-31T09:59:59.000Z",
+              "end_time": "2021-05-31T09:59:59Z",
               "stop_direction": "20000.00"
             },
             "trigger_bracket_gtc": {
@@ -318,7 +337,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
               "base_size": 0.001,
               "limit_price": "10000.00",
               "stop_trigger_price": "20000.00",
-              "end_time": "2021-05-31T09:59:59.000Z"
+              "end_time": "2021-05-31T09:59:59Z"
             },
             "scaled_limit_gtc": {
               "orders": [
@@ -327,7 +346,10 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
                   "base_size": "0.001",
                   "limit_price": "10000.00",
                   "post_only": false,
-                  "rfq_disabled": true
+                  "currency_size": {
+                    "value": "1.23",
+                    "currency": "BTC"
+                  }
                 }
               ],
               "quote_size": "<string>",
@@ -368,7 +390,19 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
           "displayed_order_config": "UNKNOWN_DISPLAYED_ORDER_CONFIG",
           "equity_trading_session": "UNKNOWN_EQUITY_TRADING_SESSION",
           "prediction_side": "PREDICTION_SIDE_UNKNOWN",
-          "last_update_time": "<string>"
+          "last_update_time": "<string>",
+          "total_value_after_fees_native": {
+            "value": "1.23",
+            "currency": "BTC"
+          },
+          "outstanding_hold_amount_native": {
+            "value": "1.23",
+            "currency": "BTC"
+          },
+          "total_fees_native": {
+            "value": "1.23",
+            "currency": "BTC"
+          }
         }
       ],
       "has_next": true,
@@ -383,10 +417,7 @@ Get a list of orders filtered by optional query parameters (`product_id`, `order
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -414,7 +445,7 @@ product_ids
 
 string[]
 
-Optional string of the product ID(s). Defaults to null, or fetch for all products.
+Optional canonical product ID(s) to filter by. For equities, use product_id rather than the display ticker. If omitted, orders for all products are returned.
 
 product_type
 
@@ -422,7 +453,7 @@ enum<string>
 
 default:UNKNOWN_PRODUCT_TYPE
 
-Returns orders matching this product type. By default, returns all product types.
+Returns orders matching this product type. Use EQUITY for equity orders. By default, returns all product types.
 
 Available options:
 
@@ -430,7 +461,13 @@ Available options:
 
 `SPOT`,
 
-`FUTURE`
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
 
 order_status
 
@@ -548,7 +585,11 @@ Available options:
 
 `RETAIL_SIMPLE`,
 
-`RETAIL_ADVANCED`
+`RETAIL_ADVANCED`,
+
+`RETAIL_ADMIN`,
+
+`RETAIL_RAISE`
 
 contract_expiry_type
 

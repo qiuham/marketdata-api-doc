@@ -2,921 +2,1911 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/public/public-transaction
 api_type: WebSocket
-updated_at: 2026-07-27 19:04:49.893666
+updated_at: 2026-07-28 19:04:02.500195
 ---
 
-# SBE BBO Integration
+# Fast Order Response SBE
+
+MMWS only
+
+This channel is available **only** via your **dedicated Market Maker WebSocket (MMWS)** host. It is not accessible from standard WebSocket endpoints.
 
 ## Overview
 
-  * **Channel:** Private MM WebSocket only (not available on public WS).
-  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
-  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
-  * **Depth:** Real-time Level 1 Orderbook data.
-  * **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
+The Fast Order SBE channel provides ultra-low-latency order push updates for HFT clients through the Market Maker WebSocket (MMWS). It delivers binary-encoded SBE messages directly from the matching engine for fast order submission, amendment, and cancellation acknowledgements.
 
+This channel is designed for speed and efficiency. For details on which events trigger a push, see the Push Logic section below.
 
+## Release Schedule
 
+Product| Testnet| Mainnet  
+---|---|---  
+Spot| ✅| ✅  
+Futures (linear & inverse)| ✅| ✅  
+Options| ✅| ✅  
+  
 ## Connection
 
-  * Field `u` increases **monotonically**.
-  * Field `u` **does not reset** , unless there is a system restart or precision change, `u` would be reset to **1**.
-  * If BBO does not change within **3 seconds** , the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
-  * Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, continuity of `u` is **not guaranteed**.
+Environment| URL  
+---|---  
+Testnet| `wss://stream-testnet.bybits.org/v5/private-sbe`  
+Mainnet| `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe`  
+  
+  * SBE messages are sent as **binary frames** (`opcode = 2`).
+  * Control frames (auth, ping/pong, subscribe/unsubscribe) use the standard **Bybit V5 API JSON format**.
 
 
 
-## Subscription Flow
+## Authentication
 
-### Send subscription request
+Authentication is required immediately after establishing a connection.
+
+### Auth Request
     
     
     {  
-      "op": "subscribe",  
-      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+        "req_id": "10001",  
+        "op": "auth",  
+        "args": [  
+            "api_key",  
+            1662350400000,  
+            "signature"  
+        ]  
     }  
     
 
-  * Topic format: `ob.rpi.1.sbe.<symbol>`
-  * Example symbols: `BTCUSDT`, `ETHUSDT`, etc.
-
-
-
-### Subscription confirmation
+Field| Description  
+---|---  
+req_id| Optional client identifier  
+args[1]| Timestamp — must be greater than current time  
+args[2]| Generated using the [Bybit API signing algorithm](/docs/v5/guide#authentication)  
+  
+### Auth Success Response
     
     
     {  
-      "success": true,  
-      "ret_msg": "",  
-      "conn_id": "d30fdpbboasp1pjbe7r0",  
-      "req_id": "xxx",  
-      "op": "subscribe"  
+        "success": true,  
+        "ret_msg": "",  
+        "op": "auth",  
+        "conn_id": "cejreaspqfh3sjdnldmg-p"  
     }  
     
 
-### Receive data
+## Heartbeat
+
+### Send Ping
     
     
-    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
+    {"req_id": "100001", "op": "ping"}  
     
 
-### Decode example
+### Receive Pong
     
     
     {  
-      "header": {  
-        "block_length": 82,  
-        "template_id": 20000,  
-        "schema_id": 1,  
-        "version": 0  
-      },  
-      "seq": 1808827611,  
-      "cts": 1757497309030,  
-      "price_exponent": 2,  
-      "size_exponent": 6,  
-      "ask_price": 1060342500,  
-      "ask_normal_size": 776935000000,  
-      "ask_rpi_size": 0,  
-      "bid_price": 1060250000,  
-      "bid_normal_size": 20000000000,  
-      "bid_rpi_size": 0,  
-      "u": 312,  
-      "ts": 1757497309814,  
-      "symbol": "BTCUSDT",  
-      "parsed_length": 98  
+        "success": true,  
+        "ret_msg": "pong",  
+        "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",  
+        "req_id": "100001",  
+        "op": "ping"  
     }  
     
 
-* * *
+## Subscription
 
-## SBE Message Structure
+### Available Topics
 
-### SBE XML Schema
+Topic| Description  
+---|---  
+`order.sbe.resp.spot`| Spot fast order response  
+`order.sbe.resp.linear`| Linear (USDT/USDC) fast order response  
+`order.sbe.resp.inverse`| Inverse fast order response  
+`order.sbe.resp.option`| Options fast order response  
+  
+### Subscribe Example
+    
+    
+    {  
+        "op": "subscribe",  
+        "args": ["order.sbe.resp.linear", "order.sbe.resp.spot", "order.sbe.resp.option"]  
+    }  
+    
 
-  * The `templateId = 20000` identifies the message type.
-  * Validate that `templateId = 20000` to confirm it is a Level 1 Orderbook event.
-  * [sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+### Subscription Acknowledgment
+    
+    
+    {  
+        "success": true,  
+        "ret_msg": "",  
+        "conn_id": "d30fdpbboasp1pjbe7r0",  
+        "req_id": "abc123",  
+        "op": "subscribe"  
+    }  
+    
 
+## Push Logic
 
+`fast.resp.order` messages are actively pushed to clients when the order is initiated by the user (active trading actions: place, amend, cancel).
 
-### Message Structure Details
+info
 
-#### Message Header (8 bytes)
+Upon channel restart or re-subscription, pushes start from the latest matching event — the focus is **speed** , not backfill.
+
+Scenario / Event| Push via Fast Order Channel| Notes  
+---|---|---  
+Maker order new (accepted / ack)| ✅ Yes| All active actions initiated by client (place / amend / cancel / reject).  
+Maker order filled / partial filled| ✅ Yes| All active actions initiated by client (place / amend / cancel / reject).  
+Taker order (active side)| ✅ Yes| All active actions initiated by client (place / amend / cancel / reject).  
+COT (CloseOnTrigger) order| ✅ Yes (for triggered order)| Triggered COT order acts like a new taker order; if it opens opposite side, `orderLinkId=""`.  
+RO / ReduceOnly order| ✅ Yes| Normal push; if rejected due to cost or position box, `rejectReason` populated.  
+Condition / TP-SL triggered order| ✅ Yes| Once condition triggers and order becomes active, it's pushed. `orderLinkId=""` (empty).  
+DCP (Disconnect All Protection)| ✅ Yes| Pushes when DCP forcibly cancels orders on disconnect.  
+SMP cancel-taker / Cancel Both (Self Match Protection)| ✅ Yes| Both taker/maker side cancellations will be pushed.  
+SMP cancel-maker| ✅ Yes| Both taker/maker side cancellations will be pushed.  
+MMP (Market Maker Protection)| ✅ Yes| MMP trigger cancels also pushed in fast order channel.  
+Delist / Contract expiry / Option delivery| ❌ No| System-initiated close; no fast order push.  
+Order reject (matching / validation reject)| ✅ Yes| Pushed immediately with `rejectReason`.  
+Amend success / reject| ✅ Yes| Active amend ack / reject are pushed.  
+Cancel success / reject| ✅ Yes| Active cancel ack / reject are pushed.  
+  
+## Differences from Standard WebSocket Order Channel
+
+The table below highlights behavioral differences between the Fast Order SBE channel (`order.sbe.resp.*`) and the standard private WebSocket [Order](/docs/v5/websocket/private/order) channel.
+
+Scenario| Fast Order Channel| Standard WS Order Channel| Notes  
+---|---|---|---  
+Conditional order — place / amend / cancel (before trigger)| ❌ No push| ✅ Push| Conditional orders are not sent to the matching engine before being triggered; the matching engine has no pre-trigger order state to push.  
+TP/SL order — place / amend / cancel (before trigger)| ❌ No push| ✅ Push| Same reason as above.  
+Trailing stop order — place / amend / cancel (before trigger)| ❌ No push| ✅ Push| Same reason as above.  
+Position liquidation order| ❌ No push| ✅ Push| Note: liquidation-triggered cancellations are consistent between both channels.  
+Contract delist cancellation| ❌ No push| ✅ Push| Delist cancellations are handled internally and not forwarded to the matching engine.  
+Amend / cancel an order that was fully filled before the request arrived| Fast Order: `orderStatus=Rejected`| Standard WS: `orderStatus=Filled`| e.g. qty=10, amend to 12, but 10 lots already filled — Fast Order returns the amend/cancel as `Rejected`; Standard WS returns `Filled`.  
+Normal place / amend / cancel — `leavesValue` field| No value (`0`)| Has value| Fast Order always returns `0` for `leavesValue` on non-spot-market-order-by-value orders.  
+Pre-market call auction — cancel rejected| `orderStatus=Rejected`| `orderStatus=New`| During the pre-market call auction phase, cancel requests are rejected; Fast Order reflects `Rejected` while Standard WS reflects `New`.  
+  
+## OrderLinkId Behavior by Version
+
+Scenario| 2026 Testnet / Mainnet| Notes  
+---|---|---  
+Active new order (user-initiated)| ✅ Present| Client-initiated place includes user's `orderLinkId`.  
+Amend / Cancel (user-initiated)| ✅ Present| Client-initiated place includes user's `orderLinkId`.  
+Maker→Taker transition (e.g. price amend crosses book)| ✅ Present| Client-initiated place includes user's `orderLinkId`.  
+Active new conditional order (user-initiated)| ✅ Present| Client-initiated place includes user's `orderLinkId`.  
+Position set trading stop order| ❌ Empty| System-created, no `orderLinkId`.  
+  
+## Message Structure (SBE)
+
+`templateId = 21000` (`FastOrderResp`)
+
+### Message Header (8 bytes)
 
 Field| Type| Size (bytes)| Description  
 ---|---|---|---  
 blockLength| uint16| 2| Message body length  
-templateId| uint16| 2| Fixed = 20000  
-schemaId| uint16| 2| Fixed = 1  
-version| uint16| 2| Fixed = 0  
+templateId| uint16| 2| Fixed = `21000`  
+schemaId| uint16| 2| Fixed = `1`  
+version| uint16| 2| Fixed = `2`  
   
-#### Message Body (`BestOBRpiEvent`)
+### Message Body
 
 ID| Field| Type| Description  
 ---|---|---|---  
-1| ts| int64| Snapshot timestamp (µs)  
-2| seq| int64| Unique message sequence number  
-3| cts| int64| Trade timestamp (µs)  
-4| u| int64| Update ID  
-5| askNormalPrice| int64| Best ask price mantissa  
-6| askNormalSize| int64| Best ask size (normal) mantissa  
-7| askRpiPrice| int64| Best RPI ask price mantissa  
-8| askRpiSize| int64| Best RPI ask size mantissa  
-9| bidNormalPrice| int64| Best bid price mantissa  
-10| bidNormalSize| int64| Best bid size (normal) mantissa  
-11| bidRpiPrice| int64| Best bid price (RPI) mantissa  
-12| bidRpiSize| int64| Best bid size (RPI) mantissa  
-13| priceExponent| int8| Price exponent  
-14| sizeExponent| int8| Size exponent  
-55| symbol| varStr| Trading pair (e.g., `BTCUSDT`)  
+1| category| uint8| `1`=spot, `2`=linear, `3`=inverse, `4`=option  
+2| side| uint8| `1`=Buy, `2`=Sell  
+3| orderStatus| uint8| Order state enum. `0`=Others, `4`=PartiallyFilledAndCancelled, `5`=Rejected, `6`=New, `7`=Cancelled, `8`=PartiallyFilled, `9`=Filled  
+4| priceExponent| int8| Decimal places for price. `price = mantissa / 10^priceExponent`  
+5| sizeExponent| int8| Decimal places for size  
+6| valueExponent| int8| Decimal places for value  
+7| rejectReason| uint16| `0` if N/A. See rejectReason mapping  
+8| price| int64| Price mantissa (apply `priceExponent`)  
+9| leavesQty| int64| Remaining quantity mantissa (apply `sizeExponent`)  
+10| leavesValue| int64| Active only when spot order type is market and `marketUnit=quoteCoin`; otherwise `0` (apply `valueExponent`)  
+11| creationTime| int64| Order creation timestamp in Fast Order channel (microseconds)  
+12| updatedTime| int64| Matching timestamp (microseconds)   
+_Note: ME timestamp does not represent the end-to-end processing completion time of the transaction. For the final completion timestamp, please refer to`updatedTime` in [Order](/docs/v5/websocket/private/order)_  
+13| seq| int64| Cross sequence ID  
+14| symbolID| int32| Symbol ID  
+15| liquidity| int8| `1`=taker, `2`=maker when trade, otherwise `0`. Added in schema version 1 
+* For pre-market perps, only applied to Continuous Trading stage  
+16| amendFlag| int8| `0`=the feed is not triggered by amend action, `1`=triggered by amend action. Added in schema version 2 (prod 21 July)  
+17| fillQty| int64| Order filled quantity mantissa (apply `sizeExponent`). Added in schema version 2 (prod 21 July) 
+* For pre-market perps, only applied to Continuous Trading stage
+* Provides the accumulated filled quantity across multiple executions within a single taker fill  
+18| fillPrice| int64| Order fill price mantissa (apply `priceExponent`). Added in schema version 2 (prod 21 July) 
+* For pre-market perps, only applied to Continuous Trading stage
+* Provides the last filled price of execution across multiple executions within a single taker fill  
+19| originalQty| int64| Order quantity mantissa (apply `sizeExponent`). Added in schema version 2 (prod 21 July)  
+100| orderId| varString8| Order ID (UUID)  
+101| orderLinkId| varString8| Optional; present for user-initiated orders  
   
-* * *
+## rejectReason Mapping
 
-## Optimisation
-
-New field definitions (sell side as example; buy side is analogous):
-
-Field| Definition  
+Code| Name  
 ---|---  
-askNormalPrice| No RPI order best ask price  
-askNormalSize| No RPI order best ask size  
-askRpiPrice| RPI order best ask price  
-askRpiSize| RPI order best ask size  
+0| EC_NoError  
+1| EC_Others  
+2| EC_UnknownMessageType  
+3| EC_MissingClOrdID  
+4| EC_MissingOrigClOrdID  
+5| EC_ClOrdIDOrigClOrdIDAreTheSame  
+6| EC_DuplicatedClOrdID  
+7| EC_OrigClOrdIDDoesNotExist  
+8| EC_TooLateToCancel  
+9| EC_UnknownOrderType  
+10| EC_UnknownSide  
+11| EC_UnknownTimeInForce  
+12| EC_WronglyRouted  
+13| EC_MarketOrderPriceIsNotZero  
+14| EC_LimitOrderInvalidPrice  
+15| EC_NoEnoughQtyToFill  
+16| EC_NoImmediateQtyToFill  
+17| EC_QtyCannotBeZero  
+18| EC_PerCancelRequest  
+19| EC_MarketOrderCannotBePostOnly  
+20| EC_PostOnlyWillTakeLiquidity  
+21| EC_CancelReplaceOrder  
+22| EC_InvalidSymbolStatus  
+23| EC_MarketOrderNoSupportTIF  
+24| EC_ReachMaxTradeNum  
+25| EC_InvalidPriceScale  
+26| EC_BitIndexInvalid  
+27| EC_StopBySelfMatch  
+28| EC_BySelfMatch  
+29| EC_InvalidSmpType  
+30| EC_CancelByMMP  
+31| EC_InCallAuctionStatus  
+34| EC_InvalidUserType  
+35| EC_InvalidMirrorOid  
+36| EC_InvalidMirrorUid  
+37| EC_SymbolNotExist  
+38| EC_CancelNoActiveOrders  
+39| EC_MissingUID  
+100| EC_EcInvalidQty  
+101| EC_InvalidAmount  
+102| EC_LoadOrderCancel  
+103| EC_CancelForNoFullFill  
+104| EC_MarketQuoteNoSuppSell  
+105| EC_DisorderOrderID  
+106| EC_InvalidBaseValue  
+107| EC_LoadOrderCanMatch  
+108| EC_SecurityStatusFail  
+110| EC_ReachRiskPriceLimit  
+111| EC_OrderNotExist  
+112| EC_CancelByOrderValueZero  
+113| EC_CancelByMatchValueZero  
+200| EC_ReachMarketPriceLimit  
   
-The current logic might result in:
-
-Price| normalQty| rpiQty  
----|---|---  
-1000| 0| 100  
-  
-This means that users without RPI permissions won't know at what price they can take their orders, making this message useless. To address this, we adjust the message content as follows.
-
-#### Case 1: `askNormalSize != 0 && askRpiSize != 0`
-
-This is a normal response based on the actual situation. This case conveys the same meaning as the original message.
-
-Example:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| No RPI order best ask price| 1000  
-askNormalSize| No RPI order best ask size| 200  
-askRpiPrice| RPI order best ask price| 1000  
-askRpiSize| RPI order best ask size| 300  
-  
-#### Case 2: `askNormalSize != 0 && askRpiSize == 0`
-
-`askRpiPrice` is assigned the value `askNormalPrice`, and `askRpiSize = 0`.  
-In this case, the `askRpiPrice` value will not be searched further.
-
-Example:
-
-Field| Definition| Example| Note  
----|---|---|---  
-askNormalPrice| No RPI order best ask price| 1000|   
-askNormalSize| No RPI order best ask size| 200|   
-askRpiPrice| RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
-askRpiSize| RPI order best ask size| 0|   
-  
-#### Case 3: `askNormalSize == 0 && askRpiSize != 0`
-
-`askNormalPrice =` the actual non-RPI asking price.  
-In this case, `askNormalPrice` is retrieved and returned.
-
-Example:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| No RPI order best ask price| 1200  
-askNormalSize| No RPI order best ask size| 100  
-askRpiPrice| RPI order best ask price| 1000  
-askRpiSize| RPI order best ask size| 20  
-  
-#### Case 4
-
-When the market is so bad that there is no liquidity, **no message is pushed**.
-
-* * *
-
-## Integration Example
+## SBE XML Template (Fast Order Response)
     
     
-    import json  
-    import logging  
-    import struct  
-    import threading  
-    import time  
-    from datetime import datetime  
-    from typing import Dict, Any  
+    <?xml version="1.0" encoding="UTF-8"?>  
+    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="2" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">  
+      <types>  
+        <composite name="messageHeader" description="Template ID and length of message root">  
+          <type name="blockLength" primitiveType="uint16"/>  
+          <type name="templateId" primitiveType="uint16"/>  
+          <type name="schemaId" primitiveType="uint16"/>  
+          <type name="version" primitiveType="uint16"/>  
+        </composite>  
+        <composite name="varString8" description="Variable length UTF-8 string">  
+          <type name="length" primitiveType="uint8"/>  
+          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
+        </composite>  
+      </types>  
+      <!-- Fast order response: active place/cancel/amend acknowledgements -->  
+      <sbe:message name="FastOrderResp" id="21000">  
+        <!-- Routing / classification -->  
+        <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>  
+        <!-- Side / status / rejection -->  
+        <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>  
+        <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>  
+        <!-- Price / size (mantissas) with exponents -->  
+        <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>  
+        <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>  
+        <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>  
+        <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>  
+        <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>  
+        <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>  
+        <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Active only when spot order type is market and marketUnit=quoteCoin; otherwise 0."/>  
+        <!-- Timing -->  
+        <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>  
+        <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>  
+        <field id="13" name="seq" type="int64" description="Cross sequence ID"/>  
+        <!-- SymbolID -->  
+        <field id="14" name="symbolID" type="int32" description="Symbol ID"/>  
+        <!-- Liquidity -->  
+        <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>  
+        <!-- Version 2 add new fields-->  
+        <field id="16" name="amendFlag" type="int8" sinceVersion="2" description="0=not amended, 1=amended"/>  
+        <field id="17" name="fillQty" type="int64" sinceVersion="2" description="order Filled quantity mantissa"/>  
+        <field id="18" name="fillPrice" type="int64" sinceVersion="2" description="order fill price mantissa"/>  
+        <field id="19" name="originalQty" type="int64" sinceVersion="2" description="order originalorder quantity mantissa"/>  
+        <!-- Order identifiers -->  
+        <data id="100" name="orderId" type="varString8" description="Order ID"/>  
+        <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>  
+      </sbe:message>  
+    </sbe:messageSchema>  
+    
+
+## Code Example
+
+  * Go
+  * Python
+
+
+    
+    
+    package main  
       
-    import websocket  
+    import (  
+        "context"  
+        "crypto/hmac"  
+        "crypto/sha256"  
+        "encoding/binary"  
+        "encoding/hex"  
+        "encoding/json"  
+        "flag"  
+        "fmt"  
+        "log"  
+        "math"  
+        "os"  
+        "os/signal"  
+        "time"  
       
-    logging.basicConfig(  
-        filename="logfile_wrapper.log",  
-        level=logging.INFO,  
-        format="%(asctime)s %(levelname)s %(message)s",  
+        "github.com/gorilla/websocket"  
     )  
       
-    # Change symbol/topic as you wish  
-    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    // ---------- Config ----------  
+      
+    const (  
+        MMWSURLTestnetBybits = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+        MMWSURLTestnetBybit  = "wss://stream-testnet.bybit.com/v5/private-sbe"  
+        MMWSURLMainnet       = "wss://stream.bybit.com/v5/private-sbe"  
+    )  
+      
+    // TODO: fill in your real keys  
+    const (  
+        APIKey    = "YOUR_API_KEY"  
+        APISecret = "YOUR_API_SECRET"  
+    )  
+      
+    var subTopics = []string{  
+        "order.sbe.resp.spot",  
+    }  
+      
+    // ---------- SBE helpers ----------  
+      
+    func readU8(buf []byte, off *int) (uint8, error) {  
+        if *off+1 > len(buf) {  
+            return 0, fmt.Errorf("readU8: out of range")  
+        }  
+        v := buf[*off]  
+        *off++  
+        return v, nil  
+    }  
+      
+    func readI8(buf []byte, off *int) (int8, error) {  
+        if *off+1 > len(buf) {  
+            return 0, fmt.Errorf("readI8: out of range")  
+        }  
+        v := int8(buf[*off])  
+        *off++  
+        return v, nil  
+    }  
+      
+    func readU16LE(buf []byte, off *int) (uint16, error) {  
+        if *off+2 > len(buf) {  
+            return 0, fmt.Errorf("readU16LE: out of range")  
+        }  
+        v := binary.LittleEndian.Uint16(buf[*off : *off+2])  
+        *off += 2  
+        return v, nil  
+    }  
+      
+    func readI32LE(buf []byte, off *int) (int32, error) {  
+        if *off+4 > len(buf) {  
+            return 0, fmt.Errorf("readI32LE: out of range")  
+        }  
+        v := int32(binary.LittleEndian.Uint32(buf[*off : *off+4]))  
+        *off += 4  
+        return v, nil  
+    }  
+      
+    func readI64LE(buf []byte, off *int) (int64, error) {  
+        if *off+8 > len(buf) {  
+            return 0, fmt.Errorf("readI64LE: out of range")  
+        }  
+        v := int64(binary.LittleEndian.Uint64(buf[*off : *off+8]))  
+        *off += 8  
+        return v, nil  
+    }  
+      
+    func readVarString8(buf []byte, off *int) (string, error) {  
+        if *off+1 > len(buf) {  
+            return "", fmt.Errorf("readVarString8: no length byte")  
+        }  
+        ln := int(buf[*off])  
+        *off++  
+        if ln == 0 {  
+            return "", nil  
+        }  
+        if *off+ln > len(buf) {  
+            return "", fmt.Errorf("readVarString8: length out of range")  
+        }  
+        s := string(buf[*off : *off+ln])  
+        *off += ln  
+        return s, nil  
+    }  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+        e := int(exp)  
+        if e >= 0 {  
+            return float64(mantissa) / math.Pow10(e)  
+        }  
+        return float64(mantissa) * math.Pow10(-e)  
+    }  
+      
+    // ---------- Fast Order SBE decode ----------  
+      
+    type FastOrderSBEResp struct {  
+        SBEHeader struct {  
+            BlockLength uint16 `json:"blockLength"`  
+            TemplateID  uint16 `json:"templateId"`  
+            SchemaID    uint16 `json:"schemaId"`  
+            Version     uint16 `json:"version"`  
+        } `json:"_sbe_header"`  
+      
+        Category      uint8  `json:"category"`  
+        Side          uint8  `json:"side"`  
+        OrderStatus   uint8  `json:"orderStatus"`  
+        PriceExponent int8   `json:"priceExponent"`  
+        SizeExponent  int8   `json:"sizeExponent"`  
+        ValExponent   int8   `json:"valueExponent"`  
+        RejectReason  uint16 `json:"rejectReason"`  
+      
+        PriceMantissa       int64 `json:"priceMantissa"`  
+        LeavesQtyMantissa   int64 `json:"leavesQtyMantissa"`  
+        LeavesValueMantissa int64 `json:"leavesValueMantissa"`  
+      
+        CreationTime int64 `json:"creationTime"`  
+        UpdatedTime  int64 `json:"updatedTime"`  
+        Seq          int64 `json:"seq"`  
+      
+        SymbolID    int32  `json:"symbolID"`  
+        Liquidity   int8   `json:"liquidity"`  
+      
+        AmendFlag           int8  `json:"amendFlag,omitempty"`  
+        FillQtyMantissa     int64 `json:"fillQtyMantissa,omitempty"`  
+        FillPriceMantissa   int64 `json:"fillPriceMantissa,omitempty"`  
+        OriginalQtyMantissa int64 `json:"originalQtyMantissa,omitempty"`  
+      
+        OrderID     string `json:"orderId"`  
+        OrderLinkID string `json:"orderLinkId"`  
+      
+        Price       float64 `json:"price"`  
+        LeavesQty   float64 `json:"leavesQty"`  
+        LeavesValue float64 `json:"leavesValue"`  
+        FillQty     float64 `json:"fillQty,omitempty"`  
+        FillPrice   float64 `json:"fillPrice,omitempty"`  
+        OriginalQty float64 `json:"originalQty,omitempty"`  
+      
+        RawOffsetEnd int `json:"_raw_offset_end"`  
+    }  
+      
+    func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) {  
+        if len(payload) < 8 {  
+            return nil, fmt.Errorf("payload too short for SBE header")  
+        }  
+        off := 0  
+        blockLen := binary.LittleEndian.Uint16(payload[off : off+2])  
+        templateID := binary.LittleEndian.Uint16(payload[off+2 : off+4])  
+        schemaID := binary.LittleEndian.Uint16(payload[off+4 : off+6])  
+        version := binary.LittleEndian.Uint16(payload[off+6 : off+8])  
+        off += 8  
+      
+        if debug {  
+            log.Printf("HEADER: block_len=%d, template_id=%d, schema_id=%d, version=%d",  
+                blockLen, templateID, schemaID, version)  
+        }  
+      
+        if templateID != 21000 {  
+            return nil, fmt.Errorf("unexpected templateId: %d", templateID)  
+        }  
+      
+        var err error  
+        resp := &FastOrderSBEResp{}  
+        resp.SBEHeader.BlockLength = blockLen  
+        resp.SBEHeader.TemplateID = templateID  
+        resp.SBEHeader.SchemaID = schemaID  
+        resp.SBEHeader.Version = version  
+      
+        bodyStart := off // fixed block begins here; var-length fields follow at bodyStart+blockLen  
+      
+        if resp.Category, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.Side, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.OrderStatus, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.PriceExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.SizeExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.ValExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.RejectReason, err = readU16LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.PriceMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.LeavesQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.LeavesValueMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.CreationTime, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.UpdatedTime, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.Seq, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.SymbolID, err = readI32LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        // field 15 liquidity (sinceVersion=1) — present when blockLen covers it  
+        if off-bodyStart < int(blockLen) {  
+            if resp.Liquidity, err = readI8(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 16 amendFlag (sinceVersion=2)  
+        if off-bodyStart < int(blockLen) {  
+            if resp.AmendFlag, err = readI8(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 17 fillQty (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.FillQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 18 fillPrice (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.FillPriceMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 19 originalQty (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.OriginalQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // skip any future fixed fields we don't know about  
+        off = bodyStart + int(blockLen)  
+        if resp.OrderID, err = readVarString8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.OrderLinkID, err = readVarString8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+      
+        resp.Price = applyExp(resp.PriceMantissa, resp.PriceExponent)  
+        resp.LeavesQty = applyExp(resp.LeavesQtyMantissa, resp.SizeExponent)  
+        resp.LeavesValue = applyExp(resp.LeavesValueMantissa, resp.ValExponent)  
+        resp.FillQty = applyExp(resp.FillQtyMantissa, resp.SizeExponent)  
+        resp.FillPrice = applyExp(resp.FillPriceMantissa, resp.PriceExponent)  
+        resp.OriginalQty = applyExp(resp.OriginalQtyMantissa, resp.SizeExponent)  
+        resp.RawOffsetEnd = off  
+      
+        return resp, nil  
+    }  
+      
+    // ---------- WebSocket helpers ----------  
+      
+    func sendJSON(conn *websocket.Conn, v any) error {  
+        data, err := json.Marshal(v)  
+        if err != nil {  
+            return err  
+        }  
+        return conn.WriteMessage(websocket.TextMessage, data)  
+    }  
+      
+    func signAuth(secret, value string) string {  
+        h := hmac.New(sha256.New, []byte(secret))  
+        h.Write([]byte(value))  
+        return hex.EncodeToString(h.Sum(nil))  
+    }  
+      
+    func heartbeat(ctx context.Context, conn *websocket.Conn) {  
+        ticker := time.NewTicker(10 * time.Second)  
+        defer ticker.Stop()  
+        for {  
+            select {  
+            case <-ctx.Done():  
+                return  
+            case <-ticker.C:  
+                reqID := fmt.Sprintf("%d", time.Now().UnixMilli())  
+                err := sendJSON(conn, map[string]any{  
+                    "req_id": reqID,  
+                    "op":     "ping",  
+                })  
+                if err != nil {  
+                    log.Printf("[heartbeat] error sending ping: %v", err)  
+                    return  
+                }  
+            }  
+        }  
+    }  
+      
+    // ---------- Main run ----------  
+      
+    func run(ctx context.Context, url string) error {  
+        dialer := websocket.Dialer{  
+            HandshakeTimeout:  10 * time.Second,  
+            EnableCompression: false,  
+        }  
+      
+        conn, _, err := dialer.Dial(url, nil)  
+        if err != nil {  
+            return fmt.Errorf("dial error: %w", err)  
+        }  
+        defer conn.Close()  
+        log.Printf("Connected to %s", url)  
+      
+        expires := (time.Now().Unix() + 10000) * 1000  
+        val := fmt.Sprintf("GET/realtime%d", expires)  
+        sig := signAuth(APISecret, val)  
+      
+        authMsg := map[string]any{  
+            "req_id": "10001",  
+            "op":     "auth",  
+            "args":   []any{APIKey, expires, sig},  
+        }  
+        if err := sendJSON(conn, authMsg); err != nil {  
+            return fmt.Errorf("send auth error: %w", err)  
+        }  
+      
+        if _, msg, err := conn.ReadMessage(); err != nil {  
+            return fmt.Errorf("read auth ack error: %w", err)  
+        } else {  
+            log.Printf("auth-ack: %s", string(msg))  
+        }  
+      
+        subMsg := map[string]any{  
+            "op":   "subscribe",  
+            "args": subTopics,  
+        }  
+        if err := sendJSON(conn, subMsg); err != nil {  
+            return fmt.Errorf("send subscribe error: %w", err)  
+        }  
+      
+        hbCtx, hbCancel := context.WithCancel(ctx)  
+        defer hbCancel()  
+        go heartbeat(hbCtx, conn)  
+      
+        for {  
+            select {  
+            case <-ctx.Done():  
+                log.Printf("context canceled, exit read loop")  
+                return nil  
+            default:  
+            }  
+      
+            mt, data, err := conn.ReadMessage()  
+            if err != nil {  
+                return fmt.Errorf("read message error: %w", err)  
+            }  
+      
+            switch mt {  
+            case websocket.BinaryMessage:  
+                resp, err := decodeFastOrderResp(data, false)  
+                if err != nil {  
+                    log.Printf("binary decode error: %v", err)  
+                } else {  
+                    j, _ := json.Marshal(resp)  
+                    log.Printf("FAST_ORDER_SBE: %s", string(j))  
+                }  
+            case websocket.TextMessage:  
+                var obj map[string]any  
+                if err := json.Unmarshal(data, &obj); err != nil {  
+                    log.Printf("text-nonjson: %s", string(data))  
+                    continue  
+                }  
+                if op, ok := obj["op"].(string); ok && op == "pong" {  
+                    continue  
+                }  
+                j, _ := json.Marshal(obj)  
+                log.Printf("control: %s", string(j))  
+            default:  
+                log.Printf("unknown message type %d", mt)  
+            }  
+        }  
+    }  
+      
+    // ---------- Entry ----------  
+      
+    func main() {  
+        url := flag.String("url", MMWSURLTestnetBybits, "WebSocket URL")  
+        flag.Parse()  
+      
+        if APIKey == "YOUR_API_KEY" || APISecret == "YOUR_API_SECRET" {  
+            log.Println("⚠️ Please set APIKey and APISecret in the source before running.")  
+        }  
+      
+        ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)  
+        defer cancel()  
+      
+        if err := run(ctx, *url); err != nil {  
+            log.Fatalf("run error: %v", err)  
+        }  
+    }  
+    
+    
+    
+    #!/usr/bin/env python3  
+    import asyncio  
+    import json  
+    import hmac  
+    import time  
+    import struct  
+    from typing import Tuple, Dict, Any  
+    import websockets  
+      
+    MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+    # MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private-sbe"  
+      
+    # TODO: fill in your real keys  
+    API_KEY = "YOUR_API_KEY"  
+    API_SECRET = "YOUR_API_SECRET"  
+    SUB_TOPICS = ["order.sbe.resp.spot"]  
       
       
-    class SBEBestOBRpiParser:  
-        """  
-        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
+    def read_u8(buf: memoryview, off: int) -> Tuple[int, int]:  
+        return buf[off], off + 1  
       
-        ts(int64), seq(int64), cts(int64), u(int64),  
-        askNormalPrice(int64), askNormalSize(int64),  
-        askRpiPrice(int64), askRpiSize(int64),  
-        bidNormalPrice(int64), bidNormalSize(int64),  
-        bidRpiPrice(int64), bidRpiSize(int64),  
-        priceExponent(int8), sizeExponent(int8),  
-        symbol(varString8)  
+    def read_i8(buf: memoryview, off: int) -> Tuple[int, int]:  
+        b = struct.unpack_from("<b", buf, off)[0]  
+        return b, off + 1  
       
-        All values are little-endian.  
-        """  
+    def read_u16_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<H", buf, off)[0]  
+        return v, off + 2  
       
-        def __init__(self) -> None:  
-            # Header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
+    def read_i32_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<i", buf, off)[0]  
+        return v, off + 4  
       
-            # 12 x int64 + 2 x int8:  
-            # ts, seq, cts, u,  
-            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
-            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
-            # priceExponent, sizeExponent  
-            self.body_fmt = "<" + ("q" * 12) + "bb"  
-            self.body_sz = struct.calcsize(self.body_fmt)  
+    def read_i64_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<q", buf, off)[0]  
+        return v, off + 8  
       
-            self.target_template_id = 20000  
+    def read_varstring8(buf: memoryview, off: int) -> Tuple[str, int]:  
+        ln = buf[off]  
+        off += 1  
+        if ln == 0:  
+            return "", off  
+        s = bytes(buf[off: off + ln]).decode("utf-8", "replace")  
+        return s, off + ln  
       
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        if exp >= 0:  
+            return mantissa / (10 ** exp)  
+        else:  
+            return mantissa * (10 ** (-exp))  
       
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
+    def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any]:  
+        mv = memoryview(payload)  
+        off = 0  
+        if len(mv) < 8:  
+            raise ValueError("payload too short for SBE header")  
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", mv, off)  
+        off += 8  
       
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
+        if debug:  
+            print(f"HEADER: block_len={block_len}, template_id={template_id}, schema_id={schema_id}, version={version}")  
+      
+        if template_id != 21000:  
+            return {"_warn": f"unexpected_template_id:{template_id}", "_raw": payload.hex()}  
+      
+        body_start = off  # fixed block begins here; var-length fields follow at body_start+block_len  
+      
+        category, off = read_u8(mv, off)  
+        side, off = read_u8(mv, off)  
+        order_status, off = read_u8(mv, off)  
+        price_exp, off = read_i8(mv, off)  
+        size_exp, off = read_i8(mv, off)  
+        value_exp, off = read_i8(mv, off)  
+        reject_reason, off = read_u16_le(mv, off)  
+      
+        price, off = read_i64_le(mv, off)  
+        leaves_qty, off = read_i64_le(mv, off)  
+        leaves_value, off = read_i64_le(mv, off)  
+        creation_time_us, off = read_i64_le(mv, off)  
+        updated_time_us, off = read_i64_le(mv, off)  
+        seq, off = read_i64_le(mv, off)  
+        symbol_id, off = read_i32_le(mv, off)  
+      
+        # field 15 liquidity (sinceVersion=1) — present when block_len covers it  
+        liquidity = 0  
+        if off - body_start < block_len:  
+            liquidity, off = read_i8(mv, off)  
+      
+        # field 16 amendFlag (sinceVersion=2)  
+        amend_flag = 0  
+        if off - body_start < block_len:  
+            amend_flag, off = read_i8(mv, off)  
+      
+        # field 17 fillQty (sinceVersion=2)  
+        fill_qty = 0  
+        if off - body_start + 8 <= block_len:  
+            fill_qty, off = read_i64_le(mv, off)  
+      
+        # field 18 fillPrice (sinceVersion=2)  
+        fill_price = 0  
+        if off - body_start + 8 <= block_len:  
+            fill_price, off = read_i64_le(mv, off)  
+      
+        # field 19 originalQty (sinceVersion=2)  
+        original_qty = 0  
+        if off - body_start + 8 <= block_len:  
+            original_qty, off = read_i64_le(mv, off)  
+      
+        # skip any future fixed fields we don't know about  
+        off = body_start + block_len  
+      
+        order_id, off = read_varstring8(mv, off)  
+        order_link_id, off = read_varstring8(mv, off)  
+      
+        result = {  
+            "_sbe_header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
                 "version": version,  
-            }  
+            },  
+            "category": category,  
+            "side": side,  
+            "orderStatus": order_status,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "valueExponent": value_exp,  
+            "rejectReason": reject_reason,  
+            "priceMantissa": price,  
+            "leavesQtyMantissa": leaves_qty,  
+            "leavesValueMantissa": leaves_value,  
+            "price": apply_exp(price, price_exp),  
+            "leavesQty": apply_exp(leaves_qty, size_exp),  
+            "leavesValue": apply_exp(leaves_value, value_exp),  
+            "creationTime": creation_time_us,  
+            "updatedTime": updated_time_us,  
+            "seq": seq,  
+            "symbolID": symbol_id,  
+            "liquidity": liquidity,  
+            "orderId": order_id,  
+            "orderLinkId": order_link_id,  
+            "_raw_offset_end": off  
+        }  
+        if amend_flag or fill_qty or fill_price or original_qty:  
+            result["amendFlag"] = amend_flag  
+            result["fillQtyMantissa"] = fill_qty  
+            result["fillPriceMantissa"] = fill_price  
+            result["originalQtyMantissa"] = original_qty  
+            result["fillQty"] = apply_exp(fill_qty, size_exp)  
+            result["fillPrice"] = apply_exp(fill_price, price_exp)  
+            result["originalQty"] = apply_exp(original_qty, size_exp)  
+        return result  
       
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
+    async def send_json(ws, obj):  
+        await ws.send(json.dumps(obj, separators=(",", ":")))  
       
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-      
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-      
-            s = data[offset : offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            # Exponent is for decimal point positioning.  
-            # If exponent = 2 and value=1060342500 -> 10603425.00  
-            return value / (10 ** exponent) if exponent >= 0 else value * (  
-                10 ** (-exponent)  
-            )  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(  
-                    f"unsupported template_id={hdr['template_id']}"  
-                )  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for BestOBRpiEvent body")  
-      
-            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
-            (  
-                ts,  
-                seq,  
-                cts,  
-                u,  
-                ask_np_m,  
-                ask_ns_m,  
-                ask_rp_m,  
-                ask_rs_m,  
-                bid_np_m,  
-                bid_ns_m,  
-                bid_rp_m,  
-                bid_rs_m,  
-                price_exp,  
-                size_exp,  
-            ) = fields  
-      
-            offset = self.header_sz + self.body_sz  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # Apply exponents  
-            ask_np = self._apply_exponent(ask_np_m, price_exp)  
-            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
-            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
-            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
-            bid_np = self._apply_exponent(bid_np_m, price_exp)  
-            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
-            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
-            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "symbol": symbol,  
-                # Normal book (best)  
-                "ask_normal_price": ask_np,  
-                "ask_normal_size": ask_ns,  
-                "bid_normal_price": bid_np,  
-                "bid_normal_size": bid_ns,  
-                # RPI book (best)  
-                "ask_rpi_price": ask_rp,  
-                "ask_rpi_size": ask_rs,  
-                "bid_rpi_price": bid_rp,  
-                "bid_rpi_size": bid_rs,  
-                "parsed_length": offset,  
-            }  
-      
-      
-    parser = SBEBestOBRpiParser()  
-      
-      
-    # --------------------------- WebSocket handlers ---------------------------  
-      
-    def on_message(ws, message):  
-        try:  
-            # Binary SBE frames; text frames for control/acks/errors  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
-                logging.info(  
-                    "SBE %s seq=%s u=%s "  
-                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
-                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"],  
-                    decoded["seq"],  
-                    decoded["u"],  
-                    decoded["bid_normal_price"],  
-                    decoded["bid_normal_size"],  
-                    decoded["ask_normal_price"],  
-                    decoded["ask_normal_size"],  
-                    decoded["bid_rpi_price"],  
-                    decoded["bid_rpi_size"],  
-                    decoded["ask_rpi_price"],  
-                    decoded["ask_rpi_size"],  
-                    decoded["ts"],  
-                )  
-                print(  
-                    f"{decoded['symbol']} u={decoded['u']} "  
-                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
-                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
-                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
-                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
-                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
-                )  
-            else:  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print(obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-        except Exception as e:  
-            logging.exception("decode error: %s", e)  
-            print("decode error:", e)  
-      
-      
-    def on_error(ws, error):  
-        print("WS error:", error)  
-        logging.error("WS error: %s", error)  
-      
-      
-    def on_close(ws, *_):  
-        print("### connection closed ###")  
-        logging.info("connection closed")  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
-      
-      
-    def manage_subscription(ws):  
-        # demo: unsubscribe/resubscribe once  
-        time.sleep(20)  
-        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
-        print("unsubscribed:", TOPIC)  
-        time.sleep(5)  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("resubscribed:", TOPIC)  
-      
-      
-    def ping_per(ws):  
+    async def heartbeat(ws):  
         while True:  
+            await asyncio.sleep(10)  
             try:  
-                ws.send(json.dumps({"op": "ping"}))  
+                await send_json(ws, {"req_id": str(int(time.time() * 1000)), "op": "ping"})  
             except Exception:  
                 return  
-            time.sleep(10)  
       
+    async def run(url: str):  
+        async with websockets.connect(url, max_size=None) as ws:  
+            expires = int((time.time() + 10000) * 1000)  
+            val = f'GET/realtime{expires}'  
+            signature = hmac.new(  
+                bytes(API_SECRET, 'utf-8'),  
+                bytes(val, 'utf-8'),  
+                digestmod='sha256'  
+            ).hexdigest()  
+            await send_json(ws, {"req_id": "10001", "op": "auth", "args": [API_KEY, expires, signature]})  
       
-    def on_pong(ws, *_):  
-        print("pong received")  
+            ack = await ws.recv()  
+            print("auth-ack:", ack)  
       
+            await send_json(ws, {"op": "subscribe", "args": SUB_TOPICS})  
+            asyncio.create_task(heartbeat(ws))  
       
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
-      
-      
-    def connWS():  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)  
+            while True:  
+                frame = await ws.recv()  
+                if isinstance(frame, (bytes, bytearray)):  
+                    try:  
+                        decoded = decode_fast_order_resp(frame)  
+                        print(json.dumps(decoded, ensure_ascii=False))  
+                    except Exception as e:  
+                        print("binary-decode-error:", e)  
+                else:  
+                    try:  
+                        obj = json.loads(frame)  
+                        if obj.get("op") != "pong":  
+                            print(obj)  
+                    except Exception:  
+                        print("text-nonjson:", frame)  
       
       
     if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        connWS()
+        asyncio.run(run(MMWS_URL_TESTNET))
 
 ---
 
-# SBE BBO 接入指南
+# Fast Order Response SBE
 
-## 總覽
+僅限 MMWS
 
-  * **Channel:** 僅支援私有 MMWS, 不開放於 public WS.
-  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
-  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-  * **Depth:** 提供即時 Level 1 訂單簿資料.
-  * **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
+此頻道**僅** 可透過您的**專屬 Market Maker WebSocket（MMWS）** 主機訪問，標準 WebSocket 端點無法使用。
 
+## 概述
 
+Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HFT）客戶提供超低延遲的訂單推送。它直接從撮合引擎推送 SBE（Simple Binary Encoding）二進位編碼訊息，用於下單、改單和撤單的確認回執。
 
+本頻道以速度和效率為核心設計。詳細推送觸發邏輯，請參閱下方推送邏輯章節。
+
+## 上線時間表
+
+產品| 測試網| 主網  
+---|---|---  
+現貨| ✅| ✅  
+期貨（U本位 & 幣本位）| ✅| ✅  
+期權| ✅| ✅  
+  
 ## 連接
 
-  * 字段 `u` 總是**單調遞增**.
-  * 字段 `u` 通常**不會重置** , 除非系統重啟或精度 (precision) 改變, 則重置成**1**.
-  * 如果 3 秒內BBO沒有變化, 會強推一個 snapshot 信息, 字段 `u` 會與前一則信息保持相同。
-  * 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
+環境| URL  
+---|---  
+測試網| `wss://stream-testnet.bybits.org/v5/private-sbe`  
+主網| `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe`  
+  
+  * SBE 訊息以**二進位幀** （`opcode = 2`）發送。
+  * 控制幀（鑒權、ping/pong、訂閱/取消訂閱）使用標準 **Bybit V5 API JSON 格式** 。
 
 
 
-## 訂閱流程(JSON 控制 frame)
+## 鑒權
 
-### 送出訂閱請求
+建立連接後必須立即進行鑒權。
+
+### 鑒權請求
     
     
     {  
-      "op": "subscribe",  
-      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+        "req_id": "10001",  
+        "op": "auth",  
+        "args": [  
+            "api_key",  
+            1662350400000,  
+            "signature"  
+        ]  
     }  
     
 
-  * Topic 格式: `ob.rpi.1.sbe.<symbol>`
-  * 範例 symbol: `BTCUSDT`, `ETHUSDT` 等。
+欄位| 說明  
+---|---  
+req_id| 可選的客戶端標識符  
+args[1]| 時間戳，必須大於當前時間  
+args[2]| 使用 [Bybit API 簽名算法](/docs/zh-TW/v5/guide#authentication) 生成  
+  
+### 鑒權成功響應
+    
+    
+    {  
+        "success": true,  
+        "ret_msg": "",  
+        "op": "auth",  
+        "conn_id": "cejreaspqfh3sjdnldmg-p"  
+    }  
+    
 
+## 心跳
 
+### 發送 Ping
+    
+    
+    {"req_id": "100001", "op": "ping"}  
+    
+
+### 接收 Pong
+    
+    
+    {  
+        "success": true,  
+        "ret_msg": "pong",  
+        "conn_id": "465772b1-7630-4fdc-a492-e003e6f0f260",  
+        "req_id": "100001",  
+        "op": "ping"  
+    }  
+    
+
+## 訂閱
+
+### 可用 Topic
+
+Topic| 說明  
+---|---  
+`order.sbe.resp.spot`| 現貨快速訂單響應  
+`order.sbe.resp.linear`| 線性合約（USDT/USDC）快速訂單響應  
+`order.sbe.resp.inverse`| 反向合約快速訂單響應  
+`order.sbe.resp.option`| 期權快速訂單響應  
+  
+### 訂閱示例
+    
+    
+    {  
+        "op": "subscribe",  
+        "args": ["order.sbe.resp.linear", "order.sbe.resp.spot", "order.sbe.resp.option"]  
+    }  
+    
 
 ### 訂閱確認
     
     
     {  
-      "success": true,  
-      "ret_msg": "",  
-      "conn_id": "d30fdpbboasp1pjbe7r0",  
-      "req_id": "xxx",  
-      "op": "subscribe"  
+        "success": true,  
+        "ret_msg": "",  
+        "conn_id": "d30fdpbboasp1pjbe7r0",  
+        "req_id": "abc123",  
+        "op": "subscribe"  
     }  
     
 
-### 接收數據
-    
-    
-    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
-    
+## 推送邏輯
 
-### 解碼示例
-    
-    
-    {  
-      "header": {  
-        "block_length": 82,  
-        "template_id": 20000,  
-        "schema_id": 1,  
-        "version": 0  
-      },  
-      "seq": 1808827611,  
-      "cts": 1757497309030,  
-      "price_exponent": 2,  
-      "size_exponent": 6,  
-      "ask_price": 1060342500,  
-      "ask_normal_size": 776935000000,  
-      "ask_rpi_size": 0,  
-      "bid_price": 1060250000,  
-      "bid_normal_size": 20000000000,  
-      "bid_rpi_size": 0,  
-      "u": 312,  
-      "ts": 1757497309814,  
-      "symbol": "BTCUSDT",  
-      "parsed_length": 98  
-    }  
-    
+當用戶主動發起操作（下單、改單、撤單）時，`fast.resp.order` 訊息將主動推送給客戶端。
 
-## SBE 信息結構
+信息
 
-### SBE XML Schema
+頻道重啟或重新訂閱後，推送從最新的撮合事件開始——核心是**速度** ，不支持補發歷史數據。
 
-  * `templateId = 20000` 用來識別信息型別。
-  * 驗證 `templateId = 20000` 以確認這是一則 Level 1 訂單簿事件。
-  * [sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
-
-
-
-### 信息結構細節
-
-#### 信息標頭 (8 bytes)
-
-Field| Type| Size (bytes)| Description  
----|---|---|---  
-blockLength| uint16| 2| 信息主體長度 Message body length  
-templateId| uint16| 2| 固定值 = 20000 Fixed = 20000  
-schemaId| uint16| 2| 固定值 = 1 Fixed = 1  
-version| uint16| 2| 固定值 = 0 Fixed = 0  
+場景 / 事件| 是否推送| 備註  
+---|---|---  
+Maker 訂單新建（已接受 / ack）| ✅ 是| 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。  
+Maker 訂單成交 / 部分成交| ✅ 是| 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。  
+Taker 訂單（主動方）| ✅ 是| 所有由客戶端主動發起的操作（下單 / 改單 / 撤單 / 拒絕）。  
+COT（CloseOnTrigger）訂單| ✅ 是（針對觸發後訂單）| 觸發的 COT 訂單行為類似新的 Taker 訂單；若開反向倉位，`orderLinkId=""`。  
+RO / ReduceOnly 訂單| ✅ 是| 正常推送；若因保證金不足或倉位限制被拒絕，`rejectReason` 將有值。  
+條件單 / TP-SL 觸發訂單| ✅ 是| 條件觸發且訂單變為活躍後推送，`orderLinkId=""` （為空）。  
+DCP（斷線全部保護）| ✅ 是| DCP 在斷線時強制撤單時推送。  
+SMP 撤 Taker / 同時撤兩方（自成交保護）| ✅ 是| Taker / Maker 兩側撤單均會推送。  
+SMP 撤 Maker| ✅ 是| Taker / Maker 兩側撤單均會推送。  
+MMP（做市商保護）| ✅ 是| MMP 觸發的撤單也會在 Fast Order 頻道推送。  
+下架 / 合約到期 / 期權交割| ❌ 否| 系統主動平倉，不推送 Fast Order。  
+訂單被拒（撮合 / 驗證拒絕）| ✅ 是| 立即推送，附帶 `rejectReason`。  
+改單成功 / 拒絕| ✅ 是| 主動改單的 ack / 拒絕均推送。  
+撤單成功 / 拒絕| ✅ 是| 主動撤單的 ack / 拒絕均推送。  
   
-#### 信息主體 (`BestOBRpiEvent`)
+## 与标准 WebSocket 订单频道的差异
 
-ID| Field| Type| Description  
+下表列出了 Fast Order SBE 频道（`order.sbe.resp.*`）与标准私有 WebSocket [订单](/docs/zh-TW/v5/websocket/private/order)频道在行为上的差异。
+
+场景| Fast Order 频道| 标准 WS 订单频道| 说明  
 ---|---|---|---  
-1| ts| int64| Snapshot 時間戳 (µs) Snapshot timestamp (µs)  
-2| seq| int64| 唯一信息序號 Unique message sequence number  
-3| cts| int64| 交易時間戳 (µs) Trade timestamp (µs)  
-4| u| int64| 更新 ID Update ID  
-5| askNormalPrice| int64| 最佳賣價 mantissa Best ask price mantissa  
-6| askNormalSize| int64| 最佳賣量 (normal) mantissa Best ask size (normal) mantissa  
-7| askRpiPrice| int64| 最佳 RPI 賣價 mantissa Best RPI ask price mantissa  
-8| askRpiSize| int64| 最佳 RPI 賣量 mantissa Best RPI ask size mantissa  
-9| bidNormalPrice| int64| 最佳買價 mantissa Best bid price mantissa  
-10| bidNormalSize| int64| 最佳買量 (normal) mantissa Best bid size (normal) mantissa  
-11| bidRpiPrice| int64| 最佳買價 (RPI) mantissa Best bid price (RPI) mantissa  
-12| bidRpiSize| int64| 最佳買量 (RPI) mantissa Best bid size (RPI) mantissa  
-13| priceExponent| int8| 價格 exponent Price exponent  
-14| sizeExponent| int8| 數量 exponent Size exponent  
-55| symbol| varStr| 交易對 (例如 `BTCUSDT`) Trading pair (e.g., `BTCUSDT`)  
+条件单下改撤（触发前）| ❌ 无推送| ✅ 有推送| 条件单在触发前不会发送到撮合引擎，撮合引擎无法获取触发前的订单状态。  
+TP/SL 订单下改撤（触发前）| ❌ 无推送| ✅ 有推送| 原因同上。  
+Trailing Stop 订单下改撤（触发前）| ❌ 无推送| ✅ 有推送| 原因同上。  
+仓位强平订单| ❌ 无推送| ✅ 有推送| 注：强平触发的撤单两者推送一致。  
+合约下架撤单| ❌ 无推送| ✅ 有推送| 下架撤单由内部处理，不发送到撮合引擎。  
+改单/撤单请求到达前订单已完全成交| `orderStatus=Rejected`| `orderStatus=Filled`| 例如 qty=10，改成 12，但 10 手已成交 — Fast Order 返回 `Rejected`，标准 WS 返回 `Filled`。  
+正常下改撤 — `leavesValue` 字段| 无值（`0`）| 有值| Fast Order 对非现货市价按金额买单（non-spot-market-buy-order-by-value）的 `leavesValue` 始终返回 `0`。  
+盘前集合竞价阶段 — 撤单被拒| `orderStatus=Rejected`| `orderStatus=New`| 盘前集合竞价阶段不允许撤单，Fast Order 返回 `Rejected`，标准 WS 返回 `New`。  
   
-## 相關優化
+## OrderLinkId 各版本行為說明
 
-新的欄位定義 (以賣方為例, 買方邏輯相同):
+場景| 2026 測試網 / 主網| 備註  
+---|---|---  
+主動新建訂單（用戶發起）| ✅ 有值| 客戶端發起的下單包含用戶的 `orderLinkId`。  
+改單 / 撤單（用戶發起）| ✅ 有值| 客戶端發起的下單包含用戶的 `orderLinkId`。  
+Maker→Taker 轉變（如價格改單穿越盤口）| ✅ 有值| 客戶端發起的下單包含用戶的 `orderLinkId`。  
+主動新建條件單（用戶發起）| ✅ 有值| 客戶端發起的下單包含用戶的 `orderLinkId`。  
+倉位設置止盈止損訂單| ❌ 為空| 系統創建，無 `orderLinkId`。  
+  
+## 消息結構（SBE）
 
-Field| Definition  
+`templateId = 21000`（`FastOrderResp`）
+
+### 消息頭（8 字節）
+
+欄位| 類型| 大小（字節）| 說明  
+---|---|---|---  
+blockLength| uint16| 2| 消息體長度  
+templateId| uint16| 2| 固定 = `21000`  
+schemaId| uint16| 2| 固定 = `1`  
+version| uint16| 2| 固定 = `2`  
+  
+### 消息體
+
+ID| 欄位| 類型| 說明  
+---|---|---|---  
+1| category| uint8| `1`=現貨, `2`=線性, `3`=反向, `4`=期權  
+2| side| uint8| `1`=買, `2`=賣  
+3| orderStatus| uint8| 訂單狀態枚舉。`0`=Others, `4`=PartiallyFilledAndCancelled, `5`=Rejected, `6`=New, `7`=Cancelled, `8`=PartiallyFilled, `9`=Filled  
+4| priceExponent| int8| 價格小數位數。`price = mantissa / 10^priceExponent`  
+5| sizeExponent| int8| 數量小數位數  
+6| valueExponent| int8| 金額小數位數  
+7| rejectReason| uint16| 無拒絕時為 `0`，詳見 rejectReason 映射  
+8| price| int64| 價格尾數（需應用 `priceExponent`）  
+9| leavesQty| int64| 剩餘數量尾數（需應用 `sizeExponent`）  
+10| leavesValue| int64| 僅當現貨訂單類型為市價單且 `marketUnit=quoteCoin` 時有效，其他情況為 `0`（需應用 `valueExponent`）  
+11| creationTime| int64| 訂單在 Fast Order 頻道的創建時間戳（微秒）  
+12| updatedTime| int64| 撮合時間戳（微秒）  
+_撮合時間戳並不代表交易的端到端處理完成時間。如需獲取最終完成時間戳，請參考[訂單流](/docs/zh-TW/v5/websocket/private/order)裡的 `updatedTime`字段_  
+13| seq| int64| 跨序列 ID  
+14| symbolID| int32| 交易對 ID  
+15| liquidity| int8| `1`=taker，`2`=maker（成交時），否則為 `0`。版本 1 新增欄位 
+* 對於盤前永續合約，僅支持連續交易階段  
+16| amendFlag| int8| `0`=不是改單請求觸發的推送，`1`=是改單請求觸發的推送。版本 2 新增欄位（7月21日主網）  
+17| fillQty| int64| 訂單已成交數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）
+* 對於盤前永續合約，僅支持連續交易階段
+* 對於taker有多筆成交時, 該字段給的是多筆成交的累計的成交數量  
+18| fillPrice| int64| 訂單成交價格尾數（需應用 `priceExponent`）。版本 2 新增欄位（7月21日主網）
+* 對於盤前永續合約，僅支持連續交易階段
+* 對於taker有多筆成交時, 該字段給的是多筆成交的最後一筆成交價格  
+19| originalQty| int64| 訂單數量尾數（需應用 `sizeExponent`）。版本 2 新增欄位（7月21日主網）  
+100| orderId| varString8| 訂單 ID（UUID）  
+101| orderLinkId| varString8| 可選；用戶主動操作時存在  
+  
+## rejectReason 映射
+
+代碼| 名稱  
 ---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size  
+0| EC_NoError  
+1| EC_Others  
+2| EC_UnknownMessageType  
+3| EC_MissingClOrdID  
+4| EC_MissingOrigClOrdID  
+5| EC_ClOrdIDOrigClOrdIDAreTheSame  
+6| EC_DuplicatedClOrdID  
+7| EC_OrigClOrdIDDoesNotExist  
+8| EC_TooLateToCancel  
+9| EC_UnknownOrderType  
+10| EC_UnknownSide  
+11| EC_UnknownTimeInForce  
+12| EC_WronglyRouted  
+13| EC_MarketOrderPriceIsNotZero  
+14| EC_LimitOrderInvalidPrice  
+15| EC_NoEnoughQtyToFill  
+16| EC_NoImmediateQtyToFill  
+17| EC_QtyCannotBeZero  
+18| EC_PerCancelRequest  
+19| EC_MarketOrderCannotBePostOnly  
+20| EC_PostOnlyWillTakeLiquidity  
+21| EC_CancelReplaceOrder  
+22| EC_InvalidSymbolStatus  
+23| EC_MarketOrderNoSupportTIF  
+24| EC_ReachMaxTradeNum  
+25| EC_InvalidPriceScale  
+26| EC_BitIndexInvalid  
+27| EC_StopBySelfMatch  
+28| EC_BySelfMatch  
+29| EC_InvalidSmpType  
+30| EC_CancelByMMP  
+31| EC_InCallAuctionStatus  
+34| EC_InvalidUserType  
+35| EC_InvalidMirrorOid  
+36| EC_InvalidMirrorUid  
+37| EC_SymbolNotExist  
+38| EC_CancelNoActiveOrders  
+39| EC_MissingUID  
+100| EC_EcInvalidQty  
+101| EC_InvalidAmount  
+102| EC_LoadOrderCancel  
+103| EC_CancelForNoFullFill  
+104| EC_MarketQuoteNoSuppSell  
+105| EC_DisorderOrderID  
+106| EC_InvalidBaseValue  
+107| EC_LoadOrderCanMatch  
+108| EC_SecurityStatusFail  
+110| EC_ReachRiskPriceLimit  
+111| EC_OrderNotExist  
+112| EC_CancelByOrderValueZero  
+113| EC_CancelByMatchValueZero  
+200| EC_ReachMarketPriceLimit  
   
-目前的邏輯可能出現以下狀況:
-
-Price| normalQty| rpiQty  
----|---|---  
-1000| 0| 100  
-  
-這表示沒有 RPI 權限的使用者無法得知實際可成交的價格, 導致這則信息對他們沒有實際意義。為了解決此問題, 我們對信息內容做了上述調整。
-
-#### 情況 1: `askNormalSize != 0 && askRpiSize != 0`
-
-這是基於實際市場情況的正常回應, 與原先信息表達的含義相同。
-
-示例:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 300  
-  
-#### 情況 2: `askNormalSize != 0 && askRpiSize == 0`
-
-`askRpiPrice` 會被指定為 `askNormalPrice`, 並且 `askRpiSize = 0`。  
-在此情況下, 不會再向更深的價位搜尋 `askRpiPrice`。
-
-示例:
-
-Field| Definition| Example| Note  
----|---|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000|   
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200|   
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 0|   
-  
-#### 情況 3: `askNormalSize == 0 && askRpiSize != 0`
-
-此時 `askNormalPrice =` 真正的非 RPI 最佳賣價。  
-在這種情況下, 會回傳並使用 `askNormalPrice`。
-
-示例:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1200  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 100  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 20  
-  
-#### 情況 4
-
-當市場極度冷清, 完全沒有流動性時, **不會推送任何 BBO 信息** 。
-
-## 接入示例
+## SBE XML 模板（Fast Order Response）
     
     
-    import json  
-    import logging  
-    import struct  
-    import threading  
-    import time  
-    from datetime import datetime  
-    from typing import Dict, Any  
+    <?xml version="1.0" encoding="UTF-8"?>  
+    <sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe" xmlns:mbx="https://bybit-exchange.github.io/docs/v5/intro" package="order.fast.sbe" id="1" version="2" semanticVersion="1.0.0" description="Bybit fast order response SBE schema" byteOrder="littleEndian" headerType="messageHeader">  
+      <types>  
+        <composite name="messageHeader" description="Template ID and length of message root">  
+          <type name="blockLength" primitiveType="uint16"/>  
+          <type name="templateId" primitiveType="uint16"/>  
+          <type name="schemaId" primitiveType="uint16"/>  
+          <type name="version" primitiveType="uint16"/>  
+        </composite>  
+        <composite name="varString8" description="Variable length UTF-8 string">  
+          <type name="length" primitiveType="uint8"/>  
+          <type name="varData" length="0" primitiveType="uint8" semanticType="String" characterEncoding="UTF-8"/>  
+        </composite>  
+      </types>  
+      <!-- Fast order response: active place/cancel/amend acknowledgements -->  
+      <sbe:message name="FastOrderResp" id="21000">  
+        <!-- Routing / classification -->  
+        <field id="1" name="category" type="uint8" description="1=spot, 2=linear, 3=inverse, 4=option"/>  
+        <!-- Side / status / rejection -->  
+        <field id="2" name="side" type="uint8" description="1=Buy, 2=Sell"/>  
+        <field id="3" name="orderStatus" type="uint8" description="Order state enum"/>  
+        <!-- Price / size (mantissas) with exponents -->  
+        <field id="4" name="priceExponent" type="int8" description="Decimal places for price"/>  
+        <field id="5" name="sizeExponent" type="int8" description="Decimal places for size"/>  
+        <field id="6" name="valueExponent" type="int8" description="Decimal places for value"/>  
+        <field id="7" name="rejectReason" type="uint16" description="0 if N/A"/>  
+        <field id="8" name="price" type="int64" mbx:exponent="priceExponent" description="Price mantissa"/>  
+        <field id="9" name="leavesQty" type="int64" mbx:exponent="sizeExponent" description="Remaining quantity mantissa"/>  
+        <field id="10" name="leavesValue" type="int64" mbx:exponent="valueExponent" description="Active only when spot order type is market and marketUnit=quoteCoin; otherwise 0."/>  
+        <!-- Timing -->  
+        <field id="11" name="creationTime" type="int64" description="Order creation timestamp in Fast order channel(microseconds)"/>  
+        <field id="12" name="updatedTime" type="int64" description="Matching timestamp (microseconds)"/>  
+        <field id="13" name="seq" type="int64" description="Cross sequence ID"/>  
+        <!-- SymbolID -->  
+        <field id="14" name="symbolID" type="int32" description="Symbol ID"/>  
+        <!-- Liquidity -->  
+        <field id="15" name="liquidity" type="int8" sinceVersion="1" description="1=taker, 2=maker when trade, otherwise 0"/>  
+        <!-- Version 2 add new fields-->  
+        <field id="16" name="amendFlag" type="int8" sinceVersion="2" description="0=not amended, 1=amended"/>  
+        <field id="17" name="fillQty" type="int64" sinceVersion="2" description="order Filled quantity mantissa"/>  
+        <field id="18" name="fillPrice" type="int64" sinceVersion="2" description="order fill price mantissa"/>  
+        <field id="19" name="originalQty" type="int64" sinceVersion="2" description="order originalorder quantity mantissa"/>  
+        <!-- Order identifiers -->  
+        <data id="100" name="orderId" type="varString8" description="Order ID"/>  
+        <data id="101" name="orderLinkId" type="varString8" description="Optional; present for user-initiated orders"/>  
+      </sbe:message>  
+    </sbe:messageSchema>  
+    
+
+## 代碼示例
+
+  * Go
+  * Python
+
+
+    
+    
+    package main  
       
-    import websocket  
+    import (  
+        "context"  
+        "crypto/hmac"  
+        "crypto/sha256"  
+        "encoding/binary"  
+        "encoding/hex"  
+        "encoding/json"  
+        "flag"  
+        "fmt"  
+        "log"  
+        "math"  
+        "os"  
+        "os/signal"  
+        "time"  
       
-    logging.basicConfig(  
-        filename="logfile_wrapper.log",  
-        level=logging.INFO,  
-        format="%(asctime)s %(levelname)s %(message)s",  
+        "github.com/gorilla/websocket"  
     )  
       
-    # Change symbol/topic as you wish  
-    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    // ---------- Config ----------  
+      
+    const (  
+        MMWSURLTestnetBybits = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+        MMWSURLTestnetBybit  = "wss://stream-testnet.bybit.com/v5/private-sbe"  
+        MMWSURLMainnet       = "wss://stream.bybit.com/v5/private-sbe"  
+    )  
+      
+    // TODO: 填入您的真實密鑰  
+    const (  
+        APIKey    = "YOUR_API_KEY"  
+        APISecret = "YOUR_API_SECRET"  
+    )  
+      
+    var subTopics = []string{  
+        "order.sbe.resp.spot",  
+    }  
+      
+    // ---------- SBE helpers ----------  
+      
+    func readU8(buf []byte, off *int) (uint8, error) {  
+        if *off+1 > len(buf) {  
+            return 0, fmt.Errorf("readU8: out of range")  
+        }  
+        v := buf[*off]  
+        *off++  
+        return v, nil  
+    }  
+      
+    func readI8(buf []byte, off *int) (int8, error) {  
+        if *off+1 > len(buf) {  
+            return 0, fmt.Errorf("readI8: out of range")  
+        }  
+        v := int8(buf[*off])  
+        *off++  
+        return v, nil  
+    }  
+      
+    func readU16LE(buf []byte, off *int) (uint16, error) {  
+        if *off+2 > len(buf) {  
+            return 0, fmt.Errorf("readU16LE: out of range")  
+        }  
+        v := binary.LittleEndian.Uint16(buf[*off : *off+2])  
+        *off += 2  
+        return v, nil  
+    }  
+      
+    func readI32LE(buf []byte, off *int) (int32, error) {  
+        if *off+4 > len(buf) {  
+            return 0, fmt.Errorf("readI32LE: out of range")  
+        }  
+        v := int32(binary.LittleEndian.Uint32(buf[*off : *off+4]))  
+        *off += 4  
+        return v, nil  
+    }  
+      
+    func readI64LE(buf []byte, off *int) (int64, error) {  
+        if *off+8 > len(buf) {  
+            return 0, fmt.Errorf("readI64LE: out of range")  
+        }  
+        v := int64(binary.LittleEndian.Uint64(buf[*off : *off+8]))  
+        *off += 8  
+        return v, nil  
+    }  
+      
+    func readVarString8(buf []byte, off *int) (string, error) {  
+        if *off+1 > len(buf) {  
+            return "", fmt.Errorf("readVarString8: no length byte")  
+        }  
+        ln := int(buf[*off])  
+        *off++  
+        if ln == 0 {  
+            return "", nil  
+        }  
+        if *off+ln > len(buf) {  
+            return "", fmt.Errorf("readVarString8: length out of range")  
+        }  
+        s := string(buf[*off : *off+ln])  
+        *off += ln  
+        return s, nil  
+    }  
+      
+    func applyExp(mantissa int64, exp int8) float64 {  
+        e := int(exp)  
+        if e >= 0 {  
+            return float64(mantissa) / math.Pow10(e)  
+        }  
+        return float64(mantissa) * math.Pow10(-e)  
+    }  
+      
+    // ---------- Fast Order SBE decode ----------  
+      
+    type FastOrderSBEResp struct {  
+        SBEHeader struct {  
+            BlockLength uint16 `json:"blockLength"`  
+            TemplateID  uint16 `json:"templateId"`  
+            SchemaID    uint16 `json:"schemaId"`  
+            Version     uint16 `json:"version"`  
+        } `json:"_sbe_header"`  
+      
+        Category      uint8  `json:"category"`  
+        Side          uint8  `json:"side"`  
+        OrderStatus   uint8  `json:"orderStatus"`  
+        PriceExponent int8   `json:"priceExponent"`  
+        SizeExponent  int8   `json:"sizeExponent"`  
+        ValExponent   int8   `json:"valueExponent"`  
+        RejectReason  uint16 `json:"rejectReason"`  
+      
+        PriceMantissa       int64 `json:"priceMantissa"`  
+        LeavesQtyMantissa   int64 `json:"leavesQtyMantissa"`  
+        LeavesValueMantissa int64 `json:"leavesValueMantissa"`  
+      
+        CreationTime int64 `json:"creationTime"`  
+        UpdatedTime  int64 `json:"updatedTime"`  
+        Seq          int64 `json:"seq"`  
+      
+        SymbolID    int32  `json:"symbolID"`  
+        Liquidity   int8   `json:"liquidity"`  
+      
+        AmendFlag           int8  `json:"amendFlag,omitempty"`  
+        FillQtyMantissa     int64 `json:"fillQtyMantissa,omitempty"`  
+        FillPriceMantissa   int64 `json:"fillPriceMantissa,omitempty"`  
+        OriginalQtyMantissa int64 `json:"originalQtyMantissa,omitempty"`  
+      
+        OrderID     string `json:"orderId"`  
+        OrderLinkID string `json:"orderLinkId"`  
+      
+        Price       float64 `json:"price"`  
+        LeavesQty   float64 `json:"leavesQty"`  
+        LeavesValue float64 `json:"leavesValue"`  
+        FillQty     float64 `json:"fillQty,omitempty"`  
+        FillPrice   float64 `json:"fillPrice,omitempty"`  
+        OriginalQty float64 `json:"originalQty,omitempty"`  
+      
+        RawOffsetEnd int `json:"_raw_offset_end"`  
+    }  
+      
+    func decodeFastOrderResp(payload []byte, debug bool) (*FastOrderSBEResp, error) {  
+        if len(payload) < 8 {  
+            return nil, fmt.Errorf("payload too short for SBE header")  
+        }  
+        off := 0  
+        blockLen := binary.LittleEndian.Uint16(payload[off : off+2])  
+        templateID := binary.LittleEndian.Uint16(payload[off+2 : off+4])  
+        schemaID := binary.LittleEndian.Uint16(payload[off+4 : off+6])  
+        version := binary.LittleEndian.Uint16(payload[off+6 : off+8])  
+        off += 8  
+      
+        if debug {  
+            log.Printf("HEADER: block_len=%d, template_id=%d, schema_id=%d, version=%d",  
+                blockLen, templateID, schemaID, version)  
+        }  
+      
+        if templateID != 21000 {  
+            return nil, fmt.Errorf("unexpected templateId: %d", templateID)  
+        }  
+      
+        var err error  
+        resp := &FastOrderSBEResp{}  
+        resp.SBEHeader.BlockLength = blockLen  
+        resp.SBEHeader.TemplateID = templateID  
+        resp.SBEHeader.SchemaID = schemaID  
+        resp.SBEHeader.Version = version  
+      
+        bodyStart := off // fixed block begins here; var-length fields follow at bodyStart+blockLen  
+      
+        if resp.Category, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.Side, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.OrderStatus, err = readU8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.PriceExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.SizeExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.ValExponent, err = readI8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.RejectReason, err = readU16LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.PriceMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.LeavesQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.LeavesValueMantissa, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.CreationTime, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.UpdatedTime, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.Seq, err = readI64LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.SymbolID, err = readI32LE(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        // field 15 liquidity (sinceVersion=1) — present when blockLen covers it  
+        if off-bodyStart < int(blockLen) {  
+            if resp.Liquidity, err = readI8(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 16 amendFlag (sinceVersion=2)  
+        if off-bodyStart < int(blockLen) {  
+            if resp.AmendFlag, err = readI8(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 17 fillQty (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.FillQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 18 fillPrice (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.FillPriceMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // field 19 originalQty (sinceVersion=2)  
+        if off-bodyStart+8 <= int(blockLen) {  
+            if resp.OriginalQtyMantissa, err = readI64LE(payload, &off); err != nil {  
+                return nil, err  
+            }  
+        }  
+        // skip any future fixed fields we don't know about  
+        off = bodyStart + int(blockLen)  
+        if resp.OrderID, err = readVarString8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+        if resp.OrderLinkID, err = readVarString8(payload, &off); err != nil {  
+            return nil, err  
+        }  
+      
+        resp.Price = applyExp(resp.PriceMantissa, resp.PriceExponent)  
+        resp.LeavesQty = applyExp(resp.LeavesQtyMantissa, resp.SizeExponent)  
+        resp.LeavesValue = applyExp(resp.LeavesValueMantissa, resp.ValExponent)  
+        resp.FillQty = applyExp(resp.FillQtyMantissa, resp.SizeExponent)  
+        resp.FillPrice = applyExp(resp.FillPriceMantissa, resp.PriceExponent)  
+        resp.OriginalQty = applyExp(resp.OriginalQtyMantissa, resp.SizeExponent)  
+        resp.RawOffsetEnd = off  
+      
+        return resp, nil  
+    }  
+      
+    // ---------- WebSocket helpers ----------  
+      
+    func sendJSON(conn *websocket.Conn, v any) error {  
+        data, err := json.Marshal(v)  
+        if err != nil {  
+            return err  
+        }  
+        return conn.WriteMessage(websocket.TextMessage, data)  
+    }  
+      
+    func signAuth(secret, value string) string {  
+        h := hmac.New(sha256.New, []byte(secret))  
+        h.Write([]byte(value))  
+        return hex.EncodeToString(h.Sum(nil))  
+    }  
+      
+    func heartbeat(ctx context.Context, conn *websocket.Conn) {  
+        ticker := time.NewTicker(10 * time.Second)  
+        defer ticker.Stop()  
+        for {  
+            select {  
+            case <-ctx.Done():  
+                return  
+            case <-ticker.C:  
+                reqID := fmt.Sprintf("%d", time.Now().UnixMilli())  
+                err := sendJSON(conn, map[string]any{  
+                    "req_id": reqID,  
+                    "op":     "ping",  
+                })  
+                if err != nil {  
+                    log.Printf("[heartbeat] error sending ping: %v", err)  
+                    return  
+                }  
+            }  
+        }  
+    }  
+      
+    // ---------- Main run ----------  
+      
+    func run(ctx context.Context, url string) error {  
+        dialer := websocket.Dialer{  
+            HandshakeTimeout:  10 * time.Second,  
+            EnableCompression: false,  
+        }  
+      
+        conn, _, err := dialer.Dial(url, nil)  
+        if err != nil {  
+            return fmt.Errorf("dial error: %w", err)  
+        }  
+        defer conn.Close()  
+        log.Printf("Connected to %s", url)  
+      
+        expires := (time.Now().Unix() + 10000) * 1000  
+        val := fmt.Sprintf("GET/realtime%d", expires)  
+        sig := signAuth(APISecret, val)  
+      
+        authMsg := map[string]any{  
+            "req_id": "10001",  
+            "op":     "auth",  
+            "args":   []any{APIKey, expires, sig},  
+        }  
+        if err := sendJSON(conn, authMsg); err != nil {  
+            return fmt.Errorf("send auth error: %w", err)  
+        }  
+      
+        if _, msg, err := conn.ReadMessage(); err != nil {  
+            return fmt.Errorf("read auth ack error: %w", err)  
+        } else {  
+            log.Printf("auth-ack: %s", string(msg))  
+        }  
+      
+        subMsg := map[string]any{  
+            "op":   "subscribe",  
+            "args": subTopics,  
+        }  
+        if err := sendJSON(conn, subMsg); err != nil {  
+            return fmt.Errorf("send subscribe error: %w", err)  
+        }  
+      
+        hbCtx, hbCancel := context.WithCancel(ctx)  
+        defer hbCancel()  
+        go heartbeat(hbCtx, conn)  
+      
+        for {  
+            select {  
+            case <-ctx.Done():  
+                log.Printf("context canceled, exit read loop")  
+                return nil  
+            default:  
+            }  
+      
+            mt, data, err := conn.ReadMessage()  
+            if err != nil {  
+                return fmt.Errorf("read message error: %w", err)  
+            }  
+      
+            switch mt {  
+            case websocket.BinaryMessage:  
+                resp, err := decodeFastOrderResp(data, false)  
+                if err != nil {  
+                    log.Printf("binary decode error: %v", err)  
+                } else {  
+                    j, _ := json.Marshal(resp)  
+                    log.Printf("FAST_ORDER_SBE: %s", string(j))  
+                }  
+            case websocket.TextMessage:  
+                var obj map[string]any  
+                if err := json.Unmarshal(data, &obj); err != nil {  
+                    log.Printf("text-nonjson: %s", string(data))  
+                    continue  
+                }  
+                if op, ok := obj["op"].(string); ok && op == "pong" {  
+                    continue  
+                }  
+                j, _ := json.Marshal(obj)  
+                log.Printf("control: %s", string(j))  
+            default:  
+                log.Printf("unknown message type %d", mt)  
+            }  
+        }  
+    }  
+      
+    // ---------- Entry ----------  
+      
+    func main() {  
+        url := flag.String("url", MMWSURLTestnetBybits, "WebSocket URL")  
+        flag.Parse()  
+      
+        if APIKey == "YOUR_API_KEY" || APISecret == "YOUR_API_SECRET" {  
+            log.Println("⚠️ Please set APIKey and APISecret in the source before running.")  
+        }  
+      
+        ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)  
+        defer cancel()  
+      
+        if err := run(ctx, *url); err != nil {  
+            log.Fatalf("run error: %v", err)  
+        }  
+    }  
+    
+    
+    
+    #!/usr/bin/env python3  
+    import asyncio  
+    import json  
+    import hmac  
+    import time  
+    import struct  
+    from typing import Tuple, Dict, Any  
+    import websockets  
+      
+    MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+    # MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private-sbe"  
+      
+    # TODO: 填入您的真實密鑰  
+    API_KEY = "YOUR_API_KEY"  
+    API_SECRET = "YOUR_API_SECRET"  
+    SUB_TOPICS = ["order.sbe.resp.spot"]  
       
       
-    class SBEBestOBRpiParser:  
-        """  
-        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
+    def read_u8(buf: memoryview, off: int) -> Tuple[int, int]:  
+        return buf[off], off + 1  
       
-        ts(int64), seq(int64), cts(int64), u(int64),  
-        askNormalPrice(int64), askNormalSize(int64),  
-        askRpiPrice(int64), askRpiSize(int64),  
-        bidNormalPrice(int64), bidNormalSize(int64),  
-        bidRpiPrice(int64), bidRpiSize(int64),  
-        priceExponent(int8), sizeExponent(int8),  
-        symbol(varString8)  
+    def read_i8(buf: memoryview, off: int) -> Tuple[int, int]:  
+        b = struct.unpack_from("<b", buf, off)[0]  
+        return b, off + 1  
       
-        All values are little-endian.  
-        """  
+    def read_u16_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<H", buf, off)[0]  
+        return v, off + 2  
       
-        def __init__(self) -> None:  
-            # Header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
+    def read_i32_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<i", buf, off)[0]  
+        return v, off + 4  
       
-            # 12 x int64 + 2 x int8:  
-            # ts, seq, cts, u,  
-            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
-            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
-            # priceExponent, sizeExponent  
-            self.body_fmt = "<" + ("q" * 12) + "bb"  
-            self.body_sz = struct.calcsize(self.body_fmt)  
+    def read_i64_le(buf: memoryview, off: int) -> Tuple[int, int]:  
+        v = struct.unpack_from("<q", buf, off)[0]  
+        return v, off + 8  
       
-            self.target_template_id = 20000  
+    def read_varstring8(buf: memoryview, off: int) -> Tuple[str, int]:  
+        ln = buf[off]  
+        off += 1  
+        if ln == 0:  
+            return "", off  
+        s = bytes(buf[off: off + ln]).decode("utf-8", "replace")  
+        return s, off + ln  
       
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
+    def apply_exp(mantissa: int, exp: int) -> float:  
+        if exp >= 0:  
+            return mantissa / (10 ** exp)  
+        else:  
+            return mantissa * (10 ** (-exp))  
       
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
+    def decode_fast_order_resp(payload: bytes, debug: bool = False) -> Dict[str, Any]:  
+        mv = memoryview(payload)  
+        off = 0  
+        if len(mv) < 8:  
+            raise ValueError("payload too short for SBE header")  
+        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", mv, off)  
+        off += 8  
       
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
+        if debug:  
+            print(f"HEADER: block_len={block_len}, template_id={template_id}, schema_id={schema_id}, version={version}")  
+      
+        if template_id != 21000:  
+            return {"_warn": f"unexpected_template_id:{template_id}", "_raw": payload.hex()}  
+      
+        body_start = off  # fixed block begins here; var-length fields follow at body_start+block_len  
+      
+        category, off = read_u8(mv, off)  
+        side, off = read_u8(mv, off)  
+        order_status, off = read_u8(mv, off)  
+        price_exp, off = read_i8(mv, off)  
+        size_exp, off = read_i8(mv, off)  
+        value_exp, off = read_i8(mv, off)  
+        reject_reason, off = read_u16_le(mv, off)  
+      
+        price, off = read_i64_le(mv, off)  
+        leaves_qty, off = read_i64_le(mv, off)  
+        leaves_value, off = read_i64_le(mv, off)  
+        creation_time_us, off = read_i64_le(mv, off)  
+        updated_time_us, off = read_i64_le(mv, off)  
+        seq, off = read_i64_le(mv, off)  
+        symbol_id, off = read_i32_le(mv, off)  
+      
+        # field 15 liquidity (sinceVersion=1) — present when block_len covers it  
+        liquidity = 0  
+        if off - body_start < block_len:  
+            liquidity, off = read_i8(mv, off)  
+      
+        # field 16 amendFlag (sinceVersion=2)  
+        amend_flag = 0  
+        if off - body_start < block_len:  
+            amend_flag, off = read_i8(mv, off)  
+      
+        # field 17 fillQty (sinceVersion=2)  
+        fill_qty = 0  
+        if off - body_start + 8 <= block_len:  
+            fill_qty, off = read_i64_le(mv, off)  
+      
+        # field 18 fillPrice (sinceVersion=2)  
+        fill_price = 0  
+        if off - body_start + 8 <= block_len:  
+            fill_price, off = read_i64_le(mv, off)  
+      
+        # field 19 originalQty (sinceVersion=2)  
+        original_qty = 0  
+        if off - body_start + 8 <= block_len:  
+            original_qty, off = read_i64_le(mv, off)  
+      
+        # skip any future fixed fields we don't know about  
+        off = body_start + block_len  
+      
+        order_id, off = read_varstring8(mv, off)  
+        order_link_id, off = read_varstring8(mv, off)  
+      
+        result = {  
+            "_sbe_header": {  
+                "blockLength": block_len,  
+                "templateId": template_id,  
+                "schemaId": schema_id,  
                 "version": version,  
-            }  
+            },  
+            "category": category,  
+            "side": side,  
+            "orderStatus": order_status,  
+            "priceExponent": price_exp,  
+            "sizeExponent": size_exp,  
+            "valueExponent": value_exp,  
+            "rejectReason": reject_reason,  
+            "priceMantissa": price,  
+            "leavesQtyMantissa": leaves_qty,  
+            "leavesValueMantissa": leaves_value,  
+            "price": apply_exp(price, price_exp),  
+            "leavesQty": apply_exp(leaves_qty, size_exp),  
+            "leavesValue": apply_exp(leaves_value, value_exp),  
+            "creationTime": creation_time_us,  
+            "updatedTime": updated_time_us,  
+            "seq": seq,  
+            "symbolID": symbol_id,  
+            "liquidity": liquidity,  
+            "orderId": order_id,  
+            "orderLinkId": order_link_id,  
+            "_raw_offset_end": off  
+        }  
+        if amend_flag or fill_qty or fill_price or original_qty:  
+            result["amendFlag"] = amend_flag  
+            result["fillQtyMantissa"] = fill_qty  
+            result["fillPriceMantissa"] = fill_price  
+            result["originalQtyMantissa"] = original_qty  
+            result["fillQty"] = apply_exp(fill_qty, size_exp)  
+            result["fillPrice"] = apply_exp(fill_price, price_exp)  
+            result["originalQty"] = apply_exp(original_qty, size_exp)  
+        return result  
       
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
+    async def send_json(ws, obj):  
+        await ws.send(json.dumps(obj, separators=(",", ":")))  
       
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-      
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-      
-            s = data[offset : offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            # Exponent is for decimal point positioning.  
-            # If exponent = 2 and value=1060342500 -> 10603425.00  
-            return value / (10 ** exponent) if exponent >= 0 else value * (  
-                10 ** (-exponent)  
-            )  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(  
-                    f"unsupported template_id={hdr['template_id']}"  
-                )  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for BestOBRpiEvent body")  
-      
-            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
-            (  
-                ts,  
-                seq,  
-                cts,  
-                u,  
-                ask_np_m,  
-                ask_ns_m,  
-                ask_rp_m,  
-                ask_rs_m,  
-                bid_np_m,  
-                bid_ns_m,  
-                bid_rp_m,  
-                bid_rs_m,  
-                price_exp,  
-                size_exp,  
-            ) = fields  
-      
-            offset = self.header_sz + self.body_sz  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # Apply exponents  
-            ask_np = self._apply_exponent(ask_np_m, price_exp)  
-            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
-            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
-            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
-            bid_np = self._apply_exponent(bid_np_m, price_exp)  
-            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
-            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
-            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "symbol": symbol,  
-                # Normal book (best)  
-                "ask_normal_price": ask_np,  
-                "ask_normal_size": ask_ns,  
-                "bid_normal_price": bid_np,  
-                "bid_normal_size": bid_ns,  
-                # RPI book (best)  
-                "ask_rpi_price": ask_rp,  
-                "ask_rpi_size": ask_rs,  
-                "bid_rpi_price": bid_rp,  
-                "bid_rpi_size": bid_rs,  
-                "parsed_length": offset,  
-            }  
-      
-      
-    parser = SBEBestOBRpiParser()  
-      
-      
-    # --------------------------- WebSocket handlers ---------------------------  
-      
-    def on_message(ws, message):  
-        try:  
-            # Binary SBE frames; text frames for control/acks/errors  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
-                logging.info(  
-                    "SBE %s seq=%s u=%s "  
-                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
-                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"],  
-                    decoded["seq"],  
-                    decoded["u"],  
-                    decoded["bid_normal_price"],  
-                    decoded["bid_normal_size"],  
-                    decoded["ask_normal_price"],  
-                    decoded["ask_normal_size"],  
-                    decoded["bid_rpi_price"],  
-                    decoded["bid_rpi_size"],  
-                    decoded["ask_rpi_price"],  
-                    decoded["ask_rpi_size"],  
-                    decoded["ts"],  
-                )  
-                print(  
-                    f"{decoded['symbol']} u={decoded['u']} "  
-                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
-                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
-                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
-                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
-                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
-                )  
-            else:  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print(obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-        except Exception as e:  
-            logging.exception("decode error: %s", e)  
-            print("decode error:", e)  
-      
-      
-    def on_error(ws, error):  
-        print("WS error:", error)  
-        logging.error("WS error: %s", error)  
-      
-      
-    def on_close(ws, *_):  
-        print("### connection closed ###")  
-        logging.info("connection closed")  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
-      
-      
-    def manage_subscription(ws):  
-        # demo: unsubscribe/resubscribe once  
-        time.sleep(20)  
-        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
-        print("unsubscribed:", TOPIC)  
-        time.sleep(5)  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("resubscribed:", TOPIC)  
-      
-      
-    def ping_per(ws):  
+    async def heartbeat(ws):  
         while True:  
+            await asyncio.sleep(10)  
             try:  
-                ws.send(json.dumps({"op": "ping"}))  
+                await send_json(ws, {"req_id": str(int(time.time() * 1000)), "op": "ping"})  
             except Exception:  
                 return  
-            time.sleep(10)  
       
+    async def run(url: str):  
+        async with websockets.connect(url, max_size=None) as ws:  
+            expires = int((time.time() + 10000) * 1000)  
+            val = f'GET/realtime{expires}'  
+            signature = hmac.new(  
+                bytes(API_SECRET, 'utf-8'),  
+                bytes(val, 'utf-8'),  
+                digestmod='sha256'  
+            ).hexdigest()  
+            await send_json(ws, {"req_id": "10001", "op": "auth", "args": [API_KEY, expires, signature]})  
       
-    def on_pong(ws, *_):  
-        print("pong received")  
+            ack = await ws.recv()  
+            print("auth-ack:", ack)  
       
+            await send_json(ws, {"op": "subscribe", "args": SUB_TOPICS})  
+            asyncio.create_task(heartbeat(ws))  
       
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
-      
-      
-    def connWS():  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)  
+            while True:  
+                frame = await ws.recv()  
+                if isinstance(frame, (bytes, bytearray)):  
+                    try:  
+                        decoded = decode_fast_order_resp(frame)  
+                        print(json.dumps(decoded, ensure_ascii=False))  
+                    except Exception as e:  
+                        print("binary-decode-error:", e)  
+                else:  
+                    try:  
+                        obj = json.loads(frame)  
+                        if obj.get("op") != "pong":  
+                            print(obj)  
+                    except Exception:  
+                        print("text-nonjson:", frame)  
       
       
     if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        connWS()
+        asyncio.run(run(MMWS_URL_TESTNET))

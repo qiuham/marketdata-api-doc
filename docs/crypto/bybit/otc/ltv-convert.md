@@ -2,87 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/ltv-convert
 api_type: REST
-updated_at: 2026-07-27 19:03:39.989689
+updated_at: 2026-07-28 19:02:58.257568
 ---
 
-# Get LTV
+# Repay
 
-Get your loan-to-value (LTV) ratio.
+You can repay the INS loan by calling this API.
 
-important
+info
 
-  * In cases where an institutional user makes frequent transfers, LTV calculations may become inaccurate, and this endpoint will return retCode = 100016, retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
-  * If you encounter this error, it is recommended to reduce the transfer frequency first and retry
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-  * When a user is in a state such as liquidation, transfer, or manual repayment, LTV is not calculated. We have added a new `liqStatus` to represent these states. When `liqStatus` != 0, `ltvInfo` returns empty strings for `ltv`, `unpaidAmount` and `balance`, and `unpaidInfo` and `balanceInfo` return empty arrays.
+  * Only the designated Risk Unit UID is allowed to call this API. To obtain the designated Risk Unit UID, please refer to the `parentUid` from [Get LTV](/docs/v5/otc/ltv-convert)
+  * The repayment is processed asynchronously and usually takes 2–3 minutes.
+  * Pease confirm the repayment status via [Get Repayment Orders](/docs/v5/otc/repay-info) before initiating the next repayment. **Note** that the repayment record will not appear in the response until 2–3 minutes later.
 
 
 
 ### HTTP Request
 
-GET`/v5/ins-loan/ltv-convert`
+POST`/v5/ins-loan/repay-loan`
+
+IMPORTANT
+
+  1. **Please note this API can only be used when urgent. Make sure contact RM before executing**
+  2. When repay, principal amount will be deducted from Unified wallet, the interest **not include**
+
+
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+token| **true**|  string| Coin name  
+quantity| **true**|  string| The qty to be repaid  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-ltvInfo| array| Object  
-> ltv| string| Risk rate 
-
-  * ltv is calculated in real time
-  * If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)
-
-. When `liqStatus` != 0, empty string is returned.  
-> rst| string| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. When `liqStatus` != 0, empty string is returned.  
-> parentUid| string| The designated Risk Unit ID that was used to bind with the INS loan  
-> subAccountUids| array| Bound user ID  
-> unpaidAmount| string| Total debt(USD). When `liqStatus` != 0, empty string is returned.  
-> unpaidInfo| array| Debt details. When `liqStatus` != 0, empty array is returned.  
->> token| string| coin  
->> unpaidQty| string| Unpaid principle  
->> unpaidInterest| string| Useless field, please ignore this for now  
-> balance| string| Total asset (margin coins converted to USDT). Please read [here](https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending) to understand the calculation. When `liqStatus` != 0, empty string is returned.  
-> balanceInfo| array| Asset details. When `liqStatus` != 0, empty array is returned.  
->> token| string| Margin coin  
->> price| string| Margin coin price  
->> qty| string| Margin coin quantity  
->> convertedAmount| string| Margin conversion amount  
-> liqStatus| integer| Liquidation status. 
-
-  * `0`: Normal
-  * `1`: Under liquidation
-  * `2`: Manual repayment in progress
-  * `3`: Transfer in progress
-
-  
-liqStatus| integer| Liquidation status. 
-
-  * `0`: Normal
-  * `1`: Under liquidation
-  * `2`: Manual repayment in progress
-  * `3`: Transfer in progress
-
-  
+repayOrderStatus| string| `P`: processing  
   
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/ins-loan/ltv-convert HTTP/1.1  
+    POST /v5/ins-loan/repay-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686638165351  
+    X-BAPI-API-KEY: XXXXX  
+    X-BAPI-TIMESTAMP: 1767605784035  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+    Content-Length: 49  
+      
+    {  
+        "token": "USDT",  
+        "quantity": "500000"  
+    }  
     
     
     
@@ -92,26 +71,10 @@ liqStatus| integer| Liquidation status.
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_ltv())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getInstitutionalLendingLTVWithLadderConversionRate()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    print(session.repay_loan(  
+        token="USDT",  
+        quantity="500000"  
+    ))  
     
 
 ### Response Example
@@ -119,174 +82,68 @@ liqStatus| integer| Liquidation status.
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "0.75",  
-                    "rst": "",  
-                    "parentUid": "xxxxx",  
-                    "subAccountUids": [  
-                        "60568258"  
-                    ],  
-                    "unpaidAmount": "30",  
-                    "unpaidInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "unpaidQty": "30",  
-                            "unpaidInterest": "0"  
-                        }  
-                    ],  
-                    "balance": "40",  
-                    "balanceInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "price": "1",  
-                            "qty": "40",  
-                            "convertedAmount": "40"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "repayOrderStatus": "P"  
         },  
         "retExtInfo": {},  
-        "time": 1686638166323  
-    }  
-      
-    When `liqStatus` != 0:  
-    {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "",  
-                    "parentUid": "100331354",  
-                    "subAccountUids": [  
-                        "100334094",  
-                        "100334098"  
-                    ],  
-                    "unpaidAmount": "",  
-                    "unpaidInfo": [],  
-                    "balance": "",  
-                    "balanceInfo": [],  
-                    "rst": "",  
-                    "liqStatus": 3  
-                }  
-            ],  
-            "liqStatus": 3  
-        },  
-        "retExtInfo": {},  
-        "time": 1766462020703  
+        "time": 1767580441965  
     }
 
 ---
 
-# 查詢風險率
+# 還款
 
-important
+您可以透過调用此接口來償還机构借贷
 
-  * 如果機構用戶頻繁轉帳，LTV 計算可能會變得不準確，此端點將返回 retCode = 100016，retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
-  * 遇到這個報錯，建議先減少轉帳頻率，再重試
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-  * 當用戶發生強平、劃轉、手工還款等過程中的狀態時，LTV不進行計算。我們新增了一個`liqStatus`來表示這些狀態。當`liqStatus`!=0時，此時`ltvInfo`裡`ltv`、`unpaidAmount`、`balance`都是空字串，`unpaidInfo`、`balanceInfo`都是空數組。
+信息
+
+  * 僅允許風險單元主UID調用此API. 要了解風險單元主UID, 可以參考請參考 [查詢風險率](/docs/zh-TW/v5/otc/ltv-convert) 裏的`parentUid`字段.
+  * 還款為異步處理, 通常需要 2–3 分鐘完成.
+  * 在發起下一筆還款前，請先透過 [查詢借貸訂單信息](/docs/zh-TW/v5/otc/repay-info) 確認還款狀態。請注意，還款紀錄會在 2–3 分鐘後才會出現在回傳結果中.
 
 
 
 ### HTTP 請求
 
-GET`/v5/ins-loan/ltv-convert`
+POST`/v5/ins-loan/repay-loan`
+
+重要
+
+  1. **請注意該接口僅限緊急時使用。確保您在要使用該接口還款前, 先跟客戶經理溝通**
+  2. 還款時，是從統一錢包中扣除本金金額，不包含利息。
+
+
 
 ### 請求參數
 
-無
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+token| **true**|  string| 還款幣種  
+quantity| **true**|  string| 還款金額  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-ltvInfo| array| Object  
-> ltv| string| 風險率 
-
-  * 該數據是實時計算
-  * 如果持有機構借貸, 強烈建議每秒查詢一次ltv。當達到0.9 (90%)時即觸發強平
-
-. 當 `liqStatus` != 0 時，傳回空字串。  
-> rst| string| 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。當 `liqStatus` != 0 時，傳回空字串。  
-> parentUid| string| 被指定綁定為機構借貸產品的風險單元Id  
-> subAccountUids| array| 綁定場外借貸產品的UID  
-> unpaidAmount| string| 總負債 (USD)。當 `liqStatus` != 0 時，傳回空字串。  
-> unpaidInfo| array| 負債明細。 當 `liqStatus` != 0 時，傳回空數組。  
->> token| string| 幣種  
->> unpaidQty| string| 未還本金  
->> unpaidInterest| string| 該字段無效, 暫時請忽略  
-> balance| string| 總資產(保證金幣種資產折算為USDT資產). 可以參考[這裡](https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending)了解詳細計算。當 `liqStatus` != 0 時，傳回空字串。  
-> balanceInfo| array| 資產明細。當 `liqStatus` != 0 時，傳回空數組。  
->> token| string| 保證金幣種  
->> price| string| 保證金幣種價格  
->> qty| string| 保證金數量  
->> convertedAmount| string| 保證金折算金額  
-> liqStatus| integer| 清算狀態。 
-
-  * `0`: 正常
-  * `1`: 強平
-  * `2`: 手工還款
-  * `3`: 劃轉
-
-  
-liqStatus| integer| 清算狀態。 
-
-  * `0`: 正常
-  * `1`: 強平
-  * `2`: 手工還款
-  * `3`: 劃轉
-
-  
+repayOrderStatus| string| `P`: 處理中  
   
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/ins-loan/ltv-convert HTTP/1.1  
+    POST /v5/ins-loan/repay-loan HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686638165351  
+    X-BAPI-API-KEY: XXXXX  
+    X-BAPI-TIMESTAMP: 1767605784035  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_ltv())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
+    Content-Type: application/json  
+    Content-Length: 49  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getInstitutionalLendingLTVWithLadderConversionRate()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    {  
+        "token": "USDT",  
+        "quantity": "500000"  
+    }  
     
 
 ### 響應示例
@@ -294,63 +151,10 @@ liqStatus| integer| 清算狀態。
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "0.75",  
-                    "rst": "",  
-                    "parentUid": "xxxxx",  
-                    "subAccountUids": [  
-                        "60568258"  
-                    ],  
-                    "unpaidAmount": "30",  
-                    "unpaidInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "unpaidQty": "30",  
-                            "unpaidInterest": "0"  
-                        }  
-                    ],  
-                    "balance": "40",  
-                    "balanceInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "price": "1",  
-                            "qty": "40",  
-                            "convertedAmount": "40"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "repayOrderStatus": "P"  
         },  
         "retExtInfo": {},  
-        "time": 1686638166323  
-    }  
-      
-    When `liqStatus` != 0:  
-    {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "",  
-                    "parentUid": "100331354",  
-                    "subAccountUids": [  
-                        "100334094",  
-                        "100334098"  
-                    ],  
-                    "unpaidAmount": "",  
-                    "unpaidInfo": [],  
-                    "balance": "",  
-                    "balanceInfo": [],  
-                    "rst": "",  
-                    "liqStatus": 3  
-                }  
-            ],  
-            "liqStatus": 3  
-        },  
-        "retExtInfo": {},  
-        "time": 1766462020703  
+        "time": 1767580441965  
     }

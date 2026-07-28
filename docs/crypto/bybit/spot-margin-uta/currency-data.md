@@ -2,31 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/currency-data
 api_type: REST
-updated_at: 2026-07-27 19:05:04.175907
+updated_at: 2026-07-28 19:04:12.327293
 ---
 
-# Fixed-Rate Borrow
+# Get Currency Data
+
+info
+
+If the borrowable switch is disabled (`false`), the related configuration fields will return `""`.
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/fixedborrow`
+GET`/v5/spot-margin-trade/currency-data`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Currency to borrow  
-orderAmount| **true**|  string| Amount to borrow  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-term| **true**|  string| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-repayType| false| string| `1`: Auto Repayment (default). Enable "Auto Repayment" to automatically repay your loan using assets in your UTA account when it is due, avoiding overdue penalties. `2`: Transfer to flexible loan  
-strategyType| false| string| Fill strategy. `PARTIAL`: Allow partial fill (default); `FULL`: Full fill only. Must be uppercase; any other value is rejected  
+currency| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Loan order ID  
+list| array| Object  
+> currency| string| Coin name  
+> flexibleManualBorrowable| boolean| Whether flexible manual borrow is enabled. `true`: enabled, `false`: disabled  
+> minFlexibleManualBorrowQty| string| Min flexible manual borrow qty  
+> flexibleManualBorrowAccuracy| string| Coin precision for flexible manual borrow  
+> fixedManualBorrowable| boolean| Whether fixed manual borrow is enabled. `true`: enabled, `false`: disabled  
+> minFixedManualBorrowQty| string| Min fixed manual borrow qty  
+> fixedManualBorrowAccuracy| string| Coin precision for fixed manual borrow  
+> fixedInterestRateAccuracy| string| Coin precision for fixed manual borrow interest rate.  
+> minFixedInterestRate| string| Min fixed manual borrow interest rate, e.g.: `0.01`  
+> maxFixedInterestRate| string| Max fixed manual borrow interest rate, e.g.: `0.8`  
   
 * * *
 
@@ -39,20 +48,12 @@ orderId| string| Loan order ID
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow HTTP/1.1  
+    GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1773220082000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderCurrency": "BTC",  
-        "orderAmount": "0.01",  
-        "annualRate": "0.02",  
-        "term": "30"  
-    }  
     
     
     
@@ -62,11 +63,8 @@ orderId| string| Loan order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_fixed_borrow(  
-        orderCurrency="BTC",  
-        orderAmount="0.01",  
-        annualRate="0.02",  
-        term="30"  
+    print(session.spot_margin_trade_get_currency_data(  
+        currency="BTC"  
     ))  
     
     
@@ -79,38 +77,60 @@ orderId| string| Loan order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187"  
+            "list": [  
+                {  
+                    "currency": "BTC",  
+                    "flexibleManualBorrowable": true,  
+                    "minFlexibleManualBorrowQty": "0.001",  
+                    "flexibleManualBorrowAccuracy": "8",  
+                    "fixedManualBorrowable": false,  
+                    "minFixedManualBorrowQty": "",  
+                    "fixedManualBorrowAccuracy": "",  
+                    "fixedInterestRateAccuracy": "",  
+                    "minFixedInterestRate": "",  
+                    "maxFixedInterestRate": ""  
+                }  
+            ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775616124837  
+        "retExtInfo": "{}",  
+        "time": 1773220082091  
     }
 
 ---
 
-# 固定利率借款
+# 查詢借幣幣種數據
+
+信息
+
+若借貸開關為關閉狀態（`false`），相關配置字段將返回 `""`。
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/fixedborrow`
+GET`/v5/spot-margin-trade/currency-data`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 借款幣種  
-orderAmount| **true**|  string| 借款金額  
-annualRate| **true**|  string| 自定義年化利率，例如 `0.02` 表示 2%  
-term| **true**|  string| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-repayType| false| string| `1`：自動還款（默認）。開啟「自動還款」後，借款到期時將自動使用 UTA 帳戶資產還款，避免逾期罰息。`2`：轉為活期借款  
-strategyType| false| string| 成交策略。`PARTIAL`：允許部分成交（默認）；`FULL`：僅全額成交。必須大寫，其他值均會被拒絕  
+currency| false| string| 幣種名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 借款訂單 ID  
+list| array| Object  
+> currency| string| 幣種名稱  
+> flexibleManualBorrowable| boolean| 是否開啟活期借幣。`true`：開啟，`false`：關閉  
+> minFlexibleManualBorrowQty| string| 活期最小借幣數量  
+> flexibleManualBorrowAccuracy| string| 活期借幣精度  
+> fixedManualBorrowable| boolean| 是否開啟定期借幣。`true`：開啟，`false`：關閉  
+> minFixedManualBorrowQty| string| 定期最小借幣數量  
+> fixedManualBorrowAccuracy| string| 定期借幣精度  
+> fixedInterestRateAccuracy| string| 定期借幣利率精度  
+> minFixedInterestRate| string| 最小借幣利率，例如：`0.01`  
+> maxFixedInterestRate| string| 最大借幣利率，例如：`0.8`  
   
 * * *
 
@@ -123,20 +143,12 @@ orderId| string| 借款訂單 ID
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow HTTP/1.1  
+    GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1773220082000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderCurrency": "BTC",  
-        "orderAmount": "0.01",  
-        "annualRate": "0.02",  
-        "term": "30"  
-    }  
     
     
     
@@ -152,10 +164,23 @@ orderId| string| 借款訂單 ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187"  
+            "list": [  
+                {  
+                    "currency": "BTC",  
+                    "flexibleManualBorrowable": true,  
+                    "minFlexibleManualBorrowQty": "0.001",  
+                    "flexibleManualBorrowAccuracy": "8",  
+                    "fixedManualBorrowable": false,  
+                    "minFixedManualBorrowQty": "",  
+                    "fixedManualBorrowAccuracy": "",  
+                    "fixedInterestRateAccuracy": "",  
+                    "minFixedInterestRate": "",  
+                    "maxFixedInterestRate": ""  
+                }  
+            ]  
         },  
-        "retExtInfo": {},  
-        "time": 1775616124837  
+        "retExtInfo": "{}",  
+        "time": 1773220082091  
     }

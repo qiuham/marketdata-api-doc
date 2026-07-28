@@ -2,921 +2,187 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/private/transaction
 api_type: WebSocket
-updated_at: 2026-07-27 19:04:49.241709
+updated_at: 2026-07-28 19:03:57.739671
 ---
 
-# SBE BBO Integration
+# Execution
 
-## Overview
+Obtain the user's own block trade information. All legs in the same block trade are included in the same update. As long as the user performs block trade as a counterparty, the data will be pushed.
 
-  * **Channel:** Private MM WebSocket only (not available on public WS).
-  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
-  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
-  * **Depth:** Real-time Level 1 Orderbook data.
-  * **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
+**Topic:** `rfq.open.trades`
 
+### Response Parameters
 
-
-## Connection
-
-  * Field `u` increases **monotonically**.
-  * Field `u` **does not reset** , unless there is a system restart or precision change, `u` would be reset to **1**.
-  * If BBO does not change within **3 seconds** , the system will push a **snapshot** again, and the field `u` will be **the same as** in the previous message.
-  * Under extreme market conditions, both the producer and the publisher may apply **merge and drop** strategies; therefore, continuity of `u` is **not guaranteed**.
-
-
-
-## Subscription Flow
-
-### Send subscription request
+Parameter| Type| Comments  
+---|---|---  
+id| string| Message ID  
+topic| string| Topic name  
+creationTime| int| Data created timestamp (ms)  
+data| array| Object  
+data| array|   
+> rfqId| string| Inquiry ID  
+> rfqLinkId| string| Custom RFQ ID. Not publicly disclosed.  
+> quoteId| string| Quote ID  
+> quoteLinkId| string| Custom quote ID. Not publicly disclosed.  
+> quoteSide| string| Return of completed inquiry, executed quote direction, `buy` or `sell`  
+> strategyType| string| Inquiry label  
+> status| string| Status: `Filled` , `Failed`  
+> rfqDeskCode| string| The unique identification code of the inquiry party, which is not visible when anonymous is set to `true` during inquiry  
+> quoteDeskCode| string| The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation  
+> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
+> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
+> legs| array of objects| Combination transaction  
+>> category| string| category. Valid values include: `linear`, `option` and `spot`  
+>> orderId| string| bybit order id  
+>> symbol| string| symbol name  
+>> side| string| Direction, valid values are `buy` and `sell`  
+>> price| string| Execution price  
+>> qty| string| Number of executions  
+>> markPrice| string| The markPrice (contract) at the time of transaction, and the spot price is indexPrice  
+>> execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.  
+>> execId| string| The unique exec(trade) ID from the exchange  
+>> resultCode| integer| The status code of the this order. "0" means success  
+>>resultMessage| string| Error message about resultCode. If resultCode is "0", resultMessage is "".  
+>> rejectParty| string| Empty if status is `Filled`. Valid values: `Taker` or `Maker` if status is `Rejected`, "rejectParty=`bybit`" to indicate errors that occur on the Bybit side.  
+  
+### Subscribe Example
     
     
     {  
-      "op": "subscribe",  
-      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+        "op": "subscribe",  
+        "args": [  
+            "rfq.open.trades"  
+        ]  
     }  
     
 
-  * Topic format: `ob.rpi.1.sbe.<symbol>`
-  * Example symbols: `BTCUSDT`, `ETHUSDT`, etc.
-
-
-
-### Subscription confirmation
+### Stream Example
     
     
     {  
-      "success": true,  
-      "ret_msg": "",  
-      "conn_id": "d30fdpbboasp1pjbe7r0",  
-      "req_id": "xxx",  
-      "op": "subscribe"  
-    }  
-    
-
-### Receive data
-    
-    
-    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
-    
-
-### Decode example
-    
-    
-    {  
-      "header": {  
-        "block_length": 82,  
-        "template_id": 20000,  
-        "schema_id": 1,  
-        "version": 0  
-      },  
-      "seq": 1808827611,  
-      "cts": 1757497309030,  
-      "price_exponent": 2,  
-      "size_exponent": 6,  
-      "ask_price": 1060342500,  
-      "ask_normal_size": 776935000000,  
-      "ask_rpi_size": 0,  
-      "bid_price": 1060250000,  
-      "bid_normal_size": 20000000000,  
-      "bid_rpi_size": 0,  
-      "u": 312,  
-      "ts": 1757497309814,  
-      "symbol": "BTCUSDT",  
-      "parsed_length": 98  
-    }  
-    
-
-* * *
-
-## SBE Message Structure
-
-### SBE XML Schema
-
-  * The `templateId = 20000` identifies the message type.
-  * Validate that `templateId = 20000` to confirm it is a Level 1 Orderbook event.
-  * [sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
-
-
-
-### Message Structure Details
-
-#### Message Header (8 bytes)
-
-Field| Type| Size (bytes)| Description  
----|---|---|---  
-blockLength| uint16| 2| Message body length  
-templateId| uint16| 2| Fixed = 20000  
-schemaId| uint16| 2| Fixed = 1  
-version| uint16| 2| Fixed = 0  
-  
-#### Message Body (`BestOBRpiEvent`)
-
-ID| Field| Type| Description  
----|---|---|---  
-1| ts| int64| Snapshot timestamp (µs)  
-2| seq| int64| Unique message sequence number  
-3| cts| int64| Trade timestamp (µs)  
-4| u| int64| Update ID  
-5| askNormalPrice| int64| Best ask price mantissa  
-6| askNormalSize| int64| Best ask size (normal) mantissa  
-7| askRpiPrice| int64| Best RPI ask price mantissa  
-8| askRpiSize| int64| Best RPI ask size mantissa  
-9| bidNormalPrice| int64| Best bid price mantissa  
-10| bidNormalSize| int64| Best bid size (normal) mantissa  
-11| bidRpiPrice| int64| Best bid price (RPI) mantissa  
-12| bidRpiSize| int64| Best bid size (RPI) mantissa  
-13| priceExponent| int8| Price exponent  
-14| sizeExponent| int8| Size exponent  
-55| symbol| varStr| Trading pair (e.g., `BTCUSDT`)  
-  
-* * *
-
-## Optimisation
-
-New field definitions (sell side as example; buy side is analogous):
-
-Field| Definition  
----|---  
-askNormalPrice| No RPI order best ask price  
-askNormalSize| No RPI order best ask size  
-askRpiPrice| RPI order best ask price  
-askRpiSize| RPI order best ask size  
-  
-The current logic might result in:
-
-Price| normalQty| rpiQty  
----|---|---  
-1000| 0| 100  
-  
-This means that users without RPI permissions won't know at what price they can take their orders, making this message useless. To address this, we adjust the message content as follows.
-
-#### Case 1: `askNormalSize != 0 && askRpiSize != 0`
-
-This is a normal response based on the actual situation. This case conveys the same meaning as the original message.
-
-Example:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| No RPI order best ask price| 1000  
-askNormalSize| No RPI order best ask size| 200  
-askRpiPrice| RPI order best ask price| 1000  
-askRpiSize| RPI order best ask size| 300  
-  
-#### Case 2: `askNormalSize != 0 && askRpiSize == 0`
-
-`askRpiPrice` is assigned the value `askNormalPrice`, and `askRpiSize = 0`.  
-In this case, the `askRpiPrice` value will not be searched further.
-
-Example:
-
-Field| Definition| Example| Note  
----|---|---|---  
-askNormalPrice| No RPI order best ask price| 1000|   
-askNormalSize| No RPI order best ask size| 200|   
-askRpiPrice| RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
-askRpiSize| RPI order best ask size| 0|   
-  
-#### Case 3: `askNormalSize == 0 && askRpiSize != 0`
-
-`askNormalPrice =` the actual non-RPI asking price.  
-In this case, `askNormalPrice` is retrieved and returned.
-
-Example:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| No RPI order best ask price| 1200  
-askNormalSize| No RPI order best ask size| 100  
-askRpiPrice| RPI order best ask price| 1000  
-askRpiSize| RPI order best ask size| 20  
-  
-#### Case 4
-
-When the market is so bad that there is no liquidity, **no message is pushed**.
-
-* * *
-
-## Integration Example
-    
-    
-    import json  
-    import logging  
-    import struct  
-    import threading  
-    import time  
-    from datetime import datetime  
-    from typing import Dict, Any  
-      
-    import websocket  
-      
-    logging.basicConfig(  
-        filename="logfile_wrapper.log",  
-        level=logging.INFO,  
-        format="%(asctime)s %(levelname)s %(message)s",  
-    )  
-      
-    # Change symbol/topic as you wish  
-    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-      
-      
-    class SBEBestOBRpiParser:  
-        """  
-        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
-      
-        ts(int64), seq(int64), cts(int64), u(int64),  
-        askNormalPrice(int64), askNormalSize(int64),  
-        askRpiPrice(int64), askRpiSize(int64),  
-        bidNormalPrice(int64), bidNormalSize(int64),  
-        bidRpiPrice(int64), bidRpiSize(int64),  
-        priceExponent(int8), sizeExponent(int8),  
-        symbol(varString8)  
-      
-        All values are little-endian.  
-        """  
-      
-        def __init__(self) -> None:  
-            # Header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
-      
-            # 12 x int64 + 2 x int8:  
-            # ts, seq, cts, u,  
-            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
-            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
-            # priceExponent, sizeExponent  
-            self.body_fmt = "<" + ("q" * 12) + "bb"  
-            self.body_sz = struct.calcsize(self.body_fmt)  
-      
-            self.target_template_id = 20000  
-      
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
-      
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
-      
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
-                "version": version,  
+      "topic": "rfq.open.trades",  
+      "creationTime": 1757578749474,  
+      "data": [  
+        {  
+          "rfqId": "1757578410512325974246073709371267",  
+          "rfqLinkId": "",  
+          "quoteId": "1757578719388835162295211364781592",  
+          "quoteLinkId": "",  
+          "quoteSide": "Buy",  
+          "strategyType": "custom",  
+          "status": "Filled",  
+          "rfqDeskCode": "1nu9d1",  
+          "quoteDeskCode": "test0904",  
+          "legs": [  
+            {  
+              "category": "linear",  
+              "symbol": "BTCUSDT",  
+              "side": "Buy",  
+              "price": "91600",  
+              "qty": "1",  
+              "orderId": "64fe4108-555e-4361-ae2d-3a8d0c292859",  
+              "markPrice": "91741.11",  
+              "execFee": "-1.374",  
+              "execId": "42b8be1e-36cf-4aba-bb75-4602cc11df37",  
+              "resultCode": 0,  
+              "resultMessage": "",  
+              "rejectParty": ""  
             }  
-      
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
-      
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-      
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-      
-            s = data[offset : offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            # Exponent is for decimal point positioning.  
-            # If exponent = 2 and value=1060342500 -> 10603425.00  
-            return value / (10 ** exponent) if exponent >= 0 else value * (  
-                10 ** (-exponent)  
-            )  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(  
-                    f"unsupported template_id={hdr['template_id']}"  
-                )  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for BestOBRpiEvent body")  
-      
-            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
-            (  
-                ts,  
-                seq,  
-                cts,  
-                u,  
-                ask_np_m,  
-                ask_ns_m,  
-                ask_rp_m,  
-                ask_rs_m,  
-                bid_np_m,  
-                bid_ns_m,  
-                bid_rp_m,  
-                bid_rs_m,  
-                price_exp,  
-                size_exp,  
-            ) = fields  
-      
-            offset = self.header_sz + self.body_sz  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # Apply exponents  
-            ask_np = self._apply_exponent(ask_np_m, price_exp)  
-            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
-            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
-            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
-            bid_np = self._apply_exponent(bid_np_m, price_exp)  
-            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
-            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
-            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "symbol": symbol,  
-                # Normal book (best)  
-                "ask_normal_price": ask_np,  
-                "ask_normal_size": ask_ns,  
-                "bid_normal_price": bid_np,  
-                "bid_normal_size": bid_ns,  
-                # RPI book (best)  
-                "ask_rpi_price": ask_rp,  
-                "ask_rpi_size": ask_rs,  
-                "bid_rpi_price": bid_rp,  
-                "bid_rpi_size": bid_rs,  
-                "parsed_length": offset,  
-            }  
-      
-      
-    parser = SBEBestOBRpiParser()  
-      
-      
-    # --------------------------- WebSocket handlers ---------------------------  
-      
-    def on_message(ws, message):  
-        try:  
-            # Binary SBE frames; text frames for control/acks/errors  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
-                logging.info(  
-                    "SBE %s seq=%s u=%s "  
-                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
-                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"],  
-                    decoded["seq"],  
-                    decoded["u"],  
-                    decoded["bid_normal_price"],  
-                    decoded["bid_normal_size"],  
-                    decoded["ask_normal_price"],  
-                    decoded["ask_normal_size"],  
-                    decoded["bid_rpi_price"],  
-                    decoded["bid_rpi_size"],  
-                    decoded["ask_rpi_price"],  
-                    decoded["ask_rpi_size"],  
-                    decoded["ts"],  
-                )  
-                print(  
-                    f"{decoded['symbol']} u={decoded['u']} "  
-                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
-                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
-                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
-                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
-                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
-                )  
-            else:  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print(obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-        except Exception as e:  
-            logging.exception("decode error: %s", e)  
-            print("decode error:", e)  
-      
-      
-    def on_error(ws, error):  
-        print("WS error:", error)  
-        logging.error("WS error: %s", error)  
-      
-      
-    def on_close(ws, *_):  
-        print("### connection closed ###")  
-        logging.info("connection closed")  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
-      
-      
-    def manage_subscription(ws):  
-        # demo: unsubscribe/resubscribe once  
-        time.sleep(20)  
-        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
-        print("unsubscribed:", TOPIC)  
-        time.sleep(5)  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("resubscribed:", TOPIC)  
-      
-      
-    def ping_per(ws):  
-        while True:  
-            try:  
-                ws.send(json.dumps({"op": "ping"}))  
-            except Exception:  
-                return  
-            time.sleep(10)  
-      
-      
-    def on_pong(ws, *_):  
-        print("pong received")  
-      
-      
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
-      
-      
-    def connWS():  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)  
-      
-      
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        connWS()
+          ],  
+          "createdAt": "1757578749361",  
+          "updatedAt": "1757578749464"  
+        }  
+      ]  
+    }
 
 ---
 
-# SBE BBO 接入指南
+# 交易頻道
 
-## 總覽
+獲取用戶自己的大宗交易信息。同一大宗交易中的所有 legs 都包含在同一更新中。只要用戶作為交易對手方進行大宗交易，數據將被推送。
 
-  * **Channel:** 僅支援私有 MMWS, 不開放於 public WS.
-  * **Topic:** `ob.rpi.1.sbe.{symbol}`.
-  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-  * **Depth:** 提供即時 Level 1 訂單簿資料.
-  * **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
+**主題：** `rfq.open.trades`
 
+### 響應參數
 
-
-## 連接
-
-  * 字段 `u` 總是**單調遞增**.
-  * 字段 `u` 通常**不會重置** , 除非系統重啟或精度 (precision) 改變, 則重置成**1**.
-  * 如果 3 秒內BBO沒有變化, 會強推一個 snapshot 信息, 字段 `u` 會與前一則信息保持相同。
-  * 在極端的市場情況下, 產生端與推送端都會採用合併與丟包策略, 因此 **`u` 的連續性不被保證**。
-
-
-
-## 訂閱流程(JSON 控制 frame)
-
-### 送出訂閱請求
+參數| 類型| 說明  
+---|---|---  
+id| string| 消息 ID  
+topic| string| 主題名稱  
+creationTime| int| 數據創建時間戳（毫秒）  
+data| array| Object  
+data| array|   
+> rfqId| string| 詢價單 ID  
+> rfqLinkId| string| 詢價單的自定義 ID，客戶的敏感信息，不會向報價方披露，返回 ""。  
+> quoteId| string| 報價單 ID  
+> quoteLinkId| string| 報價單自定義 ID，客戶的敏感信息，不會向詢價方披露，返回 ""。  
+> quoteSide| string| 已完成詢價的返回，執行的報價方向，`buy`（買入） 或 `sell`（賣出）  
+> strategyType| string| 詢價標籤  
+> status| string| 狀態：`Filled`（已成交）、`Failed`（失敗）  
+> rfqDeskCode| string| 詢價方的唯一識別碼，如果在詢價期間設置為匿名，則不可見  
+> quoteDeskCode| string| 報價方的唯一識別碼，如果在報價期間設置為匿名，則不可見  
+> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
+> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
+> legs| Array of objects| 組合交易  
+>> category| string| 類別。有效值包括：`linear`（線性）、`option`（期權） 和 `spot`（現貨）  
+>> orderId| string| Bybit 訂單 ID  
+>> symbol| string| 交易對名稱  
+>> side| string| 方向，有效值為 `buy`（買入） 和 `sell`（賣出）  
+>> price| string| 執行價格  
+>> qty| string| 執行數量  
+>> markPrice| string| 交易時的標記價格（合約），現貨的標記價格為 indexPrice  
+>> execFee| string| Taker 或 Maker 支付給交易所的大宗交易手續費（以基礎貨幣計算）。  
+>> execId| string| 交易所生成的唯一交易 ID  
+>> resultCode| integer| 該訂單的狀態碼。"0" 表示成功  
+>>resultMessage| string| 關於 resultCode 的錯誤信息。如果 resultCode 為 "0"，則 resultMessage 為 ""。  
+>> rejectParty| string| 如果狀態為 `Filled` 則為空。有效值為：`Taker` 或 `Maker`（如果狀態為 `Rejected`）；"rejectParty=`bybit`" 表示錯誤發生於 Bybit 端。  
+  
+### 訂閱示例
     
     
     {  
-      "op": "subscribe",  
-      "args": ["ob.rpi.1.sbe.BTCUSDT"]  
+        "op": "subscribe",  
+        "args": [  
+            "rfq.open.trades"  
+        ]  
     }  
     
 
-  * Topic 格式: `ob.rpi.1.sbe.<symbol>`
-  * 範例 symbol: `BTCUSDT`, `ETHUSDT` 等。
-
-
-
-### 訂閱確認
+### 資料流示例
     
     
     {  
-      "success": true,  
-      "ret_msg": "",  
-      "conn_id": "d30fdpbboasp1pjbe7r0",  
-      "req_id": "xxx",  
-      "op": "subscribe"  
-    }  
-    
-
-### 接收數據
-    
-    
-    b"R\x00 N\x01\x00\x00\x00\xdb\x84\xd0k\x00\x00\x00\x00f\xb7\x003\x99\x01\x00\x00\x02\x06\xa1\xcb\xa1\x00\x00\x00\x00\x00\xe7\xda\x0b\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04\xc8\xa1\x00\x00\x00\x00\x00 N\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x008\x01\x00\x00\x00\x00\x00\x00v\xba\x003\x99\x01\x00\x00\x07BTCUSDT"  
-    
-
-### 解碼示例
-    
-    
-    {  
-      "header": {  
-        "block_length": 82,  
-        "template_id": 20000,  
-        "schema_id": 1,  
-        "version": 0  
-      },  
-      "seq": 1808827611,  
-      "cts": 1757497309030,  
-      "price_exponent": 2,  
-      "size_exponent": 6,  
-      "ask_price": 1060342500,  
-      "ask_normal_size": 776935000000,  
-      "ask_rpi_size": 0,  
-      "bid_price": 1060250000,  
-      "bid_normal_size": 20000000000,  
-      "bid_rpi_size": 0,  
-      "u": 312,  
-      "ts": 1757497309814,  
-      "symbol": "BTCUSDT",  
-      "parsed_length": 98  
-    }  
-    
-
-## SBE 信息結構
-
-### SBE XML Schema
-
-  * `templateId = 20000` 用來識別信息型別。
-  * 驗證 `templateId = 20000` 以確認這是一則 Level 1 訂單簿事件。
-  * [sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
-
-
-
-### 信息結構細節
-
-#### 信息標頭 (8 bytes)
-
-Field| Type| Size (bytes)| Description  
----|---|---|---  
-blockLength| uint16| 2| 信息主體長度 Message body length  
-templateId| uint16| 2| 固定值 = 20000 Fixed = 20000  
-schemaId| uint16| 2| 固定值 = 1 Fixed = 1  
-version| uint16| 2| 固定值 = 0 Fixed = 0  
-  
-#### 信息主體 (`BestOBRpiEvent`)
-
-ID| Field| Type| Description  
----|---|---|---  
-1| ts| int64| Snapshot 時間戳 (µs) Snapshot timestamp (µs)  
-2| seq| int64| 唯一信息序號 Unique message sequence number  
-3| cts| int64| 交易時間戳 (µs) Trade timestamp (µs)  
-4| u| int64| 更新 ID Update ID  
-5| askNormalPrice| int64| 最佳賣價 mantissa Best ask price mantissa  
-6| askNormalSize| int64| 最佳賣量 (normal) mantissa Best ask size (normal) mantissa  
-7| askRpiPrice| int64| 最佳 RPI 賣價 mantissa Best RPI ask price mantissa  
-8| askRpiSize| int64| 最佳 RPI 賣量 mantissa Best RPI ask size mantissa  
-9| bidNormalPrice| int64| 最佳買價 mantissa Best bid price mantissa  
-10| bidNormalSize| int64| 最佳買量 (normal) mantissa Best bid size (normal) mantissa  
-11| bidRpiPrice| int64| 最佳買價 (RPI) mantissa Best bid price (RPI) mantissa  
-12| bidRpiSize| int64| 最佳買量 (RPI) mantissa Best bid size (RPI) mantissa  
-13| priceExponent| int8| 價格 exponent Price exponent  
-14| sizeExponent| int8| 數量 exponent Size exponent  
-55| symbol| varStr| 交易對 (例如 `BTCUSDT`) Trading pair (e.g., `BTCUSDT`)  
-  
-## 相關優化
-
-新的欄位定義 (以賣方為例, 買方邏輯相同):
-
-Field| Definition  
----|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size  
-  
-目前的邏輯可能出現以下狀況:
-
-Price| normalQty| rpiQty  
----|---|---  
-1000| 0| 100  
-  
-這表示沒有 RPI 權限的使用者無法得知實際可成交的價格, 導致這則信息對他們沒有實際意義。為了解決此問題, 我們對信息內容做了上述調整。
-
-#### 情況 1: `askNormalSize != 0 && askRpiSize != 0`
-
-這是基於實際市場情況的正常回應, 與原先信息表達的含義相同。
-
-示例:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 300  
-  
-#### 情況 2: `askNormalSize != 0 && askRpiSize == 0`
-
-`askRpiPrice` 會被指定為 `askNormalPrice`, 並且 `askRpiSize = 0`。  
-在此情況下, 不會再向更深的價位搜尋 `askRpiPrice`。
-
-示例:
-
-Field| Definition| Example| Note  
----|---|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1000|   
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 200|   
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000| This itself has no meaning. The price field is assigned a non-RPI sell price.  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 0|   
-  
-#### 情況 3: `askNormalSize == 0 && askRpiSize != 0`
-
-此時 `askNormalPrice =` 真正的非 RPI 最佳賣價。  
-在這種情況下, 會回傳並使用 `askNormalPrice`。
-
-示例:
-
-Field| Definition| Example  
----|---|---  
-askNormalPrice| 無 RPI 訂單的最佳賣價 No RPI order best ask price| 1200  
-askNormalSize| 無 RPI 訂單的最佳賣量 No RPI order best ask size| 100  
-askRpiPrice| RPI 訂單的最佳賣價 RPI order best ask price| 1000  
-askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 20  
-  
-#### 情況 4
-
-當市場極度冷清, 完全沒有流動性時, **不會推送任何 BBO 信息** 。
-
-## 接入示例
-    
-    
-    import json  
-    import logging  
-    import struct  
-    import threading  
-    import time  
-    from datetime import datetime  
-    from typing import Dict, Any  
-      
-    import websocket  
-      
-    logging.basicConfig(  
-        filename="logfile_wrapper.log",  
-        level=logging.INFO,  
-        format="%(asctime)s %(levelname)s %(message)s",  
-    )  
-      
-    # Change symbol/topic as you wish  
-    TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-      
-      
-    class SBEBestOBRpiParser:  
-        """  
-        Parser for BestOBRpiEvent (template_id = 20000) per XML schema:  
-      
-        ts(int64), seq(int64), cts(int64), u(int64),  
-        askNormalPrice(int64), askNormalSize(int64),  
-        askRpiPrice(int64), askRpiSize(int64),  
-        bidNormalPrice(int64), bidNormalSize(int64),  
-        bidRpiPrice(int64), bidRpiSize(int64),  
-        priceExponent(int8), sizeExponent(int8),  
-        symbol(varString8)  
-      
-        All values are little-endian.  
-        """  
-      
-        def __init__(self) -> None:  
-            # Header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
-      
-            # 12 x int64 + 2 x int8:  
-            # ts, seq, cts, u,  
-            # askNormalPrice, askNormalSize, askRpiPrice, askRpiSize,  
-            # bidNormalPrice, bidNormalSize, bidRpiPrice, bidRpiSize,  
-            # priceExponent, sizeExponent  
-            self.body_fmt = "<" + ("q" * 12) + "bb"  
-            self.body_sz = struct.calcsize(self.body_fmt)  
-      
-            self.target_template_id = 20000  
-      
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
-      
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
-      
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
-                "version": version,  
+      "topic": "rfq.open.trades",  
+      "creationTime": 1757578749474,  
+      "data": [  
+        {  
+          "rfqId": "1757578410512325974246073709371267",  
+          "rfqLinkId": "",  
+          "quoteId": "1757578719388835162295211364781592",  
+          "quoteLinkId": "",  
+          "quoteSide": "Buy",  
+          "strategyType": "custom",  
+          "status": "Filled",  
+          "rfqDeskCode": "1nu9d1",  
+          "quoteDeskCode": "test0904",  
+          "legs": [  
+            {  
+              "category": "linear",  
+              "symbol": "BTCUSDT",  
+              "side": "Buy",  
+              "price": "91600",  
+              "qty": "1",  
+              "orderId": "64fe4108-555e-4361-ae2d-3a8d0c292859",  
+              "markPrice": "91741.11",  
+              "execFee": "-1.374",  
+              "execId": "42b8be1e-36cf-4aba-bb75-4602cc11df37",  
+              "resultCode": 0,  
+              "resultMessage": "",  
+              "rejectParty": ""  
             }  
-      
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
-      
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-      
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-      
-            s = data[offset : offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            # Exponent is for decimal point positioning.  
-            # If exponent = 2 and value=1060342500 -> 10603425.00  
-            return value / (10 ** exponent) if exponent >= 0 else value * (  
-                10 ** (-exponent)  
-            )  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(  
-                    f"unsupported template_id={hdr['template_id']}"  
-                )  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for BestOBRpiEvent body")  
-      
-            fields = struct.unpack_from(self.body_fmt, data, self.header_sz)  
-            (  
-                ts,  
-                seq,  
-                cts,  
-                u,  
-                ask_np_m,  
-                ask_ns_m,  
-                ask_rp_m,  
-                ask_rs_m,  
-                bid_np_m,  
-                bid_ns_m,  
-                bid_rp_m,  
-                bid_rs_m,  
-                price_exp,  
-                size_exp,  
-            ) = fields  
-      
-            offset = self.header_sz + self.body_sz  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # Apply exponents  
-            ask_np = self._apply_exponent(ask_np_m, price_exp)  
-            ask_ns = self._apply_exponent(ask_ns_m, size_exp)  
-            ask_rp = self._apply_exponent(ask_rp_m, price_exp)  
-            ask_rs = self._apply_exponent(ask_rs_m, size_exp)  
-            bid_np = self._apply_exponent(bid_np_m, price_exp)  
-            bid_ns = self._apply_exponent(bid_ns_m, size_exp)  
-            bid_rp = self._apply_exponent(bid_rp_m, price_exp)  
-            bid_rs = self._apply_exponent(bid_rs_m, size_exp)  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "symbol": symbol,  
-                # Normal book (best)  
-                "ask_normal_price": ask_np,  
-                "ask_normal_size": ask_ns,  
-                "bid_normal_price": bid_np,  
-                "bid_normal_size": bid_ns,  
-                # RPI book (best)  
-                "ask_rpi_price": ask_rp,  
-                "ask_rpi_size": ask_rs,  
-                "bid_rpi_price": bid_rp,  
-                "bid_rpi_size": bid_rs,  
-                "parsed_length": offset,  
-            }  
-      
-      
-    parser = SBEBestOBRpiParser()  
-      
-      
-    # --------------------------- WebSocket handlers ---------------------------  
-      
-    def on_message(ws, message):  
-        try:  
-            # Binary SBE frames; text frames for control/acks/errors  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
-                logging.info(  
-                    "SBE %s seq=%s u=%s "  
-                    "NORM bid=%.8f@%.8f ask=%.8f@%.8f "  
-                    "RPI bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"],  
-                    decoded["seq"],  
-                    decoded["u"],  
-                    decoded["bid_normal_price"],  
-                    decoded["bid_normal_size"],  
-                    decoded["ask_normal_price"],  
-                    decoded["ask_normal_size"],  
-                    decoded["bid_rpi_price"],  
-                    decoded["bid_rpi_size"],  
-                    decoded["ask_rpi_price"],  
-                    decoded["ask_rpi_size"],  
-                    decoded["ts"],  
-                )  
-                print(  
-                    f"{decoded['symbol']} u={decoded['u']} "  
-                    f"NORM: {decoded['bid_normal_price']:.8f} x {decoded['bid_normal_size']:.8f} "  
-                    f"| {decoded['ask_normal_price']:.8f} x {decoded['ask_normal_size']:.8f} "  
-                    f"RPI: {decoded['bid_rpi_price']:.8f} x {decoded['bid_rpi_size']:.8f} "  
-                    f"| {decoded['ask_rpi_price']:.8f} x {decoded['ask_rpi_size']:.8f} "  
-                    f"(seq={decoded['seq']} ts={decoded['ts']})"  
-                )  
-            else:  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print(obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-        except Exception as e:  
-            logging.exception("decode error: %s", e)  
-            print("decode error:", e)  
-      
-      
-    def on_error(ws, error):  
-        print("WS error:", error)  
-        logging.error("WS error: %s", error)  
-      
-      
-    def on_close(ws, *_):  
-        print("### connection closed ###")  
-        logging.info("connection closed")  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-        threading.Thread(target=manage_subscription, args=(ws,), daemon=True).start()  
-      
-      
-    def manage_subscription(ws):  
-        # demo: unsubscribe/resubscribe once  
-        time.sleep(20)  
-        ws.send(json.dumps({"op": "unsubscribe", "args": [TOPIC]}))  
-        print("unsubscribed:", TOPIC)  
-        time.sleep(5)  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("resubscribed:", TOPIC)  
-      
-      
-    def ping_per(ws):  
-        while True:  
-            try:  
-                ws.send(json.dumps({"op": "ping"}))  
-            except Exception:  
-                return  
-            time.sleep(10)  
-      
-      
-    def on_pong(ws, *_):  
-        print("pong received")  
-      
-      
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
-      
-      
-    def connWS():  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)  
-      
-      
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        connWS()
+          ],  
+          "createdAt": "1757578749361",  
+          "updatedAt": "1757578749464"  
+        }  
+      ]  
+    }

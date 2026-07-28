@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades
 api_type: Market Data
-updated_at: 2026-07-27 19:18:34.225797
+updated_at: 2026-07-28 19:16:38.628491
 ---
 
 # Get Public Market Trades
@@ -119,7 +119,7 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
           "product_id": "BTC-USD",
           "price": "140.91",
           "size": "4",
-          "time": "2021-05-31T09:59:59.000Z",
+          "time": "2021-05-31T09:59:59Z",
           "side": "",
           "exchange": "<string>"
         }
@@ -134,10 +134,7 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/cancel-order
 api_type: Trading
-updated_at: 2026-07-27 19:18:32.310542
+updated_at: 2026-07-28 19:16:37.031317
 ---
 
 # Cancel Orders
@@ -11,6 +11,8 @@ updated_at: 2026-07-27 19:18:32.310542
 
 
 Initiate cancel requests for one or more orders.
+
+**Equities:** Equity orders use the same `order_ids` request and per-order result format as other products. Do not include `equity_order_metadata` when canceling an order.
     
     
     curl --request POST \
@@ -160,10 +162,7 @@ Initiate cancel requests for one or more orders.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-trades
 anchor_id: order-book-trading-market-data-get-trades
 api_type: API
-updated_at: 2026-07-27 19:30:03.768536
+updated_at: 2026-07-28 19:28:57.798593
 ---
 
 # GET / Trades
@@ -89,7 +89,7 @@ side | String | Trade side of taker
 `sell`  
 source | String | Order source  
 `0`: normal order  
-`1`: Enhanced Liquidity Program order  
+`1`: RPI order  
 ts | String | Trade time, Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 Up to 500 most recent historical public transaction data can be retrieved.
 
@@ -178,6 +178,6 @@ side | String | 吃单方向
 `sell`：卖  
 source | String | 订单来源  
 `0`：普通订单  
-`1`：流动性增强计划订单  
+`1`：RPI 订单  
 ts | String | 成交时间，Unix时间戳的毫秒数格式， 如`1597026383085`  
 最多获取最近500条历史公共成交数据

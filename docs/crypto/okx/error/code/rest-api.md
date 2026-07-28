@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-07-27 19:31:38.392340
+updated_at: 2026-07-28 19:30:34.360635
 ---
 
 # REST API
@@ -598,17 +598,17 @@ Error Code | HTTP Status code | Error Message
 54035 | 200 | Order failed. The platform has reached the collateral limit for this crypto, so you can only place reduce-only orders.  
 54036 | 200 | You can't place fill or kill orders when self-trade prevention is set to both maker and taker orders.  
 54036 | 200 | You can't place fill or kill orders when self-trade prevention is set to both maker and taker orders.  
-54039 | 200 | ELP orders can't be reduce-only orders.  
-54040 | 200 | ELP orders can't be used with TP/SL settings.  
-54041 | 200 | ELP orders aren't supported for {param0}.  
-54042 | 200 | You don't have permission to place ELP orders for {param0}.  
-54043 | 200 | You can only place up to {param1} ELP orders for {param0}. Cancel some of your orders and try again.  
-54044 | 200 | ELP is not enabled for {param0}. You can’t place orders that take ELP liquidity of it.  
-54045 | 200 | OpenAPI users can only place IOC orders that take ELP liquidity.  
-54046 | 200 | You can’t place orders to take ELP liquidity.  
+54039 | 200 | RPI orders can’t be reduce-only orders.  
+54040 | 200 | RPI orders can’t be used with TP/SL settings.  
+54041 | 200 | RPI orders aren’t supported for {param0}.  
+54042 | 200 | You don’t have permission to place RPI orders for {param0}.  
+54043 | 200 | You can only place up to {param1} RPI orders for {param0}. Cancel some of your orders and try again.  
+54044 | 200 | RPI is not enabled for {param0}. You can’t place orders that take RPI liquidity of it.  
+54045 | 200 | OpenAPI users can only place IOC orders that take ELP liquidity. (Deprecated)  
+54046 | 200 | You can’t place orders to take RPI liquidity.  
 54047 | 200 | You can’t amend this order because an order with the same order ID or client order ID is in speed bump.  
 54048 | 200 | You can’t cancel the order because an order with the same order ID or client order ID is in speed bump.  
-54049 | 200 | API users can’t place orders that take ELP liquidity now because system is busy. To proceed, set isElpTakerAccess:false.  
+54049 | 200 | API users can’t place orders that take RPI liquidity now because system is busy. To proceed, set rpiTakerAccess:false.  
 54070 | 200 | The current function is not supported. Please update to the latest app version if using the app, or use the attachAlgoOrds array to place orders via Open API.  
 54071 | 200 | Due to the platform system upgrade, this order no longer supports modifications. It is recommended to cancel and place a new order.  
 54072 | 200 | This contract is currently view-only and not tradable.  
@@ -1769,17 +1769,17 @@ e.g. clOrdId 已存在
 54031 | 200 | 下单失败，{param0}的平台持仓量已达到平台持仓限额，无法开仓，只能平仓。开仓请稍后再试。  
 54035 | 200 | 下单失败，当前已达到该币种的全平台质押上限，仅支持只减仓订单  
 54036 | 200 | STP mode 为 cancel both，不支持 FOK 订单  
-54039 | 200 | ELP 订单不支持仅减仓设置  
-54040 | 200 | ELP 订单无法与止盈止损设置同时使用  
-54041 | 200 | {param0} 不支持下 ELP 订单  
-54042 | 200 | 您无法为 {param0} 下 ELP 订单  
-54043 | 200 | 您最多只能为 {param0} 下 {param1} 个 ELP 订单，请撤销部分订单后再试  
-54044 | 200 | {param0} 不支持 ELP，你不能吃单 ELP 挂单  
-54045 | 200 | OpenAPI 用户只能下 IOC 订单来吃单 ELP 挂单  
-54046 | 200 | 你不能吃单 ELP 挂单  
+54039 | 200 | RPI 订单不支持仅减仓设置  
+54040 | 200 | RPI 订单无法与止盈止损设置同时使用  
+54041 | 200 | {param0} 不支持下 RPI 订单  
+54042 | 200 | 您无法为 {param0} 下 RPI 订单  
+54043 | 200 | 您最多只能为 {param0} 下 {param1} 个 RPI 订单，请撤销部分订单后再试  
+54044 | 200 | {param0} 不支持 RPI，你不能吃单 RPI 挂单  
+54045 | 200 | OpenAPI 用户只能下 IOC 订单来吃单 ELP 挂单(已弃用)  
+54046 | 200 | 你不能吃单 RPI 挂单  
 54047 | 200 | 您无法修改此订单，因为存在订单 ID 或客户订单 ID 相同的订单处于延迟中  
 54048 | 200 | 您无法取消此订单，因为存在订单 ID 或客户订单 ID 相同的订单处于延迟中  
-54049 | 200 | 由于系统繁忙，API 用户目前无法吃单 ELP 挂单。请将 isElpTakerAccess 设置为 false 以继续操作  
+54049 | 200 | 由于系统繁忙，API 用户目前无法吃单 RPI 挂单。请将 rpiTakerAccess 设置为 false 以继续操作  
 54070 | 200 | 当前功能不可用。使用 App 请更新至最新版本；使用 Open API 请通过 attachAlgoOrds 数组下单。  
 54071 | 200 | 由于平台系统已升级，此订单已不支持修改。建议撤销后再重新下单。  
 54072 | 200 | 当前仅支持查看该合约，无法进行交易  

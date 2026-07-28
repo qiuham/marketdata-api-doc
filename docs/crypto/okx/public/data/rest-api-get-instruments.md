@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-instruments
 anchor_id: public-data-rest-api-get-instruments
 api_type: REST
-updated_at: 2026-07-27 19:30:36.192053
+updated_at: 2026-07-28 19:29:31.026431
 ---
 
 # Get instruments
@@ -274,6 +274,8 @@ floatPxLmtPct | String | Floating price-limit band during normal trading, e.g. `
 Only applicable to `SPOT`/`MARGIN`/`SWAP`/`FUTURES`, returns `""` for `OPTION` and `EVENTS`.  
 maxPxLmtPct | String | Maximum price-limit cap (hard ceiling on order-price deviation from the index price), e.g. `0.15` represents 15%. Use GET /api/v5/public/price-limit for the computed price limits.  
 Only applicable to `SPOT`/`MARGIN`/`SWAP`/`FUTURES`, returns `""` for `OPTION` and `EVENTS`.  
+rpiMinLevel | String | Minimum spacing between the RPI bid and RPI ask, in organic price levels.  
+rpiMinPxBand | String | Minimum distance from the opposite-side organic best price, in basis points (bps).  
 upcChg | Array of objects | Upcoming changes. It is [] when there is no upcoming change.  
 > param | String | The parameter name to be updated.   
 `tickSz`  
@@ -544,6 +546,8 @@ floatPxLmtPct | String | 常规交易期间的浮动价格限制区间，小数�
 适用于 `SPOT`/`MARGIN`/`SWAP`/`FUTURES`；`OPTION` 和 `EVENTS` 返回 `""`。  
 maxPxLmtPct | String | 最大价格限制上限（下单价格相对指数价格偏离的硬性上限），小数百分比，例如 `0.15` 代表 15%。通过 GET /api/v5/public/price-limit 可获取对应价格限制。  
 适用于 `SPOT`/`MARGIN`/`SWAP`/`FUTURES`；`OPTION` 和 `EVENTS` 返回 `""`。  
+rpiMinLevel | String | RPI 买卖间最小间距，以有机订单的价格档位计。  
+rpiMinPxBand | String | 距对手方有机最优价的最小距离，以基点（bps）计。  
 upcChg | Array of objects | 即将变更的参数列表。当没有即将变更的参数时，返回空数组 []  
 > param | String | 即将变更的参数名称。  
 `tickSz`  

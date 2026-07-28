@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills
 api_type: Trading
-updated_at: 2026-07-27 19:18:32.798677
+updated_at: 2026-07-28 19:16:37.431502
 ---
 
 # List Fills
@@ -10,7 +10,9 @@ updated_at: 2026-07-27 19:18:32.798677
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/fills`
 
 
-Get a list of fills filtered by optional query parameters (`product_id`, `order_id`, etc).
+Get a list of fills filtered by optional query parameters (`product_ids`, `order_ids`, etc.).
+
+**Equities:** Pass `EQUITY` in `product_types` to return only equity fills. When filtering by product, use the canonical `product_id` rather than the display ticker.
     
     
     curl --request GET \
@@ -118,13 +120,13 @@ Get a list of fills filtered by optional query parameters (`product_id`, `order_
           "entry_id": "22222-2222222-22222222",
           "trade_id": "1111-11111-111111",
           "order_id": "0000-000000-000000",
-          "trade_time": "2021-05-31T09:59:59.000Z",
+          "trade_time": "2021-05-31T09:59:59Z",
           "trade_type": "FILL",
           "price": "10000.00",
           "size": "0.001",
           "commission": "1.25",
           "product_id": "BTC-USD",
-          "sequence_timestamp": "2021-05-31T09:58:59.000Z",
+          "sequence_timestamp": "2021-05-31T09:58:59Z",
           "liquidity_indicator": "UNKNOWN_LIQUIDITY_INDICATOR",
           "size_in_quote": false,
           "user_id": "3333-333333-3333333",
@@ -139,7 +141,18 @@ Get a list of fills filtered by optional query parameters (`product_id`, `order_
             "venue_commission": "<string>",
             "regulatory_commission": "<string>",
             "clearing_commission": "<string>"
-          }
+          },
+          "order_data_source": "ORDER_DATA_SOURCE_UNKNOWN",
+          "future_legs": [
+            {
+              "product_id": "<string>",
+              "combo_id": "<string>",
+              "trade_id": "<string>",
+              "filled_price": "<string>",
+              "filled_size": "<string>",
+              "side": ""
+            }
+          ]
         }
       ],
       "cursor": "789100",
@@ -152,10 +165,7 @@ Get a list of fills filtered by optional query parameters (`product_id`, `order_
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -189,7 +199,7 @@ product_ids
 
 string[]
 
-The ID(s) of the product(s) to filter fills by.
+Canonical product ID(s) to filter fills by. For equities, use product_id rather than the display ticker.
 
 start_sequence_timestamp
 
@@ -302,7 +312,7 @@ product_types
 
 enum<string>[]
 
-Only returns fills for orders matching the specified product types (e.g. 'SPOT', 'FUTURE'). By default, returns all product types.
+Only returns fills for orders matching the specified product types (for example, SPOT, FUTURE, or EQUITY). By default, returns all product types.
 
 Available options:
 
@@ -310,7 +320,13 @@ Available options:
 
 `SPOT`,
 
-`FUTURE`
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
 
 proof_token
 

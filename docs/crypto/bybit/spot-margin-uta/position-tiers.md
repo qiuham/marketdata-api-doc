@@ -2,41 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/position-tiers
 api_type: REST
-updated_at: 2026-07-27 19:05:18.153498
+updated_at: 2026-07-28 19:04:29.427834
 ---
 
-# Get Position Tiers
+# Set Leverage
 
-info
+Set the user's maximum leverage in spot cross margin
 
-  * If `currency` is passed in the input parameter, query by currency; if `currency` is not passed in the input parameter, query all configured currencies
+caution
 
-
+Your account needs to activate spot margin first; i.e., you must have finished the quiz on web / app.   
+The updated leverage must be less than or equal to the maximum leverage of the currency
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/position-tiers`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
+leverage| **true**|  string| Leverage. [`2`, `10`].  
 currency| false| string| Coin name, uppercase only  
-  
+[](/docs/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
+
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-list| array| Object  
-> currency| string| Coin name, uppercase only  
-> positionTiersRatioList| string| Object  
->> tier| string| Tiers. Display from small to large  
->> borrowLimit| string| Tiers Accumulation Borrow limit  
->> positionMMR| string| Loan Maintenance Margin Rate. Precision 8 decimal places  
->> positionIMR| string| Loan Initial Margin Rate. Precision 8 decimal places  
->> maxLeverage| string| Max Loan Leverage  
-  
-* * *
+None
 
 ### Request Example
 
@@ -47,12 +41,17 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/position-tiers?currency=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "leverage": "4"  
+    }  
     
     
     
@@ -62,13 +61,28 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_position_tiers(  
-        currency="BTC"  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
     ))  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .setSpotMarginLeverage('4')  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -77,81 +91,41 @@ list| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "currency": "BTC",  
-                    "positionTiersRatioList": [  
-                        {  
-                            "tier": "1",  
-                            "borrowLimit": "390",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.2",  
-                            "maxLeverage": "5"  
-                        },  
-                        {  
-                            "tier": "2",  
-                            "borrowLimit": "391",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.25",  
-                            "maxLeverage": "4"  
-                        },  
-                        {  
-                            "tier": "3",  
-                            "borrowLimit": "392",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.33333333",  
-                            "maxLeverage": "3"  
-                        },  
-                        {  
-                            "tier": "4",  
-                            "borrowLimit": "393",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.5",  
-                            "maxLeverage": "2"  
-                        }  
-                    ]  
-                }  
-            ]  
-        },  
-        "retExtInfo": "{}",  
-        "time": 1756272543440  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672710944282  
     }
 
 ---
 
-# 查詢借貸倉位風險訊息
+# 全倉槓桿設置
 
-信息
+全倉槓桿設置用戶最大槓桿倍數
 
-  * 如果輸入參數中傳入了 `currency`，則按幣查詢；如果輸入參數中沒有傳入 `currency`，則查詢所有已配置的幣
+> **覆蓋範圍: 全倉槓桿 (統一帳戶)**
 
+警告
 
+需要先開啟全倉槓桿，才能調整槓桿。  
+更新後的槓桿必須小於或等於該幣的最大槓桿
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/position-tiers`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
+leverage| **true**|  string| 槓桿倍數 (整數), 支持區間 [`2`, `10`]  
 currency| false| string| 幣名稱，僅限大寫  
-  
+[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
+
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-list| array| Object  
-> currency| string| 幣名稱，僅限大寫  
-> positionTiersRatioList| string| Object  
->> tier| string| 等級。從小到大顯示  
->> borrowLimit| string| 等級累積借款限額  
->> positionMMR| string| 借款佔用維持保證金比率。精確到8位小數  
->> positionIMR| string| 借款佔用初始保證金比率。精確到8位小數  
->> maxLeverage| string| 最大借貸槓桿  
-  
-* * *
+無
 
 ### 請求示例
 
@@ -162,20 +136,48 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/position-tiers?currency=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "leverage": "4"  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .setSpotMarginLeverage('4')  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -184,43 +186,7 @@ list| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "currency": "BTC",  
-                    "positionTiersRatioList": [  
-                        {  
-                            "tier": "1",  
-                            "borrowLimit": "390",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.2",  
-                            "maxLeverage": "5"  
-                        },  
-                        {  
-                            "tier": "2",  
-                            "borrowLimit": "391",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.25",  
-                            "maxLeverage": "4"  
-                        },  
-                        {  
-                            "tier": "3",  
-                            "borrowLimit": "392",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.33333333",  
-                            "maxLeverage": "3"  
-                        },  
-                        {  
-                            "tier": "4",  
-                            "borrowLimit": "393",  
-                            "positionMMR": "0.04",  
-                            "positionIMR": "0.5",  
-                            "maxLeverage": "2"  
-                        }  
-                    ]  
-                }  
-            ]  
-        },  
-        "retExtInfo": "{}",  
-        "time": 1756272543440  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672710944282  
     }

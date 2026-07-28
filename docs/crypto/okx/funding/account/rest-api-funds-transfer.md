@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-funds-transfer
 anchor_id: funding-account-rest-api-funds-transfer
 api_type: REST
-updated_at: 2026-07-27 19:30:58.740177
+updated_at: 2026-07-28 19:29:54.056465
 ---
 
 # Funds transfer

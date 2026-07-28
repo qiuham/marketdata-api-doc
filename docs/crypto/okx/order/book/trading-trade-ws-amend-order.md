@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-amend-order
 anchor_id: order-book-trading-trade-ws-amend-order
 api_type: WebSocket
-updated_at: 2026-07-27 19:29:25.708011
+updated_at: 2026-07-28 19:28:19.035251
 ---
 
 # WS / Amend order
@@ -75,6 +75,10 @@ When modifying options orders, users can only fill in one of the following: newP
 `0`: Do not allow the system to amend to order price if `newPx` exceeds the price limit   
 `1`: Allow the system to amend the price to the best available value within the price limit if `newPx` exceeds the price limit  
 The default value is `0`  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 expTime | String | No | Request effective deadline. Unix timestamp format in milliseconds, e.g. `1597026383085`  
   
 > Successful Response Example
@@ -230,6 +234,10 @@ ordId和clOrdId必须传一个，若传两个，以 ordId 为主
 `0`：当`newPx`超出价格限制时，不允许系统修改订单价格  
 `1`：当`newPx`超出价格限制时，允许系统将价格修改为限制范围内的最优值  
 默认值为`0`  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 成功返回示例

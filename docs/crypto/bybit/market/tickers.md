@@ -2,20 +2,17 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/tickers
 api_type: Market Data
-updated_at: 2026-07-27 19:02:36.484310
+updated_at: 2026-07-28 19:01:59.619676
 ---
 
-# Get Bybit Server Time
+# Get Crypto Loan Position
 
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+> Permission: "Spot trade"  
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/market/time`
+GET`/v5/crypto-loan-common/position`
 
 ### Request Parameters
 
@@ -25,64 +22,56 @@ None
 
 Parameter| Type| Comments  
 ---|---|---  
-timeSecond| string| Bybit server timestamp (sec)  
-timeNano| string| Bybit server timestamp (nano)  
-[](/docs/api-explorer/v5/market/time)
-
-* * *
-
+borrowList| array| Object  
+> fixedTotalDebt| string| Total debt of fixed loan (coin)  
+> fixedTotalDebtUSD| string| Total debt of fixed loan (USD)  
+> flexibleHourlyInterestRate| string| Flebible loan hourly interest rate  
+> flexibleTotalDebt| string| Total debt of flexible loan (coin)  
+> flexibleTotalDebtUSD| string| Total debt of flexible loan (USD)  
+> loanCurrency| string| Loan coin  
+collateralList| array| Object  
+> amount| string| Collateral amount in coin  
+> amountUSD| string| Collateral amount in USD (after tierd collateral ratio calculation)  
+> currency| string| Collateral coin  
+ltv| string| LTV  
+supplyList| array| Object  
+> amount| string| Supply amount in coin  
+> amountUSD| string| Supply amount in USD  
+> currency| string| Supply coin  
+totalCollateral| string| Total collateral amount (USD)  
+totalDebt| string| Total debt (fixed + flexible, in USD)  
+totalSupply| string| Total supply amount (USD)  
+colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Java
-  * Go
   * Node.js
 
 
     
     
-    GET /v5/market/time HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752628288472  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_server_time())  
-    
-    
-    
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    client.getServerTime(System.out::println);  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
+    print(session.get_position_new_crypto_loan())  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-    });  
-      
-    client  
-      .getServerTime()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -90,97 +79,134 @@ timeNano| string| Bybit server timestamp (nano)
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "timeSecond": "1688639403",  
-            "timeNano": "1688639403423213947"  
+            "borrowList": [  
+                {  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
+                },  
+                {  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
+                }  
+            ],  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1688639403423  
+        "time": 1752627962000  
     }
 
 ---
 
-# Bybit服務器時間
+# 查詢質押借幣持倉
 
-獲取Bybit服務器時間
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+> 權限: "現貨"  
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/market/time`
+GET`/v5/crypto-loan-common/position`
 
 ### 請求參數
 
-無
+None
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-timeSecond| string| Bybit服務器時間戳 (秒)  
-timeNano| string| Bybit 服務器時間戳 (微秒)  
-[](/docs/zh-TW/api-explorer/v5/market/time)
-
-* * *
-
+borrowList| array| Object  
+> fixedTotalDebt| string| 定期借款總負債（幣）  
+> fixedTotalDebtUSD| string| 定期借款總負債（美元）  
+> flexibleHourlyInterestRate| string| 活期借款每小時利率  
+> flexibleTotalDebt| string| 活期借款總負債（幣）  
+> flexibleTotalDebtUSD| string| 活期借款總負債（美元）  
+> loanCurrency| string| 借款幣種  
+collateralList| array| Object  
+> amount| string| 抵押金額（幣）  
+> amountUSD| string| 抵押金額（USD，經分層抵押率計算後）  
+> currency| string| 抵押幣種  
+ltv| string| 質押率（LTV）  
+supplyList| array| Object  
+> amount| string| 出借金額（幣）  
+> amountUSD| string| 出借金額（USD）  
+> currency| string| 出借幣種  
+totalCollateral| string| 抵押總金額（USD）  
+totalDebt| string| 總負債金額（定期 + 活期，USD）  
+totalSupply| string| 出借總金額（USD）  
+colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Go
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/market/time HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752628288472  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_server_time())  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
+    print(session.get_position_new_crypto_loan())  
     
     
     
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    client.getServerTime(System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-    });  
-      
-    client  
-      .getServerTime()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -188,11 +214,61 @@ timeNano| string| Bybit 服務器時間戳 (微秒)
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "timeSecond": "1688639403",  
-            "timeNano": "1688639403423213947"  
+            "borrowList": [  
+                {  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
+                },  
+                {  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
+                }  
+            ],  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1688639403423  
+        "time": 1752627962000  
     }

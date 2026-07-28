@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-position
 api_type: REST
-updated_at: 2026-07-27 19:18:31.754588
+updated_at: 2026-07-28 19:16:36.796051
 ---
 
 # Get US Derivatives Position
@@ -131,10 +131,7 @@ Get positions for a specific CFM product
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

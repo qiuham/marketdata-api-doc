@@ -2,52 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/repay
 api_type: REST
-updated_at: 2026-07-27 19:03:07.589926
+updated_at: 2026-07-28 19:02:26.775814
 ---
 
-# Get Borrowable Coins
+# Get Repayment History
 
-info
-
-Does not need authentication.
+> Permission: "Spot trade"  
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-common/loanable-data`
+GET`/v5/crypto-loan-flexible/repayment-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-vipLevel| false| string| VIP level 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| Coin name, uppercase only  
+repayId| false| string| Repayment tranaction ID  
+loanCurrency| false| string| Loan coin name  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> currency| string| Coin name  
-> fixedBorrowable| boolean| Whether support fixed loan  
-> fixedBorrowingAccuracy| integer| Coin precision for fixed loan  
-> flexibleBorrowable| boolean| Whether support flexible loan  
-> flexibleBorrowingAccuracy| integer| Coin precision for flexible loan  
-> maxBorrowingAmount| string| Max borrow limit  
-> minFixedBorrowingAmount| string| Minimum amount for each fixed loan order  
-> minFlexibleBorrowingAmount| string| Minimum amount for each flexible loan order  
-> vipLevel| string| VIP level  
-> flexibleAnnualizedInterestRate| integer| The annualized interest rate for flexible borrowing. If the loan currency does not support flexible borrowing, it will always be """"  
-> annualizedInterestRate7D| string| The lowest annualized interest rate for fixed borrowing for 7 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate14D| string| The lowest annualized interest rate for fixed borrowing for 14 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate30D| string| The lowest annualized interest rate for fixed borrowing for 30 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate60D| string| The lowest annualized interest rate for fixed borrowing for 60 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate90D| string| The lowest annualized interest rate for fixed borrowing for 90 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
-> annualizedInterestRate180D| string| The lowest annualized interest rate for fixed borrowing for 180 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> loanCurrency| string| Loan coin  
+> repayAmount| string| Repayment amount  
+> repayId| string| Repayment transaction ID  
+> repayStatus| integer| Repayment status, `1`: success; `2`: processing; `3`: fail  
+> repayTime| long| Repay timestamp  
+> repayType| integer| Repayment type, `1`: repay by user; `2`: repay by liquidation; `5`: repay by delisting; `6`: repay by delay liquidation; `7`: repay by currency  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
 
@@ -58,16 +45,24 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
+    GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752570746227  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowable_coins_new_crypto_loan())  
+    print(session.get_repayment_history_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+    ))  
     
     
     
@@ -83,74 +78,68 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "currency": "ETH",  
-                    "fixedBorrowable": true,  
-                    "fixedBorrowingAccuracy": 6,  
-                    "flexibleBorrowable": true,  
-                    "flexibleBorrowingAccuracy": 4,  
-                    "maxBorrowingAmount": "1100",  
-                    "minFixedBorrowingAmount": "0.1",  
-                    "minFlexibleBorrowingAmount": "0.001",  
-                    "vipLevel": "VIP5",  
-                    "annualizedInterestRate14D": "0.08",  
-                    "annualizedInterestRate180D": "",  
-                    "annualizedInterestRate30D": "",  
-                    "annualizedInterestRate60D": "",  
-                    "annualizedInterestRate7D": "",  
-                    "annualizedInterestRate90D": "",  
-                    "flexibleAnnualizedInterestRate": "0.001429799316"  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.007",  
+                    "repayId": "1773",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752570731274,  
+                    "repayType": 1  
+                },  
+                {  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.006",  
+                    "repayId": "1772",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752570726038,  
+                    "repayType": 1  
+                },  
+                {  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.005",  
+                    "repayId": "1771",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752569614528,  
+                    "repayType": 1  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "1769"  
         },  
         "retExtInfo": {},  
-        "time": 1752573126653  
+        "time": 1752570745493  
     }
 
 ---
 
-# 查詢可借貸幣種
+# 查詢還款歷史
 
-信息
-
-不需要鑒權
+> 權限: "現貨"  
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-common/loanable-data`
+GET`/v5/crypto-loan-flexible/repayment-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-vipLevel| false| string| Vip等級 
-
-  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
-  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
-
-  
-currency| false| string| 幣種名稱  
+repayId| false| string| 還款訂單ID  
+loanCurrency| false| string| 借款幣種  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> currency| string| 幣種名稱  
-> fixedBorrowable| boolean| 是否支持定期借款  
-> fixedBorrowingAccuracy| integer| 定期借款的幣種精度  
-> flexibleBorrowable| boolean| 是否支持活期借款  
-> flexibleBorrowingAccuracy| integer| 活期借款的幣種精度  
-> maxBorrowingAmount| string| 最大借款限額  
-> minFixedBorrowingAmount| string| 每筆定期借款訂單的最低金額  
-> minFlexibleBorrowingAmount| string| 每筆活期借款訂單的最低金額  
-> vipLevel| string| VIP 等級  
-> flexibleAnnualizedInterestRate| integer| 活期年化借款利率。如果借貸幣種不支持活期, 則總是空字符串  
-> annualizedInterestRate7D| string| 市場目前可提供的7天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate14D| string| 市場目前可提供的14天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate30D| string| 市場目前可提供的30天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate60D| string| 市場目前可提供的60天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate90D| string| 市場目前可提供的90天最低借款年化利率。如果當前市場無存款單，則是空字符串  
-> annualizedInterestRate180D| string| 市場目前可提供的180天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> loanCurrency| string| 借款幣種  
+> repayAmount| string| 還款金額  
+> repayId| string| 還款交易 ID  
+> repayStatus| integer| 還款狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
+> repayTime| long| 還款時間戳  
+> repayType| integer| 還款類型，`1`: 用戶還款；`2`: 強制平倉還款；`5`: 下架還款；`6`: 延期強平還款；`7`: 兌幣還款  
+nextPageCursor| string| 下一頁游標  
   
 ### 請求示例
 
@@ -161,16 +150,24 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
+    GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752570746227  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowable_coins_new_crypto_loan())  
+    print(session.get_repayment_history_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+    ))  
     
     
     
@@ -186,25 +183,32 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "currency": "ETH",  
-                    "fixedBorrowable": true,  
-                    "fixedBorrowingAccuracy": 6,  
-                    "flexibleBorrowable": true,  
-                    "flexibleBorrowingAccuracy": 4,  
-                    "maxBorrowingAmount": "1100",  
-                    "minFixedBorrowingAmount": "0.1",  
-                    "minFlexibleBorrowingAmount": "0.001",  
-                    "vipLevel": "VIP5",  
-                    "annualizedInterestRate14D": "0.08",  
-                    "annualizedInterestRate180D": "",  
-                    "annualizedInterestRate30D": "",  
-                    "annualizedInterestRate60D": "",  
-                    "annualizedInterestRate7D": "",  
-                    "annualizedInterestRate90D": "",  
-                    "flexibleAnnualizedInterestRate": "0.001429799316"  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.007",  
+                    "repayId": "1773",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752570731274,  
+                    "repayType": 1  
+                },  
+                {  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.006",  
+                    "repayId": "1772",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752570726038,  
+                    "repayType": 1  
+                },  
+                {  
+                    "loanCurrency": "BTC",  
+                    "repayAmount": "0.005",  
+                    "repayId": "1771",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752569614528,  
+                    "repayType": 1  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "1769"  
         },  
         "retExtInfo": {},  
-        "time": 1752573126653  
+        "time": 1752570745493  
     }

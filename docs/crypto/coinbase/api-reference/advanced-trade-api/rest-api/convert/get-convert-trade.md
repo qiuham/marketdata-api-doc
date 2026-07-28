@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade
 api_type: Trading
-updated_at: 2026-07-27 19:18:31.369679
+updated_at: 2026-07-28 19:16:36.604048
 ---
 
 # Get Convert Trade
@@ -18,97 +18,97 @@ Gets a list of information about a convert trade with a specified trade id, sour
       --header 'Authorization: Bearer <token>'
     
     
-    import requests  
-      
-    url = "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"  
-      
-    headers = {"Authorization": "Bearer <token>"}  
-      
-    response = requests.get(url, headers=headers)  
-      
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
     print(response.text)
     
     
-    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};  
-      
-    fetch('https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}', options)  
-      .then(res => res.json())  
-      .then(res => console.log(res))  
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
       .catch(err => console.error(err));
     
     
-    <?php  
-      
-    $curl = curl_init();  
-      
-    curl_setopt_array($curl, [  
-      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}",  
-      CURLOPT_RETURNTRANSFER => true,  
-      CURLOPT_ENCODING => "",  
-      CURLOPT_MAXREDIRS => 10,  
-      CURLOPT_TIMEOUT => 30,  
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,  
-      CURLOPT_CUSTOMREQUEST => "GET",  
-      CURLOPT_HTTPHEADER => [  
-        "Authorization: Bearer <token>"  
-      ],  
-    ]);  
-      
-    $response = curl_exec($curl);  
-    $err = curl_error($curl);  
-      
-    curl_close($curl);  
-      
-    if ($err) {  
-      echo "cURL Error #:" . $err;  
-    } else {  
-      echo $response;  
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
     }
     
     
-    package main  
-      
-    import (  
-    	"fmt"  
-    	"net/http"  
-    	"io"  
-    )  
-      
-    func main() {  
-      
-    	url := "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"  
-      
-    	req, _ := http.NewRequest("GET", url, nil)  
-      
-    	req.Header.Add("Authorization", "Bearer <token>")  
-      
-    	res, _ := http.DefaultClient.Do(req)  
-      
-    	defer res.Body.Close()  
-    	body, _ := io.ReadAll(res.Body)  
-      
-    	fmt.Println(string(body))  
-      
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
     }
     
     
-    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")  
-      .header("Authorization", "Bearer <token>")  
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")
+      .header("Authorization", "Bearer <token>")
       .asString();
     
     
-    require 'uri'  
-    require 'net/http'  
-      
-    url = URI("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")  
-      
-    http = Net::HTTP.new(url.host, url.port)  
-    http.use_ssl = true  
-      
-    request = Net::HTTP::Get.new(url)  
-    request["Authorization"] = 'Bearer <token>'  
-      
-    response = http.request(request)  
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
     puts response.read_body
     
     
@@ -222,6 +222,7 @@ Gets a list of information about a convert trade with a specified trade id, sour
           "type": "INVALID",
           "network": "<string>",
           "payment_method_id": "<string>",
+          "payment_method_uuid": "<string>",
           "payment_method_type_string": "<string>",
           "blockchain_address": {
             "address": "<string>",
@@ -749,7 +750,9 @@ Gets a list of information about a convert trade with a specified trade id, sour
               "giact_status": "<string>",
               "giact_last_updated_at": "<string>",
               "giact_account_added_date": "<string>",
-              "giact_account_last_updated_date": "<string>"
+              "giact_account_last_updated_date": "<string>",
+              "giact_account_added_range": "<string>",
+              "giact_account_last_updated_range": "<string>"
             },
             "vendor_verification_status": {
               "iav_status": "<string>",
@@ -1291,6 +1294,7 @@ Gets a list of information about a convert trade with a specified trade id, sour
           "type": "INVALID",
           "network": "<string>",
           "payment_method_id": "<string>",
+          "payment_method_uuid": "<string>",
           "payment_method_type_string": "<string>",
           "blockchain_address": {
             "address": "<string>",
@@ -1818,7 +1822,9 @@ Gets a list of information about a convert trade with a specified trade id, sour
               "giact_status": "<string>",
               "giact_last_updated_at": "<string>",
               "giact_account_added_date": "<string>",
-              "giact_account_last_updated_date": "<string>"
+              "giact_account_last_updated_date": "<string>",
+              "giact_account_added_range": "<string>",
+              "giact_account_last_updated_range": "<string>"
             },
             "vendor_verification_status": {
               "iav_status": "<string>",
@@ -2528,16 +2534,13 @@ Gets a list of information about a convert trade with a specified trade id, sour
     }
     
     
-    {  
-      "error": "<string>",  
-      "code": 123,  
-      "message": "<string>",  
-      "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
-      ]  
+    {
+      "error": "<string>",
+      "code": 123,
+      "message": "<string>",
+      "details": [
+        {}
+      ]
     }
 
 #### Authorizations

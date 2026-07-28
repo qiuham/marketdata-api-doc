@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances
 api_type: Account
-updated_at: 2026-07-27 19:18:33.385333
+updated_at: 2026-07-28 19:16:38.007136
 ---
 
 # Get Portfolios Balances
@@ -152,10 +152,7 @@ Get a list of asset balances on Intx for a given Portfolio
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

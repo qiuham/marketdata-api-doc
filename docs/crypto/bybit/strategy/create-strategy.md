@@ -2,173 +2,86 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/create-strategy
 api_type: REST
-updated_at: 2026-07-27 19:05:54.077451
+updated_at: 2026-07-28 19:05:01.099641
 ---
 
-# Create Strategy Order
+# Get Strategy List
 
-Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceberg`, `pov`.
-
-## Strategy Types
-
-### TWAP (Time-Weighted Average Price)
-
-Splits a large order into equal-sized sub-orders executed at fixed time intervals, minimizing market impact and achieving a price close to the time-weighted average.
-
-**Execution logic:** `Number of sub-orders = Running Time (seconds) ÷ Frequency`. Sub-orders that fail to fill are retried once; if unsuccessful, they are canceled and the strategy continues.
-
-Please refer to [Introduction to TWAP Strategy](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) to get more details.
-
-Parameter| Constraint  
----|---  
-Total quantity (`size`)| Must be ≥ Max(MinNotional × subOrders ÷ LastPrice × 1.1, MinSize × subOrders)  
-Running time (`duration`)| 5 minutes – 24 hours  
-Sub-order interval (`interval`)| 5 – 120 seconds  
-Sub-order quantity| ≤ 50% of the exchange's maximum single order size (Perpetual/Futures)  
-Random quantity variance| ±20% if `isRandom` is enabled  
-  
-* * *
-
-### Chase Order (Chase Limit Order)
-
-Continuously places and adjusts a limit order at the best bid/ask price to track market movements until the order is fully filled, canceled, or reaches the maximum chase distance.
-
-**Execution logic:** The order price updates every second. All Chase Limit Orders are **Post Only** by default (maker execution). If the order is rejected by the Post Only condition 5 consecutive times, the strategy is canceled.
-
-Please refer to [Chase Limit Order](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) to get more details.
-
-* * *
-
-### Iceberg Order
-
-Splits a large order into multiple smaller sub-orders that are placed sequentially, revealing only a small portion of the total order size to the market at any one time.
-
-**Execution logic:** Each sub-order enters the order book → upon fill, the next sub-order is automatically placed → repeats until the full quantity is executed.
-
-Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) to get more details.
-
-**Order preferences:**
-
-Preference| Execution behavior  
----|---  
-`Chase Limit (Taker)`| Buy at Ask1 / Sell at Bid1; prioritizes speed  
-`Chase Limit`| Buy at Bid1 / Sell at Ask1; maker execution  
-`Chase Limit (offset)`| Fixed distance from Ask1/Bid1; balances speed and cost  
-`Fixed Prices`| All sub-orders placed at a single fixed price  
-  
-* * *
-
-### POV Order (Percentage of Volume)
-
-Participates in market volume at a fixed rate, dynamically sizing each sub-order as a percentage of observed trading activity or order book depth to minimize market impact.
-
-**Execution logic:** At each `interval`, the strategy samples market activity based on the selected mode → calculates sub-order quantity using `participationRate` → places the order → repeats until `maxQty` (`size`) is reached or `maxDuration` (`duration`) expires. Setting `interval` to `0` executes once immediately (OneTime mode).
-
-**Note:** POV supports Perpetuals only (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`). Spot is not supported. When `interval` > `0`, at least one of `size` or `duration` must be provided.
-
-**Execution modes (`povParams.mode`):**
-
-Mode| Order type| Volume reference  
----|---|---  
-`TradedVolume`| Market order| Historical traded volume over `referenceWindow` seconds; range: [60, 14400]  
-`OppositeSideLiquidity`| Taker limit at best bid/ask| Opposite-side book depth; Top-N levels via `depthReference` [1, 10]  
-`SameSideLiquidity`| Post-Only limit at best bid/ask| Same-side book depth; Top-N levels via `depthReference` [1, 10]; maker execution only  
-  
-* * *
+Query the strategy list. Supports filtering by strategy ID, symbol, status, category, and strategy type.  
+You can also subscribe [strategy](/docs/v5/websocket/private/strategy) stream to receive the feed.
 
 ### HTTP Request
 
-POST`/v5/strategy/create`
+GET`/v5/strategy/list`
 
 ### Request Parameters
 
-  * TWAP
-  * Chase Order
-  * Iceberg
-  * POV
-
-
-
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_SPOT`(Spot), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
-symbol| **true**|  string| Symbol name, e.g. `BTCUSDT`  
-side| **true**|  string| `Buy`, `Sell`  
-size| false| string| Total order quantity (coin). Either "size" or "positionValue" is **needed**  
-positionValue| false| string| Total order quantity (value). Either "size" or "positionValue" is **needed**  
-strategyType| **true**|  string| Strategy type. `twap`  
-duration| **true**|  integer| Total execution duration in seconds. Range: [300, 86400]. Must be divisible by `interval`  
-reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the position. `true`, `false`  
-positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
-leverageType| false| integer| Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only)  
-interval| false| integer| Sub-order placement interval in seconds. `5`, `10`, `15`, `30`(default), `60`, `120`  
-isRandom| false| boolean| Whether to randomize each sub-order quantity by ±20%  
-triggerPrice| false| string| Advanced settings (Trigger price): Strategy activates when the market price reaches this value  
-maxChasePrice| false| string| Advanced settings (Stop Price): Strategy terminates when the last traded price reaches this value  
-chaseDistance| false| string| Advanced settings - ordertype=Limit (default: market): Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set  
-chasePercentE4| false| integer| Advanced settings - ordertype=Limit (default: market): Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%. Mutually exclusive with `chaseDistance`  
-  
-Parameter| Required| Type| Comments  
----|---|---|---  
-category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_SPOT`(Spot), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
-symbol| **true**|  string| Symbol name, e.g. `BTCUSDT`  
-side| **true**|  string| `Buy`, `Sell`  
-size| false| string| Total order quantity (coin). Either "size" or "positionValue" is **needed**  
-positionValue| false| string| Total order quantity (value). Either "size" or "positionValue" is **needed**  
-strategyType| **true**|  string| Strategy type. `chaseOrder`  
-reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the position. `true`, `false`  
-positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
-leverageType| false| integer| Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only)  
-chaseDistance| false| string| Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set  
-chasePercentE4| false| integer| Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%, range: [0, 500]. Mutually exclusive with `chaseDistance`  
-triggerPrice| false| string| Advanced setting (Trigger price): Strategy activates when the market price reaches this value  
-maxChasePrice| false| string| Advanced setting (Max chase price): Stop chasing when the last traded price reaches this value  
-  
-Parameter| Required| Type| Comments  
----|---|---|---  
-category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_SPOT`(Spot), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
-symbol| **true**|  string| Symbol name, e.g. `BTCUSDT`  
-side| **true**|  string| `Buy`, `Sell`  
-size| false| string| Total order quantity (coin). Either "size" or "positionValue" is **needed**  
-positionValue| false| string| Total order quantity (value). Either "size" or "positionValue" is **needed**  
-strategyType| **true**|  string| Strategy type. `iceberg`  
-reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the position. `true`, `false`  
-positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
-leverageType| false| integer| Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only)  
-subSize| false| string| Quantity per sub-order. Mutually exclusive with `orderCount`; `subSize` takes priority if both are set  
-orderCount| false| integer| Number of sub-orders. Mutually exclusive with `subSize` or `subPositionValue`  
-subPositionValue| false| string| Order value per sub-order. Mutually exclusive with `orderCount`; `subPositionValue` takes priority if both are set  
-postOnly| false| integer| Maker-only mode. `0`: post-only (maker only), `1`: taker allowed  
-maxChasePrice| false| string| Price limit parameter. Buy orders are only placed when the price is at or below this limit and pause if the price rises above it. Sell orders are only placed when the price is at or above this limit and pause if the price falls below it  
-limitPrice| false| string| **Order preferences: Limit Price** , limit price applied to all sub-orders  
-chaseDistance| false| string| **Order preferences: Chase Limit (offset)** , Price distance from best bid/ask (absolute value), e.g. `"0.5"`. Mutually exclusive with `chasePercentE4`; `chaseDistance` takes priority if both are set.   
-**Order preferences: Chase Limit (Taker)** , `"-1"` means immediate fill at counterparty price  
-chasePercentE4| false| integer| **Order preferences: Chase Limit (offset)** , Price offset from best bid/ask in basis points (1/10000), e.g. `100` = 1%, range: [0, 100]. Mutually exclusive with `chaseDistance`  
-  
-Parameter| Required| Type| Comments  
----|---|---|---  
-category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
-strategyType| **true**|  string| Strategy type. `pov`  
-symbol| **true**|  string| Symbol name, e.g. `BTCUSDT`  
-side| **true**|  string| `Buy`, `Sell`  
-size| false| string| Total order quantity (coin). **Required** either "size" or "duration"  
-duration| false| integer| Total execution duration in seconds. Range: [900, 86400]. **Required** either "size" or "duration"  
-interval| false| integer| Sub-order placement interval in seconds. "0": one time execution, otherwise, range: [5, 3600]  
-reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the position. `true`, `false`  
-positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
-povParams| **true**|  object| Param object  
-> mode| **true**|  string| Execution modes, `TradedVolume`: places a market order based on historical volume  
-`OppositeSideLiquidity`: places a taker limit at BBO based on the counterparty depth, `SameSideLiquidity`: places a post-only order at BBO based on the order side  
-> participationRate| **true**|  string| Participation rate, range: [1, 100], support 1 decimal. e.g, `"25.1"`=25.1%  
-> referenceWindow| false| string| **Required** when "mode"=`TradedVolume`, reference window for historical trading volume, range: [60, 14400]  
-> depthReference| false| integer| **Required** when "mode"=`OppositeSideLiquidity` or `SameSideLiquidity`, reference depths, range: [1, 10]  
+strategyId| false| string| Strategy ID (exact match)  
+symbol| false| string| Symbol name, e.g. `BTCUSDT`  
+status| false| string| Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: untriggered  
+category| false| string| Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`  
+strategyType| false| string| Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov`  
+beginTimeE0| false| int64| Start time in seconds (Unix timestamp)  
+endTimeE0| false| int64| End time in seconds (Unix timestamp)  
+pageSize| false| integer| Limit for data size per page. Default: `20`, max: `50`  
+cursor| false| string| Cursor for pagination, returned from the previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-strategyId| string| Strategy ID (UUID format)  
-result| string| Execution result. `null` if creation succeeded  
+list| array| Object  
+> strategyId| string| Strategy ID (UUID format)  
+> category| string| Product type  
+> symbol| string| Symbol name  
+> side| string| `Buy`, `Sell`  
+> size| string| Total order quantity  
+> strategyType| string| Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov`  
+> status| integer| Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: untriggered  
+> executedSize| string| Executed quantity  
+> executedAvgPrice| string| Average executed price  
+> executedStartTimeE3| int64| Execution start time (ms)  
+> executedEndTimeE3| int64| Execution end time (ms). `0` means not yet ended  
+> createdTimeE3| int64| Strategy creation time (ms)  
+> updatedTimeE3| int64| Strategy last updated time (ms)  
+> reduceOnly| boolean| Whether it is a reduce-only order  
+> triggerPrice| string| Trigger price  
+> isTriggered| boolean| Whether the strategy has been triggered  
+> leverageType| integer| Leverage type. `0`: normal, `1`: margin  
+> terminateType| integer| Termination reason code. `0`: unknown, `1`: user stop, `2`: completed normally, `3`: insufficient balance, `4`: position mode changed, `5`: uid blocked, `6`: would trigger liquidation, `7`: no position for reduce-only, `8`: upgrade to UTA, `9`: OI limited, `10`: user trading banned, `11`: risk limit exceeded, `12`: symbol delivery stopped, `13`: symbol delisted, `14`: consecutive order failures, `15`: missing template param, `16`: signal latency, `17`: symbol mismatch, `18`: beyond max chase price, `19`: max sub-order count exceeded, `20`: order already cancelled, `21`: max risk limit value exceeded, `22`: risk limit max leverage exceeded, `23`: coin not collateral, `24`: reached limit price, `25`: reduce-only state with pending UTA upgrade, `26`: user in cooling-off period  
+> terminateRemark| string| Termination reason description  
+> triggerCount| integer| Number of trigger attempts  
+> tradingCount| integer| Number of actual orders placed  
+> realizedPnl| string| Realized PnL (futures only)  
+> strategyName| string| Strategy custom name  
+> strategyPrefer| string| Execution preference. `limit`, `priceSpeedBalance`, `fastestExecution`, `quickExecution`  
+> duration| integer| Total planned execution duration in seconds. _TWAP/POV only_  
+> executedDuration| integer| Actual executed duration in seconds. _TWAP/POV only_  
+> isRandom| boolean| Whether sub-order quantity randomization is enabled. _TWAP only_  
+> interval| integer| Sub-order placement interval in seconds. _TWAP/POV only_  
+> limitPrice| string| Fixed limit price. Orders will not be placed beyond this price  
+> chasePercentE4| int64| Chase price offset in basis points (1/10000). _Chase / Iceberg_  
+> chaseDistance| string| Chase price distance (absolute value). _Chase / Iceberg_  
+> maxChasePrice| string| Maximum chase price protection. _Chase / Iceberg_  
+> chaseOrderPrice| string| Current chase order price (real-time). _Chase only_  
+> chasePrice| string| Reference price side for chase orders, e.g. `Bid1`, `Ask1`. _Chase / Iceberg_  
+> postOnly| integer| Maker-only mode. `0`: taker allowed, `1`: post-only. _Iceberg only_  
+> isRebalance| boolean| Whether rebalance is enabled  
+> orderType| integer| Order type. `1`: market order, `2`: limit order  
+> orderPriceOffset| string| Limit order price offset percentage. _TWAP only_  
+> strategySl| string| Strategy stop-loss price  
+> strategyTp| string| Strategy take-profit price  
+> arbitrageOrders| array| List of associated arbitrage orders  
+> positionValue| string| Total position value  
+> filledPositionValue| string| Filled position value  
+> mode| string| Execution modes, `TradeVolume` `OppositeSideLiquidity` `SameSideLiquidity`, _POV only_  
+> participationRate| string| Participation rate, _POV only_  
+> referenceWindow| string| Reference window for historical trading volume, _POV only_  
+> depthReference| string| Reference depths, _POV only_  
+nextCursor| string| Cursor for the next page. Empty string means no more data  
+prevCursor| string| Cursor for the previous page  
   
 ### Request Example
 
@@ -179,26 +92,12 @@ result| string| Execution result. `null` if creation succeeded
 
     
     
-    POST /v5/strategy/create HTTP/1.1  
+    GET /v5/strategy/list?strategyId=119b6211-2611-461b-be5e-5ac557099e82 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-TIMESTAMP: 1773718018000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "side": "Buy",  
-        "symbol": "BTCUSDT",  
-        "reduceOnly": false,  
-        "category": "UTA_USDT",  
-        "size": "0.1",  
-        "positionIdx": 1,  
-        "strategyType": "chaseOrder",  
-        "chasePrice": "75967.7",  
-        "maxChasePrice": "83564.5",  
-        "triggerPrice": "75000.0"  
-    }  
     
     
     
@@ -216,179 +115,138 @@ result| string| Execution result. `null` if creation succeeded
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",  
-            "result": null  
+            "list": [  
+                {  
+                    "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",  
+                    "category": "UTA_USDT",  
+                    "symbol": "BTCUSDT",  
+                    "side": "Buy",  
+                    "size": "0.05",  
+                    "duration": 1560,  
+                    "status": 3,  
+                    "executedDuration": 1608,  
+                    "executedSize": "0.046",  
+                    "executedAvgPrice": "76695.48",  
+                    "executedStartTimeE3": "1773711467045",  
+                    "executedEndTimeE3": "1773713075628",  
+                    "createdTimeE3": "1773711467045",  
+                    "updatedTimeE3": "1773713075628",  
+                    "isRandom": false,  
+                    "limitPrice": "",  
+                    "reduceOnly": false,  
+                    "terminateType": 2,  
+                    "terminateRemark": "RunningStop",  
+                    "strategyName": "",  
+                    "triggerCount": "26",  
+                    "tradingCount": "0",  
+                    "realizedPnl": "0",  
+                    "strategyType": "twap",  
+                    "chasePrice": "Bid1",  
+                    "chasePercentE4": "0",  
+                    "chaseDistance": "0",  
+                    "maxChasePrice": "",  
+                    "chaseOrderPrice": "",  
+                    "arbitrageOrders": [],  
+                    "strategyPrefer": "quickExecution",  
+                    "isRebalance": false,  
+                    "interval": 60,  
+                    "leverageType": 0,  
+                    "postOnly": 0,  
+                    "triggerPrice": "0",  
+                    "isTriggered": false,  
+                    "strategyTp": "",  
+                    "strategySl": "",  
+                    "orderType": "UNKNOWN",  
+                    "orderPriceOffset": "",  
+                    "positionValue": "",  
+                    "filledPositionValue": ""  
+                }  
+            ],  
+            "nextCursor": "",  
+            "prevCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773711467052  
+        "time": 1774583153599  
     }
 
 ---
 
-# 創建策略訂單
+# 查詢策略列表
 
-創建策略訂單。支援的策略類型：`chaseOrder`、`twap`、`iceberg`, `pov`。
-
-## 策略類型
-
-### TWAP（時間加權平均價格）
-
-將大額訂單拆分為等量子訂單，按固定時間間隔執行，降低市場衝擊並使成交均價接近時間加權平均值。
-
-**執行邏輯：** `子訂單數量 = 執行時間（秒）÷ 頻率`。未成交子訂單將重試一次；若仍未成功，則取消並繼續執行後續子訂單。
-
-請參閱 [TWAP 策略介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) 了解更多細節。
-
-參數| 限制條件  
----|---  
-總數量（`size`）| 必須 ≥ Max(最小名義價值 × 子訂單數 ÷ 最新價格 × 1.1, 最小數量 × 子訂單數)  
-執行時間（`duration`）| 5 分鐘 – 24 小時  
-子訂單間隔（`interval`）| 5 – 120 秒  
-子訂單數量| ≤ 交易所單筆最大下單量的 50%（永續/交割）  
-隨機數量波動| 若啟用 `isRandom`，波動範圍 ±20%  
-  
-* * *
-
-### 追蹤委託（Chase Limit Order）
-
-持續在最優買一/賣一價格掛出並調整限價單，跟蹤市場行情直至訂單完全成交、取消或達到最大追蹤距離。
-
-**執行邏輯：** 訂單價格每秒更新一次。所有追蹤委託默認為 **Post Only** （僅掛單成交）。若連續 5 次被 Post Only 條件拒絕，策略將取消。
-
-請參閱 [追蹤委託](https://www.bybit.com/en/help-center/article/Chase-Order?category=5f2fb74e9c8b771130) 了解更多細節。
-
-* * *
-
-### 冰山委託（Iceberg Order）
-
-將大額訂單拆分為多個較小子訂單並依序掛出，每次僅向市場展示一小部分訂單量。
-
-**執行邏輯：** 每筆子訂單進入訂單簿 → 成交後自動掛出下一筆子訂單 → 重複直至全部數量成交。
-
-請參閱 [冰山委託](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) 了解更多細節。
-
-**訂單偏好：**
-
-偏好| 執行行為  
----|---  
-`追逐限價單 (Taker)`| 買入掛賣一價 / 賣出掛買一價；優先速度  
-`追逐限價單`| 買入掛買一價 / 賣出掛賣一價；掛單成交  
-`追逐限價單 (跟價差)`| 與賣一/買一保持固定距離；兼顧速度與成本  
-`固定價格`| 所有子訂單以固定單一價格掛出  
-  
-* * *
-
-### POV 委託（Percentage of Volume）
-
-以固定比例參與市場成交量，依據觀測到的市場交易活動或盤口深度動態計算每筆子訂單量，有效降低市場衝擊。
-
-**執行邏輯：** 每隔 `interval` 秒，策略依照所選模式對市場活動進行取樣 → 依據 `participationRate` 計算子訂單數量 → 下單 → 重複直至達到 `maxQty`（`size`）或 `maxDuration`（`duration`）到期為止。將 `interval` 設為 `0` 時，策略僅執行一次即終止（OneTime 模式）。
-
-**注意：** POV 僅支援永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`），不支援現貨。`interval` > `0` 時，`size` 與 `duration` 至少須填寫一項。
-
-**執行模式（`povParams.mode`）：**
-
-模式| 訂單類型| 成交量參考依據  
----|---|---  
-`TradedVolume`| 市價單| `referenceWindow` 秒內的歷史成交量，範圍：[60, 14400]  
-`OppositeSideLiquidity`| 以最優買一／賣一價掛吃單限價單| 對手方盤口深度；`depthReference` Top-N 檔，範圍：[1, 10]  
-`SameSideLiquidity`| 以最優買一／賣一價掛 Post-Only 限價單| 同側盤口深度；`depthReference` Top-N 檔，範圍：[1, 10]；僅掛單成交  
-  
-* * *
+查詢策略列表。支援依策略 ID、交易對、狀態、產品類型及策略類型進行篩選。您也可以通過訂閱[strategy](/docs/zh-TW/v5/websocket/private/strategy)流獲得實時更新
 
 ### HTTP 請求
 
-POST`/v5/strategy/create`
+GET`/v5/strategy/list`
 
 ### 請求參數
 
-  * TWAP
-  * 追逐限價單
-  * 冰山委託
-  * POV
-
-
-
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_SPOT`（現貨）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
-symbol| **true**|  string| 交易對名稱，例如 `BTCUSDT`  
-side| **true**|  string| `Buy`、`Sell`  
-size| false| string| 總下單數量，"size" 和 "positionValue" **二選一**  
-positionValue| false| string| 總下單價值，"size" 和 "positionValue" **二選一**  
-strategyType| **true**|  string| 策略類型。`twap`  
-duration| **true**|  integer| 總執行時間（秒）。範圍：[300, 86400]，必須能被 `interval` 整除  
-reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`。`true`、`false`  
-positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
-leverageType| false| integer| 現貨槓桿類型。`0`：普通，`1`：槓桿交易（僅 `UTA_SPOT`）  
-interval| false| integer| 子訂單掛出間隔（秒）。`5`、`10`、`15`、`30`（默認）、`60`、`120`  
-isRandom| false| boolean| 隨機訂單: 是否對每筆子訂單數量進行 ±20% 隨機化  
-triggerPrice| false| string| 高級設置（觸發價格）: 市場價格達到此值時策略啟動  
-maxChasePrice| false| string| 高級設置（停止價格）: 達到此值時策略終止  
-chaseDistance| false| string| 高級設置 - 訂單類型設置為限價（默認市價）: 與最優買一/賣一的價格距離（絕對值），例如 `"0.5"`。與 `chasePercentE4` 互斥；若兩者均設置，`chaseDistance` 優先  
-chasePercentE4| false| integer| 高級設置 - 訂單類型設置為限價（默認市價）: 與最優買一/賣一的價格偏移（基點，1/10000），例如 `100` = 1%。與 `chaseDistance` 互斥  
-  
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_SPOT`（現貨）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
-symbol| **true**|  string| 交易對名稱，例如 `BTCUSDT`  
-side| **true**|  string| `Buy`、`Sell`  
-size| false| string| 總下單數量，"size" 和 "positionValue" **二選一**  
-positionValue| false| string| 總下單價值，"size" 和 "positionValue" **二選一**  
-strategyType| **true**|  string| 策略類型。`chaseOrder`  
-reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`。`true`、`false`  
-positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
-chaseDistance| false| string| 追逐價格方式（默認追逐買一賣一價）：與最優買一/賣一的價格距離（絕對值），例如 `"0.5"`。與 `chasePercentE4` 互斥；若兩者均設置，`chaseDistance` 優先  
-chasePercentE4| false| integer| 追逐價格方式（默認追逐買一賣一價）：與最優買一/賣一的價格偏移（基點，1/10000），例如 `100` = 1%, 範圍: [0, 500]。與 `chaseDistance` 互斥  
-leverageType| false| integer| 現貨槓桿類型。`0`：普通，`1`：槓桿交易（僅 `UTA_SPOT`）  
-triggerPrice| false| string| 高級設置（觸發價格）。市場價格達到此值時策略啟動  
-maxChasePrice| false| string| 高級設置（最大追逐價格） - 最新成交價達到此值時停止追蹤  
-  
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_SPOT`（現貨）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
-symbol| **true**|  string| 交易對名稱，例如 `BTCUSDT`  
-side| **true**|  string| `Buy`、`Sell`  
-size| false| string| 總下單數量，"size" 和 "positionValue" **二選一**  
-positionValue| false| string| 總下單價值，"size" 和 "positionValue" **二選一**  
-strategyType| **true**|  string| 策略類型。`iceberg`  
-reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`。`true`、`false`  
-positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
-leverageType| false| integer| 現貨槓桿類型。`0`：普通，`1`：槓桿交易（僅 `UTA_SPOT`）  
-subSize| false| string| 每筆子訂單數量。與 `orderCount` 互斥；若兩者均設置，`subSize` 優先  
-orderCount| false| integer| 子訂單筆數。與 `subSize`或者`subPositionValue` 互斥  
-subPositionValue| false| string| 每筆子訂單價值。與 `orderCount` 互斥；若兩者均設置，`subPositionValue` 優先  
-postOnly| false| integer| 掛單模式。`0`：Post Only（僅掛單），`1`：允許吃單  
-maxChasePrice| false| string| 作為價格限制參數，買入訂單僅在價格低於或等於此限制時掛出，價格高於此限制時暫停；賣出訂單僅在價格高於或等於此限制時掛出，價格低於此限制時暫停  
-limitPrice| false| string| **掛單偏好: 固定價格** ，應用於所有子訂單的固定限價  
-chaseDistance| false| string| **掛單偏好: 追逐限價單（跟價差）參數，按價差** , 與最優買一/賣一的價格距離（絕對值），例如 `"0.5"`。與 `chasePercentE4` 互斥；若兩者均設置，`chaseDistance` 優先。  
-**掛單偏好: 追逐限價單（Taker）參數**`"-1"` 表示以對手方價格立即成交  
-chasePercentE4| false| integer| **掛單偏好: 追逐限價單（跟價差）參數，按比例** , 與最優買一/賣一的價格偏移（基點，1/10000），例如 `100` = 1%，範圍: [0, 100]。與 `chaseDistance` 互斥  
-  
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
-strategyType| **true**|  string| 策略類型。`pov`  
-symbol| **true**|  string| 交易對名稱，例如 `BTCUSDT`  
-side| **true**|  string| `Buy`、`Sell`  
-size| false| string| 總下單數量（幣）。"size" 和 "duration" **二選一**  
-duration| false| integer| 總執行時間（秒）。範圍：[900, 86400]。"size" 和 "duration" **二選一**  
-interval| false| integer| 子訂單掛出間隔（秒）。`"0"`：單次執行；否則範圍：[5, 3600]  
-reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`。`true`、`false`  
-positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
-povParams| **true**|  object| 參數物件  
-> mode| **true**|  string| 執行模式。`TradedVolume`：根據歷史成交量下市價單；  
-`OppositeSideLiquidity`：根據對手方深度在最優買賣價以吃單限價掛出；`SameSideLiquidity`：根據訂單方向在最優買賣價以 Post Only 限價掛出  
-> participationRate| **true**|  string| 參與率，範圍：[1, 100]，支援 1 位小數。例如 `"25.1"`=25.1%  
-> referenceWindow| false| string| 當 "mode"=`TradedVolume` 時**必填** ，歷史成交量的參考時間窗口（秒），範圍：[60, 14400]  
-> depthReference| false| integer| 當 "mode"=`OppositeSideLiquidity` 或 `SameSideLiquidity` 時**必填** ，參考深度檔位，範圍：[1, 10]  
+strategyId| false| string| 策略 ID（精確匹配）  
+symbol| false| string| 交易對名稱，例如 `BTCUSDT`  
+status| false| string| 策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交, `5`：已暫停，`6`：待觸發  
+category| false| string| 產品類型。`UTA_USDT`、`UTA_USDC`、`UTA_USDC_FUTURE`、`UTA_SPOT`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`  
+strategyType| false| string| 策略類型。`twap`、`chaseOrder`、`iceberg`、`pov`  
+beginTimeE0| false| int64| 起始時間（Unix 時間戳，秒）  
+endTimeE0| false| int64| 結束時間（Unix 時間戳，秒）  
+pageSize| false| integer| 每頁資料筆數。默認：`20`，最大：`50`  
+cursor| false| string| 分頁游標，從上一次響應中返回  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-strategyId| string| 策略 ID（UUID 格式）  
-result| string| 執行結果。創建成功時為 `null`  
+list| array| 物件  
+> strategyId| string| 策略 ID（UUID 格式）  
+> category| string| 產品類型  
+> symbol| string| 交易對名稱  
+> side| string| `Buy`、`Sell`  
+> size| string| 總下單數量  
+> strategyType| string| 策略類型。`twap`、`chaseOrder`、`iceberg`、`pov`  
+> status| integer| 策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交，`5`：已暫停，`6`：待觸發  
+> executedSize| string| 已成交數量  
+> executedAvgPrice| string| 平均成交價格  
+> executedStartTimeE3| int64| 執行開始時間（毫秒）  
+> executedEndTimeE3| int64| 執行結束時間（毫秒）。`0` 表示尚未結束  
+> createdTimeE3| int64| 策略創建時間（毫秒）  
+> updatedTimeE3| int64| 策略最後更新時間（毫秒）  
+> reduceOnly| boolean| 是否為只減倉訂單  
+> triggerPrice| string| 觸發價格  
+> isTriggered| boolean| 策略是否已被觸發  
+> leverageType| integer| 槓桿類型。`0`：普通，`1`：借貸  
+> terminateType| integer| 終止原因代碼。`0`：未知，`1`：使用者停止，`2`：正常完成，`3`：餘額不足，`4`：持倉模式變更，`5`：UID 被封禁，`6`：觸發強平，`7`：只減倉但無持倉，`8`：升級至 UTA，`9`：OI 超限，`10`：用戶交易被禁，`11`：超過風險限額，`12`：交易對交割停止，`13`：交易對下架，`14`：連續下單失敗，`15`：缺少模板參數，`16`：信號延遲，`17`：交易對不匹配，`18`：超出最大追蹤價格，`19`：子訂單數量超限，`20`：訂單已取消，`21`：超出最大風險限額，`22`：風險限額最大槓桿超限，`23`：幣種非抵押品，`24`：達到限價，`25`：只減倉狀態下有待處理的 UTA 升級，`26`：用戶處於冷靜期  
+> terminateRemark| string| 終止原因說明  
+> triggerCount| integer| 觸發嘗試次數  
+> tradingCount| integer| 實際下單筆數  
+> realizedPnl| string| 已實現盈虧（僅合約）  
+> strategyName| string| 策略自訂名稱  
+> strategyPrefer| string| 執行偏好。`limit`、`priceSpeedBalance`、`fastestExecution`、`quickExecution`  
+> duration| integer| 計劃總執行時間（秒）。 _僅 TWAP/POV_  
+> executedDuration| integer| 實際已執行時間（秒）。 _僅 TWAP/POV_  
+> isRandom| boolean| 是否啟用子訂單數量隨機化。 _僅 TWAP_  
+> interval| integer| 子訂單掛出間隔（秒）。 _僅 TWAP/POV_  
+> limitPrice| string| 固定限價。訂單不會在此價格以外掛出  
+> chasePercentE4| int64| 追蹤價格偏移（基點，1/10000）。 _Chase / Iceberg_  
+> chaseDistance| string| 追蹤價格距離（絕對值）。 _Chase / Iceberg_  
+> maxChasePrice| string| 最大追蹤價格保護。 _Chase / Iceberg_  
+> chaseOrderPrice| string| 當前追蹤委託價格（實時）。 _僅 Chase_  
+> chasePrice| string| 追蹤委託的參考價格方向，例如 `Bid1`、`Ask1`。 _Chase / Iceberg_  
+> postOnly| integer| 掛單模式。`0`：允許吃單，`1`：僅掛單。 _僅 Iceberg_  
+> isRebalance| boolean| 是否啟用再平衡  
+> orderType| integer| 訂單類型。`1`：市價單，`2`：限價單  
+> orderPriceOffset| string| 限價單價格偏移百分比。 _僅 TWAP_  
+> strategySl| string| 策略止損價格  
+> strategyTp| string| 策略止盈價格  
+> arbitrageOrders| array| 關聯套利訂單列表  
+> positionValue| string| 總持倉價值  
+> filledPositionValue| string| 已成交持倉價值  
+> mode| string| 執行模式, `TradeVolume` `OppositeSideLiquidity` `SameSideLiquidity`, _僅 POV_  
+> participationRate| string| 參與率, _僅 POV_  
+> referenceWindow| string| 歷史成交量的參考窗口, _僅 POV_  
+> depthReference| string| 參考深度, _僅 POV_  
+nextCursor| string| 下一頁游標。空字串表示無更多資料  
+prevCursor| string| 上一頁游標  
   
 ### 請求示例
 
@@ -399,26 +257,12 @@ result| string| 執行結果。創建成功時為 `null`
 
     
     
-    POST /v5/strategy/create HTTP/1.1  
+    GET /v5/strategy/list?strategyId=119b6211-2611-461b-be5e-5ac557099e82 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773711467000  
+    X-BAPI-TIMESTAMP: 1773718018000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "side": "Buy",  
-        "symbol": "BTCUSDT",  
-        "reduceOnly": false,  
-        "category": "UTA_USDT",  
-        "size": "0.1",  
-        "positionIdx": 1,  
-        "strategyType": "chaseOrder",  
-        "chasePrice": "75967.7",  
-        "maxChasePrice": "83564.5",  
-        "triggerPrice": "75000.0"  
-    }  
     
     
     
@@ -436,9 +280,56 @@ result| string| 執行結果。創建成功時為 `null`
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",  
-            "result": null  
+            "list": [  
+                {  
+                    "strategyId": "119b6211-2611-461b-be5e-5ac557099e82",  
+                    "category": "UTA_USDT",  
+                    "symbol": "BTCUSDT",  
+                    "side": "Buy",  
+                    "size": "0.05",  
+                    "duration": 1560,  
+                    "status": 3,  
+                    "executedDuration": 1608,  
+                    "executedSize": "0.046",  
+                    "executedAvgPrice": "76695.48",  
+                    "executedStartTimeE3": "1773711467045",  
+                    "executedEndTimeE3": "1773713075628",  
+                    "createdTimeE3": "1773711467045",  
+                    "updatedTimeE3": "1773713075628",  
+                    "isRandom": false,  
+                    "limitPrice": "",  
+                    "reduceOnly": false,  
+                    "terminateType": 2,  
+                    "terminateRemark": "RunningStop",  
+                    "strategyName": "",  
+                    "triggerCount": "26",  
+                    "tradingCount": "0",  
+                    "realizedPnl": "0",  
+                    "strategyType": "twap",  
+                    "chasePrice": "Bid1",  
+                    "chasePercentE4": "0",  
+                    "chaseDistance": "0",  
+                    "maxChasePrice": "",  
+                    "chaseOrderPrice": "",  
+                    "arbitrageOrders": [],  
+                    "strategyPrefer": "quickExecution",  
+                    "isRebalance": false,  
+                    "interval": 60,  
+                    "leverageType": 0,  
+                    "postOnly": 0,  
+                    "triggerPrice": "0",  
+                    "isTriggered": false,  
+                    "strategyTp": "",  
+                    "strategySl": "",  
+                    "orderType": "UNKNOWN",  
+                    "orderPriceOffset": "",  
+                    "positionValue": "",  
+                    "filledPositionValue": ""  
+                }  
+            ],  
+            "nextCursor": "",  
+            "prevCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773711467052  
+        "time": 1774583153599  
     }

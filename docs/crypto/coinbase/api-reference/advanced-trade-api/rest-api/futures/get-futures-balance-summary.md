@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary
 api_type: REST
-updated_at: 2026-07-27 19:18:31.747044
+updated_at: 2026-07-28 19:16:36.766494
 ---
 
 # Get US Derivatives Balance Summary
@@ -207,10 +207,7 @@ Get a summary of balances for CFM trading
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

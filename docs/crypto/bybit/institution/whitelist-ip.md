@@ -2,61 +2,152 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/whitelist-ip
 api_type: REST
-updated_at: 2026-07-27 19:02:07.736514
+updated_at: 2026-07-28 19:01:29.002319
 ---
 
-# Get Fee Group Structure
+# Get ADL Alert
 
-Query for the [group fee structure](https://www.bybit.com/en/help-center/article/Group-Fee-Structure-Symbol-Grouping) and fee rates.
-
-note
-
-The new grouped fee structure only applies to Pro-level and Market Maker clients. It does not apply to retail traders.
-
-For more details please refer to the [fee structure update announcement](https://announcements.bybit.com/article/bybit-fee-structure-update-for-pro-and-market-maker-clients-blt06875b6d623e7581/).
+Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-ADL) (auto-deleveraging mechanism) alerts and insurance pool information.
 
 > **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
+tip
+
+Data update frequency: every 1 minute.
+
 info
 
-  * **Weighted maker volume** = Σ(Maker volume on pair × Group weighting factor (`weightingFactor`))
-  * **Weighted maker share** = (Your total weighted maker volume ÷ Bybit's total weighted maker volume)
-  * _Note: Bybit's total weighted maker volume is not provided by the API. Weighted maker share will be provided in the monthly MM report_.
+  * **ADL trigger and stop conditions are based on the following three cases:**
 
 
+  1. **Contract PnL drawdown ADL (based on the new grouped insurance pool mechanism, see examples 1 and 2)**
+
+     * **Trigger condition** :  
+`balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for contract PnL drawdown ADL)  
+and `pnlRatio` < `insurancePnlRatio` (PnL ratio threshold for triggering ADL)
+
+Where:
+
+       * **pnlRatio** : drawdown ratio of the symbol in the last 8 hours  
+Formula: `pnlRatio` = (Symbol's current PnL - Symbol's 8h max PnL) / Insurance pool's 8h max balance (`maxBalance`)  
+_Note: the symbol's Current PnL and 8h Max PnL are not provided by the API_.
+       * **Insurance pool 8h max balance (`maxBalance`)**: the maximum balance of the grouped insurance pool in the last 8 hours
+     * **Stop condition** : `pnlRatio` > `adlStopRatio` (stop ratio threshold for ADL)
+
+  2. **Insurance pool equity drawdown ADL (original mechanism, see example 3)**
+
+     * **Trigger condition** : `balance` (insurance fund balance) ≤ 0
+     * **Stop condition** : `balance` (insurance fund balance) > 0
+  3. **Excessive margin loss of a symbol after removing it from a grouped insurance pool (can be regarded as a special case of pool equity drawdown ADL)**
+
+     * To ensure pool safety, the risk control team may remove a symbol from its grouped pool and temporarily establish it as a new independent insurance pool.
+     * **Trigger condition** : `balance` (insurance fund balance) ≤ 0
+     * **Stop condition** : `balance` (insurance fund balance) > 0
+
+
+
+ADL examples: Triggered by PnL Drawdown and Insurance Pool Balance
+
+  1. **Example 1: Pool has no significant profit in the last 8 hours, then symbol loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will be triggered**
+
+     * Assume symbols A, B, and C share the same pool with an initial 8h `balance` of **1M USDT**
+     * A incurs a loss of **350K**
+     * Calculation:
+       * `pnlRatio` = -35%
+       * `balance` = 1M
+       * `adlTriggerThreshold` = 1 (a constant set by Bybit)
+       * `insurancePnlRatio` = -0.3 (a constant set by Bybit)
+     * Condition check:
+       * `balance` (1M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3)
+     * → Contract PnL drawdown ADL is triggered
+     * The system calculates the bankruptcy price at **-30% drawdown** so ADL closes **50K** worth of user positions to keep A's `pnlRatio` at -30%
+     * **Stop condition** : ADL stops if A's `pnlRatio` > `adlStopRatio` (-0.25, a constant set by Bybit)
+
+**Recovery methods** :
+
+     1. Platform injects funds into the pool and adjusts A's PnL
+     2. Pool continues to take A's positions and earns maintenance margin through liquidation on the market
+
+
+
+* * *
+
+  2. **Example 2: Pool has significant profit in the last 8 hours, but symbol loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will still be triggered**
+
+     * Assume symbols A, B, C share the same pool, initial `balance` = **1M USDT**
+     * A gains profit through liquidation, pool 8h Max Balance = **2M USDT** (A's PnL = +1M)
+     * Later A incurs a loss of **600K**
+     * Calculation:
+       * `pnlRatio` = -30%
+       * `balance` = 2M
+       * `adlTriggerThreshold` = 1 (a constant set by Bybit)
+       * `insurancePnlRatio` = -0.3 (a constant set by Bybit)
+     * Condition check:
+       * `balance` (2M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)
+     * → Contract PnL drawdown ADL is triggered
+     * The system calculates the bankruptcy price at **-30% drawdown**
+     * **Stop condition** : ADL stops if A's `pnlRatio` > `adlStopRatio` (-0.25, a constant set by Bybit)
+
+**Recovery methods** :
+
+     1. Platform injects funds into the pool and adjusts A's PnL
+     2. Pool continues to take A's positions and earns maintenance margin through liquidation on the market
+
+
+
+* * *
+
+  3. **Example 3: Pool balance reaches zero which triggers ADL**
+     * Assume symbols A, B, C, D share the same pool, initial `balance` = **1M USDT**
+     * Although none of the `pnlRatio` values for the symbols reach -30%, the pool `balance` drops to 0
+     * Condition check:
+       * `balance` (0) ≤ 0
+     * → Insurance pool equity ADL is triggered
+     * The system redistributes bankruptcy loss across symbols based on their PnL when pool balance = 0
+     * **Stop condition** : ADL stops if `balance` > 0
+
+
+
+Subscribe to the [ADL WebSocket topic](/docs/v5/websocket/public/adl-alert) for faster updates.
 
 ### HTTP Request
 
-GET`/v5/market/fee-group-info`
+GET`/v5/market/adlAlert`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productType| **true**|  string| Product type. `contract` only  
-[groupId](/docs/v5/enum#groupid)| false| string| Group ID. `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`  
+symbol| false| string| Contract name, e.g. `BTCUSDT`. Uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| List of fee group objects  
-> [groupName](/docs/v5/enum#groupname)| string| Fee group name  
-> weightingFactor| integer| Group weighting factor  
-> symbolsNumbers| integer| No. of symbols  
-> symbols| array| Symbol name  
-> feeRates| object| Fee rate details for different categories. `pro`, `marketMaker`  
->> pro| array| Pro-level fee structures  
->>> level| string| Pro level name. `Pro 1`, `Pro 2`, `Pro 3`, `Pro 4`, `Pro 5`, `Pro 6`  
->>> takerFeeRate| string| Taker fee rate  
->>> makerFeeRate| string| Maker fee rate  
->>> makerRebate| string| Maker rebate fee rate  
->> marketMaker| array| Market Maker-level fee structures  
->>> level| string| Market Maker level name. `MM 1`, `MM 2`, `MM 3`  
->>> takerFeeRate| string| Taker fee rate  
->>> makerFeeRate| string| Maker fee rate  
->>> makerRebate| string| Maker rebate fee rate  
-> updateTime| string| Latest data update timestamp (ms)  
+updateTime| string| Latest data update timestamp (ms)  
+list| array| Object  
+> coin| string| Token of the insurance pool  
+> symbol| string| Trading pair name  
+> balance| string| Balance of the insurance fund. Used to determine if ADL is triggered. For shared insurance pool, the "balance" field will follow a T+1 refresh mechanism and will be updated daily at 00:00 UTC.  
+> maxBalance| string| Deprecated, always return "". Maximum balance of the insurance pool in the last 8 hours  
+> insurancePnlRatio| string| PnL ratio threshold for triggering **contract PnL drawdown ADL**
+
+  * ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value
+
+  
+> pnlRatio| string| Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped  
+> adlTriggerThreshold| string| Trigger threshold for **contract PnL drawdown ADL**
+
+  * This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL
+
+  
+> adlStopRatio| string| Stop ratio threshold for **contract PnL drawdown ADL**
+
+  * ADL stops when the symbol's 8 hours drawdown ratio falls below this value
+
+  
   
 * * *
 
@@ -71,7 +162,7 @@ list| array| List of fee group objects
 
     
     
-    GET /v5/market/fee-group-info?productType=contract HTTP/1.1  
+    GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -82,9 +173,8 @@ list| array| List of fee group objects
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fee_group_info(  
-        productType="contract",  
-        groupId="1"  
+    print(session.get_adl_alert(  
+        symbol="BTCUSDT"  
     ))  
     
     
@@ -107,1429 +197,173 @@ list| array| List of fee group objects
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "updatedTime": "1757733960000",  
             "list": [  
                 {  
-                    "groupName": "Innovation-Zone",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 119,  
-                    "symbols": [  
-                        "HAEDALUSDT",  
-                        "OPGUSDT",  
-                        "BSBUSDT",  
-                        "FHEUSDT",  
-                        "STOUSDT",  
-                        "GENIUSUSDT",  
-                        "DBRUSDT",  
-                        "ESUSDT",  
-                        "AVNTUSDT",  
-                        "MAGMAUSDT",  
-                        "BTRUSDT",  
-                        "TLMUSDT",  
-                        "HEMIUSDT",  
-                        "AZTECUSDT",  
-                        "BLUAIUSDT",  
-                        "JCTUSDT",  
-                        "XPINUSDT",  
-                        "CYSUSDT",  
-                        "B2USDT",  
-                        "BOBBOBUSDT",  
-                        "RECALLUSDT",  
-                        "PTBUSDT",  
-                        "TRUSTUSDT",  
-                        "WHITEWHALEUSDT",  
-                        "HIGHUSDT",  
-                        "NAORISUSDT",  
-                        "DUSKUSDT",  
-                        "MLNUSDT",  
-                        "VVVUSDT",  
-                        "AWEUSDT",  
-                        "CROSSUSDT",  
-                        "EVAAUSDT",  
-                        "ASPUSDT",  
-                        "TURTLEUSDT",  
-                        "ARIAUSDT",  
-                        "ALPINEUSDT",  
-                        "GPSUSDT",  
-                        "RAVEUSDT",  
-                        "CLOUSDT",  
-                        "ROAMUSDT",  
-                        "SAPIENUSDT",  
-                        "UAIUSDT",  
-                        "BEATUSDT",  
-                        "FIGHTUSDT",  
-                        "BRUSDT",  
-                        "BLESSUSDT",  
-                        "SOSOUSDT",  
-                        "BROCCOLIUSDT",  
-                        "DOLOUSDT",  
-                        "XDCUSDT",  
-                        "BUSDT",  
-                        "JELLYJELLYUSDT",  
-                        "GWEIUSDT",  
-                        "BOBAUSDT",  
-                        "TACUSDT",  
-                        "SIRENUSDT",  
-                        "ASRUSDT",  
-                        "ALLOUSDT",  
-                        "MITOUSDT",  
-                        "BILLUSDT",  
-                        "1000TAGUSDT",  
-                        "AIOUSDT",  
-                        "FOLKSUSDT",  
-                        "APRUSDT",  
-                        "TAUSDT",  
-                        "BLENDUSDT",  
-                        "COAIUSDT",  
-                        "CTRUSDT",  
-                        "ZESTUSDT",  
-                        "PIEVERSEUSDT",  
-                        "SPORTFUNUSDT",  
-                        "ACXUSDT",  
-                        "TRIAUSDT",  
-                        "ESPORTSUSDT",  
-                        "GIGGLEUSDT",  
-                        "ACUUSDT",  
-                        "PHAROSUSDT",  
-                        "CUSDT",  
-                        "PUMPBTCUSDT",  
-                        "LABUSDT",  
-                        "TUTUSDT",  
-                        "SCRTUSDT",  
-                        "IRYSUSDT",  
-                        "DOODUSDT",  
-                        "PEAQUSDT",  
-                        "BASEDUSDT",  
-                        "LUMIAUSDT",  
-                        "MUSDT",  
-                        "USELESSUSDT",  
-                        "UBUSDT",  
-                        "PLAYSOUTUSDT",  
-                        "FLOCKUSDT",  
-                        "PROMPTUSDT",  
-                        "OPENUSDT",  
-                        "CLANKERUSDT",  
-                        "EPICUSDT",  
-                        "USUSDT",  
-                        "POWERUSDT",  
-                        "ELSAUSDT",  
-                        "BIRBUSDT",  
-                        "ATUSDT",  
-                        "LIGHTUSDT",  
-                        "INUSDT",  
-                        "AKEUSDT",  
-                        "AIGENSYNUSDT",  
-                        "PRLUSDT",  
-                        "STBLUSDT",  
-                        "ZKPUSDT",  
-                        "AGIUSDT",  
-                        "HANAUSDT",  
-                        "BMTUSDT",  
-                        "QUSDT",  
-                        "AIOZUSDT",  
-                        "XNYUSDT",  
-                        "BANKUSDT",  
-                        "VELVETUSDT",  
-                        "SPACEUSDT",  
-                        "4USDT",  
-                        "MYXUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "Pre-listing",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 1,  
-                    "symbols": [  
-                        "BPUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G1(Major Coins)",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 4,  
-                    "symbols": [  
-                        "BTCUSDT",  
-                        "ETHUSDT",  
-                        "XRPUSDT",  
-                        "SOLUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.0001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00022",  
-                                "makerFeeRate": "0.000025",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.0002",  
-                                "makerFeeRate": "0.00001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00015",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00001"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G2(High Growth)",  
-                    "weightingFactor": 5,  
-                    "symbolsNumbers": 38,  
-                    "symbols": [  
-                        "WLDUSDT",  
-                        "SUIUSDT",  
-                        "1000NEIROCTOUSDT",  
-                        "WCTUSDT",  
-                        "MOODENGUSDT",  
-                        "1000BONKUSDT",  
-                        "UNIUSDT",  
-                        "VIRTUALUSDT",  
-                        "TRBUSDT",  
-                        "LTCUSDT",  
-                        "GOATUSDT",  
-                        "PNUTUSDT",  
-                        "KAITOUSDT",  
-                        "HYPEUSDT",  
-                        "NEARUSDT",  
-                        "XRPUSD",  
-                        "TIAUSDT",  
-                        "INITUSDT",  
-                        "LINKUSDT",  
-                        "WIFUSDT",  
-                        "ETHUSD",  
-                        "ONDOUSDT",  
-                        "BNBUSDT",  
-                        "DOGEUSDT",  
-                        "GALAUSDT",  
-                        "BTCUSD",  
-                        "FARTCOINUSDT",  
-                        "TRUMPUSDT",  
-                        "SOLAYERUSDT",  
-                        "POPCATUSDT",  
-                        "AAVEUSDT",  
-                        "OPUSDT",  
-                        "ENAUSDT",  
-                        "ADAUSDT",  
-                        "ARBUSDT",  
-                        "1000PEPEUSDT",  
-                        "AVAXUSDT",  
-                        "CRVUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0.000125",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0.0001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.000275",  
-                                "makerFeeRate": "0.000075",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0.000025",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00001"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G3(Mid-Tier Liquidity)",  
-                    "weightingFactor": 8,  
-                    "symbolsNumbers": 81,  
-                    "symbols": [  
-                        "JASMYUSDT",  
-                        "IOTAUSDT",  
-                        "RUNEUSDT",  
-                        "MANAUSDT",  
-                        "FILUSDT",  
-                        "ETHFIUSDT",  
-                        "DOTUSD",  
-                        "JTOUSDT",  
-                        "MNTUSDT",  
-                        "BCHUSDT",  
-                        "SUSDT",  
-                        "AXSUSDT",  
-                        "XTZUSDT",  
-                        "SOLUSD",  
-                        "BSVUSDT",  
-                        "SEIUSDT",  
-                        "SHIB1000USDT",  
-                        "MASKUSDT",  
-                        "CAKEUSDT",  
-                        "DYDXUSDT",  
-                        "PYTHUSDT",  
-                        "ZKUSDT",  
-                        "RENDERUSDT",  
-                        "STRKUSDT",  
-                        "GASUSDT",  
-                        "1000FLOKIUSDT",  
-                        "ALGOUSDT",  
-                        "DOTUSDT",  
-                        "PENGUUSDT",  
-                        "PAXGUSDT",  
-                        "SUIUSD",  
-                        "XAUTUSDT",  
-                        "MOVEUSDT",  
-                        "NOTUSDT",  
-                        "USUALUSDT",  
-                        "ADAUSD",  
-                        "ARKMUSDT",  
-                        "MEWUSDT",  
-                        "STXUSDT",  
-                        "HBARUSDT",  
-                        "KASUSDT",  
-                        "XMRUSDT",  
-                        "COWUSDT",  
-                        "THETAUSDT",  
-                        "APEUSDT",  
-                        "JUPUSDT",  
-                        "IPUSDT",  
-                        "TAOUSDT",  
-                        "ICPUSDT",  
-                        "EIGENUSDT",  
-                        "DOGEUSD",  
-                        "BERAUSDT",  
-                        "PENDLEUSDT",  
-                        "APTUSDT",  
-                        "ENSUSDT",  
-                        "ARKUSDT",  
-                        "BOMEUSDT",  
-                        "GRTUSDT",  
-                        "SANDUSDT",  
-                        "BIGTIMEUSDT",  
-                        "XLMUSDT",  
-                        "LDOUSDT",  
-                        "POLUSDT",  
-                        "1000TURBOUSDT",  
-                        "ORDIUSDT",  
-                        "ZROUSDT",  
-                        "INJUSDT",  
-                        "AERGOUSDT",  
-                        "COMPUSDT",  
-                        "PEOPLEUSDT",  
-                        "TRXUSDT",  
-                        "GMTUSDT",  
-                        "VETUSDT",  
-                        "ATOMUSDT",  
-                        "NEOUSDT",  
-                        "IMXUSDT",  
-                        "LTCUSD",  
-                        "MEUSDT",  
-                        "MAGICUSDT",  
-                        "ETCUSDT",  
-                        "AUCTIONUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.000075",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00026",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G4(Mid-Tier Activation)",  
-                    "weightingFactor": 15,  
-                    "symbolsNumbers": 106,  
-                    "symbols": [  
-                        "LPTUSDT",  
-                        "SHELLUSDT",  
-                        "ZORAUSDT",  
-                        "MANTAUSDT",  
-                        "CELOUSDT",  
-                        "HYPERUSDT",  
-                        "BRETTUSDT",  
-                        "CVCUSDT",  
-                        "SPXUSDT",  
-                        "SIGNUSDT",  
-                        "ZEREBROUSDT",  
-                        "FIDAUSDT",  
-                        "SSVUSDT",  
-                        "API3USDT",  
-                        "IOUSDT",  
-                        "SUPERUSDT",  
-                        "TAIKOUSDT",  
-                        "SUSHIUSDT",  
-                        "1000000MOGUSDT",  
-                        "CROUSDT",  
-                        "BEAMUSDT",  
-                        "WALUSDT",  
-                        "10000SATSUSDT",  
-                        "1000CATUSDT",  
-                        "ACTUSDT",  
-                        "RAYDIUMUSDT",  
-                        "HIVEUSDT",  
-                        "SNTUSDT",  
-                        "1000000BABYDOGEUSDT",  
-                        "BANANAUSDT",  
-                        "ATHUSDT",  
-                        "DEEPUSDT",  
-                        "ARUSDT",  
-                        "XAIUSDT",  
-                        "ALCHUSDT",  
-                        "COOKIEUSDT",  
-                        "FLOWUSDT",  
-                        "MELANIAUSDT",  
-                        "ORCAUSDT",  
-                        "NMRUSDT",  
-                        "AIXBTUSDT",  
-                        "GRASSUSDT",  
-                        "SAFEUSDT",  
-                        "BIOUSDT",  
-                        "TSTBSCUSDT",  
-                        "AKTUSDT",  
-                        "AVAAIUSDT",  
-                        "PARTIUSDT",  
-                        "VINEUSDT",  
-                        "MEMEUSDT",  
-                        "CGPTUSDT",  
-                        "RSRUSDT",  
-                        "CHILLGUYUSDT",  
-                        "HMSTRUSDT",  
-                        "BLURUSDT",  
-                        "BABYUSDT",  
-                        "SOLVUSDT",  
-                        "NILUSDT",  
-                        "ZETAUSDT",  
-                        "VANAUSDT",  
-                        "ROSEUSDT",  
-                        "DYMUSDT",  
-                        "MAVIAUSDT",  
-                        "PUNDIXUSDT",  
-                        "B3USDT",  
-                        "LRCUSDT",  
-                        "1000TOSHIUSDT",  
-                        "GRIFFAINUSDT",  
-                        "BANUSDT",  
-                        "PUFFERUSDT",  
-                        "EGLDUSDT",  
-                        "KSMUSDT",  
-                        "KAVAUSDT",  
-                        "CATIUSDT",  
-                        "PIXELUSDT",  
-                        "ARCUSDT",  
-                        "SONICUSDT",  
-                        "ICXUSDT",  
-                        "XCNUSDT",  
-                        "WAVESUSDT",  
-                        "AEROUSDT",  
-                        "BBUSDT",  
-                        "MUBARAKUSDT",  
-                        "XVGUSDT",  
-                        "SWARMSUSDT",  
-                        "PLUMEUSDT",  
-                        "1000RATSUSDT",  
-                        "ANIMEUSDT",  
-                        "MERLUSDT",  
-                        "DRIFTUSDT",  
-                        "SAGAUSDT",  
-                        "REZUSDT",  
-                        "PORTALUSDT",  
-                        "WUSDT",  
-                        "KMNOUSDT",  
-                        "CETUSUSDT",  
-                        "ZBCNUSDT",  
-                        "GIGAUSDT",  
-                        "CARVUSDT",  
-                        "GUNUSDT",  
-                        "AGLDUSDT",  
-                        "RAREUSDT",  
-                        "PIPPINUSDT",  
-                        "MOCAUSDT",  
-                        "KERNELUSDT",  
-                        "ZECUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G5(Long Tail)",  
-                    "weightingFactor": 20,  
-                    "symbolsNumbers": 266,  
-                    "symbols": [  
-                        "CFXUSDT",  
-                        "LQTYUSDT",  
-                        "STORJUSDT",  
-                        "TRUTHUSDT",  
-                        "ETHBTCUSDT",  
-                        "IDUSDT",  
-                        "BTCUSDT-26JUN26",  
-                        "TUSDT",  
-                        "UMAUSDT",  
-                        "ETHUSDT-19JUN26",  
-                        "ETHUSDT-25SEP26",  
-                        "LYNUSDT",  
-                        "OPUSD",  
-                        "XAUTUSDT-03JUL26",  
-                        "SOMIUSDT",  
-                        "REDUSDT",  
-                        "VANRYUSDT",  
-                        "PROVEUSDT",  
-                        "SNXUSDT",  
-                        "BTCUSDT-26MAR27",  
-                        "HEIUSDT",  
-                        "ICNTUSDT",  
-                        "SKYUSDT",  
-                        "ORDERUSDT",  
-                        "MIRAUSDT",  
-                        "WC_SCO_MAR_USDT-20JUN26",  
-                        "MONUSDT",  
-                        "XLMUSD",  
-                        "DASHUSDT",  
-                        "LAUSDT",  
-                        "WC_SUI_CAN_USDT-24JUN26",  
-                        "YFIUSDT",  
-                        "THEUSDT",  
-                        "ZKCUSDT",  
-                        "ZENUSDT",  
-                        "TNSRUSDT",  
-                        "FLUIDUSDT",  
-                        "OGUSDT",  
-                        "ALICEUSDT",  
-                        "CTCUSDT",  
-                        "XRPUSDT-19JUN26",  
-                        "WC_MAR_HAI_USDT-25JUN26",  
-                        "WAXPUSDT",  
-                        "ETHUSDT-28AUG26",  
-                        "WC_CZE_MEX_USDT-25JUN26",  
-                        "BATUSDT",  
-                        "UNIUSD",  
-                        "METUSDT",  
-                        "YBUSDT",  
-                        "C98USDT",  
-                        "WC_ENG_GHA_USDT-23JUN26",  
-                        "DOGEUSDT-26JUN26",  
-                        "WC_BEL_IRN_USDT-21JUN26",  
-                        "RPLUSDT",  
-                        "ONTUSDT",  
-                        "ONGUSDT",  
-                        "ETHUSDU26",  
-                        "ETHUSDM26",  
-                        "HNTUSDT",  
-                        "ETCUSD",  
-                        "XAUTUSDT-31JUL26",  
-                        "BTCUSDU26",  
-                        "WC_SUI_BIH_USDT-18JUN26",  
-                        "SOLUSDT-26JUN26",  
-                        "KNCUSDT",  
-                        "NIGHTUSDT",  
-                        "ETHUSDT-25DEC26",  
-                        "WC_URU_CPV_USDT-22JUN26",  
-                        "LINEAUSDT",  
-                        "KAIAUSDT",  
-                        "WC_PAN_CRO_USDT-24JUN26",  
-                        "WC_TUN_JPN_USDT-21JUN26",  
-                        "XRPUSDT-03JUL26",  
-                        "WC_TUR_PAR_USDT-20JUN26",  
-                        "WC_NZL_EGY_USDT-22JUN26",  
-                        "AVAXUSD",  
-                        "MBOXUSDT",  
-                        "CCUSDT",  
-                        "ERAUSDT",  
-                        "ETHUSDT-03JUL26",  
-                        "BTCUSDT-25SEP26",  
-                        "PHAUSDT",  
-                        "WC_ESP_KSA_USDT-21JUN26",  
-                        "CYBERUSDT",  
-                        "CHRUSDT",  
-                        "RONINUSDT",  
-                        "IOTXUSDT",  
-                        "RLUSDUSDT",  
-                        "ETHUSDT-26MAR27",  
-                        "ANKRUSDT",  
-                        "ROBOUSDT",  
-                        "EDENUSDT",  
-                        "APTUSD",  
-                        "KGENUSDT",  
-                        "SOLUSDT-31JUL26",  
-                        "DEXEUSDT",  
-                        "FOGOUSDT",  
-                        "SCRUSDT",  
-                        "SOLUSDT-03JUL26",  
-                        "METISUSDT",  
-                        "VELODROMEUSDT",  
-                        "WC_USA_AUS_USDT-19JUN26",  
-                        "ENSOUSDT",  
-                        "WOOUSDT",  
-                        "0GUSDT",  
-                        "DOGEUSDT-31JUL26",  
-                        "WC_CAN_QAT_USDT-19JUN26",  
-                        "HFTUSDT",  
-                        "OKBUSDT",  
-                        "SQDUSDT",  
-                        "IOSTUSDT",  
-                        "BTCUSDM26",  
-                        "AXLUSDT",  
-                        "STEEMUSDT",  
-                        "BTCUSDT-03JUL26",  
-                        "NEARUSD",  
-                        "XVSUSDT",  
-                        "SPKUSDT",  
-                        "FFUSDT",  
-                        "MAVUSDT",  
-                        "WC_JOR_ALG_USDT-23JUN26",  
-                        "SYRUPUSDT",  
-                        "APEXUSDT",  
-                        "WC_NOR_SEN_USDT-23JUN26",  
-                        "SOLUSDT-19JUN26",  
-                        "QTUMUSDT",  
-                        "ASTERUSDT",  
-                        "MNTUSDT-31JUL26",  
-                        "BTCUSDT-31JUL26",  
-                        "WC_RSA_KOR_USDT-25JUN26",  
-                        "XRPUSDT-31JUL26",  
-                        "JSTUSDT",  
-                        "LUNA2USDT",  
-                        "1000XECUSDT",  
-                        "TWTUSDT",  
-                        "ARPAUSDT",  
-                        "TREEUSDT",  
-                        "BTCUSDT-28AUG26",  
-                        "BTCUSDT-19JUN26",  
-                        "WC_GER_CIV_USDT-20JUN26",  
-                        "WC_FRA_IRQ_USDT-22JUN26",  
-                        "EDUUSDT",  
-                        "WC_BIH_QAT_USDT-24JUN26",  
-                        "XANUSDT",  
-                        "SUNUSDT",  
-                        "ZILUSDT",  
-                        "WC_ARG_AUT_USDT-22JUN26",  
-                        "MNTUSDT-19JUN26",  
-                        "POLYXUSDT",  
-                        "BANANAS31USDT",  
-                        "BTCUSDT-25DEC26",  
-                        "FUSDT",  
-                        "FLUXUSDT",  
-                        "USTCUSDT",  
-                        "HUSDT",  
-                        "WC_CZE_RSA_USDT-18JUN26",  
-                        "XPLUSDT",  
-                        "CHIPUSDT",  
-                        "BELUSDT",  
-                        "MINAUSDT",  
-                        "BREVUSDT",  
-                        "SENTUSDT",  
-                        "ZAMAUSDT",  
-                        "XRPUSDT-26JUN26",  
-                        "ENJUSDT",  
-                        "BARDUSDT",  
-                        "USDEUSDT",  
-                        "DOGEUSDT-03JUL26",  
-                        "MOVRUSDT",  
-                        "COREUSDT",  
-                        "SLPUSDT",  
-                        "MNTUSDT-26JUN26",  
-                        "ESPUSDT",  
-                        "AVAUSDT",  
-                        "MNTUSD",  
-                        "POWRUSDT",  
-                        "ZBTUSDT",  
-                        "MNTUSDT-03JUL26",  
-                        "SKLUSDT",  
-                        "STGUSDT",  
-                        "TOWNSUSDT",  
-                        "SKYAI1USDT",  
-                        "HUMAUSDT",  
-                        "BCHUSD",  
-                        "RIVERUSDT",  
-                        "LITUSDT",  
-                        "FORMUSDT",  
-                        "BTCUSDZ26",  
-                        "PUMPFUNUSDT",  
-                        "HOMEUSDT",  
-                        "QNTUSDT",  
-                        "OGNUSDT",  
-                        "INXUSDT",  
-                        "LSKUSDT",  
-                        "WC_COL_COD_USDT-24JUN26",  
-                        "ASTRUSDT",  
-                        "EDGEUSDT",  
-                        "USDCUSDT",  
-                        "ETHUSDT-31JUL26",  
-                        "2ZUSDT",  
-                        "SXTUSDT",  
-                        "XAUTUSDT-19JUN26",  
-                        "CHZUSDT",  
-                        "HOLOUSDT",  
-                        "1000BTTUSDT",  
-                        "XAUTUSDT-26JUN26",  
-                        "GMXUSDT",  
-                        "CFGUSDT",  
-                        "CKBUSDT",  
-                        "BICOUSDT",  
-                        "RESOLVUSDT",  
-                        "NXPCUSDT",  
-                        "AAVEUSD",  
-                        "ACHUSDT",  
-                        "FILUSD",  
-                        "WETUSDT",  
-                        "ACEUSDT",  
-                        "DIAUSDT",  
-                        "NEWTUSDT",  
-                        "KITEUSDT",  
-                        "10000NEXUSDT",  
-                        "SKRUSDT",  
-                        "WC_POR_UZB_USDT-23JUN26",  
-                        "BLASTUSDT",  
-                        "WC_MEX_KOR_USDT-19JUN26",  
-                        "MMTUSDT",  
-                        "WC_NED_SWE_USDT-20JUN26",  
-                        "AUSDT",  
-                        "GLMUSDT",  
-                        "COTIUSDT",  
-                        "STABLEUSDT",  
-                        "1INCHUSDT",  
-                        "ETHUSDT-26JUN26",  
-                        "WC_SCO_BRA_USDT-25JUN26",  
-                        "MORPHOUSDT",  
-                        "RVNUSDT",  
-                        "USD1USDT",  
-                        "CVXUSDT",  
-                        "YGGUSDT",  
-                        "EULUSDT",  
-                        "SAHARAUSDT",  
-                        "MTLUSDT",  
-                        "RLCUSDT",  
-                        "SLXUSDT",  
-                        "WC_BRA_HAI_USDT-20JUN26",  
-                        "ETHUSDZ26",  
-                        "MEGAUSDT",  
-                        "BTWUSDT",  
-                        "LINKUSD",  
-                        "SOPHUSDT",  
-                        "VELOUSDT",  
-                        "DOGEUSDT-19JUN26",  
-                        "OPNUSDT",  
-                        "WC_ECU_CUW_USDT-21JUN26",  
-                        "ALTUSDT",  
-                        "KATUSDT",  
-                        "FLRUSDT",  
-                        "SOONUSDT",  
-                        "BANDUSDT",  
-                        "ZRXUSDT",  
-                        "1000LUNCUSDT",  
-                        "WLFIUSDT",  
-                        "NOMUSDT",  
-                        "BNTUSDT",  
-                        "ILVUSDT",  
-                        "AEVOUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000125"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "USDC",  
-                    "weightingFactor": 8,  
-                    "symbolsNumbers": 69,  
-                    "symbols": [  
-                        "UNIPERP",  
-                        "LTCPERP",  
-                        "ETCPERP",  
-                        "ICPPERP",  
-                        "VIRTUALPERP",  
-                        "ORDIPERP",  
-                        "POLPERP",  
-                        "PNUTPERP",  
-                        "FARTCOINPERP",  
-                        "CRVPERP",  
-                        "DOTPERP",  
-                        "TWTPERP",  
-                        "EIGENPERP",  
-                        "NIGHTPERP",  
-                        "AEVOPERP",  
-                        "1000NEIROCTOPERP",  
-                        "PUMPFUNPERP",  
-                        "PENDLEPERP",  
-                        "HYPEPERP",  
-                        "ETHFIPERP",  
-                        "XMRPERP",  
-                        "RESOLVPERP",  
-                        "WLFIPERP",  
-                        "HBARPERP",  
-                        "XLMPERP",  
-                        "ARBPERP",  
-                        "SEIPERP",  
-                        "1000PEPEPERP",  
-                        "XRPPERP",  
-                        "XPLPERP",  
-                        "LINKPERP",  
-                        "POPCATPERP",  
-                        "ASTERPERP",  
-                        "PENGUPERP",  
-                        "BNBPERP",  
-                        "ETHPERP",  
-                        "ICNTPERP",  
-                        "NOTPERP",  
-                        "SAHARAPERP",  
-                        "ENAPERP",  
-                        "OPPERP",  
-                        "WLDPERP",  
-                        "WIFPERP",  
-                        "AVNTPERP",  
-                        "XAUTPERP",  
-                        "MOODENGPERP",  
-                        "TRXPERP",  
-                        "TAOPERP",  
-                        "HPERP",  
-                        "TRUMPPERP",  
-                        "TIAPERP",  
-                        "IPPERP",  
-                        "STRKPERP",  
-                        "FILPERP",  
-                        "SPXPERP",  
-                        "SHIB1000PERP",  
-                        "BTCPERP",  
-                        "KASPERP",  
-                        "ONDOPERP",  
-                        "SOLPERP",  
-                        "1000BONKPERP",  
-                        "INJPERP",  
-                        "SUIPERP",  
-                        "MERLPERP",  
-                        "BCHPERP",  
-                        "PAXGPERP",  
-                        "AAVEPERP",  
-                        "MNTPERP",  
-                        "DOGEPERP"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.000275",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000015"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G9(Stock & Commodity Tradfi Perp",  
-                    "weightingFactor": 10,  
-                    "symbolsNumbers": 62,  
-                    "symbols": [  
-                        "SAMSUNGUSDT",  
-                        "XAGUSDT",  
-                        "EWYUSDT",  
-                        "QQQUSDT",  
-                        "ASTSUSDT",  
-                        "FLNCUSDT",  
-                        "GOOGLUSDT",  
-                        "AAOIUSDT",  
-                        "CRCLUSDT",  
-                        "SPCXUSDT",  
-                        "AAPLUSDT",  
-                        "PLTRUSDT",  
-                        "ONDSUSDT",  
-                        "HYUNDAIUSDT",  
-                        "BABAUSDT",  
-                        "AXTIUSDT",  
-                        "TSMUSDT",  
-                        "IRENUSDT",  
-                        "HOODUSDT",  
-                        "AMDSTOCKUSDT",  
-                        "NBISUSDT",  
-                        "METAUSDT",  
-                        "CSCOUSDT",  
-                        "LITEUSDT",  
-                        "CBRSUSDT",  
-                        "MRVLUSDT",  
-                        "AMATUSDT",  
-                        "ORCLUSDT",  
-                        "NOKIAUSDT",  
-                        "DELLUSDT",  
-                        "CRWVUSDT",  
-                        "SOXLUSDT",  
-                        "SNDKUSDT",  
-                        "MSTRUSDT",  
-                        "COINUSDT",  
-                        "IWMUSDT",  
-                        "NVDAUSDT",  
-                        "ARMUSDT",  
-                        "NOWUSDT",  
-                        "TSLAUSDT",  
-                        "MSFTUSDT",  
-                        "EWTUSDT",  
-                        "COHRUSDT",  
-                        "XAUUSDT",  
-                        "BZUSDT",  
-                        "AVGOUSDT",  
-                        "LLYUSDT",  
-                        "MUUSDT",  
-                        "BEUSDT",  
-                        "WDCUSDT",  
-                        "RKLBUSDT",  
-                        "QCOMUSDT",  
-                        "SKHYNIXUSDT",  
-                        "SPYUSDT",  
-                        "BMNRUSDT",  
-                        "CLUSDT",  
-                        "AMZNUSDT",  
-                        "DRAMUSDT",  
-                        "IBMUSDT",  
-                        "EWJUSDT",  
-                        "INTCUSDT",  
-                        "QNTXUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.0002",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00016",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00015",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00014",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.000125",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
+                    "coin": "USDT",  
+                    "symbol": "BTCUSDT",  
+                    "balance": "92203504694.99632",  
+                    "maxBalance": "92231510324.75948",  
+                    "insurancePnlRatio": "-0.3",  
+                    "pnlRatio": "-0.560973",  
+                    "adlTriggerThreshold": "10000",  
+                    "adlStopRatio": "-0.25"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1781780429273  
+        "time": 1757734022014  
     }
 
 ---
 
-# 查詢分組手續費结构
+# 查詢ADL告警
 
-查詢[分組手續費結構](https://www.bybit.com/en/help-center/article/Group-Fee-Structure-Symbol-Grouping)相關信息及費率
+查詢按組劃分保險池 ADL 告警及相關資訊
 
-備註
+> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
-新的分組費率結構僅適用於專業級別和做市商客戶, 不適用於散戶交易者
+提示
 
-更多詳情請參考[費率結構更新公告](https://announcements.bybit.com/article/bybit-fee-structure-update-for-pro-and-market-maker-clients-blt06875b6d623e7581/)
-
-> **覆蓋範圍: USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
+響應數據基於每分鐘快照
 
 信息
 
-  * **加權 Maker 交易量** = Σ(單個交易對的 Maker 交易量 × `weightingFactor`組別權重係數)
-  * **加權 Maker 份額** = (您的加權 Maker 總交易量 ÷ Bybit 加權 Maker 總交易量)  
-_注意: Bybit 加權 Maker 總交易量不會通過 API 提供，加權 Maker 份額將會在每月的做市商報告中提供_
+  * **ADL 觸發與停止條件基於以下三種情況:**
 
 
+  1. **合約盈虧回撤 ADL (基於分組保險池的新機制, 詳見用例 1, 2)**
+
+     * **觸發條件** :  
+`balance` (保險基金餘額) > `adlTriggerThreshold` (合約盈虧回撤 ADL 的觸發閾值)  
+且 `pnlRatio` < `insurancePnlRatio` (觸發 ADL 的盈虧比例閾值)
+
+其中:
+
+       * **pnlRatio** : symbol 在 8 小時內的回撤比例  
+計算公式: `pnlRatio` = (symbol 當前 PnL - symbol 8h 最大 PnL) / 保險池 8h 最大餘額(`maxBalance`)  
+_注意: symbol 當前 PnL 與 symbol 8h 最大 PnL 的具體數值未在 API 中直接提供_
+       * **保險池 8h 最大餘額(`maxBalance`)**: 最近 8 小時內, 該分組保險池的最大餘額
+     * **停止條件** : `pnlRatio` > `adlStopRatio` (ADL 停止回撤比例閾值)
+
+  2. **保險池整體淨值 (equity) 虧損觸發 ADL (原有機制, 詳見用例 3)**
+
+     * **觸發條件** : `balance` (保險基金餘額) ≤ 0
+     * **停止條件** : `balance` (保險基金餘額) > 0
+  3. **symbol 在分組保險池中出現過於劇烈的保證金虧損 (可視作保險池整體淨值虧損的一種特殊情況)**
+
+     * 為確保資金池整體安全性, 風控團隊可將該幣對自分組保險池中移出, 並臨時設立為獨立保險池
+     * **觸發條件** : 當虧損的 symbol 被移出所屬保險池, 且 `balance` (保險基金餘額) ≤ 0 時, 觸發 ADL
+     * **停止條件** : `balance` (保險基金餘額) > 0
+
+
+
+ADL 示例: 按百分比回撤及保險池餘額觸發
+
+  1. **場景 1: 保險池在 8 小時內未產生大額盈利, 當symbol 虧損超過盈虧比閾值(`insurancePnlRatio`)時，將觸發 ADL**
+
+     * 假設 A、B、C 三個 symbol 共用保險池, 8h 初始 `balance` (保險基金餘額) = **1M USDT**
+     * A 持倉發生虧損, 虧損金額 = **350K**
+     * 此時計算:
+       * `pnlRatio` = -35%
+       * `balance` = 1M
+       * `adlTriggerThreshold` = 1 (Bybit配置常數)
+       * `insurancePnlRatio` = -0.3 (Bybit配置常數)
+     * 條件判斷:
+       * `balance` (1M) > `adlTriggerThreshold` (1) 
+       * `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3) 
+     * → 觸發合約盈虧回撤 ADL
+     * 系統依據 **-30% 回撤比例** 計算破產價格, 用戶需補貼 **50K** , 使 A 的 `pnlRatio` 控制在 -30%
+     * **停止條件** : 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL
+
+**恢復方式** :
+
+     1. 平台向保險池注資並調整 A 的盈虧值
+     2. 保險池繼續承接 A 的倉位, 並透過甩賣賺取維持保證金
+
+
+
+* * *
+
+  2. **場景 2: 保險池在 8 小時內產生大額盈利, 但symbol 虧損超過盈虧比閾值(`insurancePnlRatio`)時，仍將觸發 ADL**
+
+     * 假設 A、B、C 三個 symbol 共用保險池, 初始 `balance` = **1M USDT**
+     * A 持倉甩賣獲得利潤, 使保險池 8h 最大餘額 = **2M USDT** (A 的 PnL = +1M)
+     * 隨後 A 發生虧損, 虧損金額 = **600K**
+     * 此時計算:
+       * `pnlRatio` = -30%
+       * `balance` = 2M
+       * `adlTriggerThreshold` = 1 (Bybit配置常數)
+       * `insurancePnlRatio` = -0.3 (Bybit配置常數)
+     * 條件判斷:
+       * `balance` (2M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)
+     * → 觸發合約盈虧回撤 ADL
+     * 系統依據 **-30% 回撤比例** 計算破產價格
+     * **停止條件** : 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL
+
+**恢復方式** :
+
+     1. 平台向保險池注資並調整 A 的盈虧值
+     2. 保險池繼續承接 A 的倉位, 並透過甩賣賺取維持保證金
+
+
+
+* * *
+
+  3. **場景 3: 保險池餘額歸零觸發 ADL**
+     * 假設 A、B、C、D 四個 symbol 共用保險池, 初始 `balance` = **1M USDT**
+     * 雖然各 symbol 的 `pnlRatio` 均未達 -30%, 但保險池 `balance` 已降至 0
+     * 條件判斷:
+       * `balance` (0) ≤ 0
+     * → 觸發保險池整體淨值 ADL
+     * 系統依據各 symbol 的盈虧情況進行破產分攤, 計算保險池為 0 時的破產價格
+     * **停止條件** : 若 `balance` > 0, 則停止 ADL
+
+
+
+訂閱 [ADL告警](/docs/zh-TW/v5/websocket/public/adl-alert) 以獲取更快速的更新
 
 ### HTTP 請求
 
-GET`/v5/market/fee-group-info`
+GET`/v5/market/adlAlert`
 
 ### 請求參數
 
-Parameter| Required| Type| Comments  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-productType| **true**|  string| 產品類型, 僅支援`contract`  
-[groupId](/docs/zh-TW/v5/enum#groupid)| false| string| 分組ID, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`  
+symbol| false| string| 合約名稱，例如 `BTCUSDT`，僅限大寫  
   
 ### 響應參數
 
-Parameter| Type| Comments  
+參數| 類型| 說明  
 ---|---|---  
+updateTime| string| 數據最近更新的時間戳 (毫秒)  
 list| array| Object  
-> [groupName](/docs/zh-TW/v5/enum#groupname)| string| 費率群組名稱  
-> weightingFactor| integer| 分組權重  
-> symbolsNumbers| integer| 分组交易对数量  
-> symbols| array| 合約名稱  
-> feeRates| object| 不同類別的費率詳細資訊, `pro`, `marketMaker`  
->> pro| array| Pro 等級費率結構  
->>> level| string| Pro 等級名稱, `Pro 1`, `Pro 2`, `Pro 3`, `Pro 4`, `Pro 5`, `Pro 6`  
->>> takerFeeRate| string| 吃單手續費率  
->>> makerFeeRate| string| 掛單手續費率  
->>> makerRebate| string| 掛單返佣率  
->> marketMaker| array| 做市商等級費率結構  
->>> level| string| 做市商等級名稱, `MM 1`, `MM 2`, `MM 3`  
->>> takerFeeRate| string| 吃單手續費率  
->>> makerFeeRate| string| 掛單手續費率  
->>> makerRebate| string| 掛單返佣率  
-> updateTime| string| 數據最近更新的時間戳 (毫秒)  
+> coin| string| 保險池所屬幣種  
+> symbol| string| 交易對名稱  
+> balance| string| 保險基金餘額，用於判斷是否觸發 ADL。對於共用保險池，balance 將採用 T+1 刷新機制，並於每日 UTC 時間 00:00 更新。  
+> maxBalance| string| 被棄用，並將傳回空字串。最近 8 小時內的保險池最大餘額  
+> insurancePnlRatio| string| 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 
+
+  * 當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL
+
+  
+> pnlRatio| string| symbol 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止  
+> adlTriggerThreshold| string| **合約盈虧回撤 ADL** 的觸發閾值 
+
+  * 僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效
+
+  
+> adlStopRatio| string| **合約盈虧回撤 ADL** 的停止比例閾值 
+
+  * 當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止
+
+  
   
 * * *
 
-### Request Example
+### 請求示例
 
   * HTTP
   * Python
@@ -1540,7 +374,7 @@ list| array| Object
 
     
     
-    GET /v5/market/fee-group-info?productType=contract HTTP/1.1  
+    GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -1560,1374 +394,27 @@ list| array| Object
       
     
 
-### Response Example
+### 響應示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "updatedTime": "1757733960000",  
             "list": [  
                 {  
-                    "groupName": "Innovation-Zone",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 119,  
-                    "symbols": [  
-                        "HAEDALUSDT",  
-                        "OPGUSDT",  
-                        "BSBUSDT",  
-                        "FHEUSDT",  
-                        "STOUSDT",  
-                        "GENIUSUSDT",  
-                        "DBRUSDT",  
-                        "ESUSDT",  
-                        "AVNTUSDT",  
-                        "MAGMAUSDT",  
-                        "BTRUSDT",  
-                        "TLMUSDT",  
-                        "HEMIUSDT",  
-                        "AZTECUSDT",  
-                        "BLUAIUSDT",  
-                        "JCTUSDT",  
-                        "XPINUSDT",  
-                        "CYSUSDT",  
-                        "B2USDT",  
-                        "BOBBOBUSDT",  
-                        "RECALLUSDT",  
-                        "PTBUSDT",  
-                        "TRUSTUSDT",  
-                        "WHITEWHALEUSDT",  
-                        "HIGHUSDT",  
-                        "NAORISUSDT",  
-                        "DUSKUSDT",  
-                        "MLNUSDT",  
-                        "VVVUSDT",  
-                        "AWEUSDT",  
-                        "CROSSUSDT",  
-                        "EVAAUSDT",  
-                        "ASPUSDT",  
-                        "TURTLEUSDT",  
-                        "ARIAUSDT",  
-                        "ALPINEUSDT",  
-                        "GPSUSDT",  
-                        "RAVEUSDT",  
-                        "CLOUSDT",  
-                        "ROAMUSDT",  
-                        "SAPIENUSDT",  
-                        "UAIUSDT",  
-                        "BEATUSDT",  
-                        "FIGHTUSDT",  
-                        "BRUSDT",  
-                        "BLESSUSDT",  
-                        "SOSOUSDT",  
-                        "BROCCOLIUSDT",  
-                        "DOLOUSDT",  
-                        "XDCUSDT",  
-                        "BUSDT",  
-                        "JELLYJELLYUSDT",  
-                        "GWEIUSDT",  
-                        "BOBAUSDT",  
-                        "TACUSDT",  
-                        "SIRENUSDT",  
-                        "ASRUSDT",  
-                        "ALLOUSDT",  
-                        "MITOUSDT",  
-                        "BILLUSDT",  
-                        "1000TAGUSDT",  
-                        "AIOUSDT",  
-                        "FOLKSUSDT",  
-                        "APRUSDT",  
-                        "TAUSDT",  
-                        "BLENDUSDT",  
-                        "COAIUSDT",  
-                        "CTRUSDT",  
-                        "ZESTUSDT",  
-                        "PIEVERSEUSDT",  
-                        "SPORTFUNUSDT",  
-                        "ACXUSDT",  
-                        "TRIAUSDT",  
-                        "ESPORTSUSDT",  
-                        "GIGGLEUSDT",  
-                        "ACUUSDT",  
-                        "PHAROSUSDT",  
-                        "CUSDT",  
-                        "PUMPBTCUSDT",  
-                        "LABUSDT",  
-                        "TUTUSDT",  
-                        "SCRTUSDT",  
-                        "IRYSUSDT",  
-                        "DOODUSDT",  
-                        "PEAQUSDT",  
-                        "BASEDUSDT",  
-                        "LUMIAUSDT",  
-                        "MUSDT",  
-                        "USELESSUSDT",  
-                        "UBUSDT",  
-                        "PLAYSOUTUSDT",  
-                        "FLOCKUSDT",  
-                        "PROMPTUSDT",  
-                        "OPENUSDT",  
-                        "CLANKERUSDT",  
-                        "EPICUSDT",  
-                        "USUSDT",  
-                        "POWERUSDT",  
-                        "ELSAUSDT",  
-                        "BIRBUSDT",  
-                        "ATUSDT",  
-                        "LIGHTUSDT",  
-                        "INUSDT",  
-                        "AKEUSDT",  
-                        "AIGENSYNUSDT",  
-                        "PRLUSDT",  
-                        "STBLUSDT",  
-                        "ZKPUSDT",  
-                        "AGIUSDT",  
-                        "HANAUSDT",  
-                        "BMTUSDT",  
-                        "QUSDT",  
-                        "AIOZUSDT",  
-                        "XNYUSDT",  
-                        "BANKUSDT",  
-                        "VELVETUSDT",  
-                        "SPACEUSDT",  
-                        "4USDT",  
-                        "MYXUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "Pre-listing",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 1,  
-                    "symbols": [  
-                        "BPUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G1(Major Coins)",  
-                    "weightingFactor": 1,  
-                    "symbolsNumbers": 4,  
-                    "symbols": [  
-                        "BTCUSDT",  
-                        "ETHUSDT",  
-                        "XRPUSDT",  
-                        "SOLUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.0001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00022",  
-                                "makerFeeRate": "0.000025",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.0002",  
-                                "makerFeeRate": "0.00001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00015",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00001"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G2(High Growth)",  
-                    "weightingFactor": 5,  
-                    "symbolsNumbers": 38,  
-                    "symbols": [  
-                        "WLDUSDT",  
-                        "SUIUSDT",  
-                        "1000NEIROCTOUSDT",  
-                        "WCTUSDT",  
-                        "MOODENGUSDT",  
-                        "1000BONKUSDT",  
-                        "UNIUSDT",  
-                        "VIRTUALUSDT",  
-                        "TRBUSDT",  
-                        "LTCUSDT",  
-                        "GOATUSDT",  
-                        "PNUTUSDT",  
-                        "KAITOUSDT",  
-                        "HYPEUSDT",  
-                        "NEARUSDT",  
-                        "XRPUSD",  
-                        "TIAUSDT",  
-                        "INITUSDT",  
-                        "LINKUSDT",  
-                        "WIFUSDT",  
-                        "ETHUSD",  
-                        "ONDOUSDT",  
-                        "BNBUSDT",  
-                        "DOGEUSDT",  
-                        "GALAUSDT",  
-                        "BTCUSD",  
-                        "FARTCOINUSDT",  
-                        "TRUMPUSDT",  
-                        "SOLAYERUSDT",  
-                        "POPCATUSDT",  
-                        "AAVEUSDT",  
-                        "OPUSDT",  
-                        "ENAUSDT",  
-                        "ADAUSDT",  
-                        "ARBUSDT",  
-                        "1000PEPEUSDT",  
-                        "AVAXUSDT",  
-                        "CRVUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0.000125",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0.0001",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.000275",  
-                                "makerFeeRate": "0.000075",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0.000025",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00001"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G3(Mid-Tier Liquidity)",  
-                    "weightingFactor": 8,  
-                    "symbolsNumbers": 81,  
-                    "symbols": [  
-                        "JASMYUSDT",  
-                        "IOTAUSDT",  
-                        "RUNEUSDT",  
-                        "MANAUSDT",  
-                        "FILUSDT",  
-                        "ETHFIUSDT",  
-                        "DOTUSD",  
-                        "JTOUSDT",  
-                        "MNTUSDT",  
-                        "BCHUSDT",  
-                        "SUSDT",  
-                        "AXSUSDT",  
-                        "XTZUSDT",  
-                        "SOLUSD",  
-                        "BSVUSDT",  
-                        "SEIUSDT",  
-                        "SHIB1000USDT",  
-                        "MASKUSDT",  
-                        "CAKEUSDT",  
-                        "DYDXUSDT",  
-                        "PYTHUSDT",  
-                        "ZKUSDT",  
-                        "RENDERUSDT",  
-                        "STRKUSDT",  
-                        "GASUSDT",  
-                        "1000FLOKIUSDT",  
-                        "ALGOUSDT",  
-                        "DOTUSDT",  
-                        "PENGUUSDT",  
-                        "PAXGUSDT",  
-                        "SUIUSD",  
-                        "XAUTUSDT",  
-                        "MOVEUSDT",  
-                        "NOTUSDT",  
-                        "USUALUSDT",  
-                        "ADAUSD",  
-                        "ARKMUSDT",  
-                        "MEWUSDT",  
-                        "STXUSDT",  
-                        "HBARUSDT",  
-                        "KASUSDT",  
-                        "XMRUSDT",  
-                        "COWUSDT",  
-                        "THETAUSDT",  
-                        "APEUSDT",  
-                        "JUPUSDT",  
-                        "IPUSDT",  
-                        "TAOUSDT",  
-                        "ICPUSDT",  
-                        "EIGENUSDT",  
-                        "DOGEUSD",  
-                        "BERAUSDT",  
-                        "PENDLEUSDT",  
-                        "APTUSDT",  
-                        "ENSUSDT",  
-                        "ARKUSDT",  
-                        "BOMEUSDT",  
-                        "GRTUSDT",  
-                        "SANDUSDT",  
-                        "BIGTIMEUSDT",  
-                        "XLMUSDT",  
-                        "LDOUSDT",  
-                        "POLUSDT",  
-                        "1000TURBOUSDT",  
-                        "ORDIUSDT",  
-                        "ZROUSDT",  
-                        "INJUSDT",  
-                        "AERGOUSDT",  
-                        "COMPUSDT",  
-                        "PEOPLEUSDT",  
-                        "TRXUSDT",  
-                        "GMTUSDT",  
-                        "VETUSDT",  
-                        "ATOMUSDT",  
-                        "NEOUSDT",  
-                        "IMXUSDT",  
-                        "LTCUSD",  
-                        "MEUSDT",  
-                        "MAGICUSDT",  
-                        "ETCUSDT",  
-                        "AUCTIONUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.000075",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0.00005",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00026",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G4(Mid-Tier Activation)",  
-                    "weightingFactor": 15,  
-                    "symbolsNumbers": 106,  
-                    "symbols": [  
-                        "LPTUSDT",  
-                        "SHELLUSDT",  
-                        "ZORAUSDT",  
-                        "MANTAUSDT",  
-                        "CELOUSDT",  
-                        "HYPERUSDT",  
-                        "BRETTUSDT",  
-                        "CVCUSDT",  
-                        "SPXUSDT",  
-                        "SIGNUSDT",  
-                        "ZEREBROUSDT",  
-                        "FIDAUSDT",  
-                        "SSVUSDT",  
-                        "API3USDT",  
-                        "IOUSDT",  
-                        "SUPERUSDT",  
-                        "TAIKOUSDT",  
-                        "SUSHIUSDT",  
-                        "1000000MOGUSDT",  
-                        "CROUSDT",  
-                        "BEAMUSDT",  
-                        "WALUSDT",  
-                        "10000SATSUSDT",  
-                        "1000CATUSDT",  
-                        "ACTUSDT",  
-                        "RAYDIUMUSDT",  
-                        "HIVEUSDT",  
-                        "SNTUSDT",  
-                        "1000000BABYDOGEUSDT",  
-                        "BANANAUSDT",  
-                        "ATHUSDT",  
-                        "DEEPUSDT",  
-                        "ARUSDT",  
-                        "XAIUSDT",  
-                        "ALCHUSDT",  
-                        "COOKIEUSDT",  
-                        "FLOWUSDT",  
-                        "MELANIAUSDT",  
-                        "ORCAUSDT",  
-                        "NMRUSDT",  
-                        "AIXBTUSDT",  
-                        "GRASSUSDT",  
-                        "SAFEUSDT",  
-                        "BIOUSDT",  
-                        "TSTBSCUSDT",  
-                        "AKTUSDT",  
-                        "AVAAIUSDT",  
-                        "PARTIUSDT",  
-                        "VINEUSDT",  
-                        "MEMEUSDT",  
-                        "CGPTUSDT",  
-                        "RSRUSDT",  
-                        "CHILLGUYUSDT",  
-                        "HMSTRUSDT",  
-                        "BLURUSDT",  
-                        "BABYUSDT",  
-                        "SOLVUSDT",  
-                        "NILUSDT",  
-                        "ZETAUSDT",  
-                        "VANAUSDT",  
-                        "ROSEUSDT",  
-                        "DYMUSDT",  
-                        "MAVIAUSDT",  
-                        "PUNDIXUSDT",  
-                        "B3USDT",  
-                        "LRCUSDT",  
-                        "1000TOSHIUSDT",  
-                        "GRIFFAINUSDT",  
-                        "BANUSDT",  
-                        "PUFFERUSDT",  
-                        "EGLDUSDT",  
-                        "KSMUSDT",  
-                        "KAVAUSDT",  
-                        "CATIUSDT",  
-                        "PIXELUSDT",  
-                        "ARCUSDT",  
-                        "SONICUSDT",  
-                        "ICXUSDT",  
-                        "XCNUSDT",  
-                        "WAVESUSDT",  
-                        "AEROUSDT",  
-                        "BBUSDT",  
-                        "MUBARAKUSDT",  
-                        "XVGUSDT",  
-                        "SWARMSUSDT",  
-                        "PLUMEUSDT",  
-                        "1000RATSUSDT",  
-                        "ANIMEUSDT",  
-                        "MERLUSDT",  
-                        "DRIFTUSDT",  
-                        "SAGAUSDT",  
-                        "REZUSDT",  
-                        "PORTALUSDT",  
-                        "WUSDT",  
-                        "KMNOUSDT",  
-                        "CETUSUSDT",  
-                        "ZBCNUSDT",  
-                        "GIGAUSDT",  
-                        "CARVUSDT",  
-                        "GUNUSDT",  
-                        "AGLDUSDT",  
-                        "RAREUSDT",  
-                        "PIPPINUSDT",  
-                        "MOCAUSDT",  
-                        "KERNELUSDT",  
-                        "ZECUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.0003",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00025",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G5(Long Tail)",  
-                    "weightingFactor": 20,  
-                    "symbolsNumbers": 266,  
-                    "symbols": [  
-                        "CFXUSDT",  
-                        "LQTYUSDT",  
-                        "STORJUSDT",  
-                        "TRUTHUSDT",  
-                        "ETHBTCUSDT",  
-                        "IDUSDT",  
-                        "BTCUSDT-26JUN26",  
-                        "TUSDT",  
-                        "UMAUSDT",  
-                        "ETHUSDT-19JUN26",  
-                        "ETHUSDT-25SEP26",  
-                        "LYNUSDT",  
-                        "OPUSD",  
-                        "XAUTUSDT-03JUL26",  
-                        "SOMIUSDT",  
-                        "REDUSDT",  
-                        "VANRYUSDT",  
-                        "PROVEUSDT",  
-                        "SNXUSDT",  
-                        "BTCUSDT-26MAR27",  
-                        "HEIUSDT",  
-                        "ICNTUSDT",  
-                        "SKYUSDT",  
-                        "ORDERUSDT",  
-                        "MIRAUSDT",  
-                        "WC_SCO_MAR_USDT-20JUN26",  
-                        "MONUSDT",  
-                        "XLMUSD",  
-                        "DASHUSDT",  
-                        "LAUSDT",  
-                        "WC_SUI_CAN_USDT-24JUN26",  
-                        "YFIUSDT",  
-                        "THEUSDT",  
-                        "ZKCUSDT",  
-                        "ZENUSDT",  
-                        "TNSRUSDT",  
-                        "FLUIDUSDT",  
-                        "OGUSDT",  
-                        "ALICEUSDT",  
-                        "CTCUSDT",  
-                        "XRPUSDT-19JUN26",  
-                        "WC_MAR_HAI_USDT-25JUN26",  
-                        "WAXPUSDT",  
-                        "ETHUSDT-28AUG26",  
-                        "WC_CZE_MEX_USDT-25JUN26",  
-                        "BATUSDT",  
-                        "UNIUSD",  
-                        "METUSDT",  
-                        "YBUSDT",  
-                        "C98USDT",  
-                        "WC_ENG_GHA_USDT-23JUN26",  
-                        "DOGEUSDT-26JUN26",  
-                        "WC_BEL_IRN_USDT-21JUN26",  
-                        "RPLUSDT",  
-                        "ONTUSDT",  
-                        "ONGUSDT",  
-                        "ETHUSDU26",  
-                        "ETHUSDM26",  
-                        "HNTUSDT",  
-                        "ETCUSD",  
-                        "XAUTUSDT-31JUL26",  
-                        "BTCUSDU26",  
-                        "WC_SUI_BIH_USDT-18JUN26",  
-                        "SOLUSDT-26JUN26",  
-                        "KNCUSDT",  
-                        "NIGHTUSDT",  
-                        "ETHUSDT-25DEC26",  
-                        "WC_URU_CPV_USDT-22JUN26",  
-                        "LINEAUSDT",  
-                        "KAIAUSDT",  
-                        "WC_PAN_CRO_USDT-24JUN26",  
-                        "WC_TUN_JPN_USDT-21JUN26",  
-                        "XRPUSDT-03JUL26",  
-                        "WC_TUR_PAR_USDT-20JUN26",  
-                        "WC_NZL_EGY_USDT-22JUN26",  
-                        "AVAXUSD",  
-                        "MBOXUSDT",  
-                        "CCUSDT",  
-                        "ERAUSDT",  
-                        "ETHUSDT-03JUL26",  
-                        "BTCUSDT-25SEP26",  
-                        "PHAUSDT",  
-                        "WC_ESP_KSA_USDT-21JUN26",  
-                        "CYBERUSDT",  
-                        "CHRUSDT",  
-                        "RONINUSDT",  
-                        "IOTXUSDT",  
-                        "RLUSDUSDT",  
-                        "ETHUSDT-26MAR27",  
-                        "ANKRUSDT",  
-                        "ROBOUSDT",  
-                        "EDENUSDT",  
-                        "APTUSD",  
-                        "KGENUSDT",  
-                        "SOLUSDT-31JUL26",  
-                        "DEXEUSDT",  
-                        "FOGOUSDT",  
-                        "SCRUSDT",  
-                        "SOLUSDT-03JUL26",  
-                        "METISUSDT",  
-                        "VELODROMEUSDT",  
-                        "WC_USA_AUS_USDT-19JUN26",  
-                        "ENSOUSDT",  
-                        "WOOUSDT",  
-                        "0GUSDT",  
-                        "DOGEUSDT-31JUL26",  
-                        "WC_CAN_QAT_USDT-19JUN26",  
-                        "HFTUSDT",  
-                        "OKBUSDT",  
-                        "SQDUSDT",  
-                        "IOSTUSDT",  
-                        "BTCUSDM26",  
-                        "AXLUSDT",  
-                        "STEEMUSDT",  
-                        "BTCUSDT-03JUL26",  
-                        "NEARUSD",  
-                        "XVSUSDT",  
-                        "SPKUSDT",  
-                        "FFUSDT",  
-                        "MAVUSDT",  
-                        "WC_JOR_ALG_USDT-23JUN26",  
-                        "SYRUPUSDT",  
-                        "APEXUSDT",  
-                        "WC_NOR_SEN_USDT-23JUN26",  
-                        "SOLUSDT-19JUN26",  
-                        "QTUMUSDT",  
-                        "ASTERUSDT",  
-                        "MNTUSDT-31JUL26",  
-                        "BTCUSDT-31JUL26",  
-                        "WC_RSA_KOR_USDT-25JUN26",  
-                        "XRPUSDT-31JUL26",  
-                        "JSTUSDT",  
-                        "LUNA2USDT",  
-                        "1000XECUSDT",  
-                        "TWTUSDT",  
-                        "ARPAUSDT",  
-                        "TREEUSDT",  
-                        "BTCUSDT-28AUG26",  
-                        "BTCUSDT-19JUN26",  
-                        "WC_GER_CIV_USDT-20JUN26",  
-                        "WC_FRA_IRQ_USDT-22JUN26",  
-                        "EDUUSDT",  
-                        "WC_BIH_QAT_USDT-24JUN26",  
-                        "XANUSDT",  
-                        "SUNUSDT",  
-                        "ZILUSDT",  
-                        "WC_ARG_AUT_USDT-22JUN26",  
-                        "MNTUSDT-19JUN26",  
-                        "POLYXUSDT",  
-                        "BANANAS31USDT",  
-                        "BTCUSDT-25DEC26",  
-                        "FUSDT",  
-                        "FLUXUSDT",  
-                        "USTCUSDT",  
-                        "HUSDT",  
-                        "WC_CZE_RSA_USDT-18JUN26",  
-                        "XPLUSDT",  
-                        "CHIPUSDT",  
-                        "BELUSDT",  
-                        "MINAUSDT",  
-                        "BREVUSDT",  
-                        "SENTUSDT",  
-                        "ZAMAUSDT",  
-                        "XRPUSDT-26JUN26",  
-                        "ENJUSDT",  
-                        "BARDUSDT",  
-                        "USDEUSDT",  
-                        "DOGEUSDT-03JUL26",  
-                        "MOVRUSDT",  
-                        "COREUSDT",  
-                        "SLPUSDT",  
-                        "MNTUSDT-26JUN26",  
-                        "ESPUSDT",  
-                        "AVAUSDT",  
-                        "MNTUSD",  
-                        "POWRUSDT",  
-                        "ZBTUSDT",  
-                        "MNTUSDT-03JUL26",  
-                        "SKLUSDT",  
-                        "STGUSDT",  
-                        "TOWNSUSDT",  
-                        "SKYAI1USDT",  
-                        "HUMAUSDT",  
-                        "BCHUSD",  
-                        "RIVERUSDT",  
-                        "LITUSDT",  
-                        "FORMUSDT",  
-                        "BTCUSDZ26",  
-                        "PUMPFUNUSDT",  
-                        "HOMEUSDT",  
-                        "QNTUSDT",  
-                        "OGNUSDT",  
-                        "INXUSDT",  
-                        "LSKUSDT",  
-                        "WC_COL_COD_USDT-24JUN26",  
-                        "ASTRUSDT",  
-                        "EDGEUSDT",  
-                        "USDCUSDT",  
-                        "ETHUSDT-31JUL26",  
-                        "2ZUSDT",  
-                        "SXTUSDT",  
-                        "XAUTUSDT-19JUN26",  
-                        "CHZUSDT",  
-                        "HOLOUSDT",  
-                        "1000BTTUSDT",  
-                        "XAUTUSDT-26JUN26",  
-                        "GMXUSDT",  
-                        "CFGUSDT",  
-                        "CKBUSDT",  
-                        "BICOUSDT",  
-                        "RESOLVUSDT",  
-                        "NXPCUSDT",  
-                        "AAVEUSD",  
-                        "ACHUSDT",  
-                        "FILUSD",  
-                        "WETUSDT",  
-                        "ACEUSDT",  
-                        "DIAUSDT",  
-                        "NEWTUSDT",  
-                        "KITEUSDT",  
-                        "10000NEXUSDT",  
-                        "SKRUSDT",  
-                        "WC_POR_UZB_USDT-23JUN26",  
-                        "BLASTUSDT",  
-                        "WC_MEX_KOR_USDT-19JUN26",  
-                        "MMTUSDT",  
-                        "WC_NED_SWE_USDT-20JUN26",  
-                        "AUSDT",  
-                        "GLMUSDT",  
-                        "COTIUSDT",  
-                        "STABLEUSDT",  
-                        "1INCHUSDT",  
-                        "ETHUSDT-26JUN26",  
-                        "WC_SCO_BRA_USDT-25JUN26",  
-                        "MORPHOUSDT",  
-                        "RVNUSDT",  
-                        "USD1USDT",  
-                        "CVXUSDT",  
-                        "YGGUSDT",  
-                        "EULUSDT",  
-                        "SAHARAUSDT",  
-                        "MTLUSDT",  
-                        "RLCUSDT",  
-                        "SLXUSDT",  
-                        "WC_BRA_HAI_USDT-20JUN26",  
-                        "ETHUSDZ26",  
-                        "MEGAUSDT",  
-                        "BTWUSDT",  
-                        "LINKUSD",  
-                        "SOPHUSDT",  
-                        "VELOUSDT",  
-                        "DOGEUSDT-19JUN26",  
-                        "OPNUSDT",  
-                        "WC_ECU_CUW_USDT-21JUN26",  
-                        "ALTUSDT",  
-                        "KATUSDT",  
-                        "FLRUSDT",  
-                        "SOONUSDT",  
-                        "BANDUSDT",  
-                        "ZRXUSDT",  
-                        "1000LUNCUSDT",  
-                        "WLFIUSDT",  
-                        "NOMUSDT",  
-                        "BNTUSDT",  
-                        "ILVUSDT",  
-                        "AEVOUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00028",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000125"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "USDC",  
-                    "weightingFactor": 8,  
-                    "symbolsNumbers": 69,  
-                    "symbols": [  
-                        "UNIPERP",  
-                        "LTCPERP",  
-                        "ETCPERP",  
-                        "ICPPERP",  
-                        "VIRTUALPERP",  
-                        "ORDIPERP",  
-                        "POLPERP",  
-                        "PNUTPERP",  
-                        "FARTCOINPERP",  
-                        "CRVPERP",  
-                        "DOTPERP",  
-                        "TWTPERP",  
-                        "EIGENPERP",  
-                        "NIGHTPERP",  
-                        "AEVOPERP",  
-                        "1000NEIROCTOPERP",  
-                        "PUMPFUNPERP",  
-                        "PENDLEPERP",  
-                        "HYPEPERP",  
-                        "ETHFIPERP",  
-                        "XMRPERP",  
-                        "RESOLVPERP",  
-                        "WLFIPERP",  
-                        "HBARPERP",  
-                        "XLMPERP",  
-                        "ARBPERP",  
-                        "SEIPERP",  
-                        "1000PEPEPERP",  
-                        "XRPPERP",  
-                        "XPLPERP",  
-                        "LINKPERP",  
-                        "POPCATPERP",  
-                        "ASTERPERP",  
-                        "PENGUPERP",  
-                        "BNBPERP",  
-                        "ETHPERP",  
-                        "ICNTPERP",  
-                        "NOTPERP",  
-                        "SAHARAPERP",  
-                        "ENAPERP",  
-                        "OPPERP",  
-                        "WLDPERP",  
-                        "WIFPERP",  
-                        "AVNTPERP",  
-                        "XAUTPERP",  
-                        "MOODENGPERP",  
-                        "TRXPERP",  
-                        "TAOPERP",  
-                        "HPERP",  
-                        "TRUMPPERP",  
-                        "TIAPERP",  
-                        "IPPERP",  
-                        "STRKPERP",  
-                        "FILPERP",  
-                        "SPXPERP",  
-                        "SHIB1000PERP",  
-                        "BTCPERP",  
-                        "KASPERP",  
-                        "ONDOPERP",  
-                        "SOLPERP",  
-                        "1000BONKPERP",  
-                        "INJPERP",  
-                        "SUIPERP",  
-                        "MERLPERP",  
-                        "BCHPERP",  
-                        "PAXGPERP",  
-                        "AAVEPERP",  
-                        "MNTPERP",  
-                        "DOGEPERP"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00032",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.000275",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00024",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00021",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000015"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000025"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00004"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
-                },  
-                {  
-                    "groupName": "G9(Stock & Commodity Tradfi Perp",  
-                    "weightingFactor": 10,  
-                    "symbolsNumbers": 62,  
-                    "symbols": [  
-                        "SAMSUNGUSDT",  
-                        "XAGUSDT",  
-                        "EWYUSDT",  
-                        "QQQUSDT",  
-                        "ASTSUSDT",  
-                        "FLNCUSDT",  
-                        "GOOGLUSDT",  
-                        "AAOIUSDT",  
-                        "CRCLUSDT",  
-                        "SPCXUSDT",  
-                        "AAPLUSDT",  
-                        "PLTRUSDT",  
-                        "ONDSUSDT",  
-                        "HYUNDAIUSDT",  
-                        "BABAUSDT",  
-                        "AXTIUSDT",  
-                        "TSMUSDT",  
-                        "IRENUSDT",  
-                        "HOODUSDT",  
-                        "AMDSTOCKUSDT",  
-                        "NBISUSDT",  
-                        "METAUSDT",  
-                        "CSCOUSDT",  
-                        "LITEUSDT",  
-                        "CBRSUSDT",  
-                        "MRVLUSDT",  
-                        "AMATUSDT",  
-                        "ORCLUSDT",  
-                        "NOKIAUSDT",  
-                        "DELLUSDT",  
-                        "CRWVUSDT",  
-                        "SOXLUSDT",  
-                        "SNDKUSDT",  
-                        "MSTRUSDT",  
-                        "COINUSDT",  
-                        "IWMUSDT",  
-                        "NVDAUSDT",  
-                        "ARMUSDT",  
-                        "NOWUSDT",  
-                        "TSLAUSDT",  
-                        "MSFTUSDT",  
-                        "EWTUSDT",  
-                        "COHRUSDT",  
-                        "XAUUSDT",  
-                        "BZUSDT",  
-                        "AVGOUSDT",  
-                        "LLYUSDT",  
-                        "MUUSDT",  
-                        "BEUSDT",  
-                        "WDCUSDT",  
-                        "RKLBUSDT",  
-                        "QCOMUSDT",  
-                        "SKHYNIXUSDT",  
-                        "SPYUSDT",  
-                        "BMNRUSDT",  
-                        "CLUSDT",  
-                        "AMZNUSDT",  
-                        "DRAMUSDT",  
-                        "IBMUSDT",  
-                        "EWJUSDT",  
-                        "INTCUSDT",  
-                        "QNTXUSDT"  
-                    ],  
-                    "feeRates": {  
-                        "pro": [  
-                            {  
-                                "level": "Pro 1",  
-                                "takerFeeRate": "0.0002",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 2",  
-                                "takerFeeRate": "0.00018",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 3",  
-                                "takerFeeRate": "0.00016",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 4",  
-                                "takerFeeRate": "0.00015",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 5",  
-                                "takerFeeRate": "0.00014",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            },  
-                            {  
-                                "level": "Pro 6",  
-                                "takerFeeRate": "0.000125",  
-                                "makerFeeRate": "0",  
-                                "makerRebate": ""  
-                            }  
-                        ],  
-                        "marketMaker": [  
-                            {  
-                                "level": "MM 1",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.00005"  
-                            },  
-                            {  
-                                "level": "MM 2",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.000075"  
-                            },  
-                            {  
-                                "level": "MM 3",  
-                                "takerFeeRate": "",  
-                                "makerFeeRate": "",  
-                                "makerRebate": "-0.0001"  
-                            }  
-                        ]  
-                    },  
-                    "updateTime": "1781605234098"  
+                    "coin": "USDT",  
+                    "symbol": "BTCUSDT",  
+                    "balance": "92203504694.99632",  
+                    "maxBalance": "92231510324.75948",  
+                    "insurancePnlRatio": "-0.3",  
+                    "pnlRatio": "-0.560973",  
+                    "adlTriggerThreshold": "10000",  
+                    "adlStopRatio": "-0.25"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1781780429273  
+        "time": 1757734022014  
     }

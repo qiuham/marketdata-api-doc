@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-07-27 19:28:22.703375
+updated_at: 2026-07-28 19:27:14.003343
 ---
 
 # Send order
@@ -16,52 +16,52 @@ Send order
       --header 'Authent: <api-key>'
     
     
-    import requests  
-      
-    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"  
-      
-    headers = {  
-        "APIKey": "<api-key>",  
-        "Authent": "<api-key>"  
-    }  
-      
-    response = requests.post(url, headers=headers)  
-      
+    import requests
+    
+    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"
+    
+    headers = {
+        "APIKey": "<api-key>",
+        "Authent": "<api-key>"
+    }
+    
+    response = requests.post(url, headers=headers)
+    
     print(response.text)
     
     
-    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};  
-      
-    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)  
-      .then(res => res.json())  
-      .then(res => console.log(res))  
+    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};
+    
+    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
       .catch(err => console.error(err));
     
     
-    package main  
-      
-    import (  
-    	"fmt"  
-    	"net/http"  
-    	"io"  
-    )  
-      
-    func main() {  
-      
-    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"  
-      
-    	req, _ := http.NewRequest("POST", url, nil)  
-      
-    	req.Header.Add("APIKey", "<api-key>")  
-    	req.Header.Add("Authent", "<api-key>")  
-      
-    	res, _ := http.DefaultClient.Do(req)  
-      
-    	defer res.Body.Close()  
-    	body, _ := io.ReadAll(res.Body)  
-      
-    	fmt.Println(string(body))  
-      
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"
+    
+    	req, _ := http.NewRequest("POST", url, nil)
+    
+    	req.Header.Add("APIKey", "<api-key>")
+    	req.Header.Add("Authent", "<api-key>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
     }
     
     
@@ -109,52 +109,52 @@ Send order
       --header 'Authent: <api-key>'
     
     
-    import requests  
-      
-    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"  
-      
-    headers = {  
-        "APIKey": "<api-key>",  
-        "Authent": "<api-key>"  
-    }  
-      
-    response = requests.post(url, headers=headers)  
-      
+    import requests
+    
+    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"
+    
+    headers = {
+        "APIKey": "<api-key>",
+        "Authent": "<api-key>"
+    }
+    
+    response = requests.post(url, headers=headers)
+    
     print(response.text)
     
     
-    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};  
-      
-    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)  
-      .then(res => res.json())  
-      .then(res => console.log(res))  
+    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};
+    
+    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
       .catch(err => console.error(err));
     
     
-    package main  
-      
-    import (  
-    	"fmt"  
-    	"net/http"  
-    	"io"  
-    )  
-      
-    func main() {  
-      
-    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"  
-      
-    	req, _ := http.NewRequest("POST", url, nil)  
-      
-    	req.Header.Add("APIKey", "<api-key>")  
-    	req.Header.Add("Authent", "<api-key>")  
-      
-    	res, _ := http.DefaultClient.Do(req)  
-      
-    	defer res.Body.Close()  
-    	body, _ := io.ReadAll(res.Body)  
-      
-    	fmt.Println(string(body))  
-      
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"
+    
+    	req, _ := http.NewRequest("POST", url, nil)
+    
+    	req.Header.Add("APIKey", "<api-key>")
+    	req.Header.Add("Authent", "<api-key>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
     }
     
     

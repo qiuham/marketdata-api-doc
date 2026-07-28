@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-07-27 19:29:14.719862
+updated_at: 2026-07-28 19:28:07.727437
 ---
 
 # Order Book Trading
@@ -105,7 +105,8 @@ ordType | String | Yes | Order type
 `optimal_limit_ioc`: Places a limit order at the maximum buy price (upper price limit) for buy orders, or the minimum sell price (lower price limit) for sell orders, as defined by the exchange's price limit bands. Any unfilled portion is immediately cancelled (IOC). Applicable only to Expiry Futures and Perpetual Futures.  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)   
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -147,11 +148,12 @@ stpMode | String | No | Self trade prevention mode.
 Cancel both does not support FOK   
   
 The account-level acctStpMode will be used to place orders by default. The default value of this field is `cancel_maker`. Users can log in to the webpage through the master account to modify this configuration. Users can also utilize the stpMode request parameter of the placing order endpoint to determine the stpMode of a certain order.  
-isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
@@ -337,7 +339,7 @@ There are three STP modes. The STP mode is always taken based on the configurati
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
 3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode. Combining stpMode=cancel_both with ordType=`fok` returns error 50016.  tradeQuoteCcy  
 For users in specific countries and regions, this parameter must be filled out for a successful order. Otherwise, the system will use the quote currency of instId as the default value, then error code 51000 will occur.  
-The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as isElpTakerAccess:true  
+The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
 
@@ -445,7 +447,8 @@ ordType | String | Yes | Order type
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures).  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -489,11 +492,12 @@ stpMode | String | No | Self trade prevention mode.
 Cancel both does not support FOK.   
   
 The account-level acctStpMode will be used to place orders by default. The default value of this field is `cancel_maker`. Users can log in to the webpage through the master account to modify this configuration. Users can also utilize the stpMode request parameter of the placing order endpoint to determine the stpMode of a certain order.  
-isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
@@ -597,7 +601,7 @@ The time is recorded after authentication.
 outTime | String | Timestamp at REST gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as isElpTakerAccess:true  
+clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
 
@@ -926,6 +930,10 @@ Either `newCallbackRatio` or `newCallbackSpread` can be passed. Only one can be 
 Only applicable when `ordType` = `move_order_stop`  
 > newActivePx | String | No | New activation price.  
 Only applicable when `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
   
 > Response Example
     
@@ -1111,6 +1119,10 @@ Either `newCallbackRatio` or `newCallbackSpread` can be passed. Only one can be 
 Only applicable when `ordType` = `move_order_stop`  
 > newActivePx | String | No | New activation price.  
 Only applicable when `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
   
 > Response Example
     
@@ -1418,7 +1430,8 @@ ordType | String | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -1600,7 +1613,8 @@ ordType | String | No | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `live`   
 `partially_filled`  
@@ -1719,7 +1733,8 @@ ordType | String | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -1887,7 +1902,8 @@ ordType | String | No | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `canceled`  
 `filled`  
@@ -2014,7 +2030,8 @@ ordType | String | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -2189,7 +2206,8 @@ ordType | String | No | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `canceled`   
 `filled`  
@@ -2314,7 +2332,8 @@ ordType | String | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -3897,7 +3916,8 @@ ordType | String | Yes | Order type
 `fok`: Fill-or-kill order   
 `ioc`: Immediate-or-cancel order   
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures).   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 outcome | String | Conditional | The market outcome users trade on.  
@@ -4367,7 +4387,8 @@ For options, use coin as unit (e.g. BTC, ETH)
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
 `op_fok`: Simple options (fok)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > side | String | Order side, `buy` `sell`  
 > posSide | String | Position side   
 `net`   
@@ -4507,13 +4528,14 @@ Valid values and the corresponding meanings are:
 `42`: Your order was canceled because the difference between the initial and current best bid or ask prices reached the maximum chase difference.  
 `43`: Order cancelled because the buy order price is higher than the index price or the sell order price is lower than the index price.  
 `44`: Your order was canceled because your available balance of this crypto was insufficient for auto conversion. Auto conversion was triggered when the total collateralized liabilities for this crypto reached the platform’s risk control limit.   
-`45`: Order cancelled because ELP order price verification failed  
+`45`: Order cancelled because RPI order price verification failed  
 `46`: delta reducing cancel orders  
-> amendSource | String | Source of the order amendation.   
+> amendSource | String | Source of the order amendment.  
 `1`: Order amended by user  
-`2`: Order amended by user, but the order quantity is overriden by system due to reduce-only  
-`4`: Order quantity amended by system due to reduce-only, including a new order placed by the user whose quantity is overriden by the system, and an existing pending order amended by the system due to other pending orders  
+`2`: Order amended by user, but the order quantity is overridden by system due to reduce-only  
+`4`: Order quantity amended by system due to reduce-only, including a new order placed by the user whose quantity is overridden by the system, and an existing pending order amended by the system due to other pending orders  
 `5`: Order modification due to changes in options px, pxVol, or pxUsd as a result of following variations. For example, when iv = 60, USD and px are anchored at iv = 60, the changes in USD or px lead to modification.  
+`6`: Order price adjusted by system to satisfy RPI maker spacing rule (triggered by `rpiPxRound`)  
 > category | String | Category   
 `normal`   
 `twap`   
@@ -4853,7 +4875,8 @@ Only applicable to `FUTURES`/`SWAP`.
 `optimal_limit_ioc`: Market order with immediate-or-cancel order  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > sz | String | Yes | Quantity to buy or sell.  
 > px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -4897,11 +4920,12 @@ Only applicable to `SPOT` and `SPOT margin` `market` orders.
 Cancel both does not support FOK   
   
 The account-level acctStpMode will be used to place orders. The default value of this field is `cancel_maker`. Users can log in to the webpage through the master account to modify this configuration. Users can also utilize the stpMode request parameter of the placing order endpoint to determine the stpMode of a certain order.  
-> isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 expTime | String | No | Request effective deadline. Unix timestamp format in milliseconds, e.g. `1597026383085`  
   
 > Successful Response Example
@@ -5052,7 +5076,7 @@ Mandatory self trade prevention will not lead to latency.
 There are three STP modes. The STP mode is always taken based on the configuration in the taker order.  
 1\. Cancel Maker: This is the default STP mode, which cancels the maker order to prevent self-trading. Then, the taker order continues to match with the next order based on the order book priority.  
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
-3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode.  Rate limit of orders tagged as isElpTakerAccess:true  
+3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode.  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
 
@@ -5140,7 +5164,8 @@ Only applicable to `FUTURES`/`SWAP`.
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures)  
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > sz | String | Yes | Quantity to buy or sell.  
 > px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -5179,11 +5204,12 @@ Range: `0` to `0.05` (0% to 5%, inclusive). Up to 2 decimal places of the percen
 If not specified or empty, defaults to `0.00%`.  
 Slippage cannot be modified on an existing order. Cancel and resubmit to change the slippage setting.  
 Only applicable to `SPOT` and `SPOT margin` `market` orders.  
-> isElpTakerAccess | Boolean | No | ELP taker access  
-`true`: the request can trade with ELP orders but a speed bump will be applied  
-`false`: the request cannot trade with ELP orders and no speed bump  
-  
-The default value is `false` while `true` is only applicable to ioc orders.  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
+Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
+`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 > stpMode | String | No | Self trade prevention mode.   
 `cancel_maker`,`cancel_taker`, `cancel_both`  
 Cancel both does not support FOK.   
@@ -5327,7 +5353,7 @@ inTime | String | Timestamp at Websocket gateway when the request is received, U
 outTime | String | Timestamp at Websocket gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as isElpTakerAccess:true  
+clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
 \- 50 orders per 2 seconds per User ID per instrument ID.  
 \- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
 
@@ -5692,6 +5718,10 @@ When modifying options orders, users can only fill in one of the following: newP
 `0`: Do not allow the system to amend to order price if `newPx` exceeds the price limit   
 `1`: Allow the system to amend the price to the best available value within the price limit if `newPx` exceeds the price limit  
 The default value is `0`  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 expTime | String | No | Request effective deadline. Unix timestamp format in milliseconds, e.g. `1597026383085`  
   
 > Successful Response Example
@@ -5853,6 +5883,10 @@ When modifying options orders, users can only fill in one of the following: newP
 `0`: Do not allow the system to amend to order price if `newPx` exceeds the price limit   
 `1`: Allow the system to amend the price to the best available value within the price limit if `newPx` exceeds the price limit  
 The default value is `0`  
+> rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+> rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 expTime | String | No | Request effective deadline. Unix timestamp format in milliseconds, e.g. `1597026383085`  
   
 > Response Example When All Succeed
@@ -18261,7 +18295,7 @@ side | String | Trade side of taker
 `sell`  
 source | String | Order source  
 `0`: normal order  
-`1`: Enhanced Liquidity Program order  
+`1`: RPI order  
 ts | String | Trade time, Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 Up to 500 most recent historical public transaction data can be retrieved. 
 
@@ -19325,8 +19359,9 @@ Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by
 
   * `books`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
 
-  * `books-elp`: only push ELP orders. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
+  * `books-elp`: (Deprecated; use `books-rpi`) only push ELP orders. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
 
+  * `books-rpi`: consolidated organic and RPI depth. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms. No `checksum`; sequencing relies on `seqId`/`prevSeqId`. Each `asks`/`bids` element is `[price, totalQty, nonRpiQty, count]`. Supersedes `books-elp`.
   * `books5`: 5 depth levels snapshot will be pushed in the initial push. Snapshot data will be pushed every 100 ms when there are changes in the 5 depth levels snapshot.  
 
   * `bbo-tbt`: 1 depth level snapshot will be pushed in the initial push. Snapshot data will be pushed every 10 ms when there are changes in the 1 depth level snapshot.   
@@ -19334,7 +19369,7 @@ Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by
   * `books-l2-tbt`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.   
 
   * `books50-l2-tbt`: 50 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.
-  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books5.
+  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5.
   * Users can not simultaneously subscribe to `books-l2-tbt` and `books50-l2-tbt/books` channels for the same trading symbol. 
     * For more details, please refer to the changelog [2024-07-17](/docs-v5/log_en/#2024-07-17)
 
@@ -20286,7 +20321,8 @@ ordType | String | 是 | 订单类型
 `optimal_limit_ioc`：以价格限制区间的最高买价（买单）或最低卖价（卖单）挂限价单，未成交部分立即取消（IOC）。仅适用交割、永续合约，订单不会以超出当前价格限制边界的价格成交  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -20324,11 +20360,12 @@ stpMode | String | 否 | 自成交保护模式
 Cancel both不支持FOK   
   
 默认使用账户层面的acctStpMode进行下单，该字段的默认值为`cancel_maker`，用户可通过母账户登录网页修改该配置；用户亦可以通过下单接口的stpMode参数指定订单的STP模式。  
-isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
@@ -20515,7 +20552,7 @@ optimal_limit_ioc：以价格限制区间的最高买价（买单）或最低卖
 tradeQuoteCcy  
 对于特定国家和地区的用户，下单成功需要填写该参数，否则会取 `instId` 的计价币种为默认值，报错 51000。  
 传值必须取 tradeQuoteCcyList 的枚举值，tradeQuoteCcyList 来自获取交易产品基础信息(GET /api/v5/account/instruments) 接口。  
-isElpTakerAccess:true订单限速  
+rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
@@ -20619,7 +20656,8 @@ ordType | String | 是 | 订单类型
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -20659,11 +20697,12 @@ slippagePct | String | 否 | 币币、币币杠杆市价单（`tgtCcy` 为到手
 不填或为空时，默认为 `0.00%`。  
 不支持改单修改滑点，如需调整请撤单重新提交。  
 仅适用于币币和币币杠杆的市价单。  
-isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
@@ -20764,7 +20803,7 @@ inTime | String | REST网关接收请求时的时间戳，Unix时间戳的微秒
 返回的时间是请求验证后的时间。  
 outTime | String | REST网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  isElpTakerAccess:true订单限速  
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
@@ -21085,6 +21124,10 @@ attachAlgoOrds | Array of objects | 否 | 修改附带止盈止损或移动止�
 仅适用于 `ordType` = `move_order_stop`  
 > newActivePx | String | 否 | 新的激活价格。  
 仅适用于 `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 newSz  
 修改的数量<=该笔订单已成交数量时，该订单的状态会修改为完全成交状态。  
 
@@ -21261,6 +21304,10 @@ attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止�
 仅适用于 `ordType` = `move_order_stop`  
 > newActivePx | String | 否 | 新的激活价格。  
 仅适用于 `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 newSz  
 修改的数量<=该笔订单已成交数量时，该订单的状态会修改为完全成交状态。  
 
@@ -21567,7 +21614,8 @@ ordType | String | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -21746,7 +21794,8 @@ ordType | String | 否 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `live`：等待成交  
 `partially_filled`：部分成交  
@@ -21863,7 +21912,8 @@ ordType | String | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -22036,7 +22086,8 @@ ordType | String | 否 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `canceled`：撤单成功   
 `filled`：完全成交  
@@ -22161,7 +22212,8 @@ ordType | String | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -22333,7 +22385,8 @@ ordType | String | 否 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `canceled`：撤单成功   
 `filled`：完全成交  
@@ -22458,7 +22511,8 @@ ordType | String | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -24026,7 +24080,8 @@ ordType | String | 是 | 订单类型
 `fok`：全部成交或立即取消   
 `ioc`：立即成交并取消剩余   
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`类型的订单  
 outcome | String | 可选 | 用户交易的市场结果方向。  
@@ -24479,7 +24534,8 @@ data | Array of objects | 订阅的数据
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > side | String | 订单方向，`buy` `sell`  
 > posSide | String | 持仓方向  
 `long`：开平仓模式开多  
@@ -24617,13 +24673,14 @@ data | Array of objects | 订阅的数据
 `42`: 初始下单价格与最新的买一或卖一价已达到最大追逐距离，您的订单已被自动取消  
 `43`: 由于买单价格高于指数价格或卖单价格低于指数价格，导致系统撤单  
 `44`：由于该币种的可用余额不足，无法在触发自动换币后进行兑换，您的订单已撤销，撤销订单后恢复的余额将用于自动换币。当该币种的总抵押借贷量达到平台抵押借贷风控上限时，则会触发自动换币。  
-`45`：ELP订单价格校验失败  
+`45`：RPI订单价格校验失败  
 `46`：由于降低Delta而导致的撤单  
 > amendSource | String | 订单修改的来源  
 `1`: 用户主动改单，改单成功  
 `2`: 用户主动改单，并且当前这笔订单被只减仓修改，改单成功  
 `4`: 订单数量被系统按只减仓修改，改单成功，包括：用户主动下单后当前这笔订单被只减仓修改，以及用户当前已存在的挂单（非当前操作的订单）被只减仓修改  
 `5`：期权 px, pxVol 或 pxUsd 的跟随变动导致的改单，比如 iv=60，USD，px 锚定iv=60 时，USD, px 产生变动时的改单  
+`6`：系统因 RPI 做市商间距规则调整了订单价格（由 `rpiPxRound` 触发）  
 > category | String | 订单种类分类  
 `normal`：普通委托订单种类   
 `twap`：TWAP订单种类  
@@ -24968,7 +25025,8 @@ args | Array of objects | 是 | 请求参数
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > sz | String | 是 | 委托数量  
 > px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -25009,11 +25067,12 @@ args | Array of objects | 是 | 请求参数
 Cancel both不支持FOK   
   
 默认使用账户层面的acctStpMode进行下单，该字段的默认值为`cancel_maker`，用户可通过母账户登录网页修改该配置；用户亦可以通过下单接口的stpMode参数指定订单的STP模式。  
-> isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 成功返回示例
@@ -25166,7 +25225,7 @@ optimal_limit_ioc：市价委托，立即成交并取消剩余，仅适用于交
 1.Cancel Maker：这是默认的STP模式，系统撤Maker订单以防止自成交。然后，taker订单会基于深度继续和下一个订单成交。  
 2.Cancel Taker：撤Taker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后撤单。FOK订单会确保完全成交和自成交保护。  
 3.Cancel Both：撤Taker和Maker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后Taker订单的剩余数量和第一个自我Maker订单被取消。此模式不支持FOK订单。  
-isElpTakerAccess:true订单限速  
+rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
@@ -25249,7 +25308,8 @@ args | Array of objects | 是 | 请求参数
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > sz | String | 是 | 委托数量  
 > px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -25290,11 +25350,12 @@ args | Array of objects | 是 | 请求参数
 Cancel both不支持FOK   
   
 默认使用账户层面的acctStpMode进行下单，该字段的默认值为`cancel_maker`，用户可通过母账户登录网页修改该配置；用户亦可以通过下单接口的stpMode参数指定订单的STP模式。  
-> isElpTakerAccess | Boolean | 否 | 是否作为 taker 吃单 ELP  
-`true`：该请求能吃单 ELP，但会被施加延迟  
-`false`：该请求不能吃单 ELP，并且没有延迟  
-  
-默认值为`false`，`true`仅适用于ioc订单  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 全部成功返回示例
@@ -25422,7 +25483,7 @@ data | Array of objects | 请求成功后返回的数据
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 outTime | String | WebSocket 网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  isElpTakerAccess:true订单限速  
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
 \- 50个/2s，限制维度为 User ID + Instrument ID  
 \- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
@@ -25764,6 +25825,10 @@ ordId和clOrdId必须传一个，若传两个，以 ordId 为主
 `0`：当`newPx`超出价格限制时，不允许系统修改订单价格  
 `1`：当`newPx`超出价格限制时，允许系统将价格修改为限制范围内的最优值  
 默认值为`0`  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 成功返回示例
@@ -25921,6 +25986,10 @@ ordId 和 clOrdId 必须传一个，若传两个，以order id 为主
 `0`：当`newPx`超出价格限制时，不允许系统修改订单价格  
 `1`：当`newPx`超出价格限制时，允许系统将价格修改为限制范围内的最优值  
 默认值为`0`  
+> rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+> rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
 > 全部成功返回示例
@@ -38297,7 +38366,7 @@ side | String | 吃单方向
 `sell`：卖  
 source | String | 订单来源  
 `0`：普通订单  
-`1`：流动性增强计划订单  
+`1`：RPI 订单  
 ts | String | 成交时间，Unix时间戳的毫秒数格式， 如`1597026383085`  
 最多获取最近500条历史公共成交数据 
 
@@ -39339,8 +39408,9 @@ data | Array of objects | 订阅的数据
 
   * `books` 首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
 
-  * `books-elp` 仅推送ELP订单，首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
+  * `books-elp`（已弃用，请使用 `books-rpi`）仅推送ELP订单，首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
 
+  * `books-rpi`：合并有机和 RPI 深度。初始全量推送 400 档，之后每 100ms 推送增量。无 `checksum`，排序依赖 `seqId`/`prevSeqId`。每个 `asks`/`bids` 元素为 `[price, totalQty, nonRpiQty, count]`。取代 `books-elp`。
   * `books5` 首次推5档快照数据，以后定量推送，每100毫秒当5档快照数据有变化推送一次5档数据  
 
   * `bbo-tbt` 首次推1档快照数据，以后定量推送，每10毫秒当1档快照数据有变化推送一次1档数据  
@@ -39348,7 +39418,7 @@ data | Array of objects | 订阅的数据
   * `books-l2-tbt` 首次推400档快照数据，以后增量推送，每10毫秒推送一次变化的数据  
 
   * `books50-l2-tbt` 首次推50档快照数据，以后增量推送，每10毫秒推送一次变化的数据
-  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books5。
+  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5。
   * 在相同连接下，用户将无法为相同交易产品同时订阅 `books-l2-tbt` 以及 `books50-l2-tbt/books`频道 
     * 更多细节，请参阅更新日志 [2024-07-17](/docs-v5/log_zh/#2024-07-17)
 

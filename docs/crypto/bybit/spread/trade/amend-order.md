@@ -2,39 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/amend-order
 api_type: Trading
-updated_at: 2026-07-27 19:05:36.792675
+updated_at: 2026-07-28 19:04:43.027741
 ---
 
-# Create Order
+# Cancel All Orders
 
-Place a spread combination order. **Up to 50 open orders** per account.
+Cancel all open orders
 
 ### HTTP Request
 
-POST`/v5/spread/order/create`
+POST`/v5/spread/order/cancel-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Spread combination symbol name  
-side| **true**|  string| Order side. `Buy`, `Sell`  
-orderType| **true**|  string| `Limit`, `Market`  
-qty| **true**|  string| Order qty  
-price| false| string| Order price  
-orderLinkId| false| string| User customised order ID, a max of 45 characters. Combinations of numbers, letters (upper and lower cases), dashes, and underscores are supported.  
-timeInForce| false| string| [Time in force](https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK). `IOC`, `FOK`, `GTC`, `PostOnly`  
+symbol| false| string| Spread combination symbol name 
+
+  * When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.
+  * When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled
+
+  
+cancelAll| false| boolean| `true`, `false`  
   
 info
 
-The acknowledgement of an place order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+The acknowledgement of cancel all orders request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Spread combination order ID  
-orderLinkId| string| User customised order ID  
+list| array<object>|   
+> orderId| string| Order ID  
+> orderLinkId| string| User customised order ID  
+success| string| The field can be ignored  
   
 ### Request Example
 
@@ -44,23 +46,18 @@ orderLinkId| string| User customised order ID
 
     
     
-    POST /v5/spread/order/create HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744079410023  
+    X-BAPI-TIMESTAMP: 1744090967121  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 191  
+    Content-Length: 49  
       
     {  
-        "symbol": "SOLUSDT_SOL/USDT",  
-        "side": "Buy",  
-        "orderType": "Limit",  
-        "qty": "0.1",  
-        "price": "21",  
-        "orderLinkId": "1744072052193428479",  
-        "timeInForce": "PostOnly"  
+        "symbol": null,  
+        "cancelAll": true  
     }  
     
     
@@ -71,14 +68,8 @@ orderLinkId| string| User customised order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_place_order(  
-        symbol="SOLUSDT_SOL/USDT",  
-        side="Buy",  
-        orderType="Limit",  
-        qty="0.1",  
-        price="21",  
-        orderLinkId="1744072052193428479",  
-        timeInForce="PostOnly"  
+    print(session.spread_cancel_all_orders(  
+        cancelAll=True  
     ))  
     
 
@@ -89,62 +80,67 @@ orderLinkId| string| User customised order ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",  
-            "orderLinkId": "1744072052193428479"  
+            "list": [  
+                {  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
+                }  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744075839332  
+        "time": 1744090940933  
     }
 
 ---
 
-# 創建價差委托單
-
-每個帳戶最多支持50個活動單
+# 價差-全部撤單
 
 ### HTTP請求
 
-POST`/v5/spread/order/create`
+POST`/v5/spread/order/cancel-all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 價差產品名稱  
-side| **true**|  string| 訂單方向, `Buy`, `Sell`  
-orderType| **true**|  string| 訂單類型 `Limit`, `Market`  
-qty| **true**|  string| 訂單數量  
-price| **true**|  string| 訂單價格  
-orderLinkId| **true**|  string| 用戶自定義訂單ID, 最多 45 個字元。支援數字、字母（大寫和小寫）、破折號和底線的組合  
-timeInForce| **true**|  string| [訂單執行策略](https://www.bybit.com/en/help-center/article/What-Are-Time-In-Force-TIF-GTC-IOC-FOK) `IOC`, `FOK`, `GTC`, `PostOnly`  
+symbol| false| string| 價差產品名稱 
+
+  * 當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.
+  * 當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消
+
   
+cancelAll| false| boolean| `true`, `false`  
+  
+信息
+
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 價差訂單ID  
-orderLinkId| string| 用戶自定義訂單ID  
+list| array<object>|   
+> orderId| string| 價差訂單ID  
+> orderLinkId| string| 用戶自定義訂單ID  
+success| string| 該字段可以忽略, 無實際意義  
   
 ### 請求示例
     
     
-    POST /v5/spread/order/create HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744079410023  
+    X-BAPI-TIMESTAMP: 1744090967121  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 191  
+    Content-Length: 49  
       
     {  
-        "symbol": "SOLUSDT_SOL/USDT",  
-        "side": "Buy",  
-        "orderType": "Limit",  
-        "qty": "0.1",  
-        "price": "21",  
-        "orderLinkId": "1744072052193428479",  
-        "timeInForce": "PostOnly"  
+         
+        "symbol": null,  
+        "cancelAll": true  
     }  
     
 
@@ -155,9 +151,14 @@ orderLinkId| string| 用戶自定義訂單ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "1b00b997-d825-465e-ad1d-80b0eb1955af",  
-            "orderLinkId": "1744072052193428479"  
+            "list": [  
+                {  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
+                }  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744075839332  
+        "time": 1744090940933  
     }

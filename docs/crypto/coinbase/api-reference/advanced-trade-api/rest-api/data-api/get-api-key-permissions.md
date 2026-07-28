@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions
 api_type: REST
-updated_at: 2026-07-27 19:18:31.441710
+updated_at: 2026-07-28 19:16:36.529258
 ---
 
 # Get API Key Permissions
@@ -116,7 +116,6 @@ Get information about your CDP API key permissions
       "can_view": true,
       "can_trade": true,
       "can_transfer": true,
-      "can_receive": true,
       "portfolio_uuid": "<string>",
       "portfolio_type": "UNDEFINED"
     }
@@ -127,10 +126,7 @@ Get information about your CDP API key permissions
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -167,12 +163,6 @@ can_transfer
 boolean
 
 Indicates whether the API key has deposit/withdrawal permissions.
-
-can_receive
-
-boolean
-
-Indicates whether the API key has receive inbound payments permissions.
 
 portfolio_uuid
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data
 anchor_id: order-book-trading-market-data
 api_type: API
-updated_at: 2026-07-27 19:30:01.596471
+updated_at: 2026-07-28 19:28:55.604253
 ---
 
 # Market Data
@@ -683,7 +683,7 @@ side | String | Trade side of taker
 `sell`  
 source | String | Order source  
 `0`: normal order  
-`1`: Enhanced Liquidity Program order  
+`1`: RPI order  
 ts | String | Trade time, Unix timestamp format in milliseconds, e.g. `1597026383085`.  
 Up to 500 most recent historical public transaction data can be retrieved. 
 
@@ -1747,8 +1747,9 @@ Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by
 
   * `books`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
 
-  * `books-elp`: only push ELP orders. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
+  * `books-elp`: (Deprecated; use `books-rpi`) only push ELP orders. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
 
+  * `books-rpi`: consolidated organic and RPI depth. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms. No `checksum`; sequencing relies on `seqId`/`prevSeqId`. Each `asks`/`bids` element is `[price, totalQty, nonRpiQty, count]`. Supersedes `books-elp`.
   * `books5`: 5 depth levels snapshot will be pushed in the initial push. Snapshot data will be pushed every 100 ms when there are changes in the 5 depth levels snapshot.  
 
   * `bbo-tbt`: 1 depth level snapshot will be pushed in the initial push. Snapshot data will be pushed every 10 ms when there are changes in the 1 depth level snapshot.   
@@ -1756,7 +1757,7 @@ Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by
   * `books-l2-tbt`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.   
 
   * `books50-l2-tbt`: 50 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.
-  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books5.
+  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5.
   * Users can not simultaneously subscribe to `books-l2-tbt` and `books50-l2-tbt/books` channels for the same trading symbol. 
     * For more details, please refer to the changelog [2024-07-17](/docs-v5/log_en/#2024-07-17)
 
@@ -3028,7 +3029,7 @@ side | String | 吃单方向
 `sell`：卖  
 source | String | 订单来源  
 `0`：普通订单  
-`1`：流动性增强计划订单  
+`1`：RPI 订单  
 ts | String | 成交时间，Unix时间戳的毫秒数格式， 如`1597026383085`  
 最多获取最近500条历史公共成交数据 
 
@@ -4070,8 +4071,9 @@ data | Array of objects | 订阅的数据
 
   * `books` 首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
 
-  * `books-elp` 仅推送ELP订单，首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
+  * `books-elp`（已弃用，请使用 `books-rpi`）仅推送ELP订单，首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
 
+  * `books-rpi`：合并有机和 RPI 深度。初始全量推送 400 档，之后每 100ms 推送增量。无 `checksum`，排序依赖 `seqId`/`prevSeqId`。每个 `asks`/`bids` 元素为 `[price, totalQty, nonRpiQty, count]`。取代 `books-elp`。
   * `books5` 首次推5档快照数据，以后定量推送，每100毫秒当5档快照数据有变化推送一次5档数据  
 
   * `bbo-tbt` 首次推1档快照数据，以后定量推送，每10毫秒当1档快照数据有变化推送一次1档数据  
@@ -4079,7 +4081,7 @@ data | Array of objects | 订阅的数据
   * `books-l2-tbt` 首次推400档快照数据，以后增量推送，每10毫秒推送一次变化的数据  
 
   * `books50-l2-tbt` 首次推50档快照数据，以后增量推送，每10毫秒推送一次变化的数据
-  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books5。
+  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5。
   * 在相同连接下，用户将无法为相同交易产品同时订阅 `books-l2-tbt` 以及 `books50-l2-tbt/books`频道 
     * 更多细节，请参阅更新日志 [2024-07-17](/docs-v5/log_zh/#2024-07-17)
 

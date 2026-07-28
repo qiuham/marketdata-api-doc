@@ -2,36 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/orderbook
 api_type: Market Data
-updated_at: 2026-07-27 19:05:29.959556
+updated_at: 2026-07-28 19:04:41.168971
 ---
 
-# Get Recent Public Trades
+# Cancel All Orders
 
-Query recent public spread trading history in Bybit.
+Cancel all open orders
 
 ### HTTP Request
 
-GET`/v5/spread/recent-trade`
+POST`/v5/spread/order/cancel-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Spread combination symbol name  
-limit| false| integer| Limit for data size per page [`1`,`1000`], default: `500`  
+symbol| false| string| Spread combination symbol name 
+
+  * When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.
+  * When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled
+
   
+cancelAll| false| boolean| `true`, `false`  
+  
+info
+
+The acknowledgement of cancel all orders request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Public trade info  
-> execId| string| Execution ID  
-> symbol| string| Spread combination symbol name  
-> price| string| Trade price  
-> size| string| Trade size  
-> side| string| Side of taker `Buy`, `Sell`  
-> time| string| Trade time (ms)  
-> seq| string| Cross sequence  
+list| array<object>|   
+> orderId| string| Order ID  
+> orderLinkId| string| User customised order ID  
+success| string| The field can be ignored  
   
 ### Request Example
 
@@ -41,8 +46,19 @@ list| array<object>| Public trade info
 
     
     
-    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 49  
+      
+    {  
+        "symbol": null,  
+        "cancelAll": true  
+    }  
     
     
     
@@ -52,9 +68,8 @@ list| array<object>| Public trade info
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_public_trade_history(  
-        symbol="SOLUSDT_SOL/USDT",  
-        limit=2  
+    print(session.spread_cancel_all_orders(  
+        cancelAll=True  
     ))  
     
 
@@ -63,66 +78,70 @@ list| array<object>| Public trade info
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
             "list": [  
                 {  
-                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "price": "20.2805",  
-                    "size": "3.3",  
-                    "side": "Sell",  
-                    "time": "1744078324035",  
-                    "seq":"123456"  
-                },  
-                {  
-                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "price": "20.843",  
-                    "size": "2.2",  
-                    "side": "Buy",  
-                    "time": "1744078322010",  
-                    "seq":"123450"  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
                 }  
-            ]  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744078324682  
+        "time": 1744090940933  
     }
 
 ---
 
-# 查詢最近公共成交
+# 價差-全部撤單
 
 ### HTTP請求
 
-GET`/v5/spread/recent-trade`
+POST`/v5/spread/order/cancel-all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 價差產品名稱  
-limit| false| integer| 每頁數量限制 [1,1000], 默認: `500`  
+symbol| false| string| 價差產品名稱 
+
+  * 當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.
+  * 當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消
+
   
+cancelAll| false| boolean| `true`, `false`  
+  
+信息
+
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 成交信息  
-> execId| string| 成交id  
-> symbol| string| 價差產品名稱  
-> price| string| 成交價格  
-> size| string| 成交數量  
-> side| string| 吃單方向 `Buy`, `Sell`  
-> time| string| 成交時間戳 (毫秒)  
-> seq| string| 撮合版本號  
+list| array<object>|   
+> orderId| string| 價差訂單ID  
+> orderLinkId| string| 用戶自定義訂單ID  
+success| string| 該字段可以忽略, 無實際意義  
   
 ### 請求示例
     
     
-    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 49  
+      
+    {  
+         
+        "symbol": null,  
+        "cancelAll": true  
+    }  
     
 
 ### 響應示例
@@ -130,29 +149,16 @@ list| array<object>| 成交信息
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
             "list": [  
                 {  
-                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "price": "20.2805",  
-                    "size": "3.3",  
-                    "side": "Sell",  
-                    "time": "1744078324035",  
-                    "seq":"123456"  
-                },  
-                {  
-                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "price": "20.843",  
-                    "size": "2.2",  
-                    "side": "Buy",  
-                    "time": "1744078322010",  
-                    "seq":"123450"  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
                 }  
-            ]  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744078324682  
+        "time": 1744090940933  
     }

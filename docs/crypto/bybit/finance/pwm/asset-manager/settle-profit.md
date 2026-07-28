@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-07-27 19:01:30.693663
+updated_at: 2026-07-28 19:00:50.762397
 ---
 
 # Create Customize Investment Plan
@@ -21,7 +21,7 @@ Parameter| Required| Type| Comments
 ---|---|---|---  
 accountType| false| string| Source account type. Default: `FUND`  
 products| **true**|  array| Product configuration list. At least 1 item required  
-> category| **true**|  string| Pass through from product query result. Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> category| **true**|  string| Pass through from product query result. Product category: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
 > productId| **true**|  string| Pass through from product query result. May be `0`  
 > fundName| **true**|  string| Pass through from product query result. May be empty  
 > amount| **true**|  string| Subscription amount (base coin)  
@@ -98,7 +98,7 @@ POST`/v5/earn/pwm/customize-plan/create`
 ---|---|---|---  
 accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
 products| **true**|  array| 產品配置列表，至少 1 個  
-> category| **true**|  string| 透傳product查詢結果，產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+> category| **true**|  string| 透傳product查詢結果，產品類別：`flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
 > productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
 > fundName| **true**|  string| 透傳product查詢結果，可能為空  
 > amount| **true**|  string| 申購金額（本位幣）  

@@ -2,137 +2,59 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/wallet-type
 api_type: REST
-updated_at: 2026-07-27 19:06:24.721723
+updated_at: 2026-07-28 19:05:27.933910
 ---
 
-# Greek
+# Dcp
 
-Subscribe to the greeks stream to see changes to your greeks data in **real-time**. `option` only.
+Subscribe to the dcp stream to trigger DCP function.
 
-**Topic:** `greeks`
+For example, connection A subscribes "dcp.xxx", connection B does not and connection C subscribes "dcp.xxx".
 
-### Response Parameters
+  1. If A is alive, B is dead, C is alive, then this case will not trigger DCP.
+  2. If A is alive, B is dead, C is dead, then this case will not trigger DCP.
+  3. If A is dead, B is alive, C is dead, then DCP is triggered when reach the timeWindow threshold
 
-Parameter| Type| Comments  
----|---|---  
-id| string| Message ID  
-topic| string| Topic name  
-creationTime| number| Data created timestamp (ms)  
-data| array| Object  
-> baseCoin| string| Base coin  
-> totalDelta| string| Delta value  
-> totalGamma| string| Gamma value  
-> totalVega| string| Vega value  
-> totalTheta| string| Theta value  
-  
+
+
+To sum up, for those private connections subscribing "dcp" topic are all dead, then DCP will be triggered.
+
+**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+
 ### Subscribe Example
     
     
     {  
         "op": "subscribe",  
         "args": [  
-            "greeks"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.greek_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
-    
-
-### Stream Example
-    
-    
-    {  
-        "id": "592324fa945a30-2603-49a5-b865-21668c29f2a6",  
-        "topic": "greeks",  
-        "creationTime": 1672364262482,  
-        "data": [  
-            {  
-                "baseCoin": "ETH",  
-                "totalDelta": "0.06999986",  
-                "totalGamma": "-0.00000001",  
-                "totalVega": "-0.00000024",  
-                "totalTheta": "0.00001314"  
-            }  
+            "dcp.future"  
         ]  
     }
 
 ---
 
-# 用戶希臘字母信息 (期權)
+# 斷線保護
 
-訂閱用戶希臘字母數據推送
+通過訂閱DCP流來觸發功能
 
-**Topic:** `greeks`
+**舉例:** 私有連接A訂閱了"dcp.xxx", 私有連接B沒有訂閱"dcp.xxx", 私有連接C訂閱了"dcp.xxx".
 
-### 響應參數
+  1. 如果連接A在線, 連接B斷線, 連接C在線, 那麼這種情況下不會觸發DCP功能.
+  2. 如果連接A在線, 連接B斷線, 連接C斷線, 那麼這種情況下不會觸發DCP功能.
+  3. 如果連接A斷線, 連接B在線, 連接C斷線, 那麼這種情況下就會當達到時間窗口的閾值後觸發斷線保護機制.
 
-參數| 類型| 說明  
----|---|---  
-id| string| 消息id  
-topic| string| Topic名  
-creationTime| number| 消息數據創建時間  
-data| array| Object  
-> baseCoin| string| 交易幣種  
-> totalDelta| string| Delta值  
-> totalGamma| string| Gamma值  
-> totalVega| string| Vega值  
-> totalTheta| string| Theta值  
-  
+
+
+綜上, 只有當所有訂閱了"dcp.xxx"的私有連接斷線後, 斷線保護機制才會被觸發.
+
+**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+
 ### 訂閱示例
     
     
     {  
         "op": "subscribe",  
         "args": [  
-            "greeks"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.greek_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
-    
-
-### 推送示例
-    
-    
-    {  
-        "id": "592324fa945a30-2603-49a5-b865-21668c29f2a6",  
-        "topic": "greeks",  
-        "creationTime": 1672364262482,  
-        "data": [  
-            {  
-                "baseCoin": "ETH",  
-                "totalDelta": "0.06999986",  
-                "totalGamma": "-0.00000001",  
-                "totalVega": "-0.00000024",  
-                "totalTheta": "0.00001314"  
-            }  
+            "dcp.future"  
         ]  
     }

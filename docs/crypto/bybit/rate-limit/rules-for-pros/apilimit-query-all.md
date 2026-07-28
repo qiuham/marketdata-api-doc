@@ -2,181 +2,103 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query-all
 api_type: REST
-updated_at: 2026-07-27 19:04:15.091558
+updated_at: 2026-07-28 19:03:30.439661
 ---
 
-# Get All Rate Limits
+# Introduction
 
-> API rate limit: 50 req per second
+## API Rate Limit Rules for PROs
 
-info
+Upcoming changes for pro account
 
-  * Query for all your UID-level rate limits, including all master accounts and subaccounts.
+Starting **August 13, 2025** , Bybit will roll out a new institutional API rate limit framework designed to enhance performance for high-frequency trading clients. The new system introduces a centralized institution-level rate cap with flexible per-UID configurations, enabling greater efficiency and scalability. Please refer to the [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/) for more information.
 
+### UID-level rate limit
 
+Maximum limit for a single UID.
 
-### HTTP Request
-
-GET`/v5/apilimit/query-all`
-
-### Request Parameters
-
-Parameter| Required| Type| Comments  
----|---|---|---  
-limit| false| string| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-uids| false| string| Multiple UIDs across different master accounts, separated by commas. Returns all master accounts and subaccounts by default  
+| Unified Account  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+Default| 10/s| 10/s| 20/s  
+PRO1| 200/s| 200/s| 200/s  
+PRO2| 400/s| 400/s| 400/s  
+PRO3| 600/s| 600/s| 600/s  
+PRO4| 800/s| 800/s| 800/s  
+PRO5| 1000/s| 1000/s| 1000/s  
+PRO6| 1200/s| 1200/s| 1200/s  
+MM1| 600/s| 600/s| 600/s  
+MM2| 800/s| 800/s| 800/s  
+MM3| 1000/s| 1000/s| 1000/s  
   
-### Response Parameters
+### Institutional-level rate limit
 
-Parameter| Type| Comments  
----|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-list| array| Object  
-> uids| string| Multiple UIDs separated by commas  
-> [bizType](/docs/v5/enum#biztype)| string| Business type  
-> rate| integer| API Rate limit per second  
+Aggregate limit across all main and sub UIDs.
+
+| Unified Account  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+PRO1| 10000/s| 10000/s| 10000/s  
+PRO2| 20000/s| 20000/s| 20000/s  
+PRO3| 30000/s| 30000/s| 30000/s  
+PRO4| 40000/s| 40000/s| 40000/s  
+PRO5| 50000/s| 50000/s| 50000/s  
+PRO6| 60000/s| 60000/s| 60000/s  
+MM1| 30000/s| 30000/s| 30000/s  
+MM2| 40000/s| 40000/s| 40000/s  
+MM3| 50000/s| 50000/s| 50000/s  
   
-### Request Example
+instructions for API rate limit
 
-  * HTTP
-  * Python
-  * Node.js
-
-
-    
-    
-    GET /v5/apilimit/query-all HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 2  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_all_api_rate_limits())  
-    
-    
-    
-      
-    
-
-### Response Example
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "uids": "104270393,1674166,1190923,101446030",  
-                    "bizType": "SPOT",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104074050,104394193,104126066",  
-                    "bizType": "OPTIONS",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104154966,103803484,103995540,100445068",  
-                    "bizType": "DERIVATIVES",  
-                    "rate": 298  
-                }  
-            ],  
-            "nextPageCursor": ""  
-        },  
-        "retExtInfo": {},  
-        "time": 1758857701702  
-    }
+  * All of the existing subaccounts still have their original API rate limits.
+  * The default API rate limit for a new subaccount is not counted in the institutional-level API rate limit. 
+  * The default API rate limit for a new sub is: 10/s for futures, 10/s for options, 20/s for spot.
+  * If the aggregate institutional-level API rate limit is exceeded, you must reduce one or several account's API rate limit(s) first. After the API rate limit is less than the aggregate institutional API rate limit, you can increase the API rate limit of an account.
 
 ---
 
-# 查詢所有 API 限速
+# 限頻介紹
 
-### 查詢所有 API 限速
+## PROs接口限頻規則
 
-> API 限速：每秒 50 次請求  
-> 
+即將到來的變更
 
-信息
+自**2025年8月13日** 起，Bybit 將推出全新機構 API 速率限制框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
 
-  * 查詢所有 UID 等級的限速，包括主帳戶及所有子帳戶。
-  * 僅允許透過main UID或來自sub-INS API key的子帳戶 UID 進行查詢
+### UID 層級:
 
-
-
-### HTTP 請求
-
-GET`/v5/apilimit/query-all`
-
-### 請求參數
-
-參數| 必填| 類型| 說明  
----|---|---|---  
-limit| false| string| 每頁資料大小限制。[`1`, `1000`]。預設值：`1000`  
-cursor| false| string| 游標。使用回應中的 `nextPageCursor` 令牌以取得下一頁結果集  
-uids| false| string| 跨主帳戶的多個 UID，以逗號分隔。預設返回所有主帳戶及子帳戶的限速  
+| 統一帳戶  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+Default| 10/s| 10/s| 20/s  
+PRO1| 200/s| 200/s| 200/s  
+PRO2| 400/s| 400/s| 400/s  
+PRO3| 600/s| 600/s| 600/s  
+PRO4| 800/s| 800/s| 800/s  
+PRO5| 1000/s| 1000/s| 1000/s  
+PRO6| 1200/s| 1200/s| 1200/s  
+MM1| 600/s| 600/s| 600/s  
+MM2| 800/s| 800/s| 800/s  
+MM3| 1000/s| 1000/s| 1000/s  
   
-### 響應參數
+### 主帳戶和子帳戶層級 (（機構 API 速率限製配額）):
 
-參數| 類型| 說明  
----|---|---  
-nextPageCursor| string| 用於取得下一頁資料  
-list| array| Object  
-> uids| string| 多個 UID，以逗號分隔。  
-> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> rate| integer| 每秒 API 限速  
+| 統一帳戶  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+PRO1| 10000/s| 10000/s| 10000/s  
+PRO2| 20000/s| 20000/s| 20000/s  
+PRO3| 30000/s| 30000/s| 30000/s  
+PRO4| 40000/s| 40000/s| 40000/s  
+PRO5| 50000/s| 50000/s| 50000/s  
+PRO6| 60000/s| 60000/s| 60000/s  
+MM1| 30000/s| 30000/s| 30000/s  
+MM2| 40000/s| 40000/s| 40000/s  
+MM3| 50000/s| 50000/s| 50000/s  
   
-### 請求範例
-    
-    
-    GET /v5/apilimit/query-all HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 2  
-    
+API 速率限制說明
 
-### 響應範例
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "uids": "104270393,1674166,1190923,101446030",  
-                    "bizType": "SPOT",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104074050,104394193,104126066",  
-                    "bizType": "OPTIONS",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104154966,103803484,103995540,100445068",  
-                    "bizType": "DERIVATIVES",  
-                    "rate": 298  
-                }  
-            ],  
-            "nextPageCursor": ""  
-        },  
-        "retExtInfo": {},  
-        "time": 1758857701702  
-    }
+  * 所有現有子帳戶仍享有原有的 API 速率限制。
+  * 新子帳戶的預設 API 速率限制不計入機構 API 速率限制總配額。
+  * 新子帳戶的預設 API 速率限制為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
+  * 如果超出機構 API 速率限制總配額，您只能先降低帳戶的 API 速率限制。當 API 速率限制總配額低於機構 API 速率限制總配額後，您才能提高帳戶的 API 速率限制。

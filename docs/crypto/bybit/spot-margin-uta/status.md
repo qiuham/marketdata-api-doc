@@ -2,56 +2,73 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status
 api_type: REST
-updated_at: 2026-07-27 19:05:23.808878
+updated_at: 2026-07-28 19:04:34.872037
 ---
 
-# Toggle Margin Trade
+# Get Instruments Info
 
-Turn on / off spot margin trade
+Query for the instrument specification of spread combinations.
 
-caution
+info
 
-Your account needs to activate spot margin first; i.e., you must have finished the quiz on web / app.
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/switch-mode`
+GET`/v5/spread/instrument`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-spotMarginMode| **true**|  string| `1`: on, `0`: off  
+symbol| false| string| Spread combination symbol name  
+baseCoin| false| string| Base coin, uppercase only  
+limit| false| integer| Limit for data size per page. [`1`, `500`]. Default: `200`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-spotMarginMode| string| Spot margin status. `1`: on, `0`: off  
-[](/docs/api-explorer/v5/spot-margin-uta/switch-mode)
+list| array<object>| instrument info  
+> symbol| string| Spread combination symbol name  
+> contractType| string| Product type 
 
-* * *
+  * `FundingRateArb`: perpetual & spot combination
+  * `CarryTrade`: futures & spot combination
+  * `FutureSpread`: different expiry futures combination
+  * `PerpBasis`: futures & perpetual
 
+  
+> status| string| Spread status. `Trading`, `Settling`  
+> baseCoin| string| Base coin  
+> quoteCoin| string| Quote coin  
+> settleCoin| string| Settle coin  
+> tickSize| string| The step to increase/reduce order price  
+> minPrice| string| Min. order price  
+> maxPrice| string| Max. order price  
+> lotSize| string| Order qty precision  
+> minSize| string| Min. order qty  
+> maxSize| string| Max. order qty  
+> launchTime| string| Launch timestamp (ms)  
+> deliveryTime| string| Delivery timestamp (ms)  
+> legs| array<object>| Legs information  
+>> symbol| string| Legs symbol name  
+>> contractType| string| Legs contract type. `LinearPerpetual`, `LinearFutures`, `Spot`  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    POST /v5/spot-margin-trade/switch-mode HTTP/1.1  
+    GET /v5/spread/instrument?limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672297794480  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "spotMarginMode": "0"  
-    }  
     
     
     
@@ -61,28 +78,9 @@ spotMarginMode| string| Spot margin status. `1`: on, `0`: off
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_toggle_margin_trade(  
-        spotMarginMode="0",  
+    print(session.spread_get_instruments_info(  
+        limit=1  
     ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .toggleSpotMarginTrade('0')  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -92,94 +90,99 @@ spotMarginMode| string| Spot margin status. `1`: on, `0`: off
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "spotMarginMode": "0"  
+            "list": [  
+                {  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "contractType": "FundingRateArb",  
+                    "status": "Trading",  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "tickSize": "0.0001",  
+                    "minPrice": "-1999.9998",  
+                    "maxPrice": "1999.9998",  
+                    "lotSize": "0.1",  
+                    "minSize": "0.1",  
+                    "maxSize": "50000",  
+                    "launchTime": "1743675300000",  
+                    "deliveryTime": "0",  
+                    "legs": [  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "contractType": "LinearPerpetual"  
+                        },  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "contractType": "Spot"  
+                        }  
+                    ]  
+                }  
+            ],  
+            "nextPageCursor": "first%3D100008%26last%3D100008"  
         },  
         "retExtInfo": {},  
-        "time": 1672297795542  
+        "time": 1744076802479  
     }
 
 ---
 
-# 全倉槓桿開關
-
-全倉槓桿開關
-
-> **覆蓋範圍: 全倉槓桿 (統一帳戶)**
+# 查詢價差產品的規格信息
 
 警告
 
-您的帳戶需要先開啟全倉槓桿
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
-### HTTP 請求
 
-POST`/v5/spot-margin-trade/switch-mode`
+
+### HTTP請求
+
+GET`/v5/spread/instrument`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-spotMarginMode| **true**|  string| `1`: 開啟，`0`: 關閉  
+symbol| false| string| 價差產品名稱  
+baseCoin| false| string| 交易幣種  
+limit| false| integer| 每頁數量限制. [`1`, `500`]. 默認: `200`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-spotMarginMode| string| 全倉槓桿狀態（`1`: 開啟，`0`: 關閉）  
-[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/switch-mode)
+list| array<object>| 規格信息  
+> symbol| string| 價差產品名稱  
+> contractType| string| 價差分類 
 
-* * *
+  * `FundingRateArb`: 永續 & 現貨組合
+  * `CarryTrade`: 到期合約& 現貨組合
+  * `FutureSpread`: 不同到期日合約組合
+  * `PerpBasis`: 到期合約& 永續組合
 
+  
+> status| string| 價差產品交易狀態, `Trading`, `Settling`  
+> baseCoin| string| 交易幣種  
+> quoteCoin| string| 報價幣種  
+> settleCoin| string| 結算幣種  
+> tickSize| string| 修改價格的步長  
+> minPrice| string| 訂單最小價格  
+> maxPrice| string| 訂單最大價格  
+> lotSize| string| 訂單數量精度  
+> minSize| string| 單筆訂單最小下單量  
+> maxSize| string| 單筆訂單最大下單量  
+> launchTime| string| 發佈時間 (ms)  
+> deliveryTime| string| 交割時間 (ms)  
+> legs| array<object>| 單腿信息  
+>> symbol| string| 單腿合約名稱  
+>> contractType| string| 單腿合約類型, `LinearPerpetual`: 永續合約, `LinearFutures`: 交割合約, `Spot`: 現貨  
+nextPageCursor| string| 游標，用於翻頁  
+  
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    POST /v5/spot-margin-trade/switch-mode HTTP/1.1  
+    GET /v5/spread/instrument?limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672297794480  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "spotMarginMode": "0"  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.spot_margin_trade_toggle_margin_trade(  
-        spotMarginMode="0",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .toggleSpotMarginTrade('0')  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -189,8 +192,36 @@ spotMarginMode| string| 全倉槓桿狀態（`1`: 開啟，`0`: 關閉）
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "spotMarginMode": "0"  
+            "list": [  
+                {  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "contractType": "FundingRateArb",  
+                    "status": "Trading",  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "tickSize": "0.0001",  
+                    "minPrice": "-1999.9998",  
+                    "maxPrice": "1999.9998",  
+                    "lotSize": "0.1",  
+                    "minSize": "0.1",  
+                    "maxSize": "50000",  
+                    "launchTime": "1743675300000",  
+                    "deliveryTime": "0",  
+                    "legs": [  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "contractType": "LinearPerpetual"  
+                        },  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "contractType": "Spot"  
+                        }  
+                    ]  
+                }  
+            ],  
+            "nextPageCursor": "first%3D100008%26last%3D100008"  
         },  
         "retExtInfo": {},  
-        "time": 1672297795542  
+        "time": 1744076802479  
     }

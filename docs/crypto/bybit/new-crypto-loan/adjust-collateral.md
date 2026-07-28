@@ -2,48 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/adjust-collateral
 api_type: REST
-updated_at: 2026-07-27 19:02:41.113773
+updated_at: 2026-07-28 19:02:00.870970
 ---
 
-# Get Borrow Contract Info
+# Get Crypto Loan Position
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/borrow-contract-info`
+GET`/v5/crypto-loan-common/position`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-orderId| false| string| Loan order ID  
-loanId| false| string| Loan ID  
-orderCurrency| false| string| Loan coin name  
-term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> annualRate| string| Annual rate for the borrowing  
-> autoRepay| string| Deprecated. `"true"`: enable auto repay, default; `"false"`: disable auto repay  
-> borrowCurrency| string| Loan coin  
-> borrowTime| string| Loan order timestamp  
-> interestPaid| string| Paid interest  
-> loanId| string| Loan contract ID  
-> orderId| string| Loan order ID  
-> repaymentTime| string| Time to repay  
-> residualPenaltyInterest| string| Unpaid interest  
-> residualPrincipal| string| Unpaid principal  
-> status| integer| Loan order status `1`: unrepaid; `2`: fully repaid; `3`: overdue  
-> term| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-> repayType| string| `1`:Auto Repayment; `2`:Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+borrowList| array| Object  
+> fixedTotalDebt| string| Total debt of fixed loan (coin)  
+> fixedTotalDebtUSD| string| Total debt of fixed loan (USD)  
+> flexibleHourlyInterestRate| string| Flebible loan hourly interest rate  
+> flexibleTotalDebt| string| Total debt of flexible loan (coin)  
+> flexibleTotalDebtUSD| string| Total debt of flexible loan (USD)  
+> loanCurrency| string| Loan coin  
+collateralList| array| Object  
+> amount| string| Collateral amount in coin  
+> amountUSD| string| Collateral amount in USD (after tierd collateral ratio calculation)  
+> currency| string| Collateral coin  
+ltv| string| LTV  
+supplyList| array| Object  
+> amount| string| Supply amount in coin  
+> amountUSD| string| Supply amount in USD  
+> currency| string| Supply coin  
+totalCollateral| string| Total collateral amount (USD)  
+totalDebt| string| Total debt (fixed + flexible, in USD)  
+totalSupply| string| Total supply amount (USD)  
+colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
   
 ### Request Example
 
@@ -54,11 +52,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-fixed/borrow-contract-info?orderCurrency=ETH HTTP/1.1  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652691909  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -69,9 +67,7 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_contract_info_fixed_crypto_loan(  
-        collateralCurrency="ETH",  
-    ))  
+    print(session.get_position_new_crypto_loan())  
     
     
     
@@ -85,85 +81,102 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
+            "borrowList": [  
                 {  
-                    "annualRate": "0.022",  
-                    "autoRepay": "true",  
-                    "borrowCurrency": "ETH",  
-                    "borrowTime": "1752633756068",  
-                    "interestPaid": "0.002531506849315069",  
-                    "loanId": "571",  
-                    "orderId": "13007",  
-                    "repayType": "1",  
-                    "repaymentTime": "1755225756068",  
-                    "residualPenaltyInterest": "0",  
-                    "residualPrincipal": "1.4",  
-                    "status": 1,  
-                    "term": "30"  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
                 },  
                 {  
-                    "annualRate": "0.022",  
-                    "autoRepay": "true",  
-                    "borrowCurrency": "ETH",  
-                    "borrowTime": "1752633696068",  
-                    "interestPaid": "0.00018082191780822",  
-                    "loanId": "570",  
-                    "orderId": "13007",  
-                    "repayType": "1",  
-                    "repaymentTime": "1755225696068",  
-                    "residualPenaltyInterest": "0",  
-                    "residualPrincipal": "0.1",  
-                    "status": 1,  
-                    "term": "30"  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
                 }  
             ],  
-            "nextPageCursor": "568"  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1752652692603  
+        "time": 1752627962000  
     }
 
 ---
 
-# 查詢借款合同
+# 查詢質押借幣持倉
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/borrow-contract-info`
+GET`/v5/crypto-loan-common/position`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-orderId| false| string| 借款訂單ID  
-loanId| false| string| 借款合同ID  
-orderCurrency| false| string| 借款幣種  
-term| false| string| 借款期限 `7`: 7天; `14`: 14天; `30`: 30天; `90`: 90天; `180`: 180天  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
-  
+None
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> annualRate| string| 借款年化利率  
-> autoRepay| string| 已廢棄。`"true"`: 開啟自動還款; `"false"`: 關閉自動還款  
-> borrowCurrency| string| 借款幣種  
-> borrowTime| string| 借款時間  
-> interestPaid| string| 已支付利息  
-> loanId| string| 借款合同ID  
-> orderId| string| 借款訂單ID  
-> repaymentTime| string| 還款到期時間  
-> residualPenaltyInterest| string| 未繳利息  
-> residualPrincipal| string| 未繳本金  
-> status| integer| 借款訂單狀態 `1`: 未償還；`2`: 已全額償還；`3`: 逾期  
-> term| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-> repayType| string| `1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;  
-nextPageCursor| string| 下一頁游標  
+borrowList| array| Object  
+> fixedTotalDebt| string| 定期借款總負債（幣）  
+> fixedTotalDebtUSD| string| 定期借款總負債（美元）  
+> flexibleHourlyInterestRate| string| 活期借款每小時利率  
+> flexibleTotalDebt| string| 活期借款總負債（幣）  
+> flexibleTotalDebtUSD| string| 活期借款總負債（美元）  
+> loanCurrency| string| 借款幣種  
+collateralList| array| Object  
+> amount| string| 抵押金額（幣）  
+> amountUSD| string| 抵押金額（USD，經分層抵押率計算後）  
+> currency| string| 抵押幣種  
+ltv| string| 質押率（LTV）  
+supplyList| array| Object  
+> amount| string| 出借金額（幣）  
+> amountUSD| string| 出借金額（USD）  
+> currency| string| 出借幣種  
+totalCollateral| string| 抵押總金額（USD）  
+totalDebt| string| 總負債金額（定期 + 活期，USD）  
+totalSupply| string| 出借總金額（USD）  
+colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
   
 ### 請求示例
 
@@ -174,11 +187,11 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-fixed/borrow-contract-info?orderCurrency=ETH HTTP/1.1  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652691909  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -189,9 +202,7 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_contract_info_fixed_crypto_loan(  
-        collateralCurrency="ETH",  
-    ))  
+    print(session.get_position_new_crypto_loan())  
     
     
     
@@ -205,40 +216,59 @@ nextPageCursor| string| 下一頁游標
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
+            "borrowList": [  
                 {  
-                    "annualRate": "0.022",  
-                    "autoRepay": "true",  
-                    "borrowCurrency": "ETH",  
-                    "borrowTime": "1752633756068",  
-                    "interestPaid": "0.002531506849315069",  
-                    "loanId": "571",  
-                    "orderId": "13007",  
-                    "repayType": "1",  
-                    "repaymentTime": "1755225756068",  
-                    "residualPenaltyInterest": "0",  
-                    "residualPrincipal": "1.4",  
-                    "status": 1,  
-                    "term": "30"  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
                 },  
                 {  
-                    "annualRate": "0.022",  
-                    "autoRepay": "true",  
-                    "borrowCurrency": "ETH",  
-                    "borrowTime": "1752633696068",  
-                    "interestPaid": "0.00018082191780822",  
-                    "loanId": "570",  
-                    "orderId": "13007",  
-                    "repayType": "1",  
-                    "repaymentTime": "1755225696068",  
-                    "residualPenaltyInterest": "0",  
-                    "residualPrincipal": "0.1",  
-                    "status": 1,  
-                    "term": "30"  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
                 }  
             ],  
-            "nextPageCursor": "568"  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1752652692603  
+        "time": 1752627962000  
     }

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/create-order
 api_type: Trading
-updated_at: 2026-07-27 19:18:32.674165
+updated_at: 2026-07-28 19:16:37.186165
 ---
 
 # Create Order
@@ -10,7 +10,9 @@ updated_at: 2026-07-27 19:18:32.674165
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/orders`
 
 
-Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), etc.
+Create an order with a specified `product_id`, `side`, and `order_configuration`.
+
+**Equities:** Use the canonical `product_id` returned by the Products API, not the display ticker. Include `equity_order_metadata` to select the trading session and time in force. Use `market_market_ioc` with `MARKET_GFD` for market orders, which are supported only during the normal session. Use `limit_limit_gtc` with `LIMIT_GFD` or `LIMIT_GTC` for limit orders. In pre-market, after-hours, overnight, or multi-session trading, specify a positive whole-share `base_size`; `quote_size` and fractional sizing are not supported. Attached orders are not supported for equities.
     
     
     curl --request POST \
@@ -25,45 +27,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
       "order_configuration": {
         "market_market_ioc": {
           "quote_size": "10.00",
-          "base_size": "0.001",
-          "rfq_disabled": true
+          "base_size": "0.001"
         },
         "market_market_fok": {
           "quote_size": "10.00",
-          "base_size": "0.001",
-          "rfq_disabled": true
+          "base_size": "0.001"
         },
         "sor_limit_ioc": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "limit_limit_gtc": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
-          "post_only": false,
-          "rfq_disabled": true
+          "post_only": false
         },
         "limit_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "post_only": false
         },
         "limit_limit_fok": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "twap_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "start_time": "2021-05-31T07:59:59.000Z",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "start_time": "2021-05-31T07:59:59Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "limit_price": "10000.00",
           "number_buckets": "5",
           "bucket_size": "2.00",
@@ -79,7 +76,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "stop_direction": "20000.00"
         },
         "trigger_bracket_gtc": {
@@ -91,7 +88,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_trigger_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z"
+          "end_time": "2021-05-31T09:59:59Z"
         },
         "scaled_limit_gtc": {
           "orders": [
@@ -99,8 +96,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
-              "post_only": false,
-              "rfq_disabled": true
+              "post_only": false
             }
           ],
           "quote_size": "<string>",
@@ -121,45 +117,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
       "attached_order_configuration": {
         "market_market_ioc": {
           "quote_size": "10.00",
-          "base_size": "0.001",
-          "rfq_disabled": true
+          "base_size": "0.001"
         },
         "market_market_fok": {
           "quote_size": "10.00",
-          "base_size": "0.001",
-          "rfq_disabled": true
+          "base_size": "0.001"
         },
         "sor_limit_ioc": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "limit_limit_gtc": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
-          "post_only": false,
-          "rfq_disabled": true
+          "post_only": false
         },
         "limit_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "post_only": false
         },
         "limit_limit_fok": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "twap_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "start_time": "2021-05-31T07:59:59.000Z",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "start_time": "2021-05-31T07:59:59Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "limit_price": "10000.00",
           "number_buckets": "5",
           "bucket_size": "2.00",
@@ -175,7 +166,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "stop_direction": "20000.00"
         },
         "trigger_bracket_gtc": {
@@ -187,7 +178,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_trigger_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z"
+          "end_time": "2021-05-31T09:59:59Z"
         },
         "scaled_limit_gtc": {
           "orders": [
@@ -195,8 +186,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
               "quote_size": "10.00",
               "base_size": "0.001",
               "limit_price": "10000.00",
-              "post_only": false,
-              "rfq_disabled": true
+              "post_only": false
             }
           ],
           "quote_size": "<string>",
@@ -216,6 +206,10 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         "preview_order_est_average_filled_price": "<string>",
         "supports_fractional_base_size": true
       },
+      "equity_order_metadata": {
+        "equity_trading_session": "UNKNOWN_EQUITY_TRADING_SESSION",
+        "displayed_order_config": "UNKNOWN_DISPLAYED_ORDER_CONFIG"
+      },
       "cost_basis_method": "COST_BASIS_METHOD_UNSPECIFIED"
     }
     '
@@ -232,45 +226,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         "order_configuration": {  
             "market_market_ioc": {  
                 "quote_size": "10.00",  
-                "base_size": "0.001",  
-                "rfq_disabled": True  
+                "base_size": "0.001"  
             },  
             "market_market_fok": {  
                 "quote_size": "10.00",  
-                "base_size": "0.001",  
-                "rfq_disabled": True  
+                "base_size": "0.001"  
             },  
             "sor_limit_ioc": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "limit_price": "10000.00",  
-                "rfq_disabled": True  
+                "limit_price": "10000.00"  
             },  
             "limit_limit_gtc": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
                 "limit_price": "10000.00",  
-                "post_only": False,  
-                "rfq_disabled": True  
+                "post_only": False  
             },  
             "limit_limit_gtd": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
                 "limit_price": "10000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "post_only": False  
             },  
             "limit_limit_fok": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "limit_price": "10000.00",  
-                "rfq_disabled": True  
+                "limit_price": "10000.00"  
             },  
             "twap_limit_gtd": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "start_time": "2021-05-31T07:59:59.000Z",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "start_time": "2021-05-31T07:59:59Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "limit_price": "10000.00",  
                 "number_buckets": "5",  
                 "bucket_size": "2.00",  
@@ -286,7 +275,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 "base_size": 0.001,  
                 "limit_price": "10000.00",  
                 "stop_price": "20000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "stop_direction": "20000.00"  
             },  
             "trigger_bracket_gtc": {  
@@ -298,7 +287,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 "base_size": 0.001,  
                 "limit_price": "10000.00",  
                 "stop_trigger_price": "20000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z"  
+                "end_time": "2021-05-31T09:59:59Z"  
             },  
             "scaled_limit_gtc": {  
                 "orders": [  
@@ -306,8 +295,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                         "quote_size": "10.00",  
                         "base_size": "0.001",  
                         "limit_price": "10000.00",  
-                        "post_only": False,  
-                        "rfq_disabled": True  
+                        "post_only": False  
                     }  
                 ],  
                 "quote_size": "<string>",  
@@ -328,45 +316,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         "attached_order_configuration": {  
             "market_market_ioc": {  
                 "quote_size": "10.00",  
-                "base_size": "0.001",  
-                "rfq_disabled": True  
+                "base_size": "0.001"  
             },  
             "market_market_fok": {  
                 "quote_size": "10.00",  
-                "base_size": "0.001",  
-                "rfq_disabled": True  
+                "base_size": "0.001"  
             },  
             "sor_limit_ioc": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "limit_price": "10000.00",  
-                "rfq_disabled": True  
+                "limit_price": "10000.00"  
             },  
             "limit_limit_gtc": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
                 "limit_price": "10000.00",  
-                "post_only": False,  
-                "rfq_disabled": True  
+                "post_only": False  
             },  
             "limit_limit_gtd": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
                 "limit_price": "10000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "post_only": False  
             },  
             "limit_limit_fok": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "limit_price": "10000.00",  
-                "rfq_disabled": True  
+                "limit_price": "10000.00"  
             },  
             "twap_limit_gtd": {  
                 "quote_size": "10.00",  
                 "base_size": "0.001",  
-                "start_time": "2021-05-31T07:59:59.000Z",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "start_time": "2021-05-31T07:59:59Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "limit_price": "10000.00",  
                 "number_buckets": "5",  
                 "bucket_size": "2.00",  
@@ -382,7 +365,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 "base_size": 0.001,  
                 "limit_price": "10000.00",  
                 "stop_price": "20000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z",  
+                "end_time": "2021-05-31T09:59:59Z",  
                 "stop_direction": "20000.00"  
             },  
             "trigger_bracket_gtc": {  
@@ -394,7 +377,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 "base_size": 0.001,  
                 "limit_price": "10000.00",  
                 "stop_trigger_price": "20000.00",  
-                "end_time": "2021-05-31T09:59:59.000Z"  
+                "end_time": "2021-05-31T09:59:59Z"  
             },  
             "scaled_limit_gtc": {  
                 "orders": [  
@@ -402,8 +385,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                         "quote_size": "10.00",  
                         "base_size": "0.001",  
                         "limit_price": "10000.00",  
-                        "post_only": False,  
-                        "rfq_disabled": True  
+                        "post_only": False  
                     }  
                 ],  
                 "quote_size": "<string>",  
@@ -422,6 +404,10 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             "prediction_side": "PREDICTION_SIDE_UNKNOWN",  
             "preview_order_est_average_filled_price": "<string>",  
             "supports_fractional_base_size": True  
+        },  
+        "equity_order_metadata": {  
+            "equity_trading_session": "UNKNOWN_EQUITY_TRADING_SESSION",  
+            "displayed_order_config": "UNKNOWN_DISPLAYED_ORDER_CONFIG"  
         },  
         "cost_basis_method": "COST_BASIS_METHOD_UNSPECIFIED"  
     }  
@@ -443,39 +429,28 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         product_id: 'BTC-USD',  
         side: '',  
         order_configuration: {  
-          market_market_ioc: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
-          market_market_fok: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
-          sor_limit_ioc: {  
-            quote_size: '10.00',  
-            base_size: '0.001',  
-            limit_price: '10000.00',  
-            rfq_disabled: true  
-          },  
+          market_market_ioc: {quote_size: '10.00', base_size: '0.001'},  
+          market_market_fok: {quote_size: '10.00', base_size: '0.001'},  
+          sor_limit_ioc: {quote_size: '10.00', base_size: '0.001', limit_price: '10000.00'},  
           limit_limit_gtc: {  
             quote_size: '10.00',  
             base_size: '0.001',  
             limit_price: '10000.00',  
-            post_only: false,  
-            rfq_disabled: true  
+            post_only: false  
           },  
           limit_limit_gtd: {  
             quote_size: '10.00',  
             base_size: '0.001',  
             limit_price: '10000.00',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             post_only: false  
           },  
-          limit_limit_fok: {  
-            quote_size: '10.00',  
-            base_size: '0.001',  
-            limit_price: '10000.00',  
-            rfq_disabled: true  
-          },  
+          limit_limit_fok: {quote_size: '10.00', base_size: '0.001', limit_price: '10000.00'},  
           twap_limit_gtd: {  
             quote_size: '10.00',  
             base_size: '0.001',  
-            start_time: '2021-05-31T07:59:59.000Z',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            start_time: '2021-05-31T07:59:59Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             limit_price: '10000.00',  
             number_buckets: '5',  
             bucket_size: '2.00',  
@@ -491,7 +466,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             base_size: 0.001,  
             limit_price: '10000.00',  
             stop_price: '20000.00',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             stop_direction: '20000.00'  
           },  
           trigger_bracket_gtc: {base_size: 0.001, limit_price: '10000.00', stop_trigger_price: '20000.00'},  
@@ -499,7 +474,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             base_size: 0.001,  
             limit_price: '10000.00',  
             stop_trigger_price: '20000.00',  
-            end_time: '2021-05-31T09:59:59.000Z'  
+            end_time: '2021-05-31T09:59:59Z'  
           },  
           scaled_limit_gtc: {  
             orders: [  
@@ -507,8 +482,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 quote_size: '10.00',  
                 base_size: '0.001',  
                 limit_price: '10000.00',  
-                post_only: false,  
-                rfq_disabled: true  
+                post_only: false  
               }  
             ],  
             quote_size: '<string>',  
@@ -527,39 +501,28 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         retail_portfolio_id: '11111111-1111-1111-1111-111111111111',  
         preview_id: 'b40bbff9-17ce-4726-8b64-9de7ae57ad26',  
         attached_order_configuration: {  
-          market_market_ioc: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
-          market_market_fok: {quote_size: '10.00', base_size: '0.001', rfq_disabled: true},  
-          sor_limit_ioc: {  
-            quote_size: '10.00',  
-            base_size: '0.001',  
-            limit_price: '10000.00',  
-            rfq_disabled: true  
-          },  
+          market_market_ioc: {quote_size: '10.00', base_size: '0.001'},  
+          market_market_fok: {quote_size: '10.00', base_size: '0.001'},  
+          sor_limit_ioc: {quote_size: '10.00', base_size: '0.001', limit_price: '10000.00'},  
           limit_limit_gtc: {  
             quote_size: '10.00',  
             base_size: '0.001',  
             limit_price: '10000.00',  
-            post_only: false,  
-            rfq_disabled: true  
+            post_only: false  
           },  
           limit_limit_gtd: {  
             quote_size: '10.00',  
             base_size: '0.001',  
             limit_price: '10000.00',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             post_only: false  
           },  
-          limit_limit_fok: {  
-            quote_size: '10.00',  
-            base_size: '0.001',  
-            limit_price: '10000.00',  
-            rfq_disabled: true  
-          },  
+          limit_limit_fok: {quote_size: '10.00', base_size: '0.001', limit_price: '10000.00'},  
           twap_limit_gtd: {  
             quote_size: '10.00',  
             base_size: '0.001',  
-            start_time: '2021-05-31T07:59:59.000Z',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            start_time: '2021-05-31T07:59:59Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             limit_price: '10000.00',  
             number_buckets: '5',  
             bucket_size: '2.00',  
@@ -575,7 +538,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             base_size: 0.001,  
             limit_price: '10000.00',  
             stop_price: '20000.00',  
-            end_time: '2021-05-31T09:59:59.000Z',  
+            end_time: '2021-05-31T09:59:59Z',  
             stop_direction: '20000.00'  
           },  
           trigger_bracket_gtc: {base_size: 0.001, limit_price: '10000.00', stop_trigger_price: '20000.00'},  
@@ -583,7 +546,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             base_size: 0.001,  
             limit_price: '10000.00',  
             stop_trigger_price: '20000.00',  
-            end_time: '2021-05-31T09:59:59.000Z'  
+            end_time: '2021-05-31T09:59:59Z'  
           },  
           scaled_limit_gtc: {  
             orders: [  
@@ -591,8 +554,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                 quote_size: '10.00',  
                 base_size: '0.001',  
                 limit_price: '10000.00',  
-                post_only: false,  
-                rfq_disabled: true  
+                post_only: false  
               }  
             ],  
             quote_size: '<string>',  
@@ -611,6 +573,10 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           prediction_side: 'PREDICTION_SIDE_UNKNOWN',  
           preview_order_est_average_filled_price: '<string>',  
           supports_fractional_base_size: true  
+        },  
+        equity_order_metadata: {  
+          equity_trading_session: 'UNKNOWN_EQUITY_TRADING_SESSION',  
+          displayed_order_config: 'UNKNOWN_DISPLAYED_ORDER_CONFIG'  
         },  
         cost_basis_method: 'COST_BASIS_METHOD_UNSPECIFIED'  
       })  
@@ -641,45 +607,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         'order_configuration' => [  
             'market_market_ioc' => [  
                     'quote_size' => '10.00',  
-                    'base_size' => '0.001',  
-                    'rfq_disabled' => true  
+                    'base_size' => '0.001'  
             ],  
             'market_market_fok' => [  
                     'quote_size' => '10.00',  
-                    'base_size' => '0.001',  
-                    'rfq_disabled' => true  
+                    'base_size' => '0.001'  
             ],  
             'sor_limit_ioc' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'limit_price' => '10000.00',  
-                    'rfq_disabled' => true  
+                    'limit_price' => '10000.00'  
             ],  
             'limit_limit_gtc' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
                     'limit_price' => '10000.00',  
-                    'post_only' => false,  
-                    'rfq_disabled' => true  
+                    'post_only' => false  
             ],  
             'limit_limit_gtd' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
                     'limit_price' => '10000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'post_only' => false  
             ],  
             'limit_limit_fok' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'limit_price' => '10000.00',  
-                    'rfq_disabled' => true  
+                    'limit_price' => '10000.00'  
             ],  
             'twap_limit_gtd' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'start_time' => '2021-05-31T07:59:59.000Z',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'start_time' => '2021-05-31T07:59:59Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'limit_price' => '10000.00',  
                     'number_buckets' => '5',  
                     'bucket_size' => '2.00',  
@@ -695,7 +656,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                     'base_size' => 0.001,  
                     'limit_price' => '10000.00',  
                     'stop_price' => '20000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'stop_direction' => '20000.00'  
             ],  
             'trigger_bracket_gtc' => [  
@@ -707,7 +668,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                     'base_size' => 0.001,  
                     'limit_price' => '10000.00',  
                     'stop_trigger_price' => '20000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z'  
+                    'end_time' => '2021-05-31T09:59:59Z'  
             ],  
             'scaled_limit_gtc' => [  
                     'orders' => [  
@@ -715,8 +676,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                                                                     'quote_size' => '10.00',  
                                                                     'base_size' => '0.001',  
                                                                     'limit_price' => '10000.00',  
-                                                                    'post_only' => false,  
-                                                                    'rfq_disabled' => true  
+                                                                    'post_only' => false  
                                     ]  
                     ],  
                     'quote_size' => '<string>',  
@@ -737,45 +697,40 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         'attached_order_configuration' => [  
             'market_market_ioc' => [  
                     'quote_size' => '10.00',  
-                    'base_size' => '0.001',  
-                    'rfq_disabled' => true  
+                    'base_size' => '0.001'  
             ],  
             'market_market_fok' => [  
                     'quote_size' => '10.00',  
-                    'base_size' => '0.001',  
-                    'rfq_disabled' => true  
+                    'base_size' => '0.001'  
             ],  
             'sor_limit_ioc' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'limit_price' => '10000.00',  
-                    'rfq_disabled' => true  
+                    'limit_price' => '10000.00'  
             ],  
             'limit_limit_gtc' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
                     'limit_price' => '10000.00',  
-                    'post_only' => false,  
-                    'rfq_disabled' => true  
+                    'post_only' => false  
             ],  
             'limit_limit_gtd' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
                     'limit_price' => '10000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'post_only' => false  
             ],  
             'limit_limit_fok' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'limit_price' => '10000.00',  
-                    'rfq_disabled' => true  
+                    'limit_price' => '10000.00'  
             ],  
             'twap_limit_gtd' => [  
                     'quote_size' => '10.00',  
                     'base_size' => '0.001',  
-                    'start_time' => '2021-05-31T07:59:59.000Z',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'start_time' => '2021-05-31T07:59:59Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'limit_price' => '10000.00',  
                     'number_buckets' => '5',  
                     'bucket_size' => '2.00',  
@@ -791,7 +746,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                     'base_size' => 0.001,  
                     'limit_price' => '10000.00',  
                     'stop_price' => '20000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z',  
+                    'end_time' => '2021-05-31T09:59:59Z',  
                     'stop_direction' => '20000.00'  
             ],  
             'trigger_bracket_gtc' => [  
@@ -803,7 +758,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                     'base_size' => 0.001,  
                     'limit_price' => '10000.00',  
                     'stop_trigger_price' => '20000.00',  
-                    'end_time' => '2021-05-31T09:59:59.000Z'  
+                    'end_time' => '2021-05-31T09:59:59Z'  
             ],  
             'scaled_limit_gtc' => [  
                     'orders' => [  
@@ -811,8 +766,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
                                                                     'quote_size' => '10.00',  
                                                                     'base_size' => '0.001',  
                                                                     'limit_price' => '10000.00',  
-                                                                    'post_only' => false,  
-                                                                    'rfq_disabled' => true  
+                                                                    'post_only' => false  
                                     ]  
                     ],  
                     'quote_size' => '<string>',  
@@ -831,6 +785,10 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
             'prediction_side' => 'PREDICTION_SIDE_UNKNOWN',  
             'preview_order_est_average_filled_price' => '<string>',  
             'supports_fractional_base_size' => true  
+        ],  
+        'equity_order_metadata' => [  
+            'equity_trading_session' => 'UNKNOWN_EQUITY_TRADING_SESSION',  
+            'displayed_order_config' => 'UNKNOWN_DISPLAYED_ORDER_CONFIG'  
         ],  
         'cost_basis_method' => 'COST_BASIS_METHOD_UNSPECIFIED'  
       ]),  
@@ -865,7 +823,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
       
     	url := "https://api.coinbase.com/api/v3/brokerage/orders"  
       
-    	payload := strings.NewReader("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}")  
+    	payload := strings.NewReader("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"equity_order_metadata\": {\n    \"equity_trading_session\": \"UNKNOWN_EQUITY_TRADING_SESSION\",\n    \"displayed_order_config\": \"UNKNOWN_DISPLAYED_ORDER_CONFIG\"\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}")  
       
     	req, _ := http.NewRequest("POST", url, payload)  
       
@@ -885,7 +843,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
     HttpResponse<String> response = Unirest.post("https://api.coinbase.com/api/v3/brokerage/orders")  
       .header("Authorization", "Bearer <token>")  
       .header("Content-Type", "application/json")  
-      .body("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}")  
+      .body("{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"equity_order_metadata\": {\n    \"equity_trading_session\": \"UNKNOWN_EQUITY_TRADING_SESSION\",\n    \"displayed_order_config\": \"UNKNOWN_DISPLAYED_ORDER_CONFIG\"\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}")  
       .asString();
     
     
@@ -900,7 +858,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
     request = Net::HTTP::Post.new(url)  
     request["Authorization"] = 'Bearer <token>'  
     request["Content-Type"] = 'application/json'  
-    request.body = "{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"rfq_disabled\": true\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false,\n      \"rfq_disabled\": true\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"rfq_disabled\": true\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59.000Z\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59.000Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false,\n          \"rfq_disabled\": true\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}"  
+    request.body = "{\n  \"client_order_id\": \"0000-00000-000000\",\n  \"product_id\": \"BTC-USD\",\n  \"side\": \"\",\n  \"order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"leverage\": \"2.0\",\n  \"margin_type\": \"\",\n  \"retail_portfolio_id\": \"11111111-1111-1111-1111-111111111111\",\n  \"preview_id\": \"b40bbff9-17ce-4726-8b64-9de7ae57ad26\",\n  \"attached_order_configuration\": {\n    \"market_market_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"market_market_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\"\n    },\n    \"sor_limit_ioc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"limit_limit_gtc\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"post_only\": false\n    },\n    \"limit_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"post_only\": false\n    },\n    \"limit_limit_fok\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\"\n    },\n    \"twap_limit_gtd\": {\n      \"quote_size\": \"10.00\",\n      \"base_size\": \"0.001\",\n      \"start_time\": \"2021-05-31T07:59:59Z\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"limit_price\": \"10000.00\",\n      \"number_buckets\": \"5\",\n      \"bucket_size\": \"2.00\",\n      \"bucket_duration\": \"300s\"\n    },\n    \"stop_limit_stop_limit_gtc\": {\n      \"base_size\": \"0.001\",\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"stop_limit_stop_limit_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\",\n      \"stop_direction\": \"20000.00\"\n    },\n    \"trigger_bracket_gtc\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\"\n    },\n    \"trigger_bracket_gtd\": {\n      \"base_size\": 0.001,\n      \"limit_price\": \"10000.00\",\n      \"stop_trigger_price\": \"20000.00\",\n      \"end_time\": \"2021-05-31T09:59:59Z\"\n    },\n    \"scaled_limit_gtc\": {\n      \"orders\": [\n        {\n          \"quote_size\": \"10.00\",\n          \"base_size\": \"0.001\",\n          \"limit_price\": \"10000.00\",\n          \"post_only\": false\n        }\n      ],\n      \"quote_size\": \"<string>\",\n      \"base_size\": \"<string>\",\n      \"num_orders\": 123,\n      \"min_price\": \"<string>\",\n      \"max_price\": \"<string>\",\n      \"price_distribution\": \"FLAT\",\n      \"size_distribution\": \"UNKNOWN_DISTRIBUTION\",\n      \"size_diff\": \"<string>\",\n      \"size_ratio\": \"<string>\"\n    }\n  },\n  \"sor_preference\": \"SOR_ENABLED\",\n  \"prediction_metadata\": {\n    \"prediction_side\": \"PREDICTION_SIDE_UNKNOWN\",\n    \"preview_order_est_average_filled_price\": \"<string>\",\n    \"supports_fractional_base_size\": true\n  },\n  \"equity_order_metadata\": {\n    \"equity_trading_session\": \"UNKNOWN_EQUITY_TRADING_SESSION\",\n    \"displayed_order_config\": \"UNKNOWN_DISPLAYED_ORDER_CONFIG\"\n  },\n  \"cost_basis_method\": \"COST_BASIS_METHOD_UNSPECIFIED\"\n}"  
       
     response = http.request(request)  
     puts response.read_body
@@ -925,44 +883,51 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
         "market_market_ioc": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "rfq_disabled": true
+          "currency_size": {
+            "value": "1.23",
+            "currency": "BTC"
+          }
         },
         "market_market_fok": {
           "quote_size": "10.00",
-          "base_size": "0.001",
-          "rfq_disabled": true
+          "base_size": "0.001"
         },
         "sor_limit_ioc": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "limit_limit_gtc": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
           "post_only": false,
-          "rfq_disabled": true
+          "currency_size": {
+            "value": "1.23",
+            "currency": "BTC"
+          }
         },
         "limit_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
           "limit_price": "10000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
-          "post_only": false
+          "end_time": "2021-05-31T09:59:59Z",
+          "post_only": false,
+          "currency_size": {
+            "value": "1.23",
+            "currency": "BTC"
+          }
         },
         "limit_limit_fok": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "limit_price": "10000.00",
-          "rfq_disabled": true
+          "limit_price": "10000.00"
         },
         "twap_limit_gtd": {
           "quote_size": "10.00",
           "base_size": "0.001",
-          "start_time": "2021-05-31T07:59:59.000Z",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "start_time": "2021-05-31T07:59:59Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "limit_price": "10000.00",
           "number_buckets": "5",
           "bucket_size": "2.00",
@@ -978,7 +943,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z",
+          "end_time": "2021-05-31T09:59:59Z",
           "stop_direction": "20000.00"
         },
         "trigger_bracket_gtc": {
@@ -990,7 +955,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
           "base_size": 0.001,
           "limit_price": "10000.00",
           "stop_trigger_price": "20000.00",
-          "end_time": "2021-05-31T09:59:59.000Z"
+          "end_time": "2021-05-31T09:59:59Z"
         },
         "scaled_limit_gtc": {
           "orders": [
@@ -999,7 +964,10 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
               "base_size": "0.001",
               "limit_price": "10000.00",
               "post_only": false,
-              "rfq_disabled": true
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
             }
           ],
           "quote_size": "<string>",
@@ -1021,10 +989,7 @@ Create an order with a specified `product_id` (asset-pair), `side` (buy/sell), e
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -1062,7 +1027,7 @@ string
 
 required
 
-The trading pair (e.g. 'BTC-USD').
+Canonical product identifier for the order. For equities, use the product_id returned by the Products API, not the display ticker.
 
 Example:
 
@@ -1168,6 +1133,12 @@ object
 
 Request metadata specific to prediction market orders.
 
+equity_order_metadata
+
+object
+
+Equity-specific order instructions. For equity products, use this field to select the trading session and time in force.
+
 cost_basis_method
 
 enum<string>
@@ -1184,7 +1155,9 @@ Available options:
 
 `COST_BASIS_METHOD_LIFO`,
 
-`COST_BASIS_METHOD_FIFO`
+`COST_BASIS_METHOD_FIFO`,
+
+`COST_BASIS_METHOD_SPEC_ID`
 
 #### Response
 

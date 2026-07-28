@@ -2,49 +2,42 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/pre-check-order
 api_type: Trading
-updated_at: 2026-07-27 19:03:32.077381
+updated_at: 2026-07-28 19:02:51.893433
 ---
 
-# Pre Check Order
+# Get Coin Delta Amount
 
-This endpoint is used to calculate the changes in IMR and MMR of UTA account before and after placing an order.
+Query coin delta amount details for institutional loan hedge product.
 
 info
 
-  1. This endpoint supports orders with category = `inverse`,`linear`,`option`.   
-
-  2. Only Cross Margin mode and Portfolio Margin mode are supported, isolated margin mode is not supported.  
-
-  3. category = `inverse` is not supported in Cross Margin mode.  
-
-  4. Conditional order is not supported.  
-
-  5. If `retCode` is neither 0 nor 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id` will be displayed in the `retExtInfo` json.
-  6. If `retCode` is 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id`, `post_imr_e4`, and `post_mmr_e4` will be displayed in the `retExtInfo` json.
+  * Unified account only
+  * Optional `coin` filter; if omitted, returns all coins
 
 
 
 ### HTTP Request
 
-POST`/v5/order/pre-check`
+GET`/v5/ins-loan/coin-delta-amount`
 
 ### Request Parameters
 
-refer to [create order request](/docs/v5/order/create-order#request-parameters)
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coin| false| string| Coin name, uppercase only. e.g. `BTC`. If not passed, returns all coins  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Order ID  
-orderLinkId| string| User customised order ID  
-preImrE4| int| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
-preMmrE4| int| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
-postImrE4| int| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
-postMmrE4| int| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+riskUnitDeltaAmount| string| Risk unit total delta amount limit (USD)  
+riskUnitDeltaAvailableAmount| string| Risk unit available delta amount (USD)  
+list| array| Object  
+> coin| string| Coin name  
+> coinDeltaSize| string| Coin delta size (quantity)  
+> coinDeltaAvailableAmount| string| Coin delta available amount (USD)  
+> coinDeltaAmount| string| Coin delta total amount limit (USD)  
   
-* * *
-
 ### Request Example
 
   * HTTP
@@ -54,60 +47,16 @@ postMmrE4| int| Maintenance margin rate calculated after checking, keep four dec
 
     
     
-    POST /v5/order/pre-check HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-TIMESTAMP: 1716192000000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    // Spot Limit order with market tp sl  
-    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
-      
-    // Spot Limit order with limit tp sl  
-    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
-      
-    // Spot PostOnly normal order  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
-      
-    // Spot TP/SL order  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
-      
-    // Spot margin normal order (UTA)  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
-      
-    // Spot Market Buy order, qty is quote currency  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
-      
-      
-    // USDT Perp open long position (one-way mode)  
-    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
-      
-    // USDT Perp close long position (one-way mode)  
-    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
+    X-BAPI-SIGN: XXXXX  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.pre_check_order(  
-        category="spot",  
-        symbol="BTCUSDT",  
-        side="Buy",  
-        orderType="Limit",  
-        qty="0.1",  
-        price="28000",  
-        timeInForce="PostOnly",  
-        takeProfit="35000",  
-        stopLoss="27000",  
-        tpOrderType="Market",  
-        slOrderType="Market",  
-    ))  
+      
     
     
     
@@ -121,59 +70,62 @@ postMmrE4| int| Maintenance margin rate calculated after checking, keep four dec
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
-            "orderLinkId": "test129",  
-            "preImrE4": 30,  
-            "preMmrE4": 21,  
-            "postImrE4": 357,  
-            "postMmrE4": 294  
+            "riskUnitDeltaAmount": "500000",  
+            "riskUnitDeltaAvailableAmount": "350000",  
+            "list": [  
+                {  
+                    "coin": "BTC",  
+                    "coinDeltaSize": "10",  
+                    "coinDeltaAvailableAmount": "200000",  
+                    "coinDeltaAmount": "300000"  
+                },  
+                {  
+                    "coin": "ETH",  
+                    "coinDeltaSize": "100",  
+                    "coinDeltaAvailableAmount": "150000",  
+                    "coinDeltaAmount": "200000"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1749541599589  
+        "time": 1716192000000  
     }
 
 ---
 
-# 預下單
+# 查詢幣種 Delta 額度
 
-此接口用於計算UTA帳戶下單前後IMR、MMR的變化。
+查詢機構借貸對沖產品的幣種 Delta 額度詳情。
 
 信息
 
-  1. 此接口只支持期貨和期權的訂單。   
-
-  2. 僅支持全倉模式和組合保證金模式，不支援逐倉模式。   
-
-  3. 全倉模式下不支持反向訂單。   
-
-  4. 不支持條件訂單。   
-
-  5. 如果`retCode`既不是0也不是110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id` 會顯示在`retExtInfo`這個json裡。
-  6. 如果`retCode` 是 110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id`，`post_imr_e4`，`post_mmr_e4`會顯示在`retExtInfo`這個json裡。
+  * 僅支持統一帳戶
+  * `coin` 為可選篩選參數，若不傳則返回所有幣種
 
 
 
-### HTTP請求
+### HTTP 請求
 
-POST`/v5/order/pre-check`
+GET`/v5/ins-loan/coin-delta-amount`
 
 ### 請求參數
 
-參考 [create order request](/docs/zh-TW/v5/order/create-order#request-parameters)
-
-### 響應參數
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+coin| false| string| 幣種名稱，僅大寫。如 `BTC`。若不傳，返回所有幣種  
+  
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 訂單ID  
-orderLinkId| string| 用戶自定義訂單ID  
-preImrE4| int| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
-preMmrE4| int| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
-postImrE4| int| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
-postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+riskUnitDeltaAmount| string| 風險單元 Delta 總額度限制（USD）  
+riskUnitDeltaAvailableAmount| string| 風險單元可用 Delta 額度（USD）  
+list| array| Object  
+> coin| string| 幣種名稱  
+> coinDeltaSize| string| 幣種 Delta 數量  
+> coinDeltaAvailableAmount| string| 幣種可用 Delta 額度（USD）  
+> coinDeltaAmount| string| 幣種 Delta 總額度限制（USD）  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -183,80 +135,46 @@ postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四�
 
     
     
-    POST /v5/order/pre-check HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-TIMESTAMP: 1716192000000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    // Spot Limit order with market tp sl  
-    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
-      
-    // Spot Limit order with limit tp sl  
-    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
-      
-    // Spot PostOnly normal order  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
-      
-    // Spot TP/SL order  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
-      
-    // Spot margin normal order (UTA)  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
-      
-    // Spot Market Buy order, qty is quote currency  
-    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
-      
-      
-    // USDT Perp open long position (one-way mode)  
-    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
-      
-    // USDT Perp close long position (one-way mode)  
-    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
+    X-BAPI-SIGN: XXXXX  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.pre_check_order(  
-        category="spot",  
-        symbol="BTCUSDT",  
-        side="Buy",  
-        orderType="Limit",  
-        qty="0.1",  
-        price="28000",  
-        timeInForce="PostOnly",  
-        takeProfit="35000",  
-        stopLoss="27000",  
-        tpOrderType="Market",  
-        slOrderType="Market",  
-    ))  
+      
     
     
     
       
     
 
-### 響應示例
+### 返回示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
-            "orderLinkId": "test129",  
-            "preImrE4": 30,  
-            "preMmrE4": 21,  
-            "postImrE4": 357,  
-            "postMmrE4": 294  
+            "riskUnitDeltaAmount": "500000",  
+            "riskUnitDeltaAvailableAmount": "350000",  
+            "list": [  
+                {  
+                    "coin": "BTC",  
+                    "coinDeltaSize": "10",  
+                    "coinDeltaAvailableAmount": "200000",  
+                    "coinDeltaAmount": "300000"  
+                },  
+                {  
+                    "coin": "ETH",  
+                    "coinDeltaSize": "100",  
+                    "coinDeltaAvailableAmount": "150000",  
+                    "coinDeltaAmount": "200000"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1749541599589  
+        "time": 1716192000000  
     }

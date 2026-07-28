@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods
 api_type: REST
-updated_at: 2026-07-27 19:18:33.217209
+updated_at: 2026-07-28 19:16:37.795213
 ---
 
 # List Payment Methods
@@ -124,8 +124,8 @@ Get a list of payment methods for the current user.
           "allow_sell": true,
           "allow_deposit": true,
           "allow_withdraw": true,
-          "created_at": "2021-05-31T09:59:59.000Z",
-          "updated_at": "2021-05-31T09:59:59.000Z"
+          "created_at": "2021-05-31T09:59:59Z",
+          "updated_at": "2021-05-31T09:59:59Z"
         }
       ]
     }
@@ -136,10 +136,7 @@ Get a list of payment methods for the current user.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

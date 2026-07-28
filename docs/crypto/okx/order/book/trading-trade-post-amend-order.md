@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-amend-order
 anchor_id: order-book-trading-trade-post-amend-order
 api_type: API
-updated_at: 2026-07-27 19:29:16.898357
+updated_at: 2026-07-28 19:28:10.103570
 ---
 
 # POST / Amend order
@@ -135,6 +135,10 @@ Either `newCallbackRatio` or `newCallbackSpread` can be passed. Only one can be 
 Only applicable when `ordType` = `move_order_stop`  
 > newActivePx | String | No | New activation price.  
 Only applicable when `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | No | Default `false`.  
+When `true`, the amended order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
+Not inherited from the original order — must be re-specified on each amend request (omitted = `false` for that amend).  
+rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
   
 > Response Example
     
@@ -305,6 +309,10 @@ attachAlgoOrds | Array of objects | 否 | 修改附带止盈止损或移动止�
 仅适用于 `ordType` = `move_order_stop`  
 > newActivePx | String | 否 | 新的激活价格。  
 仅适用于 `ordType` = `move_order_stop`  
+rpiTakerAccess | Boolean | 否 | 默认值为 `false`。  
+设为 `true` 时，改单后的订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
+改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
+rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 newSz  
 修改的数量<=该笔订单已成交数量时，该订单的状态会修改为完全成交状态。  
 

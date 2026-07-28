@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/set-risk-limit
 api_type: REST
-updated_at: 2026-07-27 18:55:59.460471
+updated_at: 2026-07-28 18:55:42.512893
 ---
 
 # Set Risk Limit

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask
 api_type: Market Data
-updated_at: 2026-07-27 19:18:33.827019
+updated_at: 2026-07-28 19:16:38.324918
 ---
 
 # Get Best Bid/Ask
@@ -139,10 +139,7 @@ Get the best bid/ask for all products. A subset of all products can be returned 
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

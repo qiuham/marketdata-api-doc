@@ -2,116 +2,419 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/connection/mmws
 api_type: REST
-updated_at: 2026-07-27 19:02:01.946217
+updated_at: 2026-07-28 19:01:27.749316
 ---
 
-# MMWS Integration
+# Get ADL Alert
 
-Market Maker WebSocket (MMWS) is a dedicated WebSocket access path for market makers and institutional clients. It provides a more stable portal for private, trade, public market data, and SBE WebSocket traffic.
+Query for [ADL](https://www.bybit.com/en/help-center/article/Auto-Deleveraging-ADL) (auto-deleveraging mechanism) alerts and insurance pool information.
 
-MMWS is designed for connection stability. It can reduce unexpected disconnects, reduce delayed pushes, and avoid handshake failures caused by frequent reconnect attempts. It does not guarantee lower absolute latency than the regular public WebSocket endpoint.
+> **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
-## Supported paths
+tip
 
-MMWS supports the following V5 WebSocket paths:
+Data update frequency: every 1 minute.
 
-Type| Path  
----|---  
-Private stream| `/v5/private`  
-Trade| `/v5/trade`  
-Linear market data| `/v5/public/linear`  
-Inverse market data| `/v5/public/inverse`  
-Spot market data| `/v5/public/spot`  
-Option market data| `/v5/public/option`  
-Spread market data| `/v5/public/spread`  
-Spot SBE market data| `/v5/public-sbe/spot`  
-Linear SBE market data| `/v5/public-sbe/linear`  
-Inverse SBE market data| `/v5/public-sbe/inverse`  
+info
+
+  * **ADL trigger and stop conditions are based on the following three cases:**
+
+
+  1. **Contract PnL drawdown ADL (based on the new grouped insurance pool mechanism, see examples 1 and 2)**
+
+     * **Trigger condition** :  
+`balance` (insurance fund balance) > `adlTriggerThreshold` (trigger threshold for contract PnL drawdown ADL)  
+and `pnlRatio` < `insurancePnlRatio` (PnL ratio threshold for triggering ADL)
+
+Where:
+
+       * **pnlRatio** : drawdown ratio of the symbol in the last 8 hours  
+Formula: `pnlRatio` = (Symbol's current PnL - Symbol's 8h max PnL) / Insurance pool's 8h max balance (`maxBalance`)  
+_Note: the symbol's Current PnL and 8h Max PnL are not provided by the API_.
+       * **Insurance pool 8h max balance (`maxBalance`)**: the maximum balance of the grouped insurance pool in the last 8 hours
+     * **Stop condition** : `pnlRatio` > `adlStopRatio` (stop ratio threshold for ADL)
+
+  2. **Insurance pool equity drawdown ADL (original mechanism, see example 3)**
+
+     * **Trigger condition** : `balance` (insurance fund balance) ≤ 0
+     * **Stop condition** : `balance` (insurance fund balance) > 0
+  3. **Excessive margin loss of a symbol after removing it from a grouped insurance pool (can be regarded as a special case of pool equity drawdown ADL)**
+
+     * To ensure pool safety, the risk control team may remove a symbol from its grouped pool and temporarily establish it as a new independent insurance pool.
+     * **Trigger condition** : `balance` (insurance fund balance) ≤ 0
+     * **Stop condition** : `balance` (insurance fund balance) > 0
+
+
+
+ADL examples: Triggered by PnL Drawdown and Insurance Pool Balance
+
+  1. **Example 1: Pool has no significant profit in the last 8 hours, then symbol loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will be triggered**
+
+     * Assume symbols A, B, and C share the same pool with an initial 8h `balance` of **1M USDT**
+     * A incurs a loss of **350K**
+     * Calculation:
+       * `pnlRatio` = -35%
+       * `balance` = 1M
+       * `adlTriggerThreshold` = 1 (a constant set by Bybit)
+       * `insurancePnlRatio` = -0.3 (a constant set by Bybit)
+     * Condition check:
+       * `balance` (1M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3)
+     * → Contract PnL drawdown ADL is triggered
+     * The system calculates the bankruptcy price at **-30% drawdown** so ADL closes **50K** worth of user positions to keep A's `pnlRatio` at -30%
+     * **Stop condition** : ADL stops if A's `pnlRatio` > `adlStopRatio` (-0.25, a constant set by Bybit)
+
+**Recovery methods** :
+
+     1. Platform injects funds into the pool and adjusts A's PnL
+     2. Pool continues to take A's positions and earns maintenance margin through liquidation on the market
+
+
+
+* * *
+
+  2. **Example 2: Pool has significant profit in the last 8 hours, but symbol loss exceeds the PnL ratio threshold (`insurancePnlRatio`), ADL will still be triggered**
+
+     * Assume symbols A, B, C share the same pool, initial `balance` = **1M USDT**
+     * A gains profit through liquidation, pool 8h Max Balance = **2M USDT** (A's PnL = +1M)
+     * Later A incurs a loss of **600K**
+     * Calculation:
+       * `pnlRatio` = -30%
+       * `balance` = 2M
+       * `adlTriggerThreshold` = 1 (a constant set by Bybit)
+       * `insurancePnlRatio` = -0.3 (a constant set by Bybit)
+     * Condition check:
+       * `balance` (2M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)
+     * → Contract PnL drawdown ADL is triggered
+     * The system calculates the bankruptcy price at **-30% drawdown**
+     * **Stop condition** : ADL stops if A's `pnlRatio` > `adlStopRatio` (-0.25, a constant set by Bybit)
+
+**Recovery methods** :
+
+     1. Platform injects funds into the pool and adjusts A's PnL
+     2. Pool continues to take A's positions and earns maintenance margin through liquidation on the market
+
+
+
+* * *
+
+  3. **Example 3: Pool balance reaches zero which triggers ADL**
+     * Assume symbols A, B, C, D share the same pool, initial `balance` = **1M USDT**
+     * Although none of the `pnlRatio` values for the symbols reach -30%, the pool `balance` drops to 0
+     * Condition check:
+       * `balance` (0) ≤ 0
+     * → Insurance pool equity ADL is triggered
+     * The system redistributes bankruptcy loss across symbols based on their PnL when pool balance = 0
+     * **Stop condition** : ADL stops if `balance` > 0
+
+
+
+Subscribe to the [ADL WebSocket topic](/docs/v5/websocket/public/adl-alert) for faster updates.
+
+### HTTP Request
+
+GET`/v5/market/adlAlert`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+symbol| false| string| Contract name, e.g. `BTCUSDT`. Uppercase only  
   
-Use the dedicated hostname provided by Bybit with the same WebSocket path structure:
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+updateTime| string| Latest data update timestamp (ms)  
+list| array| Object  
+> coin| string| Token of the insurance pool  
+> symbol| string| Trading pair name  
+> balance| string| Balance of the insurance fund. Used to determine if ADL is triggered. For shared insurance pool, the "balance" field will follow a T+1 refresh mechanism and will be updated daily at 00:00 UTC.  
+> maxBalance| string| Deprecated, always return "". Maximum balance of the insurance pool in the last 8 hours  
+> insurancePnlRatio| string| PnL ratio threshold for triggering **contract PnL drawdown ADL**
+
+  * ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value
+
+  
+> pnlRatio| string| Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped  
+> adlTriggerThreshold| string| Trigger threshold for **contract PnL drawdown ADL**
+
+  * This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL
+
+  
+> adlStopRatio| string| Stop ratio threshold for **contract PnL drawdown ADL**
+
+  * ADL stops when the symbol's 8 hours drawdown ratio falls below this value
+
+  
+  
+* * *
+
+### Request Example
+
+  * HTTP
+  * Python
+  * Go
+  * Java
+  * Node.js
+
+
     
     
-    wss://{MMWS hostname}/v5/private  
-    wss://{MMWS hostname}/v5/trade  
-    wss://{MMWS hostname}/v5/public/linear  
+    GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_adl_alert(  
+        symbol="BTCUSDT"  
+    ))  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
-## Access setup
-
-To request MMWS access, provide the IP addresses or CIDR ranges that will connect to MMWS. Bybit supports up to 10 IP entries or CIDR ranges for whitelisting. CIDR ranges are recommended when your infrastructure may scale or rotate within a fixed network block.
-
-After approval, Bybit will provide private MMWS hostnames for your account. Keep these hostnames confidential. If malicious traffic is detected through the assigned hostnames, Bybit may disable them urgently.
-
-## Integration steps
-
-  1. Confirm the WebSocket paths your system needs, including whether you require JSON streams, SBE streams, or order entry through `/v5/trade`.
-  2. Send your source IP addresses or CIDR ranges to your Bybit contact for whitelisting.
-  3. Replace the public WebSocket hostname with the dedicated MMWS hostname provided by Bybit.
-  4. Keep the same authentication, subscription, ping/pong, reconnect, and message parsing logic used by the standard V5 WebSocket API.
-  5. Monitor disconnect frequency, delayed push events, and reconnect behavior after migration.
-
-
-
-## Operational notes
-
-  * MMWS is a stability-focused access path, not a guaranteed latency shortcut.
-  * Do not share the assigned MMWS hostnames outside your approved infrastructure.
-  * If your source IP changes, update the whitelist before routing production traffic through the dedicated hostname.
-  * For SBE payload structure and channel details, see [SBE Basic Information](/docs/v5/sbe/sbe-basic-info).
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "updatedTime": "1757733960000",  
+            "list": [  
+                {  
+                    "coin": "USDT",  
+                    "symbol": "BTCUSDT",  
+                    "balance": "92203504694.99632",  
+                    "maxBalance": "92231510324.75948",  
+                    "insurancePnlRatio": "-0.3",  
+                    "pnlRatio": "-0.560973",  
+                    "adlTriggerThreshold": "10000",  
+                    "adlStopRatio": "-0.25"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1757734022014  
+    }
 
 ---
 
-# MMWS 接入指南
+# 查詢ADL告警
 
-Market Maker WebSocket (MMWS) 是面向做市商與機構客戶的專屬 WebSocket 接入路徑。它為私有頻道、交易頻道、公共行情頻道以及 SBE WebSocket 流量提供更穩定的入口。
+查詢按組劃分保險池 ADL 告警及相關資訊
 
-MMWS 的設計重點是連線穩定性。它可以減少非預期斷線、降低推送延遲發生率，並避免因頻繁重連而導致的握手失敗。不過，MMWS 並不保證相較標準 stream.bybit.com 具備絕對延遲優勢。
+> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
-## 支援路徑
+提示
 
-MMWS 支援以下 WebSocket 路徑:
+響應數據基於每分鐘快照
 
-類型| 路徑  
----|---  
-私有頻道| `/v5/private`  
-交易| `/v5/trade`  
-SBE交易| `/v5/trade/-sbe` (6月主網)  
-Linear 行情| `/v5/public/linear`  
-Inverse 行情| `/v5/public/inverse`  
-現貨行情| `/v5/public/spot`  
-期權行情| `/v5/public/option`  
-Spread 行情| `/v5/public/spread`  
-現貨 SBE 行情| `/v5/public-sbe/spot`  
-Linear SBE 行情| `/v5/public-sbe/linear`  
-Inverse SBE 行情| `/v5/public-sbe/inverse`  
+信息
+
+  * **ADL 觸發與停止條件基於以下三種情況:**
+
+
+  1. **合約盈虧回撤 ADL (基於分組保險池的新機制, 詳見用例 1, 2)**
+
+     * **觸發條件** :  
+`balance` (保險基金餘額) > `adlTriggerThreshold` (合約盈虧回撤 ADL 的觸發閾值)  
+且 `pnlRatio` < `insurancePnlRatio` (觸發 ADL 的盈虧比例閾值)
+
+其中:
+
+       * **pnlRatio** : symbol 在 8 小時內的回撤比例  
+計算公式: `pnlRatio` = (symbol 當前 PnL - symbol 8h 最大 PnL) / 保險池 8h 最大餘額(`maxBalance`)  
+_注意: symbol 當前 PnL 與 symbol 8h 最大 PnL 的具體數值未在 API 中直接提供_
+       * **保險池 8h 最大餘額(`maxBalance`)**: 最近 8 小時內, 該分組保險池的最大餘額
+     * **停止條件** : `pnlRatio` > `adlStopRatio` (ADL 停止回撤比例閾值)
+
+  2. **保險池整體淨值 (equity) 虧損觸發 ADL (原有機制, 詳見用例 3)**
+
+     * **觸發條件** : `balance` (保險基金餘額) ≤ 0
+     * **停止條件** : `balance` (保險基金餘額) > 0
+  3. **symbol 在分組保險池中出現過於劇烈的保證金虧損 (可視作保險池整體淨值虧損的一種特殊情況)**
+
+     * 為確保資金池整體安全性, 風控團隊可將該幣對自分組保險池中移出, 並臨時設立為獨立保險池
+     * **觸發條件** : 當虧損的 symbol 被移出所屬保險池, 且 `balance` (保險基金餘額) ≤ 0 時, 觸發 ADL
+     * **停止條件** : `balance` (保險基金餘額) > 0
+
+
+
+ADL 示例: 按百分比回撤及保險池餘額觸發
+
+  1. **場景 1: 保險池在 8 小時內未產生大額盈利, 當symbol 虧損超過盈虧比閾值(`insurancePnlRatio`)時，將觸發 ADL**
+
+     * 假設 A、B、C 三個 symbol 共用保險池, 8h 初始 `balance` (保險基金餘額) = **1M USDT**
+     * A 持倉發生虧損, 虧損金額 = **350K**
+     * 此時計算:
+       * `pnlRatio` = -35%
+       * `balance` = 1M
+       * `adlTriggerThreshold` = 1 (Bybit配置常數)
+       * `insurancePnlRatio` = -0.3 (Bybit配置常數)
+     * 條件判斷:
+       * `balance` (1M) > `adlTriggerThreshold` (1) 
+       * `pnlRatio` (-0.35) < `insurancePnlRatio` (-0.3) 
+     * → 觸發合約盈虧回撤 ADL
+     * 系統依據 **-30% 回撤比例** 計算破產價格, 用戶需補貼 **50K** , 使 A 的 `pnlRatio` 控制在 -30%
+     * **停止條件** : 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL
+
+**恢復方式** :
+
+     1. 平台向保險池注資並調整 A 的盈虧值
+     2. 保險池繼續承接 A 的倉位, 並透過甩賣賺取維持保證金
+
+
+
+* * *
+
+  2. **場景 2: 保險池在 8 小時內產生大額盈利, 但symbol 虧損超過盈虧比閾值(`insurancePnlRatio`)時，仍將觸發 ADL**
+
+     * 假設 A、B、C 三個 symbol 共用保險池, 初始 `balance` = **1M USDT**
+     * A 持倉甩賣獲得利潤, 使保險池 8h 最大餘額 = **2M USDT** (A 的 PnL = +1M)
+     * 隨後 A 發生虧損, 虧損金額 = **600K**
+     * 此時計算:
+       * `pnlRatio` = -30%
+       * `balance` = 2M
+       * `adlTriggerThreshold` = 1 (Bybit配置常數)
+       * `insurancePnlRatio` = -0.3 (Bybit配置常數)
+     * 條件判斷:
+       * `balance` (2M) > `adlTriggerThreshold` (1)
+       * `pnlRatio` (-0.30) ≤ `insurancePnlRatio` (-0.3)
+     * → 觸發合約盈虧回撤 ADL
+     * 系統依據 **-30% 回撤比例** 計算破產價格
+     * **停止條件** : 若 A 的 `pnlRatio` > `adlStopRatio` (-0.25, Bybit配置常數), 則停止 ADL
+
+**恢復方式** :
+
+     1. 平台向保險池注資並調整 A 的盈虧值
+     2. 保險池繼續承接 A 的倉位, 並透過甩賣賺取維持保證金
+
+
+
+* * *
+
+  3. **場景 3: 保險池餘額歸零觸發 ADL**
+     * 假設 A、B、C、D 四個 symbol 共用保險池, 初始 `balance` = **1M USDT**
+     * 雖然各 symbol 的 `pnlRatio` 均未達 -30%, 但保險池 `balance` 已降至 0
+     * 條件判斷:
+       * `balance` (0) ≤ 0
+     * → 觸發保險池整體淨值 ADL
+     * 系統依據各 symbol 的盈虧情況進行破產分攤, 計算保險池為 0 時的破產價格
+     * **停止條件** : 若 `balance` > 0, 則停止 ADL
+
+
+
+訂閱 [ADL告警](/docs/zh-TW/v5/websocket/public/adl-alert) 以獲取更快速的更新
+
+### HTTP 請求
+
+GET`/v5/market/adlAlert`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+symbol| false| string| 合約名稱，例如 `BTCUSDT`，僅限大寫  
   
-使用 Bybit 提供的專屬 hostname，並保持相同的 WebSocket 路徑結構:
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+updateTime| string| 數據最近更新的時間戳 (毫秒)  
+list| array| Object  
+> coin| string| 保險池所屬幣種  
+> symbol| string| 交易對名稱  
+> balance| string| 保險基金餘額，用於判斷是否觸發 ADL。對於共用保險池，balance 將採用 T+1 刷新機制，並於每日 UTC 時間 00:00 更新。  
+> maxBalance| string| 被棄用，並將傳回空字串。最近 8 小時內的保險池最大餘額  
+> insurancePnlRatio| string| 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 
+
+  * 當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL
+
+  
+> pnlRatio| string| symbol 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止  
+> adlTriggerThreshold| string| **合約盈虧回撤 ADL** 的觸發閾值 
+
+  * 僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效
+
+  
+> adlStopRatio| string| **合約盈虧回撤 ADL** 的停止比例閾值 
+
+  * 當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止
+
+  
+  
+* * *
+
+### 請求示例
+
+  * HTTP
+  * Python
+  * Go
+  * Java
+  * Node.js
+
+
     
     
-    wss://{MMWS hostname}/v5/private  
-    wss://{MMWS hostname}/v5/trade  
-    wss://{MMWS hostname}/v5/public/linear  
+    GET /v5/market/adlAlert&symbol=BTCUSDT HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
-## 接入配置
-
-如需申請 MMWS 接入，請提供將連線至 MMWS 的 IP 位址或 CIDR 範圍。Bybit 支援最多 10 個 IP 條目或 CIDR 範圍用於白名單配置。若您的基礎設施可能在固定網段內擴展或輪換，建議使用 CIDR 範圍。
-
-審核通過後，Bybit 會為您的帳戶提供私有 MMWS hostname。請對這些 hostname 保密。若 Bybit 偵測到透過已分配 hostname 發起的惡意流量，Bybit 可能會緊急停用相關 hostname。
-
-## 接入步驟
-
-  1. 確認系統需要使用的 WebSocket 路徑，包括是否需要 JSON 流、SBE 流，或透過 `/v5/trade` 進行下單。
-  2. 將源 IP 位址或 CIDR 範圍提交給您的 Bybit 對接人，用於白名單配置。
-  3. 將 stream.bybit.com 替換為 Bybit 提供的專屬 MMWS hostname。
-  4. 保持與 stream.bybit.com 相同的鑑權、訂閱、ping/pong、重連和消息解析邏輯。
-  5. 遷移後監控斷線頻率、推送延遲事件以及重連行為。
-
-
-
-## 運維注意事項
-
-  * MMWS 是以穩定性為重點的接入路徑，並不是保證低延遲的捷徑。
-  * 不要在已批准的基礎設施之外分享已分配的 MMWS hostname。
-  * 若源 IP 發生變更，請先更新白名單，再將生產流量路由到專屬 hostname。
-  * 關於 SBE payload 結構和頻道詳情，請參考 [SBE 基本信息](/docs/zh-TW/v5/sbe/sbe-basic-info)。
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "updatedTime": "1757733960000",  
+            "list": [  
+                {  
+                    "coin": "USDT",  
+                    "symbol": "BTCUSDT",  
+                    "balance": "92203504694.99632",  
+                    "maxBalance": "92231510324.75948",  
+                    "insurancePnlRatio": "-0.3",  
+                    "pnlRatio": "-0.560973",  
+                    "adlTriggerThreshold": "10000",  
+                    "adlStopRatio": "-0.25"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1757734022014  
+    }

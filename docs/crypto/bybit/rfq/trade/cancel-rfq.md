@@ -2,37 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/cancel-rfq
 api_type: Trading
-updated_at: 2026-07-27 19:04:27.897579
+updated_at: 2026-07-28 19:03:43.097953
 ---
 
-# Cancel RFQ
+# Execute Quote
 
-Cancel RFQ. **Up to 50 requests per second**
+Execute quote – only for the creator of the RFQ. **Up to 50 requests** per second.
 
 info
 
-  * You must pass either rfqId or rfqLinkId.
-  * If both rfqId and rfqLinkId are passed, only rfqId is considered.
-
-
+This endpoint is asynchronous. You must check the [Get Trade History](/docs/v5/rfq/trade/trade-list) endpoint or listen to the [Execution](/docs/v5/rfq/websocket/private/transaction) WebSocket topic to confirm if the execution was successful.
 
 ### HTTP Request
 
-POST`/v5/rfq/cancel-rfq`
+POST`/v5/rfq/execute-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-rfqId|  _false_|  string| Inquiry ID  
-rfqLinkId|  _false_|  string| Custom inquiry ID  
+rfqId| **true**|  string| Inquiry ID  
+quoteId| **true**|  string| Quote ID  
+quoteSide| **true**|  string| The direction of the quote is `Buy` or `Sell` . When the direction of the quote is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-rfqId| string| Inquiry ID  
-rfqLinkId| string| Custom inquiry ID  
+result| object|   
+> rfqId| string| Inquiry ID  
+>rfqLinkId| string|   
+> quoteId| string| Quote ID  
+> status| string| Order status: 
+
+  * `PendingFill`: Order has been sent to the matching engine but not yet filled.
+  * `Failed`: Order failed
+
+  
   
 ### Request Example
 
@@ -42,7 +48,7 @@ rfqLinkId| string| Custom inquiry ID
 
     
     
-    POST /v5/rfq/cancel-rfq HTTP/1.1  
+    POST /v5/rfq/execute-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -51,8 +57,10 @@ rfqLinkId| string| Custom inquiry ID
     Content-Type: application/json  
     Content-Length: 115  
       
-    {  
-        "rfqId": "1756871488168105512459181956436945"  
+     {  
+      "rfqId":"1754364447601610516653123084412812",  
+      "quoteId": "111",  
+      "quoteSide":"Buy"  
     }  
     
     
@@ -63,8 +71,10 @@ rfqLinkId| string| Custom inquiry ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_rfq(  
-        rfqId="1756871488168105512459181956436945"  
+    print(session.execute_quote(  
+        rfqId="1754364447601610516653123084412812",  
+        quoteId="111",  
+        quoteSide="Buy"  
     ))  
     
 
@@ -75,48 +85,58 @@ rfqLinkId| string| Custom inquiry ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "1756871488168105512459181956436945",  
-            "rfqLinkId": ""  
+            "rfqId": "175740700350925204128457980089654",  
+            "rfqLinkId": "",  
+            "quoteId": "1757407015586174663206671159484665",  
+            "status": "PendingFill"  
         },  
         "retExtInfo": {},  
-        "time": 1756871494507  
+        "time": 1757407058177  
     }
 
 ---
 
-# 取消詢價單
+# 執行報價
 
-取消詢價單。**每秒最多 50 次請求**
+執行報價，僅限詢價單的創建者使用。**每秒最多 50 次請求**
 
 信息
 
-  * 至少需傳遞 rfqId 或 rfqLinkId。
-  * 若同時傳遞 rfqId 和 rfqLinkId，則以 rfqId 為準。
+  * 執行成功，只是已經發送撮合，並不能說明訂單已經成交，用戶需要通過査詢介面/v5/rfq/trade-list或監聽toipic:rfq.open.trades來獲取執行結果
 
 
 
 ### HTTP 請求
 
-POST`/v5/rfq/cancel-rfq`
+POST`/v5/rfq/execute-quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-rfqId| **false**|  string| 詢價單 ID  
-rfqLinkId| **false**|  string| 詢價單自定義 ID  
+rfqId| **true**|  string| 詢價單 ID  
+quoteId| **true**|  string| 報價單 ID  
+quoteSide| **true**|  string| 報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-rfqId| string| 詢價單 ID  
-rfqLinkId| string| 詢價單自定義 ID  
+result| object|   
+> rfqId| string| 詢價單 ID  
+> rfqLinkId| string| 自定義詢價單 ID  
+> quoteId| string| 報價單 ID  
+> status| string| 訂單狀態： 
+
+  * `PendingFill`：已經發送撮合，待執行，執行結果需要通過査詢/v5/rfq/trade-list獲取或者監聽rfq.open.trades獲取
+  * `Failed`：驗證失敗
+
+  
   
 ### 請求示例
     
     
-    POST /v5/rfq/cancel-rfq HTTP/1.1  
+    POST /v5/rfq/execute-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -125,8 +145,10 @@ rfqLinkId| string| 詢價單自定義 ID
     Content-Type: application/json  
     Content-Length: 115  
       
-    {  
-        "rfqId": "1756871488168105512459181956436945"  
+     {  
+      "rfqId":"1754364447601610516653123084412812",  
+      "quoteId": "111",  
+      "quoteSide":"Buy"  
     }  
     
 
@@ -137,9 +159,11 @@ rfqLinkId| string| 詢價單自定義 ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "1756871488168105512459181956436945",  
-            "rfqLinkId": ""  
+            "rfqId": "175740700350925204128457980089654",  
+            "rfqLinkId": "",  
+            "quoteId": "1757407015586174663206671159484665",  
+            "status": "PendingFill"  
         },  
         "retExtInfo": {},  
-        "time": 1756871494507  
+        "time": 1757407058177  
     }

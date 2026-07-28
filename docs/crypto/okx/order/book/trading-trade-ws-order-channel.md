@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-order-channel
 anchor_id: order-book-trading-trade-ws-order-channel
 api_type: WebSocket
-updated_at: 2026-07-27 19:29:23.813360
+updated_at: 2026-07-28 19:28:17.105003
 ---
 
 # WS / Order channel
@@ -356,7 +356,8 @@ For options, use coin as unit (e.g. BTC, ETH)
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
 `op_fok`: Simple options (fok)   
-`elp`: Enhanced Liquidity Program order  
+`rpi`: Retail Price Improvement order  
+`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > side | String | Order side, `buy` `sell`  
 > posSide | String | Position side   
 `net`   
@@ -496,13 +497,14 @@ Valid values and the corresponding meanings are:
 `42`: Your order was canceled because the difference between the initial and current best bid or ask prices reached the maximum chase difference.  
 `43`: Order cancelled because the buy order price is higher than the index price or the sell order price is lower than the index price.  
 `44`: Your order was canceled because your available balance of this crypto was insufficient for auto conversion. Auto conversion was triggered when the total collateralized liabilities for this crypto reached the platform’s risk control limit.   
-`45`: Order cancelled because ELP order price verification failed  
+`45`: Order cancelled because RPI order price verification failed  
 `46`: delta reducing cancel orders  
-> amendSource | String | Source of the order amendation.   
+> amendSource | String | Source of the order amendment.  
 `1`: Order amended by user  
-`2`: Order amended by user, but the order quantity is overriden by system due to reduce-only  
-`4`: Order quantity amended by system due to reduce-only, including a new order placed by the user whose quantity is overriden by the system, and an existing pending order amended by the system due to other pending orders  
+`2`: Order amended by user, but the order quantity is overridden by system due to reduce-only  
+`4`: Order quantity amended by system due to reduce-only, including a new order placed by the user whose quantity is overridden by the system, and an existing pending order amended by the system due to other pending orders  
 `5`: Order modification due to changes in options px, pxVol, or pxUsd as a result of following variations. For example, when iv = 60, USD and px are anchored at iv = 60, the changes in USD or px lead to modification.  
+`6`: Order price adjusted by system to satisfy RPI maker spacing rule (triggered by `rpiPxRound`)  
 > category | String | Category   
 `normal`   
 `twap`   
@@ -885,7 +887,8 @@ data | Array of objects | 订阅的数据
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
-`elp`：流动性增强计划订单  
+`rpi`：Retail Price Improvement 订单  
+`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > side | String | 订单方向，`buy` `sell`  
 > posSide | String | 持仓方向  
 `long`：开平仓模式开多  
@@ -1023,13 +1026,14 @@ data | Array of objects | 订阅的数据
 `42`: 初始下单价格与最新的买一或卖一价已达到最大追逐距离，您的订单已被自动取消  
 `43`: 由于买单价格高于指数价格或卖单价格低于指数价格，导致系统撤单  
 `44`：由于该币种的可用余额不足，无法在触发自动换币后进行兑换，您的订单已撤销，撤销订单后恢复的余额将用于自动换币。当该币种的总抵押借贷量达到平台抵押借贷风控上限时，则会触发自动换币。  
-`45`：ELP订单价格校验失败  
+`45`：RPI订单价格校验失败  
 `46`：由于降低Delta而导致的撤单  
 > amendSource | String | 订单修改的来源  
 `1`: 用户主动改单，改单成功  
 `2`: 用户主动改单，并且当前这笔订单被只减仓修改，改单成功  
 `4`: 订单数量被系统按只减仓修改，改单成功，包括：用户主动下单后当前这笔订单被只减仓修改，以及用户当前已存在的挂单（非当前操作的订单）被只减仓修改  
 `5`：期权 px, pxVol 或 pxUsd 的跟随变动导致的改单，比如 iv=60，USD，px 锚定iv=60 时，USD, px 产生变动时的改单  
+`6`：系统因 RPI 做市商间距规则调整了订单价格（由 `rpiPxRound` 触发）  
 > category | String | 订单种类分类  
 `normal`：普通委托订单种类   
 `twap`：TWAP订单种类  

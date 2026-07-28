@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps
 api_type: REST
-updated_at: 2026-07-27 19:18:31.953909
+updated_at: 2026-07-28 19:16:36.880915
 ---
 
 # List US Derivatives Sweeps
@@ -134,10 +134,7 @@ Get pending and processing sweeps of funds from FCM wallet to USD Spot wallet
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fee-rates
 anchor_id: trading-account-rest-api-get-fee-rates
 api_type: REST
-updated_at: 2026-07-27 19:29:00.510699
+updated_at: 2026-07-28 19:27:52.897609
 ---
 
 # Get fee rates
@@ -77,6 +77,7 @@ Users can use instruments endpoint to fetch the mapping of an instrument ID and 
                 "feeGroup": [
                     {
                         "elpMaker": "-0.0008",
+                        "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
                         "taker": "-0.001"
@@ -114,6 +115,8 @@ K2 parameter for `EVENTS` maker fee formula: `K2 × C × (P × (1-P))` (C = numb
   
 **instType and groupId should be used together to determine a trading fee group. Users should use this endpoint together with[instruments endpoint](/docs-v5/en/#trading-account-rest-api-get-instruments) to get the trading fee of a specific symbol.**  
 > elpMaker | String | ELP Maker effective fee rate. Returns `""` if ELP is not applicable to the instrument.  
+> rpiMaker | String | RPI maker effective fee rate. Returns `""` if RPI is not applicable to the instrument.  
+`elpMaker` remains accepted as an alias until October 31, 2026.  
 delivery | String | Delivery fee rate  
 exercise | String | Fee rate for exercising the option  
 instType | String | Instrument type  
@@ -214,6 +217,7 @@ groupId 和 instId/instFamily 只能传入其一
                 "feeGroup": [
                     {
                         "elpMaker": "-0.0008",
+                        "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
                         "taker": "-0.001"
@@ -251,6 +255,8 @@ feeGroup | Array of objects | 手续费分组
   
 **用户需要同时使用instType和groupId来确定一个交易产品的交易手续费分组；用户应该将此接口和[获取交易产品基础信息](/docs-v5/zh/#trading-account-rest-api-get-instruments)一起使用，以获取特定交易产品的手续费率**  
 > elpMaker | String | ELP Maker 有效费率。若 ELP 不适用于该交易产品，则返回 `""`。  
+> rpiMaker | String | RPI 做市商有效费率。若 RPI 不适用于该产品，返回 `""`。  
+`elpMaker` 在 2026年10月31日前作为别名继续被接受。  
 delivery | String | 交割手续费率  
 exercise | String | 行权手续费率  
 instType | String | 产品类型  

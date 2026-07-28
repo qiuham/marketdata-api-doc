@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/list-public-products
 api_type: Market Data
-updated_at: 2026-07-27 19:18:34.584122
+updated_at: 2026-07-28 19:16:38.905232
 ---
 
 # List Public Products
@@ -164,15 +164,16 @@ Get a list of the available currency pairs for trading.
           "display_name": "BTC PERP",
           "product_venue": "neptune",
           "approximate_quote_24h_volume": "1908432",
-          "new_at": "2021-07-01T00:00:00.000Z",
+          "new_at": "2021-07-01T00:00:00Z",
           "market_cap": "1500000000000",
           "icon_color": "red",
-          "icon_url": "https://metadata.cbhq.net/equity_icons/123456789.png",
+          "icon_url": "https://example.com",
           "display_name_overwrite": "Bitcoin Perpetual",
-          "is_alpha_testing": false,
           "about_description": "nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil.",
           "best_bid_price": "<string>",
           "best_ask_price": "<string>",
+          "high_24h": "<string>",
+          "low_24h": "<string>",
           "future_product_details": {
             "venue": "<string>",
             "contract_code": "<string>",
@@ -215,7 +216,105 @@ Get a list of the available currency pairs for trading.
             "futures_asset_type": "UNKNOWN_FUTURES_ASSET_TYPE",
             "index_price": "<string>",
             "contract_code_display_name": "<string>",
-            "product_group_cbrn": "<string>"
+            "product_group_cbrn": "<string>",
+            "futures_asset_types": [
+              "UNKNOWN_FUTURES_ASSET_TYPE"
+            ],
+            "trading_hours_type": "TRADING_HOURS_TYPE_UNSPECIFIED",
+            "deribit_product_details": {
+              "instrument_id": "<string>",
+              "settlement_currency": "<string>",
+              "counter_currency": "<string>",
+              "settlement_period": "<string>",
+              "price_index": "<string>",
+              "instrument_type": "<string>",
+              "maker_commission": "<string>",
+              "taker_commission": "<string>",
+              "block_trade_commission": "<string>",
+              "block_trade_tick_size": "<string>",
+              "block_trade_min_trade_amount": "<string>",
+              "creation_time": "<string>",
+              "max_leverage": "<string>",
+              "max_liquidation_commission": "<string>",
+              "tick_size_steps": [
+                {
+                  "above_price": "<string>",
+                  "tick_size": "<string>"
+                }
+              ],
+              "qty_tick_size": "<string>",
+              "index_id": "<string>",
+              "product_group": "<string>",
+              "base_currency_uuid": "<string>",
+              "quote_currency_uuid": "<string>",
+              "state": "<string>",
+              "delivery_price": "<string>"
+            }
+          },
+          "equity_product_details": {
+            "equity_subtype": "EQUITY_PRODUCT_SUBTYPE_UNSPECIFIED",
+            "fractionable": true,
+            "liquidate_only": true,
+            "ticker": "<string>",
+            "description": "<string>",
+            "trading_halted": true,
+            "trading_halted_start_time": "<string>",
+            "trading_halted_end_time": "<string>",
+            "fractional_notional_min_size": "<string>",
+            "cik": "<string>",
+            "short_name": "<string>",
+            "company_description": "<string>",
+            "company_website": "<string>",
+            "trading_day_info": {
+              "venue_id": "<string>",
+              "date": "<string>",
+              "trade_date_type": "TRADE_DATE_TYPE_UNSPECIFIED",
+              "holiday_name": "<string>",
+              "version_id": "<string>",
+              "trading_sessions": [
+                {
+                  "session_type": "UNKNOWN_EQUITY_TRADING_SESSION",
+                  "session_start_time": "<string>",
+                  "session_end_time": "<string>",
+                  "support_fractional": true,
+                  "limit_only": true
+                }
+              ]
+            },
+            "current_session": "UNKNOWN_EQUITY_TRADING_SESSION",
+            "opol": "<string>",
+            "recent_trading_days": {
+              "trading_days": [
+                {
+                  "venue_id": "<string>",
+                  "date": "<string>",
+                  "trade_date_type": "TRADE_DATE_TYPE_UNSPECIFIED",
+                  "holiday_name": "<string>",
+                  "version_id": "<string>",
+                  "trading_sessions": [
+                    {
+                      "session_type": "UNKNOWN_EQUITY_TRADING_SESSION",
+                      "session_start_time": "<string>",
+                      "session_end_time": "<string>",
+                      "support_fractional": true,
+                      "limit_only": true
+                    }
+                  ]
+                }
+              ]
+            },
+            "equity_trading_flags": {
+              "tradable": true,
+              "searchable": true,
+              "buy_enabled": true,
+              "buy_whole_shares": true,
+              "buy_fractional_shares": true,
+              "buy_notional": true,
+              "sell_enabled": true,
+              "sell_whole_shares": true,
+              "sell_fractional_shares": true,
+              "sell_notional": true
+            }
           }
         }
       ],
@@ -234,10 +333,7 @@ Get a list of the available currency pairs for trading.
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 
@@ -273,7 +369,7 @@ enum<string>
 
 default:UNKNOWN_PRODUCT_TYPE
 
-Only returns the orders matching this product type. By default, returns all product types.
+Only returns products matching this product type. If omitted, only SPOT products are returned.
 
 Available options:
 
@@ -281,7 +377,13 @@ Available options:
 
 `SPOT`,
 
-`FUTURE`
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
 
 product_ids
 
@@ -295,7 +397,7 @@ enum<string>
 
 default:UNKNOWN_CONTRACT_EXPIRY_TYPE
 
-Only returns the orders matching the contract expiry type. Only applicable if product_type is set to FUTURE.
+Only returns the products matching the contract expiry type. Only applicable if product_type is set to FUTURE.
 
 Available options:
 
@@ -392,6 +494,12 @@ user_country_code
 string
 
 The country code of the user. This is used to provide differentiated product display names.
+
+expired
+
+boolean
+
+If true, return recently expired instruments instead of active ones. Only applicable to product_venue=DERIBIT; ignored for other venues. Defaults to false.
 
 #### Response
 

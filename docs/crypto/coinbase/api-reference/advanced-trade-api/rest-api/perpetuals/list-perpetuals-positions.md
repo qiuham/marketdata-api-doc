@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions
 api_type: REST
-updated_at: 2026-07-27 19:18:33.447088
+updated_at: 2026-07-28 19:16:37.958723
 ---
 
 # List Perpetuals Positions
@@ -178,10 +178,7 @@ Get a list of open positions in your Perpetuals portfolio
       "code": 123,  
       "message": "<string>",  
       "details": [  
-        {  
-          "type_url": "<string>",  
-          "value": "aSDinaTvuI8gbWludGxpZnk="  
-        }  
+        {}  
       ]  
     }
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-economic-calendar-data
 anchor_id: public-data-rest-api-get-economic-calendar-data
 api_type: REST
-updated_at: 2026-07-27 19:30:45.492692
+updated_at: 2026-07-28 19:29:40.397568
 ---
 
 # Get economic calendar data
