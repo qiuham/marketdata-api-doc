@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position-history
 api_type: Position
-updated_at: 2026-07-28 19:03:16.724379
+updated_at: 2026-07-29 18:52:23.742816
 ---
 
 # Get Pre-upgrade Delivery Record

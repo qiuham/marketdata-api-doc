@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/guide
 api_type: REST
-updated_at: 2026-07-28 19:01:27.122949
+updated_at: 2026-07-29 18:50:44.701059
 ---
 
 # Get ADL Alert

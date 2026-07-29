@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/transferable-coin
 api_type: REST
-updated_at: 2026-07-28 18:58:02.746390
+updated_at: 2026-07-29 18:47:41.753681
 ---
 
 # Create Universal Transfer

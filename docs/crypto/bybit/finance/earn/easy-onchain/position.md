@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/position
 api_type: REST
-updated_at: 2026-07-28 19:00:25.612556
+updated_at: 2026-07-29 18:49:49.829081
 ---
 
 # Get Staked Position

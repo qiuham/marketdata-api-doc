@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-stop-recurring-buy-order
 anchor_id: order-book-trading-recurring-buy-post-stop-recurring-buy-order
 api_type: API
-updated_at: 2026-07-28 19:28:42.804364
+updated_at: 2026-07-29 19:15:41.942212
 ---
 
 # POST / Stop recurring buy order

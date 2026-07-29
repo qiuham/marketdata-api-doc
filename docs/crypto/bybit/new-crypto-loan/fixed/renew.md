@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/renew
 api_type: REST
-updated_at: 2026-07-28 19:02:13.179130
+updated_at: 2026-07-29 18:51:26.160058
 ---
 
 # Collateral Repayment
