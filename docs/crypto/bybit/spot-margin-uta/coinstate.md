@@ -2,18 +2,14 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/coinstate
 api_type: REST
-updated_at: 2026-07-29 18:53:13.771306
+updated_at: 2026-07-30 19:03:23.228453
 ---
 
-# Get Currency Data
-
-info
-
-If the borrowable switch is disabled (`false`), the related configuration fields will return `""`.
+# Get Coin State
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/currency-data`
+GET`/v5/spot-margin-trade/coinstate`
 
 ### Request Parameters
 
@@ -25,17 +21,9 @@ currency| false| string| Coin name, uppercase only
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| Coin name  
-> flexibleManualBorrowable| boolean| Whether flexible manual borrow is enabled. `true`: enabled, `false`: disabled  
-> minFlexibleManualBorrowQty| string| Min flexible manual borrow qty  
-> flexibleManualBorrowAccuracy| string| Coin precision for flexible manual borrow  
-> fixedManualBorrowable| boolean| Whether fixed manual borrow is enabled. `true`: enabled, `false`: disabled  
-> minFixedManualBorrowQty| string| Min fixed manual borrow qty  
-> fixedManualBorrowAccuracy| string| Coin precision for fixed manual borrow  
-> fixedInterestRateAccuracy| string| Coin precision for fixed manual borrow interest rate.  
-> minFixedInterestRate| string| Min fixed manual borrow interest rate, e.g.: `0.01`  
-> maxFixedInterestRate| string| Max fixed manual borrow interest rate, e.g.: `0.8`  
+list| arrayList| Object  
+> currency| string| Coin name, uppercase only  
+> spotLeverage| string| Spot margin leverage. Returns "" if spot margin mode is turned off  
   
 * * *
 
@@ -48,11 +36,11 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/coinstate HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773220082000  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -63,7 +51,7 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_currency_data(  
+    print(session.spot_margin_trade_get_coin_state(  
         currency="BTC"  
     ))  
     
@@ -77,60 +65,100 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
             "list": [  
                 {  
-                    "currency": "BTC",  
-                    "flexibleManualBorrowable": true,  
-                    "minFlexibleManualBorrowQty": "0.001",  
-                    "flexibleManualBorrowAccuracy": "8",  
-                    "fixedManualBorrowable": false,  
-                    "minFixedManualBorrowQty": "",  
-                    "fixedManualBorrowAccuracy": "",  
-                    "fixedInterestRateAccuracy": "",  
-                    "minFixedInterestRate": "",  
-                    "maxFixedInterestRate": ""  
+                    "spotLeverage": 3,  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "AVAX"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "EOS"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "XRP"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "GALA"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "DOGE"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BIT"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BTC3S"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BTC3L"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "EUR"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "USDC"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "UNI"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "SOL"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "ADA"  
                 }  
             ]  
         },  
-        "retExtInfo": "{}",  
-        "time": 1773220082091  
+        "retExtInfo": {},  
+        "time": 1756273703314  
     }
 
 ---
 
-# 查詢借幣幣種數據
-
-信息
-
-若借貸開關為關閉狀態（`false`），相關配置字段將返回 `""`。
+# 查詢幣種槓桿
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/currency-data`
+GET`/v5/spot-margin-trade/coinstate`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| 幣種名稱，僅限大寫  
+currency| false| string| 幣名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| 幣種名稱  
-> flexibleManualBorrowable| boolean| 是否開啟活期借幣。`true`：開啟，`false`：關閉  
-> minFlexibleManualBorrowQty| string| 活期最小借幣數量  
-> flexibleManualBorrowAccuracy| string| 活期借幣精度  
-> fixedManualBorrowable| boolean| 是否開啟定期借幣。`true`：開啟，`false`：關閉  
-> minFixedManualBorrowQty| string| 定期最小借幣數量  
-> fixedManualBorrowAccuracy| string| 定期借幣精度  
-> fixedInterestRateAccuracy| string| 定期借幣利率精度  
-> minFixedInterestRate| string| 最小借幣利率，例如：`0.01`  
-> maxFixedInterestRate| string| 最大借幣利率，例如：`0.8`  
+list| arrayList| Object  
+> currency| string| 幣名稱，僅限大寫  
+> spotLeverage| string| 現貨借貸槓桿。如果現貨借貸模式關閉，則返回“”  
   
 * * *
 
@@ -143,11 +171,11 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/currency-data?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/coinstate HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773220082000  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -164,23 +192,75 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
             "list": [  
                 {  
-                    "currency": "BTC",  
-                    "flexibleManualBorrowable": true,  
-                    "minFlexibleManualBorrowQty": "0.001",  
-                    "flexibleManualBorrowAccuracy": "8",  
-                    "fixedManualBorrowable": false,  
-                    "minFixedManualBorrowQty": "",  
-                    "fixedManualBorrowAccuracy": "",  
-                    "fixedInterestRateAccuracy": "",  
-                    "minFixedInterestRate": "",  
-                    "maxFixedInterestRate": ""  
+                    "spotLeverage": 3,  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "AVAX"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "EOS"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "XRP"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "GALA"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "DOGE"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BIT"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BTC3S"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "BTC3L"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "EUR"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "USDC"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "UNI"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "SOL"  
+                },  
+                {  
+                    "spotLeverage": 4,  
+                    "currency": "ADA"  
                 }  
             ]  
         },  
-        "retExtInfo": "{}",  
-        "time": 1773220082091  
+        "retExtInfo": {},  
+        "time": 1756273703314  
     }

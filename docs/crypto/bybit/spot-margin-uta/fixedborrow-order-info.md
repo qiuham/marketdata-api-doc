@@ -2,34 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-info
 api_type: REST
-updated_at: 2026-07-29 18:53:19.567577
+updated_at: 2026-07-30 19:03:28.944790
 ---
 
-# Get Fixed-Rate Borrow Order Quote
+# Get Fixed-Rate Borrow Order Info
+
+info
+
+  * Results are returned in descending order by `orderTime`.
+
+
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/fixedborrow-order-quote`
+GET`/v5/spot-margin-trade/fixedborrow-order-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Coin name  
+orderId| false| string| Loan order ID  
+orderCurrency| false| string| Loan coin name  
+state| false| string| Borrow order status. `1`: Matching; `2`: Partially filled and cancelled; `3`: Fully filled; `4`: Cancelled  
 term| false| string| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-orderBy| false| string| Sort field. `apy`: annual rate; `term`: term; `quantity`: quantity  
-sort| false| integer| Sort direction. `0`: ascending (default); `1`: descending  
-limit| false| integer| Limit for data size per page. [1, 100]. Default: `10`  
+limit| false| string| Limit for data size per page. [1, 100]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
+> annualRate| string| Annual rate for the borrowing  
+> orderId| long| Loan order ID  
+> orderTime| string| Order created time  
+> filledQty| string| Filled quantity  
+> orderQty| string| Order quantity  
 > orderCurrency| string| Coin name  
+> state| integer| Borrow order status. `1`: Matching; `2`: Partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: Failed  
 > term| integer| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-> annualRate| string| Annual rate  
-> qty| string| Quantity  
+> repayType| string| `1`: Auto Repayment; `2`: Transfer to flexible loan  
+> strategyType| string| `PARTIAL`: Allow partial fill; `FULL`: Full fill only  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 * * *
 
@@ -42,7 +56,7 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
+    GET /v5/spot-margin-trade/fixedborrow-order-info?orderCurrency=ETH&limit=10 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -57,10 +71,9 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_fixed_borrow_order_quote(  
+    print(session.spot_margin_trade_get_fixed_borrow_order_info(  
         orderCurrency="ETH",  
-        orderBy="apy",  
-        limit=10  
+        limit="10"  
     ))  
     
     
@@ -77,68 +90,77 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
+                    "annualRate": "0.070000000000000000",  
+                    "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187",  
+                    "orderTime": "1775616125000",  
+                    "filledQty": "0.000000000000000000",  
+                    "orderQty": "1.000000000000000000",  
                     "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.026",  
-                    "qty": "0.1"  
+                    "state": 1,  
+                    "term": 7,  
+                    "repayType": "1",  
+                    "strategyType": "FULL"  
                 },  
                 {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.033",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 90,  
-                    "annualRate": "0.038",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.1",  
-                    "qty": "0.6"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.1",  
-                    "qty": "0.1"  
+                    "annualRate": "1.000000000000000000",  
+                    "orderId": "FIXED_BORROW_a17089fc526441faa52eb99b0b9feb69185",  
+                    "orderTime": "1764120783000",  
+                    "filledQty": "1000.000000000000000000",  
+                    "orderQty": "1000.000000000000000000",  
+                    "orderCurrency": "USDT",  
+                    "state": 3,  
+                    "term": 1,  
+                    "repayType": "1",  
+                    "strategyType": "PARTIAL"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "30"  
         },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1775616669348  
     }
 
 ---
 
-# 查詢固定利率借款掛單報價
+# 查詢固定利率借款訂單信息
+
+信息
+
+  * 結果按 `orderTime` 時間倒序返回。
+
+
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/fixedborrow-order-quote`
+GET`/v5/spot-margin-trade/fixedborrow-order-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 幣種名稱  
+orderId| false| string| 借款訂單 ID  
+orderCurrency| false| string| 借款幣種  
+state| false| string| 借款訂單狀態。`1`：撮合中；`2`：部分成交後取消；`3`：全部成交；`4`：已取消  
 term| false| string| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-orderBy| false| string| 排序字段。`apy`：年化利率；`term`：期限；`quantity`：數量  
-sort| false| integer| 排序方向。`0`：升序（默認）；`1`：降序  
-limit| false| integer| 每頁返回數量，[1, 100]，默認：`10`  
+limit| false| string| 每頁返回數量，[1, 100]，默認：`10`  
+cursor| false| string| 翻頁游標，使用上一次響應中的 `nextPageCursor` 獲取下一頁數據  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
+> annualRate| string| 借款年化利率  
+> orderId| long| 借款訂單 ID  
+> orderTime| string| 訂單創建時間  
+> filledQty| string| 已成交數量  
+> orderQty| string| 訂單數量  
 > orderCurrency| string| 幣種名稱  
+> state| integer| 借款訂單狀態。`1`：撮合中；`2`：部分成交後取消；`3`：全部成交；`4`：已取消；`5`：失敗  
 > term| integer| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-> annualRate| string| 年化利率  
-> qty| string| 數量  
+> repayType| string| `1`：自動還款；`2`：轉為活期借款  
+> strategyType| string| `PARTIAL`：允許部分成交；`FULL`：僅允許全部成交  
+nextPageCursor| string| 參考請求參數 `cursor`  
   
 * * *
 
@@ -151,7 +173,7 @@ list| array| Object
 
     
     
-    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
+    GET /v5/spot-margin-trade/fixedborrow-order-info?orderCurrency=ETH&limit=10 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -176,37 +198,32 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
+                    "annualRate": "0.070000000000000000",  
+                    "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187",  
+                    "orderTime": "1775616125000",  
+                    "filledQty": "0.000000000000000000",  
+                    "orderQty": "1.000000000000000000",  
                     "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.026",  
-                    "qty": "0.1"  
+                    "state": 1,  
+                    "term": 7,  
+                    "repayType": "1",  
+                    "strategyType": "FULL"  
                 },  
                 {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.033",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 90,  
-                    "annualRate": "0.038",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.1",  
-                    "qty": "0.6"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.1",  
-                    "qty": "0.1"  
+                    "annualRate": "1.000000000000000000",  
+                    "orderId": "FIXED_BORROW_a17089fc526441faa52eb99b0b9feb69185",  
+                    "orderTime": "1764120783000",  
+                    "filledQty": "1000.000000000000000000",  
+                    "orderQty": "1000.000000000000000000",  
+                    "orderCurrency": "USDT",  
+                    "state": 3,  
+                    "term": 1,  
+                    "repayType": "1",  
+                    "strategyType": "PARTIAL"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "30"  
         },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1775616669348  
     }

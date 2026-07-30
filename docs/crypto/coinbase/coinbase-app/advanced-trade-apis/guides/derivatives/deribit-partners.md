@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/deribit-partners
 api_type: Guide
-updated_at: 2026-07-29 19:04:30.992345
+updated_at: 2026-07-30 19:14:23.829058
 ---
 
 # Deribit Registered Partners — Migration Guide

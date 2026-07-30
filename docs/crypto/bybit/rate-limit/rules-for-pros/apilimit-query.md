@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query
 api_type: REST
-updated_at: 2026-07-29 18:52:35.326092
+updated_at: 2026-07-30 19:02:45.626136
 ---
 
 # Introduction
@@ -63,7 +63,7 @@ instructions for API rate limit
 
 即將到來的變更
 
-自**2025年8月13日** 起，Bybit 將推出全新機構 API 速率限制框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
+自**2025年8月13日** 起，Bybit 將推出全新機構 API 限頻框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
 
 ### UID 層級:
 
@@ -81,7 +81,7 @@ MM1| 600/s| 600/s| 600/s
 MM2| 800/s| 800/s| 800/s  
 MM3| 1000/s| 1000/s| 1000/s  
   
-### 主帳戶和子帳戶層級 (（機構 API 速率限製配額）):
+### 主帳戶和子帳戶層級 (（機構 API 限頻配額）):
 
 | 統一帳戶  
 ---|---  
@@ -96,9 +96,9 @@ MM1| 30000/s| 30000/s| 30000/s
 MM2| 40000/s| 40000/s| 40000/s  
 MM3| 50000/s| 50000/s| 50000/s  
   
-API 速率限制說明
+API 限頻說明
 
-  * 所有現有子帳戶仍享有原有的 API 速率限制。
-  * 新子帳戶的預設 API 速率限制不計入機構 API 速率限制總配額。
-  * 新子帳戶的預設 API 速率限制為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
-  * 如果超出機構 API 速率限制總配額，您只能先降低帳戶的 API 速率限制。當 API 速率限制總配額低於機構 API 速率限制總配額後，您才能提高帳戶的 API 速率限制。
+  * 所有現有子帳戶仍享有原有的 API 限頻。
+  * 新子帳戶的預設 API 限頻不計入機構 API 限頻總配額。
+  * 新子帳戶的預設 API 限頻為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
+  * 如果超出機構 API 限頻總配額，您只能先降低帳戶的 API 限頻。當 API 限頻總配額低於機構 API 限頻總配額後，您才能提高帳戶的 API 限頻。

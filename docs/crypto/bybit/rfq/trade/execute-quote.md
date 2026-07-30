@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/execute-quote
 api_type: Trading
-updated_at: 2026-07-29 18:52:49.241965
+updated_at: 2026-07-30 19:02:59.426299
 ---
 
 # Execute Quote
@@ -24,6 +24,7 @@ Parameter| Required| Type| Comments
 rfqId| **true**|  string| Inquiry ID  
 quoteId| **true**|  string| Quote ID  
 quoteSide| **true**|  string| The direction of the quote is `Buy` or `Sell` . When the direction of the quote is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies  
+isHedge| false| boolean| Whether to simultaneously execute the hedge leg in the RFQ. The execution direction is determined by `quoteSide`. Default: `false`  
   
 ### Response Parameters
 
@@ -117,6 +118,7 @@ POST`/v5/rfq/execute-quote`
 rfqId| **true**|  string| 詢價單 ID  
 quoteId| **true**|  string| 報價單 ID  
 quoteSide| **true**|  string| 報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然  
+isHedge| false| boolean| 是否同時執行詢價單中的 hedge 腿，執行方向取決於 `quoteSide`；預設為 `false`  
   
 ### 響應參數
 

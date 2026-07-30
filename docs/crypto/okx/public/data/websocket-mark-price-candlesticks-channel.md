@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-mark-price-candlesticks-channel
 anchor_id: public-data-websocket-mark-price-candlesticks-channel
 api_type: WebSocket
-updated_at: 2026-07-29 19:16:44.205953
+updated_at: 2026-07-30 19:26:37.040389
 ---
 
 # Mark price candlesticks channel

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit
 api_type: REST
-updated_at: 2026-07-29 18:52:32.106348
+updated_at: 2026-07-30 19:02:42.396491
 ---
 
 # Rate Limit Rules
@@ -295,13 +295,13 @@ The batch order endpoint, which includes operations for creating, amending, and 
 
 ---
 
-# 基礎頻率限制
+# 基礎限頻
 
 ## IP限頻
 
 ### HTTP IP限頻
 
-默認情況下, 每個IP允許在每5秒的時間窗口內發送最多600次請求。這個速率限制將統計所有打到`api.bybit.com`, `api.bybick.com`, 以及本地站`api.bybit.kz`等域名的請求數量。 如果您遇到了**“403, access too frequent”** 這樣的報錯, 它表示您的IP已經超過了限定的頻率, 這種情況下, 您應當斷開所有來自這個IP的活著的HTTP會話, 然後休息至少10分鐘。IP將會自動解除限制。
+默認情況下, 每個IP允許在每5秒的時間窗口內發送最多600次請求。這個限頻將統計所有打到`api.bybit.com`, `api.bybick.com`, 以及本地站`api.bybit.kz`等域名的請求數量。 如果您遇到了**“403, access too frequent”** 這樣的報錯, 它表示您的IP已經超過了限定的頻率, 這種情況下, 您應當斷開所有來自這個IP的活著的HTTP會話, 然後休息至少10分鐘。IP將會自動解除限制。
 
 我們不建議您在這些限制的邊緣運行您的應用程序，以防異常的網絡活動導致意外違規。
 
@@ -313,17 +313,17 @@ The batch order endpoint, which includes operations for creating, amending, and 
 
 
 
-## 賬戶頻率限製
+## 賬戶限頻
 
 警告
 
-如果您收到這樣的響應`"retCode": 10006, "retMsg": "Too many visits!"`, 則表示您觸發了帳戶頻率限制, 請等到頻率限制重置以後, 再繼續發送請求。
+如果您收到這樣的響應`"retCode": 10006, "retMsg": "Too many visits!"`, 則表示您觸發了帳戶限頻, 請等到限頻重置以後, 再繼續發送請求。
 
-Bybit基於**每秒鍾** 的滾動時間窗口來做頻率限製，並且是按**賬戶** （uid）來做劃分限製，每次請求API響應頭(response header)中都會包含如下字段：
+Bybit基於**每秒鍾** 的滾動時間窗口來做限頻，並且是按**賬戶** （uid）來做劃分限製，每次請求API響應頭(response header)中都會包含如下字段：
 
   * `X-Bapi-Limit-Status` \- 該接口當前時間窗口剩余可用請求數
-  * `X-Bapi-Limit` \- 該接口當前頻率限製上限
-  * `X-Bapi-Limit-Reset-Timestamp` \- 如果您已超過該接口當前窗口頻率限製，該字段表示下個可用時間窗口的時間戳（毫秒），即什麽時候可以恢復訪問；如果您未超過該接口當前窗口頻率限製，該字段表示返回的是當前服務器時間（毫秒).
+  * `X-Bapi-Limit` \- 該接口當前限頻上限
+  * `X-Bapi-Limit-Reset-Timestamp` \- 如果您已超過該接口當前窗口限頻，該字段表示下個可用時間窗口的時間戳（毫秒），即什麽時候可以恢復訪問；如果您未超過該接口當前窗口限頻，該字段表示返回的是當前服務器時間（毫秒).
 
 
 
@@ -338,7 +338,7 @@ Bybit基於**每秒鍾** 的滾動時間窗口來做頻率限製，並且是按*
     X-Bapi-Limit-Reset-Timestamp: 1672738134824  
     
 
-### 接口頻率限制表
+### 接口限頻表
 
 #### 交易
 
@@ -573,7 +573,7 @@ POST| [還款](/docs/zh-TW/v5/otc/repay)| 1 req/s| N
 
 提示
 
-批次訂單接口（包括創建、修改和取消）的速率限制不會與單一的下改撤請求共享。 _例如，單一下單接口頻率是100/秒, 批量下單接口是100/秒,，那麼當結合兩個接口一起下單時， 就擁有200單每秒的能力_ 。
+批次訂單接口（包括創建、修改和取消）的限頻不會與單一的下改撤請求共享。 _例如，單一下單接口頻率是100/秒, 批量下單接口是100/秒,，那麼當結合兩個接口一起下單時， 就擁有200單每秒的能力_ 。
 
 #### 僅category=linear, inverse或spot時
 

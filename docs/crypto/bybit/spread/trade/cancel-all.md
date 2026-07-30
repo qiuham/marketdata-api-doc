@@ -2,41 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/cancel-all
 api_type: Trading
-updated_at: 2026-07-29 18:53:43.340491
+updated_at: 2026-07-30 19:03:55.086197
 ---
 
-# Cancel All Orders
+# Get Open Orders
 
-Cancel all open orders
+info
+
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-POST`/v5/spread/order/cancel-all`
+GET`/v5/spread/order/realtime`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| false| string| Spread combination symbol name 
-
-  * When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.
-  * When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled
-
+symbol| false| string| Spread combination symbol name  
+baseCoin| false| string| Base coin  
+orderId| false| string| Spread combination order ID  
+orderLinkId| false| string| User customised order ID  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
-cancelAll| false| boolean| `true`, `false`  
-  
-info
-
-The acknowledgement of cancel all orders request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>|   
-> orderId| string| Order ID  
+list| array<object>| Order info  
+> symbol| string| Spread combination symbol name  
+> baseCoin| string| Base coin  
+> orderType| string| Order type, `Market`, `Limit`  
 > orderLinkId| string| User customised order ID  
-success| string| The field can be ignored  
+> side| string| Side, `Buy`, `Sell`  
+> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
+> orderId| string| Spread combination order ID  
+> leavesQty| string| The remaining qty not executed  
+> orderStatus| string| Order status, `New`, `PartiallyFilled`  
+> cumExecQty| string| Cumulative executed order qty  
+> price| string| Order price  
+> qty| string| Order qty  
+> createdTime| string| Order created timestamp (ms)  
+> updatedTime| string| Order updated timestamp (ms)  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
 
@@ -46,19 +57,13 @@ success| string| The field can be ignored
 
     
     
-    POST /v5/spread/order/cancel-all HTTP/1.1  
+    GET /v5/spread/order/realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-TIMESTAMP: 1744096099520  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-        "symbol": null,  
-        "cancelAll": true  
-    }  
     
     
     
@@ -68,9 +73,7 @@ success| string| The field can be ignored
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_cancel_all_orders(  
-        cancelAll=True  
-    ))  
+    print(session.spread_get_open_orders())  
     
 
 ### Response Example
@@ -80,68 +83,86 @@ success| string| The field can be ignored
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
             "list": [  
                 {  
-                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
-                    "orderLinkId": ""  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderType": "Limit",  
+                    "updatedTime": "1744096099771",  
+                    "orderLinkId": "",  
+                    "side": "Buy",  
+                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
+                    "leavesQty": "0.1",  
+                    "orderStatus": "New",  
+                    "cumExecQty": "0",  
+                    "price": "-4",  
+                    "qty": "0.1",  
+                    "createdTime": "1744096099767",  
+                    "timeInForce": "PostOnly",  
+                    "baseCoin": "SOL"  
                 }  
-            ],  
-            "success": "1"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744090940933  
+        "time": 1744096103435  
     }
 
 ---
 
-# 價差-全部撤單
+# 查詢價差活動單
+
+信息
+
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+
+
 
 ### HTTP請求
 
-POST`/v5/spread/order/cancel-all`
+GET`/v5/spread/order/realtime`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| false| string| 價差產品名稱 
-
-  * 當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.
-  * 當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消
-
+symbol| false| string| 價差產品名稱  
+baseCoin| false| string| 交易幣種  
+orderId| false| string| 價差訂單ID  
+orderLinkId| false| string| 用戶自定義ID  
+limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
+cursor| false| string| 游標，用於翻頁  
   
-cancelAll| false| boolean| `true`, `false`  
-  
-信息
-
-ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>|   
+list| array<object>| 訂單信息  
+> symbol| string| 價差產品名稱  
+> orderType| string| 訂單類型, `Market`, `Limit`  
+> updatedTime| string| 訂單更新時間 (毫秒)  
 > orderId| string| 價差訂單ID  
-> orderLinkId| string| 用戶自定義訂單ID  
-success| string| 該字段可以忽略, 無實際意義  
+> orderLinkId| string| 用戶自定義ID  
+> side| string| 訂單方向, `Buy`, `Sell`  
+> leavesQty| string| 剩餘未成交數量  
+> orderStatus| string| 訂單狀態, `New`, `PartiallyFilled`  
+> cumExecQty| string| 累計成交數量  
+> price| string| 訂單價格  
+> qty| string| 訂單數量  
+> createdTime| string| 訂單創建時間 (毫秒)  
+> timeInForce| string| 訂單執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
+> baseCoin| string| 交易幣種  
+nextPageCursor| string| 游標，用於翻頁  
   
 ### 請求示例
     
     
-    POST /v5/spread/order/cancel-all HTTP/1.1  
+    GET /v5/spread/order/realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-TIMESTAMP: 1744096099520  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-         
-        "symbol": null,  
-        "cancelAll": true  
-    }  
     
 
 ### 響應示例
@@ -151,14 +172,26 @@ success| string| 該字段可以忽略, 無實際意義
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767%2Caaaee090-fab3-42ea-aea0-c9fbfe6c4bc4%3A1744096099767",  
             "list": [  
                 {  
-                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
-                    "orderLinkId": ""  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderType": "Limit",  
+                    "updatedTime": "1744096099771",  
+                    "orderLinkId": "",  
+                    "side": "Buy",  
+                    "orderId": "aaaee090-fab3-42ea-aea0-c9fbfe6c4bc4",  
+                    "leavesQty": "0.1",  
+                    "orderStatus": "New",  
+                    "cumExecQty": "0",  
+                    "price": "-4",  
+                    "qty": "0.1",  
+                    "createdTime": "1744096099767",  
+                    "timeInForce": "PostOnly",  
+                    "baseCoin": "SOL"  
                 }  
-            ],  
-            "success": "1"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744090940933  
+        "time": 1744096103435  
     }

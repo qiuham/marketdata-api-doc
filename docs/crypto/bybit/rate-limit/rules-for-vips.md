@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-vips
 api_type: REST
-updated_at: 2026-07-29 18:52:41.036513
+updated_at: 2026-07-30 19:02:51.183468
 ---
 
 # Cancel All RFQs

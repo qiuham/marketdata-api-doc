@@ -2,62 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/instrument
 api_type: Market Data
-updated_at: 2026-07-29 18:53:37.591753
+updated_at: 2026-07-30 19:03:49.414594
 ---
 
-# Get Instruments Info
-
-Query for the instrument specification of spread combinations.
+# Amend Order
 
 info
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+You can only modify **unfilled** or **partially filled** orders.
 
 ### HTTP Request
 
-GET`/v5/spread/instrument`
+POST`/v5/spread/order/amend`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| false| string| Spread combination symbol name  
-baseCoin| false| string| Base coin, uppercase only  
-limit| false| integer| Limit for data size per page. [`1`, `500`]. Default: `200`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+symbol| **true**|  string| Spread combination symbol name  
+orderId| false| string| Spread combination order ID. Either `orderId` or `orderLinkId` is **required**  
+orderLinkId| false| string| User customised order ID. Either `orderId` or `orderLinkId` is **required**  
+qty| false| string| Order quantity after modification. Either `qty` or `price` is **required**  
+price| false| string| Order price after modification 
+
+  * Either `qty` or `price` is **required**
+  * price="" means the price remains unchanged, while price="0" updates the price to 0.
+
   
+  
+info
+
+The acknowledgement of an amend order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| instrument info  
-> symbol| string| Spread combination symbol name  
-> contractType| string| Product type 
-
-  * `FundingRateArb`: perpetual & spot combination
-  * `CarryTrade`: futures & spot combination
-  * `FutureSpread`: different expiry futures combination
-  * `PerpBasis`: futures & perpetual
-
-  
-> status| string| Spread status. `Trading`, `Settling`  
-> baseCoin| string| Base coin  
-> quoteCoin| string| Quote coin  
-> settleCoin| string| Settle coin  
-> tickSize| string| The step to increase/reduce order price  
-> minPrice| string| Min. order price  
-> maxPrice| string| Max. order price  
-> lotSize| string| Order qty precision  
-> minSize| string| Min. order qty  
-> maxSize| string| Max. order qty  
-> launchTime| string| Launch timestamp (ms)  
-> deliveryTime| string| Delivery timestamp (ms)  
-> legs| array<object>| Legs information  
->> symbol| string| Legs symbol name  
->> contractType| string| Legs contract type. `LinearPerpetual`, `LinearFutures`, `Spot`  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+orderId| string| Order ID  
+orderLinkId| string| User customised order ID  
   
 ### Request Example
 
@@ -67,8 +49,21 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/spread/instrument?limit=1 HTTP/1.1  
+    POST /v5/spread/order/amend HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 115  
+      
+    {  
+        "symbol": "SOLUSDT_SOL/USDT",  
+        "orderLinkId": "1744072052193428475",  
+        "price": "14",  
+        "qty": "0.2"  
+    }  
     
     
     
@@ -78,8 +73,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_instruments_info(  
-        limit=1  
+    print(session.spread_amend_order(  
+        symbol="SOLUSDT_SOL/USDT",  
+        orderLinkId="1744072052193428475",  
+        price="14",  
+        qty="0.2"  
     ))  
     
 
@@ -90,99 +88,73 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "contractType": "FundingRateArb",  
-                    "status": "Trading",  
-                    "baseCoin": "SOL",  
-                    "quoteCoin": "USDT",  
-                    "settleCoin": "USDT",  
-                    "tickSize": "0.0001",  
-                    "minPrice": "-1999.9998",  
-                    "maxPrice": "1999.9998",  
-                    "lotSize": "0.1",  
-                    "minSize": "0.1",  
-                    "maxSize": "50000",  
-                    "launchTime": "1743675300000",  
-                    "deliveryTime": "0",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "contractType": "LinearPerpetual"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "contractType": "Spot"  
-                        }  
-                    ]  
-                }  
-            ],  
-            "nextPageCursor": "first%3D100008%26last%3D100008"  
+            "orderId": "b0e6c938-9731-4122-8552-01e6dc06b303",  
+            "orderLinkId": "1744072052193428475"  
         },  
         "retExtInfo": {},  
-        "time": 1744076802479  
+        "time": 1744083952599  
     }
 
 ---
 
-# 查詢價差產品的規格信息
+# 修改價差委託單
 
-警告
+信息
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+您只能修改那些 _未成交_ 或者 _部分成交_ 的訂單。
 
 ### HTTP請求
 
-GET`/v5/spread/instrument`
+POST`/v5/spread/order/amend`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| false| string| 價差產品名稱  
-baseCoin| false| string| 交易幣種  
-limit| false| integer| 每頁數量限制. [`1`, `500`]. 默認: `200`  
-cursor| false| string| 游標，用於翻頁  
+symbol| **true**|  string| 價差產品名稱  
+orderId| false| string| 價差訂單ID. `orderId` 和 `orderLinkId` 必傳其中一個  
+orderLinkId| false| string| 用戶自定義訂單ID. `orderId` 和 `orderLinkId` 必傳其中一個  
+qty| false| string| 訂單數量 
+
+  * `qty`和`price`必須傳其中一個
+
   
+price| false| string| 訂單價格
+
+  * `qty`和`price`必須傳其中一個
+  * 傳price="" 表示價格不變, 如果設置price="0" 表示價格將修改為0.
+
+  
+  
+信息
+
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 規格信息  
-> symbol| string| 價差產品名稱  
-> contractType| string| 價差分類 
-
-  * `FundingRateArb`: 永續 & 現貨組合
-  * `CarryTrade`: 到期合約& 現貨組合
-  * `FutureSpread`: 不同到期日合約組合
-  * `PerpBasis`: 到期合約& 永續組合
-
-  
-> status| string| 價差產品交易狀態, `Trading`, `Settling`  
-> baseCoin| string| 交易幣種  
-> quoteCoin| string| 報價幣種  
-> settleCoin| string| 結算幣種  
-> tickSize| string| 修改價格的步長  
-> minPrice| string| 訂單最小價格  
-> maxPrice| string| 訂單最大價格  
-> lotSize| string| 訂單數量精度  
-> minSize| string| 單筆訂單最小下單量  
-> maxSize| string| 單筆訂單最大下單量  
-> launchTime| string| 發佈時間 (ms)  
-> deliveryTime| string| 交割時間 (ms)  
-> legs| array<object>| 單腿信息  
->> symbol| string| 單腿合約名稱  
->> contractType| string| 單腿合約類型, `LinearPerpetual`: 永續合約, `LinearFutures`: 交割合約, `Spot`: 現貨  
-nextPageCursor| string| 游標，用於翻頁  
+orderId| string| 價差訂單ID  
+orderLinkId| string| 用戶自定義訂單ID  
   
 ### 請求示例
     
     
-    GET /v5/spread/instrument?limit=1 HTTP/1.1  
+    POST /v5/spread/order/amend HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 115  
+      
+    {  
+        "symbol": "SOLUSDT_SOL/USDT",  
+        "orderLinkId": "1744072052193428475",  
+        "price": "14",  
+        "qty": "0.2"  
+    }  
     
 
 ### 響應示例
@@ -192,36 +164,9 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "contractType": "FundingRateArb",  
-                    "status": "Trading",  
-                    "baseCoin": "SOL",  
-                    "quoteCoin": "USDT",  
-                    "settleCoin": "USDT",  
-                    "tickSize": "0.0001",  
-                    "minPrice": "-1999.9998",  
-                    "maxPrice": "1999.9998",  
-                    "lotSize": "0.1",  
-                    "minSize": "0.1",  
-                    "maxSize": "50000",  
-                    "launchTime": "1743675300000",  
-                    "deliveryTime": "0",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "contractType": "LinearPerpetual"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "contractType": "Spot"  
-                        }  
-                    ]  
-                }  
-            ],  
-            "nextPageCursor": "first%3D100008%26last%3D100008"  
+            "orderId": "b0e6c938-9731-4122-8552-01e6dc06b303",  
+            "orderLinkId": "1744072052193428475"  
         },  
         "retExtInfo": {},  
-        "time": 1744076802479  
+        "time": 1744083952599  
     }

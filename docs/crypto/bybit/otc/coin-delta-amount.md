@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-07-29 18:52:02.925985
+updated_at: 2026-07-30 19:02:14.113311
 ---
 
 # Get Coin Delta Amount
@@ -32,6 +32,7 @@ Parameter| Type| Comments
 ---|---|---  
 riskUnitDeltaAmount| string| Risk unit total delta amount limit (USD)  
 riskUnitDeltaAvailableAmount| string| Risk unit available delta amount (USD)  
+riskUnitDelta| string| Risk unit delta value  
 list| array| Object  
 > coin| string| Coin name  
 > coinDeltaSize| string| Coin delta size (quantity)  
@@ -72,6 +73,7 @@ list| array| Object
         "result": {  
             "riskUnitDeltaAmount": "500000",  
             "riskUnitDeltaAvailableAmount": "350000",  
+            "riskUnitDelta": "0.8",  
             "list": [  
                 {  
                     "coin": "BTC",  
@@ -120,6 +122,7 @@ coin| false| string| 幣種名稱，僅大寫。如 `BTC`。若不傳，返回�
 ---|---|---  
 riskUnitDeltaAmount| string| 風險單元 Delta 總額度限制（USD）  
 riskUnitDeltaAvailableAmount| string| 風險單元可用 Delta 額度（USD）  
+riskUnitDelta| string| 風險單元 Delta 值  
 list| array| Object  
 > coin| string| 幣種名稱  
 > coinDeltaSize| string| 幣種 Delta 數量  
@@ -160,6 +163,7 @@ list| array| Object
         "result": {  
             "riskUnitDeltaAmount": "500000",  
             "riskUnitDeltaAvailableAmount": "350000",  
+            "riskUnitDelta": "0.8",  
             "list": [  
                 {  
                     "coin": "BTC",  

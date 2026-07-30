@@ -2,82 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/froze-subuid
 api_type: REST
-updated_at: 2026-07-29 18:54:10.632093
+updated_at: 2026-07-30 19:04:19.065149
 ---
 
-# Modify Master API Key
+# Get Sub Account All API Keys
 
-Modify the settings of master api key. Use the api key pending to be modified to call the endpoint. Use **master user's api key** **only**.
+Query all api keys information of a sub UID.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint..
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
-  * For Read_Write apikey, adding or deleting FiatP2P, FiatBitPay, and FiatConvertBroker is prohibited.
+  * Any permission can access this endpoint
+  * Only master account can call this endpoint
 
 
-
-info
-
-Only the api key that calls this interface can be modified
 
 ### HTTP Request
 
-POST`/v5/user/update-api`
+GET`/v5/user/sub-apikeys`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-readOnly| false| integer| `0` (default): Read and Write. `1`: Read only  
-permissions| false| Object| Tick the types of permission. Don't send this param if you don't want to change the permission  
-> ContractTrade| false| array| Contract Trade. ["Order","Position"]  
-> Spot| false| array| Spot Trade. ["SpotTrade"]  
-> Wallet| false| array| Wallet. ["AccountTransfer","SubMemberTransfer"]  
-> Options| false| array| USDC Contract. ["OptionsTrade"]  
-> Exchange| false| array| Convert. ["ExchangeHistory"]  
-> Earn| false| array| Earn product. ["Earn"]  
-> FiatP2P| false| array| P2P ["FiatP2POrder", "Advertising"]  
-> FiatBitPay| false| array| Bybit Pay ["FaitPayOrder"]  
-> FiatConvertBroker| false| array| Fiat convert ["FiatConvertBrokerOrder"]  
-> BitCard| false| array| Bybit card permission, ["BitCard"]  
-> ByXPost| false| array| Community post permission, ["ByXPost"]  
-> Affiliate| false| array| Affiliate permission. ["Affiliate"]
-
-  * This permission is only useful for affiliate
-  * If you need this permission, make sure you remove all other permissions
-
-  
-> Derivatives| false| array| ["DerivativesTrade"]  
-> BlockTrade| false| array| ["BlockTrade"]  
+subMemberId| **true**|  string| Sub UID  
+limit| false| integer| Limit for data size per page. [`1`, `20`]. Default: `20`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Unique id. Internal used  
-note| string| The remark  
-apiKey| string| Api key  
-readOnly| integer| `0`: Read and Write. `1`: Read only  
-secret| string| Always `""`  
-permissions| Object| The types of permission  
-> ContractTrade| array| Permisson of contract trade  
-> Spot| array| Permisson of spot  
-> Wallet| array| Permisson of wallet  
-> Options| array| Permission of USDC Contract. It supports trade option and usdc perpetual.  
-> Derivatives| array| Permission of Unified account  
-> BlockTrade| array| Permission of blocktrade  
-> Exchange| array| Permission of convert  
-> Earn| array| Permission of earn  
-> Affiliate| array| Affiliate permission  
-> FiatP2P| array| Permission of P2P  
-> FiatBitPay| array| Permission of Bybit pay  
-> FiatConvertBroker| array| Permission of fiat convert  
-> NFT| array| **Deprecated** , always `[]`  
-> CopyTrading| array| **Deprecated** , always `[]`  
-ips| array| IP bound  
-  
+result| array| Object  
+> id| string| Unique ID. Internal use  
+> ips| array<string>| IP bound  
+> apiKey| string| Api key  
+> note| string| The remark  
+> status| integer| `1`: permanent, `2`: expired, `3`: within the validity period, `4`: expires soon (less than 7 days)  
+> expiredAt| datetime| The expiry day of the api key. Only for those api key with no IP bound or the password has been changed  
+> createdAt| datetime| The create day of the api key  
+> type| integer| The type of api key. `1`: personal, `2`: connected to the third-party app  
+> permissions| Object| The types of permission  
+>> ContractTrade| array| Permission of contract trade `Order`, `Position`  
+>> Spot| array| Permission of spot `SpotTrade`  
+>> Wallet| array| Permission of wallet `AccountTransfer`, `SubMemberTransferList`  
+>> Options| array| Permission of USDC Contract. It supports trade option and USDC perpetual. `OptionsTrade`  
+>> Derivatives| array| `DerivativesTrade`  
+>> Exchange| array| Permission of convert `ExchangeHistory`  
+>> Earn| array| Permission of earn product `Earn`  
+>> Affiliate| array| Not applicable to sub account, always `[]`  
+>> BlockTrade| array| Not applicable to subaccount, always `[]`  
+>> NFT| array| **Deprecated** , always `[]`  
+>> CopyTrading| array| **Deprecated** , always `[]`  
+> secret| string| Always `"******"`  
+> readOnly| boolean| `true`, `false`  
+> deadlineDay| integer| The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed  
+> flag| string| Api key type  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[](/docs/api-explorer/v5/user/list-sub-apikeys)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -87,43 +71,13 @@ ips| array| IP bound
 
     
     
-    POST /v5/user/update-api HTTP/1.1  
+    GET /v5/user/sub-apikeys?subMemberId=100400345 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431264739  
+    X-BAPI-TIMESTAMP: 1699515251088  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
     Content-Type: application/json  
-      
-    {  
-        "readOnly": null,  
-        "permissions": {  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            }  
-    }  
     
     
     
@@ -133,36 +87,9 @@ ips| array| IP bound
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.modify_master_api_key(  
-        permissions={  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "Derivatives": [  
-                    "DerivativesTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            }  
+    print(session.get_all_sub_api_keys(  
+        subMemberId="100400345",  
+        limit=20  
     ))  
     
     
@@ -176,18 +103,9 @@ ips| array| IP bound
     });  
       
     client  
-      .updateMasterApiKey({  
-        permissions: {  
-          ContractTrade: ['Order', 'Position'],  
-          Spot: ['SpotTrade'],  
-          Wallet: ['AccountTransfer', 'SubMemberTransfer'],  
-          Options: ['OptionsTrade'],  
-          Derivatives: ['DerivativesTrade'],  
-          CopyTrading: ['CopyTrading'],  
-          BlockTrade: [],  
-          Exchange: ['ExchangeHistory'],  
-          NFT: ['NFTQueryProductList'],  
-        },  
+      .getSubAccountAllApiKeys({  
+        subMemberId: 'subUID',  
+        limit: 20,  
       })  
       .then((response) => {  
         console.log(response);  
@@ -204,124 +122,116 @@ ips| array| IP bound
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "13770661",  
-            "note": "xxxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "",  
-            "permissions": {  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "Derivatives": [  
-                    "DerivativesTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "Earn": [],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            },  
-            "ips": [  
-                "*"  
-            ]  
+            "result": [  
+                {  
+                    "id": "24828209",  
+                    "ips": [  
+                        "*"  
+                    ],  
+                    "apiKey": "XXXXXX",  
+                    "note": "UTA",  
+                    "status": 3,  
+                    "expiredAt": "2023-12-01T02:36:06Z",  
+                    "createdAt": "2023-08-25T06:42:39Z",  
+                    "type": 1,  
+                    "permissions": {  
+                        "ContractTrade": [  
+                            "Order",  
+                            "Position"  
+                        ],  
+                        "Spot": [  
+                            "SpotTrade"  
+                        ],  
+                        "Wallet": [  
+                            "AccountTransfer",  
+                            "SubMemberTransferList"  
+                        ],  
+                        "Options": [  
+                            "OptionsTrade"  
+                        ],  
+                        "Derivatives": [  
+                            "DerivativesTrade"  
+                        ],  
+                        "CopyTrading": [],  
+                        "BlockTrade": [],  
+                        "Exchange": [  
+                            "ExchangeHistory"  
+                        ],  
+                        "NFT": [],  
+                        "Affiliate": [],  
+                        "Earn": []  
+                    },  
+                    "secret": "******",  
+                    "readOnly": false,  
+                    "deadlineDay": 21,  
+                    "flag": "hmac"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1676431265427  
+        "time": 1699515251698  
     }
 
 ---
 
-# 修改母帳戶的API Key設置
+# 查詢子帳戶的所有API Key信息
 
-修改母帳戶API key的設置。使用待修改的api key調用接口。需使用**母** 帳戶的API key。
+查詢某個子帳戶下所有的api key
 
 提示
 
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
-  * 針對讀写 (Read_Write) API ，禁止新增或刪除 FiatP2P、FiatBitPay 及 FiatConvertBroker 權限。
+  * 任意權限可以訪問該接口
+  * 僅支持母帳戶調用
 
 
-
-信息
-
-只能修改調用該接口的api key
 
 ### HTTP 請求
 
-POST`/v5/user/update-api`
+GET`/v5/user/sub-apikeys`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-readOnly| false| integer| `0` (默認)：可讀可寫. `1`：只讀  
-permissions| false| Object| 勾選api key權限. 如果不修改權限, 則不要傳入該參數  
-> ContractTrade| false| array| 合約. ["Order","Position"]  
-> Spot| false| array| 現貨. ["SpotTrade"]  
-> Wallet| false| array| 錢包. ["AccountTransfer","SubMemberTransfer"]  
-> Options| false| array| USDC合約和期權. ["OptionsTrade"]  
-> Exchange| false| array| 兌換. ["ExchangeHistory"]  
-> Earn| false| array| 理財產品的權限 ["Earn"]  
-> FiatP2P| false| array| P2P ["FiatP2POrder", "Advertising"]  
-> FiatBitPay| false| array| Bybit Pay ["FaitPayOrder"]  
-> FiatConvertBroker| false| array| 數法兌換權限(僅支援經紀商) ["FiatConvertBrokerOrder"]  
-> BitCard| false| array| Bybit卡權限, ["BitCard"]  
-> ByXPost| false| array| 社區帖子, ["ByXPost"]  
-> Affiliate| false| array| 代理商查詢權限. ["Affiliate"]
-
-  * 該權限僅作用於代理商
-  * 如果您需要該權限, 請確保移除所有其他權限項
-
-  
-> Derivatives| false| array| 統一帳戶權限. ["DerivativesTrade"]  
-> BlockTrade| false| array| 大宗商品交易權限. ["BlockTrade"]  
+subMemberId| **true**|  string| 子帳戶UID  
+limit| false| integer| 每頁數量限制. [`1`, `20`]. 默認: `20`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 唯一id. 內部使用  
-note| string| 備註  
-apiKey| string| Api key  
-readOnly| integer| `0`：可讀可寫. `1`：只讀  
-secret| string| 總是 `""`  
-permissions| Object| 權限類型  
-> ContractTrade| array| 合約交易的權限  
-> Spot| array| 現貨交易的權限  
-> Wallet| array| 錢包的權限  
-> Options| array| USDC合約和期權  
-> Derivatives| array| 統一帳戶權限  
-> Earn| array| 理財的權限  
-> Exchange| array| 兌換的權限  
-> FiatP2P| array| P2P `FiatP2POrder`, `Advertising`  
-> FiatBitPay| array| Bybit Pay `FaitPayOrder`  
-> FiatConvertBroker| array| 數法兌換權限 `FiatConvertBrokerOrder`  
-> Affiliate| array| 代理商查詢權限  
-> BlockTrade| array| 大宗交易的權限  
-> NFT| array| **廢棄** , 總是[]  
-> CopyTrading| array| **廢棄** , 總是[]  
-ips| array| 綁定的IP  
-  
+result| array| Object  
+> id| string| 唯一id. 內部使用  
+> ips| array<string>| 綁定的IP, 未綁定IP則是`*`  
+> apiKey| string| Api key  
+> note| string| 備註  
+> status| integer| 當前狀態 `1`: 永久, `2`: 已過期, `3`: 仍在有效期內, `4`: 即將過期 (少於7天)  
+> expiredAt| datetime| API key的過期日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
+> createdAt| datetime| API key的創建日  
+> type| integer| Api key類型. `1`：個人使用, `2`：綁定到第三方應用  
+> permissions| Object| 權限類型  
+>> ContractTrade| array| 合約交易的權限 `Order`, `Position`  
+>> Spot| array| 現貨交易的權限 `SpotTrade`  
+>> Wallet| array| 錢包的權限 `AccountTransfer`, `SubMemberTransferList`  
+>> Options| array| USDC合約的權限. 該權限支持USDC合約下的期權和永續交易 `OptionsTrade`  
+>> Derivatives| array| 統一交易帳戶默認賦予的權限  
+>> Exchange| array| 兌換的權限 `ExchangeHistory`  
+>> Earn| array| 理財產品的權限 `Earn`  
+>> Affiliate| array| 子帳戶暫不支持, 總是 `[]`  
+>> BlockTrade| array| 子帳戶暫不支持，總是[]  
+>> NFT| array| **廢棄** , 總是[]  
+>> CopyTrading| array| **廢棄** , 總是[]  
+> secret| string| 總是`"******"`  
+> readOnly| boolean| `true`：可讀可寫. `false`：只讀  
+> deadlineDay| integer| API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
+> flag| string| API Key的類型  
+nextPageCursor| string| 游標，用於翻頁  
+[](/docs/zh-TW/api-explorer/v5/user/list-sub-apikeys)
+
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -331,80 +241,17 @@ ips| array| 綁定的IP
 
     
     
-    POST /v5/user/update-api HTTP/1.1  
+    GET /v5/user/sub-apikeys?subMemberId=100400345 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431264739  
+    X-BAPI-TIMESTAMP: 1699515251088  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
     Content-Type: application/json  
+    
+    
+    
       
-    {  
-        "readOnly": null,  
-        "permissions": {  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            }  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.modify_master_api_key(  
-        permissions={  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            }  
-    ))  
     
     
     
@@ -417,18 +264,9 @@ ips| array| 綁定的IP
     });  
       
     client  
-      .updateMasterApiKey({  
-        permissions: {  
-          ContractTrade: ['Order', 'Position'],  
-          Spot: ['SpotTrade'],  
-          Wallet: ['AccountTransfer', 'SubMemberTransfer'],  
-          Options: ['OptionsTrade'],  
-          Derivatives: ['DerivativesTrade'],  
-          CopyTrading: ['CopyTrading'],  
-          BlockTrade: [],  
-          Exchange: ['ExchangeHistory'],  
-          NFT: ['NFTQueryProductList'],  
-        },  
+      .getSubAccountAllApiKeys({  
+        subMemberId: 'subUID',  
+        limit: 20,  
       })  
       .then((response) => {  
         console.log(response);  
@@ -445,44 +283,52 @@ ips| array| 綁定的IP
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "13770661",  
-            "note": "xxxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "",  
-            "permissions": {  
-                "ContractTrade": [  
-                    "Order",  
-                    "Position"  
-                ],  
-                "Spot": [  
-                    "SpotTrade"  
-                ],  
-                "Wallet": [  
-                    "AccountTransfer",  
-                    "SubMemberTransfer"  
-                ],  
-                "Options": [  
-                    "OptionsTrade"  
-                ],  
-                "Derivatives": [  
-                    "DerivativesTrade"  
-                ],  
-                "CopyTrading": [  
-                    "CopyTrading"  
-                ],  
-                "BlockTrade": [],  
-                "Exchange": [  
-                    "ExchangeHistory"  
-                ],  
-                "NFT": [  
-                    "NFTQueryProductList"  
-                ]  
-            },  
-            "ips": [  
-                "*"  
-            ]  
+            "result": [  
+                {  
+                    "id": "24828209",  
+                    "ips": [  
+                        "*"  
+                    ],  
+                    "apiKey": "XXXXXX",  
+                    "note": "UTA",  
+                    "status": 3,  
+                    "expiredAt": "2023-12-01T02:36:06Z",  
+                    "createdAt": "2023-08-25T06:42:39Z",  
+                    "type": 1,  
+                    "permissions": {  
+                        "ContractTrade": [  
+                            "Order",  
+                            "Position"  
+                        ],  
+                        "Spot": [  
+                            "SpotTrade"  
+                        ],  
+                        "Wallet": [  
+                            "AccountTransfer",  
+                            "SubMemberTransferList"  
+                        ],  
+                        "Options": [  
+                            "OptionsTrade"  
+                        ],  
+                        "Derivatives": [  
+                            "DerivativesTrade"  
+                        ],  
+                        "CopyTrading": [],  
+                        "BlockTrade": [],  
+                        "Exchange": [  
+                            "ExchangeHistory"  
+                        ],  
+                        "NFT": [],  
+                        "Affiliate": []  
+                    },  
+                    "secret": "******",  
+                    "readOnly": false,  
+                    "deadlineDay": 21,  
+                    "flag": "hmac"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1676431265427  
+        "time": 1699515251698  
     }

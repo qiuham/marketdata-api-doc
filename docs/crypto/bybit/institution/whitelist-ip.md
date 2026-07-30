@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/whitelist-ip
 api_type: REST
-updated_at: 2026-07-29 18:50:46.586114
+updated_at: 2026-07-30 19:00:58.291096
 ---
 
 # Get ADL Alert

@@ -2,59 +2,240 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/sign-agreement
 api_type: REST
-updated_at: 2026-07-29 18:54:22.140658
+updated_at: 2026-07-30 19:04:30.323075
 ---
 
-# Dcp
+# Get UID Wallet Type
 
-Subscribe to the dcp stream to trigger DCP function.
+Get available wallet types for the master account or sub account
 
-For example, connection A subscribes "dcp.xxx", connection B does not and connection C subscribes "dcp.xxx".
+tip
 
-  1. If A is alive, B is dead, C is alive, then this case will not trigger DCP.
-  2. If A is alive, B is dead, C is dead, then this case will not trigger DCP.
-  3. If A is dead, B is alive, C is dead, then DCP is triggered when reach the timeWindow threshold
-
+  * Master api key: you can get master account and appointed sub account available wallet types, and support up to 200 sub UID in one request.
+  * Sub api key: you can get its own available wallet types
 
 
-To sum up, for those private connections subscribing "dcp" topic are all dead, then DCP will be triggered.
 
-**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+### HTTP Request
 
-### Subscribe Example
+GET`/v5/user/get-member-type`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+memberIds| false| string| 
+
+  * Query itself wallet types when not passed
+  * When use master api key to query sub UID, master UID data is always returned in the top of the array
+  * Multiple sub UID are supported, separated by commas
+  * This param is ignored when you use sub account api key
+
+  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+accounts| array| Object  
+> uid| string| Master/Sub user Id  
+> [accountType](/docs/v5/enum#accounttype)| array| Wallets array. `FUND`,`UNIFIED`  
+[](/docs/api-explorer/v5/user/wallet-type)
+
+* * *
+
+### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    GET /v5/user/get-member-type HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1686884973961  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_uid_wallet_type(  
+        memberIds="subUID1,subUID2"  
+    ))  
+    
+    
+    
+    // https://api.bybit.com/v5/user/get-member-type  
+      
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getUIDWalletType({  
+        memberIds: 'subUID1,subUID2',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
+
+### Response Example
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "dcp.future"  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "accounts": [  
+                {  
+                    "uid": "533285",  
+                    "accountType": [  
+                        "UNIFIED",  
+                        "FUND"  
+                    ]  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1686884974151  
     }
 
 ---
 
-# 斷線保護
+# 查詢帳戶支持的錢包類型
 
-通過訂閱DCP流來觸發功能
+查詢母帳戶或者子帳戶下支持的錢包類型
 
-**舉例:** 私有連接A訂閱了"dcp.xxx", 私有連接B沒有訂閱"dcp.xxx", 私有連接C訂閱了"dcp.xxx".
+提示
 
-  1. 如果連接A在線, 連接B斷線, 連接C在線, 那麼這種情況下不會觸發DCP功能.
-  2. 如果連接A在線, 連接B斷線, 連接C斷線, 那麼這種情況下不會觸發DCP功能.
-  3. 如果連接A斷線, 連接B在線, 連接C斷線, 那麼這種情況下就會當達到時間窗口的閾值後觸發斷線保護機制.
-
+  * 使用母帳戶api key: 您可以查詢到母帳戶以及指定的子帳戶的錢包類型, 子帳戶的uid最多單次可查詢200個.
+  * 使用子帳戶api key: 僅能查詢自身的錢包類型
 
 
-綜上, 只有當所有訂閱了"dcp.xxx"的私有連接斷線後, 斷線保護機制才會被觸發.
 
-**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+最佳實踐
 
-### 訂閱示例
+"FUND" - 這個資金錢包, 如果您從未存入或者轉入過資金, 該接口返回的數組裡將不會呈現該枚舉值, 但實際上您的帳戶總是擁有該錢包.
+
+  * `["SPOT","OPTION","FUND","CONTRACT"]` : 經典帳戶並且資金錢包曾經操作過
+  * `["SPOT","OPTION","CONTRACT"]` : 經典帳戶並且資金錢包不曾操作過
+  * `["SPOT","UNIFIED","FUND","CONTRACT"]` : UMA帳戶並且資金錢包曾經操作過. (等強制或主動升級到UTA後, 就沒有UMA帳戶的概念了)
+  * `["SPOT","UNIFIED","CONTRACT"]` : UMA帳戶並且資金錢包不曾操作過. (等強制或主動升級到UTA後, 就沒有UMA帳戶的概念了)
+  * `["UNIFIED""FUND","CONTRACT"]` : UTA帳戶並且資金錢包曾經操作過
+  * `["UNIFIED","CONTRACT"]` : UTA帳戶並且資金錢包不曾操作過
+
+
+
+### HTTP 請求
+
+GET`/v5/user/get-member-type`
+
+### 請求參數
+
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+memberIds| false| string| 
+
+  * 不入参時, 僅查詢自身
+  * 當使用母帳戶api key查詢子uid時, 母帳戶的數據總是返回且在數組的第一個
+  * 支持輸入多個子uid, 用逗號隔開, 單次查詢最多支持200個
+  * 子帳戶api key查詢時, 該入参將會被忽略
+
+  
+  
+### 返回參數
+
+參數| 類型| 說明  
+---|---|---  
+accounts| array| Object  
+> uid| string| 母/子 uid  
+> [accountType](/docs/zh-TW/v5/enum#accounttype)| array| `SPOT`, `CONTRACT`, `FUND`, `OPTION`, `UNIFIED`. 請查閱上面的最佳實踐來理解返回的值  
+[](/docs/zh-TW/api-explorer/v5/user/wallet-type)
+
+* * *
+
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    GET /v5/user/get-member-type HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1686884973961  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    
+    
+    
+      
+    
+    
+    
+    // https://api.bybit.com/v5/user/get-member-type  
+      
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getUIDWalletType({  
+        memberIds: 'subUID1,subUID2',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
+
+### 響應示例
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "dcp.future"  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "accounts": [  
+                {  
+                    "uid": "24617703",  
+                    "accountType": [  
+                        "SPOT",  
+                        "OPTION",  
+                        "FUND",  
+                        "CONTRACT"  
+                    ]  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1686895670002  
     }

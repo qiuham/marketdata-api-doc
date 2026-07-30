@@ -2,16 +2,16 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/create-subuid
 api_type: REST
-updated_at: 2026-07-29 18:54:06.077359
+updated_at: 2026-07-30 19:04:14.527633
 ---
 
-# Create Sub UID API Key
+# Create Sub UID
 
-To create new API key for those newly created sub UID. Use **master user's api key** **only**.
+Create a new sub user id. Use **master** account's api key.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint..
+The API key must have one of the below permissions in order to call this endpoint
 
   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
@@ -19,62 +19,53 @@ The API key must have one of the below permissions in order to call this endpoin
 
 ### HTTP Request
 
-POST`/v5/user/create-sub-api`
+POST`/v5/user/create-sub-member`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subuid| **true**|  integer| Sub user Id  
+username| **true**|  string| Username of the new sub user. 
+
+  * 6-16 characters, must include both numbers and letters.
+  * Cannot be the same as the existing or deleted usernames.
+
+  
+password| false| string| Password for the new sub user. 
+
+  * 8-30 characters, must include numbers, upper and lowercase letters.
+
+  
+memberType| **true**|  integer| `1`: normal subaccount, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683)  
+switch| false| integer| 
+
+  * `0`: turn off quick login (default)
+  * `1`: turn on quick login.
+
+  
+isUta| false| boolean| **Deprecated** param, always UTA account  
 note| false| string| Set a remark  
-readOnly| **true**|  integer| `0`: Read and Write. `1`: Read only  
-ips| false| string| Set the IP bind. example: `"192.168.0.1,192.168.0.2"`**note:**
-
-  * don't pass ips or pass with `"*"` means no bind
-  * No ip bound api key will be **invalid after 90 days**
-  * api key without IP bound will be invalid after **7 days** once the account password is changed
-
-  
-permissions| **true**|  Object| Tick the types of permission.
-
-  * one of below types must be passed, otherwise the error is thrown
-
-  
-> ContractTrade| false| array| Contract Trade. `["Order","Position"]`  
-> Spot| false| array| Spot Trade. `["SpotTrade"]`  
-> Options| false| array| USDC Contract. `["OptionsTrade"]`  
-> Wallet| false| array| Wallet. `["AccountTransfer","SubMemberTransferList"]`  
-_Note: Fund Custodial account is not supported_  
-> Exchange| false| array| Convert. `["ExchangeHistory"]`  
-> Earn| false| array| Earn product. `["Earn"]`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Unique id. Internal used  
-note| string| The remark  
-apiKey| string| Api key  
-readOnly| integer| `0`: Read and Write. `1`: Read only  
-secret| string| The secret paired with api key.
+uid| string| Sub user Id  
+username| string| Username of the new sub user. 
 
-  * The secret can't be queried by GET api. Please keep it properly
+  * 6-16 characters, must include both numbers and letters.
+  * Cannot be the same as the existing or deleted usernames.
 
   
-permissions| Object| The types of permission  
-> ContractTrade| array| Permisson of contract trade  
-> Spot| array| Permisson of spot  
-> Wallet| array| Permisson of wallet  
-> Options| array| Permission of USDC Contract. It supports trade option and usdc perpetual.  
-> Derivatives| array| Permission of Unified account  
-> Exchange| array| Permission of convert  
-> Earn| array| Permission of earn product  
-> BlockTrade| array| Not applicable to sub account, always `[]`  
-> Affiliate| array| Not applicable to sub account, always `[]`  
-> FiatP2P| array| Not applicable to sub account, always `[]`  
-> FiatConvertBroker| array| Not applicable to sub account, always `[]`  
-> NFT| array| **Deprecated** , always `[]`  
-> CopyTrading| array| **Deprecated** always `[]`  
+memberType| integer| `1`: normal subaccount, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683)  
+status| integer| The status of the user account
+
+  * `1`: normal
+  * `2`: login banned
+  * `4`: frozen 
+
+  
+remark| string| The remark  
   
 ### Request Example
 
@@ -85,23 +76,19 @@ permissions| Object| The types of permission
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
+    POST /v5/user/create-sub-member HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    X-BAPI-TIMESTAMP: 1676429344202  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
+        "username": "xxxxx",  
+        "memberType": 1,  
+        "switch": 1,  
+        "note": "test"  
     }  
     
     
@@ -112,15 +99,11 @@ permissions| Object| The types of permission
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
+    print(session.create_sub_uid(  
+        username="xxxxx",  
+        memberType=1,  
+        switch=1,  
+        note="test",  
     ))  
     
     
@@ -134,13 +117,11 @@ permissions| Object| The types of permission
     });  
       
     client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
+      .createSubMember({  
+        username: 'xxxxx',  
+        memberType: 1,  
+        switch: 1,  
+        note: 'test',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -157,34 +138,21 @@ permissions| Object| The types of permission
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
-            "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
-                "Wallet": [  
-                    "AccountTransfer"  
-                ],  
-                "Options": [],  
-                "CopyTrading": [],  
-                "BlockTrade": [],  
-                "Exchange": [],  
-                "NFT": [],  
-                "Earn": ["Earn"]  
-            }  
+            "uid": "53888000",  
+            "username": "xxxxx",  
+            "memberType": 1,  
+            "status": 1,  
+            "remark": "test"  
         },  
         "retExtInfo": {},  
-        "time": 1676430007643  
+        "time": 1676429344734  
     }
 
 ---
 
-# 新建子帳戶的API Key
+# 新建子帳戶
 
-給新建好的子帳戶創建新的API key。需使用**母** 帳戶的API key。
+創建新的子帳戶。需使用**母** 帳戶的API key。
 
 提示
 
@@ -196,62 +164,53 @@ permissions| Object| The types of permission
 
 ### HTTP 請求
 
-POST`/v5/user/create-sub-api`
+POST`/v5/user/create-sub-member`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-subuid| **true**|  integer| 子帳戶userId  
+username| **true**|  string| 給新的子帳戶創建一個用戶名。
+
+  * 6-16位字符，須同時含有數字和字母。
+  * 不能與已存在或已刪除的帳戶用戶名重複。
+
+  
+password| false| string| 給新的子帳戶設置一個密碼。
+
+  * 8-30位字符，須同時含有數字和大小寫字母。
+
+  
+memberType| **true**|  integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+switch| false| integer| 
+
+  * `0`: 關閉快捷登陸 (默認關閉)
+  * `1`: 打開快捷登陸.
+
+  
+isUta| false| boolean| **廢棄** , 總是創建UTA子帳戶  
 note| false| string| 設置備註  
-readOnly| **true**|  integer| `0`：可讀可寫. `1`：只讀  
-ips| false| string| 綁定IP. 比如: "192.168.0.1,192.168.0.2"**注意:**
-
-  * 不傳參數ips 或者入参值為`"*"`意味著不綁定
-  * 不綁定IP的api key將有**90天的有效期限**
-  * 一旦帳戶密碼做了修改，帳戶下的非永久api key將在**7天後失效**
-
-  
-permissions| **true**|  Object| 勾選api key權限.
-
-  * 注意: 必須傳入以下權限類型的任意一種, 否則報錯
-
-  
-> ContractTrade| false| array| USDT合約, 幣本位合約. ["Order","Position"]  
-> Spot| false| array| 現貨. ["SpotTrade"]  
-> Wallet| false| array| 錢包. ["AccountTransfer","SubMemberTransferList"] _注意: 基金託管子帳戶不支持這兩個權限項_  
-> Options| false| array| USDC合約和期權. ["OptionsTrade"]  
-> Derivatives| false| array| ["DerivativesTrade"]  
-> Exchange| false| array| 兌換. ["ExchangeHistory"]  
-> Earn| false| array| 理財產品的權限 ["Earn"]  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 唯一id. 內部使用  
-note| string| 備註  
-apiKey| string| Api key  
-readOnly| integer| `0`：可讀可寫. `1`：只讀  
-secret| string| Api密鑰密碼.
+uid| string| 子帳戶userId  
+username| string| 給新的子帳戶創建一個用戶名 
 
-  * 注意: Api密鑰密碼只會在這裡出現一次，除此之外沒有任何地方還可以獲取到密碼。請妥善保存。
+  * 6-16位字符，須同時含有數字和字母。
+  * 不能與已存在或已刪除的帳戶用戶名重複。
 
   
-permissions| Object| 權限類型  
-> ContractTrade| array| 合約交易的權限  
-> Spot| array| 現貨交易的權限  
-> Wallet| array| 錢包的權限  
-> Options| array| USDC合約和期權  
-> Derivatives| array| 統一帳戶權限  
-> Earn| array| 理財產品的權限 `Earn`  
-> Exchange| array| 兌換的權限  
-> BlockTrade| array| 子帳戶暫不支持，總是[]  
-> FiatP2P| array| 子帳戶暫不支持，總是[]  
-> FiatConvertBroker| array| 子帳戶暫不支持，總是[]  
-> Affiliate| array| 子帳戶暫不支持，總是[]  
-> NFT| array| **廢棄** , 總是[]  
-> CopyTrading| array| **廢棄** , 總是[]  
+memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+status| integer| 帳戶狀態
+
+  * `1`: 正常
+  * `2`: 登陸封禁
+  * `4`: 凍結 
+
+  
+remark| string| 設置的備註  
   
 ### 請求示例
 
@@ -262,23 +221,19 @@ permissions| Object| 權限類型
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
+    POST /v5/user/create-sub-member HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    X-BAPI-TIMESTAMP: 1676429344202  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
+        "username": "xxxxx",  
+        "memberType": 1,  
+        "switch": 1,  
+        "note": "test"  
     }  
     
     
@@ -289,15 +244,11 @@ permissions| Object| 權限類型
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
+    print(session.create_sub_uid(  
+        username="xxxxx",  
+        memberType=1,  
+        switch=1,  
+        note="test",  
     ))  
     
     
@@ -311,13 +262,11 @@ permissions| Object| 權限類型
     });  
       
     client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
+      .createSubMember({  
+        username: 'xxxxx',  
+        memberType: 1,  
+        switch: 1,  
+        note: 'test',  
       })  
       .then((response) => {  
         console.log(response);  
@@ -334,25 +283,12 @@ permissions| Object| 權限類型
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
-            "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
-                "Wallet": [  
-                    "AccountTransfer"  
-                ],  
-                "Options": [],  
-                "Derivatives": [],  
-                "CopyTrading": [],  
-                "BlockTrade": [],  
-                "Exchange": [],  
-                "NFT": []  
-            }  
+            "uid": "53888000",  
+            "username": "xxxxx",  
+            "memberType": 1,  
+            "status": 1,  
+            "remark": "test"  
         },  
         "retExtInfo": {},  
-        "time": 1676430007643  
+        "time": 1676429344734  
     }

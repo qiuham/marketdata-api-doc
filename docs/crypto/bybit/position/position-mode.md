@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/position-mode
 api_type: Position
-updated_at: 2026-07-29 18:52:24.364418
+updated_at: 2026-07-30 19:02:34.810057
 ---
 
 # Get Pre-upgrade Delivery Record
