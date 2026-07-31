@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#status-ws-status-channel
 anchor_id: status-ws-status-channel
 api_type: WebSocket
-updated_at: 2026-07-30 19:27:24.141938
+updated_at: 2026-07-31 19:27:00.428496
 ---
 
 # WS / Status channel

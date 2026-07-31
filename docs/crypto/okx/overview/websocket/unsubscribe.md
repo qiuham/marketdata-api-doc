@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-websocket-unsubscribe
 anchor_id: overview-websocket-unsubscribe
 api_type: WebSocket
-updated_at: 2026-07-30 19:24:35.121182
+updated_at: 2026-07-31 19:24:08.619259
 ---
 
 # Unsubscribe

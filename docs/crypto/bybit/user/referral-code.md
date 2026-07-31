@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-07-30 19:04:25.328838
+updated_at: 2026-07-31 19:03:31.225175
 ---
 
 # Delete Master API Key

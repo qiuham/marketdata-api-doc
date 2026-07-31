@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/ltv-adjust-history
 api_type: REST
-updated_at: 2026-07-30 19:01:55.458458
+updated_at: 2026-07-31 19:00:58.249113
 ---
 
 # Get Max. Allowed Collateral Reduction Amount

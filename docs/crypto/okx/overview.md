@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview
 anchor_id: overview
 api_type: API
-updated_at: 2026-07-30 19:24:29.571929
+updated_at: 2026-07-31 19:24:03.035826
 ---
 
 # Overview
@@ -1482,7 +1482,12 @@ WebSocket有一种消息类型(event=`notice`)。
 
   
 
-**`instFamily` 和 `uly` 参数说明：** \- 以下说明以 `BTC` 合约为例，其他币种的合约同理。 \- `uly` 是指数，如："BTC-USD"，与盈亏结算和保证金币种 (`settleCcy`) 会存在一对多的关系。 \- `instFamily` 是交易品种，如：`BTC-USD_UM`，与盈亏结算和保证金币种 (`settleCcy`) 一一对应。 \- 以下表格详细展示了 `uly`, `instFamily`，`settleCcy` 和 `instId` 的对应关系。
+**`instFamily` 和 `uly` 参数说明：**
+
+  * 以下说明以 `BTC` 合约为例，其他币种的合约同理。
+  * `uly` 是指数，如："BTC-USD"，与盈亏结算和保证金币种 (`settleCcy`) 会存在一对多的关系。
+  * `instFamily` 是交易品种，如：`BTC-USD_UM`，与盈亏结算和保证金币种 (`settleCcy`) 一一对应。
+  * 以下表格详细展示了 `uly`, `instFamily`，`settleCcy` 和 `instId` 的对应关系。
 
 **合约类型** | **uly** | **instFamily** | **settleCcy** | **交割合约 instId** | **永续合约 instId**  
 ---|---|---|---|---|---  

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/private/fast-order
 api_type: REST
-updated_at: 2026-07-30 19:03:20.749892
+updated_at: 2026-07-31 19:02:25.589786
 ---
 
 # Get Coin State

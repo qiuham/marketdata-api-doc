@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/supply-market
 api_type: REST
-updated_at: 2026-07-30 19:01:44.632973
+updated_at: 2026-07-31 19:00:47.509781
 ---
 
 # Get Supply Order Info

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-request-for-redeem-quote
 anchor_id: financial-product-dual-investment-post-request-for-redeem-quote
 api_type: API
-updated_at: 2026-07-30 19:27:19.727898
+updated_at: 2026-07-31 19:26:55.961531
 ---
 
 # POST / Request for redeem quote

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/smart-lvg-offer
 api_type: WebSocket
-updated_at: 2026-07-30 18:59:47.696283
+updated_at: 2026-07-31 18:58:49.796670
 ---
 
 # Place Order

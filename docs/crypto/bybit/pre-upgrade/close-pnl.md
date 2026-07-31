@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/close-pnl
 api_type: REST
-updated_at: 2026-07-30 19:02:36.042571
+updated_at: 2026-07-31 19:01:39.909949
 ---
 
 # Get Pre-upgrade Delivery Record
