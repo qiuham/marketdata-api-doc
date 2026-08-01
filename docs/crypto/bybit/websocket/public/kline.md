@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/kline
 api_type: WebSocket
-updated_at: 2026-07-31 19:03:53.699925
+updated_at: 2026-08-01 18:55:19.250701
 ---
 
 # Orderbook

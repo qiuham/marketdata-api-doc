@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-07-31 19:01:16.490194
+updated_at: 2026-08-01 18:52:24.890396
 ---
 
 # Get Coin Delta Amount

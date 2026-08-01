@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/side-market-list
 api_type: REST
-updated_at: 2026-07-31 18:55:53.086872
+updated_at: 2026-08-01 18:46:20.796715
 ---
 
 # Get Sports Group Stage Detail
