@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/place-order
 api_type: REST
-updated_at: 2026-08-01 18:49:43.185274
+updated_at: 2026-08-02 18:49:37.376690
 ---
 
 # Place Order

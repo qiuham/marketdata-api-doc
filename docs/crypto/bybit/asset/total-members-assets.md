@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/total-members-assets
 api_type: REST
-updated_at: 2026-08-01 18:47:30.012735
+updated_at: 2026-08-02 18:47:25.266781
 ---
 
 # Create Universal Transfer

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios
 api_type: Account
-updated_at: 2026-08-01 19:06:15.075979
+updated_at: 2026-08-02 19:06:04.406695
 ---
 
 # List Portfolios
@@ -11,6 +11,46 @@ updated_at: 2026-08-01 19:06:15.075979
 
 
 Get all portfolios of a user.
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/portfolios \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/portfolios"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)Portfolios
+
+# List Portfolios
+
+Get all portfolios of a user.
+
+GET
+
+/
+
+api
+
+/
+
+v3
+
+/
+
+brokerage
+
+/
+
+portfolios
+
+List Portfolios
     
     
     curl --request GET \

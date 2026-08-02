@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-amend-order
 anchor_id: spread-trading-rest-api-amend-order
 api_type: REST
-updated_at: 2026-08-01 19:18:20.448812
+updated_at: 2026-08-02 19:18:12.476975
 ---
 
 # Amend order

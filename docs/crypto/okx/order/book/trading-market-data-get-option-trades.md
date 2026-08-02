@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-option-trades
 anchor_id: order-book-trading-market-data-get-option-trades
 api_type: API
-updated_at: 2026-08-01 19:17:57.726312
+updated_at: 2026-08-02 19:17:49.752507
 ---
 
 # GET / Option trades

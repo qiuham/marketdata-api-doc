@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/tier
 api_type: REST
-updated_at: 2026-08-01 18:48:35.873033
+updated_at: 2026-08-02 18:48:30.059914
 ---
 
 # Get Completed Loan History
