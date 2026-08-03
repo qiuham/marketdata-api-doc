@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-08-02 19:18:32.480768
+updated_at: 2026-08-03 19:33:38.844247
 ---
 
 # WebSocket
@@ -299,8 +299,8 @@ Only applicable to `FUTURES`
 `live`  
 `suspend`  
 `expired`  
-`rebase`: can't be traded during rebasing, only applicable to `SWAP`  
-`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected. Only applicable to `SWAP`  
+`rebase`: can't be traded during rebasing  
+`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected.  
 `preopen`. e.g. There will be `preopen` before the Futures and Options new contracts state is live.  
 `test`: Test pairs, can't be traded  
 `settling`: Settling, only applicable to `EVENTS`  
@@ -1132,7 +1132,7 @@ data | Array of objects | Subscribed data
 
 Retrieve the estimated delivery/exercise/settlement price of `FUTURES`, `OPTION` and `SWAP` contracts.
 
-The estimated price, calculated based on index price during the one-hour period prior to delivery, excerise, or settlement, with updates pushed approximately every 200ms.
+The estimated price, calculated based on index price during the 30-minute period prior to delivery, excerise, or settlement, with updates pushed approximately every 200ms.
 
 #### URL Path
 
@@ -2673,8 +2673,8 @@ data | Array of objects | 订阅的数据
 `live`：交易中   
 `suspend`：暂停中  
 `expired`：已过期  
-`rebase`：合约在变基中，不可交易，仅适用于`SWAP`  
-`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。仅适用于 `SWAP`  
+`rebase`：合约在变基中，不可交易  
+`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。  
 `preopen`：预上线，交割和期权合约轮转生成到开始交易；部分交易产品上线前  
 `test`：测试中（测试产品，不可交易）  
 `settling`：结算中，仅适用于 `EVENTS`  
@@ -3481,7 +3481,7 @@ data | Array of objects | 订阅的数据
   
 ### 预估永续/交割/行权/结算价格频道 
 
-在永续/交割/行权/结算前一小时内，将基于指数价格计算并推送预估价，更新频率约为每 200 毫秒一次。
+在永续/交割/行权/结算前30分钟内，将基于指数价格计算并推送预估价，更新频率约为每 200 毫秒一次。
 
 #### URL Path
 

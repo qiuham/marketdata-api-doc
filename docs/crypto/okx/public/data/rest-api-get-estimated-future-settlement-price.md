@@ -3,12 +3,12 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-estimated-future-settlement-price
 anchor_id: public-data-rest-api-get-estimated-future-settlement-price
 api_type: REST
-updated_at: 2026-08-02 19:18:23.865058
+updated_at: 2026-08-03 19:33:30.307661
 ---
 
 # Get estimated future settlement price
 
-Retrieve the estimated settlement price which will only have a return value one hour before the settlement.  
+Retrieve the estimated settlement price which will only have a return value 30 minutes before the settlement.  
   
 #### Rate Limit: 10 requests per 2 seconds
 
@@ -61,7 +61,7 @@ ts | String | Data return time, Unix timestamp format in milliseconds, e.g. `159
 
 # 获取交割预估结算价格
 
-获取交割合约预估结算价。只有结算前一小时才有返回值。  
+获取交割合约预估结算价。只有结算前30分钟才有返回值。  
   
 #### 限速：10次/2s
 

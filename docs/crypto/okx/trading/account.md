@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account
 anchor_id: trading-account
 api_type: API
-updated_at: 2026-08-02 19:16:36.399431
+updated_at: 2026-08-03 19:31:44.370880
 ---
 
 # Trading Account
@@ -234,8 +234,8 @@ Only applicable to `FUTURES`/`SWAP`
 state | String | Instrument status  
 `live`   
 `suspend`  
-`rebase`: can't be traded during rebasing, only applicable to `SWAP`  
-`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected. Only applicable to `SWAP`  
+`rebase`: can't be traded during rebasing  
+`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected.  
 `preopen` e.g. Futures and options contracts rollover from generation to trading start; certain symbols before they go live  
 `test`: Test pairs, can't be traded  
 `settling`: Settling, only applicable to `EVENTS`  
@@ -5561,13 +5561,6 @@ clientId | String | Yes | Client-supplied ID. A combination of case-sensitive al
         "data": []
     }
     
-    // TradeFi positions are not supported.
-    {
-        "code": "70004",
-        "msg": "Invalid instrument ID XAG-USDT-SWAP",
-        "data": []
-    }
-    
     
 
 #### Response parameters
@@ -5611,7 +5604,7 @@ ts | String | Unix timestamp in milliseconds indicating when the transfer reques
   4. The maximum number of legs per move position request is 30.
   5. No move position fee will be charged at this time.
   6. Moving positions is not supported in margin trading now.
-  7. TradeFi positions are not supported.
+  7. TradeFi positions (including equity perps/XPerp) are supported.
   8. The move position price is determined by the TWAP (Time-Weighted Average Price) of the mark price over the past 60 minutes, using the closing mark price per minute. If the symbol is newly listed and a 60-minute TWAP is unavailable, the move position will be rejected with error code 70065
   9. The move position will share the same price limit as those in the order book. The move position will fail if the 60-minute mark price TWAP is outside of the price limit.
   10. For the source account, move positions must be conducted in a reduce-only manner. You must choose the opposite side of your current position and specify a size equal to or smaller than your existing position size. The system will also process move position requests in a best-effort reduce-only manner.
@@ -8209,8 +8202,8 @@ ctType | String | 合约类型
 state | String | 产品状态  
 `live`：交易中   
 `suspend`：暂停中  
-`rebase`：合约在变基中，不可交易，仅适用于`SWAP`  
-`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。仅适用于 `SWAP`  
+`rebase`：合约在变基中，不可交易  
+`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。  
 `preopen`：预上线，交割和期权合约轮转生成到开始交易；部分交易产品上线前  
 `test`：测试中（测试产品，不可交易）  
 `settling`：结算中，仅适用于 `EVENTS`  
@@ -13575,13 +13568,6 @@ clientId | String | 是 | 客户自定义ID，字母（区分大小写）与数�
         "data": []
     }
     
-    // TradeFi仓位不支持移仓
-    {
-        "code": "70004",
-        "msg": "Invalid instrument ID XAG-USDT-SWAP",
-        "data": []
-    }
-    
     
 
 #### 返回参数
@@ -13625,7 +13611,7 @@ ts | String | 移仓请求处理时间戳，Unix时间戳的毫秒数格式，�
   4. 每个移仓请求最多支持30个仓位
   5. 目前暂不收取移仓手续费
   6. 目前币币杠杆交易产生的仓位不支持移仓
-  7. TradeFi仓位不支持移仓
+  7. 支持TradeFi仓位（含equity perps/XPerp）移仓
   8. 移仓价格采用过去60分钟内每分钟标记价格收盘价的TWAP（时间加权平均价格），若交易对为新上币且无法获取60分钟TWAP，移仓将被拒绝并返回错误码70065
   9. 移仓适用于订单簿相同的限价，若标记价格TWAP超出限价范围，移仓将失败
   10. 对源账户而言，移仓必须以只减仓模式进行；必须选择当前持仓的相反方向，且划转数量需小于或等于现有持仓量；系统将以尽力而为的方式按只减仓原则处理移仓请求

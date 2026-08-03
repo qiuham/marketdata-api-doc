@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api
 anchor_id: affiliate-rest-api
 api_type: REST
-updated_at: 2026-08-02 19:19:20.748036
+updated_at: 2026-08-03 19:34:26.606226
 ---
 
 # REST API
@@ -116,7 +116,7 @@ details | Array of objects | One entry per instrument bucket.
 > Request sample
     
     
-    GET /api/v5/affiliate/invitee/detail?uid=11111111
+    GET /api/v5/affiliate/invitee/detail?uid=11111111&periodType=last_30d
     
 
 #### Request Parameters
@@ -125,6 +125,15 @@ Parameter | Type | Required | Description
 ---|---|---|---  
 uid | String | Yes | UID of the invitee. Only applicable to the UID of invitee master account.   
 The data returned covers invitee master account and invitee sub-accounts.  
+periodType | String | No | Stats window for `volPeriod`.  
+`last_7d`  
+`last_30d`  
+`this_month`  
+`last_month`  
+`total`  
+`today`  
+`this_week`  
+When omitted, `volPeriod` is not returned. `custom` is not supported on this endpoint; `custom` or any unknown value returns `51000`.  
   
 > Returned results
     
@@ -147,7 +156,8 @@ The data returned covers invitee master account and invitee sub-accounts.
                 "region": "Vietnam",
                 "totalCommission": "0",
                 "volMonth": "0",
-                "totalVol": "0"
+                "totalVol": "0",
+                "volPeriod": "1234.56"
             }
         ]
     }
@@ -174,6 +184,7 @@ volMonth | String | Accumulated Trading volume in the current month in USDT
 If user has not traded, 0 will be returned  
 totalVol | String | Lifetime accumulated trading volume in USDT  
 If user has not traded, 0 will be returned  
+volPeriod | String | Trading volume within the selected `periodType` window, unit in `USDT`. Only returned when `periodType` is supplied in the request; omitted otherwise. If the user has not traded in the window, `0` is returned.  
 accFee | String | Accumulated Amount of trading fee in USDT  
 If there is no any fee, 0 will be returned  
 kycTime | String | KYC2 verification time. Unix timestamp in millisecond format and the precision is in day  
@@ -236,9 +247,14 @@ kycStatus | String | No | KYC status.
 `unverified`  
 `verified` (passed at least KYC2)  
 subAffiliateUid | String | No | Filter invitees under a specific sub-affiliate (external UID).  
+uid | String | No | External user UIDs for exact match — the same UID returned as `uid` in the response. Single UID or up to 100 UIDs, comma-separated, e.g. `835449167911924693,835449167911924700`. Unknown UIDs are silently skipped; if none resolve, an empty page is returned (never the full list).  
+joinTimeBegin | String | Conditional | Filter lower bound on `joinTime` (the relationship-established time), Unix timestamp in millisecond format. Inclusive. Required when `joinTimeEnd` is supplied; the two must be sent together. Independent of the `periodType` / `begin` / `end` stats window.  
+joinTimeEnd | String | Conditional | Filter upper bound on `joinTime` (the relationship-established time), Unix timestamp in millisecond format. Inclusive. Required when `joinTimeBegin` is supplied; the two must be sent together. Independent of the `periodType` / `begin` / `end` stats window.  
   
 When `periodType=custom`, supply both `begin` and `end`. Supplying only one returns `50014`.  
 For all other `periodType` values, server-defined windows are used and any `begin` / `end` passed alongside are ignored. The window between `begin` and `end` must not exceed 90 days. `begin` cannot be earlier than 180 days from now.
+
+Supply both `joinTimeBegin` and `joinTimeEnd` or neither. `joinTimeBegin` equal to `joinTimeEnd` is a valid single-point range. The `joinTimeBegin` / `joinTimeEnd` span must not exceed 90 days, and `joinTimeBegin` cannot be earlier than 180 days from now.
 
 > Response Example
     
@@ -685,7 +701,7 @@ details | Array of objects | 按业务类别拆分的明细，每个类别一条
 > 请求示例
     
     
-    GET /api/v5/affiliate/invitee/detail?uid=11111111
+    GET /api/v5/affiliate/invitee/detail?uid=11111111&periodType=last_30d
     
 
 #### 请求参数
@@ -694,6 +710,15 @@ details | Array of objects | 按业务类别拆分的明细，每个类别一条
 ---|---|---|---  
 uid | String | 是 | 被邀请人UID，仅支持使用被邀请人母账号的 UID  
 返回数据中涵盖了被邀请人母账户和子账户。  
+periodType | String | 否 | `volPeriod` 的统计窗口。  
+`last_7d`  
+`last_30d`  
+`this_month`  
+`last_month`  
+`total`  
+`today`  
+`this_week`  
+不传时不返回 `volPeriod`。本接口不支持 `custom`；`custom` 或任意未知值返回 `51000`。  
   
 > 返回结果
     
@@ -716,7 +741,8 @@ uid | String | 是 | 被邀请人UID，仅支持使用被邀请人母账号的 U
                 "region": "越南",
                 "totalCommission": "0",
                 "volMonth": "0",
-                "totalVol": "0"
+                "totalVol": "0",
+                "volPeriod": "1234.56"
             }
         ]
     }
@@ -743,6 +769,7 @@ volMonth | String | 当月累计交易量，单位为 USDT
 如果没有交易, 返回 0  
 totalVol | String | 生命周期累计交易量，单位为 USDT  
 如果没有交易, 返回 0  
+volPeriod | String | 所选 `periodType` 窗口内的交易量，单位为 `USDT`。仅当请求传入 `periodType` 时返回，否则省略。窗口内无交易时返回 `0`。  
 accFee | String | 累计交易手续费，单位为 USDT  
 如果没有交易手续费，返回 0  
 kycTime | String | KYC2 认证时间. Unix时间戳的毫秒数格式，且精确到天  
@@ -805,9 +832,14 @@ kycStatus | String | 否 | KYC 状态。
 `unverified`：未通过  
 `verified`：至少通过 KYC2  
 subAffiliateUid | String | 否 | 按指定二级节点（外部 UID）筛选其直客。  
+uid | String | 否 | 按外部 UID 精确匹配，与响应中的 `uid` 对应。单个或最多 100 个 UID，以逗号分隔，如 `835449167911924693,835449167911924700`。无法解析的 UID 静默跳过；若全部无法解析，返回空页（不会退化为全量列表）。  
+joinTimeBegin | String | 条件必填 | 按 `joinTime`（返佣关系建立时间）过滤的下界，Unix时间戳的毫秒数格式。包含端点。当 `joinTimeEnd` 传入时必填，两者需同时传入。与 `periodType` / `begin` / `end` 统计窗口相互独立。  
+joinTimeEnd | String | 条件必填 | 按 `joinTime`（返佣关系建立时间）过滤的上界，Unix时间戳的毫秒数格式。包含端点。当 `joinTimeBegin` 传入时必填，两者需同时传入。与 `periodType` / `begin` / `end` 统计窗口相互独立。  
   
 当 `periodType=custom` 时，需同时传 `begin` 和 `end`，仅传一个会返回 `50014`。  
 其他 `periodType` 值使用服务端预设窗口，与之同时传入的 `begin` / `end` 将被忽略。`begin` 与 `end` 区间不得超过 90 天，`begin` 不得早于当前时间 180 天前。
+
+`joinTimeBegin` 与 `joinTimeEnd` 需同时传入或都不传。`joinTimeBegin` 等于 `joinTimeEnd` 时为合法的单点区间。`joinTimeBegin` 与 `joinTimeEnd` 的区间不得超过 90 天，且 `joinTimeBegin` 不得早于当前时间 180 天前。
 
 > 返回结果
     

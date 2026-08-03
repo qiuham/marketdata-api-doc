@@ -3,14 +3,14 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-estimated-delivery-exercise-settlement-price-channel
 anchor_id: public-data-websocket-estimated-delivery-exercise-settlement-price-channel
 api_type: WebSocket
-updated_at: 2026-08-02 19:18:34.725701
+updated_at: 2026-08-03 19:33:41.065236
 ---
 
 # Estimated delivery/exercise/settlement price channel
 
 Retrieve the estimated delivery/exercise/settlement price of `FUTURES`, `OPTION` and `SWAP` contracts.  
   
-The estimated price, calculated based on index price during the one-hour period prior to delivery, excerise, or settlement, with updates pushed approximately every 200ms.
+The estimated price, calculated based on index price during the 30-minute period prior to delivery, excerise, or settlement, with updates pushed approximately every 200ms.
 
 #### URL Path
 
@@ -179,7 +179,7 @@ data | Array of objects | Subscribed data
 
 # 预估永续/交割/行权/结算价格频道
 
-在永续/交割/行权/结算前一小时内，将基于指数价格计算并推送预估价，更新频率约为每 200 毫秒一次。  
+在永续/交割/行权/结算前30分钟内，将基于指数价格计算并推送预估价，更新频率约为每 200 毫秒一次。  
   
 #### URL Path
 

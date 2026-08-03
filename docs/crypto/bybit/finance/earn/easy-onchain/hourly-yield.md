@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/hourly-yield
 api_type: REST
-updated_at: 2026-08-02 18:49:48.351111
+updated_at: 2026-08-03 19:05:45.936060
 ---
 
 # Get Staked Position

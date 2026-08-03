@@ -3,12 +3,12 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-estimated-delivery-exercise-price
 anchor_id: public-data-rest-api-get-estimated-delivery-exercise-price
 api_type: REST
-updated_at: 2026-08-02 19:18:23.241472
+updated_at: 2026-08-03 19:33:29.686475
 ---
 
 # Get estimated delivery/exercise price
 
-Retrieve the estimated delivery price which will only have a return value one hour before the delivery/exercise.  
+Retrieve the estimated delivery price which will only have a return value 30 minutes before the delivery/exercise.  
   
 #### Rate Limit: 10 requests per 2 seconds
 
@@ -77,7 +77,7 @@ ts | String | Data return time, Unix timestamp format in milliseconds, e.g. `159
 
 # 获取预估交割/行权价格
 
-获取交割合约和期权预估交割/行权价。交割/行权预估价只有交割/行权前一小时才有返回值  
+获取交割合约和期权预估交割/行权价。交割/行权预估价只有交割/行权前30分钟才有返回值  
   
 #### 限速：10次/2s
 

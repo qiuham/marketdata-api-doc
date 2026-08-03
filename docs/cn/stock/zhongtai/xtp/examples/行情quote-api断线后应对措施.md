@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2076482916128440321
+id: zhongtai-xtp-2084090012911058946
 title: 行情Quote-API断线后应对措施
-doc_id: 2076482916128440321
+doc_id: 2084090012911058946
 doc_category: 范例和教程
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2076482916128440321'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2084090012911058946'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-07-13
+updated_at: 2026-08-03
 ---
 
 # 行情Quote-API断线后应对措施

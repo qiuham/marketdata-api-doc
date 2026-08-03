@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-the-invitee-39-s-detail
 anchor_id: affiliate-rest-api-get-the-invitee-39-s-detail
 api_type: REST
-updated_at: 2026-08-02 19:19:21.375867
+updated_at: 2026-08-03 19:34:27.232151
 ---
 
 # Get the invitee's detail
@@ -19,7 +19,7 @@ updated_at: 2026-08-02 19:19:21.375867
 > Request sample
     
     
-    GET /api/v5/affiliate/invitee/detail?uid=11111111
+    GET /api/v5/affiliate/invitee/detail?uid=11111111&periodType=last_30d
     
 
 #### Request Parameters
@@ -28,6 +28,15 @@ Parameter | Type | Required | Description
 ---|---|---|---  
 uid | String | Yes | UID of the invitee. Only applicable to the UID of invitee master account.   
 The data returned covers invitee master account and invitee sub-accounts.  
+periodType | String | No | Stats window for `volPeriod`.  
+`last_7d`  
+`last_30d`  
+`this_month`  
+`last_month`  
+`total`  
+`today`  
+`this_week`  
+When omitted, `volPeriod` is not returned. `custom` is not supported on this endpoint; `custom` or any unknown value returns `51000`.  
   
 > Returned results
     
@@ -50,7 +59,8 @@ The data returned covers invitee master account and invitee sub-accounts.
                 "region": "Vietnam",
                 "totalCommission": "0",
                 "volMonth": "0",
-                "totalVol": "0"
+                "totalVol": "0",
+                "volPeriod": "1234.56"
             }
         ]
     }
@@ -77,6 +87,7 @@ volMonth | String | Accumulated Trading volume in the current month in USDT
 If user has not traded, 0 will be returned  
 totalVol | String | Lifetime accumulated trading volume in USDT  
 If user has not traded, 0 will be returned  
+volPeriod | String | Trading volume within the selected `periodType` window, unit in `USDT`. Only returned when `periodType` is supplied in the request; omitted otherwise. If the user has not traded in the window, `0` is returned.  
 accFee | String | Accumulated Amount of trading fee in USDT  
 If there is no any fee, 0 will be returned  
 kycTime | String | KYC2 verification time. Unix timestamp in millisecond format and the precision is in day  
@@ -99,7 +110,7 @@ affiliateCode | String | Affiliate invite code that the invitee registered/recal
 > 请求示例
     
     
-    GET /api/v5/affiliate/invitee/detail?uid=11111111
+    GET /api/v5/affiliate/invitee/detail?uid=11111111&periodType=last_30d
     
 
 #### 请求参数
@@ -108,6 +119,15 @@ affiliateCode | String | Affiliate invite code that the invitee registered/recal
 ---|---|---|---  
 uid | String | 是 | 被邀请人UID，仅支持使用被邀请人母账号的 UID  
 返回数据中涵盖了被邀请人母账户和子账户。  
+periodType | String | 否 | `volPeriod` 的统计窗口。  
+`last_7d`  
+`last_30d`  
+`this_month`  
+`last_month`  
+`total`  
+`today`  
+`this_week`  
+不传时不返回 `volPeriod`。本接口不支持 `custom`；`custom` 或任意未知值返回 `51000`。  
   
 > 返回结果
     
@@ -130,7 +150,8 @@ uid | String | 是 | 被邀请人UID，仅支持使用被邀请人母账号的 U
                 "region": "越南",
                 "totalCommission": "0",
                 "volMonth": "0",
-                "totalVol": "0"
+                "totalVol": "0",
+                "volPeriod": "1234.56"
             }
         ]
     }
@@ -157,6 +178,7 @@ volMonth | String | 当月累计交易量，单位为 USDT
 如果没有交易, 返回 0  
 totalVol | String | 生命周期累计交易量，单位为 USDT  
 如果没有交易, 返回 0  
+volPeriod | String | 所选 `periodType` 窗口内的交易量，单位为 `USDT`。仅当请求传入 `periodType` 时返回，否则省略。窗口内无交易时返回 `0`。  
 accFee | String | 累计交易手续费，单位为 USDT  
 如果没有交易手续费，返回 0  
 kycTime | String | KYC2 认证时间. Unix时间戳的毫秒数格式，且精确到天  

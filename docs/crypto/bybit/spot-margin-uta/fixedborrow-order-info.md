@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-info
 api_type: REST
-updated_at: 2026-08-02 18:53:42.621286
+updated_at: 2026-08-03 19:09:19.394418
 ---
 
 # Get Fixed-Rate Borrow Order Info

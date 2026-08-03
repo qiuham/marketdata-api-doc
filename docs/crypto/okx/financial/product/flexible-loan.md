@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan
 anchor_id: financial-product-flexible-loan
 api_type: API
-updated_at: 2026-08-02 19:19:14.718353
+updated_at: 2026-08-03 19:34:20.617363
 ---
 
 # Flexible loan
@@ -68,7 +68,7 @@ borrowCcy | String | Borrowable currency, e.g. `BTC`
   
 ### GET / Collateral assets
 
-Get collateral assets in funding account.
+Get the collateral assets currently held under your existing flexible loan order(s) (funding account assets only). This endpoint queries the collateral held against an order — it does not return the full list of assets that are generally eligible to be used as collateral when no order exists.
 
 #### Rate Limit: 5 requests per 2 seconds
 
@@ -683,7 +683,7 @@ borrowCcy | String | 可借币种，如 `BTC`
   
 ### GET / 可抵押资产 
 
-获取可抵押资产信息（仅支持资金账户中的资产）
+获取活期借币现存订单下持有的抵押资产信息（仅支持资金账户中的资产）。该接口查询的是订单下实际持有的抵押资产，若不存在订单，则无法返回泛指的、用户可用作抵押的资产列表
 
 #### 限速：5次/2s
 

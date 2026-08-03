@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-purchase
 api_type: Trading
-updated_at: 2026-08-02 18:46:34.016534
+updated_at: 2026-08-03 19:02:50.598886
 ---
 
 # Get Single Coin Balance

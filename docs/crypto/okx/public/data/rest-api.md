@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api
 anchor_id: public-data-rest-api
 api_type: REST
-updated_at: 2026-08-02 19:18:21.660471
+updated_at: 2026-08-03 19:33:28.117082
 ---
 
 # REST API
@@ -224,8 +224,8 @@ Only applicable to `FUTURES`
 state | String | Instrument status  
 `live`   
 `suspend`  
-`rebase`: can’t be traded during rebasing, only applicable to `SWAP`  
-`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected. Only applicable to `SWAP`  
+`rebase`: can’t be traded during rebasing  
+`post_only`: only post-only orders are accepted; existing post-only orders can be amended and cancelled. Other order types (market, IOC, FOK, normal limit) are rejected.  
 `preopen`. e.g. There will be `preopen` before the Futures and Options new contracts state is live.  
 `test`: Test pairs, can’t be traded  
 `settling`: Settling, only applicable to `EVENTS`  
@@ -526,7 +526,7 @@ hitDir | String | Hit direction. Only applicable when the settlement method is `
   
 ### Get estimated delivery/exercise price
 
-Retrieve the estimated delivery price which will only have a return value one hour before the delivery/exercise.
+Retrieve the estimated delivery price which will only have a return value 30 minutes before the delivery/exercise.
 
 #### Rate Limit: 10 requests per 2 seconds
 
@@ -687,7 +687,7 @@ details | Array of objects | Delivery/exercise details
   
 ### Get estimated future settlement price
 
-Retrieve the estimated settlement price which will only have a return value one hour before the settlement.
+Retrieve the estimated settlement price which will only have a return value 30 minutes before the settlement.
 
 #### Rate Limit: 10 requests per 2 seconds
 
@@ -3228,8 +3228,8 @@ alias | String | 合约日期别名（已废弃，将于 2026 年 4 月底下线
 state | String | 产品状态  
 `live`：交易中   
 `suspend`：暂停中  
-`rebase`：合约在变基中，不可交易，仅适用于`SWAP`  
-`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。仅适用于 `SWAP`  
+`rebase`：合约在变基中，不可交易  
+`post_only`：仅接受 post-only 订单；已有 post-only 订单可改单和撤单。其他订单类型（市价单、IOC、FOK、普通限价单）将被拒绝。  
 `preopen`：预上线，交割和期权合约轮转生成到开始交易；部分交易产品上线前  
 `test`：测试中（测试产品，不可交易）  
 `settling`：结算中，仅适用于 `EVENTS`  
@@ -3523,7 +3523,7 @@ hitDir | String | 触及方向。仅在结算方式为 `hit` 时适用。
   
 ### 获取预估交割/行权价格 
 
-获取交割合约和期权预估交割/行权价。交割/行权预估价只有交割/行权前一小时才有返回值
+获取交割合约和期权预估交割/行权价。交割/行权预估价只有交割/行权前30分钟才有返回值
 
 #### 限速：10次/2s
 
@@ -3684,7 +3684,7 @@ details | Array of objects | 详细数据
   
 ### 获取交割预估结算价格 
 
-获取交割合约预估结算价。只有结算前一小时才有返回值。
+获取交割合约预估结算价。只有结算前30分钟才有返回值。
 
 #### 限速：10次/2s
 

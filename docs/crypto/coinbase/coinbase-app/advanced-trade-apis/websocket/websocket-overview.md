@@ -2,80 +2,34 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview
 api_type: WebSocket
-updated_at: 2026-08-02 19:06:05.862876
+updated_at: 2026-08-03 19:20:36.662952
 ---
 
 # Advanced Trade WebSocket Overview
 
-WebSocket
-    
-    # Advanced Trade WebSocket Overview
-    
-    The WebSocket feed is publicly available and provides real-time market data updates for orders and trades. Two endpoints are supported in production:
-    
-    
-    
-    
-        * **Market Data** is our traditional feed that provides updates for both orders and trades. Most channels are now available without authentication.
-    
-    
-        * **User Order Data** provides updates for the orders of the user.
-    
-    
-    
-    
-    
-    **Market Data** Endpoint: wss://advanced-trade-ws.coinbase.com  
-    
-    **User Order Data** Endpoint: wss://advanced-trade-ws-user.coinbase.com
-    
-    
-    
-    
-    You can subscribe to the Heartbeats Channel, User Channel and Futures Balance Summary Channel with the User Order Data endpoint. If advanced-trade-ws-user is your primary connection, we recommend using advanced-trade-ws as a failover.
-    
-    
-    
-    
-    ## 
-    
-    
-    
-    Protocol
-    
-    
-    The WebSocket feed uses a bidirectional protocol that encodes all messages as JSON objects. All messages have a type attribute that can be used to handle the message appropriately.
-    
-    
-    New message types can be added at any time. Clients are expected to ignore messages they do not support.
-    
-    
-    
-    
-    ## 
-    
-    
-    
-    Sending Messages with CDP Keys
-    
-    
-    
-    
-    ### 
-    
-    
-    
-    Subscribing
-    
-    
-    To begin receiving feed messages, you must send a subscribe message to the server indicating which channel and products to receive. This message is mandatory and you are disconnected if no subscribe has been received within 5 seconds.
-    You can subscribe to multiple channels but you must send a unique subscription message for each channel.
-    
-    
-    To receive feed messages, you must send a subscribe message or you are disconnected in 5 seconds.
-    
-    
-    
+The WebSocket feed is publicly available and provides real-time market data updates for orders and trades. Two endpoints are supported in production:
+
+  * **Market Data** is our traditional feed that provides updates for both orders and trades. Most channels are now available without authentication.
+  * **User Order Data** provides updates for the orders of the user.
+
+**Market Data** Endpoint: `wss://advanced-trade-ws.coinbase.com`  
+**User Order Data** Endpoint: `wss://advanced-trade-ws-user.coinbase.com`
+
+You can subscribe to the Heartbeats Channel, User Channel and Futures Balance Summary Channel with the User Order Data endpoint. If advanced-trade-ws-user is your primary connection, we recommend using advanced-trade-ws as a failover.
+
+## Protocol
+
+The WebSocket feed uses a bidirectional protocol that encodes all messages as JSON objects. All messages have a `type` attribute that can be used to handle the message appropriately.
+
+New message types can be added at any time. Clients are expected to ignore messages they do not support.
+
+## Sending Messages with CDP Keys
+
+### Subscribing
+
+To begin receiving feed messages, you must send a `subscribe` message to the server indicating which channel and products to receive. This message is mandatory and you are disconnected if no `subscribe` has been received within 5 seconds. You can subscribe to multiple channels but you must send a unique subscription message for each channel.
+
+To receive feed messages, you must send a `subscribe` message or you are disconnected in 5 seconds.
     
     
     // Request

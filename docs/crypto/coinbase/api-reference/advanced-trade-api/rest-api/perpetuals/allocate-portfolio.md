@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio
 api_type: Account
-updated_at: 2026-08-02 19:06:04.092498
+updated_at: 2026-08-03 19:20:34.186697
 ---
 
 # Allocate Portfolio
@@ -78,41 +78,7 @@ Allocate portfolio funds to a sub-portfolio on Intx Portfolio
       CURLOPT_CUSTOMREQUEST => "POST",
       CURLOPT_POSTFIELDS => json_encode([
         'portfolio_uuid' => '<string>',
-        'symbol' =International Derivatives (INTX, deprecated)
-    
-    # Allocate Portfolio
-    
-    Allocate portfolio funds to a sub-portfolio on Intx Portfolio
-    
-    POST
-    
-    /
-    
-    api
-    
-    /
-    
-    v3
-    
-    /
-    
-    brokerage
-    
-    /
-    
-    intx
-    
-    /
-    
-    allocate
-    
-    Allocate Portfolio
-    
-    
-    curl --request POST \
-      --url https://api.coinbase.com/api/v3/brokerage/intx/allocate \
-      --header 'Authorization: Bearer <token>' \
-      --header> '<string>',
+        'symbol' => '<string>',
         'amount' => '<string>',
         'currency' => '<string>'
       ]),

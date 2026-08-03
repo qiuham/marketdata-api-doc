@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/tier-collateral-ratio
 api_type: REST
-updated_at: 2026-08-02 18:54:00.798099
+updated_at: 2026-08-03 19:09:36.179233
 ---
 
 # Get VIP Margin Data

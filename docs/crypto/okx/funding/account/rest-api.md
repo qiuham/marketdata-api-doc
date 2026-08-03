@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api
 anchor_id: funding-account-rest-api
 api_type: REST
-updated_at: 2026-08-02 19:18:43.450218
+updated_at: 2026-08-03 19:33:49.608992
 ---
 
 # REST API
@@ -850,6 +850,8 @@ type | String | No | Bill type
 `509`: [OKUSD] Subscription  
 `511`: [OKUSD] Redemption  
 `516`: [OKUSD] Earnings  
+`518`: [OKUSD] Mint  
+`523`: Auto earn RLUSD interest  
 thirdPartyType | String | No | Third-party custody type. If not specified, defaults to `1` (for backward compatibility).  
 `1`: Copper  
 `2`: Komainu  
@@ -1089,6 +1091,8 @@ type | String | No | Bill type
 `509`: [OKUSD] Subscription  
 `511`: [OKUSD] Redemption  
 `516`: [OKUSD] Earnings  
+`518`: [OKUSD] Mint  
+`523`: Auto earn interest (RLUSD earn)  
 thirdPartyType | String | No | Third-party custody type. If not specified, defaults to `1` (for backward compatibility).  
 `1`: Copper  
 `2`: Komainu  
@@ -4588,6 +4592,8 @@ type | String | 否 | 账单类型
 `509`：[OKUSD] 申购  
 `511`：[OKUSD] 赎回  
 `516`：[OKUSD] 收益  
+`518`：[OKUSD] 铸造  
+`523`：自动赚币（RLUSD赚币）利息  
 thirdPartyType | String | 否 | 第三方托管类型。不填则默认为 `1`（向后兼容）。  
 `1`：Copper  
 `2`：Komainu  
@@ -4831,6 +4837,8 @@ type | String | 否 | 账单类型
 `509`：[OKUSD] 申购  
 `511`：[OKUSD] 赎回  
 `516`：[OKUSD] 收益  
+`518`：[OKUSD] 铸造  
+`523`：自动赚币（RLUSD赚币）利息  
 thirdPartyType | String | 否 | 第三方托管类型。不填则默认为 `1`（向后兼容）。  
 `1`：Copper  
 `2`：Komainu  

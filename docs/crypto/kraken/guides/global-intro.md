@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/guides/global-intro
 api_type: Guide
-updated_at: 2026-08-02 19:16:08.700769
+updated_at: 2026-08-03 19:31:16.308447
 ---
 
 # Exchange overview
@@ -85,7 +85,5 @@ Getting started
 ## [Rate limitsHow rate limits work across REST, WebSocket, and FIX](/exchange/guides/general/ratelimits)
 
 Was this page helpful?
-
-[Choose your protocol](/exchange/guides/general/api-comparison)
 
 Ctrl+I

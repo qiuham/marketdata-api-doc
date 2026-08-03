@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-borrow-repay-history
 anchor_id: trading-account-rest-api-get-borrow-repay-history
 api_type: REST
-updated_at: 2026-08-02 19:16:46.978608
+updated_at: 2026-08-03 19:31:54.773804
 ---
 
 # Get borrow/repay history

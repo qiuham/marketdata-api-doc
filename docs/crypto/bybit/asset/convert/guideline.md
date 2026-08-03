@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert/guideline
 api_type: REST
-updated_at: 2026-08-02 18:46:55.082811
+updated_at: 2026-08-03 19:03:09.869709
 ---
 
 # Get Delivery Record

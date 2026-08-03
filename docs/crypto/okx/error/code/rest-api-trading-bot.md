@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-trading-bot
 anchor_id: error-code-rest-api-trading-bot
 api_type: REST
-updated_at: 2026-08-02 19:19:28.902539
+updated_at: 2026-08-03 19:34:34.651714
 ---
 
 # Trading bot
