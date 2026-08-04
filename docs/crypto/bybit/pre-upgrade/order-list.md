@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/order-list
 api_type: REST
-updated_at: 2026-08-03 19:08:29.780715
+updated_at: 2026-08-04 19:06:11.491359
 ---
 
 # Rate Limit Rules

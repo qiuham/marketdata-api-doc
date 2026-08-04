@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/friend-referral
 api_type: REST
-updated_at: 2026-08-03 19:10:10.753602
+updated_at: 2026-08-04 19:07:52.333357
 ---
 
 # Get Sub Account All API Keys

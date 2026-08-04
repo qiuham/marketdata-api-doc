@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-fund
 api_type: REST
-updated_at: 2026-08-03 19:06:03.851968
+updated_at: 2026-08-04 19:03:45.238512
 ---
 
 # Create Fund Sub-Account

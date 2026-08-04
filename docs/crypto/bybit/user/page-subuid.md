@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/page-subuid
 api_type: REST
-updated_at: 2026-08-03 19:10:17.296063
+updated_at: 2026-08-04 19:07:58.749369
 ---
 
 # Delete Master API Key

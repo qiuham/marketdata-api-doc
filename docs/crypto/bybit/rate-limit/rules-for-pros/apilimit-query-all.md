@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query-all
 api_type: REST
-updated_at: 2026-08-03 19:08:35.579142
+updated_at: 2026-08-04 19:06:17.230592
 ---
 
 # Introduction
