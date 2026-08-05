@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-leverage
 api_type: REST
-updated_at: 2026-08-04 19:07:16.145915
+updated_at: 2026-08-05 19:07:54.823007
 ---
 
 # Get VIP Margin Data

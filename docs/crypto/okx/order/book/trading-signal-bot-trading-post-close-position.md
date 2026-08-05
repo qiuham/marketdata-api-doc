@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-close-position
 anchor_id: order-book-trading-signal-bot-trading-post-close-position
 api_type: API
-updated_at: 2026-08-04 19:29:54.991144
+updated_at: 2026-08-05 19:31:33.388780
 ---
 
 # POST / Close position

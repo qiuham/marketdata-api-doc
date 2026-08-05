@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/portfolio-margin
 api_type: REST
-updated_at: 2026-08-04 19:01:13.123224
+updated_at: 2026-08-05 19:01:20.436091
 ---
 
 # Get Sub UID

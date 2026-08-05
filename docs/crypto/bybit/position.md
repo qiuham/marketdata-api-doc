@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position
 api_type: REST
-updated_at: 2026-08-04 19:05:53.825233
+updated_at: 2026-08-05 19:06:25.360795
 ---
 
 # Get Closed PnL

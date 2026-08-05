@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-bills-details-since-2021
 anchor_id: trading-account-rest-api-get-bills-details-since-2021
 api_type: REST
-updated_at: 2026-08-04 19:29:04.586976
+updated_at: 2026-08-05 19:30:42.820112
 ---
 
 # Get bills details (since 2021)

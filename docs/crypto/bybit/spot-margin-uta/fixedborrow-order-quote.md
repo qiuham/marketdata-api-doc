@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-quote
 api_type: REST
-updated_at: 2026-08-04 19:07:04.729860
+updated_at: 2026-08-05 19:07:42.388957
 ---
 
 # Get Historical Interest Rate

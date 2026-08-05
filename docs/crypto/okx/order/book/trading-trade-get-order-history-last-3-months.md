@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-history-last-3-months
 anchor_id: order-book-trading-trade-get-order-history-last-3-months
 api_type: API
-updated_at: 2026-08-04 19:29:26.984098
+updated_at: 2026-08-05 19:31:05.355169
 ---
 
 # GET / Order history (last 3 months)

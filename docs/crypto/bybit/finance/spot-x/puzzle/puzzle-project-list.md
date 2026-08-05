@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/puzzle/puzzle-project-list
 api_type: REST
-updated_at: 2026-08-04 19:04:19.565124
+updated_at: 2026-08-05 19:04:43.759753
 ---
 
 # Get Token Splash User Activity Params

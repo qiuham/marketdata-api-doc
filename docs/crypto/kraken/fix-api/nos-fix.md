@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-08-04 19:28:30.288855
+updated_at: 2026-08-05 19:30:08.303471
 ---
 
 # Send order

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-tickers-channel
 anchor_id: order-book-trading-market-data-ws-tickers-channel
 api_type: WebSocket
-updated_at: 2026-08-04 19:30:14.779853
+updated_at: 2026-08-05 19:31:53.159622
 ---
 
 # WS / Tickers channel

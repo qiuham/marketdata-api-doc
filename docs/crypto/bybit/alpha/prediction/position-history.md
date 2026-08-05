@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/position-history
 api_type: REST
-updated_at: 2026-08-04 19:00:10.182111
+updated_at: 2026-08-05 19:00:12.034071
 ---
 
 # Get Position History
