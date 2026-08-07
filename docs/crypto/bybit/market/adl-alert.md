@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/adl-alert
 api_type: Market Data
-updated_at: 2026-08-05 19:04:51.025934
+updated_at: 2026-08-07 18:45:50.570284
 ---
 
 # Get ADL Alert

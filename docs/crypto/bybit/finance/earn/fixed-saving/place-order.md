@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/place-order
 api_type: REST
-updated_at: 2026-08-05 19:03:53.747921
+updated_at: 2026-08-07 18:44:58.486520
 ---
 
 # Get Position Info

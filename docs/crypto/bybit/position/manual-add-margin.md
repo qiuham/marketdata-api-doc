@@ -2,82 +2,78 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
 api_type: Position
-updated_at: 2026-08-05 19:06:32.919944
+updated_at: 2026-08-07 18:47:27.110268
 ---
 
-# Move Position
+# Set Trading Stop
 
-You can move positions between sub-master, master-sub, or sub-sub UIDs when necessary
+Set the take profit, stop loss or trailing stop for the position.
+
+tip
+
+Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
 
 info
 
-  * The endpoint can only be called by master UID api key
-  * UIDs must be the same master-sub account relationship
-  * The trades generated from move-position endpoint will not be displayed in the Recent Trade (Rest API & Websocket)
-  * There is no trading fee
-  * `fromUid` and `toUid` both should be Unified trading accounts, and they need to be one-way mode when moving the positions
-  * Please note that once executed, you will get execType=`MovePosition` entry from [Get Trade History](/docs/v5/order/execution), [Get Closed Pnl](/docs/v5/position/close-pnl), and stream from [Execution](/docs/v5/websocket/private/execution).
-  * Not available for TradFi perpetual contracts, including forex, stock, and commodities
+New version of TP/SL function supports both holding entire position TP/SL orders and holding partial position TP/SL orders.
+
+  * Full position TP/SL orders: This API can be used to modify the parameters of existing TP/SL orders.
+  * Partial position TP/SL orders: This API can only add partial position TP/SL orders.
 
 
+
+note
+
+Under the new version of TP/SL function, when calling this API to perform one-sided take profit or stop loss modification on existing TP/SL orders on the holding position, it will cause the paired tp/sl orders to lose binding relationship. This means that when calling the cancel API through the tp/sl order ID, it will only cancel the corresponding one-sided take profit or stop loss order ID.
 
 ### HTTP Request
 
-POST`/v5/position/move-positions`
+POST`/v5/position/trading-stop`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-fromUid| **true**|  string| From UID 
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`, `option`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+tpslMode| **true**|  string| TP/SL mode
 
-  * Must be UTA
-  * Must be in one-way mode for Futures
-
-  
-toUid| **true**|  string| To UID 
-
-  * Must be UTA
-  * Must be in one-way mode for Futures
+  * `Full`: entire position TP/SL, option supports "tpslMode"=`Full` only
+  * `Partial`: partial position TP/SL
 
   
-list| **true**|  array| Object. Up to 25 legs per request  
-> [category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `spot`, `option`,`inverse`  
-> symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-> price| **true**|  string| Trade price 
+[positionIdx](/docs/v5/enum#positionidx)| true| integer| Used to identify positions in different position modes. 
 
-  * `linear`&`inverse`: the price needs to be between [95% of mark price, 105% of mark price]
-  * `spot`&`option`: the price needs to follow the price rule from [Instruments Info](/docs/v5/market/instrument)
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
 
   
-> side| **true**|  string| Trading side of `fromUid`
-
-  * For example, `fromUid` has a long position, when side=`Sell`, then once executed, the position of `fromUid` will be reduced or open a short position depending on `qty` input
-
-  
-> qty| **true**|  string| Executed qty 
-
-  * The value must satisfy the qty rule from [Instruments Info](/docs/v5/market/instrument), in particular, category=`linear` is able to input `maxOrderQty` * 5
-
-  
+takeProfit| false| string| Cannot be less than 0, 0 means cancel TP  
+stopLoss| false| string| Cannot be less than 0, 0 means cancel SL  
+trailingStop| false| string| Trailing stop by price distance. Cannot be less than 0, 0 means cancel TS  
+[tpTriggerBy](/docs/v5/enum#triggerby)| false| string| Take profit trigger price type  
+[slTriggerBy](/docs/v5/enum#triggerby)| false| string| Stop loss trigger price type  
+activePrice| false| string| Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only**  
+tpSize| false| string| Take profit size  
+valid for TP/SL partial mode, note: the value of tpSize and slSize must equal  
+slSize| false| string| Stop loss size  
+valid for TP/SL partial mode, note: the value of tpSize and slSize must equal  
+tpLimitPrice| false| string| The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit  
+slLimitPrice| false| string| The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit  
+tpOrderType| false| string| The order type when take profit is triggered. `Market`(default), `Limit`  
+For tpslMode=Full, it only supports tpOrderType="Market"  
+slOrderType| false| string| The order type when stop loss is triggered. `Market`(default), `Limit`  
+For tpslMode=Full, it only supports slOrderType="Market"  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-retCode| integer| Result code. `0` means request is successfully accepted  
-retMsg| string| Result message  
-result| map| Object  
-> blockTradeId| string| Block trade ID  
-> status| string| Status. `Processing`, `Rejected`  
-> rejectParty| string| 
+None
 
-  * `""` means initial validation is passed, please check the order status via [Get Move Position History](/docs/v5/position/move-position-history)
-  * `Taker`, `Maker` when status=`Rejected`
-  * `bybit` means error is occurred on the Bybit side
+[](/docs/api-explorer/v5/position/trading-stop)
 
-  
-  
+* * *
+
 ### Request Example
 
   * HTTP
@@ -88,26 +84,29 @@ result| map| Object
 
     
     
-    POST /v5/position/move-positions HTTP/1.1  
+    POST /v5/position/trading-stop HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1697447928051  
+    X-BAPI-TIMESTAMP: 1672283124270  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "fromUid": "100307601",  
-        "toUid": "592324",  
-        "list": [  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01"  
-            }  
-        ]  
+        "category":"linear",  
+        "symbol": "XRPUSDT",  
+        "takeProfit": "0.6",  
+        "stopLoss": "0.2",  
+        "tpTriggerBy": "MarkPrice",  
+        "slTriggerBy": "IndexPrice",  
+        "tpslMode": "Partial",  
+        "tpOrderType": "Limit",  
+        "slOrderType": "Limit",  
+        "tpSize": "50",  
+        "slSize": "50",  
+        "tpLimitPrice": "0.57",  
+        "slLimitPrice": "0.21",  
+        "positionIdx": 0  
     }  
     
     
@@ -118,18 +117,21 @@ result| map| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.move_position(  
-        fromUid="100307601",  
-        toUid="592324",  
-        list=[  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01",  
-            }  
-        ]  
+    print(session.set_trading_stop(  
+        category="linear",  
+        symbol="XRPUSDT",  
+        takeProfit="0.6",  
+        stopLoss="0.2",  
+        tpTriggerBy="MarkPrice",  
+        slTriggerB="IndexPrice",  
+        tpslMode="Partial",  
+        tpOrderType="Limit",  
+        slOrderType="Limit",  
+        tpSize="50",  
+        slSize="50",  
+        tpLimitPrice="0.57",  
+        slLimitPrice="0.21",  
+        positionIdx=0,  
     ))  
     
     
@@ -139,14 +141,43 @@ result| map| Object
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
-                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
-    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
-    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
+    var setTradingStopRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("XRPUSDT").takeProfit("0.6").stopLoss("0.2").tpTriggerBy(TriggerBy.MARK_PRICE).slTriggerBy(TriggerBy.LAST_PRICE)  
+                    .tpslMode(TpslMode.PARTIAL).tpOrderType(TradeOrderType.LIMIT).slOrderType(TradeOrderType.LIMIT).tpSize("50").slSize("50").tpLimitPrice("0.57").slLimitPrice("0.21").build();  
+    client.setTradingStop(setTradingStopRequest, System.out::println);  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setTradingStop({  
+            category: 'linear',  
+            symbol: 'XRPUSDT',  
+            takeProfit: '0.6',  
+            stopLoss: '0.2',  
+            tpTriggerBy: 'MarkPrice',  
+            slTriggerBy: 'IndexPrice',  
+            tpslMode: 'Partial',  
+            tpOrderType: 'Limit',  
+            slOrderType: 'Limit',  
+            tpSize: '50',  
+            slSize: '50',  
+            tpLimitPrice: '0.57',  
+            slLimitPrice: '0.21',  
+            positionIdx: 0,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -155,88 +186,76 @@ result| map| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
-            "status": "Processing",  
-            "rejectParty": ""  
-        }  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672283125359  
     }
 
 ---
 
-# 移倉
+# 設置止盈止損
 
-您可以在同一個母子帳戶體系下移動期貨、期權的倉位, 以及現貨的幣幣交易
+該接口可以設置止盈、止損和追蹤止損
+
+提示
+
+在提交請求後，系統內部將會自動創建對應類型的條件單。若倉位被平，系統將會調整相關條件訂單數量或者取消這些條件單。
 
 信息
 
-  * 該接口僅支持母帳戶的api key訪問
-  * 移倉間的UID和調用者的UID必須是同一個母子帳戶體系
-  * 該移倉生成的交易將不會出現在公有行情的成交中(包括Rest API和Websocket)
-  * 該操作不會產生手續費
-  * `fromUid` 和 `toUid`都必須是統一交易帳戶, 並且對於期貨而言, 倉位需要處於單向模式下
-  * 請注意一旦成交, [查詢成交紀錄](/docs/zh-TW/v5/order/execution), [查詢平倉盈虧](/docs/zh-TW/v5/position/close-pnl), 以及私有推送[成交](/docs/zh-TW/v5/websocket/private/execution)會返回execType=`MovePosition`的數據
-  * 不支持 TradFi 永續合約，包括外匯、股票及大宗商品
+新版止盈止損, 支持既持有全部止盈止損單, 也可以持有部分止盈止損單
+
+  * 全部倉位止盈止損單: 該接口可用於修改該類型的止盈止損單的參數
+  * 部分倉位止盈止損單: 該接口僅能新增部分倉位止盈止損單
 
 
+
+備註
+
+新版止盈止損下, 調用該接口對持倉上的已有的止盈止損進行單邊止盈或者止損修改時, 會導致成對的tp/sl訂單失去綁定關係, 這意味著當通過tp/sl訂單ID調用 取消接口時, 只會取消對應訂單ID的單邊止盈或止損.
 
 ### HTTP 請求
 
-POST`/v5/position/move-positions`
+POST`/v5/position/trading-stop`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-fromUid| **true**|  string| 原UID 
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`, `option`  
+symbol| **true**|  string| 合約名稱  
+tpslMode| **true**|  string| 止盈止損模式. `Full`: 全部倉位止盈止損, 期權僅支持`Full` `Partial`: 部分倉位止盈止損  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| true| integer| 倉位標識，用戶識別倉位. 
 
-  * 必須是統一交易帳戶
-  * 期貨倉位必須有處於單向持倉模式
-
-  
-toUid| **true**|  string| 目標UID 
-
-  * 必須是統一交易帳戶
-  * 期貨倉位必須有處於單向持倉模式
+  * `0`: 單向持倉
+  * `1`: 買側雙向持倉
+  * `2`: 賣側雙向持倉
 
   
-list| **true**|  array| Object. 單次請求最多支持25腿  
-> [category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `spot`, `option`,`inverse`  
-> symbol| **true**|  string| 合約名稱/幣對名  
-> price| **true**|  string| 訂單價格 
+takeProfit| false| string| 止盈價格. 等於0表示取消止盈，若不修改，則不要傳遞該參數  
+stopLoss| false| string| 止損價格. 等於0表示取消止損，若不修改，則不要傳遞該參數  
+trailingStop| false| string| 追蹤止損, 僅支持按價差設置. 等於0表示取消追蹤止損，若不修改，則不要傳遞該參數  
+[tpTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止盈價格類型  
+[slTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止損價格類型  
+activePrice| false| string| 追蹤止損激活價格. 追蹤止損會在到達該價格時觸發  
+tpSize| false| string| 止盈倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等  
+slSize| false| string| 止損倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等  
+tpLimitPrice| false| string| 觸發止盈後轉換為限價單的價格  
+僅tpslMode=Partial且tpOrderType=Limit時有效  
+slLimitPrice| false| string| 觸發止損後轉換為限價單的價格  
+僅tpslMode=Partial且slOrderType=Limit時有效  
+tpOrderType| false| string| 止盈觸發後的訂單類型. `Market`(默認), `Limit`  
+對於tpslMode=Full時, 僅支持tpOrderType=Market  
+slOrderType| false| string| 止損觸發後的訂單類型. `Market`(默認), `Limit`  
+對於tpslMode=Full時, 僅支持slOrderType=Market  
+[](/docs/zh-TW/api-explorer/v5/position/trading-stop)
 
-  * `linear`和`inverse`: 價格需要位於[95% _標記價格, 105%_ 標記價格]之間
-  * `spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的價格上下限和精度
+* * *
 
-  
-> side| **true**|  string| 是`fromUid`的交易方向 
-
-  * 例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小
-
-  
-> qty| **true**|  string| 交易數量
-
-  * 該數字需要滿足[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`
-
-  
-  
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-retCode| integer| 響應碼. `0`表示請求被成功接受  
-retMsg| string| 響應信息  
-result| map| Object  
-> blockTradeId| string| 大宗交易訂單ID  
-> status| string| 訂單狀態. `Processing`, `Rejected`  
-> rejectParty| string| 
+無
 
-  * `""`表示初始校驗通過, 需要進一步通過[查詢移倉歷史](/docs/zh-TW/v5/position/move-position-history)接口來確認最終狀態
-  * `Taker`, `Maker`: 當status=`Rejected`返回
-  * `bybit`表示處理過程中的錯誤發生在Bybit側
-
-  
-  
 ### 請求示例
 
   * HTTP
@@ -247,26 +266,28 @@ result| map| Object
 
     
     
-    POST /v5/position/move-positions HTTP/1.1  
+    POST /v5/position/trading-stop HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1697447928051  
+    X-BAPI-TIMESTAMP: 1672283124270  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "fromUid": "100307601",  
-        "toUid": "592324",  
-        "list": [  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01"  
-            }  
-        ]  
+        "category":"linear",  
+        "symbol": "XRPUSDT",  
+        "takeProfit": "0.6",  
+        "stopLoss": "0.2",  
+        "tpTriggerBy": "MarkPrice",  
+        "slTriggerBy": "IndexPrice",  
+        "tpslMode": "Partial",  
+        "tpOrderType": "Limit",  
+        "slOrderType": "Limit",  
+        "tpSize": "50",  
+        "tpLimitPrice": "0.57",  
+        "slLimitPrice": "0.21",  
+        "positionIdx": 0  
     }  
     
     
@@ -277,18 +298,21 @@ result| map| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.move_position(  
-        fromUid="100307601",  
-        toUid="592324",  
-        list=[  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01",  
-            }  
-        ]  
+    print(session.set_trading_stop(  
+        category="linear",  
+        symbol="XRPUSDT",  
+        takeProfit="0.6",  
+        stopLoss="0.2",  
+        tpTriggerBy="MarkPrice",  
+        slTriggerB="IndexPrice",  
+        tpslMode="Partial",  
+        tpOrderType="Limit",  
+        slOrderType="Limit",  
+        tpSize="50",  
+        slSize="50",  
+        tpLimitPrice="0.57",  
+        slLimitPrice="0.21",  
+        positionIdx=0,  
     ))  
     
     
@@ -298,14 +322,43 @@ result| map| Object
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
-                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
-    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
-    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
+    var setTradingStopRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("XRPUSDT").takeProfit("0.6").stopLoss("0.2").tpTriggerBy(TriggerBy.MARK_PRICE).slTriggerBy(TriggerBy.LAST_PRICE)  
+                    .tpslMode(TpslMode.PARTIAL).tpOrderType(TradeOrderType.LIMIT).slOrderType(TradeOrderType.LIMIT).tpSize("50").slSize("50").tpLimitPrice("0.57").slLimitPrice("0.21").build();  
+    client.setTradingStop(setTradingStopRequest, System.out::println);  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setTradingStop({  
+            category: 'linear',  
+            symbol: 'XRPUSDT',  
+            takeProfit: '0.6',  
+            stopLoss: '0.2',  
+            tpTriggerBy: 'MarkPrice',  
+            slTriggerBy: 'IndexPrice',  
+            tpslMode: 'Partial',  
+            tpOrderType: 'Limit',  
+            slOrderType: 'Limit',  
+            tpSize: '50',  
+            slSize: '50',  
+            tpLimitPrice: '0.57',  
+            slLimitPrice: '0.21',  
+            positionIdx: 0,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -314,9 +367,7 @@ result| map| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
-            "status": "Processing",  
-            "rejectParty": ""  
-        }  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672283125359  
     }

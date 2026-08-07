@@ -2,37 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-vips
 api_type: REST
-updated_at: 2026-08-05 19:06:56.436158
+updated_at: 2026-08-07 18:47:45.449735
 ---
 
-# Cancel All RFQs
+# Accept non-LP Quote
 
-Cancel all active RFQs. **Up to 50 requests per second**
+Accept non-LP Quote. **Up to 50 requests** per second.
 
 info
 
-  * Inquirer cancels order: Cancel the inquiry, all its corresponding quotes becoming invalid
-  * Quoter cancels the order: The inquiry is not affected, but the quote becomes invalid
+  * Accepts non-LP quotes.
 
 
 
 ### HTTP Request
 
-POST`/v5/rfq/cancel-all-rfq`
+POST`/v5/rfq/accept-other-quote`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+rfqId| **true**|  string| Inquiry ID  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array of objects|   
+result| object|   
 > rfqId| string| Inquiry ID  
-> rfqLinkId| string| Custom inquiry ID  
-> code| string| Whether or not the cancellations were a success, `0`: success  
-> msg| string| Cancellation failure reason  
   
 ### Request Example
 
@@ -42,7 +40,7 @@ result| array of objects|
 
     
     
-    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
+    POST /v5/rfq/accept-other-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -50,6 +48,10 @@ result| array of objects|
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
+      
+    {  
+      "rfqId":"1754364447601610516653123084412812",   
+    }  
     
     
     
@@ -59,7 +61,9 @@ result| array of objects|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_all_quotes())  
+    print(session.accept_other_quote(  
+        rfqId="1754364447601610516653123084412812"  
+    ))  
     
 
 ### Response Example
@@ -68,53 +72,46 @@ result| array of objects|
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "rfqId": "175766967076315412093641573648082",  
-                "rfqLinkId": "",  
-                "code": 0,  
-                "msg": ""  
-            }  
-        ],  
+        "result": {  
+            "rfqId": "1754364447601610516653123084412812"  
+        },  
         "retExtInfo": {},  
-        "time": 1757669676581  
+        "time": 1757405933132  
     }
 
 ---
 
-# 取消所有詢價單
+# 接受非 LP 報價
 
-取消所有您的詢價單。**每秒最多 50 次請求**
+接受非 LP 報價 **每秒最多 50 個請求**
 
 信息
 
-  * 詢價方取消訂單：取消詢價單，所有報價均失效。
-  * 報價方取消訂單：詢價單不受影響，報價單失效。
+  * 用戶确认接受非 LP 報價
 
 
 
 ### HTTP 請求
 
-POST`/v5/rfq/cancel-all-rfq`
+POST`/v5/rfq/accept-other-quote`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+rfqId| **true**|  string| 詢價单ID  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array of objects| 詢價單資料  
-> rfqId| string| 詢價單 ID  
-> rfqLinkId| string| 詢價單自定義 ID  
-> code| string| 取消成功或失敗，0 表示取消成功  
-> msg| string| 取消失敗原因  
+result| object|   
+> rfqId| string| 詢價单ID  
   
 ### 請求示例
     
     
-    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
+    POST /v5/rfq/accept-other-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -122,6 +119,10 @@ result| array of objects| 詢價單資料
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
+      
+    {  
+      "rfqId":"1754364447601610516653123084412812",   
+    }  
     
 
 ### 響應示例
@@ -130,14 +131,9 @@ result| array of objects| 詢價單資料
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "rfqId": "175766967076315412093641573648082",  
-                "rfqLinkId": "",  
-                "code": 0,  
-                "msg": ""  
-            }  
-        ],  
+        "result": {  
+            "rfqId": "1754364447601610516653123084412812"  
+        },  
         "retExtInfo": {},  
-        "time": 1757669676581  
+        "time": 1757405933132  
     }

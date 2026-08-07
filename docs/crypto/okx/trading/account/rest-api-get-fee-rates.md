@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-fee-rates
 anchor_id: trading-account-rest-api-get-fee-rates
 api_type: REST
-updated_at: 2026-08-05 19:30:46.268738
+updated_at: 2026-08-07 19:10:15.413269
 ---
 
 # Get fee rates

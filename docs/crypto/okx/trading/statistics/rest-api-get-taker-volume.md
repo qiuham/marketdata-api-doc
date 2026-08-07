@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-taker-volume
 anchor_id: trading-statistics-rest-api-get-taker-volume
 api_type: REST
-updated_at: 2026-08-05 19:32:40.912608
+updated_at: 2026-08-07 19:12:09.873844
 ---
 
 # Get taker volume

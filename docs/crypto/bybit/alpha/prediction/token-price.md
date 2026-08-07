@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/token-price
 api_type: REST
-updated_at: 2026-08-05 19:00:23.482958
+updated_at: 2026-08-07 18:41:49.791640
 ---
 
 # Get Asset List

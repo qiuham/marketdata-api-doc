@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/repay-liability
 api_type: Account
-updated_at: 2026-08-05 18:59:32.301769
+updated_at: 2026-08-07 18:41:03.700845
 ---
 
 # Set Delta Neutral Mode

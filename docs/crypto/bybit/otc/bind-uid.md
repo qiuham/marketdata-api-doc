@@ -2,42 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-08-05 19:06:13.709084
+updated_at: 2026-08-07 18:47:09.818750
 ---
 
-# Get Coin Delta Amount
+# Get Margin Coin Info
 
-Query coin delta amount details for institutional loan hedge product.
+tip
 
-info
-
-  * Unified account only
-  * Optional `coin` filter; if omitted, returns all coins
+  * When queried without an API key, this endpoint returns public margin data
+  * If your UID is bound with an OTC loan, then you can get your private margin data by calling with your API key
+  * If your UID is not bound with an OTC loan but you passed your API key, this endpoint returns public margin data
 
 
 
 ### HTTP Request
 
-GET`/v5/ins-loan/coin-delta-amount`
+GET`/v5/ins-loan/ensure-tokens-convert`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Coin name, uppercase only. e.g. `BTC`. If not passed, returns all coins  
+productId| false| string| Product ID. If not passed, returns all margin products. For spot, it returns coins with a `convertRatio` greater than 0.  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-riskUnitDeltaAmount| string| Risk unit total delta amount limit (USD)  
-riskUnitDeltaAvailableAmount| string| Risk unit available delta amount (USD)  
-riskUnitDelta| string| Risk unit delta value  
-list| array| Object  
-> coin| string| Coin name  
-> coinDeltaSize| string| Coin delta size (quantity)  
-> coinDeltaAvailableAmount| string| Coin delta available amount (USD)  
-> coinDeltaAmount| string| Coin delta total amount limit (USD)  
+marginToken| array| Object  
+> productId| string| Product Id  
+> tokenInfo| array| Spot margin coin  
+>> token| string| Margin coin  
+>> convertRatioList| array| Margin coin convert ratio List  
+>>> ladder| string| ladder  
+>>> convertRatio| string| Margin coin convert ratio  
   
 ### Request Example
 
@@ -48,20 +46,39 @@ list| array| Object
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/ins-loan/ensure-tokens-convert HTTP/1.1  
+    Host: api-testnet.bybit.com  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_margin_coin_info())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
+        productId: '81',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -69,65 +86,124 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
+            "marginToken": [  
                 {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
+                    "productId": "81",  
+                    "tokenInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-500",  
+                                    "convertRatio": "0.95"  
+                                },  
+                                {  
+                                    "ladder": "500-1000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.8"  
+                                },  
+                                {  
+                                    "ladder": "2000-4000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "4000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                      ...  
+                    ]  
                 },  
                 {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
+                    "productId": "82",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.65"  
+                                },  
+                                {  
+                                    "ladder": "2000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                },  
+                {  
+                    "productId": "84",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "BTC",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "1"  
+                                },  
+                                {  
+                                    "ladder": "1000-5000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "5000-99999999999",  
+                                    "convertRatio": "0.55"  
+                                }  
+                            ]  
+                        }  
+                    ]  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1683276016497  
     }
 
 ---
 
-# 查詢幣種 Delta 額度
+# 查詢保證金幣種信息
 
-查詢機構借貸對沖產品的幣種 Delta 額度詳情。
+提示
 
-信息
-
-  * 僅支持統一帳戶
-  * `coin` 為可選篩選參數，若不傳則返回所有幣種
+  * 該接口在不傳入api key和secret進行鑒權時, 則返回公共數據
+  * 該接口在傳入api key和secret進行鑒權時且uid綁定了場外借貸產品, 則返回特定的保證金幣種數據
 
 
 
 ### HTTP 請求
 
-GET`/v5/ins-loan/coin-delta-amount`
+GET`/v5/ins-loan/ensure-tokens-convert`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱，僅大寫。如 `BTC`。若不傳，返回所有幣種  
+productId| false| string| 產品ID. 若不傳，則返回所有產品的保證金幣種信息. 現貨返回折算率大於0的幣種.  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-riskUnitDeltaAmount| string| 風險單元 Delta 總額度限制（USD）  
-riskUnitDeltaAvailableAmount| string| 風險單元可用 Delta 額度（USD）  
-riskUnitDelta| string| 風險單元 Delta 值  
-list| array| Object  
-> coin| string| 幣種名稱  
-> coinDeltaSize| string| 幣種 Delta 數量  
-> coinDeltaAvailableAmount| string| 幣種可用 Delta 額度（USD）  
-> coinDeltaAmount| string| 幣種 Delta 總額度限制（USD）  
+marginToken| array| Object  
+> productId| string| 產品ID  
+> tokenInfo| array| 現貨保證金幣種信息  
+>> token| string| 保證金幣種  
+>> convertRatioList| array| 保證金幣種折算率列  
+>>> ladder| string| 階梯  
+>>> convertRatio| string| 折算率  
   
 ### 請求示例
 
@@ -138,47 +214,128 @@ list| array| Object
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/ins-loan/ensure-tokens HTTP/1.1  
+    Host: api-testnet.bybit.com  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_margin_coin_info())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
+        productId: '81',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
+            "marginToken": [  
                 {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
+                    "productId": "81",  
+                    "tokenInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-500",  
+                                    "convertRatio": "0.95"  
+                                },  
+                                {  
+                                    "ladder": "500-1000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.8"  
+                                },  
+                                {  
+                                    "ladder": "2000-4000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "4000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                      ...  
+                    ]  
                 },  
                 {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
+                    "productId": "82",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.65"  
+                                },  
+                                {  
+                                    "ladder": "2000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                },  
+                {  
+                    "productId": "84",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "BTC",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "1"  
+                                },  
+                                {  
+                                    "ladder": "1000-5000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "5000-99999999999",  
+                                    "convertRatio": "0.55"  
+                                }  
+                            ]  
+                        }  
+                    ]  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1683276016497  
     }

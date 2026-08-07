@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/error
 api_type: REST
-updated_at: 2026-08-05 19:02:43.824431
+updated_at: 2026-08-07 18:43:56.011904
 ---
 
 # Place Order

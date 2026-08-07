@@ -2,66 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/loan-info
 api_type: REST
-updated_at: 2026-08-05 19:06:18.424607
+updated_at: 2026-08-07 18:47:11.073312
 ---
 
-# Repay
+# Get Margin Coin Info
 
-You can repay the INS loan by calling this API.
+tip
 
-info
-
-  * Only the designated Risk Unit UID is allowed to call this API. To obtain the designated Risk Unit UID, please refer to the `parentUid` from [Get LTV](/docs/v5/otc/ltv-convert)
-  * The repayment is processed asynchronously and usually takes 2–3 minutes.
-  * Pease confirm the repayment status via [Get Repayment Orders](/docs/v5/otc/repay-info) before initiating the next repayment. **Note** that the repayment record will not appear in the response until 2–3 minutes later.
+  * When queried without an API key, this endpoint returns public margin data
+  * If your UID is bound with an OTC loan, then you can get your private margin data by calling with your API key
+  * If your UID is not bound with an OTC loan but you passed your API key, this endpoint returns public margin data
 
 
 
 ### HTTP Request
 
-POST`/v5/ins-loan/repay-loan`
-
-IMPORTANT
-
-  1. **Please note this API can only be used when urgent. Make sure contact RM before executing**
-  2. When repay, principal amount will be deducted from Unified wallet, the interest **not include**
-
-
+GET`/v5/ins-loan/ensure-tokens-convert`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-token| **true**|  string| Coin name  
-quantity| **true**|  string| The qty to be repaid  
+productId| false| string| Product ID. If not passed, returns all margin products. For spot, it returns coins with a `convertRatio` greater than 0.  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-repayOrderStatus| string| `P`: processing  
+marginToken| array| Object  
+> productId| string| Product Id  
+> tokenInfo| array| Spot margin coin  
+>> token| string| Margin coin  
+>> convertRatioList| array| Margin coin convert ratio List  
+>>> ladder| string| ladder  
+>>> convertRatio| string| Margin coin convert ratio  
   
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    POST /v5/ins-loan/repay-loan HTTP/1.1  
+    GET /v5/ins-loan/ensure-tokens-convert HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1767605784035  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-        "token": "USDT",  
-        "quantity": "500000"  
-    }  
     
     
     
@@ -71,10 +57,28 @@ repayOrderStatus| string| `P`: processing
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_loan(  
-        token="USDT",  
-        quantity="500000"  
-    ))  
+    print(session.get_margin_coin_info())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
+        productId: '81',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -82,68 +86,167 @@ repayOrderStatus| string| `P`: processing
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "repayOrderStatus": "P"  
+            "marginToken": [  
+                {  
+                    "productId": "81",  
+                    "tokenInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-500",  
+                                    "convertRatio": "0.95"  
+                                },  
+                                {  
+                                    "ladder": "500-1000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.8"  
+                                },  
+                                {  
+                                    "ladder": "2000-4000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "4000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                      ...  
+                    ]  
+                },  
+                {  
+                    "productId": "82",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.65"  
+                                },  
+                                {  
+                                    "ladder": "2000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                },  
+                {  
+                    "productId": "84",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "BTC",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "1"  
+                                },  
+                                {  
+                                    "ladder": "1000-5000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "5000-99999999999",  
+                                    "convertRatio": "0.55"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1767580441965  
+        "time": 1683276016497  
     }
 
 ---
 
-# 還款
+# 查詢保證金幣種信息
 
-您可以透過调用此接口來償還机构借贷
+提示
 
-信息
-
-  * 僅允許風險單元主UID調用此API. 要了解風險單元主UID, 可以參考請參考 [查詢風險率](/docs/zh-TW/v5/otc/ltv-convert) 裏的`parentUid`字段.
-  * 還款為異步處理, 通常需要 2–3 分鐘完成.
-  * 在發起下一筆還款前，請先透過 [查詢借貸訂單信息](/docs/zh-TW/v5/otc/repay-info) 確認還款狀態。請注意，還款紀錄會在 2–3 分鐘後才會出現在回傳結果中.
+  * 該接口在不傳入api key和secret進行鑒權時, 則返回公共數據
+  * 該接口在傳入api key和secret進行鑒權時且uid綁定了場外借貸產品, 則返回特定的保證金幣種數據
 
 
 
 ### HTTP 請求
 
-POST`/v5/ins-loan/repay-loan`
-
-重要
-
-  1. **請注意該接口僅限緊急時使用。確保您在要使用該接口還款前, 先跟客戶經理溝通**
-  2. 還款時，是從統一錢包中扣除本金金額，不包含利息。
-
-
+GET`/v5/ins-loan/ensure-tokens-convert`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-token| **true**|  string| 還款幣種  
-quantity| **true**|  string| 還款金額  
+productId| false| string| 產品ID. 若不傳，則返回所有產品的保證金幣種信息. 現貨返回折算率大於0的幣種.  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-repayOrderStatus| string| `P`: 處理中  
+marginToken| array| Object  
+> productId| string| 產品ID  
+> tokenInfo| array| 現貨保證金幣種信息  
+>> token| string| 保證金幣種  
+>> convertRatioList| array| 保證金幣種折算率列  
+>>> ladder| string| 階梯  
+>>> convertRatio| string| 折算率  
   
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/ins-loan/repay-loan HTTP/1.1  
+    GET /v5/ins-loan/ensure-tokens HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1767605784035  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-    Content-Length: 49  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_margin_coin_info())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    {  
-        "token": "USDT",  
-        "quantity": "500000"  
-    }  
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
+        productId: '81',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -151,10 +254,88 @@ repayOrderStatus| string| `P`: 處理中
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "repayOrderStatus": "P"  
+            "marginToken": [  
+                {  
+                    "productId": "81",  
+                    "tokenInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-500",  
+                                    "convertRatio": "0.95"  
+                                },  
+                                {  
+                                    "ladder": "500-1000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.8"  
+                                },  
+                                {  
+                                    "ladder": "2000-4000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "4000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                      ...  
+                    ]  
+                },  
+                {  
+                    "productId": "82",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "USDT",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "0.7"  
+                                },  
+                                {  
+                                    "ladder": "1000-2000",  
+                                    "convertRatio": "0.65"  
+                                },  
+                                {  
+                                    "ladder": "2000-99999999999",  
+                                    "convertRatio": "0.6"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                },  
+                {  
+                    "productId": "84",  
+                    "tokenInfo": [  
+                        ...  
+                        {  
+                            "token": "BTC",  
+                            "convertRatioList": [  
+                                {  
+                                    "ladder": "0-1000",  
+                                    "convertRatio": "1"  
+                                },  
+                                {  
+                                    "ladder": "1000-5000",  
+                                    "convertRatio": "0.9"  
+                                },  
+                                {  
+                                    "ladder": "5000-99999999999",  
+                                    "convertRatio": "0.55"  
+                                }  
+                            ]  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1767580441965  
+        "time": 1683276016497  
     }

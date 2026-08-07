@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/order-price-limit
 api_type: Market Data
-updated_at: 2026-08-05 19:05:10.488718
+updated_at: 2026-08-07 18:46:08.234086
 ---
 
 # Get Order Price Limit

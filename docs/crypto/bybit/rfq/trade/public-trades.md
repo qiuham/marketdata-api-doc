@@ -2,108 +2,64 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/public-trades
 api_type: Trading
-updated_at: 2026-08-05 19:07:09.208989
+updated_at: 2026-08-07 18:47:57.198524
 ---
 
-# Get RFQ Details
+# Get Quotes (real-time)
 
-Obtain historical inquiry details. **Up to 50 requests per second**
+Get real-time quote information. **Up to 50 requests per second**
 
 info
 
-  * Obtain historical RFQ information queried from the database. There may be a delay.
-  * If both rfqId and rfqLinkId are passed, only rfqId is considered.
+  * Obtain quote information sent or received by users, query from rfq-egine, without delay
+  * Pass both quoteId and quoteLinkId, with quoteId as the standard and priority: quoteId > quoteLinkId > rfqId
   * Sorted in descending order by createdAt.
+  * Return all non-final quotes
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-GET`/v5/rfq/rfq-detail-list`
+GET`/v5/rfq/quote-realtime`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 rfqId| false| string| Inquiry ID  
-rfqLinkId| false| string| Custom RFQ ID. Specifying rfqLinkId only queries data from the last 3 months  
-status| false| string| Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
-traderType| false| string| Trader type: `quote`, `request`. Default: `request`
-
-  * `request`: Inquiring party, queries RFQs sent by yourself
-  * `quote`: Quoting party, queries RFQs received by yourself
-
-  
-startTime| false| integer| Start time in milliseconds  
-endTime| false| integer| End time in milliseconds  
-limit| false| integer| Return the number of items. [`1`, `100`]. Default: `50`  
-cursor| false| string| For page turning, use the returned cursor. Use the returned original data when signing, and URLEncode when sending the request  
+quoteId| false| string| Quote ID  
+quoteLinkId| false| string| Quote custom ID, traderType is `request` , this field is invalid  
+traderType| false| string| Trader type, `quote` , `request`. Default: `quote`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object|   
-> cursor| string| Refer to the `cursor` request parameter  
-> list| array| An array of RFQs  
->> rfqId| string| Inquiry ID  
->> rfqLinkId| string| Custom RFQ ID. Sensitive customer information, not publicly disclosed. Returns empty string for the quoting party  
->> counterparties| array of strings| List of quoting parties  
->> expiresAt| string| The inquiry's expiration time (ms)  
->> strategyType| string| Inquiry label  
+list| array| An array of quotes  
+> rfqId| string| Inquiry ID  
+> rfqLinkId| string| Custom RFQ ID. Not publicly disclosed.  
+> quoteId| string| Quote ID  
+> quoteLinkId| string| Custom quote ID. Not publicly disclosed.  
+> expiresAt| string| The quote's expiration time (ms)  
+> deskCode| string| The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created  
+> anonymous| boolean| Whether the RFQ is anonymous  
 >> status| string| Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->> acceptOtherQuoteStatus| boolean| Whether to accept non-LP quotes. The default value is `false`. `false`: Default, do not accept non-LP quotes. `true`: Accept non-LP quotes  
->> execQuoteId| string| Returned for filled RFQs. The executed quote ID  
->> execQuoteSide| string| Returned for filled RFQs. The executed quote direction: `Buy` or `Sell`  
->> deskCode| string| The unique identification code of the inquiring party, not visible when `anonymous` is set to `true`  
->> anonymous| boolean| Whether the RFQ is anonymous  
+>> execQuoteSide| string| Execute the quote direction, `Buy` or `Sell` . When the quote direction is `Buy` , for maker, the execution direction is the same as the direction in legs, and opposite for taker. Conversely, the same applies  
 >> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
 >> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
->> legs| array of objects| Combination transaction  
->>> category| string| Category. Valid values include: `linear`, `option` and `spot`  
+>> quoteBuyList| array of objects| Quote `Buy` Direction  
+>>> category| string| Product type: `spot`,`linear`,`option`  
 >>> symbol| string| The unique instrument ID  
->>> side| string| Inquiry direction. Valid values are `Buy` and `Sell`  
->>> qty| string| Order quantity of the instrument  
->> hedge| array of objects| Delta Hedge leg object  
->>> category| string| Product type. Only `linear` is supported initially (perpetual / linear delivery futures)  
->>> symbol| string| Hedge contract name, e.g. `BTCUSDT` (perpetual) or `BTC-27JUN25` (linear delivery futures). The underlying asset must match the main strategy legs. Cross-asset hedging is not supported  
->>> side| string| Inquiry transaction direction: `Buy`, `Sell`  
->>> qty| string| Trade quantity. If it exceeds the position size, the position will open in the reverse direction  
->>> price| string| Taker's desired Delta Hedge execution price, passed to the market maker for reference only. The maker may override this price in `create-quote`. Price validation reuses the existing derivatives limit-price logic; out-of-range values are automatically corrected  
->> quoteList| array of objects| List of active quotes. Only returned when `traderType` is `request`  
->>> quoteId| string| Quote ID  
->>> deskCode| string| The unique identification code of the quoting party, not visible when `anonymous` is set to `true`  
->>> anonymous| boolean| Whether the quote is anonymous  
->>> status| string| Status of the quote: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->>> createdAt| string| Time (ms) when the quote is created in epoch, such as 1650380963  
->>> updatedAt| string| Time (ms) when the quote is updated in epoch, such as 1650380964  
->>> expiresAt| string| The quote's expiration time (ms)  
->>> quoteBuyList| array of objects| Quote `Buy` direction. Only returned when `traderType` is `request`  
->>>> category| string| Product type: `spot`, `linear`, `option`  
->>>> symbol| string| The unique instrument ID  
->>>> price| string| Order price in the quote currency of the instrument  
->>>> qty| string| Order quantity of the instrument  
->>>> isHedge| boolean| Whether this leg is a hedge leg  
->>> quoteSellList| array of objects| Quote `Sell` direction. Only returned when `traderType` is `request`  
->>>> category| string| Product type: `spot`, `linear`, `option`  
->>>> symbol| string| The unique instrument ID  
->>>> price| string| Order price in the quote currency of the instrument  
->>>> qty| string| Order quantity of the instrument  
->>>> isHedge| boolean| Whether this leg is a hedge leg  
->> tradeLegs| array of objects| Trade execution information. Only returns your own trade legs  
->>> category| string| Category. Valid values include: `linear`, `option` and `spot`  
->>> orderId| string| Bybit order ID  
+>>> price| string| Quote price  
+>>> qty| string| Order quantity of the instrument.  
+>>> isHedge| boolean| Whether this leg is a hedge leg  
+>> quoteSellList| array of objects| Quote `Sell` Direction  
+>>> category| string| Product type: `spot`,`linear`,`option`  
 >>> symbol| string| The unique instrument ID  
->>> side| string| Direction. Valid values are `Buy` and `Sell`  
->>> price| string| Execution price  
->>> qty| string| Execution quantity  
->>> markPrice| string| Mark price at the time of execution. For spot: index price. For options: mark price of the underlying asset  
->>> execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade  
->>> extraFees| string| Additional fees  
->>> execId| string| The unique exec (trade) ID from the exchange  
->>> resultCode| integer| The status code of this order. `0` means success  
->>> resultMessage| string| Error message for `resultCode`. Empty if `resultCode` is `0`  
->>> rejectParty| string| Empty if status is `Filled`. `Taker` or `Maker` if status is `Rejected`. `bybit` indicates an error on the Bybit side  
+>>> price| string| Quote price  
+>>> qty| string| Order quantity of the instrument.  
+>>> isHedge| boolean| Whether this leg is a hedge leg  
   
 ### Request Example
 
@@ -113,7 +69,7 @@ result| object|
 
     
     
-    GET /v5/rfq/rfq-detail-list HTTP/1.1  
+    GET /v5/rfq/quote-realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -128,7 +84,7 @@ result| object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_rfq_detail_list())  
+    print(session.get_quote_realtime())  
     
 
 ### Response Example
@@ -138,197 +94,111 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "cursor": "",  
             "list": [  
                 {  
-                    "rfqId": "1756885055799241492396882271696580",  
-                    "rfqLinkId": "V2-Integration-Test-RFQ",  
-                    "counterparties": ["SPMAKERTEST"],  
-                    "expiresAt": "1756885655801",  
-                    "strategyType": "custom",  
-                    "status": "Filled",  
-                    "acceptOtherQuoteStatus": false,  
-                    "execQuoteId": "1757405933130044334361923221559805",  
-                    "execQuoteSide": "Buy",  
-                    "deskCode": "1nu9d1",  
+                    "rfqLinkId": "",  
+                    "rfqId": "175740578143743543930777169307022",  
+                    "quoteId": "1757405933130044334361923221559805",  
+                    "quoteLinkId": "",  
+                    "expiresAt": "1757405993126",  
+                    "status": "Active",  
+                    "deskCode": "test0904",  
                     "anonymous": false,  
-                    "createdAt": "1756885055801",  
-                    "updatedAt": "1756885655802",  
-                    "legs": [  
-                        {  
-                            "category": "option",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "qty": "100"  
-                        }  
-                    ],  
-                    "hedge": [  
+                    "execQuoteSide": "",  
+                    "quoteBuyList": [  
                         {  
                             "category": "linear",  
                             "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "qty": "46",  
-                            "price": "121500.0"  
+                            "price": "113790",  
+                            "qty": "0.5",  
+                            "isHedge": false  
                         }  
                     ],  
-                    "quoteList": [  
+                    "quoteSellList": [  
                         {  
-                            "quoteId": "1757405933130044334361923221559805",  
-                            "deskCode": "SPMAKERTEST",  
-                            "anonymous": false,  
-                            "status": "Filled",  
-                            "createdAt": "1757405933126",  
-                            "updatedAt": "1757405999156",  
-                            "expiresAt": "1757405993126",  
-                            "quoteBuyList": [  
-                                {  
-                                    "category": "option",  
-                                    "symbol": "BTC-25JUL25-100000-C",  
-                                    "price": "1250.5",  
-                                    "qty": "100",  
-                                    "isHedge": false  
-                                },  
-                                {  
-                                    "category": "linear",  
-                                    "symbol": "BTCUSDT",  
-                                    "price": "121500.0",  
-                                    "qty": "46",  
-                                    "isHedge": true  
-                                }  
-                            ],  
-                            "quoteSellList": []  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "price": "110500",  
+                            "qty": "0.5",  
+                            "isHedge": false  
                         }  
                     ],  
-                    "tradeLegs": [  
-                        {  
-                            "category": "option",  
-                            "orderId": "1234567890123456789",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "price": "1250.5",  
-                            "qty": "100",  
-                            "markPrice": "1248.0",  
-                            "execFee": "0.5",  
-                            "extraFees": "",  
-                            "execId": "abcdef1234567890abcdef",  
-                            "resultCode": 0,  
-                            "resultMessage": "",  
-                            "rejectParty": ""  
-                        }  
-                    ]  
+                    "createdAt": "1757405933126",  
+                    "updatedAt": "1757405933126"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756885352116  
+        "time": 1757405978376  
     }
 
 ---
 
-# 獲取歷史詢價詳情
+# 獲取即時報價
 
-獲取歷史詢價詳情。**每秒最多 50 次請求**
+獲取即時報價資訊。**每秒最多 50 次請求**
 
 信息
 
-  * 獲取使用者發出的詢價單資訊，從資料庫查詢，存在延遲
-  * 同時傳遞 rfqId 和 rfqLinkId 時，以 rfqId 為準
-  * 根據詢價單的創建時間倒序排列並返回
+  * 獲取使用者發送或接收的報價資訊，從 rfq-engine 查詢，無延遲
+  * 同時傳遞 quoteId 和 quoteLinkId 時，以 quoteId 為準，優先順序：quoteId > quoteLinkId > rfqId
+  * 根據報價的創建時間倒序排列
+  * 返回所有非最終報價
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
 ### HTTP 請求
 
-GET`/v5/rfq/rfq-detail-list`
+GET`/v5/rfq/quote-realtime`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-rfqId| false| string| 詢價單 ID  
-rfqLinkId| false| string| 詢價單自定義 ID；指定 rfqLinkId 僅能查詢最近 3 個月的數據  
-status| false| string| 詢價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
-traderType| false| string| 交易員類型，`quote`、`request`，默認為 `request`
+rfqId| **false**|  string| 詢價單 ID  
+quoteId| **false**|  string| 報價單 ID  
+quoteLinkId| **false**|  string| 報價單自定義 ID；當 traderType 為 `request` 時，此字段無效  
+traderType| **false**|  string| 交易者類型，`quote` 或 `request`，默認為 `quote`
 
-  * `request`：詢價方，查詢自己發出的詢價單
-  * `quote`：報價方，查詢自己收到的詢價單
+  * `Request`：詢價方，查詢自己接收到的報價
+  * `Quote`：報價方，查詢自己發布的報價
 
   
-startTime| false| integer| 開始時間，毫秒  
-endTime| false| integer| 結束時間，毫秒  
-limit| false| integer| 返回條數，最大 100 條，默認 50 條  
-cursor| false| string| 翻頁標記，請使用返回的 cursor；簽名時使用返回的原始數據，發送請求時進行 URLEncode  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-> cursor| string| 翻頁標記  
-> list| Array| 詢價單數據陣列  
->> rfqId| string| 詢價單 ID  
->> rfqLinkId| string| 詢價單自定義 ID，為客戶敏感資訊，不會公開；對報價方返回空字串  
->> counterparties| Array of strings| 報價方列表  
->> expiresAt| string| 詢價單的過期時間，Unix 時間戳的毫秒格式  
->> strategyType| string| 詢價標籤  
->> status| string| 詢價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->> acceptOtherQuoteStatus| boolean| 是否接受非 LP 報價，預設值為 `false`。`false`：不接受非 LP 報價。`true`：接受非 LP 報價  
->> execQuoteId| string| 已成交的詢價單返回，執行的報價 ID  
->> execQuoteSide| string| 已成交的詢價單返回，執行的報價方向：`Buy` 或 `Sell`  
->> deskCode| string| 詢價方唯一識別代碼，詢價時 `anonymous` 設置為 `true` 時不可見  
->> anonymous| boolean| 是否匿名  
+list| Array| 報價數據陣列  
+> rfqId| string| 詢價單 ID  
+> rfqLinkId| string| 自定義詢價單 ID，客戶敏感資訊不會公開，僅返回給報價方  
+> quoteId| string| 報價單 ID  
+> quoteLinkId| string| 自定義報價單 ID，客戶敏感資訊不會公開，僅返回給詢價方  
+> expiresAt| string| 詢價單的過期時間，Unix 時間戳的毫秒格式  
+> deskCode| string| 詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見  
+> anonymous| boolean| 是否匿名  
+>> status| string| 詢價單狀態：`Active`、`PendingFill`、`Canceled`、`Filled`、`Expired`、`Failed`  
+>> execQuoteSide| string| 執行報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然  
 >> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
 >> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
->> legs| Array of objects| 詢價單交易 legs  
->>> category| string| 類型，有效值包括：`linear`、`option` 和 `spot`  
+>> quoteBuyList| array of objects| 報價 `Buy` 方向  
+>>> category| string| 產品類型：`spot`、`linear`、`option`  
 >>> symbol| string| 唯一的交易品種 ID  
->>> side| string| 詢價方向，有效值包括 `Buy` 和 `Sell`  
+>>> price| string| 報價價格  
 >>> qty| string| 交易品種的訂單數量  
->> hedge| Array of objects| Delta Hedge 腿對象  
->>> category| string| 產品類型，初期僅支持 `linear`（永續合約 / 線性交割期貨）  
->>> symbol| string| 對冲合約名稱，如 `BTCUSDT`（永續）或 `BTC-27JUN25`（線性交割期貨）。底層資產須與主策略腿（`legs`）一致，不支持跨資產對冲  
->>> side| string| 詢價單交易方向：`Buy`, `Sell`  
->>> qty| string| 交易數量，超過倉位的 Size，則反向開倉  
->>> price| string| Taker 期望的 Delta Hedge 執行價格，僅作為參考透傳給做市商；Maker 可在 `create-quote` 中覆蓋此價格。價格校驗復用主網現有衍生品限價邏輯，超限自動修正  
->> quoteList| Array of objects| 有效報價單列表，當 `traderType` 為 `request` 時才返回  
->>> quoteId| string| 報價單 ID  
->>> deskCode| string| 報價方唯一識別代碼，報價時 `anonymous` 設置為 `true` 時不可見  
->>> anonymous| boolean| 是否匿名  
->>> status| string| 報價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->>> createdAt| string| 報價創建的時間（毫秒），例如 1650380963  
->>> updatedAt| string| 報價更新的時間（毫秒），例如 1650380964  
->>> expiresAt| string| 報價單的過期時間，Unix 時間戳的毫秒格式  
->>> quoteBuyList| Array of objects| 有效報價單 Buy 方向，當 `traderType` 為 `request` 時才返回  
->>>> category| string| 產品類型：`spot`、`linear`、`option`  
->>>> symbol| string| 唯一的交易品種 ID  
->>>> price| string| 報價貨幣中的訂單價格  
->>>> qty| string| 交易品種的訂單數量  
->>>> isHedge| boolean| 是否對冲腿  
->>> quoteSellList| Array of objects| 有效報價單 Sell 方向，當 `traderType` 為 `request` 時才返回  
->>>> category| string| 產品類型：`spot`、`linear`、`option`  
->>>> symbol| string| 交易合約的名稱  
->>>> price| string| 報價價格  
->>>> qty| string| 交易品種的訂單數量  
->>>> isHedge| boolean| 是否對冲腿  
->> tradeLegs| Array of objects| 交易成功資訊，只返回自己的交易腿資訊  
->>> category| string| 類型，有效值包括：`linear`、`option` 和 `spot`  
->>> orderId| string| Bybit 訂單 ID  
+>>> isHedge| boolean| 是否對冲腿  
+>> quoteSellList| array of objects| 報價 `Sell` 方向  
+>>> category| string| 產品類型：`spot`、`linear`、`option`  
 >>> symbol| string| 唯一的交易品種 ID  
->>> side| string| 方向，有效值為 `Buy` 和 `Sell`  
->>> price| string| 執行價格  
->>> qty| string| 執行數量  
->>> markPrice| string| 成交時的 markPrice；現貨為 indexPrice；期權為標的資產的 markPrice  
->>> execFee| string| Taker 或 Maker 支付給交易所的費用（以基礎幣種計）  
->>> extraFees| string| 額外費率  
->>> execId| string| 交易所唯一成交 ID  
->>> resultCode| integer| 訂單狀態碼，`0` 表示成功  
->>> resultMessage| string| resultCode 的錯誤訊息，`resultCode` 為 `0` 時為空  
->>> rejectParty| string| 狀態為 `Filled` 時為空；狀態為 `Rejected` 時值為 `Taker` 或 `Maker`；`bybit` 表示 Bybit 側發生錯誤  
+>>> price| string| 報價價格  
+>>> qty| string| 交易品種的訂單數量  
+>>> isHedge| boolean| 是否對冲腿  
   
 ### 請求示例
     
     
-    GET /v5/rfq/rfq-detail-list HTTP/1.1  
+    GET /v5/rfq/quote-realtime HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -343,87 +213,40 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "cursor": "",  
             "list": [  
                 {  
-                    "rfqId": "1756885055799241492396882271696580",  
-                    "rfqLinkId": "V2-Integration-Test-RFQ",  
-                    "counterparties": ["SPMAKERTEST"],  
-                    "expiresAt": "1756885655801",  
-                    "strategyType": "custom",  
-                    "status": "Filled",  
-                    "acceptOtherQuoteStatus": false,  
-                    "execQuoteId": "1757405933130044334361923221559805",  
-                    "execQuoteSide": "Buy",  
-                    "deskCode": "1nu9d1",  
+                    "rfqLinkId": "",  
+                    "rfqId": "175740578143743543930777169307022",  
+                    "quoteId": "1757405933130044334361923221559805",  
+                    "quoteLinkId": "",  
+                    "expiresAt": "1757405993126",  
+                    "status": "Active",  
+                    "deskCode": "test0904",  
                     "anonymous": false,  
-                    "createdAt": "1756885055801",  
-                    "updatedAt": "1756885655802",  
-                    "legs": [  
-                        {  
-                            "category": "option",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "qty": "100"  
-                        }  
-                    ],  
-                    "hedge": [  
+                    "execQuoteSide": "",  
+                    "quoteBuyList": [  
                         {  
                             "category": "linear",  
                             "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "qty": "46",  
-                            "price": "121500.0"  
+                            "price": "113790",  
+                            "qty": "0.5",  
+                            "isHedge": false  
                         }  
                     ],  
-                    "quoteList": [  
+                    "quoteSellList": [  
                         {  
-                            "quoteId": "1757405933130044334361923221559805",  
-                            "deskCode": "SPMAKERTEST",  
-                            "anonymous": false,  
-                            "status": "Filled",  
-                            "createdAt": "1757405933126",  
-                            "updatedAt": "1757405999156",  
-                            "expiresAt": "1757405993126",  
-                            "quoteBuyList": [  
-                                {  
-                                    "category": "option",  
-                                    "symbol": "BTC-25JUL25-100000-C",  
-                                    "price": "1250.5",  
-                                    "qty": "100",  
-                                    "isHedge": false  
-                                },  
-                                {  
-                                    "category": "linear",  
-                                    "symbol": "BTCUSDT",  
-                                    "price": "121500.0",  
-                                    "qty": "46",  
-                                    "isHedge": true  
-                                }  
-                            ],  
-                            "quoteSellList": []  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "price": "110500",  
+                            "qty": "0.5",  
+                            "isHedge": false  
                         }  
                     ],  
-                    "tradeLegs": [  
-                        {  
-                            "category": "option",  
-                            "orderId": "1234567890123456789",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "price": "1250.5",  
-                            "qty": "100",  
-                            "markPrice": "1248.0",  
-                            "execFee": "0.5",  
-                            "extraFees": "",  
-                            "execId": "abcdef1234567890abcdef",  
-                            "resultCode": 0,  
-                            "resultMessage": "",  
-                            "rejectParty": ""  
-                        }  
-                    ]  
+                    "createdAt": "1757405933126",  
+                    "updatedAt": "1757405933126"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756885352116  
+        "time": 1757405978376  
     }

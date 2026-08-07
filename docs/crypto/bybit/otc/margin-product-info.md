@@ -2,65 +2,64 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-product-info
 api_type: REST
-updated_at: 2026-08-05 19:06:20.288491
+updated_at: 2026-08-07 18:47:15.583100
 ---
 
-# Repay
+# Set Auto Add Margin
 
-You can repay the INS loan by calling this API.
-
-info
-
-  * Only the designated Risk Unit UID is allowed to call this API. To obtain the designated Risk Unit UID, please refer to the `parentUid` from [Get LTV](/docs/v5/otc/ltv-convert)
-  * The repayment is processed asynchronously and usually takes 2–3 minutes.
-  * Pease confirm the repayment status via [Get Repayment Orders](/docs/v5/otc/repay-info) before initiating the next repayment. **Note** that the repayment record will not appear in the response until 2–3 minutes later.
-
-
+Turn on/off auto-add-margin for **isolated** margin position
 
 ### HTTP Request
 
-POST`/v5/ins-loan/repay-loan`
-
-IMPORTANT
-
-  1. **Please note this API can only be used when urgent. Make sure contact RM before executing**
-  2. When repay, principal amount will be deducted from Unified wallet, the interest **not include**
-
-
+POST`/v5/position/set-auto-add-margin`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-token| **true**|  string| Coin name  
-quantity| **true**|  string| The qty to be repaid  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear` (USDT Contract, USDC Contract)  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+autoAddMargin| **true**|  integer| Turn on/off. `0`: off. `1`: on  
+[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode position, this param is **required**
+
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
+
+  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-repayOrderStatus| string| `P`: processing  
-  
+None
+
+[](/docs/api-explorer/v5/position/auto-add-margin)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    POST /v5/ins-loan/repay-loan HTTP/1.1  
+    POST /v5/position/set-auto-add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1767605784035  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1675255134857  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 49  
       
     {  
-        "token": "USDT",  
-        "quantity": "500000"  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "autoAddmargin": 1,  
+        "positionIdx": null  
     }  
     
     
@@ -71,10 +70,44 @@ repayOrderStatus| string| `P`: processing
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_loan(  
-        token="USDT",  
-        quantity="500000"  
+    print(session.set_auto_add_margin(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        autoAddmargin=1,  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
+    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setAutoAddMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            autoAddMargin: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -82,68 +115,116 @@ repayOrderStatus| string| `P`: processing
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "repayOrderStatus": "P"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1767580441965  
+        "time": 1675255135069  
     }
 
 ---
 
-# 還款
+# 設置自動追加保證金
 
-您可以透過调用此接口來償還机构借贷
-
-信息
-
-  * 僅允許風險單元主UID調用此API. 要了解風險單元主UID, 可以參考請參考 [查詢風險率](/docs/zh-TW/v5/otc/ltv-convert) 裏的`parentUid`字段.
-  * 還款為異步處理, 通常需要 2–3 分鐘完成.
-  * 在發起下一筆還款前，請先透過 [查詢借貸訂單信息](/docs/zh-TW/v5/otc/repay-info) 確認還款狀態。請注意，還款紀錄會在 2–3 分鐘後才會出現在回傳結果中.
-
-
+開關自動追加保證金，僅適用於**逐倉** 保證金模式
 
 ### HTTP 請求
 
-POST`/v5/ins-loan/repay-loan`
-
-重要
-
-  1. **請注意該接口僅限緊急時使用。確保您在要使用該接口還款前, 先跟客戶經理溝通**
-  2. 還款時，是從統一錢包中扣除本金金額，不包含利息。
-
-
+POST`/v5/position/set-auto-add-margin`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-token| **true**|  string| 還款幣種  
-quantity| **true**|  string| 還款金額  
-  
-### 返回參數
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`  
+symbol| **true**|  string| 合約名稱  
+autoAddMargin| **true**|  integer| 是否自動追加保證金. `0`: 關閉. `1`: 開啟  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
 
-參數| 類型| 說明  
----|---|---  
-repayOrderStatus| string| `P`: 處理中  
+  * `0`: 單向持倉模式
+  * `1`: 買側雙向持倉模式
+  * `2`: 賣側雙向持倉模式
+
   
+[](/docs/zh-TW/api-explorer/v5/position/auto-add-margin)
+
+* * *
+
+### 響應參數
+
+無
+
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Java
+  * Node.js
+
+
     
     
-    POST /v5/ins-loan/repay-loan HTTP/1.1  
+    POST /v5/position/set-auto-add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1767605784035  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1675255134857  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 49  
       
     {  
-        "token": "USDT",  
-        "quantity": "500000"  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "autoAddmargin": 1,  
+        "positionIdx": null  
     }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_auto_add_margin(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        autoAddmargin=1,  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
+    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setAutoAddMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            autoAddMargin: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -151,10 +232,8 @@ repayOrderStatus| string| `P`: 處理中
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "repayOrderStatus": "P"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1767580441965  
+        "time": 1675255135069  
     }

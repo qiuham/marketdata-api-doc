@@ -2,108 +2,67 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/rfq-detail-list
 api_type: Trading
-updated_at: 2026-08-05 19:07:11.753643
+updated_at: 2026-08-07 18:48:02.458150
 ---
 
-# Get RFQ Details
+# Get Trade History
 
-Obtain historical inquiry details. **Up to 50 requests per second**
+Obtain transaction information. **Up to 50 requests per second**
 
 info
 
-  * Obtain historical RFQ information queried from the database. There may be a delay.
-  * If both rfqId and rfqLinkId are passed, only rfqId is considered.
-  * Sorted in descending order by createdAt.
+  * Field query priority: rfqId > rfqLinkId quoteId > quoteLinkId
 
 
 
 ### HTTP Request
 
-GET`/v5/rfq/rfq-detail-list`
+GET`/v5/rfq/trade-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 rfqId| false| string| Inquiry ID  
-rfqLinkId| false| string| Custom RFQ ID. Specifying rfqLinkId only queries data from the last 3 months  
-status| false| string| Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
-traderType| false| string| Trader type: `quote`, `request`. Default: `request`
-
-  * `request`: Inquiring party, queries RFQs sent by yourself
-  * `quote`: Quoting party, queries RFQs received by yourself
-
-  
-startTime| false| integer| Start time in milliseconds  
-endTime| false| integer| End time in milliseconds  
+rfqLinkId| false| string| Custom ID for RFQ; specify rfqLinkId to only check the last 3 months  
+quoteId| false| string| Quote ID  
+quoteLinkId| false| string| quote custom ID; specifying quoteLinkId can only check the last 3 months  
+traderType| false| string| Trader type, `quote` , `request` , default `quote`  
+status| false| string| Status : `Filled` `Failed`  
 limit| false| integer| Return the number of items. [`1`, `100`]. Default: `50`  
-cursor| false| string| For page turning, use the returned cursor. Use the returned original data when signing, and URLEncode when sending the request  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object|   
+result| Object|   
 > cursor| string| Refer to the `cursor` request parameter  
 > list| array| An array of RFQs  
 >> rfqId| string| Inquiry ID  
->> rfqLinkId| string| Custom RFQ ID. Sensitive customer information, not publicly disclosed. Returns empty string for the quoting party  
->> counterparties| array of strings| List of quoting parties  
->> expiresAt| string| The inquiry's expiration time (ms)  
+>> rfqLinkId| string| Custom RFQ ID. Not publicly disclosed.  
+>> quoteId| string| Return the completed RFQ and the executed quote id.  
+>> quoteLinkId| string| Custom quote ID. Not publicly disclosed.  
+>> quoteSide| string| Return of completed inquiry, execution of quote direction, `Buy` or `Sell`  
 >> strategyType| string| Inquiry label  
->> status| string| Status of the RFQ: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->> acceptOtherQuoteStatus| boolean| Whether to accept non-LP quotes. The default value is `false`. `false`: Default, do not accept non-LP quotes. `true`: Accept non-LP quotes  
->> execQuoteId| string| Returned for filled RFQs. The executed quote ID  
->> execQuoteSide| string| Returned for filled RFQs. The executed quote direction: `Buy` or `Sell`  
->> deskCode| string| The unique identification code of the inquiring party, not visible when `anonymous` is set to `true`  
->> anonymous| boolean| Whether the RFQ is anonymous  
+>>status| string| Status : `Filled` `Failed`  
+>> rfqDeskCode| string| The unique identification code of the inquiring party, which is not visible when anonymous was set to `true` when the RFQ was created  
+>> quoteDeskCode| string| The unique identification code of the quoting party, which is not visible when anonymous is set to `true` during quotation  
 >> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
 >> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
 >> legs| array of objects| Combination transaction  
->>> category| string| Category. Valid values include: `linear`, `option` and `spot`  
+>>> category| string| category. Valid values include: `linear`, `option` and `spot`  
+>>> orderId| string| bybit order id  
 >>> symbol| string| The unique instrument ID  
->>> side| string| Inquiry direction. Valid values are `Buy` and `Sell`  
->>> qty| string| Order quantity of the instrument  
->> hedge| array of objects| Delta Hedge leg object  
->>> category| string| Product type. Only `linear` is supported initially (perpetual / linear delivery futures)  
->>> symbol| string| Hedge contract name, e.g. `BTCUSDT` (perpetual) or `BTC-27JUN25` (linear delivery futures). The underlying asset must match the main strategy legs. Cross-asset hedging is not supported  
->>> side| string| Inquiry transaction direction: `Buy`, `Sell`  
->>> qty| string| Trade quantity. If it exceeds the position size, the position will open in the reverse direction  
->>> price| string| Taker's desired Delta Hedge execution price, passed to the market maker for reference only. The maker may override this price in `create-quote`. Price validation reuses the existing derivatives limit-price logic; out-of-range values are automatically corrected  
->> quoteList| array of objects| List of active quotes. Only returned when `traderType` is `request`  
->>> quoteId| string| Quote ID  
->>> deskCode| string| The unique identification code of the quoting party, not visible when `anonymous` is set to `true`  
->>> anonymous| boolean| Whether the quote is anonymous  
->>> status| string| Status of the quote: `Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->>> createdAt| string| Time (ms) when the quote is created in epoch, such as 1650380963  
->>> updatedAt| string| Time (ms) when the quote is updated in epoch, such as 1650380964  
->>> expiresAt| string| The quote's expiration time (ms)  
->>> quoteBuyList| array of objects| Quote `Buy` direction. Only returned when `traderType` is `request`  
->>>> category| string| Product type: `spot`, `linear`, `option`  
->>>> symbol| string| The unique instrument ID  
->>>> price| string| Order price in the quote currency of the instrument  
->>>> qty| string| Order quantity of the instrument  
->>>> isHedge| boolean| Whether this leg is a hedge leg  
->>> quoteSellList| array of objects| Quote `Sell` direction. Only returned when `traderType` is `request`  
->>>> category| string| Product type: `spot`, `linear`, `option`  
->>>> symbol| string| The unique instrument ID  
->>>> price| string| Order price in the quote currency of the instrument  
->>>> qty| string| Order quantity of the instrument  
->>>> isHedge| boolean| Whether this leg is a hedge leg  
->> tradeLegs| array of objects| Trade execution information. Only returns your own trade legs  
->>> category| string| Category. Valid values include: `linear`, `option` and `spot`  
->>> orderId| string| Bybit order ID  
->>> symbol| string| The unique instrument ID  
->>> side| string| Direction. Valid values are `Buy` and `Sell`  
+>>> side| string| Direction, valid values are `Buy` and `Sell`  
 >>> price| string| Execution price  
->>> qty| string| Execution quantity  
->>> markPrice| string| Mark price at the time of execution. For spot: index price. For options: mark price of the underlying asset  
->>> execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade  
->>> extraFees| string| Additional fees  
->>> execId| string| The unique exec (trade) ID from the exchange  
->>> resultCode| integer| The status code of this order. `0` means success  
->>> resultMessage| string| Error message for `resultCode`. Empty if `resultCode` is `0`  
->>> rejectParty| string| Empty if status is `Filled`. `Taker` or `Maker` if status is `Rejected`. `bybit` indicates an error on the Bybit side  
+>>> qty| string| Number of executions  
+>>> markPrice| string| The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.  
+>>> execFee| string| The fee for taker or maker in the base currency paid to the Exchange executing the Block Trade.  
+>>> execId| string| The unique exec(trade) ID from the exchange  
+>>> resultCode| integer| The status code of the this order. "0" means success  
+>>> resultMessage| string| Error message about resultCode. If resultCode is "0", resultMessage is "".  
+>>> rejectParty| string| Empty if status is `Filled`. Valid values: `Taker` or `Maker` if status is `Rejected`, "rejectParty='bybit'" to indicate errors that occur on the Bybit side.  
   
 ### Request Example
 
@@ -113,7 +72,7 @@ result| object|
 
     
     
-    GET /v5/rfq/rfq-detail-list HTTP/1.1  
+    GET /v5/rfq/trade-list HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -128,7 +87,7 @@ result| object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_rfq_detail_list())  
+    print(session.get_trade_list())  
     
 
 ### Response Example
@@ -141,194 +100,122 @@ result| object|
             "cursor": "",  
             "list": [  
                 {  
-                    "rfqId": "1756885055799241492396882271696580",  
-                    "rfqLinkId": "V2-Integration-Test-RFQ",  
-                    "counterparties": ["SPMAKERTEST"],  
-                    "expiresAt": "1756885655801",  
-                    "strategyType": "custom",  
-                    "status": "Filled",  
-                    "acceptOtherQuoteStatus": false,  
-                    "execQuoteId": "1757405933130044334361923221559805",  
-                    "execQuoteSide": "Buy",  
-                    "deskCode": "1nu9d1",  
-                    "anonymous": false,  
-                    "createdAt": "1756885055801",  
-                    "updatedAt": "1756885655802",  
+                    "rfqId": "1755159541420049734454484077021786",  
+                    "quoteId": "175515955714692291558309160384918",  
+                    "quoteSide": "Buy",  
+                    "strategyType": "PerpBasis",  
+                    "status": "Failed",  
+                    "rfqDeskCode": "1nu9d1",  
+                    "quoteDeskCode": "lines100412673",  
                     "legs": [  
                         {  
-                            "category": "option",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "qty": "100"  
-                        }  
-                    ],  
-                    "hedge": [  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT-15AUG25",  
+                            "side": "Sell",  
+                            "price": "108887",  
+                            "qty": "1",  
+                            "orderId": "db852bcd-052e-49b7-ba10-059622e1219b",  
+                            "markPrice": "",  
+                            "execFee": "0",  
+                            "execId": "",  
+                            "resultCode": 111002,  
+                            "resultMessage": "Rejected caused by another legs",  
+                            "rejectParty": ""  
+                        },  
                         {  
                             "category": "linear",  
                             "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "qty": "46",  
-                            "price": "121500.0"  
-                        }  
-                    ],  
-                    "quoteList": [  
-                        {  
-                            "quoteId": "1757405933130044334361923221559805",  
-                            "deskCode": "SPMAKERTEST",  
-                            "anonymous": false,  
-                            "status": "Filled",  
-                            "createdAt": "1757405933126",  
-                            "updatedAt": "1757405999156",  
-                            "expiresAt": "1757405993126",  
-                            "quoteBuyList": [  
-                                {  
-                                    "category": "option",  
-                                    "symbol": "BTC-25JUL25-100000-C",  
-                                    "price": "1250.5",  
-                                    "qty": "100",  
-                                    "isHedge": false  
-                                },  
-                                {  
-                                    "category": "linear",  
-                                    "symbol": "BTCUSDT",  
-                                    "price": "121500.0",  
-                                    "qty": "46",  
-                                    "isHedge": true  
-                                }  
-                            ],  
-                            "quoteSellList": []  
-                        }  
-                    ],  
-                    "tradeLegs": [  
-                        {  
-                            "category": "option",  
-                            "orderId": "1234567890123456789",  
-                            "symbol": "BTC-25JUL25-100000-C",  
                             "side": "Buy",  
-                            "price": "1250.5",  
-                            "qty": "100",  
-                            "markPrice": "1248.0",  
-                            "execFee": "0.5",  
-                            "extraFees": "",  
-                            "execId": "abcdef1234567890abcdef",  
-                            "resultCode": 0,  
-                            "resultMessage": "",  
-                            "rejectParty": ""  
+                            "price": "132038",  
+                            "qty": "1",  
+                            "orderId": "69667acb-7048-48d7-90b9-ccbdfd423130",  
+                            "markPrice": "",  
+                            "execFee": "0",  
+                            "execId": "",  
+                            "resultCode": 110007,  
+                            "resultMessage": "Insufficient available balance",  
+                            "rejectParty": "taker"  
                         }  
-                    ]  
+                    ],  
+                    "createdAt": "1755159541421",  
+                    "updatedAt": "1755159654501"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756885352116  
+        "time": 1756891941267  
     }
 
 ---
 
-# 獲取歷史詢價詳情
+# 獲取交易資訊
 
-獲取歷史詢價詳情。**每秒最多 50 次請求**
+獲取交易資訊。**每秒最多 50 次請求**
 
 信息
 
-  * 獲取使用者發出的詢價單資訊，從資料庫查詢，存在延遲
-  * 同時傳遞 rfqId 和 rfqLinkId 時，以 rfqId 為準
-  * 根據詢價單的創建時間倒序排列並返回
+  * 字段查詢優先級：rfqId > rfqLinkId > quoteId > quoteLinkId
 
 
 
 ### HTTP 請求
 
-GET`/v5/rfq/rfq-detail-list`
+GET`/v5/rfq/trade-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-rfqId| false| string| 詢價單 ID  
-rfqLinkId| false| string| 詢價單自定義 ID；指定 rfqLinkId 僅能查詢最近 3 個月的數據  
-status| false| string| 詢價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
-traderType| false| string| 交易員類型，`quote`、`request`，默認為 `request`
+rfqId| **false**|  string| 詢價單 ID  
+rfqLinkId| **false**|  string| 自定義詢價單 ID；指定 rfqLinkId 僅能查詢最近 3 個月的數據  
+quoteId| **false**|  string| 報價單 ID  
+quoteLinkId| **false**|  string| 自定義報價單 ID；指定 quoteLinkId 僅能查詢最近 3 個月的數據  
+traderType| **false**|  string| 交易者類型，`quote` 或 `request`，默認為 `quote`
 
-  * `request`：詢價方，查詢自己發出的詢價單
-  * `quote`：報價方，查詢自己收到的詢價單
+  * `Request`：詢價方，查詢自己詢價單的成功交易
+  * `Quote`：報價方，查詢自己報價單的成功交易
 
   
-startTime| false| integer| 開始時間，毫秒  
-endTime| false| integer| 結束時間，毫秒  
-limit| false| integer| 返回條數，最大 100 條，默認 50 條  
-cursor| false| string| 翻頁標記，請使用返回的 cursor；簽名時使用返回的原始數據，發送請求時進行 URLEncode  
+status| false| string| 狀態：`Filled` 或 `Failed`  
+limit| **false**|  integer| 返回的項目數量，最多 100 項，默認 50 項  
+cursor| **false**|  string| 分頁標記，請使用返回的 cursor，簽名時使用返回的原始數據，發送請求時進行 URLEncode  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-> cursor| string| 翻頁標記  
+result| Object|   
+> cursor| string| 分頁標記  
 > list| Array| 詢價單數據陣列  
 >> rfqId| string| 詢價單 ID  
->> rfqLinkId| string| 詢價單自定義 ID，為客戶敏感資訊，不會公開；對報價方返回空字串  
->> counterparties| Array of strings| 報價方列表  
->> expiresAt| string| 詢價單的過期時間，Unix 時間戳的毫秒格式  
+>> rfqLinkId| string| 自定義詢價單 ID，客戶敏感資訊不會公開，僅返回給報價方。  
+>> quoteId| string| 返回已完成的詢價單及執行的報價單 ID  
+>> quoteLinkId| string| 自定義報價單 ID，客戶敏感資訊不會公開，僅返回給詢價方。  
+>> quoteSide| string| 返回已完成詢價單的執行方向，`Buy` 或 `Sell`  
 >> strategyType| string| 詢價標籤  
->> status| string| 詢價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->> acceptOtherQuoteStatus| boolean| 是否接受非 LP 報價，預設值為 `false`。`false`：不接受非 LP 報價。`true`：接受非 LP 報價  
->> execQuoteId| string| 已成交的詢價單返回，執行的報價 ID  
->> execQuoteSide| string| 已成交的詢價單返回，執行的報價方向：`Buy` 或 `Sell`  
->> deskCode| string| 詢價方唯一識別代碼，詢價時 `anonymous` 設置為 `true` 時不可見  
->> anonymous| boolean| 是否匿名  
+>> status| string| 狀態：`Filled` 或 `Failed`  
+>> rfqDeskCode| string| 詢價方的唯一識別代碼，若詢價時設置匿名為 `true` 則不可見  
+>> quoteDeskCode| string| 報價方的唯一識別代碼，若報價時設置匿名為 `true` 則不可見  
 >> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
 >> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
->> legs| Array of objects| 詢價單交易 legs  
->>> category| string| 類型，有效值包括：`linear`、`option` 和 `spot`  
->>> symbol| string| 唯一的交易品種 ID  
->>> side| string| 詢價方向，有效值包括 `Buy` 和 `Sell`  
->>> qty| string| 交易品種的訂單數量  
->> hedge| Array of objects| Delta Hedge 腿對象  
->>> category| string| 產品類型，初期僅支持 `linear`（永續合約 / 線性交割期貨）  
->>> symbol| string| 對冲合約名稱，如 `BTCUSDT`（永續）或 `BTC-27JUN25`（線性交割期貨）。底層資產須與主策略腿（`legs`）一致，不支持跨資產對冲  
->>> side| string| 詢價單交易方向：`Buy`, `Sell`  
->>> qty| string| 交易數量，超過倉位的 Size，則反向開倉  
->>> price| string| Taker 期望的 Delta Hedge 執行價格，僅作為參考透傳給做市商；Maker 可在 `create-quote` 中覆蓋此價格。價格校驗復用主網現有衍生品限價邏輯，超限自動修正  
->> quoteList| Array of objects| 有效報價單列表，當 `traderType` 為 `request` 時才返回  
->>> quoteId| string| 報價單 ID  
->>> deskCode| string| 報價方唯一識別代碼，報價時 `anonymous` 設置為 `true` 時不可見  
->>> anonymous| boolean| 是否匿名  
->>> status| string| 報價單狀態：`Active` `PendingFill` `Canceled` `Filled` `Expired` `Failed`  
->>> createdAt| string| 報價創建的時間（毫秒），例如 1650380963  
->>> updatedAt| string| 報價更新的時間（毫秒），例如 1650380964  
->>> expiresAt| string| 報價單的過期時間，Unix 時間戳的毫秒格式  
->>> quoteBuyList| Array of objects| 有效報價單 Buy 方向，當 `traderType` 為 `request` 時才返回  
->>>> category| string| 產品類型：`spot`、`linear`、`option`  
->>>> symbol| string| 唯一的交易品種 ID  
->>>> price| string| 報價貨幣中的訂單價格  
->>>> qty| string| 交易品種的訂單數量  
->>>> isHedge| boolean| 是否對冲腿  
->>> quoteSellList| Array of objects| 有效報價單 Sell 方向，當 `traderType` 為 `request` 時才返回  
->>>> category| string| 產品類型：`spot`、`linear`、`option`  
->>>> symbol| string| 交易合約的名稱  
->>>> price| string| 報價價格  
->>>> qty| string| 交易品種的訂單數量  
->>>> isHedge| boolean| 是否對冲腿  
->> tradeLegs| Array of objects| 交易成功資訊，只返回自己的交易腿資訊  
+>> legs| Array of objects| 組合交易  
 >>> category| string| 類型，有效值包括：`linear`、`option` 和 `spot`  
 >>> orderId| string| Bybit 訂單 ID  
 >>> symbol| string| 唯一的交易品種 ID  
->>> side| string| 方向，有效值為 `Buy` 和 `Sell`  
+>>> side| string| 方向，有效值包括 `Buy` 和 `Sell`  
 >>> price| string| 執行價格  
 >>> qty| string| 執行數量  
->>> markPrice| string| 成交時的 markPrice；現貨為 indexPrice；期權為標的資產的 markPrice  
->>> execFee| string| Taker 或 Maker 支付給交易所的費用（以基礎幣種計）  
->>> extraFees| string| 額外費率  
->>> execId| string| 交易所唯一成交 ID  
->>> resultCode| integer| 訂單狀態碼，`0` 表示成功  
->>> resultMessage| string| resultCode 的錯誤訊息，`resultCode` 為 `0` 時為空  
->>> rejectParty| string| 狀態為 `Filled` 時為空；狀態為 `Rejected` 時值為 `Taker` 或 `Maker`；`bybit` 表示 Bybit 側發生錯誤  
+>>> markPrice| string| 交易時的期貨標記價格，現貨為指數價格，期權為標的價格的標記價格  
+>>> execFee| string| 支付給執行該交易的交易所的基礎貨幣的 taker 或 maker 費用  
+>>> execId| string| 交易所唯一的執行交易 ID  
+>>> resultCode| integer| 該訂單的狀態碼，"0" 表示成功  
+>>> resultMessage| string| 關於 resultCode 的錯誤信息。如果 resultCode 為 "0"，則 resultMessage 為空字符串  
+>>> rejectParty| string| 若狀態為 `Filled` 則為空。若狀態為 `Rejected`，有效值包括 `Taker` 或 `Maker`，"rejectParty='bybit'" 表示錯誤發生在 Bybit 端。  
   
 ### 請求示例
     
     
-    GET /v5/rfq/rfq-detail-list HTTP/1.1  
+    GET /v5/rfq/trade-list HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1676430842094  
@@ -346,84 +233,48 @@ result| object|
             "cursor": "",  
             "list": [  
                 {  
-                    "rfqId": "1756885055799241492396882271696580",  
-                    "rfqLinkId": "V2-Integration-Test-RFQ",  
-                    "counterparties": ["SPMAKERTEST"],  
-                    "expiresAt": "1756885655801",  
-                    "strategyType": "custom",  
-                    "status": "Filled",  
-                    "acceptOtherQuoteStatus": false,  
-                    "execQuoteId": "1757405933130044334361923221559805",  
-                    "execQuoteSide": "Buy",  
-                    "deskCode": "1nu9d1",  
-                    "anonymous": false,  
-                    "createdAt": "1756885055801",  
-                    "updatedAt": "1756885655802",  
+                    "rfqId": "1755159541420049734454484077021786",  
+                    "quoteId": "175515955714692291558309160384918",  
+                    "quoteSide": "Buy",  
+                    "strategyType": "PerpBasis",  
+                    "status": "Failed",  
+                    "rfqDeskCode": "1nu9d1",  
+                    "quoteDeskCode": "lines100412673",  
                     "legs": [  
                         {  
-                            "category": "option",  
-                            "symbol": "BTC-25JUL25-100000-C",  
-                            "side": "Buy",  
-                            "qty": "100"  
-                        }  
-                    ],  
-                    "hedge": [  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT-15AUG25",  
+                            "side": "Sell",  
+                            "price": "108887",  
+                            "qty": "1",  
+                            "orderId": "db852bcd-052e-49b7-ba10-059622e1219b",  
+                            "markPrice": "",  
+                            "execFee": "0",  
+                            "execId": "",  
+                            "resultCode": 111002,  
+                            "resultMessage": "Rejected caused by another legs",  
+                            "rejectParty": ""  
+                        },  
                         {  
                             "category": "linear",  
                             "symbol": "BTCUSDT",  
-                            "side": "Sell",  
-                            "qty": "46",  
-                            "price": "121500.0"  
-                        }  
-                    ],  
-                    "quoteList": [  
-                        {  
-                            "quoteId": "1757405933130044334361923221559805",  
-                            "deskCode": "SPMAKERTEST",  
-                            "anonymous": false,  
-                            "status": "Filled",  
-                            "createdAt": "1757405933126",  
-                            "updatedAt": "1757405999156",  
-                            "expiresAt": "1757405993126",  
-                            "quoteBuyList": [  
-                                {  
-                                    "category": "option",  
-                                    "symbol": "BTC-25JUL25-100000-C",  
-                                    "price": "1250.5",  
-                                    "qty": "100",  
-                                    "isHedge": false  
-                                },  
-                                {  
-                                    "category": "linear",  
-                                    "symbol": "BTCUSDT",  
-                                    "price": "121500.0",  
-                                    "qty": "46",  
-                                    "isHedge": true  
-                                }  
-                            ],  
-                            "quoteSellList": []  
-                        }  
-                    ],  
-                    "tradeLegs": [  
-                        {  
-                            "category": "option",  
-                            "orderId": "1234567890123456789",  
-                            "symbol": "BTC-25JUL25-100000-C",  
                             "side": "Buy",  
-                            "price": "1250.5",  
-                            "qty": "100",  
-                            "markPrice": "1248.0",  
-                            "execFee": "0.5",  
-                            "extraFees": "",  
-                            "execId": "abcdef1234567890abcdef",  
-                            "resultCode": 0,  
-                            "resultMessage": "",  
-                            "rejectParty": ""  
+                            "price": "132038",  
+                            "qty": "1",  
+                            "orderId": "69667acb-7048-48d7-90b9-ccbdfd423130",  
+                            "markPrice": "",  
+                            "execFee": "0",  
+                            "execId": "",  
+                            "resultCode": 110007,  
+                            "resultMessage": "Insufficient available balance",  
+                            "rejectParty": "taker"  
                         }  
-                    ]  
+                    ],  
+                    "createdAt": "1755159541421",  
+                    "updatedAt": "1755159654501"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756885352116  
+        "time": 1756891941267  
     }

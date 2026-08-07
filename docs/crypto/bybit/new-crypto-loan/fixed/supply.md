@@ -2,43 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/supply
 api_type: REST
-updated_at: 2026-08-05 19:05:40.332785
+updated_at: 2026-08-07 18:46:35.874035
 ---
 
-# Get Supply Order Info
+# Get Lending Market
 
-> Permission: "Spot trade"  
->  UID rate limit: 5 req / second
+info
+
+Does not need authentication.
+
+If you want to supply, you can use this endpoint to check whether there are any suitable counterparty borrow orders available.
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/supply-order-info`
+GET`/v5/crypto-loan-fixed/supply-order-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Supply order ID  
-orderCurrency| false| string| Supply coin name  
-state| false| string| Supply order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled  
+orderCurrency| **true**|  string| Coin name  
 term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+orderBy| **true**|  string| Order by, `apy`: annual rate; `term`; `quantity`  
+sort| false| integer| `0`: ascend, default; `1`: descend  
+limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> annualRate| string| Annual rate for the supply  
-> orderId| long| Supply order ID  
-> orderTime| string| Order created time  
-> filledQty| string| Filled qty  
-> orderQty| string| Order qty  
 > orderCurrency| string| Coin name  
-> state| integer| Supply order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: fail  
 > term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+> annualRate| string| Annual rate  
+> qty| string| Quantity  
   
 ### Request Example
 
@@ -49,12 +46,8 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-fixed/supply-order-info?orderId=13564 HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752655992606  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
@@ -64,8 +57,9 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_lending_orders_fixed_crypto_loan(  
-        orderId="13564",  
+    print(session.get_lending_market_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderBy="apy",  
     ))  
     
     
@@ -82,58 +76,56 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "result": {  
             "list": [  
                 {  
-                    "annualRate": "0.01",  
-                    "filledQty": "800",  
+                    "annualRate": "0.02",  
                     "orderCurrency": "USDT",  
-                    "orderId": 13564,  
-                    "orderQty": "1020",  
-                    "orderTime": "1752482751043",  
-                    "state": 2,  
+                    "qty": "1000.1234",  
+                    "term": 60  
+                },  
+                {  
+                    "annualRate": "0.022",  
+                    "orderCurrency": "USDT",  
+                    "qty": "212.1234",  
                     "term": 7  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752655993869  
+        "time": 1752652136224  
     }
 
 ---
 
-# 查詢個人存款訂單
+# 查詢可存市場
 
-> 權限: "現貨"  
->  頻率: 5次/秒
+信息
+
+公共接口, 無需鑒權
+
+如果您是存款方, 可通過該接口查詢到市場上可匹配的借款單報價
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/supply-order-info`
+GET`/v5/crypto-loan-fixed/supply-order-quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 存款訂單 ID  
-orderCurrency| false| string| 存款幣種名稱  
-state| false| string| 存款訂單狀態，`1`: 等待匹配; `2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消  
+orderCurrency| **true**|  string| 幣種名稱  
 term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+orderBy| **true**|  string| 排序依據，`apy`: 年化利率；`term`: 期限；`quantity`: 數量  
+sort| false| integer| `0`: 升序，預設；`1`: 降序  
 limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> annualRate| string| 存款年化利率  
-> orderId| long| 存款訂單 ID  
-> orderTime| string| 訂單建立時間  
-> filledQty| string| 成交數量  
-> orderQty| string| 訂單數量  
 > orderCurrency| string| 幣種名稱  
-> state| integer| 存款訂單狀態，`1`: 等待匹配；`2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消；`5`: 失敗  
 > term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-nextPageCursor| string| 下一頁游標  
+> annualRate| string| 年化利率  
+> qty| string| 數量  
   
 ### 請求示例
 
@@ -144,12 +136,8 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-fixed/supply-order-info?orderId=13564 HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752655992606  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
@@ -159,8 +147,9 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_lending_orders_fixed_crypto_loan(  
-        orderId="13564",  
+    print(session.get_lending_market_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderBy="apy",  
     ))  
     
     
@@ -177,18 +166,19 @@ nextPageCursor| string| 下一頁游標
         "result": {  
             "list": [  
                 {  
-                    "annualRate": "0.01",  
-                    "filledQty": "800",  
+                    "annualRate": "0.02",  
                     "orderCurrency": "USDT",  
-                    "orderId": 13564,  
-                    "orderQty": "1020",  
-                    "orderTime": "1752482751043",  
-                    "state": 2,  
+                    "qty": "1000.1234",  
+                    "term": 60  
+                },  
+                {  
+                    "annualRate": "0.022",  
+                    "orderCurrency": "USDT",  
+                    "qty": "212.1234",  
                     "term": 7  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752655993869  
+        "time": 1752652136224  
     }

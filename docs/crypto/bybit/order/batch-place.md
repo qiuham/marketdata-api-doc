@@ -2,102 +2,72 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/batch-place
 api_type: Trading
-updated_at: 2026-08-05 19:06:00.778979
+updated_at: 2026-08-07 18:46:57.790971
 ---
 
-# Cancel All Orders
-
-Cancel all open orders
+# Set Disconnect Cancel All
 
 info
 
-  * Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, the system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
-  * **NOTE** : category=_option_ , you can cancel all option open orders without passing any of those three params. However, for "linear" and "inverse", you must specify one of those three params.
-  * **NOTE** : category=_spot_ , you can cancel all spot open orders (normal order by default) without passing other params.
+## What is Disconnection Protect (DCP)?
+
+Based on the websocket private connection and heartbeat mechanism, Bybit provides disconnection protection function. The timing starts from the first disconnection. If the Bybit server does not receive the reconnection from the client for more than 10 (default) seconds and resumes the heartbeat "ping", then the client is in the state of "disconnection protect", all active **futures / spot / option** orders of the client will be cancelled automatically. If within 10 seconds, the client reconnects and resumes the heartbeat "ping", the timing will be reset and restarted at the next disconnection.
+
+## How to enable DCP
+
+  * If you need to turn it on/off, you can contact your client manager for consultation and application. The default time window is 10 seconds.
+  * DCP feature is only available for Ins clients. VIP clients cannot access this feature
 
 
 
-info
+## Applicable
 
-**Spot** : no limit  
-**Futures** : cancel up to 500 orders (System **picks up 500 orders randomly to cancel** when you have over 500 orders)  
-**Options** : no limit
+Effective for **Inverse Perp / Inverse Futures / USDT Perp / USDT Futures / USDC Perp / USDC Futures / Spot / options**
+
+tip
+
+After the request is successfully sent, the system needs a certain time to take effect. It is recommended to query or set again after 10 seconds
+
+  * You can use [this endpoint](/docs/v5/account/dcp-info) to get your current DCP configuration.
+  * Your private websocket connection **must** subscribe ["dcp" topic](/docs/v5/websocket/private/dcp) in order to trigger DCP successfully
+
+
 
 ### HTTP Request
 
-POST`/v5/order/cancel-all`
+POST`/v5/order/disconnected-cancel-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `inverse`, `spot`, `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-`linear`&`inverse`: **Required** if not passing baseCoin or settleCoin  
-baseCoin| false| string| Base coin, uppercase only. `linear` & `inverse`: If cancel all by baseCoin, it will cancel all of the corresponding category's orders. **Required** if not passing symbol or settleCoin  
-settleCoin| false| string| Settle coin, uppercase only 
-
-  * `linear` & `inverse`: **Required** if not passing symbol or baseCoin
-  * `option`: USDT or USDC
-  * Not support `spot`
-
+product| false| string| `OPTIONS`(default), `DERIVATIVES`, `SPOT`  
+timeWindow| **true**|  integer| Disconnection timing window time. [`3`, `300`], unit: second  
   
-orderFilter| false| string| 
-
-  * category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`, `OcoOrder`, `BidirectionalTpslOrder`  
-If not passed, `Order` by default
-  * category=`linear` or `inverse`, you can pass `Order`, `StopOrder`,`OpenOrder`  
-If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order
-  * category=`option`, you can pass `Order`,`StopOrder`  
-If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order
-
-  
-[stopOrderType](/docs/v5/enum#stopordertype)| false| string| Stop order type `Stop`
-
-  * Only used for category=`linear` or `inverse` and orderFilter=`StopOrder`,you can cancel conditional orders except TP/SL order and Trailing stop orders with this param
-
-  
-  
-info
-
-The acknowledgement of create/amend/cancel order requests indicates that the request was sucessfully accepted. The request is asynchronous so please use the websocket to confirm the order status.
-
-[](/docs/api-explorer/v5/trade/cancel-all)
-
-* * *
-
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-list| array| Object  
-> orderId| string| Order ID  
-> orderLinkId| string| User customised order ID  
-success| string| "1": success, "0": fail. [UTA1.0](/docs/v5/acct-mode#uta-10) (inverse) does not return this field  
-  
+None
+
 ### Request Example
 
   * HTTP
   * Python
   * Java
-  * .Net
   * Node.js
 
 
     
     
-    POST /v5/order/cancel-all HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST v5/order/disconnected-cancel-all HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672219779140  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1675852742375  
+    X-BAPI-RECV-WINDOW: 50000  
     Content-Type: application/json  
       
     {  
-      "category": "linear",  
-      "symbol": null,  
-      "settleCoin": "USDT"  
+      "timeWindow": 40  
     }  
     
     
@@ -108,29 +78,20 @@ success| string| "1": success, "0": fail. [UTA1.0](/docs/v5/acct-mode#uta-10) (i
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_all_orders(  
-        category="linear",  
-        settleCoin="USDT",  
+    print(session.set_dcp(  
+        timeWindow=40,  
     ))  
     
     
     
-    import com.bybit.api.client.restApi.BybitApiTradeRestClient;  
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
     import com.bybit.api.client.domain.*;  
     import com.bybit.api.client.domain.trade.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
-    BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");  
-    BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();  
-    var cancelAllOrdersRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).baseCoin("USDT").build();  
-    client.cancelAllOrder(cancelAllOrdersRequest, System.out::println);  
-    
-    
-    
-    using bybit.net.api.ApiServiceImp;  
-    using bybit.net.api.Models.Trade;  
-    BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");  
-    var orderInfoString = await TradeService.CancelAllOrder(category: Category.LINEAR, baseCoin:"USDT");  
-    Console.WriteLine(orderInfoString);  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
+    var setDcpOptionsRequest = TradeOrderRequest.builder().timeWindow(40).build();  
+    System.out.println(client.setDisconnectCancelAllTime(setDcpOptionsRequest));  
     
     
     
@@ -143,10 +104,7 @@ success| string| "1": success, "0": fail. [UTA1.0](/docs/v5/acct-mode#uta-10) (i
     });  
       
     client  
-        .cancelAllOrders({  
-        category: 'linear',  
-        settleCoin: 'USDT',  
-        })  
+        .setDisconnectCancelAllWindow('option', 40)  
         .then((response) => {  
             console.log(response);  
         })  
@@ -160,121 +118,74 @@ success| string| "1": success, "0": fail. [UTA1.0](/docs/v5/acct-mode#uta-10) (i
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "orderId": "1616024329462743808",  
-                    "orderLinkId": "1616024329462743809"  
-                },  
-                {  
-                    "orderId": "1616024287544869632",  
-                    "orderLinkId": "1616024287544869633"  
-                }  
-            ],  
-            "success": "1"  
-        },  
-        "retExtInfo": {},  
-        "time": 1707381118116  
+        "retMsg": "success"  
     }
 
 ---
 
-# 撤銷所有訂單
+# 設置斷線保護時間
 
 信息
 
-  * 支持按照symbol/baseCoin/settleCoin撤銷訂單，若您傳入了多個參數組合, 系統僅會處理其中一個參數，其中優先級為`symbol` > `baseCoin` > `settleCoin`.
-  * **注意** : 當`category`=_option_ , 您可以不傳人三個參數中的任何一個，就能取消所有期權的委託單。但是, 對於`linear`和`inverse`, 您必需指定三個參數的其中一個。
-  * **注意** : 當`category`=_spot_ , 您可以不傳人任何參數，就能取消所有現貨的委託單 (默認普通單)。
+## 什麼是斷線保護 (Disconnection Protect)?
+
+Bybit基於websocket私有連接和心跳機制，提供斷線保護功能。這計時從第一次斷開開始。如果Bybit服務器在一段時間內沒有收到客戶端的重連超過10秒（默認）並 恢復心跳“ping”，則客戶端處於“斷線保護”狀態，客戶所有活躍的**合約 / 現貨 / 期權** 訂單將自動取消。如果在 10 秒內，客戶端重新連接並恢復心跳“ping”，計時會在下次斷線 時重置並重新開始。
+
+## 如何啟用斷線保護
+
+  * 若您需要開啟/關閉斷線保護功能, 您可以諮詢客戶經理. 開啟後，默認的斷線保護時間為10秒。
+  * DCP 功能僅適用於 Ins 用戶，VIP 用戶無法使用此功能。
 
 
 
-信息
+## 適用對象
 
-**現貨** : 無限制  
-**期貨** : 最多取消500單 (當您訂單數量超過500單時, 系統會**隨機挑選500單** 進行取消)  
-**期權** : 統無限制
+作用於**幣本位合約 / U本位合約 / 現貨 / 期權**
+
+提示
+
+API請求發送成功後，系統需要一定的時間才能生效。建議10秒後再查詢或設置。
+
+  * 您可以使用該[接口](/docs/zh-TW/v5/account/dcp-info)來查詢當前DCP配置
+  * 您的私有連接**必須** 訂閱[斷線保護](/docs/zh-TW/v5/websocket/private/dcp), 才能確保DCP功能被觸發
+
+
 
 ### HTTP請求
 
-POST`/v5/order/cancel-all`
+POST`/v5/order/disconnected-cancel-all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`, `linear`, `inverse`, `option`  
-symbol| false| string| 合約名稱  
-對於`linear` & `inverse`: 若不傳`baseCoin`和`settleCoin`, 該字段**必傳**  
-baseCoin| false| string| 交易幣種 
-
-  * `linear` & `inverse`: 當通過baseCoin來全部撤單時, 會將對應category的訂單全部撤掉。若不傳`symbol`和`baseCoin`, 則該字段**必傳**
-
+product| false| string| `OPTIONS`(默認), `DERIVATIVES`, `SPOT`  
+timeWindow| **true**|  integer| 斷線保護時間窗口. [`3`, `300`], 單位: 秒  
   
-settleCoin| false| string| 結算幣種 
-
-  * 對於`linear` & `inverse`: 該字段**必傳** , 若不傳`symbol`和`baseCoin`
-  * `option`: USDC或者USDT
-  * 該字段不支持`spot`
-
-  
-orderFilter| false| string| 
-
-  * category=`spot`, 該字段可以傳:   
-`Order`(普通單), `tpslOrder`(止盈止損單)  
-`StopOrder`(條件單), `OcoOrder`  
-`BidirectionalTpslOrder`(現貨雙向止盈止損訂單)  
-若不傳, 則默認是撤掉`Order`單
-  * 當category=`linear` 或者 `inverse`, 該字段可以傳`Order`(普通單), `StopOrder`(條件單, 包括止盈止損單和追蹤出場單), `OpenOrder`(僅取消開倉單). 若不傳, 則所有類型的訂單都會被撤掉
-  * 當category=`option`, 該字段可以傳`Order`,`StopOrder`, 若不傳, 則撤掉這兩種類型下所有訂單
-
-  
-[stopOrderType](/docs/zh-TW/v5/enum#stopordertype)| false| string| 條件單類型, `Stop`
-
-  * 僅用於當category=`linear` 或者 `inverse`以及orderFilter=`StopOrder`時, 若想僅取消條件單 (不包括止盈止損單和追蹤出場單), 則可以傳入該字段
-
-  
-[](/docs/zh-TW/api-explorer/v5/trade/cancel-all)
-
-* * *
-
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-list| array| Object  
-> orderId| string| 訂單ID  
-> orderLinkId| string| 用戶自定義的訂單ID  
-success| string| "1": 成功, "0": 失敗  
-  
-信息
-
-ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+無
 
 ### 請求示例
 
   * HTTP
   * Python
   * Java
-  * .Net
   * Node.js
 
 
     
     
-    POST /v5/order/cancel-all HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST v5/order/disconnected-cancel-all HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672219779140  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1675852742375  
+    X-BAPI-RECV-WINDOW: 50000  
     Content-Type: application/json  
       
     {  
-      "category": "linear",  
-      "symbol": null,  
-      "settleCoin": "USDT"  
+      "timeWindow": 40  
     }  
     
     
@@ -285,29 +196,20 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_all_orders(  
-        category="linear",  
-        settleCoin="USDT",  
+    print(session.set_dcp(  
+        timeWindow=40,  
     ))  
     
     
     
-    import com.bybit.api.client.restApi.BybitApiTradeRestClient;  
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
     import com.bybit.api.client.domain.*;  
     import com.bybit.api.client.domain.trade.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
-    BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");  
-    BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();  
-    var cancelAllOrdersRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).baseCoin("USDT").build();  
-    client.cancelAllOrder(cancelAllOrdersRequest, System.out::println);  
-    
-    
-    
-    using bybit.net.api.ApiServiceImp;  
-    using bybit.net.api.Models.Trade;  
-    BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");  
-    var orderInfoString = await TradeService.CancelAllOrder(category: Category.LINEAR, baseCoin:"USDT");  
-    Console.WriteLine(orderInfoString);  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
+    var setDcpOptionsRequest = TradeOrderRequest.builder().timeWindow(40).build();  
+    System.out.println(client.setDisconnectCancelAllTime(setDcpOptionsRequest));  
     
     
     
@@ -320,10 +222,7 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
     });  
       
     client  
-        .cancelAllOrders({  
-        category: 'linear',  
-        settleCoin: 'USDT',  
-        })  
+        .setDisconnectCancelAllWindow('option', 40)  
         .then((response) => {  
             console.log(response);  
         })  
@@ -337,20 +236,5 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "orderId": "1616024329462743808",  
-                    "orderLinkId": "1616024329462743809"  
-                },  
-                {  
-                    "orderId": "1616024287544869632",  
-                    "orderLinkId": "1616024287544869633"  
-                }  
-            ],  
-            "success": "1"  
-        },  
-        "retExtInfo": {},  
-        "time": 1707381118116  
+        "retMsg": "success"  
     }

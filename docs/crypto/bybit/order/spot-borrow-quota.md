@@ -2,66 +2,118 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-08-05 19:06:13.086904
+updated_at: 2026-08-07 18:47:06.223974
 ---
 
-# Get Coin Delta Amount
+# Get Borrow Quota (Spot)
 
-Query coin delta amount details for institutional loan hedge product.
+Query the available balance for Spot trading and Margin trading
 
 info
 
-  * Unified account only
-  * Optional `coin` filter; if omitted, returns all coins
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-GET`/v5/ins-loan/coin-delta-amount`
+GET`/v5/order/spot-borrow-check`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Coin name, uppercase only. e.g. `BTC`. If not passed, returns all coins  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `spot`  
+symbol| **true**|  string| Symbol name  
+side| **true**|  string| Transaction side. `Buy`,`Sell`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-riskUnitDeltaAmount| string| Risk unit total delta amount limit (USD)  
-riskUnitDeltaAvailableAmount| string| Risk unit available delta amount (USD)  
-riskUnitDelta| string| Risk unit delta value  
-list| array| Object  
-> coin| string| Coin name  
-> coinDeltaSize| string| Coin delta size (quantity)  
-> coinDeltaAvailableAmount| string| Coin delta available amount (USD)  
-> coinDeltaAmount| string| Coin delta total amount limit (USD)  
+symbol| string| Symbol name, like `BTCUSDT`, uppercase only  
+side| string| Side  
+maxTradeQty| string| The maximum base coin qty can be traded
+
+  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable quantity = min(The maximum quantity that a single user can borrow on the platform, The maximum quantity that can be borrowed calculated by IMR MMR of UTA account, The available quantity of the platform's capital pool) 
+  * Otherwise, it returns actual available balance
+  * up to 4 decimals
+
   
+maxTradeAmount| string| The maximum quote coin amount can be traded
+
+  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount = min(The maximum amount that a single user can borrow on the platform, The maximum amount that can be borrowed calculated by IMR MMR of UTA account, The available amount of the platform's capital pool) 
+  * Otherwise, it returns actual available balance
+  * up to 8 decimals
+
+  
+spotMaxTradeQty| string| No matter your Spot margin switch on or not, it always returns actual qty of base coin you can trade or you have (borrowable qty is not included), up to 4 decimals  
+spotMaxTradeAmount| string| No matter your Spot margin switch on or not, it always returns actual amount of quote coin you can trade or you have (borrowable amount is not included), up to 8 decimals  
+borrowCoin| string| Borrow coin  
+[](/docs/api-explorer/v5/trade/query-spot-quota)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Java
   * Node.js
 
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_borrow_quota(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.trade.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
+    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
+    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -71,114 +123,146 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
-                {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
-                },  
-                {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
-                }  
-            ]  
+            "symbol": "BTCUSDT",  
+            "maxTradeQty": "6.6065",  
+            "side": "Buy",  
+            "spotMaxTradeAmount": "9004.75628594",  
+            "maxTradeAmount": "218014.01330797",  
+            "borrowCoin": "USDT",  
+            "spotMaxTradeQty": "0.2728"  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1698895841534  
     }
 
 ---
 
-# 查詢幣種 Delta 額度
+# 查詢用戶可用額度 (現貨)
 
-查詢機構借貸對沖產品的幣種 Delta 額度詳情。
+可以查詢現貨幣幣交易以及槓桿交易時, 可用對應幣種的實時餘額
 
 信息
 
-  * 僅支持統一帳戶
-  * `coin` 為可選篩選參數，若不傳則返回所有幣種
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
-### HTTP 請求
+### HTTP請求
 
-GET`/v5/ins-loan/coin-delta-amount`
+GET`/v5/order/spot-borrow-check`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱，僅大寫。如 `BTC`。若不傳，返回所有幣種  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`  
+symbol| **true**|  string| 交易對名稱  
+side| **true**|  string| 交易方向. `Buy`,`Sell`  
   
-### 返回參數
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-riskUnitDeltaAmount| string| 風險單元 Delta 總額度限制（USD）  
-riskUnitDeltaAvailableAmount| string| 風險單元可用 Delta 額度（USD）  
-riskUnitDelta| string| 風險單元 Delta 值  
-list| array| Object  
-> coin| string| 幣種名稱  
-> coinDeltaSize| string| 幣種 Delta 數量  
-> coinDeltaAvailableAmount| string| 幣種可用 Delta 額度（USD）  
-> coinDeltaAmount| string| 幣種 Delta 總額度限制（USD）  
+symbol| string| 交易對名稱  
+side| string| 方向  
+maxTradeQty| string| 最大可用於交易的交易幣種數量
+
+  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度)
+  * 否則, 僅代表現貨可用
+  * 最多支持4位小數
+
   
+maxTradeAmount| string| 最大可用於交易的報價幣種金額
+
+  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度) 
+  * 否則, 僅代表現貨可用
+  * 最多支持8位小數
+
+  
+spotMaxTradeQty| string| 無論是否開啟了槓桿, 這個字段表示交易幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持4位小數  
+spotMaxTradeAmount| string| 無論是否開啟了槓桿, 這個字段表示報價幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持8位小數  
+borrowCoin| string| 借貸幣種  
+[](/docs/zh-TW/api-explorer/v5/trade/query-spot-quota)
+
+* * *
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Java
   * Node.js
 
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_borrow_quota(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.trade.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
+    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
+    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
-                {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
-                },  
-                {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
-                }  
-            ]  
+            "symbol": "BTCUSDT",  
+            "maxTradeQty": "6.6065",  
+            "side": "Buy",  
+            "spotMaxTradeAmount": "9004.75628594",  
+            "maxTradeAmount": "218014.01330797",  
+            "borrowCoin": "USDT",  
+            "spotMaxTradeQty": "0.2728"  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1698895841534  
     }

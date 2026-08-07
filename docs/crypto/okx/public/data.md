@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data
 anchor_id: public-data
 api_type: API
-updated_at: 2026-08-05 19:32:23.481027
+updated_at: 2026-08-07 19:11:52.482428
 ---
 
 # Public Data
@@ -2856,7 +2856,7 @@ dateAggrType | String | Yes | Date aggregation type
 `daily` (not supported for module = `3` & instFamilyList ≠ `ANY`)  
 `monthly` (not supported for module = `6`)  
 begin | String | Yes | Begin timestamp. Unix timestamp format in milliseconds (inclusive)  
-Maximum range: 20 days for daily, 20 months for monthly  
+Maximum range: 10 days for daily, 10 months for monthly  
 end | String | Yes | End timestamp. Unix timestamp format in milliseconds (inclusive)  
 When module = `6` & instType = `OPTION`, only returns data for the day specified by `end`  
   
@@ -8216,7 +8216,7 @@ dateAggrType | String | 是 | 日期聚合类型
 `daily` (不支持 module = `3` & instFamilyList ≠ `ANY`)  
 `monthly` （不支持module = `6`）  
 begin | String | 是 | 开始时间戳，Unix时间戳格式为毫秒数（包含该时间）  
-日度最大范围：20天，月度最大范围：20个月  
+日度最大范围：10天，月度最大范围：10个月  
 end | String | 是 | 结束时间戳，Unix时间戳格式为毫秒数（包含该时间）  
 当module = `6` & instType = `OPTION`时，仅返回`end`指定日期的数据  
   

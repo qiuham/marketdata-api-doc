@@ -2,39 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/borrow
 api_type: REST
-updated_at: 2026-08-05 19:05:46.272217
+updated_at: 2026-08-07 18:46:41.567250
 ---
 
-# Get Repayment History
+# Repay
+
+Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
 
 > Permission: "Spot trade"  
->  UID rate limit: 5 req / second
+>  UID rate limit: 1 req / second
+
+info
+
+  * The repaid amount will be deducted from the Funding wallet.
+  * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+
+
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-flexible/repayment-history`
+POST`/v5/crypto-loan-flexible/repay`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-repayId| false| string| Repayment tranaction ID  
-loanCurrency| false| string| Loan coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+loanCurrency| **true**|  string| Loan coin name  
+amount| **true**|  string| Amount to repay  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> loanCurrency| string| Loan coin  
-> repayAmount| string| Repayment amount  
-> repayId| string| Repayment transaction ID  
-> repayStatus| integer| Repayment status, `1`: success; `2`: processing; `3`: fail  
-> repayTime| long| Repay timestamp  
-> repayType| integer| Repayment type, `1`: repay by user; `2`: repay by liquidation; `5`: repay by delisting; `6`: repay by delay liquidation; `7`: repay by currency  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+repayId| string| Repayment transaction ID  
   
 ### Request Example
 
@@ -45,12 +45,19 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1  
+    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570746227  
+    X-BAPI-TIMESTAMP: 1752569628364  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 52  
+      
+    {  
+        "loanCurrency": "BTC",  
+        "amount": "0.005"  
+    }  
     
     
     
@@ -60,8 +67,9 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_repayment_history_flexible_crypto_loan(  
+    print(session.repay_flexible_crypto_loan(  
         loanCurrency="BTC",  
+        loanAmount="0.005",  
     ))  
     
     
@@ -76,70 +84,44 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.007",  
-                    "repayId": "1773",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752570731274,  
-                    "repayType": 1  
-                },  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.006",  
-                    "repayId": "1772",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752570726038,  
-                    "repayType": 1  
-                },  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.005",  
-                    "repayId": "1771",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752569614528,  
-                    "repayType": 1  
-                }  
-            ],  
-            "nextPageCursor": "1769"  
+            "repayId": "1771"  
         },  
         "retExtInfo": {},  
-        "time": 1752570745493  
+        "time": 1752569614549  
     }
 
 ---
 
-# 查詢還款歷史
+# 還款
+
+您可以選擇提前還款, 並且支持部分還款, 如果存在利息, 將優先還利息
 
 > 權限: "現貨"  
->  頻率: 5次/秒
+>  頻率: 1次/秒
+
+信息
+
+  * 還款金額將從資金帳戶扣除
+  * 非完全還清操作, 系統將不會主動退還質押金, 但是您可以自行減少質押金
+
+
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-flexible/repayment-history`
+POST`/v5/crypto-loan-flexible/repay`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-repayId| false| string| 還款訂單ID  
-loanCurrency| false| string| 借款幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+loanCurrency| **true**|  string| 借款幣種  
+amount| **true**|  string| 還款金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> loanCurrency| string| 借款幣種  
-> repayAmount| string| 還款金額  
-> repayId| string| 還款交易 ID  
-> repayStatus| integer| 還款狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
-> repayTime| long| 還款時間戳  
-> repayType| integer| 還款類型，`1`: 用戶還款；`2`: 強制平倉還款；`5`: 下架還款；`6`: 延期強平還款；`7`: 兌幣還款  
-nextPageCursor| string| 下一頁游標  
+repayId| string| 還款訂單ID  
   
 ### 請求示例
 
@@ -150,12 +132,19 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-flexible/repayment-history?loanCurrency=BTC HTTP/1.1  
+    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570746227  
+    X-BAPI-TIMESTAMP: 1752569628364  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 52  
+      
+    {  
+        "loanCurrency": "BTC",  
+        "amount": "0.005"  
+    }  
     
     
     
@@ -165,8 +154,9 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_repayment_history_flexible_crypto_loan(  
+    print(session.repay_flexible_crypto_loan(  
         loanCurrency="BTC",  
+        loanAmount="0.005",  
     ))  
     
     
@@ -181,34 +171,8 @@ nextPageCursor| string| 下一頁游標
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.007",  
-                    "repayId": "1773",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752570731274,  
-                    "repayType": 1  
-                },  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.006",  
-                    "repayId": "1772",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752570726038,  
-                    "repayType": 1  
-                },  
-                {  
-                    "loanCurrency": "BTC",  
-                    "repayAmount": "0.005",  
-                    "repayId": "1771",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752569614528,  
-                    "repayType": 1  
-                }  
-            ],  
-            "nextPageCursor": "1769"  
+            "repayId": "1771"  
         },  
         "retExtInfo": {},  
-        "time": 1752570745493  
+        "time": 1752569614549  
     }
