@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/hourly-yield
 api_type: REST
-updated_at: 2026-08-07 18:44:40.919476
+updated_at: 2026-08-08 18:43:02.045458
 ---
 
 # Place Order

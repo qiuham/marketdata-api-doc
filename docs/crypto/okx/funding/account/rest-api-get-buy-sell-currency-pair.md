@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-buy-sell-currency-pair
 anchor_id: funding-account-rest-api-get-buy-sell-currency-pair
 api_type: REST
-updated_at: 2026-08-07 19:12:24.686671
+updated_at: 2026-08-08 19:16:14.107614
 ---
 
 # Get buy/sell currency pair

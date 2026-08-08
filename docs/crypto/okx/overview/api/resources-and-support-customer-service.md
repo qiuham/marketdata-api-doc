@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-api-resources-and-support-customer-service
 anchor_id: overview-api-resources-and-support-customer-service
 api_type: API
-updated_at: 2026-08-07 19:09:58.245741
+updated_at: 2026-08-08 19:13:49.980163
 ---
 
 # Customer service

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/ip-changelog
 api_type: REST
-updated_at: 2026-08-07 18:45:49.318496
+updated_at: 2026-08-08 18:44:20.268398
 ---
 
 # Get ADL Alert

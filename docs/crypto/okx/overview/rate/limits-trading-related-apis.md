@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rate-limits-trading-related-apis
 anchor_id: overview-rate-limits-trading-related-apis
 api_type: API
-updated_at: 2026-08-07 19:10:06.000586
+updated_at: 2026-08-08 19:13:57.689050
 ---
 
 # Trading-related APIs

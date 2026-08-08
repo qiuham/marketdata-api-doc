@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/portfolios
 api_type: Guide
-updated_at: 2026-08-07 18:59:38.087281
+updated_at: 2026-08-08 19:03:16.483368
 ---
 
 # Advanced Trade Portfolios

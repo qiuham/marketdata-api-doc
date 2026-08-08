@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-option
 anchor_id: error-code-rest-api-option
 api_type: REST
-updated_at: 2026-08-07 19:12:58.351755
+updated_at: 2026-08-08 19:16:47.296099
 ---
 
 # Option
