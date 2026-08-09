@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-subuid
 api_type: REST
-updated_at: 2026-08-08 18:50:58.829951
+updated_at: 2026-08-09 18:48:08.520768
 ---
 
 # Sign Agreement

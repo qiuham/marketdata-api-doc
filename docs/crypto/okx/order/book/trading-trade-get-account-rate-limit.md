@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-account-rate-limit
 anchor_id: order-book-trading-trade-get-account-rate-limit
 api_type: API
-updated_at: 2026-08-08 19:14:29.532892
+updated_at: 2026-08-09 19:10:07.283533
 ---
 
 # GET / Account rate limit

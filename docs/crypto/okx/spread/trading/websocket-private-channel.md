@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-private-channel
 anchor_id: spread-trading-websocket-private-channel
 api_type: WebSocket
-updated_at: 2026-08-08 19:15:39.409518
+updated_at: 2026-08-09 19:11:18.304775
 ---
 
 # WebSocket Private Channel

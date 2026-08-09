@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-demo-trading-services
 anchor_id: overview-demo-trading-services
 api_type: API
-updated_at: 2026-08-08 19:13:55.532359
+updated_at: 2026-08-09 19:09:31.931609
 ---
 
 # Demo Trading Services

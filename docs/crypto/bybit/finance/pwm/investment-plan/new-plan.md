@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/new-plan
 api_type: REST
-updated_at: 2026-08-08 18:43:55.370799
+updated_at: 2026-08-09 18:43:53.809428
 ---
 
 # Get Investment Plan Orders

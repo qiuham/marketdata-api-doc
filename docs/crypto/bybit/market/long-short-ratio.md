@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/long-short-ratio
 api_type: Market Data
-updated_at: 2026-08-08 18:44:38.564342
+updated_at: 2026-08-09 18:44:34.995075
 ---
 
 # Get Order Price Limit

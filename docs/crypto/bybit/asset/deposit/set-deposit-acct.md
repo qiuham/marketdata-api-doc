@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/set-deposit-acct
 api_type: REST
-updated_at: 2026-08-08 18:40:24.933976
+updated_at: 2026-08-09 18:40:37.513007
 ---
 
 # Get Sub Deposit Address

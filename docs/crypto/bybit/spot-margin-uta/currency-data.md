@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/currency-data
 api_type: REST
-updated_at: 2026-08-08 18:49:43.131702
+updated_at: 2026-08-09 18:47:00.297597
 ---
 
 # Fixed-Rate Borrow

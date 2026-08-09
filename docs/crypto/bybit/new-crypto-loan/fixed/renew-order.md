@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/renew-order
 api_type: REST
-updated_at: 2026-08-08 18:45:06.283594
+updated_at: 2026-08-09 18:45:01.333012
 ---
 
 # Repay
