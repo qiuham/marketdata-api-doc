@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-deposit-withdraw-status
 anchor_id: funding-account-rest-api-get-deposit-withdraw-status
 api_type: REST
-updated_at: 2026-08-09 19:11:48.074508
+updated_at: 2026-08-10 19:14:54.041449
 ---
 
 # Get deposit withdraw status

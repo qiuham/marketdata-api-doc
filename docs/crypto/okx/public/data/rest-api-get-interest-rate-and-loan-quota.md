@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-interest-rate-and-loan-quota
 anchor_id: public-data-rest-api-get-interest-rate-and-loan-quota
 api_type: REST
-updated_at: 2026-08-09 19:11:27.410341
+updated_at: 2026-08-10 19:14:33.489283
 ---
 
 # Get interest rate and loan quota

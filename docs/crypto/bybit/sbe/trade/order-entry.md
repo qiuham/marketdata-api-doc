@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/trade/order-entry
 api_type: Trading
-updated_at: 2026-08-09 18:46:55.368389
+updated_at: 2026-08-10 18:49:31.165447
 ---
 
 # SBE Order Entry Integration

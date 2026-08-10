@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan
 anchor_id: financial-product-flexible-loan
 api_type: API
-updated_at: 2026-08-09 19:12:14.914963
+updated_at: 2026-08-10 19:15:20.786532
 ---
 
 # Flexible loan
@@ -337,6 +337,8 @@ ordId | String | No | Order ID of your flexible loan.
 If `ordId` is not passed, system will assume it is acting against the existing order with the earliest order start time.  
 If there are no existing orders, system will return error `51063`  
   
+For an E-Mode order, an `add` request must use the collateral currency recorded for that order's E-Mode pair. Otherwise, the system returns error `51785`.
+
 > Response Example
     
     
@@ -352,6 +354,162 @@ If there are no existing orders, system will return error `51063`
 
 code = `0` means your request has been accepted (It doesn't mean the request has been successfully handled.)
 
+### POST / Borrow
+
+#### Rate Limit: 2 requests per 2 seconds
+
+#### Rate limit rule: User ID
+
+#### HTTP Request
+
+`POST /api/v5/finance/flexible-loan/borrow`
+
+Creates a Flexible Loan order or adds a borrow amount to an existing active order.
+
+> Request Example
+    
+    
+    POST /api/v5/finance/flexible-loan/borrow
+    body
+    {
+      "loanData": {"ccy": "USDT", "amt": "1000"},
+      "collateralData": [{"ccy": "BTC", "amt": "0.02"}],
+      "eMode": "0",
+      "clOrdId": "my-borrow-001"
+    }
+    
+
+#### Request Parameters
+
+**Parameter** | **Type** | **Required** | **Description**  
+---|---|---|---  
+ordId | String | No | Existing order ID. Omit it to create an order.  
+loanData | Object | Yes | Borrow currency and amount.  
+> ccy | String | Yes | Borrow currency.  
+> amt | String | Yes | Borrow amount. When `ordId` is provided, this is the additional amount.  
+collateralData | Array of objects | Conditional | Collateral assets. Required with 1–10 entries when creating an order; optional when adding to an order to add collateral together with the borrow.  
+> ccy | String | Yes | Collateral currency.  
+> amt | String | Yes | Collateral amount.  
+eMode | String | Conditional | `0`: disabled (default); `1`: enabled. Accepted only when creating an order. Every collateral/borrow pair must be supported by the E-Mode info endpoint.  
+clOrdId | String | Yes | Client-supplied ID. The idempotency key is scoped to the UID and endpoint path. It is retained for 60 seconds; a completed duplicate returns `51016`, and an in-flight duplicate returns `51784`.  
+  
+When `ordId` is provided, `eMode` must not be provided; E-Mode status is fixed at order creation. `collateralData` is optional and adds collateral to the existing order. For an E-Mode order, the added collateral must comply with the order's E-Mode pair.
+
+> Response Example
+    
+    
+    {
+      "code": "0",
+      "data": [{"ordId": "680234819012345678", "eMode": "0", "clOrdId": "my-borrow-001"}],
+      "msg": ""
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+ordId | String | Created order ID, or the order ID to which the borrow was added.  
+eMode | String | E-Mode status of the order.  
+clOrdId | String | Client-supplied ID echoed from the request.  
+  
+### POST / Repay
+
+#### Rate Limit: 2 requests per 2 seconds
+
+#### Rate limit rule: User ID
+
+#### HTTP Request
+
+`POST /api/v5/finance/flexible-loan/repay`
+
+Repays part or all of an order's outstanding borrow amount. Settlement is asynchronous; a successful response means the request was accepted. Use the Loan info endpoint to confirm the final result.
+
+> Request Example
+    
+    
+    POST /api/v5/finance/flexible-loan/repay
+    body
+    {
+      "ordId": "680234819012345678",
+      "ccy": "USDT",
+      "amt": "1000",
+      "clOrdId": "my-repay-001"
+    }
+    
+
+#### Request Parameters
+
+**Parameter** | **Type** | **Required** | **Description**  
+---|---|---|---  
+ordId | String | Yes | Order ID to repay.  
+ccy | String | Yes | Repayment currency. It must match the order's borrow currency.  
+amt | String | Yes | Repayment amount. Repaying the entire outstanding balance closes the order.  
+clOrdId | String | Yes | Client-supplied idempotency key, scoped to the UID and endpoint path. It is retained for 60 seconds; a completed duplicate returns `51016`, and an in-flight duplicate returns `51784`.  
+  
+> Response Example
+    
+    
+    {
+      "code": "0",
+      "data": [{"ordId": "680234819012345678", "ccy": "USDT", "amt": "1000", "clOrdId": "my-repay-001"}],
+      "msg": ""
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+ordId | String | Order ID.  
+ccy | String | Repaid currency.  
+amt | String | Requested repayment amount, echoed from the request.  
+clOrdId | String | Client-supplied ID echoed from the request.  
+  
+### GET / E-Mode info
+
+#### Rate Limit: 5 requests per 2 seconds
+
+#### Rate limit rule: IP
+
+#### Permission: Read
+
+#### HTTP Request
+
+`GET /api/v5/finance/flexible-loan/emode-info`
+
+> Request Example
+    
+    
+    GET /api/v5/finance/flexible-loan/emode-info
+    
+
+#### Request Parameters
+
+None.
+
+Returns all currently valid collateral and borrow currency pairs eligible for E-Mode. This endpoint does not require authentication.
+
+> Response Example
+    
+    
+    {
+      "code": "0",
+      "data": [
+        {"collateralCcy": "USDC", "borrowCcy": "USDT"},
+        {"collateralCcy": "WBTC", "borrowCcy": "BTC"}
+      ],
+      "msg": ""
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+collateralCcy | String | Collateral currency eligible for E-Mode.  
+borrowCcy | String | Borrow currency eligible with `collateralCcy`.  
+  
 ### GET / Loan info
 
 #### Rate Limit: 5 requests per 2 seconds
@@ -952,6 +1110,8 @@ ordId | String | 否 | 活期借币订单 ID。
 如果不传 `ordId`，系统将默认对起始时间最早的现存订单进行操作。  
 如果没有现存订单，系统将返回错误 `51063`  
   
+对于 E-Mode 订单，`add` 请求的抵押币种必须与订单记录的 E-Mode 配对抵押币种一致；否则将返回错误码 `51785`。
+
 > 返回结果
     
     
@@ -967,6 +1127,162 @@ ordId | String | 否 | 活期借币订单 ID。
 
 code = `0` 代表请求已被接受(不代表处理成功)
 
+### POST / 下单
+
+#### 限速：2次/2秒
+
+#### 限速规则：User ID
+
+#### HTTP 请求
+
+`POST /api/v5/finance/flexible-loan/borrow`
+
+创建一笔活期借币订单，或为已有活跃订单追加借款。
+
+> 请求示例
+    
+    
+    POST /api/v5/finance/flexible-loan/borrow
+    body
+    {
+      "loanData": {"ccy": "USDT", "amt": "1000"},
+      "collateralData": [{"ccy": "BTC", "amt": "0.02"}],
+      "eMode": "0",
+      "clOrdId": "my-borrow-001"
+    }
+    
+
+#### 请求参数
+
+**参数名** | **类型** | **是否必须** | **描述**  
+---|---|---|---  
+ordId | String | 否 | 已有订单 ID。省略则创建订单。  
+loanData | Object | 是 | 借入币种与金额。  
+> ccy | String | 是 | 借入币种。  
+> amt | String | 是 | 借入数量。提供 `ordId` 时为追加数量。  
+collateralData | Array of objects | 按情况 | 抵押资产。创建订单时必填，数量为 1–10 项；追加借款时可选，可与借款一并追加抵押品。  
+> ccy | String | 是 | 抵押币种。  
+> amt | String | 是 | 抵押数量。  
+eMode | String | 按情况 | `0`：不开启（默认）；`1`：开启。仅创建订单时可提供；每个抵押币种/借入币种组合必须受 E-Mode 配对信息接口支持。  
+clOrdId | String | 是 | 客户端订单 ID，也是 UID 与接口路径维度的幂等键。记录保留 60 秒；已完成的重复请求返回 `51016`，执行中的重复请求返回 `51784`。  
+  
+提供 `ordId` 时，不可提供 `eMode`；订单创建后 E-Mode 状态不可修改。`collateralData` 为可选，提供后会向已有订单追加抵押品。对于 E-Mode 订单，追加的抵押币种必须符合该订单的 E-Mode 配对。
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [{"ordId": "680234819012345678", "eMode": "0", "clOrdId": "my-borrow-001"}],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+ordId | String | 新建订单的订单 ID，或被追加借款的订单 ID。  
+eMode | String | 订单的 E-Mode 状态。  
+clOrdId | String | 从请求中回显的客户端订单 ID。  
+  
+### POST / 还款
+
+#### 限速：2次/2秒
+
+#### 限速规则：User ID
+
+#### HTTP 请求
+
+`POST /api/v5/finance/flexible-loan/repay`
+
+对订单的未偿借款进行部分或全额还款。结算为异步执行；成功响应仅表示请求已受理。请通过借款信息接口确认最终结果。
+
+> 请求示例
+    
+    
+    POST /api/v5/finance/flexible-loan/repay
+    body
+    {
+      "ordId": "680234819012345678",
+      "ccy": "USDT",
+      "amt": "1000",
+      "clOrdId": "my-repay-001"
+    }
+    
+
+#### 请求参数
+
+**参数名** | **类型** | **是否必须** | **描述**  
+---|---|---|---  
+ordId | String | 是 | 待还款的订单 ID。  
+ccy | String | 是 | 还款币种，必须与订单借入币种一致。  
+amt | String | 是 | 还款数量。偿还全部未偿余额将关闭订单。  
+clOrdId | String | 是 | UID 与接口路径维度的客户端幂等键。记录保留 60 秒；已完成的重复请求返回 `51016`，执行中的重复请求返回 `51784`。  
+  
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [{"ordId": "680234819012345678", "ccy": "USDT", "amt": "1000", "clOrdId": "my-repay-001"}],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+ordId | String | 订单 ID。  
+ccy | String | 已还款币种。  
+amt | String | 从请求中回显的还款数量。  
+clOrdId | String | 从请求中回显的客户端订单 ID。  
+  
+### GET / E-Mode 配对信息
+
+#### 限速：5次/2秒
+
+#### 限速规则：IP
+
+#### Permission: Read
+
+#### HTTP 请求
+
+`GET /api/v5/finance/flexible-loan/emode-info`
+
+> 请求示例
+    
+    
+    GET /api/v5/finance/flexible-loan/emode-info
+    
+
+#### 请求参数
+
+无。
+
+返回当前所有支持 E-Mode 的抵押币种与借入币种配对。该接口无需鉴权。
+
+> 返回示例
+    
+    
+    {
+      "code": "0",
+      "data": [
+        {"collateralCcy": "USDC", "borrowCcy": "USDT"},
+        {"collateralCcy": "WBTC", "borrowCcy": "BTC"}
+      ],
+      "msg": ""
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+collateralCcy | String | 支持 E-Mode 的抵押币种。  
+borrowCcy | String | 与 `collateralCcy` 配对后支持 E-Mode 的借入币种。  
+  
 ### GET / 借贷信息 
 
 #### 限速：5次/2s

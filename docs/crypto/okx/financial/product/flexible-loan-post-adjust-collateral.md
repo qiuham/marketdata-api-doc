@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-adjust-collateral
 anchor_id: financial-product-flexible-loan-post-adjust-collateral
 api_type: API
-updated_at: 2026-08-09 19:12:16.478171
+updated_at: 2026-08-10 19:15:22.343167
 ---
 
 # POST / Adjust collateral
@@ -58,6 +58,8 @@ ordId | String | No | Order ID of your flexible loan.
 If `ordId` is not passed, system will assume it is acting against the existing order with the earliest order start time.  
 If there are no existing orders, system will return error `51063`  
   
+For an E-Mode order, an `add` request must use the collateral currency recorded for that order's E-Mode pair. Otherwise, the system returns error `51785`.
+
 > Response Example
     
     
@@ -127,6 +129,8 @@ ordId | String | 否 | 活期借币订单 ID。
 如果不传 `ordId`，系统将默认对起始时间最早的现存订单进行操作。  
 如果没有现存订单，系统将返回错误 `51063`  
   
+对于 E-Mode 订单，`add` 请求的抵押币种必须与订单记录的 E-Mode 配对抵押币种一致；否则将返回错误码 `51785`。
+
 > 返回结果
     
     

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-08-09 19:12:25.633515
+updated_at: 2026-08-10 19:15:32.387519
 ---
 
 # REST API
@@ -677,6 +677,8 @@ Error Code | HTTP Status Code | Error Message
 51772 | 200 | Instant redemption pool insufficient  
 51773 | 200 | Feature not available in your region  
 51774 | 200 | OKUSD API is under maintenance  
+51784 | 200 | Client order ID is being processed  
+51785 | 200 | The collateral currency does not match the E-Mode pair  
   
 ### Convert
 
@@ -1848,6 +1850,8 @@ e.g. clOrdId 已存在
 51772 | 200 | 即时赎回池余额不足  
 51773 | 200 | 该功能在您所在地区暂不可用  
 51774 | 200 | OKUSD API 正在维护中  
+51784 | 200 | 客户端订单 ID 正在处理中  
+51785 | 200 | 抵押币种与 E-Mode 配对不匹配  
   
 ### 闪兑 
 

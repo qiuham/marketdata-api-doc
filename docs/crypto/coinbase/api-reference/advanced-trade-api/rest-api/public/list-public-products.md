@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/list-public-products
 api_type: Market Data
-updated_at: 2026-08-09 18:58:57.080190
+updated_at: 2026-08-10 19:02:10.818336
 ---
 
 # List Public Products
@@ -233,7 +233,37 @@ Get a list of the available currency pairs for trading.
               "block_trade_commission": "<string>",
               "block_trade_tick_size": "<string>",
               "block_trade_min_trade_amount": "<string>",
-              "creation_time": "<string>",
+              "creation_time": "<string>",Public
+    
+    # List Public Products
+    
+    Get a list of the available currency pairs for trading.
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    market
+    
+    /
+    
+    products
+    
+    List Public Products
+    
+    
               "max_leverage": "<string>",
               "max_liquidation_commission": "<string>",
               "tick_size_steps": [
@@ -316,7 +346,146 @@ Get a list of the available currency pairs for trading.
               "sell_notional": true
             }
           }
-        }
+    
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/market/products \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/market/products"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/market/products', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/market/products",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/market/products"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/market/products")
+      .header("Authorization", "Bearer <token>")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/market/products")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
+    puts response.read_body
+    
+    
+    {
+      "products": [
+        {
+          "product_id": "BTC-USD",
+          "price": "140.21",
+          "price_percentage_change_24h": "9.43%",
+          "volume_24h": "1908432",
+          "volume_percentage_change_24h": "9.43%",
+          "base_increment": "0.00000001",
+          "quote_increment": "0.00000001",
+          "quote_min_size": "0.00000001",
+          "quote_max_size": "1000",
+          "base_min_size": "0.00000001",
+          "base_max_size": "1000",
+          "base_name": "Bitcoin",
+          "quote_name": "US Dollar",
+          "watched": true,
+          "is_disabled": false,
+          "new": true,
+          "status": "<string>",
+          "cancel_only": true,
+          "limit_only": true,
+          "post_only": true,
+          "trading_disabled": false,
+          "auction_mode": true,
+          "base_display_symbol": "BTC",
+          "quote_display_symbol": "USD",
+          "product_type": "UNKNOWN_PRODUCT_TYPE",
+          "quote_currency_id": "USD",
+          "base_currency_id": "BTC",
+          "fcm_trading_session_details": {
+            "is_session_open": true,
+            "open_time": "<string>",
+            "close_time": "<string>",
+            "session_state": "FCM_TRADING_SESSION_STATE_UNDEFINED",
+            "after_hours_order_entry_disabled": true,
+            "closed_reason": "FCM_TRADING_SESSION_CLOSED_REASON_UNDEFINED",
+            "maintenance"    }
       ],
       "num_products": 100,
       "pagination": {

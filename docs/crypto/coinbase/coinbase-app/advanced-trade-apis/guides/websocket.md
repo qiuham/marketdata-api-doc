@@ -2,12 +2,12 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/websocket
 api_type: WebSocket
-updated_at: 2026-08-09 18:58:58.404606
+updated_at: 2026-08-10 19:02:11.480265
 ---
 
 # Advanced Trade WebSockets. Setup, Authentication, and Subscriptions
 
-## 1. Introduction
+## 1\. Introduction
 
 This guide provides a comprehensive overview of setting up Coinbase Advanced Trade WebSockets, including essential steps for authentication and managing subscriptions. Coinbase’s Advanced Trade WebSocket API enables real-time access to market data and user-specific order information, empowering developers to build robust trading applications and monitoring tools. In this first part, you’ll learn how to establish WebSocket connections, authenticate using JWT tokens, and efficiently subscribe to key channels, such as market data and user-specific channels. With this foundational knowledge, you’ll be prepared to integrate the WebSocket API seamlessly into your application.
 
@@ -22,7 +22,7 @@ The Coinbase Developer Platform’s Advanced Trade product provides two WebSocke
 
 Both endpoints provide live data streams using WebSocket connections, enabling developers to receive real-time updates on trading activity, order books, and market movements. This guide will cover how to correctly establish these WebSocket connections, manage subscriptions, and handle potential errors during integration.
 
-## 2. Setting Up WebSocket Connections
+## 2\. Setting Up WebSocket Connections
 
 To integrate with the Coinbase Advanced Trade WebSockets, developers need to establish a WebSocket connection with either the Market Data or User Order Data endpoints. This section will guide you through the process of setting up these WebSocket connections and ensuring they remain active.
 
@@ -151,7 +151,7 @@ For user-specific data, such as order updates, you must authenticate using a JWT
 
 In this authenticated example, we generate a JWT using the PyJWT library and include it in the subscription message for the user channel. This allows the client to receive real-time updates related to the user’s orders for the BTC-USD product.
 
-## 3. Authentication and Subscriptions
+## 3\. Authentication and Subscriptions
 
 WebSocket connections that interact with user-specific data on the Coinbase Developer Platform’s Advanced Trade product require authentication via JSON Web Tokens (JWTs). This section will guide developers through generating JWTs, subscribing to channels, and managing multiple subscriptions effectively.
 
@@ -263,7 +263,7 @@ Each subscription can handle only one channel at a time, so if you want to recei
 
 Including the heartbeats subscription ensures that the WebSocket connection stays open, even when there is a lack of updates on other subscribed channels.
 
-## 4. WebSocket Channels Overview
+## 4\. WebSocket Channels Overview
 
 Coinbase’s Advanced Trade WebSockets offer various channels that provide real-time market data and user-specific information. This section gives an overview of the available channels, indicates which channels require authentication, and provides sample code to subscribe and unsubscribe from these channels.
 
@@ -287,53 +287,7 @@ Below are examples of how to subscribe to and unsubscribe from various channels 
 
 ### Subscribing to a Public Channel (e.g., Ticker Channel)
 
-Public channels do not require authentication, so you can simply send a subscription message after establishing the WebSocket connection.Guides
-
-# Advanced Trade WebSockets. Setup, Authentication, and Subscriptions
-
-## 1. Introduction
-
-This guide provides a comprehensive overview of setting up Coinbase Advanced Trade WebSockets, including essential steps for authentication and managing subscriptions. Coinbase’s Advanced Trade WebSocket API enables real-time access to market data and user-specific order information, empowering developers to build robust trading applications and monitoring tools. In this first part, you’ll learn how to establish WebSocket connections, authenticate using JWT tokens, and efficiently subscribe to key channels, such as market data and user-specific channels. With this foundational knowledge, you’ll be prepared to integrate the WebSocket API seamlessly into your application.
-
-You can quickly scroll to any section of this article by using the links on the outline of this guide on the right-hand side of the page.
-
-### Overview of WebSocket Functionality
-
-The Coinbase Developer Platform’s Advanced Trade product provides two WebSocket endpoints:
-
-  * **Market Data Endpoint** : `wss://advanced-trade-ws.coinbase.com` This public WebSocket feed delivers real-time updates on market orders and trades for various cryptocurrency products.
-  * **User Order Data Endpoint** : `wss://advanced-trade-ws-user.coinbase.com` This authenticated WebSocket feed provides real-time updates on the user’s orders, including order status and updates on active trades.
-
-Both endpoints provide live data streams using WebSocket connections, enabling developers to receive real-time updates on trading activity, order books, and market movements. This guide will cover how to correctly establish these WebSocket connections, manage subscriptions, and handle potential errors during integration.
-
-## 2. Setting Up WebSocket Connections
-
-To integrate with the Coinbase Advanced Trade WebSockets, developers need to establish a WebSocket connection with either the Market Data or User Order Data endpoints. This section will guide you through the process of setting up these WebSocket connections and ensuring they remain active.
-
-### WebSocket Endpoints
-
-**Market Data Endpoint** : `wss://advanced-trade-ws.coinbase.com` This endpoint provides real-time market data, including updates on orders, trades, and price changes for various cryptocurrency pairs. Authentication is not required for most channels on this endpoint. **User Order Data Endpoint** : `wss://advanced-trade-ws-user.coinbase.com` This endpoint provides updates related to a user’s orders, including order status, fills, and real-time changes. It requires authentication using a JWT (JSON Web Token).
-
-### Basic Connection Setup
-
-After establishing a WebSocket connection, the server expects a subscription message to be sent within 5 seconds; otherwise, the connection will be terminated. This subscription message tells the WebSocket server which channels and products the client wants to receive data for. Developers can subscribe to multiple channels, but each subscription must be sent in a unique message.
-
-### Example: Connecting Without Authentication (Market Data Endpoint)
-
-For public data, you can set up a basic WebSocket connection without authentication. Here is an example in Python that connects to the market data WebSocket and subscribes to the `ticker` channel for the BTC-USD product. First, let’s install the necessary dependency:: `pip install websocket`
-    
-    
-    import websocket
-    import json
-    
-    # Market Data WebSocket URL
-    WS_URL = "wss://advanced-trade-ws.coinbase.com"
-    
-    def on_open(ws):
-        # Subscribe to the ticker channel for BTC-USD
-        subscribe_message = {
-            "type": "subscribe",
-            "product_ids"
+Public channels do not require authentication, so you can simply send a subscription message after establishing the WebSocket connection.
     
     
     import websocket
@@ -420,105 +374,18 @@ If developers are using JavaScript, they can use the ws library in a Node.js env
     });
     
 
-## : ["BTC-USD"], "channel": "ticker" } ws.send(json.dumps(subscribe_message)) print("Subscribed to BTC-USD ticker channel") def on_message(ws, message): data = json.loads(message) print(f"Received message: {data}") def on_error(ws, error): print(f"Error: {error}") def on_close(ws): print("Connection closed") # Create the WebSocket connection ws = websocket.WebSocketApp( WS_URL, on_open=on_open, on_message=on_message, on_error=on_error, on_close=on_close ) ws.run_forever() `
+## 5\. Conclusion
 
-In this example, once the connection is established, the client sends a subscription message to the `ticker` channel for the BTC-USD product. The WebSocket then begins streaming real-time price updates for that product. Example: Connecting With Authentication (User Order Data Endpoint) For user-specific data, such as order updates, you must authenticate using a JWT. Below is an example in Python that connects to the User Order Data WebSocket and subscribes to the `user` channel. First, let’s install the necessary dependencies:
-    
-    
-    pip install websocket "pyjwt[crypto]"
-    
-    
-    import websocket
-    import json
-    import jwt  # PyJWT library
-    import time
-    import uuid
-    
-    # User Order Data WebSocket URL
-    WS_USER_URL = "wss://advanced-trade-ws-user.coinbase.com"
-    
-    # Example JWT generation (Replace with your actual API_KEY and SIGNING_KEY)
-    API_KEY = "organizations/{org_id}/apiKeys/{key_id}"
-    SIGNING_KEY = "-----BEGIN EC PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END EC PRIVATE KEY-----\n"
-    
-    def generate_jwt():
-        current_time = int(time.time())
-        payload = {
-            "iss": "cdp",
-            "nbf": current_time,
-            "exp": current_time + 120,  # JWT valid for 120 seconds
-            "sub": API_KEY,
-        }
-        headers = {
-            "kid": API_KEY,
-            "nonce": uuid.uuid4().hex
-        }
-        return jwt.encode(payload, SIGNING_KEY, algorithm="ES256", headers=headers)
-    
-    def on_open(ws):
-        # Generate JWT
-        token = generate_jwt()
-    
-        # Subscribe to the user channel for BTC-USD orders
-        subscribe_message = {
-            "type": "subscribe",
-            "channel": "user",
-            "product_ids": ["BTC-USD"],
-            "jwt": token
-        }
-        ws.send(json.dumps(subscribe_message))
-        print("Subscribed to user channel for BTC-USD orders")
-    
-    def on_message(ws, message):
-        data = json.loads(message)
-        print(f"Received message: {data
-    
-    5. Conclusion
-    
-    
-    Successfully integrating with Coinbase’s Advanced Trade WebSocket API begins with a solid understanding of connection setup, authentication, and subscription management. Below is a summary of the essential best practices covered in this guide:
-    
-    
-    
-    
-        1. 
-         **Ensuring Stable WebSocket Connections**
-         
-         
-              * Send a subscription message within 5 seconds of establishing a connection to prevent disconnection.
-    
-    
-              * Include the heartbeats channel in your subscriptions to keep connections alive during periods of low activity.
-    
-    
-    
-    
-    
-        2. 
-         **Authenticating with JWTs for Secure Data Access**
-         
-         
-              * Use JWT tokens for authenticated channels like the user channel.
-    
-    
-              * Refresh JWT tokens every 2 minutes to maintain uninterrupted access to private data channels.
-    
-    
-    
-    
-    
-        3. 
-         **Managing Subscriptions Across Channels**
-         
-         
-              * Use a unique subscription message for each channel and product combination.
-    
-    
-              * Spread subscriptions across multiple WebSocket connections to optimize data flow and maintain stability, especially when handling multiple high-volume channels.
-    
-    
-    
-    
-    
-    
-    By following these practices, you can build a robust, high-performance system capable of handling the demands of real-time data and trading insights. With this in-depth understanding of WebSocket optimization and advanced features, your application will be well-equipped to provide a seamless experience for end-users in Coinbase’s Advanced Trade environment.
+Successfully integrating with Coinbase’s Advanced Trade WebSocket API begins with a solid understanding of connection setup, authentication, and subscription management. Below is a summary of the essential best practices covered in this guide:
+
+  1. **Ensuring Stable WebSocket Connections**
+     * Send a subscription message within 5 seconds of establishing a connection to prevent disconnection.
+     * Include the heartbeats channel in your subscriptions to keep connections alive during periods of low activity.
+  2. **Authenticating with JWTs for Secure Data Access**
+     * Use JWT tokens for authenticated channels like the user channel.
+     * Refresh JWT tokens every 2 minutes to maintain uninterrupted access to private data channels.
+  3. **Managing Subscriptions Across Channels**
+     * Use a unique subscription message for each channel and product combination.
+     * Spread subscriptions across multiple WebSocket connections to optimize data flow and maintain stability, especially when handling multiple high-volume channels.
+
+By following these practices, you can build a robust, high-performance system capable of handling the demands of real-time data and trading insights. With this in-depth understanding of WebSocket optimization and advanced features, your application will be well-equipped to provide a seamless experience for end-users in Coinbase’s Advanced Trade environment.

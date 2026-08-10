@@ -2,43 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods
 api_type: REST
-updated_at: 2026-08-09 18:58:55.267542
+updated_at: 2026-08-10 19:02:09.872242
 ---
 
 # List Payment Methods
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/payment_methods`
 
-equity_trading_session' => 'UNKNOWN_EQUITY_TRADING_SESSION',
-            'displayed_order_config' => 'UNKNOWN_DISPLAYED_ORDER_CONFIG'
-        ],
-        'prediction_metadata' => [
-            'prediction_side' => 'PREDICTION_SIDE_UNKNOWN',
-            'preview_order_est_average_filled_price' => '<string>',
-            'supports_fractional_base_size' => true
-        ],
-        'cost_basis_method' => 'COST_BASIS_METHOD_UNSPECIFIED'
-      ]),
-      CURLOPT_HTTPHEADER => [
-        "Authorization: Bearer <token>",
-        "Content-Type: application/json"
-      ],
-    ]);
-    
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
-    
-    curl_close($curl);
-    
-    if ($err) {
-      echo "cURL Error #:" . $err;
-    } else {
-      echo $response;
-    }Payment Methods
-    
-    # List Payment Methods
-    
-    Get a list of payment methods for the current user.
+
+Get a list of payment methods for the current user.
     
     
     curl --request GET \

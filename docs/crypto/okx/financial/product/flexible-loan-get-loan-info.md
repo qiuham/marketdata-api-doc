@@ -3,13 +3,13 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-loan-info
 anchor_id: financial-product-flexible-loan-get-loan-info
 api_type: API
-updated_at: 2026-08-09 19:12:16.793727
+updated_at: 2026-08-10 19:15:23.589829
 ---
 
 # GET / Loan info
 
-#### Rate Limit: 5 requests per 2 seconds
-
+#### Rate Limit: 5 requests per 2 seconds  
+  
 #### Rate limit rule: User ID
 
 #### HTTP Request
@@ -121,8 +121,8 @@ If your loan reaches liquidation LTV, it'll trigger forced liquidation. When thi
 
 # GET / 借贷信息
 
-#### 限速：5次/2s
-
+#### 限速：5次/2s  
+  
 #### 限速规则：User ID
 
 #### HTTP请求

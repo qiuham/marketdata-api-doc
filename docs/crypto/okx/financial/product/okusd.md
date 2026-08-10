@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-okusd
 anchor_id: financial-product-okusd
 api_type: API
-updated_at: 2026-08-09 19:12:09.864963
+updated_at: 2026-08-10 19:15:15.746309
 ---
 
 # OKUSD
@@ -255,8 +255,6 @@ Retrieve your current OKUSD balance and lifetime accrued yield. All balances are
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/okusd/account`
@@ -304,8 +302,6 @@ Retrieve your OKUSD subscription order history. Results are returned in descendi
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -366,8 +362,6 @@ Retrieve your OKUSD redemption order history. Results are returned in descending
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -436,8 +430,6 @@ Retrieve your daily OKUSD yield distribution history. Results are returned in de
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/finance/okusd/rewards/history`
@@ -491,8 +483,6 @@ Retrieve the historical APR snapshots for OKUSD. Results are returned in descend
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -783,8 +773,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### Permission: Read
-
 #### HTTP 请求
 
 `GET /api/v5/finance/okusd/account`
@@ -832,8 +820,6 @@ ts | String | 服务器时间戳，Unix 时间戳，单位为毫秒，如 `15970
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### Permission: Read
 
 #### HTTP 请求
 
@@ -894,8 +880,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### Permission: Read
 
 #### HTTP 请求
 
@@ -964,8 +948,6 @@ ts | String | 订单创建时间，Unix 时间戳，单位为毫秒，如 `15970
 
 #### 限速规则：User ID
 
-#### Permission: Read
-
 #### HTTP 请求
 
 `GET /api/v5/finance/okusd/rewards/history`
@@ -1019,8 +1001,6 @@ ts | String | 发放时间戳，Unix 时间戳，单位为毫秒，如 `15970263
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### Permission: Read
 
 #### HTTP 请求
 

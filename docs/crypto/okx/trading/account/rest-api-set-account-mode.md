@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-account-mode
 anchor_id: trading-account-rest-api-set-account-mode
 api_type: REST
-updated_at: 2026-08-09 19:09:50.287456
+updated_at: 2026-08-10 19:12:56.533703
 ---
 
 # Set account mode

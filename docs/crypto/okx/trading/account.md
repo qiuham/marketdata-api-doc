@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account
 anchor_id: trading-account
 api_type: API
-updated_at: 2026-08-09 19:09:36.514820
+updated_at: 2026-08-10 19:12:42.835064
 ---
 
 # Trading Account
@@ -6095,8 +6095,6 @@ Retrieve the current day and month-to-date (MTD) GLP performance snapshot for th
 
 #### Rate limit rule: User ID
 
-#### Permission: Read
-
 #### HTTP Request
 
 `GET /api/v5/users/glp/today-performance`
@@ -6222,8 +6220,6 @@ Retrieve daily GLP performance history for a single program. Results are sorted 
 #### Rate Limit: 5 requests per 2 seconds
 
 #### Rate limit rule: User ID
-
-#### Permission: Read
 
 #### HTTP Request
 
@@ -14093,8 +14089,6 @@ details | Array | 各币种操作详情。
 
 #### 限速规则：User ID
 
-#### 权限：读取
-
 #### HTTP请求
 
 `GET /api/v5/users/glp/today-performance`
@@ -14220,8 +14214,6 @@ total | 是 | 是 | 各类型合计。始终存在
 #### 限速：5次/2s
 
 #### 限速规则：User ID
-
-#### 权限：读取
 
 #### HTTP请求
 
