@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-order
 anchor_id: order-book-trading-trade-post-place-order
 api_type: API
-updated_at: 2026-08-10 19:13:05.837107
+updated_at: 2026-08-11 19:13:15.238619
 ---
 
 # POST / Place order
@@ -333,9 +333,7 @@ There are three STP modes. The STP mode is always taken based on the configurati
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
 3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode. Combining stpMode=cancel_both with ordType=`fok` returns error 50016.  tradeQuoteCcy  
 For users in specific countries and regions, this parameter must be filled out for a successful order. Otherwise, the system will use the quote currency of instId as the default value, then error code 51000 will occur.  
-The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket
+The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).
 
 ---
 
@@ -662,7 +660,4 @@ optimal_limit_ioc：以价格限制区间的最高买价（买单）或最低卖
 3.Cancel Both：撤Taker和Maker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后Taker订单的剩余数量和第一个自我Maker订单被取消。此模式不支持FOK订单。将 stpMode=cancel_both 与 ordType=`fok` 组合使用将返回错误码 50016。  
 tradeQuoteCcy  
 对于特定国家和地区的用户，下单成功需要填写该参数，否则会取 `instId` 的计价币种为默认值，报错 51000。  
-传值必须取 tradeQuoteCcyList 的枚举值，tradeQuoteCcyList 来自获取交易产品基础信息(GET /api/v5/account/instruments) 接口。  
-rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享
+传值必须取 tradeQuoteCcyList 的枚举值，tradeQuoteCcyList 来自获取交易产品基础信息(GET /api/v5/account/instruments) 接口。

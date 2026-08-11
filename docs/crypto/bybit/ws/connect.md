@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-08-10 18:51:19.320224
+updated_at: 2026-08-11 18:52:33.182594
 ---
 
 # Connect
@@ -68,7 +68,7 @@ info
   * If your account is registered from [www.bybit.kz](http://www.bybit.kz), please use `stream.bybit.kz` for mainnet access
   * If your account is registered from [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge), please use `stream.bybitgeorgia.ge` for mainnet access
   * If your account is registered from [www.manepa.jp](http://www.manepa.jp), please use `stream.manepa.jp` for mainnet access
-  * If you are users from Bybit Argentina, please use `stream.bybit.com`, and add `x-site-id`: **ARG_BTL** in the request header for mainnet access
+  * If you are users from Bybit Brazil, please use `stream.bybit.com`, and add `x-site-id`: **BRA_BTL** in the request header for mainnet access
 
 
 

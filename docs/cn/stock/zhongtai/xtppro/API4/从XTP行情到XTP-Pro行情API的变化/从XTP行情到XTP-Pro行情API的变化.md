@@ -13,7 +13,7 @@ id: zhongtai-xtppro-从xtp行情到xtp-pro行情api的变化
 title: 从XTP行情到XTP Pro行情API的变化
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E8%A1%8C%E6%83%85%E5%88%B0XTP-Pro%E8%A1%8C%E6%83%85API%E7%9A%84%E5%8F%98%E5%8C%96.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-15
+updated_at: 2026-08-11
 ---
 
 # 从XTP行情到XTP Pro行情API的变化
@@ -25,7 +25,8 @@ updated_at: 2026-07-15
   * **1\. 结构体变动**
     * 1.1. 结构体XTPMD变动
     * 1.2. 结构体XTPQuoteRebuildReq变动
-    * 1.3. 结构体XTPTBT变动
+    * 1.3. 结构体XTPQFI变动
+    * 1.4. 结构体XTPTBT变动
   * **2\. 已去除接口**
     * 2.1. 去除期权逐笔行情以及订单簿行情相关的请求和回调接口
     * 2.2. 去除异步日志输出接口
@@ -268,7 +269,119 @@ cpp
 
 
 
-### 1.3. 结构体XTPTBT变动 ​
+### 1.3. 结构体XTPQFI变动 ​
+
+XTP Pro版本为1.1.0及其以上版本的行情API，其查询合约静态信息的回调接口OnQueryAllTickersFullInfo()里字段security_type新增了REITs基金类型 XTP_SECURITY_REITS，详细信息如下：
+
+cpp
+    
+    
+    virtual void OnQueryAllTickersFullInfo(XTPQFI* ticker_info, XTPRI *error_info, bool is_last) { (void)ticker_info; (void)error_info; (void)is_last; };
+    
+    ///股票行情全量静态信息
+    typedef struct XTPQuoteFullInfo {
+      XTP_EXCHANGE_TYPE  exchange_id;                    ///<交易所代码
+      XTP_SECURITY_TYPE  security_type;                  ///<合约详细类型
+      char    ticker[XTP_QUOTE_TICKER_LEN];              ///<证券代码
+      char    ticker_name[XTP_QUOTE_TICKER_NAME_LEN];    ///<证券名称
+      XTP_QUALIFICATION_TYPE ticker_qualification_class; ///<合约适当性类别
+      bool    is_registration;                           ///<是否注册制(仅适用创业板股票，创新企业股票及存托凭证)
+      bool    is_VIE;                                    ///<是否具有协议控制架构(仅适用创业板股票，创新企业股票及存托凭证)
+      bool    is_noprofit;                               ///<是否尚未盈利(仅适用创业板股票，创新企业股票及存托凭证)
+      bool    is_weighted_voting_rights;                 ///<是否存在投票权差异(仅适用创业板股票，创新企业股票及存托凭证)
+      bool    is_have_price_limit;                       ///<是否有涨跌幅限制(注：不提供具体幅度，可通过涨跌停价和昨收价来计算幅度)
+      bool    is_inventory;                              ///<是否为存量科创板股票（即2025.07.13日前上市的）。1=是；0=否；
+      char    unused[6];                                 ///预留
+      double  upper_limit_price;                         ///<涨停价（仅在有涨跌幅限制时有效）
+      double  lower_limit_price;                         ///<跌停价（仅在有涨跌幅限制时有效）
+      double  pre_close_price;                           ///<昨收价
+      double  price_tick;                                ///<价格最小变动价位
+      int32_t bid_qty_upper_limit;                       ///<限价买委托数量上限
+      int32_t bid_qty_lower_limit;                       ///<限价买委托数量下限
+      int32_t bid_qty_unit;                              ///<限价买数量单位
+      int32_t ask_qty_upper_limit;                       ///<限价卖委托数量上限
+      int32_t ask_qty_lower_limit;                       ///<限价卖委托数量下限
+      int32_t ask_qty_unit;                              ///<限价卖数量单位
+      int32_t market_bid_qty_upper_limit;                ///<市价买委托数量上限
+      int32_t market_bid_qty_lower_limit;                ///<市价买委托数量下限
+      int32_t market_bid_qty_unit;                       ///<市价买数量单位
+      int32_t market_ask_qty_upper_limit;                ///<市价卖委托数量上限
+      int32_t market_ask_qty_lower_limit;                ///<市价卖委托数量上限
+      int32_t market_ask_qty_unit;                       ///<市价卖数量单位
+      XTP_SECURITY_STATUS security_status;               ///<证券状态
+      uint32_t unknown1;                                 ///<保留字段
+      uint64_t unknown[3];                               ///<保留字段
+    
+    }XTPQFI;
+    
+    ///@brief XTP_SECURITY_TYPE是一个证券详细分类枚举类型
+    /////////////////////////////////////////////////////////////////////////
+    typedef uint32_t  XTP_SECURITY_TYPE;
+    /// 主板股票
+    constexpr uint32_t XTP_SECURITY_MAIN_BOARD = 0;
+    /// 中小板股票
+    constexpr uint32_t XTP_SECURITY_SECOND_BOARD = 1;
+    /// 创业板股票
+    constexpr uint32_t XTP_SECURITY_STARTUP_BOARD = 2;
+    /// 指数
+    constexpr uint32_t XTP_SECURITY_INDEX = 3;
+    /// 科创板股票(上海)
+    constexpr uint32_t XTP_SECURITY_TECH_BOARD = 4;
+    /// 国债
+    constexpr uint32_t XTP_SECURITY_STATE_BOND = 5;
+    /// 企业债
+    constexpr uint32_t XTP_SECURITY_ENTERPRICE_BOND = 6;
+    /// 公司债
+    constexpr uint32_t XTP_SECURITY_COMPANEY_BOND = 7;
+    /// 转换债券
+    constexpr uint32_t XTP_SECURITY_CONVERTABLE_BOND = 8;
+    /// 国债逆回购
+    constexpr uint32_t XTP_SECURITY_NATIONAL_BOND_REVERSE_REPO = 12;
+    /// 本市场股票 ETF
+    constexpr uint32_t XTP_SECURITY_ETF_SINGLE_MARKET_STOCK = 14;
+    /// 跨市场股票 ETF
+    constexpr uint32_t XTP_SECURITY_ETF_INTER_MARKET_STOCK = 15;
+    /// 跨境股票 ETF
+    constexpr uint32_t XTP_SECURITY_ETF_CROSS_BORDER_STOCK = 16;
+    /// 本市场实物债券 ETF
+    constexpr uint32_t XTP_SECURITY_ETF_SINGLE_MARKET_BOND = 17;
+    /// 现金债券ETF
+    constexpr uint32_t XTP_SECURITY_TYPE_ETF_CASH_BOND = 18;
+    /// 黄金 ETF
+    constexpr uint32_t XTP_SECURITY_ETF_GOLD = 19;
+    /// 商品期货ETF
+    constexpr uint32_t XTP_SECURITY_ETF_COMMODITY_FUTURES = 22;
+    /// 上市开放式基金LOF
+    constexpr uint32_t XTP_SECURITY_LOF = 23;
+    /// 分级基金子基金
+    constexpr uint32_t XTP_SECURITY_STRUCTURED_FUND_CHILD = 24;
+    /// 深交所仅申赎基金
+    constexpr uint32_t XTP_SECURITY_SZSE_RECREATION_FUND = 26;
+    /// 个股期权
+    constexpr uint32_t XTP_SECURITY_STOCK_OPTION = 29;
+    /// ETF期权
+    constexpr uint32_t XTP_SECURITY_ETF_OPTION = 30;
+    /// REITs基金
+    constexpr uint32_t XTP_SECURITY_REITS = 38;
+    /// 配股
+    constexpr uint32_t XTP_SECURITY_ALLOTMENT = 100;
+    /// 上交所申赎型货币基金
+    constexpr uint32_t XTP_SECURITY_MONETARY_FUND_SHCR = 110;
+    /// 上交所交易型货币基金
+    constexpr uint32_t XTP_SECURITY_MONETARY_FUND_SHTR = 111;
+    /// 深交所货币基金
+    constexpr uint32_t XTP_SECURITY_MONETARY_FUND_SZ = 112;
+    /// 跨境LOF
+    constexpr uint32_t XTP_SECURITY_LOF_CROSS_BORDER = 113;
+    /// 其他
+    constexpr uint32_t XTP_SECURITY_OTHERS = 255;
+
+其中，XTP_SECURITY_REITS = 38为新增REITs基金类型。
+
+  
+
+
+### 1.4. 结构体XTPTBT变动 ​
 
 XTP Pro行情API更新到版本1.2.1版本及其以上时，逐笔回调OnTickByTick()的数据新增已成交的委托数量字段XTPTickByTickEntrust.traded_qty。结构体详情如下：
 

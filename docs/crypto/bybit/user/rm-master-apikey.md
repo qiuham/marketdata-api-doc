@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-master-apikey
 api_type: REST
-updated_at: 2026-08-10 18:50:47.167044
+updated_at: 2026-08-11 18:52:04.847319
 ---
 
 # Sign Agreement

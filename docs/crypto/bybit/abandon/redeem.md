@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/redeem
 api_type: REST
-updated_at: 2026-08-10 18:40:56.209854
+updated_at: 2026-08-11 18:43:24.122796
 ---
 
 # Set Risk Limit

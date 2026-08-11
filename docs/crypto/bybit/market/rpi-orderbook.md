@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/rpi-orderbook
 api_type: Market Data
-updated_at: 2026-08-10 18:47:13.204668
+updated_at: 2026-08-11 18:48:55.228950
 ---
 
 # Get RPI Orderbook

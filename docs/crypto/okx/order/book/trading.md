@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-08-10 19:13:04.741326
+updated_at: 2026-08-11 19:13:14.049840
 ---
 
 # Order Book Trading
@@ -339,9 +339,7 @@ There are three STP modes. The STP mode is always taken based on the configurati
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
 3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode. Combining stpMode=cancel_both with ordType=`fok` returns error 50016.  tradeQuoteCcy  
 For users in specific countries and regions, this parameter must be filled out for a successful order. Otherwise, the system will use the quote currency of instId as the default value, then error code 51000 will occur.  
-The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments).  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
+The value provided must be one of the enumerated values from tradeQuoteCcyList, which can be obtained from the endpoint Get instruments (GET /api/v5/account/instruments). 
 
 ### POST / Place multiple orders
 
@@ -601,9 +599,7 @@ The time is recorded after authentication.
 outTime | String | Timestamp at REST gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
+clOrdId must be unique among all pending orders and the current request. 
 
 ### POST / Cancel order
 
@@ -5076,9 +5072,7 @@ Mandatory self trade prevention will not lead to latency.
 There are three STP modes. The STP mode is always taken based on the configuration in the taker order.  
 1\. Cancel Maker: This is the default STP mode, which cancels the maker order to prevent self-trading. Then, the taker order continues to match with the next order based on the order book priority.  
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
-3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode.  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
+3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode. 
 
 ### WS / Place multiple orders
 
@@ -5353,9 +5347,7 @@ inTime | String | Timestamp at Websocket gateway when the request is received, U
 outTime | String | Timestamp at Websocket gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket  
+clOrdId must be unique among all pending orders and the current request. 
 
 ### WS / Cancel order
 
@@ -20650,9 +20642,6 @@ optimal_limit_ioc：以价格限制区间的最高买价（买单）或最低卖
 tradeQuoteCcy  
 对于特定国家和地区的用户，下单成功需要填写该参数，否则会取 `instId` 的计价币种为默认值，报错 51000。  
 传值必须取 tradeQuoteCcyList 的枚举值，tradeQuoteCcyList 来自获取交易产品基础信息(GET /api/v5/account/instruments) 接口。  
-rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
 ### POST / 批量下单 
 
@@ -20901,9 +20890,7 @@ inTime | String | REST网关接收请求时的时间戳，Unix时间戳的微秒
 返回的时间是请求验证后的时间。  
 outTime | String | REST网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。 
 
 ### POST / 撤单 
 
@@ -25323,9 +25310,6 @@ optimal_limit_ioc：市价委托，立即成交并取消剩余，仅适用于交
 1.Cancel Maker：这是默认的STP模式，系统撤Maker订单以防止自成交。然后，taker订单会基于深度继续和下一个订单成交。  
 2.Cancel Taker：撤Taker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后撤单。FOK订单会确保完全成交和自成交保护。  
 3.Cancel Both：撤Taker和Maker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后Taker订单的剩余数量和第一个自我Maker订单被取消。此模式不支持FOK订单。  
-rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
 
 ### WS / 批量下单 
 
@@ -25581,9 +25565,7 @@ data | Array of objects | 请求成功后返回的数据
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 outTime | String | WebSocket 网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享 
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。 
 
 ### WS / 撤单 
 

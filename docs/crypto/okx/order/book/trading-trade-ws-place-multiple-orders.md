@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-place-multiple-orders
 anchor_id: order-book-trading-trade-ws-place-multiple-orders
 api_type: WebSocket
-updated_at: 2026-08-10 19:13:15.116153
+updated_at: 2026-08-11 19:13:24.471472
 ---
 
 # WS / Place multiple orders
@@ -279,9 +279,7 @@ inTime | String | Timestamp at Websocket gateway when the request is received, U
 outTime | String | Timestamp at Websocket gateway when the response is sent, Unix timestamp format in microseconds, e.g. `1597026383085123`  
 In the `Portfolio Margin` account mode, either all orders are accepted by the system successfully, or all orders are rejected by the system.  clOrdId  
 clOrdId is a user-defined unique ID used to identify the order. It will be included in the response parameters if you have specified during order submission, and can be used as a request parameter to the endpoints to query, cancel and amend orders.   
-clOrdId must be unique among all pending orders and the current request.  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket
+clOrdId must be unique among all pending orders and the current request.
 
 ---
 
@@ -539,6 +537,4 @@ data | Array of objects | 请求成功后返回的数据
 inTime | String | WebSocket 网关接收请求时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 outTime | String | WebSocket 网关发送响应时的时间戳，Unix时间戳的微秒数格式，如 `1597026383085123`  
 在组合保证金账户模式下，或者全部成功，或者全部失败。  clOrdId  
-clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。  rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享
+clOrdId是用户自定义的唯一ID用来识别订单。如果在请求参数中传入了，那它一定会在返回参数内，并且可以用于查询订单，撤销订单，修改订单等接口。 clOrdId不能与当前所有挂单和当前请求中的clOrdId重复。

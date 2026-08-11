@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-api常见问题
 title: XTP Pro API常见问题
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/API%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-20
+updated_at: 2026-08-07
 ---
 
 # XTP Pro API常见问题
@@ -164,7 +164,8 @@ updated_at: 2026-07-20
 
 > 答：这2种特殊情况下，只创建一个QuoteApi就不够了。  
 >  (1) 若在同一个程序里，同时接收L1和L2快照行情，如果要完全区分Level1和Level2快照数据，就需要配置2份quote_config.ini，创建2套QuoteApi实例，2个QuoteApi分别登录订阅，分别从2个OnDepthMarketData()接收数据。  
->  (2) 若在同一个程序里，同时接收20和30网段的OB行情，也要配置2份quote_config.ini，创建2套QuoteApi实例，2个QuoteApi分别登录订阅，分别从2个OnOrderBook()接收数据。
+>  (2) 若在同一个程序里，同时接收L1沪市ETF的iopv值和L2快照行情，那么只需配置1份quote_config.ini，创建1套QuoteApi实例。Level1 只需开启 sh_level1_md_index = ON，iopv值从OnETFIOPVData()接收数据。  
+>  (3) 若在同一个程序里，同时接收20和30网段的OB行情，也要配置2份quote_config.ini，创建2套QuoteApi实例，2个QuoteApi分别登录订阅，分别从2个OnOrderBook()接收数据。
 
 **2.1.4. 问：调用CreateQuoteApi()创建API时client_id取值范围是多少？同一个账户同时多点登录行情时，client_id可以相同么？**
 
@@ -1029,7 +1030,7 @@ updated_at: 2026-07-20
 
 **3.1.10. 问：XTP-Pro有获取交易日历的接口吗？**
 
-> 答：API没有获取交易日历的接口，您可以根据交易所官方公告的交易日历来设置。
+> 答：没有获取交易日历的接口，只能调用GetTradingDay()获取当天的交易日，您可以根据交易所公告的交易日安排来设置交易日历。
 
 **3.1.11. 问：每个账户对应一个TraderSpi吗？我登录两个账号注册了2个TraderSpi，好像没有生效？**
 
@@ -1471,7 +1472,10 @@ updated_at: 2026-07-20
 
 **3.1.98. 问：资金划拨操作是调用哪个Api接口？**
 
-> 答：使用FundTransfer()接口请求资金划拨，资金流转方向参见 transfer_type 字段，一账户两中心节点之间的资金划拨，需注意资金划拨的方向，另外，XTP和主柜台之间的资金划拨要使用交易密码，而不是银证转账的资金密码。
+> 答：使用FundTransfer()接口请求资金划拨，划拨方向请参见 XTPFundTransferReq.transfer_type 字段。  
+>  (1) 该接口受资金划拨服务是否可用影响。登录成功后需等待OnServerStatusNotification()返回true-服务可用，才能进行资金划拨，最晚请在16:00之前划拨。  
+>  (2) 双中心用户跨节点划拨资金时，必须填写转入或转出的目标节点，请参见 XTPFundTransferReq.site 字段。  
+>  (3) 实盘环境有划拨请求频率限制，1秒内只允许划拨一次，因为涉及跨柜台、跨节点之间的划拨。
 
 **3.1.99. 问：资金划拨请求发送成功，FundTransfer()函数的返回值，跟回调返回的XTPFundTransferNotice.serial_id是同一个值吗？**
 
@@ -1479,7 +1483,11 @@ updated_at: 2026-07-20
 
 **3.1.100. 问：调用FundTransfer()做资金划转操作，只是在跨节点划拨时要填site字段吧？**
 
-> 答：是的，划转节点类型site字段，双中心用户跨节点划拨时必填，填转入或转出的目标服务器对应的节点类型，枚举值如下：
+> 答：是的，划转节点类型site字段，双中心用户跨节点划拨时必填，填转入或转出的目标服务器对应的节点类型。  
+>  (1) 双中心用户在上海节点，要划拨资金到深圳节点，site填目标节点 XTP_TRANSFER_SITE_SZ。  
+>  (2) 双中心用户在深圳节点，要划拨资金到上海节点，site填目标节点 XTP_TRANSFER_SITE_SH。  
+>  (3) 在XTP和主柜台之间的转入转出，可以不填目标节点，site填 XTP_TRANSFER_SITE_UNKNOWN 也不影响。  
+>  XTPFundTransferReq.site 枚举值如下：
     
     
     /////////////////////////////////////////////////////////////////////////
@@ -1502,11 +1510,12 @@ updated_at: 2026-07-20
 
 **3.1.101. 问：一账号两中心节点之间如何进行资金划转？**
 
-> 答：如果是做转入操作，且知道对方节点的可用资金是多少，那么可以直接发起划拨请求。如果不知道对方节点可用资金是多少，那么可以先通过QueryOtherServerFund()查询到对方节点的资金，然后设置合适的资金，再发起划拨请求。
+> 答：如果是做转入操作，且知道对方节点的可用资金是多少，那么可以直接调用FundTransfer()发起划拨请求。  
+>  如果不知道对方节点可用资金是多少，那么可以先通过QueryOtherServerFund()查询到对方节点的资金，然后设置合适的资金，再发起划拨请求。
 
 **3.1.102. 问：QueryFundTransferByID()接口可以一次性查询当天所有的资金划拨订单吗？**
 
-> 答：不可以，一次只能查询指定ID单号的资金划拨订单。
+> 答：不可以，一次只能查询指定ID单号的资金划拨订单。注意：该接口受资金划拨服务是否可用影响。
 
 **3.1.103. 问：QueryFundTransferByID()能查询到银证转账订单吗？**
 
@@ -1514,15 +1523,23 @@ updated_at: 2026-07-20
 
 **3.1.104. 问：要查询所有的资金划拨订单，是调用QueryFundTransferByPage()接口获取吗？**
 
-> 答：是的，如果是第一次查询，reference填0即可，后续的查询，reference要传入上一次收到的查询结果中带回来的索引。
+> 答：是的，如果是第一次查询，reference填0即可，后续的查询，reference要传入上一次收到的查询结果中带回来的索引。  
+>  注意：该接口受资金划拨服务是否可用影响。
 
 **3.1.105. 问：XTP柜台有Api接口查询金证主柜台的资金吗？**
 
-> 答：可调用 QueryOtherServerFund()接口查询，查询类型 query_type 包括：金证主柜台的可转资金（不是可取资金），双中心账号的对方节点的可用资金、对方节点的融券卖出余额资金、对方节点的授信额度。
+> 答：可调用 QueryOtherServerFund()接口查询，查询类型 XTPFundQueryReq.query_type 包括：  
+>  金证主柜台的可转资金（不是可取资金），双中心账号的对方节点的可用资金、对方节点的融券卖出余额资金、对方节点的授信额度。  
+>  注意：  
+>  (1) 该接口受资金划拨服务是否可用影响。登录成功后需等待OnServerStatusNotification()返回true-服务可用，才能查询其他节点可用资金。  
+>  (2) 实盘环境有查询请求频率限制，1秒内只允许查询一次，因为涉及跨柜台、跨节点之间的查询。
 
 **3.1.106. 问：开通两中心的账号，在当前交易节点如何查询另一个节点的实时资金及授信额度？**
 
-> 答：可参见 QueryOtherServerFund()的查询类型query_type。如果查询另一个节点的实时资金，query_type 填 XTP_FUND_QUERY_INTERNAL，如果查询另一个节点的授信额度，query_type 填 XTP_FUND_QUERY_INTERNAL_CONTRACT。柜台资金查询类型的枚举值如下：
+> 答：可调用 QueryOtherServerFund()接口查询，注意查询类型 XTPFundQueryReq.query_type：  
+>  如果查询另一个节点的实时可用资金，query_type 填 XTP_FUND_QUERY_INTERNAL；  
+>  如果查询另一个节点的可用授信额度，query_type 填 XTP_FUND_QUERY_INTERNAL_CONTRACT；  
+>  XTPFundQueryReq.query_type 枚举值如下：
     
     
     /////////////////////////////////////////////////////////////////////////

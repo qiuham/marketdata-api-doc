@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-08-10 19:02:11.581139
+updated_at: 2026-08-11 19:02:14.226780
 ---
 
 # Advanced Trade API Endpoints
@@ -67,10 +67,9 @@ API| Method| Resource| API Key Permission
 Public endpoints do not require authentication.
 
 1s cache is enabled for all public endpoints. If you need real-time data, please choose one of the following options:
-
-  * Use the [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-overview) (recommended as this will provide the fastest product and market trades updates).
-  * Set `cache-control: no-cache` header on the API requests to bypass caching.
-  * Use the authenticated endpoints.
+     * Use the [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-overview) (recommended as this will provide the fastest product and market trades updates).
+     * Set `cache-control: no-cache` header on the API requests to bypass caching.
+     * Use the authenticated endpoints.
 
 API| Method| Resource  
 ---|---|---  

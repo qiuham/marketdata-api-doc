@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan
 anchor_id: financial-product-flexible-loan
 api_type: API
-updated_at: 2026-08-10 19:15:20.786532
+updated_at: 2026-08-11 19:15:29.706607
 ---
 
 # Flexible loan
@@ -1127,7 +1127,7 @@ ordId | String | 否 | 活期借币订单 ID。
 
 code = `0` 代表请求已被接受(不代表处理成功)
 
-### POST / 下单
+### POST / 下单 
 
 #### 限速：2次/2秒
 
@@ -1186,7 +1186,7 @@ ordId | String | 新建订单的订单 ID，或被追加借款的订单 ID。
 eMode | String | 订单的 E-Mode 状态。  
 clOrdId | String | 从请求中回显的客户端订单 ID。  
   
-### POST / 还款
+### POST / 还款 
 
 #### 限速：2次/2秒
 

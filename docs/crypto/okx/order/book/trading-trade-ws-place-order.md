@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-place-order
 anchor_id: order-book-trading-trade-ws-place-order
 api_type: WebSocket
-updated_at: 2026-08-10 19:13:14.786790
+updated_at: 2026-08-11 19:13:24.145012
 ---
 
 # WS / Place order
@@ -283,9 +283,7 @@ Mandatory self trade prevention will not lead to latency.
 There are three STP modes. The STP mode is always taken based on the configuration in the taker order.  
 1\. Cancel Maker: This is the default STP mode, which cancels the maker order to prevent self-trading. Then, the taker order continues to match with the next order based on the order book priority.  
 2\. Cancel Taker: The taker order is canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled and then canceled. FOK orders are always honored and canceled if they would result in self-trading.  
-3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode.  Rate limit of orders tagged as rpiTakerAccess:true  
-\- 50 orders per 2 seconds per User ID per instrument ID.  
-\- This rate limit is shared in Place order/Place multiple orders endpoints in REST/WebSocket
+3\. Cancel Both: Both taker and maker orders are canceled to prevent self-trading. If the user's own maker order is lower in the order book priority, the taker order is partially filled. Then, the remaining quantity of the taker order and the first maker order are canceled. FOK orders are not supported in this mode.
 
 ---
 
@@ -560,7 +558,4 @@ optimal_limit_ioc：市价委托，立即成交并取消剩余，仅适用于交
 有三种STP模式。STP模式始终基于taker订单中的配置。  
 1.Cancel Maker：这是默认的STP模式，系统撤Maker订单以防止自成交。然后，taker订单会基于深度继续和下一个订单成交。  
 2.Cancel Taker：撤Taker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后撤单。FOK订单会确保完全成交和自成交保护。  
-3.Cancel Both：撤Taker和Maker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后Taker订单的剩余数量和第一个自我Maker订单被取消。此模式不支持FOK订单。  
-rpiTakerAccess:true订单限速  
-\- 50个/2s，限制维度为 User ID + Instrument ID  
-\- 该限速会在 REST 和 WebSocket 的下单及批量下单接口中共享
+3.Cancel Both：撤Taker和Maker订单以防止自成交。如果用户的Maker订单不是深度里第一个订单，Taker订单会被部分成交，然后Taker订单的剩余数量和第一个自我Maker订单被取消。此模式不支持FOK订单。

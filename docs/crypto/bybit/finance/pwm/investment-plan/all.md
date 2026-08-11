@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/all
 api_type: REST
-updated_at: 2026-08-10 18:46:13.683562
+updated_at: 2026-08-11 18:48:02.368524
 ---
 
 # Claim Withdrawable Funds

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-get-purchase-amp-redeem-history
 anchor_id: financial-product-sol-staking-get-purchase-amp-redeem-history
 api_type: API
-updated_at: 2026-08-10 19:15:13.842460
+updated_at: 2026-08-11 19:15:22.776311
 ---
 
 # GET / Purchase&Redeem history
