@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/close-pnl
 api_type: REST
-updated_at: 2026-08-11 18:50:13.015140
+updated_at: 2026-08-12 18:50:15.336418
 ---
 
 # Get Pre-upgrade USDC Session Settlement

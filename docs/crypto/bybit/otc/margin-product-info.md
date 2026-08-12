@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-product-info
 api_type: REST
-updated_at: 2026-08-11 18:49:55.726175
+updated_at: 2026-08-12 18:49:58.018955
 ---
 
 # Set Auto Add Margin

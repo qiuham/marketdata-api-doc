@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-amend-copy-settings
 anchor_id: order-book-trading-copy-trading-post-amend-copy-settings
 api_type: API
-updated_at: 2026-08-11 19:13:57.283546
+updated_at: 2026-08-12 19:13:58.652821
 ---
 
 # POST / Amend copy settings

@@ -2,16 +2,17 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/sandbox
 api_type: Trading
-updated_at: 2026-08-11 19:02:14.252684
+updated_at: 2026-08-12 19:02:15.171899
 ---
 
 # Advanced Trade API Sandbox
 
 Advanced Trade API offers a static sandbox environment and its use cases are:
-     * Users can make API requests to Advanced sandbox API without authentication.
-     * Users can make API requests to the sandbox and get the same formatted responses as production.
-     * All responses are static and pre-defined.
-     * Set custom request header “X-Sandbox:” to trigger pre-defined variance in some endpoints.
+
+  * Users can make API requests to Advanced sandbox API without authentication.
+  * Users can make API requests to the sandbox and get the same formatted responses as production.
+  * All responses are static and pre-defined.
+  * Set custom request header “X-Sandbox:” to trigger pre-defined variance in some endpoints.
 
 ## Advanced Trade Sandbox Endpoints
 
@@ -74,4 +75,5 @@ API| Method| Resource| Error| Header
   
   
 **See Also:**
-     * [REST API Overview](/coinbase-app/advanced-trade-apis/rest-api)
+
+  * [REST API Overview](/coinbase-app/advanced-trade-apis/rest-api)

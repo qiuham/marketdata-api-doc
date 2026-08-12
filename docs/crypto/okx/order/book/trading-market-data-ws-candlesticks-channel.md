@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-candlesticks-channel
 anchor_id: order-book-trading-market-data-ws-candlesticks-channel
 api_type: WebSocket
-updated_at: 2026-08-11 19:14:06.489756
+updated_at: 2026-08-12 19:14:07.861790
 ---
 
 # WS / Candlesticks channel

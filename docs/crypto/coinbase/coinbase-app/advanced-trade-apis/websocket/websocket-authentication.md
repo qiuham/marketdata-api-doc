@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication
 api_type: WebSocket
-updated_at: 2026-08-11 19:02:14.371174
+updated_at: 2026-08-12 19:02:15.283106
 ---
 
 # Advanced Trade WebSocket Authentication
@@ -20,9 +20,10 @@ WebSocket JWTs (vs those for REST API) are not built with a request method or re
 ### Generating a JWT
 
 Regardless of which code snippet you use, follow these steps:
-     1. Replace `key name` and `key secret` with your key name and private key. `key secret` is a multi-line key and newlines must be preserved to properly parse the key. Do this on one line with `\n` escaped newlines, or with a multi-line string.
-     2. Run the generation script that prints the command `export JWT=...`.
-     3. Run the generated command to save your JWT.
+
+  1. Replace `key name` and `key secret` with your key name and private key. `key secret` is a multi-line key and newlines must be preserved to properly parse the key. Do this on one line with `\n` escaped newlines, or with a multi-line string.
+  2. Run the generation script that prints the command `export JWT=...`.
+  3. Run the generated command to save your JWT.
 
 Your JWT expires after 2 minutes, after which all requests are unauthenticated.
 
@@ -30,33 +31,35 @@ Your JWT expires after 2 minutes, after which all requests are unauthenticated.
 
 The easiest way to generate a JWT is to use the built-in functions in our Python SDK as described below. Otherwise, use the code samples below to generate/export a JWT and make an authenticated request.
 
-     * Python SDK
+  * Python SDK
 
-     * Python
+  * Python
 
-     * Go
+  * Go
 
-     * JavaScript
+  * JavaScript
 
-     * PHP
+  * PHP
 
-     * Java
+  * Java
 
-     * C++
+  * C++
 
-     * TypeScript
+  * TypeScript
 
-     * C#
+  * C#
 
-     * Ruby
+  * Ruby
 
-     1. Install the SDK.
-            
-            pip3 install coinbase-advanced-py
-            
+  1. Install the SDK.
+         
+         pip3 install coinbase-advanced-py
+         
 
-     2. In the console, run: `python main.py` (or whatever your file name is).
-     3. Set the JWT to that output, or export the JWT to the environment with `export JWT=$(python main.py)`.
+  2. In the console, run: `python main.py` (or whatever your file name is).
+  3. Set the JWT to that output, or export the JWT to the environment with `export JWT=$(python main.py)`.
+
+    
     
     from coinbase import jwt_generator
     
@@ -72,14 +75,16 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     
     
 
-     1. Install dependencies PyJWT and cryptography.
-            
-            pip install PyJWT
-            pip install cryptography
-            
+  1. Install dependencies PyJWT and cryptography.
+         
+         pip install PyJWT
+         pip install cryptography
+         
 
-     2. In the console, run: `python main.py` (or whatever your file name is).
-     3. Set JWT to that output, or export the JWT to the environment with `export JWT=$(node main.py)`.
+  2. In the console, run: `python main.py` (or whatever your file name is).
+  3. Set JWT to that output, or export the JWT to the environment with `export JWT=$(node main.py)`.
+
+    
     
     import jwt
     from cryptography.hazmat.primitives import serialization
@@ -119,11 +124,13 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     
     
 
-     1. Create a new directory and generate a Go file called `main.go`.
-     2. Paste the Go snippet below into `main.go`.
-     3. Run `go mod init jwt-generator` and `go mod tidy` to generate `go.mod` and `go.sum` and manage your dependencies.
-     4. In the console, run: go run `main.go`.
-     5. Set your JWT with that output, or export the JWT to environment with `export JWT=$(node main.go)`.
+  1. Create a new directory and generate a Go file called `main.go`.
+  2. Paste the Go snippet below into `main.go`.
+  3. Run `go mod init jwt-generator` and `go mod tidy` to generate `go.mod` and `go.sum` and manage your dependencies.
+  4. In the console, run: go run `main.go`.
+  5. Set your JWT with that output, or export the JWT to environment with `export JWT=$(node main.go)`.
+
+    
     
     package main
     
@@ -206,13 +213,15 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     }
     
 
-     1. Install jsonwebtoken.
-            
-            npm install jsonwebtoken
-            
+  1. Install jsonwebtoken.
+         
+         npm install jsonwebtoken
+         
 
-     2. In the console, run: `node main.js` (or whatever your file name is).
-     3. Set JWT to that output, or export the JWT to environment with `export JWT=$(node main.js)`.
+  2. In the console, run: `node main.js` (or whatever your file name is).
+  3. Set JWT to that output, or export the JWT to environment with `export JWT=$(node main.js)`.
+
+    
     
     const { sign } = require('jsonwebtoken');
     const crypto = require('crypto');
@@ -241,21 +250,22 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     console.log('export JWT=' + token);
     
 
-     1. Add PHP dependencies with Composer (for JWT and environment variable management):
-            
-            composer require firebase/php-jwt
-            composer require vlucas/phpdotenv
-            
+  1. Add PHP dependencies with Composer (for JWT and environment variable management):
+         
+         composer require firebase/php-jwt
+         composer require vlucas/phpdotenv
+         
 
-     2. Run `generate_jwt.php` (or a filename of your choice).
-     3. Output the JWT to the command line and use a shell script to export it:
-            
-            export JWT=$(php generate_jwt.php)
-            
+  2. Run `generate_jwt.php` (or a filename of your choice).
+  3. Output the JWT to the command line and use a shell script to export it:
+         
+         export JWT=$(php generate_jwt.php)
+         
 
   
 
 > Code Snippet
+    
     
     <?php
     require 'vendor/autoload.php';
@@ -293,24 +303,25 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     }
     
 
-     1. Add Java Dependencies to your project’s Maven or Gradle configuration:
-            
-            nimbus-jose-jwt (version 9.39), bcpkix-jdk18on (version 1.78), and java-dotenv (version 5.2.2)
-            
+  1. Add Java Dependencies to your project’s Maven or Gradle configuration:
+         
+         nimbus-jose-jwt (version 9.39), bcpkix-jdk18on (version 1.78), and java-dotenv (version 5.2.2)
+         
 
-     2. Compile your Java application to generates a JWT, for example:
-            
-            mvn compile
-            
+  2. Compile your Java application to generates a JWT, for example:
+         
+         mvn compile
+         
 
-     3. Capture and export the JWT output from your Java application to an environment variable:
-            
-            export JWT=$(mvn exec:java -Dexec.mainClass=Main)
-            
+  3. Capture and export the JWT output from your Java application to an environment variable:
+         
+         export JWT=$(mvn exec:java -Dexec.mainClass=Main)
+         
 
   
 
 > Code Snippet
+    
     
     import com.nimbusds.jose.*;
     import com.nimbusds.jose.crypto.*;
@@ -393,31 +404,32 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     }
     
 
-     1. Install C++ project dependencies like so:
-            
-            apt-get update
-            apt-get install libcurlpp-dev libssl-dev
-            git clone https://github.com/Thalhammer/jwt-cpp
-            cd jwt-cpp
-            mkdir build && cd build
-            cmake ..
-            make
-            make install
-            
+  1. Install C++ project dependencies like so:
+         
+         apt-get update
+         apt-get install libcurlpp-dev libssl-dev
+         git clone https://github.com/Thalhammer/jwt-cpp
+         cd jwt-cpp
+         mkdir build && cd build
+         cmake ..
+         make
+         make install
+         
 
-     2. After you’ve saved your code to a file name, for example main.cpp, compile the program:
-            
-            g++ main.cpp -o myapp -lcurlpp -lcurl -lssl -lcrypto -I/usr/local/include -L/usr/local/lib -ljwt -std=c++17
-            
+  2. After you’ve saved your code to a file name, for example main.cpp, compile the program:
+         
+         g++ main.cpp -o myapp -lcurlpp -lcurl -lssl -lcrypto -I/usr/local/include -L/usr/local/lib -ljwt -std=c++17
+         
 
-     3. Capture and export the JWT output from your C++ application to an environment variable:
-            
-            export JWT=$(./myapp)
-            
+  3. Capture and export the JWT output from your C++ application to an environment variable:
+         
+         export JWT=$(./myapp)
+         
 
   
 
 > Code Snippet
+    
     
     #include <iostream>
     #include <sstream>
@@ -466,67 +478,68 @@ The easiest way to generate a JWT is to use the built-in functions in our Python
     };
     
 
-     1. Install the JSON Web Token and TypeScript dependencies:
-            
-            npm install jsonwebtoken
-            npm install @types/jsonwebtoken
-            npm install -g typescript
-            
+  1. Install the JSON Web Token and TypeScript dependencies:
+         
+         npm install jsonwebtoken
+         npm install @types/jsonwebtoken
+         npm install -g typescript
+         
 
-     2. Create a TypeScript file named `main.ts` and add the following code:
-            
-            import * as jwt from 'jsonwebtoken';
-            import * as crypto from 'crypto';
-            
-            const keyName = 'organizations/{org_id}/apiKeys/{key_id}';
-            const keySecret = `-----BEGIN EC PRIVATE KEY-----
-            YOUR PRIVATE KEY
-            -----END EC PRIVATE KEY-----`;
-            const algorithm = 'ES256';
-            
-            
-            const generateJWT = (): string => {
-              const payload = {
-                iss: 'cdp',
-                nbf: Math.floor(Date.now() / 1000),
-                exp: Math.floor(Date.now() / 1000) + 120,
-                sub: keyName,
-              };
-            
-              const header = {
-                alg: algorithm,
-                kid: keyName,
-                nonce: crypto.randomBytes(16).toString('hex'),
-              };
-            
-              return jwt.sign(payload, keySecret, { algorithm, header });
-            };
-            
-            const main = () => {
-              const token = generateJWT();
-              console.log(token);
-            };
-            
-            main();
-            
+  2. Create a TypeScript file named `main.ts` and add the following code:
+         
+         import * as jwt from 'jsonwebtoken';
+         import * as crypto from 'crypto';
+         
+         const keyName = 'organizations/{org_id}/apiKeys/{key_id}';
+         const keySecret = `-----BEGIN EC PRIVATE KEY-----
+         YOUR PRIVATE KEY
+         -----END EC PRIVATE KEY-----`;
+         const algorithm = 'ES256';
+         
+         
+         const generateJWT = (): string => {
+           const payload = {
+             iss: 'cdp',
+             nbf: Math.floor(Date.now() / 1000),
+             exp: Math.floor(Date.now() / 1000) + 120,
+             sub: keyName,
+           };
+         
+           const header = {
+             alg: algorithm,
+             kid: keyName,
+             nonce: crypto.randomBytes(16).toString('hex'),
+           };
+         
+           return jwt.sign(payload, keySecret, { algorithm, header });
+         };
+         
+         const main = () => {
+           const token = generateJWT();
+           console.log(token);
+         };
+         
+         main();
+         
 
-     3. Compile the TypeScript file to JavaScript:
-            
-            tsc main.ts
-            
+  3. Compile the TypeScript file to JavaScript:
+         
+         tsc main.ts
+         
 
 This will generate a `main.js` file.
-     4. Run the generated JavaScript file:
-            
-            node main.js
-            
+  4. Run the generated JavaScript file:
+         
+         node main.js
+         
 
-     5. Set the JWT to the output, or export the JWT to the environment with:
-            
-            export JWT=$(node main.js)
-            
+  5. Set the JWT to the output, or export the JWT to the environment with:
+         
+         export JWT=$(node main.js)
+         
 
 > Code Snippet
+    
     
     import * as jwt from 'jsonwebtoken';
     import * as crypto from 'crypto';
@@ -562,32 +575,33 @@ This will generate a `main.js` file.
     main();
     
 
-     1. Create a new console project by running the following command:
-            
-            dotnet new console
-            
+  1. Create a new console project by running the following command:
+         
+         dotnet new console
+         
 
-     2. Open the Program.cs file in a text editor or IDE (e.g., Visual Studio Code, Visual Studio, or any text editor). Replace the contents of Program.cs with the provided bellow in the Code Snippet.
-     3. Install C# project dependencies like so:
-            
-            dotnet add package Microsoft.IdentityModel.Tokens
-            dotnet add package System.IdentityModel.Tokens.Jwt
-            dotnet add package Jose-JWT
-            
+  2. Open the Program.cs file in a text editor or IDE (e.g., Visual Studio Code, Visual Studio, or any text editor). Replace the contents of Program.cs with the provided bellow in the Code Snippet.
+  3. Install C# project dependencies like so:
+         
+         dotnet add package Microsoft.IdentityModel.Tokens
+         dotnet add package System.IdentityModel.Tokens.Jwt
+         dotnet add package Jose-JWT
+         
 
-     4. Build the project by running the following command:
-            
-            dotnet build
-            
+  4. Build the project by running the following command:
+         
+         dotnet build
+         
 
-     5. Run the project by running the following command:
-            
-            dotnet run
-            
+  5. Run the project by running the following command:
+         
+         dotnet run
+         
 
   
 
 > Code Snippet
+    
     
     // Environment is .NET 6.0 C#
     
@@ -692,14 +706,16 @@ This will generate a `main.js` file.
     }
     
 
-     1. Install dependencies `JWT` and `OpenSSL`.
-            
-            gem install JWT
-            gem install OpenSSL
-            
+  1. Install dependencies `JWT` and `OpenSSL`.
+         
+         gem install JWT
+         gem install OpenSSL
+         
 
-     2. In the console, run: `ruby main.rb` (or whatever your file name is).
-     3. Set the JWT to that output, or export the JWT to the environment with `export JWT=$(ruby main.rb)`.
+  2. In the console, run: `ruby main.rb` (or whatever your file name is).
+  3. Set the JWT to that output, or export the JWT to the environment with `export JWT=$(ruby main.rb)`.
+
+    
     
     require 'jwt'
     require 'openssl'
@@ -737,6 +753,7 @@ This will generate a `main.js` file.
 
 ### Subscribing
     
+    
     // Request
     // Subscribe to ETH-USD and ETH-EUR with the level2 channel
     {
@@ -750,6 +767,7 @@ This will generate a `main.js` file.
     
 
 ### Unsubscribing
+    
     
     // Request
     {
@@ -771,4 +789,5 @@ Even though a WebSocket connection is over TCP, the WebSocket servers receive ma
 To guarantee that messages are delivered and your order book is in sync, consider using the [level2 channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#level2-channel).
 
 **See Also:**
-     * [WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)
+
+  * [WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)

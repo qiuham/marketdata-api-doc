@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/product-quote
 api_type: REST
-updated_at: 2026-08-11 18:46:58.135873
+updated_at: 2026-08-12 18:46:59.445468
 ---
 
 # Get Liquidation Records

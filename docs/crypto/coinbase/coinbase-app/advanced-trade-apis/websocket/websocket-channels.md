@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-channels
 api_type: WebSocket
-updated_at: 2026-08-11 19:02:14.478311
+updated_at: 2026-08-12 19:02:15.341708
 ---
 
 # Advanced Trade WebSocket Channels
@@ -23,18 +23,21 @@ futures_balance_summary| Real-time updates every time a user’s futures balance
   
 ### Working with websockets
 
-     * **Keep subscriptions open with heartbeats.** Most channels close within 60-90 seconds when no updates are sent. Subscribe to the heartbeats channel alongside your other channels to keep all subscriptions open — especially useful for illiquid pairs.
-     * **Authenticate for a reliable connection.** For the most reliable connection, authenticate with a CDP API key when subscribing to any channel.
-     * **USDC products.** Subscribing to `-USDC` products is only available on the user channel. Other channels return the same data as the corresponding `-USD` products. `USDT-USDC` and `EURC-USDC` are available on all channels.
+  * **Keep subscriptions open with heartbeats.** Most channels close within 60-90 seconds when no updates are sent. Subscribe to the heartbeats channel alongside your other channels to keep all subscriptions open — especially useful for illiquid pairs.
+  * **Authenticate for a reliable connection.** For the most reliable connection, authenticate with a CDP API key when subscribing to any channel.
+  * **USDC products.** Subscribing to `-USDC` products is only available on the user channel. Other channels return the same data as the corresponding `-USD` products. `USDT-USDC` and `EURC-USDC` are available on all channels.
+
 For more detail, see:
-     * [Subscribing to a WebSocket channel](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#subscribing)
-     * [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction) for the full WebSocket specs
+
+  * [Subscribing to a WebSocket channel](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#subscribing)
+  * [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction) for the full WebSocket specs
 
 ## Heartbeats Channel
 
 Subscribe to the `heartbeats` channel to receive heartbeats messages every second. Heartbeats include a `heartbeat_counter` which verifies that no messages were missed.
 
 Subscribing to the heartbeats channel, alongside other channels, ensures that all subscriptions stay open when updates are sparse. This is useful, for example, when fetching market data for illiquid pairs.
+    
     
     // Request
     {
@@ -45,6 +48,7 @@ Subscribing to the heartbeats channel, alongside other channels, ensures that al
     
 
 A heartbeats message is of the type `heartbeats` as seen below.
+    
     
     // Heartbeats Message
     {
@@ -63,6 +67,7 @@ A heartbeats message is of the type `heartbeats` as seen below.
 
 Subscribe to the `candles` channel to receive candles messages for specific products with updates every second. Candles are grouped into buckets (granularities) of five minutes.
     
+    
     // Request
     {
       "type": "subscribe",
@@ -73,11 +78,14 @@ Subscribe to the `candles` channel to receive candles messages for specific prod
     
 
 A candles message is of the type `candles` and some of its parameters include:
-     * `start` \- string representation of the UNIX timestamp of the candle.
-     * `high` and `low` \- highest and lowest prices during the bucket interval.
-     * `open` and `close` \- prices of the first and last trade respectively.
-     * `volume` \- base amount that has been traded during this interval.
-     * `product_id` \- product identifier for this candle
+
+  * `start` \- string representation of the UNIX timestamp of the candle.
+  * `high` and `low` \- highest and lowest prices during the bucket interval.
+  * `open` and `close` \- prices of the first and last trade respectively.
+  * `volume` \- base amount that has been traded during this interval.
+  * `product_id` \- product identifier for this candle
+
+    
     
     // Candles Message
     {
@@ -106,6 +114,7 @@ A candles message is of the type `candles` and some of its parameters include:
 
 The `market_trades` channel sends market trades for a specified product on a preset interval. Clients should provide an array of `product_ids` for which they would like status subscriptions.
     
+    
     // Request
     {
       "type": "subscribe",
@@ -116,6 +125,7 @@ The `market_trades` channel sends market trades for a specified product on a pre
     
 
 A market trades message is of the type `snapshot` or `update`, and contains an array of market trades. Each market trade belongs to a `side`, which refers to the makers side, and can be of type `BUY`, or `SELL`. The channel collects all updates over the last 250 ms and sends them as an `update` — so an `update` can contain one or many trades, depending on the last 250 ms of trading volume.
+    
     
     // Market Trades Message
     {
@@ -145,6 +155,7 @@ The `status` channel sends all products and currencies on a preset interval. Cli
 
 The `status` channel, like most channels, closes within 60-90 seconds when there are no updates. For example, if you listen for `BTC-USD` updates and nothing changes within 60-90 seconds (which is common), the channel closes. To avoid this, subscribe to the heartbeats in addition to your other channels.
     
+    
     // Request
     {
       "type": "subscribe",
@@ -152,6 +163,7 @@ The `status` channel, like most channels, closes within 60-90 seconds when there
       "channel": "status",
       "jwt": "XYZ"
     }
+    
     
     
     // Status Message
@@ -184,6 +196,7 @@ The `status` channel, like most channels, closes within 60-90 seconds when there
 
 The `ticker` channel provides real-time price updates every time a match happens. It batches updates in case of cascading matches, greatly reducing bandwidth requirements.
     
+    
     // Request
     {
       "type": "subscribe",
@@ -191,6 +204,7 @@ The `ticker` channel provides real-time price updates every time a match happens
       "channel": "ticker",
       "jwt": "XYZ"
     }
+    
     
     
     // Ticker message
@@ -226,6 +240,7 @@ The `ticker` channel provides real-time price updates every time a match happens
 
 The `ticker_batch` channel provides latest price updates **every 5000 milliseconds** (5 seconds) if there is a change. It has the same JSON message schema as the `ticker` channel, except the `channel` field will have a value of `ticker_batch` and it currently doesn’t provide best bid or best ask fields.
     
+    
     // Request
     {
       "type": "subscribe",
@@ -238,6 +253,7 @@ The `ticker_batch` channel provides latest price updates **every 5000 millisecon
 ## Level2 Channel
 
 The `level2` channel guarantees delivery of all updates and is the easiest way to keep a snapshot of the order book.
+    
     
     // Request
     {
@@ -253,6 +269,7 @@ Subscribe to the `level2` channel to guarantee that messages are delivered and y
 The level2 channel sends a message with fields, `type` (“snapshot” or “update”), `product_id`, and `updates`. The field `updates` is an array of objects of `{price_level, new_quantity, event_time, side}` to represent the entire order book. The`event_time` property is the time of the event as recorded by our trading engine.
 
 The `new_quantity` property is the updated size at that price level, not a delta. A `new_quantity` of “0” indicates the price level can be removed.
+    
     
     // Example:
     {
@@ -284,10 +301,12 @@ The `new_quantity` property is the updated size at that price level, not a delta
 ## User Channel
 
 The `user` channel sends updates on all of a user’s open orders and current positions, including all subsequent updates of those orders and positions. The `user` channel expects one connection per user:
-     * This connection accepts multiple product IDs in a `product_ids` array. If none are provided, the WebSocket subscription is open to all product IDs.
-     * To subscribe to new `product_ids`, close your previous connection by unsubscribing and open a new connection with `product_ids` added to the array.
+
+  * This connection accepts multiple product IDs in a `product_ids` array. If none are provided, the WebSocket subscription is open to all product IDs.
+  * To subscribe to new `product_ids`, close your previous connection by unsubscribing and open a new connection with `product_ids` added to the array.
 
 Subscribing to the User channel returns all `OPEN` orders, batched by 50, in the first few messages of the stream. For example, if you have 109 orders, you will get a snapshot containing 50 orders, followed by a patch of 50 orders, followed by a patch of 9 orders. To know when all of your open orders are returned, look for the first message with less than 50 orders.
+    
     
     // Request
     {
@@ -296,6 +315,7 @@ Subscribing to the User channel returns all `OPEN` orders, batched by 50, in the
       "product_ids": ["BTC-USD"],
       "jwt": "XYZ"
     }
+    
     
     
     // User message
@@ -386,70 +406,109 @@ Field| Description
 `client_order_id`| Unique identifier of order specified by client  
 `completion_percentage`| Percentage of order completion  
 `contract_expiry_type`| Can be one of: 
-     * `UNKNOWN_CONTRACT_EXPIRY`
-     * `EXPIRING`
-     * `PERPETUAL`  
+
+  * `UNKNOWN_CONTRACT_EXPIRY`
+  * `EXPIRING`
+  * `PERPETUAL`
+
+  
 `cumulative_quantity`| Amount the order is filled, in base currency  
 `filled_value`| Value of the filled order  
 `leaves_quantity`| Amount remaining, in same currency as order was placed in (quote or base)  
 `limit_price`| Can be one of: 
-     * `Limit Price`: Order is Limit or Stop Limit type
-     * `0`: Order is not Limit or Stop Limit type  
+
+  * `Limit Price`: Order is Limit or Stop Limit type
+  * `0`: Order is not Limit or Stop Limit type
+
+  
 `number_of_fills`| Number of fills for the order  
 `order_id`| Unique identifier of order  
 `order_side`| Can be one of: 
-     * `BUY`
-     * `SELL`  
+
+  * `BUY`
+  * `SELL`
+
+  
 `order_type`| Can be one of: 
-     * `LIMIT`
-     * `MARKET`
-     * `STOP_LIMIT`  
+
+  * `LIMIT`
+  * `MARKET`
+  * `STOP_LIMIT`
+
+  
 `outstanding_hold_amount`| Outstanding hold amount for the order  
 `post_only`| Can be one of: 
-     * `true`
-     * `false`  
+
+  * `true`
+  * `false`
+
+  
 `product_id`| The product ID for which this order was placed  
 `product_type`| Can be one of: 
-     * `UNKNOWN_PRODUCT_TYPE`
-     * `SPOT`
-     * `FUTURE`  
+
+  * `UNKNOWN_PRODUCT_TYPE`
+  * `SPOT`
+  * `FUTURE`
+
+  
 `reject_Reason`| Reason for order rejection  
 `retail_portfolio_id`| The ID of the portfolio this order is associated with.  
 `risk_managed_by`| Can be one of: 
-     * `UNKNOWN_RISK_MANAGEMENT_TYPE`
-     * `MANAGED_BY_FCM`
-     * `MANAGED_BY_VENUE`  
+
+  * `UNKNOWN_RISK_MANAGEMENT_TYPE`
+  * `MANAGED_BY_FCM`
+  * `MANAGED_BY_VENUE`
+
+  
 `status`| Can be one of: 
-     * `PENDING`: Order is not yet open
-     * `OPEN`: Order is waiting to be fully filled
-     * `FILLED`: Order is 100% filled
-     * `CANCEL_QUEUED`: Order queued to be cancelled by user or system
-     * `CANCELLED`: Order was cancelled by user or system
-     * `EXPIRED`: TWAP order was not filled by the expiry time
-     * `FAILED`: Order cannot be placed at all  
+
+  * `PENDING`: Order is not yet open
+  * `OPEN`: Order is waiting to be fully filled
+  * `FILLED`: Order is 100% filled
+  * `CANCEL_QUEUED`: Order queued to be cancelled by user or system
+  * `CANCELLED`: Order was cancelled by user or system
+  * `EXPIRED`: TWAP order was not filled by the expiry time
+  * `FAILED`: Order cannot be placed at all
+
+  
 `stop_price`| Can be one of: 
-     * `Stop Price`: Order is Stop Limit type
-     * `0`: Order is not Stop Limit type  
+
+  * `Stop Price`: Order is Stop Limit type
+  * `0`: Order is not Stop Limit type
+
+  
 `time_in_force`| Can be one of: 
-     * `UNKNOWN_TIME_IN_FORCE`
-     * `GOOD_UNTIL_DATE_TIME`
-     * `GOOD_UNTIL_CANCELLED`
-     * `IMMEDIATE_OR_CANCEL`
-     * `FILL_OR_KILL`  
+
+  * `UNKNOWN_TIME_IN_FORCE`
+  * `GOOD_UNTIL_DATE_TIME`
+  * `GOOD_UNTIL_CANCELLED`
+  * `IMMEDIATE_OR_CANCEL`
+  * `FILL_OR_KILL`
+
+  
 `total_fees`| Commission paid for the order  
 `total_value_after_fees`| Total value of the order after fees  
 `trigger_status`| Can be one of: 
-     * `UNKNOWN_TRIGGER_STATUS`
-     * `INVALID_ORDER_TYPE`
-     * `STOP_PENDING`
-     * `STOP_TRIGGERED`  
+
+  * `UNKNOWN_TRIGGER_STATUS`
+  * `INVALID_ORDER_TYPE`
+  * `STOP_PENDING`
+  * `STOP_TRIGGERED`
+
+  
 `creation_time`| When the order was placed  
 `end_time`| 
-     * `End Time`: Order has end time 
-     * `0001-01-01T00:00:00Z`: End Time not applicable  
+
+  * `End Time`: Order has end time 
+  * `0001-01-01T00:00:00Z`: End Time not applicable
+
+  
 `start_time`| 
-     * `Start Time`: Order has start time 
-     * `0001-01-01T00:00:00Z`: Start Time not applicable  
+
+  * `Start Time`: Order has start time 
+  * `0001-01-01T00:00:00Z`: Start Time not applicable
+
+  
   
 #### Positions Fields
 
@@ -466,11 +525,17 @@ Field| Description
 `vwap`| The price of the position based on the last settlement period  
 `entry_vwap`| Volume weighted entry price of the position (not reset to the last funding price)  
 `position_side`| The side of the position. Can be one of: 
-     * `Long`
-     * `Short`  
+
+  * `Long`
+  * `Short`
+
+  
 `margin_type`| The margin type of the position. Can be one of: 
-     * `Cross`: Indicating a cross margin position
-     * `Isolated`: Indicating an isolated margin position  
+
+  * `Cross`: Indicating a cross margin position
+  * `Isolated`: Indicating an isolated margin position
+
+  
 `net_size`| The size of the position with positive values reflecting a long position and negative values reflecting a short position  
 `buy_order_size`| Cumulative size of all the open buy orders  
 `sell_order_size`| Cumulative size of all the open sell orders  
@@ -489,8 +554,11 @@ Field| Description
 ---|---  
 `product_id`| Name of the instrument the position is in, e.g. `BTC-12Jun24-CDE`  
 `side`| The side of the position. Can be one of: 
-     * `Long`
-     * `Short`  
+
+  * `Long`
+  * `Short`
+
+  
 `number_of_contracts`| The size of your position in contracts  
 `realized_pnl`| Your realized PnL for your position  
 `unrealized_pnl`| Your current unrealized PnL for your position  
@@ -502,12 +570,14 @@ The `positions` object also includes a `prediction_market_positions` array. This
 
 The `futures_balance_summary` channel sends updates on all of a user’s futures balances, including all subsequent updates of those balances.
     
+    
     // Request
     {
       "type": "subscribe",
       "channel": "futures_balance_summary",
       "jwt": "XYZ"
     }
+    
     
     
     // Futures Balance Summary Message:
@@ -570,44 +640,51 @@ Field| Description
 `liquidation_buffer_percentage`| Funds available in excess of the liquidation threshold expressed as a percentage. If your liquidation buffer percentage reaches 0%, your futures positions and/or open orders will be liquidated as necessary  
 `intraday_margin_window_measure`| The period of time used to calculate margin requirements for positions held intraday before settling overnight   
 Includes: 
-     * `margin_window_type`
-       * FCM_MARGIN_WINDOW_TYPE_UNSPECIFIED
-       * FCM_MARGIN_WINDOW_TYPE_OVERNIGHT
-       * FCM_MARGIN_WINDOW_TYPE_WEEKEND
-       * FCM_MARGIN_WINDOW_TYPE_INTRADAY
-       * FCM_MARGIN_WINDOW_TYPE_TRANSITION
-     * `margin_level`
-       * MARGIN_LEVEL_TYPE_UNSPECIFIED
-       * MARGIN_LEVEL_TYPE_BASE
-       * MARGIN_LEVEL_TYPE_WARNING
-       * MARGIN_LEVEL_TYPE_DANGER
-       * MARGIN_LEVEL_TYPE_LIQUIDATION
-     * `initial_margin`
-     * `maintenance_margin`
-     * `liquidation_buffer_percentage`
-     * `total_hold`
-     * `futures_buying_power`  
+
+  * `margin_window_type`
+    * FCM_MARGIN_WINDOW_TYPE_UNSPECIFIED
+    * FCM_MARGIN_WINDOW_TYPE_OVERNIGHT
+    * FCM_MARGIN_WINDOW_TYPE_WEEKEND
+    * FCM_MARGIN_WINDOW_TYPE_INTRADAY
+    * FCM_MARGIN_WINDOW_TYPE_TRANSITION
+  * `margin_level`
+    * MARGIN_LEVEL_TYPE_UNSPECIFIED
+    * MARGIN_LEVEL_TYPE_BASE
+    * MARGIN_LEVEL_TYPE_WARNING
+    * MARGIN_LEVEL_TYPE_DANGER
+    * MARGIN_LEVEL_TYPE_LIQUIDATION
+  * `initial_margin`
+  * `maintenance_margin`
+  * `liquidation_buffer_percentage`
+  * `total_hold`
+  * `futures_buying_power`
+
+  
 `overnight_margin_window_measure`| The period of time used to calculate increased margin requirements for positions held and left unsettled overnight   
 Includes: 
-     * `margin_window_type`
-       * FCM_MARGIN_WINDOW_TYPE_UNSPECIFIED
-       * FCM_MARGIN_WINDOW_TYPE_OVERNIGHT
-       * FCM_MARGIN_WINDOW_TYPE_WEEKEND
-       * FCM_MARGIN_WINDOW_TYPE_INTRADAY
-       * FCM_MARGIN_WINDOW_TYPE_TRANSITION
-     * `margin_level`
-       * MARGIN_LEVEL_TYPE_UNSPECIFIED
-       * MARGIN_LEVEL_TYPE_BASE
-       * MARGIN_LEVEL_TYPE_WARNING
-       * MARGIN_LEVEL_TYPE_DANGER
-       * MARGIN_LEVEL_TYPE_LIQUIDATION
-     * `initial_margin`
-     * `maintenance_margin`
-     * `liquidation_buffer_percentage`
-     * `total_hold`
-     * `futures_buying_power`  
+
+  * `margin_window_type`
+    * FCM_MARGIN_WINDOW_TYPE_UNSPECIFIED
+    * FCM_MARGIN_WINDOW_TYPE_OVERNIGHT
+    * FCM_MARGIN_WINDOW_TYPE_WEEKEND
+    * FCM_MARGIN_WINDOW_TYPE_INTRADAY
+    * FCM_MARGIN_WINDOW_TYPE_TRANSITION
+  * `margin_level`
+    * MARGIN_LEVEL_TYPE_UNSPECIFIED
+    * MARGIN_LEVEL_TYPE_BASE
+    * MARGIN_LEVEL_TYPE_WARNING
+    * MARGIN_LEVEL_TYPE_DANGER
+    * MARGIN_LEVEL_TYPE_LIQUIDATION
+  * `initial_margin`
+  * `maintenance_margin`
+  * `liquidation_buffer_percentage`
+  * `total_hold`
+  * `futures_buying_power`
+
+  
   
 **See Also:**
-     * [Subscribing to WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)
-     * [WebSocket Sequence Numbers](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#sequence-numbers)
-     * [WebSocket Best Practices](/coinbase-app/advanced-trade-apis/guides/websocket)
+
+  * [Subscribing to WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)
+  * [WebSocket Sequence Numbers](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#sequence-numbers)
+  * [WebSocket Best Practices](/coinbase-app/advanced-trade-apis/guides/websocket)

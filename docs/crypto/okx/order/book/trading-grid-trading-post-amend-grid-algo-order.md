@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-amend-grid-algo-order
 anchor_id: order-book-trading-grid-trading-post-amend-grid-algo-order
 api_type: API
-updated_at: 2026-08-11 19:13:30.538237
+updated_at: 2026-08-12 19:13:31.918430
 ---
 
 # POST / Amend grid algo order

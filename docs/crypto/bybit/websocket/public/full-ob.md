@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/full-ob
 api_type: WebSocket
-updated_at: 2026-08-11 18:52:22.634102
+updated_at: 2026-08-12 18:52:24.542529
 ---
 
 # Kline
