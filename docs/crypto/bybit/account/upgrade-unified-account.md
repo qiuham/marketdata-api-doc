@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/upgrade-unified-account
 api_type: Account
-updated_at: 2026-08-12 18:43:57.348794
+updated_at: 2026-08-13 18:44:00.688485
 ---
 
 # Get Wallet Balance

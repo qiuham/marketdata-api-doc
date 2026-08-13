@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/new-delivery-price
 api_type: Market Data
-updated_at: 2026-08-12 18:48:49.988130
+updated_at: 2026-08-13 18:49:21.735019
 ---
 
 # Get Order Price Limit

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-borrow
 anchor_id: financial-product-flexible-loan-post-borrow
 api_type: API
-updated_at: 2026-08-12 19:15:32.858095
+updated_at: 2026-08-13 19:17:24.298434
 ---
 
 # POST / Borrow

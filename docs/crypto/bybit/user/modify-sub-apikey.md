@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/modify-sub-apikey
 api_type: REST
-updated_at: 2026-08-12 18:52:02.180570
+updated_at: 2026-08-13 18:52:50.662839
 ---
 
 # Get Sub UID List (Unlimited)

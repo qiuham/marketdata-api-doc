@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards-get-product-info
 anchor_id: financial-product-stable-rewards-get-product-info
 api_type: API
-updated_at: 2026-08-12 19:15:24.983802
+updated_at: 2026-08-13 19:17:16.445558
 ---
 
 # GET / Product info
