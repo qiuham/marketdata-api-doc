@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-quote
 api_type: REST
-updated_at: 2026-08-13 18:51:53.898707
+updated_at: 2026-08-14 18:48:34.158530
 ---
 
 # Get Flexible Available Inventory

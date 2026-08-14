@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-instruments
 anchor_id: public-data-rest-api-get-instruments
 api_type: REST
-updated_at: 2026-08-13 19:16:29.941569
+updated_at: 2026-08-14 19:12:07.385465
 ---
 
 # Get instruments

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade
 api_type: Trading
-updated_at: 2026-08-13 19:03:57.140551
+updated_at: 2026-08-14 18:59:35.640692
 ---
 
 # Get Convert Trade
@@ -1821,7 +1821,39 @@ Gets a list of information about a convert trade with a specified trade id, sour
               "giact_customer_result": "<string>",
               "giact_status": "<string>",
               "giact_last_updated_at": "<string>",
-              "giact_account_added_date": "<string>",
+              Convert
+    
+    # Get Convert Trade
+    
+    Gets a list of information about a convert trade with a specified trade id, source account, and target account
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    convert
+    
+    /
+    
+    trade
+    
+    /
+    
+    {trade_id}
+    
+    "giact_account_added_date": "<string>",
               "giact_account_last_updated_date": "<string>",
               "giact_account_added_range": "<string>",
               "giact_account_last_updated_range": "<string>"
@@ -2532,6 +2564,330 @@ Gets a list of information about a convert trade with a specified trade id, sour
         }
       }
     }
+
+Get Convert Trade
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id} \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")
+      .header("Authorization", "Bearer <token>")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
+    puts response.read_body
+    
+    
+    {
+      "trade": {
+        "id": "<string>",
+        "status": "TRADE_STATUS_UNSPECIFIED",
+        "user_entered_amount": {
+          "value": "<string>",
+          "currency": "<string>",
+          "cbrn": "<string>"
+        },
+        "amount": {
+          "value": "<string>",
+          "currency": "<string>",
+          "cbrn": "<string>"
+        },
+        "subtotal": {
+          "value": "<string>",
+          "currency": "<string>",
+          "cbrn": "<string>"
+        },
+        "total": {
+          "value": "<string>",
+          "currency": "<string>",
+          "cbrn": "<string>"
+        },
+        "fees": [
+          {
+            "title": "<string>",
+            "description": "<string>",
+            "amount": {
+              "value": "<string>",
+              "currency": "<string>",
+              "cbrn": "<string>"
+            },
+            "label": "<string>",
+            "disclosure": {
+              "title": "<string>",
+              "description": "<string>",
+              "link": {
+                "text": "<string>",
+                "url": "<string>"
+              }
+            },
+            "waived_details": {
+              "amount": {
+                "value": "<string>",
+                "currency": "<string>",
+                "cbrn": "<string>"
+              },
+              "source": "WAIVED_FEE_SOURCE_UNSPECIFIED"
+            },
+            "metadata": {
+              "netburn": {
+                "threshold": {
+                  "value": "<string>",
+                  "currency": "<string>",
+                  "cbrn": "<string>"
+                },
+                "netburn_value": {
+                  "value": "<string>",
+                  "currency": "<string>",
+                  "cbrn": "<string>"
+                }
+              }
+            }
+          }
+        ],
+        "total_fee": {
+          "title": "<string>",
+          "description": "<string>",
+          "amount": {
+            "value": "<string>",
+            "currency": "<string>",
+            "cbrn": "<string>"
+          },
+          "label": "<string>",
+          "disclosure": {
+            "title": "<string>",
+            "description": "<string>",
+            "link": {
+              "text": "<string>",
+              "url": "<string>"
+            }
+          },
+          "waived_details": {
+            "amount": {
+              "value": "<string>",
+              "currency": "<string>",
+              "cbrn": "<string>"
+            },
+            "source": "WAIVED_FEE_SOURCE_UNSPECIFIED"
+          },
+          "metadata": {
+            "netburn": {
+              "threshold": {
+                "value": "<string>",
+                "currency": "<string>",
+                "cbrn": "<string>"
+              },
+              "netburn_value": {
+                "value": "<string>",
+                "currency": "<string>",
+                "cbrn": "<string>"
+              }
+            }
+          }
+        },
+        "source": {
+          "type": "INVALID",
+          "network": "<string>",
+          "payment_method_id": "<string>",
+          "payment_method_uuid": "<string>",
+          "payment_method_type_string": "<string>",
+          "blockchain_address": {
+            "address": "<string>",
+            "destination_tag": "<string>"
+          },
+          "coinbase_account": {
+            "account_id": "<string>"
+          },
+          "blockchain_transaction": {
+            "hsh": "<string>",
+            "height": 123,
+            "normalized_hash": "<string>"
+          },
+          "fedwire": {
+            "routing_number": "<string>",
+            "account_holder": {
+              "legal_name": "<string>",
+              "account_number": "<string>",
+              "address": {
+                "lines": [
+                  "<string>"
+                ],
+                "country_code": "<string>",
+                "city": "<string>",
+                "state": "<string>",
+                "postal_code": "<string>"
+              }
+            },
+            "bank": {
+              "name": "<string>",
+              "address": {
+                "lines": [
+                  "<string>"
+                ],
+                "country_code": "<string>",
+                "city": "<string>",
+                "state": "<string>",
+                "postal_code": "<string>"
+              },
+              "identifier": "<string>",
+              "type": "CHIPS_IDENTIFIER",
+              "identifier_code": "<string>"
+            },
+            "intermediary_bank": {
+              "name": "<string>",
+              "address": {
+                "lines": [
+                  "<string>"
+                ],
+                "country_code": "<string>",
+                "city": "<string>",
+                "state": "<string>",
+                "postal_code": "<string>"
+              },
+              "identifier": "<string>",
+              "type": "CHIPS_IDENTIFIER",
+              "identifier_code": "<string>"
+            },
+            "currency": "<string>",
+            "fiat_id": "<string>",
+            "rejection_count_v2": 123
+          },
+          "swift": {
+            "account_holder": {
+              "legal_name": "<string>",
+              "iban": "<string>",
+              "bban": "<string>",
+              "domestic_account_id": "<string>",
+              "customer_payment_address1": "<string>",
+              "customer_payment_address2": "<string>",
+              "customer_payment_address3": "<string>",
+              "customer_payment_country_code": "<string>",
+              "iban_generated": true
+            },
+            "institution": {
+              "bic": "<string>",
+              "name": "<string>",
+              "bank_address1": "<string>",
+              "bank_address2": "<string>",
+              "bank_address3": "<string>",
+              "bank_country_code": "<string>",
+              "domestic_bank_id": "<string>",
+              "international_bank_id": "<string>"
+            },
+            "intermediary": {
+              "bic": "<string>",
+              "name": "<string>",
+              "bank_address1": "<string>",
+              "bank_address2": "<string>",
+              "bank_address3": "<string>",
+              "bank_country_code": "<string>",
+              "domestic_bank_id": "<string>",
+              "international_bank_id": "<string>"
+            },
+            "currency": "<string>",
+            "rejection_count": 123
+          },
+          "card": {
+            "first_data_token": {
+              "value": "<string>",
+              "store_id": "<string>",
+              "id": "<string>"
+            },
+            "merchant": {
+              "mid": "<string>"
+            },
+            "vault_token": {
+              "value": "<string>",
+              "vault_id": "<string>",
+              "attempted_at": "<string>
     
     
     {

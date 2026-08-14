@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-comprehensive-api-workflow-retrieving-your-trades
 anchor_id: spread-trading-comprehensive-api-workflow-retrieving-your-trades
 api_type: API
-updated_at: 2026-08-13 19:16:16.983299
+updated_at: 2026-08-14 19:11:54.462408
 ---
 
 # Retrieving Your Trades

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-maximum-loan-amount
 anchor_id: financial-product-flexible-loan-post-maximum-loan-amount
 api_type: API
-updated_at: 2026-08-13 19:17:23.366876
+updated_at: 2026-08-14 19:13:00.824998
 ---
 
 # POST / Maximum loan amount

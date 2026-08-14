@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/earning
 api_type: REST
-updated_at: 2026-08-13 18:43:17.234543
+updated_at: 2026-08-14 18:40:43.893540
 ---
 
 # Enable Universal Transfer for Sub UID

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-08-13 18:48:25.271648
+updated_at: 2026-08-14 18:45:23.482500
 ---
 
 # Create Customize Investment Plan
