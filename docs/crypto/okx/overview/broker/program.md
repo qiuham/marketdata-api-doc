@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-broker-program
 anchor_id: overview-broker-program
 api_type: API
-updated_at: 2026-08-14 19:10:21.646498
+updated_at: 2026-08-15 19:08:50.924504
 ---
 
 # Broker Program

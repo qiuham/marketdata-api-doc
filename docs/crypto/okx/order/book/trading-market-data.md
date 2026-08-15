@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data
 anchor_id: order-book-trading-market-data
 api_type: API
-updated_at: 2026-08-14 19:11:31.907217
+updated_at: 2026-08-15 19:10:01.733222
 ---
 
 # Market Data

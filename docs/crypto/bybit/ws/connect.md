@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-08-14 18:49:59.460871
+updated_at: 2026-08-15 18:47:47.732822
 ---
 
 # Connect
@@ -68,7 +68,7 @@ info
   * If your account is registered from [www.bybit.kz](http://www.bybit.kz), please use `stream.bybit.kz` for mainnet access
   * If your account is registered from [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge), please use `stream.bybitgeorgia.ge` for mainnet access
   * If your account is registered from [www.manepa.jp](http://www.manepa.jp), please use `stream.manepa.jp` for mainnet access
-  * If you are users from Bybit Brazil, please use `stream.bybit.com`, and add `x-site-id`: **BRA_BTL** in the request header for mainnet access
+  * If you are international account users from Bybit Brazil, please use `stream.bybit.com`, and add `x-site-id`: **BRA_BTL** in the request header for mainnet access
 
 
 
@@ -402,7 +402,7 @@ RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`
   * 哈薩克斯坦站：如果您的帳戶是在 [www.bybit.kz](http://www.bybit.kz), 請使用 `stream.bybit.kz` 進行主網連接
   * 喬治亞站：如果您的帳戶是在 [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge) 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
   * 日本站：如果您的帳戶是在 [www.manepa.jp](http://www.manepa.jp) 註冊, 請使用 `stream.manepa.jp` 進行主網連接
-  * 阿根廷國際站：請使用 `stream.bybit.com`，同時必須在header裡增加`x-site-id`: **ARG_BTL** 進行主網連接
+  * 巴西國際站：巴西國際賬號用戶請使用 `stream.bybit.com`，同時必須在header裡增加`x-site-id`: **BRA_BTL** 進行主網連接
 
 
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-precheck-set-delta-neutral
 anchor_id: trading-account-rest-api-precheck-set-delta-neutral
 api_type: REST
-updated_at: 2026-08-14 19:10:39.502005
+updated_at: 2026-08-15 19:09:08.968579
 ---
 
 # Precheck set delta neutral
