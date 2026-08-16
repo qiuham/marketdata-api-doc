@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/coin-info
 api_type: REST
-updated_at: 2026-08-15 18:39:12.628339
+updated_at: 2026-08-16 18:38:43.823712
 ---
 
 # Confirm a Quote

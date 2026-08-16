@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-get-algo-order-list
 anchor_id: order-book-trading-algo-trading-get-algo-order-list
 api_type: API
-updated_at: 2026-08-15 19:09:27.922949
+updated_at: 2026-08-16 19:08:14.988845
 ---
 
 # GET / Algo order list

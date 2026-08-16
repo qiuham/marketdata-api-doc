@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-maximum-collateral-redeem-amount
 anchor_id: financial-product-flexible-loan-get-maximum-collateral-redeem-amount
 api_type: API
-updated_at: 2026-08-15 19:11:31.581961
+updated_at: 2026-08-16 19:10:16.131822
 ---
 
 # GET / Maximum collateral redeem amount

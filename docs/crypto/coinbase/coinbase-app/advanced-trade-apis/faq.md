@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/faq
 api_type: Guide
-updated_at: 2026-08-15 18:58:25.192538
+updated_at: 2026-08-16 18:57:12.830400
 ---
 
 # Advanced Trade API FAQ
