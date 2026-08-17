@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/collateral-coin
 api_type: REST
-updated_at: 2026-08-16 18:40:28.103489
+updated_at: 2026-08-17 18:41:53.583499
 ---
 
 # Get Completed Loan History

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/dual-asset-offer
 api_type: WebSocket
-updated_at: 2026-08-16 18:41:24.320967
+updated_at: 2026-08-17 18:42:46.309751
 ---
 
 # Dual Asset Offers

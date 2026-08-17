@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-instant-trigger-grid-algo-order
 anchor_id: order-book-trading-grid-trading-post-instant-trigger-grid-algo-order
 api_type: API
-updated_at: 2026-08-16 19:08:18.639727
+updated_at: 2026-08-17 19:13:26.668727
 ---
 
 # POST / Instant trigger grid algo order

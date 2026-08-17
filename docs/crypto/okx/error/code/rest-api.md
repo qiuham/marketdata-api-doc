@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-08-16 19:10:26.295100
+updated_at: 2026-08-17 19:15:34.927678
 ---
 
 # REST API
@@ -609,6 +609,7 @@ Error Code | HTTP Status code | Error Message
 54047 | 200 | You can’t amend this order because an order with the same order ID or client order ID is in speed bump.  
 54048 | 200 | You can’t cancel the order because an order with the same order ID or client order ID is in speed bump.  
 54049 | 200 | API users can’t place orders that take RPI liquidity now because system is busy. To proceed, set rpiTakerAccess:false.  
+54051 | 200 | RPI order rejected. The order value is below the minimum required for RPI orders ({param0} USD).  
 54070 | 200 | The current function is not supported. Please update to the latest app version if using the app, or use the attachAlgoOrds array to place orders via Open API.  
 54071 | 200 | Due to the platform system upgrade, this order no longer supports modifications. It is recommended to cancel and place a new order.  
 54072 | 200 | This contract is currently view-only and not tradable.  
@@ -1782,6 +1783,7 @@ e.g. clOrdId 已存在
 54047 | 200 | 您无法修改此订单，因为存在订单 ID 或客户订单 ID 相同的订单处于延迟中  
 54048 | 200 | 您无法取消此订单，因为存在订单 ID 或客户订单 ID 相同的订单处于延迟中  
 54049 | 200 | 由于系统繁忙，API 用户目前无法吃单 RPI 挂单。请将 rpiTakerAccess 设置为 false 以继续操作  
+54051 | 200 | RPI 订单被拒绝。订单价值低于 RPI 订单所需的最低金额（{param0} USD）。  
 54070 | 200 | 当前功能不可用。使用 App 请更新至最新版本；使用 Open API 请通过 attachAlgoOrds 数组下单。  
 54071 | 200 | 由于平台系统已升级，此订单已不支持修改。建议撤销后再重新下单。  
 54072 | 200 | 当前仅支持查看该合约，无法进行交易  

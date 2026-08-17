@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/max-loan-amt
 api_type: REST
-updated_at: 2026-08-16 18:43:48.753827
+updated_at: 2026-08-17 18:45:01.805059
 ---
 
 # Batch Cancel Order

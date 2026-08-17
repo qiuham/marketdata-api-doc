@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-option-market-data
 anchor_id: public-data-rest-api-get-option-market-data
 api_type: REST
-updated_at: 2026-08-16 19:09:26.807035
+updated_at: 2026-08-17 19:14:35.105853
 ---
 
 # Get option market data

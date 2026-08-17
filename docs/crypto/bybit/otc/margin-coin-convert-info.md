@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-coin-convert-info
 api_type: REST
-updated_at: 2026-08-16 18:44:09.708268
+updated_at: 2026-08-17 18:45:21.432814
 ---
 
 # Get Margin Coin Info

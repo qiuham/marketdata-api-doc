@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/friend-referral
 api_type: REST
-updated_at: 2026-08-16 18:46:17.400721
+updated_at: 2026-08-17 18:47:24.488323
 ---
 
 # Freeze Sub UID

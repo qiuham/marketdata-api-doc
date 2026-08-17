@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-repay
 anchor_id: financial-product-flexible-loan-post-repay
 api_type: API
-updated_at: 2026-08-16 19:10:17.059115
+updated_at: 2026-08-17 19:15:25.609154
 ---
 
 # POST / Repay
