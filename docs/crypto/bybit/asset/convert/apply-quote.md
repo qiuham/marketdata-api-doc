@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert/apply-quote
 api_type: REST
-updated_at: 2026-08-17 18:40:21.850248
+updated_at: 2026-08-18 18:40:06.514195
 ---
 
 # Confirm a Quote

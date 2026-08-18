@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-08-17 18:47:34.261207
+updated_at: 2026-08-18 18:47:41.379206
 ---
 
 # Sign Agreement

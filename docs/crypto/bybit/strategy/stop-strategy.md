@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/stop-strategy
 api_type: REST
-updated_at: 2026-08-17 18:47:17.368338
+updated_at: 2026-08-18 18:47:23.996201
 ---
 
 # TradFi Integration

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
 api_type: Position
-updated_at: 2026-08-17 18:45:36.435149
+updated_at: 2026-08-18 18:45:38.507875
 ---
 
 # Set Trading Stop
