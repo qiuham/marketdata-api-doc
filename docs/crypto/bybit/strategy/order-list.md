@@ -2,10 +2,17 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/order-list
 api_type: REST
-updated_at: 2026-08-18 18:47:23.368958
+updated_at: 2026-08-19 18:47:07.000145
 ---
 
 # TradFi Integration
+
+info
+
+  * TradFi CFD does not support to trade via Open API.
+  * TradFi perpetuals & xstocks support to trade via Open API.
+
+
 
 This guide explains how to integrate with Bybit's TradFi (Traditional Finance) products via the existing V5 API, including how to distinguish between CFD instruments and Bybit-native TradFi, how to sign required agreements, and how to trade.
 
@@ -256,6 +263,13 @@ Simply pass the appropriate `category` and `symbol` in your request:
 ---
 
 # TradFi 接入指南
+
+信息
+
+  * TradFi CFD 暫不支持API交易
+  * TradFi 永續 以及 xstocks 支持API交易
+
+
 
 本指南說明如何透過現有的 V5 API 接入 Bybit 的 TradFi（傳統金融）產品，包括如何區分 CFD 交易產品與 Bybit 平台原生的 TradFi、如何簽署所需協議，以及如何進行交易。
 

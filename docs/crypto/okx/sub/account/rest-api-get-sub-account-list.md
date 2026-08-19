@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-list
 anchor_id: sub-account-rest-api-get-sub-account-list
 api_type: REST
-updated_at: 2026-08-18 19:15:37.056970
+updated_at: 2026-08-19 19:15:20.138739
 ---
 
 # Get sub-account list

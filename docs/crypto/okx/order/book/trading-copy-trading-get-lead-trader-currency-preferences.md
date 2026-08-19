@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-currency-preferences
 anchor_id: order-book-trading-copy-trading-get-lead-trader-currency-preferences
 api_type: API
-updated_at: 2026-08-18 19:14:25.544429
+updated_at: 2026-08-19 19:14:10.096728
 ---
 
 # GET / Lead trader currency preferences

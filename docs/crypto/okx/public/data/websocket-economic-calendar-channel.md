@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-economic-calendar-channel
 anchor_id: public-data-websocket-economic-calendar-channel
 api_type: WebSocket
-updated_at: 2026-08-18 19:15:17.631204
+updated_at: 2026-08-19 19:15:01.176705
 ---
 
 # Economic calendar channel

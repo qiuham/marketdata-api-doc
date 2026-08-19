@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/risk-limit
 api_type: Market Data
-updated_at: 2026-08-18 18:44:21.034139
+updated_at: 2026-08-19 18:44:14.910654
 ---
 
 # Get RPI Orderbook
