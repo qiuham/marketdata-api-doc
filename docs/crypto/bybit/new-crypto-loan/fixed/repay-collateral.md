@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/repay-collateral
 api_type: REST
-updated_at: 2026-08-19 18:44:36.488198
+updated_at: 2026-08-20 18:44:22.536238
 ---
 
 # Get Lending Market

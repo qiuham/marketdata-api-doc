@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/instrument
 api_type: Market Data
-updated_at: 2026-08-19 18:44:02.349054
+updated_at: 2026-08-20 18:43:47.820196
 ---
 
 # Get Kline

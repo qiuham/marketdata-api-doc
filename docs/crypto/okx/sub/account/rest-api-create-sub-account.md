@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-create-sub-account
 anchor_id: sub-account-rest-api-create-sub-account
 api_type: REST
-updated_at: 2026-08-19 19:15:20.447495
+updated_at: 2026-08-20 19:15:21.221661
 ---
 
 # Create sub-account

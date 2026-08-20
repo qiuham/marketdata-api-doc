@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/history-fund-rate
 api_type: Market Data
-updated_at: 2026-08-19 18:43:57.752006
+updated_at: 2026-08-20 18:43:43.189484
 ---
 
 # Get Index Price Components

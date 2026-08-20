@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/instrument
 api_type: Market Data
-updated_at: 2026-08-19 18:46:45.105591
+updated_at: 2026-08-20 18:46:34.168747
 ---
 
 # Get Recent Public Trades

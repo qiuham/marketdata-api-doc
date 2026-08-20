@@ -2,23 +2,17 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders
 api_type: Trading
-updated_at: 2026-08-19 18:57:29.714055
+updated_at: 2026-08-20 18:57:42.554261
 ---
 
 # List Orders
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/batch`
 
-Orders
-    
-    # List Orders
-    
-    Get a list of orders filtered by optional query parameters (product_ids, order_status, etc.).
-    
-    
-    
-    
-    **Equities:** Set product_type to EQUITY to return only equity orders. Each equity order includes its time in force in displayed_order_config and execution session in equity_trading_session.
+
+Get a list of orders filtered by optional query parameters (`product_ids`, `order_status`, etc.).
+
+**Equities:** Set `product_type` to `EQUITY` to return only equity orders. Each equity order includes its time in force in `displayed_order_config` and execution session in `equity_trading_session`.
     
     
     curl --request GET \

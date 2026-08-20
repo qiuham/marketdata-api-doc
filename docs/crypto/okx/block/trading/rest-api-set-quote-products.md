@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-set-quote-products
 anchor_id: block-trading-rest-api-set-quote-products
 api_type: REST
-updated_at: 2026-08-19 19:14:24.179806
+updated_at: 2026-08-20 19:14:25.601516
 ---
 
 # Set Quote products

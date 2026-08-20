@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode
 api_type: REST
-updated_at: 2026-08-19 18:46:40.750746
+updated_at: 2026-08-20 18:46:29.743423
 ---
 
 # Toggle Margin Trade

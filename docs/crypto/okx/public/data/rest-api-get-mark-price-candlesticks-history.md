@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-mark-price-candlesticks-history
 anchor_id: public-data-rest-api-get-mark-price-candlesticks-history
 api_type: REST
-updated_at: 2026-08-19 19:14:54.773468
+updated_at: 2026-08-20 19:14:55.880435
 ---
 
 # Get mark price candlesticks history
