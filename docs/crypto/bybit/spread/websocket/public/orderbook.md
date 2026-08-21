@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/public/orderbook
 api_type: WebSocket
-updated_at: 2026-08-20 18:46:51.354364
+updated_at: 2026-08-21 18:47:09.456011
 ---
 
 # Create Strategy Order

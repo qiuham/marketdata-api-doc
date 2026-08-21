@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-funding
 anchor_id: error-code-rest-api-funding
 api_type: REST
-updated_at: 2026-08-20 19:15:51.920242
+updated_at: 2026-08-21 19:16:51.788859
 ---
 
 # Funding

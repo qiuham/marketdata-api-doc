@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rest-authentication-making-requests
 anchor_id: overview-rest-authentication-making-requests
 api_type: REST
-updated_at: 2026-08-20 19:12:59.002895
+updated_at: 2026-08-21 19:13:52.194680
 ---
 
 # Making Requests

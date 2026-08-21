@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-leverage
 anchor_id: trading-account-rest-api-set-leverage
 api_type: REST
-updated_at: 2026-08-20 19:13:11.489500
+updated_at: 2026-08-21 19:14:05.333498
 ---
 
 # Set leverage

@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/trading/send-order
 api_type: REST
-updated_at: 2026-08-20 19:12:38.893406
+updated_at: 2026-08-21 19:13:29.501027
 ---
 
 # Send order
@@ -412,8 +412,6 @@ Valid Broker IIBAN on whose behalf the order is sent. The format must follow the
 Note: This is currently available exclusively in the Kraken pre-prod environments.
 
 #### Response
-
-200 - application/json
 
   * Success Response
 

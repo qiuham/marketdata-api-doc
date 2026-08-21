@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rest-authentication-signature
 anchor_id: overview-rest-authentication-signature
 api_type: REST
-updated_at: 2026-08-20 19:12:59.307156
+updated_at: 2026-08-21 19:13:52.501829
 ---
 
 # Signature

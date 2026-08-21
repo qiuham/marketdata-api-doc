@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account
 anchor_id: trading-account
 api_type: API
-updated_at: 2026-08-20 19:13:06.934411
+updated_at: 2026-08-21 19:14:00.461871
 ---
 
 # Trading Account
@@ -6097,12 +6097,12 @@ Retrieve the current day and month-to-date (MTD) GLP performance snapshot for th
 
 #### HTTP Request
 
-`GET /api/v5/users/glp/today-performance`
+`GET /api/v5/users/glp/todayperformance`
 
 > Request Example
     
     
-    GET /api/v5/users/glp/today-performance
+    GET /api/v5/users/glp/todayperformance
     
 
 #### Request Parameters
@@ -6223,13 +6223,13 @@ Retrieve daily GLP performance history for a single program. Results are sorted 
 
 #### HTTP Request
 
-`GET /api/v5/users/glp/historical-performance`
+`GET /api/v5/users/glp/historicalperformance`
 
 > Request Example
     
     
-    GET /api/v5/users/glp/historical-performance?program=SPOT
-    GET /api/v5/users/glp/historical-performance?program=SPOT&begin=1751299200000&end=1753804800000&limit=31
+    GET /api/v5/users/glp/historicalperformance?program=SPOT
+    GET /api/v5/users/glp/historicalperformance?program=SPOT&begin=1751299200000&end=1753804800000&limit=31
     
 
 #### Request Parameters
@@ -14091,12 +14091,12 @@ details | Array | 各币种操作详情。
 
 #### HTTP请求
 
-`GET /api/v5/users/glp/today-performance`
+`GET /api/v5/users/glp/todayperformance`
 
 > 请求示例
     
     
-    GET /api/v5/users/glp/today-performance
+    GET /api/v5/users/glp/todayperformance
     
 
 #### 请求参数
@@ -14217,13 +14217,13 @@ total | 是 | 是 | 各类型合计。始终存在
 
 #### HTTP请求
 
-`GET /api/v5/users/glp/historical-performance`
+`GET /api/v5/users/glp/historicalperformance`
 
 > 请求示例
     
     
-    GET /api/v5/users/glp/historical-performance?program=SPOT
-    GET /api/v5/users/glp/historical-performance?program=SPOT&begin=1751299200000&end=1753804800000&limit=31
+    GET /api/v5/users/glp/historicalperformance?program=SPOT
+    GET /api/v5/users/glp/historicalperformance?program=SPOT&begin=1751299200000&end=1753804800000&limit=31
     
 
 #### 请求参数

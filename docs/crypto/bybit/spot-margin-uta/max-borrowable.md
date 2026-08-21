@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/max-borrowable
 api_type: REST
-updated_at: 2026-08-20 18:46:23.248017
+updated_at: 2026-08-21 18:46:40.289637
 ---
 
 # Get Position Tiers
