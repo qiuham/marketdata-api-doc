@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/order
 api_type: REST
-updated_at: 2026-08-21 18:42:11.996600
+updated_at: 2026-08-22 18:41:35.337099
 ---
 
 # Remove Liquidity

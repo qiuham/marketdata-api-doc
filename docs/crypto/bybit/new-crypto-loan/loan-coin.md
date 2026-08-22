@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/loan-coin
 api_type: REST
-updated_at: 2026-08-21 18:44:47.187111
+updated_at: 2026-08-22 18:46:28.803188
 ---
 
 # Get Collateral Adjustment History

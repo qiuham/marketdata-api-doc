@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/rfq-realtime
 api_type: Trading
-updated_at: 2026-08-21 18:46:08.229330
+updated_at: 2026-08-22 18:47:43.217235
 ---
 
 # Get Trade History

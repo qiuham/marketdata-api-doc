@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-estimated-delivery-exercise-settlement-price-channel
 anchor_id: public-data-websocket-estimated-delivery-exercise-settlement-price-channel
 api_type: WebSocket
-updated_at: 2026-08-21 19:15:58.176955
+updated_at: 2026-08-22 19:16:13.250373
 ---
 
 # Estimated delivery/exercise/settlement price channel

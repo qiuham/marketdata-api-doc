@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-redeem
 api_type: Trading
-updated_at: 2026-08-21 18:39:39.922789
+updated_at: 2026-08-22 18:39:15.155332
 ---
 
 # Get Single Coin Balance

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-auto-loan
 anchor_id: trading-account-rest-api-set-auto-loan
 api_type: REST
-updated_at: 2026-08-21 19:14:13.166809
+updated_at: 2026-08-22 19:14:28.662319
 ---
 
 # Set auto loan

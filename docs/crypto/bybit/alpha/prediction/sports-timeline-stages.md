@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sports-timeline-stages
 api_type: REST
-updated_at: 2026-08-21 18:39:27.264347
+updated_at: 2026-08-22 18:39:03.301193
 ---
 
 # Get Asset List
