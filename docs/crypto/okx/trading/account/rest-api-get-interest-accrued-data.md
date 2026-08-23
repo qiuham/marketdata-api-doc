@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-interest-accrued-data
 anchor_id: trading-account-rest-api-get-interest-accrued-data
 api_type: REST
-updated_at: 2026-08-22 19:14:23.348521
+updated_at: 2026-08-23 19:12:58.894865
 ---
 
 # Get interest accrued data

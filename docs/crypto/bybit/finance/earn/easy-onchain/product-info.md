@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/product-info
 api_type: REST
-updated_at: 2026-08-22 18:42:08.998552
+updated_at: 2026-08-23 18:41:50.768197
 ---
 
 # Get Position Info

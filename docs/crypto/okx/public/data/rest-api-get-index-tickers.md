@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-index-tickers
 anchor_id: public-data-rest-api-get-index-tickers
 api_type: REST
-updated_at: 2026-08-22 19:16:07.760052
+updated_at: 2026-08-23 19:14:44.159236
 ---
 
 # Get index tickers
