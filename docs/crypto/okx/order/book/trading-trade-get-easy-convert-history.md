@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-easy-convert-history
 anchor_id: order-book-trading-trade-get-easy-convert-history
 api_type: API
-updated_at: 2026-08-23 19:13:19.332171
+updated_at: 2026-08-24 19:14:32.921025
 ---
 
 # GET / Easy convert history

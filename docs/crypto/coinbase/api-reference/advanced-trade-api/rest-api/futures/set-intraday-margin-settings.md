@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings
 api_type: REST
-updated_at: 2026-08-23 18:57:43.717984
+updated_at: 2026-08-24 18:58:30.478643
 ---
 
 # Set Intraday Margin Setting
@@ -11,41 +11,6 @@ updated_at: 2026-08-23 18:57:43.717984
 
 
 Set the futures intraday margin setting
-    
-    
-    curl --request POSTUS Derivatives
-    
-    # Set Intraday Margin Setting
-    
-    Set the futures intraday margin setting
-    
-    POST
-    
-    /
-    
-    api
-    
-    /
-    
-    v3
-    
-    /
-    
-    brokerage
-    
-    /
-    
-    cfm
-    
-    /
-    
-    intraday
-    
-    /
-    
-    margin_setting
-    
-    Set Intraday Margin Setting
     
     
     curl --request POST \
@@ -57,8 +22,6 @@ Set the futures intraday margin setting
       "setting": "INTRADAY_MARGIN_SETTING_UNSPECIFIED"
     }
     '
-
-\ \--url https://api.coinbase.com/api/v3/brokerage/cfm/intraday/margin_setting \ \--header 'Authorization: Bearer <token>' \ \--header 'Content-Type: application/json' \ \--data ' { "setting": "INTRADAY_MARGIN_SETTING_UNSPECIFIED" } '`
     
     
     import requests

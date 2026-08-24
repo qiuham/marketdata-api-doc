@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/batch-set-collateral
 api_type: Account
-updated_at: 2026-08-23 18:37:15.750793
+updated_at: 2026-08-24 18:39:19.076841
 ---
 
 # Get Borrow History

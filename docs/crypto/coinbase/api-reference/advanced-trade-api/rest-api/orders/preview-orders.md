@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/preview-orders
 api_type: Trading
-updated_at: 2026-08-23 18:57:44.550537
+updated_at: 2026-08-24 18:58:31.263152
 ---
 
 # Preview Order
@@ -1522,7 +1522,35 @@ Twap bucket metadata - size/duration of each suborder into which twap is broken 
 
 position_notional_limit
 
-string
+stringOrders
+
+# Preview Order
+
+Preview an order.
+
+POST
+
+/
+
+api
+
+/
+
+v3
+
+/
+
+brokerage
+
+/
+
+orders
+
+/
+
+preview
+
+Preview Order
 
 max_notional_at_requested_leverage
 

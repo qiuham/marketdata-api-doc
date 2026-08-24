@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary
 api_type: Account
-updated_at: 2026-08-23 18:57:44.674685
+updated_at: 2026-08-24 18:58:31.454504
 ---
 
 # Get Perpetuals Portfolio Summary

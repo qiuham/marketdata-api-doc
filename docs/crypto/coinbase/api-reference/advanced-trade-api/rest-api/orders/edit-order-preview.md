@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview
 api_type: Trading
-updated_at: 2026-08-23 18:57:44.175685
+updated_at: 2026-08-24 18:58:30.948907
 ---
 
 # Edit Order Preview

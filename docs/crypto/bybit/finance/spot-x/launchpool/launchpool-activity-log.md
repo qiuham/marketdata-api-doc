@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-activity-log
 api_type: REST
-updated_at: 2026-08-23 18:42:36.677105
+updated_at: 2026-08-24 18:44:18.234975
 ---
 
 # Get Launchpool Current Staking

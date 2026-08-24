@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2089182101348904962
+id: zhongtai-xtp-2091777567920058369
 title: 支持上海Level2逐笔委托说明
-doc_id: 2089182101348904962
+doc_id: 2091777567920058369
 doc_category: 使用建议
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2089182101348904962'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2091777567920058369'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-08-17
+updated_at: 2026-08-24
 ---
 
 # 支持上海Level2逐笔委托说明
@@ -163,4 +163,4 @@ typedef struct XTPTickByTickStruct {
 
 目前实盘回调函数线程如下：
 
-![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182101348904962&imagePath=4.png)
+![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567920058369&imagePath=4.png)

@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2089182100795256834
+id: zhongtai-xtp-2091777567479656449
 title: API常见问题
-doc_id: 2089182100795256834
+doc_id: 2091777567479656449
 doc_category: 其他帮助文档
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2089182100795256834'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2091777567479656449'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-08-17
+updated_at: 2026-08-24
 ---
 
 # API常见问题
@@ -732,14 +732,14 @@ Exception in thread "main" java.lang.UnsatisfiedLinkError: /usr/local/lib/libquo
 
 
 **94.问：下载的github上的Java版本，编译通过，但是运行报错，是什么原因？**
-> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182100795256834&imagePath=94Q-1.png)
+> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567479656449&imagePath=94Q-1.png)
 
 > 答：如果使用我们提供的库，那得用官网的glog，libglog.so要放到系统目录，如果是windows系统，要把glog.dll、glog.lib 放到系统目录下C:\Windows\System32\。也可以自己编译 dependsLibSrc目录下的 gflags-master 和 glog-master 源码中的glog。
 
 
 **95.问：为什么下载的java中的demo编译不了，有很多builder方法没有定义**
 
-> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182100795256834&imagePath=95Q-1.png)
+> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567479656449&imagePath=95Q-1.png)
 
 > 答：java为了减少写代码的工作量，引入了builder模式。需要安装Lombok插件。
 
@@ -772,7 +772,7 @@ Exception in thread "main" java.lang.UnsatisfiedLinkError: /usr/local/lib/libquo
 
 
 > 答：请检查一下证券代码是否正确，如果无误请检查一下交易市场是否正确。行情api和交易api使用的是不同的市场类型，如果都没问题请确认一下是不是XTP不支持的品种。
-> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182100795256834&imagePath=100A-1.png)
+> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567479656449&imagePath=100A-1.png)
 
 
 **101.问：在下单的时候，在接收回调函数报单通知时，会不会保证按照正常的订单生命周期对应的时间顺序；举个例子，全成会在部成后面出现，而不会是部成在全成后面出现。**
@@ -1025,7 +1025,7 @@ LNK2019 无法解析的外部符号 public: static class XTP::API::TraderApi�
 
 > 答：请检查SubscribePublicTopic()参数resume_type是否使用的XTP_TERT_RESTART，可改为quick方式登录只收到登录后的一系列公有流消息。
 
-> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182100795256834&imagePath=143A-1.png)
+> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567479656449&imagePath=143A-1.png)
 
 
 **144.问：两融仿真测试，所有交易委托订单都被拒绝： error_info=&get;error_id:11000909, error_msg:Order is invalid in current debt expire status! 这是什么原因？**
@@ -1036,7 +1036,7 @@ LNK2019 无法解析的外部符号 public: static class XTP::API::TraderApi�
 
 **145.问：程序运行时提示缺少dll文件是怎么回事？**
 
-> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2089182100795256834&imagePath=145Q-1.png)
+> ![avatar](https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getImageStream?id=2091777567479656449&imagePath=145Q-1.png)
 
 > 答：这是运行环境缺少必要的库文件，请下载64位运行时库 vcredist_x64.exe，解压后放到程序所在目录。
 

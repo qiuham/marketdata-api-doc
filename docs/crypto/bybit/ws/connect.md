@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-08-23 18:47:12.470227
+updated_at: 2026-08-24 18:48:37.114490
 ---
 
 # Connect
@@ -14,7 +14,7 @@ Spot: `wss://stream.bybit.com/v5/public/spot`
 USDT, USDC perpetual & USDT Futures: `wss://stream.bybit.com/v5/public/linear`  
 Inverse contract: `wss://stream.bybit.com/v5/public/inverse`  
 Spread trading: `wss://stream.bybit.com/v5/public/spread`  
-RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`  
+RFQ: `wss://stream.bybit.com/v5/public/rfq`  
 USDT/USDC Options: `wss://stream.bybit.com/v5/public/option`
 
   * **Testnet:**  
