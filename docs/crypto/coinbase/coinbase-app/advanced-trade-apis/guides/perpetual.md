@@ -2,14 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual
 api_type: Guide
-updated_at: 2026-08-24 18:58:32.640394
+updated_at: 2026-08-25 18:59:20.145507
 ---
 
-# Advanced Trade International Derivatives (INTX) — Deprecated
+# Advanced Trade INTX Perpetuals — Deprecated
 
 **Deprecated — retires September 9, 2026.** International derivatives trading is moving to the new [Deribit-powered gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).The INTX perpetuals endpoints below stop serving derivatives trading at the cutover. Integrations should plan building against the new gateway. See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
-The Advanced Trade API supports trading for International Derivatives products (a.k.a. INTX perpetuals) via the following endpoints (for users in eligible regions):
+The Advanced Trade API supports trading INTX perpetuals via the following endpoints (for users in eligible regions):
 
   * [Order Management](/api-reference/advanced-trade-api/rest-api/orders/create-order)
   * [Market Data](/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask)
@@ -21,7 +21,7 @@ eligibilityTo use the Advanced Trade API, you must be in an eligible region and 
 
 ## API Authentication
 
-[Advanced Trade REST API Authentication](/coinbase-app/advanced-trade-apis/rest-api) explains how to authenticate requests to the Advanced REST API endpoints and WebSocket server channels.
+[API key authentication](/coinbase-app/authentication-authorization/api-key-authentication) explains how to authenticate requests to the Advanced REST API endpoints and WebSocket server channels.
 
 ## Onboarding Requirements
 

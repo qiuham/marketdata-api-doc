@@ -2,12 +2,12 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication
 api_type: WebSocket
-updated_at: 2026-08-24 18:58:33.058599
+updated_at: 2026-08-25 18:59:20.866644
 ---
 
 # Advanced Trade WebSocket Authentication
 
-This guide explains how to authenticate requests to the Advanced Trade [WebSocket API](/coinbase-app/advanced-trade-apis/websocket/websocket-channels) server channels. It assumes that you have already [created API keys](/coinbase-app/authentication-authorization/api-key-authentication).
+Authenticate to the Advanced Trade [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints) with a JWT from a [CDP API key](/coinbase-app/authentication-authorization/api-key-authentication). Public channels do not need one.
 
 ## Sending Messages with API Keys
 
@@ -780,14 +780,6 @@ This will generate a `main.js` file.
     }
     
 
-## Sequence Numbers
+Sequence numbers and how to handle gaps are on the [WebSocket Overview](/coinbase-app/advanced-trade-apis/websocket/websocket-overview#sequence-numbers). **See Also:**
 
-Most feed messages contain a sequence number. Sequence numbers are increasing integer values for each product, with each new message being exactly one sequence number greater than the one before it. Sequence numbers that are _greater than one integer value_ from the previous number indicate that a message has been dropped. Sequence numbers that are _less_ than the previous number can be ignored or represent a message that has arrived out of order. In either situation you may need to perform logic to make sure your system is in the correct state.
-
-Even though a WebSocket connection is over TCP, the WebSocket servers receive market data in a manner that can result in dropped messages. Your feed consumer should be designed to handle sequence gaps and out of order messages, or should use channels that guarantee delivery of messages.
-
-To guarantee that messages are delivered and your order book is in sync, consider using the [level2 channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#level2-channel).
-
-**See Also:**
-
-  * [WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)
+  * [WebSocket Endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints)

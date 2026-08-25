@@ -2,35 +2,24 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical
 api_type: Guide
-updated_at: 2026-08-24 18:58:32.464869
+updated_at: 2026-08-25 18:59:20.081231
 ---
 
 # Technical Migration Guide
 
-Technical guide to trading international derivatives on Coinbase Advanced Trade via the new Deribit-powered gateway
+Technical guide to trading Global Derivatives on Advanced Trade via the new Deribit-powered gateway
 
-On **September 9, 2026** , Coinbase Advanced is moving international derivatives from INTX onto a Deribit-powered gateway running the next-generation Starbase engine.
+On **September 9, 2026** , Advanced Trade is moving international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
 
 For the full API reference — all methods, parameters and schemas — see the [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction).
 
 ## HTTP API
 
-  * The new gateway is JSON-RPC 2.0 over HTTP (and WebSocket).
-
-    
-    
-    # Current gateway
-    https://api.coinbase.com/api/v3/brokerage
-    
-    # New gateway
-    https://drb.coinbase.com/api/v2
-    
-
-These are the schema changes most likely to break an existing integration.
+The new gateway is JSON-RPC 2.0 over HTTP (and WebSocket). Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction). These are the schema changes most likely to break an existing integration.
 
   * **Envelope.** Responses follow JSON-RPC: a top-level result or error object plus the request ID, not a bare REST body.
   * **Numeric values.** Send prices and sizes as JSON numbers, and expect them back as JSON numbers. This differs from the Coinbase spot API, which encodes decimals as decimal strings.
-  * **Order size.** `amount` is in the base coin of the instrument, or size in contract units with `contracts`.
+  * **Order size.** `amount` is in the base coin for spot, options, and linear instruments — including the USDC-settled perpetuals used here, so `amount: 0.001` is 0.001 of the base coin. It is in USD only for inverse futures and inverse perpetuals. Pass `contracts` instead to specify contract units.
   * **Client order ID.** Carried in the `label` field, not a dedicated client-order-ID field. Unlike `client_order_id` today, `label` is not guaranteed unique, so don’t rely on it as an idempotency key.
   * **Instrument names.** Instrument names replace the old symbol field and use a new format (see below).
 
@@ -38,20 +27,9 @@ These are the schema changes most likely to break an existing integration.
 
 **WebSocket now supports full order entry.** Use WebSocket for trading or event-driven flows — live market data and streams of your orders, positions, and portfolio.
 
-Every JSON-RPC HTTP method can be sent over WebSocket in addition to the dedicated streaming methods.
-    
-    
-    # Current gateway — public
-    wss://advanced-trade-ws.coinbase.com
-    
-    # Current gateway — private
-    wss://advanced-trade-ws-user.coinbase.com
-    
-    # New gateway — public + private
-    wss://drb.coinbase.com/ws/api/v2
-    
+Every JSON-RPC HTTP method can be sent on the main WebSocket. The public streams host is subscribe-only. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction).
 
-  * **One connection.** The same endpoint carries public market data and your authenticated order flow. Authenticate by calling `public/auth` after connecting; the socket then stays authenticated, and you re-send `public/auth` on it before the session expires.
+  * **Two hosts.** Public market data is `public/subscribe` on the streams host. HTTP methods and authenticated order flow are on the main WebSocket. Authenticate by calling `public/auth` after connecting; the socket then stays authenticated, and you re-send `public/auth` on it before the session expires.
   * **Subscriptions.** Subscribe to channels by name. Market-data channels cover the order book, ticker, trades, and charts; private channels cover your orders, position changes, and portfolio.
   * **Cancel on Disconnect (CoD).** An opt-in safety mechanism: your orders auto-cancel if the connection drops.
   * **Heartbeats.** The server sends periodic test requests that your client must answer to keep the connection alive. You set the heartbeat interval from `public/set_heartbeat`.

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades
 api_type: Market Data
-updated_at: 2026-08-24 18:58:32.068239
+updated_at: 2026-08-25 18:59:19.461664
 ---
 
 # Get Public Market Trades
@@ -14,22 +14,19 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
     
     
     curl --request GET \
-      --url https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker \
-      --header 'Authorization: Bearer <token>'
+      --url https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker
     
     
     import requests
     
     url = "https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker"
     
-    headers = {"Authorization": "Bearer <token>"}
-    
-    response = requests.get(url, headers=headers)
+    response = requests.get(url)
     
     print(response.text)
     
     
-    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    const options = {method: 'GET'};
     
     fetch('https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker', options)
       .then(res => res.json())
@@ -49,9 +46,6 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
       CURLOPT_TIMEOUT => 30,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => "GET",
-      CURLOPT_HTTPHEADER => [
-        "Authorization: Bearer <token>"
-      ],
     ]);
     
     $response = curl_exec($curl);
@@ -80,8 +74,6 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
     
     	req, _ := http.NewRequest("GET", url, nil)
     
-    	req.Header.Add("Authorization", "Bearer <token>")
-    
     	res, _ := http.DefaultClient.Do(req)
     
     	defer res.Body.Close()
@@ -93,7 +85,6 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
     
     
     HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker")
-      .header("Authorization", "Bearer <token>")
       .asString();
     
     
@@ -106,7 +97,6 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
     http.use_ssl = true
     
     request = Net::HTTP::Get.new(url)
-    request["Authorization"] = 'Bearer <token>'
     
     response = http.request(request)
     puts response.read_body
@@ -137,18 +127,6 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
         {}
       ]
     }
-
-#### Authorizations
-
-Authorization
-
-string
-
-header
-
-required
-
-A JWT signed using your CDP API Key Secret, encoded in base64. Refer to the [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our Coinbase App Authentication docs for information on how to generate your Bearer Token.
 
 #### Path Parameters
 

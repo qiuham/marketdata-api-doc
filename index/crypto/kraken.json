@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/kraken",
   "total": 243,
-  "updated_at": "2026-08-24 19:13:40.900035",
+  "updated_at": "2026-08-25 19:15:02.035079",
   "documents_by_type": {
     "REST": [
       {
@@ -1023,7 +1023,7 @@
       },
       {
         "id": "send-order",
-        "title": "Send order",
+        "title": "Book",
         "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
         "filename": "send-order.md",
         "api_type": "REST",
@@ -1031,7 +1031,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-08-24 19:13:35.349297"
+        "updated_at": "2026-08-25 19:14:56.551937"
       },
       {
         "id": "set-leverage-setting",
@@ -1211,7 +1211,7 @@
         "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-08-24 19:13:40.075901"
+        "updated_at": "2026-08-25 19:15:00.515124"
       },
       {
         "id": "allocate-strategy",
@@ -2011,7 +2011,7 @@
       },
       {
         "id": "book",
-        "title": "Exchange overview",
+        "title": "Book",
         "path": "docs/crypto/kraken/futures-api/websocket/book.md",
         "filename": "book.md",
         "api_type": "WebSocket",
@@ -2019,7 +2019,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-08-24 19:13:37.191759"
+        "updated_at": "2026-08-25 19:14:57.346399"
       },
       {
         "id": "challenge",
@@ -2451,7 +2451,7 @@
         "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-08-24 19:13:40.900035"
+        "updated_at": "2026-08-25 19:15:02.035079"
       },
       {
         "id": "amend_order",
@@ -2817,7 +2817,7 @@
       },
       {
         "id": "global-intro",
-        "title": "Exchange overview",
+        "title": "Add Order",
         "path": "docs/crypto/kraken/guides/global-intro.md",
         "filename": "global-intro.md",
         "api_type": "Guide",
@@ -2825,7 +2825,7 @@
         "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-08-24 19:13:37.971581"
+        "updated_at": "2026-08-25 19:14:59.695420"
       },
       {
         "id": "spot-amends",
@@ -2939,6 +2939,18 @@
   },
   "all_documents": [
     {
+      "id": "global-intro",
+      "title": "Add Order",
+      "path": "docs/crypto/kraken/guides/global-intro.md",
+      "filename": "global-intro.md",
+      "api_type": "Guide",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-08-25 19:14:59.695420"
+    },
+    {
       "id": "custody-rest-auth",
       "title": "Custody REST Authentication",
       "path": "docs/crypto/kraken/guides/custody-rest-auth.md",
@@ -3009,18 +3021,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:56:56.487814"
-    },
-    {
-      "id": "global-intro",
-      "title": "Exchange overview",
-      "path": "docs/crypto/kraken/guides/global-intro.md",
-      "filename": "global-intro.md",
-      "api_type": "Guide",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-08-24 19:13:37.971581"
     },
     {
       "id": "fix-auth",
@@ -3404,7 +3404,7 @@
       "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-08-24 19:13:40.075901"
+      "updated_at": "2026-08-25 19:15:00.515124"
     },
     {
       "id": "add-order-batch",
@@ -3489,6 +3489,18 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 19:53:17.998588"
+    },
+    {
+      "id": "send-order",
+      "title": "Book",
+      "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
+      "filename": "send-order.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-08-25 19:14:56.551937"
     },
     {
       "id": "simulate-portfolio",
@@ -5015,18 +5027,6 @@
       "updated_at": "2026-08-24 19:13:34.545803"
     },
     {
-      "id": "send-order",
-      "title": "Send order",
-      "path": "docs/crypto/kraken/futures-api/trading/send-order.md",
-      "filename": "send-order.md",
-      "api_type": "REST",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-08-24 19:13:35.349297"
-    },
-    {
       "id": "sequence-reset-fix",
       "title": "Sequence Reset",
       "path": "docs/crypto/kraken/fix-api/sequence-reset-fix.md",
@@ -5204,7 +5204,7 @@
       "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-08-24 19:13:40.900035"
+      "updated_at": "2026-08-25 19:15:02.035079"
     },
     {
       "id": "amendorder",
@@ -5277,6 +5277,18 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 20:11:26.814314"
+    },
+    {
+      "id": "book",
+      "title": "Book",
+      "path": "docs/crypto/kraken/futures-api/websocket/book.md",
+      "filename": "book.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-08-25 19:14:57.346399"
     },
     {
       "id": "book",
@@ -5433,18 +5445,6 @@
       "doc_category": "",
       "version": "",
       "updated_at": "2026-05-27 20:12:02.295409"
-    },
-    {
-      "id": "book",
-      "title": "Exchange overview",
-      "path": "docs/crypto/kraken/futures-api/websocket/book.md",
-      "filename": "book.md",
-      "api_type": "WebSocket",
-      "source_type": "",
-      "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-08-24 19:13:37.191759"
     },
     {
       "id": "executions",

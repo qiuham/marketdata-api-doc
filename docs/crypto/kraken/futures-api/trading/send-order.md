@@ -2,456 +2,213 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/trading/send-order
 api_type: REST
-updated_at: 2026-08-24 19:13:35.349297
+updated_at: 2026-08-25 19:14:56.551937
 ---
 
-# Send order
+# Book
 
-Send order
-    
-    
-    curl --request POST \
-      --url https://futures.kraken.com/derivatives/api/v3/sendorder \
-      --header 'APIKey: <api-key>' \
-      --header 'Authent: <api-key>'
-    
-    
-    import requests
-    
-    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"
-    
-    headers = {
-        "APIKey": "<api-key>",
-        "Authent": "<api-key>"
-    }
-    
-    response = requests.post(url, headers=headers)
-    
-    print(response.text)
-    
-    
-    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};
-    
-    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)
-      .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
-    
-    
-    package main
-    
-    import (
-    	"fmt"
-    	"net/http"
-    	"io"
-    )
-    
-    func main() {
-    
-    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"
-    
-    	req, _ := http.NewRequest("POST", url, nil)
-    
-    	req.Header.Add("APIKey", "<api-key>")
-    	req.Header.Add("Authent", "<api-key>")
-    
-    	res, _ := http.DefaultClient.Do(req)
-    
-    	defer res.Body.Close()
-    	body, _ := io.ReadAll(res.Body)
-    
-    	fmt.Println(string(body))
-    
-    }
+WSSfutures.kraken.com/ws/v1book
+
+The `book` feed returns information about the order book.
+
+* * *
+
+## 
+
+Request
+
+string
+
+required
+
+`subscribe` or `unsubscribe`
+
+string
+
+required
+
+The requested subscription feed. Value: `book`
+
+list of strings
+
+required
+
+A list of strings which represent the products that user will receive information upon.
     
     
     {
-      "result": "success",
-      "sendStatus": {
-        "order_id": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
-        "status": "placed",
-        "receivedTime": "2019-09-05T16:33:50.734Z",
-        "orderEvents": [
-          {
-            "type": "PLACE",
-            "order": {
-              "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
-              "cliOrdId": null,
-              "type": "lmt",
-              "symbol": "PI_XBTUSD",
-              "side": "buy",
-              "quantity": 10000,
-              "filled": 0,
-              "limitPrice": 9400,
-              "reduceOnly": false,
-              "timestamp": "2019-09-05T16:33:50.734Z",
-              "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
-            },
-            "reducedQuantity": null
-          }
-        ]
-      },
-      "serverTime": "2019-09-05T16:33:50.734Z"
+      "event": "subscribe",
+      "feed": "book",
+      "product_ids": ["PF_XBTUSD"]
     }
+* * *
 
-POST
+## 
 
-/
+Response Success
 
-sendorder
+string
 
-Send order
-    
-    
-    curl --request POST \
-      --url https://futures.kraken.com/derivatives/api/v3/sendorder \
-      --header 'APIKey: <api-key>' \
-      --header 'Authent: <api-key>'
-    
-    
-    import requests
-    
-    url = "https://futures.kraken.com/derivatives/api/v3/sendorder"
-    
-    headers = {
-        "APIKey": "<api-key>",
-        "Authent": "<api-key>"
-    }
-    
-    response = requests.post(url, headers=headers)
-    
-    print(response.text)
-    
-    
-    const options = {method: 'POST', headers: {APIKey: '<api-key>', Authent: '<api-key>'}};
-    
-    fetch('https://futures.kraken.com/derivatives/api/v3/sendorder', options)
-      .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
-    
-    
-    package main
-    
-    import (
-    	"fmt"
-    	"net/http"
-    	"io"
-    )
-    
-    func main() {
-    
-    	url := "https://futures.kraken.com/derivatives/api/v3/sendorder"
-    
-    	req, _ := http.NewRequest("POST", url, nil)
-    
-    	req.Header.Add("APIKey", "<api-key>")
-    	req.Header.Add("Authent", "<api-key>")
-    
-    	res, _ := http.DefaultClient.Do(req)
-    
-    	defer res.Body.Close()
-    	body, _ := io.ReadAll(res.Body)
-    
-    	fmt.Println(string(body))
-    
-    }
+One of: `subscribed`, `subscribed_failed`, `unsubscribed`, `unsubscribed_failed`The result.
+
+string
+
+The requested subscription feed. Value: `book`
+
+list of strings
+
+required
+
+A list of strings which represent the products that user will receive information upon.
     
     
     {
-      "result": "success",
-      "sendStatus": {
-        "order_id": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
-        "status": "placed",
-        "receivedTime": "2019-09-05T16:33:50.734Z",
-        "orderEvents": [
-          {
-            "type": "PLACE",
-            "order": {
-              "orderId": "179f9af8-e45e-469d-b3e9-2fd4675cb7d0",
-              "cliOrdId": null,
-              "type": "lmt",
-              "symbol": "PI_XBTUSD",
-              "side": "buy",
-              "quantity": 10000,
-              "filled": 0,
-              "limitPrice": 9400,
-              "reduceOnly": false,
-              "timestamp": "2019-09-05T16:33:50.734Z",
-              "lastUpdateTimestamp": "2019-09-05T16:33:50.734Z"
-            },
-            "reducedQuantity": null
-          }
-        ]
-      },
-      "serverTime": "2019-09-05T16:33:50.734Z"
+      "event": "subscribed",
+      "feed": "book",
+      "product_ids": ["PF_XBTUSD"]
     }
+* * *
 
-#### Authorizations
+## 
 
-APIKey
-
-string
-
-header
-
-required
-
-General API key with full access
-
-Authent
+Response Snapshot
 
 string
 
-header
-
-required
-
-Authentication string
-
-#### Headers
-
-algoId
+The subscribed feed.
 
 string
 
-ID of the algorithm that is making the request.
+The subscribed product (referred also as instrument or symbol).
 
-#### Query Parameters
+positive integer
 
-processBefore
+The subscription message sequence number.
 
-string<date-time>
+positive integer
 
-The time before which the request should be processed, otherwise it is rejected.
-
-orderType
-
-enum<string>
-
-required
-
-The order type:
-
-  * `lmt` \- a limit order
-
-  * `post` \- a post-only limit order
-
-  * `mkt` \- an immediate-or-cancel order with 1% price protection
-
-  * `stp` \- a stop order
-
-  * `take_profit` \- a take profit order
-
-  * `ioc` \- an immediate-or-cancel order
-
-  * `trailing_stop` \- a trailing stop order
-
-  * `fok` \- fill or kill order The order type:
-
-  * `lmt` \- a limit order
-
-  * `post` \- a post-only limit order
-
-  * `mkt` \- an immediate-or-cancel order with 1% price protection
-
-  * `stp` \- a stop order
-
-  * `take_profit` \- a take profit order
-
-  * `ioc` \- an immediate-or-cancel order
-
-  * `trailing_stop` \- a trailing stop order
-
-  * `fok` \- fill-or-kill order
-
-Available options:
-
-`lmt`,
-
-`post`,
-
-`ioc`,
-
-`mkt`,
-
-`stp`,
-
-`take_profit`,
-
-`trailing_stop`,
-
-`fok`
-
-symbol
+Timestamp in milliseconds.
 
 string
 
-required
+Always null.
 
-The symbol of the Futures
+list of structures
 
-side
+Show properties
 
-enum<string>
+positive float
 
-required
+The quantity of the entry.
 
-The direction of the order.
+positive float
 
-Available options:
+The price of the entry.
 
-`buy`,
+list of structures
 
-`sell`
+Show properties
 
-size
+positive float
 
-number
+The quantity of the entry.
 
-required
+positive float
 
-The size associated with the order. Note that different Futures have different contract sizes.
+The price of the entry.
+    
+    
+    {
+      "feed": "book_snapshot",
+      "product_id": "PF_XBTUSD",
+      "timestamp": 1612269825817,
+      "seq": 326072249,
+      "tickSize": null,
+      "bids": [
+        {
+          "price": 34892.5,
+          "qty": 6385
+        },
+        {
+          "price": 34892,
+          "qty": 10924
+        }
+      ],
+      "asks": [
+        {
+          "price": 34911.5,
+          "qty": 20598
+        },
+        {
+          "price": 34912,
+          "qty": 2300
+        }
+      ]
+    }
+* * *
 
-limitPrice
+## 
 
-number
-
-The limit price associated with the order. Note that for stop orders, limitPrice denotes the worst price at which the `stp` or `take_profit` order can get filled at. If no `limitPrice` is provided the `stp` or `take_profit` order will trigger a market order. If placing a `trailing_stop` order then leave undefined.
-
-stopPrice
-
-number
-
-The stop price associated with a stop or take profit order.
-
-Required if orderType is `stp` or `take_profit`, but if placing a `trailing_stop` then leave undefined. Note that for stop orders, limitPrice denotes the worst price at which the `stp` or `take_profit` order can get filled at. If no `limitPrice` is provided the `stp` or `take_profit` order will trigger a market order.
-
-cliOrdId
+Response Delta
 
 string
 
-The order identity that is specified from the user. It must be globally unique.
+The subscribed feed.
 
-Maximum string length: `100`
+string
 
-triggerSignal
+The subscribed product (referred also as instrument or symbol).
 
-enum<string>
+positive integer
 
-If placing a `stp`, `take_profit` or `trailing_stop`, the signal used for trigger.
+The subscription message sequence number.
 
-  * `mark` \- the mark price
-  * `index` \- the index price
-  * `last` \- the last executed trade
+positive integer
 
-Available options:
+Timestamp in milliseconds.
 
-`mark`,
+string
 
-`index`,
+The side of the entry.
 
-`last`
+positive float
 
-reduceOnly
+The price of the entry.
 
-boolean
+positive float
 
-Set as true if you wish the order to only reduce an existing position.
+The quantity of the entry.
+    
+    
+    {
+      "feed": "book",
+      "product_id": "PF_XBTUSD",
+      "side": "sell",
+      "seq": 326094134,
+      "price": 34981,
+      "qty": 0,
+      "timestamp": 1612269953629
+    }
+* * *
 
-Any order which increases an existing position will be rejected. Default false.
+## 
 
-trailingStopMaxDeviation
+Response Error
 
-number
+string
 
-Required if the order type is `trailing_stop`. Maximum value of 50%, minimum value of 0.1% for 'PERCENT' 'maxDeviationUnit'.
+Value: `error`
 
-Is the maximum distance the trailing stop's trigger price may trail behind the requested trigger signal. It defines the threshold at which the trigger price updates.
+string
 
-Required range: `0.1 <= x <= 50`
-
-trailingStopDeviationUnit
-
-enum<string>
-
-Required if the order type is `trailing_stop`.
-
-This defines how the trailing trigger price is calculated from the requested trigger signal. For example, if the max deviation is set to 10, the unit is 'PERCENT', and the underlying order is a sell, then the trigger price will never be more then 10% below the trigger signal. Similarly, if the deviation is 100, the unit is 'QUOTE_CURRENCY', the underlying order is a sell, and the contract is quoted in USD, then the trigger price will never be more than $100 below the trigger signal.
-
-Available options:
-
-`PERCENT`,
-
-`QUOTE_CURRENCY`
-
-limitPriceOffsetValue
-
-number
-
-Can only be set for triggers, e.g. order types `take_profit`, `stop` and `trailing_stop`. If set, `limitPriceOffsetUnit` must be set as well. This defines a relative limit price depending on the trigger `stopPrice`. The price is determined when the trigger is activated by the `triggerSignal`. The offset can be positive or negative, there might be restrictions on the value depending on the `limitPriceOffsetUnit`.
-
-limitPriceOffsetUnit
-
-enum<string>
-
-Can only be set together with `limitPriceOffsetValue`. This defines the unit for the relative limit price distance from the trigger's `stopPrice`.
-
-Available options:
-
-`QUOTE_CURRENCY`,
-
-`PERCENT`
-
-broker
-
-string<iiban>
-
-Valid Broker IIBAN on whose behalf the order is sent. The format must follow the usual IIBAN pattern `XXXX YYYY ZZZZ WWWW` or machine pattern `XXXXYYYYZZZZWWWW`.
-
-Note: This is currently available exclusively in the Kraken pre-prod environments.
-
-#### Response
-
-  * Success Response
-
-  * Errors
-
-sendStatus
-
-object
-
-required
-
-A structure containing information on the send order request.
-
-Show child attributes
-
-result
-
-enum<string>
-
-required
-
-Available options:
-
-`success`
-
-Example:
-
-`"success"`
-
-serverTime
-
-string<date-time>
-
-required
-
-Server time in Coordinated Universal Time (UTC)
-
-Example:
-
-`"2020-08-27T17:03:33.196Z"`
+One of: `Invalid product id`, `Invalid feed`, `Json Error`An error message.
+    
+    
+    {
+      "event": "error",
+      "message": "Invalid product id"
+    }
+    
 
 Was this page helpful?
 

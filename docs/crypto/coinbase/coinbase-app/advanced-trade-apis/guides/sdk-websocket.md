@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-websocket
 api_type: WebSocket
-updated_at: 2026-08-24 18:58:32.758951
+updated_at: 2026-08-25 18:59:20.326901
 ---
 
 # Listen for Order Updates with the WebSocket SDK
@@ -49,7 +49,7 @@ You are now ready to start subscribing to channels!
 
 ### WebSocket User API Client
 
-We offer a WebSocket User API client that allows you to connect to the Coinbase Advanced Trade WebSocket [heartbeats channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#heartbeats-channel), [user channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#user-channel) and [futures_balance_summary channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#futures-balance-summary-channel). In your code, import the WSUserClient class instead of WSClient.
+We offer a WebSocket User API client that allows you to connect to the Coinbase Advanced Trade WebSocket [heartbeats channel](/api-reference/advanced-trade-api/websocket/heartbeats), [user channel](/api-reference/advanced-trade-api/websocket/user) and [futures_balance_summary channel](/api-reference/advanced-trade-api/websocket/futures-balance-summary). In your code, import the WSUserClient class instead of WSClient.
     
     
     from coinbase.websocket import WSUserClient
@@ -73,8 +73,8 @@ Let’s start by opening a connection to the WebSocket API. Add the following ca
 
 With an open connection, you can now subscribe to channels.
 
-  * The [Heartbeats](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#heartbeats-channel) channel receives heartbeats messages for specific products every second, which is used to keep the connection alive.
-  * The [Ticker](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#ticker-channel) channel provides real-time price updates every time a match happens for a given product.
+  * The [Heartbeats](/api-reference/advanced-trade-api/websocket/heartbeats) channel receives heartbeats messages for specific products every second, which is used to keep the connection alive.
+  * The [Ticker](/api-reference/advanced-trade-api/websocket/ticker) channel provides real-time price updates every time a match happens for a given product.
 
 Using your same client, send the following message to subscribe to the `heartbeats` and `ticker` channels for the `BTC-USD` product. The received message is printed to the console.
     
@@ -118,7 +118,7 @@ To keep the client open indefinitely, use the `run_forever_with_exception_check`
 Now let’s get a bit more… _advanced!_ In this final section, we integrate both the REST and WebSocket APIs to:
 
   1. Place a limit-buy order 5% below said price (in the [REST SDK tutorial](/coinbase-app/advanced-trade-apis/guides/sdk-rest-api)).
-  2. Subscribe to the [user channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#user-channel) for updates on a Limit order.
+  2. Subscribe to the [user channel](/api-reference/advanced-trade-api/websocket/user) for updates on a Limit order.
   3. Print when the order is filled.
 
 ### Placing an Order 5% below Price
@@ -127,7 +127,7 @@ This section assumes that you used the REST SDK Client to [place a limit-buy ord
 
 ### Subscribing to the User Channel
 
-Now let’s integrate the WebSocket SDK! Let’s call the [User](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#user-channel) channel to receive updates on the order. This channel sends updates on all of a user’s open orders. First, let’s define the `on_message` function. This function:
+Now let’s integrate the WebSocket SDK! Let’s call the [User](/api-reference/advanced-trade-api/websocket/user) channel to receive updates on the order. This channel sends updates on all of a user’s open orders. First, let’s define the `on_message` function. This function:
 
   * Checks for all messages from the `user` channel’
   * Checks if the message is an update on our order.

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/repay-transaction
 api_type: REST
-updated_at: 2026-08-24 18:42:27.718913
+updated_at: 2026-08-25 18:42:05.097024
 ---
 
 # Get Loan Repayment History

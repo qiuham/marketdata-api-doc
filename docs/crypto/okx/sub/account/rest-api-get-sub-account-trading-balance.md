@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-trading-balance
 anchor_id: sub-account-rest-api-get-sub-account-trading-balance
 api_type: REST
-updated_at: 2026-08-24 19:16:26.344806
+updated_at: 2026-08-25 19:17:47.736610
 ---
 
 # Get sub-account trading balance

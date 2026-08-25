@@ -2,12 +2,12 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview
 api_type: Guide
-updated_at: 2026-08-24 18:58:32.781776
+updated_at: 2026-08-25 18:59:20.394832
 ---
 
 # Welcome to Advanced Trade API
 
-Programmatic trading and order management for spot, US futures, and international derivatives.
+Programmatic trading and order management for spot, US futures, and Global Derivatives.
 
 The **Coinbase Advanced Trade API** gives you programmatic trading and order management — a [REST API](/coinbase-app/advanced-trade-apis/rest-api) for placing and managing orders, and a [WebSocket protocol](/coinbase-app/advanced-trade-apis/websocket/websocket-overview) for real-time market data and account updates. Official SDKs wrap both. [Advanced Trade](https://www.coinbase.com/advanced-trade) is Coinbase’s trading platform for the more experienced trader — a secure way to buy, sell, and trade digital assets across a wide range of markets.
 
@@ -33,11 +33,11 @@ Market| What it covers
 ---|---  
 **Spot**|  Buy, sell, and trade digital assets across spot pairs  
 **US futures**|  CFTC-regulated futures for eligible US clients  
-**International derivatives**|  Perpetuals for eligible non-US clients — options and dated futures to follow  
+**Global Derivatives**|  Perpetuals for eligible non-US clients — options and dated futures to follow  
   
 ## International derivatives are moving to Deribit
 
-On **September 9, 2026** , Coinbase Advanced moves international derivatives from INTX onto a Deribit-powered gateway running the next-generation **Starbase** matching engine. This is a hard cutover — plan your integration now.
+On **September 9, 2026** , Advanced Trade moves international derivatives from INTX onto a Deribit-powered gateway running on the **Starbase** platform. This is a hard cutover — plan your integration now.
 
 Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). International derivatives move to a new gateway with:
 
@@ -55,7 +55,7 @@ Authentication, endpoint and schema mapping, and spec references.
 
 ## Advanced Trade API Reference
 
-The JSON-RPC method reference for the new derivatives gateway.
+Hosts and specs for spot, US derivatives, and Global Derivatives.
 
 ## SDKs
 

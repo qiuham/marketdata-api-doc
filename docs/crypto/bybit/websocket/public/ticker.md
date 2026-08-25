@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-08-24 18:48:32.921128
+updated_at: 2026-08-25 18:48:38.339830
 ---
 
 # Trade

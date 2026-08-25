@@ -2,22 +2,22 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-08-24 18:58:32.492966
+updated_at: 2026-08-25 18:59:19.912612
 ---
 
-# International Derivatives Overview
+# Global Derivatives Overview
 
-Guide to trading international derivatives on Coinbase Advanced Trade
+Guide to trading Global Derivatives on Advanced Trade
 
-On **September 9, 2026** , Coinbase Advanced is moving international derivatives from INTX onto a Deribit-powered gateway running the next-generation Starbase engine.
+On **September 9, 2026** , Advanced Trade is moving international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
 
-Coinbase International Exchange and Deribit are coming together to create a unified, world-class derivatives platform. Starting September 9, 2026, the exchange infrastructure behind your perpetuals trades is moving to a combined platform powered by Deribit and Starbase, Deribit’s next-generation matching engine.
+Coinbase International Exchange and Deribit are coming together to create a unified, world-class derivatives platform. Starting September 9, 2026, the exchange infrastructure behind your perpetuals trades is moving to a combined platform powered by Deribit and Starbase.
 
-## Migration to Deribit international derivatives trading
+## Migration to Deribit Global Derivatives trading
 
 ### Who is this guide for:
 
-  * These guides are for new or existing Coinbase retail clients/partners who want to trade international derivatives after September 9, 2026.
+  * These guides are for new or existing Coinbase retail clients/partners who want to trade Global Derivatives after September 9, 2026.
   * Existing Deribit clients can continue to use Deribit services and APIs as they do today.
 
 ### What’s new for you:
@@ -25,12 +25,12 @@ Coinbase International Exchange and Deribit are coming together to create a unif
   * 125+ perpetual contracts: Including equity and commodity perpetuals
   * Up to 50x maximum leverage
   * Deeper liquidity: Unified order books from a combined global user base
-  * Starbase matching engine: Faster, more scalable, lower-latency execution
+  * Starbase platform: Faster, more scalable, lower-latency execution
   * Options trading — Coming soon for eligible users
 
 ### What’s changing
 
-  * **New API endpoints.** Derivatives trading moves to a new Deribit-powered gateway. The protocol moves from REST to JSON-RPC 2.0, over HTTP or WebSocket. See the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical) for base URLs and protocol detail.
+  * **New API endpoints.** Derivatives trading moves to a new Deribit-powered gateway. The protocol moves from REST to JSON-RPC 2.0, over HTTP or WebSocket. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction); protocol detail is in the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical).
   * **New products.** 125+ perpetual contracts at launch — including equity and commodity perpetuals — with up to 50x maximum leverage. Options and dated futures follow (see Timeline).
   * **A richer trading surface.** New native order types and features become available, including trailing stops, market-limit orders, iceberg orders, and WebSocket order entry.
   * **More order controls.** Choose your margin model per portfolio, trigger stop and take orders on the index, mark, or last price, and auto-cancel resting orders if your WebSocket connection drops (Cancel on Disconnect).

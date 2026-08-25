@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/asset-trend
 api_type: REST
-updated_at: 2026-08-24 18:44:00.624890
+updated_at: 2026-08-25 18:43:45.792235
 ---
 
 # Claim Withdrawable Funds

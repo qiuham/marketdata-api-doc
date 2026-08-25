@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview
 api_type: WebSocket
-updated_at: 2026-08-24 18:58:33.162282
+updated_at: 2026-08-25 18:59:20.905616
 ---
 
 # Advanced Trade WebSocket Overview
@@ -324,9 +324,9 @@ Most feed messages contain a sequence number. Sequence numbers are increasing in
 
 Even though a WebSocket connection is over TCP, the WebSocket servers receive market data in a manner that can result in dropped messages. Your feed consumer should be designed to handle sequence gaps and out of order messages, or should use channels that guarantee delivery of messages.
 
-To guarantee that messages are delivered and your order book is in sync, consider using the [level2 channel](/coinbase-app/advanced-trade-apis/websocket/websocket-channels#level2-channel).
+To guarantee that messages are delivered and your order book is in sync, consider using the [level2 channel](/api-reference/advanced-trade-api/websocket/level2).
 
 **See Also:**
 
-  * [WebSocket Channels](/coinbase-app/advanced-trade-apis/websocket/websocket-channels)
+  * [WebSocket Endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints)
   * [WebSocket Rate Limits](/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits)

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction
 api_type: REST
-updated_at: 2026-08-24 18:58:30.544755
+updated_at: 2026-08-25 18:59:17.757257
 ---
 
 # Coinbase Advanced Trade API
@@ -13,8 +13,9 @@ The Advanced Trade API is Coinbase’s programmatic interface for **spot crypto 
 
 Spot crypto and CFTC-regulated US futures.
 
-  * **REST** at `https://api.coinbase.com/api/v3/brokerage`
-  * **WebSocket** at `wss://advanced-trade-ws.coinbase.com` (public) and `wss://advanced-trade-ws-user.coinbase.com` (private)
+  * Market, limit, stop-limit, bracket and attached take-profit/stop-loss orders.
+  * Accounts, portfolios and converts on the same REST host as the order path.
+  * The API is **REST** for request-response and **WebSocket** for market data and user streams.
 
 ## REST
 
@@ -24,20 +25,38 @@ Order entry and management, accounts, portfolios, and market data over REST.Down
 
 Real-time market data and user order, position, and futures balance streams.Download the [AsyncAPI spec](/api-reference/advanced-trade-api/advanced-trade-asyncapi.json).
 
-## International Derivatives
+## Global Derivatives
 
-**Coming soon.** The Deribit-powered gateway goes live **September 9, 2026**. It’s published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Coming soon.** The Deribit-powered gateway goes live **September 9, 2026**. It is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
-On **September 9, 2026** , Coinbase Advanced is moving international derivatives from INTX onto a Deribit-powered gateway running the next-generation Starbase engine.
+On **September 9, 2026** , Advanced Trade is moving Global Derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
 
   * New native order types and features — trailing stops, market-limit orders and WebSocket order entry.
   * Deeper liquidity, lower-latency execution and a broader product set (options and dated futures to follow).
   * The gateway is **JSON-RPC 2.0** over both HTTP and WebSocket.
 
-## HTTP / WebSocket
+## REST
 
-Every JSON-RPC method can be sent over **either HTTP or WebSocket**.Download the [OpenAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-openapi.json).
+JSON-RPC request-response over HTTP. Snapshots such as `public/get_index_price`.Download the [OpenAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-openapi.json).
 
-## Websocket Streams
+## WebSocket
 
-Streaming channels for live order, position, portfolio, and market data.Download the [AsyncAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-asyncapi.json).
+Public market data on the public WebSocket. Order and user channels on the private WebSocket.Download the [AsyncAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-asyncapi.json).
+
+## URLs
+
+REST uses one URL for public and private methods.
+
+Venue| REST (public and private)  
+---|---  
+Spot and US Derivatives| `https://api.coinbase.com/api/v3/brokerage`  
+Global Derivatives| `https://drb.coinbase.com/api/v2`  
+  
+WebSocket uses a public host and a private host.
+
+Venue| WebSocket public| WebSocket private  
+---|---|---  
+Spot and US Derivatives| `wss://advanced-trade-ws.coinbase.com`| `wss://advanced-trade-ws-user.coinbase.com`  
+Global Derivatives| `wss://streams.drb.coinbase.com/ws/api/v2`| `wss://drb.coinbase.com/ws/api/v2`  
+  
+On Global Derivatives, HTTP methods also run on the private WebSocket. The public WebSocket is subscription-only.

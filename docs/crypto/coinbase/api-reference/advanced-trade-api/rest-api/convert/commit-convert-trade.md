@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade
 api_type: Trading
-updated_at: 2026-08-23 18:57:42.914330
+updated_at: 2026-08-25 18:59:16.922113
 ---
 
 # Commit Convert Trade
@@ -2576,6 +2576,8 @@ Commits a convert trade with a specified trade id, source account, and target ac
 
 #### Authorizations
 
+ApiKeyOAuth2ApiKeyOAuth2
+
 Authorization
 
 string
@@ -2584,7 +2586,7 @@ header
 
 required
 
-A JWT signed using your CDP API Key Secret, encoded in base64. Refer to the [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our Coinbase App Authentication docs for information on how to generate your Bearer Token.
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
 
 #### Path Parameters
 
