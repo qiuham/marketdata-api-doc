@@ -2,647 +2,491 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/rest-api/add-order
 api_type: REST
-updated_at: 2026-08-25 19:15:00.515124
+updated_at: 2026-08-26 19:42:16.888308
 ---
 
 # Add Order
 
-Add Order
-    
-    
-    curl --request POST \
-      --url https://api.kraken.com/0/private/AddOrder \
-      --header 'API-Key: <api-key>' \
-      --header 'API-Sign: <api-key>' \
-      --header 'Content-Type: application/json' \
-      --data '
-    {
-      "nonce": 163245617,
-      "ordertype": "limit",
-      "type": "buy",
-      "volume": "1.25",
-      "pair": "XBTUSD",
-      "price": "27500",
-      "cl_ord_id": "6d1b345e-2821-40e2-ad83-4ecb18a06876",
-      "trigger": "last",
-      "reduce_only": false,
-      "stptype": "cancel-newest",
-      "timeinforce": "GTC",
-      "validate": false
-    }
-    '
-    
-    
-    import requests
-    
-    url = "https://api.kraken.com/0/private/AddOrder"
-    
-    payload = {
-        "nonce": 163245617,
-        "ordertype": "limit",
-        "type": "buy",
-        "volume": "1.25",
-        "pair": "XBTUSD",
-        "price": "27500",
-        "cl_ord_id": "6d1b345e-2821-40e2-ad83-4ecb18a06876",
-        "trigger": "last",
-        "reduce_only": False,
-        "stptype": "cancel-newest",
-        "timeinforce": "GTC",
-        "validate": False
-    }
-    headers = {
-        "API-Key": "<api-key>",
-        "API-Sign": "<api-key>",
-        "Content-Type": "application/json"
-    }
-    
-    response = requests.post(url, json=payload, headers=headers)
-    
-    print(response.text)
-    
-    
-    const options = {
-      method: 'POST',
-      headers: {
-        'API-Key': '<api-key>',
-        'API-Sign': '<api-key>',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nonce: 163245617,
-        ordertype: 'limit',
-        type: 'buy',
-        volume: '1.25',
-        pair: 'XBTUSD',
-        price: '27500',
-        cl_ord_id: '6d1b345e-2821-40e2-ad83-4ecb18a06876',
-        trigger: 'last',
-        reduce_only: false,
-        stptype: 'cancel-newest',
-        timeinforce: 'GTC',
-        validate: false
-      })
-    };
-    
-    fetch('https://api.kraken.com/0/private/AddOrder', options)
-      .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
-    
-    
-    package main
-    
-    import (
-    	"fmt"
-    	"strings"
-    	"net/http"
-    	"io"
-    )
-    
-    func main() {
-    
-    	url := "https://api.kraken.com/0/private/AddOrder"
-    
-    	payload := strings.NewReader("{\n  \"nonce\": 163245617,\n  \"ordertype\": \"limit\",\n  \"type\": \"buy\",\n  \"volume\": \"1.25\",\n  \"pair\": \"XBTUSD\",\n  \"price\": \"27500\",\n  \"cl_ord_id\": \"6d1b345e-2821-40e2-ad83-4ecb18a06876\",\n  \"trigger\": \"last\",\n  \"reduce_only\": false,\n  \"stptype\": \"cancel-newest\",\n  \"timeinforce\": \"GTC\",\n  \"validate\": false\n}")
-    
-    	req, _ := http.NewRequest("POST", url, payload)
-    
-    	req.Header.Add("API-Key", "<api-key>")
-    	req.Header.Add("API-Sign", "<api-key>")
-    	req.Header.Add("Content-Type", "application/json")
-    
-    	res, _ := http.DefaultClient.Do(req)
-    
-    	defer res.Body.Close()
-    	body, _ := io.ReadAll(res.Body)
-    
-    	fmt.Println(string(body))
-    
-    }
-    
-    
-    {
-      "error": [],
-      "result": {
-        "descr": {
-          "order": "buy 2.12340000 XBTUSD @ limit 25000.1 with 2:1 leverage",
-          "close": "close position @ stop loss 22000.0 -> limit 21000.0"
+{
+        "method": "add_order",
+        "params": {
+            "order_type": "limit",
+            "side": "buy",
+            "limit_price": 26500.4,
+            "order_userref": 100054,
+            "order_qty": 1.2,
+            "symbol": "BTC/USD",
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
         },
-        "txid": [
-          "OUF4EM-FRGI2-MQMWZD"
-        ]
-      }
-    }
-
-POST
-
-/
-
-private
-
-/
-
-AddOrder
-
-Add Order
-    
-    
-    curl --request POST \
-      --url https://api.kraken.com/0/private/AddOrder \
-      --header 'API-Key: <api-key>' \
-      --header 'API-Sign: <api-key>' \
-      --header 'Content-Type: application/json' \
-      --data '
-    {
-      "nonce": 163245617,
-      "ordertype": "limit",
-      "type": "buy",
-      "volume": "1.25",
-      "pair": "XBTUSD",
-      "price": "27500",
-      "cl_ord_id": "6d1b345e-2821-40e2-ad83-4ecb18a06876",
-      "trigger": "last",
-      "reduce_only": false,
-      "stptype": "cancel-newest",
-      "timeinforce": "GTC",
-      "validate": false
-    }
-    '
-    
-    
-    import requests
-    
-    url = "https://api.kraken.com/0/private/AddOrder"
-    
-    payload = {
-        "nonce": 163245617,
-        "ordertype": "limit",
-        "type": "buy",
-        "volume": "1.25",
-        "pair": "XBTUSD",
-        "price": "27500",
-        "cl_ord_id": "6d1b345e-2821-40e2-ad83-4ecb18a06876",
-        "trigger": "last",
-        "reduce_only": False,
-        "stptype": "cancel-newest",
-        "timeinforce": "GTC",
-        "validate": False
-    }
-    headers = {
-        "API-Key": "<api-key>",
-        "API-Sign": "<api-key>",
-        "Content-Type": "application/json"
+        "req_id": 123456789
     }
     
-    response = requests.post(url, json=payload, headers=headers)
-    
-    print(response.text)
-    
-    
-    const options = {
-      method: 'POST',
-      headers: {
-        'API-Key': '<api-key>',
-        'API-Sign': '<api-key>',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        nonce: 163245617,
-        ordertype: 'limit',
-        type: 'buy',
-        volume: '1.25',
-        pair: 'XBTUSD',
-        price: '27500',
-        cl_ord_id: '6d1b345e-2821-40e2-ad83-4ecb18a06876',
-        trigger: 'last',
-        reduce_only: false,
-        stptype: 'cancel-newest',
-        timeinforce: 'GTC',
-        validate: false
-      })
-    };
-    
-    fetch('https://api.kraken.com/0/private/AddOrder', options)
-      .then(res => res.json())
-      .then(res => console.log(res))
-      .catch(err => console.error(err));
-    
-    
-    package main
-    
-    import (
-    	"fmt"
-    	"strings"
-    	"net/http"
-    	"io"
-    )
-    
-    func main() {
-    
-    	url := "https://api.kraken.com/0/private/AddOrder"
-    
-    	payload := strings.NewReader("{\n  \"nonce\": 163245617,\n  \"ordertype\": \"limit\",\n  \"type\": \"buy\",\n  \"volume\": \"1.25\",\n  \"pair\": \"XBTUSD\",\n  \"price\": \"27500\",\n  \"cl_ord_id\": \"6d1b345e-2821-40e2-ad83-4ecb18a06876\",\n  \"trigger\": \"last\",\n  \"reduce_only\": false,\n  \"stptype\": \"cancel-newest\",\n  \"timeinforce\": \"GTC\",\n  \"validate\": false\n}")
-    
-    	req, _ := http.NewRequest("POST", url, payload)
-    
-    	req.Header.Add("API-Key", "<api-key>")
-    	req.Header.Add("API-Sign", "<api-key>")
-    	req.Header.Add("Content-Type", "application/json")
-    
-    	res, _ := http.DefaultClient.Do(req)
-    
-    	defer res.Body.Close()
-    	body, _ := io.ReadAll(res.Body)
-    
-    	fmt.Println(string(body))
-    
-    }
     
     
     {
-      "error": [],
-      "result": {
-        "descr": {
-          "order": "buy 2.12340000 XBTUSD @ limit 25000.1 with 2:1 leverage",
-          "close": "close position @ stop loss 22000.0 -> limit 21000.0"
+        "method": "add_order",
+        "params": {
+            "order_type": "stop-loss",
+            "side": "sell",
+            "order_qty": 100,
+            "symbol": "MATIC/USD",
+            "triggers": {
+                "reference": "last",
+                "price": -2.0,
+                "price_type": "pct"
+            },
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
+        }
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "params": {
+            "order_type": "limit",
+            "side": "buy",
+            "order_qty": 1.2,
+            "symbol": "BTC/USD",
+            "limit_price": 28440,
+            "conditional": {
+                "order_type": "stop-loss-limit",
+                "trigger_price": 28410,
+                "limit_price": 28400
+            },
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
+        }
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "req_id": 123456789,
+        "result": {
+            "order_id": "AA5JGQ-SBMRC-SCJ7J7",
+            "order_userref": 100054
         },
-        "txid": [
-          "OUF4EM-FRGI2-MQMWZD"
-        ]
-      }
+        "success": true,
+        "time_in": "2023-09-21T14:15:07.197274Z",
+        "time_out": "2023-09-21T14:15:07.205301Z"
     }
+    
+    
+    
+    {
+        "error": "EOrder:Insufficient funds",
+        "method": "add_order",
+        "req_id": 123456789,
+        "success": false,
+        "time_in": "2023-09-21T14:15:07.197274Z",
+        "time_out": "2023-09-21T14:15:07.205301Z"
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "params": {
+            "order_type": "limit",
+            "side": "buy",
+            "limit_price": 26500.4,
+            "order_userref": 100054,
+            "order_qty": 1.2,
+            "symbol": "BTC/USD",
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
+        },
+        "req_id": 123456789
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "params": {
+            "order_type": "stop-loss",
+            "side": "sell",
+            "order_qty": 100,
+            "symbol": "MATIC/USD",
+            "triggers": {
+                "reference": "last",
+                "price": -2.0,
+                "price_type": "pct"
+            },
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
+        }
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "params": {
+            "order_type": "limit",
+            "side": "buy",
+            "order_qty": 1.2,
+            "symbol": "BTC/USD",
+            "limit_price": 28440,
+            "conditional": {
+                "order_type": "stop-loss-limit",
+                "trigger_price": 28410,
+                "limit_price": 28400
+            },
+            "token": "G38a1tGFzqGiUCmnegBcm8d4nfP3tytiNQz6tkCBYXY"
+        }
+    }
+    
+    
+    
+    {
+        "method": "add_order",
+        "req_id": 123456789,
+        "result": {
+            "order_id": "AA5JGQ-SBMRC-SCJ7J7",
+            "order_userref": 100054
+        },
+        "success": true,
+        "time_in": "2023-09-21T14:15:07.197274Z",
+        "time_out": "2023-09-21T14:15:07.205301Z"
+    }
+    
+    
+    
+    {
+        "error": "EOrder:Insufficient funds",
+        "method": "add_order",
+        "req_id": 123456789,
+        "success": false,
+        "time_in": "2023-09-21T14:15:07.197274Z",
+        "time_out": "2023-09-21T14:15:07.205301Z"
+    }
+    
 
-#### Authorizations
+WSSws-auth.kraken.com/v2add_order
 
-API-Key
+Sends a single, new order into the exchange. A range of order types, Time-In-Force (TIF) and order flags can be specified by the parameters below. For triggered order types (`stop-loss`, `take-profit`, `trailing-stop`), the `triggers` section contains the parameters for price tracking and trigger thresholds. For One-Triggers-Other (OTO) orders, the `conditional` section contains the parameters to add a secondary close order to the primary order.
+
+  * Request
+
+  * Response
 
 string
-
-header
 
 required
 
-The "API-Key" header should contain your API key.
+Value: `add_order`
 
-API-Sign
-
-string
-
-header
+object
 
 required
 
-Authenticated requests should be signed with the "API-Sign" header, using a signature generated with your private key, nonce, encoded payload, and URI path.
-
-#### Body
-
-application/json
-
-nonce
-
-integer<int64>
-
-required
-
-Nonce used in construction of `API-Sign` header
-
-ordertype
-
-enum<string>
-
-required
-
-The execution model of the order.
-
-Available options:
-
-`market`,
-
-`limit`,
-
-`iceberg`,
-
-`stop-loss`,
-
-`take-profit`,
-
-`stop-loss-limit`,
-
-`take-profit-limit`,
-
-`trailing-stop`,
-
-`trailing-stop-limit`,
-
-`settle-position`
-
-Example:
-
-`"limit"`
-
-type
-
-enum<string>
-
-required
-
-Order direction (buy/sell)
-
-Available options:
-
-`buy`,
-
-`sell`
-
-volume
+Hide properties
 
 string
 
 required
 
-Order quantity in terms of the base asset
+One of: `limit`, `market`, `iceberg`, `stop-loss`, `stop-loss-limit`, `take-profit`, `take-profit-limit`, `trailing-stop`, `trailing-stop-limit`, `settle-position`The execution model of the order.
 
-> Note: Volume can be specified as `0` for closing margin orders to automatically fill the requisite quantity.
-
-Example:
-
-`"1.25"`
-
-pair
+  * `limit`: The full order quantity is placed immediately with a limit price restriction to only trade at this price or better.
+  * `market`: The full order quantity executes immediately at the best available price in the order book.
+  * `iceberg`: Hides the full order size by only showing your chosen display size in the book at your limit price.
+  * `stop-loss`: A market order is triggered when the reference price reaches the stop price (from an unfavourable direction).
+  * `stop-loss-limit`: A limit order is triggered when the reference price reaches the stop price (from an unfavourable direction).
+  * `take-profit`: A market order is triggered when the reference price reaches the stop price (from a favourable direction).
+  * `take-profit-limit`: A limit order is triggered when the reference price reaches the stop price (from a favourable direction).
+  * `trailing-stop`: A market order is triggered when the market reverts a specified distance from the peak price.
+  * `trailing-stop-limit`: A limit order is triggered when the market reverts a specified distance from the peak price.
+  * `settle-position`: Settles an open leveraged position at the current market price.
 
 string
 
 required
 
-Asset pair `id` or `altname`
+One of: `buy`, `sell`Side of the order.
 
-Example:
+float
 
-`"XBTUSD"`
+required
 
-userref
-
-integer<int32>
-
-This is an optional non-unique, numeric identifier which can associated with a number of orders by the client. This field is mutually exclusive with `cl_ord_id` parameter.
-
-`userref` is an optional user-specified integer id that can be associated with any number of orders. Many clients choose a `userref` corresponding to a unique integer id generated by their systems (e.g. a timestamp). However, because we don't enforce uniqueness on our side, it can also be used to easily group orders by pair, side, strategy, etc. This allows clients to more readily cancel or query information about orders in a particular group, with fewer API calls by using `userref` instead of our `txid`, where supported.
-
-cl_ord_id
+Order quantity in terms of the base asset.
 
 string
 
-Adds an alphanumeric client order identifier which uniquely identifies an open order for each client. This field is mutually exclusive with `userref` parameter.
+required
 
-The `cl_ord_id` parameter can be one of the following formats:
+Example: `"BTC/USD"`The symbol of the currency pair.
 
-  * • Long UUID: `6d1b345e-2821-40e2-ad83-4ecb18a06876` 32 hex characters separated with 4 dashes.
-  * • Short UUID: `da8e4ad59b78481c93e589746b0cf91f` 32 hex characters with no dashes.
-  * • Free text: `arb-20240509-00010` Free format ascii text up to 18 characters.
+float
 
-displayvol
+Limit price for order types that support limit price restriction.
 
 string
 
-For `iceberg` orders only, it defines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of `volume`.
+One of: `static`, `pct`, `quote`  
+Default: `quote`  
+Condition: Only available on trailing-stop-limit ordersThe units for the limit price.
 
-asset_class
+  * `static`: a static market price for the asset, i.e. 30000 for BTC/USD.
+  * `pct`: a percentage offset from the reference price, i.e. -10% from index price.
+  * `quote`: a notional offset from the reference price in the quote currency, i.e, 150 BTC/USD from last price.
 
-enum<string>
+Note, for `trailing-stop-limit` order type, the value represents offset from the trigger price. 0 would set a limit price the same as the trigger price.
 
-This parameter is required on requests for non-crypto pairs, i.e. use `tokenized_asset` for xstocks.
+object
 
-Available options:
+Condition: Required for triggered order types onlyThe parameters for setting the trigger price conditions.
 
-`tokenized_asset`
-
-price
-
-string
-
-Price:
-
-  * • Limit price for `limit` and `iceberg` orders
-  * • Trigger price for `stop-loss`, `stop-loss-limit`, `take-profit`, `take-profit-limit`, `trailing-stop` and `trailing-stop-limit` orders
-
-Notes:
-
-  * • Relative Prices: Either `price` or `price2` can be preceded by `+`, `-`, or `#` to specify the order price as an offset relative to the last traded price. `+` adds the amount to, and `-` subtracts the amount from the last traded price. `#` will either add or subtract the amount to the last traded price, depending on the direction and order type used. Prices can also be suffixed with a `%` to signify the relative amount as a percentage, rather than an absolute price difference.
-  * • Trailing Stops: Must use a relative price for this field, namely the `+` prefix, from which the direction will be automatic based on if the original order is a buy or sell (no need to use `-` or `#`). The `%` suffix also works for these order types to use a relative percentage price.
-
-Example:
-
-`"40000.0"`
-
-price2
+Hide properties
 
 string
 
-Secondary Price:
+One of: `index`, `last`  
+Default: `last`The reference price to track for triggering orders.
 
-  * • Limit price for `stop-loss-limit`, `take-profit-limit` and `trailing-stop-limit` orders
+  * `index`: the index price in the broader market (for this pair). Note, to keep triggers serviceable during connectivity issues with external index feeds, the last price will be used as the reference price.
+  * `last`: the last traded price in the Kraken order book (for this pair).
 
-Note:
+float
 
-  * • Trailing Stops: Must use a relative price for this field, namely one of the `+` or `-` prefixes. This will provide the offset from the trigger price to the limit price, i.e. +0 would set the limit price equal to the trigger price. The `%` suffix also works for this field to use a relative percentage limit price.
+required
 
-trigger
+Specifies the amount for the trigger price - it supports both static market prices and relative prices. This field is used in combination with the `price_type` field below to determine the effective trigger price.**Examples:**
 
-enum<string>
-
-default:last
-
-Price signal used to trigger `stop-loss`, `stop-loss-limit`, `take-profit`, `take-profit-limit`, `trailing-stop` and `trailing-stop-limit` orders
-
-Notes:
-
-  * • This `trigger` type will also be used for any associated conditional close orders.
-  * • To keep triggers serviceable, the last price will be used as fallback reference price during connectivity issues with external index feeds.
-
-Available options:
-
-`index`,
-
-`last`
-
-leverage
+  * To trigger at 29000.5 BTC/USD, use price=29000.5, price_type=static.
+  * To trigger when price rises by 5%, use price=5, price_type=pct.
+  * To trigger when price drops by 150 USD, use price=-150, price_type=quote.
 
 string
 
-Amount of leverage desired (default: none)
+One of: `static`, `pct`, `quote`  
+Default: `static`The units for the trigger price.
 
-Example:
+  * `static`: a static market price for the asset, i.e. 30000 for BTC/USD.
+  * `pct`: a percentage offset from the reference price, i.e. -10% from index price.
+  * `quote`: a notional offset from the reference price in the quote currency, i.e, 150 BTC/USD from last price.
 
-`5`
+Note, for `trailing-stop` and `trailing-stop-limit` order types, the price represents the reversion from the peak. It is always a positive value with `pct` or `quote` offset.
 
-reduce_only
+string
+
+One of: `gtc`, `gtd`, `ioc`, `fok`  
+Default: `gtc`Time-in-force specifies how long an order remains in effect before being expired.
+
+  * `gtc`: Good Till Canceled - until user has cancelled.
+  * `gtd`: Good Till Date - until `expire_time` parameter.
+  * `ioc`: Immediate Or Cancel - immediately cancels back any quantity that cannot be filled on arrival.
+  * `fok`: Fill Or Kill - immediately fills the full order quantity or cancels it entirely. Available for `limit` orders only.
 
 boolean
 
-default:false
-
-If `true`, order will only reduce a currently open position, not increase it or open a new position.
-
-Example:
-
-`true`
-
-stptype
-
-enum<string>
-
-default:cancel-newest
-
-Self Trade Prevention (STP) is a protection feature to prevent users from inadvertently or deliberately trading against themselves. To prevent a self-match, one of the following STP modes can be used to define which order(s) will be expired:
-
-  * • `cancel-newest`: arriving order will be canceled
-  * • `cancel-oldest`: resting order will be canceled
-  * • `cancel-both`: both arriving and resting orders will be canceled
-
-Available options:
-
-`cancel-newest`,
-
-`cancel-oldest`,
-
-`cancel-both`
-
-oflags
-
-string
-
-Comma delimited list of order flags
-
-  * • `post` post-only order (available when ordertype = limit)
-  * • `fcib` prefer fee in base currency (default if selling)
-  * • `fciq` prefer fee in quote currency (default if buying, mutually exclusive with `fcib`)
-  * • `nompp` (DEPRECATED) — disabling Market Price Protection for market orders is no longer supported. If supplied, the flag is accepted but ignored.
-  * • `viqc` order volume expressed in quote currency. This option is supported only for buy market orders. Also not available on margin orders.
-
-Example:
-
-`"post"`
-
-timeinforce
-
-enum<string>
-
-default:GTC
-
-Time-in-force of the order to specify how long it should remain in the order book before being cancelled. GTC (Good-'til-cancelled) is default if the parameter is omitted. IOC (immediate-or-cancel) will immediately execute the amount possible and cancel any remaining balance rather than resting in the book. GTD (good-'til-date), if specified, must coincide with a desired `expiretm`. FOK (fill-or-kill) will execute the full order immediately or cancel it entirely.
-
-Available options:
-
-`GTC`,
-
-`IOC`,
-
-`GTD`,
-
-`FOK`
-
-starttm
-
-string
-
-Scheduled start time, can be specified as an absolute timestamp or as a number of seconds in the future:
-
-  * • `0` now (default)
-  * • `<n>` = unix timestamp of start time
-  * • `+<n>` = schedule start time `<n>` seconds from now 
-* Note that URL encoding of the `+` character changes it to a space, so please use `%2b` followed by the number of seconds instead of `+`
-
-expiretm
-
-string
-
-Expiry time on GTD orders can be set up to one month in future, it is specified as an absolute timestamp or as a number of seconds from now:
-
-  * • `0` no expiration (default)
-  * • `<n>` = unix timestamp of expiration time
-  * • `+<n>` = expire `<n>` seconds from now, minimum 5 seconds 
-* Note that URL encoding of the `+` character changes it to a space, so please use `%2b` followed by the number of seconds instead of `+`
-
-close[ordertype]
-
-enum<string>
-
-Conditional close order type
-
-> Note: [Conditional close orders](https://support.kraken.com/hc/en-us/articles/360038640052-Conditional-Close) are triggered by execution of the primary order in the same quantity and opposite direction, but once triggered are independent orders that may reduce or increase net position
-
-Available options:
-
-`limit`,
-
-`iceberg`,
-
-`stop-loss`,
-
-`take-profit`,
-
-`stop-loss-limit`,
-
-`take-profit-limit`,
-
-`trailing-stop`,
-
-`trailing-stop-limit`
-
-close[price]
-
-string
-
-Conditional close order `price`
-
-Example:
-
-`"50000.0"`
-
-close[price2]
-
-string
-
-Conditional close order `price2`
-
-deadline
-
-string
-
-RFC3339 timestamp (e.g. 2021-04-01T00:18:45Z) after which the matching engine should reject the new order request, in presence of latency or order queueing: min now() + 2 seconds, max now() + 60 seconds.
-
-validate
+One of: `false`, `true`  
+Default: `false`Funds the order on margin using the maximum leverage for the pair (maximum is leverage of 5).
 
 boolean
 
-default:false
+One of: `true`, `false`  
+Default: `false`  
+Condition: Orders with limit price onlyCancels the order if it will take liquidity on arrival. Post only orders will always be posted passively in the book.
 
-If set to `true` the order will be validated only, it will not trade in the matching engine.
+boolean
 
-broker
+One of: `true`, `false`  
+Default: `false`Reduces an existing margin position without opening an opposite long or short position worth more than the current value of your leveraged assets.
 
-string | null
+string
 
-Broker IIBAN (Partner's Kraken IIBAN)
+Format: RFC3339  
+Example: `2022-12-25T09:30:59Z`Scheduled start time (precision to seconds).
 
-#### Response
+string
 
-200 - application/json
+Format: RFC3339  
+Example: `2022-12-25T09:30:59Z`  
+Condition: GTD orders onlyExpiration time of the order (precision to seconds). GTD orders can have an expiry time up to one month in future.
 
-Order added.
+string
 
-result
+Format: RFC3339  
+Example: `2022-12-25T09:30:59.123Z`Range of valid offsets (from current time) is 500 milliseconds to 60 seconds, default is 5 seconds. The precision of this parameter is to the millisecond. The engine will prevent this order from matching after this time, it provides protection against latency on time sensitive orders.
 
-OrderAdded · object
+string
 
-Show child attributes
+Adds a alphanumeric client order identifier which uniquely identifies an open order for each client. This field is mutually exclusive with `order_userref` parameter.The `cl_ord_id` parameter can be one of the following formats:
 
-error
+  * Long UUID: `6d1b345e-2821-40e2-ad83-4ecb18a06876` 32 hex characters separated with 4 dashes.
+  * Short UUID: `da8e4ad59b78481c93e589746b0cf91f` 32 hex characters with no dashes.
+  * Free text: `arb-20240509-00010` Free format ascii text up to 18 characters.
 
-string[][]
+integer
 
-Kraken API error
+This is an optional non-unique, numeric identifier which can associated with a number of orders by the client. This field is mutually exclusive with `cl_ord_id` parameter.Many clients choose a unique integer value generated by their systems (i.e. a timestamp). However, because we don’t enforce uniqueness on our side, it can also be used to easily tag a group of orders for querying or cancelling.
+
+object
+
+The conditional parameters are used as a template for generating the secondary close orders when the primary order fills. Each fill on the primary order will generate a new secondary order. The size of the secondary order will be the same size as the executed quantity and have the opposite side.
+
+Hide properties
+
+string
+
+One of: `limit`, `stop-loss`, `stop-loss-limit`, `take-profit`, `take-profit-limit`, `trailing-stop`, `trailing-stop-limit`Defines the order type of the secondary close orders which will be created on each fill.
+
+float
+
+Defines the limit price on the secondary close orders. Only required on secondary order types that support limit price: `limit`, `stop-loss-limit`, `take-profit-limit`.
+
+string
+
+One of: `static`, `pct`, `quote`  
+Default: `quote`  
+Condition: Only available on trailing-stop-limit ordersThe units for the limit price on the secondary order.
+
+  * `static`: a static market price for the asset, i.e. 30000 for BTC/USD.
+  * `pct`: a percentage offset from the reference price, i.e. -10% from index price.
+  * `quote`: a notional offset from the reference price in the quote currency, i.e, 150 BTC/USD from last price.
+
+Note, for `trailing-stop-limit` order type, the value represents offset from the trigger price. 0 would set a limit price the same as the trigger price.
+
+float
+
+Specifies the amount for the trigger price - it supports both static market prices and relative prices. This field is used in combination with the `price_type` field below to determine the effective trigger price.**Examples:**
+
+  * To trigger at 29000.5 BTC/USD, use price=29000.5, price_type=static.
+  * To trigger when price rises by 5%, use price=5, price_type=pct.
+  * To trigger when price drops by 150 USD, use price=-150, price_type=quote.
+
+Note, for `trailing-stop` and `trailing-stop-limit` order types, the price represents the reversion from the peak. It is always a positive offset value.
+
+string
+
+One of: `static`, `pct`, `quote`  
+Default: `static`The units for the trigger price.
+
+  * `static`: a static market price for the asset, i.e. 30000 for BTC/USD.
+  * `pct`: a percentage offset from the reference price, i.e. -10% from index price.
+  * `quote`: a notional offset from the reference price in the quote currency, i.e, 150 BTC/USD from last price.
+
+float
+
+deprecated
+
+Deprecated: Use trigger_priceDefines the trigger price on the secondary close orders. Only required on triggered secondary order types: `stop-loss`, `stop-loss-limit`, `take-profit`, `take-profit-limit`.
+
+float
+
+Condition: iceberg orders onlyDefines the quantity to show in the book while the rest of order quantity remains hidden. Minimum value is 1 / 15 of `order_qty`.
+
+string
+
+One of: `base`, `quote`Fee preference base or quote currency. `quote` is the default for buy orders, `base` is the default for sell orders.
+
+boolean
+
+deprecated
+
+One of: `true`, `false`  
+Default: `false`  
+Condition: Market orders only  
+Deprecated: If supplied, the flag is accepted but ignoredDisables Market Price Protection (MPP) if set to `true`. MPP is a feature that protects market orders from filling at a bad price due to price slippage in an illiquid or volatile market.
+
+string
+
+One of: `cancel_newest`, `cancel_oldest`, `cancel_both`  
+Default: `cancel_newest`Self Trade Prevention (STP) is a protection feature to prevent users from inadvertently or deliberately trading against themselves.
+
+  * `cancel_newest`: arriving order will be canceled.
+  * `cancel_oldest`: resting order will be canceled.
+  * `cancel_both`: both arriving and resting orders will be canceled.
+
+float
+
+Condition: Buy market orders without margin fundingOrder volume expressed in quote currency.
+
+boolean
+
+One of: `true`, `false`  
+Default: `false`If set to `true` the order will be validated only, it will not trade in the matching engine.
+
+string
+
+Condition: For institutional accounts with enhanced Self Trade Prevention (STP)Adds a alphanumeric sub-account/trader identifier which enables STP to be performed at a more granular level.The `sender_sub_id` parameter can be one of the following formats:
+
+  * Long UUID: `6d1b345e-2821-40e2-ad83-4ecb18a06876` 32 hex characters separated with 4 dashes.
+  * Short UUID: `da8e4ad59b78481c93e589746b0cf91f` 32 hex characters with no dashes.
+  * Free text: `arb-20240509-00010` Free format ascii text up to 18 characters.
+
+float
+
+deprecated
+
+Deprecated: Use ‘triggers’ objectThe stop price for trigger order types.
+
+string
+
+deprecated
+
+One of: `last`, `index`  
+Default: `last`  
+Condition: Triggered order types only  
+Deprecated: Use ‘triggers’ objectThe reference price to trigger the order.
+
+  * `index`: the index price for the broader market for this symbol.
+  * `last`: the last traded price in the order book for this symbol.
+
+string
+
+required
+
+Authentication token. See [authentication guide](/exchange/guides/websockets/authentication) for details.
+
+integer
+
+Optional client originated request identifier sent as acknowledgment in the response.
+
+string
+
+Value: `add_order`
+
+object
+
+Hide properties
+
+string
+
+Unique order identifier generated by Kraken.
+
+string
+
+An optional, alphanumeric identifier specified by the client in the `add_order` parameters.
+
+integer
+
+An optional non-unique, numeric identifier specified by the client in the `add_order` parameters.
+
+array of string
+
+Non-fatal warnings about the order, if any.
+
+string
+
+Error message. Condition: if `success` is `false`.
+
+boolean
+
+Indicates if the request was successfully processed by the engine. One of: `true`, `false`
+
+integer
+
+Optional client originated request identifier sent as acknowledgment in the response.
+
+string
+
+The timestamp when the request was received on the wire, just prior to parsing data. Format: RFC3339. Example: `2022-12-25T09:30:59.123456Z`
+
+string
+
+The timestamp when the response was sent on the wire, just prior to transmitting data. Format: RFC3339. Example: `2022-12-25T09:30:59.123456Z`
 
 Was this page helpful?
 

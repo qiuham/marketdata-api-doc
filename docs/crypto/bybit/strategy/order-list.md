@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/order-list
 api_type: REST
-updated_at: 2026-08-25 18:47:51.925406
+updated_at: 2026-08-26 19:16:53.796672
 ---
 
 # TradFi Integration
@@ -259,6 +259,27 @@ Simply pass the appropriate `category` and `symbol` in your request:
   * **Stock perpetuals** : `category=linear`, `symbol` e.g., `TSLAUSDT`
   * **Metals perpetuals** : `category=linear`, `symbol` e.g., `XAUUSDT`, `XAGUSDT`
   * **Crude oil perpetual** : `category=linear`, `symbol`: `CLUSDT`
+
+
+
+## Stock Split & Reverse Split FAQ
+
+For full details, refer to the Help Center: [Stock Splits and Reverse Stock Splits for TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Stock-Splits-and-Reverse-Stock-Splits-for-TradFi-Perpetual-Contracts).
+
+**Q1: What will be the status of the contract in the instrumentInfo while it is undergoing the adjustment?**
+
+The contract status will remain `"Trading"` throughout the adjustment window.
+
+**Q2: What happens to the price feed during the adjustment window?**
+
+  * Bybit will **stop sending prices** during the adjustment window.
+  * The last price is **not** continued — there are no market data updates during this window.
+
+
+
+**Q3: Will Bybit provide pre-adjustment historical prices after the adjustment window is completed, or does it remove them?**
+
+Historical K-line prices will be **adjusted accordingly** to reflect the split ratio. Personal trading history (your own order and execution records) will **not** be changed.
 
 ---
 
@@ -518,3 +539,24 @@ xStock 代幣| `spot`| `xstocks`| `TSLAXUSDT`、`AAPLXUSDT`、`NVDAXUSDT`| `xsto
   * **股票永續合約** ：`category=linear`，`symbol` 如 `TSLAUSDT`
   * **貴金屬永續合約** ：`category=linear`，`symbol` 如 `XAUUSDT`、`XAGUSDT`
   * **原油永續合約** ：`category=linear`，`symbol`：`CLUSDT`
+
+
+
+## 股票拆分與反向拆分常見問題
+
+詳情請參閱 Help Center：[Stock Splits and Reverse Stock Splits for TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Stock-Splits-and-Reverse-Stock-Splits-for-TradFi-Perpetual-Contracts)。
+
+**Q1：調整期間合約在 instrumentInfo 中的狀態是什麼？**
+
+調整窗口期間合約狀態仍為 `"Trading"`。
+
+**Q2：調整窗口期間價格數據會如何？**
+
+  * Bybit 將**停止推送行情** 。
+  * **不會** 繼續推送最後一個價格——調整窗口期間沒有任何市場數據更新。
+
+
+
+**Q3：調整完成後，Bybit 是否提供調整前的歷史行情，還是直接刪除？**
+
+歷史 K 線價格將**按拆分比例進行相應調整** 。個人交易記錄（您自己的委託及成交記錄）**不會** 發生變化。

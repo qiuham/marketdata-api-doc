@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-08-25 18:45:56.825207
+updated_at: 2026-08-26 19:15:05.562283
 ---
 
 # Set Leverage

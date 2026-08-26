@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/max-loan-amt
 api_type: REST
-updated_at: 2026-08-25 18:45:25.186500
+updated_at: 2026-08-26 19:14:36.144876
 ---
 
 # Batch Cancel Order
@@ -14,7 +14,7 @@ important
   * You must specify `orderId` or `orderLinkId`.
   * If `orderId` and `orderLinkId` is not matched, the system will process `orderId` first.
   * You can cancel **unfilled** or **partially filled** orders.
-  * A maximum of 20 orders (option), 20 orders (inverse), 20 orders (linear), 10 orders (spot) can be cancelled per request.
+  * A maximum of 5 orders (option), 20 orders (inverse), 20 orders (linear), 10 orders (spot) can be cancelled per request.
 
 
 
@@ -209,7 +209,7 @@ The acknowledgement of an cancel order request indicates that the request was su
   * 您必須指定`orderId`或者`orderLinkId`.
   * 若`orderId`和`orderLinkId`之間不匹配, 系統將會優先處理`orderId`.
   * 您只能撤銷未成交和部分成交的訂單.
-  * 最多支持單個請求中撤銷, 期權: 20個訂單, 反向合約: 20個訂單, 正向合約: 20个訂單, 現貨: 10個訂單.
+  * 最多支持單個請求中撤銷, 期權: 5個訂單, 反向合約: 20個訂單, 正向合約: 20个訂單, 現貨: 10個訂單.
 
 
 

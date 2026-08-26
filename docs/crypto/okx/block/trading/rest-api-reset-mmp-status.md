@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-reset-mmp-status
 anchor_id: block-trading-rest-api-reset-mmp-status
 api_type: REST
-updated_at: 2026-08-25 19:16:48.673482
+updated_at: 2026-08-26 19:44:04.841017
 ---
 
 # Reset MMP status
