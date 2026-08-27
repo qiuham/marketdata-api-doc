@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-websocket
 anchor_id: error-code-websocket
 api_type: WebSocket
-updated_at: 2026-08-26 19:45:35.388230
+updated_at: 2026-08-27 22:17:22.513103
 ---
 
 # WebSocket
@@ -59,6 +59,7 @@ Status Code | Reason Text
 4007 | API key has been updated or deleted. Please reconnect.  
 4008 | The number of subscribed channels exceeds the maximum limit.  
 4009 | The number of subscription channels for this connection exceeds the limit  
+4013 | Compliance status has been updated. Please reconnect.  
 Disclaimer: The availability of products and services listed on this page will depend on your region. Please see your applicable Terms of Service for more detail.
 
 ---
@@ -118,4 +119,5 @@ WebSocket 错误消息均为英文，中文错误消息仅供参考
 4007 | API key已更新或删除，请重新连接  
 4008 | 总订阅频道数量超过最大限制  
 4009 | 该连接订阅频道数超限制  
+4013 | 合规状态已更新，请重新连接。  
 请注意：此页面展示的产品与服务是否可用，将视您所在的地区而定。请参阅您所在地区适用的服务条款了解更多详情。

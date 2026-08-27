@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/sub-deposit-record
 api_type: REST
-updated_at: 2026-08-26 19:11:13.654633
+updated_at: 2026-08-27 21:41:50.558552
 ---
 
 # Get Voucher Spec

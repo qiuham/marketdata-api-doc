@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/websocket-v2/add_order
 api_type: WebSocket
-updated_at: 2026-08-26 19:42:17.715738
+updated_at: 2026-08-27 22:14:04.359477
 ---
 
 # Add Order
@@ -489,5 +489,3 @@ string
 The timestamp when the response was sent on the wire, just prior to transmitting data. Format: RFC3339. Example: `2022-12-25T09:30:59.123456Z`
 
 Was this page helpful?
-
-Ctrl+I

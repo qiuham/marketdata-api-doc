@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-08-26 19:14:53.833112
+updated_at: 2026-08-27 21:45:48.425337
 ---
 
 # Get Margin Coin Info

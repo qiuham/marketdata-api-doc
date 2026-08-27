@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-get-apy-history-public
 anchor_id: financial-product-eth-staking-get-apy-history-public
 api_type: API
-updated_at: 2026-08-26 19:45:11.191666
+updated_at: 2026-08-27 22:16:58.248118
 ---
 
 # GET / APY history (Public)

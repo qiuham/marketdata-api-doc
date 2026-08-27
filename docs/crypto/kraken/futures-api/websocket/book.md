@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/websocket/book
 api_type: WebSocket
-updated_at: 2026-08-26 19:42:13.524269
+updated_at: 2026-08-27 22:14:00.068184
 ---
 
 # Exchange overview
@@ -85,5 +85,3 @@ Getting started
 ## [Rate limitsHow rate limits work across REST, WebSocket, and FIX](/exchange/guides/general/ratelimits)
 
 Was this page helpful?
-
-Ctrl+I

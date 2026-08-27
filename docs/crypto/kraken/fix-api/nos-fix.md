@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-08-26 19:42:10.838121
+updated_at: 2026-08-27 22:13:57.436479
 ---
 
 # Send order
@@ -454,5 +454,3 @@ Example:
 `"2020-08-27T17:03:33.196Z"`
 
 Was this page helpful?
-
-Ctrl+I

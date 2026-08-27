@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-08-26 19:15:06.819918
+updated_at: 2026-08-27 21:46:02.006404
 ---
 
 # Set Leverage

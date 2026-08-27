@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/settlement
 api_type: REST
-updated_at: 2026-08-26 19:10:22.575106
+updated_at: 2026-08-27 21:40:53.423252
 ---
 
 # Get Sub UID

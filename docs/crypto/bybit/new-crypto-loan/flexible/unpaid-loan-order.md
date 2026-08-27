@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/unpaid-loan-order
 api_type: REST
-updated_at: 2026-08-26 19:14:31.586018
+updated_at: 2026-08-27 21:45:24.786667
 ---
 
 # Get Collateral Adjustment History
