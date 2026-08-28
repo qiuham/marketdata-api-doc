@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/cross-isolate
 api_type: REST
-updated_at: 2026-08-27 21:38:34.036436
+updated_at: 2026-08-28 21:39:47.041664
 ---
 
 # Enable Universal Transfer for Sub UID

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-close-positions
 anchor_id: order-book-trading-trade-post-close-positions
 api_type: API
-updated_at: 2026-08-27 22:14:53.382564
+updated_at: 2026-08-28 22:14:25.724353
 ---
 
 # POST / Close positions

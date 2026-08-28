@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/dcp-info
 api_type: Account
-updated_at: 2026-08-27 21:38:53.168494
+updated_at: 2026-08-28 21:40:04.782946
 ---
 
 # Get MMP State

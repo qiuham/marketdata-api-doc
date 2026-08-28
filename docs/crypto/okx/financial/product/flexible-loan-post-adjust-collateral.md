@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-post-adjust-collateral
 anchor_id: financial-product-flexible-loan-post-adjust-collateral
 api_type: API
-updated_at: 2026-08-27 22:17:08.633948
+updated_at: 2026-08-28 22:16:41.009300
 ---
 
 # POST / Adjust collateral

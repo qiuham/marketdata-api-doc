@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-set
 api_type: REST
-updated_at: 2026-08-27 21:46:26.374051
+updated_at: 2026-08-28 21:46:58.235940
 ---
 
 # Accept non-LP Quote

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/borrow-market
 api_type: REST
-updated_at: 2026-08-27 21:45:00.252220
+updated_at: 2026-08-28 21:45:38.671390
 ---
 
 # Get Borrow Order Info

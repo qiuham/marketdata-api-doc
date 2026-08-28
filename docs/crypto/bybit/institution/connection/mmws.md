@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/connection/mmws
 api_type: REST
-updated_at: 2026-08-27 21:44:21.457151
+updated_at: 2026-08-28 21:45:02.272797
 ---
 
 # Get ADL Alert

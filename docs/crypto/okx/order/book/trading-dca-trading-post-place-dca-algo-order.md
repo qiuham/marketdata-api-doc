@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading-post-place-dca-algo-order
 anchor_id: order-book-trading-dca-trading-post-place-dca-algo-order
 api_type: API
-updated_at: 2026-08-27 22:15:14.586825
+updated_at: 2026-08-28 22:14:46.936850
 ---
 
 # POST / Place dca algo order

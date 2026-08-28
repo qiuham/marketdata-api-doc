@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/delivery-price
 api_type: Market Data
-updated_at: 2026-08-27 21:44:27.335606
+updated_at: 2026-08-28 21:45:07.789497
 ---
 
 # Get Index Price Components

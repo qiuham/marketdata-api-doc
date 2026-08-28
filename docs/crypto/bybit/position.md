@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position
 api_type: REST
-updated_at: 2026-08-27 21:45:56.498514
+updated_at: 2026-08-28 21:46:31.386882
 ---
 
 # Set Auto Add Margin

@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/websocket/book
 api_type: WebSocket
-updated_at: 2026-08-27 22:14:00.068184
+updated_at: 2026-08-28 22:13:32.239313
 ---
 
 # Exchange overview

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-websocket
 api_type: WebSocket
-updated_at: 2026-08-27 21:59:24.501515
+updated_at: 2026-08-28 21:58:50.489297
 ---
 
 # Listen for Order Updates with the WebSocket SDK
@@ -147,35 +147,7 @@ Now let’s integrate the WebSocket SDK! Let’s call the [User](/api-reference/
                         order_filled = True
     
 
-Now, let’s subscribe to the `user` and `heartbeats` channels and run the client in a `while` loop to wait for the order to be filled before closing the connection.Guides
-
-# Listen for Order Updates with the WebSocket SDK
-
-This quickstart explains how to set up and subscribe to WebSocket channels with the **Advanced API Python WebSocket Client**. This WebSocket Client is a Python package that makes it easy to interact with the [WebSocket API](/coinbase-app/advanced-trade-apis/websocket/websocket-overview).
-
-## Introduction
-
-Consider going through the [REST SDK quickstart](/coinbase-app/advanced-trade-apis/guides/sdk-rest-api) first as it is referenced in this tutorial.
-
-See the SDK [README](https://github.com/coinbase/coinbase-advanced-py/blob/master/README.md) for detailed instructions, plus the full suite of SDK functions.
-
-## Prerequisites
-
-### Creating API Keys
-
-To you use the SDK, you must first create your own [API key](/coinbase-app/authentication-authorization/api-key-authentication) on the Coinbase Developer Platform (CDP).
-
-### Installing the SDK
-
-To install the Coinbase Advanced API Python SDK, run the following command in a terminal:
-    
-    
-    pip3 install coinbase-advanced-py
-    
-
-## Setting up your Client
-
-Create a Python project with the following code we have set up for you. Replace the `api_key` and `api_secret` with your own CDP API Key and Secret. You must specify an `on_message` function that is called when a message is received from the WebSocket API. This function takes in a single argument, which is the raw message received from the WebSocket API.
+Now, let’s subscribe to the `user` and `heartbeats` channels and run the client in a `while` loop to wait for the order to be filled before closing the connection.
     
     
     limit_order_id = ""
