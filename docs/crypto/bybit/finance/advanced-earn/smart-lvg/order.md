@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/order
 api_type: REST
-updated_at: 2026-08-28 21:43:43.937799
+updated_at: 2026-08-29 18:37:30.435886
 ---
 
 # Get Position Info

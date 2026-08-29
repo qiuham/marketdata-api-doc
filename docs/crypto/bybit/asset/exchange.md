@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/exchange
 api_type: REST
-updated_at: 2026-08-28 21:41:42.439048
+updated_at: 2026-08-29 18:35:26.093598
 ---
 
 # Confirm a Quote

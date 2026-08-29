@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw/withdraw-record
 api_type: REST
-updated_at: 2026-08-28 21:42:11.226464
+updated_at: 2026-08-29 18:35:54.355301
 ---
 
 # Bot Error Codes
