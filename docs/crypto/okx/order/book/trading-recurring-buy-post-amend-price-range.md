@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-amend-price-range
 anchor_id: order-book-trading-recurring-buy-post-amend-price-range
 api_type: API
-updated_at: 2026-08-29 19:09:18.483103
+updated_at: 2026-08-30 19:09:22.803474
 ---
 
 # POST / Amend price range

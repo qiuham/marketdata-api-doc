@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/accept-other-quote
 api_type: Trading
-updated_at: 2026-08-29 18:40:50.171043
+updated_at: 2026-08-30 18:41:08.628740
 ---
 
 # Accept non-LP Quote

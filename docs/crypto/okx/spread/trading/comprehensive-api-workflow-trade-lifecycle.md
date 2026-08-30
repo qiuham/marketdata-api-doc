@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-comprehensive-api-workflow-trade-lifecycle
 anchor_id: spread-trading-comprehensive-api-workflow-trade-lifecycle
 api_type: API
-updated_at: 2026-08-29 19:09:51.224133
+updated_at: 2026-08-30 19:09:55.377161
 ---
 
 # Trade Lifecycle

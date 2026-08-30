@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/confirm-quote
 api_type: REST
-updated_at: 2026-08-29 18:35:27.330822
+updated_at: 2026-08-30 18:35:47.089329
 ---
 
 # Confirm a Quote

@@ -2,110 +2,56 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication
 api_type: WebSocket
-updated_at: 2026-08-29 18:52:49.916134
+updated_at: 2026-08-30 18:53:04.188131
 ---
 
 # Advanced Trade WebSocket Authentication
 
-WebSocket
-    
-    # Advanced Trade WebSocket Authentication
-    
-    Authenticate to the Advanced Trade [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints) with a JWT from a [CDP API key](/coinbase-app/authentication-authorization/api-key-authentication). Public channels do not need one.
-    
-    
-    ## 
-    
-    
-    
-    Sending Messages with API Keys
-    
-    
-    
-    
-    ### 
-    
-    
-    
-    Making Requests
-    
-    
-    Use the code samples below to generate/export a JSON Web Token (JWT) and make an authenticated request.
-    
-    
-    WebSocket JWTs (vs those for REST API) are not built with a request method or request path.
-    
-    
-    
-    
-    ### 
-    
-    
-    
-    Generating a JWT
-    
-    
-    Regardless of which code snippet you use, follow these steps:
-    
-    
-    
-    
-        1. Replace key name and key secret with your key name and private key. key secret is a multi-line key and newlines must be preserved to properly parse the key. Do this on one line with \n escaped newlines, or with a multi-line string.
-    
-    
-        2. Run the generation script that prints the command export JWT=....
-    
-    
-        3. Run the generated command to save your JWT.
-    
-    
-    
-    
-    
-    Your JWT expires after 2 minutes, after which all requests are unauthenticated.
-    
-    
-    
-    
-    ### 
-    
-    
-    
-    Code samples
-    
-    
-    The easiest way to generate a JWT is to use the built-in functions in our Python SDK as described below.
-    Otherwise, use the code samples below to generate/export a JWT and make an authenticated request.
-    
-      
-        *  Python SDK
-      
-        *  Python
-      
-        *  Go
-      
-        *  JavaScript
-      
-        *  PHP
-      
-        *  Java
-      
-        *  C++
-      
-        *  TypeScript
-      
-        *  C#
-      
-        *  Ruby
-    
-    
-    
-    
-    
-    
-        1. 
-         Install the SDK.
-         
+Authenticate to the Advanced Trade [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints) with a JWT from a [CDP API key](/coinbase-app/authentication-authorization/api-key-authentication). Public channels do not need one.
+
+## Sending Messages with API Keys
+
+### Making Requests
+
+Use the code samples below to generate/export a JSON Web Token (JWT) and make an authenticated request.
+
+WebSocket JWTs (vs those for REST API) are not built with a request method or request path.
+
+### Generating a JWT
+
+Regardless of which code snippet you use, follow these steps:
+
+  1. Replace `key name` and `key secret` with your key name and private key. `key secret` is a multi-line key and newlines must be preserved to properly parse the key. Do this on one line with `\n` escaped newlines, or with a multi-line string.
+  2. Run the generation script that prints the command `export JWT=...`.
+  3. Run the generated command to save your JWT.
+
+Your JWT expires after 2 minutes, after which all requests are unauthenticated.
+
+### Code samples
+
+The easiest way to generate a JWT is to use the built-in functions in our Python SDK as described below. Otherwise, use the code samples below to generate/export a JWT and make an authenticated request.
+
+  * Python SDK
+
+  * Python
+
+  * Go
+
+  * JavaScript
+
+  * PHP
+
+  * Java
+
+  * C++
+
+  * TypeScript
+
+  * C#
+
+  * Ruby
+
+  1. Install the SDK.
          
          pip3 install coinbase-advanced-py
          

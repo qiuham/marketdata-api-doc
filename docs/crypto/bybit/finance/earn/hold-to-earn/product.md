@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-08-29 18:38:05.380236
+updated_at: 2026-08-30 18:38:24.776756
 ---
 
 # Get Airdrop Daily PnL Records

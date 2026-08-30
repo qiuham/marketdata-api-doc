@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/tier-collateral-ratio
 api_type: REST
-updated_at: 2026-08-29 18:41:47.209318
+updated_at: 2026-08-30 18:42:05.091546
 ---
 
 # Get Recent Public Trades
