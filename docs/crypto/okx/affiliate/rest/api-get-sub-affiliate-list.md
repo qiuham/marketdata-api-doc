@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-sub-affiliate-list
 anchor_id: affiliate-rest-api-get-sub-affiliate-list
 api_type: REST
-updated_at: 2026-08-30 19:11:08.028079
+updated_at: 2026-09-01 19:20:05.218292
 ---
 
 # Get sub-affiliate list

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-delete-the-api-key-of-sub-accounts
 anchor_id: sub-account-rest-api-delete-the-api-key-of-sub-accounts
 api_type: REST
-updated_at: 2026-08-30 19:10:42.880536
+updated_at: 2026-09-01 19:19:39.911161
 ---
 
 # Delete the API Key of sub-accounts

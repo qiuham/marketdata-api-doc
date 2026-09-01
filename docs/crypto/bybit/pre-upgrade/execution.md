@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/execution
 api_type: REST
-updated_at: 2026-08-30 18:40:55.829075
+updated_at: 2026-09-01 18:46:17.164416
 ---
 
 # Get Pre-upgrade USDC Session Settlement

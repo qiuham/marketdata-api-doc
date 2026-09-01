@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro算法交易xalgo-api使用示例说明
 title: XTP Pro算法交易XAlgo-API使用示例说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E7%AE%97%E6%B3%95XAlgo-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-08
+updated_at: 2026-06-23
 ---
 
 # XTP Pro算法交易XAlgo-API使用示例说明

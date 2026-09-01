@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-bill-types
 anchor_id: trading-account-rest-api-get-bill-types
 api_type: REST
-updated_at: 2026-08-30 19:08:27.652879
+updated_at: 2026-09-01 19:17:23.763819
 ---
 
 # Get bill types

@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-algo-api接口说明
 title: XTP Pro Algo API接口说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E7%AE%97%E6%B3%95API%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E%E4%B8%8E%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-08
+updated_at: 2026-06-23
 ---
 
 # XTP Pro Algo API接口说明

@@ -13,7 +13,7 @@ id: zhongtai-xtppro-从xtp交易到xtp-pro交易api的变化
 title: 从XTP交易到XTP-Pro交易API的变化
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96/%E4%BB%8EXTP%E4%BA%A4%E6%98%93%E5%88%B0XTP-Pro%E4%BA%A4%E6%98%93API%E7%9A%84%E5%8F%98%E5%8C%96.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-21
+updated_at: 2026-09-01
 ---
 
 # 从XTP交易到XTP-Pro交易API的变化
@@ -331,12 +331,12 @@ cpp
 
 ### 1.9. 服务状态改变时的通知 ​
 
-XTP Pro版本新增的OnServerStatusNotification()回调函数，核心作用是实时推送资金划拨服务、查询服务的可用状态变化，帮助用户及时感知服务的可用性，避免因服务不可用导致操作失败。当用户Login后，默认查询服务是可用的，资金划拨服务是否可用要等待回调通知。当收到服务不可用的通知时，之前没有完成的查询，不再推送后续消息，需等待查询服务恢复后重新查询。回调函数详情如下：
+XTP Pro版本新增的OnServerStatusNotification()回调函数，核心作用是实时推送资金划拨服务、查询服务的可用状态变化，帮助用户及时感知服务的可用性，避免因服务不可用导致操作失败。当用户Login成功后，默认查询服务是可用的，资金划拨服务是否可用要等待回调通知。当收到服务不可用的通知时，之前没有完成的查询，不再推送后续消息，需等待查询服务恢复后重新查询。回调函数详情如下：
 
 cpp
     
     
-    ///当登录成功后，中途出现某个服务（资金划拨或者查询）服务状态改变时，该方法将被调用。
+    ///当用户完成登录，或资金划拨、查询类服务在运行过程中发生服务状态变更时，该方法将被触发调用。
     ///@param session_id 资金账户对应的session_id，登录时得到
     ///@param server_type 服务类型，1-资金划拨服务，2-查询服务
     ///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
@@ -1394,6 +1394,49 @@ cpp
     ///未知节点
     constexpr uint32_t XTP_TRANSFER_SITE_UNKNOWN = 256;
 
+  * XTP_FUND_QUERY_TYPE新增枚举类型  
+XTP Pro交易API为1.3.0及其以上版本，查询其他节点资金接口QueryOtherServerFund()新增两种主柜台的资金查询类型，分别是XTP_FUND_QUERY_JZ_BALANCE和XTP_FUND_QUERY_JZ_WITHDRAW。
+
+
+
+cpp
+    
+    
+    ///@brief XTP_FUND_QUERY_TYPE是柜台资金查询类型
+    /////////////////////////////////////////////////////////////////////////
+    typedef uint32_t XTP_FUND_QUERY_TYPE;
+    
+    ///查询金证主柜台可转资金
+    constexpr uint32_t XTP_FUND_QUERY_JZ = 0;        
+    ///查询一账号两中心设置时，对方节点的资金
+    constexpr uint32_t XTP_FUND_QUERY_INTERNAL = 1;
+    ///查询一账号两中心设置时，对方节点的融券卖余额资金
+    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_REPAY = 2;  
+    ///查询一账号两中心设置时，对方节点的授信额度
+    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_CONTRACT = 3;
+    ///查询金证主柜台账户余额
+    constexpr uint32_t XTP_FUND_QUERY_JZ_BALANCE = 4;
+    ///查询金证主柜台可取资金
+    constexpr uint32_t XTP_FUND_QUERY_JZ_WITHDRAW = 5;
+    ///未知类型
+    constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 6;
+
+以下是关于查询主柜台的几个资金字段的区别：  
+（1）主柜台账户可转资金(XTP_FUND_QUERY_JZ)：客户在XTP Pro资金划入时使用，提示客户当前最大可划入金额。  
+（2）主柜台账户可取资金(XTP_FUND_QUERY_JZ_WITHDRAW): 客户在银证转账前使用，提示客户当前实际最大可取金额。但在账户有相关冻结T+1日资金的业务（例如逆回购等）时，该可取资金就不准确了。  
+（3）主柜台账户余额(XTP_FUND_QUERY_JZ_BALANCE)：主柜台账户余额可使用作为资金账户最大可取金额的一个参考值，在xtp pro柜台的资金划转到主柜台之前，没有实际意义，该金额数值不代表能直接可取。一般用于计算xtp pro柜台可划转到主柜台的可取资金。
+
+以上3个字段在几种场景下的资金变化如下：
+
+序号| 场景| 金证主柜台账户余额| 金证主柜台账户可转资金| 金证主柜台账户可取资金  
+---|---|---|---|---  
+1| 金证主柜台盘前初始化| 10000| 10000| 10000  
+2| 盘前金证主柜台账户资金全部划转至XTP Pro柜台| 10000| 0| 0  
+3| 盘中XTP Pro柜台账户资金划转5000至金证主柜台| 10000| 5000| 5000  
+4| 盘中金证主柜台账户资金银证转出5000| 5000| 0| 0  
+5| 盘中XTP Pro柜台账户资金划转10000至金证主柜台| 5000| 10000| 5000  
+6| 盘中金证主柜台账户资金银证转入10000| 15000| 20000| 15000  
+  
   * currency_type  
 XTP-Pro版本新增了货币种类字段。
 

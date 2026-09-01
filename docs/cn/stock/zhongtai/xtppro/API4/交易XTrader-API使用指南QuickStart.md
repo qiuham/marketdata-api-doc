@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro交易xtrader-api使用示例说明
 title: XTP-Pro交易XTrader-API使用示例说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E4%BA%A4%E6%98%93XTrader-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-08
+updated_at: 2026-08-31
 ---
 
 # XTP-Pro交易XTrader-API使用示例说明
@@ -536,7 +536,7 @@ cpp
   * (9) 普通用户自行选择client_id时，仅支持[1,24]之间的数值。
   * (10) 交易服务器上有风控控制，请注意报单的频率和拒单数量。触发风控后，可能会被限制下单或强制断线。
   * (11) 查询结果中，如果返回的错误信息中error_id=11000350，此时不代表查询出错，仅仅代表没有找到满足查询条件的结果。
-  * (12) 资金划拨和查询资金划拨时，要注意资金划拨服务是否可用，用户登录成功默认服务是可用的，当遇到服务状态改变时，回调接口OnServerStatusNotification()会被响应。其他查询操作同理，但有些查询操作不受查询服务是否可用影响，请关注查询接口上的注释说明。
+  * (12) 资金划拨和查询资金划拨时，要注意资金划拨服务是否可用，用户登录成功默认查询服务是可用的，资金划拨服务是否可用要等待OnServerStatusNotification()的回调通知。当遇到服务状态改变时，回调接口OnServerStatusNotification()会被响应。其他查询操作同理，但有些查询操作不受查询服务是否可用影响，请关注查询接口上的注释说明。
   * (13) 当OMS服务端未收到过从API端发送出去的某个订单，且未报送到交易所时，就会收到接口OnUnknownOrder()的响应回调，用户需关注下该接口回调过来的order_xtp_id。
 
 

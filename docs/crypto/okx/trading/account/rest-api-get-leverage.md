@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-leverage
 anchor_id: trading-account-rest-api-get-leverage
 api_type: REST
-updated_at: 2026-08-30 19:08:29.839037
+updated_at: 2026-09-01 19:17:25.948233
 ---
 
 # Get leverage

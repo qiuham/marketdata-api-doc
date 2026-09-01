@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro-api接口说明
 title: XTP-Pro API接口说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/API%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E%E4%B8%8E%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-21
+updated_at: 2026-09-01
 ---
 
 # XTP-Pro API接口说明
@@ -257,9 +257,20 @@ linux| `libxtpxquoteapi.so`
 
 ### 2.1. 版本 ​
 
-V1.2.1
+V1.3.0
 
 ### 2.2. 更新历史 ​
+
+version 1.3.0
+
+(1) 修复自旋日志在8点前开启会导致前面的日志写入昨天日志的错误
+
+(2) 交易API中XTP_FUND_QUERY_TYPE新增查询类型：XTP_FUND_QUERY_JZ_BALANCE和XTP_FUND_QUERY_JZ_WITHDRAW
+
+(3) 修改部分接口注释
+
+(4) 心跳超时时间不能设置低于15s   
+
 
 version 1.2.1
 
@@ -6861,19 +6872,6 @@ cpp
     			///@remark 此函数为同步阻塞式，不需要异步等待登出，当函数返回即可进行后续操作，不允许在回调线程调用。
     			virtual int Logout(uint64_t session_id) = 0;
     
-    // 			///服务器是否重启过
-    // 			///@return “true”表示重启过，“false”表示没有重启过
-    // 			///@param session_id 资金账户对应的session_id,登录时得到
-    // 			///@remark 此函数必须在Login之后调用
-    // 			virtual bool IsServerRestart(uint64_t session_id) = 0;
-    // 
-    // 			///修改已登录用户的硬件信息，仅限授权系统使用
-    // 			///@return 发送消息是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param info 需要修改成的用户硬件信息
-    // 			///@param session_id 资金账户对应的session_id,登录时得到
-    // 			///@remark 此函数必须在Login之后调用，且仅限授权系统使用，一般客户无需使用
-    // 			virtual int ModifyUserTerminalInfo(const XTPUserTerminalInfoReq* info, uint64_t session_id) = 0;
-    
     			///查询用户在本节点上的可交易市场类型
     			///@return 按位来看，从低位开始数，第0位表示沪市，即如果(trade_location&0x01) == 0x01，代表可交易沪市，第1位表示深市，即如果(trade_location&0x02) == 0x02，表示可交易深市，如果第0位和第1位均是1，即(trade_location&(0x01|0x02)) == 0x03，就表示可交易沪深2个市场
     			///@param session_id 资金账户对应的session_id,登录时得到
@@ -6943,34 +6941,6 @@ cpp
     			///@remark 该方法支持分页查询，注意用户需要记录下最后一笔查询结果的reference以便用户下次查询使用
     			virtual int QueryOrdersByPage(const XTPQueryOrderByPageReq *query_param, uint64_t session_id, int request_id) = 0;
     
-    // 			///根据报单ID请求查询报单
-    // 			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param order_xtp_id 需要查询的报单在xtp系统中的ID，即InsertOrder()成功时返回的order_xtp_id
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@param request_id 用于用户定位查询响应的ID，由用户自定义
-    // 			virtual int QueryOrderByXTPIDEx(const uint64_t order_xtp_id, uint64_t session_id, int request_id) = 0;
-    
-    // 			///请求查询报单
-    // 			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param query_param 需要查询的订单相关筛选条件，其中合约代码可以为空，则默认所有存在的合约代码，如果不为空，请不带空格，并以'\0'结尾，其中起始时间格式为YYYYMMDDHHMMSSsss，为0则默认当前交易日0点，结束时间格式为YYYYMMDDHHMMSSsss，为0则默认当前时间
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@param request_id 用于用户定位查询响应的ID，由用户自定义
-    // 			///@remark 该方法支持分时段查询，如果股票代码为空，则默认查询时间段内的所有报单，否则查询时间段内所有跟股票代码相关的报单，此函数查询出的结果可能对应多个查询结果响应。此函数不建议轮询使用，当报单量过多时，容易造成用户线路拥堵，导致api断线
-    // 			virtual int QueryOrdersEx(const XTPQueryOrderReq *query_param, uint64_t session_id, int request_id) = 0;
-    
-    // 			///请求查询未完结报单
-    // 			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@param request_id 用于用户定位查询响应的ID，由用户自定义
-    // 			virtual int QueryUnfinishedOrdersEx(uint64_t session_id, int request_id) = 0;
-    
-    // 			///分页请求查询报单-新版本接口
-    // 			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param query_param 需要分页查询订单的条件，如果第一次查询，那么query_param.reference填0
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@param request_id 用于用户定位查询响应的ID，由用户自定义
-    // 			///@remark 该方法支持分页查询，注意用户需要记录下最后一笔查询结果的reference以便用户下次查询使用
-    // 			virtual int QueryOrdersByPageEx(const XTPQueryOrderByPageReq *query_param, uint64_t session_id, int request_id) = 0;
     
     			///根据委托编号请求查询相关成交
     			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
@@ -7025,14 +6995,6 @@ cpp
     			///@param request_id 用于用户定位查询响应的ID，由用户自定义
     			///@remark 该方法不受查询服务是否可用影响
     			virtual int QueryAsset(uint64_t session_id, int request_id) = 0;
-    
-    // 			///请求查询分级基金
-    // 			///@return 查询发送是否成功，“0”表示成功，非“0”表示出错，此时用户可以调用GetApiLastError()来获取错误代码
-    // 			///@param query_param 需要查询的分级基金筛选条件，其中母基金代码可以为空，则默认所有存在的母基金，如果不为空，请不带空格，并以'\0'结尾，其中交易市场不能为空
-    // 			///@param session_id 资金账户对应的session_id,登录时得到
-    // 			///@param request_id 用于用户定位查询响应的ID，由用户自定义
-    // 			///@remark 此函数查询出的结果可能对应多个查询结果响应
-    // 			virtual int QueryStructuredFund(XTPQueryStructuredFundInfoReq *query_param, uint64_t session_id, int request_id) = 0;
     
     			///资金划拨请求
     			///@return 资金划拨订单在XTP系统中的ID,如果为‘0’表示消息发送失败，此时用户可以调用GetApiLastError()来获取错误代码，非“0”表示消息发送成功，用户需要记录下返回的serial_id，它保证一个交易日内唯一，不同的交易日不保证唯一性
@@ -9515,9 +9477,18 @@ cpp
     ///查询一账号两中心设置时，对方节点的融券卖余额资金
     constexpr uint32_t XTP_FUND_QUERY_INTERNAL_REPAY = 2;  
     ///查询一账号两中心设置时，对方节点的授信额度
-    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_CONTRACT = 3; 
+    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_CONTRACT = 3;
+    ///查询金证主柜台账户余额
+    constexpr uint32_t XTP_FUND_QUERY_JZ_BALANCE = 4;
+    ///查询金证主柜台可取资金
+    constexpr uint32_t XTP_FUND_QUERY_JZ_WITHDRAW = 5;
     ///未知类型
-    constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 4;
+    constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 6;
+
+XTP Pro交易API为1.3.0及其以上版本，查询其他节点资金接口QueryOtherServerFund()新增两种主柜台的资金查询类型，分别是XTP_FUND_QUERY_JZ_BALANCE和XTP_FUND_QUERY_JZ_WITHDRAW，以下是关于查询主柜台的几个资金字段的区别：  
+（1）主柜台账户可转资金(XTP_FUND_QUERY_JZ)：客户在XTP Pro资金划入时使用，提示客户当前最大可划入金额。  
+（2）主柜台账户可取资金(XTP_FUND_QUERY_JZ_WITHDRAW): 客户在银证转账前使用，提示客户当前实际最大可取金额。但在账户有相关冻结T+1日资金的业务（例如逆回购等）时，该可取资金就不准确了。  
+（3）主柜台账户余额(XTP_FUND_QUERY_JZ_BALANCE)：主柜台账户余额可使用作为资金账户最大可取金额的一个参考值，在xtp pro柜台的资金划转到主柜台之前，没有实际意义，该金额数值不代表能直接可取。一般用于计算xtp pro柜台可划转到主柜台的可取资金。
 
 cpp
     
@@ -9979,11 +9950,11 @@ cpp
     			///@remark 用户主动调用logout导致的断线，不会触发此函数。api不会自动重连，当断线发生时，请用户自行选择后续操作，可以在此函数中调用Login重新登录，并更新session_id，此时用户收到的数据跟断线之前是连续的
     			virtual void OnDisconnected(uint64_t session_id, int reason) { (void)session_id; (void)reason; };
     
-    			///当登录成功后，中途出现某个服务（资金划拨或者查询）服务状态改变时，该方法将被调用。
-                ///@param session_id 资金账户对应的session_id，登录时得到
-                ///@param server_type 服务类型，1-资金划拨服务，2-查询服务
-                ///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
-                ///@remark 用户登录成功时，默认查询服务可用，资金划拨服务是否可用得等待此回调函数通知。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
+    			///当用户完成登录，或资金划拨、查询类服务在运行过程中发生服务状态变更时，该方法将被触发调用。
+    			///@param session_id 资金账户对应的session_id，登录时得到
+    			///@param server_type 服务类型，1-资金划拨服务，2-查询服务
+    			///@param status 服务是否可用标识，false-服务不可用，true-服务恢复可用
+    			///@remark 用户登录成功时，默认查询服务可用，资金划拨服务是否可用得等待此回调函数通知。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
     			virtual void OnServerStatusNotification(uint64_t session_id, uint32_t server_type, bool status) { (void)session_id; (void)server_type; (void)status; };
     
     			///错误应答
@@ -10015,14 +9986,6 @@ cpp
     			///@remark 此响应仅表明XTP服务器收到了报单且没被OMS拒单（OMS内部拒单将没有这条ack消息，仅有OrderEvent的拒单消息），不代表已经报送到交易所
     			virtual void OnOrderAck(XTPOrderInfo *order_info, uint64_t session_id) { (void)order_info; (void)session_id; };
     
-    // 			///请求查询用户在本节点上可交易市场的响应
-    // 			///@param trade_location 查询到的交易市场信息，按位来看，从低位开始数，第0位表示沪市，即如果(trade_location&0x01) == 0x01，代表可交易沪市，第1位表示深市，即如果(trade_location&0x02) == 0x02，表示可交易深市，如果第0位和第1位均是1，即(trade_location&(0x01|0x02)) == 0x03，就表示可交易沪深2个市场
-    // 			///@param error_info 查询可交易市场发生错误时，返回的错误信息，当error_info为空，或者error_info.error_id为0时，表明没有错误
-    // 			///@param request_id 此消息响应函数对应的请求ID
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@remark 此查询只会有一个结果
-    // 			virtual void OnQueryAccountTradeMarket(int trade_location, XTPRI *error_info, int request_id, uint64_t session_id) {};
-    
     			///报单通知
     			///@param order_info 订单响应具体信息，用户可以通过order_info.order_xtp_id来管理订单，通过GetClientIDByXTPID() == client_id来过滤自己的订单，order_info.qty_left字段在订单为未成交、部成、全成、废单状态时，表示此订单还没有成交的数量，在部撤、全撤状态时，表示此订单被撤的数量。order_info.order_cancel_xtp_id为其所对应的撤单ID，不为0时表示此单被撤成功
     			///@param error_info 订单被拒绝或者发生错误时错误代码和错误信息，当error_info为空，或者error_info.error_id为0时，表明没有错误
@@ -10052,15 +10015,6 @@ cpp
     			///@remark 由于支持分时段查询，一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线。此对应的请求函数不建议轮询使用，当报单量过多时，容易造成用户线路拥堵，导致api断线
     			virtual void OnQueryOrder(XTPQueryOrderRsp *order_info, XTPRI *error_info, int request_id, bool is_last, uint64_t session_id) { (void)order_info; (void)error_info; (void)request_id; (void)is_last; (void)session_id; };
     
-    // 			///请求查询报单响应-新版本接口
-    // 			///@param order_info 查询到的一个报单信息
-    // 			///@param error_info 查询报单时发生错误时，返回的错误信息，当error_info为空，或者error_info.error_id为0时，表明没有错误
-    // 			///@param request_id 此消息响应函数对应的请求ID
-    // 			///@param is_last 此消息响应函数是否为request_id这条请求所对应的最后一个响应，当为最后一个的时候为true，如果为false，表示还有其他后续消息响应
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@remark 由于支持分时段查询，一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线
-    // 			virtual void OnQueryOrderEx(XTPOrderInfoEx *order_info, XTPRI *error_info, int request_id, bool is_last, uint64_t session_id) { (void)order_info; (void)error_info; (void)request_id; (void)is_last; (void)session_id; };
-    
     			///分页请求查询报单响应
     			///@param order_info 查询到的一个报单
     			///@param req_count 分页请求的最大数量
@@ -10071,17 +10025,6 @@ cpp
     			///@param session_id 资金账户对应的session_id，登录时得到
     			///@remark 当order_sequence为0，表明当次查询没有查到任何记录，当is_last为true时，如果order_sequence等于req_count，那么表示还有报单，可以进行下一次分页查询，如果不等，表示所有报单已经查询完毕。一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线。
     			virtual void OnQueryOrderByPage(XTPQueryOrderRsp *order_info, int64_t req_count, int64_t order_sequence, int64_t query_reference, int request_id, bool is_last, uint64_t session_id) { (void)order_info; (void)req_count; (void)order_sequence; (void)query_reference; (void)request_id; (void)is_last; (void)session_id; };
-    
-    // 			///分页请求查询报单响应
-    // 			///@param order_info 查询到的一个报单
-    // 			///@param req_count 分页请求的最大数量
-    // 			///@param order_sequence 分页请求的当前回报数量
-    // 			///@param query_reference 当前报单信息所对应的查询索引，需要记录下来，在进行下一次分页查询的时候需要用到
-    // 			///@param request_id 此消息响应函数对应的请求ID
-    // 			///@param is_last 此消息响应函数是否为request_id这条请求所对应的最后一个响应，当为最后一个的时候为true，如果为false，表示还有其他后续消息响应
-    // 			///@param session_id 资金账户对应的session_id，登录时得到
-    // 			///@remark 当order_sequence为0，表明当次查询没有查到任何记录，当is_last为true时，如果order_sequence等于req_count，那么表示还有报单，可以进行下一次分页查询，如果不等，表示所有报单已经查询完毕。一个查询请求可能对应多个响应，需要快速返回，否则会堵塞后续消息，当堵塞严重时，会触发断线。
-    // 			virtual void OnQueryOrderByPageEx(XTPOrderInfoEx *order_info, int64_t req_count, int64_t order_sequence, int64_t query_reference, int request_id, bool is_last, uint64_t session_id) { (void)order_info; (void)req_count; (void)order_sequence; (void)query_reference; (void)request_id; (void)is_last; (void)session_id; };
     
     			///请求查询成交响应
     			///@param trade_info 查询到的一个成交回报
@@ -10481,7 +10424,7 @@ cpp
 
 当登录成功后，中途出现某个服务（资金划拨或者查询）的状态改变时，该方法将被调用。
 
-用户登录成功时，默认服务可用。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
+用户登录成功时，默认查询服务可用，但资金划拨服务是否可用得等待该回调函数的通知。当用户收到服务不可用的通知时，之前没有完成的查询，将不再推送后续的查询消息，需要用户等待查询服务恢复后重新发起查询。
 
 ◇ 1.函数原型
 
@@ -13137,9 +13080,13 @@ cpp
     ///查询一账号两中心设置时，对方节点的融券卖余额资金
     constexpr uint32_t XTP_FUND_QUERY_INTERNAL_REPAY = 2;  
     ///查询一账号两中心设置时，对方节点的授信额度
-    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_CONTRACT = 3; 
+    constexpr uint32_t XTP_FUND_QUERY_INTERNAL_CONTRACT = 3;
+    ///查询金证主柜台账户余额
+    constexpr uint32_t XTP_FUND_QUERY_JZ_BALANCE = 4;
+    ///查询金证主柜台可取资金
+    constexpr uint32_t XTP_FUND_QUERY_JZ_WITHDRAW = 5;
     ///未知类型
-    constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 4;
+    constexpr uint32_t XTP_FUND_QUERY_UNKNOWN = 6;
 
 cpp
     
