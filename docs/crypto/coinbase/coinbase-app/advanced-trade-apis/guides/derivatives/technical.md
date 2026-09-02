@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical
 api_type: Guide
-updated_at: 2026-09-01 19:01:43.509652
+updated_at: 2026-09-02 19:00:38.111044
 ---
 
 # Technical Migration Guide
@@ -86,14 +86,10 @@ Exchange your CDP key for an access token, then trade:
 
   * WebSocket
 
-![CDP key authentication over HTTP](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-cdp-http-fp.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=1d12d48f39983816ab0879def4726d74)
-
   * You create a JWT, no round-trip to Coinbase. See [creating a JWT](/coinbase-app/authentication-authorization/api-key-authentication#generating-a-jwt).
   * It lasts only ~120s, use a fresh JWT for every `public/auth` call.
   * You need to provide the Deribit access token on each private method call.
   * Refresh the Deribit access token every 15 minutes.
-
-![CDP key authentication over WebSocket](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-cdp-ws-fp.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=e44065dec8d63d86311406ca5921c655)
 
   * You create a JWT, no round-trip to Coinbase. See [creating a JWT](/coinbase-app/authentication-authorization/api-key-authentication#generating-a-jwt).
   * It lasts only ~120s, use a fresh JWT for every `public/auth` call.

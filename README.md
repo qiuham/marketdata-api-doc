@@ -20,12 +20,12 @@
 | cn | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-08-24 |
 | cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 22 | 2026-09-01 |
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 529 | 2026-09-01 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 77 | 2026-09-01 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 529 | 2026-09-02 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 77 | 2026-09-02 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-09-01 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-09-01 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 517 | 2026-09-01 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-09-02 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-09-02 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 517 | 2026-09-02 |
 
 ## 快速开始
 

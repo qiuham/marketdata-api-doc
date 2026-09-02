@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-09-01 18:45:52.938904
+updated_at: 2026-09-02 18:45:52.509046
 ---
 
 # Get Margin Coin Info

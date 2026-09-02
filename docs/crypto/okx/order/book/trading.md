@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-09-01 19:17:41.487411
+updated_at: 2026-09-02 19:17:45.045057
 ---
 
 # Order Book Trading
@@ -84,8 +84,8 @@ Non-Margin mode `cash`
 Note: `isolated` (spot margin isolated) is not available in multi-currency margin mode and portfolio margin mode.   
   
 Event contracts symbols only support `isolated`  
-ccy | String | No | Margin currency   
-Applicable to all `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
+ccy | String | Conditional | Margin currency  
+Optional in general. Required for `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
 clOrdId | String | No | Client Order ID as assigned by the client   
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 Only applicable to general order. It will not be posted to algoId when placing TP/SL order after the general order is filled completely.  
@@ -425,8 +425,8 @@ Non-Margin mode `cash`
 Note: `isolated` is not available in multi-currency margin mode and portfolio margin mode.   
   
 Event contracts symbols only support `isolated`  
-ccy | String | No | Margin currency   
-Applicable to all `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
+ccy | String | Conditional | Margin currency  
+Optional in general. Required for `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
 clOrdId | String | No | Client Order ID as assigned by the client   
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 tag | String | No | Order tag   
@@ -4851,8 +4851,8 @@ Non-Margin mode `cash`
 `spot_isolated` (only applicable to SPOT lead trading, `tdMode` should be `spot_isolated` for `SPOT` lead trading.)   
   
 Event contracts symbols only support `isolated`  
-> ccy | String | No | Margin currency   
-Applicable to all `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
+> ccy | String | Conditional | Margin currency  
+Optional in general. Required for `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
 > clOrdId | String | No | Client Order ID as assigned by the client   
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 > tag | String | No | Order tag   
@@ -5138,8 +5138,8 @@ Non-Margin mode `cash`
 Note: `isolated` is not available in multi-currency margin mode and portfolio margin mode.   
   
 Event contracts symbols only support `isolated`  
-> ccy | String | No | Margin currency   
-Applicable to all `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
+> ccy | String | Conditional | Margin currency  
+Optional in general. Required for `isolated` `MARGIN` orders and `cross` `MARGIN` orders in `Futures mode`.  
 > clOrdId | String | No | Client Order ID as assigned by the client   
 A combination of case-sensitive alphanumerics, all numbers, or all letters of up to 32 characters.  
 > tag | String | No | Order tag   
@@ -20393,7 +20393,8 @@ tdMode | String | 是 | 交易模式
 注意：`isolated`（现货杠杆逐仓）在跨币种保证金模式和组合保证金模式下不可用。  
   
 事件合约对应交易产品仅支持`isolated`逐仓下单  
-ccy | String | 否 | 保证金币种，适用于`逐仓杠杆`及`合约模式`下的`全仓杠杆`订单  
+ccy | String | 条件必填 | 保证金币种  
+通常可选；逐仓杠杆订单及`合约模式`下的全仓杠杆订单必填  
 clOrdId | String | 否 | 客户自定义订单ID   
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 tag | String | 否 | 订单标签  
@@ -20726,7 +20727,8 @@ tdMode | String | 是 | 交易模式
 注意：`isolated` 在跨币种保证金模式和组合保证金模式下不可用。  
   
 事件合约对应交易产品仅支持`isolated`逐仓下单  
-ccy | String | 否 | 保证金币种，适用于`逐仓杠杆`及`合约模式`下的`全仓杠杆`订单  
+ccy | String | 条件必填 | 保证金币种  
+通常可选；逐仓杠杆订单及`合约模式`下的全仓杠杆订单必填  
 clOrdId | String | 否 | 客户自定义订单ID  
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 tag | String | 否 | 订单标签  
@@ -25092,7 +25094,8 @@ args | Array of objects | 是 | 请求参数
 `spot_isolated`：现货逐仓(仅适用于现货带单) ，现货带单时，`tdMode` 的值需要指定为`spot_isolated`   
   
 事件合约对应交易产品仅支持`isolated`逐仓下单  
-> ccy | String | 否 | 保证金币种，适用于`逐仓杠杆`及`合约模式`下的`全仓杠杆`订单  
+> ccy | String | 条件必填 | 保证金币种  
+通常可选；逐仓杠杆订单及`合约模式`下的全仓杠杆订单必填  
 > clOrdId | String | 否 | 由用户设置的订单ID  
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 > tag | String | 否 | 订单标签  
@@ -25372,7 +25375,8 @@ args | Array of objects | 是 | 请求参数
 注意：`isolated` 在跨币种保证金模式和组合保证金模式下不可用。   
   
 事件合约对应交易产品仅支持`isolated`逐仓下单  
-> ccy | String | 否 | 保证金币种，适用于`逐仓杠杆`及`合约模式`下的`全仓杠杆`订单  
+> ccy | String | 条件必填 | 保证金币种  
+通常可选；逐仓杠杆订单及`合约模式`下的全仓杠杆订单必填  
 > clOrdId | String | 否 | 用户提供的订单ID  
 字母（区分大小写）与数字的组合，可以是纯字母、纯数字且长度要在1-32位之间。  
 > tag | String | 否 | 订单标签  

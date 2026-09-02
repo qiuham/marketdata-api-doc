@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/pre-check-order
 api_type: Trading
-updated_at: 2026-09-01 18:45:48.315181
+updated_at: 2026-09-02 18:45:47.490127
 ---
 
 # Get Borrow Quota (Spot)

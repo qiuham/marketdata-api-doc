@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/repay
 api_type: REST
-updated_at: 2026-09-01 18:45:13.811230
+updated_at: 2026-09-02 18:45:06.348201
 ---
 
 # Repay

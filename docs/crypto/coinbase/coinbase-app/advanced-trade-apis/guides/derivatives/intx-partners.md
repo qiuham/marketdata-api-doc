@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners
 api_type: Guide
-updated_at: 2026-09-01 19:01:43.206583
+updated_at: 2026-09-02 19:00:38.024587
 ---
 
 # INTX Retail API Partners — Migration Guide
@@ -51,14 +51,10 @@ Token| What it is| Issued by| Lifetime| Reference
 
   * WebSocket
 
-![CDP API key HTTP authentication flow](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-cdp-http.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=01dacfc9f9bf1082f63630ce381d7a00)
-
   * You create a JWT, no round-trip to Coinbase. See [creating a JWT](/coinbase-app/authentication-authorization/api-key-authentication#generating-a-jwt).
   * It lasts only ~120s, use a fresh JWT for every `public/auth` call.
   * You need to provide the Deribit access token on each private method call.
   * Refresh the Deribit access token every 15 minutes.
-
-![CDP API key WebSocket authentication flow](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-cdp-ws.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=da205794e4b2fb96d27d53a5c55fb828)
 
   * You create a JWT, no round-trip to Coinbase. See [creating a JWT](/coinbase-app/authentication-authorization/api-key-authentication#generating-a-jwt).
   * It lasts only ~120s, use a fresh JWT for every `public/auth` call.
@@ -71,8 +67,6 @@ Token| What it is| Issued by| Lifetime| Reference
 
   * WebSocket
 
-![OAuth2 HTTP authentication flow](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-oauth2-http.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=edeeecd9516b905490e8e17475a23642)
-
   * Retrieve an OAuth2 access token from `POST login.coinbase.com/oauth2/token`.
   * It expires in 60 mins, use an unexpired OAuth2 access token with every `public/auth` call.
   * You need to provide the Deribit access token on each private method call.
@@ -81,8 +75,6 @@ For OAuth there are 2 separate refresh cycles:
 
   * Refresh the Deribit access token every 15 minutes.
   * Refresh the OAuth2 access token every 1 hour. `POST login.coinbase.com/oauth2/token` with `grant_type=refresh_token` and your refresh token; you get back a new access _and_ refresh token.
-
-![OAuth2 WebSocket authentication flow](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-oauth2-ws.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=051d7746684e34ffb42517e5548e2588)
 
   * Retrieve an OAuth2 access token from `POST login.coinbase.com/oauth2/token`.
   * It expires in 60 mins, use an unexpired OAuth2 access token with every `public/auth` call.
