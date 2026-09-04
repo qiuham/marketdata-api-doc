@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-collateral-assets
 anchor_id: financial-product-flexible-loan-get-collateral-assets
 api_type: API
-updated_at: 2026-09-02 19:20:01.638504
+updated_at: 2026-09-04 19:14:09.712752
 ---
 
 # GET / Collateral assets

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/leverage
 api_type: Position
-updated_at: 2026-09-02 18:46:06.625977
+updated_at: 2026-09-04 18:42:32.408976
 ---
 
 # Set Leverage

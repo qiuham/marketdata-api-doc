@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-get-currency-pairs
 anchor_id: financial-product-dual-investment-get-currency-pairs
 api_type: API
-updated_at: 2026-09-02 19:20:05.087536
+updated_at: 2026-09-04 19:14:13.164401
 ---
 
 # GET / Currency pairs

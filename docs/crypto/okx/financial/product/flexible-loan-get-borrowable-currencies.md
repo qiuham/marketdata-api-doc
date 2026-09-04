@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-borrowable-currencies
 anchor_id: financial-product-flexible-loan-get-borrowable-currencies
 api_type: API
-updated_at: 2026-09-02 19:20:01.326030
+updated_at: 2026-09-04 19:14:09.400205
 ---
 
 # GET / Borrowable currencies

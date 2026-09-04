@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-leverage
 api_type: REST
-updated_at: 2026-09-02 18:47:34.435897
+updated_at: 2026-09-04 18:43:54.581434
 ---
 
 # Toggle Margin Trade
