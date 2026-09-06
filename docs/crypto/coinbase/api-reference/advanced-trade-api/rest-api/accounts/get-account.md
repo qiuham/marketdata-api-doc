@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/get-account
 api_type: Account
-updated_at: 2026-09-04 18:56:01.315375
+updated_at: 2026-09-06 18:53:57.254046
 ---
 
 # Get Account
@@ -10,7 +10,69 @@ updated_at: 2026-09-04 18:56:01.315375
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/accounts/{account_uuid}`
 
 
+# Get Account
+
 Get a list of information about an account, given an account UUID.
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/accounts/{account_uuid} \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/accounts/{account_uuid}"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/accounts/{account_uuid}', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/accounts/{account_uuid}",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "
+    
+    Get a list of information about an account, given an account UUID.
+    
+    GET
+    
+    /
+    
+    api
+    
+    /
+    
+    v3
+    
+    /
+    
+    brokerage
+    
+    /
+    
+    accounts
+    
+    /
+    
+    {account_uuid}
+    
+    Get Account
     
     
     curl --request GET \

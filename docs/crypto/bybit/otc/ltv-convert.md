@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/ltv-convert
 api_type: REST
-updated_at: 2026-09-04 18:42:19.520784
+updated_at: 2026-09-06 18:40:30.343041
 ---
 
 # Get Margin Coin Info

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-contract-taker-volume
 anchor_id: trading-statistics-rest-api-get-contract-taker-volume
 api_type: REST
-updated_at: 2026-09-04 19:13:33.413772
+updated_at: 2026-09-06 19:11:16.321663
 ---
 
 # Get contract taker volume

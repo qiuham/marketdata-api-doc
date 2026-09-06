@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-mark-price
 anchor_id: public-data-rest-api-get-mark-price
 api_type: REST
-updated_at: 2026-09-04 19:13:20.879452
+updated_at: 2026-09-06 19:11:03.879712
 ---
 
 # Get mark price

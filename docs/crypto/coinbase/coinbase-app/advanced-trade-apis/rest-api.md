@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-09-04 18:56:05.025465
+updated_at: 2026-09-06 18:54:00.702249
 ---
 
 # Advanced Trade REST Endpoints
@@ -38,9 +38,9 @@ Endpoint| Description
 [`GET /time`](/api-reference/advanced-trade-api/rest-api/public/get-server-time)| Server time  
 [`GET /market/product_book`](/api-reference/advanced-trade-api/rest-api/public/get-public-product-book)| Public order book  
 [`GET /market/products`](/api-reference/advanced-trade-api/rest-api/public/list-public-products)| Public product list  
-[`GET /market/products/\{product_id\}`](/api-reference/advanced-trade-api/rest-api/public/get-public-product)| Public product  
-[`GET /market/products/\{product_id\}/candles`](/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles)| Public candles  
-[`GET /market/products/\{product_id\}/ticker`](/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades)| Public trades  
+[`GET /market/products/\\{product_id\\}`](/api-reference/advanced-trade-api/rest-api/public/get-public-product)| Public product  
+[`GET /market/products/\\{product_id\\}/candles`](/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles)| Public candles  
+[`GET /market/products/\\{product_id\\}/ticker`](/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades)| Public trades  
   
 #### Notes
 
@@ -58,7 +58,7 @@ Orders, accounts, portfolios, converts, and US futures.
 Endpoint| Description  
 ---|---  
 [`GET /accounts`](/api-reference/advanced-trade-api/rest-api/accounts/list-accounts)| The user’s accounts  
-[`GET /accounts/\{account_uuid\}`](/api-reference/advanced-trade-api/rest-api/accounts/get-account)| One account  
+[`GET /accounts/\\{account_uuid\\}`](/api-reference/advanced-trade-api/rest-api/accounts/get-account)| One account  
 [`POST /orders`](/api-reference/advanced-trade-api/rest-api/orders/create-order)| Place an order  
 [`POST /orders/batch_cancel`](/api-reference/advanced-trade-api/rest-api/orders/cancel-order)| Cancel orders  
 [`POST /orders/edit`](/api-reference/advanced-trade-api/rest-api/orders/edit-order)| Edit an order  
@@ -66,27 +66,27 @@ Endpoint| Description
 [`POST /orders/close_position`](/api-reference/advanced-trade-api/rest-api/orders/close-position)| Close a position  
 [`GET /orders/historical/batch`](/api-reference/advanced-trade-api/rest-api/orders/list-orders)| Order history  
 [`GET /orders/historical/fills`](/api-reference/advanced-trade-api/rest-api/orders/list-fills)| Fill history  
-[`GET /orders/historical/\{order_id\}`](/api-reference/advanced-trade-api/rest-api/orders/get-order)| One order  
+[`GET /orders/historical/\\{order_id\\}`](/api-reference/advanced-trade-api/rest-api/orders/get-order)| One order  
 [`POST /orders/preview`](/api-reference/advanced-trade-api/rest-api/orders/preview-orders)| Preview an order  
 [`GET /best_bid_ask`](/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask)| Best bid and ask  
 [`GET /product_book`](/api-reference/advanced-trade-api/rest-api/products/get-product-book)| Order book  
 [`GET /products`](/api-reference/advanced-trade-api/rest-api/products/list-products)| Product list  
-[`GET /products/\{product_id\}`](/api-reference/advanced-trade-api/rest-api/products/get-product)| One product  
-[`GET /products/\{product_id\}/candles`](/api-reference/advanced-trade-api/rest-api/products/get-product-candles)| Product candles  
-[`GET /products/\{product_id\}/ticker`](/api-reference/advanced-trade-api/rest-api/products/get-market-trades)| Market trades  
+[`GET /products/\\{product_id\\}`](/api-reference/advanced-trade-api/rest-api/products/get-product)| One product  
+[`GET /products/\\{product_id\\}/candles`](/api-reference/advanced-trade-api/rest-api/products/get-product-candles)| Product candles  
+[`GET /products/\\{product_id\\}/ticker`](/api-reference/advanced-trade-api/rest-api/products/get-market-trades)| Market trades  
 [`GET /transaction_summary`](/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary)| Fee summary  
 [`POST /convert/quote`](/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote)| Create a convert quote  
-[`POST /convert/trade/\{trade_id\}`](/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade)| Commit a convert  
-[`GET /convert/trade/\{trade_id\}`](/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade)| One convert  
+[`POST /convert/trade/\\{trade_id\\}`](/api-reference/advanced-trade-api/rest-api/convert/commit-convert-trade)| Commit a convert  
+[`GET /convert/trade/\\{trade_id\\}`](/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade)| One convert  
 [`GET /portfolios`](/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios)| The user’s portfolios  
 [`POST /portfolios`](/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio)| Create a portfolio  
 [`POST /portfolios/move_funds`](/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds)| Move funds between portfolios  
-[`GET /portfolios/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown)| Portfolio breakdown  
-[`DELETE /portfolios/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio)| Delete a portfolio  
-[`PUT /portfolios/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio)| Edit a portfolio  
+[`GET /portfolios/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown)| Portfolio breakdown  
+[`DELETE /portfolios/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio)| Delete a portfolio  
+[`PUT /portfolios/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio)| Edit a portfolio  
 [`GET /cfm/balance_summary`](/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary)| US futures balances  
 [`GET /cfm/positions`](/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions)| US futures positions  
-[`GET /cfm/positions/\{product_id\}`](/api-reference/advanced-trade-api/rest-api/futures/get-futures-position)| One US futures position  
+[`GET /cfm/positions/\\{product_id\\}`](/api-reference/advanced-trade-api/rest-api/futures/get-futures-position)| One US futures position  
 [`POST /cfm/sweeps/schedule`](/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep)| Schedule a US futures sweep  
 [`GET /cfm/sweeps`](/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps)| US futures sweeps  
 [`DELETE /cfm/sweeps`](/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep)| Cancel a pending sweep  
@@ -94,12 +94,12 @@ Endpoint| Description
 [`POST /cfm/intraday/margin_setting`](/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings)| Set intraday margin  
 [`GET /cfm/intraday/current_margin_window`](/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window)| Current margin window  
 [`GET /payment_methods`](/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods)| Payment methods  
-[`GET /payment_methods/\{payment_method_id\}`](/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method)| One payment method  
+[`GET /payment_methods/\\{payment_method_id\\}`](/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method)| One payment method  
 [`GET /key_permissions`](/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions)| API key permissions  
-[`GET /intx/portfolio/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary)| INTX portfolio summary (deprecated)  
-[`GET /intx/positions/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions)| INTX positions (deprecated)  
-[`GET /intx/positions/\{portfolio_uuid\}/\{symbol\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position)| One INTX position (deprecated)  
-[`GET /intx/balances/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances)| INTX balances (deprecated)  
+[`GET /intx/portfolio/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary)| INTX portfolio summary (deprecated)  
+[`GET /intx/positions/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions)| INTX positions (deprecated)  
+[`GET /intx/positions/\\{portfolio_uuid\\}/\\{symbol\\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position)| One INTX position (deprecated)  
+[`GET /intx/balances/\\{portfolio_uuid\\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances)| INTX balances (deprecated)  
 [`POST /intx/multi_asset_collateral`](/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out)| INTX multi-asset collateral (deprecated)  
 [`POST /intx/allocate`](/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio)| Allocate to an INTX portfolio (deprecated)  
   

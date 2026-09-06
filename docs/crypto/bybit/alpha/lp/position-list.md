@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/position-list
 api_type: REST
-updated_at: 2026-09-04 18:35:46.695596
+updated_at: 2026-09-06 18:34:00.597299
 ---
 
 # Execute LP Redeem
