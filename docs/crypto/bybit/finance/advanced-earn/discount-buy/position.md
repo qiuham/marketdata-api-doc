@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/discount-buy/position
 api_type: REST
-updated_at: 2026-09-06 18:37:05.508010
+updated_at: 2026-09-07 18:40:55.277700
 ---
 
 # Place Order

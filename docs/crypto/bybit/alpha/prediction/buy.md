@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/buy
 api_type: REST
-updated_at: 2026-09-06 18:34:05.790126
+updated_at: 2026-09-07 18:37:50.950171
 ---
 
 # Get Order Book

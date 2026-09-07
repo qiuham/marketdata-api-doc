@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/transaction-log
 api_type: REST
-updated_at: 2026-09-06 18:40:59.200095
+updated_at: 2026-09-07 18:44:54.561078
 ---
 
 # Get Rate Limit Cap

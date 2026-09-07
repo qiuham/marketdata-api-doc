@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2091777566301057025
+id: zhongtai-xtp-2096782387034812418
 title: 交易Trader-API使用指南QuickStart
-doc_id: 2091777566301057025
+doc_id: 2096782387034812418
 doc_category: XTP API 快速入门
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2091777566301057025'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2096782387034812418'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-08-24
+updated_at: 2026-09-07
 ---
 
 # 交易Trader-API使用指南QuickStart

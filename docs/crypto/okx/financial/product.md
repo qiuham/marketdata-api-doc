@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product
 anchor_id: financial-product
 api_type: API
-updated_at: 2026-09-06 19:11:38.285844
+updated_at: 2026-09-07 19:15:38.828161
 ---
 
 # Financial Product
@@ -2346,7 +2346,7 @@ amt | String | Yes | Purchase/redemption amount
 side | String | Yes | Action type.   
 `purchase`: purchase saving shares   
 `redempt`: redeem saving shares  
-rate | String | Conditional | Annual purchase rate, e.g. `0.1` represents `10%`  
+rate | String | No | Annual purchase rate, e.g. `0.1` represents `10%`  
 Only applicable to purchase saving shares  
 The interest rate of the new subscription will cover the interest rate of the last subscription  
 The rate value range is between 1% and 365%  
@@ -2376,72 +2376,6 @@ ccy | String | Currency
 amt | String | Purchase/Redemption amount  
 side | String | Action type  
 rate | String | Annual purchase rate, e.g. `0.1` represents `10%`  
-  
-### POST / Set lending rate
-
-#### Rate Limit: 6 requests per second
-
-#### Rate limit rule: User ID
-
-#### HTTP Request
-
-`POST /api/v5/finance/savings/set-lending-rate`
-
-> Request Example
-    
-    
-    POST /api/v5/finance/savings/set-lending-rate
-    body
-    {
-        "ccy":"BTC",
-        "rate":"0.02"
-    }
-    
-    
-    
-    
-    import okx.Finance.Savings as Savings
-    
-    # API initialization
-    apikey = "YOUR_API_KEY"
-    secretkey = "YOUR_SECRET_KEY"
-    passphrase = "YOUR_PASSPHRASE"
-    
-    flag = "0"  # Production trading:0 , demo trading:1
-    
-    SavingsAPI = Savings.SavingsAPI(apikey, secretkey, passphrase, False, flag)
-    
-    result = SavingsAPI.set_lending_rate(ccy='USDT',rate="1")
-    print(result)
-    
-
-#### Request Parameters
-
-Parameter | Type | Required | Description  
----|---|---|---  
-ccy | String | Yes | Currency, e.g. `BTC`  
-rate | String | Yes | Annual lending rate  
-The rate value range is between 1% and 365%  
-  
-> Response Example
-    
-    
-    {
-        "code": "0",
-        "msg": "",
-        "data": [{
-            "ccy": "BTC",
-            "rate": "0.02"
-        }]
-    }
-    
-
-#### Response Parameters
-
-Parameter | Type | Description  
----|---|---  
-ccy | String | Currency, e.g. `BTC`  
-rate | String | Annual lending rate  
   
 ### GET / Lending history
 
@@ -6335,72 +6269,6 @@ ccy | String | 币种名称
 amt | String | 申购/赎回 数量  
 side | String | 操作类型  
 rate | String | 申购年利率，如 `0.1`代表`10%`  
-  
-### POST / 设置活期简单赚币借贷利率 
-
-#### 限速：6次/s
-
-#### 限速规则：User ID
-
-#### HTTP请求
-
-`POST /api/v5/finance/savings/set-lending-rate`
-
-> 请求示例
-    
-    
-    POST /api/v5/finance/savings/set-lending-rate
-    body
-    {
-        "ccy":"BTC",
-        "rate":"0.02"
-    }
-    
-    
-    
-    
-    import okx.Finance.Savings as Savings
-    
-    # API 初始化
-    apikey = "YOUR_API_KEY"
-    secretkey = "YOUR_SECRET_KEY"
-    passphrase = "YOUR_PASSPHRASE"
-    
-    flag = "0"  # 实盘: 0, 模拟盘: 1
-    
-    SavingsAPI = Savings.SavingsAPI(apikey, secretkey, passphrase, False, flag)
-    
-    result = SavingsAPI.set_lending_rate(ccy='USDT',rate="1")
-    print(result)
-    
-
-#### 请求参数
-
-参数名 | 类型 | 是否必须 | 描述  
----|---|---|---  
-ccy | String | 是 | 币种名称，如 `BTC`  
-rate | String | 是 | 贷出年利率  
-参数取值范围在1%到365%之间  
-  
-> 返回结果
-    
-    
-    {
-        "code": "0",
-        "msg": "",
-        "data": [{
-            "ccy": "BTC",
-            "rate": "0.02"
-        }]
-    }
-    
-
-#### 返回参数
-
-参数名 | 类型 | 描述  
----|---|---  
-ccy | String | 币种名称，如 `BTC`  
-rate | String | 贷出年利率  
   
 ### GET / 获取活期简单赚币出借明细 
 
