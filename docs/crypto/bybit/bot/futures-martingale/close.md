@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-martingale/close
 api_type: REST
-updated_at: 2026-09-07 18:39:38.774721
+updated_at: 2026-09-08 18:41:32.366354
 ---
 
 # Create Martingale Bot

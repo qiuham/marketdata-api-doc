@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/kraken",
   "total": 243,
-  "updated_at": "2026-09-07 19:12:49.241701",
+  "updated_at": "2026-09-08 19:13:29.920590",
   "documents_by_type": {
     "REST": [
       {
@@ -59,7 +59,7 @@
         "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:42.831814"
+        "updated_at": "2026-09-08 19:13:23.401386"
       },
       {
         "id": "ocr-fix",
@@ -1031,7 +1031,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:43.639355"
+        "updated_at": "2026-09-08 19:13:24.207854"
       },
       {
         "id": "set-leverage-setting",
@@ -1211,7 +1211,7 @@
         "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:48.412441"
+        "updated_at": "2026-09-08 19:13:29.087617"
       },
       {
         "id": "allocate-strategy",
@@ -2019,7 +2019,7 @@
         "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:45.421026"
+        "updated_at": "2026-09-08 19:13:26.031015"
       },
       {
         "id": "challenge",
@@ -2451,7 +2451,7 @@
         "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:49.241701"
+        "updated_at": "2026-09-08 19:13:29.920590"
       },
       {
         "id": "amend_order",
@@ -2825,7 +2825,7 @@
         "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-09-07 19:12:46.201418"
+        "updated_at": "2026-09-08 19:13:26.812660"
       },
       {
         "id": "spot-amends",
@@ -3020,7 +3020,7 @@
       "source_url": "https://docs.kraken.com/api/docs/guides/global-intro",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:46.201418"
+      "updated_at": "2026-09-08 19:13:26.812660"
     },
     {
       "id": "fix-auth",
@@ -3404,7 +3404,7 @@
       "source_url": "https://docs.kraken.com/api/docs/rest-api/add-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:48.412441"
+      "updated_at": "2026-09-08 19:13:29.087617"
     },
     {
       "id": "add-order-batch",
@@ -5012,7 +5012,7 @@
       "source_url": "https://docs.kraken.com/api/docs/fix-api/nos-fix",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:42.831814"
+      "updated_at": "2026-09-08 19:13:23.401386"
     },
     {
       "id": "send-order",
@@ -5024,7 +5024,7 @@
       "source_url": "https://docs.kraken.com/api/docs/futures-api/trading/send-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:43.639355"
+      "updated_at": "2026-09-08 19:13:24.207854"
     },
     {
       "id": "sequence-reset-fix",
@@ -5204,7 +5204,7 @@
       "source_url": "https://docs.kraken.com/api/docs/websocket-v2/add_order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:49.241701"
+      "updated_at": "2026-09-08 19:13:29.920590"
     },
     {
       "id": "amendorder",
@@ -5444,7 +5444,7 @@
       "source_url": "https://docs.kraken.com/api/docs/futures-api/websocket/book",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-09-07 19:12:45.421026"
+      "updated_at": "2026-09-08 19:13:26.031015"
     },
     {
       "id": "executions",

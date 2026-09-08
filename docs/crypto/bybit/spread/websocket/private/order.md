@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/private/order
 api_type: WebSocket
-updated_at: 2026-09-07 18:46:23.193997
+updated_at: 2026-09-08 18:47:39.106807
 ---
 
 # Create Strategy Order
@@ -16,6 +16,8 @@ Create a strategy order. Supported strategy types: `chaseOrder`, `twap`, `iceber
 Splits a large order into equal-sized sub-orders executed at fixed time intervals, minimizing market impact and achieving a price close to the time-weighted average.
 
 **Execution logic:** `Number of sub-orders = Running Time (seconds) ÷ Frequency`. Sub-orders that fail to fill are retried once; if unsuccessful, they are canceled and the strategy continues.
+
+The maximum number of concurrent TWAP strategies per user is **30**.
 
 Please refer to [Introduction to TWAP Strategy](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) to get more details.
 
@@ -236,6 +238,8 @@ result| string| Execution result. `null` if creation succeeded
 將大額訂單拆分為等量子訂單，按固定時間間隔執行，降低市場衝擊並使成交均價接近時間加權平均值。
 
 **執行邏輯：** `子訂單數量 = 執行時間（秒）÷ 頻率`。未成交子訂單將重試一次；若仍未成功，則取消並繼續執行後續子訂單。
+
+單個用戶可同時運行的 TWAP 策略數量上限為 **30** 個。
 
 請參閱 [TWAP 策略介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TWAP-Strategy?category=5f2fb74e9c8b771130) 了解更多細節。
 

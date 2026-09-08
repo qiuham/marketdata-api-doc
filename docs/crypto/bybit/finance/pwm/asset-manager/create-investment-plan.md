@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-investment-plan
 api_type: REST
-updated_at: 2026-09-07 18:42:13.233506
+updated_at: 2026-09-08 18:43:48.891870
 ---
 
 # Create Fund Sub-Account

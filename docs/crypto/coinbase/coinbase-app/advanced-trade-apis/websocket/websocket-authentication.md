@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication
 api_type: WebSocket
-updated_at: 2026-09-07 18:58:09.866414
+updated_at: 2026-09-08 18:58:30.615993
 ---
 
 # Advanced Trade WebSocket Authentication
@@ -647,7 +647,118 @@ This will generate a `main.js` file.
                      { "kid", name },
                      // add nonce to prevent replay attacks with a random 10 digit number
                      { "nonce", randomHex(10) },
-                     { "typ", "JWT"}
+                     { "typWebSocket
+    
+    # Advanced Trade WebSocket Authentication
+    
+    Authenticate to the Advanced Trade [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints) with a JWT from a [CDP API key](/coinbase-app/authentication-authorization/api-key-authentication). Public channels do not need one.
+    
+    
+    ## 
+    
+    
+    
+    Sending Messages with API Keys
+    
+    
+    
+    
+    ### 
+    
+    
+    
+    Making Requests
+    
+    
+    Use the code samples below to generate/export a JSON Web Token (JWT) and make an authenticated request.
+    
+    
+    WebSocket JWTs (vs those for REST API) are not built with a request method or request path.
+    
+    
+    
+    
+    ### 
+    
+    
+    
+    Generating a JWT
+    
+    
+    Regardless of which code snippet you use, follow these steps:
+    
+    
+    
+    
+        1. Replace key name and key secret with your key name and private key. key secret is a multi-line key and newlines must be preserved to properly parse the key. Do this on one line with \n escaped newlines, or with a multi-line string.
+    
+    
+        2. Run the generation script that prints the command export JWT=....
+    
+    
+        3. Run the generated command to save your JWT.
+    
+    
+    
+    
+    
+    Your JWT expires after 2 minutes, after which all requests are unauthenticated.
+    
+    
+    
+    
+    ### 
+    
+    
+    
+    Code samples
+    
+    
+    The easiest way to generate a JWT is to use the built-in functions in our Python SDK as described below.
+    Otherwise, use the code samples below to generate/export a JWT and make an authenticated request.
+    
+      
+        *  Python SDK
+      
+        *  Python
+      
+        *  Go
+      
+        *  JavaScript
+      
+        *  PHP
+      
+        *  Java
+      
+        *  C++
+      
+        *  TypeScript
+      
+        *  C#
+      
+        *  Ruby
+    
+    
+    
+    
+    
+    
+        1. 
+         Install the SDK.
+         
+         
+         pip3 install coinbase-advanced-py
+         
+
+  2. In the console, run: `python main.py` (or whatever your file name is).
+  3. Set the JWT to that output, or export the JWT to the environment with `export JWT=$(python main.py)`.
+
+    
+    
+    from coinbase import jwt_generator
+    
+    api_key = "organizations/{org_id}/apiKeys/{key_id}"
+    api_secret = "-----BEGIN EC PRIVATE KEY-----\n", "JWT"}
                  };
     
                  var encodedToken = JWT.Encode(payload, key, JwsAlgorithm.ES256, extraHeaders);
@@ -757,7 +868,93 @@ This will generate a `main.js` file.
     // Request
     // Subscribe to ETH-USD and ETH-EUR with the level2 channel
     {
-        "type": "subscribe",
+        "type"YOUR PRIVATE KEY\n-----END EC PRIVATE KEY-----\n"
+    
+    def main():
+        jwt_token = jwt_generator.build_ws_jwt(api_key, api_secret)
+        print(f"export JWT={jwt_token}")
+    
+    if __name__ == "__main__":
+        main()
+    
+    
+
+  1. Install dependencies PyJWT and cryptography.
+         
+         pip install PyJWT
+         pip install cryptography
+         
+
+  2. In the console, run: `python main.py` (or whatever your file name is).
+  3. Set JWT to that output, or export the JWT to the environment with `export JWT=$(node main.py)`.
+
+    
+    
+    import jwt
+    from cryptography.hazmat.primitives import serialization
+    import time
+    import secrets
+    
+    key_name     = "organizations/{org_id}/apiKeys/{key_id}"
+    key_secret   = "-----BEGIN EC PRIVATE KEY-----\nYOUR PRIVATE KEY\n-----END EC PRIVATE KEY-----\n"
+    
+    def build_jwt():
+        private_key_bytes = key_secret.encode('utf-8')
+        private_key = serialization.load_pem_private_key(private_key_bytes, password=None)
+    
+        jwt_payload = {
+            'sub': key_name,
+            'iss': "cdp",
+            'nbf': int(time.time()),
+            'exp': int(time.time()) + 120,
+        }
+    
+        jwt_token = jwt.encode(
+            jwt_payload,
+            private_key,
+            algorithm='ES256',
+            headers={'kid': key_name, 'nonce': secrets.token_hex()},
+        )
+    
+        return jwt_token
+    
+    def main():
+        jwt_token = build_jwt()
+    
+        print(f"export JWT={jwt_token}")
+    
+    if __name__ == "__main__":
+        main()
+    
+    
+
+  1. Create a new directory and generate a Go file called `main.go`.
+  2. Paste the Go snippet below into `main.go`.
+  3. Run `go mod init jwt-generator` and `go mod tidy` to generate `go.mod` and `go.sum` and manage your dependencies.
+  4. In the console, run: go run `main.go`.
+  5. Set your JWT with that output, or export the JWT to environment with `export JWT=$(node main.go)`.
+
+    
+    
+    package main
+    
+    import (
+        "crypto/rand"
+        "crypto/x509"
+        "encoding/pem"
+        "fmt"
+        "math"
+        "math/big"
+        "time"
+    
+        log "github.com/sirupsen/logrus"
+        "gopkg.in/go-jose/go-jose.v2"
+        "gopkg.in/go-jose/go-jose.v2/jwt"
+    )
+    
+    const (
+        keyName     = "organizations/{org_id}/apiKeys/{key_id}"
+        keySecret: "subscribe",
         "product_ids": [
             "ETH-USD",
             "ETH-EUR"

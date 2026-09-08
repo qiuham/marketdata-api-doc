@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/order-price-limit
 api_type: WebSocket
-updated_at: 2026-09-07 18:47:13.709045
+updated_at: 2026-09-08 18:48:25.426105
 ---
 
 # Trade
