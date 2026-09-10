@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-settle-currency
 anchor_id: trading-account-rest-api-set-settle-currency
 api_type: REST
-updated_at: 2026-09-08 19:14:11.036430
+updated_at: 2026-09-10 19:11:29.704896
 ---
 
 # Set settle currency

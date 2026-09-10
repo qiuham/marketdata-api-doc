@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints
 api_type: WebSocket
-updated_at: 2026-09-08 18:58:30.688185
+updated_at: 2026-09-10 18:55:54.315426
 ---
 
 # Advanced Trade WebSocket Endpoints
@@ -126,7 +126,7 @@ Endpoint| Description
 
 The user’s orders, fills, positions, portfolio, and Block RFQs.
 
-**Coming soon.** The Deribit-powered gateway goes live **September 9, 2026**. It is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Coming soon.** The Deribit-powered gateway is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 #### Private URL
 

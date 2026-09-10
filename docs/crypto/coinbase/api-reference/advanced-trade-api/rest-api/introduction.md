@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction
 api_type: REST
-updated_at: 2026-09-08 18:58:28.558954
+updated_at: 2026-09-10 18:55:52.143550
 ---
 
 # Coinbase Advanced Trade API
@@ -27,9 +27,9 @@ Real-time market data and user order, position, and futures balance streams.Down
 
 ## Global Derivatives
 
-**Coming soon.** The Deribit-powered gateway goes live **September 9, 2026**. It is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Coming soon.** The Deribit-powered gateway is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
-On **September 9, 2026** , Advanced Trade is moving Global Derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
+Advanced Trade is moving Global Derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
 
   * New native order types and features — trailing stops, market-limit orders and WebSocket order entry.
   * Deeper liquidity, lower-latency execution and a broader product set (options and dated futures to follow).

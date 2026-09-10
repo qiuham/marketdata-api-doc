@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-price-limit-channel
 anchor_id: public-data-websocket-price-limit-channel
 api_type: WebSocket
-updated_at: 2026-09-08 19:15:52.149966
+updated_at: 2026-09-10 19:13:11.087792
 ---
 
 # Price limit channel

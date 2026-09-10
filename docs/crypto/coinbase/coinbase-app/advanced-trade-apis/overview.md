@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview
 api_type: Guide
-updated_at: 2026-09-08 18:58:30.347066
+updated_at: 2026-09-10 18:55:53.993778
 ---
 
 # Welcome to Advanced Trade API
@@ -37,7 +37,7 @@ Market| What it covers
   
 ## International derivatives are moving to Deribit
 
-On **September 9, 2026** , Advanced Trade moves international derivatives from INTX onto a Deribit-powered gateway running on the **Starbase** platform. This is a hard cutover — plan your integration now.
+**Coming soon.** Advanced Trade moves international derivatives from INTX onto a Deribit-powered gateway running on the **Starbase** platform. This is a hard cutover — plan your integration now.
 
 Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). International derivatives move to a new gateway with:
 

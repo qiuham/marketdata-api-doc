@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-09-08 18:58:30.447416
+updated_at: 2026-09-10 18:55:54.053610
 ---
 
 # Advanced Trade REST Endpoints
@@ -107,7 +107,7 @@ Endpoint| Description
 
   * Same URL as the public methods. A CDP JWT is required. See [API key authentication](/coinbase-app/authentication-authorization/api-key-authentication).
   * Endpoints require `view`, `trade`, or `transfer` on the key, depending on the call.
-  * `/intx/*` endpoints are the current international-derivatives API. They retire on **September 9, 2026** — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+  * `/intx/*` endpoints are the current international-derivatives API. They retire at cutover — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 ## API Reference
 
@@ -181,7 +181,7 @@ Endpoint| Description
 
 The user’s orders, fills, positions, portfolio, and Block RFQs.
 
-**Coming soon.** The Deribit-powered gateway goes live **September 9, 2026**. It is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Coming soon.** The Deribit-powered gateway is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 #### Endpoints
 

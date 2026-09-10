@@ -2,12 +2,12 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual
 api_type: Guide
-updated_at: 2026-09-08 18:58:30.214427
+updated_at: 2026-09-10 18:55:53.808894
 ---
 
 # Advanced Trade INTX Perpetuals — Deprecated
 
-**Deprecated — retires September 9, 2026.** International derivatives trading is moving to the new [Deribit-powered gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).The INTX perpetuals endpoints below stop serving derivatives trading at the cutover. Integrations should plan building against the new gateway. See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Deprecated — retires at cutover.** International derivatives trading is moving to the new [Deribit-powered gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).The INTX perpetuals endpoints below stop serving derivatives trading at the cutover. Integrations should plan building against the new gateway. See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 The Advanced Trade API supports trading INTX perpetuals via the following endpoints (for users in eligible regions):
 

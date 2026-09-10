@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/account-info
 api_type: Account
-updated_at: 2026-09-08 18:39:08.760852
+updated_at: 2026-09-10 18:36:24.741872
 ---
 
 # Get Borrow History

@@ -2,22 +2,22 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-09-08 18:58:30.053947
+updated_at: 2026-09-10 18:55:53.731610
 ---
 
 # Global Derivatives Overview
 
 Guide to trading Global Derivatives on Advanced Trade
 
-On **September 9, 2026** , Advanced Trade is moving international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
+**Coming soon.** Advanced Trade is moving international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
 
-Coinbase International Exchange and Deribit are coming together to create a unified, world-class derivatives platform. Starting September 9, 2026, the exchange infrastructure behind your perpetuals trades is moving to a combined platform powered by Deribit and Starbase.
+Coinbase International Exchange and Deribit are coming together to create a unified, world-class derivatives platform. The exchange infrastructure behind your perpetuals trades is moving to a combined platform powered by Deribit and Starbase.
 
 ## Migration to Deribit Global Derivatives trading
 
 ### Who is this guide for:
 
-  * These guides are for new or existing Coinbase retail clients/partners who want to trade Global Derivatives after September 9, 2026.
+  * These guides are for new or existing Coinbase retail clients/partners who want to trade Global Derivatives after cutover.
   * Existing Deribit clients can continue to use Deribit services and APIs as they do today.
 
 ### What’s new for you:
@@ -71,10 +71,10 @@ For partners on Coinbase’s international (INTX) platform moving to the new Der
 Milestone| Date| What it means  
 ---|---|---  
 **Account provisioning**|  August 2, 2026| Your accounts are created on the new combined platform  
-**Cutover**|  September 9, 2026| INTX trading ends and the Deribit-powered gateway goes live. Open orders are cancelled, positions settle and are recreated on the new platform, and old endpoints stop serving international derivatives. Perpetuals trade from day one.  
+**Cutover**|  Coming soon| INTX trading ends and the Deribit-powered gateway goes live. Open orders are cancelled, positions settle and are recreated on the new platform, and old endpoints stop serving international derivatives. Perpetuals trade from day one.  
 **Options and dated futures**|  Fast-follow| New products come online after the perpetuals cutover  
   
-**This is a hard cutover.** There is no parallel-running window — the old endpoints and the new gateway do not run side by side. Integrations not migrated by September 9, 2026 stop trading.
+**This is a hard cutover.** There is no parallel-running window — the old endpoints and the new gateway do not run side by side. Integrations not migrated by cutover stop trading.
 
 ### What happens at cutover
 
@@ -205,7 +205,7 @@ Replace the single combined order with two linked exit orders.
 
 Deribit Advanced Trading gateway is live
 
-Cut over on **September 9, 2026** , no parallel run. Repoint production traffic.
+Cutover is coming soon, no parallel run. Repoint production traffic.
 
 ## FAQ
 
@@ -215,7 +215,7 @@ No. You keep your existing Coinbase (CDP) API key and authenticate to the new ga
 
 Can I run old and new endpoints in parallel during cutover?
 
-No. This is a hard cutover. Integrations not migrated by September 9, 2026 stop trading.
+No. This is a hard cutover. Integrations not migrated by cutover stop trading.
 
 What happens to my open orders and positions at cutover?
 
