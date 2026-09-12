@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-limit-price
 anchor_id: public-data-rest-api-get-limit-price
 api_type: REST
-updated_at: 2026-09-10 19:13:02.123543
+updated_at: 2026-09-12 19:10:33.718729
 ---
 
 # Get limit price

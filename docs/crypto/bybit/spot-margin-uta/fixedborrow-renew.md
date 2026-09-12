@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-09-10 18:44:25.710002
+updated_at: 2026-09-12 18:41:47.426817
 ---
 
 # Get Flexible Available Inventory

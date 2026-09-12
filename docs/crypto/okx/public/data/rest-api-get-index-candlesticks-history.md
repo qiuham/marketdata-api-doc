@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-index-candlesticks-history
 anchor_id: public-data-rest-api-get-index-candlesticks-history
 api_type: REST
-updated_at: 2026-09-10 19:13:06.506825
+updated_at: 2026-09-12 19:10:38.060493
 ---
 
 # Get index candlesticks history

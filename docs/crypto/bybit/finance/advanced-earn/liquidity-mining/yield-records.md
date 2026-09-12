@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/yield-records
 api_type: REST
-updated_at: 2026-09-10 18:40:25.654220
+updated_at: 2026-09-12 18:37:49.747050
 ---
 
 # Get Position Info

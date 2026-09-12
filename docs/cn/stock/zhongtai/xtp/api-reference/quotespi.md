@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2096782387349385218
+id: zhongtai-xtp-2098308310896787458
 title: QuoteSpi
-doc_id: 2096782387349385218
+doc_id: 2098308310896787458
 doc_category: 详细接口使用说明
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2096782387349385218'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2098308310896787458'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-09-07
+updated_at: 2026-09-11
 ---
 
 # QuoteSpi
