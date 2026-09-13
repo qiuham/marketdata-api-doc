@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/claim-interest
 api_type: REST
-updated_at: 2026-09-12 18:37:40.196313
+updated_at: 2026-09-13 18:38:40.785238
 ---
 
 # Get Liquidation Records

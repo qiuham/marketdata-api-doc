@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-server-time
 api_type: REST
-updated_at: 2026-09-12 18:53:03.877743
+updated_at: 2026-09-13 18:54:21.136982
 ---
 
 # Get Server Time

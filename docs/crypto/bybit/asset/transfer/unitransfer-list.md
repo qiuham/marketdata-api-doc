@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/unitransfer-list
 api_type: REST
-updated_at: 2026-09-12 18:35:55.080626
+updated_at: 2026-09-13 18:36:54.799704
 ---
 
 # Get available VASPs

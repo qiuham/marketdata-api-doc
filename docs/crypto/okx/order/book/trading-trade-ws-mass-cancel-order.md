@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-mass-cancel-order
 anchor_id: order-book-trading-trade-ws-mass-cancel-order
 api_type: WebSocket
-updated_at: 2026-09-12 19:09:20.441546
+updated_at: 2026-09-13 19:10:16.385567
 ---
 
 # WS / Mass cancel order

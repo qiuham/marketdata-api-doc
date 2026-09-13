@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-funding-rate-channel
 anchor_id: public-data-websocket-funding-rate-channel
 api_type: WebSocket
-updated_at: 2026-09-12 19:10:42.302733
+updated_at: 2026-09-13 19:11:38.254885
 ---
 
 # Funding rate channel

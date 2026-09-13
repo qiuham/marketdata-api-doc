@@ -2,15 +2,89 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods
 api_type: REST
-updated_at: 2026-09-12 18:53:02.649376
+updated_at: 2026-09-13 18:54:19.935065
 ---
 
 # List Payment Methods
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/payment_methods`
 
-
-Get a list of payment methods for the current user.
+: "10.00",
+                "base_size": "0.001",
+                "start_time": "2021-05-31T07:59:59Z",
+                "end_time": "2021-05-31T09:59:59Z",
+                "limit_price": "10000.00",
+                "number_buckets": "5",
+                "bucket_size": "2.00",
+                "bucket_duration": "300s"
+            },
+            "stop_limit_stop_limit_gtc": {
+                "base_size": "0.001",
+                "limit_price": "10000.00",
+                "stop_price": "20000.00",
+                "stop_direction": "20000.00"
+            },
+            "stop_limit_stop_limit_gtd": {
+                "base_size": 0.001,
+                "limit_price": "10000.00",
+                "stop_price": "20000.00",
+                "end_time": "2021-05-31T09:59:59Z",
+                "stop_direction": "20000.00"
+            },
+            "trigger_bracket_gtc": {
+                "base_size": 0.001,
+                "limit_price": "10000.00",
+                "stop_trigger_price": "20000.00"
+            },
+            "trigger_bracket_gtd": {
+                "base_size": 0.001,
+                "limit_price": "10000.00",
+                "stop_trigger_price": "20000.00",
+                "end_time": "2021-05-31T09:59:59Z"
+            },
+            "scaled_limit_gtc": {
+                "orders": [
+                    {
+                        "quote_size": "10.00",
+                        "base_size": "0.001",
+                        "limit_price": "10000.00",
+                        "post_only": False
+                    }
+                ],
+                "quote_size": "<string>",
+                "base_size": "<string>",
+                "num_orders": 123,
+                "min_price": "<string>",
+                "max_price": "<string>",
+                "price_distribution": "FLAT",
+                "size_distribution": "UNKNOWN_DISTRIBUTION",
+                "size_diff": "<string>",
+                "size_ratio": "<string>"
+            }
+        },
+        "equity_order_metadata": {
+            "equity_trading_session": "UNKNOWN_EQUITY_TRADING_SESSION",
+            "displayed_order_config": "UNKNOWN_DISPLAYED_ORDER_CONFIG"
+        },
+        "prediction_metadata": {
+            "prediction_side": "PREDICTION_SIDE_UNKNOWN",
+            "preview_order_est_average_filled_price": "<string>",
+            "supports_fractional_base_size": True
+        },
+        "cost_basis_method": "COST_BASIS_METHOD_UNSPECIFIED"
+    }
+    headers = {
+        "Authorization": "Bearer <token>",
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    
+    print(response.text)Payment Methods
+    
+    # List Payment Methods
+    
+    Get a list of payment methods for the current user.
     
     
     curl --request GET \
