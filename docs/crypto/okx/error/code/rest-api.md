@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-09-13 19:12:29.426519
+updated_at: 2026-09-15 19:14:12.622534
 ---
 
 # REST API
@@ -120,6 +120,7 @@ Error Code | HTTP Status Code | Error Message
 50120 | 200 | This API key doesn't have permission to use this function  
 50121 | 200 | You can't access our services through the IP address ({param0})  
 50122 | 200 | Order amount must exceed minimum amount  
+50123 | 200 | This API Key does not have trading permission for the Crypto.  
   
 #### Trade Class
 
@@ -1300,6 +1301,7 @@ e.g. clOrdId 已存在
 50120 | 200 | API key 权限不足  
 50121 | 200 | 您无权通过该 IP 地址 ({param0}) 访问  
 50122 | 200 | 下单金额必须超过最低金额限制  
+50123 | 200 | 该 API Key 没有该币种的交易权限  
   
 #### 交易类
 

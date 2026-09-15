@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account
 anchor_id: funding-account
 api_type: API
-updated_at: 2026-09-13 19:11:47.173661
+updated_at: 2026-09-15 19:13:29.765257
 ---
 
 # Funding Account
@@ -412,7 +412,7 @@ details | Object | Asset valuation details for each account
   
 ### Funds transfer
 
-Only API keys with `Trade` privilege can call this endpoint.
+Only API keys with `Transfer` privilege can call this endpoint.
 
 This endpoint supports the transfer of funds between your funding account and trading account, and from the master account to sub-accounts.
 
@@ -4559,7 +4559,7 @@ details | Object | 各个账户的资产估值
   
 ### 资金划转 
 
-调用时，API Key 需要有交易权限。
+调用时，API Key 需要有划转权限。
 
 支持母账户的资金账户划转到交易账户，母账户到子账户的资金账户和交易账户划转。
 

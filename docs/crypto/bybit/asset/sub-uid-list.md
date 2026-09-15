@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/sub-uid-list
 api_type: REST
-updated_at: 2026-09-13 18:36:45.598509
+updated_at: 2026-09-15 18:38:22.550779
 ---
 
 # Get Sub UID

@@ -3,14 +3,14 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 anchor_id: sub-account-rest-api-master-accounts-manage-the-transfers-between-sub-accounts
 api_type: REST
-updated_at: 2026-09-13 19:12:03.888570
+updated_at: 2026-09-15 19:13:46.697461
 ---
 
 # Master accounts manage the transfers between sub-accounts
 
 Applies to master accounts only.   
   
-Only API keys with `Trade` privilege can call this endpoint.
+Only API keys with `Transfer` privilege can call this endpoint.
 
 #### Rate limit：1 request per second
 
@@ -105,7 +105,7 @@ transId | String | Transfer ID
 
 母账户控制子账户与子账户之间划转（仅适用于母账户）  
   
-调用时，APIKey 需要有交易权限
+调用时，APIKey 需要有划转权限
 
 #### 限速：1次/s
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-copy-traders
 anchor_id: order-book-trading-copy-trading-get-copy-traders
 api_type: API
-updated_at: 2026-09-13 19:10:50.849881
+updated_at: 2026-09-15 19:12:32.573208
 ---
 
 # GET / Copy traders

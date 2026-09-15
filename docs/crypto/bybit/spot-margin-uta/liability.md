@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/liability
 api_type: REST
-updated_at: 2026-09-13 18:42:57.163492
+updated_at: 2026-09-15 18:44:37.741707
 ---
 
 # Get Position Tiers

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/modify-master-apikey
 api_type: REST
-updated_at: 2026-09-13 18:43:43.808200
+updated_at: 2026-09-15 18:45:24.308534
 ---
 
 # Get Sub UID List (Unlimited)
@@ -35,7 +35,7 @@ Parameter| Type| Comments
 subMembers| array| Object  
 > uid| string| Sub user Id  
 > username| string| Username  
-> memberType| integer| `1`: standard subaccount, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683)  
+> memberType| integer| `1`: standard subaccount, `4`: copy trading account, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683), `14`: general AI account, `15`: ByCustody subacct, `16`: Bybit AI  
 > status| integer| The status of the user account
 
   * `1`: normal
@@ -45,9 +45,6 @@ subMembers| array| Object
   
 > accountMode| integer| The account mode of the user account
 
-  * `1`: Classic Account
-  * `3`: UTA1.0
-  * `4`: UTA1.0 Pro
   * `5`: UTA2.0
   * `6`: UTA2.0 Pro
 
@@ -146,7 +143,7 @@ nextCursor| false| string| 游標. 傳入響應中的`nextCursor`來獲取下一
 subMembers| array| Object  
 > uid| string| 子帳戶userId  
 > username| string| 用戶名  
-> memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+> memberType| integer| `1`: 普通子帳戶, `4`: 跟單帶單子帳戶, `6`: [託管子帳戶](https://www.bybit.com/en/help-center/article?id=000001683), `14`: 通用AI子帳戶, `15`: ByCustody子帳戶, `16`: Bybit AI  
 > status| integer| 帳戶狀態.
 
   * `1`: 正常
@@ -156,9 +153,6 @@ subMembers| array| Object
   
 > accountMode| integer| 帳戶模式.
 
-  * `1`: 經典帳戶
-  * `3`: UTA帳戶
-  * `4`: UTA1.0 Pro 帳戶
   * `5`: UTA2.0 帳戶
   * `6`: UTA2.0 Pro 帳戶
 

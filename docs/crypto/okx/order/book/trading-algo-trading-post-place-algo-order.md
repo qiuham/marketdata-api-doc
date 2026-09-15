@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-post-place-algo-order
 anchor_id: order-book-trading-algo-trading-post-place-algo-order
 api_type: API
-updated_at: 2026-09-13 19:10:17.124897
+updated_at: 2026-09-15 19:11:58.475503
 ---
 
 # POST / Place algo order

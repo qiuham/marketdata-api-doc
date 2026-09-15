@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account
 anchor_id: sub-account
 api_type: API
-updated_at: 2026-09-13 19:11:59.808063
+updated_at: 2026-09-15 19:13:42.567580
 ---
 
 # Sub-account
@@ -1045,7 +1045,7 @@ ts | String | Bill ID creation time, Unix timestamp in millisecond format, e.g. 
 
 Applies to master accounts only. 
 
-Only API keys with `Trade` privilege can call this endpoint.
+Only API keys with `Transfer` privilege can call this endpoint.
 
 #### Rate limit：1 request per second
 
@@ -2298,7 +2298,7 @@ ts | String | 账单ID创建时间，Unix时间戳的毫秒数格式，如 `1597
 
 母账户控制子账户与子账户之间划转（仅适用于母账户）
 
-调用时，APIKey 需要有交易权限
+调用时，APIKey 需要有划转权限
 
 #### 限速：1次/s
 

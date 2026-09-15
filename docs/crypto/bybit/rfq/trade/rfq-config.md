@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/rfq-config
 api_type: Trading
-updated_at: 2026-09-13 18:42:25.615905
+updated_at: 2026-09-15 18:44:05.693353
 ---
 
 # Get Trade History
