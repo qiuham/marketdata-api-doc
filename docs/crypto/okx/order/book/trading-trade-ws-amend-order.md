@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-amend-order
 anchor_id: order-book-trading-trade-ws-amend-order
 api_type: WebSocket
-updated_at: 2026-09-15 19:11:57.064145
+updated_at: 2026-09-17 19:16:45.830217
 ---
 
 # WS / Amend order

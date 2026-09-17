@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-exchange-rate
 anchor_id: public-data-rest-api-get-exchange-rate
 api_type: REST
-updated_at: 2026-09-15 19:13:17.433731
+updated_at: 2026-09-17 19:18:06.758056
 ---
 
 # Get exchange rate

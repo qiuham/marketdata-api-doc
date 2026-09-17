@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/create-order
 api_type: Trading
-updated_at: 2026-09-15 18:43:03.490305
+updated_at: 2026-09-17 18:46:38.908803
 ---
 
 # Set Disconnect Cancel All

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/fee-group-info
 api_type: Market Data
-updated_at: 2026-09-15 18:41:58.784960
+updated_at: 2026-09-17 18:45:27.534199
 ---
 
 # Get Index Price Components

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-tickers-channel
 anchor_id: spread-trading-websocket-public-channel-tickers-channel
 api_type: WebSocket
-updated_at: 2026-09-15 19:13:06.935482
+updated_at: 2026-09-17 19:17:56.145667
 ---
 
 # Tickers channel

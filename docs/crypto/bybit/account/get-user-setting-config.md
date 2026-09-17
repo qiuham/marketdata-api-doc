@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config
 api_type: Account
-updated_at: 2026-09-15 18:36:36.978065
+updated_at: 2026-09-17 18:39:38.062698
 ---
 
 # Get Pay Info
