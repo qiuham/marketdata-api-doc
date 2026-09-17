@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 import json
+import logging
+import time
+import urllib.error
+from http.client import IncompleteRead
 import re
 import urllib.request
 from html import unescape
@@ -100,8 +104,24 @@ class ZhongtaiXtpAdapter(ProductAdapter):
             "User-Agent": "Mozilla/5.0 marketdata-api-doc crawler",
         }
         req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=30) as response:
-            return json.loads(response.read().decode("utf-8"))
+        for attempt in range(4):
+            try:
+                with urllib.request.urlopen(req, timeout=30) as response:
+                    return json.loads(response.read().decode("utf-8"))
+            except (urllib.error.URLError, IncompleteRead, ConnectionError, TimeoutError) as exc:
+                # HTTPError subclasses URLError; permanent HTTP failures must not retry.
+                if isinstance(exc, urllib.error.HTTPError) and exc.code not in {
+                    408, 429, 500, 502, 503, 504,
+                }:
+                    raise
+                if attempt == 3:
+                    raise
+                delay = 2 ** attempt
+                logging.getLogger(__name__).warning(
+                    "XTP request failed (%s); retry %d/3 in %ss: %s",
+                    type(exc).__name__, attempt + 1, delay, url,
+                )
+                time.sleep(delay)
 
     def _infer_api_type(self, title: str, menu_name: str) -> str:
         text = f"{title} {menu_name}".lower()
