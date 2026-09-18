@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-grid/validate-input
 api_type: REST
-updated_at: 2026-09-17 18:42:04.162036
+updated_at: 2026-09-18 18:39:43.591990
 ---
 
 # Create Martingale Bot

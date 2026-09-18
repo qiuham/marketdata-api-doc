@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/product-quote
 api_type: REST
-updated_at: 2026-09-17 18:43:58.577160
+updated_at: 2026-09-18 18:41:36.724180
 ---
 
 # Dual Asset Offers

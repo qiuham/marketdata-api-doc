@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay-info
 api_type: REST
-updated_at: 2026-09-17 18:46:58.320641
+updated_at: 2026-09-18 18:44:34.082339
 ---
 
 # Set Auto Add Margin

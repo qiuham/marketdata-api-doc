@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/flexible-available-inventory
 api_type: REST
-updated_at: 2026-09-17 18:48:17.132110
+updated_at: 2026-09-18 18:45:52.754247
 ---
 
 # Get Flexible Available Inventory

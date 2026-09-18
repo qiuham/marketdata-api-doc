@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds
 api_type: Account
-updated_at: 2026-09-17 19:00:49.034155
+updated_at: 2026-09-18 18:58:35.257903
 ---
 
 # Move Portfolio Funds

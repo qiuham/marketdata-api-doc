@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/get-mmp-state
 api_type: Account
-updated_at: 2026-09-17 18:39:34.125562
+updated_at: 2026-09-18 18:37:11.380822
 ---
 
 # Get MMP State

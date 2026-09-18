@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/discount-buy/create-order
 api_type: REST
-updated_at: 2026-09-17 18:43:15.138458
+updated_at: 2026-09-18 18:40:53.250498
 ---
 
 # Place Order

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/insurance
 api_type: Market Data
-updated_at: 2026-09-17 18:45:34.541360
+updated_at: 2026-09-18 18:43:12.362587
 ---
 
 # Get Kline

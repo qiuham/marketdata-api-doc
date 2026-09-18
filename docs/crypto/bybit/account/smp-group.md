@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/smp-group
 api_type: Account
-updated_at: 2026-09-17 18:39:53.035119
+updated_at: 2026-09-18 18:37:30.069347
 ---
 
 # Get SMP Group ID
