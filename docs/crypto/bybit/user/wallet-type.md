@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/wallet-type
 api_type: REST
-updated_at: 2026-09-18 18:47:02.263212
+updated_at: 2026-09-19 18:44:02.052276
 ---
 
 # Fast Execution

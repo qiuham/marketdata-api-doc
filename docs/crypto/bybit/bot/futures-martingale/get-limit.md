@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-martingale/get-limit
 api_type: REST
-updated_at: 2026-09-18 18:39:49.474700
+updated_at: 2026-09-19 18:37:07.319649
 ---
 
 # Get Grid Bot Detail

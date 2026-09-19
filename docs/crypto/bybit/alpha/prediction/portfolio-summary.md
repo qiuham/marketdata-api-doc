@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/portfolio-summary
 api_type: REST
-updated_at: 2026-09-18 18:38:01.020557
+updated_at: 2026-09-19 18:35:25.296048
 ---
 
 # Get Position History

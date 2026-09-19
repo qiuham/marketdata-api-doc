@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/err
 api_type: REST
-updated_at: 2026-09-18 18:39:31.987072
+updated_at: 2026-09-19 18:36:50.870923
 ---
 
 # Bot Error Codes

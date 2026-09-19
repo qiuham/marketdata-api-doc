@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/margin-coin-info
 api_type: REST
-updated_at: 2026-09-18 18:36:56.897405
+updated_at: 2026-09-19 18:34:23.737908
 ---
 
 # Set Risk Limit

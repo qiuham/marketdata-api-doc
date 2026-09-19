@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-cancel-all-after
 anchor_id: block-trading-rest-api-cancel-all-after
 api_type: REST
-updated_at: 2026-09-18 19:15:38.436685
+updated_at: 2026-09-19 19:11:53.888412
 ---
 
 # Cancel All After

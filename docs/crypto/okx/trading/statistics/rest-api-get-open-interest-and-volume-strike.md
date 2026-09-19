@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-open-interest-and-volume-strike
 anchor_id: trading-statistics-rest-api-get-open-interest-and-volume-strike
 api_type: REST
-updated_at: 2026-09-18 19:16:18.962632
+updated_at: 2026-09-19 19:12:33.927270
 ---
 
 # Get open interest and volume (strike)
