@@ -9,13 +9,13 @@ provider: zhongtai
 provider_name: 中泰证券
 product: xtp
 product_id: zhongtai-xtp
-id: zhongtai-xtp-2100877324806307841
+id: zhongtai-xtp-2101550810121990146
 title: TraderSpi
-doc_id: 2100877324806307841
+doc_id: 2101550810121990146
 doc_category: 详细接口使用说明
-source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2100877324806307841'
+source_url: 'https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2101550810121990146'
 page_url: 'https://xtp.zts.com.cn/doc/api/xtpDoc'
-updated_at: 2026-09-18
+updated_at: 2026-09-20
 ---
 
 # TraderSpi

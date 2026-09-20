@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/market/instrument-info
 api_type: Market Data
-updated_at: 2026-09-19 18:37:55.231672
+updated_at: 2026-09-20 18:39:12.378838
 ---
 
 # Get Event Contract Active Orders
