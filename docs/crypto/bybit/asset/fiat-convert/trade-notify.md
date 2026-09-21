@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/trade-notify
 api_type: REST
-updated_at: 2026-09-20 18:37:44.305300
+updated_at: 2026-09-21 18:41:49.963455
 ---
 
 # Get Sub UID

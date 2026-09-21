@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-copy-settings
 anchor_id: order-book-trading-copy-trading-get-copy-settings
 api_type: API
-updated_at: 2026-09-20 19:12:48.811655
+updated_at: 2026-09-21 19:17:47.241909
 ---
 
 # GET / Copy settings

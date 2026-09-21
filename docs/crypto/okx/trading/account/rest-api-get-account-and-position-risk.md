@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-account-and-position-risk
 anchor_id: trading-account-rest-api-get-account-and-position-risk
 api_type: REST
-updated_at: 2026-09-20 19:11:45.453197
+updated_at: 2026-09-21 19:16:43.720196
 ---
 
 # Get account and position risk

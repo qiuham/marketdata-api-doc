@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-get-position-history
 anchor_id: order-book-trading-signal-bot-trading-get-position-history
 api_type: API
-updated_at: 2026-09-20 19:12:37.018123
+updated_at: 2026-09-21 19:17:35.423461
 ---
 
 # GET / Position history

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product
 api_type: Market Data
-updated_at: 2026-09-20 18:56:51.673660
+updated_at: 2026-09-21 19:01:09.225466
 ---
 
 # Get Product
@@ -724,7 +724,6 @@ Example:
     
     
     ["BTC-USDC"]
-    
 
 view_only
 

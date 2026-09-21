@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary
 api_type: REST
-updated_at: 2026-09-20 18:56:50.306824
+updated_at: 2026-09-21 19:01:07.178512
 ---
 
 # Get Transaction Summary
@@ -435,12 +435,13 @@ Breakdown of volumes that contributed to the fee tier calculation.
 Example:
     
     
-    [  
-      {  
-        "volume_type": "VOLUME_TYPE_SPOT",  
-        "volume": 1000  
-      }  
+    [
+      {
+        "volume_type": "VOLUME_TYPE_SPOT",
+        "volume": 1000
+      }
     ]
+    
 
 has_cost_plus_commission
 

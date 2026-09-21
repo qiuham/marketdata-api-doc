@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders
 api_type: Trading
-updated_at: 2026-09-20 18:56:51.056725
+updated_at: 2026-09-21 19:01:08.317206
 ---
 
 # List Orders
@@ -695,28 +695,286 @@ Example:
 
 `true`
 
-sequence
+sequenceOrders
 
-string<int64>
+# List Orders
 
-(Deprecated) The sequence of the db at which this state was read.
+Get a list of orders filtered by optional query parameters (`product_ids`, `order_status`, etc.).
 
-cursor
+**Equities:** Set `product_type` to `EQUITY` to return only equity orders. Each equity order includes its time in force in `displayed_order_config` and execution session in `equity_trading_session`.
 
-string
+GET
 
-For paginated responses, returns all responses that come after this value.
+/
 
-Example:
+api
 
-`"789100"`
+/
 
-proof_token_required
+v3
 
-boolean
+/
 
-Indicates that a valid proof token is required to access this data (EU SCA compliance).
+brokerage
 
-Example:
+/
 
-`true`
+orders
+
+/
+
+historical
+
+/
+
+batch
+
+List Orders
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/orders/historical/batch \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/orders/historical/batch"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/orders/historical/batch', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/orders/historical/batch",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/orders/historical/batch"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/orders/historical/batch")
+      .header("Authorization", "Bearer <token>")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/orders/historical/batch")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
+    puts response.read_body
+    
+    
+    {
+      "orders": [
+        {
+          "order_id": "0000-000000-000000",
+          "product_id": "BTC-USD",
+          "user_id": "2222-000000-000000",
+          "order_configuration": {
+            "market_market_ioc": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
+            },
+            "market_market_fok": {
+              "quote_size": "10.00",
+              "base_size": "0.001"
+            },
+            "sor_limit_ioc": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00"
+            },
+            "limit_limit_gtc": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00",
+              "post_only": false,
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
+            },
+            "limit_limit_gtd": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00",
+              "end_time": "2021-05-31T09:59:59Z",
+              "post_only": false,
+              "currency_size": {
+                "value": "1.23",
+                "currency": "BTC"
+              }
+            },
+            "limit_limit_fok": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "limit_price": "10000.00"
+            },
+            "twap_limit_gtd": {
+              "quote_size": "10.00",
+              "base_size": "0.001",
+              "start_time": "2021-05-31T07:59:59Z",
+              "end_time": "2021-05-31T09:59:59Z",
+              "limit_price": "10000.00",
+              "number_buckets": "5",
+              "bucket_size": "2.00",
+              "bucket_duration": "300s"
+            },
+            "stop_limit_stop_limit_gtc": {
+              "base_size": "0.001",
+              "limit_price": "10000.00",
+              "stop_price": "20000.00",
+              "stop_direction": "20000.00"
+            },
+            "stop_limit_stop_limit_gtd": {
+              "base_size": 0.001,
+              "limit_price": "10000.00",
+              "stop_price": "20000.00",
+              "end_time": "2021-05-31T09:59:59Z",
+              "stop_direction": "20000.00"
+            },
+            "trigger_bracket_gtc": {
+              "base_size": 0.001,
+              "limit_price": "10000.00",
+              "stop_trigger_price": "20000.00"
+            },
+            "trigger_bracket_gtd": {
+              "base_size": 0.001,
+              "limit_price": "10000.00",
+              "stop_trigger_price": "20000.00",
+              "end_time": "2021-05-31T09:59:59Z"
+            },
+            "scaled_limit_gtc": {
+              "orders": [
+                {
+                  "quote_size": "10.00",
+                  "base_size": "0.001",
+                  "limit_price": "10000.00",
+                  "post_only": false,
+                  "currency_size": {
+                    "value": "1.23",
+                    "currency": "BTC"
+                  }
+                }
+              ],
+              "quote_size": "<string>",
+              "base_size": "<string>",
+              "num_orders": 123,
+              "min_price": "<string>",
+              "max_price": "<string>",
+              "price_distribution": "FLAT",
+              "size_distribution": "UNKNOWN_DISTRIBUTION",
+              "size_diff": "<string>",
+              "size_ratio": "<string>"
+            }
+          },
+          "side": "",
+          "client_order_id": "11111-000000-000000",
+          "status": "PENDING",
+          "created_time": "2021-05-31T09:59:59Z",
+          "completion_percentage": "50",
+          "average_filled_price": "50",
+          "number_of_fills": "2",
+          "pending_cancel": true,
+          "size_in_quote": false,
+          "total_fees": "5.00",
+          "size_inclusive_of_fees"
+    
+    string<int64>
+    
+    (Deprecated) The sequence of the db at which this state was read.
+    
+    
+    
+    cursor
+    
+    string
+    
+    For paginated responses, returns all responses that come after this value.
+    
+    Example:
+    
+    "789100"
+    
+    
+    
+    proof_token_required
+    
+    boolean
+    
+    Indicates that a valid proof token is required to access this data (EU SCA compliance).
+    
+    Example:
+    
+    true

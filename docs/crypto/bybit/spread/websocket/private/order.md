@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/private/order
 api_type: WebSocket
-updated_at: 2026-09-20 18:45:01.988008
+updated_at: 2026-09-21 18:49:11.638341
 ---
 
 # Create Strategy Order
@@ -49,6 +49,8 @@ Splits a large order into multiple smaller sub-orders that are placed sequential
 
 Please refer to [Iceberg Order](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) to get more details.
 
+**Note:** The number of sub-orders is capped at **200**. This applies to the count implied by `size` ÷ `subSize` (or `positionValue` ÷ `subPositionValue`) as well as to an explicit `orderCount`; a larger count is rejected with `10001 order count is too big`.
+
 **Order preferences:**
 
 Preference| Execution behavior  
@@ -66,7 +68,9 @@ Participates in market volume at a fixed rate, dynamically sizing each sub-order
 
 **Execution logic:** At each `interval`, the strategy samples market activity based on the selected mode → calculates sub-order quantity using `participationRate` → places the order → repeats until `maxQty` (`size`) is reached or `maxDuration` (`duration`) expires. Setting `interval` to `0` executes once immediately (OneTime mode).
 
-**Note:** POV supports Perpetuals only (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`). Spot is not supported. When `interval` > `0`, at least one of `size` or `duration` must be provided.
+**Note:** POV supports Spot (`UTA_SPOT`), Perpetuals (`UTA_USDT`, `UTA_USDC`, `UTA_INVERSE`) and Futures (`UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`).
+
+**Stop conditions:** At least one of the following must be set, otherwise the request is rejected: `duration` > `0`, `size` > `0`, `positionValue` > `0`, or `interval` = `0` (One-Time execution). `size` and `positionValue` are mutually exclusive.
 
 **Execution modes (`povParams.mode`):**
 
@@ -138,7 +142,7 @@ reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the
 positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
 leverageType| false| integer| Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only)  
 subSize| false| string| Quantity per sub-order. Mutually exclusive with `orderCount`; `subSize` takes priority if both are set  
-orderCount| false| integer| Number of sub-orders. Mutually exclusive with `subSize` or `subPositionValue`  
+orderCount| false| integer| Number of sub-orders, range: [1, 200]. Mutually exclusive with `subSize` or `subPositionValue`  
 subPositionValue| false| string| Order value per sub-order. Mutually exclusive with `orderCount`; `subPositionValue` takes priority if both are set  
 postOnly| false| integer| Maker-only mode. `0`: post-only (maker only), `1`: taker allowed  
 maxChasePrice| false| string| Price limit parameter. Buy orders are only placed when the price is at or below this limit and pause if the price rises above it. Sell orders are only placed when the price is at or above this limit and pause if the price falls below it  
@@ -149,15 +153,17 @@ chasePercentE4| false| integer| **Order preferences: Chase Limit (offset)** , Pr
   
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
+category| **true**|  string| Product type. `UTA_USDT`(USDT Perpetual), `UTA_USDC`(USDC Perpetual), `UTA_SPOT`(Spot), `UTA_INVERSE`(Inverse Perpetual), `UTA_INVERSE_FUTURE`(Inverse Futures), `UTA_USDT_FUTURE`(USDT Futures)  
 strategyType| **true**|  string| Strategy type. `pov`  
 symbol| **true**|  string| Symbol name, e.g. `BTCUSDT`  
 side| **true**|  string| `Buy`, `Sell`  
-size| false| string| Total order quantity (coin). **Required** either "size" or "duration"  
-duration| false| integer| Total execution duration in seconds. Range: [900, 86400]. **Required** either "size" or "duration"  
+size| false| string| Total order quantity (coin). Mutually exclusive with `positionValue`. Acts as a stop condition  
+positionValue| false| string| Total order quantity (value, denominated in the quote currency). Mutually exclusive with `size`. Acts as a stop condition  
+duration| false| integer| Total execution duration in seconds. Range: [900, 86400]. Acts as a stop condition  
 interval| false| integer| Sub-order placement interval in seconds. "0": one time execution, otherwise, range: [5, 3600]  
 reduceOnly| false| boolean| Reduce-only order, must set `true` when reducing the position. `true`, `false`  
 positionIdx| false| integer| Position index. `0`: one-way mode, `1`: buy side of hedge mode, `2`: sell side of hedge mode. **Required** for hedge mode  
+leverageType| false| integer| Spot leverage type. `0`: normal, `1`: borrow to trade (`UTA_SPOT` only)  
 povParams| **true**|  object| Param object  
 > mode| **true**|  string| Execution modes, `TradedVolume`: places a market order based on historical volume  
 `OppositeSideLiquidity`: places a taker limit at BBO based on the counterparty depth, `SameSideLiquidity`: places a post-only order at BBO based on the order side  
@@ -271,6 +277,8 @@ result| string| Execution result. `null` if creation succeeded
 
 請參閱 [冰山委託](https://www.bybit.com/en/help-center/article/Iceberg-Order?category=5f2fb74e9c8b771130) 了解更多細節。
 
+**注意：** 子訂單筆數上限為 **200** 。此上限同時適用於由 `size` ÷ `subSize`（或 `positionValue` ÷ `subPositionValue`）推導出的筆數，以及顯式指定的 `orderCount`；超出時將返回 `10001 order count is too big`。
+
 **訂單偏好：**
 
 偏好| 執行行為  
@@ -288,7 +296,9 @@ result| string| Execution result. `null` if creation succeeded
 
 **執行邏輯：** 每隔 `interval` 秒，策略依照所選模式對市場活動進行取樣 → 依據 `participationRate` 計算子訂單數量 → 下單 → 重複直至達到 `maxQty`（`size`）或 `maxDuration`（`duration`）到期為止。將 `interval` 設為 `0` 時，策略僅執行一次即終止（OneTime 模式）。
 
-**注意：** POV 僅支援永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`），不支援現貨。`interval` > `0` 時，`size` 與 `duration` 至少須填寫一項。
+**注意：** POV 支援現貨（`UTA_SPOT`）、永續合約（`UTA_USDT`、`UTA_USDC`、`UTA_INVERSE`）與交割合約（`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`）。
+
+**停止條件：** 以下至少須設置一項，否則請求將被拒絕：`duration` > `0`、`size` > `0`、`positionValue` > `0`，或 `interval` = `0`（單次執行）。`size` 與 `positionValue` 互斥。
 
 **執行模式（`povParams.mode`）：**
 
@@ -360,7 +370,7 @@ reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`
 positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
 leverageType| false| integer| 現貨槓桿類型。`0`：普通，`1`：槓桿交易（僅 `UTA_SPOT`）  
 subSize| false| string| 每筆子訂單數量。與 `orderCount` 互斥；若兩者均設置，`subSize` 優先  
-orderCount| false| integer| 子訂單筆數。與 `subSize`或者`subPositionValue` 互斥  
+orderCount| false| integer| 子訂單筆數，範圍：[1, 200]。與 `subSize`或者`subPositionValue` 互斥  
 subPositionValue| false| string| 每筆子訂單價值。與 `orderCount` 互斥；若兩者均設置，`subPositionValue` 優先  
 postOnly| false| integer| 掛單模式。`0`：Post Only（僅掛單），`1`：允許吃單  
 maxChasePrice| false| string| 作為價格限制參數，買入訂單僅在價格低於或等於此限制時掛出，價格高於此限制時暫停；賣出訂單僅在價格高於或等於此限制時掛出，價格低於此限制時暫停  
@@ -371,15 +381,17 @@ chasePercentE4| false| integer| **掛單偏好: 追逐限價單（跟價差）�
   
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
+category| **true**|  string| 產品類型。`UTA_USDT`（USDT 永續）、`UTA_USDC`（USDC 永續）、`UTA_SPOT`（現貨）、`UTA_INVERSE`（反向永續）、`UTA_INVERSE_FUTURE`（反向交割）、`UTA_USDT_FUTURE`（USDT 交割）  
 strategyType| **true**|  string| 策略類型。`pov`  
 symbol| **true**|  string| 交易對名稱，例如 `BTCUSDT`  
 side| **true**|  string| `Buy`、`Sell`  
-size| false| string| 總下單數量（幣）。"size" 和 "duration" **二選一**  
-duration| false| integer| 總執行時間（秒）。範圍：[900, 86400]。"size" 和 "duration" **二選一**  
+size| false| string| 總下單數量（幣）。與 `positionValue` 互斥。可作為停止條件  
+positionValue| false| string| 總下單金額（以計價幣種計）。與 `size` 互斥。可作為停止條件  
+duration| false| integer| 總執行時間（秒）。範圍：[900, 86400]。可作為停止條件  
 interval| false| integer| 子訂單掛出間隔（秒）。`"0"`：單次執行；否則範圍：[5, 3600]  
 reduceOnly| false| boolean| 是否為只減倉訂單，減倉時需設為 `true`。`true`、`false`  
 positionIdx| false| integer| 持倉方向索引。`0`：單向持倉，`1`：雙向持倉多頭，`2`：雙向持倉空頭。雙向持倉模式下**必填**  
+leverageType| false| integer| 現貨槓桿類型。`0`：普通，`1`：槓桿交易（僅 `UTA_SPOT`）  
 povParams| **true**|  object| 參數物件  
 > mode| **true**|  string| 執行模式。`TradedVolume`：根據歷史成交量下市價單；  
 `OppositeSideLiquidity`：根據對手方深度在最優買賣價以吃單限價掛出；`SameSideLiquidity`：根據訂單方向在最優買賣價以 Post Only 限價掛出  

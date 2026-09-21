@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/delay-amount
 api_type: REST
-updated_at: 2026-09-20 18:37:08.216028
+updated_at: 2026-09-21 18:41:13.080557
 ---
 
 # Confirm a Quote

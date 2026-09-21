@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/quote-apply
 api_type: REST
-updated_at: 2026-09-20 18:37:40.025659
+updated_at: 2026-09-21 18:41:45.456264
 ---
 
 # Get Reference Price

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit
 api_type: REST
-updated_at: 2026-09-20 18:43:33.941355
+updated_at: 2026-09-21 18:47:42.070334
 ---
 
 # Get Rate Limit Cap
