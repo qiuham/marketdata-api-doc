@@ -2,73 +2,90 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/dcp
 api_type: Trading
-updated_at: 2026-09-21 18:46:58.869785
+updated_at: 2026-09-22 18:47:19.679750
 ---
 
-# Set Disconnect Cancel All
+# Pre Check Order
+
+This endpoint is used to calculate the changes in IMR and MMR of UTA account before and after placing an order.
 
 info
 
-## What is Disconnection Protect (DCP)?
+  1. This endpoint supports orders with category = `inverse`,`linear`,`option`.   
 
-Based on the websocket private connection and heartbeat mechanism, Bybit provides disconnection protection function. The timing starts from the first disconnection. If the Bybit server does not receive the reconnection from the client for more than 10 (default) seconds and resumes the heartbeat "ping", then the client is in the state of "disconnection protect", all active **futures / spot / option** orders of the client will be cancelled automatically. If within 10 seconds, the client reconnects and resumes the heartbeat "ping", the timing will be reset and restarted at the next disconnection.
+  2. Only Cross Margin mode and Portfolio Margin mode are supported, isolated margin mode is not supported.  
 
-## How to enable DCP
+  3. category = `inverse` is not supported in Cross Margin mode.  
 
-  * If you need to turn it on/off, you can contact your client manager for consultation and application. The default time window is 10 seconds.
-  * DCP feature is only available for Ins clients. VIP clients cannot access this feature
+  4. Conditional order is not supported.  
 
-
-
-## Applicable
-
-Effective for **Inverse Perp / Inverse Futures / USDT Perp / USDT Futures / USDC Perp / USDC Futures / Spot / options**
-
-tip
-
-After the request is successfully sent, the system needs a certain time to take effect. It is recommended to query or set again after 10 seconds
-
-  * You can use [this endpoint](/docs/v5/account/dcp-info) to get your current DCP configuration.
-  * Your private websocket connection **must** subscribe ["dcp" topic](/docs/v5/websocket/private/dcp) in order to trigger DCP successfully
+  5. If `retCode` is neither 0 nor 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id` will be displayed in the `retExtInfo` json.
+  6. If `retCode` is 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id`, `post_imr_e4`, and `post_mmr_e4` will be displayed in the `retExtInfo` json.
 
 
 
 ### HTTP Request
 
-POST`/v5/order/disconnected-cancel-all`
+POST`/v5/order/pre-check`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-product| false| string| `OPTIONS`(default), `DERIVATIVES`, `SPOT`  
-timeWindow| **true**|  integer| Disconnection timing window time. [`3`, `300`], unit: second  
-  
+refer to [create order request](/docs/v5/order/create-order#request-parameters)
+
 ### Response Parameters
 
-None
+Parameter| Type| Comments  
+---|---|---  
+orderId| string| Order ID  
+orderLinkId| string| User customised order ID  
+preImrE4| int| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+preMmrE4| int| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+postImrE4| int| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+postMmrE4| int| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+  
+* * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    POST v5/order/disconnected-cancel-all HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/order/pre-check HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675852742375  
-    X-BAPI-RECV-WINDOW: 50000  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {  
-      "timeWindow": 40  
-    }  
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -78,39 +95,23 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_dcp(  
-        timeWindow=40,  
+    print(session.pre_check_order(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var setDcpOptionsRequest = TradeOrderRequest.builder().timeWindow(40).build();  
-    System.out.println(client.setDisconnectCancelAllTime(setDcpOptionsRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setDisconnectCancelAllWindow('option', 40)  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
@@ -118,75 +119,102 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "success"  
+        "retMsg": "OK",  
+        "result": {  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
+        },  
+        "retExtInfo": {},  
+        "time": 1749541599589  
     }
 
 ---
 
-# 設置斷線保護時間
+# 預下單
+
+此接口用於計算UTA帳戶下單前後IMR、MMR的變化。
 
 信息
 
-## 什麼是斷線保護 (Disconnection Protect)?
+  1. 此接口只支持期貨和期權的訂單。   
 
-Bybit基於websocket私有連接和心跳機制，提供斷線保護功能。這計時從第一次斷開開始。如果Bybit服務器在一段時間內沒有收到客戶端的重連超過10秒（默認）並 恢復心跳“ping”，則客戶端處於“斷線保護”狀態，客戶所有活躍的**合約 / 現貨 / 期權** 訂單將自動取消。如果在 10 秒內，客戶端重新連接並恢復心跳“ping”，計時會在下次斷線 時重置並重新開始。
+  2. 僅支持全倉模式和組合保證金模式，不支援逐倉模式。   
 
-## 如何啟用斷線保護
+  3. 全倉模式下不支持反向訂單。   
 
-  * 若您需要開啟/關閉斷線保護功能, 您可以諮詢客戶經理. 開啟後，默認的斷線保護時間為10秒。
-  * DCP 功能僅適用於 Ins 用戶，VIP 用戶無法使用此功能。
+  4. 不支持條件訂單。   
 
-
-
-## 適用對象
-
-作用於**幣本位合約 / U本位合約 / 現貨 / 期權**
-
-提示
-
-API請求發送成功後，系統需要一定的時間才能生效。建議10秒後再查詢或設置。
-
-  * 您可以使用該[接口](/docs/zh-TW/v5/account/dcp-info)來查詢當前DCP配置
-  * 您的私有連接**必須** 訂閱[斷線保護](/docs/zh-TW/v5/websocket/private/dcp), 才能確保DCP功能被觸發
+  5. 如果`retCode`既不是0也不是110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id` 會顯示在`retExtInfo`這個json裡。
+  6. 如果`retCode` 是 110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id`，`post_imr_e4`，`post_mmr_e4`會顯示在`retExtInfo`這個json裡。
 
 
 
 ### HTTP請求
 
-POST`/v5/order/disconnected-cancel-all`
+POST`/v5/order/pre-check`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-product| false| string| `OPTIONS`(默認), `DERIVATIVES`, `SPOT`  
-timeWindow| **true**|  integer| 斷線保護時間窗口. [`3`, `300`], 單位: 秒  
-  
+參考 [create order request](/docs/zh-TW/v5/order/create-order#request-parameters)
+
 ### 響應參數
 
-無
+參數| 類型| 說明  
+---|---|---  
+orderId| string| 訂單ID  
+orderLinkId| string| 用戶自定義訂單ID  
+preImrE4| int| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
+preMmrE4| int| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+postImrE4| int| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
+postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+  
+* * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    POST v5/order/disconnected-cancel-all HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/order/pre-check HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675852742375  
-    X-BAPI-RECV-WINDOW: 50000  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {  
-      "timeWindow": 40  
-    }  
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -196,39 +224,23 @@ timeWindow| **true**|  integer| 斷線保護時間窗口. [`3`, `300`], 單位: 
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_dcp(  
-        timeWindow=40,  
+    print(session.pre_check_order(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var setDcpOptionsRequest = TradeOrderRequest.builder().timeWindow(40).build();  
-    System.out.println(client.setDisconnectCancelAllTime(setDcpOptionsRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setDisconnectCancelAllWindow('option', 40)  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
@@ -236,5 +248,15 @@ timeWindow| **true**|  integer| 斷線保護時間窗口. [`3`, `300`], 單位: 
     
     {  
         "retCode": 0,  
-        "retMsg": "success"  
+        "retMsg": "OK",  
+        "result": {  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
+        },  
+        "retExtInfo": {},  
+        "time": 1749541599589  
     }

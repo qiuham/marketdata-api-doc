@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade
 anchor_id: order-book-trading-trade
 api_type: API
-updated_at: 2026-09-21 19:17:04.083905
+updated_at: 2026-09-22 19:18:02.816507
 ---
 
 # Trade
@@ -4319,6 +4319,7 @@ connId | String | Yes | WebSocket connection ID
                 "lastPx": "38892.2",
                 "uTime": "1654084353264",
                 "isTpLimit": "false",
+                "riskBypassResult": "",
                 "linkedAlgoOrd": {
                     "algoId": ""
                 }
@@ -4564,6 +4565,7 @@ When amending the order through Web/APP and the amendment failed, `-1` will be r
 `yes`  
 `no`  
 Only applicable to `EVENTS`  
+> riskBypassResult | String | Only applicable to specific users. For details, please contact your relationship manager (RM). Returns `""` when not applicable.  
 For market orders, it's likely the orders channel will show order state as "filled" while showing the "last filled quantity (fillSz)" as 0.  In exceptional cases, the same message may be sent multiple times (perhaps with the different uTime) . The following guidelines are advised:  
   
 1\. If a `tradeId` is present, it means a fill. Each `tradeId` should only be returned once per instrument ID, and the later messages that have the same `tradeId` should be discarded.  
@@ -10349,6 +10351,7 @@ connId | String | 是 | WebSocket连接ID
                 "cancelSource": "",
                 "isTpLimit": "false",
                 "uTime": "1654084353264",
+                "riskBypassResult": "",
                 "linkedAlgoOrd": {
                     "algoId": ""
                 }
@@ -10589,6 +10592,7 @@ data | Array of objects | 订阅的数据
 `yes`  
 `no`  
 仅适用于 `EVENTS`  
+> riskBypassResult | String | 仅适用于特定用户。详情请联系您的客户经理（RM）。不适用时返回 `""`  
 对于市价委托，订单频道推送消息会出现状态为“完全成交”，但最新成交数量 (fillSz) 为 0 的情况。  极端情况下，会出现同一条消息重复推送的情况（`uTime` 可能会不一样），建议做如下处理：  
   
 * 当`tradeId`有值时，代表成交，对于同一`tradeId`，请以第一条推送消息为准，忽略后续的推送消息；  

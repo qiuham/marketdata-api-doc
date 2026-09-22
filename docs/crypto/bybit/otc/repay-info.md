@@ -2,65 +2,61 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay-info
 api_type: REST
-updated_at: 2026-09-21 18:47:16.968883
+updated_at: 2026-09-22 18:47:34.809960
 ---
 
-# Set Auto Add Margin
+# Get Repayment Orders
 
-Turn on/off auto-add-margin for **isolated** margin position
+Get a list of your loan repayment orders (orders which repaid the loan).
+
+tip
+
+  * Get the past 2 years data by default
+  * Get up to the past 2 years of data
+
+
 
 ### HTTP Request
 
-POST`/v5/position/set-auto-add-margin`
+GET`/v5/ins-loan/repaid-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear` (USDT Contract, USDC Contract)  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-autoAddMargin| **true**|  integer| Turn on/off. `0`: off. `1`: on  
-[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode position, this param is **required**
-
-  * `0`: one-way mode
-  * `1`: hedge-mode Buy side
-  * `2`: hedge-mode Sell side
-
-  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size. [`1`, `100`]. Default: `100`  
   
 ### Response Parameters
 
-None
-
-[](/docs/api-explorer/v5/position/auto-add-margin)
-
-* * *
-
+Parameter| Type| Comments  
+---|---|---  
+repayInfo| array| Object  
+> repayOrderId| string| Repaid order ID  
+> repaidTime| string| Repaid timestamp (ms)  
+> token| string| Repaid coin  
+> quantity| string| Repaid principle  
+> interest| string| Repaid interest  
+> businessType| string| Repaid type. `1`: normal repayment; `2`: repaid by liquidation  
+> status| string| `1`: success; `2`: fail  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    POST /v5/position/set-auto-add-margin HTTP/1.1  
+    GET /v5/ins-loan/repaid-history HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675255134857  
+    X-BAPI-TIMESTAMP: 1678687944725  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "autoAddmargin": 1,  
-        "positionIdx": null  
-    }  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -70,44 +66,28 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_add_margin(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        autoAddmargin=1,  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
-    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    print(session.get_repayment_info())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .setAutoAddMargin({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            autoAddMargin: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getInstitutionalLendingRepayOrders({  
+        limit: 100,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -115,69 +95,76 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
+        "retMsg": "",  
+        "result": {  
+            "repayInfo": [  
+                {  
+                    "repayOrderId": "8189",  
+                    "repaidTime": "1663126393000",  
+                    "token": "USDT",  
+                    "quantity": "30000",  
+                    "interest": "0",  
+                    "businessType": "1",  
+                    "status": "1"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1675255135069  
+        "time": 1669366648366  
     }
 
 ---
 
-# 設置自動追加保證金
+# 查詢還款信息
 
-開關自動追加保證金，僅適用於**逐倉** 保證金模式
+提示
+
+  * 默認查詢過去2年的數據
+  * 最多支持查詢過去2年的數據
+
+
 
 ### HTTP 請求
 
-POST`/v5/position/set-auto-add-margin`
+GET`/v5/ins-loan/repaid-history`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`  
-symbol| **true**|  string| 合約名稱  
-autoAddMargin| **true**|  integer| 是否自動追加保證金. `0`: 關閉. `1`: 開啟  
-[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
-
-  * `0`: 單向持倉模式
-  * `1`: 買側雙向持倉模式
-  * `2`: 賣側雙向持倉模式
-
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 返回數量限制. [`1`, `100`]. 默認: `100`  
   
-[](/docs/zh-TW/api-explorer/v5/position/auto-add-margin)
+### 返回參數
 
-* * *
-
-### 響應參數
-
-無
-
+參數| 類型| 說明  
+---|---|---  
+repayInfo| array| Object  
+> repayOrderId| string| 還款訂單號  
+> repaidTime| string| 還款時間（毫秒）  
+> token| string| 還款幣種  
+> quantity| string| 還款本金  
+> interest| string| 還款利息  
+> businessType| string| 還款類型. `1`：正常還款; `2`：系統強平還款  
+> status| string| `1`：還款成功; `2`：還款失敗  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    POST /v5/position/set-auto-add-margin HTTP/1.1  
+    GET /v5/ins-loan/repaid-history HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675255134857  
+    X-BAPI-TIMESTAMP: 1678687944725  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "autoAddmargin": 1,  
-        "positionIdx": null  
-    }  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -187,44 +174,28 @@ autoAddMargin| **true**|  integer| 是否自動追加保證金. `0`: 關閉. `1`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_add_margin(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        autoAddmargin=1,  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
-    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    print(session.get_repayment_info())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .setAutoAddMargin({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            autoAddMargin: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getInstitutionalLendingRepayOrders({  
+        limit: 100,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -232,8 +203,20 @@ autoAddMargin| **true**|  integer| 是否自動追加保證金. `0`: 關閉. `1`
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
+        "retMsg": "",  
+        "result": {  
+            "repayInfo": [  
+                {  
+                    "repayOrderId": "8189",  
+                    "repaidTime": "1663126393000",  
+                    "token": "USDT",  
+                    "quantity": "30000",  
+                    "interest": "0",  
+                    "businessType": "1",  
+                    "status": "1"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1675255135069  
+        "time": 1669366648366  
     }

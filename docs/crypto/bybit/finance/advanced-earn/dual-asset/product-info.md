@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/product-info
 api_type: REST
-updated_at: 2026-09-21 18:43:53.615897
+updated_at: 2026-09-22 18:44:06.713454
 ---
 
 # Get Product Info

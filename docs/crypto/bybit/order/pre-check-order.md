@@ -2,74 +2,90 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/pre-check-order
 api_type: Trading
-updated_at: 2026-09-21 18:47:04.680369
+updated_at: 2026-09-22 18:47:22.195531
 ---
 
-# Get Borrow Quota (Spot)
+# Pre Check Order
 
-Query the available balance for Spot trading and Margin trading
+This endpoint is used to calculate the changes in IMR and MMR of UTA account before and after placing an order.
 
 info
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  1. This endpoint supports orders with category = `inverse`,`linear`,`option`.   
+
+  2. Only Cross Margin mode and Portfolio Margin mode are supported, isolated margin mode is not supported.  
+
+  3. category = `inverse` is not supported in Cross Margin mode.  
+
+  4. Conditional order is not supported.  
+
+  5. If `retCode` is neither 0 nor 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id` will be displayed in the `retExtInfo` json.
+  6. If `retCode` is 110007, `result` will return an empty json. `future_order_id`, `future_order_link_id`, `post_imr_e4`, and `post_mmr_e4` will be displayed in the `retExtInfo` json.
 
 
 
 ### HTTP Request
 
-GET`/v5/order/spot-borrow-check`
+POST`/v5/order/pre-check`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `spot`  
-symbol| **true**|  string| Symbol name  
-side| **true**|  string| Transaction side. `Buy`,`Sell`  
-  
+refer to [create order request](/docs/v5/order/create-order#request-parameters)
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-symbol| string| Symbol name, like `BTCUSDT`, uppercase only  
-side| string| Side  
-maxTradeQty| string| The maximum base coin qty can be traded
-
-  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable quantity = min(The maximum quantity that a single user can borrow on the platform, The maximum quantity that can be borrowed calculated by IMR MMR of UTA account, The available quantity of the platform's capital pool) 
-  * Otherwise, it returns actual available balance
-  * up to 4 decimals
-
+orderId| string| Order ID  
+orderLinkId| string| User customised order ID  
+preImrE4| int| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+preMmrE4| int| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+postImrE4| int| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+postMmrE4| int| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
   
-maxTradeAmount| string| The maximum quote coin amount can be traded
-
-  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount = min(The maximum amount that a single user can borrow on the platform, The maximum amount that can be borrowed calculated by IMR MMR of UTA account, The available amount of the platform's capital pool) 
-  * Otherwise, it returns actual available balance
-  * up to 8 decimals
-
-  
-spotMaxTradeQty| string| No matter your Spot margin switch on or not, it always returns actual qty of base coin you can trade or you have (borrowable qty is not included), up to 4 decimals  
-spotMaxTradeAmount| string| No matter your Spot margin switch on or not, it always returns actual amount of quote coin you can trade or you have (borrowable amount is not included), up to 8 decimals  
-borrowCoin| string| Borrow coin  
-[](/docs/api-explorer/v5/trade/query-spot-quota)
-
 * * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    POST /v5/order/pre-check HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -79,41 +95,23 @@ borrowCoin| string| Borrow coin
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_quota(  
+    print(session.pre_check_order(  
         category="spot",  
         symbol="BTCUSDT",  
         side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
-    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
@@ -123,85 +121,100 @@ borrowCoin| string| Borrow coin
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "maxTradeQty": "6.6065",  
-            "side": "Buy",  
-            "spotMaxTradeAmount": "9004.75628594",  
-            "maxTradeAmount": "218014.01330797",  
-            "borrowCoin": "USDT",  
-            "spotMaxTradeQty": "0.2728"  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
         },  
         "retExtInfo": {},  
-        "time": 1698895841534  
+        "time": 1749541599589  
     }
 
 ---
 
-# 查詢用戶可用額度 (現貨)
+# 預下單
 
-可以查詢現貨幣幣交易以及槓桿交易時, 可用對應幣種的實時餘額
+此接口用於計算UTA帳戶下單前後IMR、MMR的變化。
 
 信息
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  1. 此接口只支持期貨和期權的訂單。   
+
+  2. 僅支持全倉模式和組合保證金模式，不支援逐倉模式。   
+
+  3. 全倉模式下不支持反向訂單。   
+
+  4. 不支持條件訂單。   
+
+  5. 如果`retCode`既不是0也不是110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id` 會顯示在`retExtInfo`這個json裡。
+  6. 如果`retCode` 是 110007，`result`將回傳空json。 `future_order_id`，`future_order_link_id`，`post_imr_e4`，`post_mmr_e4`會顯示在`retExtInfo`這個json裡。
 
 
 
 ### HTTP請求
 
-GET`/v5/order/spot-borrow-check`
+POST`/v5/order/pre-check`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`  
-symbol| **true**|  string| 交易對名稱  
-side| **true**|  string| 交易方向. `Buy`,`Sell`  
-  
+參考 [create order request](/docs/zh-TW/v5/order/create-order#request-parameters)
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-symbol| string| 交易對名稱  
-side| string| 方向  
-maxTradeQty| string| 最大可用於交易的交易幣種數量
-
-  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度)
-  * 否則, 僅代表現貨可用
-  * 最多支持4位小數
-
+orderId| string| 訂單ID  
+orderLinkId| string| 用戶自定義訂單ID  
+preImrE4| int| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
+preMmrE4| int| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+postImrE4| int| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
+postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
   
-maxTradeAmount| string| 最大可用於交易的報價幣種金額
-
-  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度) 
-  * 否則, 僅代表現貨可用
-  * 最多支持8位小數
-
-  
-spotMaxTradeQty| string| 無論是否開啟了槓桿, 這個字段表示交易幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持4位小數  
-spotMaxTradeAmount| string| 無論是否開啟了槓桿, 這個字段表示報價幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持8位小數  
-borrowCoin| string| 借貸幣種  
-[](/docs/zh-TW/api-explorer/v5/trade/query-spot-quota)
-
 * * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    POST /v5/order/pre-check HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    // Spot Limit order with market tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpOrderType": "Market","slOrderType": "Market"}  
+      
+    // Spot Limit order with limit tp sl  
+    {"category": "spot","symbol": "BTCUSDT","side": "Buy","orderType": "Limit","qty": "0.01","price": "28000","timeInForce": "PostOnly","takeProfit": "35000","stopLoss": "27000","tpLimitPrice": "36000","slLimitPrice": "27500","tpOrderType": "Limit","slOrderType": "Limit"}  
+      
+    // Spot PostOnly normal order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"PostOnly","orderLinkId":"spot-test-01","isLeverage":0,"orderFilter":"Order"}  
+      
+    // Spot TP/SL order  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","triggerPrice": "15000", "timeInForce":"Limit","orderLinkId":"spot-test-02","isLeverage":0,"orderFilter":"tpslOrder"}  
+      
+    // Spot margin normal order (UTA)  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"0.1","price":"15600","timeInForce":"GTC","orderLinkId":"spot-test-limit","isLeverage":1,"orderFilter":"Order"}  
+      
+    // Spot Market Buy order, qty is quote currency  
+    {"category":"spot","symbol":"BTCUSDT","side":"Buy","orderType":"Market","qty":"200","timeInForce":"IOC","orderLinkId":"spot-test-04","isLeverage":0,"orderFilter":"Order"}  
+      
+      
+    // USDT Perp open long position (one-way mode)  
+    {"category":"linear","symbol":"BTCUSDT","side":"Buy","orderType":"Limit","qty":"1","price":"25000","timeInForce":"GTC","positionIdx":0,"orderLinkId":"usdt-test-01","reduceOnly":false,"takeProfit":"28000","stopLoss":"20000","tpslMode":"Partial","tpOrderType":"Limit","slOrderType":"Limit","tpLimitPrice":"27500","slLimitPrice":"20500"}  
+      
+    // USDT Perp close long position (one-way mode)  
+    {"category": "linear", "symbol": "BTCUSDT", "side": "Sell", "orderType": "Limit", "qty": "1", "price": "30000", "timeInForce": "GTC", "positionIdx": 0, "orderLinkId": "usdt-test-02", "reduceOnly": true}  
     
     
     
@@ -211,41 +224,23 @@ borrowCoin| string| 借貸幣種
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_quota(  
+    print(session.pre_check_order(  
         category="spot",  
         symbol="BTCUSDT",  
         side="Buy",  
+        orderType="Limit",  
+        qty="0.1",  
+        price="28000",  
+        timeInForce="PostOnly",  
+        takeProfit="35000",  
+        stopLoss="27000",  
+        tpOrderType="Market",  
+        slOrderType="Market",  
     ))  
     
     
     
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
-    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
@@ -255,14 +250,13 @@ borrowCoin| string| 借貸幣種
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "maxTradeQty": "6.6065",  
-            "side": "Buy",  
-            "spotMaxTradeAmount": "9004.75628594",  
-            "maxTradeAmount": "218014.01330797",  
-            "borrowCoin": "USDT",  
-            "spotMaxTradeQty": "0.2728"  
+            "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
+            "orderLinkId": "test129",  
+            "preImrE4": 30,  
+            "preMmrE4": 21,  
+            "postImrE4": 357,  
+            "postMmrE4": 294  
         },  
         "retExtInfo": {},  
-        "time": 1698895841534  
+        "time": 1749541599589  
     }

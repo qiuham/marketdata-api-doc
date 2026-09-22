@@ -2,74 +2,122 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-09-21 18:47:05.305602
+updated_at: 2026-09-22 18:47:26.020832
 ---
 
-# Get Borrow Quota (Spot)
+# Get Loan Orders
 
-Query the available balance for Spot trading and Margin trading
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Get up to 2 years worth of historical loan orders.
 
 ### HTTP Request
 
-GET`/v5/order/spot-borrow-check`
+GET`/v5/ins-loan/loan-order`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `spot`  
-symbol| **true**|  string| Symbol name  
-side| **true**|  string| Transaction side. `Buy`,`Sell`  
+orderId| false| string| Loan order ID. If not passed, returns all orders sorted by `loanTime` in descending order  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size. [`1`, `100`], Default: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-symbol| string| Symbol name, like `BTCUSDT`, uppercase only  
-side| string| Side  
-maxTradeQty| string| The maximum base coin qty can be traded
+loanInfo| array| Object  
+> orderId| string| Loan order ID  
+> orderProductId| string| Product ID  
+> parentUid| string| The designated UID that was used to bind with the INS loan  
+> loanTime| string| Loan timestamp, in milliseconds  
+> loanCoin| string| Loan coin  
+> loanAmount| string| Loan amount  
+> unpaidAmount| string| Unpaid principal  
+> unpaidInterest| string| Unpaid interest  
+> repaidAmount| string| Repaid principal  
+> repaidInterest| string| Repaid interest  
+> interestRate| string| Daily interest rate  
+> status| string| `1`: outstanding; `2`: paid off  
+> leverage| string| The maximum leverage for this loan product  
+> supportSpot| string| Whether to support spot. `0`:false; `1`:true  
+> supportContract| string| Whether to support contract . `0`:false; `1`:true  
+> withdrawLine| string| Restrict line for withdrawal  
+> transferLine| string| Restrict line for transfer  
+> spotBuyLine| string| Restrict line for SPOT buy  
+> spotSellLine| string| Restrict line for SPOT sell  
+> contractOpenLine| string| Restrict line for USDT Perpetual open position  
+> deferredLiquidationLine| string| Line for deferred liquidation  
+> deferredLiquidationTime| string| Time for deferred liquidation  
+> reserveToken| string| Reserve token  
+> reserveQuantity| string| Reserve token qty  
+> liquidationLine| string| Line for liquidation  
+> stopLiquidationLine| string| Line for stop liquidation  
+> contractLeverage| string| The allowed default leverage for USDT Perpetual  
+> transferRatio| string| The transfer ratio for loan funds to transfer from Spot wallet to Contract wallet  
+> spotSymbols| array| The whitelist of spot trading pairs. If there is no whitelist, then "[]"  
+> contractSymbols| array| The whitelist of contract trading pairs 
 
-  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable quantity = min(The maximum quantity that a single user can borrow on the platform, The maximum quantity that can be borrowed calculated by IMR MMR of UTA account, The available quantity of the platform's capital pool) 
-  * Otherwise, it returns actual available balance
-  * up to 4 decimals
+  * If `supportContract`="0", then this is "[]"
+  * If there is no whitelist, this is "[]"
 
   
-maxTradeAmount| string| The maximum quote coin amount can be traded
+> supportUSDCContract| string| Whether to support USDC contract. `"0"`:false; `"1"`:true  
+> supportUSDCOptions| string| Whether to support Option. `"0"`:false; `"1"`:true  
+> supportMarginTrading| string| Whether to support Spot margin trading. `"0"`:false; `"1"`:true  
+> USDTPerpetualOpenLine| string| Restrict line to open USDT Perpetual position  
+> USDCContractOpenLine| string| Restrict line to open USDC Contract position  
+> USDCOptionsOpenLine| string| Restrict line to open Option position  
+> USDTPerpetualCloseLine| string| Restrict line to trade USDT Perpetual position  
+> USDCContractCloseLine| string| Restrict line to trade USDC Contract position  
+> USDCOptionsCloseLine| string| Restrict line to trade Option position  
+> USDCContractSymbols| array| The whitelist of USDC contract trading pairs 
 
-  * If spot margin trade on and symbol is margin trading pair, it returns available balance + max.borrowable amount = min(The maximum amount that a single user can borrow on the platform, The maximum amount that can be borrowed calculated by IMR MMR of UTA account, The available amount of the platform's capital pool) 
-  * Otherwise, it returns actual available balance
-  * up to 8 decimals
+  * If no whitelist symbols, it is `[]`, and you can trade any
+  * If supportUSDCContract="0", it is `[]`
 
   
-spotMaxTradeQty| string| No matter your Spot margin switch on or not, it always returns actual qty of base coin you can trade or you have (borrowable qty is not included), up to 4 decimals  
-spotMaxTradeAmount| string| No matter your Spot margin switch on or not, it always returns actual amount of quote coin you can trade or you have (borrowable amount is not included), up to 8 decimals  
-borrowCoin| string| Borrow coin  
-[](/docs/api-explorer/v5/trade/query-spot-quota)
+> USDCOptionsSymbols| array| The whitelist of Option symbols 
 
-* * *
+  * If no whitelisted, it is `[]`, and you can trade any
+  * If supportUSDCOptions="0", it is `[]`
 
+  
+> marginLeverage| string| The allowable maximum leverage for Spot margin  
+> USDTPerpetualLeverage| array| Object 
+
+  * If supportContract="0", it is `[]`
+  * If no whitelist USDT perp symbols, it returns all trading symbols and leverage by default
+  * If there are whitelist symbols, it return those whitelist data
+
+  
+>> symbol| string| Symbol name  
+>> leverage| string| Maximum leverage  
+> USDCContractLeverage| array| Object 
+
+  * If supportUSDCContract="0", it is `[]`
+  * If no whitelist USDC contract symbols, it returns all trading symbols and leverage by default
+  * If there are whitelist symbols, it return those whitelist data
+
+  
+>> symbol| string| Symbol name  
+>> leverage| string| Maximum leverage  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    GET /v5/ins-loan/loan-order HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-TIMESTAMP: 1678687874060  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -79,41 +127,28 @@ borrowCoin| string| Borrow coin
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_quota(  
-        category="spot",  
-        symbol="BTCUSDT",  
-        side="Buy",  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
-    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
+    print(session.get_loan_orders())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getInstitutionalLendingLoanOrders({  
+        limit: 10,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -121,87 +156,236 @@ borrowCoin| string| Borrow coin
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "maxTradeQty": "6.6065",  
-            "side": "Buy",  
-            "spotMaxTradeAmount": "9004.75628594",  
-            "maxTradeAmount": "218014.01330797",  
-            "borrowCoin": "USDT",  
-            "spotMaxTradeQty": "0.2728"  
+            "loanInfo": [  
+                {  
+                    "orderId": "1468005106166530304",  
+                    "orderProductId": "96",  
+                    "parentUid": "1631521",  
+                    "loanTime": "1689735916000",  
+                    "loanCoin": "USDT",  
+                    "loanAmount": "204",  
+                    "unpaidAmount": "52.07924201",  
+                    "unpaidInterest": "0",  
+                    "repaidAmount": "151.92075799",  
+                    "repaidInterest": "0",  
+                    "interestRate": "0.00019178",  
+                    "status": "1",  
+                    "leverage": "4",  
+                    "supportSpot": "1",  
+                    "supportContract": "1",  
+                    "withdrawLine": "",  
+                    "transferLine": "",  
+                    "spotBuyLine": "0.71",  
+                    "spotSellLine": "0.71",  
+                    "contractOpenLine": "0.71",  
+                    "liquidationLine": "0.75",  
+                    "stopLiquidationLine": "0.35000000",  
+                    "contractLeverage": "7",  
+                    "transferRatio": "1",  
+                    "spotSymbols": [],  
+                    "contractSymbols": [],  
+                    "supportUSDCContract": "1",  
+                    "supportUSDCOptions": "1",  
+                    "USDTPerpetualOpenLine": "0.71",  
+                    "USDCContractOpenLine": "0.71",  
+                    "USDCOptionsOpenLine": "0.71",  
+                    "USDTPerpetualCloseLine": "0.71",  
+                    "USDCContractCloseLine": "0.71",  
+                    "USDCOptionsCloseLine": "0.71",  
+                    "USDCContractSymbols": [],  
+                    "USDCOptionsSymbols": [],  
+                    "deferredLiquidationLine":"",  
+                    "deferredLiquidationTime":"",  
+                    "marginLeverage": "4",  
+                    "USDTPerpetualLeverage": [  
+                        {  
+                            "symbol": "SUSHIUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "INJUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "RDNTUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "ZRXUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "HIGHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "WAVESUSDT",  
+                            "leverage": "7"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ACHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "SUNUSDT",  
+                            "leverage": "7"  
+                        }  
+                    ],  
+                    "USDCContractLeverage": [  
+                        {  
+                            "symbol": "BTCPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "BTC-Futures",  
+                            "leverage": "8"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ETH-Futures",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "SOLPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "ETHPERP",  
+                            "leverage": "8"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1698895841534  
+        "time": 1689745773187  
     }
 
 ---
 
-# 查詢用戶可用額度 (現貨)
+# 查詢借貸訂單信息
 
-可以查詢現貨幣幣交易以及槓桿交易時, 可用對應幣種的實時餘額
+查詢借貸訂單的詳情
 
-信息
+提示
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 默認查詢過去2年的數據
+  * 最多支持查詢過去2年的數據
 
 
 
-### HTTP請求
+### HTTP 請求
 
-GET`/v5/order/spot-borrow-check`
+GET`/v5/ins-loan/loan-order`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`  
-symbol| **true**|  string| 交易對名稱  
-side| **true**|  string| 交易方向. `Buy`,`Sell`  
+orderId| false| string| 借貸訂單ID. 若不傳，則返回全部. 按照`loanTime`降序排列  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 返回數量限制. [`1`, `100`], 默認: `10`  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-symbol| string| 交易對名稱  
-side| string| 方向  
-maxTradeQty| string| 最大可用於交易的交易幣種數量
+loanInfo| array| Object  
+> orderId| string| 借貸訂單ID  
+> orderProductId| string| 產品ID  
+> parentUid| string| 綁定場外借貸產品的UID  
+> loanTime| string| 放款時間（毫秒）  
+> loanCoin| string| 借款幣種  
+> loanAmount| string| 借款金額  
+> unpaidAmount| string| 未還本金  
+> unpaidInterest| string| 未還利息  
+> repaidAmount| string| 已還本金  
+> repaidInterest| string| 已還利息  
+> interestRate| string| 日利率  
+> status| string| `1`：未還清; `2`：已還清  
+> leverage| string| 該借貸產品的最大槓桿倍數  
+> supportSpot| string| 是否支持現貨. `0`:否; `1`:是  
+> supportContract| string| 是否支持合約 . `0`: 否; `1`: 是  
+> supportMarginTrading| string| 是否支持現貨槓桿交易. `0`: 否; `1`: 是  
+> withdrawLine| string| 限制提幣線  
+> transferLine| string| 限制劃轉線  
+> spotBuyLine| string| 限制現貨買入線  
+> spotSellLine| string| 限制現貨交易線  
+> contractOpenLine| string| 限制USDT永續合約開倉線  
+> deferredLiquidationLine| string| 延期清算線  
+> deferredLiquidationTime| string| 延期清算時間  
+> reserveToken| string| 備付金幣種  
+> reserveQuantity| string| 備付金幣種數量  
+> liquidationLine| string| 強平線  
+> stopLiquidationLine| string| 停止強平線  
+> contractLeverage| string| 允許USDT永續默認開倉倍數  
+> transferRatio| string| 現貨帳戶到合約帳戶的借貸資金劃轉比例  
+> spotSymbols| array| 現貨交易對白名單. 若沒有配置白名單, 則返回[]  
+> contractSymbols| array| USDT永續合約交易對白名單 
 
-  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度)
-  * 否則, 僅代表現貨可用
-  * 最多支持4位小數
+  * 若沒有配置白名單, 則返回[]
+  * 若supportContract="0", 則也是[]
 
   
-maxTradeAmount| string| 最大可用於交易的報價幣種金額
+> supportUSDCContract| string| 是否支持USDC合約交易. `'0'`:否; `'1'`:是  
+> supportUSDCOptions| string| 是否支持期權交易. `'0'`:false; `'1'`:true  
+> USDTPerpetualOpenLine| string| 限制USDT永續的開倉線  
+> USDCContractOpenLine| string| 限制USDC合約的開倉線  
+> USDCOptionsOpenLine| string| 限制期權的開倉線  
+> USDTPerpetualCloseLine| string| 限制USDT永續的交易線  
+> USDCContractCloseLine| string| 限制USDC合約的交易線  
+> USDCOptionsCloseLine| string| 限制期權的交易線  
+> USDCContractSymbols| array| USDC合約的白名單交易對 
 
-  * 若啟用了全倉槓桿且是槓桿幣對, 則返回現貨可用+最大可借貸數量 = min(平台單一用戶可借貸上限，UTA帳戶IMR MMR反推出來的最大可借，平台資金池可用額度) 
-  * 否則, 僅代表現貨可用
-  * 最多支持8位小數
+  * 若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約
+  * 如果 supportUSDCContract="0", 則也是空數組`[]`
 
   
-spotMaxTradeQty| string| 無論是否開啟了槓桿, 這個字段表示交易幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持4位小數  
-spotMaxTradeAmount| string| 無論是否開啟了槓桿, 這個字段表示報價幣種在幣幣交易下的可交易數量或者餘額 (不包含可借貸數量), 最多支持8位小數  
-borrowCoin| string| 借貸幣種  
-[](/docs/zh-TW/api-explorer/v5/trade/query-spot-quota)
+> USDCOptionsSymbols| array| 期權的白名單交易對 
 
-* * *
+  * 若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約
+  * 如果 supportUSDCOptions="0", 則也是空數組`[]`
 
+  
+> marginLeverage| string| 全倉槓桿允許可開的最高槓桿  
+> USDTPerpetualLeverage| array| Object 
+
+  * 如果 supportContract="0", 則返回空數組`[]`
+  * 如果沒有配置USDT永續交易對白名單, 則返回所有的合約和槓桿
+  * 如果有白名單配置, 則只返回白名單列表的合約和槓桿
+
+  
+>> symbol| string| 合約名  
+>> leverage| string| 最高可開槓桿  
+> USDCContractLeverage| array| Object 
+
+  * 如果 supportUSDCContract="0", 則返回空數組`[]`
+  * 如果沒有配置USDC合約交易對白名單, 則返回所有的合約和槓桿
+  * 如果有白名單配置, 則只返回白名單列表的合約和槓桿
+
+  
+>> symbol| string| 合約名  
+>> leverage| string| 最高可開槓桿  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/order/spot-borrow-check?category=spot&symbol=BTCUSDT&side=Buy HTTP/1.1  
+    GET /v5/ins-loan/loan-order HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672228522214  
+    X-BAPI-TIMESTAMP: 1678687874060  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -211,41 +395,28 @@ borrowCoin| string| 借貸幣種
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_quota(  
-        category="spot",  
-        symbol="BTCUSDT",  
-        side="Buy",  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.config.BybitApiConfig;  
-    import com.bybit.api.client.domain.trade.request.TradeOrderRequest;  
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.trade.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newTradeRestClient();  
-    var getBorrowQuotaRequest = TradeOrderRequest.builder().category(CategoryType.SPOT).symbol("BTCUSDT").side(Side.BUY).build();  
-    System.out.println(client.getBorrowQuota(getBorrowQuotaRequest));  
+    print(session.get_loan_orders())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getSpotBorrowCheck('BTCUSDT', 'Buy')  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+      .getInstitutionalLendingLoanOrders({  
+        limit: 10,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -253,16 +424,110 @@ borrowCoin| string| 借貸幣種
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "maxTradeQty": "6.6065",  
-            "side": "Buy",  
-            "spotMaxTradeAmount": "9004.75628594",  
-            "maxTradeAmount": "218014.01330797",  
-            "borrowCoin": "USDT",  
-            "spotMaxTradeQty": "0.2728"  
+            "loanInfo": [  
+                {  
+                    "orderId": "1468005106166530304",  
+                    "orderProductId": "96",  
+                    "parentUid": "1631521",  
+                    "loanTime": "1689735916000",  
+                    "loanCoin": "USDT",  
+                    "loanAmount": "204",  
+                    "unpaidAmount": "52.07924201",  
+                    "unpaidInterest": "0",  
+                    "repaidAmount": "151.92075799",  
+                    "repaidInterest": "0",  
+                    "interestRate": "0.00019178",  
+                    "status": "1",  
+                    "leverage": "4",  
+                    "supportSpot": "1",  
+                    "supportContract": "1",  
+                    "withdrawLine": "",  
+                    "transferLine": "",  
+                    "spotBuyLine": "0.71",  
+                    "spotSellLine": "0.71",  
+                    "contractOpenLine": "0.71",  
+                    "liquidationLine": "0.75",  
+                    "stopLiquidationLine": "0.35000000",  
+                    "contractLeverage": "7",  
+                    "transferRatio": "1",  
+                    "spotSymbols": [],  
+                    "contractSymbols": [],  
+                    "supportUSDCContract": "1",  
+                    "supportUSDCOptions": "1",  
+                    "USDTPerpetualOpenLine": "0.71",  
+                    "USDCContractOpenLine": "0.71",  
+                    "USDCOptionsOpenLine": "0.71",  
+                    "USDTPerpetualCloseLine": "0.71",  
+                    "USDCContractCloseLine": "0.71",  
+                    "USDCOptionsCloseLine": "0.71",  
+                    "USDCContractSymbols": [],  
+                    "USDCOptionsSymbols": [],  
+                    "deferredLiquidationLine":"",  
+                    "deferredLiquidationTime":"",  
+                    "marginLeverage": "4",  
+                    "USDTPerpetualLeverage": [  
+                        {  
+                            "symbol": "SUSHIUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "INJUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "RDNTUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "ZRXUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "HIGHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "WAVESUSDT",  
+                            "leverage": "7"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ACHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "SUNUSDT",  
+                            "leverage": "7"  
+                        }  
+                    ],  
+                    "USDCContractLeverage": [  
+                        {  
+                            "symbol": "BTCPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "BTC-Futures",  
+                            "leverage": "8"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ETH-Futures",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "SOLPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "ETHPERP",  
+                            "leverage": "8"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1698895841534  
+        "time": 1689745773187  
     }

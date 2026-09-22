@@ -2,73 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/cancel-rfq
 api_type: Trading
-updated_at: 2026-09-21 18:47:55.919986
+updated_at: 2026-09-22 18:48:16.801250
 ---
 
-# Create Quote
+# Get Public Trades
 
-Create a quote. **Up to 50 requests** per second. The quoting party sends a quote in response to the inquirier.
-
-info
-
-  * Only support UTA2.0 accounts
-  * Cannot quote for your own inquiry
-  * One request reports in two directions
-  * You must pass at least one quoteBuyList and quoteSellList
-  * If you would like to quote a spot quote, please ensure the corresponding collateral asset is enabled using [Set Collateral Coin](/docs/v5/account/set-collateral) or [Batch Set Collateral Coin](/docs/v5/account/batch-set-collateral)
-  * Quoting the hedge leg is optional. To include a hedge leg quote, add it to `quoteBuyList` or `quoteSellList`. If the RFQ already carries a `price` for the hedge leg, omitting the price when quoting the hedge leg will fall back to the price specified in the RFQ
-
-
+Get the recently executed rfq successfully. **Up to 50 requests per second**
 
 ### HTTP Request
 
-POST`/v5/rfq/create-quote`
+GET`/v5/rfq/public-trades`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-rfqId| **true**|  string| Inquiry ID  
-quoteLinkId| false| string| Custom quote ID: 
-
-  * The length should be between 1-32 bits 
-  * Combination of letters (case sensitive) and numbers
-  * An rfqLinkId expires after three months – after which it can be reused
-  * Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. 
-
-  
-anonymous| false| boolean| Whether or not it is anonymous quote. The default value is `false`. When it is `true` the identity of the quoting party will not be revealed even after the transaction is concluded.  
-expireIn| false| integer| Duration of the quote (in secs). [`10`, `120`]. Default: `60`  
-quoteBuyList| false| array of objects| Quote direction 
-
-  * In the `Buy` direction, for the maker (the quoting party), the execution direction is the same as the direction of the legs
-  * For the taker (the inquiring party) it is opposite direction
-
-  
-> category| **true**|  string| Product type: Unified account: `spot`, `linear`,`option`  
-> symbol| **true**|  string| Name of the trading contract  
-> price| **true**|  string| Quote price  
-quoteSellList| false| array of objects| Ask direction 
-
-  * In the `Sell` direction, for the maker (the quoting party), the execution direction is opposite to the direction of the legs
-  * For the taker (the inquiring party) it is the same direction
-
-  
-> category| **true**|  string| Product type: Unified account: `spot`, `linear`,`option`  
-> symbol| **true**|  string| Name of the trading contract  
-> price| **true**|  string| Quote price  
+startTime| false| integer| The timestamp (ms), `startTime` and `endTime` of the order transaction are 30 days  
+endTime| false| integer| The closing timestamp (ms), `startTime` and `endTime` of the order are 30 days  
+limit| false| integer| Return the number of items. [`1`, `100`]. Default: `50`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object|   
-> rfqId| string| Inquiry ID  
-> quoteId| string| Quote ID  
-> quoteLinkId| string| Custom quote ID  
-> expiresAt| string| The quote's expiration time (ms)  
-> deskCode| string| Quoter's unique identification code  
-> status| string| Status of quotation: `Active` `Canceled` `Filled` `Expired` `Failed`  
+result| Object|   
+> cursor| string| Refer to the `cursor` request parameter  
+> list| array| An array of RFQs  
+>> rfqId| string| Inquiry ID  
+>> strategyType| string| Policy type  
+>> createdAt| string| Time (ms) when the trade is created in epoch, such as 1650380963  
+>> updatedAt| string| Time (ms) when the trade is updated in epoch, such as 1650380964  
+>> legs| array of objects| Combination transaction  
+>>> category| string| category. Valid values include: `linear`, `option` and `spot`  
+>>> symbol| string| The unique instrument ID  
+>>> side| string| Direction, valid values are `Buy` and `Sell`  
+>>> price| string| Execution price  
+>>> qty| string| Number of executions  
+>>> markPrice| string| The futures markPrice at the time of transaction, the spot is indexPrice, and the option is the markPrice of the underlying Price.  
   
 ### Request Example
 
@@ -78,32 +49,12 @@ result| object|
 
     
     
-    POST /v5/rfq/create-quote HTTP/1.1  
+    GET /v5/rfq/public-trades HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-    {  
-      "rfqId":"1754364447601610516653123084412812",   
-      "quoteBuyList": [  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "106000"  
-            }  
-        ],  
-        "quoteSellList":[  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "126500"  
-            }  
-        ]  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
     
     
@@ -113,23 +64,7 @@ result| object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_quote(  
-        rfqId="1754364447601610516653123084412812",  
-        quoteBuyList=[  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "106000"  
-            }  
-        ],  
-        quoteSellList=[  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "126500"  
-            }  
-        ]  
-    ))  
+    print(session.get_public_trades())  
     
 
 ### Response Example
@@ -139,103 +74,109 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "175740578143743543930777169307022",  
-            "quoteId": "1757405933130044334361923221559805",  
-            "quoteLinkId": "",  
-            "expiresAt": "1757405993126",  
-            "deskCode": "test0904",  
-            "status": "Active"  
+            "cursor": "page_token%3D14912%26last_time%3D1756826273947000000%26",  
+            "list": [  
+                {  
+                    "rfqId": "1756892210565322771637442724834278",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "spot",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Sell",  
+                            "price": "100000",  
+                            "qty": "0.5",  
+                            "markPrice": "110320"  
+                        }  
+                    ],  
+                    "createdAt": "1756892210567",  
+                    "updatedAt": "1756892215712"  
+                },  
+                {  
+                    "rfqId": "1756891080435210075162963643082323",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Buy",  
+                            "price": "143843.9",  
+                            "qty": "0.01",  
+                            "markPrice": "143843"  
+                        }  
+                    ],  
+                    "createdAt": "1756891080437",  
+                    "updatedAt": "1756891081550"  
+                },  
+                {  
+                    "rfqId": "1756826272870633375460463539530377",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Buy",  
+                            "price": "107600.9",  
+                            "qty": "1",  
+                            "markPrice": "108481.73"  
+                        }  
+                    ],  
+                    "createdAt": "1756826272871",  
+                    "updatedAt": "1756826273947"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1757405933132  
+        "time": 1756892357602  
     }
 
 ---
 
-# 報價
+# 獲取rfq公共成交數據
 
-建立報價。**每秒最多 50 次請求**
-
-信息
-
-  * 僅支持 UTA2.0 帳戶
-  * 無法對自己提出的詢價進行報價
-  * 一個請求報價包含兩個方向
-  * 至少需傳遞 quoteBuyList 或 quoteSellList
-  * 若需進行現貨報價，請先通過 [設置抵押品幣種](/docs/zh-TW/v5/account/set-collateral) 或 [批量設置抵押品幣種](/docs/zh-TW/v5/account/batch-set-collateral) 啟用相應的抵押幣種
-  * 可以選擇是否對 hedge 腿進行報價。如需對 hedge 腿報價，請將其加入 `quoteBuyList` 或 `quoteSellList`；若詢價單已攜帶 hedge 腿的 `price`，報價時不傳價格則自動使用詢價中的 `price`
-
-
+獲取最近成功執行的 RFQ。**每秒最多 50 次請求**
 
 ### HTTP 請求
 
-POST`/v5/rfq/create-quote`
+GET`/v5/rfq/public-trades`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-rfqId| **true**|  string| 詢價單 ID  
-quoteLinkId| false| string| 報價自定義 ID： 
-
-  * 長度應介於 1-32 位 
-  * 字母（區分大小寫）與數字的組合，可以是純字母或純數字 
-  * 指定 quoteLinkId 僅檢查最近 3 個月的資料 
-  * 非終端狀態僅能保證在 24 小時內的唯一性，而終端狀態不保證唯一性 
-
-  
-anonymous| false| boolean| 是否為匿名報價，`true` 表示匿名報價，`false` 表示公開報價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給詢價方。  
-expireIn| false| integer| 報價的有效持續時間（以秒為單位）. [`10`, `120`]. 默認: `60`  
-quoteBuyList| false| array of objects| 買入方向，報價方向為 `Buy`，對於 maker（報價方），執行方向與 legs 中的方向一致，對於 taker（詢價方）則相反  
-> category| true| string| 產品類型：統一帳戶：`spot`, `linear`, `option`  
-> symbol| true| string| 交易合約名稱  
-> price| true| string| 報價價格  
-quoteSellList| false| array of objects| 賣出方向，報價方向為 `Sell`，對於 maker（報價方），執行方向與 legs 中的方向相反，對於 taker（詢價方）則一致  
-> category| true| string| 產品類型：統一帳戶：`spot`, `linear`, `option`  
-> symbol| true| string| 交易合約名稱  
-> price| true| string| 報價價格  
+startTime| **false**|  integer| 訂單交易的開始時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 30 天  
+endTime| **false**|  integer| 訂單交易的結束時間戳（毫秒），`startTime` 和 `endTime` 之間的範圍最多為 30 天  
+limit| **false**|  integer| 返回的項目數量，最多 100 項，默認為 50 項  
+cursor| **false**|  string| 翻頁標記，請使用返回的 cursor；簽名時使用返回的原始資料，發送請求時進行 URLEncode  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-> rfqId| string| 詢價單 ID  
-> quoteId| string| 報價單 ID  
-> quoteLinkId| string| 報價自定義 ID  
-> expiresAt| string| 報價單的到期時間，為 Unix 時間戳的毫秒格式  
-> deskCode| string| 報價方唯一識別碼  
-> status| string| 報價單狀態：`Active` `Canceled` `Filled` `Expired` `Failed`  
+result| Object|   
+> cursor| string| 翻頁標記  
+> list| Array| RFQ 數據陣列  
+>> rfqId| string| 詢價單 ID  
+>> strategyType| string| 策略類型  
+>> createdAt| string| 交易創建的時間（毫秒），例如 1650380963  
+>> updatedAt| string| 交易更新的時間（毫秒），例如 1650380964  
+>> legs| Array of objects| 組合交易  
+>>> category| string| 類型。有效值包括：`linear`、`option` 和 `spot`  
+>>> symbol| string| 唯一的交易品種 ID  
+>>> side| string| 方向，有效值包括 `Buy` 和 `Sell`  
+>>> price| string| 執行價格  
+>>> qty| string| 執行數量  
+>>> markPrice| string| 交易時期貨的標記價格，現貨為指數價格，期權為標的價格的標記價格  
   
 ### 請求示例
     
     
-    POST /v5/rfq/create-quote HTTP/1.1  
+    GET /v5/rfq/public-trades HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-    {  
-      "rfqId":"1754364447601610516653123084412812",   
-      "quoteBuyList": [  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "106000"  
-            }  
-        ],  
-        "quoteSellList":[  
-            {  
-                "category": "linear",  
-                "symbol": "BTCUSDT",  
-                "price": "126500"  
-            }  
-        ]  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
 
 ### 響應示例
@@ -245,13 +186,58 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "175740578143743543930777169307022",  
-            "quoteId": "1757405933130044334361923221559805",  
-            "quoteLinkId": "",  
-            "expiresAt": "1757405993126",  
-            "deskCode": "test0904",  
-            "status": "Active"  
+            "cursor": "page_token%3D14912%26last_time%3D1756826273947000000%26",  
+            "list": [  
+                {  
+                    "rfqId": "1756892210565322771637442724834278",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "spot",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Sell",  
+                            "price": "100000",  
+                            "qty": "0.5",  
+                            "markPrice": "110320"  
+                        }  
+                    ],  
+                    "createdAt": "1756892210567",  
+                    "updatedAt": "1756892215712"  
+                },  
+                {  
+                    "rfqId": "1756891080435210075162963643082323",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Buy",  
+                            "price": "143843.9",  
+                            "qty": "0.01",  
+                            "markPrice": "143843"  
+                        }  
+                    ],  
+                    "createdAt": "1756891080437",  
+                    "updatedAt": "1756891081550"  
+                },  
+                {  
+                    "rfqId": "1756826272870633375460463539530377",  
+                    "strategyType": "custom",  
+                    "legs": [  
+                        {  
+                            "category": "linear",  
+                            "symbol": "BTCUSDT",  
+                            "side": "Buy",  
+                            "price": "107600.9",  
+                            "qty": "1",  
+                            "markPrice": "108481.73"  
+                        }  
+                    ],  
+                    "createdAt": "1756826272871",  
+                    "updatedAt": "1756826273947"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1757405933132  
+        "time": 1756892357602  
     }

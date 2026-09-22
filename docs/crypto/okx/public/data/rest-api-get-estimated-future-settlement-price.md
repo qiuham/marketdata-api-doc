@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-estimated-future-settlement-price
 anchor_id: public-data-rest-api-get-estimated-future-settlement-price
 api_type: REST
-updated_at: 2026-09-21 19:18:28.581841
+updated_at: 2026-09-22 19:19:27.411198
 ---
 
 # Get estimated future settlement price

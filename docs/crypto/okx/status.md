@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#status
 anchor_id: status
 api_type: API
-updated_at: 2026-09-21 19:19:28.526082
+updated_at: 2026-09-22 19:20:27.402144
 ---
 
 # Status

@@ -1,0 +1,292 @@
+---
+exchange: bybit
+source_url: https://bybit-exchange.github.io/docs/v5/market/option-base-coins
+api_type: Market Data
+updated_at: 2026-09-22 18:46:19.469249
+---
+
+# Get Option Base Coins
+
+Query option base coins, including their display names, launch times, and whether they currently have tradable option symbols.
+
+### HTTP Request
+
+GET`/v5/market/option-base-coins`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+underlyingType| false| string| Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil. Supports multiple values separated by commas, e.g. `0,2`. Returns all types if not passed.  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+list| array| List of option base coins  
+> baseCoin| string| Base coin  
+> quoteCoin| string| Quote coin  
+> settleCoin| string| Settle coin  
+> optionShowName| string| Option display name  
+> optionOnlineTime| integer| Option launch time, a 64-bit UTC timestamp in milliseconds  
+> hasSymbol| integer| Whether this base coin currently has tradable option symbols. `1`: Yes; `0`: No. Returns `0` when `optionOnlineTime` is `0` or is in the future.  
+> underlyingType| integer| Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil.  
+  
+### Request Example
+
+  * HTTP
+
+
+    
+    
+    GET /v5/market/option-base-coins?underlyingType=0,2 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "list": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "BTC-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "SPCX",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SPCX-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "ETH-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "NVDA",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "NVDA-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SOL-Options",  
+                    "optionOnlineTime": 1739347200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XAUT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XAUT-Options",  
+                    "optionOnlineTime": 1774944000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "HYPE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "HYPE-Options",  
+                    "optionOnlineTime": 1785830400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XRP-Options",  
+                    "optionOnlineTime": 1761033600000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "MNT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "MNT-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "DOGE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "DOGE-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1790055708162  
+    }
+
+---
+
+# 查詢期權基礎幣種
+
+查詢期權基礎幣種，包括展示名稱、上線時間及當前是否有可交易的期權合約。
+
+### HTTP 請求
+
+GET`/v5/market/option-base-coins`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+underlyingType| false| string| 標的類型。`0`：加密貨幣；`1`：大宗商品；`2`：股票；`3`：外匯；`4`：石油。支持多個值，以逗號分隔，例如 `0,2`。不傳則返回所有類型。  
+  
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+list| array| 期權基礎幣種列表  
+> baseCoin| string| 基礎幣種  
+> quoteCoin| string| 報價幣種  
+> settleCoin| string| 結算幣種  
+> optionShowName| string| 期權展示名稱  
+> optionOnlineTime| integer| 期權上線時間，64 位 UTC 時間戳（毫秒）  
+> hasSymbol| integer| 該幣種當前是否有可交易的期權合約。`1`：有；`0`：無。當 `optionOnlineTime` 為 `0` 或尚未到達上線時間時，返回 `0`。  
+> underlyingType| integer| 標的類型。`0`：加密貨幣；`1`：大宗商品；`2`：股票；`3`：外匯；`4`：石油。  
+  
+### 請求示例
+
+  * HTTP
+
+
+    
+    
+    GET /v5/market/option-base-coins?underlyingType=0,2 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "list": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "BTC-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "SPCX",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SPCX-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "ETH-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "NVDA",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "NVDA-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SOL-Options",  
+                    "optionOnlineTime": 1739347200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XAUT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XAUT-Options",  
+                    "optionOnlineTime": 1774944000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "HYPE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "HYPE-Options",  
+                    "optionOnlineTime": 1785830400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XRP-Options",  
+                    "optionOnlineTime": 1761033600000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "MNT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "MNT-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "DOGE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "DOGE-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1790055708162  
+    }

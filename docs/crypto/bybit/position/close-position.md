@@ -2,67 +2,78 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-09-21 18:47:23.266492
+updated_at: 2026-09-22 18:47:41.003375
 ---
 
-# Set Leverage
+# Get Closed Options Positions
+
+Query user's closed options positions, sorted by `closeTime` in descending order.
 
 info
 
-According to the risk limit, leverage affects the maximum position value that can be opened, that is, the greater the leverage, the smaller the maximum position value that can be opened, and vice versa. [Learn more](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
+  * Only supports users to query closed options positions in the last 6 months.
+  * Fee and price are displayed with trailing zeroes up to 8 decimal places.
+
+
 
 ### HTTP Request
 
-POST`/v5/position/set-leverage`
+GET`/v5/position/get-closed-positions`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-buyLeverage| **true**|  string| [`1`, max leverage]
+[category](/docs/v5/enum#category)| **true**|  string| `option`  
+symbol| false| string| Symbol name  
+startTime| false| integer| The start timestamp (ms) 
 
-  * one-way mode: `buyLeverage` must be the same as `sellLeverage`
-  * Hedge mode:   
-isolated margin: `buyLeverage` and `sellLeverage` can be different;   
-cross margin: `buyLeverage` must be the same as `sellLeverage`
+  * startTime and endTime are not passed, return 1 days by default
+  * Only startTime is passed, return range between startTime and startTime+1 days
+  * Only endTime is passed, return range between endTime-1 days and endTime
+  * If both are passed, the rule is endTime - startTime <= 7 days
 
   
-sellLeverage| **true**|  string| [`1`, max leverage]  
-[](/docs/api-explorer/v5/position/leverage)
-
-* * *
-
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+  
 ### Response Parameters
 
-None
+Parameter| Type| Comments  
+---|---|---  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[category](/docs/v5/enum#category)| string| Product type  
+list| array| Object  
+> symbol| string| Symbol name  
+> side| string| `Buy`, `Sell`  
+> totalOpenFee| string| Total open fee  
+> deliveryFee| string| Delivery fee  
+> totalCloseFee| string| Total close fee  
+> qty| string| Order qty  
+> closeTime| integer| The closed time (ms)  
+> avgExitPrice| string| Average exit price  
+> deliveryPrice| string| Delivery price  
+> openTime| integer| The opened time (ms)  
+> avgEntryPrice| string| Average entry price  
+> totalPnl| string| Total PnL  
+  
+* * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * Java
-  * Node.js
 
 
     
     
-    POST /v5/position/set-leverage HTTP/1.1  
+    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672281605082  
+    X-BAPI-TIMESTAMP: 1672284128523  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "buyLeverage": "6",  
-        "sellLeverage": "6"  
-      
-    }  
     
     
     
@@ -72,46 +83,10 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_leverage(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        buyLeverage="6",  
-        sellLeverage="6",  
+    print(session.get_closed_options_positions(  
+        category="option",  
+        limit="1",  
     ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
-    client.setPositionLeverage(setLeverageRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setLeverage({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            buyLeverage: '6',  
-            sellLeverage: '6',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
@@ -120,71 +95,113 @@ None
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
+            "category": "option",  
+            "list": [  
+                {  
+                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "side": "Sell",  
+                    "totalOpenFee": "0.94506647",  
+                    "deliveryFee": "0.32184533",  
+                    "totalCloseFee": "0.00000000",  
+                    "qty": "0.02",  
+                    "closeTime": 1749726002161,  
+                    "avgExitPrice": "107281.77405000",  
+                    "deliveryPrice": "107281.77405031",  
+                    "openTime": 1749722990063,  
+                    "avgEntryPrice": "3371.50000000",  
+                    "totalPnl": "0.90760719"  
+                },  
+                {  
+                    "symbol": "BTC-12JUN25-104000-C-USDT",  
+                    "side": "Buy",  
+                    "totalOpenFee": "0.86379999",  
+                    "deliveryFee": "0.32287622",  
+                    "totalCloseFee": "0.00000000",  
+                    "qty": "0.02",  
+                    "closeTime": 1749715220240,  
+                    "avgExitPrice": "107625.40470150",  
+                    "deliveryPrice": "107625.40470159",  
+                    "openTime": 1749710568608,  
+                    "avgEntryPrice": "3946.50000000",  
+                    "totalPnl": "-7.60858218"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1672281607343  
+        "time": 1749736532193  
     }
 
 ---
 
-# 設置槓桿
+# 查詢期权平倉
+
+獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
 
 信息
 
-根據風險限額, 槓桿影響最大可開數量, 即槓桿越大, 最大可開倉數量越小, 反之亦然。[了解更多](https://www.bybit.com/zh-MY/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
+  * 支持用户查询最近六个月期权平仓数据
+  * fee和price相關字段保留小数点后8位末尾0不省略
+
+
 
 ### HTTP 請求
 
-POST`/v5/position/set-leverage`
+GET`/v5/position/get-closed-positions`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
-symbol| **true**|  string| 合約名稱  
-buyLeverage| **true**|  string| [`1`, 最大槓桿數]
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| `option`  
+symbol| false| string| 合約名稱  
+startTime| false| integer| 開始時間戳 (毫秒) 
 
-  * 單倉: `buyLeverage` 必須等於`sellLeverage`
-  * 雙倉:   
-逐倉保證金: `buyLeverage`可以與`sellLeverage`不相等;   
-全倉保證金: `buyLeverage` 必須等於`sellLeverage`
+  * startTime 和 endTime都不傳入, 則默認返回最近1天的數據
+  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
+  * 若只傳startTime，則查詢startTime和startTime+1天的數據
+  * 若只傳endTime，則查詢endTime-1天和endTime的數據
 
   
-sellLeverage| **true**|  string| [`1`, 最大槓桿數]  
-[](/docs/zh-TW/api-explorer/v5/position/leverage)
-
-* * *
-
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
+cursor| false| string| 游標，用於翻頁  
+  
 ### 響應參數
 
-無
-
+參數| 類型| 說明  
+---|---|---  
+nextPageCursor| string| 游標，用於翻頁  
+[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
+list| array| Object  
+> symbol| string| 合約名稱  
+> side| string| 買賣方向 `Buy`, `Side`  
+> totalOpenFee| string| 开仓费用  
+> deliveryFee| string| 交割费用  
+> totalCloseFee| string| 平仓费用  
+> qty| string| 訂單數量  
+> closeTime| integer| 平仓時間 (毫秒)  
+> avgExitPrice| string| 平均出場價格  
+> deliveryPrice| string| 交割價格  
+> openTime| integer| 开仓時間 (毫秒)  
+> avgExitPrice| string| 平均出場價格  
+> totalPnl| string| 被平倉位的盈虧  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Java
-  * Node.js
 
 
     
     
-    POST /v5/position/set-leverage HTTP/1.1  
+    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672281605082  
+    X-BAPI-TIMESTAMP: 1672284128523  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "buyLeverage": "6",  
-        "sellLeverage": "6"  
-      
-    }  
     
     
     
@@ -194,46 +211,10 @@ sellLeverage| **true**|  string| [`1`, 最大槓桿數]
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_leverage(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        buyLeverage="6",  
-        sellLeverage="6",  
+    print(session.get_closed_options_positions(  
+        category="option",  
+        limit="1",  
     ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
-    client.setPositionLeverage(setLeverageRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setLeverage({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            buyLeverage: '6',  
-            sellLeverage: '6',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
@@ -242,7 +223,40 @@ sellLeverage| **true**|  string| [`1`, 最大槓桿數]
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
+            "category": "option",  
+            "list": [  
+                {  
+                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "side": "Sell",  
+                    "totalOpenFee": "0.94506647",  
+                    "deliveryFee": "0.32184533",  
+                    "totalCloseFee": "0.00000000",  
+                    "qty": "0.02",  
+                    "closeTime": 1749726002161,  
+                    "avgExitPrice": "107281.77405000",  
+                    "deliveryPrice": "107281.77405031",  
+                    "openTime": 1749722990063,  
+                    "avgEntryPrice": "3371.50000000",  
+                    "totalPnl": "0.90760719"  
+                },  
+                {  
+                    "symbol": "BTC-12JUN25-104000-C-USDT",  
+                    "side": "Buy",  
+                    "totalOpenFee": "0.86379999",  
+                    "deliveryFee": "0.32287622",  
+                    "totalCloseFee": "0.00000000",  
+                    "qty": "0.02",  
+                    "closeTime": 1749715220240,  
+                    "avgExitPrice": "107625.40470150",  
+                    "deliveryPrice": "107625.40470159",  
+                    "openTime": 1749710568608,  
+                    "avgEntryPrice": "3946.50000000",  
+                    "totalPnl": "-7.60858218"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1672281607343  
+        "time": 1749736532193  
     }

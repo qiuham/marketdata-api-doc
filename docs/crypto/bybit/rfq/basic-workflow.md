@@ -2,35 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/basic-workflow
 api_type: REST
-updated_at: 2026-09-21 18:47:49.532770
+updated_at: 2026-09-22 18:48:09.962535
 ---
 
-# Accept non-LP Quote
+# Cancel Quote
 
-Accept non-LP Quote. **Up to 50 requests** per second.
+Cancel a quote. **Up to 50 requests per second**
 
 info
 
-  * Accepts non-LP quotes.
+  * You must pass one of the following params: quoteId, rfqId, and quoteLinkId.
+  * If quoteId, rfqId, and quoteLinkId are all passed, they are read in this priority: quoteId > quoteLinkId > rfqId.
 
 
 
 ### HTTP Request
 
-POST`/v5/rfq/accept-other-quote`
+POST`/v5/rfq/cancel-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-rfqId| **true**|  string| Inquiry ID  
+quoteId|  _false_|  string| Quote ID  
+rfqId|  _false_|  string| Inquiry ID  
+quoteLinkId|  _false_|  string| Custom quote ID  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 result| object|   
-> rfqId| string| Inquiry ID  
+rfqId| string| Inquiry ID  
+quoteId| string| Quote ID  
+quoteLinkId| string| Custom quote ID  
   
 ### Request Example
 
@@ -40,7 +45,7 @@ result| object|
 
     
     
-    POST /v5/rfq/accept-other-quote HTTP/1.1  
+    POST /v5/rfq/cancel-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -50,7 +55,7 @@ result| object|
     Content-Length: 115  
       
     {  
-      "rfqId":"1754364447601610516653123084412812",   
+        "quoteId":"1754364447601610516653123084412812"    
     }  
     
     
@@ -61,8 +66,8 @@ result| object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.accept_other_quote(  
-        rfqId="1754364447601610516653123084412812"  
+    print(session.cancel_quote(  
+        quoteId="1754364447601610516653123084412812"  
     ))  
     
 
@@ -73,45 +78,52 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "1754364447601610516653123084412812"  
+            "rfqId": "175740723913299909861293671607573",  
+            "quoteId": "1757407443083427576602342578477746",  
+            "quoteLinkId": ""  
         },  
         "retExtInfo": {},  
-        "time": 1757405933132  
+        "time": 1757407457635  
     }
 
 ---
 
-# 接受非 LP 報價
+# 取消報價單
 
-接受非 LP 報價 **每秒最多 50 個請求**
+取消報價單。**每秒最多 50 次請求**
 
 信息
 
-  * 用戶确认接受非 LP 報價
+  * 至少需傳遞 quoteId、rfqId 或 quoteLinkId。
+  * 若同時傳遞 quoteId、rfqId 和 quoteLinkId，則優先以 quoteId 為準，優先順序判斷為：quoteId > quoteLinkId > rfqId。
 
 
 
 ### HTTP 請求
 
-POST`/v5/rfq/accept-other-quote`
+POST`/v5/rfq/cancel-quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-rfqId| **true**|  string| 詢價单ID  
+quoteId| **false**|  string| 報價單 ID  
+rfqId| **false**|  string| 詢價單 ID  
+quoteLinkId| **false**|  string| 報價單自定義 ID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 result| object|   
-> rfqId| string| 詢價单ID  
+rfqId| string| 詢價單 ID  
+quoteId| string| 報價單 ID  
+quoteLinkId| string| 報價單自定義 ID  
   
 ### 請求示例
     
     
-    POST /v5/rfq/accept-other-quote HTTP/1.1  
+    POST /v5/rfq/cancel-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -121,7 +133,7 @@ result| object|
     Content-Length: 115  
       
     {  
-      "rfqId":"1754364447601610516653123084412812",   
+        "quoteId":"1754364447601610516653123084412812"    
     }  
     
 
@@ -132,8 +144,10 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "1754364447601610516653123084412812"  
+            "rfqId": "175740723913299909861293671607573",  
+            "quoteId": "1757407443083427576602342578477746",  
+            "quoteLinkId": ""  
         },  
         "retExtInfo": {},  
-        "time": 1757405933132  
+        "time": 1757407457635  
     }

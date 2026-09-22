@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/redeem
 api_type: REST
-updated_at: 2026-09-21 18:44:49.396540
+updated_at: 2026-09-22 18:45:02.711867
 ---
 
 # Get Airdrop Daily PnL Records

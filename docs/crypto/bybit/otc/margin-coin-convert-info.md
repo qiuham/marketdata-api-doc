@@ -2,40 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-coin-convert-info
 api_type: REST
-updated_at: 2026-09-21 18:47:11.968298
+updated_at: 2026-09-22 18:47:32.942646
 ---
 
-# Get Margin Coin Info
+# Get Repayment Orders
+
+Get a list of your loan repayment orders (orders which repaid the loan).
 
 tip
 
-  * When queried without an API key, this endpoint returns public margin data
-  * If your UID is bound with an OTC loan, then you can get your private margin data by calling with your API key
-  * If your UID is not bound with an OTC loan but you passed your API key, this endpoint returns public margin data
+  * Get the past 2 years data by default
+  * Get up to the past 2 years of data
 
 
 
 ### HTTP Request
 
-GET`/v5/ins-loan/ensure-tokens-convert`
+GET`/v5/ins-loan/repaid-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| false| string| Product ID. If not passed, returns all margin products. For spot, it returns coins with a `convertRatio` greater than 0.  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size. [`1`, `100`]. Default: `100`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-marginToken| array| Object  
-> productId| string| Product Id  
-> tokenInfo| array| Spot margin coin  
->> token| string| Margin coin  
->> convertRatioList| array| Margin coin convert ratio List  
->>> ladder| string| ladder  
->>> convertRatio| string| Margin coin convert ratio  
+repayInfo| array| Object  
+> repayOrderId| string| Repaid order ID  
+> repaidTime| string| Repaid timestamp (ms)  
+> token| string| Repaid coin  
+> quantity| string| Repaid principle  
+> interest| string| Repaid interest  
+> businessType| string| Repaid type. `1`: normal repayment; `2`: repaid by liquidation  
+> status| string| `1`: success; `2`: fail  
   
 ### Request Example
 
@@ -46,8 +50,13 @@ marginToken| array| Object
 
     
     
-    GET /v5/ins-loan/ensure-tokens-convert HTTP/1.1  
+    GET /v5/ins-loan/repaid-history HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1678687944725  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -57,7 +66,7 @@ marginToken| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_margin_coin_info())  
+    print(session.get_repayment_info())  
     
     
     
@@ -70,8 +79,8 @@ marginToken| array| Object
     });  
       
     client  
-      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
-        productId: '81',  
+      .getInstitutionalLendingRepayOrders({  
+        limit: 100,  
       })  
       .then((response) => {  
         console.log(response);  
@@ -88,122 +97,57 @@ marginToken| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "marginToken": [  
+            "repayInfo": [  
                 {  
-                    "productId": "81",  
-                    "tokenInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-500",  
-                                    "convertRatio": "0.95"  
-                                },  
-                                {  
-                                    "ladder": "500-1000",  
-                                    "convertRatio": "0.9"  
-                                },  
-                                {  
-                                    "ladder": "1000-2000",  
-                                    "convertRatio": "0.8"  
-                                },  
-                                {  
-                                    "ladder": "2000-4000",  
-                                    "convertRatio": "0.7"  
-                                },  
-                                {  
-                                    "ladder": "4000-99999999999",  
-                                    "convertRatio": "0.6"  
-                                }  
-                            ]  
-                        }  
-                      ...  
-                    ]  
-                },  
-                {  
-                    "productId": "82",  
-                    "tokenInfo": [  
-                        ...  
-                        {  
-                            "token": "USDT",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-1000",  
-                                    "convertRatio": "0.7"  
-                                },  
-                                {  
-                                    "ladder": "1000-2000",  
-                                    "convertRatio": "0.65"  
-                                },  
-                                {  
-                                    "ladder": "2000-99999999999",  
-                                    "convertRatio": "0.6"  
-                                }  
-                            ]  
-                        }  
-                    ]  
-                },  
-                {  
-                    "productId": "84",  
-                    "tokenInfo": [  
-                        ...  
-                        {  
-                            "token": "BTC",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-1000",  
-                                    "convertRatio": "1"  
-                                },  
-                                {  
-                                    "ladder": "1000-5000",  
-                                    "convertRatio": "0.9"  
-                                },  
-                                {  
-                                    "ladder": "5000-99999999999",  
-                                    "convertRatio": "0.55"  
-                                }  
-                            ]  
-                        }  
-                    ]  
+                    "repayOrderId": "8189",  
+                    "repaidTime": "1663126393000",  
+                    "token": "USDT",  
+                    "quantity": "30000",  
+                    "interest": "0",  
+                    "businessType": "1",  
+                    "status": "1"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1683276016497  
+        "time": 1669366648366  
     }
 
 ---
 
-# 查詢保證金幣種信息
+# 查詢還款信息
 
 提示
 
-  * 該接口在不傳入api key和secret進行鑒權時, 則返回公共數據
-  * 該接口在傳入api key和secret進行鑒權時且uid綁定了場外借貸產品, 則返回特定的保證金幣種數據
+  * 默認查詢過去2年的數據
+  * 最多支持查詢過去2年的數據
 
 
 
 ### HTTP 請求
 
-GET`/v5/ins-loan/ensure-tokens-convert`
+GET`/v5/ins-loan/repaid-history`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-productId| false| string| 產品ID. 若不傳，則返回所有產品的保證金幣種信息. 現貨返回折算率大於0的幣種.  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 返回數量限制. [`1`, `100`]. 默認: `100`  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-marginToken| array| Object  
-> productId| string| 產品ID  
-> tokenInfo| array| 現貨保證金幣種信息  
->> token| string| 保證金幣種  
->> convertRatioList| array| 保證金幣種折算率列  
->>> ladder| string| 階梯  
->>> convertRatio| string| 折算率  
+repayInfo| array| Object  
+> repayOrderId| string| 還款訂單號  
+> repaidTime| string| 還款時間（毫秒）  
+> token| string| 還款幣種  
+> quantity| string| 還款本金  
+> interest| string| 還款利息  
+> businessType| string| 還款類型. `1`：正常還款; `2`：系統強平還款  
+> status| string| `1`：還款成功; `2`：還款失敗  
   
 ### 請求示例
 
@@ -214,8 +158,13 @@ marginToken| array| Object
 
     
     
-    GET /v5/ins-loan/ensure-tokens HTTP/1.1  
+    GET /v5/ins-loan/repaid-history HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1678687944725  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -225,7 +174,7 @@ marginToken| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_margin_coin_info())  
+    print(session.get_repayment_info())  
     
     
     
@@ -238,8 +187,8 @@ marginToken| array| Object
     });  
       
     client  
-      .getInstitutionalLendingMarginCoinInfoWithConversionRate({  
-        productId: '81',  
+      .getInstitutionalLendingRepayOrders({  
+        limit: 100,  
       })  
       .then((response) => {  
         console.log(response);  
@@ -256,86 +205,18 @@ marginToken| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "marginToken": [  
+            "repayInfo": [  
                 {  
-                    "productId": "81",  
-                    "tokenInfo": [  
-                        {  
-                            "token": "USDT",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-500",  
-                                    "convertRatio": "0.95"  
-                                },  
-                                {  
-                                    "ladder": "500-1000",  
-                                    "convertRatio": "0.9"  
-                                },  
-                                {  
-                                    "ladder": "1000-2000",  
-                                    "convertRatio": "0.8"  
-                                },  
-                                {  
-                                    "ladder": "2000-4000",  
-                                    "convertRatio": "0.7"  
-                                },  
-                                {  
-                                    "ladder": "4000-99999999999",  
-                                    "convertRatio": "0.6"  
-                                }  
-                            ]  
-                        }  
-                      ...  
-                    ]  
-                },  
-                {  
-                    "productId": "82",  
-                    "tokenInfo": [  
-                        ...  
-                        {  
-                            "token": "USDT",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-1000",  
-                                    "convertRatio": "0.7"  
-                                },  
-                                {  
-                                    "ladder": "1000-2000",  
-                                    "convertRatio": "0.65"  
-                                },  
-                                {  
-                                    "ladder": "2000-99999999999",  
-                                    "convertRatio": "0.6"  
-                                }  
-                            ]  
-                        }  
-                    ]  
-                },  
-                {  
-                    "productId": "84",  
-                    "tokenInfo": [  
-                        ...  
-                        {  
-                            "token": "BTC",  
-                            "convertRatioList": [  
-                                {  
-                                    "ladder": "0-1000",  
-                                    "convertRatio": "1"  
-                                },  
-                                {  
-                                    "ladder": "1000-5000",  
-                                    "convertRatio": "0.9"  
-                                },  
-                                {  
-                                    "ladder": "5000-99999999999",  
-                                    "convertRatio": "0.55"  
-                                }  
-                            ]  
-                        }  
-                    ]  
+                    "repayOrderId": "8189",  
+                    "repaidTime": "1663126393000",  
+                    "token": "USDT",  
+                    "quantity": "30000",  
+                    "interest": "0",  
+                    "businessType": "1",  
+                    "status": "1"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1683276016497  
+        "time": 1669366648366  
     }

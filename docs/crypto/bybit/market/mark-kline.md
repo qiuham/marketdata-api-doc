@@ -2,75 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-09-21 18:46:00.012028
+updated_at: 2026-09-22 18:46:17.583869
 ---
 
-# Get Order Price Limit
+# Get Option Base Coins
 
-For derivative trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-For spot trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
-
+Query option base coins, including their display names, launch times, and whether they currently have tradable option symbols.
 
 ### HTTP Request
 
-GET`/v5/market/price-limit`
+GET`/v5/market/option-base-coins`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| false| string| Product type. `spot`,`linear`,`inverse`
-
-  * When `category` is not passed, use `linear` by default
-
-  
-[symbol](/docs/v5/enum#symbol)| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+underlyingType| false| string| Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil. Supports multiple values separated by commas, e.g. `0,2`. Returns all types if not passed.  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-symbol| string| Symbol name  
-buyLmt| string| Highest Bid Price  
-sellLmt| string| Lowest Ask Price  
-ts| string| timestamp in milliseconds  
+list| array| List of option base coins  
+> baseCoin| string| Base coin  
+> quoteCoin| string| Quote coin  
+> settleCoin| string| Settle coin  
+> optionShowName| string| Option display name  
+> optionOnlineTime| integer| Option launch time, a 64-bit UTC timestamp in milliseconds  
+> hasSymbol| integer| Whether this base coin currently has tradable option symbols. `1`: Yes; `0`: No. Returns `0` when `optionOnlineTime` is `0` or is in the future.  
+> underlyingType| integer| Underlying asset type. `0`: Crypto; `1`: Commodity; `2`: Stock; `3`: Forex; `4`: Oil.  
   
 ### Request Example
 
   * HTTP
-  * Python
-  * Go
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/price-limit?category=linear&symbol=BTCUSDT HTTP/1.1  
+    GET /v5/market/option-base-coins?underlyingType=0,2 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-    ))  
-    
-    
-    
-      
-    
-    
-    
-      
-    
-    
-    
-      
     
 
 ### Response Example
@@ -78,85 +48,143 @@ ts| string| timestamp in milliseconds
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "buyLmt": "105878.10",  
-            "sellLmt": "103781.60",  
-            "ts": "1750302284491"  
+            "list": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "BTC-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "SPCX",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SPCX-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "ETH-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "NVDA",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "NVDA-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SOL-Options",  
+                    "optionOnlineTime": 1739347200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XAUT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XAUT-Options",  
+                    "optionOnlineTime": 1774944000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "HYPE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "HYPE-Options",  
+                    "optionOnlineTime": 1785830400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XRP-Options",  
+                    "optionOnlineTime": 1761033600000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "MNT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "MNT-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "DOGE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "DOGE-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1750302285376  
+        "time": 1790055708162  
     }
 
 ---
 
-# 查詢訂單價格限制
+# 查詢期權基礎幣種
 
-衍生性商品交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-現貨交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
+查詢期權基礎幣種，包括展示名稱、上線時間及當前是否有可交易的期權合約。
 
+### HTTP 請求
 
-### HTTP請求
-
-GET`/v5/market/price-limit`
+GET`/v5/market/option-base-coins`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `spot`,`linear`,`inverse`
-
-  * 當`category`不指定時, 默認是`linear`
-
-  
-[symbol](/docs/zh-TW/v5/enum#symbol)| **true**|  string| 合約名稱  
+underlyingType| false| string| 標的類型。`0`：加密貨幣；`1`：大宗商品；`2`：股票；`3`：外匯；`4`：石油。支持多個值，以逗號分隔，例如 `0,2`。不傳則返回所有類型。  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-symbol| string| 合約名稱  
-buyLmt| string| 最高買價  
-sellLmt| string| 最低賣價  
-ts| string| 時間戳（以毫秒為單位）  
+list| array| 期權基礎幣種列表  
+> baseCoin| string| 基礎幣種  
+> quoteCoin| string| 報價幣種  
+> settleCoin| string| 結算幣種  
+> optionShowName| string| 期權展示名稱  
+> optionOnlineTime| integer| 期權上線時間，64 位 UTC 時間戳（毫秒）  
+> hasSymbol| integer| 該幣種當前是否有可交易的期權合約。`1`：有；`0`：無。當 `optionOnlineTime` 為 `0` 或尚未到達上線時間時，返回 `0`。  
+> underlyingType| integer| 標的類型。`0`：加密貨幣；`1`：大宗商品；`2`：股票；`3`：外匯；`4`：石油。  
   
 ### 請求示例
 
   * HTTP
-  * Python
-  * Go
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/price-limit?category=linear&symbol=BTCUSDT HTTP/1.1  
+    GET /v5/market/option-base-coins?underlyingType=0,2 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-    ))  
-    
-    
-    
-      
-    
-    
-    
-      
-    
-    
-    
-      
     
 
 ### 響應示例
@@ -164,13 +192,101 @@ ts| string| 時間戳（以毫秒為單位）
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "symbol": "BTCUSDT",  
-            "buyLmt": "105878.10",  
-            "sellLmt": "103781.60",  
-            "ts": "1750302284491"  
+            "list": [  
+                {  
+                    "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "BTC-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "SPCX",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SPCX-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "ETH-Options",  
+                    "optionOnlineTime": 1739952000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "NVDA",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "NVDA-Options",  
+                    "optionOnlineTime": 1789675200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 2  
+                },  
+                {  
+                    "baseCoin": "SOL",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "SOL-Options",  
+                    "optionOnlineTime": 1739347200000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XAUT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XAUT-Options",  
+                    "optionOnlineTime": 1774944000000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "HYPE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "HYPE-Options",  
+                    "optionOnlineTime": 1785830400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "XRP",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "XRP-Options",  
+                    "optionOnlineTime": 1761033600000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "MNT",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "MNT-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                },  
+                {  
+                    "baseCoin": "DOGE",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "optionShowName": "DOGE-Options",  
+                    "optionOnlineTime": 1761638400000,  
+                    "hasSymbol": 1,  
+                    "underlyingType": 0  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1750302285376  
+        "time": 1790055708162  
     }

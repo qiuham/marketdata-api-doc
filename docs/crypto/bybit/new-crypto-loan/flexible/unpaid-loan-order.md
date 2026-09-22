@@ -2,43 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/unpaid-loan-order
 api_type: REST
-updated_at: 2026-09-21 18:46:44.949872
+updated_at: 2026-09-22 18:47:02.608894
 ---
 
-# Get Collateral Adjustment History
+# Get Borrowable Coins
 
-Query for your LTV adjustment history.
+info
 
-> Permission: "Spot trade"  
->  UID rate limit: 5 req / second
+Does not need authentication.
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-common/adjustment-history`
+GET`/v5/crypto-loan-common/loanable-data`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-adjustId| false| string| Collateral adjustment transaction ID  
-collateralCurrency| false| string| Collateral coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+vipLevel| false| string| VIP level 
+
+  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
+  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
+
+  
+currency| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> collateralCurrency| string| Collateral coin  
-> amount| string| amount  
-> adjustId| long| Collateral adjustment transaction ID  
-> adjustTime| long| Adjust timestamp  
-> preLTV| string| LTV before the adjustment  
-> afterLTV| string| LTV after the adjustment  
-> direction| integer| The direction of adjustment, `0`: add collateral; `1`: reduce collateral  
-> status| integer| The status of adjustment, `1`: success; `2`: processing; `3`: fail  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+> currency| string| Coin name  
+> fixedBorrowable| boolean| Whether support fixed loan  
+> fixedBorrowingAccuracy| integer| Coin precision for fixed loan  
+> flexibleBorrowable| boolean| Whether support flexible loan  
+> flexibleBorrowingAccuracy| integer| Coin precision for flexible loan  
+> maxBorrowingAmount| string| Max borrow limit  
+> minFixedBorrowingAmount| string| Minimum amount for each fixed loan order  
+> minFlexibleBorrowingAmount| string| Minimum amount for each flexible loan order  
+> vipLevel| string| VIP level  
+> flexibleAnnualizedInterestRate| integer| The annualized interest rate for flexible borrowing. If the loan currency does not support flexible borrowing, it will always be """"  
+> annualizedInterestRate7D| string| The lowest annualized interest rate for fixed borrowing for 7 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> annualizedInterestRate14D| string| The lowest annualized interest rate for fixed borrowing for 14 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> annualizedInterestRate30D| string| The lowest annualized interest rate for fixed borrowing for 30 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> annualizedInterestRate60D| string| The lowest annualized interest rate for fixed borrowing for 60 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> annualizedInterestRate90D| string| The lowest annualized interest rate for fixed borrowing for 90 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
+> annualizedInterestRate180D| string| The lowest annualized interest rate for fixed borrowing for 180 days that the market can currently provide. If there is no lending in the current market, then it is empty string  
   
 ### Request Example
 
@@ -49,25 +58,16 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
+    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752628288472  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_ltv_adjustment_history_new_crypto_loan(  
-        limit="2",  
-        collateralCurrency="BTC",  
-    ))  
+    print(session.get_borrowable_coins_new_crypto_loan())  
     
     
     
@@ -83,68 +83,74 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "result": {  
             "list": [  
                 {  
-                    "adjustId": 27511,  
-                    "adjustTime": 1752627997907,  
-                    "afterLTV": "0.813743",  
-                    "amount": "0.08",  
-                    "collateralCurrency": "BTC",  
-                    "direction": 1,  
-                    "preLTV": "0.524602",  
-                    "status": 1  
-                },  
-                {  
-                    "adjustId": 27491,  
-                    "adjustTime": 1752218558913,  
-                    "afterLTV": "0.41983",  
-                    "amount": "0.03",  
-                    "collateralCurrency": "BTC",  
-                    "direction": 1,  
-                    "preLTV": "0.372314",  
-                    "status": 1  
+                    "currency": "ETH",  
+                    "fixedBorrowable": true,  
+                    "fixedBorrowingAccuracy": 6,  
+                    "flexibleBorrowable": true,  
+                    "flexibleBorrowingAccuracy": 4,  
+                    "maxBorrowingAmount": "1100",  
+                    "minFixedBorrowingAmount": "0.1",  
+                    "minFlexibleBorrowingAmount": "0.001",  
+                    "vipLevel": "VIP5",  
+                    "annualizedInterestRate14D": "0.08",  
+                    "annualizedInterestRate180D": "",  
+                    "annualizedInterestRate30D": "",  
+                    "annualizedInterestRate60D": "",  
+                    "annualizedInterestRate7D": "",  
+                    "annualizedInterestRate90D": "",  
+                    "flexibleAnnualizedInterestRate": "0.001429799316"  
                 }  
-            ],  
-            "nextPageCursor": "27491"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752628288732  
+        "time": 1752573126653  
     }
 
 ---
 
-# 查詢質押金調整歷史
+# 查詢可借貸幣種
 
-查詢增減質押金的操作歷史
+信息
 
-> 權限: "現貨"  
->  頻率: 5次/秒
+不需要鑒權
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-common/adjustment-history`
+GET`/v5/crypto-loan-common/loanable-data`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-adjustId| false| string| 質押金調整操作ID  
-collateralCurrency| false| string| 質押幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+vipLevel| false| string| Vip等級 
+
+  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
+  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
+
+  
+currency| false| string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> collateralCurrency| string| 抵押幣種  
-> amount| string| 金額  
-> adjustId| long| 抵押調整交易 ID  
-> adjustTime| long| 調整時間戳  
-> preLTV| string| 調整前質押率（LTV）  
-> afterLTV| string| 調整後質押率（LTV）  
-> direction| integer| 調整方向，`0`: 增加抵押；`1`: 減少抵押  
-> status| integer| 調整狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
-nextPageCursor| string| 下一頁游標  
+> currency| string| 幣種名稱  
+> fixedBorrowable| boolean| 是否支持定期借款  
+> fixedBorrowingAccuracy| integer| 定期借款的幣種精度  
+> flexibleBorrowable| boolean| 是否支持活期借款  
+> flexibleBorrowingAccuracy| integer| 活期借款的幣種精度  
+> maxBorrowingAmount| string| 最大借款限額  
+> minFixedBorrowingAmount| string| 每筆定期借款訂單的最低金額  
+> minFlexibleBorrowingAmount| string| 每筆活期借款訂單的最低金額  
+> vipLevel| string| VIP 等級  
+> flexibleAnnualizedInterestRate| integer| 活期年化借款利率。如果借貸幣種不支持活期, 則總是空字符串  
+> annualizedInterestRate7D| string| 市場目前可提供的7天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> annualizedInterestRate14D| string| 市場目前可提供的14天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> annualizedInterestRate30D| string| 市場目前可提供的30天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> annualizedInterestRate60D| string| 市場目前可提供的60天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> annualizedInterestRate90D| string| 市場目前可提供的90天最低借款年化利率。如果當前市場無存款單，則是空字符串  
+> annualizedInterestRate180D| string| 市場目前可提供的180天最低借款年化利率。如果當前市場無存款單，則是空字符串  
   
 ### 請求示例
 
@@ -155,25 +161,16 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
+    GET /v5/crypto-loan-common/loanable-data?currency=ETH&vipLevel=VIP5 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752628288472  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_ltv_adjustment_history_new_crypto_loan(  
-        limit="2",  
-        collateralCurrency="BTC",  
-    ))  
+    print(session.get_borrowable_coins_new_crypto_loan())  
     
     
     
@@ -189,28 +186,25 @@ nextPageCursor| string| 下一頁游標
         "result": {  
             "list": [  
                 {  
-                    "adjustId": 27511,  
-                    "adjustTime": 1752627997907,  
-                    "afterLTV": "0.813743",  
-                    "amount": "0.08",  
-                    "collateralCurrency": "BTC",  
-                    "direction": 1,  
-                    "preLTV": "0.524602",  
-                    "status": 1  
-                },  
-                {  
-                    "adjustId": 27491,  
-                    "adjustTime": 1752218558913,  
-                    "afterLTV": "0.41983",  
-                    "amount": "0.03",  
-                    "collateralCurrency": "BTC",  
-                    "direction": 1,  
-                    "preLTV": "0.372314",  
-                    "status": 1  
+                    "currency": "ETH",  
+                    "fixedBorrowable": true,  
+                    "fixedBorrowingAccuracy": 6,  
+                    "flexibleBorrowable": true,  
+                    "flexibleBorrowingAccuracy": 4,  
+                    "maxBorrowingAmount": "1100",  
+                    "minFixedBorrowingAmount": "0.1",  
+                    "minFlexibleBorrowingAmount": "0.001",  
+                    "vipLevel": "VIP5",  
+                    "annualizedInterestRate14D": "0.08",  
+                    "annualizedInterestRate180D": "",  
+                    "annualizedInterestRate30D": "",  
+                    "annualizedInterestRate60D": "",  
+                    "annualizedInterestRate7D": "",  
+                    "annualizedInterestRate90D": "",  
+                    "flexibleAnnualizedInterestRate": "0.001429799316"  
                 }  
-            ],  
-            "nextPageCursor": "27491"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752628288732  
+        "time": 1752573126653  
     }
