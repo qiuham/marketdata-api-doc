@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-apply-for-monthly-statement-last-year
 anchor_id: funding-account-rest-api-apply-for-monthly-statement-last-year
 api_type: REST
-updated_at: 2026-09-22 19:19:52.329900
+updated_at: 2026-09-23 19:16:20.881025
 ---
 
 # Apply for monthly statement (last year)

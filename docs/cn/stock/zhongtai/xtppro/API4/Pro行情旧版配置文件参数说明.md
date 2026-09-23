@@ -13,7 +13,7 @@ id: zhongtai-xtppro-pro行情旧版配置文件的参数说明
 title: Pro行情旧版配置文件的参数说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/Pro%E8%A1%8C%E6%83%85%E6%97%A7%E7%89%88%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-07-08
+updated_at: 2026-08-06
 ---
 
 # Pro行情旧版配置文件的参数说明

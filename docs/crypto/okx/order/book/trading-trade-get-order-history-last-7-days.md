@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-history-last-7-days
 anchor_id: order-book-trading-trade-get-order-history-last-7-days
 api_type: API
-updated_at: 2026-09-22 19:18:06.046991
+updated_at: 2026-09-23 19:14:34.740812
 ---
 
 # GET / Order history (last 7 days)

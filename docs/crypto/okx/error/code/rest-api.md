@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api
 anchor_id: error-code-rest-api
 api_type: REST
-updated_at: 2026-09-22 19:20:29.819988
+updated_at: 2026-09-23 19:16:58.365108
 ---
 
 # REST API
@@ -1856,6 +1856,10 @@ e.g. clOrdId 已存在
 51774 | 200 | OKUSD API 正在维护中  
 51784 | 200 | 客户端订单 ID 正在处理中  
 51785 | 200 | 抵押币种与 E-Mode 配对不匹配  
+51787 | 200 | 还款订单不存在或不是活跃状态  
+51788 | 200 | 还款数量超过订单当前未偿负债  
+51789 | 200 | 资金账户余额不足以进行还款  
+51790 | 200 | 还款币种与订单借入币种不一致  
   
 ### 闪兑 
 

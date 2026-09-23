@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/loan-coin
 api_type: REST
-updated_at: 2026-09-22 18:47:03.229072
+updated_at: 2026-09-23 18:45:43.796151
 ---
 
 # Get Borrowable Coins

@@ -13,7 +13,7 @@ id: zhongtai-xtppro-xtp-pro行情xquote-api使用示例说明
 title: XTP-Pro行情XQuote-API使用示例说明
 source_url: 'https://xtp.zts.com.cn/xtp-pro/API4/%E8%A1%8C%E6%83%85XQuote-API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97QuickStart.html'
 page_url: 'https://xtp.zts.com.cn/xtp-pro/'
-updated_at: 2026-06-30
+updated_at: 2026-08-06
 ---
 
 # XTP-Pro行情XQuote-API使用示例说明
