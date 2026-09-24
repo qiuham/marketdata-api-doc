@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-finance
 anchor_id: error-code-rest-api-finance
 api_type: REST
-updated_at: 2026-09-23 19:16:59.048328
+updated_at: 2026-09-24 19:19:14.353975
 ---
 
 # Finance
@@ -58,7 +58,11 @@ Error Code | HTTP Status Code | Error Message
 51773 | 200 | Feature not available in your region  
 51774 | 200 | OKUSD API is under maintenance  
 51784 | 200 | Client order ID is being processed  
-51785 | 200 | The collateral currency does not match the E-Mode pair
+51785 | 200 | The collateral currency does not match the E-Mode pair  
+51787 | 200 | The repayment order does not exist or is not active  
+51788 | 200 | The repayment amount exceeds the order's current outstanding liability  
+51789 | 200 | The funding account balance is insufficient for repayment  
+51790 | 200 | The repayment currency does not match the order's borrow currency
 
 ---
 

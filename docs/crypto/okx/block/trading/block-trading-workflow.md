@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-block-trading-workflow
 anchor_id: block-trading-block-trading-workflow
 api_type: API
-updated_at: 2026-09-23 19:15:28.179428
+updated_at: 2026-09-24 19:17:43.367925
 ---
 
 # Block Trading Workflow

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/dcp
 api_type: Trading
-updated_at: 2026-09-23 18:45:59.065274
+updated_at: 2026-09-24 18:46:59.069444
 ---
 
 # Pre Check Order
@@ -38,10 +38,10 @@ Parameter| Type| Comments
 ---|---|---  
 orderId| string| Order ID  
 orderLinkId| string| User customised order ID  
-preImrE4| int| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
-preMmrE4| int| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
-postImrE4| int| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
-postMmrE4| int| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+preImrE4| string| Initial margin rate before checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+preMmrE4| string| Maintenance margin rate before checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
+postImrE4| string| Initial margin rate calculated after checking, keep four decimal places. For examples, 30 means IMR = 30/1e4 = 0.30%  
+postMmrE4| string| Maintenance margin rate calculated after checking, keep four decimal places. For examples, 30 means MMR = 30/1e4 = 0.30%  
   
 * * *
 
@@ -123,10 +123,10 @@ postMmrE4| int| Maintenance margin rate calculated after checking, keep four dec
         "result": {  
             "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
             "orderLinkId": "test129",  
-            "preImrE4": 30,  
-            "preMmrE4": 21,  
-            "postImrE4": 357,  
-            "postMmrE4": 294  
+            "preImrE4": "30",  
+            "preMmrE4": "21",  
+            "postImrE4": "357",  
+            "postMmrE4": "294"  
         },  
         "retExtInfo": {},  
         "time": 1749541599589  
@@ -167,10 +167,10 @@ POST`/v5/order/pre-check`
 ---|---|---  
 orderId| string| 訂單ID  
 orderLinkId| string| 用戶自定義訂單ID  
-preImrE4| int| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
-preMmrE4| int| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
-postImrE4| int| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
-postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+preImrE4| string| 預下單前的初始保證金率，保留小數點後四位。例如，30 表示 IMR = 30/1e4 = 0.30%  
+preMmrE4| string| 預下單前的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
+postImrE4| string| 預下單後計算的初始保證金率，保留小數點後四位。例如：30 表示 IMR = 30/1e4 = 0.30%  
+postMmrE4| string| 預下單後計算的維持保證金率，保留小數點後四位。例如：30 表示 MMR = 30/1e4 = 0.30%  
   
 * * *
 
@@ -252,10 +252,10 @@ postMmrE4| int| 預下單後計算的維持保證金率，保留小數點後四�
         "result": {  
             "orderId": "24920bdb-4019-4e37-ad1c-876e3a855ac3",  
             "orderLinkId": "test129",  
-            "preImrE4": 30,  
-            "preMmrE4": 21,  
-            "postImrE4": 357,  
-            "postMmrE4": 294  
+            "preImrE4": "30",  
+            "preMmrE4": "21",  
+            "postImrE4": "357",  
+            "postMmrE4": "294"  
         },  
         "retExtInfo": {},  
         "time": 1749541599589  

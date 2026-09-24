@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code
 anchor_id: error-code
 api_type: API
-updated_at: 2026-09-23 19:16:57.946254
+updated_at: 2026-09-24 19:19:13.242341
 ---
 
 # Error Code
@@ -685,6 +685,10 @@ Error Code | HTTP Status Code | Error Message
 51774 | 200 | OKUSD API is under maintenance  
 51784 | 200 | Client order ID is being processed  
 51785 | 200 | The collateral currency does not match the E-Mode pair  
+51787 | 200 | The repayment order does not exist or is not active  
+51788 | 200 | The repayment amount exceeds the order's current outstanding liability  
+51789 | 200 | The funding account balance is insufficient for repayment  
+51790 | 200 | The repayment currency does not match the order's borrow currency  
   
 ### Convert
 

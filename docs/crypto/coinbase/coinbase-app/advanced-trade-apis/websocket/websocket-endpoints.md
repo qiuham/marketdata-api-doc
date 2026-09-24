@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints
 api_type: WebSocket
-updated_at: 2026-09-23 18:58:54.044333
+updated_at: 2026-09-24 19:01:05.705045
 ---
 
 # Advanced Trade WebSocket Endpoints
@@ -92,26 +92,26 @@ Public market data for options, futures, and perpetuals.
 
 Endpoint| Description  
 ---|---  
-`announcements`| Platform notices  
-`block_rfq.trades.{currency}`| Public Block RFQ trades  
-`book.{instrument_name}.{group}.{depth}.{interval}`| Grouped order book  
-`book.{instrument_name}.{interval}`| Order book  
-`chart.trades.{instrument_name}.{resolution}`| Chart / candle updates  
-`deribit_price_index.{index_name}`| Index price  
-`deribit_price_ranking.{index_name}`| Index constituents ranking  
-`deribit_price_statistics.{index_name}`| 24h index statistics  
-`deribit_volatility_index.{index_name}`| Volatility index  
-`estimated_expiration_price.{index_name}`| Estimated expiration price  
-`incremental_ticker.{instrument_name}`| Incremental ticker  
-`instrument.state.{kind}.{currency}`| Instrument state  
-`markprice.options.{index_name}`| Options mark price  
-`perpetual.{instrument_name}.{interval}`| Perpetual funding  
-`platform_state`| Platform status  
-`platform_state.public_methods_state`| Public-methods status  
-`quote.{instrument_name}`| Top of book quote  
-`ticker.{instrument_name}.{interval}`| Ticker  
-`trades.{instrument_name}.{interval}`| Public trades  
-`trades.{kind}.{currency}.{interval}`| Public trades by kind and currency  
+[`announcements`](/api-reference/coinbase-deribit-app-api/websocket/announcements/announcements)| Platform notices  
+[`book.{instrument_name}.{group}.{depth}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/orderbook/bookinstrument_namegroupdepthinterval)| Grouped order book  
+[`book.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/orderbook/bookinstrument_nameinterval)| Order book  
+[`chart.trades.{instrument_name}.{resolution}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/charttradesinstrument_nameresolution)| Chart / candle updates  
+[`deribit_price_index.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/deribit_price_indexindex_name)| Index price  
+[`deribit_price_ranking.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/deribit_price_rankingindex_name)| Index constituents ranking  
+[`deribit_price_statistics.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/deribit_price_statisticsindex_name)| 24h index statistics  
+[`deribit_volatility_index.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/deribit_volatility_indexindex_name)| Volatility index  
+[`estimated_expiration_price.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/estimated_expiration_priceindex_name)| Estimated expiration price  
+[`incremental_ticker.{instrument_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/incremental_tickerinstrument_name)| Incremental ticker  
+[`instrument.creation.{kind}.{currency}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/instrumentcreationkindcurrency)| Newly created instrument details  
+[`instrument.state.{kind}.{currency}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/instrumentstatekindcurrency)| Instrument state  
+[`markprice.options.{index_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/markpriceoptionsindex_name)| Options mark price  
+[`perpetual.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/perpetualinstrument_nameinterval)| Perpetual funding  
+[`platform_state`](/api-reference/coinbase-deribit-app-api/websocket/platform/platform_state)| Platform status  
+[`platform_state.public_methods_state`](/api-reference/coinbase-deribit-app-api/websocket/platform/platform_statepublic_methods_state)| Public-methods status  
+[`quote.{instrument_name}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/quoteinstrument_name)| Top of book quote  
+[`ticker.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/market-data/tickerinstrument_nameinterval)| Ticker  
+[`trades.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/trades/tradesinstrument_nameinterval)| Public trades  
+[`trades.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/trades/tradeskindcurrencyinterval)| Public trades by kind and currency  
   
 #### Notes
 
@@ -124,7 +124,7 @@ Endpoint| Description
 
 ### Private
 
-The user’s orders, fills, positions, portfolio, and Block RFQs.
+The user’s account events, orders, fills, positions, and portfolio updates.
 
 **Coming soon.** The Deribit-powered gateway is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
@@ -136,23 +136,29 @@ The user’s orders, fills, positions, portfolio, and Block RFQs.
 
 Endpoint| Description  
 ---|---  
-`block_rfq.maker.{currency}`| Incoming Block RFQs for a maker  
-`block_rfq.maker.quotes.{currency}`| Maker quotes on Block RFQs  
-`block_rfq.taker.{currency}`| Block RFQs for a taker  
-`user.access_log`| Account access events  
-`user.changes.{instrument_name}.{interval}`| Order and position changes, one instrument  
-`user.changes.{kind}.{currency}.{interval}`| Order and position changes by kind and currency  
-`user.combo_trades.{instrument_name}.{interval}`| Combo trades, one instrument  
-`user.combo_trades.{kind}.{currency}.{interval}`| Combo trades by kind and currency  
-`user.orders.{instrument_name}.{interval}`| Your orders, one instrument  
-`user.orders.{instrument_name}.raw`| Your orders, one instrument, every update  
-`user.orders.{kind}.{currency}.{interval}`| Your orders by kind and currency  
-`user.orders.{kind}.{currency}.raw`| Your orders by kind and currency, every update  
-`user.portfolio.{currency}`| Portfolio and balances  
-`user.trades.{instrument_name}.{interval}`| Your fills, one instrument  
-`user.trades.{kind}.{currency}.{interval}`| Your fills by kind and currency  
-`block_trade_confirmations`| Block trade confirmations  
-`block_trade_confirmations.{currency}`| Block trade confirmations, one currency  
+[`user.access_log`](/api-reference/coinbase-deribit-app-api/websocket/user/useraccess_log)| Account access events  
+[`user.changes.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userchangesinstrument_nameinterval)| Order and position changes, one instrument  
+[`user.changes.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userchangeskindcurrencyinterval)| Order and position changes by kind and currency  
+[`user.combo_trades.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/usercombo_tradesinstrument_nameinterval)| Combo trades, one instrument  
+[`user.combo_trades.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/usercombo_tradeskindcurrencyinterval)| Combo trades by kind and currency  
+[`user.isolated.changes.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangesinstrument_nameinterval)| Isolated-subaccount changes, one instrument  
+[`user.isolated.changes.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangeskindcurrencyinterval)| Isolated-subaccount changes by kind and currency  
+[`user.isolated.liquidation`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedliquidation)| Isolated-subaccount liquidation events  
+[`user.isolated.orders.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedordersinstrument_nameinterval)| Isolated-subaccount orders, one instrument  
+[`user.isolated.orders.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedorderskindcurrencyinterval)| Isolated-subaccount orders by kind and currency  
+[`user.isolated.portfolio.{currency}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedportfoliocurrency)| Isolated-subaccount portfolio and balances  
+[`user.isolated.trades.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradesinstrument_nameinterval)| Isolated-subaccount fills, one instrument  
+[`user.isolated.trades.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradeskindcurrencyinterval)| Isolated-subaccount fills by kind and currency  
+[`user.lock`](/api-reference/coinbase-deribit-app-api/websocket/user/userlock)| Account lock and unlock events  
+[`user.orders.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userordersinstrument_nameinterval)| Your orders, one instrument  
+[`user.orders.{instrument_name}.raw`](/api-reference/coinbase-deribit-app-api/websocket/user/userordersinstrument_nameraw)| Your orders, one instrument, every update  
+[`user.orders.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/userorderskindcurrencyinterval)| Your orders by kind and currency  
+[`user.orders.{kind}.{currency}.raw`](/api-reference/coinbase-deribit-app-api/websocket/user/userorderskindcurrencyraw)| Your orders by kind and currency, every update  
+[`user.portfolio.{currency}`](/api-reference/coinbase-deribit-app-api/websocket/user/userportfoliocurrency)| Portfolio and balances  
+[`user.position_lock`](/api-reference/coinbase-deribit-app-api/websocket/user/userposition_lock)| Position lock state changes  
+[`user.trades.{instrument_name}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/usertradesinstrument_nameinterval)| Your fills, one instrument  
+[`user.trades.{kind}.{currency}.{interval}`](/api-reference/coinbase-deribit-app-api/websocket/user/usertradeskindcurrencyinterval)| Your fills by kind and currency  
+[`user.trailing_orders.trigger_price.{currency}`](/api-reference/coinbase-deribit-app-api/websocket/user/usertrailing_orderstrigger_pricecurrency)| Trailing order trigger-price updates  
   
 #### Notes
 

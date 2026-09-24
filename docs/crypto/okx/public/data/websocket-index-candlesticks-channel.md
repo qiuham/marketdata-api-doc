@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-index-candlesticks-channel
 anchor_id: public-data-websocket-index-candlesticks-channel
 api_type: WebSocket
-updated_at: 2026-09-23 19:16:08.424996
+updated_at: 2026-09-24 19:18:23.655325
 ---
 
 # Index candlesticks channel
