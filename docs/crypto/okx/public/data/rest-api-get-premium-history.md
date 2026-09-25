@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-premium-history
 anchor_id: public-data-rest-api-get-premium-history
 api_type: REST
-updated_at: 2026-09-24 19:18:16.228731
+updated_at: 2026-09-25 19:14:59.168066
 ---
 
 # Get premium history

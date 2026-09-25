@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/rate-limit/set
 api_type: REST
-updated_at: 2026-09-24 18:42:43.088853
+updated_at: 2026-09-25 18:41:05.438031
 ---
 
 # Get Voucher Spec

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/fund-transfer
 api_type: REST
-updated_at: 2026-09-24 18:45:03.651015
+updated_at: 2026-09-25 18:43:14.054067
 ---
 
 # Claim Withdrawable Funds

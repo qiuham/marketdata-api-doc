@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/settlement
 api_type: Trading
-updated_at: 2026-09-24 18:43:22.351367
+updated_at: 2026-09-25 18:41:41.533451
 ---
 
 # Execution

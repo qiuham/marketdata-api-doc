@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
 api_type: REST
-updated_at: 2026-09-24 18:48:37.579456
+updated_at: 2026-09-25 18:46:33.190208
 ---
 
 # Get Liability Info

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-09-24 18:47:19.416553
+updated_at: 2026-09-25 18:45:20.667397
 ---
 
 # Get Closed Options Positions

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners
 api_type: Guide
-updated_at: 2026-09-24 19:01:05.083051
+updated_at: 2026-09-25 18:57:59.600864
 ---
 
 # INTX Retail API Partners — Migration Guide
@@ -11,7 +11,7 @@ This is the migration guide for existing Coinbase INTX partners.
 
 ## Summary
 
-Coinbase is moving international derivatives off INTX onto Deribit-backed endpoints, with cutover coming soon. INTX trading ends at cutover — migrate your integration before then to keep trading. You already authenticate with Coinbase CDP API keys or OAuth2, and those credentials carry over unchanged — no new keys to issue, no new end-user consent. To migrate, repoint to the new endpoints and add a single `public/auth` token-exchange call. The protocol moves from INTX REST to JSON-RPC 2.0 over HTTP and WebSocket. The [Technical Migration Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical) is the full reference — protocol, base URLs, symbology, order types, and endpoint mapping. This guide covers what’s specific to you as an INTX partner.
+Coinbase is moving international derivatives off INTX onto Deribit-backed endpoints, with cutover on **October 1, 2026**. INTX trading ends at cutover — migrate your integration before then to keep trading. You already authenticate with Coinbase CDP API keys or OAuth2, and those credentials carry over unchanged — no new keys to issue, no new end-user consent. To migrate, repoint to the new endpoints and add a single `public/auth` token-exchange call. The protocol moves from INTX REST to JSON-RPC 2.0 over HTTP and WebSocket. The [Technical Migration Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical) is the full reference — protocol, base URLs, symbology, order types, and endpoint mapping. This guide covers what’s specific to you as an INTX partner.
 
 ## What changes
 
@@ -138,7 +138,7 @@ Update symbology
 
 Deribit Advanced Trading gateway is live
 
-Cutover is coming soon, no parallel run. Repoint production traffic.
+Cut over on **October 1, 2026** , no parallel run. Repoint production traffic.
 
 ## Help
 
