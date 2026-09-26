@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/position-tiers
 api_type: REST
-updated_at: 2026-09-25 18:46:37.766847
+updated_at: 2026-09-26 18:46:22.959977
 ---
 
 # Set Leverage

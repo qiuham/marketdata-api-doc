@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-scopes
 api_type: Trading
-updated_at: 2026-09-25 18:58:00.140847
+updated_at: 2026-09-26 18:58:33.070377
 ---
 
 # Advanced Trade Scope & Permissions

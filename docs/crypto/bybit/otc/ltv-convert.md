@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/ltv-convert
 api_type: REST
-updated_at: 2026-09-25 18:45:13.513248
+updated_at: 2026-09-26 18:44:54.933212
 ---
 
 # Get Repayment Orders

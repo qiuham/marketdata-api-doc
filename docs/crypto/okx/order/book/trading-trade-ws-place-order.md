@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-place-order
 anchor_id: order-book-trading-trade-ws-place-order
 api_type: WebSocket
-updated_at: 2026-09-25 19:13:39.018255
+updated_at: 2026-09-26 19:14:15.426194
 ---
 
 # WS / Place order

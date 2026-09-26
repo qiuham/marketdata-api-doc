@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/delivery
 api_type: REST
-updated_at: 2026-09-25 18:39:52.235916
+updated_at: 2026-09-26 18:39:19.022850
 ---
 
 # Get Delivery Record

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-position-history
 anchor_id: order-book-trading-copy-trading-get-lead-position-history
 api_type: API
-updated_at: 2026-09-25 19:14:08.468869
+updated_at: 2026-09-26 19:14:44.834117
 ---
 
 # GET / Lead position history

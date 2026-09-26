@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-easy-convert
 anchor_id: order-book-trading-trade-post-place-easy-convert
 api_type: API
-updated_at: 2026-09-25 19:13:34.585475
+updated_at: 2026-09-26 19:14:11.014477
 ---
 
 # POST / Place easy convert

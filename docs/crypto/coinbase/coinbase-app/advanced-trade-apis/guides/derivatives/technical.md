@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical
 api_type: Guide
-updated_at: 2026-09-25 18:57:59.719101
+updated_at: 2026-09-26 18:58:32.212565
 ---
 
 # Technical Migration Guide

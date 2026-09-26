@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-total-profit-sharing
 anchor_id: order-book-trading-copy-trading-get-total-profit-sharing
 api_type: API
-updated_at: 2026-09-25 19:14:10.334947
+updated_at: 2026-09-26 19:14:46.697482
 ---
 
 # GET / Total profit sharing

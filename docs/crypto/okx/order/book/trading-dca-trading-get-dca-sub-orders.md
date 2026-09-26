@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-dca-trading-get-dca-sub-orders
 anchor_id: order-book-trading-dca-trading-get-dca-sub-orders
 api_type: API
-updated_at: 2026-09-25 19:13:54.697030
+updated_at: 2026-09-26 19:14:31.092358
 ---
 
 # GET / DCA sub orders
