@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-history-of-managed-sub-account-transfer
 anchor_id: sub-account-rest-api-get-history-of-managed-sub-account-transfer
 api_type: REST
-updated_at: 2026-09-26 19:16:06.266299
+updated_at: 2026-09-27 19:15:37.981928
 ---
 
 # Get history of managed sub-account transfer

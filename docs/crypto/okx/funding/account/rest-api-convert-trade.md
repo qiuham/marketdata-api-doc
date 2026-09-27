@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-convert-trade
 anchor_id: funding-account-rest-api-convert-trade
 api_type: REST
-updated_at: 2026-09-26 19:15:56.745778
+updated_at: 2026-09-27 19:15:28.399790
 ---
 
 # Convert trade
