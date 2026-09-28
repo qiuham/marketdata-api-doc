@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/bbo
 api_type: Market Data
-updated_at: 2026-09-27 18:46:24.876809
+updated_at: 2026-09-28 18:50:25.961580
 ---
 
 # Fast Order Response SBE

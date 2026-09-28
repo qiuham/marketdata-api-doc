@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/status
 api_type: REST
-updated_at: 2026-09-27 18:46:54.512197
+updated_at: 2026-09-28 18:50:55.779507
 ---
 
 # Get Instruments Info

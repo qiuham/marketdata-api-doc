@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-websocket-deposit-info-channel
 anchor_id: funding-account-websocket-deposit-info-channel
 api_type: WebSocket
-updated_at: 2026-09-27 19:15:33.436204
+updated_at: 2026-09-28 19:22:43.236213
 ---
 
 # Deposit info channel

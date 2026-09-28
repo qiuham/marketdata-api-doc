@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/liability
 api_type: REST
-updated_at: 2026-09-27 18:46:45.070617
+updated_at: 2026-09-28 18:50:46.458984
 ---
 
 # Get Liability Info

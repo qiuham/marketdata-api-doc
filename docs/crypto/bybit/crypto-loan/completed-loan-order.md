@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/completed-loan-order
 api_type: REST
-updated_at: 2026-09-27 18:41:35.283126
+updated_at: 2026-09-28 18:45:29.370644
 ---
 
 # Get Completed Loan History

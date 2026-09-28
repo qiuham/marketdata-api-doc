@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/reduce-max-collateral-amt
 api_type: REST
-updated_at: 2026-09-27 18:41:39.804752
+updated_at: 2026-09-28 18:45:33.947984
 ---
 
 # Get Loan Repayment History

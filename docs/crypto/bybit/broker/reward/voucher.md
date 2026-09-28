@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/reward/voucher
 api_type: REST
-updated_at: 2026-09-27 18:41:23.803229
+updated_at: 2026-09-28 18:45:17.573669
 ---
 
 # Get Voucher Spec
