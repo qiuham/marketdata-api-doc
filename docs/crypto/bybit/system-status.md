@@ -2,106 +2,267 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/system-status
 api_type: REST
-updated_at: 2026-09-28 18:51:25.670664
+updated_at: 2026-09-29 18:50:56.213360
 ---
 
-# Create Sub UID API Key
+# TradFi Integration
 
-To create new API key for those newly created sub UID. Use **master user's api key** **only**.
+info
 
-tip
-
-The API key must have one of the below permissions in order to call this endpoint..
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+  * The Bybit-native **Spot** , **Futures** , and **Options** products covered in this guide support trading via the V5 API.
+  * TradFi **CFD** products use MetaTrader 5 (MT5) and are not supported by the V5 API.
 
 
 
-### HTTP Request
+This guide covers trading products linked to traditional assets, including stock and ETF perpetuals, commodity and forex perpetuals, tokenized stocks, tokenized gold, and options. It maps their Web UI entries under **TradFi** and **Trade** to the V5 APIs used to query specifications and trade supported products.
 
-POST`/v5/user/create-sub-api`
+## Web UI Entries and API Support
 
-### Request Parameters
+### TradFi (Futures, Options & CFD)
+
+Open **TradFi** in the Web navigation menu to access the following derivatives products:
+
+Web UI entry| Products| API integration  
+---|---|---  
+**TradFi → Futures**|  USDT-settled perpetual contracts, including stocks, ETFs, commodities, and forex| Bybit-native; V5 `category=linear`  
+**TradFi → Options**|  USDT-settled options, including stock underlyings such as `SPCX` and `NVDA`| Bybit-native; V5 `category=option`  
+**TradFi → CFD**|  MT5 CFDs, with groups such as metals, stocks, indices, forex, and commodities| MT5; not available through the V5 API  
+  
+  * Futures
+  * Options
+  * CFD
+
+
+
+![TradFi menu with Futures highlighted and the perpetual contract list displayed](/docs/assets/images/tradfi-futures-menu-305e68e7ab12f77c4908dc240b23b0c0.png)
+
+![TradFi Options menu showing the SPCX and NVDA underlyings](/docs/assets/images/tradfi-options-menu-723e983e6b8e760ab8b3ec66d2dc7f88.png)
+
+![TradFi menu with CFD selected and the MT5 CFD product list displayed](/docs/assets/images/tradfi-cfd-menu-270ad1d0a50aaa8ff28a5a49423fd271.png)
+
+TradFi perpetuals use V5 `category=linear`, and options use `category=option`. Use the API parameters described below to discover the corresponding instruments; menu labels are not necessarily API enum values. **All** , **Trending** , and **New** are Web UI filters without dedicated `symbolType` values.
+
+### Trade (Spot, Futures & Options)
+
+All products listed in this section are Bybit-native and support trading through the existing V5 [Trade API](/docs/v5/order/create-order). Use `category=spot` for spot pairs, `category=linear` for the perpetual contracts listed below, and `category=option` for options.
+
+  * **Trade → Spot → xStocks** : Tokenized stocks, such as `TSLAX`, `AAPLX`, and `GOOGLX`.
+  * **Trade → Spot → RWA** : Includes tokenized gold (`XAUT/USDT`), alongside xStocks and other RWA-related assets.
+  * **Trade → Futures → USDT → RWA** : Includes USDT-settled perpetuals on tokenized gold, such as `XAUTUSDT` and `PAXGUSDT`. These use V5 `category=linear`.
+  * **Trade → Options** : Includes USDT-settled options on tokenized gold (`XAUT`). These use V5 `category=option`; query their specifications with `baseCoin=XAUT`.
+
+
+
+  * Spot (xStocks)
+  * Spot (XAUT)
+  * Futures (XAUT / PAXG)
+  * Options (XAUT)
+
+
+
+After signing in, select **xStocks** under **Trade → Spot** to view tokenized-stock pairs, including `AAPLX/USDT`, `NVDAX/USDT`, and `SPCXX/USDT`:
+
+![Trade Spot menu with Spot and the xStocks category highlighted, showing tokenized-stock pairs](/docs/assets/images/tradfi-xstocks-menu-23f34cacc79a5117a33d00e297b77e0a.png)
+
+Select **RWA** under **Trade → Spot** to find `XAUT/USDT` (Tether Gold). This broader list also includes xStocks and other assets:
+
+![Trade Spot menu with RWA selected, showing XAUT/USDT alongside xStocks and other assets](/docs/assets/images/tradfi-xaut-spot-rwa-menu-4ff52143d57f1f7188bc942318465ef8.png)
+
+Under **Trade → Futures** , select **USDT → RWA** to find `XAUTUSDT` (Tether Gold) and `PAXGUSDT` (Pax Gold) perpetuals:
+
+![Trade Futures menu with USDT and RWA selected, showing PAXGUSDT and XAUTUSDT perpetuals](/docs/assets/images/tradfi-gold-futures-rwa-menu-3e7ba727cb51d7888fbceadfad142f57.png)
+
+The **Trade → Options** menu includes `XAUT` alongside other option underlyings, such as `BTC`, `ETH`, and `SOL`:
+
+![Trade Options menu showing XAUT alongside BTC, ETH, and SOL, with available expiry dates](/docs/assets/images/tradfi-trade-options-menu-b24029408826eb26b76844b4c3369c8d.png)
+
+xStocks use V5 `category=spot` and `symbolType=xstocks`. Query XAUT spot with `category=spot` and `symbol=XAUTUSDT`.
+
+The Spot and Futures **RWA** menus are theme filters, with no corresponding `symbolType=RWA` value. These lists also contain other RWA-related crypto assets.
+
+## Discover TradFi Instruments via API
+
+### TradFi Futures: Filter by symbolType
+
+Use [Get Instruments Info](/docs/v5/market/instrument) with `category=linear` and a [symbolType](/docs/v5/enum#symboltype) value to retrieve perpetual contract specifications.
+
+GET`/v5/market/instruments-info`Futures group| `category`| `symbolType`| Example symbols  
+---|---|---|---  
+Stocks| `linear`| `stock`| `TSLAUSDT`, `NVDAUSDT`  
+ETF| `linear`| `ETF`| `QQQUSDT`, `SPYUSDT`  
+Commodities| `linear`| `commodity`| `XAUUSDT`, `XAGUSDT`, `CLUSDT`, `BZUSDT`  
+Pre-IPO| `linear`| `stock` (also pass `status=PreLaunch`)| `OPENAIUSDT`, `ANTHROPICUSDT`, `MOONSHOTUSDT`  
+FX| `linear`| `forex`| `EURUSDUSDT`, `GBPUSDUSDT`, `USDJPYUSDT`  
+  
+Pass one `symbolType` per request, using the enum's exact spelling (`ETF` is uppercase). These products return the standard linear contract fields, including `contractType`, `leverageFilter`, `priceFilter`, `lotSizeFilter`, and `fundingInterval`. Use `fullName`, `marketRegion`, and `underlyingTicker`, where available, to identify the underlying asset.
+
+Example requests:
+    
+    
+    GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=ETF&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=stock&status=PreLaunch&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=forex&limit=1000  
+    
+
+If `nextPageCursor` is non-empty, pass it as `cursor` in the next request to retrieve the remaining instruments.
+
+Pre-IPO
+
+To query pre-market stock contracts shown under **Pre-IPO** , use `category=linear`, `symbolType=stock`, and `status=PreLaunch`. Default list queries omit `PreLaunch` contracts.
+
+Check `isPreListing` and `preListingInfo.curAuctionPhase` for the trading state. A contract with `status=PreLaunch` can already be in `ContinuousTrading`.
+
+![TradFi menu with Futures and the Pre-IPO filter highlighted, showing the pre-IPO contract list](/docs/assets/images/tradfi-pre-ipo-menu-46a1a932376622a5a19fb50e307d0639.png)
+
+### Options: Discover Base Coins, Then Query Contracts
+
+For stock options under **TradFi → Options** , first use [Get Option Base Coins](/docs/v5/market/option-base-coins) to discover underlyings. Its `underlyingType` parameter classifies the underlying asset; `2` selects stocks.
+
+GET`/v5/market/option-base-coins`
+    
+    
+    GET /v5/market/option-base-coins?underlyingType=2  
+    
+
+Check `hasSymbol=1` for base coins with tradable option contracts, such as `SPCX` and `NVDA`. Then call [Get Instruments Info](/docs/v5/market/instrument) with `category=option` and the returned `baseCoin`:
+    
+    
+    GET /v5/market/instruments-info?category=option&baseCoin=SPCX&limit=1000  
+    GET /v5/market/instruments-info?category=option&baseCoin=NVDA&limit=1000  
+    
+
+For tokenized-gold options under **Trade → Options** , use `baseCoin=XAUT` with the same `category=option`:
+    
+    
+    GET /v5/market/instruments-info?category=option&baseCoin=XAUT&limit=1000  
+    
+
+Use the returned `symbol` to identify each expiry, strike, and call/put contract. Option specifications include `optionsType`, `deliveryTime`, `quoteCoin`, `settleCoin`, `priceFilter`, and `lotSizeFilter`. Follow `nextPageCursor` when present.
+
+The `symbolType` filter does not apply to `category=option`. `underlyingType` belongs to the **Get Option Base Coins** endpoint; use `baseCoin` to filter contracts in **Get Instruments Info**.
+
+### xStocks: Related Spot Instruments
+
+For tokenized-stock pairs such as `NVDAXUSDT` and `AAPLXUSDT`, use `category=spot` and `symbolType=xstocks` in API queries:
+    
+    
+    GET /v5/market/instruments-info?category=spot&symbolType=xstocks  
+    
+
+Use the returned `symbol` and spot trading rules; xStocks and stock perpetuals have separate instrument specifications. See [Get Instruments Info](/docs/v5/market/instrument) for details.
+
+### Tokenized Gold: XAUT Spot
+
+For `XAUT/USDT` under **Trade → Spot → RWA** , query its spot specifications by `symbol`:
+    
+    
+    GET /v5/market/instruments-info?category=spot&symbol=XAUTUSDT  
+    
+
+XAUT spot returns an empty `symbolType` and is not included in the `symbolType=xstocks` filter. Use the returned spot trading rules. The same `XAUTUSDT` symbol also identifies a perpetual contract under `category=linear`, so always specify the appropriate `category`.
+
+### Tokenized Gold: Perpetual and Expiry Contracts
+
+For the USDT perpetuals under **Trade → Futures → USDT → RWA** , use `category=linear` and the full `symbol`:
+    
+    
+    GET /v5/market/instruments-info?category=linear&symbol=XAUTUSDT  
+    GET /v5/market/instruments-info?category=linear&symbol=PAXGUSDT  
+    
+
+These contracts return `contractType=LinearPerpetual` and an empty `symbolType`. They are not included in `symbolType=commodity` queries. `XAUUSDT` under **TradFi → Futures** is a separate commodity perpetual.
+
+To discover other contracts on the same tokenized-gold underlyings, query by `baseCoin`:
+    
+    
+    GET /v5/market/instruments-info?category=linear&baseCoin=XAUT&limit=1000  
+    GET /v5/market/instruments-info?category=linear&baseCoin=PAXG&limit=1000  
+    
+
+The results include USDC-settled perpetuals (`XAUTPERP`, `PAXGPERP`) and XAUT expiry contracts. Check `contractType` (`LinearPerpetual` or `LinearFutures`), `quoteCoin`, `settleCoin`, and `deliveryTime` to identify each contract. Use the returned `symbol`, and follow `nextPageCursor` when present.
+
+### CFD: MT5 Products
+
+The **TradFi → CFD** groups, including Stocks, Indices, Forex, Metals, and Commodities, belong to MT5. They are not V5 `symbolType` values, and their CFD instruments cannot be queried or traded through the V5 endpoints in this guide. For example, the CFD symbol `XAUUSD.s` shown in the screenshot and the V5 perpetual symbol `XAUUSDT` identify different products.
+
+## Legal Review
+
+Before trading traditional asset perpetuals, please review the applicable terms and conditions:
+
+  * [Derivative Contract Terms - TradFi Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+  * [Derivative Contract Terms - Oil Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-Oil-Perps)
+
+
+
+## Sign Agreement by Main Account
+
+To trade commodity contracts (metals and crude oil) or stock perpetuals, users must first sign the trading agreement. Stock perpetuals share the same agreement as metals. This can be done in two ways:
+
+### Option 1: Via Web UI
+
+When attempting to trade for the first time, a **Trading Terms** pop-up will appear. Check the checkbox and click **Confirm** to accept.
+
+info
+
+Only the **master account** can sign the agreement via Web UI. Please ensure you are logged in with the master account.
+
+![Trading Terms Agreement Pop-up](/docs/assets/images/tradfi-trading-terms-76a20698cc44a1ce30b4eaa4a1e96e4b.png)
+
+### Option 2: Via API
+
+Use the [Sign Agreement](/docs/v5/user/sign-agreement) endpoint to sign programmatically.
+
+info
+
+  * Only the **master account** can sign the agreement. Subaccounts are not supported for this action.
+  * Once the master account has signed, all subaccounts will be eligible to trade.
+  * The API key must have at least one of the following permissions: **Account Transfer** , **Subaccount Transfer** , or **Withdrawal**.
+
+
+
+#### HTTP Request
+
+POST`/v5/user/agreement`
+
+#### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subuid| **true**|  integer| Sub user Id  
-note| false| string| Set a remark  
-readOnly| **true**|  integer| `0`: Read and Write. `1`: Read only  
-ips| false| string| Set the IP bind. example: `"192.168.0.1,192.168.0.2"`**note:**
-
-  * don't pass ips or pass with `"*"` means no bind
-  * No ip bound api key will be **invalid after 90 days**
-  * api key without IP bound will be invalid after **7 days** once the account password is changed
-
+category| false| integer| `2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`3`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. This field remains supported, but new enum values will no longer be added here — use `categoryV2` instead._  
+categoryV2| false| integer| `1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`2`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._  
+agree| **true**|  boolean| `true`  
   
-permissions| **true**|  Object| Tick the types of permission.
+#### Response Parameters
 
-  * one of below types must be passed, otherwise the error is thrown
+None
 
-  
-> ContractTrade| false| array| Contract Trade. `["Order","Position"]`  
-> Spot| false| array| Spot Trade. `["SpotTrade"]`  
-> Options| false| array| USDC Contract. `["OptionsTrade"]`  
-> Wallet| false| array| Wallet. `["AccountTransfer","SubMemberTransferList"]`  
-_Note: Fund Custodial account is not supported_  
-> Exchange| false| array| Convert. `["ExchangeHistory"]`  
-> Earn| false| array| Earn product. `["Earn"]`  
-  
-### Response Parameters
+#### Request Example
 
-Parameter| Type| Comments  
----|---|---  
-id| string| Unique id. Internal used  
-note| string| The remark  
-apiKey| string| Api key  
-readOnly| integer| `0`: Read and Write. `1`: Read only  
-secret| string| The secret paired with api key.
-
-  * The secret can't be queried by GET api. Please keep it properly
-
-  
-permissions| Object| The types of permission  
-> ContractTrade| array| Permisson of contract trade  
-> Spot| array| Permisson of spot  
-> Wallet| array| Permisson of wallet  
-> Options| array| Permission of USDC Contract. It supports trade option and usdc perpetual.  
-> Derivatives| array| Permission of Unified account  
-> Exchange| array| Permission of convert  
-> Earn| array| Permission of earn product  
-> BlockTrade| array| Not applicable to sub account, always `[]`  
-> Affiliate| array| Not applicable to sub account, always `[]`  
-> FiatP2P| array| Not applicable to sub account, always `[]`  
-> FiatConvertBroker| array| Not applicable to sub account, always `[]`  
-> NFT| array| **Deprecated** , always `[]`  
-> CopyTrading| array| **Deprecated** always `[]`  
-  
-### Request Example
+The following examples sign the metals agreement (`categoryV2=1`), which is also used for stock perpetuals.
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
+        "agree": true,  
+        "categoryV2": 1  
     }  
     
     
@@ -112,173 +273,371 @@ permissions| Object| The types of permission
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
+    print(session.sign_agreement(  
+        categoryV2=1,  
+        agree=True  
     ))  
     
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
 
-### Response Example
+#### Response Example
     
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
-            "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
-                "Wallet": [  
-                    "AccountTransfer"  
-                ],  
-                "Options": [],  
-                "CopyTrading": [],  
-                "BlockTrade": [],  
-                "Exchange": [],  
-                "NFT": [],  
-                "Earn": ["Earn"]  
-            }  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1676430007643  
-    }
+        "time": 1772695037330  
+    }  
+    
+
+## Trade via Existing API
+
+The spot, perpetual, expiry, and option products described above use the standard V5 [Trade](/docs/v5/order/create-order) endpoints. Complete the applicable trading agreements before placing orders; the agreement flow above covers the specified perpetual products. Check each endpoint's supported categories and product-specific parameters:
+
+  * [Place Order](/docs/v5/order/create-order)
+  * [Amend Order](/docs/v5/order/amend-order)
+  * [Cancel Order](/docs/v5/order/cancel-order)
+  * [Get Open & Closed Orders](/docs/v5/order/open-order)
+  * [Cancel All Orders](/docs/v5/order/cancel-all)
+  * [Get Order History (2 years)](/docs/v5/order/order-list)
+  * [Get Trade History (2 years)](/docs/v5/order/execution)
+  * [Batch Place Order](/docs/v5/order/batch-place)
+  * [Batch Amend Order](/docs/v5/order/batch-amend)
+  * [Batch Cancel Order](/docs/v5/order/batch-cancel)
+  * [Pre Check Order](/docs/v5/order/pre-check-order)
+
+
+
+Pass the appropriate `category` and a `symbol` returned by **Get Instruments Info** :
+
+  * **Futures** : `category=linear`, with the full perpetual or expiry contract symbol returned by **Get Instruments Info** , such as `TSLAUSDT`, `QQQUSDT`, `XAUUSDT`, `XAUTUSDT`, `PAXGUSDT`, or `XAUTPERP`.
+  * **Options** : `category=option`, with the full option contract symbol, including expiry, strike, and call/put. Do not submit only the base coin `NVDA`, `SPCX`, or `XAUT` as the order's `symbol`.
+  * **Spot** : `category=spot`, with the tokenized-stock pair, such as `NVDAXUSDT` or `AAPLXUSDT`, or the tokenized-gold pair `XAUTUSDT`.
+
+
+
+## Index Price Calculation Rule
+
+TradFi perpetual index prices are calculated from weighted index components. The sources and weights depend on the instrument and market session; components can include price feeds, exchange indices, and futures prices.
+
+  * **Market open** : the index is updated every second using a weighted average of its components.
+  * **Market closed** : components that stop updating, such as certain equity or commodity feeds from Pyth, may be temporarily excluded to reduce the effect of stale prices.
+  * **Session transitions** : a smoothing mechanism helps maintain index price continuity.
+
+
+
+For the methodology and market-session rules, see [Introduction to TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts). For general calculation formulas and price protection mechanisms, see [Index Price Calculation](https://www.bybit.com/en/help-center/article/Index-Price-Calculation). Component and weight changes are published in [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price).
+
+To query the current components and weights, use [Get Index Price Components](/docs/v5/market/index-components):
+
+GET`/v5/market/index-price-components`
+    
+    
+    GET /v5/market/index-price-components?indexName=CLUSDT  
+    
+
+The response includes each component's source (`exchange`), reference symbol (`spotPair`), equivalent price, multiplier, and weight. The field name `spotPair` can also identify a futures reference or price feed.
+
+## Index Price Rollover Mechanism
+
+For commodity perpetuals whose index references dated futures contracts, such as `CLUSDT`, the reference must roll to a later-dated contract as the earlier contract approaches expiry. The index reference changes; the Bybit perpetual contract itself does not expire as part of this rollover.
+
+A gradual rollover shifts weight from the front-month contract to the next-month contract over several days. The following five-day allocation is an illustrative example; the actual dates and weights depend on the applicable rollover schedule:
+
+Day| Front-Month Weight| Next-Month Weight  
+---|---|---  
+Day 1| 80%| 20%  
+Day 2| 60%| 40%  
+Day 3| 40%| 60%  
+Day 4| 20%| 80%  
+Day 5| 0%| 100% (Rollover Completed)  
+  
+The screenshot below illustrates `CLUSDT` index components during a rollover. It is a historical example; query **Get Index Price Components** for the current reference contracts and weights.
+
+![Historical CLUSDT index components during a rollover](/docs/assets/images/tradfi-index-component-2480f7bd7ee3d68201186a1e51dd61f2.jpg)
+
+For Pyth components, use the returned reference symbol to locate the feed in [Pyth Data Explorer](https://pythdata.app/explore). Refer to the applicable [Index Price Announcements](https://www.bybit.com/en/announcement-info/index-price) for index changes and schedules. Market-closure handling follows the index rules above.
+
+## Stock Split & Reverse Split FAQ
+
+For full details, refer to the Help Center: [Stock Splits and Reverse Stock Splits for TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Stock-Splits-and-Reverse-Stock-Splits-for-TradFi-Perpetual-Contracts).
+
+**Q1: What will be the status of the contract in the instrumentInfo while it is undergoing the adjustment?**
+
+The contract status remains `"Trading"` in **Get Instruments Info** during the adjustment window. Trading is nevertheless suspended during the adjustment; use the announced suspension and resumption times, rather than this field alone, to determine availability.
+
+**Q2: What happens to the price feed during the adjustment window?**
+
+  * Bybit will **stop sending prices** during the adjustment window.
+  * The last price is **not** continued — there are no market data updates during this window.
+
+
+
+**Q3: Will Bybit provide pre-adjustment historical prices after the adjustment window is completed, or does it remove them?**
+
+Historical K-line prices will be **adjusted accordingly** to reflect the split ratio. Personal trading history (your own order and execution records) will **not** be changed.
 
 ---
 
-# 新建子帳戶的API Key
+# TradFi 接入指南
 
-給新建好的子帳戶創建新的API key。需使用**母** 帳戶的API key。
+信息
 
-提示
-
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+  * 本指南涵蓋的 Bybit 原生 **Spot** 、**Futures** 與 **Options** 產品均支持透過 V5 API 交易。
+  * TradFi **CFD** 使用 MetaTrader 5（MT5），不支持透過 V5 API 查詢或交易。
 
 
 
-### HTTP 請求
+本指南涵蓋與傳統資產相關的交易產品，包括股票及 ETF 永續合約、大宗商品及外匯永續合約、股票代幣、代幣化黃金與期權，並說明 **TradFi** 與 **Trade** 下的 Web UI 入口，以及查詢產品規格和交易所需的 V5 API。
 
-POST`/v5/user/create-sub-api`
+## Web UI 入口與 API 支持範圍
 
-### 請求參數
+### TradFi（Futures、Options 與 CFD）
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-subuid| **true**|  integer| 子帳戶userId  
-note| false| string| 設置備註  
-readOnly| **true**|  integer| `0`：可讀可寫. `1`：只讀  
-ips| false| string| 綁定IP. 比如: "192.168.0.1,192.168.0.2"**注意:**
+在 Web 導覽列開啟 **TradFi** ，可進入以下衍生品區塊：
 
-  * 不傳參數ips 或者入参值為`"*"`意味著不綁定
-  * 不綁定IP的api key將有**90天的有效期限**
-  * 一旦帳戶密碼做了修改，帳戶下的非永久api key將在**7天後失效**
-
-  
-permissions| **true**|  Object| 勾選api key權限.
-
-  * 注意: 必須傳入以下權限類型的任意一種, 否則報錯
-
-  
-> ContractTrade| false| array| USDT合約, 幣本位合約. ["Order","Position"]  
-> Spot| false| array| 現貨. ["SpotTrade"]  
-> Wallet| false| array| 錢包. ["AccountTransfer","SubMemberTransferList"] _注意: 基金託管子帳戶不支持這兩個權限項_  
-> Options| false| array| USDC合約和期權. ["OptionsTrade"]  
-> Derivatives| false| array| ["DerivativesTrade"]  
-> Exchange| false| array| 兌換. ["ExchangeHistory"]  
-> Earn| false| array| 理財產品的權限 ["Earn"]  
-  
-### 返回參數
-
-參數| 類型| 說明  
+Web UI 入口| 產品| API 接入方式  
 ---|---|---  
-id| string| 唯一id. 內部使用  
-note| string| 備註  
-apiKey| string| Api key  
-readOnly| integer| `0`：可讀可寫. `1`：只讀  
-secret| string| Api密鑰密碼.
-
-  * 注意: Api密鑰密碼只會在這裡出現一次，除此之外沒有任何地方還可以獲取到密碼。請妥善保存。
-
+**TradFi → Futures**|  以 USDT 結算的永續合約，包括股票、ETF、大宗商品及外匯| Bybit 原生；V5 `category=linear`  
+**TradFi → Options**|  以 USDT 結算的期權，包括 `SPCX`、`NVDA` 等股票標的| Bybit 原生；V5 `category=option`  
+**TradFi → CFD**|  MT5 差價合約，包含貴金屬、股票、指數、外匯及大宗商品等分類| MT5；不支持 V5 API  
   
-permissions| Object| 權限類型  
-> ContractTrade| array| 合約交易的權限  
-> Spot| array| 現貨交易的權限  
-> Wallet| array| 錢包的權限  
-> Options| array| USDC合約和期權  
-> Derivatives| array| 統一帳戶權限  
-> Earn| array| 理財產品的權限 `Earn`  
-> Exchange| array| 兌換的權限  
-> BlockTrade| array| 子帳戶暫不支持，總是[]  
-> FiatP2P| array| 子帳戶暫不支持，總是[]  
-> FiatConvertBroker| array| 子帳戶暫不支持，總是[]  
-> Affiliate| array| 子帳戶暫不支持，總是[]  
-> NFT| array| **廢棄** , 總是[]  
-> CopyTrading| array| **廢棄** , 總是[]  
+  * Futures
+  * Options
+  * CFD
+
+
+
+![TradFi 選單，標示 Futures 入口並展示永續合約列表](/docs/zh-TW/assets/images/tradfi-futures-menu-305e68e7ab12f77c4908dc240b23b0c0.png)
+
+![TradFi Options 選單，展示 SPCX 與 NVDA 標的](/docs/zh-TW/assets/images/tradfi-options-menu-723e983e6b8e760ab8b3ec66d2dc7f88.png)
+
+![TradFi 選單，選中 CFD 並展示 MT5 差價合約產品列表](/docs/zh-TW/assets/images/tradfi-cfd-menu-270ad1d0a50aaa8ff28a5a49423fd271.png)
+
+TradFi 永續合約使用 V5 `category=linear`，期權使用 `category=option`。選單名稱不一定是 API 列舉值，請按下文說明使用對應參數查詢產品。**All** 、**Trending** 、**New** 為 Web UI 篩選項，沒有專用的 `symbolType` 值。
+
+### Trade（Spot、Futures 與 Options）
+
+本節列出的產品均為 Bybit 原生產品，支持透過現有的 V5 [交易 API](/docs/zh-TW/v5/order/create-order) 進行交易。現貨交易對使用 `category=spot`，下列永續合約使用 `category=linear`，期權使用 `category=option`。
+
+  * **Trade → Spot → xStocks** ：股票代幣，例如 `TSLAX`、`AAPLX`、`GOOGLX`。
+  * **Trade → Spot → RWA** ：包含代幣化黃金（`XAUT/USDT`）、xStocks 及其他 RWA 相關資產。
+  * **Trade → Futures → USDT → RWA** ：包含以 USDT 結算的代幣化黃金永續合約，例如 `XAUTUSDT`、`PAXGUSDT`，使用 V5 `category=linear`。
+  * **Trade → Options** ：包含以 USDT 結算的代幣化黃金（`XAUT`）期權。使用 V5 `category=option`，並透過 `baseCoin=XAUT` 查詢合約規格。
+
+
+
+  * Spot (xStocks)
+  * Spot (XAUT)
+  * Futures (XAUT / PAXG)
+  * Options (XAUT)
+
+
+
+登入後，在 **Trade → Spot** 下選擇 **xStocks** ，即可查看 `AAPLX/USDT`、`NVDAX/USDT`、`SPCXX/USDT` 等股票代幣交易對：
+
+![Trade Spot 選單，標示 Spot 入口及 xStocks 分類，並展示股票代幣交易對](/docs/zh-TW/assets/images/tradfi-xstocks-menu-23f34cacc79a5117a33d00e297b77e0a.png)
+
+在 **Trade → Spot** 下選擇 **RWA** ，即可找到 `XAUT/USDT`（Tether Gold）。此列表範圍較廣，也包含 xStocks 及其他資產：
+
+![Trade Spot 選單，選中 RWA 並展示 XAUT/USDT、xStocks 及其他資產](/docs/zh-TW/assets/images/tradfi-xaut-spot-rwa-menu-4ff52143d57f1f7188bc942318465ef8.png)
+
+在 **Trade → Futures** 下選擇 **USDT → RWA** ，即可找到 `XAUTUSDT`（Tether Gold）與 `PAXGUSDT`（Pax Gold）永續合約：
+
+![Trade Futures 選單，選中 USDT 與 RWA，並展示 PAXGUSDT、XAUTUSDT 永續合約](/docs/zh-TW/assets/images/tradfi-gold-futures-rwa-menu-3e7ba727cb51d7888fbceadfad142f57.png)
+
+**Trade → Options** 選單包含 `XAUT`，並同時展示 `BTC`、`ETH`、`SOL` 等其他期權標的：
+
+![Trade Options 選單，展示 XAUT、BTC、ETH、SOL 標的及可選到期日](/docs/zh-TW/assets/images/tradfi-trade-options-menu-b24029408826eb26b76844b4c3369c8d.png)
+
+xStocks 使用 V5 `category=spot` 與 `symbolType=xstocks`；XAUT 現貨則使用 `category=spot` 與 `symbol=XAUTUSDT` 查詢。
+
+Spot 與 Futures 下的 **RWA** 選單是主題篩選項，沒有對應的 `symbolType=RWA` 列舉值。這些列表也包含其他 RWA 相關加密資產。
+
+## 透過 API 查詢 TradFi 產品
+
+### TradFi Futures：按 symbolType 篩選
+
+使用 [查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument) 介面，傳入 `category=linear` 與 [symbolType](/docs/zh-TW/v5/enum#symboltype) 列舉值，取得永續合約規格。
+
+GET`/v5/market/instruments-info`Futures 分類| `category`| `symbolType`| 範例 symbol  
+---|---|---|---  
+Stocks（股票）| `linear`| `stock`| `TSLAUSDT`、`NVDAUSDT`  
+ETF| `linear`| `ETF`| `QQQUSDT`、`SPYUSDT`  
+Commodities（大宗商品）| `linear`| `commodity`| `XAUUSDT`、`XAGUSDT`、`CLUSDT`、`BZUSDT`  
+Pre-IPO| `linear`| `stock`（另傳 `status=PreLaunch`）| `OPENAIUSDT`、`ANTHROPICUSDT`、`MOONSHOTUSDT`  
+FX（外匯）| `linear`| `forex`| `EURUSDUSDT`、`GBPUSDUSDT`、`USDJPYUSDT`  
   
-### 請求示例
+每次請求傳入一個 `symbolType`，並使用列舉值的準確拼寫（`ETF` 為大寫）。這些產品返回標準的 linear 合約欄位，包括 `contractType`、`leverageFilter`、`priceFilter`、`lotSizeFilter` 與 `fundingInterval`。可透過有值的 `fullName`、`marketRegion`、`underlyingTicker` 識別標的資產。
+
+請求範例：
+    
+    
+    GET /v5/market/instruments-info?category=linear&symbolType=stock&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=ETF&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=commodity&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=stock&status=PreLaunch&limit=1000  
+    GET /v5/market/instruments-info?category=linear&symbolType=forex&limit=1000  
+    
+
+若 `nextPageCursor` 非空，請在下一次請求中將其作為 `cursor` 傳入，以取得剩餘產品。
+
+Pre-IPO
+
+如需查詢 **Pre-IPO** 下的盤前股票合約，請使用 `category=linear`、`symbolType=stock` 與 `status=PreLaunch`。預設列表查詢不包含 `PreLaunch` 合約。
+
+請透過 `isPreListing` 與 `preListingInfo.curAuctionPhase` 確認交易狀態。`status=PreLaunch` 的合約可能已處於 `ContinuousTrading`。
+
+![TradFi 選單，標示 Futures 入口及 Pre-IPO 篩選項，並展示 Pre-IPO 合約列表](/docs/zh-TW/assets/images/tradfi-pre-ipo-menu-46a1a932376622a5a19fb50e307d0639.png)
+
+### Options：先查基礎幣種，再查具體合約
+
+**TradFi → Options** 下的股票期權，可先透過 [查詢期權基礎幣種](/docs/zh-TW/v5/market/option-base-coins) 取得標的。此介面的 `underlyingType` 按標的資產類型篩選，其中 `2` 代表股票。
+
+GET`/v5/market/option-base-coins`
+    
+    
+    GET /v5/market/option-base-coins?underlyingType=2  
+    
+
+檢查 `hasSymbol=1`，以識別當前有可交易期權合約的基礎幣種，例如 `SPCX`、`NVDA`。然後使用 [查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)，傳入 `category=option` 及返回的 `baseCoin`：
+    
+    
+    GET /v5/market/instruments-info?category=option&baseCoin=SPCX&limit=1000  
+    GET /v5/market/instruments-info?category=option&baseCoin=NVDA&limit=1000  
+    
+
+**Trade → Options** 下的代幣化黃金期權同樣使用 `category=option`，傳入 `baseCoin=XAUT` 即可查詢：
+    
+    
+    GET /v5/market/instruments-info?category=option&baseCoin=XAUT&limit=1000  
+    
+
+使用返回的 `symbol` 識別不同到期日、行權價及看漲／看跌的具體合約。期權規格包含 `optionsType`、`deliveryTime`、`quoteCoin`、`settleCoin`、`priceFilter` 與 `lotSizeFilter`。若返回 `nextPageCursor`，請繼續分頁查詢。
+
+`symbolType` 篩選不適用於 `category=option`。`underlyingType` 屬於**查詢期權基礎幣種** 介面；在**查詢可交易產品的規格信息** 中，應使用 `baseCoin` 篩選期權合約。
+
+### xStocks：相關現貨產品
+
+如需查詢 `NVDAXUSDT`、`AAPLXUSDT` 等股票代幣交易對，請在 API 請求中使用 `category=spot` 與 `symbolType=xstocks`：
+    
+    
+    GET /v5/market/instruments-info?category=spot&symbolType=xstocks  
+    
+
+請使用返回的 `symbol` 與現貨交易規則；xStocks 與股票永續合約各有獨立的產品規格，詳見 [查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)。
+
+### 代幣化黃金：XAUT 現貨
+
+如需查詢 **Trade → Spot → RWA** 下的 `XAUT/USDT`，請透過 `symbol` 取得現貨規格：
+    
+    
+    GET /v5/market/instruments-info?category=spot&symbol=XAUTUSDT  
+    
+
+XAUT 現貨返回的 `symbolType` 為空字串，不包含在 `symbolType=xstocks` 的篩選結果中。請使用返回的現貨交易規則。同一個 `XAUTUSDT` 代碼在 `category=linear` 下代表永續合約，因此查詢及交易時務必傳入對應的 `category`。
+
+### 代幣化黃金：永續與交割合約
+
+如需查詢 **Trade → Futures → USDT → RWA** 下的 USDT 永續合約，請使用 `category=linear` 與完整 `symbol`：
+    
+    
+    GET /v5/market/instruments-info?category=linear&symbol=XAUTUSDT  
+    GET /v5/market/instruments-info?category=linear&symbol=PAXGUSDT  
+    
+
+這些合約返回 `contractType=LinearPerpetual`，`symbolType` 為空字串，不包含在 `symbolType=commodity` 的查詢結果中。**TradFi → Futures** 下的 `XAUUSDT` 則是另一個大宗商品永續合約。
+
+如需查詢相同代幣化黃金標的的其他合約，請使用 `baseCoin`：
+    
+    
+    GET /v5/market/instruments-info?category=linear&baseCoin=XAUT&limit=1000  
+    GET /v5/market/instruments-info?category=linear&baseCoin=PAXG&limit=1000  
+    
+
+結果包含以 USDC 結算的永續合約（`XAUTPERP`、`PAXGPERP`）及 XAUT 交割合約。請檢查 `contractType`（`LinearPerpetual` 或 `LinearFutures`）、`quoteCoin`、`settleCoin` 與 `deliveryTime`，以識別具體合約。請使用返回的 `symbol`；若返回 `nextPageCursor`，請繼續分頁查詢。
+
+### CFD：MT5 產品
+
+**TradFi → CFD** 下的 Stocks、Indices、Forex、Metals、Commodities 等分類屬於 MT5，並非 V5 的 `symbolType` 列舉值。這些 CFD 產品不能透過本指南中的 V5 介面查詢或交易。例如，截圖中的 CFD 代碼 `XAUUSD.s` 與 V5 永續合約代碼 `XAUUSDT` 代表不同產品。
+
+## 法律條款審閱
+
+在交易傳統資產永續合約之前，請先閱讀適用的條款與細則：
+
+  * [衍生品合約條款 - TradFi Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-TradFi-Perps)
+  * [衍生品合約條款 - Oil Perps](https://www.bybit.com/en/legal/service-specific-terms/Derivative-Contract-Terms-Oil-Perps)
+
+
+
+## 母帳戶簽署協議
+
+交易大宗商品合約（貴金屬與原油）或股票永續合約前，用戶必須先簽署交易協議。股票永續合約與貴金屬共用同一份協議。可透過以下兩種方式完成：
+
+### 方式一：透過 Web UI
+
+首次嘗試交易時，系統會彈出 **Trading Terms** 視窗，勾選核取方塊並點擊 **Confirm** 即可接受。
+
+信息
+
+僅**母帳戶** 可透過 Web UI 簽署協議，請確保使用母帳戶登入。
+
+![交易條款協議彈窗](/docs/zh-TW/assets/images/tradfi-trading-terms-76a20698cc44a1ce30b4eaa4a1e96e4b.png)
+
+### 方式二：透過 API
+
+使用 [簽署協議](/docs/zh-TW/v5/user/sign-agreement) 介面以程式化方式簽署。
+
+信息
+
+  * 請使用**母帳戶** 呼叫介面，子帳戶不支援此操作。
+  * 母帳戶簽署後，旗下所有子帳戶即可進行交易。
+  * API key 權限需具備其中之一：**帳戶劃轉** 、**母子帳戶劃轉** 、**提幣** 。
+
+
+
+#### HTTP 請求
+
+POST`/v5/user/agreement`
+
+#### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+category| false| integer| `2`: 貴金屬（黃金、白銀）合約協議，股票永續合約共用此協議  
+`3`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。該字段仍然可用，但後續新增的枚舉值將不再添加至此字段，請使用 `categoryV2`。_  
+categoryV2| false| integer| `1`: 貴金屬（黃金、白銀）合約協議，股票永續合約共用此協議  
+`2`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。建議使用此字段，後續新增的枚舉值將統一添加至此字段。_  
+agree| **true**|  boolean| `true`  
+  
+#### 響應參數
+
+無
+
+#### 請求示例
+
+以下範例簽署貴金屬協議（`categoryV2=1`），股票永續合約也使用此協議。
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
+        "agree": true,  
+        "categoryV2": 1  
     }  
     
     
@@ -289,70 +648,107 @@ permissions| Object| 權限類型
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
+    print(session.sign_agreement(  
+        categoryV2=1,  
+        agree=True  
     ))  
     
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
 
-### 響應示例
+#### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
-            "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
-                "Wallet": [  
-                    "AccountTransfer"  
-                ],  
-                "Options": [],  
-                "Derivatives": [],  
-                "CopyTrading": [],  
-                "BlockTrade": [],  
-                "Exchange": [],  
-                "NFT": []  
-            }  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1676430007643  
-    }
+        "time": 1772695037330  
+    }  
+    
+
+## 透過現有 API 交易
+
+上述現貨、永續、交割及期權產品均使用標準的 V5 [交易](/docs/zh-TW/v5/order/create-order) 介面。下單前請完成適用的交易協議；上文的簽署流程適用於其中列明的永續合約產品。請以各介面支持的 `category` 及產品專用參數為準：
+
+  * [創建委託單](/docs/zh-TW/v5/order/create-order)
+  * [修改委託單](/docs/zh-TW/v5/order/amend-order)
+  * [撤銷委託單](/docs/zh-TW/v5/order/cancel-order)
+  * [查詢實時委託單](/docs/zh-TW/v5/order/open-order)
+  * [撤銷所有委託單](/docs/zh-TW/v5/order/cancel-all)
+  * [查詢歷史訂單 (2年)](/docs/zh-TW/v5/order/order-list)
+  * [查詢成交紀錄 (2年)](/docs/zh-TW/v5/order/execution)
+  * [批量創建委託單](/docs/zh-TW/v5/order/batch-place)
+  * [批量修改委託單](/docs/zh-TW/v5/order/batch-amend)
+  * [批量撤銷委託單](/docs/zh-TW/v5/order/batch-cancel)
+  * [預檢查訂單](/docs/zh-TW/v5/order/pre-check-order)
+
+
+
+請傳入對應的 `category`，以及**查詢可交易產品的規格信息** 返回的 `symbol`：
+
+  * **Futures** ：`category=linear`，使用**查詢可交易產品的規格信息** 返回的完整永續或交割合約代碼，例如 `TSLAUSDT`、`QQQUSDT`、`XAUUSDT`、`XAUTUSDT`、`PAXGUSDT` 或 `XAUTPERP`。
+  * **Options** ：`category=option`，使用包含到期日、行權價及看漲／看跌類型的完整期權合約代碼。下單時不能僅將基礎幣種 `NVDA`、`SPCX` 或 `XAUT` 作為 `symbol`。
+  * **Spot** ：`category=spot`，使用股票代幣交易對（例如 `NVDAXUSDT`、`AAPLXUSDT`）或代幣化黃金交易對 `XAUTUSDT`。
+
+
+
+## 指數價格計算規則
+
+TradFi 永續合約的指數價格由各成分加權計算，來源及權重依產品與交易時段而定。成分可包含價格數據源、交易所指數及期貨價格。
+
+  * **市場開市** ：每秒更新指數價格，以各成分的加權平均計算。
+  * **市場休市** ：停止更新的成分（例如 Pyth 提供的部分股票或大宗商品價格）可能被暫時剔除，以減少過時價格的影響。
+  * **時段切換** ：透過平滑機制維持指數價格的連續性。
+
+
+
+計算方式及交易時段規則請參閱 [TradFi 永續合約介紹](https://www.bybit.com/en/help-center/article/Introduction-to-TradFi-Perpetual-Contracts)。一般計算公式及價格保護機制請參閱 [指數價格計算](https://www.bybit.com/en/help-center/article/Index-Price-Calculation)。成分及權重變更請參閱 [指數價格公告](https://www.bybit.com/en/announcement-info/index-price)。
+
+如需查詢當前成分及權重，請使用 [查詢指數價格成分](/docs/zh-TW/v5/market/index-components)：
+
+GET`/v5/market/index-price-components`
+    
+    
+    GET /v5/market/index-price-components?indexName=CLUSDT  
+    
+
+響應包含各成分的來源（`exchange`）、參考代碼（`spotPair`）、等價價格、乘數及權重。`spotPair` 欄位也可能表示期貨參考合約或價格數據源。
+
+## 指數價格展期機制（Index Price Rollover Mechanism）
+
+對於指數參考有到期日期貨合約的大宗商品永續合約（例如 `CLUSDT`），當參考合約接近到期時，需將參考價格切換至較遠月份的合約。展期改變的是指數參考成分，Bybit 永續合約本身不會因此到期。
+
+漸進式展期會在數日內，將前月合約的權重逐步移至下月合約。以下五日分配僅為示意，實際日期及權重以適用的展期時程為準：
+
+日期| 前月合約權重（Front-Month）| 下月合約權重（Next-Month）  
+---|---|---  
+Day 1| 80%| 20%  
+Day 2| 60%| 40%  
+Day 3| 40%| 60%  
+Day 4| 20%| 80%  
+Day 5| 0%| 100%（展期完成）  
+  
+以下截圖展示 `CLUSDT` 展期期間的指數成分，僅作歷史範例。當前參考合約及權重請透過**查詢指數價格成分** 取得。
+
+![CLUSDT 展期期間的歷史指數成分範例](/docs/zh-TW/assets/images/tradfi-index-component-2480f7bd7ee3d68201186a1e51dd61f2.jpg)
+
+如需查看 Pyth 成分，可使用返回的參考代碼，在 [Pyth Data Explorer](https://pythdata.app/explore) 查找對應數據源。指數變更及時程請參閱適用的 [指數價格公告](https://www.bybit.com/en/announcement-info/index-price)。市場休市期間的處理方式依上文指數規則執行。
+
+## 股票拆分與反向拆分常見問題
+
+詳情請參閱 Help Center：[Stock Splits and Reverse Stock Splits for TradFi Perpetual Contracts](https://www.bybit.com/en/help-center/article/Stock-Splits-and-Reverse-Stock-Splits-for-TradFi-Perpetual-Contracts)。
+
+**Q1：調整期間合約在 instrumentInfo 中的狀態是什麼？**
+
+調整窗口期間，**查詢可交易產品的規格信息** 中的合約狀態仍為 `"Trading"`，但調整期間會暫停交易。請按公告中的暫停及恢復時間判斷交易是否可用，不應僅依賴此欄位。
+
+**Q2：調整窗口期間價格數據會如何？**
+
+  * Bybit 將**停止推送行情** 。
+  * **不會** 繼續推送最後一個價格——調整窗口期間沒有任何市場數據更新。
+
+
+
+**Q3：調整完成後，Bybit 是否提供調整前的歷史行情，還是直接刪除？**
+
+歷史 K 線價格將**按拆分比例進行相應調整** 。個人交易記錄（您自己的委託及成交記錄）**不會** 發生變化。

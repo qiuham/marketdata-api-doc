@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/cancel-redeem
 api_type: REST
-updated_at: 2026-09-28 18:42:08.553203
+updated_at: 2026-09-29 18:42:04.803918
 ---
 
 # Get Lending Coin Info

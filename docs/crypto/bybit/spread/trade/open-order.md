@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/open-order
 api_type: Trading
-updated_at: 2026-09-28 18:51:09.384869
+updated_at: 2026-09-29 18:50:40.880594
 ---
 
 # Get Order History

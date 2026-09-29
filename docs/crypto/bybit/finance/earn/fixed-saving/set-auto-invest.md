@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-09-28 18:47:08.156602
+updated_at: 2026-09-29 18:46:53.431704
 ---
 
 # Get Airdrop Daily PnL Records

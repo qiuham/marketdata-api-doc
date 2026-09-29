@@ -2,152 +2,53 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/fast-execution
 api_type: WebSocket
-updated_at: 2026-09-28 18:51:53.848656
+updated_at: 2026-09-29 18:51:21.387274
 ---
 
-# Position
+# Fast Execution
 
-Subscribe to the position stream to see changes to your position data in **real-time**.
+Fast execution stream significantly reduces data latency compared original "execution" stream. However, it pushes limited execution type of trades, and fewer data fields.
 
-**All-In-One Topic:** `position`  
-**Categorised Topic:** `position.linear`, `position.inverse`, `position.option`
+**All-In-One Topic:** `execution.fast`  
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`  
+
 
 info
 
-  * All-In-One topic and Categorised topic **cannot** be in the same subscription request
-  * All-In-One topic: Allow you to listen to all categories (linear, inverse, option) websocket updates
-  * Categorised Topic: Allow you to listen only to specific category websocket updates
+  * Supports all Perps, Futures, Spot and Options exceution
+  * You can only receive [execType](/docs/v5/enum#exectype)=Trade update
 
 
-
-tip
-
-Every time when you create/amend/cancel an order, the position topic will generate a new message (regardless if there's any actual change)
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Message ID  
 topic| string| Topic name  
 creationTime| number| Data created timestamp (ms)  
 data| array| Object  
-> [category](/docs/v5/enum#category)| string| Product type `linear`, `inverse`, `option`  
+> [category](/docs/v5/enum#category)| string| Product type `linear`, `inverse`, `spot`, `option`  
 > symbol| string| Symbol name  
-> side| string| Position side. `Buy`: long, `Sell`: short  
-return an empty string `""` for an empty position  
-> size| string| Position size  
-> [positionIdx](/docs/v5/enum#positionidx)| integer| Used to identify positions in different position modes  
-> positionValue| string| Position value  
-> riskId| integer| Risk tier ID  
- _for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_  
-> riskLimitValue| string| Risk limit value, become meaningless when auto risk-limit tier is applied  
- _for portfolio margin mode, this field returns 0, which means risk limit rules are invalid_  
-> entryPrice| string| Average entry price 
+> orderId| string| Order ID  
+> isMaker| boolean| `true`: Maker, `false`: Taker  
+> orderLinkId| string| User customized order ID 
 
-  * For USDC Perp & Futures, it indicates average entry price, and it will not be changed with 8-hour session settlement
+  * maker trade is always `""`
+  * If a maker order in the orderbook is converted to taker (by price amend), orderLinkId is also `""`
+  * For option: maker trade is always `""`, taker trade is always orderLinkId
 
   
-> markPrice| string| Mark price  
-> leverage| string| Position leverage  
- _for portfolio margin mode, this field returns "", which means leverage rules are invalid_  
-> breakEvenPrice| string| Break even price, only for `linear`,`inverse`. 
-
-  * breakeven_price = (entry_price _qty - realized_pnl) / (qty - abs(qty)_ max(taker fee rate, 0.00055))
-
-  
-> autoAddMargin| integer| Whether to add margin automatically when using isolated margin mode 
-
-  * `0`: false
-  * `1`: true
-
-  
-> positionIM| string| Initial margin, the same value as `positionIMByMp`, please note this change [The New Margin Calculation: Adjustments and Implications](https://www.bybit.com/en/help-center/article/Understanding-the-Adjustment-and-Impact-of-the-New-Margin-Calculation)
-
-  * Portfolio margin mode: returns ""
-
-  
-> positionMM| string| Maintenance margin, the same value as `positionMMByMp`
-
-  * Portfolio margin mode: returns ""
-
-  
-> liqPrice| string| Position liquidation price 
-
-  * Isolated margin:   
-it is the real price for isolated and cross positions, and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice
-  * Cross margin:  
-it is an **estimated** price for cross positions(because the unified mode controls the risk rate according to the account), and keeps `""` when liqPrice <= minPrice or liqPrice >= maxPrice
-
- _this field is empty for Portfolio Margin Mode, and no liquidation price will be provided_  
-> takeProfit| string| Take profit price  
-> stopLoss| string| Stop loss price  
-> trailingStop| string| Trailing stop  
-> unrealisedPnl| string| Unrealised profit and loss  
-> curRealisedPnl| string| The realised PnL for the current holding position  
-> sessionAvgPrice| string| USDC contract session avg price, it is the same figure as avg entry price shown in the web UI  
-> delta| string| Delta. It is only pushed when you subscribe to the option position.  
-> gamma| string| Gamma. It is only pushed when you subscribe to the option position.  
-> vega| string| Vega. It is only pushed when you subscribe to the option position.  
-> theta| string| Theta. It is only pushed when you subscribe to the option position.  
-> netDeltaRatio| string| Net delta ratio. Option delta is excluded from the calculation. Calculation: `coinAccountSize = abs(longSize + shortSize)`, `coinBaseSize = max(longSize, abs(shortSize))`, `netDeltaRatio = coinAccountSize / coinBaseSize`. Returns `""` if delta neutral mode is not enabled. Call [POST /v5/account/set-delta-mode](/docs/v5/account/set-delta-mode) to enable delta neutral mode.  
-> cumRealisedPnl| string| Cumulative realised pnl 
-
-  * Futures & Perp: it is the all time cumulative realised P&L
-  * Option: it is the realised P&L when you hold that position
-
-  
-> [positionStatus](/docs/v5/enum#positionstatus)| string| Position status. `Normal`, `Liq`, `Adl`  
-> [adlRankIndicator](/docs/v5/enum#adlrankindicator)| integer| Auto-deleverage rank indicator. [What is Auto-Deleveraging?](https://www.bybit.com/en-US/help-center/s/article/What-is-Auto-Deleveraging-ADL)  
-> isReduceOnly| boolean| Useful when Bybit lower the risk limit 
-
-  * `true`: Only allowed to reduce the position. You can consider a series of measures, e.g., lower the risk limit, decrease leverage or reduce the position, add margin, or cancel orders, after these operations, you can call [confirm new risk limit](/docs/v5/position/confirm-mmr) endpoint to check if your position can be removed the reduceOnly mark
-  * `false`: There is no restriction, and it means your position is under the risk when the risk limit is systematically adjusted
-  * Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others
-
-  
-> createdTime| string| Timestamp of the first time a position was created on this symbol (ms)  
-> updatedTime| string| Position data updated timestamp (ms)  
-> openTime| integer| Position open timestamp (ms), default: `0`  
+> execId| string| Execution ID  
+> execPrice| string| Execution price  
+> execQty| string| Execution qty  
+> side| string| Side. `Buy`,`Sell`  
+> execTime| string| Executed timestamp (ms)  
 > seq| long| Cross sequence, used to associate each fill and each position update
 
+  * The seq will be the same when conclude multiple transactions at the same time
   * Different symbols may have the same seq, please use seq + symbol to check unique
-  * Returns `"-1"` if the symbol has never been traded
-  * Returns the seq updated by the last transaction when there are setting like leverage, risk limit
 
   
-> mmrSysUpdatedTime| string| Useful when Bybit lower the risk limit 
-
-  * When isReduceOnly=`true`: the timestamp (ms) when the MMR will be forcibly adjusted by the system
-When isReduceOnly=`false`: the timestamp when the MMR had been adjusted by system
-    * It returns the timestamp when the system operates, and if you manually operate, there is no timestamp
-    * Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp
-    * Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others
-
-  
-> leverageSysUpdatedTime| string| Useful when Bybit lower the risk limit 
-
-  * When isReduceOnly=`true`: the timestamp (ms) when the leverage will be forcibly adjusted by the system
-When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by system
-    * It returns the timestamp when the system operates, and if you manually operate, there is no timestamp
-    * Keeps `""` by default, if there was a lower risk limit system adjustment previously, it shows that system operation timestamp
-    * Only meaningful for isolated margin & cross margin of USDT Perp, USDC Perp, USDC Futures, Inverse Perp and Inverse Futures, meaningless for others
-
-  
-> positionIMByMp| string| Initial margin calculated by mark price, the same value as `positionIM`
-
-  * Portfolio margin mode: returns ""
-
-  
-> positionMMByMp| string| Maintenance margin calculated by mark price, the same value as `positionMM`
-
-  * Portfolio margin mode: returns ""
-
-  
-> tpslMode| string| **Deprecated** , always "Full"  
-> bustPrice| string| **Deprecated** , always `""`  
-> positionBalance| string| **Deprecated** , can refer to `positionIM` or `positionIMByMp` field  
-> tradeMode| integer| **Deprecated** , always `0`, check [Get Account Info](/docs/v5/account/account-info) to know the margin mode  
   
 ### Subscribe Example
     
@@ -155,77 +56,115 @@ When isReduceOnly=`false`: the timestamp when the leverage had been adjusted by 
     {  
         "op": "subscribe",  
         "args": [  
-            "position"  
+            "execution.fast"  
         ]  
     }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.position_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
     
 
 ### Stream Example
     
     
     {  
-        "id": "1003076014fb7eedb-c7e6-45d6-a8c1-270f0169171a",  
-        "topic": "position",  
-        "creationTime": 1697682317044,  
+        "topic": "execution.fast",  
+        "creationTime": 1716800399338,  
         "data": [  
             {  
-                "positionIdx": 2,  
-                "tradeMode": 0,  
-                "riskId": 1,  
-                "riskLimitValue": "2000000",  
-                "symbol": "BTCUSDT",  
-                "side": "",  
-                "size": "0",  
-                "entryPrice": "0",  
-                "leverage": "10",  
-                "breakEvenPrice":"93556.73034991",  
-                "positionValue": "0",  
-                "positionBalance": "0",  
-                "markPrice": "28184.5",  
-                "positionIM": "0",  
-                "positionIMByMp": "0",  
-                "positionMM": "0",  
-                "positionMMByMp": "0",  
-                "takeProfit": "0",  
-                "stopLoss": "0",  
-                "trailingStop": "0",  
-                "unrealisedPnl": "0",  
-                "curRealisedPnl": "1.26",  
-                "cumRealisedPnl": "-25.06579337",  
-                "sessionAvgPrice": "0",  
-                "createdTime": "1694402496913",  
-                "updatedTime": "1697682317038",  
-                "tpslMode": "Full",  
-                "liqPrice": "0",  
-                "bustPrice": "",  
                 "category": "linear",  
-                "positionStatus": "Normal",  
-                "adlRankIndicator": 0,  
-                "autoAddMargin": 0,  
-                "leverageSysUpdatedTime": "",  
-                "mmrSysUpdatedTime": "",  
-                "seq": 8327597863,  
-                "isReduceOnly": false  
+                "symbol": "ICPUSDT",  
+                "execId": "3510f361-0add-5c7b-a2e7-9679810944fc",  
+                "execPrice": "12.015",  
+                "execQty": "3000",  
+                "orderId": "443d63fa-b4c3-4297-b7b1-23bca88b04dc",  
+                "isMaker": false,  
+                "orderLinkId": "test-00001",  
+                "side": "Sell",  
+                "execTime": "1716800399334",  
+                "seq": 34771365464  
             }  
         ]  
     }
 
 ---
 
-# Unicorn! · GitHub
+# 個人成交 (Fast)
+
+精簡版本的個人成交推送, 相比原始的快速成交流, 延遲更加低
+
+提示
+
+  * 支持USDT永續, USDC永續, USDC交割, 反向永續, 反向交割, 現貨和期權的成交推送
+  * 僅推送[execType](/docs/zh-TW/v5/enum#exectype)=Trade的消息
+
+
+
+**All-In-One Topic:** `execution.fast`  
+**Categorised Topic:** `execution.fast.linear`, `execution.fast.inverse`, `execution.fast.spot`, `execution.fast.option`  
+
+
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+topic| string| Topic名  
+creationTime| number| 消息數據創建時間  
+data| array| Object  
+> [category](/docs/zh-TW/v5/enum#category)| string| 產品類型 `linear`, `inverse`, `spot`, `option`  
+> symbol| string| 合約名稱  
+> orderId| string| 訂單ID  
+> isMaker| boolean| `true`: maker成交, `false`: taker成交  
+> orderLinkId| string| 用戶自定義訂單ID 
+
+  * maker成交總是返回`""`
+  * 當maker訂單在訂單簿中轉化成了taker單(比如修改了價格), 這種情況orderLinkId也是`""`
+  * 期權: maker成交永遠返回`""`, taker成交永遠返回orderLinkId
+
+  
+> side| string| 訂單方向.買：`Buy`,賣：`Sell`  
+> execId| string| 成交Id  
+> execPrice| string| 成交價格  
+> execQty| string| 成交數量  
+> execTime| string| 成交時間（毫秒）  
+> seq| long| 序列號, 用於關聯成交和倉位的更新
+
+  * 同一時間有多筆成交, seq相同
+  * 不同的幣對會存在相同seq, 可以使用seq + symbol來做唯一性識別
+
+  
+  
+### 訂閱示例
+    
+    
+    {  
+        "op": "subscribe",  
+        "args": [  
+            "execution.fast"  
+        ]  
+    }  
+    
+    
+    
+      
+    
+
+### 推送示例
+    
+    
+    {  
+        "topic": "execution.fast",  
+        "creationTime": 1716800399338,  
+        "data": [  
+            {  
+                "category": "linear",  
+                "symbol": "ICPUSDT",  
+                "execId": "3510f361-0add-5c7b-a2e7-9679810944fc",  
+                "execPrice": "12.015",  
+                "execQty": "3000",  
+                "orderId": "443d63fa-b4c3-4297-b7b1-23bca88b04dc",  
+                "isMaker": false,  
+                "orderLinkId": "test-00001",  
+                "side": "Sell",  
+                "execTime": "1716800399334",  
+                "seq": 34771365464  
+            }  
+        ]  
+    }

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-simple-earn-flexible
 anchor_id: financial-product-simple-earn-flexible
 api_type: API
-updated_at: 2026-09-28 19:23:00.592217
+updated_at: 2026-09-29 19:19:08.487653
 ---
 
 # Simple earn flexible

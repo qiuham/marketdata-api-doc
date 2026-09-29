@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/acct-borrow-collateral
 api_type: REST
-updated_at: 2026-09-28 18:45:27.498579
+updated_at: 2026-09-29 18:45:16.691753
 ---
 
 # Get Completed Loan History

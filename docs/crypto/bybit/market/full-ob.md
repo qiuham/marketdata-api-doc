@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/full-ob
 api_type: Market Data
-updated_at: 2026-09-28 18:48:01.554971
+updated_at: 2026-09-29 18:47:44.260968
 ---
 
 # Get Index Price Components

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
 api_type: REST
-updated_at: 2026-09-28 18:50:57.651976
+updated_at: 2026-09-29 18:50:29.735825
 ---
 
 # Get Instruments Info

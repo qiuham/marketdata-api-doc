@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-websocket-balance-and-position-channel
 anchor_id: trading-account-websocket-balance-and-position-channel
 api_type: WebSocket
-updated_at: 2026-09-28 19:20:45.015253
+updated_at: 2026-09-29 19:16:56.373726
 ---
 
 # Balance and position channel

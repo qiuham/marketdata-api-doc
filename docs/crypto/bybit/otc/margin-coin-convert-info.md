@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-coin-convert-info
 api_type: REST
-updated_at: 2026-09-28 18:49:25.129237
+updated_at: 2026-09-29 18:49:02.558971
 ---
 
 # Get Repayment Orders

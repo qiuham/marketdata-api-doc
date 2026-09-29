@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions
 api_type: REST
-updated_at: 2026-09-28 19:05:01.521807
+updated_at: 2026-09-29 19:01:32.738056
 ---
 
 # List US Derivatives Positions

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-put-call-ratio
 anchor_id: trading-statistics-rest-api-get-put-call-ratio
 api_type: REST
-updated_at: 2026-09-28 19:22:29.681418
+updated_at: 2026-09-29 19:18:38.299302
 ---
 
 # Get put/call ratio

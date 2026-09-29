@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-futures-settlement-history
 anchor_id: public-data-rest-api-get-futures-settlement-history
 api_type: REST
-updated_at: 2026-09-28 19:22:12.196918
+updated_at: 2026-09-29 19:18:21.115394
 ---
 
 # Get futures settlement history
