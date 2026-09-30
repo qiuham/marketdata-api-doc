@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-close-lead-position
 anchor_id: order-book-trading-copy-trading-post-close-lead-position
 api_type: API
-updated_at: 2026-09-29 19:17:36.895413
+updated_at: 2026-09-30 19:19:30.477396
 ---
 
 # POST / Close lead position

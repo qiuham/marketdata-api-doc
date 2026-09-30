@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code
 anchor_id: error-code
 api_type: API
-updated_at: 2026-09-29 19:19:21.280821
+updated_at: 2026-09-30 19:21:17.882787
 ---
 
 # Error Code
@@ -625,6 +625,7 @@ Error Code | HTTP Status code | Error Message
 54079 | 200 | Dynamic change is available only for futures trading in futures mode or multi-currency mode. Note that when selecting dynamic change, the trigger price can only be calculated using the last price.  
 54092 | 200 | Action Required: Please accept the TradFi Perps disclaimer on Web or App by attempting to place a TradFi Perp trade via the frontend. Each account, including sub-accounts, must separately accept the disclaimer before API trading is enabled  
 54094 | 200 | Order rejected. The cool-off period is active for the current instId.  
+54109 | 200 | You haven’t activated trading for this pair. Log in to the OKX App or website and click "Trade" on this pair’s trading page to activate it, or activate it via the designated API endpoint, then try again.  
   
 #### Data class
 
@@ -1862,6 +1863,7 @@ e.g. clOrdId 已存在
 54079 | 200 | 仅支持合约模式和跨币种保证金模式下的合约交易设置动态涨跌幅。请注意，若设置为动态涨跌幅，触发价将以最新价为参考。  
 54092 | 200 | 操作要求：请通过网页端或 App 前端尝试下单 TradFi 永续合约（TradFi Perps）交易，并完成免责声明确认。每个主账户及子账户都必须单独接受免责声明后，方可启用 API 交易功能。  
 54094 | 200 | 下单失败，当前交易产品处于冷静期内，暂不支持下单。  
+54109 | 200 | 您尚未开通该币对交易。请登录 欧易 App 或官网，进入该币对交易页面并点击"交易"完成开通，或调用指定 API 接口开通后重试。  
   
 #### 数据类
 

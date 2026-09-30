@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-09-29 19:16:37.619473
+updated_at: 2026-09-30 19:18:28.694495
 ---
 
 # REST API
@@ -4628,6 +4628,8 @@ Parameter | Type | Description
 ts | String | Activation time  
   
 ### Activate feature
+
+If order placement returns error code `54109`, call the following endpoint to activate USDC trading for the account; otherwise, you do not need to call this endpoint.
 
 #### Rate limit: 5 requests per 2 seconds
 
@@ -10984,6 +10986,8 @@ posType | String | 限仓类型，仅适用于组合保证金模式下的期权�
 ts | String | 开通时间  
   
 ### 开通功能 
+
+若下单返回错误码 `54109`，请调用以下接口为账户开通 USDC 交易功能；否则无需调用该接口。
 
 #### 限速：5 次/2 秒
 

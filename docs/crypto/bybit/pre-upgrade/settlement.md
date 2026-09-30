@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/settlement
 api_type: REST
-updated_at: 2026-09-29 18:49:25.267141
+updated_at: 2026-09-30 18:49:46.997281
 ---
 
 # Get Rate Limit

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-co-inviter-link-list
 anchor_id: affiliate-rest-api-get-co-inviter-link-list
 api_type: REST
-updated_at: 2026-09-29 19:19:18.746084
+updated_at: 2026-09-30 19:21:15.242757
 ---
 
 # Get co-inviter link list

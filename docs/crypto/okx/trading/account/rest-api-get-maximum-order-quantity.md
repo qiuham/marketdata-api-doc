@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-maximum-order-quantity
 anchor_id: trading-account-rest-api-get-maximum-order-quantity
 api_type: REST
-updated_at: 2026-09-29 19:16:42.008712
+updated_at: 2026-09-30 19:18:33.191113
 ---
 
 # Get maximum order quantity

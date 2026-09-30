@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/open-interest
 api_type: Market Data
-updated_at: 2026-09-29 18:47:56.343933
+updated_at: 2026-09-30 18:48:06.482335
 ---
 
 # Get Option Base Coins

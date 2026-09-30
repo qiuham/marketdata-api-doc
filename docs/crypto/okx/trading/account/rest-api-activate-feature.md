@@ -3,13 +3,15 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-activate-feature
 anchor_id: trading-account-rest-api-activate-feature
 api_type: REST
-updated_at: 2026-09-29 19:16:49.487541
+updated_at: 2026-09-30 19:18:40.907734
 ---
 
 # Activate feature
 
-#### Rate limit: 5 requests per 2 seconds  
+If order placement returns error code `54109`, call the following endpoint to activate USDC trading for the account; otherwise, you do not need to call this endpoint.  
   
+#### Rate limit: 5 requests per 2 seconds
+
 #### Rate limit rule: User ID
 
 #### HTTP Request
@@ -54,8 +56,10 @@ None
 
 # 开通功能
 
-#### 限速：5 次/2 秒  
+若下单返回错误码 `54109`，请调用以下接口为账户开通 USDC 交易功能；否则无需调用该接口。  
   
+#### 限速：5 次/2 秒
+
 #### 限速规则：User ID
 
 #### HTTP 请求

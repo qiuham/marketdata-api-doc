@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/product
 api_type: REST
-updated_at: 2026-09-29 18:47:27.257880
+updated_at: 2026-09-30 18:47:34.339874
 ---
 
 # Get Launchpool Current Staking

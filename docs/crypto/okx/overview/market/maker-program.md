@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-market-maker-program
 anchor_id: overview-market-maker-program
 api_type: API
-updated_at: 2026-09-29 19:16:36.220924
+updated_at: 2026-09-30 19:18:26.778906
 ---
 
 # Market Maker Program

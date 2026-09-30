@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/repay-orders
 api_type: REST
-updated_at: 2026-09-29 18:48:34.665453
+updated_at: 2026-09-30 18:48:49.817868
 ---
 
 # Get Borrowable Coins
