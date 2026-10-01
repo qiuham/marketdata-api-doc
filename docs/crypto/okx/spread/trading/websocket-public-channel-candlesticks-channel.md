@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-candlesticks-channel
 anchor_id: spread-trading-websocket-public-channel-candlesticks-channel
 api_type: WebSocket
-updated_at: 2026-09-30 19:20:12.315484
+updated_at: 2026-10-01 19:20:43.035843
 ---
 
 # Candlesticks channel

@@ -2,22 +2,20 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview
 api_type: Guide
-updated_at: 2026-09-30 19:03:22.146860
+updated_at: 2026-10-01 19:03:48.523677
 ---
 
 # Global Derivatives Overview
 
 Guide to trading Global Derivatives on Advanced Trade
 
-On **October 1, 2026** , Advanced Trade is moving international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform.
-
-Coinbase International Exchange and Deribit are coming together to create a unified, world-class derivatives platform. Starting October 1, 2026, the exchange infrastructure behind your perpetuals trades is moving to a combined platform powered by Deribit and Starbase.
+Coinbase International Exchange and Deribit have come together as a unified derivatives platform. On October 1, 2026, Advanced Trade moved international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform, and INTX perpetuals trading through the Advanced Trade API ended.
 
 ## Migration to Deribit Global Derivatives trading
 
 ### Who is this guide for:
 
-  * These guides are for new or existing Coinbase retail clients/partners who want to trade Global Derivatives after October 1, 2026.
+  * These guides are for new or existing Coinbase retail clients and partners who trade Global Derivatives, including anyone moving an INTX integration to the new gateway.
   * Existing Deribit clients can continue to use Deribit services and APIs as they do today.
 
 ### What’s new for you:
@@ -26,13 +24,13 @@ Coinbase International Exchange and Deribit are coming together to create a unif
   * Up to 50x maximum leverage
   * Deeper liquidity: Unified order books from a combined global user base
   * Starbase platform: Faster, more scalable, lower-latency execution
-  * Options trading — Coming soon for eligible users
+  * Options and dated futures are not yet available through the gateway
 
 ### What’s changing
 
-  * **New API endpoints.** Derivatives trading moves to a new Deribit-powered gateway. The protocol moves from REST to JSON-RPC 2.0, over HTTP or WebSocket. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction); protocol detail is in the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical).
-  * **New products.** 125+ perpetual contracts at launch — including equity and commodity perpetuals — with up to 50x maximum leverage. Options and dated futures follow (see Timeline).
-  * **A richer trading surface.** New native order types and features become available, including trailing stops, market-limit orders, iceberg orders, and WebSocket order entry.
+  * **New API endpoints.** Derivatives trading runs on a Deribit-powered gateway. The protocol is JSON-RPC 2.0 over HTTP or WebSocket, not REST. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction); protocol detail is in the [Technical Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical).
+  * **New products.** 125+ perpetual contracts, including equity and commodity perpetuals, with up to 50x maximum leverage.
+  * **A richer trading surface.** New native order types and features are available, including trailing stops, market-limit orders, iceberg orders, and WebSocket order entry.
   * **More order controls.** Choose your margin model per portfolio, trigger stop and take orders on the index, mark, or last price, and auto-cancel resting orders if your WebSocket connection drops (Cancel on Disconnect).
 
 ### What’s not changing
@@ -50,7 +48,7 @@ The migration is covered in the 4 guides:
 
 ## Overview
 
-This guide covers the timeline, new products, order types, margin models, and the migration plan.
+This guide covers what changed from INTX: products, order types, margin models, and the migration checklist.
 
 ## Technical Guide
 
@@ -66,39 +64,15 @@ For registered Deribit partners — how the Coinbase integration affects an exis
 
 For partners on Coinbase’s international (INTX) platform moving to the new Deribit-backed service.
 
-## Timeline
+## What happened at migration
 
-Milestone| Date| What it means  
----|---|---  
-**Account provisioning**|  August 2, 2026| Your accounts are created on the new combined platform  
-**Cutover**|  October 1, 2026| INTX trading ends and the Deribit-powered gateway goes live. Open orders are cancelled, positions settle and are recreated on the new platform, and old endpoints stop serving international derivatives. Perpetuals trade from day one.  
-**Options and dated futures**|  Fast-follow| New products come online after the perpetuals cutover  
-  
-**This is a hard cutover.** There is no parallel-running window — the old endpoints and the new gateway do not run side by side. Integrations not migrated by October 1, 2026 stop trading.
+The migration completed on October 1, 2026. INTX perpetuals trading through the Advanced Trade API ended, and there was no parallel run. An integration that still calls the INTX endpoints to trade must move to the new gateway. Positions and balances migrated automatically, but open orders did not.
 
-### What happens at cutover
+  * **Open orders were cancelled.** Resting orders on International Exchange were cancelled at migration. Re-place any you still need on the new gateway.
+  * **Positions were settled and recreated.** Open positions settled at the mark price (PnL crystallized, funding paid), then were recreated at the settlement price on the new platform.
+  * **Balances transferred.** Collateral moved to your account on the combined platform.
 
-Your **positions and balances migrate automatically** — but your **open orders do not**.
-
-1
-
-Open orders are cancelled
-
-All resting orders on International Exchange are cancelled. Re-place them on the new gateway after the switch.
-
-2
-
-Positions are settled and recreated
-
-Open positions settle at the mark price (PnL crystallized, funding paid), then are recreated at the settlement price on the new platform. Nothing for you to do.
-
-3
-
-Balances transfer
-
-Your collateral moves to your account on the combined platform automatically.
-
-You may see multiple trade records, a reset of your average entry price, and a small temporary PnL variance — these are standard migration artifacts. No trading or settlement fees are charged for the migration.
+You may see multiple trade records, a reset of your average entry price, and a small PnL variance around the migration. These are standard migration artifacts. No trading or settlement fees were charged for the migration.
 
 ## Funding
 
@@ -203,9 +177,9 @@ Replace the single combined order with two linked exit orders.
 
 8
 
-Deribit Advanced Trading gateway is live
+Repoint production traffic
 
-Cut over on **October 1, 2026** , no parallel run. Repoint production traffic.
+Move production traffic to the new gateway. The INTX endpoints no longer accept derivatives orders.
 
 ## FAQ
 
@@ -213,13 +187,13 @@ Do I need a separate trading account or API key?
 
 No. You keep your existing Coinbase (CDP) API key and authenticate to the new gateway with it. There is no separate account or key to create.
 
-Can I run old and new endpoints in parallel during cutover?
+Can I still trade derivatives on the INTX endpoints?
 
-No. This is a hard cutover. Integrations not migrated by October 1, 2026 stop trading.
+No. INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026, with no parallel run. Trade on the new gateway.
 
-What happens to my open orders and positions at cutover?
+What happened to my open orders and positions?
 
-Open orders are cancelled — re-place them on the new gateway after the switch. Positions and balances migrate automatically (settled and recreated on the new platform). See What happens at cutover.
+Open orders were cancelled; re-place them on the new gateway. Positions and balances migrated automatically (settled and recreated on the new platform). See What happened at migration.
 
 Is spot trading affected?
 

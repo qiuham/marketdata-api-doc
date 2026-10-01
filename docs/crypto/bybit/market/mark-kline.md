@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-09-30 18:48:05.226760
+updated_at: 2026-10-01 18:49:43.694042
 ---
 
 # Get Option Base Coins

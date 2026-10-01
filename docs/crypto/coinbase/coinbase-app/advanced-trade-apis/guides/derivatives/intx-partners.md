@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners
 api_type: Guide
-updated_at: 2026-09-30 19:03:21.916236
+updated_at: 2026-10-01 19:03:48.383503
 ---
 
 # INTX Retail API Partners — Migration Guide
@@ -11,11 +11,11 @@ This is the migration guide for existing Coinbase INTX partners.
 
 ## Summary
 
-Coinbase is moving international derivatives off INTX onto Deribit-backed endpoints, with cutover on **October 1, 2026**. INTX trading ends at cutover — migrate your integration before then to keep trading. You already authenticate with Coinbase CDP API keys or OAuth2, and those credentials carry over unchanged — no new keys to issue, no new end-user consent. To migrate, repoint to the new endpoints and add a single `public/auth` token-exchange call. The protocol moves from INTX REST to JSON-RPC 2.0 over HTTP and WebSocket. The [Technical Migration Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical) is the full reference — protocol, base URLs, symbology, order types, and endpoint mapping. This guide covers what’s specific to you as an INTX partner.
+Coinbase moved international derivatives off INTX onto Deribit-backed endpoints on October 1, 2026. INTX derivatives trading through the Advanced Trade API has ended, so your integration must use the new endpoints to trade. You already authenticate with Coinbase CDP API keys or OAuth2, and those credentials carry over unchanged — no new keys to issue, no new end-user consent. To migrate, repoint to the new endpoints and add a single `public/auth` token-exchange call. The protocol moves from INTX REST to JSON-RPC 2.0 over HTTP and WebSocket. The [Technical Migration Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical) is the full reference — protocol, base URLs, symbology, order types, and endpoint mapping. This guide covers what’s specific to you as an INTX partner.
 
 ## What changes
 
-Area| Today (INTX)| After cutover  
+Area| INTX (retired)| Deribit-backed gateway  
 ---|---|---  
 **Where you trade**|  Coinbase INTX| New Coinbase Deribit-backed endpoints  
 **Protocol**|  REST| JSON-RPC 2.0 (over HTTP and WebSocket)  
@@ -26,7 +26,7 @@ Area| Today (INTX)| After cutover
 
 The new surface speaks JSON-RPC 2.0 over both HTTP and WebSocket. WebSocket is the recommended transport for trading.
 
-Surface| INTX (current)| Coinbase Deribit-backed  
+Surface| INTX (retired)| Coinbase Deribit-backed  
 ---|---|---  
 **REST**| `https://api.coinbase.com/api/v3/brokerage/intx/`| `https://drb.coinbase.com/api/v2`  
 **WebSocket**| `wss://advanced-trade-ws.coinbase.com` (market data only)| `wss://drb.coinbase.com/ws/api/v2`  
@@ -136,12 +136,12 @@ Update symbology
 
 6
 
-Deribit Advanced Trading gateway is live
+Repoint production traffic
 
-Cut over on **October 1, 2026** , no parallel run. Repoint production traffic.
+Move production traffic to the new gateway. The INTX endpoints no longer accept derivatives orders.
 
 ## Help
 
-  * Further assistance and timing — your Coinbase account manager.
+  * Further assistance — your Coinbase account manager.
   * Method-level API detail — the [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction).
   * Best practices and detailed guides — [Deribit’s documentation](https://docs.deribit.com/articles/order-management-best-practices).

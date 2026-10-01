@@ -2,29 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/list-accounts
 api_type: Account
-updated_at: 2026-09-30 19:03:19.717789
+updated_at: 2026-10-01 19:03:46.134493
 ---
 
 # List Accounts
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/accounts`
 
-: "<string>",
-            "code_val": "<string>"
-        }
-    }
-    headers = {
-        "Authorization": "Bearer <token>",
-        "Content-Type": "application/json"
-    }
-    
-    response = requests.post(url, json=payload, headers=headers)
-    
-    print(response.text)Accounts
-    
-    # List Accounts
-    
-    Get a list of authenticated accounts for the current user.
+
+Get a list of authenticated accounts for the current user.
     
     
     curl --request GET \

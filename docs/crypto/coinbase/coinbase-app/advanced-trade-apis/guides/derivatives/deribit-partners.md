@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/deribit-partners
 api_type: Guide
-updated_at: 2026-09-30 19:03:21.866733
+updated_at: 2026-10-01 19:03:48.361219
 ---
 
 # Deribit Registered Partners — Migration Guide
@@ -11,14 +11,14 @@ This is the migration guide for existing registered Deribit partners.
 
 ## Summary
 
-Coinbase is integrating Deribit, with cutover on **October 1, 2026**. Your existing Deribit users are unaffected. They keep their Deribit accounts and credentials, and you keep receiving rebates from them. What changes is your new users — after cutover they arrive with Coinbase credentials. Therefore, you will need to cover a mix — existing users on Deribit credentials, new users on Coinbase credentials. This will require some integration work: route each user to the correct endpoint, and add the auth path for new (Coinbase) users.
+Coinbase integrated Deribit on October 1, 2026. Your existing Deribit users are unaffected. They keep their Deribit accounts and credentials, and you keep receiving rebates from them. What changed is your new users: they now arrive with Coinbase credentials. Your integration therefore serves a mix of existing users on Deribit credentials and new users on Coinbase credentials. That takes some integration work: route each user to the correct endpoint, and add the auth path for new (Coinbase) users.
 
 ## What changes — and what doesn’t
 
-Cohort| What happens at cutover  
+Cohort| What changed  
 ---|---  
 **Your existing Deribit users**|  Unaffected. They keep their Deribit accounts, credentials, and UX. No migration. You keep receiving rebates from them.  
-**Your new users (after cutover)**|  Can no longer self-serve at `deribit.com`. They onboard through Coinbase and arrive with Coinbase credentials.  
+**Your new users**|  Can no longer self-serve at `deribit.com`. They onboard through Coinbase and arrive with Coinbase credentials.  
   
 ## Route per user
 
@@ -127,12 +127,12 @@ Before onboarding live Coinbase-credentialed users.
 
 5
 
-Deribit Advanced Trading gateway is live
+Onboard Coinbase users
 
-New Coinbase users can trade from **October 1, 2026**.
+The Deribit Advanced Trade gateway is live, and new Coinbase users can trade through it.
 
 ## Help
 
-  * Further assistance and timing — your Coinbase account manager.
+  * Further assistance — your Coinbase account manager.
   * Method-level API detail — the [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction).
   * Best practices and detailed guides — [Deribit’s documentation](https://docs.deribit.com/articles/order-management-best-practices).

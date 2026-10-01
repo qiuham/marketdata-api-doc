@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/leverage
 api_type: Position
-updated_at: 2026-09-30 18:49:33.766778
+updated_at: 2026-10-01 18:51:06.628619
 ---
 
 # Get Move Position History

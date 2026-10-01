@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio
 api_type: Account
-updated_at: 2026-09-30 19:03:20.962855
+updated_at: 2026-10-01 19:03:47.376662
 ---
 
 # Allocate Portfolio
@@ -166,7 +166,7 @@ Allocate portfolio funds to a sub-portfolio on Intx Portfolio
       ]
     }
 
-**Deprecated — retires October 1, 2026.** This INTX perpetuals endpoint is being replaced by the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). Migrate before the cutover — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+**Retired.** INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026. International derivatives now trade on the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 #### Authorizations
 

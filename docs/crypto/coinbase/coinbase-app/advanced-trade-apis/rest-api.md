@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-09-30 19:03:22.443960
+updated_at: 2026-10-01 19:03:48.918447
 ---
 
 # Advanced Trade REST Endpoints
@@ -96,18 +96,18 @@ Endpoint| Description
 [`GET /payment_methods`](/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods)| Payment methods  
 [`GET /payment_methods/\{payment_method_id\}`](/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method)| One payment method  
 [`GET /key_permissions`](/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions)| API key permissions  
-[`GET /intx/portfolio/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary)| INTX portfolio summary (deprecated)  
-[`GET /intx/positions/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions)| INTX positions (deprecated)  
-[`GET /intx/positions/\{portfolio_uuid\}/\{symbol\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position)| One INTX position (deprecated)  
-[`GET /intx/balances/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances)| INTX balances (deprecated)  
-[`POST /intx/multi_asset_collateral`](/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out)| INTX multi-asset collateral (deprecated)  
-[`POST /intx/allocate`](/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio)| Allocate to an INTX portfolio (deprecated)  
+[`GET /intx/portfolio/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary)| INTX portfolio summary (retired)  
+[`GET /intx/positions/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions)| INTX positions (retired)  
+[`GET /intx/positions/\{portfolio_uuid\}/\{symbol\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position)| One INTX position (retired)  
+[`GET /intx/balances/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances)| INTX balances (retired)  
+[`POST /intx/multi_asset_collateral`](/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out)| INTX multi-asset collateral (retired)  
+[`POST /intx/allocate`](/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio)| Allocate to an INTX portfolio (retired)  
   
 #### Notes
 
   * Same URL as the public methods. A CDP JWT is required. See [API key authentication](/coinbase-app/authentication-authorization/api-key-authentication).
   * Endpoints require `view`, `trade`, or `transfer` on the key, depending on the call.
-  * `/intx/*` endpoints are the current international-derivatives API. They retire on **October 1, 2026** — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
+  * `/intx/*` endpoints are retired. INTX perpetuals trading ended on October 1, 2026, and international derivatives now trade on the Global Derivatives gateway. The read endpoints stay available for pre-migration INTX history for a limited period. See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 ## API Reference
 
@@ -180,8 +180,6 @@ Endpoint| Description
 ### Private
 
 The user’s orders, fills, positions, portfolio, and Block RFQs.
-
-**Coming soon.** The Deribit-powered gateway goes live **October 1, 2026**. It is published ahead of cutover so you can plan your integration now — see the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
 #### Endpoints
 

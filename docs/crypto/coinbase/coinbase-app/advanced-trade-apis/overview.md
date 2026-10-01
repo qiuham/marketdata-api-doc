@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview
 api_type: Guide
-updated_at: 2026-09-30 19:03:22.333248
+updated_at: 2026-10-01 19:03:48.882431
 ---
 
 # Welcome to Advanced Trade API
@@ -33,21 +33,19 @@ Market| What it covers
 ---|---  
 **Spot**|  Buy, sell, and trade digital assets across spot pairs  
 **US futures**|  CFTC-regulated futures for eligible US clients  
-**Global Derivatives**|  Perpetuals for eligible non-US clients — options and dated futures to follow  
+**Global Derivatives**|  Perpetuals for eligible non-US clients, traded on a Deribit-powered gateway  
   
-## International derivatives are moving to Deribit
+## Global Derivatives on Deribit
 
-On **October 1, 2026** , Advanced Trade moves international derivatives from INTX onto a Deribit-powered gateway running on the **Starbase** platform. This is a hard cutover — plan your integration now.
+Advanced Trade international derivatives trade on a Deribit-powered gateway running on the **Starbase** platform. They moved there from INTX on October 1, 2026, and INTX perpetuals are no longer traded through the Advanced Trade API. Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). The Global Derivatives gateway offers:
 
-Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). International derivatives move to a new gateway with:
-
-  * **A broader product set** — 125+ perpetual contracts at launch, including equity and commodity perpetuals, with up to 50x leverage. Options and dated futures follow.
+  * **A broader product set** — 125+ perpetual contracts, including equity and commodity perpetuals, with up to 50x leverage. Options and dated futures are not yet available.
   * **New native order types** — trailing stops, market-limit, and iceberg orders, plus WebSocket order entry.
   * **A new protocol** — JSON-RPC 2.0 over HTTP or WebSocket. Keep your existing CDP API key.
 
 ## Migration Overview
 
-Timeline, new products, order types, margin models, and the migration plan.
+What changed from INTX: products, order types, margin models, and the migration checklist.
 
 ## Technical Guide
 
