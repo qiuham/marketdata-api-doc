@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-precheck-account-mode-switch
 anchor_id: trading-account-rest-api-precheck-account-mode-switch
 api_type: REST
-updated_at: 2026-10-01 19:19:12.699546
+updated_at: 2026-10-02 19:17:38.798157
 ---
 
 # Precheck account mode switch

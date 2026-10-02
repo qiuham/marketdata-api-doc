@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/delay-liq-status
 api_type: REST
-updated_at: 2026-10-01 18:50:50.172428
+updated_at: 2026-10-02 18:48:48.082512
 ---
 
 # Get Loan Orders

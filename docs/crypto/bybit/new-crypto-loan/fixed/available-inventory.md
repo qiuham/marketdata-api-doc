@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/available-inventory
 api_type: REST
-updated_at: 2026-10-01 18:50:01.345020
+updated_at: 2026-10-02 18:47:59.909172
 ---
 
 # Get Borrowing Market

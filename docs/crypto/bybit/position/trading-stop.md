@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/trading-stop
 api_type: Position
-updated_at: 2026-10-01 18:51:12.536144
+updated_at: 2026-10-02 18:49:09.949466
 ---
 
 # Get Pre-upgrade Trade History

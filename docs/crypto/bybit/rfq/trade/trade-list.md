@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/trade-list
 api_type: Trading
-updated_at: 2026-10-01 18:51:47.550797
+updated_at: 2026-10-02 18:49:44.621163
 ---
 
 # Execution

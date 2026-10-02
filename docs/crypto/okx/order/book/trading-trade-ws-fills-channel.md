@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-fills-channel
 anchor_id: order-book-trading-trade-ws-fills-channel
 api_type: WebSocket
-updated_at: 2026-10-01 19:19:30.806058
+updated_at: 2026-10-02 19:17:56.170430
 ---
 
 # WS / Fills channel
