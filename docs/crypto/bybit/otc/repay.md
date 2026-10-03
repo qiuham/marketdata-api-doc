@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay
 api_type: REST
-updated_at: 2026-10-02 18:48:53.897775
+updated_at: 2026-10-03 19:18:23.456951
 ---
 
 # Get Repayment Orders

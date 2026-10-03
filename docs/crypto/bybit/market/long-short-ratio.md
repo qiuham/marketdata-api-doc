@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/long-short-ratio
 api_type: Market Data
-updated_at: 2026-10-02 18:47:41.812208
+updated_at: 2026-10-03 19:17:13.668863
 ---
 
 # Get Option Base Coins

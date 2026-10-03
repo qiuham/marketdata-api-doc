@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/point/cashback-detail
 api_type: REST
-updated_at: 2026-10-02 18:44:55.329268
+updated_at: 2026-10-03 19:14:30.457380
 ---
 
 # Query Point Records

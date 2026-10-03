@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-10-02 18:50:08.483047
+updated_at: 2026-10-03 19:19:37.758222
 ---
 
 # Get Liability Info
