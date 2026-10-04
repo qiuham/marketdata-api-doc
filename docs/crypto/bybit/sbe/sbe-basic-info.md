@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-10-03 19:19:26.005896
+updated_at: 2026-10-04 19:43:26.987093
 ---
 
 # Get Currency Data

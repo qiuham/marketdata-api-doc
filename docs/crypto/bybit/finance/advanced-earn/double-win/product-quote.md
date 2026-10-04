@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/product-quote
 api_type: REST
-updated_at: 2026-10-03 19:15:21.117622
+updated_at: 2026-10-04 19:39:14.614365
 ---
 
 # Get Product Info

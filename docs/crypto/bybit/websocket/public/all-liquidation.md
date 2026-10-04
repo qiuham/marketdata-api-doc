@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation
 api_type: WebSocket
-updated_at: 2026-10-03 19:20:52.531685
+updated_at: 2026-10-04 19:44:55.367211
 ---
 
 # Kline

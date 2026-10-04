@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out
 api_type: REST
-updated_at: 2026-10-03 19:30:52.350276
+updated_at: 2026-10-04 19:55:14.333349
 ---
 
 # Opt In or Out of Multi Asset Collateral

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-lead-trader-daily-pnl
 anchor_id: order-book-trading-copy-trading-get-lead-trader-daily-pnl
 api_type: API
-updated_at: 2026-10-03 19:47:06.980823
+updated_at: 2026-10-04 20:11:22.673457
 ---
 
 # GET / Lead trader daily pnl

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-leading-instruments
 anchor_id: order-book-trading-copy-trading-get-leading-instruments
 api_type: API
-updated_at: 2026-10-03 19:47:02.080449
+updated_at: 2026-10-04 20:11:17.682571
 ---
 
 # GET / Leading instruments

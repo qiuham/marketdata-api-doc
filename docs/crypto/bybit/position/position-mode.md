@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/position-mode
 api_type: Position
-updated_at: 2026-10-03 19:18:38.961128
+updated_at: 2026-10-04 19:42:38.572082
 ---
 
 # Get Pre-upgrade Trade History

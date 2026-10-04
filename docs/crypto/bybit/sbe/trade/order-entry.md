@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/trade/order-entry
 api_type: Trading
-updated_at: 2026-10-03 19:19:26.621169
+updated_at: 2026-10-04 19:43:27.608076
 ---
 
 # Get Currency Data

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-sub-account-funding-balance
 anchor_id: sub-account-rest-api-get-sub-account-funding-balance
 api_type: REST
-updated_at: 2026-10-03 19:48:19.179279
+updated_at: 2026-10-04 20:12:37.504445
 ---
 
 # Get sub-account funding balance
