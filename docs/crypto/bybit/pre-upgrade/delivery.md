@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/delivery
 api_type: REST
-updated_at: 2026-10-04 19:42:40.448011
+updated_at: 2026-10-05 18:51:37.850162
 ---
 
 # Get Pre-upgrade Trade History

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-event-contract-markets-channel
 anchor_id: public-data-websocket-event-contract-markets-channel
 api_type: WebSocket
-updated_at: 2026-10-04 20:12:12.014809
+updated_at: 2026-10-05 19:21:07.917934
 ---
 
 # Event contract markets channel

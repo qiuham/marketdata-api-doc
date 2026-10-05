@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/margin-product-info
 api_type: REST
-updated_at: 2026-10-04 19:42:22.469188
+updated_at: 2026-10-05 18:51:19.790335
 ---
 
 # Get Repayment Orders

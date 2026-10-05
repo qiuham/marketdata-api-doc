@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions
 api_type: Guide
-updated_at: 2026-10-04 19:55:15.132249
+updated_at: 2026-10-05 19:04:11.193188
 ---
 
 # Isolated Positions API Guide
@@ -11,7 +11,7 @@ Learn how to manage isolated positions with the Global Derivatives JSON-RPC API.
 
 Isolated margin confines risk to the collateral allocated to one position. Isolated orders and positions are owned by managed subaccounts that the API provisions on demand and hides from account listings unless you ask for them with `include_isolated: true`. This guide covers the behavior that differs from cross-margin trading and how to integrate against the JSON-RPC API. Examples use `SOL_USDC-PERPETUAL`. `123456` stands for a discovered integer subaccount ID; `subaccount_id` is an integer on the wire, not a string.
 
-## 1\. How isolated margin works
+## 1. How isolated margin works
 
 Four behaviors differ from ordinary cross trading. Read these before the walkthrough; most integration bugs come from assuming one of them away.
 
@@ -56,7 +56,7 @@ On recycling, remaining collateral settles back to the main account and the bind
 
 Placing a risk-increasing order with `isolated: true` automatically transfers the required margin from the main account to the slot, unless you supply `allocated_margin` explicitly. If passed, `allocated_margin` must meet the required minimum, or placement fails with `14033 isolated_allocated_too_low`. When an isolated position is completely closed and has no open orders, an **auto-sweep** automatically transfers all remaining collateral and P&L back to the main account and recycles the slot. Partial position reductions or leverage increases do not trigger a partial auto-sweep; excess margin remains in the slot until complete closure or [manual transfer](/api-reference/wallet/private-submit_transfer_between_subaccounts).
 
-## 2\. Integration walkthrough
+## 2. Integration walkthrough
 
 ### 2.1 Authenticate and subscribe
 
@@ -470,7 +470,7 @@ Isolated perpetual settlements are recorded per slot (including funding fees whe
 
 When an isolated position closes, the API may create transaction-log entries for both the isolated subaccount and the main account. Do not rely on a specific transaction type or on values inside `info`, because they can vary. Use the top-level `cashflow` field to review money movements. The `role` field is only available for some transfer types. Treat a cleared `isolated_margin_instrument` value as the confirmation that the isolated slot was recycled.
 
-## 3\. Runbooks and reference
+## 3. Runbooks and reference
 
 ### 3.1 Production startup sequence
 

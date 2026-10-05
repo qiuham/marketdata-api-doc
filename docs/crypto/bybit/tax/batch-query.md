@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/batch-query
 api_type: REST
-updated_at: 2026-10-04 19:44:20.887970
+updated_at: 2026-10-05 18:53:17.968862
 ---
 
 # TradFi Integration

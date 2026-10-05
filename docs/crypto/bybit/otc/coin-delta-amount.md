@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-10-04 19:42:16.653605
+updated_at: 2026-10-05 18:51:13.921321
 ---
 
 # Get Loan Orders

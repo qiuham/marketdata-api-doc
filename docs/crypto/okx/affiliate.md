@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate
 anchor_id: affiliate
 api_type: API
-updated_at: 2026-10-04 20:12:59.792375
+updated_at: 2026-10-05 19:21:55.548374
 ---
 
 # Affiliate

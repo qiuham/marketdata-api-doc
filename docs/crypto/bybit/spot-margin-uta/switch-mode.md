@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode
 api_type: REST
-updated_at: 2026-10-04 19:43:50.617711
+updated_at: 2026-10-05 18:52:48.126923
 ---
 
 # Get Instruments Info

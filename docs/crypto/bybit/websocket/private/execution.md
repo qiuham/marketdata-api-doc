@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/execution
 api_type: WebSocket
-updated_at: 2026-10-04 19:44:44.955087
+updated_at: 2026-10-05 18:53:41.762289
 ---
 
 # Fast Execution

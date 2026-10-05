@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits
 api_type: WebSocket
-updated_at: 2026-10-04 19:55:15.890112
+updated_at: 2026-10-05 19:04:11.947639
 ---
 
 # Advanced Trade WebSocket Rate Limits

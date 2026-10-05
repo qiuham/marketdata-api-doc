@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/transfer/inter-transfer-list
 api_type: REST
-updated_at: 2026-10-04 19:37:31.653234
+updated_at: 2026-10-05 18:46:31.139209
 ---
 
 # Create Universal Transfer

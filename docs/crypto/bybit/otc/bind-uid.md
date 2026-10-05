@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-10-04 19:42:16.015419
+updated_at: 2026-10-05 18:51:13.286046
 ---
 
 # Get Loan Orders

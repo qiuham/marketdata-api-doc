@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/est-redeem
 api_type: REST
-updated_at: 2026-10-04 19:39:08.573025
+updated_at: 2026-10-05 18:48:07.598511
 ---
 
 # Get Product Info

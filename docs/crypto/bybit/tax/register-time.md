@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/register-time
 api_type: REST
-updated_at: 2026-10-04 19:44:21.523197
+updated_at: 2026-10-05 18:53:18.602773
 ---
 
 # TradFi Integration

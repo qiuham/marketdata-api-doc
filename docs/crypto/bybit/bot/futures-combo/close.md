@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-combo/close
 api_type: REST
-updated_at: 2026-10-04 19:37:47.507192
+updated_at: 2026-10-05 18:46:47.002781
 ---
 
 # Close Grid Bot
