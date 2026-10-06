@@ -2,45 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-10-05 18:49:18.326409
+updated_at: 2026-10-06 18:50:34.367269
 ---
 
-# Create Customize Investment Plan
+# Settle Fund Profit
 
 info
 
-The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
+This endpoint only applies to funds in **Active** status. Calling it on a **Closed** fund will return error code `180040`.
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/customize-plan/create`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-accountType| false| string| Source account type. Default: `FUND`  
-products| **true**|  array| Product configuration list. At least 1 item required  
-> category| **true**|  string| Pass through from product query result. Product category: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
-> productId| **true**|  string| Pass through from product query result. May be `0`  
-> fundName| **true**|  string| Pass through from product query result. May be empty  
-> amount| **true**|  string| Subscription amount (base coin)  
+fundId| **true**|  string| Fund ID  
+reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Newly created investment plan ID  
-planName| string| Investment plan name, auto-generated in the format `PWM-{planId}`  
-status| string| Plan status. Created and subscribed in one step — `Active` upon success  
-orderLinkId| string| User-defined order ID  
+fundId| string| Fund ID  
+status| string| Profit settlement status: `Processing` / `Completed` / `Failed`. After execution, the status of the current order can be queried using the same `reqLinkId`  
+totalProfitShared| string| Total profit sharing amount settled in this round (base coin)  
+instIncome| string| Institution income in this round (base coin)  
+coin| string| Fund denomination coin  
+createdTime| string| Settlement timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -49,21 +47,8 @@ orderLinkId| string| User-defined order ID
     Content-Type: application/json  
       
     {  
-        "accountType": "FUND",  
-        "products": [  
-            {  
-                "category": "equityFund",  
-                "productId": "2001",  
-                "fundName": "Market Neutral Alpha",  
-                "amount": "100000.00"  
-            },  
-            {  
-                "category": "multiCoinEarning",  
-                "productId": "430",  
-                "fundName": "",  
-                "amount": "50000.00"  
-            }  
-        ]  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
     }  
     
 
@@ -72,52 +57,53 @@ orderLinkId| string| User-defined order ID
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "planId": "10050",  
-            "planName": "PWM-10050",  
-            "status": "Active",  
-            "orderLinkId": "xxx"  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }
 
 ---
 
-# 創建自定義投資計劃（直客模式）
+# 執行指定基金的分潤
 
 信息
 
-當前用戶 **Active** （運行中）和 **Pending** （待處理）狀態的計劃總數不能超過 **20** 個。
+僅對 **Active（運行中）** 狀態的基金有效。對 **Closed（已關閉）** 狀態的基金調用將返回 error code `180040`。
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/customize-plan/create`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
-products| **true**|  array| 產品配置列表，至少 1 個  
-> category| **true**|  string| 透傳product查詢結果，產品類別：`flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
-> productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
-> fundName| **true**|  string| 透傳product查詢結果，可能為空  
-> amount| **true**|  string| 申購金額（本位幣）  
+fundId| **true**|  string| 基金ID  
+reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 新創建的投資計劃ID  
-planName| string| 投資計劃名稱，自動生成格式為 `PWM-{planId}`  
-status| string| 計劃狀態，創建即申購，成功後為 `Active`  
-orderLinkId| string| 用戶自定義訂單ID  
+fundId| string| 基金ID  
+status| string| 分潤狀態：`Processing`（分潤處理中）/ `Completed`（分潤完成）/ `Failed`（分潤失敗）。執行分潤後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態  
+totalProfitShared| string| 本次利潤分成結算總額（本位幣）  
+instIncome| string| 機構本次收入（本位幣）  
+coin| string| 基金計價幣種  
+createdTime| string| 結算時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -126,21 +112,8 @@ orderLinkId| string| 用戶自定義訂單ID
     Content-Type: application/json  
       
     {  
-        "accountType": "FUND",  
-        "products": [  
-            {  
-                "category": "equityFund",  
-                "productId": "2001",  
-                "fundName": "Market Neutral Alpha",  
-                "amount": "100000.00"  
-            },  
-            {  
-                "category": "multiCoinEarning",  
-                "productId": "430",  
-                "fundName": "",  
-                "amount": "50000.00"  
-            }  
-        ]  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
     }  
     
 
@@ -149,10 +122,13 @@ orderLinkId| string| 用戶自定義訂單ID
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "planId": "10050",  
-            "planName": "PWM-10050",  
-            "status": "Active",  
-            "orderLinkId": "xxx"  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }

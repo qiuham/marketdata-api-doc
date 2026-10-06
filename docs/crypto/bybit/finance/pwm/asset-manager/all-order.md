@@ -2,46 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/all-order
 api_type: REST
-updated_at: 2026-10-05 18:49:11.314145
+updated_at: 2026-10-06 18:50:26.883751
 ---
 
-# Create Fund Sub-Account
+# Create Investment Plan
 
 info
 
-  1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](/docs/v5/finance/pwm/asset-manager/all-funds), which returns the list of sub-account UIDs associated with the fund.
-  2. The fund must be in **Active (Running)** status before a sub-account can be created.
-  3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
-  4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
+  1. Each institution can create a maximum of **10 investment plans**. Each user can hold a maximum of **20 investment plans**.
+  2. The fund must be in **`PendingSubscribe`** (pending subscription) status. Otherwise, error code `180040` is returned.
 
 
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/create-sub-account`
+POST`/v5/earn/pwm/asset-manager/create-investment-plan`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-fundId| **true**|  string| Fund ID  
-reqLinkId| **true**|  string| User-defined request ID, used to prevent duplicate creation  
+accountUid| **true**|  string| Target user UID  
+planName| **true**|  string| Investment plan name, max 50 characters  
+planType| **true**|  string| Plan type: `stable` / `advanced`  
+investmentDistribution| **true**|  array| Fund configuration list. At least 1 fund required  
+> productId| **true**|  string| Fund ID (must be a fund under this institution's management)  
+> amount| **true**|  string| Configured amount (base coin)  
+reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-fundId| string| Fund ID  
-subAccountUid| string| UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`  
+planId| string| Unique identifier of the newly created investment plan  
+planType| string| Plan type: `stable` / `advanced`  
+accountUid| string| Target user UID  
+status| string| Plan status. Fixed as `PendingSubscription` upon creation  
 createdTime| string| Creation timestamp (milliseconds)  
-status| string| Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -50,8 +54,16 @@ status| string| Creation status: `pending` (creating) / `success` (created) / `d
     Content-Type: application/json  
       
     {  
-        "fundId": "100001",  
-        "reqLinkId": "create-sub-001"  
+        "accountUid": "800001",  
+        "planName": "Conservative Growth Plan",  
+        "planType": "stable",  
+        "investmentDistribution": [  
+            {  
+                "productId": "12345",  
+                "amount": "100000.00"  
+            }  
+        ],  
+        "reqLinkId": "create-plan-001"  
     }  
     
 
@@ -62,52 +74,57 @@ status| string| Creation status: `pending` (creating) / `success` (created) / `d
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "fundId": "100001",  
-            "subAccountUid": "0",  
-            "createdTime": "1700600000000",  
-            "status": "pending"  
+            "planId": "10088",  
+            "planType": "stable",  
+            "accountUid": "800001",  
+            "status": "pending_subscribe",  
+            "createdTime": "1640000000000"  
         }  
     }
 
 ---
 
-# 創建基金子賬戶
+# 機構創建投資計劃
 
 信息
 
-  1. 子賬戶創建為異步操作。第一次調用時，`status` 返回 `pending`，`subAccountUid` 返回 `"0"`。後台創建完成後，使用相同參數再次調用該接口，將返回 `"status": "Active"`，新建子賬戶的 UID 會顯示在 `subAccountUid` 字段中。也可以通過 [查詢機構管轄的基金列表](/docs/zh-TW/v5/finance/pwm/asset-manager/all-funds) 查看基金下關聯的子賬戶列表，以確認子賬戶是否創建成功。
-  2. 基金必須為 **Active（運行中）** 狀態才能創建子賬戶。
-  3. 每個基金最多支持 **30 個子賬戶** （不包括已銷毀的）。
-  4. 如果當前有處於 `pending` 狀態的子賬戶正在創建，則不允許創建新的子賬戶，需等待當前創建完成後再操作。
+  1. 每個機構最多創建 **10 個投資計劃** 。每個用戶最多擁有 **20 個投資計劃** 。
+  2. 基金狀態必須為 **`PendingSubscribe`** （待申購），否則返回錯誤碼 `180040`。
 
 
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/create-sub-account`
+POST`/v5/earn/pwm/asset-manager/create-investment-plan`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-fundId| **true**|  string| 基金ID  
-reqLinkId| **true**|  string| 用戶自定義請求ID，用於防止重複調用創建  
+accountUid| **true**|  string| 目標用戶UID  
+planName| **true**|  string| 投資計劃名稱，最大50字符  
+planType| **true**|  string| 計劃類型：`stable`（穩健增值）/ `advanced`（進階收益）  
+investmentDistribution| **true**|  array| 基金配置列表，至少包含1個基金  
+> productId| **true**|  string| 基金ID（必須是該機構管轄的基金）  
+> amount| **true**|  string| 配置金額（本位幣）  
+reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-fundId| string| 基金ID  
-subAccountUid| string| 新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID  
+planId| string| 新創建的投資計劃唯一標識  
+planType| string| 計劃類型：`stable` / `advanced`  
+accountUid| string| 目標用戶UID  
+status| string| 計劃狀態，創建後固定為 `PendingSubscription`  
 createdTime| string| 創建時間戳（毫秒）  
-status| string| 創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -116,8 +133,16 @@ status| string| 創建狀態：`pending`（創建中）/ `success`（創建成�
     Content-Type: application/json  
       
     {  
-        "fundId": "100001",  
-        "reqLinkId": "create-sub-001"  
+        "accountUid": "800001",  
+        "planName": "Conservative Growth Plan",  
+        "planType": "stable",  
+        "investmentDistribution": [  
+            {  
+                "productId": "12345",  
+                "amount": "100000.00"  
+            }  
+        ],  
+        "reqLinkId": "create-plan-001"  
     }  
     
 
@@ -128,9 +153,10 @@ status| string| 創建狀態：`pending`（創建中）/ `success`（創建成�
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "fundId": "100001",  
-            "subAccountUid": "0",  
-            "createdTime": "1700600000000",  
-            "status": "pending"  
+            "planId": "10088",  
+            "planType": "stable",  
+            "accountUid": "800001",  
+            "status": "pending_subscribe",  
+            "createdTime": "1640000000000"  
         }  
     }

@@ -2,41 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-current-staking
 api_type: REST
-updated_at: 2026-10-05 18:49:41.869282
+updated_at: 2026-10-06 18:51:03.371331
 ---
 
-# Get Launchpool Current Staking
+# Get Token Splash Project List
 
-Query the authenticated user's active staking positions across all ongoing Launchpool activities, including a USD-denominated portfolio summary and per-position details.
+Query the Token Splash activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
 
 info
 
-  * Authentication is required
-  * Returns up to **30** positions, covering all active staking positions without pagination
+  * Authentication is **not** required
+  * Only released, main-site public activities are returned
+  * `nextPageCursor` being an empty string indicates the last page
+  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
+  * `registrationStartTime` = min of non-zero values among `signUpBeginTime` and `tradeSignUpBeginTime`
 
 
 
 ### HTTP Request
 
-GET`/v5/spot-x/launchpool/user/current-staking`
+GET`/v5/spot-x/token-splash/project/list`
 
 ### Request Parameters
 
-No request parameters required.
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+status| **true**|  integer| Activity phase filter. `0`: Upcoming (registration not yet started); `1`: Ongoing; `2`: Ended (announcement time has passed)  
+projectId| false| string| Exact activity code. Use to query a single project  
+activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
+cursor| false| string| Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page  
+limit| false| integer| Number of items per page. Default: `10`. Max: `10`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-totalInvestmentUsd| string| Total USD value of all active staking positions  
-totalEarningsUsd| string| Total USD value of accumulated earnings across all positions  
-todayEarningsUsd| string| Today's earnings across all positions, in USD  
-list| array| Per-position staking details. Up to 30 items  
-> stakeCoin| string| The coin staked into this position  
-> rewardCoin| string| The coin earned as reward  
-> stakeAmount| string| Total amount currently staked  
-> totalReward| string| Accumulated reward earned so far  
-> autoRedeemDate| string| Auto-redeem time, Unix timestamp in milliseconds. The principal will be automatically returned on this date. Empty string if not set  
+list| array| Activity items for the current page  
+> status| integer| Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
+> projectId| string| Unique activity code  
+> activityCoin| string| The coin that the activity is centered on  
+> rewardCoin| string| The coin distributed as the reward. Resolved in priority order: new pool token → old pool token → trade pool token  
+> totalReward| string| Total reward pool size (sum of new, old, and trade prize pool amounts)  
+> participantCount| string| Total number of registered participants  
+> registrationStartTime| string| Earliest registration start time, Unix timestamp in milliseconds. Equals `min(signUpBeginTime, tradeSignUpBeginTime)`, ignoring zero values  
+> activityEndTime| string| Activity end time, Unix timestamp in milliseconds. Equals `max(announceTime, tradeAnnounceTime)`  
+nextPageCursor| string| Cursor for the next page. Empty string means last page  
   
 * * *
 
@@ -49,12 +59,8 @@ list| array| Per-position staking details. Up to 30 items
 
     
     
-    GET /v5/spot-x/launchpool/user/current-staking HTTP/1.1  
+    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -72,25 +78,19 @@ list| array| Per-position staking details. Up to 30 items
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalInvestmentUsd": "15000.00",  
-            "totalEarningsUsd": "120.50",  
-            "todayEarningsUsd": "8.20",  
             "list": [  
                 {  
-                    "stakeCoin": "USDT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "10000",  
-                    "totalReward": "0.00120",  
-                    "autoRedeemDate": "1706745600000"  
-                },  
-                {  
-                    "stakeCoin": "MNT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "50000",  
-                    "totalReward": "0.00050",  
-                    "autoRedeemDate": "1706745600000"  
+                    "status": 1,  
+                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "rewardCoin": "USDT",  
+                    "totalReward": "100000",  
+                    "participantCount": "3456",  
+                    "registrationStartTime": "1704067200000",  
+                    "activityEndTime": "1706745600000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  
@@ -98,38 +98,48 @@ list| array| Per-position staking details. Up to 30 items
 
 ---
 
-# 查詢 Launchpool 當前質押倉位
+# 查詢 Token Splash 項目列表
 
-查詢當前用戶在所有進行中 Launchpool 活動中的有效質押倉位，包含 USD 計價的資產組合摘要及各倉位詳情。
+查詢 Token Splash 活動（項目）列表。結果按創建時間倒序排列（最新優先），支持游標分頁。
 
 信息
 
-  * 需要鑒權
-  * 最多返回 **30** 條倉位記錄，涵蓋所有有效質押倉位，無需分頁
+  * 無需鑒權
+  * 僅返回已發布的主站公開活動
+  * `nextPageCursor` 為空字符串時表示已到最後一頁
+  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
+  * `registrationStartTime` = `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值
 
 
 
 ### HTTP 請求
 
-GET`/v5/spot-x/launchpool/user/current-staking`
+GET`/v5/spot-x/token-splash/project/list`
 
 ### 請求參數
 
-無請求參數。
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+status| **true**|  integer| 活動階段篩選。`0`: 即將開始（報名未開始）；`1`: 進行中；`2`: 已結束（公告時間已過）  
+projectId| false| string| 精確活動代碼，用於查詢單個項目  
+activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
+cursor| false| string| 分頁游標，傳入上一次響應中的 `nextPageCursor`。首頁請求無需傳入  
+limit| false| integer| 每頁數量，默認 `10`，最大 `10`  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-totalInvestmentUsd| string| 所有有效質押倉位的 USD 總價值  
-totalEarningsUsd| string| 所有倉位累計收益的 USD 總額  
-todayEarningsUsd| string| 今日所有倉位的 USD 收益合計  
-list| array| 各倉位質押詳情，最多 30 條  
-> stakeCoin| string| 該倉位質押的幣種  
-> rewardCoin| string| 該倉位獲得獎勵的幣種  
-> stakeAmount| string| 當前質押總量  
-> totalReward| string| 截至目前的累計獎勵  
-> autoRedeemDate| string| 自動贖回時間，毫秒級 Unix 時間戳。到期後本金將自動返還。未設置時為空字符串  
+list| array| 當前頁的活動列表  
+> status| integer| 活動狀態。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
+> projectId| string| 唯一活動代碼  
+> activityCoin| string| 活動對應的幣種  
+> rewardCoin| string| 實際發放的獎勵幣種。優先級順序：新池代幣 → 舊池代幣 → 交易池代幣  
+> totalReward| string| 獎勵池總量（新池、舊池及交易池金額之和）  
+> participantCount| string| 已報名參與人數  
+> registrationStartTime| string| 最早報名開始時間，毫秒級 Unix 時間戳。等於 `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值  
+> activityEndTime| string| 活動結束時間，毫秒級 Unix 時間戳。等於 `max(announceTime, tradeAnnounceTime)`  
+nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後一頁  
   
 * * *
 
@@ -142,12 +152,8 @@ list| array| 各倉位質押詳情，最多 30 條
 
     
     
-    GET /v5/spot-x/launchpool/user/current-staking HTTP/1.1  
+    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -165,25 +171,19 @@ list| array| 各倉位質押詳情，最多 30 條
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalInvestmentUsd": "15000.00",  
-            "totalEarningsUsd": "120.50",  
-            "todayEarningsUsd": "8.20",  
             "list": [  
                 {  
-                    "stakeCoin": "USDT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "10000",  
-                    "totalReward": "0.00120",  
-                    "autoRedeemDate": "1706745600000"  
-                },  
-                {  
-                    "stakeCoin": "MNT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "50000",  
-                    "totalReward": "0.00050",  
-                    "autoRedeemDate": "1706745600000"  
+                    "status": 1,  
+                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "rewardCoin": "USDT",  
+                    "totalReward": "100000",  
+                    "participantCount": "3456",  
+                    "registrationStartTime": "1704067200000",  
+                    "activityEndTime": "1706745600000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  

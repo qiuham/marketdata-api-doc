@@ -2,16 +2,17 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/page-subuid
 api_type: REST
-updated_at: 2026-10-05 18:53:30.959055
+updated_at: 2026-10-06 18:55:10.639961
 ---
 
-# Get Sub UID List (Unlimited)
+# Delete Sub UID
 
-This API is applicable to the client who has over 10k sub accounts. Use **master user's api key** **only**.
+Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
+Use **master** user's api key**.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint..
+The API key must have one of the below permissions in order to call this endpoint
 
   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
@@ -19,53 +20,39 @@ The API key must have one of the below permissions in order to call this endpoin
 
 ### HTTP Request
 
-GET`/v5/user/submembers`
+POST`/v5/user/del-submember`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-pageSize| false| string| Data size per page. Return up to 100 records per request  
-nextCursor| false| string| Cursor. Use the `nextCursor` token from the response to retrieve the next page of the result set  
+subMemberId| **true**|  string| Sub UID  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-subMembers| array| Object  
-> uid| string| Sub user Id  
-> username| string| Username  
-> memberType| integer| `1`: standard subaccount, `4`: copy trading account, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683), `14`: general AI account, `15`: ByCustody subacct, `16`: Bybit AI  
-> status| integer| The status of the user account
+None
 
-  * `1`: normal
-  * `2`: login banned
-  * `4`: frozen 
-
-  
-> accountMode| integer| The account mode of the user account
-
-  * `5`: UTA2.0
-  * `6`: UTA2.0 Pro
-
-  
-> remark| string| The remark  
-nextCursor| string| The next page cursor value. "0" means no more pages  
-  
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
+    POST /v5/user/del-submember HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430318405  
+    X-BAPI-TIMESTAMP: 1698907012755  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXXX  
+    Content-Type: application/json  
+    Content-Length: 34  
+      
+    {  
+        "subMemberId": "112725187"  
+    }  
     
     
     
@@ -75,9 +62,30 @@ nextCursor| string| The next page cursor value. "0" means no more pages
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_uid_list_unlimited(  
-        pageSize="1",  
+    print(session.delete_sub_uid(  
+        subMemberId="112725187"  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -85,37 +93,20 @@ nextCursor| string| The next page cursor value. "0" means no more pages
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "subMembers": [  
-                {  
-                    "uid": "106314365",  
-                    "username": "xxxx02",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 5  
-                },  
-                {  
-                    "uid": "106279879",  
-                    "username": "xxxx01",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 6  
-                }  
-            ],  
-            "nextCursor": "0"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1760388041006  
+        "time": 1698907012962  
     }
 
 ---
 
-# 查詢子帳戶UID列表 (無限制)
+# 刪除子帳戶
 
-通過翻頁獲取當前母帳戶下所有的子帳戶列表，適合超過擁有1萬個子帳戶的母帳戶進行調用。需使用**母** 帳戶的API key。
+刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
+
+  
+僅可使用**母**帳戶api key調用.
 
 提示
 
@@ -127,65 +118,64 @@ nextCursor| string| The next page cursor value. "0" means no more pages
 
 ### HTTP 請求
 
-GET`/v5/user/submembers`
+POST`/v5/user/del-submember`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-pageSize| false| string| 數據頁大小. 每次至多返回100條  
-nextCursor| false| string| 游標. 傳入響應中的`nextCursor`來獲取下一頁的數據  
+subMemberId| **true**|  string| Sub UID  
   
 ### 返回參數
 
-參數| 類型| 說明  
----|---|---  
-subMembers| array| Object  
-> uid| string| 子帳戶userId  
-> username| string| 用戶名  
-> memberType| integer| `1`: 普通子帳戶, `4`: 跟單帶單子帳戶, `6`: [託管子帳戶](https://www.bybit.com/en/help-center/article?id=000001683), `14`: 通用AI子帳戶, `15`: ByCustody子帳戶, `16`: Bybit AI  
-> status| integer| 帳戶狀態.
+無
 
-  * `1`: 正常
-  * `2`: 登陸封禁
-  * `4`: 凍結 
-
-  
-> accountMode| integer| 帳戶模式.
-
-  * `5`: UTA2.0 帳戶
-  * `6`: UTA2.0 Pro 帳戶
-
-  
-> remark| string| 備註  
-nextCursor| string| 下一頁數據的游標. 返回"0"表示沒有更多的數據了  
-  
 ### 請求示例
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
+    POST /v5/user/del-submember HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430318405  
+    X-BAPI-TIMESTAMP: 1698907012755  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXXX  
+    Content-Type: application/json  
+    Content-Length: 34  
+      
+    {  
+        "subMemberId": "112725187"  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_sub_uid_list_unlimited(  
-        pageSize="1",  
-    ))  
+      
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -193,28 +183,8 @@ nextCursor| string| 下一頁數據的游標. 返回"0"表示沒有更多的數�
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "subMembers": [  
-                {  
-                    "uid": "106314365",  
-                    "username": "xxxx02",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 5  
-                },  
-                {  
-                    "uid": "106279879",  
-                    "username": "xxxx01",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 6  
-                }  
-            ],  
-            "nextCursor": "0"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1760388041006  
+        "time": 1698907012962  
     }

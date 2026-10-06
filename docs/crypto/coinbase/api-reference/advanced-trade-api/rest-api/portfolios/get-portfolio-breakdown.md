@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown
 api_type: Account
-updated_at: 2026-10-05 19:04:10.511451
+updated_at: 2026-10-06 19:06:45.120709
 ---
 
 # Get Portfolio Breakdown
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/portfolios/{portfolio_uuid}`
 
-
-Get the breakdown of a portfolio.
+PortfoliosGet Portfolio BreakdownGet the breakdown of a portfolio.GET/api/v3/brokerage/portfolios/{portfolio_uuid}Get Portfolio Breakdown
     
     
     curl --request GET \
@@ -371,44 +370,4 @@ Get the breakdown of a portfolio.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Path Parameters
-
-portfolio_uuid
-
-string
-
-required
-
-The portfolio UUID.
-
-#### Query Parameters
-
-currency
-
-string
-
-The currency symbol (e.g. USD).
-
-#### Response
-
-A successful response.
-
-breakdown
-
-object
-
-PortfolioBreakdown is a breakdown of a portfolio, all balances, and all positions within the portfolio.
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersportfolio_uuidstringrequiredThe portfolio UUID.Query ParameterscurrencystringThe currency symbol (e.g. USD).ResponseA successful response.breakdownobjectPortfolioBreakdown is a breakdown of a portfolio, all balances, and all positions within the portfolio.Show child attributes

@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep
 api_type: REST
-updated_at: 2026-10-05 19:04:09.504241
+updated_at: 2026-10-06 19:06:44.052285
 ---
 
 # Schedule US Derivatives Sweep
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/cfm/sweeps/schedule`
 
-
-Schedules a sweep of funds from FCM wallet to USD Spot wallet
+US DerivativesSchedule US Derivatives SweepSchedules a sweep of funds from FCM wallet to USD Spot walletPOST/api/v3/brokerage/cfm/sweeps/scheduleSchedule Futures Sweep
     
     
     curl --request POST \
@@ -152,34 +151,4 @@ Schedules a sweep of funds from FCM wallet to USD Spot wallet
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-usd_amount
-
-string
-
-The amount of USD to be swept. By default, sweeps all available excess funds.
-
-#### Response
-
-A successful response.
-
-success
-
-boolean
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonusd_amountstringThe amount of USD to be swept. By default, sweeps all available excess funds.ResponseA successful response.successboolean

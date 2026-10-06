@@ -2,36 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/apikey-info
 api_type: REST
-updated_at: 2026-10-05 18:53:22.656399
+updated_at: 2026-10-06 18:54:58.339152
 ---
 
-# Freeze Sub UID
-
-Freeze Sub UID. Use **master user's api key** **only**.
+# Get Friend Referrals
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint..
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
-
-
+Any permission can access this endpoint.
 
 ### HTTP Request
 
-POST`/v5/user/frozen-sub-member`
+GET`/v5/user/invitation/referrals`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subuid| **true**|  integer| Sub user Id  
-frozen| **true**|  integer| `0`: unfreeze, `1`: freeze  
+status| false| string| Invitation relationship status, `0`: alive; `1`: invalid. By default, returns all status  
+size| false| string| Data size per page [1, 100]. Return 20 records by default  
+cursor| false| string| Cursor. Use the `nextCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
-None
-
+Parameter| Type| Comments  
+---|---|---  
+nextCursor| string| The next page cursor value  
+records| array| Object  
+> id| string| ID, internal userd  
+> inviteeUid| string| Invitee userID  
+> status| integer| Invitation relationship status, `0`: alive; `1`: invalid  
+> createdAt| string| Created timestamp  
+> updatedAt| string| Updated timestamp  
+  
 ### Request Example
 
   * HTTP
@@ -41,18 +44,13 @@ None
 
     
     
-    POST /v5/user/frozen-sub-member HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/user/invitation/referrals?status=0&size=5&cursor=6867 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430842094  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772095760290  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-      
-    {  
-        "subuid": 53888001,  
-        "frozen": 1  
-    }  
     
     
     
@@ -62,29 +60,15 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.freeze_sub_uid(  
-        subuid=53888001,  
-        frozen=1,  
+    print(session.get_friend_referrals(  
+        status="0",  
+        size="5",  
+        cursor="6867"  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .setSubUIDFrozenState(53888001, 1)  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -93,93 +77,73 @@ None
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "nextCursor": "",  
+            "records": [  
+                {  
+                    "id": "6866",  
+                    "inviteeUid": "1447787",  
+                    "status": 0,  
+                    "createdAt": "1681206247",  
+                    "updatedAt": "1681206247"  
+                },  
+                {  
+                    "id": "6863",  
+                    "inviteeUid": "1447350",  
+                    "status": 0,  
+                    "createdAt": "1681192249",  
+                    "updatedAt": "1681192248"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1676430697553  
+        "time": 1772095760428  
     }
 
 ---
 
-# 凍結/解凍子帳戶
-
-凍結或解凍子帳戶。需使用**母** 帳戶的API key。
+# 查詢好友被邀請人
 
 提示
 
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+  * 任意權限可以訪問該接口
 
 
 
 ### HTTP 請求
 
-POST`/v5/user/frozen-sub-member`
+GET`/v5/user/invitation/referrals`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-subuid| **true**|  integer| 子帳戶userId  
-frozen| **true**|  integer| `0`：解凍, `1`：凍結  
+status| false| string| 邀請關係狀態, `0`: 存活; `1`: 失效. 默認返回全部狀態  
+size| false| string| 每頁數量限制. [`1`, `100`]. 默認: `20`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 返回參數
 
-無
-
+參數| 類型| 說明  
+---|---|---  
+nextCursor| string| 游標，用於翻頁  
+records| array| Object  
+> id| string| ID, 內部使用  
+> inviteeUid| string| 被邀請人uid  
+> status| integer| 邀請關係狀態, `0`: 存活; `1`: 失效  
+> createdAt| string| 紀錄創建時間戳  
+> updatedAt| string| 紀錄更新時間戳  
+  
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    POST /v5/user/frozen-sub-member HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/user/invitation/referrals?status=0&size=5&cursor=6867 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430842094  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772095760290  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-      
-    {  
-        "subuid": 53888001,  
-        "frozen": 1  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.freeze_sub_uid(  
-        subuid=53888001,  
-        frozen=1,  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .setSubUIDFrozenState(53888001, 1)  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -188,7 +152,25 @@ frozen| **true**|  integer| `0`：解凍, `1`：凍結
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "nextCursor": "",  
+            "records": [  
+                {  
+                    "id": "6866",  
+                    "inviteeUid": "1447787",  
+                    "status": 0,  
+                    "createdAt": "1681206247",  
+                    "updatedAt": "1681206247"  
+                },  
+                {  
+                    "id": "6863",  
+                    "inviteeUid": "1447350",  
+                    "status": 0,  
+                    "createdAt": "1681192249",  
+                    "updatedAt": "1681192248"  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1676430697553  
+        "time": 1772095760428  
     }

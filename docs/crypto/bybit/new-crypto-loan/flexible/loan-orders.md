@@ -2,38 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/loan-orders
 api_type: REST
-updated_at: 2026-10-05 18:50:45.600361
+updated_at: 2026-10-06 18:52:12.953166
 ---
 
-# Get Borrowing History
+# Get Flexible Loans
+
+Query for your ongoing loans
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-flexible/borrow-history`
+GET`/v5/crypto-loan-flexible/ongoing-coin`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Loan order ID  
 loanCurrency| false| string| Loan coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> borrowTime| long| The timestamp to borrow  
-> initialLoanAmount| string| Loan amount  
+> hourlyInterestRate| string| Latest hourly flexible interest rate  
 > loanCurrency| string| Loan coin  
-> orderId| string| Loan order ID  
-> status| integer| Loan order status `1`: success; `2`: processing; `3`: fail  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+> totalDebt| string| Unpaid principal and interest  
+> unpaidAmount| string| Unpaid principal  
+> unpaidInterest| string| Unpaid interest  
   
 ### Request Example
 
@@ -44,11 +42,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-flexible/borrow-history?limit=2 HTTP/1.1  
+    GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570519918  
+    X-BAPI-TIMESTAMP: 1752570124973  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -59,8 +57,8 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_history_flexible_crypto_loan(  
-        limit="2",  
+    print(session.get_flexible_loans_flexible_crypto_loan(  
+        loanCurrency="BTC",  
     ))  
     
     
@@ -77,57 +75,45 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "result": {  
             "list": [  
                 {  
-                    "borrowTime": 1752569950643,  
-                    "initialLoanAmount": "0.006",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1364",  
-                    "status": 1  
-                },  
-                {  
-                    "borrowTime": 1752569209643,  
-                    "initialLoanAmount": "0.1",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1363",  
-                    "status": 1  
+                    "hourlyInterestRate": "0.0000018847396",  
+                    "loanCurrency": "ETH",  
+                    "totalDebt": "0.10000019",  
+                    "unpaidAmount": "0.1",  
+                    "unpaidInterest": "0.00000019"  
                 }  
-            ],  
-            "nextPageCursor": "1363"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752570519414  
+        "time": 1760452029499  
     }
 
 ---
 
-# 查詢借款歷史
+# 查詢借款中信息
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-flexible/borrow-history`
+GET`/v5/crypto-loan-flexible/ongoing-coin`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 借款單ID  
 loanCurrency| false| string| 借款幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> borrowTime| long| 借款時間戳  
-> initialLoanAmount| string| 借款金額  
+> hourlyInterestRate| string| 最新每小時彈性利率  
 > loanCurrency| string| 借款幣種  
-> orderId| string| 借款訂單ID  
-> status| integer| 借款訂單狀態 `1`: 成功；`2`: 處理中；`3`: 失敗  
-nextPageCursor| string| 下一頁游標  
+> totalDebt| string| 未償還本金與利息總額  
+> unpaidAmount| string| 未償還本金  
+> unpaidInterest| string| 未償還利息  
   
 ### 請求示例
 
@@ -138,11 +124,11 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-flexible/borrow-history?limit=2 HTTP/1.1  
+    GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570519918  
+    X-BAPI-TIMESTAMP: 1752570124973  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -153,8 +139,8 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_history_flexible_crypto_loan(  
-        limit="2",  
+    print(session.get_flexible_loans_flexible_crypto_loan(  
+        loanCurrency="BTC",  
     ))  
     
     
@@ -171,22 +157,14 @@ nextPageCursor| string| 下一頁游標
         "result": {  
             "list": [  
                 {  
-                    "borrowTime": 1752569950643,  
-                    "initialLoanAmount": "0.006",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1364",  
-                    "status": 1  
-                },  
-                {  
-                    "borrowTime": 1752569209643,  
-                    "initialLoanAmount": "0.1",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1363",  
-                    "status": 1  
+                    "hourlyInterestRate": "0.0000018847396",  
+                    "loanCurrency": "ETH",  
+                    "totalDebt": "0.10000019",  
+                    "unpaidAmount": "0.1",  
+                    "unpaidInterest": "0.00000019"  
                 }  
-            ],  
-            "nextPageCursor": "1363"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1752570519414  
+        "time": 1760452029499  
     }

@@ -2,48 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/puzzle/puzzle-project-list
 api_type: REST
-updated_at: 2026-10-05 18:49:46.283610
+updated_at: 2026-10-06 18:51:05.233615
 ---
 
-# Get Token Splash User Activity Params
+# Get Token Splash Project List
 
-Query the authenticated user's participation details and trade-task progress for Token Splash activities.
+Query the Token Splash activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
 
 info
 
-  * Authentication is required
-  * Only returns activities where the user has already registered
-  * Only trade-task activities are returned (deposit-only task types are excluded)
-  * Only activities that have not yet reached their announcement time are returned (rewards not yet distributed)
-  * Estimated reward formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`, truncated to 4 decimal places
+  * Authentication is **not** required
+  * Only released, main-site public activities are returned
+  * `nextPageCursor` being an empty string indicates the last page
+  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
+  * `registrationStartTime` = min of non-zero values among `signUpBeginTime` and `tradeSignUpBeginTime`
 
 
 
 ### HTTP Request
 
-GET`/v5/spot-x/token-splash/user/activity-params`
+GET`/v5/spot-x/token-splash/project/list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-projectId| false| string| Filter by exact activity code. Returns data for a single project when provided  
+status| **true**|  integer| Activity phase filter. `0`: Upcoming (registration not yet started); `1`: Ongoing; `2`: Ended (announcement time has passed)  
+projectId| false| string| Exact activity code. Use to query a single project  
 activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
+cursor| false| string| Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page  
+limit| false| integer| Number of items per page. Default: `10`. Max: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| User activity items. Empty array if the user has not registered for any matching activity  
+list| array| Activity items for the current page  
+> status| integer| Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
 > projectId| string| Unique activity code  
 > activityCoin| string| The coin that the activity is centered on  
-> tradeTask| object| Trade task details and the user's current progress  
->> tradeRequiredAmount| string| Total trade volume required to earn the full reward  
->> tradeUnit| string| The coin unit for the trade task  
->> tradedAmount| string| Trade volume the user has accumulated so far  
->> maxRewardAmount| string| Maximum reward the user can earn if the full required volume is traded  
->> estimatedRewardAmount| string| Estimated reward based on current progress, truncated to 4 decimal places. Formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`  
->> rewardCoin| string| Coin in which the trade-task reward is distributed  
+> rewardCoin| string| The coin distributed as the reward. Resolved in priority order: new pool token → old pool token → trade pool token  
+> totalReward| string| Total reward pool size (sum of new, old, and trade prize pool amounts)  
+> participantCount| string| Total number of registered participants  
+> registrationStartTime| string| Earliest registration start time, Unix timestamp in milliseconds. Equals `min(signUpBeginTime, tradeSignUpBeginTime)`, ignoring zero values  
+> activityEndTime| string| Activity end time, Unix timestamp in milliseconds. Equals `max(announceTime, tradeAnnounceTime)`  
+nextPageCursor| string| Cursor for the next page. Empty string means last page  
   
 * * *
 
@@ -56,12 +59,8 @@ list| array| User activity items. Empty array if the user has not registered for
 
     
     
-    GET /v5/spot-x/token-splash/user/activity-params HTTP/1.1  
+    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -81,18 +80,17 @@ list| array| User activity items. Empty array if the user has not registered for
         "result": {  
             "list": [  
                 {  
+                    "status": 1,  
                     "projectId": "TOKENSPLASH_BTC_2024Q1",  
                     "activityCoin": "BTC",  
-                    "tradeTask": {  
-                        "tradeRequiredAmount": "0.5",  
-                        "tradeUnit": "BTC",  
-                        "tradedAmount": "0.3",  
-                        "maxRewardAmount": "200",  
-                        "estimatedRewardAmount": "120.0000",  
-                        "rewardCoin": "USDT"  
-                    }  
+                    "rewardCoin": "USDT",  
+                    "totalReward": "100000",  
+                    "participantCount": "3456",  
+                    "registrationStartTime": "1704067200000",  
+                    "activityEndTime": "1706745600000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  
@@ -100,45 +98,48 @@ list| array| User activity items. Empty array if the user has not registered for
 
 ---
 
-# 查詢 Token Splash 用戶活動參數
+# 查詢 Token Splash 項目列表
 
-查詢當前用戶在 Token Splash 活動中的參與詳情及交易任務進度。
+查詢 Token Splash 活動（項目）列表。結果按創建時間倒序排列（最新優先），支持游標分頁。
 
 信息
 
-  * 需要鑒權
-  * 僅返回用戶已報名的活動
-  * 僅返回交易任務類活動（不含純入金任務類型）
-  * 僅返回尚未到達公告時間的活動（獎勵尚未發放）
-  * 預估獎勵計算公式：`min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`，截斷至 4 位小數
+  * 無需鑒權
+  * 僅返回已發布的主站公開活動
+  * `nextPageCursor` 為空字符串時表示已到最後一頁
+  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
+  * `registrationStartTime` = `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值
 
 
 
 ### HTTP 請求
 
-GET`/v5/spot-x/token-splash/user/activity-params`
+GET`/v5/spot-x/token-splash/project/list`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-projectId| false| string| 精確活動代碼，傳入時僅返回該項目數據  
+status| **true**|  integer| 活動階段篩選。`0`: 即將開始（報名未開始）；`1`: 進行中；`2`: 已結束（公告時間已過）  
+projectId| false| string| 精確活動代碼，用於查詢單個項目  
 activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
+cursor| false| string| 分頁游標，傳入上一次響應中的 `nextPageCursor`。首頁請求無需傳入  
+limit| false| integer| 每頁數量，默認 `10`，最大 `10`  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 用戶活動列表。若用戶未報名任何匹配活動則返回空數組  
+list| array| 當前頁的活動列表  
+> status| integer| 活動狀態。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
 > projectId| string| 唯一活動代碼  
 > activityCoin| string| 活動對應的幣種  
-> tradeTask| object| 交易任務詳情及用戶當前進度  
->> tradeRequiredAmount| string| 達到全額獎勵所需的交易量  
->> tradeUnit| string| 交易任務的幣種單位  
->> tradedAmount| string| 用戶目前已累計的交易量  
->> maxRewardAmount| string| 完成全部所需交易量可獲得的最大獎勵  
->> estimatedRewardAmount| string| 基於當前進度的預估獎勵，截斷至 4 位小數。計算公式：`min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`  
->> rewardCoin| string| 交易任務獎勵的發放幣種  
+> rewardCoin| string| 實際發放的獎勵幣種。優先級順序：新池代幣 → 舊池代幣 → 交易池代幣  
+> totalReward| string| 獎勵池總量（新池、舊池及交易池金額之和）  
+> participantCount| string| 已報名參與人數  
+> registrationStartTime| string| 最早報名開始時間，毫秒級 Unix 時間戳。等於 `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值  
+> activityEndTime| string| 活動結束時間，毫秒級 Unix 時間戳。等於 `max(announceTime, tradeAnnounceTime)`  
+nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後一頁  
   
 * * *
 
@@ -151,12 +152,8 @@ list| array| 用戶活動列表。若用戶未報名任何匹配活動則返回�
 
     
     
-    GET /v5/spot-x/token-splash/user/activity-params HTTP/1.1  
+    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -176,18 +173,17 @@ list| array| 用戶活動列表。若用戶未報名任何匹配活動則返回�
         "result": {  
             "list": [  
                 {  
+                    "status": 1,  
                     "projectId": "TOKENSPLASH_BTC_2024Q1",  
                     "activityCoin": "BTC",  
-                    "tradeTask": {  
-                        "tradeRequiredAmount": "0.5",  
-                        "tradeUnit": "BTC",  
-                        "tradedAmount": "0.3",  
-                        "maxRewardAmount": "200",  
-                        "estimatedRewardAmount": "120.0000",  
-                        "rewardCoin": "USDT"  
-                    }  
+                    "rewardCoin": "USDT",  
+                    "totalReward": "100000",  
+                    "participantCount": "3456",  
+                    "registrationStartTime": "1704067200000",  
+                    "activityEndTime": "1706745600000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  

@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window
 api_type: REST
-updated_at: 2026-10-05 19:04:09.294928
+updated_at: 2026-10-06 19:06:43.862612
 ---
 
 # Get Current Margin Window
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/cfm/intraday/current_margin_window`
 
-
-Get the futures current margin window
+US DerivativesGet Current Margin WindowGet the futures current margin windowGET/api/v3/brokerage/cfm/intraday/current_margin_windowGet Current Margin Window
     
     
     curl --request GET \
@@ -131,54 +130,4 @@ Get the futures current margin window
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Query Parameters
-
-margin_profile_type
-
-enum<string>
-
-default:MARGIN_PROFILE_TYPE_UNSPECIFIED
-
-The margin profile type for your account.
-
-Available options:
-
-`MARGIN_PROFILE_TYPE_UNSPECIFIED`,
-
-`MARGIN_PROFILE_TYPE_RETAIL_REGULAR`,
-
-`MARGIN_PROFILE_TYPE_RETAIL_INTRADAY_MARGIN_1`
-
-#### Response
-
-A successful response.
-
-margin_window
-
-object
-
-is_intraday_margin_killswitch_enabled
-
-boolean
-
-True if intraday margin killswitch is enabled
-
-is_intraday_margin_enrollment_killswitch_enabled
-
-boolean
-
-True if intraday margin enrollment killswitch is enabled
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersmargin_profile_typeenum<string>default:MARGIN_PROFILE_TYPE_UNSPECIFIEDThe margin profile type for your account.Available options: `MARGIN_PROFILE_TYPE_UNSPECIFIED`, `MARGIN_PROFILE_TYPE_RETAIL_REGULAR`, `MARGIN_PROFILE_TYPE_RETAIL_INTRADAY_MARGIN_1` ResponseA successful response.margin_windowobjectShow child attributesis_intraday_margin_killswitch_enabledbooleanTrue if intraday margin killswitch is enabledis_intraday_margin_enrollment_killswitch_enabledbooleanTrue if intraday margin enrollment killswitch is enabled

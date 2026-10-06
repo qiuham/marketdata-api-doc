@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview
 api_type: Trading
-updated_at: 2026-10-05 19:04:10.038675
+updated_at: 2026-10-06 19:06:44.493102
 ---
 
 # Edit Order Preview
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/orders/edit_preview`
 
-
-Preview an edit order request with a specified new `size`, or new `price`.
+OrdersEdit Order PreviewPreview an edit order request with a specified new `size`, or new `price`.POST/api/v3/brokerage/orders/edit_previewEdit Order Preview
     
     
     curl --request POST \
@@ -531,158 +530,4 @@ Preview an edit order request with a specified new `size`, or new `price`.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-order_id
-
-string
-
-required
-
-The ID of the order.
-
-price
-
-string
-
-required
-
-The update price of the order.
-
-Example:
-
-`"19000.00"`
-
-size
-
-string
-
-required
-
-The updated size of the order.
-
-Example:
-
-`"0.001"`
-
-attached_order_configuration
-
-object
-
-The configuration of the attached order. Only TriggerBracketGtc, LimitLimitGtc or StopLimitStopLimitGtc are eligible.
-
-cancel_attached_order
-
-boolean
-
-Drops both the legs of TP/SL, order becomes a simple limit order.
-
-Example:
-
-`"true"`
-
-stop_price
-
-string
-
-The updated stop price of the order. Only applicable for editing TP/SL or SL orders.
-
-Example:
-
-`"17000.00"`
-
-average_entry_price
-
-string
-
-The average entry price of the position. Used for estimated PnL
-
-Example:
-
-`"18000.00"`
-
-#### Response
-
-A successful response.
-
-errors
-
-object[]
-
-required
-
-slippage
-
-string
-
-order_total
-
-string
-
-commission_total
-
-string
-
-quote_size
-
-string
-
-The amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.
-
-Example:
-
-`10`
-
-base_size
-
-string
-
-The amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.
-
-Example:
-
-`0.001`
-
-best_bid
-
-string
-
-best_ask
-
-string
-
-average_filled_price
-
-string
-
-order_margin_total
-
-string
-
-commission_detail_total
-
-CommissionDetailTotal contains the breakdown of commission charges for an order · object
-
-Breakdown of commission charges for the order
-
-pnl_configuration
-
-object
-
-Expected PNL of an order. This value is an estimate and does not take into account fees and slippage.
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonorder_idstringrequiredThe ID of the order.pricestringrequiredThe update price of the order.Example:`"19000.00"`sizestringrequiredThe updated size of the order.Example:`"0.001"`attached_order_configurationobjectThe configuration of the attached order. Only TriggerBracketGtc, LimitLimitGtc or StopLimitStopLimitGtc are eligible.Show child attributescancel_attached_orderbooleanDrops both the legs of TP/SL, order becomes a simple limit order.Example:`"true"`stop_pricestringThe updated stop price of the order. Only applicable for editing TP/SL or SL orders.Example:`"17000.00"`average_entry_pricestringThe average entry price of the position. Used for estimated PnLExample:`"18000.00"`ResponseA successful response.errorsobject[]requiredShow child attributesslippagestringorder_totalstringcommission_totalstringquote_sizestringThe amount of the second Asset in the Trading Pair. For example, on the BTC/USD Order Book, USD is the Quote Asset.Example:`10`base_sizestringThe amount of the first Asset in the Trading Pair. For example, on the BTC-USD Order Book, BTC is the Base Asset.Example:`0.001`best_bidstringbest_askstringaverage_filled_pricestringorder_margin_totalstringcommission_detail_totalCommissionDetailTotal contains the breakdown of commission charges for an order · objectBreakdown of commission charges for the orderShow child attributespnl_configurationobjectExpected PNL of an order. This value is an estimate and does not take into account fees and slippage.Show child attributes

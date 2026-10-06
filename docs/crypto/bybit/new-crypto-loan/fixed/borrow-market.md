@@ -2,40 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/borrow-market
 api_type: REST
-updated_at: 2026-10-05 18:50:28.570296
+updated_at: 2026-10-06 18:51:54.149683
 ---
 
-# Get Borrowing Market
+# Renew Borrow Order
+
+> Permission: "Spot trade"  
+>  UID rate limit: 1 req / second
 
 info
 
-Does not need authentication.
+  * The loan funds are released to the Funding wallet.
+  * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
+  * This endpoint allows you to re-borrow the principal that was previously repaid. The renewal amount is the same as the amount previously repaid on this loan.
 
-If you want to borrow, you can use this endpoint to check whether there are any suitable counterparty supply orders available.
+
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/borrow-order-quote`
+POST`/v5/crypto-loan-fixed/renew`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Coin name  
-orderBy| **true**|  string| Order by, `apy`: annual rate; `term`; `quantity`  
-term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-sort| false| integer| `0`: ascend, default; `1`: descend  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `10`  
+loanId| **true**|  string| Loan ID  
+collateralList| false| array<object>| Collateral coin list, supports putting up to 100 currency in the array  
+> currency| false| string| Currency used to mortgage  
+> amount| false| string| Amount to mortgage  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| Coin name  
-> term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-> annualRate| string| Annual rate  
-> qty| string| Quantity  
+orderId| string| Loan order ID  
   
 ### Request Example
 
@@ -46,8 +46,19 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-fixed/borrow-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
+    POST /v5/crypto-loan-fixed/renew HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752633649752  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "loanId": "2364",  
+        "collateralList": {"currency": "ETH","amount": "1"}  
+    }  
     
     
     
@@ -57,9 +68,12 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_market_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderBy="apy",  
+    print(session.renew_fixed_crypto_loan(  
+        loanId="2364",  
+        collateralList={  
+            "currency": "ETH",  
+            "amount": "1",  
+        },  
     ))  
     
     
@@ -74,52 +88,45 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "annualRate": "0.04",  
-                    "orderCurrency": "USDT",  
-                    "qty": "988.78",  
-                    "term": 14  
-                }  
-            ]  
+            "orderId": 49  
         },  
         "retExtInfo": {},  
-        "time": 1752719158890  
+        "time": 1764142142931  
     }
 
 ---
 
-# 查詢可借市場
+# 創建續借單
+
+> 權限: "現貨"  
+>  頻率: 1次/秒
 
 信息
 
-公共接口, 無需鑒權
+  * 借款發放到資金帳戶
+  * 質押金將從資金帳戶扣減, 因此確保資金帳戶有足額質押幣種
+  * 此接口可讓您重新借入先前已償還的本金。續借金額就是之前這筆貸款還款的金額
 
-如果您是借款方, 可通過該接口查詢到市場上可匹配的存款單報價
+
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/borrow-order-quote`
+POST`/v5/crypto-loan-fixed/renew`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 幣種名稱  
-term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-orderBy| **true**|  string| 排序依據，`apy`: 年化利率；`term`: 期限；`quantity`: 數量  
-sort| false| integer| `0`: 升序，預設；`1`: 降序  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+loanId| **true**|  string| 貸款ID  
+collateralList| false| array<object>| 抵押幣種清單，最多支持陣列中放入 100 種幣種  
+> currency| false| string| 用於抵押的幣種  
+> amount| false| string| 抵押金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| 幣種名稱  
-> term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-> annualRate| string| 年化利率  
-> qty| string| 數量  
+orderId| string| 借款單ID  
   
 ### 請求示例
 
@@ -130,8 +137,19 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-fixed/borrow-order-quote?orderCurrency=USDT&orderBy=apy HTTP/1.1  
+    POST /v5/crypto-loan-fixed/renew HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752633649752  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 208  
+      
+    {  
+        "loanId": "2364",  
+        "collateralList": {"currency": "ETH","amount": "1"}  
+    }  
     
     
     
@@ -141,9 +159,12 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_market_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderBy="apy",  
+    print(session.renew_fixed_crypto_loan(  
+        loanId="2364",  
+        collateralList={  
+            "currency": "ETH",  
+            "amount": "1",  
+        },  
     ))  
     
     
@@ -158,15 +179,8 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "annualRate": "0.04",  
-                    "orderCurrency": "USDT",  
-                    "qty": "988.78",  
-                    "term": 14  
-                }  
-            ]  
+            "orderId": 49  
         },  
         "retExtInfo": {},  
-        "time": 1752719158890  
+        "time": 1764142142931  
     }

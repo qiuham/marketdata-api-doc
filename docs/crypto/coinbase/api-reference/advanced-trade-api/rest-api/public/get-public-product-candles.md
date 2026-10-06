@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles
 api_type: Market Data
-updated_at: 2026-10-05 19:04:10.962075
+updated_at: 2026-10-06 19:06:45.495163
 ---
 
 # Get Public Product Candles
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/candles`
 
-
-Get rates for a single product by product ID, grouped in buckets.
+PublicGet Public Product CandlesGet rates for a single product by product ID, grouped in buckets.GET/api/v3/brokerage/market/products/{product_id}/candlesGet Public Product Candles
     
     
     curl --request GET \
@@ -125,76 +124,4 @@ Get rates for a single product by product ID, grouped in buckets.
       ]
     }
 
-#### Path Parameters
-
-product_id
-
-string
-
-required
-
-The trading pair (e.g. 'BTC-USD').
-
-#### Query Parameters
-
-start
-
-string
-
-required
-
-The UNIX timestamp indicating the start of the time interval.
-
-end
-
-string
-
-required
-
-The UNIX timestamp indicating the end of the time interval.
-
-granularity
-
-enum<string>
-
-default:UNKNOWN_GRANULARITY
-
-required
-
-The timeframe each candle represents.
-
-Available options:
-
-`UNKNOWN_GRANULARITY`,
-
-`ONE_MINUTE`,
-
-`FIVE_MINUTE`,
-
-`FIFTEEN_MINUTE`,
-
-`THIRTY_MINUTE`,
-
-`ONE_HOUR`,
-
-`TWO_HOUR`,
-
-`FOUR_HOUR`,
-
-`SIX_HOUR`,
-
-`ONE_DAY`
-
-limit
-
-integer<int32>
-
-The number of candle buckets to be returned. By default, returns 350 (max 350).
-
-#### Response
-
-A successful response.
-
-candles
-
-object[]
+Path Parametersproduct_idstringrequiredThe trading pair (e.g. 'BTC-USD').Query ParametersstartstringrequiredThe UNIX timestamp indicating the start of the time interval.endstringrequiredThe UNIX timestamp indicating the end of the time interval.granularityenum<string>default:UNKNOWN_GRANULARITYrequiredThe timeframe each candle represents.Available options: `UNKNOWN_GRANULARITY`, `ONE_MINUTE`, `FIVE_MINUTE`, `FIFTEEN_MINUTE`, `THIRTY_MINUTE`, `ONE_HOUR`, `TWO_HOUR`, `FOUR_HOUR`, `SIX_HOUR`, `ONE_DAY` limitinteger<int32>The number of candle buckets to be returned. By default, returns 350 (max 350).ResponseA successful response.candlesobject[]Show child attributes

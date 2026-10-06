@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary
 api_type: Account
-updated_at: 2026-10-05 19:04:10.268468
+updated_at: 2026-10-06 19:06:44.848304
 ---
 
 # Get Perpetuals Portfolio Summary
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/intx/portfolio/{portfolio_uuid}`
 
-
-Get a summary of your Perpetuals portfolio
+INTX (deprecated)Get Perpetuals Portfolio SummaryGet a summary of your Perpetuals portfolioGET/api/v3/brokerage/intx/portfolio/{portfolio_uuid}Get Perpetuals Portfolio Summary
     
     
     curl --request GET \
@@ -178,40 +177,4 @@ Get a summary of your Perpetuals portfolio
       ]
     }
 
-**Retired.** INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026. International derivatives now trade on the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
-
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Path Parameters
-
-portfolio_uuid
-
-string
-
-required
-
-The portfolio UUID.
-
-#### Response
-
-A successful response.
-
-portfolios
-
-object[]
-
-summary
-
-object
+**Retired.** INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026. International derivatives now trade on the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersportfolio_uuidstringrequiredThe portfolio UUID.ResponseA successful response.portfoliosobject[]Show child attributessummaryobjectShow child attributes

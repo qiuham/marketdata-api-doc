@@ -2,51 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/premium-index-kline
 api_type: Market Data
-updated_at: 2026-10-05 18:50:15.876332
+updated_at: 2026-10-06 18:51:37.306412
 ---
 
-# Get Risk Limit
+# Get Recent Public Trades
 
-Query for the [risk limit](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-Futures) margin parameters. This information is also displayed on the website [here](https://www.bybit.com/en/announcement-info/margin-parameters/).
+Query recent public trading history in Bybit.
 
-> **Covers: USDT contract / USDC contract / Inverse contract**
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract / Option**
 
-info
-
-  * category=`linear` returns a data set of 15 symbols in each response. Please use the `cursor` param to get the next data set.
-  * `symbol` support `Trading` status and `PreLaunch` [Pre-Market contracts](https://www.bybit.com/en/help-center/article/Introduction-to-Pre-Market-Perpetual) status trading pairs.
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+You can download archived historical trades from the [website](https://www.bybit.com/en/derivative-activity/history-data)
 
 ### HTTP Request
 
-GET`/v5/market/risk-limit`
+GET`/v5/market/recent-trade`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the data set  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `spot`,`linear`,`inverse`,`option`  
+[symbol](/docs/v5/enum#symbol)| false| string| Symbol name, like `BTCUSDT`, uppercase only 
+
+  * **required** for spot/linear/inverse
+  * optional for option
+
+  
+baseCoin| false| string| Base coin, uppercase only 
+
+  * Apply to `option` **only**
+  * If the field is not passed, return **BTC** data by default
+
+  
+optionType| false| string| Option type. `Call` or `Put`. Apply to `option` **only**  
+limit| false| integer| Limit for data size per page 
+
+  * `spot`: [1,60], default: `60`
+  * others: [1,1000], default: `500`
+
+  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
+category| string| Products category  
 list| array| Object  
-> id| integer| Risk ID  
+> execId| string| Execution ID  
 > symbol| string| Symbol name  
-> riskLimitValue| string| Position limit  
-> maintenanceMargin| number| Maintain margin rate  
-> initialMargin| number| Initial margin rate  
-> isLowestRisk| integer| `1`: true, `0`: false  
-> maxLeverage| string| Allowed max leverage  
-> mmDeduction| string| The maintenance margin deduction value when risk limit tier changed  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/market/risk-limit)
+> price| string| Trade price  
+> size| string| Trade size  
+> side| string| Side of taker `Buy`, `Sell`  
+> time| string| Trade time (ms)  
+> isBlockTrade| boolean| Whether the trade is block trade  
+> isRPITrade| boolean| Whether the trade is RPI trade  
+> mP| string| Mark price, unique field for `option`  
+> iP| string| Index price, unique field for `option`  
+> mIv| string| Mark iv, unique field for `option`  
+> iv| string| iv, unique field for `option`  
+> seq| string| cross sequence  
+[](/docs/api-explorer/v5/market/recent-trade)
 
 * * *
 
@@ -61,16 +76,17 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/recent-trade?category=spot&symbol=BTCUSDT&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_risk_limit(  
-        category="inverse",  
-        symbol="BTCUSD",  
+    print(session.get_public_trade_history(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        limit=1,  
     ))  
     
     
@@ -82,16 +98,17 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
     params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketRiskLimits(context.Background())  
+    client.NewUtaBybitServiceWithParams(params).GetPublicRecentTrades(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var riskMimitRequest = MarketDataRequest.builder().category(CategoryType.INVERSE).symbol("ADAUSD").build();  
-    client.getRiskLimit(riskMimitRequest, System.out::println);  
+    var recentTrade = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-30JUN23-2050-C").build();  
+    client.getRecentTradeData(recentTrade, System.out::println);  
     
     
     
@@ -102,9 +119,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-        .getRiskLimit({  
-            category: 'inverse',  
-            symbol: 'BTCUSD',  
+        .getPublicTradingHistory({  
+            category: 'spot',  
+            symbol: 'BTCUSDT',  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -121,56 +139,58 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "inverse",  
+            "category": "spot",  
             "list": [  
                 {  
-                    "id": 1,  
-                    "symbol": "BTCUSD",  
-                    "riskLimitValue": "150",  
-                    "maintenanceMargin": "0.5",  
-                    "initialMargin": "1",  
-                    "isLowestRisk": 1,  
-                    "maxLeverage": "100.00",  
-                    "mmDeduction": ""  
-                },  
-            ....  
+                    "execId": "2100000000007764263",  
+                    "symbol": "BTCUSDT",  
+                    "price": "16618.49",  
+                    "size": "0.00012",  
+                    "side": "Buy",  
+                    "time": "1672052955758",  
+                    "isBlockTrade": false,  
+                    "isRPITrade": true,  
+                    "seq":"123456"  
+                }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672054488010  
+        "time": 1672053054358  
     }
 
 ---
 
-# 查詢合約風險限額
+# 查詢平台最近成交歷史
 
-查詢期貨合約的風險限額表
+獲取平台最近成交數據
 
-> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約**
+> **覆蓋範圍: 現貨 / USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
 
-提示
-
-什麼是風險限額？[風險限額(USDT合約)](https://www.bybit.com/en-US/help-center/bybitHC_Article?language=en_US&id=000001164)
-
-信息
-
-  * 當category=`linear`, 每次請求返回15個symbol的風險限額數據, 請通過cursor來實現翻頁查詢下一組15個symbol的數據。
-  * `symbol`支持`Trading`線上可交易狀態，及`PreLaunch`[盤前交易](https://www.bybit.com/en/help-center/article/Introduction-to-Pre-Market-Perpetual)狀態的交易對。
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+您可以從這個[地址](https://www.bybit.com/en/derivative-activity/history-data) 下載到歸檔的更多的歷史成交數據:
 
 ### HTTP請求
 
-GET`/v5/market/risk-limit`
+GET`/v5/market/recent-trade`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
-symbol| false| string| 合約名稱  
-cursor| false| string| 游標，用於翻頁  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `spot`,`linear`,`inverse`,`option`  
+[symbol](/docs/zh-TW/v5/enum#symbol)| false| string| 合約名稱
+
+  * 現貨/期貨**必傳**
+  * 期權選傳
+
+  
+baseCoin| false| string| 交易幣種. 僅`option`, 若不傳, 則默認返回BTC數據  
+optionType| false| string| 期權類型. `Call` 或 `Put`. 僅`option`  
+limit| false| integer| 每頁數量限制.
+
+  * `spot`: [1,60], 默认: `60`.
+  * others: [1,1000], 默認: `500`
+
+  
   
 ### 響應參數
 
@@ -178,16 +198,20 @@ cursor| false| string| 游標，用於翻頁
 ---|---|---  
 category| string| 產品類型  
 list| array| Object  
-> id| integer| 風險限額id  
+> execId| string| 成交id  
 > symbol| string| 合約名稱  
-> riskLimitValue| string| 風險限制額度  
-> maintenanceMargin| number| 維持保證金率  
-> initialMargin| number| 初始保證金率  
-> isLowestRisk| integer| 是否是最低風險限額. `1`: true, `0`: false  
-> maxLeverage| string| 該風險限額允許的最大槓桿  
-> mmDeduction| string| 維持保證金扣減額  
-nextPageCursor| string| 下一頁游標, 配合`cursor`使用  
-[](/docs/zh-TW/api-explorer/v5/market/risk-limit)
+> price| string| 成交價格  
+> size| string| 成交數量  
+> side| string| 吃單方向. `Buy`, `Sell`  
+> time| string| 成交時間戳 (毫秒)  
+> isBlockTrade| boolean| 成交類型是否為大宗交易  
+> isRPITrade| boolean| 成交類型是否為RPI交易  
+> mP| string| 標記價格, 期權的特有字段  
+> iP| string| 指數價格, 期權的特有字段  
+> mIv| string| 標記iv, 期權的特有字段  
+> iv| string| iv, 期權的特有字段  
+> seq| string| 撮合版本號  
+[](/docs/zh-TW/api-explorer/v5/market/recent-trade)
 
 * * *
 
@@ -202,16 +226,17 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
 
     
     
-    GET /v5/market/risk-limit?category=inverse&symbol=BTCUSD HTTP/1.1  
+    GET /v5/market/recent-trade?category=spot&symbol=BTCUSDT&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(testnet=True)  
-    print(session.get_risk_limit(  
-        category="inverse",  
-        symbol="BTCUSD",  
+    print(session.get_public_trade_history(  
+        category="spot",  
+        symbol="BTCUSDT",  
+        limit=1,  
     ))  
     
     
@@ -223,16 +248,17 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
     params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketRiskLimits(context.Background())  
+    client.NewUtaBybitServiceWithParams(params).GetPublicRecentTrades(context.Background())  
     
     
     
     import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var riskMimitRequest = MarketDataRequest.builder().category(CategoryType.INVERSE).symbol("ADAUSD").build();  
-    client.getRiskLimit(riskMimitRequest, System.out::println);  
+    var recentTrade = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-30JUN23-2050-C").build();  
+    client.getRecentTradeData(recentTrade, System.out::println);  
     
     
     
@@ -243,9 +269,10 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
     });  
       
     client  
-        .getRiskLimit({  
-            category: 'inverse',  
-            symbol: 'BTCUSD',  
+        .getPublicTradingHistory({  
+            category: 'spot',  
+            symbol: 'BTCUSDT',  
+            limit: 1,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -262,21 +289,20 @@ nextPageCursor| string| 下一頁游標, 配合`cursor`使用
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "inverse",  
+            "category": "spot",  
             "list": [  
                 {  
-                    "id": 1,  
-                    "symbol": "BTCUSD",  
-                    "riskLimitValue": "150",  
-                    "maintenanceMargin": "0.5",  
-                    "initialMargin": "1",  
-                    "isLowestRisk": 1,  
-                    "maxLeverage": "100.00",  
-                    "mmDeduction": ""  
-                },  
-            ....  
+                    "execId": "2100000000007764263",  
+                    "symbol": "BTCUSDT",  
+                    "price": "16618.49",  
+                    "size": "0.00012",  
+                    "side": "Buy",  
+                    "time": "1672052955758",  
+                    "isBlockTrade": false,  
+                    "isRPITrade": true  
+                }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672054488010  
+        "time": 1672053054358  
     }

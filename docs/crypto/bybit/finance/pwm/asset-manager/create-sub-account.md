@@ -2,46 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-sub-account
 api_type: REST
-updated_at: 2026-10-05 18:49:13.169070
+updated_at: 2026-10-06 18:50:31.894588
 ---
 
-# Create Fund Sub-Account
+# Settle Fund Profit
 
 info
 
-  1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](/docs/v5/finance/pwm/asset-manager/all-funds), which returns the list of sub-account UIDs associated with the fund.
-  2. The fund must be in **Active (Running)** status before a sub-account can be created.
-  3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
-  4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
-
-
+This endpoint only applies to funds in **Active** status. Calling it on a **Closed** fund will return error code `180040`.
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/create-sub-account`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 fundId| **true**|  string| Fund ID  
-reqLinkId| **true**|  string| User-defined request ID, used to prevent duplicate creation  
+reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 fundId| string| Fund ID  
-subAccountUid| string| UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`  
-createdTime| string| Creation timestamp (milliseconds)  
-status| string| Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)  
+status| string| Profit settlement status: `Processing` / `Completed` / `Failed`. After execution, the status of the current order can be queried using the same `reqLinkId`  
+totalProfitShared| string| Total profit sharing amount settled in this round (base coin)  
+instIncome| string| Institution income in this round (base coin)  
+coin| string| Fund denomination coin  
+createdTime| string| Settlement timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -50,8 +47,8 @@ status| string| Creation status: `pending` (creating) / `success` (created) / `d
     Content-Type: application/json  
       
     {  
-        "fundId": "100001",  
-        "reqLinkId": "create-sub-001"  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
     }  
     
 
@@ -62,52 +59,51 @@ status| string| Creation status: `pending` (creating) / `success` (created) / `d
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "fundId": "100001",  
-            "subAccountUid": "0",  
-            "createdTime": "1700600000000",  
-            "status": "pending"  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }
 
 ---
 
-# 創建基金子賬戶
+# 執行指定基金的分潤
 
 信息
 
-  1. 子賬戶創建為異步操作。第一次調用時，`status` 返回 `pending`，`subAccountUid` 返回 `"0"`。後台創建完成後，使用相同參數再次調用該接口，將返回 `"status": "Active"`，新建子賬戶的 UID 會顯示在 `subAccountUid` 字段中。也可以通過 [查詢機構管轄的基金列表](/docs/zh-TW/v5/finance/pwm/asset-manager/all-funds) 查看基金下關聯的子賬戶列表，以確認子賬戶是否創建成功。
-  2. 基金必須為 **Active（運行中）** 狀態才能創建子賬戶。
-  3. 每個基金最多支持 **30 個子賬戶** （不包括已銷毀的）。
-  4. 如果當前有處於 `pending` 狀態的子賬戶正在創建，則不允許創建新的子賬戶，需等待當前創建完成後再操作。
-
-
+僅對 **Active（運行中）** 狀態的基金有效。對 **Closed（已關閉）** 狀態的基金調用將返回 error code `180040`。
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/create-sub-account`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 fundId| **true**|  string| 基金ID  
-reqLinkId| **true**|  string| 用戶自定義請求ID，用於防止重複調用創建  
+reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 fundId| string| 基金ID  
-subAccountUid| string| 新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID  
-createdTime| string| 創建時間戳（毫秒）  
-status| string| 創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）  
+status| string| 分潤狀態：`Processing`（分潤處理中）/ `Completed`（分潤完成）/ `Failed`（分潤失敗）。執行分潤後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態  
+totalProfitShared| string| 本次利潤分成結算總額（本位幣）  
+instIncome| string| 機構本次收入（本位幣）  
+coin| string| 基金計價幣種  
+createdTime| string| 結算時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -116,8 +112,8 @@ status| string| 創建狀態：`pending`（創建中）/ `success`（創建成�
     Content-Type: application/json  
       
     {  
-        "fundId": "100001",  
-        "reqLinkId": "create-sub-001"  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
     }  
     
 
@@ -128,9 +124,11 @@ status| string| 創建狀態：`pending`（創建中）/ `success`（創建成�
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "fundId": "100001",  
-            "subAccountUid": "0",  
-            "createdTime": "1700600000000",  
-            "status": "pending"  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }

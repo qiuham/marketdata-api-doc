@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary
 api_type: REST
-updated_at: 2026-10-05 19:04:09.166150
+updated_at: 2026-10-06 19:06:43.754131
 ---
 
 # Get Transaction Summary
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/transaction_summary`
 
-
-Get a summary of transactions with fee tiers, total volume, and fees.
+FeesGet Transaction SummaryGet a summary of transactions with fee tiers, total volume, and fees.GET/api/v3/brokerage/transaction_summaryGet Transaction Summary
     
     
     curl --request GET \
@@ -266,173 +265,7 @@ Get a summary of transactions with fee tiers, total volume, and fees.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Query Parameters
-
-product_type
-
-enum<string>
-
-default:UNKNOWN_PRODUCT_TYPE
-
-Only returns the orders matching this product type. By default, returns all product types.
-
-Available options:
-
-`UNKNOWN_PRODUCT_TYPE`,
-
-`SPOT`,
-
-`FUTURE`,
-
-`EQUITY`,
-
-`OPTION_GROUP`,
-
-`FUTURE_GROUP`
-
-contract_expiry_type
-
-enum<string>
-
-default:UNKNOWN_CONTRACT_EXPIRY_TYPE
-
-Only returns the orders matching this contract expiry type. Only applicable if product_type is set to FUTURE.
-
-Available options:
-
-`UNKNOWN_CONTRACT_EXPIRY_TYPE`,
-
-`EXPIRING`,
-
-`PERPETUAL`
-
-product_venue
-
-enum<string>
-
-default:UNKNOWN_VENUE_TYPE
-
-Venue for product
-
-Available options:
-
-`UNKNOWN_VENUE_TYPE`,
-
-`CBE`,
-
-`FCM`,
-
-`INTX`
-
-#### Response
-
-A successful response.
-
-total_fees
-
-number<double>
-
-required
-
-Total fees across assets, denoted in USD.
-
-Example:
-
-`25`
-
-fee_tier
-
-object
-
-required
-
-Description of maker and taker rates across all applicable fee tiers.
-
-margin_rate
-
-object
-
-Margin rate, only applicable to product_type `FUTURE`.
-
-Example:
-
-`0.5`
-
-goods_and_services_tax
-
-object
-
-advanced_trade_only_volume
-
-number<double>
-
-Advanced Trade volume (non-inclusive of Pro) across assets, denoted in USD.
-
-Example:
-
-`1000`
-
-advanced_trade_only_fees
-
-number<double>
-
-Advanced Trade fees (non-inclusive of Pro) across assets, denoted in USD.
-
-Example:
-
-`25`
-
-coinbase_pro_volume
-
-number<double>
-
-Coinbase Pro volume across assets, denoted in USD.
-
-Example:
-
-`1000`
-
-coinbase_pro_fees
-
-number<double>
-
-Coinbase Pro fees across assets, denoted in USD.
-
-Example:
-
-`25`
-
-total_balance
-
-string
-
-Total balance across assets and products, which is comprised of the sum of spot, intx, and fcm, and denoted in USD.
-
-Example:
-
-`"1000"`
-
-volume_breakdown
-
-object[]
-
-Breakdown of volumes that contributed to the fee tier calculation.
-
-Example:
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersproduct_typeenum<string>default:UNKNOWN_PRODUCT_TYPEOnly returns the orders matching this product type. By default, returns all product types.Available options: `UNKNOWN_PRODUCT_TYPE`, `SPOT`, `FUTURE`, `EQUITY`, `OPTION_GROUP`, `FUTURE_GROUP` contract_expiry_typeenum<string>default:UNKNOWN_CONTRACT_EXPIRY_TYPEOnly returns the orders matching this contract expiry type. Only applicable if product_type is set to FUTURE.Available options: `UNKNOWN_CONTRACT_EXPIRY_TYPE`, `EXPIRING`, `PERPETUAL` product_venueenum<string>default:UNKNOWN_VENUE_TYPEVenue for productAvailable options: `UNKNOWN_VENUE_TYPE`, `CBE`, `FCM`, `INTX` ResponseA successful response.total_feesnumber<double>requiredTotal fees across assets, denoted in USD.Example:`25`fee_tierobjectrequiredDescription of maker and taker rates across all applicable fee tiers.Show child attributesmargin_rateobjectMargin rate, only applicable to product_type `FUTURE`.Show child attributesExample:`0.5`goods_and_services_taxobjectShow child attributesadvanced_trade_only_volumenumber<double>Advanced Trade volume (non-inclusive of Pro) across assets, denoted in USD.Example:`1000`advanced_trade_only_feesnumber<double>Advanced Trade fees (non-inclusive of Pro) across assets, denoted in USD.Example:`25`coinbase_pro_volumenumber<double>Coinbase Pro volume across assets, denoted in USD.Example:`1000`coinbase_pro_feesnumber<double>Coinbase Pro fees across assets, denoted in USD.Example:`25`total_balancestringTotal balance across assets and products, which is comprised of the sum of spot, intx, and fcm, and denoted in USD.Example:`"1000"`volume_breakdownobject[]Breakdown of volumes that contributed to the fee tier calculation.Show child attributesExample:
     
     
     [
@@ -443,24 +276,4 @@ Example:
     ]
     
 
-has_cost_plus_commission
-
-boolean
-
-Indicates whether the user uses cost plus commission pricing model.
-
-Example:
-
-`false`
-
-fee_tier_without_promotion
-
-object
-
-The fee tier the user qualifies for based purely on their volume or AOP, ignoring any promotional fees or incentives. Includes current and next `FeeTier` rows, which dimension qualifies them, their current value for that dimension, and the threshold needed to reach the next tier.
-
-deribit_venue_data
-
-object
-
-Transaction summary for each INTX derivatives product type (perps, dated futures, options), resolved together by the shared fee data pipeline. Only populated for INTX derivatives requests.
+has_cost_plus_commissionbooleanIndicates whether the user uses cost plus commission pricing model.Example:`false`fee_tier_without_promotionobjectThe fee tier the user qualifies for based purely on their volume or AOP, ignoring any promotional fees or incentives. Includes current and next `FeeTier` rows, which dimension qualifies them, their current value for that dimension, and the threshold needed to reach the next tier.Show child attributesderibit_venue_dataobjectTransaction summary for each INTX derivatives product type (perps, dated futures, options), resolved together by the shared fee data pipeline. Only populated for INTX derivatives requests.Show child attributes

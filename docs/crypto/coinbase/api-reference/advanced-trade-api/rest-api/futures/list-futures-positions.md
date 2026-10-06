@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions
 api_type: REST
-updated_at: 2026-10-05 19:04:09.456353
+updated_at: 2026-10-06 19:06:44.010448
 ---
 
 # List US Derivatives Positions
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/cfm/positions`
 
-
-Get a list of positions in CFM products
+US DerivativesList US Derivatives PositionsGet a list of positions in CFM productsGET/api/v3/brokerage/cfm/positionsList Futures Positions
     
     
     curl --request GET \
@@ -137,24 +136,4 @@ Get a list of positions in CFM products
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Response
-
-A successful response.
-
-positions
-
-object[]
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.ResponseA successful response.positionsobject[]Show child attributes

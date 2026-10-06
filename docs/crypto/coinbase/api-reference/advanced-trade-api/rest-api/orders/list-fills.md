@@ -2,17 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills
 api_type: Trading
-updated_at: 2026-10-05 19:04:09.927088
+updated_at: 2026-10-06 19:06:44.547503
 ---
 
 # List Fills
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/fills`
 
-
-Get a list of fills filtered by optional query parameters (`product_ids`, `order_ids`, etc.).
-
-**Equities:** Pass `EQUITY` in `product_types` to return only equity fills. When filtering by product, use the canonical `product_id` rather than the display ticker.
+OrdersList FillsGet a list of fills filtered by optional query parameters (`product_ids`, `order_ids`, etc.). **Equities:** Pass `EQUITY` in `product_types` to return only equity fills. When filtering by product, use the canonical `product_id` rather than the display ticker.GET/api/v3/brokerage/orders/historical/fillsList Fills
     
     
     curl --request GET \
@@ -169,97 +166,7 @@ Get a list of fills filtered by optional query parameters (`product_ids`, `order
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Query Parameters
-
-order_ids
-
-string[]
-
-The ID(s) of order(s).
-
-trade_ids
-
-string[]
-
-The ID(s) of the trades of fills.
-
-product_ids
-
-string[]
-
-Canonical product ID(s) to filter fills by. For equities, use product_id rather than the display ticker.
-
-start_sequence_timestamp
-
-string<RFC3339 Timestamp>
-
-Only fills with a trade time after the specified start date are returned.
-
-end_sequence_timestamp
-
-string<RFC3339 Timestamp>
-
-Only fills with a trade time before the specified end date are returned.
-
-retail_portfolio_id
-
-string
-
-(Deprecated) Only fills matching this retail portfolio id are returned. Only applicable for legacy keys. CDP keys will default to the key's permissioned portfolio.
-
-limit
-
-integer<int64>
-
-The number of fills to be returned (default is 100).
-
-cursor
-
-string
-
-For paginated responses, returns all responses that come after this value.
-
-sort_by
-
-enum<string>
-
-default:UNKNOWN_SORT_BY
-
-Sort results by a field, results use unstable pagination. Default is sort by creation time
-
-Available options:
-
-`UNKNOWN_SORT_BY`,
-
-`PRICE`,
-
-`TRADE_TIME`
-
-asset_filters
-
-string[]
-
-Only returns the fills where the quote, base or underlying asset matches the provided asset filter(s) (e.g. 'BTC').
-
-order_types
-
-enum<string>[]
-
-Only returns fills for orders matching the specified order types (e.g. 'MARKET', 'LIMIT').
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersorder_idsstring[]The ID(s) of order(s).trade_idsstring[]The ID(s) of the trades of fills.product_idsstring[]Canonical product ID(s) to filter fills by. For equities, use product_id rather than the display ticker.start_sequence_timestampstring<RFC3339 Timestamp>Only fills with a trade time after the specified start date are returned.end_sequence_timestampstring<RFC3339 Timestamp>Only fills with a trade time before the specified end date are returned.retail_portfolio_idstring(Deprecated) Only fills matching this retail portfolio id are returned. Only applicable for legacy keys. CDP keys will default to the key's permissioned portfolio.limitinteger<int64>The number of fills to be returned (default is 100).cursorstringFor paginated responses, returns all responses that come after this value.sort_byenum<string>default:UNKNOWN_SORT_BYSort results by a field, results use unstable pagination. Default is sort by creation timeAvailable options: `UNKNOWN_SORT_BY`, `PRICE`, `TRADE_TIME` asset_filtersstring[]Only returns the fills where the quote, base or underlying asset matches the provided asset filter(s) (e.g. 'BTC').order_typesenum<string>[]Only returns fills for orders matching the specified order types (e.g. 'MARKET', 'LIMIT').
 
   * MARKET: A [market order](https://en.wikipedia.org/wiki/Order_\(exchange\)#Market_order)
   * LIMIT: A [limit order](https://en.wikipedia.org/wiki/Order_\(exchange\)#Limit_order)
@@ -272,96 +179,4 @@ Only returns fills for orders matching the specified order types (e.g. 'MARKET',
   * LIQUIDATION: LIQUIDATION is a special order type that is used to liquidate a position
   * SCALED: SCALED order is an order that is split into multiple child orders at incrementally increasing or decreasing prices
 
-Available options:
-
-`UNKNOWN_ORDER_TYPE`,
-
-`MARKET`,
-
-`LIMIT`,
-
-`STOP`,
-
-`STOP_LIMIT`,
-
-`BRACKET`,
-
-`TWAP`,
-
-`ROLL_OPEN`,
-
-`ROLL_CLOSE`,
-
-`LIQUIDATION`,
-
-`SCALED`
-
-order_side
-
-enum<string>
-
-default:""
-
-Only returns fills for orders matching the specified side ('BUY' or 'SELL'). By default, returns all sides.
-
-Available options:
-
-`BUY`,
-
-`SELL`
-
-product_types
-
-enum<string>[]
-
-Only returns fills for orders matching the specified product types (for example, SPOT, FUTURE, or EQUITY). By default, returns all product types.
-
-Available options:
-
-`UNKNOWN_PRODUCT_TYPE`,
-
-`SPOT`,
-
-`FUTURE`,
-
-`EQUITY`,
-
-`OPTION_GROUP`,
-
-`FUTURE_GROUP`
-
-proof_token
-
-string
-
-Optional proof token for 2FA validation when accessing transaction history (EU SCA compliance).
-
-#### Response
-
-A successful response.
-
-fills
-
-Represents a fill for an order in the system · object[]
-
-All fills matching the filters.
-
-cursor
-
-string
-
-For paginated responses, returns all responses that come after this value.
-
-Example:
-
-`"789100"`
-
-proof_token_required
-
-boolean
-
-Indicates that a valid proof token is required to access this data (EU SCA compliance).
-
-Example:
-
-`true`
+Available options: `UNKNOWN_ORDER_TYPE`, `MARKET`, `LIMIT`, `STOP`, `STOP_LIMIT`, `BRACKET`, `TWAP`, `ROLL_OPEN`, `ROLL_CLOSE`, `LIQUIDATION`, `SCALED` order_sideenum<string>default:""Only returns fills for orders matching the specified side ('BUY' or 'SELL'). By default, returns all sides.Available options: `BUY`, `SELL` product_typesenum<string>[]Only returns fills for orders matching the specified product types (for example, SPOT, FUTURE, or EQUITY). By default, returns all product types.Available options: `UNKNOWN_PRODUCT_TYPE`, `SPOT`, `FUTURE`, `EQUITY`, `OPTION_GROUP`, `FUTURE_GROUP` proof_tokenstringOptional proof token for 2FA validation when accessing transaction history (EU SCA compliance).ResponseA successful response.fillsRepresents a fill for an order in the system · object[]All fills matching the filters.Show child attributescursorstringFor paginated responses, returns all responses that come after this value.Example:`"789100"`proof_token_requiredbooleanIndicates that a valid proof token is required to access this data (EU SCA compliance).Example:`true`

@@ -2,50 +2,86 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/claim
 api_type: REST
-updated_at: 2026-10-05 18:49:24.573034
+updated_at: 2026-10-06 18:50:44.365311
 ---
 
-# Claim Withdrawable Funds
+# Get Pending Investment Plan Detail
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/investment-plan/claim`
+GET`/v5/earn/pwm/investment-plan/new-plan`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID. Must be in `Active` status  
-toAccountType| false| string| Target account type. Default: `FUND`  
-orderLinkId| **true**|  string| User-defined order ID, max 36 characters, used for idempotency  
+planId| **true**|  string| Investment plan ID. Must be in `PendingSubscription` status  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-toAccountType| int| Target account type for the transfer  
-status| string| Claim status: `Success` / `processing`  
-createdTime| string| Claim timestamp (milliseconds)  
+planId| string| Unique identifier of the investment plan  
+planName| string| Investment plan name  
+planType| string| Plan type: `stable` / `advanced`  
+status| string| Plan status, always `PendingSubscription`  
+source| string| Creation source: `consultant` / `direct` / `institution`  
+totalConfiguredAmountUsd| string| Total configured investment amount for the plan (USD valuation)  
+products| object| Configuration details by product category  
+> multiCoinsEarning| object| Flexible savings configuration  
+>> configuredAmountUsd| string| Configured amount for this category (USD)  
+>> items| array| Product configuration list  
+>>> category| string| Product type  
+>>> productId| string| Product ID  
+>>> coin| string| Coin  
+>>> configuredAmount| string| Configured investment amount (base coin)  
+>>> apr| string| Current annualized return rate (reference value)  
+> fixedYield| object| Fixed yield configuration  
+>> configuredAmountUsd| string| Configured amount for this category (USD)  
+>> items| array| Product configuration list  
+>>> category| string| Product type  
+>>> productId| string| Product ID  
+>>> coin| string| Coin  
+>>> configuredAmount| string| Configured investment amount (base coin)  
+>>> apr| string| Annualized return rate  
+>>> duration| int| Lock-up period in days  
+> equityFunds| object| Equity fund configuration  
+>> configuredAmountUsd| string| Configured amount for this category (USD)  
+>> items| array| Fund configuration list  
+>>> category| string| Product type  
+>>> productId| string| Fund ID  
+>>> fundName| string| Fund name  
+>>> coin| string| Fund denomination coin  
+>>> configuredAmount| string| Configured investment amount (base coin)  
+>>> tags| array[string]| Fund tags  
+>>> introduction| object| Fund introduction info  
+>>>> description| string| Fund introduction description (English)  
+>>>> historicalYieldRateMax| string| Historical yield rate upper bound  
+>>>> historicalYieldRateMin| string| Historical yield rate lower bound  
+>>>> sharpRatio| string| Sharpe ratio  
+>>>> maxDrawback| string| Maximum drawdown (negative value)  
+>>>> lockupPeriod| string| Lock-up period description (English)  
+> onchainEarn| object| On-chain earn configuration  
+>> configuredAmountUsd| string| Configured amount for this category (USD)  
+>> items| array| Product configuration list  
+>>> category| string| Product type  
+>>> productId| string| Product ID  
+>>> coin| string| Coin  
+>>> configuredAmount| string| Configured investment amount (base coin)  
+>>> apr| string| Current annualized return rate (reference value)  
+createdTime| string| Plan creation timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/new-plan?planId=10003 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "planId": "10001",  
-        "toAccountType": "FUND",  
-        "orderLinkId": "claim-order-001"  
-    }  
     
 
 ### Response Example
@@ -54,56 +90,155 @@ createdTime| string| Claim timestamp (milliseconds)
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
-            "toAccountType": 6,  
-            "status": "Success",  
-            "createdTime": "1701400000000"  
+            "planId": "10003",  
+            "planName": "Aggressive Growth Plan",  
+            "planType": "advanced",  
+            "status": "PendingSubscription",  
+            "source": "consultant",  
+            "totalConfiguredAmountUsd": "500000.00",  
+            "products": {  
+                "multiCoinsEarning": {  
+                    "configuredAmountUsd": "100000.00",  
+                    "items": [  
+                        {  
+                            "category": "flexibleSavings",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "100000.00",  
+                            "apr": "0.05"  
+                        }  
+                    ]  
+                },  
+                "fixedYield": {  
+                    "configuredAmountUsd": "80000.00",  
+                    "items": [  
+                        {  
+                            "category": "fundPoolPremium",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "80000.00",  
+                            "apr": "0.08",  
+                            "duration": 30  
+                        }  
+                    ]  
+                },  
+                "equityFunds": {  
+                    "configuredAmountUsd": "270000.00",  
+                    "items": [  
+                        {  
+                            "category": "equityFund",  
+                            "productId": "2005",  
+                            "fundName": "Market Neutral Alpha",  
+                            "coin": "USDT",  
+                            "configuredAmount": "270000.00",  
+                            "tags": ["Delta Neutral", "Funding Rate"],  
+                            "introduction": {  
+                                "description": "A market-neutral strategy fund that generates stable returns through long-short hedging",  
+                                "historicalYieldRateMax": "0.15",  
+                                "historicalYieldRateMin": "0.08",  
+                                "sharpRatio": "2.3",  
+                                "maxDrawback": "-0.035",  
+                                "lockupPeriod": "30 days"  
+                            }  
+                        }  
+                    ]  
+                },  
+                "onchainEarn": {  
+                    "configuredAmountUsd": "50000.00",  
+                    "items": [  
+                        {  
+                            "category": "onchainEarn",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "50000.00",  
+                            "apr": "0.075"  
+                        }  
+                    ]  
+                }  
+            },  
+            "createdTime": "1700800000000"  
         }  
     }
 
 ---
 
-# 領取可提取資金
+# 查詢待投資計劃詳情
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/investment-plan/claim`
+GET`/v5/earn/pwm/investment-plan/new-plan`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID，須為 `Active` 狀態  
-toAccountType| false| string| 目標賬戶類型，默認 `FUND`  
-orderLinkId| **true**|  string| 用戶自定義訂單ID，最長36字符，用於防重  
+planId| **true**|  string| 投資計劃ID（須為 `PendingSubscription` 狀態）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-toAccountType| int| 到賬目標賬戶類型  
-status| string| 提取狀態：`Success`（成功）/ `processing`（處理中）  
-createdTime| string| 提取時間戳（毫秒）  
+planId| string| 投資計劃唯一標識  
+planName| string| 投資計劃名稱  
+planType| string| 計劃類型：`stable` / `advanced`  
+status| string| 計劃狀態，固定為 `PendingSubscription`  
+source| string| 創建來源：`consultant` / `direct` / `institution`  
+totalConfiguredAmountUsd| string| 計劃配置的總投資金額（USD估值）  
+products| object| 各產品類別配置詳情  
+> multiCoinsEarning| object| 活期理財配置  
+>> configuredAmountUsd| string| 該類別配置金額（USD）  
+>> items| array| 產品配置列表  
+>>> category| string| 產品類型  
+>>> productId| string| 產品ID  
+>>> coin| string| 幣種  
+>>> configuredAmount| string| 配置的投資金額（本位幣）  
+>>> apr| string| 當前年化收益率（參考值）  
+> fixedYield| object| 固定收益配置  
+>> configuredAmountUsd| string| 該類別配置金額（USD）  
+>> items| array| 產品配置列表  
+>>> category| string| 產品類型  
+>>> productId| string| 產品ID  
+>>> coin| string| 幣種  
+>>> configuredAmount| string| 配置的投資金額（本位幣）  
+>>> apr| string| 年化收益率  
+>>> duration| int| 鎖定期天數  
+> equityFunds| object| 淨值型基金配置  
+>> configuredAmountUsd| string| 該類別配置金額（USD）  
+>> items| array| 基金配置列表  
+>>> category| string| 產品類型  
+>>> productId| string| 基金ID  
+>>> fundName| string| 基金名稱  
+>>> coin| string| 基金計價幣種  
+>>> configuredAmount| string| 配置的投資金額（本位幣）  
+>>> tags| array[string]| 基金標籤  
+>>> introduction| object| 基金簡介信息  
+>>>> description| string| 基金簡介描述文案（英文版）  
+>>>> historicalYieldRateMax| string| 歷史收益率上界  
+>>>> historicalYieldRateMin| string| 歷史收益率下界  
+>>>> sharpRatio| string| 夏普比率  
+>>>> maxDrawback| string| 最大回撤（負數）  
+>>>> lockupPeriod| string| 鎖倉週期描述（英文版）  
+> onchainEarn| object| 鏈上賺幣配置  
+>> configuredAmountUsd| string| 該類別配置金額（USD）  
+>> items| array| 產品配置列表  
+>>> category| string| 產品類型  
+>>> productId| string| 產品ID  
+>>> coin| string| 幣種  
+>>> configuredAmount| string| 配置的投資金額（本位幣）  
+>>> apr| string| 當前年化收益率（參考值）  
+createdTime| string| 計劃創建時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/new-plan?planId=10003 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "planId": "10001",  
-        "toAccountType": "FUND",  
-        "orderLinkId": "claim-order-001"  
-    }  
     
 
 ### 響應示例
@@ -112,9 +247,72 @@ createdTime| string| 提取時間戳（毫秒）
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
-            "toAccountType": 6,  
-            "status": "Success",  
-            "createdTime": "1701400000000"  
+            "planId": "10003",  
+            "planName": "Aggressive Growth Plan",  
+            "planType": "advanced",  
+            "status": "PendingSubscription",  
+            "source": "consultant",  
+            "totalConfiguredAmountUsd": "500000.00",  
+            "products": {  
+                "multiCoinsEarning": {  
+                    "configuredAmountUsd": "100000.00",  
+                    "items": [  
+                        {  
+                            "category": "flexibleSavings",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "100000.00",  
+                            "apr": "0.05"  
+                        }  
+                    ]  
+                },  
+                "fixedYield": {  
+                    "configuredAmountUsd": "80000.00",  
+                    "items": [  
+                        {  
+                            "category": "fundPoolPremium",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "80000.00",  
+                            "apr": "0.08",  
+                            "duration": 30  
+                        }  
+                    ]  
+                },  
+                "equityFunds": {  
+                    "configuredAmountUsd": "270000.00",  
+                    "items": [  
+                        {  
+                            "category": "equityFund",  
+                            "productId": "2005",  
+                            "fundName": "Market Neutral Alpha",  
+                            "coin": "USDT",  
+                            "configuredAmount": "270000.00",  
+                            "tags": ["Delta Neutral", "Funding Rate"],  
+                            "introduction": {  
+                                "description": "A market-neutral strategy fund that generates stable returns through long-short hedging",  
+                                "historicalYieldRateMax": "0.15",  
+                                "historicalYieldRateMin": "0.08",  
+                                "sharpRatio": "2.3",  
+                                "maxDrawback": "-0.035",  
+                                "lockupPeriod": "30 days"  
+                            }  
+                        }  
+                    ]  
+                },  
+                "onchainEarn": {  
+                    "configuredAmountUsd": "50000.00",  
+                    "items": [  
+                        {  
+                            "category": "onchainEarn",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "configuredAmount": "50000.00",  
+                            "apr": "0.075"  
+                        }  
+                    ]  
+                }  
+            },  
+            "createdTime": "1700800000000"  
         }  
     }

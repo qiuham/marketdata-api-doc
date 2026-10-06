@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-trading-config
 anchor_id: trading-account-rest-api-set-trading-config
 api_type: REST
-updated_at: 2026-10-05 19:19:28.344765
+updated_at: 2026-10-06 19:21:57.561468
 ---
 
 # Set trading config

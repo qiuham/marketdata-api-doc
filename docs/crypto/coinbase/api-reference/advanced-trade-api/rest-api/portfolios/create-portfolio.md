@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio
 api_type: Account
-updated_at: 2026-10-05 19:04:10.457985
+updated_at: 2026-10-06 19:06:45.077575
 ---
 
 # Create Portfolio
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/portfolios`
 
-
-Create a portfolio.
+PortfoliosCreate PortfolioCreate a portfolio.POST/api/v3/brokerage/portfoliosCreate Portfolio
     
     
     curl --request POST \
@@ -157,36 +156,4 @@ Create a portfolio.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-name
-
-string
-
-The name of the portfolio.
-
-#### Response
-
-A successful response.
-
-portfolio
-
-object
-
-Portfolio is the identifying information for a portfolio.
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonnamestringThe name of the portfolio.ResponseA successful response.portfolioobjectPortfolio is the identifying information for a portfolio.Show child attributes

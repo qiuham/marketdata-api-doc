@@ -2,85 +2,20 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview
 api_type: Guide
-updated_at: 2026-10-05 19:04:11.567301
+updated_at: 2026-10-06 19:06:46.086054
 ---
 
 # Welcome to Advanced Trade API
 
-Programmatic trading and order management for spot, US futures, and Global Derivatives.
-
-The **Coinbase Advanced Trade API** gives you programmatic trading and order management — a [REST API](/coinbase-app/advanced-trade-apis/rest-api) for placing and managing orders, and a [WebSocket protocol](/coinbase-app/advanced-trade-apis/websocket/websocket-overview) for real-time market data and account updates. Official SDKs wrap both. [Advanced Trade](https://www.coinbase.com/advanced-trade) is Coinbase’s trading platform for the more experienced trader — a secure way to buy, sell, and trade digital assets across a wide range of markets.
-
-## Interfaces
-
-Choose the interface that fits your integration. All three share one CDP API key.
-
-## REST API
-
-Place, edit, and cancel orders, and read accounts and market data over HTTP.
-
-## WebSocket
-
-Stream live prices, order book, and order/account updates in real time.
-
-## SDKs
-
-Official and sample SDKs for Python, TypeScript, Go, and Java.
-
-## What you can trade
-
-Market| What it covers  
+Advanced Trade APIsWelcome to Advanced Trade APIProgrammatic trading and order management for spot, US futures, and Global Derivatives.The **Coinbase Advanced Trade API** gives you programmatic trading and order management — a [REST API](/coinbase-app/advanced-trade-apis/rest-api) for placing and managing orders, and a [WebSocket protocol](/coinbase-app/advanced-trade-apis/websocket/websocket-overview) for real-time market data and account updates. Official SDKs wrap both. [Advanced Trade](https://www.coinbase.com/advanced-trade) is Coinbase’s trading platform for the more experienced trader — a secure way to buy, sell, and trade digital assets across a wide range of markets. Interfaces Choose the interface that fits your integration. All three share one CDP API key. REST APIPlace, edit, and cancel orders, and read accounts and market data over HTTP.WebSocketStream live prices, order book, and order/account updates in real time.SDKsOfficial and sample SDKs for Python, TypeScript, Go, and Java. What you can trade Market| What it covers  
 ---|---  
 **Spot**|  Buy, sell, and trade digital assets across spot pairs  
 **US futures**|  CFTC-regulated futures for eligible US clients  
 **Global Derivatives**|  Perpetuals for eligible non-US clients, traded on a Deribit-powered gateway  
-  
-## Global Derivatives on Deribit
-
-Advanced Trade international derivatives trade on a Deribit-powered gateway running on the **Starbase** platform. They moved there from INTX on October 1, 2026, and INTX perpetuals are no longer traded through the Advanced Trade API. Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). The Global Derivatives gateway offers:
+Global Derivatives on Deribit Advanced Trade international derivatives trade on a Deribit-powered gateway running on the **Starbase** platform. They moved there from INTX on October 1, 2026, and INTX perpetuals are no longer traded through the Advanced Trade API. Spot and US futures are unaffected and stay on the [Advanced Trade API](/api-reference/advanced-trade-api/rest-api/introduction). The Global Derivatives gateway offers:
 
   * **A broader product set** — 125+ perpetual contracts, including equity and commodity perpetuals, with up to 50x leverage. Options and dated futures are not yet available.
   * **New native order types** — trailing stops, market-limit, and iceberg orders, plus WebSocket order entry.
   * **A new protocol** — JSON-RPC 2.0 over HTTP or WebSocket. Keep your existing CDP API key.
 
-## Migration Overview
-
-What changed from INTX: products, order types, margin models, and the migration checklist.
-
-## Technical Guide
-
-Authentication, endpoint and schema mapping, and spec references.
-
-## Advanced Trade API Reference
-
-Hosts and specs for spot, US derivatives, and Global Derivatives.
-
-## SDKs
-
-## Python SDK
-
-Official — published on PyPI and actively maintained.
-
-## TypeScript SDK
-
-Sample SDK.
-
-## Go SDK
-
-Sample SDK.
-
-## Java SDK
-
-Sample SDK.
-
-## Next steps
-
-## Create an API key
-
-Create a CDP API key and make your first authenticated call.
-
-## Try the sandbox
-
-Test your integration against the sandbox before going live.
-
-**See also:** [What is Advanced Trade?](https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/what-is-advanced-trade) · [Advanced Developer Program](https://www.coinbase.com/developer-platform/products/advanced-trade-developer-program)
+Migration OverviewWhat changed from INTX: products, order types, margin models, and the migration checklist.Technical GuideAuthentication, endpoint and schema mapping, and spec references.Advanced Trade API ReferenceHosts and specs for spot, US derivatives, and Global Derivatives. SDKs Python SDKOfficial — published on PyPI and actively maintained.TypeScript SDKSample SDK.Go SDKSample SDK.Java SDKSample SDK. Next steps Create an API keyCreate a CDP API key and make your first authenticated call.Try the sandboxTest your integration against the sandbox before going live. **See also:** [What is Advanced Trade?](https://help.coinbase.com/en/coinbase/trading-and-funding/advanced-trade/what-is-advanced-trade) · [Advanced Developer Program](https://www.coinbase.com/developer-platform/products/advanced-trade-developer-program)

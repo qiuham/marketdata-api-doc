@@ -2,78 +2,113 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-10-05 18:51:26.794579
+updated_at: 2026-10-06 18:52:57.043919
 ---
 
-# Get Closed Options Positions
+# Move Position
 
-Query user's closed options positions, sorted by `closeTime` in descending order.
+You can move positions between sub-master, master-sub, or sub-sub UIDs when necessary
 
 info
 
-  * Only supports users to query closed options positions in the last 6 months.
-  * Fee and price are displayed with trailing zeroes up to 8 decimal places.
+  * The endpoint can only be called by master UID api key
+  * UIDs must be the same master-sub account relationship
+  * The trades generated from move-position endpoint will not be displayed in the Recent Trade (Rest API & Websocket)
+  * There is no trading fee
+  * `fromUid` and `toUid` both should be Unified trading accounts, and they need to be one-way mode when moving the positions
+  * Please note that once executed, you will get execType=`MovePosition` entry from [Get Trade History](/docs/v5/order/execution), [Get Closed Pnl](/docs/v5/position/close-pnl), and stream from [Execution](/docs/v5/websocket/private/execution).
+  * TradFi perpetual contracts (including forex, stock, and commodities) are supported starting from 2026-08-06
 
 
 
 ### HTTP Request
 
-GET`/v5/position/get-closed-positions`
+POST`/v5/position/move-positions`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| `option`  
-symbol| false| string| Symbol name  
-startTime| false| integer| The start timestamp (ms) 
+fromUid| **true**|  string| From UID 
 
-  * startTime and endTime are not passed, return 1 days by default
-  * Only startTime is passed, return range between startTime and startTime+1 days
-  * Only endTime is passed, return range between endTime-1 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
+  * Must be UTA
+  * Must be in one-way mode for Futures
 
   
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+toUid| **true**|  string| To UID 
+
+  * Must be UTA
+  * Must be in one-way mode for Futures
+
+  
+list| **true**|  array| Object. Up to 25 legs per request  
+> [category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `spot`, `option`,`inverse`  
+> symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+> price| **true**|  string| Trade price 
+
+  * `linear`&`inverse`: the price needs to be between [95% of mark price, 105% of mark price]
+  * `spot`&`option`: the price needs to follow the price rule from [Instruments Info](/docs/v5/market/instrument)
+
+  
+> side| **true**|  string| Trading side of `fromUid`
+
+  * For example, `fromUid` has a long position, when side=`Sell`, then once executed, the position of `fromUid` will be reduced or open a short position depending on `qty` input
+
+  
+> qty| **true**|  string| Executed qty 
+
+  * The value must satisfy the qty rule from [Instruments Info](/docs/v5/market/instrument), in particular, category=`linear` is able to input `maxOrderQty` * 5
+
+  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> side| string| `Buy`, `Sell`  
-> totalOpenFee| string| Total open fee  
-> deliveryFee| string| Delivery fee  
-> totalCloseFee| string| Total close fee  
-> qty| string| Order qty  
-> closeTime| integer| The closed time (ms)  
-> avgExitPrice| string| Average exit price  
-> deliveryPrice| string| Delivery price  
-> openTime| integer| The opened time (ms)  
-> avgEntryPrice| string| Average entry price  
-> totalPnl| string| Total PnL  
-  
-* * *
+retCode| integer| Result code. `0` means request is successfully accepted  
+retMsg| string| Result message  
+result| map| Object  
+> blockTradeId| string| Block trade ID  
+> status| string| Status. `Processing`, `Rejected`  
+> rejectParty| string| 
 
+  * `""` means initial validation is passed, please check the order status via [Get Move Position History](/docs/v5/position/move-position-history)
+  * `Taker`, `Maker` when status=`Rejected`
+  * `bybit` means error is occurred on the Bybit side
+
+  
+  
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    POST /v5/position/move-positions HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1697447928051  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fromUid": "100307601",  
+        "toUid": "592324",  
+        "list": [  
+            {  
+                "category": "spot",  
+                "symbol": "BTCUSDT",  
+                "price": "100",  
+                "side": "Sell",  
+                "qty": "0.01"  
+            }  
+        ]  
+    }  
     
     
     
@@ -83,10 +118,35 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
+    print(session.move_position(  
+        fromUid="100307601",  
+        toUid="592324",  
+        list=[  
+            {  
+                "category": "spot",  
+                "symbol": "BTCUSDT",  
+                "price": "100",  
+                "side": "Sell",  
+                "qty": "0.01",  
+            }  
+        ]  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
+                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
+    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
+    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -96,112 +156,118 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
-            "list": [  
-                {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
-                    "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
-                },  
-                {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1749736532193  
+            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
+            "status": "Processing",  
+            "rejectParty": ""  
+        }  
     }
 
 ---
 
-# 查詢期权平倉
+# 移倉
 
-獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
+您可以在同一個母子帳戶體系下移動期貨、期權的倉位, 以及現貨的幣幣交易
 
 信息
 
-  * 支持用户查询最近六个月期权平仓数据
-  * fee和price相關字段保留小数点后8位末尾0不省略
+  * 該接口僅支持母帳戶的api key訪問
+  * 移倉間的UID和調用者的UID必須是同一個母子帳戶體系
+  * 該移倉生成的交易將不會出現在公有行情的成交中(包括Rest API和Websocket)
+  * 該操作不會產生手續費
+  * `fromUid` 和 `toUid`都必須是統一交易帳戶, 並且對於期貨而言, 倉位需要處於單向模式下
+  * 請注意一旦成交, [查詢成交紀錄](/docs/zh-TW/v5/order/execution), [查詢平倉盈虧](/docs/zh-TW/v5/position/close-pnl), 以及私有推送[成交](/docs/zh-TW/v5/websocket/private/execution)會返回execType=`MovePosition`的數據
+  * TradFi 永續合約（包括外匯、股票及大宗商品）自 2026-08-06 起支持
 
 
 
 ### HTTP 請求
 
-GET`/v5/position/get-closed-positions`
+POST`/v5/position/move-positions`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| `option`  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
+fromUid| **true**|  string| 原UID 
 
-  * startTime 和 endTime都不傳入, 則默認返回最近1天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+1天的數據
-  * 若只傳endTime，則查詢endTime-1天和endTime的數據
+  * 必須是統一交易帳戶
+  * 期貨倉位必須有處於單向持倉模式
 
   
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+toUid| **true**|  string| 目標UID 
+
+  * 必須是統一交易帳戶
+  * 期貨倉位必須有處於單向持倉模式
+
+  
+list| **true**|  array| Object. 單次請求最多支持25腿  
+> [category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `spot`, `option`,`inverse`  
+> symbol| **true**|  string| 合約名稱/幣對名  
+> price| **true**|  string| 訂單價格 
+
+  * `linear`和`inverse`: 價格需要位於[95% _標記價格, 105%_ 標記價格]之間
+  * `spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的價格上下限和精度
+
+  
+> side| **true**|  string| 是`fromUid`的交易方向 
+
+  * 例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小
+
+  
+> qty| **true**|  string| 交易數量
+
+  * 該數字需要滿足[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`
+
+  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> side| string| 買賣方向 `Buy`, `Side`  
-> totalOpenFee| string| 开仓费用  
-> deliveryFee| string| 交割费用  
-> totalCloseFee| string| 平仓费用  
-> qty| string| 訂單數量  
-> closeTime| integer| 平仓時間 (毫秒)  
-> avgExitPrice| string| 平均出場價格  
-> deliveryPrice| string| 交割價格  
-> openTime| integer| 开仓時間 (毫秒)  
-> avgExitPrice| string| 平均出場價格  
-> totalPnl| string| 被平倉位的盈虧  
+retCode| integer| 響應碼. `0`表示請求被成功接受  
+retMsg| string| 響應信息  
+result| map| Object  
+> blockTradeId| string| 大宗交易訂單ID  
+> status| string| 訂單狀態. `Processing`, `Rejected`  
+> rejectParty| string| 
+
+  * `""`表示初始校驗通過, 需要進一步通過[查詢移倉歷史](/docs/zh-TW/v5/position/move-position-history)接口來確認最終狀態
+  * `Taker`, `Maker`: 當status=`Rejected`返回
+  * `bybit`表示處理過程中的錯誤發生在Bybit側
+
+  
   
 ### 請求示例
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    POST /v5/position/move-positions HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1697447928051  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fromUid": "100307601",  
+        "toUid": "592324",  
+        "list": [  
+            {  
+                "category": "spot",  
+                "symbol": "BTCUSDT",  
+                "price": "100",  
+                "side": "Sell",  
+                "qty": "0.01"  
+            }  
+        ]  
+    }  
     
     
     
@@ -211,10 +277,35 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
+    print(session.move_position(  
+        fromUid="100307601",  
+        toUid="592324",  
+        list=[  
+            {  
+                "category": "spot",  
+                "symbol": "BTCUSDT",  
+                "price": "100",  
+                "side": "Sell",  
+                "qty": "0.01",  
+            }  
+        ]  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
+                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
+    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
+    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -224,39 +315,8 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
-            "list": [  
-                {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
-                    "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
-                },  
-                {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1749736532193  
+            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
+            "status": "Processing",  
+            "rejectParty": ""  
+        }  
     }

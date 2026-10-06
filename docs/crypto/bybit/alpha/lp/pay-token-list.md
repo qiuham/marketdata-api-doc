@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pay-token-list
 api_type: REST
-updated_at: 2026-10-05 18:45:06.674283
+updated_at: 2026-10-06 18:43:25.689353
 ---
 
 # Get LP Pay Token List

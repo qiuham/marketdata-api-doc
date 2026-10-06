@@ -2,41 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-activity-log
 api_type: REST
-updated_at: 2026-10-05 18:49:41.249698
+updated_at: 2026-10-06 18:50:59.525063
 ---
 
-# Get Launchpool Current Staking
+# Get Launchpool User Activity Log
 
-Query the authenticated user's active staking positions across all ongoing Launchpool activities, including a USD-denominated portfolio summary and per-position details.
+Query the authenticated user's Launchpool staking operation records (stake-in, redeem, interest, etc.).
 
 info
 
   * Authentication is required
-  * Returns up to **30** positions, covering all active staking positions without pagination
+  * `startTime` and `endTime` must be provided **together** (both or neither)
+  * All filter fields are optional; omitting all fields returns all records
 
 
 
 ### HTTP Request
 
-GET`/v5/spot-x/launchpool/user/current-staking`
+POST`/v5/spot-x/launchpool/user/activity-log`
 
 ### Request Parameters
 
-No request parameters required.
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+stakeCoin| false| string| Filter by stake coin symbol, e.g. `USDT`  
+type| false| integer| Filter by operation type. `0`: PLEDGE (manual stake-in); `1`: REDEEM (manual redeem); `2`: INTEREST (reward credit); `3`: AUTO_REDEEM (auto principal return); `4`: LOAN_PLEDGE (leveraged stake-in); `5`: LOAN_REDEEM (manual leveraged redeem); `6`: LOAN_AUTO_REDEEM (auto leveraged maturity redemption); `7`: LOAN_RISKRATE_AUTO_REDEEM (leveraged liquidation); `8`: RISK_USER_AUTO_REDEEM (risk-control forced redeem, non-leveraged); `9`: LOAN_RISK_USER_AUTO_REDEEM (risk-control forced redeem, leveraged); `10`: EARN_REWARD (earn product reward credit)  
+status| false| integer| Filter by record status. `0`: Pending; `1`: Success; `2`: Failed  
+startTime| false| string| Query start time, 13-digit Unix timestamp in milliseconds. Must be used together with `endTime`  
+endTime| false| string| Query end time, 13-digit Unix timestamp in milliseconds. Must be used together with `startTime`  
+pageSize| false| integer| Number of records per page. Default: `10`. Max: `10`  
+current| false| integer| Page number (1-based). Default: `1`. Max: `100`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-totalInvestmentUsd| string| Total USD value of all active staking positions  
-totalEarningsUsd| string| Total USD value of accumulated earnings across all positions  
-todayEarningsUsd| string| Today's earnings across all positions, in USD  
-list| array| Per-position staking details. Up to 30 items  
-> stakeCoin| string| The coin staked into this position  
-> rewardCoin| string| The coin earned as reward  
-> stakeAmount| string| Total amount currently staked  
-> totalReward| string| Accumulated reward earned so far  
-> autoRedeemDate| string| Auto-redeem time, Unix timestamp in milliseconds. The principal will be automatically returned on this date. Empty string if not set  
+list| array| Operation records for the current page  
+> stakeCoin| string| The coin that was staked or redeemed  
+> rewardCoin| string| The reward coin associated with this operation  
+> amount| string| Operation amount  
+> type| integer| Operation type code. See request `type` field for full mapping  
+> status| integer| Record status. `0`: Pending; `1`: Success; `2`: Failed  
+> createdTime| string| Record creation time, Unix timestamp in milliseconds  
+> orderId| string| Unique order/operation identifier  
+total| integer| Total number of records matching the filter  
+pageSize| integer| Page size used for this response  
+current| integer| Current page number  
   
 * * *
 
@@ -49,12 +60,21 @@ list| array| Per-position staking details. Up to 30 items
 
     
     
-    GET /v5/spot-x/launchpool/user/current-staking HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "type": 0,  
+        "status": 1,  
+        "pageSize": 10,  
+        "current": 1  
+    }  
     
     
     
@@ -72,25 +92,20 @@ list| array| Per-position staking details. Up to 30 items
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalInvestmentUsd": "15000.00",  
-            "totalEarningsUsd": "120.50",  
-            "todayEarningsUsd": "8.20",  
             "list": [  
                 {  
                     "stakeCoin": "USDT",  
                     "rewardCoin": "BTC",  
-                    "stakeAmount": "10000",  
-                    "totalReward": "0.00120",  
-                    "autoRedeemDate": "1706745600000"  
-                },  
-                {  
-                    "stakeCoin": "MNT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "50000",  
-                    "totalReward": "0.00050",  
-                    "autoRedeemDate": "1706745600000"  
+                    "amount": "1000",  
+                    "type": 0,  
+                    "status": 1,  
+                    "createdTime": "1704067200000",  
+                    "orderId": "ORDER_123456"  
                 }  
-            ]  
+            ],  
+            "total": 25,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  
@@ -98,38 +113,49 @@ list| array| Per-position staking details. Up to 30 items
 
 ---
 
-# 查詢 Launchpool 當前質押倉位
+# 查詢 Launchpool 用戶操作記錄
 
-查詢當前用戶在所有進行中 Launchpool 活動中的有效質押倉位，包含 USD 計價的資產組合摘要及各倉位詳情。
+查詢當前用戶的 Launchpool 質押操作記錄（質押、贖回、利息等）。
 
 信息
 
   * 需要鑒權
-  * 最多返回 **30** 條倉位記錄，涵蓋所有有效質押倉位，無需分頁
+  * `startTime` 和 `endTime` 必須同時傳入（要麼都傳，要麼都不傳）
+  * 所有篩選字段均為可選；不傳任何字段時返回全部記錄
 
 
 
 ### HTTP 請求
 
-GET`/v5/spot-x/launchpool/user/current-staking`
+POST`/v5/spot-x/launchpool/user/activity-log`
 
 ### 請求參數
 
-無請求參數。
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+stakeCoin| false| string| 按質押幣種篩選，如 `USDT`  
+type| false| integer| 按操作類型篩選。`0`: PLEDGE（手動質押）；`1`: REDEEM（手動贖回）；`2`: INTEREST（獎勵發放）；`3`: AUTO_REDEEM（到期自動還本）；`4`: LOAN_PLEDGE（槓桿質押）；`5`: LOAN_REDEEM（手動槓桿贖回）；`6`: LOAN_AUTO_REDEEM（槓桿到期自動贖回）；`7`: LOAN_RISKRATE_AUTO_REDEEM（槓桿強平）；`8`: RISK_USER_AUTO_REDEEM（風控強制贖回，非槓桿）；`9`: LOAN_RISK_USER_AUTO_REDEEM（風控強制贖回，槓桿）；`10`: EARN_REWARD（理財產品獎勵）  
+status| false| integer| 按記錄狀態篩選。`0`: 處理中；`1`: 成功；`2`: 失敗  
+startTime| false| string| 查詢開始時間，13 位毫秒級 Unix 時間戳字符串。必須與 `endTime` 同時傳入  
+endTime| false| string| 查詢結束時間，13 位毫秒級 Unix 時間戳字符串。必須與 `startTime` 同時傳入  
+pageSize| false| integer| 每頁記錄數，默認 `10`，最大 `10`  
+current| false| integer| 頁碼（從 1 開始），默認 `1`，最大 `100`  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-totalInvestmentUsd| string| 所有有效質押倉位的 USD 總價值  
-totalEarningsUsd| string| 所有倉位累計收益的 USD 總額  
-todayEarningsUsd| string| 今日所有倉位的 USD 收益合計  
-list| array| 各倉位質押詳情，最多 30 條  
-> stakeCoin| string| 該倉位質押的幣種  
-> rewardCoin| string| 該倉位獲得獎勵的幣種  
-> stakeAmount| string| 當前質押總量  
-> totalReward| string| 截至目前的累計獎勵  
-> autoRedeemDate| string| 自動贖回時間，毫秒級 Unix 時間戳。到期後本金將自動返還。未設置時為空字符串  
+list| array| 當前頁的操作記錄  
+> stakeCoin| string| 質押或贖回的幣種  
+> rewardCoin| string| 該操作關聯的獎勵幣種  
+> amount| string| 操作金額  
+> type| integer| 操作類型代碼，詳見請求參數 `type` 說明  
+> status| integer| 記錄狀態。`0`: 處理中；`1`: 成功；`2`: 失敗  
+> createdTime| string| 記錄創建時間，毫秒級 Unix 時間戳  
+> orderId| string| 唯一訂單/操作標識符  
+total| integer| 符合篩選條件的記錄總數  
+pageSize| integer| 本次響應使用的每頁條數  
+current| integer| 當前頁碼  
   
 * * *
 
@@ -142,12 +168,21 @@ list| array| 各倉位質押詳情，最多 30 條
 
     
     
-    GET /v5/spot-x/launchpool/user/current-staking HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "type": 0,  
+        "status": 1,  
+        "pageSize": 10,  
+        "current": 1  
+    }  
     
     
     
@@ -165,25 +200,20 @@ list| array| 各倉位質押詳情，最多 30 條
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalInvestmentUsd": "15000.00",  
-            "totalEarningsUsd": "120.50",  
-            "todayEarningsUsd": "8.20",  
             "list": [  
                 {  
                     "stakeCoin": "USDT",  
                     "rewardCoin": "BTC",  
-                    "stakeAmount": "10000",  
-                    "totalReward": "0.00120",  
-                    "autoRedeemDate": "1706745600000"  
-                },  
-                {  
-                    "stakeCoin": "MNT",  
-                    "rewardCoin": "BTC",  
-                    "stakeAmount": "50000",  
-                    "totalReward": "0.00050",  
-                    "autoRedeemDate": "1706745600000"  
+                    "amount": "1000",  
+                    "type": 0,  
+                    "status": 1,  
+                    "createdTime": "1704067200000",  
+                    "orderId": "ORDER_123456"  
                 }  
-            ]  
+            ],  
+            "total": 25,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  

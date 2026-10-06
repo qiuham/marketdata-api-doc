@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order
 api_type: Trading
-updated_at: 2026-10-05 19:04:09.837864
+updated_at: 2026-10-06 19:06:44.408362
 ---
 
 # Edit Order
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/orders/edit`
 
-
-Edit an order with a specified new `size`, or new `price`.
+OrdersEdit OrderEdit an order with a specified new `size`, or new `price`.POST/api/v3/brokerage/orders/editEdit Order
     
     
     curl --request POST \
@@ -508,108 +507,4 @@ Edit an order with a specified new `size`, or new `price`.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-order_id
-
-string
-
-required
-
-The ID of the order.
-
-price
-
-string
-
-required
-
-The update price of the order.
-
-Example:
-
-`"19000.00"`
-
-size
-
-string
-
-required
-
-The updated size of the order.
-
-Example:
-
-`"0.001"`
-
-attached_order_configuration
-
-object
-
-The configuration of the attached order. Only TriggerBracketGtc, LimitLimitGtc or StopLimitStopLimitGtc are eligible.
-
-cancel_attached_order
-
-boolean
-
-Drops both the legs of TP/SL, order becomes a simple limit order.
-
-Example:
-
-`"true"`
-
-stop_price
-
-string
-
-The updated stop price of the order. Only applicable for editing TP/SL or SL orders.
-
-Example:
-
-`"17000.00"`
-
-average_entry_price
-
-string
-
-The average entry price of the position. Used for estimated PnL
-
-Example:
-
-`"18000.00"`
-
-#### Response
-
-A successful response.
-
-success
-
-boolean
-
-required
-
-Whether the order edit request was placed.
-
-Example:
-
-`true`
-
-errors
-
-object[]
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonorder_idstringrequiredThe ID of the order.pricestringrequiredThe update price of the order.Example:`"19000.00"`sizestringrequiredThe updated size of the order.Example:`"0.001"`attached_order_configurationobjectThe configuration of the attached order. Only TriggerBracketGtc, LimitLimitGtc or StopLimitStopLimitGtc are eligible.Show child attributescancel_attached_orderbooleanDrops both the legs of TP/SL, order becomes a simple limit order.Example:`"true"`stop_pricestringThe updated stop price of the order. Only applicable for editing TP/SL or SL orders.Example:`"17000.00"`average_entry_pricestringThe average entry price of the position. Used for estimated PnLExample:`"18000.00"`ResponseA successful response.successbooleanrequiredWhether the order edit request was placed.Example:`true`errorsobject[]Show child attributes

@@ -2,51 +2,47 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-10-05 18:49:06.217929
+updated_at: 2026-10-06 18:50:20.625552
 ---
 
-# Get Airdrop Daily PnL Records
-
-You can query up to 3 months of historical data.
+# Get Airdrop Products
 
 info
 
-  * API key permission: `Earn`
-  * Only **completed** (already distributed) yield records are returned. Pending, failed, and zero-amount records are excluded.
-  * Users with no byfi earn history will receive a successful response with an empty list.
-
-
+Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
 
 ### HTTP Request
 
-GET`/v5/earn/hold-to-earn/yield-history`
+GET`/v5/earn/hold-to-earn/product`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-timeStart| false| integer| Start time (Unix seconds). Cannot be earlier than current time minus 3 months, otherwise returns `INVALIDARGUMENTS`  
-timeEnd| false| integer| End time (Unix seconds). Requires `timeStart ≤ timeEnd`  
-limit| **true**|  integer| Page size. Range: `1` to `49`. Returns `INVALIDARGUMENTS` if out of range  
-cursor| false| string| Pagination cursor. Omit on the first request; pass the `nextCursor` value from the previous response for subsequent pages. Treat the cursor as opaque — do not parse or modify it  
-  
-info
-
-When both `timeStart` and `timeEnd` are `0`, the query defaults to the last 3 months.
+None
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextCursor| string| Next page cursor. Empty string indicates the last page. Pass it back as `cursor` in the next request  
-airdropDailyPnls| array| Yield records list, sorted by distribution date newest first  
-> coinName| string| Investment coin name  
-> yieldCoinName| string| Yield coin name. Differs from `coinName` for cross-coin airdrops  
-> effectiveAmount| string| Effective principal for that day, e.g., `"10000.00"`  
-> pnl| string| Actual yield distributed that day, e.g., `"0.27397260"`  
-> apy| string| Annualized yield for that day, e.g., `"10%"`  
-> createdAt| integer| Yield distribution time (Unix seconds)  
+products| array| Object  
+> coinName| string| Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`  
+> yields| array| Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)  
+>> coinName| string| Yield coin name  
+>> apy| string| Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin  
+>> personalApy| string| Personal APR for this yield coin, formatted for direct display including the `%` suffix, e.g., `"5.285982%"`. Reflects the user's individual rate after applying their personal multiplier  
+>> multiplier| string| Personal coefficient applied to the base APR. Returns `"1"` when the user has no position in this product  
+> status| string| Product stage, `NotStarted`, `Online`, `Ended`  
+> apy| string| Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday  
+> personalApy| string| Sum of personal APR across all yield coins, formatted for direct display including the `%` suffix, e.g., `"6.52459%"`  
+> announcementUrl| string| Activity rules announcement URL  
   
+info
+
+  * Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
+  * When `coinName != yields.coinName`, it is a cross-coin airdrop
+  * Results are sorted by product creation time, newest first.
+
+
+
 * * *
 
 ### Request Example
@@ -58,12 +54,8 @@ airdropDailyPnls| array| Yield records list, sorted by distribution date newest 
 
     
     
-    GET /v5/earn/hold-to-earn/yield-history?timeStart=1739952000&timeEnd=1747728000&limit=20 HTTP/1.1  
+    GET /v5/earn/hold-to-earn/product HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
@@ -78,87 +70,101 @@ airdropDailyPnls| array| Yield records list, sorted by distribution date newest 
     
     
     {  
-        "nextCursor": "eyJsYXN0SWQiOjEwMDE5MH0=",  
-        "airdropDailyPnls": [  
-            {  
-                "coinName": "USDE",  
-                "yieldCoinName": "USDE",  
-                "effectiveAmount": "10000.00",  
-                "pnl": "0.27397260",  
-                "apy": "10%",  
-                "createdAt": 1747641600  
-            },  
-            {  
-                "coinName": "USDE",  
-                "yieldCoinName": "USDE",  
-                "effectiveAmount": "10000.00",  
-                "pnl": "0.27397260",  
-                "apy": "10%",  
-                "createdAt": 1747555200  
-            }  
-        ]  
-    }  
-    
-
-### Pagination Example
-
-To fetch the next page, pass the `nextCursor` from the previous response back as `cursor`:
-    
-    
-    GET /v5/earn/hold-to-earn/yield-history?limit=20&cursor=eyJsYXN0SWQiOjEwMDE5MH0= HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-
-An empty `nextCursor` in the response indicates you have reached the last page.
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "products": [  
+                {  
+                    "coinName": "USDE",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDE",  
+                            "apy": "0.210604%",  
+                            "personalApy": "0.421208%",  
+                            "multiplier": "2"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.210604%",  
+                    "personalApy": "0.421208%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                },  
+                {  
+                    "coinName": "USDTB",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDTB",  
+                            "apy": "0.029978%",  
+                            "personalApy": "0.029978%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.029978%",  
+                    "personalApy": "0.029978%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
+                },  
+                {  
+                    "coinName": "USD1",  
+                    "yields": [  
+                        {  
+                            "coinName": "WLFI",  
+                            "apy": "10%",  
+                            "personalApy": "10%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Ended",  
+                    "apy": "10%",  
+                    "personalApy": "10%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1779348459085  
+    }
 
 ---
 
-# 查詢空投每日收益記錄
-
-可查詢最近 3 個月的歷史收益數據。
+# 獲取空投產品列表
 
 信息
 
-  * API key 需要 `理財` 權限
-  * 僅返回**已發放** （`status = complete`）的收益記錄，未發放、失敗及金額為零的記錄均不可見。
-  * 非 byfi earn 歷史用戶調用將直接返回成功狀態及空列表。
-
-
+不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
 
 ### HTTP 請求
 
-GET`/v5/earn/hold-to-earn/yield-history`
+GET`/v5/earn/hold-to-earn/product`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-timeStart| false| integer| 起始時間（Unix 秒）。**不得早於「當前時間 - 3 個月」** ，否則返回 `INVALIDARGUMENTS`  
-timeEnd| false| integer| 結束時間（Unix 秒）。要求 `timeStart ≤ timeEnd`  
-limit| **true**|  integer| 單頁大小，範圍：`1` 至 `49`。超出範圍返回 `INVALIDARGUMENTS`  
-cursor| false| string| 翻頁游標。首次查詢不傳；後續翻頁傳入上一次響應中的 `nextCursor`。游標對接入方不透明，**僅作整體回傳，不要解析或拼接**  
-  
-信息
-
-當 `timeStart` 與 `timeEnd` 同時為 `0` 時，自動查詢最近 3 個月的數據。
+無
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextCursor| string| 下一頁游標。空字符串表示已到尾頁；翻頁時將其原樣傳回 `cursor` 即可  
-airdropDailyPnls| array| 收益記錄列表，按發放日倒序排列（較新在前）  
-> coinName| string| 投資幣種名稱  
-> yieldCoinName| string| 收益幣種名稱。跨幣種空投時與 `coinName` 不同  
-> effectiveAmount| string| 當日計息本金（已格式化字符串，如 `"10000.00"`）  
-> pnl| string| 當日實際發放收益（已格式化字符串，如 `"0.27397260"`）  
-> apy| string| 該日折算年化收益文案（如 `"10%"`）  
-> createdAt| integer| 收益發放時間（Unix 秒）  
+products| array| Object  
+> coinName| string| **投資幣種** 名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）  
+> yields| string| **收益幣種** 明細  
+>> coinName| string| 收益幣種  
+>> apy| string| 該收益幣種**昨日 APR** ，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`  
+>> personalApy| string| 該收益幣種的個人 APR，含 `%` 後綴，如 `"5.285982%"`。反映用戶套用個人倍率後的實際利率  
+>> multiplier| string| 個人係數，適用於基礎 APR。未持倉時返回 `"1"`  
+> status| string| 產品當前階段，`NotStarted`, `Online`, `Ended`  
+> apy| string| **昨日綜合APR** ，昨日無收益時返回 `"0%"`  
+> personalApy| string| 所有收益幣種個人 APR 之和，含 `%` 後綴，如 `"6.52459%"`  
+> announcementUrl| string| **活動規則連結** （公告頁 URL）  
   
+信息
+
+  * 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
+  * 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
+  * 結果按產品創建時間倒序排列（較新在前）。
+
+
+
 * * *
 
 ### 請求示例
@@ -170,12 +176,8 @@ airdropDailyPnls| array| 收益記錄列表，按發放日倒序排列（較新�
 
     
     
-    GET /v5/earn/hold-to-earn/yield-history?timeStart=1739952000&timeEnd=1747728000&limit=20 HTTP/1.1  
+    GET /v5/earn/hold-to-earn/product HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
     
     
     
@@ -190,39 +192,57 @@ airdropDailyPnls| array| 收益記錄列表，按發放日倒序排列（較新�
     
     
     {  
-        "nextCursor": "eyJsYXN0SWQiOjEwMDE5MH0=",  
-        "airdropDailyPnls": [  
-            {  
-                "coinName": "USDE",  
-                "yieldCoinName": "USDE",  
-                "effectiveAmount": "10000.00",  
-                "pnl": "0.27397260",  
-                "apy": "10%",  
-                "createdAt": 1747641600  
-            },  
-            {  
-                "coinName": "USDE",  
-                "yieldCoinName": "USDE",  
-                "effectiveAmount": "10000.00",  
-                "pnl": "0.27397260",  
-                "apy": "10%",  
-                "createdAt": 1747555200  
-            }  
-        ]  
-    }  
-    
-
-### 翻頁示例
-
-繼續向後翻頁時，將上一次響應中的 `nextCursor` 原樣傳回 `cursor`：
-    
-    
-    GET /v5/earn/hold-to-earn/yield-history?limit=20&cursor=eyJsYXN0SWQiOjEwMDE5MH0= HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-
-當響應中的 `nextCursor` 為空字符串時，表示已到達尾頁。
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "products": [  
+                {  
+                    "coinName": "USDE",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDE",  
+                            "apy": "0.210604%",  
+                            "personalApy": "0.421208%",  
+                            "multiplier": "2"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.210604%",  
+                    "personalApy": "0.421208%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                },  
+                {  
+                    "coinName": "USDTB",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDTB",  
+                            "apy": "0.029978%",  
+                            "personalApy": "0.029978%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.029978%",  
+                    "personalApy": "0.029978%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
+                },  
+                {  
+                    "coinName": "USD1",  
+                    "yields": [  
+                        {  
+                            "coinName": "WLFI",  
+                            "apy": "10%",  
+                            "personalApy": "10%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Ended",  
+                    "apy": "10%",  
+                    "personalApy": "10%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1779348459085  
+    }

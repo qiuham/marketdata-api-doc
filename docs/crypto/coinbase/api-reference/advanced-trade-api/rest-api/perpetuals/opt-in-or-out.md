@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out
 api_type: REST
-updated_at: 2026-10-05 19:04:10.407343
+updated_at: 2026-10-06 19:06:44.973332
 ---
 
 # Opt In or Out of Multi Asset Collateral
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/intx/multi_asset_collateral`
 
-
-Enable or Disable Multi Asset Collateral for a given Portfolio
+INTX (deprecated)Opt In or Out of Multi Asset CollateralEnable or Disable Multi Asset Collateral for a given PortfolioPOST/api/v3/brokerage/intx/multi_asset_collateralOpt In or Out of Multi Asset Collateral
     
     
     curl --request POST \
@@ -157,42 +156,4 @@ Enable or Disable Multi Asset Collateral for a given Portfolio
       ]
     }
 
-**Retired.** INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026. International derivatives now trade on the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
-
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-portfolio_uuid
-
-string
-
-The portfolio UUID.
-
-multi_asset_collateral_enabled
-
-boolean
-
-Enable or disable Multi Asset Collateral.
-
-#### Response
-
-A successful response.
-
-multi_asset_collateral_enabled
-
-boolean
+**Retired.** INTX perpetuals trading through the Advanced Trade API ended on October 1, 2026. International derivatives now trade on the [Deribit-powered derivatives gateway](/coinbase-app/advanced-trade-apis/guides/derivatives/overview). See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonportfolio_uuidstringThe portfolio UUID.multi_asset_collateral_enabledbooleanEnable or disable Multi Asset Collateral.ResponseA successful response.multi_asset_collateral_enabledboolean

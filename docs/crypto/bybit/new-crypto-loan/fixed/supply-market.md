@@ -2,38 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/supply-market
 api_type: REST
-updated_at: 2026-10-05 18:50:43.119773
+updated_at: 2026-10-06 18:52:07.256678
 ---
 
-# Get Borrowing History
+# Borrow
 
 > Permission: "Spot trade"  
->  UID rate limit: 5 req / second
+>  UID rate limit: 1 req / second
+
+info
+
+  * The loan funds are released to the Funding wallet.
+  * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
+
+
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-flexible/borrow-history`
+POST`/v5/crypto-loan-flexible/borrow`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Loan order ID  
-loanCurrency| false| string| Loan coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+loanCurrency| **true**|  string| Loan coin name  
+loanAmount| **true**|  string| Amount to borrow  
+collateralList| false| array<object>| Collateral coin list, supports putting up to 100 currency in the array  
+> currency| false| string| Currency used to mortgage  
+> amount| false| string| Amount to mortgage  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> borrowTime| long| The timestamp to borrow  
-> initialLoanAmount| string| Loan amount  
-> loanCurrency| string| Loan coin  
-> orderId| string| Loan order ID  
-> status| integer| Loan order status `1`: success; `2`: processing; `3`: fail  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+orderId| string| Loan order ID  
   
 ### Request Example
 
@@ -44,12 +46,29 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-flexible/borrow-history?limit=2 HTTP/1.1  
+    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570519918  
+    X-BAPI-TIMESTAMP: 1752569210041  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 244  
+      
+    {  
+        "loanCurrency": "BTC",  
+        "loanAmount": "0.1",  
+        "collateralList": [  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
+    }  
     
     
     
@@ -59,8 +78,19 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_history_flexible_crypto_loan(  
-        limit="2",  
+    print(session.borrow_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+        loanAmount="0.1",  
+        collateralList=[  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     ))  
     
     
@@ -75,59 +105,45 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "borrowTime": 1752569950643,  
-                    "initialLoanAmount": "0.006",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1364",  
-                    "status": 1  
-                },  
-                {  
-                    "borrowTime": 1752569209643,  
-                    "initialLoanAmount": "0.1",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1363",  
-                    "status": 1  
-                }  
-            ],  
-            "nextPageCursor": "1363"  
+            "orderId": "1363"  
         },  
         "retExtInfo": {},  
-        "time": 1752570519414  
+        "time": 1752569209682  
     }
 
 ---
 
-# 查詢借款歷史
+# 借款
 
 > 權限: "現貨"  
->  頻率: 5次/秒
+>  頻率: 1次/秒
+
+信息
+
+  * 借款發放到資金帳戶
+  * 質押金將從資金帳戶扣減, 因此確保資金帳戶有足額質押幣種
+
+
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-flexible/borrow-history`
+POST`/v5/crypto-loan-flexible/borrow`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 借款單ID  
-loanCurrency| false| string| 借款幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+loanCurrency| **true**|  string| 借款幣種名稱  
+loanAmount| **true**|  string| 借款金額  
+collateralList| false| array<object>| 抵押幣種清單，最多支持放入 100 種幣種  
+> currency| false| string| 用於抵押的幣種  
+> amount| false| string| 抵押金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> borrowTime| long| 借款時間戳  
-> initialLoanAmount| string| 借款金額  
-> loanCurrency| string| 借款幣種  
-> orderId| string| 借款訂單ID  
-> status| integer| 借款訂單狀態 `1`: 成功；`2`: 處理中；`3`: 失敗  
-nextPageCursor| string| 下一頁游標  
+orderId| string| 借款單ID  
   
 ### 請求示例
 
@@ -138,12 +154,29 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-flexible/borrow-history?limit=2 HTTP/1.1  
+    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570519918  
+    X-BAPI-TIMESTAMP: 1752569210041  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 244  
+      
+    {  
+        "loanCurrency": "BTC",  
+        "loanAmount": "0.1",  
+        "collateralList": [  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
+    }  
     
     
     
@@ -153,8 +186,19 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrowing_history_flexible_crypto_loan(  
-        limit="2",  
+    print(session.borrow_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+        loanAmount="0.1",  
+        collateralList=[  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     ))  
     
     
@@ -169,24 +213,8 @@ nextPageCursor| string| 下一頁游標
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "borrowTime": 1752569950643,  
-                    "initialLoanAmount": "0.006",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1364",  
-                    "status": 1  
-                },  
-                {  
-                    "borrowTime": 1752569209643,  
-                    "initialLoanAmount": "0.1",  
-                    "loanCurrency": "BTC",  
-                    "orderId": "1363",  
-                    "status": 1  
-                }  
-            ],  
-            "nextPageCursor": "1363"  
+            "orderId": "1363"  
         },  
         "retExtInfo": {},  
-        "time": 1752570519414  
+        "time": 1752569209682  
     }

@@ -2,35 +2,28 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-10-05 18:51:24.923827
+updated_at: 2026-10-06 18:52:51.999509
 ---
 
-# Get Closed Options Positions
+# Get Closed PnL
 
-Query user's closed options positions, sorted by `closeTime` in descending order.
-
-info
-
-  * Only supports users to query closed options positions in the last 6 months.
-  * Fee and price are displayed with trailing zeroes up to 8 decimal places.
-
-
+Query user's closed profit and loss records
 
 ### HTTP Request
 
-GET`/v5/position/get-closed-positions`
+GET`/v5/position/closed-pnl`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| `option`  
-symbol| false| string| Symbol name  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
+symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
 startTime| false| integer| The start timestamp (ms) 
 
-  * startTime and endTime are not passed, return 1 days by default
-  * Only startTime is passed, return range between startTime and startTime+1 days
-  * Only endTime is passed, return range between endTime-1 days and endTime
+  * startTime and endTime are not passed, return 7 days by default
+  * Only startTime is passed, return range between startTime and startTime+7 days
+  * Only endTime is passed, return range between endTime-7 days and endTime
   * If both are passed, the rule is endTime - startTime <= 7 days
 
   
@@ -42,33 +35,47 @@ cursor| false| string| Cursor. Use the `nextPageCursor` token from the response 
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
 [category](/docs/v5/enum#category)| string| Product type  
 list| array| Object  
 > symbol| string| Symbol name  
+> orderId| string| Order ID  
 > side| string| `Buy`, `Sell`  
-> totalOpenFee| string| Total open fee  
-> deliveryFee| string| Delivery fee  
-> totalCloseFee| string| Total close fee  
 > qty| string| Order qty  
-> closeTime| integer| The closed time (ms)  
-> avgExitPrice| string| Average exit price  
-> deliveryPrice| string| Delivery price  
-> openTime| integer| The opened time (ms)  
+> orderPrice| string| Order price  
+> [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
+> execType| string| Exec type  
+`Trade`, `BustTrade`  
+`SessionSettlePnL`  
+`Settle`, `MovePosition`  
+`ForwardSplitSettle`, `ReverseSplitSettle`  
+> closedSize| string| Closed size  
+> cumEntryValue| string| Cumulated Position value  
 > avgEntryPrice| string| Average entry price  
-> totalPnl| string| Total PnL  
-  
+> cumExitValue| string| Cumulated exit position value  
+> avgExitPrice| string| Average exit price  
+> closedPnl| string| Closed PnL  
+> fillCount| string| The number of fills in a single order  
+> leverage| string| leverage  
+> openFee| string| Open position trading fee  
+> closeFee| string| Close position trading fee  
+> createdTime| string| The created time (ms)  
+> updatedTime| string| The updated time (ms)  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[](/docs/api-explorer/v5/position/close-pnl)
+
 * * *
 
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    GET /v5/position/closed-pnl?category=linear&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -83,10 +90,42 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
+    print(session.get_closed_pnl(  
+        category="linear",  
+        limit=1,  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var closPnlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).build();  
+    client.getClosePnlList(closPnlRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .getClosedPnL({  
+            category: 'linear',  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -96,72 +135,62 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
+            "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "symbol": "ETHPERP",  
+                    "orderType": "Market",  
+                    "leverage": "3",  
+                    "updatedTime": "1672214887236",  
                     "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
-                },  
-                {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
+                    "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",  
+                    "closedPnl": "-47.4065323",  
+                    "avgEntryPrice": "1194.97516667",  
+                    "qty": "3",  
+                    "cumEntryValue": "3584.9255",  
+                    "createdTime": "1672214887231",  
+                    "orderPrice": "1122.95",  
+                    "closedSize": "3",  
+                    "avgExitPrice": "1180.59833333",  
+                    "execType": "Trade",  
+                    "fillCount": "4",  
+                    "cumExitValue": "3541.795"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1749736532193  
+        "time": 1672284129153  
     }
 
 ---
 
-# 查詢期权平倉
+# 查詢平倉盈虧
 
-獲取當前用戶的所有平倉盈虧數據，返回結果按照`closeTime`降序排列.
+獲取當前用戶的所有平倉盈虧數據，返回結果按照`createdTime`降序排列.
 
 信息
 
-  * 支持用户查询最近六个月期权平仓数据
-  * fee和price相關字段保留小数点后8位末尾0不省略
+  * 支持查詢過去730天的平倉盈虧紀錄
 
 
 
 ### HTTP 請求
 
-GET`/v5/position/get-closed-positions`
+GET`/v5/position/closed-pnl`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| `option`  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
 symbol| false| string| 合約名稱  
 startTime| false| integer| 開始時間戳 (毫秒) 
 
-  * startTime 和 endTime都不傳入, 則默認返回最近1天的數據
+  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
   * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+1天的數據
-  * 若只傳endTime，則查詢endTime-1天和endTime的數據
+  * 若只傳startTime，則查詢startTime和startTime+7天的數據
+  * 若只傳endTime，則查詢endTime-7天和endTime的數據
 
   
 endTime| false| integer| 結束時間戳 (毫秒)  
@@ -172,31 +201,43 @@ cursor| false| string| 游標，用於翻頁
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
 [category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
 list| array| Object  
 > symbol| string| 合約名稱  
+> orderId| string| 訂單Id  
 > side| string| 買賣方向 `Buy`, `Side`  
-> totalOpenFee| string| 开仓费用  
-> deliveryFee| string| 交割费用  
-> totalCloseFee| string| 平仓费用  
 > qty| string| 訂單數量  
-> closeTime| integer| 平仓時間 (毫秒)  
+> orderPrice| string| 訂單價格  
+> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. `Market`,`Limit`  
+> execType| string| 執行類型. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`, `MovePosition`, `ForwardSplitSettle`, `ReverseSplitSettle`  
+> closedSize| string| 平倉數量  
+> cumEntryValue| string| 被平倉位的累計入場價值  
+> avgEntryPrice| string| 平均入場價格  
+> cumExitValue| string| 被平倉位的累計出場價值  
 > avgExitPrice| string| 平均出場價格  
-> deliveryPrice| string| 交割價格  
-> openTime| integer| 开仓時間 (毫秒)  
-> avgExitPrice| string| 平均出場價格  
-> totalPnl| string| 被平倉位的盈虧  
-  
+> closedPnl| string| 被平倉位的盈虧  
+> fillCount| string| 成交筆數  
+> leverage| string| 持倉槓桿  
+> openFee| string| 開倉手續費(平攤)  
+> closeFee| string| 平倉手續費(平攤)  
+> createdTime| string| 創建時間 (毫秒)  
+> updatedTime| string| 更新時間 (毫秒)  
+nextPageCursor| string| 游標，用於翻頁  
+[](/docs/zh-TW/api-explorer/v5/position/close-pnl)
+
+* * *
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/position/get-closed-positions?category=option&limit=1 HTTP/1.1  
+    GET /v5/position/closed-pnl?category=linear&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -211,10 +252,42 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_closed_options_positions(  
-        category="option",  
-        limit="1",  
+    print(session.get_closed_pnl(  
+        category="linear",  
+        limit=1,  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var closPnlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).build();  
+    client.getClosePnlList(closPnlRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .getClosedPnL({  
+            category: 'linear',  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -224,39 +297,30 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "1749726002161%3A0%2C1749715220240%3A1",  
-            "category": "option",  
+            "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",  
+            "category": "linear",  
             "list": [  
                 {  
-                    "symbol": "BTC-12JUN25-104019-C-USDT",  
+                    "symbol": "ETHPERP",  
+                    "orderType": "Market",  
+                    "leverage": "3",  
+                    "updatedTime": "1672214887236",  
                     "side": "Sell",  
-                    "totalOpenFee": "0.94506647",  
-                    "deliveryFee": "0.32184533",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749726002161,  
-                    "avgExitPrice": "107281.77405000",  
-                    "deliveryPrice": "107281.77405031",  
-                    "openTime": 1749722990063,  
-                    "avgEntryPrice": "3371.50000000",  
-                    "totalPnl": "0.90760719"  
-                },  
-                {  
-                    "symbol": "BTC-12JUN25-104000-C-USDT",  
-                    "side": "Buy",  
-                    "totalOpenFee": "0.86379999",  
-                    "deliveryFee": "0.32287622",  
-                    "totalCloseFee": "0.00000000",  
-                    "qty": "0.02",  
-                    "closeTime": 1749715220240,  
-                    "avgExitPrice": "107625.40470150",  
-                    "deliveryPrice": "107625.40470159",  
-                    "openTime": 1749710568608,  
-                    "avgEntryPrice": "3946.50000000",  
-                    "totalPnl": "-7.60858218"  
+                    "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",  
+                    "closedPnl": "-47.4065323",  
+                    "avgEntryPrice": "1194.97516667",  
+                    "qty": "3",  
+                    "cumEntryValue": "3584.9255",  
+                    "createdTime": "1672214887231",  
+                    "orderPrice": "1122.95",  
+                    "closedSize": "3",  
+                    "avgExitPrice": "1180.59833333",  
+                    "execType": "Trade",  
+                    "fillCount": "4",  
+                    "cumExitValue": "3541.795"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1749736532193  
+        "time": 1672284129153  
     }

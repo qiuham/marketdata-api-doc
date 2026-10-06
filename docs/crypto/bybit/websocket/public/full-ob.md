@@ -2,54 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/full-ob
 api_type: WebSocket
-updated_at: 2026-10-05 18:53:53.044473
+updated_at: 2026-10-06 18:55:31.472566
 ---
 
-# Kline
+# Insurance Pool
 
-Subscribe to the klines stream.
+Subscribe to get the update of insurance pool balance 
 
-tip
-
-If `confirm`=true, this means that the candle has closed. Otherwise, the candle is still open and updating.
-
-**Available intervals:**  
-
-
-  * `1` `3` `5` `15` `30` (min)
-  * `60` `120` `240` `360` `720` (min)
-  * `D` (day)
-  * `W` (week)
-  * `M` (month)
-
-
-
-**Push frequency:** 1-60s
+Push frequency: **1s**
 
 **Topic:**  
-`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
+USDT contracts: `insurance.USDT`  
+USDC contracts: `insurance.USDC` (**note** : all USDC Perpetuals, USDC Futures have their own shared insurance pools)  
+Inverse contracts: `insurance.inverse`
+
+info
+
+  * Shared insurance pool data is **not** pushed, please refer to Rest API [Get Insurance](/docs/v5/market/insurance) to understand which symbols belong to isolated or shared insurance pools.
+  * No event will be published if the balances of all insurance pools remain unchanged.
+
+
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 topic| string| Topic name  
-type| string| Data type. `snapshot`  
+type| string| Data type. `snapshot`, `delta`  
 ts| number| The timestamp (ms) that the system generates the data  
-data| array| Object  
-> start| number| The start timestamp (ms)  
-> end| number| The end timestamp (ms)  
-> [interval](/docs/v5/enum#interval)| string| Kline interval  
-> open| string| Open price  
-> close| string| Close price  
-> high| string| Highest price  
-> low| string| Lowest price  
-> volume| string| Trade volume  
-> turnover| string| Turnover  
-> confirm| boolean| Whether the tick is ended or not  
-> timestamp| number| The timestamp (ms) of the last matched order in the candle  
+data| Object|   
+> coin| string| Insurance pool coin  
+> symbols| string| Symbol name  
+> balance| string| Balance  
+> updateTime| string| Data updated timestamp (ms)  
   
 ### Subscribe Example
+
+  * JSON
+  * Python
+
+
+    
+    
+    {  
+        "op": "subscribe",  
+        "args": [  
+            "insurance.USDT",  
+            "insurance.USDC"  
+        ]  
+    }  
+    
     
     
     from pybit.unified_trading import WebSocket  
@@ -60,9 +62,8 @@ data| array| Object
     )  
     def handle_message(message):  
         print(message)  
-    ws.kline_stream(  
-        interval=5,  
-        symbol="BTCUSDT",  
+    ws.insurance_pool_stream(  
+        contract_group=["USDT", "USDC"],  
         callback=handle_message  
     )  
     while True:  
@@ -73,73 +74,86 @@ data| array| Object
     
     
     {  
-        "topic": "kline.5.BTCUSDT",  
+        "topic": "insurance.USDT",  
+        "type": "delta",  
+        "ts": 1747722930000,  
         "data": [  
             {  
-                "start": 1672324800000,  
-                "end": 1672325099999,  
-                "interval": "5",  
-                "open": "16649.5",  
-                "close": "16677",  
-                "high": "16677",  
-                "low": "16608",  
-                "volume": "2.081",  
-                "turnover": "34666.4005",  
-                "confirm": false,  
-                "timestamp": 1672324988882  
+                "coin": "USDT",  
+                "symbols": "GRIFFAINUSDT",  
+                "balance": "25614.92972633",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "CGPTUSDT",  
+                "balance": "100000.27064825",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "GOATUSDT",  
+                "balance": "20352.32665441",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "XTERUSDT",  
+                "balance": "19998.81533291",  
+                "updateTime": "1747722930000"  
             }  
-        ],  
-        "ts": 1672324988882,  
-        "type": "snapshot"  
+        ]  
     }
 
 ---
 
-# K線
+# 保險池餘額
 
-訂閱K線推送
+訂閱來獲取保險池的餘額變動
 
-提示
-
-註意如果字段`confirm`為true, 則表明這是這根K線的最後一個tick；否則，這只是一個快照數據，即中間價格
-
-**可用時間粒度:**  
-
-
-  * `1` `3` `5` `15` `30` (分鐘)
-  * `60` `120` `240` `360` `720` (分鐘)
-  * `D` (天)
-  * `W` (週)
-  * `M` (月)
-
-
-
-**推送頻率:** 1-60s
+推送頻率: **1秒**
 
 **Topic:**  
-`kline.{interval}.{symbol}` e.g., kline.30.BTCUSDT
+USDT合約: `insurance.USDT`  
+USDC合約: `insurance.USDC` (**注意** : 目前所有的USDC永續, USDC交割有各自的共享保險池  
+反向合約: `insurance.inverse`
+
+信息
+
+  * 共享保險池的餘額數據不推送, 可以調用[查詢保險基金](/docs/zh-TW/v5/market/insurance)接口獲取到每個合約屬於共享還是獨立保險池
+  * 如果1秒內沒有任何保險池子的餘額發生變化, 將不會有消息下發
+
+
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 topic| string| Topic名  
-type| string| 數據類型. `snapshot`  
+type| string| 數據類型. `snapshot`, `delta`  
 ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| array| Object  
-> start| number| 開始時間戳 (毫秒)  
-> end| number| 結束時間戳 (毫秒)  
-> [interval](/docs/zh-TW/v5/enum#interval)| string| K線粒度  
-> open| string| 開盤價  
-> close| string| 收盤價  
-> high| string| 最高價  
-> low| string| 最低價  
-> volume| string| 交易量  
-> turnover| string| 交易額  
-> confirm| boolean| 是否確認  
-> timestamp| number| 蠟燭中最後一筆淨值時間戳 (毫秒)  
+data| Object|   
+> coin| string| 保險池幣種  
+> symbols| string| 合約名稱  
+> balance| string| 保險基金的幣種餘額  
+> updateTime| string| 餘額更新時間戳  
   
 ### 訂閱示例
+
+  * JSON
+  * Python
+
+
+    
+    
+    {  
+        "op": "subscribe",  
+        "args": [  
+            "insurance.USDT",  
+            "insurance.USDC"  
+        ]  
+    }  
+    
     
     
     from pybit.unified_trading import WebSocket  
@@ -150,35 +164,45 @@ data| array| Object
     )  
     def handle_message(message):  
         print(message)  
-    ws.kline_stream(  
-        interval=5,  
-        symbol="BTCUSDT",  
+    ws.insurance_pool_stream(  
+        contract_group=["USDT", "USDC"],  
         callback=handle_message  
     )  
     while True:  
         sleep(1)  
     
 
-### 響應示例
+### 消息示例
     
     
     {  
-        "topic": "kline.5.BTCUSDT",  
+        "topic": "insurance.USDT",  
+        "type": "delta",  
+        "ts": 1747722930000,  
         "data": [  
             {  
-                "start": 1672324800000,  
-                "end": 1672325099999,  
-                "interval": "5",  
-                "open": "16649.5",  
-                "close": "16677",  
-                "high": "16677",  
-                "low": "16608",  
-                "volume": "2.081",  
-                "turnover": "34666.4005",  
-                "confirm": false,  
-                "timestamp": 1672324988882  
+                "coin": "USDT",  
+                "symbols": "GRIFFAINUSDT",  
+                "balance": "25614.92972633",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "CGPTUSDT",  
+                "balance": "100000.27064825",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "GOATUSDT",  
+                "balance": "20352.32665441",  
+                "updateTime": "1747722930000"  
+            },  
+            {  
+                "coin": "USDT",  
+                "symbols": "XTERUSDT",  
+                "balance": "19998.81533291",  
+                "updateTime": "1747722930000"  
             }  
-        ],  
-        "ts": 1672324988882,  
-        "type": "snapshot"  
+        ]  
     }

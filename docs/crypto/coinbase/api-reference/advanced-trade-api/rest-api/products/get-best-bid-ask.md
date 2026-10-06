@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask
 api_type: Market Data
-updated_at: 2026-10-05 19:04:10.683662
+updated_at: 2026-10-06 19:06:45.171443
 ---
 
 # Get Best Bid/Ask
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/best_bid_ask`
 
-
-Get the best bid/ask for all products. A subset of all products can be returned instead by using the product_ids input.
+ProductsGet Best Bid/AskGet the best bid/ask for all products. A subset of all products can be returned instead by using the product_ids input.GET/api/v3/brokerage/best_bid_askGet Best Bid/Ask
     
     
     curl --request GET \
@@ -143,34 +142,4 @@ Get the best bid/ask for all products. A subset of all products can be returned 
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Query Parameters
-
-product_ids
-
-string[]
-
-The list of trading pairs (e.g. 'BTC-USD').
-
-#### Response
-
-A successful response.
-
-pricebooks
-
-object[]
-
-required
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersproduct_idsstring[]The list of trading pairs (e.g. 'BTC-USD').ResponseA successful response.pricebooksobject[]requiredShow child attributes

@@ -2,40 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/cancel-all-rfq
 api_type: Trading
-updated_at: 2026-10-05 18:51:55.372392
+updated_at: 2026-10-06 18:53:24.694170
 ---
 
-# Cancel Quote
+# Cancel All RFQs
 
-Cancel a quote. **Up to 50 requests per second**
+Cancel all active RFQs. **Up to 50 requests per second**
 
 info
 
-  * You must pass one of the following params: quoteId, rfqId, and quoteLinkId.
-  * If quoteId, rfqId, and quoteLinkId are all passed, they are read in this priority: quoteId > quoteLinkId > rfqId.
+  * Inquirer cancels order: Cancel the inquiry, all its corresponding quotes becoming invalid
+  * Quoter cancels the order: The inquiry is not affected, but the quote becomes invalid
 
 
 
 ### HTTP Request
 
-POST`/v5/rfq/cancel-quote`
+POST`/v5/rfq/cancel-all-rfq`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-quoteId|  _false_|  string| Quote ID  
-rfqId|  _false_|  string| Inquiry ID  
-quoteLinkId|  _false_|  string| Custom quote ID  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object|   
-rfqId| string| Inquiry ID  
-quoteId| string| Quote ID  
-quoteLinkId| string| Custom quote ID  
+result| array of objects|   
+> rfqId| string| Inquiry ID  
+> rfqLinkId| string| Custom inquiry ID  
+> code| string| Whether or not the cancellations were a success, `0`: success  
+> msg| string| Cancellation failure reason  
   
 ### Request Example
 
@@ -45,7 +42,7 @@ quoteLinkId| string| Custom quote ID
 
     
     
-    POST /v5/rfq/cancel-quote HTTP/1.1  
+    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -53,10 +50,6 @@ quoteLinkId| string| Custom quote ID
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
-      
-    {  
-        "quoteId":"1754364447601610516653123084412812"    
-    }  
     
     
     
@@ -66,9 +59,7 @@ quoteLinkId| string| Custom quote ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_quote(  
-        quoteId="1754364447601610516653123084412812"  
-    ))  
+    print(session.cancel_all_quotes())  
     
 
 ### Response Example
@@ -77,53 +68,53 @@ quoteLinkId| string| Custom quote ID
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "rfqId": "175740723913299909861293671607573",  
-            "quoteId": "1757407443083427576602342578477746",  
-            "quoteLinkId": ""  
-        },  
+        "result": [  
+            {  
+                "rfqId": "175766967076315412093641573648082",  
+                "rfqLinkId": "",  
+                "code": 0,  
+                "msg": ""  
+            }  
+        ],  
         "retExtInfo": {},  
-        "time": 1757407457635  
+        "time": 1757669676581  
     }
 
 ---
 
-# 取消報價單
+# 取消所有詢價單
 
-取消報價單。**每秒最多 50 次請求**
+取消所有您的詢價單。**每秒最多 50 次請求**
 
 信息
 
-  * 至少需傳遞 quoteId、rfqId 或 quoteLinkId。
-  * 若同時傳遞 quoteId、rfqId 和 quoteLinkId，則優先以 quoteId 為準，優先順序判斷為：quoteId > quoteLinkId > rfqId。
+  * 詢價方取消訂單：取消詢價單，所有報價均失效。
+  * 報價方取消訂單：詢價單不受影響，報價單失效。
 
 
 
 ### HTTP 請求
 
-POST`/v5/rfq/cancel-quote`
+POST`/v5/rfq/cancel-all-rfq`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-quoteId| **false**|  string| 報價單 ID  
-rfqId| **false**|  string| 詢價單 ID  
-quoteLinkId| **false**|  string| 報價單自定義 ID  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-rfqId| string| 詢價單 ID  
-quoteId| string| 報價單 ID  
-quoteLinkId| string| 報價單自定義 ID  
+result| array of objects| 詢價單資料  
+> rfqId| string| 詢價單 ID  
+> rfqLinkId| string| 詢價單自定義 ID  
+> code| string| 取消成功或失敗，0 表示取消成功  
+> msg| string| 取消失敗原因  
   
 ### 請求示例
     
     
-    POST /v5/rfq/cancel-quote HTTP/1.1  
+    POST /v5/rfq/cancel-all-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -131,10 +122,6 @@ quoteLinkId| string| 報價單自定義 ID
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 115  
-      
-    {  
-        "quoteId":"1754364447601610516653123084412812"    
-    }  
     
 
 ### 響應示例
@@ -143,11 +130,14 @@ quoteLinkId| string| 報價單自定義 ID
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "rfqId": "175740723913299909861293671607573",  
-            "quoteId": "1757407443083427576602342578477746",  
-            "quoteLinkId": ""  
-        },  
+        "result": [  
+            {  
+                "rfqId": "175766967076315412093641573648082",  
+                "rfqLinkId": "",  
+                "code": 0,  
+                "msg": ""  
+            }  
+        ],  
         "retExtInfo": {},  
-        "time": 1757407457635  
+        "time": 1757669676581  
     }

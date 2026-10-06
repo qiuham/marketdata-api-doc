@@ -2,23 +2,15 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/strategy
 api_type: WebSocket
-updated_at: 2026-10-05 18:53:47.819672
+updated_at: 2026-10-06 18:55:25.841861
 ---
 
-# Wallet
+# Strategy
 
-Subscribe to the wallet stream to see changes to your wallet in **real-time**.
+Subscribe to the strategy stream to get the strategy (twap / iceberg / ChaseOrder) feeds.
 
-info
+**Topic:** `strategy`  
 
-  * There is no snapshot event given at the time when the subscription is successful
-  * The unrealised PnL change does not trigger an event
-  * Under the new logic of UTA manual borrow, `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
-Old `walletBalance` = New `walletBalance` \- `spotBorrow`
-
-
-
-**Topic:** `wallet`
 
 ### Response Parameters
 
@@ -28,69 +20,44 @@ id| string| Message ID
 topic| string| Topic name  
 creationTime| number| Data created timestamp (ms)  
 data| array| Object  
-> accountType| string| Account type `UNIFIED`  
-> accountIMRate| string| Account IM rate 
-
-  * You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning
-  * All account wide fields are **not** applicable to isolated margin
-
-  
-> accountMMRate| string| Account MM rate  
-> totalEquity| string| Account total equity (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| Account margin balance (USD): totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| Account available balance (USD), 
-
-  * Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.
-  * Porfolio Margin: total Equity - Haircut - totalInitialMargin 
-
-  
-> totalPerpUPL| string| Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| Account initial margin (USD): ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| You can **ignore** this field, and refer to `accountIMRate`, which has the same calculation  
-> accountMMRateByMp| string| You can **ignore** this field, and refer to `accountMMRate`, which has the same calculation  
-> totalInitialMarginByMp| string| You can **ignore** this field, and refer to `totalInitialMargin`, which has the same calculation  
-> totalMaintenanceMarginByMp| string| You can **ignore** this field, and refer to `totalMaintenanceMargin`, which has the same calculation  
-> accountLTV| string| **Deprecated** field  
-> coin| array| Object  
->> coin| string| Coin name, such as BTC, ETH, USDT, USDC  
->> equity| string| Equity of coin. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| USD value of coin. If this coin cannot be collateral, then it is 0  
->> walletBalance| string| Wallet balance of coin  
->> locked| string| Locked balance due to the Spot open order  
->> spotHedgingQty| string| The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default  
->> borrowAmount| string| Borrow amount of coin = spot liabilities + derivatives liabilities  
->> accruedInterest| string| Accrued interest  
->> totalOrderIM| string| Pre-occupied margin for order. For portfolio margin mode, it returns ""  
->> totalPositionIM| string| Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns ""  
->> totalPositionMM| string| Sum of maintenance margin for all positions. For portfolio margin mode, it returns ""  
->> unrealisedPnl| string| Unrealised P&L  
->> cumRealisedPnl| string| Cumulative Realised P&L  
->> bonus| string| Bonus  
->> collateralSwitch| boolean| Whether it can be used as a margin collateral currency (platform) 
-
-  * When marginCollateral=false, then collateralSwitch is meaningless
-
-  
->> marginCollateral| boolean| Whether the collateral is turned on by user (user) 
-
-  * When marginCollateral=true, then collateralSwitch is meaningful
-
-  
->> colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
->> spotBorrow| string| Borrow amount by spot margin trade and manual borrow amount(does not include borrow amount by spot margin active order). `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **Deprecated** since there is no Spot wallet any more  
->> availableToBorrow| string| **Deprecated** field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](/docs/v5/account/collateral-info)  
->> availableToWithdraw| string| **Deprecated** for `accountType=UNIFIED` from 9 Jan, 2025 
-
-  * Transferable balance: you can use [Get Transferable Amount (Unified)](/docs/v5/account/unified-trans-amnt) or [Get All Coins Balance](/docs/v5/asset/balance/all-balance) instead
-  * Derivatives available balance:   
-**isolated margin** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**cross & portfolio margin**: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price
-  * Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](/docs/v5/order/spot-borrow-quota)
-
-  
+> strategyId| string| Strategy ID  
+> strategyType| string| Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov`  
+> category| string| Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`  
+> symbol| string| Symbol name  
+> size| string| Total strategy quantity  
+> side| string| `Buy`, `Sell`  
+> duration| integer| Execution duration in seconds. TWAP strategy only  
+> status| integer| Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: not yet triggered  
+> terminateType| integer| Termination type. `0`: not terminated, `1`: user stopped, `2`: completed normally, `3`: insufficient balance. Refer to terminateType enum  
+> terminateRemark| string| Termination reason description  
+> executedDuration| integer| Elapsed execution duration  
+> executedSize| string| Executed quantity  
+> executedAvgPrice| string| Average execution price  
+> executedStartTimeE3| integer| Execution start time (ms)  
+> executedEndTimeE3| integer| Execution end time (ms). `0` means not yet ended  
+> createdTimeE3| integer| Strategy creation time (ms)  
+> updatedTimeE3| integer| Strategy last updated time (ms)  
+> isRandom| boolean| Whether to randomize order quantity. TWAP strategy only  
+> reduceOnly| boolean| Reduce-only  
+> limitPrice| string| Fixed limit price  
+> triggerCount| integer| Trigger count (number of times strategy executed)  
+> tradingCount| integer| Trading count (number of orders placed)  
+> chaseDistance| string| Chase distance (absolute value). Chase / Iceberg strategy  
+> ChasePercentE4| integer| Chase percentage in basis points. e.g. `100` = 1%. Chase / Iceberg strategy  
+> maxChasePrice| string| Max chase price protection. Chase / Iceberg strategy  
+> chaseOrderPrice| string| Current chase order price. Chase strategy only  
+> strategyPrefer| string| Strategy preference. `limit`: fixed price, `priceSpeedBalance`: balanced, `fastestExecution`: fastest execution, `quickExecution`: quick execution  
+> interval| integer| Order interval in seconds. TWAP strategy only  
+> leverageType| integer| Leverage type. `0`: normal, `1`: margin (spot only)  
+> postOnly| integer| Post-only. `0`: non-post-only, `1`: post-only. Iceberg strategy only  
+> triggerPrice| string| Trigger price. Strategy starts executing when this price is reached  
+> isTriggered| boolean| Whether the strategy has been triggered  
+> strategyTp| string| Strategy take-profit price  
+> strategySl| string| Strategy stop-loss price  
+> orderType| string| Order type. `1`: market order, `2`: limit order  
+> orderPriceOffset| string| Limit order price offset percentage  
+> positionValue| string| Total strategy value. Returned for value-based orders, otherwise empty string  
+> filledPositionValue| string| Filled position value  
   
 ### Subscribe Example
     
@@ -98,91 +65,73 @@ data| array| Object
     {  
         "op": "subscribe",  
         "args": [  
-            "wallet"  
+            "strategy"  
         ]  
     }  
     
     
     
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.wallet_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
+      
     
 
 ### Stream Example
     
     
     {  
-        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
-        "topic": "wallet",  
-        "creationTime": 1700034722104,  
+        "id": "62f79ebea4794f767cad0bd937f7ad01",  
+        "topic": "strategy",  
+        "creationTime": 1776734985598,  
         "data": [  
             {  
-                "accountIMRate": "0",  
-                "accountIMRateByMp": "0",  
-                "accountMMRate": "0",  
-                "accountMMRateByMp": "0",  
-                "totalEquity": "10262.91335023",  
-                "totalWalletBalance": "9684.46297164",  
-                "totalMarginBalance": "9684.46297164",  
-                "totalAvailableBalance": "9556.6056555",  
-                "totalPerpUPL": "0",  
-                "totalInitialMargin": "0",  
-                "totalInitialMarginByMp": "0",  
-                "totalMaintenanceMargin": "0",  
-                "totalMaintenanceMarginByMp": "0",  
-                "coin": [  
-                    {  
-                        "coin": "BTC",  
-                        "equity": "0.00102964",  
-                        "usdValue": "36.70759517",  
-                        "walletBalance": "0.00102964",  
-                        "availableToWithdraw": "0.00102964",  
-                        "availableToBorrow": "",  
-                        "borrowAmount": "0",  
-                        "accruedInterest": "0",  
-                        "totalOrderIM": "",  
-                        "totalPositionIM": "",  
-                        "totalPositionMM": "",  
-                        "unrealisedPnl": "0",  
-                        "cumRealisedPnl": "-0.00000973",  
-                        "bonus": "0",  
-                        "collateralSwitch": true,  
-                        "marginCollateral": true,  
-                        "locked": "0",  
-                        "spotHedgingQty": "0.01592413",  
-                        "spotBorrow": "0"  
-                    }  
-                ],  
-                "accountLTV": "0",  
-                "accountType": "UNIFIED"  
+                "strategyId": "cf7303ae-29c0-480a-8f3d-eaa9330054bc",  
+                "strategyType": "iceberg",  
+                "category": "UTA_USDT",  
+                "symbol": "BTCUSDT",  
+                "size": "0.36",  
+                "side": "Buy",  
+                "duration": 0,  
+                "status": 3,  
+                "terminateType": 2,  
+                "terminateRemark": "RunningStop",  
+                "executedDuration": 268,  
+                "executedSize": "0.36",  
+                "executedAvgPrice": "134301.53",  
+                "executedStartTimeE3": 1776734716717,  
+                "executedEndTimeE3": 1776734985592,  
+                "createdTimeE3": 1776734716717,  
+                "updatedTimeE3": 1776734985592,  
+                "isRandom": false,  
+                "reduceOnly": false,  
+                "limitPrice": "",  
+                "triggerCount": 0,  
+                "tradingCount": 0,  
+                "chaseDistance": "0",  
+                "ChasePercentE4": 0,  
+                "maxChasePrice": "198000",  
+                "chaseOrderPrice": "135682.4",  
+                "strategyPrefer": "quickExecution",  
+                "interval": 30,  
+                "leverageType": 0,  
+                "postOnly": 0,  
+                "triggerPrice": "",  
+                "isTriggered": false,  
+                "strategyTp": "",  
+                "strategySl": "",  
+                "orderType": "UNKNOWN",  
+                "orderPriceOffset": "",  
+                "positionValue": "",  
+                "filledPositionValue": ""  
             }  
         ]  
     }
 
 ---
 
-# 錢包
+# 策略
 
-訂閱錢包數據推送
+訂閱策略推送，以獲取策略（TWAP / Iceberg / ChaseOrder）的即時數據更新。
 
-**Topic:** `wallet`
-
-信息
-
-  * 在訂閱成功後不會立馬推送快照數據, 只有當餘額發生變化時, 才會觸發推送
-  * 浮動盈虧的變化不會觸發推送
-
+**Topic:** `strategy`  
 
 
 ### 響應參數
@@ -192,70 +141,45 @@ data| array| Object
 id| string| 消息id  
 topic| string| Topic名  
 creationTime| number| 消息數據創建時間  
-data| array| Object  
-> accountType| string| 帳戶類型 `UNIFIED`  
-> accountIMRate| string| 帳戶初始保證金率 
-
-  * 您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式
-  * 下面所有帳戶維度的字段都不適用於逐倉模式
-
-  
-> accountMMRate| string| 帳戶維持保證金率  
-> totalEquity| string| 總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| 賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| 賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| 賬戶維度換算成usd的可用餘額: 
-
-  * 全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.
-  * 組合保證金: total Equity - Haircut - totalInitialMargin 
-
-  
-> totalPerpUPL| string| 賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| 賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| 賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| 可**忽略** , 可以使用`accountIMRate`, 算法和值保持一致  
-> accountMMRateByMp| string| 可**忽略** , 可以使用`accountMMRate`, 算法和值保持一致  
-> totalInitialMarginByMp| string| 可**忽略** , 可以使用`totalInitialMargin`, 算法和值保持一致  
-> totalMaintenanceMarginByMp| string| 可**忽略** , 可以使用`totalMaintenanceMargin`, 算法和值保持一致  
-> accountLTV| string| **廢棄** 字段  
-> coin| array| Object. 幣種列表  
->> coin| string| 幣種名稱，例如 BTC, ETH, USDT, USDC  
->> equity| string| 當前幣種的資產淨值: Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| 當前幣種折算成 usd 的價值, 如果該幣種不能作為保證金的抵押品, 則該數值為0  
->> walletBalance| string| 當前幣種的錢包餘額 = 現貨負債 + 合約浮虧導致借幣產生的借幣負債  
->> locked| string| 現貨掛單凍結金額  
->> spotHedgingQty| string| 用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0  
->> borrowAmount| string| 當前幣種的已用借貸額度  
->> accruedInterest| string| 當前幣種的預計要在下一個利息週期收取的利息金額  
->> totalOrderIM| string| 以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串  
->> totalPositionIM| string| 以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費. 組合保證金模式下，該字段返回空字符串  
->> totalPositionMM| string| 以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串  
->> unrealisedPnl| string| 以當前幣種結算的所有倉位的未結盈虧之和  
->> cumRealisedPnl| string| 以當前幣種結算的所有倉位的累計已結盈虧之和  
->> bonus| string| 體驗金  
->> marginCollateral| boolean| 是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 
-
-  * 當marginCollateral=false時, 則collateralSwitch無意義
-
-  
->> collateralSwitch| boolean| 用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 
-
-  * 僅當marginCollateral=true時, 才能主動選擇開關抵押
-
-  
->> colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
->> spotBorrow| string| 現貨槓桿交易借入金額以及手工借貸金額（不包含現貨槓桿活躍訂單借入金額）。現貨負債對應的`spotBorrow`, 請詳見[公告](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **廢棄** , 不再有現貨錢包  
->> availableToWithdraw| string| 該字段從2025年1月9日起已經**廢棄**
-
-  * 可劃轉餘額: 可以使用[查詢可劃轉餘額(统一账户)](/docs/zh-TW/v5/websocket/v5/account/unified-trans-amnt) 或 [查詢賬戶所有幣種余額](/docs/zh-TW/v5/websocket/v5/asset/balance/all-balance)
-  * 合約可用餘額:   
-**逐倉** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**全倉/組合保證金** : 使用字段`totalAvailableBalance`(USD), 但需要通過index price来轉換成對應幣種的可用餘額
-  * 現貨(槓桿)可用餘額: 可以使用[查詢用戶可用額度 (現貨)](/docs/zh-TW/v5/websocket/v5/order/spot-borrow-quota)
-
-  
->> availableToBorrow| string| **廢棄** , 由於母子共享借貸限額, 總是返回`""`. 請通過[查詢抵押品信息](/docs/zh-TW/v5/websocket/v5/account/collateral-info)接口查詢`availableToBorrow`  
+data| array| 物件  
+> strategyId| string| 策略 ID  
+> strategyType| string| 策略類型。`twap`、`chaseOrder`、`iceberg`、`pov`  
+> category| string| 產品類型。`UTA_USDT`、`UTA_USDC`、`UTA_USDC_FUTURE`、`UTA_SPOT`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`  
+> symbol| string| 交易對名稱  
+> size| string| 總下單數量  
+> side| string| `Buy`、`Sell`  
+> duration| integer| 計劃總執行時間（秒）。 _僅 TWAP_  
+> status| integer| 策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交，`5`：已暫停，`6`：待觸發  
+> terminateType| integer| 終止原因代碼。`0`：未知，`1`：使用者停止，`2`：正常完成，`3`：餘額不足。詳見 terminateType 枚舉  
+> terminateRemark| string| 終止原因說明  
+> executedDuration| integer| 實際已執行時間（秒）  
+> executedSize| string| 已成交數量  
+> executedAvgPrice| string| 平均成交價格  
+> executedStartTimeE3| integer| 執行開始時間（毫秒）  
+> executedEndTimeE3| integer| 執行結束時間（毫秒）。`0` 表示尚未結束  
+> createdTimeE3| integer| 策略創建時間（毫秒）  
+> updatedTimeE3| integer| 策略最後更新時間（毫秒）  
+> isRandom| boolean| 是否啟用子訂單數量隨機化。 _僅 TWAP_  
+> reduceOnly| boolean| 是否為只減倉訂單  
+> limitPrice| string| 固定限價。訂單不會在此價格以外掛出  
+> triggerCount| integer| 觸發嘗試次數  
+> tradingCount| integer| 實際下單筆數  
+> chaseDistance| string| 追蹤價格距離（絕對值）。 _Chase / Iceberg_  
+> ChasePercentE4| integer| 追蹤價格偏移（基點，1/10000）。例如 `100` = 1%。 _Chase / Iceberg_  
+> maxChasePrice| string| 最大追蹤價格保護。 _Chase / Iceberg_  
+> chaseOrderPrice| string| 當前追蹤委託價格（實時）。 _僅 Chase_  
+> strategyPrefer| string| 執行偏好。`limit`：固定價格，`priceSpeedBalance`：均衡，`fastestExecution`：最快成交，`quickExecution`：快速成交  
+> interval| integer| 子訂單掛出間隔（秒）。 _僅 TWAP_  
+> leverageType| integer| 槓桿類型。`0`：普通，`1`：借貸（僅現貨）  
+> postOnly| integer| 掛單模式。`0`：允許吃單，`1`：僅掛單。 _僅 Iceberg_  
+> triggerPrice| string| 觸發價格。達到此價格後策略開始執行  
+> isTriggered| boolean| 策略是否已被觸發  
+> strategyTp| string| 策略止盈價格  
+> strategySl| string| 策略止損價格  
+> orderType| string| 訂單類型。`1`：市價單，`2`：限價單  
+> orderPriceOffset| string| 限價單價格偏移百分比  
+> positionValue| string| 策略總價值。按價值下單時返回，否則為空字串  
+> filledPositionValue| string| 已成交持倉價值  
   
 ### 訂閱示例
     
@@ -263,73 +187,62 @@ data| array| Object
     {  
         "op": "subscribe",  
         "args": [  
-            "wallet"  
+            "strategy"  
         ]  
     }  
     
     
     
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="private",  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.wallet_stream(callback=handle_message)  
-    while True:  
-        sleep(1)  
+      
     
 
 ### 推送示例
     
     
     {  
-        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
-        "topic": "wallet",  
-        "creationTime": 1700034722104,  
+        "id": "62f79ebea4794f767cad0bd937f7ad01",  
+        "topic": "strategy",  
+        "creationTime": 1776734985598,  
         "data": [  
             {  
-                "accountIMRate": "0",  
-                "accountIMRateByMp": "0",  
-                "accountMMRate": "0",  
-                "accountMMRateByMp": "0",  
-                "totalEquity": "10262.91335023",  
-                "totalWalletBalance": "9684.46297164",  
-                "totalMarginBalance": "9684.46297164",  
-                "totalAvailableBalance": "9556.6056555",  
-                "totalPerpUPL": "0",  
-                "totalInitialMargin": "0",  
-                "totalInitialMarginByMp": "0",  
-                "totalMaintenanceMargin": "0",  
-                "totalMaintenanceMarginByMp": "0",  
-                "coin": [  
-                    {  
-                        "coin": "BTC",  
-                        "equity": "0.00102964",  
-                        "usdValue": "36.70759517",  
-                        "walletBalance": "0.00102964",  
-                        "availableToWithdraw": "0.00102964",  
-                        "availableToBorrow": "",  
-                        "borrowAmount": "0",  
-                        "accruedInterest": "0",  
-                        "totalOrderIM": "",  
-                        "totalPositionIM": "",  
-                        "totalPositionMM": "",  
-                        "unrealisedPnl": "0",  
-                        "cumRealisedPnl": "-0.00000973",  
-                        "bonus": "0",  
-                        "collateralSwitch": true,  
-                        "marginCollateral": true,  
-                        "locked": "0",  
-                        "spotHedgingQty": "0.01592413"  
-                    }  
-                ],  
-                "accountLTV": "0",  
-                "accountType": "UNIFIED"  
+                "strategyId": "cf7303ae-29c0-480a-8f3d-eaa9330054bc",  
+                "strategyType": "iceberg",  
+                "category": "UTA_USDT",  
+                "symbol": "BTCUSDT",  
+                "size": "0.36",  
+                "side": "Buy",  
+                "duration": 0,  
+                "status": 3,  
+                "terminateType": 2,  
+                "terminateRemark": "RunningStop",  
+                "executedDuration": 268,  
+                "executedSize": "0.36",  
+                "executedAvgPrice": "134301.53",  
+                "executedStartTimeE3": 1776734716717,  
+                "executedEndTimeE3": 1776734985592,  
+                "createdTimeE3": 1776734716717,  
+                "updatedTimeE3": 1776734985592,  
+                "isRandom": false,  
+                "reduceOnly": false,  
+                "limitPrice": "",  
+                "triggerCount": 0,  
+                "tradingCount": 0,  
+                "chaseDistance": "0",  
+                "ChasePercentE4": 0,  
+                "maxChasePrice": "198000",  
+                "chaseOrderPrice": "135682.4",  
+                "strategyPrefer": "quickExecution",  
+                "interval": 30,  
+                "leverageType": 0,  
+                "postOnly": 0,  
+                "triggerPrice": "",  
+                "isTriggered": false,  
+                "strategyTp": "",  
+                "strategySl": "",  
+                "orderType": "UNKNOWN",  
+                "orderPriceOffset": "",  
+                "positionValue": "",  
+                "filledPositionValue": ""  
             }  
         ]  
     }

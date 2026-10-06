@@ -2,67 +2,87 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/order
 api_type: REST
-updated_at: 2026-10-05 18:49:35.977824
+updated_at: 2026-10-06 18:50:57.036435
 ---
 
-# Get Order List
+# Get Launchpool User Activity Log
+
+Query the authenticated user's Launchpool staking operation records (stake-in, redeem, interest, etc.).
 
 info
 
-  * Pass `orderId` or `orderLinkId` alone to perform an exact lookup; other filters are ignored.
-  * For paginated listing: `startTime` defaults to 7 days ago, `endTime` defaults to now. The earliest accessible time is 180 days ago.
-  * **Rate Limit:** 10 req/s (UID)
+  * Authentication is required
+  * `startTime` and `endTime` must be provided **together** (both or neither)
+  * All filter fields are optional; omitting all fields returns all records
 
 
 
 ### HTTP Request
 
-GET`/v5/earn/rwa/order`
+POST`/v5/spot-x/launchpool/user/activity-log`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| System order ID for exact lookup (highest priority)  
-orderLinkId| false| string| User-defined order ID for exact lookup (used when `orderId` is empty)  
-orderType| false| string| Order type filter: `Stake`, `Redeem`  
-productId| false| integer| Product ID filter  
-startTime| false| integer| Start timestamp (Unix seconds). Default: 7 days ago; earliest: 180 days ago  
-endTime| false| integer| End timestamp (Unix seconds). Default: now  
-limit| false| integer| Number of records per page. Default: `20`, max: `50`  
-cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
+stakeCoin| false| string| Filter by stake coin symbol, e.g. `USDT`  
+type| false| integer| Filter by operation type. `0`: PLEDGE (manual stake-in); `1`: REDEEM (manual redeem); `2`: INTEREST (reward credit); `3`: AUTO_REDEEM (auto principal return); `4`: LOAN_PLEDGE (leveraged stake-in); `5`: LOAN_REDEEM (manual leveraged redeem); `6`: LOAN_AUTO_REDEEM (auto leveraged maturity redemption); `7`: LOAN_RISKRATE_AUTO_REDEEM (leveraged liquidation); `8`: RISK_USER_AUTO_REDEEM (risk-control forced redeem, non-leveraged); `9`: LOAN_RISK_USER_AUTO_REDEEM (risk-control forced redeem, leveraged); `10`: EARN_REWARD (earn product reward credit)  
+status| false| integer| Filter by record status. `0`: Pending; `1`: Success; `2`: Failed  
+startTime| false| string| Query start time, 13-digit Unix timestamp in milliseconds. Must be used together with `endTime`  
+endTime| false| string| Query end time, 13-digit Unix timestamp in milliseconds. Must be used together with `startTime`  
+pageSize| false| integer| Number of records per page. Default: `10`. Max: `10`  
+current| false| integer| Page number (1-based). Default: `1`. Max: `100`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Order list  
-> orderId| string| System order ID  
-> orderLinkId| string| User-defined idempotency key  
-> orderType| string| Order type: `Stake`, `Redeem`  
-> productId| integer| Product ID  
-> coin| string| Settlement coin  
-> stakeAmount| string| Stake amount (only present for Stake orders)  
-> redeemShares| string| Redeem share quantity (only present for Redeem orders)  
-> status| string| Order status: `Processing`, `Success`, `Failed`  
-> accountType| string| Source/destination account: `FUND`, `UNIFIED`  
-> createdTime| integer| Creation timestamp (Unix seconds)  
-> updatedTime| integer| Last update timestamp (Unix seconds)  
-> settledShares| string| Final confirmed share quantity (only present for successful Stake orders)  
-> settledAmount| string| Final settled amount (only present for successful Redeem orders)  
-nextPageCursor| string| Cursor for the next page; empty string indicates the last page  
+list| array| Operation records for the current page  
+> stakeCoin| string| The coin that was staked or redeemed  
+> rewardCoin| string| The reward coin associated with this operation  
+> amount| string| Operation amount  
+> type| integer| Operation type code. See request `type` field for full mapping  
+> status| integer| Record status. `0`: Pending; `1`: Success; `2`: Failed  
+> createdTime| string| Record creation time, Unix timestamp in milliseconds  
+> orderId| string| Unique order/operation identifier  
+total| integer| Total number of records matching the filter  
+pageSize| integer| Page size used for this response  
+current| integer| Current page number  
   
 * * *
 
 ### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/earn/rwa/order?orderType=Stake&limit=20 HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1710691200000  
+    X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "type": 0,  
+        "status": 1,  
+        "pageSize": 10,  
+        "current": 1  
+    }  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### Response Example
@@ -70,115 +90,131 @@ nextPageCursor| string| Cursor for the next page; empty string indicates the las
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
             "list": [  
                 {  
-                    "orderId": "550e8400-e29b-41d4-a716-446655440000",  
-                    "orderLinkId": "my-stake-001",  
-                    "orderType": "Stake",  
-                    "productId": 1001,  
-                    "coin": "USDC",  
-                    "stakeAmount": "100",  
-                    "status": "Success",  
-                    "accountType": "FUND",  
-                    "createdTime": 1710691200,  
-                    "updatedTime": 1710694800,  
-                    "settledShares": "97.560975"  
+                    "stakeCoin": "USDT",  
+                    "rewardCoin": "BTC",  
+                    "amount": "1000",  
+                    "type": 0,  
+                    "status": 1,  
+                    "createdTime": "1704067200000",  
+                    "orderId": "ORDER_123456"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
+            "total": 25,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
-        "time": 1710691200000  
+        "time": 1705000000000  
     }
 
 ---
 
-# 獲取訂單列表
+# 查詢 Launchpool 用戶操作記錄
+
+查詢當前用戶的 Launchpool 質押操作記錄（質押、贖回、利息等）。
 
 信息
 
-  * 單獨傳入 `orderId` 或 `orderLinkId` 可進行精確查詢，其他篩選條件將被忽略。
-  * 分頁列表查詢：`startTime` 默認為 7 天前，`endTime` 默認為當前時間；最早可查詢 180 天前的數據。
-  * **頻率限制：** 10 次/秒（UID）
+  * 需要鑒權
+  * `startTime` 和 `endTime` 必須同時傳入（要麼都傳，要麼都不傳）
+  * 所有篩選字段均為可選；不傳任何字段時返回全部記錄
 
 
 
 ### HTTP 請求
 
-GET`/v5/earn/rwa/order`
+POST`/v5/spot-x/launchpool/user/activity-log`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 系統訂單 ID，用於精確查詢（優先級最高）  
-orderLinkId| false| string| 用戶自定義訂單 ID，用於精確查詢（`orderId` 為空時生效）  
-orderType| false| string| 訂單類型篩選：`Stake`、`Redeem`  
-productId| false| integer| 產品 ID 篩選  
-startTime| false| integer| 起始時間戳（Unix 秒）。默認：7 天前；最早：180 天前  
-endTime| false| integer| 結束時間戳（Unix 秒）。默認：當前時間  
-limit| false| integer| 每頁記錄數。默認：`20`，最大：`50`  
-cursor| false| string| 分頁遊標。使用上一次響應中的 `nextPageCursor`  
+stakeCoin| false| string| 按質押幣種篩選，如 `USDT`  
+type| false| integer| 按操作類型篩選。`0`: PLEDGE（手動質押）；`1`: REDEEM（手動贖回）；`2`: INTEREST（獎勵發放）；`3`: AUTO_REDEEM（到期自動還本）；`4`: LOAN_PLEDGE（槓桿質押）；`5`: LOAN_REDEEM（手動槓桿贖回）；`6`: LOAN_AUTO_REDEEM（槓桿到期自動贖回）；`7`: LOAN_RISKRATE_AUTO_REDEEM（槓桿強平）；`8`: RISK_USER_AUTO_REDEEM（風控強制贖回，非槓桿）；`9`: LOAN_RISK_USER_AUTO_REDEEM（風控強制贖回，槓桿）；`10`: EARN_REWARD（理財產品獎勵）  
+status| false| integer| 按記錄狀態篩選。`0`: 處理中；`1`: 成功；`2`: 失敗  
+startTime| false| string| 查詢開始時間，13 位毫秒級 Unix 時間戳字符串。必須與 `endTime` 同時傳入  
+endTime| false| string| 查詢結束時間，13 位毫秒級 Unix 時間戳字符串。必須與 `startTime` 同時傳入  
+pageSize| false| integer| 每頁記錄數，默認 `10`，最大 `10`  
+current| false| integer| 頁碼（從 1 開始），默認 `1`，最大 `100`  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 訂單列表  
-> orderId| string| 系統訂單 ID  
-> orderLinkId| string| 用戶自定義冪等鍵  
-> orderType| string| 訂單類型：`Stake`、`Redeem`  
-> productId| integer| 產品 ID  
-> coin| string| 結算幣種  
-> stakeAmount| string| 認購金額（僅 Stake 訂單返回）  
-> redeemShares| string| 贖回份額數量（僅 Redeem 訂單返回）  
-> status| string| 訂單狀態：`Processing`（處理中）、`Success`（成功）、`Failed`（失敗）  
-> accountType| string| 資金賬戶：`FUND`、`UNIFIED`  
-> createdTime| integer| 創建時間戳（Unix 秒）  
-> updatedTime| integer| 最後更新時間戳（Unix 秒）  
-> settledShares| string| 最終確認份額數量（僅 Stake 成功訂單返回）  
-> settledAmount| string| 最終結算金額（僅 Redeem 成功訂單返回）  
-nextPageCursor| string| 下一頁遊標；空字符串表示已是最後一頁  
+list| array| 當前頁的操作記錄  
+> stakeCoin| string| 質押或贖回的幣種  
+> rewardCoin| string| 該操作關聯的獎勵幣種  
+> amount| string| 操作金額  
+> type| integer| 操作類型代碼，詳見請求參數 `type` 說明  
+> status| integer| 記錄狀態。`0`: 處理中；`1`: 成功；`2`: 失敗  
+> createdTime| string| 記錄創建時間，毫秒級 Unix 時間戳  
+> orderId| string| 唯一訂單/操作標識符  
+total| integer| 符合篩選條件的記錄總數  
+pageSize| integer| 本次響應使用的每頁條數  
+current| integer| 當前頁碼  
   
 * * *
 
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/earn/rwa/order?orderType=Stake&limit=20 HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1710691200000  
+    X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "type": 0,  
+        "status": 1,  
+        "pageSize": 10,  
+        "current": 1  
+    }  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
-### 響應示例
+### 返回示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
             "list": [  
                 {  
-                    "orderId": "550e8400-e29b-41d4-a716-446655440000",  
-                    "orderLinkId": "my-stake-001",  
-                    "orderType": "Stake",  
-                    "productId": 1001,  
-                    "coin": "USDC",  
-                    "stakeAmount": "100",  
-                    "status": "Success",  
-                    "accountType": "FUND",  
-                    "createdTime": 1710691200,  
-                    "updatedTime": 1710694800,  
-                    "settledShares": "97.560975"  
+                    "stakeCoin": "USDT",  
+                    "rewardCoin": "BTC",  
+                    "amount": "1000",  
+                    "type": 0,  
+                    "status": 1,  
+                    "createdTime": "1704067200000",  
+                    "orderId": "ORDER_123456"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
+            "total": 25,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
-        "time": 1710691200000  
+        "time": 1705000000000  
     }

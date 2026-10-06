@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-market-trades
 api_type: Market Data
-updated_at: 2026-10-05 19:04:10.712681
+updated_at: 2026-10-06 19:06:45.234146
 ---
 
 # Get Market Trades
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/products/{product_id}/ticker`
 
-
-Get snapshot information by product ID about the last trades (ticks) and best bid/ask.
+ProductsGet Market TradesGet snapshot information by product ID about the last trades (ticks) and best bid/ask.GET/api/v3/brokerage/products/{product_id}/tickerGet Market Trades
     
     
     curl --request GET \
@@ -138,76 +137,4 @@ Get snapshot information by product ID about the last trades (ticks) and best bi
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Path Parameters
-
-product_id
-
-string
-
-required
-
-The trading pair (e.g. 'BTC-USD').
-
-#### Query Parameters
-
-limit
-
-integer<int32>
-
-required
-
-The number of trades to be returned.
-
-start
-
-string
-
-The UNIX timestamp indicating the start of the time interval.
-
-end
-
-string
-
-The UNIX timestamp indicating the end of the time interval.
-
-#### Response
-
-A successful response.
-
-trades
-
-object[]
-
-best_bid
-
-string
-
-The best bid for the `product_id`, in quote currency.
-
-Example:
-
-`"291.13"`
-
-best_ask
-
-string
-
-The best ask for the `product_id`, in quote currency.
-
-Example:
-
-`"292.40"`
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersproduct_idstringrequiredThe trading pair (e.g. 'BTC-USD').Query Parameterslimitinteger<int32>requiredThe number of trades to be returned.startstringThe UNIX timestamp indicating the start of the time interval.endstringThe UNIX timestamp indicating the end of the time interval.ResponseA successful response.tradesobject[]Show child attributesbest_bidstringThe best bid for the `product_id`, in quote currency.Example:`"291.13"`best_askstringThe best ask for the `product_id`, in quote currency.Example:`"292.40"`

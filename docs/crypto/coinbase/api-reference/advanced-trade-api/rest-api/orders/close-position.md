@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/close-position
 api_type: Trading
-updated_at: 2026-10-05 19:04:09.726905
+updated_at: 2026-10-06 19:06:44.194562
 ---
 
 # Close Position
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/orders/close_position`
 
-
-Places an order to close any open positions for a specified `product_id`.
+OrdersClose PositionPlaces an order to close any open positions for a specified `product_id`.POST/api/v3/brokerage/orders/close_positionClose Position
     
     
     curl --request POST \
@@ -275,84 +274,4 @@ Places an order to close any open positions for a specified `product_id`.
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2OAuth2ApiKeyOAuth2OAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Body
-
-application/json
-
-client_order_id
-
-string
-
-required
-
-The unique ID provided for the order (used for identification purposes).
-
-Example:
-
-`"0000-00000-000000"`
-
-product_id
-
-string
-
-required
-
-The trading pair (e.g. 'BIT-28JUL23-CDE').
-
-Example:
-
-`"BIT-28JUL23-CDE"`
-
-size
-
-string
-
-The amount of contracts that should be closed.
-
-Example:
-
-`3`
-
-#### Response
-
-A successful response.
-
-success
-
-boolean
-
-required
-
-Whether the order was created.
-
-Example:
-
-`true`
-
-success_response
-
-object
-
-error_response
-
-object
-
-order_configuration
-
-object
-
-The configuration of the order (e.g. the order type, size, etc).
+AuthorizationsApiKeyOAuth2OAuth2ApiKeyOAuth2OAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonclient_order_idstringrequiredThe unique ID provided for the order (used for identification purposes).Example:`"0000-00000-000000"`product_idstringrequiredThe trading pair (e.g. 'BIT-28JUL23-CDE').Example:`"BIT-28JUL23-CDE"`sizestringThe amount of contracts that should be closed.Example:`3`ResponseA successful response.successbooleanrequiredWhether the order was created.Example:`true`success_responseobjectShow child attributeserror_responseobjectShow child attributesorder_configurationobjectThe configuration of the order (e.g. the order type, size, etc).Show child attributes

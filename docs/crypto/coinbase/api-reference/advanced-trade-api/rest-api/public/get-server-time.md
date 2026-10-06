@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-server-time
 api_type: REST
-updated_at: 2026-10-05 19:04:10.997463
+updated_at: 2026-10-06 19:06:45.512905
 ---
 
 # Get Server Time
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/time`
 
-
-Get the current time from the Coinbase Advanced API.
+PublicGet Server TimeGet the current time from the Coinbase Advanced API.GET/api/v3/brokerage/timeGet Server Time
     
     
     curl --request GET \
@@ -118,24 +117,4 @@ Get the current time from the Coinbase Advanced API.
       ]
     }
 
-#### Response
-
-A successful response.
-
-iso
-
-string
-
-An ISO-8601 representation of the timestamp
-
-epochSeconds
-
-string<int64>
-
-A second-precision representation of the timestamp
-
-epochMillis
-
-string<int64>
-
-A millisecond-precision representation of the timestamp
+ResponseA successful response.isostringAn ISO-8601 representation of the timestampepochSecondsstring<int64>A second-precision representation of the timestampepochMillisstring<int64>A millisecond-precision representation of the timestamp

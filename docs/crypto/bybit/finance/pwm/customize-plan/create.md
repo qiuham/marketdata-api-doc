@@ -2,69 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/create
 api_type: REST
-updated_at: 2026-10-05 18:49:18.947503
+updated_at: 2026-10-06 18:50:38.147645
 ---
 
-# Create Customize Investment Plan
-
-info
-
-The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
+# Get Asset Trend
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/customize-plan/create`
+GET`/v5/earn/pwm/investment-plan/asset-trend`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-accountType| false| string| Source account type. Default: `FUND`  
-products| **true**|  array| Product configuration list. At least 1 item required  
-> category| **true**|  string| Pass through from product query result. Product category: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
-> productId| **true**|  string| Pass through from product query result. May be `0`  
-> fundName| **true**|  string| Pass through from product query result. May be empty  
-> amount| **true**|  string| Subscription amount (base coin)  
+planId| **true**|  string| Investment plan ID  
+startTime| false| int| Start timestamp (ms). Default: current time minus 7 days  
+endTime| false| int| End timestamp (ms). Default: current time  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Newly created investment plan ID  
-planName| string| Investment plan name, auto-generated in the format `PWM-{planId}`  
-status| string| Plan status. Created and subscribed in one step — `Active` upon success  
-orderLinkId| string| User-defined order ID  
+planId| string| Investment plan ID  
+dataPoints| array| Asset data point list, sorted in ascending order by date  
+> date| string| Date in `YYYY-MM-DD` format  
+> assetValueUsd| string| Total plan assets on that day (USD valuation), taken from the daily settlement snapshot  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "accountType": "FUND",  
-        "products": [  
-            {  
-                "category": "equityFund",  
-                "productId": "2001",  
-                "fundName": "Market Neutral Alpha",  
-                "amount": "100000.00"  
-            },  
-            {  
-                "category": "multiCoinEarning",  
-                "productId": "430",  
-                "fundName": "",  
-                "amount": "50000.00"  
-            }  
-        ]  
-    }  
     
 
 ### Response Example
@@ -73,75 +47,56 @@ orderLinkId| string| User-defined order ID
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10050",  
-            "planName": "PWM-10050",  
-            "status": "Active",  
-            "orderLinkId": "xxx"  
+            "planId": "10001",  
+            "dataPoints": [  
+                {  
+                    "date": "2024-11-01",  
+                    "assetValueUsd": "198500.00"  
+                },  
+                {  
+                    "date": "2024-11-02",  
+                    "assetValueUsd": "199100.00"  
+                }  
+            ]  
         }  
     }
 
 ---
 
-# 創建自定義投資計劃（直客模式）
-
-信息
-
-當前用戶 **Active** （運行中）和 **Pending** （待處理）狀態的計劃總數不能超過 **20** 個。
+# 查詢資產趨勢曲線
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/customize-plan/create`
+GET`/v5/earn/pwm/investment-plan/asset-trend`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
-products| **true**|  array| 產品配置列表，至少 1 個  
-> category| **true**|  string| 透傳product查詢結果，產品類別：`flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
-> productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
-> fundName| **true**|  string| 透傳product查詢結果，可能為空  
-> amount| **true**|  string| 申購金額（本位幣）  
+planId| **true**|  string| 投資計劃ID  
+startTime| false| int| 起始時間戳（ms），默認當前時間-7天  
+endTime| false| int| 結束時間戳（ms），默認當前時間  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 新創建的投資計劃ID  
-planName| string| 投資計劃名稱，自動生成格式為 `PWM-{planId}`  
-status| string| 計劃狀態，創建即申購，成功後為 `Active`  
-orderLinkId| string| 用戶自定義訂單ID  
+planId| string| 投資計劃ID  
+dataPoints| array| 資產數據點列表，按日期升序排列  
+> date| string| 日期，格式 `YYYY-MM-DD`  
+> assetValueUsd| string| 當日計劃總資產（USD估值），取每日結算快照值  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "accountType": "FUND",  
-        "products": [  
-            {  
-                "category": "equityFund",  
-                "productId": "2001",  
-                "fundName": "Market Neutral Alpha",  
-                "amount": "100000.00"  
-            },  
-            {  
-                "category": "multiCoinEarning",  
-                "productId": "430",  
-                "fundName": "",  
-                "amount": "50000.00"  
-            }  
-        ]  
-    }  
     
 
 ### 響應示例
@@ -150,9 +105,16 @@ orderLinkId| string| 用戶自定義訂單ID
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10050",  
-            "planName": "PWM-10050",  
-            "status": "Active",  
-            "orderLinkId": "xxx"  
+            "planId": "10001",  
+            "dataPoints": [  
+                {  
+                    "date": "2024-11-01",  
+                    "assetValueUsd": "198500.00"  
+                },  
+                {  
+                    "date": "2024-11-02",  
+                    "assetValueUsd": "199100.00"  
+                }  
+            ]  
         }  
     }

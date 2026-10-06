@@ -2,42 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/renew-order
 api_type: REST
-updated_at: 2026-10-05 18:50:34.279233
+updated_at: 2026-10-06 18:52:00.385599
 ---
 
-# Get Renew Order Info
+# Create Supply Order
 
 > Permission: "Spot trade"  
->  UID rate limit: 5 req / second
+>  UID rate limit: 1 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/renew-info`
+POST`/v5/crypto-loan-fixed/supply`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Loan order ID  
-orderCurrency| false| string| Loan coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+orderCurrency| **true**|  string| Currency to supply  
+orderAmount| **true**|  string| Amount to supply  
+annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
+term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+availableSource| false| string| Source account for supply. `0`: Funding Account; `1`: Earn Flexible Account; `2`: ALL. Default: `0`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> borrowCurrency| string| Borrow currency  
-> amount| string| loan amount  
-> autoRepay| integer| `1`: Auto Repayment; `2`: Transfer to flexible loan; `0`: No Automatic Repayment. Compatible with existing orders;  
-> contractNo| string| Contract number  
-> dueTime| string| Due time  
-> orderId| integer| Order Id  
-> loanId| string| Loan Id  
-> renewLoanNo| string| Renew Loan number  
-> time| string| timestamps  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+orderId| string| Supply order ID  
   
 ### Request Example
 
@@ -48,12 +39,21 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-fixed/renew-info HTTP/1.1  
+    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752655239825  
+    X-BAPI-TIMESTAMP: 1752652261840  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 104  
+      
+    {  
+        "orderCurrency": "USDT",  
+        "orderAmount": "2002.21",  
+        "annualRate": "0.35",  
+        "term": "7"  
+    }  
     
     
     
@@ -63,7 +63,12 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_renewal_orders_fixed_crypto_loan())  
+    print(session.create_lending_order_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderAmount="2002.21",  
+        annualRate="0.35",  
+        term="7",  
+    ))  
     
     
     
@@ -77,60 +82,38 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "amount": "11",  
-                    "autoRepay": 2,  
-                    "borrowCurrency": "USDT",  
-                    "contractNo": "2092164378648656896",  
-                    "dueTime": "1766750400000",  
-                    "loanId": "2364",  
-                    "orderId": 49,  
-                    "renewLoanNo": "2092170365690461952",  
-                    "time": "1764142142913"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "orderId": "13007"  
         },  
         "retExtInfo": {},  
-        "time": 1764208336537  
+        "time": 1752633650147  
     }
 
 ---
 
-# 查詢個人續借訂單
+# 創建存款單
 
 > 權限: "現貨"  
->  頻率: 5次/秒
+>  頻率: 1次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/renew-info`
+POST`/v5/crypto-loan-fixed/supply`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 借款訂單 ID  
-orderCurrency| false| string| 借款幣種名稱  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+orderCurrency| **true**|  string| 出借幣種  
+orderAmount| **true**|  string| 出借金額  
+annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
+term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+availableSource| false| string| 出借資金來源帳戶。`0`: 資金帳戶；`1`: 靈活賺幣帳戶；`2`: 全部。預設值：`0`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> borrowCurrency| string| 放款幣種  
-> amount| string| 放款金額  
-> autoRepay| integer| `1`:自動還款; `2`:轉活期; `0`: 不自動還款. 兼容存量訂單;  
-> contractNo| string| 合約編號  
-> dueTime| string| 到期時間  
-> orderId| integer| 訂單編號  
-> loanId| string| 貸款編號  
-> renewLoanNo| string| 續貸編號  
-> time| string| 時間戳  
-nextPageCursor| string| 請參考 `cursor` 請求參數  
+orderId| string| 存款單ID  
   
 ### 請求示例
 
@@ -141,12 +124,21 @@ nextPageCursor| string| 請參考 `cursor` 請求參數
 
     
     
-    GET /v5/crypto-loan-fixed/renew-info HTTP/1.1  
+    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752655239825  
+    X-BAPI-TIMESTAMP: 1752652261840  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 104  
+      
+    {  
+        "orderCurrency": "USDT",  
+        "orderAmount": "2002.21",  
+        "annualRate": "0.35",  
+        "term": "7"  
+    }  
     
     
     
@@ -156,7 +148,12 @@ nextPageCursor| string| 請參考 `cursor` 請求參數
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_renewal_orders_fixed_crypto_loan())  
+    print(session.create_lending_order_fixed_crypto_loan(  
+        orderCurrency="USDT",  
+        orderAmount="2002.21",  
+        annualRate="0.35",  
+        term="7",  
+    ))  
     
     
     
@@ -170,21 +167,8 @@ nextPageCursor| string| 請參考 `cursor` 請求參數
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "amount": "11",  
-                    "autoRepay": 2,  
-                    "borrowCurrency": "USDT",  
-                    "contractNo": "2092164378648656896",  
-                    "dueTime": "1766750400000",  
-                    "loanId": "2364",  
-                    "orderId": 49,  
-                    "renewLoanNo": "2092170365690461952",  
-                    "time": "1764142142913"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "orderId": "13007"  
         },  
         "retExtInfo": {},  
-        "time": 1764208336537  
+        "time": 1752633650147  
     }
