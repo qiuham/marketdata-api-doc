@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-10-06 18:51:30.260682
+updated_at: 2026-10-07 18:52:40.334744
 ---
 
 # Get Open Interest

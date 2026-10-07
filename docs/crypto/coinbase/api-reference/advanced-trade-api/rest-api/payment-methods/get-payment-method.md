@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method
 api_type: REST
-updated_at: 2026-10-06 19:06:44.801535
+updated_at: 2026-10-07 19:07:31.539507
 ---
 
 # Get Payment Method
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/payment_methods/{payment_method_id}`
 
-Payment MethodsGet Payment MethodGet information about a payment method for the current user.GET/api/v3/brokerage/payment_methods/{payment_method_id}Get Payment Method
+
+Get information about a payment method for the current user.
     
     
     curl --request GET \
@@ -137,4 +138,34 @@ Payment MethodsGet Payment MethodGet information about a payment method for the 
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parameterspayment_method_idstringrequiredThe ID of the payment method. Refer to [List Payment Methods](https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_getpaymentmethods/) for the list of all available payment methods and their corresponding IDs.ResponseA successful response.payment_methodobjectShow child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Path Parameters
+
+payment_method_id
+
+string
+
+required
+
+The ID of the payment method. Refer to [List Payment Methods](https://docs.cdp.coinbase.com/advanced-trade/reference/retailbrokerageapi_getpaymentmethods/) for the list of all available payment methods and their corresponding IDs.
+
+#### Response
+
+A successful response.
+
+payment_method
+
+object

@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds
 api_type: Account
-updated_at: 2026-10-06 19:06:45.205515
+updated_at: 2026-10-07 19:07:32.128510
 ---
 
 # Move Portfolio Funds
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/portfolios/move_funds`
 
-PortfoliosMove Portfolio FundsMove funds between portfolios.POST/api/v3/brokerage/portfolios/move_fundsMove Portfolio Funds
+
+Move funds between portfolios.
     
     
     curl --request POST \
@@ -173,4 +174,70 @@ PortfoliosMove Portfolio FundsMove funds between portfolios.POST/api/v3/brokerag
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonfundsobjectThe amount to be moved to the specified portfolio.Show child attributessource_portfolio_uuidstringThe UUID of the portfolio to send funds from.Example:`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`target_portfolio_uuidstringThe UUID of the portfolio to send funds to.Example:`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`ResponseA successful response.source_portfolio_uuidstringThe UUID of the portfolio to send funds from.Example:`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`target_portfolio_uuidstringThe UUID of the portfolio to send funds to.Example:`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Body
+
+application/json
+
+funds
+
+object
+
+The amount to be moved to the specified portfolio.
+
+source_portfolio_uuid
+
+string
+
+The UUID of the portfolio to send funds from.
+
+Example:
+
+`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`
+
+target_portfolio_uuid
+
+string
+
+The UUID of the portfolio to send funds to.
+
+Example:
+
+`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`
+
+#### Response
+
+A successful response.
+
+source_portfolio_uuid
+
+string
+
+The UUID of the portfolio to send funds from.
+
+Example:
+
+`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`
+
+target_portfolio_uuid
+
+string
+
+The UUID of the portfolio to send funds to.
+
+Example:
+
+`"8bfc20d7-f7c6-4422-bf07-8243ca4169fe"`

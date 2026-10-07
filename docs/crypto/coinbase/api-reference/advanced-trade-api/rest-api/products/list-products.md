@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/list-products
 api_type: Market Data
-updated_at: 2026-10-06 19:06:45.654444
+updated_at: 2026-10-07 19:07:32.395443
 ---
 
 # List Products
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/products`
 
-ProductsList ProductsGet a list of the available currency pairs for trading.GET/api/v3/brokerage/productsList Products
+
+Get a list of the available currency pairs for trading.
     
     
     curl --request GET \
@@ -336,4 +337,200 @@ ProductsList ProductsGet a list of the available currency pairs for trading.GET/
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parameterslimitinteger<int32>The number of products to be returned.offsetinteger<int32>The number of products to skip before returning.product_typeenum<string>default:UNKNOWN_PRODUCT_TYPEOnly returns products matching this product type. If omitted, only SPOT products are returned.Available options: `UNKNOWN_PRODUCT_TYPE`, `SPOT`, `FUTURE`, `EQUITY`, `OPTION_GROUP`, `FUTURE_GROUP` product_idsstring[]The list of trading pairs (e.g. 'BTC-USD').contract_expiry_typeenum<string>default:UNKNOWN_CONTRACT_EXPIRY_TYPEOnly returns the products matching the contract expiry type. Only applicable if product_type is set to FUTURE.Available options: `UNKNOWN_CONTRACT_EXPIRY_TYPE`, `EXPIRING`, `PERPETUAL` expiring_contract_statusenum<string>default:UNKNOWN_EXPIRING_CONTRACT_STATUSOnly returns contracts with this status (default is UNEXPIRED).Available options: `UNKNOWN_EXPIRING_CONTRACT_STATUS`, `STATUS_UNEXPIRED`, `STATUS_EXPIRED`, `STATUS_ALL` get_tradability_statusbooleanWhether or not to populate view_only with the tradability status of the product. This is only enabled for SPOT products.get_all_productsbooleanIf true, return all products of all product types (including expired futures contracts).products_sort_orderenum<string>default:PRODUCTS_SORT_ORDER_UNDEFINEDThe order in which products are returned. By default, products are returned in 24 hour volume descending (in quote).Available options: `PRODUCTS_SORT_ORDER_UNDEFINED`, `PRODUCTS_SORT_ORDER_VOLUME_24H_DESCENDING`, `PRODUCTS_SORT_ORDER_LIST_TIME_DESCENDING` cursorstringThe cursor to use for pagination. This will be a base64 encoded string that decodes into the last productId of the previously returned pagefutures_underlying_typeenum<string>default:UNKNOWN_FUTURES_UNDERLYING_TYPEOnly returns the products matching the underlying type. Only applicable if product_type is set to FUTURE.Available options: `UNKNOWN_FUTURES_UNDERLYING_TYPE`, `FUTURES_UNDERLYING_TYPE_SPOT`, `FUTURES_UNDERLYING_TYPE_INDEX`, `FUTURES_UNDERLYING_TYPE_EQUITY`, `FUTURES_UNDERLYING_TYPE_EQUITY_INDEX`, `FUTURES_UNDERLYING_TYPE_EQUITY_ETF`, `FUTURES_UNDERLYING_TYPE_PREIPO`, `FUTURES_UNDERLYING_TYPE_COMMOD`, `FUTURES_UNDERLYING_TYPE_COMMOD_ETF`, `FUTURES_UNDERLYING_TYPE_COMMOD_INDEX`, `FUTURES_UNDERLYING_TYPE_ADR`, `FUTURES_UNDERLYING_TYPE_FOREIGN_EQUITY`, `FUTURES_UNDERLYING_TYPE_OTC` user_country_codestringThe country code of the user. This is used to provide differentiated product display names.expiredbooleanIf true, return recently expired instruments instead of active ones. Only applicable to product_venue=DERIBIT; ignored for other venues. Defaults to false.ResponseA successful response.productsGet Products · object[]Array of objects, each representing one product.Show child attributesnum_productsinteger<int32>Number of products that were returned.Example:`100`paginationobjectPagination metadata for paginated responses.Show child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Query Parameters
+
+limit
+
+integer<int32>
+
+The number of products to be returned.
+
+offset
+
+integer<int32>
+
+The number of products to skip before returning.
+
+product_type
+
+enum<string>
+
+default:UNKNOWN_PRODUCT_TYPE
+
+Only returns products matching this product type. If omitted, only SPOT products are returned.
+
+Available options:
+
+`UNKNOWN_PRODUCT_TYPE`,
+
+`SPOT`,
+
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
+
+product_ids
+
+string[]
+
+The list of trading pairs (e.g. 'BTC-USD').
+
+contract_expiry_type
+
+enum<string>
+
+default:UNKNOWN_CONTRACT_EXPIRY_TYPE
+
+Only returns the products matching the contract expiry type. Only applicable if product_type is set to FUTURE.
+
+Available options:
+
+`UNKNOWN_CONTRACT_EXPIRY_TYPE`,
+
+`EXPIRING`,
+
+`PERPETUAL`
+
+expiring_contract_status
+
+enum<string>
+
+default:UNKNOWN_EXPIRING_CONTRACT_STATUS
+
+Only returns contracts with this status (default is UNEXPIRED).
+
+Available options:
+
+`UNKNOWN_EXPIRING_CONTRACT_STATUS`,
+
+`STATUS_UNEXPIRED`,
+
+`STATUS_EXPIRED`,
+
+`STATUS_ALL`
+
+get_tradability_status
+
+boolean
+
+Whether or not to populate view_only with the tradability status of the product. This is only enabled for SPOT products.
+
+get_all_products
+
+boolean
+
+If true, return all products of all product types (including expired futures contracts).
+
+products_sort_order
+
+enum<string>
+
+default:PRODUCTS_SORT_ORDER_UNDEFINED
+
+The order in which products are returned. By default, products are returned in 24 hour volume descending (in quote).
+
+Available options:
+
+`PRODUCTS_SORT_ORDER_UNDEFINED`,
+
+`PRODUCTS_SORT_ORDER_VOLUME_24H_DESCENDING`,
+
+`PRODUCTS_SORT_ORDER_LIST_TIME_DESCENDING`
+
+cursor
+
+string
+
+The cursor to use for pagination. This will be a base64 encoded string that decodes into the last productId of the previously returned page
+
+futures_underlying_type
+
+enum<string>
+
+default:UNKNOWN_FUTURES_UNDERLYING_TYPE
+
+Only returns the products matching the underlying type. Only applicable if product_type is set to FUTURE.
+
+Available options:
+
+`UNKNOWN_FUTURES_UNDERLYING_TYPE`,
+
+`FUTURES_UNDERLYING_TYPE_SPOT`,
+
+`FUTURES_UNDERLYING_TYPE_INDEX`,
+
+`FUTURES_UNDERLYING_TYPE_EQUITY`,
+
+`FUTURES_UNDERLYING_TYPE_EQUITY_INDEX`,
+
+`FUTURES_UNDERLYING_TYPE_EQUITY_ETF`,
+
+`FUTURES_UNDERLYING_TYPE_PREIPO`,
+
+`FUTURES_UNDERLYING_TYPE_COMMOD`,
+
+`FUTURES_UNDERLYING_TYPE_COMMOD_ETF`,
+
+`FUTURES_UNDERLYING_TYPE_COMMOD_INDEX`,
+
+`FUTURES_UNDERLYING_TYPE_ADR`,
+
+`FUTURES_UNDERLYING_TYPE_FOREIGN_EQUITY`,
+
+`FUTURES_UNDERLYING_TYPE_OTC`
+
+user_country_code
+
+string
+
+The country code of the user. This is used to provide differentiated product display names.
+
+expired
+
+boolean
+
+If true, return recently expired instruments instead of active ones. Only applicable to product_venue=DERIBIT; ignored for other venues. Defaults to false.
+
+#### Response
+
+A successful response.
+
+products
+
+Get Products · object[]
+
+Array of objects, each representing one product.
+
+num_products
+
+integer<int32>
+
+Number of products that were returned.
+
+Example:
+
+`100`
+
+pagination
+
+object
+
+Pagination metadata for paginated responses.

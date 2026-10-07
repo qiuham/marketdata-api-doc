@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-activate-option
 anchor_id: trading-account-rest-api-activate-option
 api_type: REST
-updated_at: 2026-10-06 19:21:52.865629
+updated_at: 2026-10-07 19:22:46.406125
 ---
 
 # Activate option

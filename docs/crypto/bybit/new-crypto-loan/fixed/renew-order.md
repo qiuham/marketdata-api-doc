@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/renew-order
 api_type: REST
-updated_at: 2026-10-06 18:52:00.385599
+updated_at: 2026-10-07 18:53:09.443932
 ---
 
 # Create Supply Order

@@ -2,17 +2,27 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/postman-files
 api_type: Trading
-updated_at: 2026-10-06 19:06:46.108860
+updated_at: 2026-10-07 19:07:33.329042
 ---
 
 # Advanced Trade Postman Files
 
-Advanced Trade APIsAdvanced Trade Postman FilesThe following Postman collection and environment files are available for download.
+The following Postman collection and environment files are available for download.
 
   * [Coinbase Developer Platform Advanced Trade Postman Collection](/coinbase-app/advanced-trade-apis/files/coinbase_advanced_trading.postman_collection.json)
   * [Coinbase Developer Platform Postman Environment](/coinbase-app/advanced-trade-apis/files/coinbase_developer_platform.postman_environment.json)
 
-We recommend testing authentication and relevant endpoints with these files as this will help our team troubleshoot any problems. Coinbase Cloud is in the process of being rebranded as Coinbase Developer Platform (CDP). Some documentation and naming conventions may still reflect the old branding. Coinbase Developer Platform Collection Step 1: Download Postman If don’t have Postman installed, download and install [Postman](https://www.postman.com/downloads/) from their website. Step 2: Download and Import Files
+We recommend testing authentication and relevant endpoints with these files as this will help our team troubleshoot any problems.
+
+Coinbase Cloud is in the process of being rebranded as Coinbase Developer Platform (CDP). Some documentation and naming conventions may still reflect the old branding.
+
+## Coinbase Developer Platform Collection
+
+### Step 1: Download Postman
+
+If don’t have Postman installed, download and install [Postman](https://www.postman.com/downloads/) from their website.
+
+### Step 2: Download and Import Files
 
   1. **Download Collection:**
      * Download the [Coinbase Developer Platform Advanced Trade Postman Collection](/coinbase-app/advanced-trade-apis/files/coinbase_advanced_trading.postman_collection.json)
@@ -21,7 +31,9 @@ We recommend testing authentication and relevant endpoints with these files as t
      * Click on **Import** in the upper left corner.
      * Select the downloaded JSON file and import it.
 
-Step 3: Configure Environment Variables Once the files are imported, you need to configure your environment variables.
+### Step 3: Configure Environment Variables
+
+Once the files are imported, you need to configure your environment variables.
 
   1. **Download Postman Environment:**
      * [Coinbase Developer Platform Postman Environment](/coinbase-app/advanced-trade-apis/files/coinbase_developer_platform.postman_environment.json)
@@ -41,9 +53,10 @@ Variable| Current value
 ---|---  
 `name`| `"organizations/{ORG_ID}/apiKeys/{KEY_ID}"` (Include quotes)  
 `privateKey`| `"-----BEGIN EC PRIVATE KEY-----\{KEY}\n-----END EC PRIVATE KEY-----\n"` (Include quotes)  
+  
 Ensure that the values are entered exactly as shown, including the quotes.
 
-Step 4: Authenticate and Test Endpoints
+### Step 4: Authenticate and Test Endpoints
 
   1. **Send Requests:**
      * Navigate to the “Collections” tab in Postman.
@@ -53,4 +66,8 @@ Step 4: Authenticate and Test Endpoints
      * Ensure that the responses are as expected.
      * If you encounter any issues, refer to the detailed response messages to understand the problem.
 
-Important Notes Confirm EnvironmentMake sure the correct environment is selected by checking the check mark to the right of the environment name in Postman. SupportIf you run into any issues, please reach out to us in the [CDP Discord](https://discord.com/invite/cdp) channel for assistance.
+### Important Notes
+
+Confirm EnvironmentMake sure the correct environment is selected by checking the check mark to the right of the environment name in Postman.
+
+SupportIf you run into any issues, please reach out to us in the [CDP Discord](https://discord.com/invite/cdp) channel for assistance.

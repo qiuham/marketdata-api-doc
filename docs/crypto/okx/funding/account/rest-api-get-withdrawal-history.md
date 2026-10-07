@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-withdrawal-history
 anchor_id: funding-account-rest-api-get-withdrawal-history
 api_type: REST
-updated_at: 2026-10-06 19:23:51.736193
+updated_at: 2026-10-07 19:24:42.800450
 ---
 
 # Get withdrawal history

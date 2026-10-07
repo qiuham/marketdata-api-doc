@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions
 api_type: REST
-updated_at: 2026-10-06 19:06:43.639446
+updated_at: 2026-10-07 19:07:30.333960
 ---
 
 # Get API Key Permissions
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/key_permissions`
 
-Data APIGet API Key PermissionsGet information about your CDP API key permissionsGET/api/v3/brokerage/key_permissionsGet API Key Permissions
+
+Get information about your CDP API key permissions
     
     
     curl --request GET \
@@ -129,4 +130,60 @@ Data APIGet API Key PermissionsGet information about your CDP API key permission
       ]
     }
 
-AuthorizationsAuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.ResponseA successful response.can_viewbooleanIndicates whether the API key has view permissions.can_tradebooleanIndicates whether the API key has trade permissions.can_transferbooleanIndicates whether the API key has deposit/withdrawal permissions.portfolio_uuidstringThe portfolio ID associated with the API key.portfolio_typeenum<string>default:UNDEFINEDThe type of portfolioAvailable options: `UNDEFINED`, `DEFAULT`, `CONSUMER`, `INTX`
+#### Authorizations
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Response
+
+A successful response.
+
+can_view
+
+boolean
+
+Indicates whether the API key has view permissions.
+
+can_trade
+
+boolean
+
+Indicates whether the API key has trade permissions.
+
+can_transfer
+
+boolean
+
+Indicates whether the API key has deposit/withdrawal permissions.
+
+portfolio_uuid
+
+string
+
+The portfolio ID associated with the API key.
+
+portfolio_type
+
+enum<string>
+
+default:UNDEFINED
+
+The type of portfolio
+
+Available options:
+
+`UNDEFINED`,
+
+`DEFAULT`,
+
+`CONSUMER`,
+
+`INTX`

@@ -2,17 +2,38 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-10-06 19:06:46.225527
+updated_at: 2026-10-07 19:07:33.383139
 ---
 
 # Advanced Trade REST Endpoints
 
-RESTAdvanced Trade REST EndpointsREST endpoints for Advanced Trade across spot, US derivatives, and Global Derivatives.Public and private methods share one URL on each venue. Send a JWT on the request for private methods.
+REST endpoints for Advanced Trade across spot, US derivatives, and Global Derivatives.
+
+Public and private methods share one URL on each venue. Send a JWT on the request for private methods.
 
   * Spot and US Derivatives
+
   * Global Derivatives
 
-API ReferenceRequest schemas, parameters, and examples.OpenAPI specDownload the [OpenAPI spec](/api-reference/advanced-trade-api/rest-api/advanced-trade-spec.yaml).URL`https://api.coinbase.com/api/v3/brokerage`Public and private methods both use this URL.PublicPublic market data for spot crypto and US futures.EndpointsEndpoint| Description  
+## API Reference
+
+Request schemas, parameters, and examples.
+
+## OpenAPI spec
+
+Download the [OpenAPI spec](/api-reference/advanced-trade-api/rest-api/advanced-trade-spec.yaml).
+
+### URL
+
+`https://api.coinbase.com/api/v3/brokerage`Public and private methods both use this URL.
+
+### Public
+
+Public market data for spot crypto and US futures.
+
+#### Endpoints
+
+Endpoint| Description  
 ---|---  
 [`GET /time`](/api-reference/advanced-trade-api/rest-api/public/get-server-time)| Server time  
 [`GET /market/product_book`](/api-reference/advanced-trade-api/rest-api/public/get-public-product-book)| Public order book  
@@ -20,14 +41,21 @@ API ReferenceRequest schemas, parameters, and examples.OpenAPI specDownload the 
 [`GET /market/products/\{product_id\}`](/api-reference/advanced-trade-api/rest-api/public/get-public-product)| Public product  
 [`GET /market/products/\{product_id\}/candles`](/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles)| Public candles  
 [`GET /market/products/\{product_id\}/ticker`](/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades)| Public trades  
-Notes
+  
+#### Notes
 
   * A JWT is not required.
   * Public responses are cached for 1 second. For live data, use the [WebSocket](/coinbase-app/advanced-trade-apis/websocket/websocket-overview), send `cache-control: no-cache`, or call the private product endpoints.
 
 * * *
 
-PrivateOrders, accounts, portfolios, converts, and US futures.EndpointsEndpoint| Description  
+### Private
+
+Orders, accounts, portfolios, converts, and US futures.
+
+#### Endpoints
+
+Endpoint| Description  
 ---|---  
 [`GET /accounts`](/api-reference/advanced-trade-api/rest-api/accounts/list-accounts)| The user’s accounts  
 [`GET /accounts/\{account_uuid\}`](/api-reference/advanced-trade-api/rest-api/accounts/get-account)| One account  
@@ -74,13 +102,32 @@ PrivateOrders, accounts, portfolios, converts, and US futures.EndpointsEndpoint|
 [`GET /intx/balances/\{portfolio_uuid\}`](/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances)| INTX balances (retired)  
 [`POST /intx/multi_asset_collateral`](/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out)| INTX multi-asset collateral (retired)  
 [`POST /intx/allocate`](/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio)| Allocate to an INTX portfolio (retired)  
-Notes
+  
+#### Notes
 
   * Same URL as the public methods. A CDP JWT is required. See [API key authentication](/coinbase-app/authentication-authorization/api-key-authentication).
   * Endpoints require `view`, `trade`, or `transfer` on the key, depending on the call.
   * `/intx/*` endpoints are retired. INTX perpetuals trading ended on October 1, 2026, and international derivatives now trade on the Global Derivatives gateway. The read endpoints stay available for pre-migration INTX history for a limited period. See the [Migration Overview](/coinbase-app/advanced-trade-apis/guides/derivatives/overview).
 
-API ReferenceHosts, specs, and the Global Derivatives method playground.OpenAPI specDownload the [OpenAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-openapi.json).URL`https://drb.coinbase.com/api/v2`Public and private methods both use this URL. JSON-RPC 2.0 over HTTP.PublicPublic market data for options, futures, and perpetuals.EndpointsEndpoint| Description  
+## API Reference
+
+Hosts, specs, and the Global Derivatives method playground.
+
+## OpenAPI spec
+
+Download the [OpenAPI spec](/api-reference/coinbase-deribit-app-api/adv-starbase-openapi.json).
+
+### URL
+
+`https://drb.coinbase.com/api/v2`Public and private methods both use this URL. JSON-RPC 2.0 over HTTP.
+
+### Public
+
+Public market data for options, futures, and perpetuals.
+
+#### Endpoints
+
+Endpoint| Description  
 ---|---  
 `public/auth`| Exchange a CDP JWT for an access token  
 `public/get_announcements`| Platform notices  
@@ -120,7 +167,8 @@ API ReferenceHosts, specs, and the Global Derivatives method playground.OpenAPI 
 `public/status`| Locked currencies  
 `public/test`| Connection test and server version  
 `public/ticker`| 24h ticker  
-Notes
+  
+#### Notes
 
   * Send JSON-RPC 2.0 in the request body. The method name goes in `method`.
   * A JWT is not required, except on `public/auth`.
@@ -129,7 +177,13 @@ Notes
 
 * * *
 
-PrivateThe user’s orders, fills, positions, portfolio, and Block RFQs.EndpointsEndpoint| Description  
+### Private
+
+The user’s orders, fills, positions, portfolio, and Block RFQs.
+
+#### Endpoints
+
+Endpoint| Description  
 ---|---  
 `private/buy`| Place a buy order  
 `private/sell`| Place a sell order  
@@ -198,7 +252,8 @@ PrivateThe user’s orders, fills, positions, portfolio, and Block RFQs.Endpoint
 `private/get_block_trade_requests`| Pending block-trade requests  
 `private/get_broker_trades`| Broker block trades  
 `private/get_broker_trade_requests`| Broker block-trade requests  
-Notes
+  
+#### Notes
 
   * Send JSON-RPC 2.0 in the request body. The method name goes in `method`.
   * Same URL as the public methods. Call `public/auth` with a CDP JWT, then send the returned access token as `Authorization: Bearer` on each private method. See the [Technical Migration Guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical).

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-10-06 18:52:57.043919
+updated_at: 2026-10-07 18:54:04.034024
 ---
 
 # Move Position

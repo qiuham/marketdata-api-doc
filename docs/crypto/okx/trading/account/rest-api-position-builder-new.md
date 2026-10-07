@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-position-builder-new
 anchor_id: trading-account-rest-api-position-builder-new
 api_type: REST
-updated_at: 2026-10-06 19:21:51.305641
+updated_at: 2026-10-07 19:22:44.859591
 ---
 
 # Position builder (new)

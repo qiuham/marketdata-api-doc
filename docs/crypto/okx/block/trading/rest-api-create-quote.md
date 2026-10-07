@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-create-quote
 anchor_id: block-trading-rest-api-create-quote
 api_type: REST
-updated_at: 2026-10-06 19:23:04.152635
+updated_at: 2026-10-07 19:23:56.103289
 ---
 
 # Create Quote

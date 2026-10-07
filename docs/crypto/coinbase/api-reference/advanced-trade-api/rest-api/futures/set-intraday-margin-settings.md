@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings
 api_type: REST
-updated_at: 2026-10-06 19:06:44.076293
+updated_at: 2026-10-07 19:07:30.844397
 ---
 
 # Set Intraday Margin Setting
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/cfm/intraday/margin_setting`
 
-US DerivativesSet Intraday Margin SettingSet the futures intraday margin settingPOST/api/v3/brokerage/cfm/intraday/margin_settingSet Intraday Margin Setting
+
+Set the futures intraday margin setting
     
     
     curl --request POST \
@@ -149,4 +150,42 @@ US DerivativesSet Intraday Margin SettingSet the futures intraday margin setting
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonsettingenum<string>default:INTRADAY_MARGIN_SETTING_UNSPECIFIEDThe margin setting for the account. Describes whether the account is opted in to receive increased leverage during weekdays (8am-4pm ET), excluding [market holidays](https://www.coinbase.com/derivatives/market-notices).Available options: `INTRADAY_MARGIN_SETTING_UNSPECIFIED`, `INTRADAY_MARGIN_SETTING_STANDARD`, `INTRADAY_MARGIN_SETTING_INTRADAY` ResponseA successful response.The response is of type `SetIntradayMarginSettingResponse · object`.
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Body
+
+application/json
+
+setting
+
+enum<string>
+
+default:INTRADAY_MARGIN_SETTING_UNSPECIFIED
+
+The margin setting for the account. Describes whether the account is opted in to receive increased leverage during weekdays (8am-4pm ET), excluding [market holidays](https://www.coinbase.com/derivatives/market-notices).
+
+Available options:
+
+`INTRADAY_MARGIN_SETTING_UNSPECIFIED`,
+
+`INTRADAY_MARGIN_SETTING_STANDARD`,
+
+`INTRADAY_MARGIN_SETTING_INTRADAY`
+
+#### Response
+
+A successful response.
+
+The response is of type `SetIntradayMarginSettingResponse · object`.

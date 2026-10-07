@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/list-portfolios
 api_type: Account
-updated_at: 2026-10-06 19:06:45.146154
+updated_at: 2026-10-07 19:07:32.021777
 ---
 
 # List Portfolios
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/portfolios`
 
-PortfoliosList PortfoliosGet all portfolios of a user.GET/api/v3/brokerage/portfoliosList Portfolios
+
+Get all portfolios of a user.
     
     
     curl --request GET \
@@ -132,4 +133,44 @@ PortfoliosList PortfoliosGet all portfolios of a user.GET/api/v3/brokerage/portf
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersportfolio_typeenum<string>default:UNDEFINEDOnly returns portfolios matching this portfolio type.Available options: `UNDEFINED`, `DEFAULT`, `CONSUMER`, `INTX` ResponseA successful response.portfoliosobject[]Show child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Query Parameters
+
+portfolio_type
+
+enum<string>
+
+default:UNDEFINED
+
+Only returns portfolios matching this portfolio type.
+
+Available options:
+
+`UNDEFINED`,
+
+`DEFAULT`,
+
+`CONSUMER`,
+
+`INTX`
+
+#### Response
+
+A successful response.
+
+portfolios
+
+object[]

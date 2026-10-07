@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-position
 api_type: REST
-updated_at: 2026-10-06 19:06:43.880748
+updated_at: 2026-10-07 19:07:30.582282
 ---
 
 # Get US Derivatives Position
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/cfm/positions/{product_id}`
 
-US DerivativesGet US Derivatives PositionGet positions for a specific CFM productGET/api/v3/brokerage/cfm/positions/{product_id}Get Futures Position
+
+Get positions for a specific CFM product
     
     
     curl --request GET \
@@ -134,4 +135,34 @@ US DerivativesGet US Derivatives PositionGet positions for a specific CFM produc
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersproduct_idstringrequiredThe ticker symbol (e.g. 'BIT-28JUL23-CDE').ResponseA successful response.positionobjectShow child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Path Parameters
+
+product_id
+
+string
+
+required
+
+The ticker symbol (e.g. 'BIT-28JUL23-CDE').
+
+#### Response
+
+A successful response.
+
+position
+
+object

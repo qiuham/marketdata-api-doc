@@ -2,18 +2,32 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions
 api_type: Guide
-updated_at: 2026-10-06 19:06:45.946539
+updated_at: 2026-10-07 19:07:32.895126
 ---
 
 # Isolated Positions API Guide
 
-Global DerivativesIsolated Positions API GuideLearn how to manage isolated positions with the Global Derivatives JSON-RPC API.Isolated margin confines risk to the collateral allocated to one position. Isolated orders and positions are owned by managed subaccounts that the API provisions on demand and hides from account listings unless you ask for them with `include_isolated: true`. This guide covers the behavior that differs from cross-margin trading and how to integrate against the JSON-RPC API. Examples use `SOL_USDC-PERPETUAL`. `123456` stands for a discovered integer subaccount ID; `subaccount_id` is an integer on the wire, not a string. 1\. How isolated margin works Four behaviors differ from ordinary cross trading. Read these before the walkthrough; most integration bugs come from assuming one of them away. 1.1 The API provisions hidden subaccounts for you You never create an isolated subaccount yourself. Sending [`private/buy`](/api-reference/trading/private-buy) or [`private/sell`](/api-reference/trading/private-sell) from the main account with `isolated: true`:
+Learn how to manage isolated positions with the Global Derivatives JSON-RPC API.
+
+Isolated margin confines risk to the collateral allocated to one position. Isolated orders and positions are owned by managed subaccounts that the API provisions on demand and hides from account listings unless you ask for them with `include_isolated: true`. This guide covers the behavior that differs from cross-margin trading and how to integrate against the JSON-RPC API. Examples use `SOL_USDC-PERPETUAL`. `123456` stands for a discovered integer subaccount ID; `subaccount_id` is an integer on the wire, not a string.
+
+## 1\. How isolated margin works
+
+Four behaviors differ from ordinary cross trading. Read these before the walkthrough; most integration bugs come from assuming one of them away.
+
+### 1.1 The API provisions hidden subaccounts for you
+
+You never create an isolated subaccount yourself. Sending [`private/buy`](/api-reference/trading/private-buy) or [`private/sell`](/api-reference/trading/private-sell) from the main account with `isolated: true`:
 
   1. claims a free isolated subaccount (slot) or creates one if none is free,
   2. binds it to the requested instrument,
   3. places the order under that subaccount’s ID.
 
-The order and position are owned by the isolated subaccount (`user_id`, for example `123456`), not the main account. Responses also carry `main_uid`, which identifies the owning main account. Cross and isolated positions can coexist on the same instrument. A main account can maintain a cross position while simultaneously holding an isolated position on the same instrument via a provisioned slot. Each position is margined, tracked, and managed independently under its respective account ID (`user_id`). 1.2 Two flags: routing versus visibility Because isolated records live on subaccounts, most operations take one of two flags. Mixing them up is the most common integration mistake.
+The order and position are owned by the isolated subaccount (`user_id`, for example `123456`), not the main account. Responses also carry `main_uid`, which identifies the owning main account. Cross and isolated positions can coexist on the same instrument. A main account can maintain a cross position while simultaneously holding an isolated position on the same instrument via a provisioned slot. Each position is margined, tracked, and managed independently under its respective account ID (`user_id`).
+
+### 1.2 Two flags: routing versus visibility
+
+Because isolated records live on subaccounts, most operations take one of two flags. Mixing them up is the most common integration mistake.
 
   * `isolated: true` routes a single-order operation (place, edit, cancel, close, leverage, per-order reads) to the subaccount that owns the instrument or order. The default is `false`, so omitting it silently targets cross margin instead of producing an error.
   * `include_isolated: true` widens a main-account list, snapshot, or mass cancel to include hidden isolated subaccounts. Without it, hidden isolated slots are excluded.
@@ -25,7 +39,10 @@ Single-order operations| [`private/buy`](/api-reference/trading/private-buy), [`
 Main-account aggregates| [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts), [`private/get_subaccounts_details`](/api-reference/account-management/private-get_subaccounts_details), [`private/get_positions`](/api-reference/account-management/private-get_positions), [`private/get_position`](/api-reference/account-management/private-get_position), [`private/get_open_orders`](/api-reference/trading/private-get_open_orders), [`private/get_account_summaries`](/api-reference/account-management/private-get_account_summaries), [`private/get_order_state_by_label`](/api-reference/trading/private-get_order_state_by_label)| `include_isolated: true`| Excludes hidden isolated slots.  
 Mass cancel| [`private/cancel_all`](/api-reference/trading/private-cancel_all), [`private/cancel_all_by_instrument`](/api-reference/trading/private-cancel_all_by_instrument), [`private/cancel_all_by_currency`](/api-reference/trading/private-cancel_all_by_currency), [`private/cancel_by_label`](/api-reference/trading/private-cancel_by_label)| `include_isolated: true`| Cancels main-account orders only; isolated orders stay open.  
 History| [`private/get_order_history_by_currency`](/api-reference/trading/private-get_order_history_by_currency), [`private/get_user_trades_by_currency`](/api-reference/trading/private-get_user_trades_by_currency), [`private/get_settlement_history_by_currency`](/api-reference/trading/private-get_settlement_history_by_currency), [`private/get_transaction_log`](/api-reference/account-management/private-get_transaction_log)| `subaccount_id`| —  
-1.3 Slots are recycled and IDs are reused A slot binds to one instrument at a time, reported as `isolated_margin_instrument`. A slot is recycled only when both conditions hold:
+  
+### 1.3 Slots are recycled and IDs are reused
+
+A slot binds to one instrument at a time, reported as `isolated_margin_instrument`. A slot is recycled only when both conditions hold:
 
   * no position has a non-zero size;
   * no open order remains.
@@ -35,7 +52,15 @@ On recycling, remaining collateral settles back to the main account and the bind
   * History for one `subaccount_id` can span multiple instruments. Key audit trails by `subaccount_id`, `instrument_name`, and timestamp.
   * Do not cache an instrument-to-subaccount mapping. Rediscover it.
 
-1.4 Orders auto-allocate margin and slots auto-sweep on close Placing a risk-increasing order with `isolated: true` automatically transfers the required margin from the main account to the slot, unless you supply `allocated_margin` explicitly. If passed, `allocated_margin` must meet the required minimum, or placement fails with `14033 isolated_allocated_too_low`. When an isolated position is completely closed and has no open orders, an **auto-sweep** automatically transfers all remaining collateral and P&L back to the main account and recycles the slot. Partial position reductions or leverage increases do not trigger a partial auto-sweep; excess margin remains in the slot until complete closure or [manual transfer](/api-reference/wallet/private-submit_transfer_between_subaccounts). 2\. Integration walkthrough 2.1 Authenticate and subscribe Authenticate HTTP and WebSocket sessions as the main account before you call private methods or subscribe. For the authentication flow, see the [Global Derivatives technical guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical). Subscribe to the [isolated order](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedorderskindcurrencyinterval), [isolated trade](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradeskindcurrencyinterval), [isolated change](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangeskindcurrencyinterval), [isolated portfolio](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedportfoliocurrency), and [isolated liquidation](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedliquidation) channels. For all private channels and the AsyncAPI specification, see [Global Derivatives WebSocket endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints):
+### 1.4 Orders auto-allocate margin and slots auto-sweep on close
+
+Placing a risk-increasing order with `isolated: true` automatically transfers the required margin from the main account to the slot, unless you supply `allocated_margin` explicitly. If passed, `allocated_margin` must meet the required minimum, or placement fails with `14033 isolated_allocated_too_low`. When an isolated position is completely closed and has no open orders, an **auto-sweep** automatically transfers all remaining collateral and P&L back to the main account and recycles the slot. Partial position reductions or leverage increases do not trigger a partial auto-sweep; excess margin remains in the slot until complete closure or [manual transfer](/api-reference/wallet/private-submit_transfer_between_subaccounts).
+
+## 2\. Integration walkthrough
+
+### 2.1 Authenticate and subscribe
+
+Authenticate HTTP and WebSocket sessions as the main account before you call private methods or subscribe. For the authentication flow, see the [Global Derivatives technical guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical). Subscribe to the [isolated order](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedorderskindcurrencyinterval), [isolated trade](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedtradeskindcurrencyinterval), [isolated change](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedchangeskindcurrencyinterval), [isolated portfolio](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedportfoliocurrency), and [isolated liquidation](/api-reference/coinbase-deribit-app-api/websocket/user/userisolatedliquidation) channels. For all private channels and the AsyncAPI specification, see [Global Derivatives WebSocket endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints):
     
     
     {
@@ -74,7 +99,13 @@ Channel grammar depends on the channel family:
   * For `portfolio`: `user.isolated.portfolio.<currency>`, where `<currency>` is a currency code or `any` (e.g. `USDC` or `user.isolated.portfolio.any`).
   * For `liquidation`: `user.isolated.liquidation`.
 
-Compare the `result` array against the channels you requested: unsupported channels are silently omitted. Base channels (`user.orders.*`, `user.trades.*`, `user.changes.*`) carry main-account activity only; subscribe to both sets if you track cross and isolated activity. Events carry the owning slot’s `user_id`, plus `main_uid` and `isolated: true` on order, trade, and change records. When a slot is recycled, the portfolio channel emits a final frame with zeroed equity and margin fields. A liquidation notification reports an event, not slot readiness; refresh positions, orders, portfolio state, and the binding afterward. 2.2 Discover isolated subaccounts Call [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts) with `include_isolated: true` on application startup or reconnection to discover existing active slots and their assigned `subaccount_id`s. If you have not placed an isolated order yet, [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts) returns **only your main account**. Isolated subaccounts are lazily provisioned when you submit your first order with `isolated: true` (see Place an isolated order).
+Compare the `result` array against the channels you requested: unsupported channels are silently omitted. Base channels (`user.orders.*`, `user.trades.*`, `user.changes.*`) carry main-account activity only; subscribe to both sets if you track cross and isolated activity. Events carry the owning slot’s `user_id`, plus `main_uid` and `isolated: true` on order, trade, and change records. When a slot is recycled, the portfolio channel emits a final frame with zeroed equity and margin fields. A liquidation notification reports an event, not slot readiness; refresh positions, orders, portfolio state, and the binding afterward.
+
+### 2.2 Discover isolated subaccounts
+
+Call [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts) with `include_isolated: true` on application startup or reconnection to discover existing active slots and their assigned `subaccount_id`s.
+
+If you have not placed an isolated order yet, [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts) returns **only your main account**. Isolated subaccounts are lazily provisioned when you submit your first order with `isolated: true` (see Place an isolated order).
     
     
     {
@@ -123,7 +154,7 @@ Compare the `result` array against the channels you requested: unsupported chann
     }
     
 
-2.3 Monitor risk
+### 2.3 Monitor risk
     
     
     {
@@ -137,7 +168,11 @@ Compare the `result` array against the channels you requested: unsupported chann
     }
     
 
-The plural [`private/get_account_summaries`](/api-reference/account-management/private-get_account_summaries) endpoint does not parse a `currency` parameter; summaries for all portfolio currencies are always returned for both main and isolated subaccounts. With `include_isolated: true`, it returns active isolated subaccounts under `isolated_account_summaries` as a list of entries with the structure `{ "id": 123456, "summaries": [ ... ] }`. The risk fields (`equity`, `margin_balance`, `initial_margin`, `maintenance_margin`, `available_funds`) live on the per-currency rows inside the nested `summaries` array, not flat on the slot entry. Callers must select the matching currency row (e.g. `USDC`) from `summaries` client-side. Only active/bound slots appear in `isolated_account_summaries` (recycled slots are omitted). Fields are numeric (zero where applicable); nulls are anomalous. If a slot’s aggregation fails, the slot is omitted entirely. Evaluate risk per isolated slot, not against the cross account. Call [`private/get_account_summary`](/api-reference/account-management/private-get_account_summary) with `subaccount_id` for a direct, per-slot check. 2.4 Place an isolated order Before placing an isolated order, use [`private/get_margins`](/api-reference/trading/private-get_margins) with `isolated: true` to preview the margin requirement in isolated scope.
+The plural [`private/get_account_summaries`](/api-reference/account-management/private-get_account_summaries) endpoint does not parse a `currency` parameter; summaries for all portfolio currencies are always returned for both main and isolated subaccounts. With `include_isolated: true`, it returns active isolated subaccounts under `isolated_account_summaries` as a list of entries with the structure `{ "id": 123456, "summaries": [ ... ] }`. The risk fields (`equity`, `margin_balance`, `initial_margin`, `maintenance_margin`, `available_funds`) live on the per-currency rows inside the nested `summaries` array, not flat on the slot entry. Callers must select the matching currency row (e.g. `USDC`) from `summaries` client-side. Only active/bound slots appear in `isolated_account_summaries` (recycled slots are omitted). Fields are numeric (zero where applicable); nulls are anomalous. If a slot’s aggregation fails, the slot is omitted entirely. Evaluate risk per isolated slot, not against the cross account. Call [`private/get_account_summary`](/api-reference/account-management/private-get_account_summary) with `subaccount_id` for a direct, per-slot check.
+
+### 2.4 Place an isolated order
+
+Before placing an isolated order, use [`private/get_margins`](/api-reference/trading/private-get_margins) with `isolated: true` to preview the margin requirement in isolated scope.
     
     
     {
@@ -173,7 +208,11 @@ The plural [`private/get_account_summaries`](/api-reference/account-management/p
     }
     
 
-The response identifies the provisioned slot through `order.user_id`. 2.5 Manage collateral Collateral moves between the main account and the slot in three ways. Automatic allocation: on a risk-increasing order with `allocated_margin` omitted, the API calculates the required amount. If you supply it, the amount must meet the required minimum, or the order fails with `14033 isolated_allocated_too_low`; the error `data` returns `required_minimum` and `suggested_amount` (see 3.3). Manual top-up with [`private/submit_transfer_between_subaccounts`](/api-reference/wallet/private-submit_transfer_between_subaccounts):
+The response identifies the provisioned slot through `order.user_id`.
+
+### 2.5 Manage collateral
+
+Collateral moves between the main account and the slot in three ways. Automatic allocation: on a risk-increasing order with `allocated_margin` omitted, the API calculates the required amount. If you supply it, the amount must meet the required minimum, or the order fails with `14033 isolated_allocated_too_low`; the error `data` returns `required_minimum` and `suggested_amount` (see 3.3). Manual top-up with [`private/submit_transfer_between_subaccounts`](/api-reference/wallet/private-submit_transfer_between_subaccounts):
     
     
     {
@@ -189,7 +228,11 @@ The response identifies the provisioned slot through `order.user_id`. 2.5 Manage
     }
     
 
-`source` is the main account ID and `destination` the slot ID. Common failures: `10009 not_enough_funds` (insufficient balance or wrong currency) and `12100 transfer_not_allowed` (invalid or unauthorized destination subaccount ID). Confirm completion through the portfolio channel or a fresh account summary, not the transfer response alone. On a risk-reducing order, a supplied `allocated_margin` is transferred as-is. Omit it on closes unless you mean to add collateral. Collateral returns to the main account automatically when the slot is recycled; there is no separate withdrawal step. 2.6 Set leverage Both [`private/get_leverage`](/api-reference/account-management/private-get_leverage) and [`private/set_leverage`](/api-reference/trading/private-set_leverage) take `isolated: true` to target the isolated slot scope. Omitting `isolated: true` on [`private/get_leverage`](/api-reference/account-management/private-get_leverage) or [`private/set_leverage`](/api-reference/trading/private-set_leverage) silently acts on cross leverage instead of returning an error. Direct targeting via `subaccount_id` is not a substitute for the flag on leverage calls and is rejected with `14020 only_for_retail_brokers`. Isolated leverage can be configured before a slot is active or bound.
+`source` is the main account ID and `destination` the slot ID. Common failures: `10009 not_enough_funds` (insufficient balance or wrong currency) and `12100 transfer_not_allowed` (invalid or unauthorized destination subaccount ID). Confirm completion through the portfolio channel or a fresh account summary, not the transfer response alone. On a risk-reducing order, a supplied `allocated_margin` is transferred as-is. Omit it on closes unless you mean to add collateral. Collateral returns to the main account automatically when the slot is recycled; there is no separate withdrawal step.
+
+### 2.6 Set leverage
+
+Both [`private/get_leverage`](/api-reference/account-management/private-get_leverage) and [`private/set_leverage`](/api-reference/trading/private-set_leverage) take `isolated: true` to target the isolated slot scope. Omitting `isolated: true` on [`private/get_leverage`](/api-reference/account-management/private-get_leverage) or [`private/set_leverage`](/api-reference/trading/private-set_leverage) silently acts on cross leverage instead of returning an error. Direct targeting via `subaccount_id` is not a substitute for the flag on leverage calls and is rejected with `14020 only_for_retail_brokers`. Isolated leverage can be configured before a slot is active or bound.
     
     
     {
@@ -216,7 +259,9 @@ The response identifies the provisioned slot through `order.user_id`. 2.5 Manage
     }
     
 
-2.7 Edit an isolated order Send [`private/edit`](/api-reference/trading/private-edit) or [`private/edit_by_label`](/api-reference/trading/private-edit_by_label) from the main account with `isolated: true`:
+### 2.7 Edit an isolated order
+
+Send [`private/edit`](/api-reference/trading/private-edit) or [`private/edit_by_label`](/api-reference/trading/private-edit_by_label) from the main account with `isolated: true`:
     
     
     {
@@ -232,7 +277,11 @@ The response identifies the provisioned slot through `order.user_id`. 2.5 Manage
     }
     
 
-An edit that increases risk can include `allocated_margin` to top up the slot in the same call. Editing by targeting the slot directly with `subaccount_id` is rejected with `14020 only_for_retail_brokers`; always edit from the main account with `isolated: true`. 2.8 Cancel isolated orders Single order:
+An edit that increases risk can include `allocated_margin` to top up the slot in the same call. Editing by targeting the slot directly with `subaccount_id` is rejected with `14020 only_for_retail_brokers`; always edit from the main account with `isolated: true`.
+
+### 2.8 Cancel isolated orders
+
+Single order:
     
     
     {
@@ -260,7 +309,11 @@ Without `isolated: true`, the cancel searches only the main account and returns 
     }
     
 
-[`private/cancel_all`](/api-reference/trading/private-cancel_all), [`private/cancel_all_by_currency`](/api-reference/trading/private-cancel_all_by_currency), and [`private/cancel_by_label`](/api-reference/trading/private-cancel_by_label) take the same flag. With `include_isolated: true`, a mass-cancel method includes matching open orders from the main account and every active isolated-margin subaccount. [`private/cancel_all`](/api-reference/trading/private-cancel_all) therefore cancels all open cross-margin and isolated-margin orders; filtered mass-cancel methods apply their instrument, currency, or label filter across both scopes. 2.9 Close, reduce, or reverse a position The simplest close is [`private/close_position`](/api-reference/trading/private-close_position) with `isolated: true`. The API resolves the slot, reads the current position, and submits an opposite-side reduce-only order for the full size:
+[`private/cancel_all`](/api-reference/trading/private-cancel_all), [`private/cancel_all_by_currency`](/api-reference/trading/private-cancel_all_by_currency), and [`private/cancel_by_label`](/api-reference/trading/private-cancel_by_label) take the same flag. With `include_isolated: true`, a mass-cancel method includes matching open orders from the main account and every active isolated-margin subaccount. [`private/cancel_all`](/api-reference/trading/private-cancel_all) therefore cancels all open cross-margin and isolated-margin orders; filtered mass-cancel methods apply their instrument, currency, or label filter across both scopes.
+
+### 2.9 Close, reduce, or reverse a position
+
+The simplest close is [`private/close_position`](/api-reference/trading/private-close_position) with `isolated: true`. The API resolves the slot, reads the current position, and submits an opposite-side reduce-only order for the full size:
     
     
     {
@@ -292,7 +345,11 @@ For manual control, submit an opposite-side reduce-only order with `isolated: tr
     }
     
 
-An isolated slot is recycled only after its position is closed and all open orders are cancelled. If a close order remains unfilled, cancel or replace it as needed, then confirm that the position and open orders are cleared before relying on the collateral auto-sweep. 2.10 Read positions, open orders, and history Main-account aggregates:
+An isolated slot is recycled only after its position is closed and all open orders are cancelled. If a close order remains unfilled, cancel or replace it as needed, then confirm that the position and open orders are cleared before relying on the collateral auto-sweep.
+
+### 2.10 Read positions, open orders, and history
+
+Main-account aggregates:
     
     
     {
@@ -411,7 +468,13 @@ Isolated perpetual settlements are recorded per slot (including funding fees whe
     }
     
 
-When an isolated position closes, the API may create transaction-log entries for both the isolated subaccount and the main account. Do not rely on a specific transaction type or on values inside `info`, because they can vary. Use the top-level `cashflow` field to review money movements. The `role` field is only available for some transfer types. Treat a cleared `isolated_margin_instrument` value as the confirmation that the isolated slot was recycled. 3\. Runbooks and reference 3.1 Production startup sequence Initialize in this order so you never trade on a partial view:
+When an isolated position closes, the API may create transaction-log entries for both the isolated subaccount and the main account. Do not rely on a specific transaction type or on values inside `info`, because they can vary. Use the top-level `cashflow` field to review money movements. The `role` field is only available for some transfer types. Treat a cleared `isolated_margin_instrument` value as the confirmation that the isolated slot was recycled.
+
+## 3\. Runbooks and reference
+
+### 3.1 Production startup sequence
+
+Initialize in this order so you never trade on a partial view:
 
   1. Authenticate the HTTP and WebSocket sessions as the main account.
   2. Subscribe to the `user.isolated.*` channels and verify the accepted list.
@@ -419,7 +482,7 @@ When an isolated position closes, the API may create transaction-log entries for
   4. Reconcile positions and orders against slot IDs into local state.
   5. Enable order placement.
 
-3.2 Cleanup checklist
+### 3.2 Cleanup checklist
 
   1. Fetch [`private/get_subaccounts`](/api-reference/account-management/private-get_subaccounts) with `include_isolated: true` and record each active slot’s binding.
   2. Cancel the slot’s resting orders with `include_isolated: true` on mass cancels or `isolated: true` on single cancels.
@@ -428,7 +491,9 @@ When an isolated position closes, the API may create transaction-log entries for
   5. Refresh subaccounts until `isolated_margin_instrument` clears and funds settle to the main account.
   6. For audit evidence, key slot history by `subaccount_id` and `instrument_name`.
 
-3.3 Error reference Errors arrive in the JSON-RPC `error` object; some isolated validation errors include a `data` object with machine-readable fields:
+### 3.3 Error reference
+
+Errors arrive in the JSON-RPC `error` object; some isolated validation errors include a `data` object with machine-readable fields:
     
     
     {
@@ -459,7 +524,8 @@ Hidden data is absent from a list or snapshot| Send `include_isolated: true`. `i
 A bound slot is missing from an aggregate read| Aggregates are best-effort. Query the slot directly with `subaccount_id`.  
 Transfer fails with `10009 not_enough_funds` or `12100 transfer_not_allowed`| Check available funds, currency, or destination subaccount authorization. `10009` indicates insufficient funds or invalid currency; `12100` indicates an unauthorized destination.  
 History looks mixed across instruments| The slot ID was recycled and reused. Key records by `subaccount_id` and `instrument_name`.  
-What to read next
+  
+## What to read next
 
   * [Global Derivatives technical guide](/coinbase-app/advanced-trade-apis/guides/derivatives/technical)
   * [Get positions API reference](/api-reference/account-management/private-get_positions)

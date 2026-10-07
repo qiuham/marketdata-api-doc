@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/delete-portfolio
 api_type: Account
-updated_at: 2026-10-06 19:06:45.055290
+updated_at: 2026-10-07 19:07:31.930093
 ---
 
 # Delete Portfolio
 
 **Endpoint:** `DELETE https://api.coinbase.com/api/v3/brokerage/portfolios/{portfolio_uuid}`
 
-PortfoliosDelete PortfolioDelete portfolio.DELETE/api/v3/brokerage/portfolios/{portfolio_uuid}Delete Portfolio
+
+Delete portfolio.
     
     
     curl --request DELETE \
@@ -123,4 +124,32 @@ PortfoliosDelete PortfolioDelete portfolio.DELETE/api/v3/brokerage/portfolios/{p
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersportfolio_uuidstringrequiredThe portfolio UUID.ResponseA successful response.The response is of type `object`.
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Path Parameters
+
+portfolio_uuid
+
+string
+
+required
+
+The portfolio UUID.
+
+#### Response
+
+A successful response.
+
+The response is of type `object`.

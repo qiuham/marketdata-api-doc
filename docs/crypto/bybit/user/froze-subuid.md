@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/froze-subuid
 api_type: REST
-updated_at: 2026-10-06 18:55:04.319831
+updated_at: 2026-10-07 18:56:08.479305
 ---
 
 # Modify Sub API Key

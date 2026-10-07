@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/tickers
 api_type: Market Data
-updated_at: 2026-10-06 18:51:42.860857
+updated_at: 2026-10-07 18:52:52.293644
 ---
 
 # Adjust Collateral Amount

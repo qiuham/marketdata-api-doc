@@ -2,14 +2,17 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/cancel-order
 api_type: Trading
-updated_at: 2026-10-06 19:06:44.281300
+updated_at: 2026-10-07 19:07:31.053065
 ---
 
 # Cancel Orders
 
 **Endpoint:** `POST https://api.coinbase.com/api/v3/brokerage/orders/batch_cancel`
 
-OrdersCancel OrdersInitiate cancel requests for one or more orders. **Equities:** Equity orders use the same `order_ids` request and per-order result format as other products. Do not include `equity_order_metadata` when canceling an order.POST/api/v3/brokerage/orders/batch_cancelCancel Orders
+
+Initiate cancel requests for one or more orders.
+
+**Equities:** Equity orders use the same `order_ids` request and per-order result format as other products. Do not include `equity_order_metadata` when canceling an order.
     
     
     curl --request POST \
@@ -163,9 +166,43 @@ OrdersCancel OrdersInitiate cancel requests for one or more orders. **Equities:*
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Bodyapplication/jsonorder_idsstring[]requiredThe order IDs that cancel requests should be initiated for.Example:
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Body
+
+application/json
+
+order_ids
+
+string[]
+
+required
+
+The order IDs that cancel requests should be initiated for.
+
+Example:
     
     
     ["0000-00000", "1111-11111"]
 
-ResponseA successful response.resultsobject[]The result of initiated cancel requestsShow child attributes
+#### Response
+
+A successful response.
+
+results
+
+object[]
+
+The result of initiated cancel requests

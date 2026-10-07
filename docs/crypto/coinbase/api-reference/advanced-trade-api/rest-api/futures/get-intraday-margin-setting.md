@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting
 api_type: REST
-updated_at: 2026-10-06 19:06:43.933121
+updated_at: 2026-10-07 19:07:30.564966
 ---
 
 # Get Intraday Margin Setting
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/cfm/intraday/margin_setting`
 
-US DerivativesGet Intraday Margin SettingGet the futures intraday margin settingGET/api/v3/brokerage/cfm/intraday/margin_settingGet Intraday Margin Setting
+
+Get the futures intraday margin setting
     
     
     curl --request GET \
@@ -125,4 +126,34 @@ US DerivativesGet Intraday Margin SettingGet the futures intraday margin setting
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.ResponseA successful response.settingenum<string>default:INTRADAY_MARGIN_SETTING_UNSPECIFIEDAvailable options: `INTRADAY_MARGIN_SETTING_UNSPECIFIED`, `INTRADAY_MARGIN_SETTING_STANDARD`, `INTRADAY_MARGIN_SETTING_INTRADAY`
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Response
+
+A successful response.
+
+setting
+
+enum<string>
+
+default:INTRADAY_MARGIN_SETTING_UNSPECIFIED
+
+Available options:
+
+`INTRADAY_MARGIN_SETTING_UNSPECIFIED`,
+
+`INTRADAY_MARGIN_SETTING_STANDARD`,
+
+`INTRADAY_MARGIN_SETTING_INTRADAY`

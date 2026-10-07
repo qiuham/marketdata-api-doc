@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-auto-repay-mode
 api_type: REST
-updated_at: 2026-10-06 18:54:16.369390
+updated_at: 2026-10-07 18:55:21.505634
 ---
 
 # Set Auto Repay Mode

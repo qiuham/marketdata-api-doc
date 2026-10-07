@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary
 api_type: REST
-updated_at: 2026-10-06 19:06:43.910592
+updated_at: 2026-10-07 19:07:30.525840
 ---
 
 # Get US Derivatives Balance Summary
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/cfm/balance_summary`
 
-US DerivativesGet US Derivatives Balance SummaryGet a summary of balances for CFM tradingGET/api/v3/brokerage/cfm/balance_summaryGet Futures Balance Summary
+
+Get a summary of balances for CFM trading
     
     
     curl --request GET \
@@ -210,4 +211,24 @@ US DerivativesGet US Derivatives Balance SummaryGet a summary of balances for CF
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.ResponseA successful response.balance_summaryobjectShow child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Response
+
+A successful response.
+
+balance_summary
+
+object

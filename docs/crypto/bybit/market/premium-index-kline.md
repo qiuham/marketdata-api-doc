@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/premium-index-kline
 api_type: Market Data
-updated_at: 2026-10-06 18:51:37.306412
+updated_at: 2026-10-07 18:52:46.975877
 ---
 
 # Get Recent Public Trades

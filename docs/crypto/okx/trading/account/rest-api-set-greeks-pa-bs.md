@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-greeks-pa-bs
 anchor_id: trading-account-rest-api-set-greeks-pa-bs
 api_type: REST
-updated_at: 2026-10-06 19:21:48.773897
+updated_at: 2026-10-07 19:22:42.361892
 ---
 
 # Set greeks (PA/BS)

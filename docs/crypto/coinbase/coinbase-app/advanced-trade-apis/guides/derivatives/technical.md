@@ -2,12 +2,18 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical
 api_type: Guide
-updated_at: 2026-10-06 19:06:45.814818
+updated_at: 2026-10-07 19:07:32.931342
 ---
 
 # Technical Migration Guide
 
-Global DerivativesTechnical Migration GuideTechnical guide to trading Global Derivatives on Advanced Trade via the new Deribit-powered gatewayOn October 1, 2026, Advanced Trade moved international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform. This guide maps an INTX integration onto the new gateway. For the full API reference — all methods, parameters and schemas — see the [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction). HTTP API The new gateway is JSON-RPC 2.0 over HTTP (and WebSocket). Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction). These are the schema changes most likely to break an existing integration.
+Technical guide to trading Global Derivatives on Advanced Trade via the new Deribit-powered gateway
+
+On October 1, 2026, Advanced Trade moved international derivatives from INTX onto a Deribit-powered gateway running on the Starbase platform. This guide maps an INTX integration onto the new gateway. For the full API reference — all methods, parameters and schemas — see the [Advanced Trade API reference](/api-reference/advanced-trade-api/rest-api/introduction).
+
+## HTTP API
+
+The new gateway is JSON-RPC 2.0 over HTTP (and WebSocket). Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction). These are the schema changes most likely to break an existing integration.
 
   * **Envelope.** Responses follow JSON-RPC: a top-level result or error object plus the request ID, not a bare REST body.
   * **Numeric values.** Send prices and sizes as JSON numbers, and expect them back as JSON numbers. This differs from the Coinbase spot API, which encodes decimals as decimal strings.
@@ -15,24 +21,40 @@ Global DerivativesTechnical Migration GuideTechnical guide to trading Global Der
   * **Client order ID.** Carried in the `label` field, not a dedicated client-order-ID field. Unlike `client_order_id` today, `label` is not guaranteed unique, so don’t rely on it as an idempotency key.
   * **Instrument names.** Instrument names replace the old symbol field and use a new format (see below).
 
-WebSocket API **WebSocket now supports full order entry.** Use WebSocket for trading or event-driven flows — live market data and streams of your orders, positions, and portfolio. Every JSON-RPC HTTP method can be sent on the main WebSocket. The public streams host is subscribe-only. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction).
+## WebSocket API
+
+**WebSocket now supports full order entry.** Use WebSocket for trading or event-driven flows — live market data and streams of your orders, positions, and portfolio.
+
+Every JSON-RPC HTTP method can be sent on the main WebSocket. The public streams host is subscribe-only. Hosts are on the [API reference overview](/api-reference/advanced-trade-api/rest-api/introduction).
 
   * **Two hosts.** Public market data is `public/subscribe` on the streams host. HTTP methods and authenticated order flow are on the main WebSocket. Authenticate by calling `public/auth` after connecting; the socket then stays authenticated, and you re-send `public/auth` on it before the session expires.
   * **Subscriptions.** Subscribe to channels by name. Market-data channels cover the order book, ticker, trades, and charts; private channels cover your orders, position changes, and portfolio.
   * **Cancel on Disconnect (CoD).** An opt-in safety mechanism: your orders auto-cancel if the connection drops.
   * **Heartbeats.** The server sends periodic test requests that your client must answer to keep the connection alive. You set the heartbeat interval from `public/set_heartbeat`.
 
-Symbology Product| Current| New gateway| Example  
+## Symbology
+
+Product| Current| New gateway| Example  
 ---|---|---|---  
 **Perpetuals**| `{BASE}-PERP-INTX`| `{BASE}_USDC-PERPETUAL`| `BTC-PERP-INTX` → `BTC_USDC-PERPETUAL`  
 **Options** (new)| —| `{BASE}-{DDMMMYY}-{STRIKE}-{C/P}`| `BTC-25MAR26-100000-C`  
 **Dated futures** (new)| —| `{BASE}-{DDMMMYY}`| `BTC-12JUN26`  
-Discover all tradable instruments via `public/get_instruments`, filtering by kind (future or option). Authentication Keep your CDP API key. You do not need to create a separate trading account or key. Your derivatives traffic routes through the Coinbase gateway, and you authenticate with the same CDP API key you use today. What changes is the auth flow. On the new gateway you exchange your key for a short-lived access token, then send that token with each private request. Aspect| Current API| New gateway  
+  
+Discover all tradable instruments via `public/get_instruments`, filtering by kind (future or option).
+
+## Authentication
+
+Keep your CDP API key. You do not need to create a separate trading account or key. Your derivatives traffic routes through the Coinbase gateway, and you authenticate with the same CDP API key you use today. What changes is the auth flow. On the new gateway you exchange your key for a short-lived access token, then send that token with each private request.
+
+Aspect| Current API| New gateway  
 ---|---|---  
 **Key management**|  CDP Portal| Unchanged — CDP Portal, as today  
 **Auth flow (HTTP)**|  Sign every request| Exchange your credential once via `public/auth`, then carry the returned access token on each request  
 **Auth flow (WebSocket)**|  Sign every request| Authenticate once via `public/auth`; the connection stays authenticated  
-Auth example Exchange your CDP key for an access token, then trade:
+  
+### Auth example
+
+Exchange your CDP key for an access token, then trade:
     
     
     // public/auth — exchange your CDP key for an access token
@@ -59,6 +81,7 @@ Auth example Exchange your CDP key for an access token, then trade:
     
 
   * HTTP
+
   * WebSocket
 
 ![CDP key authentication over HTTP](https://mintcdn.com/coinbase-prod/A5C6GnUDQYs1tVJd/coinbase-app/advanced-trade-apis/guides/derivatives/images/auth-cdp-http-fp.svg?fit=max&auto=format&n=A5C6GnUDQYs1tVJd&q=85&s=1d12d48f39983816ab0879def4726d74)
@@ -75,7 +98,11 @@ Auth example Exchange your CDP key for an access token, then trade:
   * When you call `public/auth` that authorizes the websocket session, no return token is needed to access private methods.
   * Refresh the websockets authentication before it expires (~50 minutes).
 
-**Tip** : Send `public/auth` as a `POST` with the credential in the request body, so it stays out of URLs, browser history, and access logs. The example below shows the calls. Attaching a Take Profit / Stop Loss (OTOCO) The combined take-profit / stop-loss order is replaced by an entry order with two attached exit legs. Set `linked_order_type` to `one_triggers_one_cancels_other` and supply the legs in `otoco_config`. When the entry fills it places both exits; whichever fills first cancels the other. Each leg returns its own order ID.
+**Tip** : Send `public/auth` as a `POST` with the credential in the request body, so it stays out of URLs, browser history, and access logs. The example below shows the calls.
+
+## Attaching a Take Profit / Stop Loss (OTOCO)
+
+The combined take-profit / stop-loss order is replaced by an entry order with two attached exit legs. Set `linked_order_type` to `one_triggers_one_cancels_other` and supply the legs in `otoco_config`. When the entry fills it places both exits; whichever fills first cancels the other. Each leg returns its own order ID.
     
     
     {
@@ -96,7 +123,11 @@ Auth example Exchange your CDP key for an access token, then trade:
     }
     
 
-Endpoint mapping The protocol changes from REST to JSON-RPC 2.0. Instead of calling a REST path, you call a method by name with a parameters object. Send one request per frame, with no batching and a 32 KB maximum per frame. Action| Current API| New API  
+## Endpoint mapping
+
+The protocol changes from REST to JSON-RPC 2.0. Instead of calling a REST path, you call a method by name with a parameters object. Send one request per frame, with no batching and a 32 KB maximum per frame.
+
+Action| Current API| New API  
 ---|---|---  
 **Place order**  
  _Side becomes the method_| `POST /orders`| `private/buy`, `private/sell`  
@@ -120,4 +151,19 @@ Endpoint mapping The protocol changes from REST to JSON-RPC 2.0. Instead of call
 **Order book**| `GET /product_book`| `public/get_order_book`  
 **Ticker**| `GET /best_bid_ask`| `public/ticker`  
 **Candles**| `GET /products/{id}/candles`| `public/get_tradingview_chart_data`  
-Method names shown with `*` denote a family — for example, `private/get_order_history_by_currency` and `private/get_order_history_by_instrument`. FAQ My stop-limit order has two different IDs.Expected. A stop-limit order yields two IDs across its lifecycle — one before trigger and one after. Track both; do not assume a stable single ID.Why are my order-type and status values lowercase?Order-type, time-in-force, and status values are lowercase on the new gateway — for example, status `open` and `filled`, not `OPEN` and `FILLED`.What price do stop and take orders trigger on?Stop and take orders trigger on `index_price`, `mark_price`, or `last_price` — you choose the trigger source per order.
+  
+Method names shown with `*` denote a family — for example, `private/get_order_history_by_currency` and `private/get_order_history_by_instrument`.
+
+## FAQ
+
+My stop-limit order has two different IDs.
+
+Expected. A stop-limit order yields two IDs across its lifecycle — one before trigger and one after. Track both; do not assume a stable single ID.
+
+Why are my order-type and status values lowercase?
+
+Order-type, time-in-force, and status values are lowercase on the new gateway — for example, status `open` and `filled`, not `OPEN` and `FILLED`.
+
+What price do stop and take orders trigger on?
+
+Stop and take orders trigger on `index_price`, `mark_price`, or `last_price` — you choose the trigger source per order.

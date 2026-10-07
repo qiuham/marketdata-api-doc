@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product
 api_type: Market Data
-updated_at: 2026-10-06 19:06:45.468919
+updated_at: 2026-10-07 19:07:32.504851
 ---
 
 # Get Public Product
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}`
 
-PublicGet Public ProductGet information on a single product by product ID.GET/api/v3/brokerage/market/products/{product_id}Get Public Product
+
+Get information on a single product by product ID.
     
     
     curl --request GET \
@@ -315,9 +316,525 @@ PublicGet Public ProductGet information on a single product by product ID.GET/ap
       ]
     }
 
-Path Parametersproduct_idstringrequiredThe trading pair (e.g. 'BTC-USD').ResponseA successful response.product_idstringrequiredThe trading pair (e.g. 'BTC-USD').Example:`"BTC-USD"`pricestringrequiredThe current price for the product, in quote currency.Example:`"140.21"`price_percentage_change_24hstringrequiredThe amount the price of the product has changed, in percent, in the last 24 hours.Example:`"9.43%"`volume_24hstringrequiredThe trading volume for the product in the last 24 hours.Example:`"1908432"`volume_percentage_change_24hstringrequiredThe amount the volume of the product has changed, in percent, in the last 24 hours.Example:`"9.43%"`base_incrementstringrequiredMinimum amount base value can be increased or decreased at once.Example:`"0.00000001"`quote_incrementstringrequiredMinimum amount quote value can be increased or decreased at once.Example:`"0.00000001"`quote_min_sizestringrequiredMinimum size that can be represented of quote currency.Example:`"0.00000001"`quote_max_sizestringrequiredMaximum size that can be represented of quote currency.Example:`"1000"`base_min_sizestringrequiredMinimum size that can be represented of base currency.Example:`"0.00000001"`base_max_sizestringrequiredMaximum size that can be represented of base currency.Example:`"1000"`base_namestringrequiredName of the base currency.Example:`"Bitcoin"`quote_namestringrequiredName of the quote currency.Example:`"US Dollar"`watchedbooleanrequiredWhether or not the product is on the user's watchlist.Example:`true`is_disabledbooleanrequiredWhether or not the product is disabled for trading.Example:`false`newbooleanrequiredWhether or not the product is 'new'.Example:`true`statusstringrequiredStatus of the product.cancel_onlybooleanrequiredWhether or not orders of the product can only be cancelled, not placed or edited.Example:`true`limit_onlybooleanrequiredWhether or not orders of the product can only be limit orders, not market orders.Example:`true`post_onlybooleanrequiredWhether or not orders of the product can only be posted, not cancelled.Example:`true`trading_disabledbooleanrequiredWhether or not the product is disabled for trading for all market participants.Example:`false`auction_modebooleanrequiredWhether or not the product is in auction mode.Example:`true`base_display_symbolstringrequiredSymbol of the base display currency.Example:`"BTC"`quote_display_symbolstringrequiredSymbol of the quote display currency.Example:`"USD"`product_typeenum<string>default:UNKNOWN_PRODUCT_TYPEType of the product.Available options: `UNKNOWN_PRODUCT_TYPE`, `SPOT`, `FUTURE`, `EQUITY`, `OPTION_GROUP`, `FUTURE_GROUP` quote_currency_idstringSymbol of the quote currency.Example:`"USD"`base_currency_idstringSymbol of the base currency.Example:`"BTC"`fcm_trading_session_detailsobjectShow child attributesmid_market_pricestringThe current midpoint of the bid-ask spread, in quote currency.Example:`"140.22"`aliasstringProduct id for the corresponding unified book.Example:`"BTC-USD"`alias_tostring[]Product ids that this product serves as an alias for.Example:
+#### Path Parameters
+
+product_id
+
+string
+
+required
+
+The trading pair (e.g. 'BTC-USD').
+
+#### Response
+
+A successful response.
+
+product_id
+
+string
+
+required
+
+The trading pair (e.g. 'BTC-USD').
+
+Example:
+
+`"BTC-USD"`
+
+price
+
+string
+
+required
+
+The current price for the product, in quote currency.
+
+Example:
+
+`"140.21"`
+
+price_percentage_change_24h
+
+string
+
+required
+
+The amount the price of the product has changed, in percent, in the last 24 hours.
+
+Example:
+
+`"9.43%"`
+
+volume_24h
+
+string
+
+required
+
+The trading volume for the product in the last 24 hours.
+
+Example:
+
+`"1908432"`
+
+volume_percentage_change_24h
+
+string
+
+required
+
+The amount the volume of the product has changed, in percent, in the last 24 hours.
+
+Example:
+
+`"9.43%"`
+
+base_increment
+
+string
+
+required
+
+Minimum amount base value can be increased or decreased at once.
+
+Example:
+
+`"0.00000001"`
+
+quote_increment
+
+string
+
+required
+
+Minimum amount quote value can be increased or decreased at once.
+
+Example:
+
+`"0.00000001"`
+
+quote_min_size
+
+string
+
+required
+
+Minimum size that can be represented of quote currency.
+
+Example:
+
+`"0.00000001"`
+
+quote_max_size
+
+string
+
+required
+
+Maximum size that can be represented of quote currency.
+
+Example:
+
+`"1000"`
+
+base_min_size
+
+string
+
+required
+
+Minimum size that can be represented of base currency.
+
+Example:
+
+`"0.00000001"`
+
+base_max_size
+
+string
+
+required
+
+Maximum size that can be represented of base currency.
+
+Example:
+
+`"1000"`
+
+base_name
+
+string
+
+required
+
+Name of the base currency.
+
+Example:
+
+`"Bitcoin"`
+
+quote_name
+
+string
+
+required
+
+Name of the quote currency.
+
+Example:
+
+`"US Dollar"`
+
+watched
+
+boolean
+
+required
+
+Whether or not the product is on the user's watchlist.
+
+Example:
+
+`true`
+
+is_disabled
+
+boolean
+
+required
+
+Whether or not the product is disabled for trading.
+
+Example:
+
+`false`
+
+new
+
+boolean
+
+required
+
+Whether or not the product is 'new'.
+
+Example:
+
+`true`
+
+status
+
+string
+
+required
+
+Status of the product.
+
+cancel_only
+
+boolean
+
+required
+
+Whether or not orders of the product can only be cancelled, not placed or edited.
+
+Example:
+
+`true`
+
+limit_only
+
+boolean
+
+required
+
+Whether or not orders of the product can only be limit orders, not market orders.
+
+Example:
+
+`true`
+
+post_only
+
+boolean
+
+required
+
+Whether or not orders of the product can only be posted, not cancelled.
+
+Example:
+
+`true`
+
+trading_disabled
+
+boolean
+
+required
+
+Whether or not the product is disabled for trading for all market participants.
+
+Example:
+
+`false`
+
+auction_mode
+
+boolean
+
+required
+
+Whether or not the product is in auction mode.
+
+Example:
+
+`true`
+
+base_display_symbol
+
+string
+
+required
+
+Symbol of the base display currency.
+
+Example:
+
+`"BTC"`
+
+quote_display_symbol
+
+string
+
+required
+
+Symbol of the quote display currency.
+
+Example:
+
+`"USD"`
+
+product_type
+
+enum<string>
+
+default:UNKNOWN_PRODUCT_TYPE
+
+Type of the product.
+
+Available options:
+
+`UNKNOWN_PRODUCT_TYPE`,
+
+`SPOT`,
+
+`FUTURE`,
+
+`EQUITY`,
+
+`OPTION_GROUP`,
+
+`FUTURE_GROUP`
+
+quote_currency_id
+
+string
+
+Symbol of the quote currency.
+
+Example:
+
+`"USD"`
+
+base_currency_id
+
+string
+
+Symbol of the base currency.
+
+Example:
+
+`"BTC"`
+
+fcm_trading_session_details
+
+object
+
+mid_market_price
+
+string
+
+The current midpoint of the bid-ask spread, in quote currency.
+
+Example:
+
+`"140.22"`
+
+alias
+
+string
+
+Product id for the corresponding unified book.
+
+Example:
+
+`"BTC-USD"`
+
+alias_to
+
+string[]
+
+Product ids that this product serves as an alias for.
+
+Example:
     
     
     ["BTC-USDC"]
 
-view_onlybooleanReflects whether an FCM product has expired. For SPOT, set get_tradability_status to get a return value here. Defaulted to false for all other product types.Example:`true`price_incrementstringMinimum amount price can be increased or decreased at once.Example:`"0.00000001"`display_namestringDisplay name for the product e.g. BTC-PERP-INTX => BTC PERPExample:`"BTC PERP"`product_venueenum<string>default:UNKNOWN_VENUE_TYPEThe sole venue id for the product. Defaults to CBE if the product is not specific to a single venueAvailable options: `UNKNOWN_VENUE_TYPE`, `CBE`, `FCM`, `INTX` Example:`"neptune"`approximate_quote_24h_volumestringThe approximate trading volume for the product in the last 24 hours based on the current quote.Example:`"1908432"`new_atstring<RFC3339 Timestamp>The timestamp when the product was listed. This is only populated if product has new tag.Example:`"2021-07-01T00:00:00Z"`market_capstringThe market capitalization of the product's base asset.Example:`"1500000000000"`icon_colorstringcolor for icon displayExample:`"red"`icon_urlstringA URL to the icon image.Example:`"https://example.com"`display_name_overwritestringAn alternative name to display for the product.Example:`"Bitcoin Perpetual"`about_descriptionstringdescription used in about section for an assetExample:`"nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil."`best_bid_pricestringbest_ask_pricestringhigh_24hstringlow_24hstringfuture_product_detailsobjectShow child attributesequity_product_detailsobjectEquity-specific identity, trading availability, session, and sizing details. Populated when product_type is EQUITY.Show child attributes
+view_only
+
+boolean
+
+Reflects whether an FCM product has expired. For SPOT, set get_tradability_status to get a return value here. Defaulted to false for all other product types.
+
+Example:
+
+`true`
+
+price_increment
+
+string
+
+Minimum amount price can be increased or decreased at once.
+
+Example:
+
+`"0.00000001"`
+
+display_name
+
+string
+
+Display name for the product e.g. BTC-PERP-INTX => BTC PERP
+
+Example:
+
+`"BTC PERP"`
+
+product_venue
+
+enum<string>
+
+default:UNKNOWN_VENUE_TYPE
+
+The sole venue id for the product. Defaults to CBE if the product is not specific to a single venue
+
+Available options:
+
+`UNKNOWN_VENUE_TYPE`,
+
+`CBE`,
+
+`FCM`,
+
+`INTX`
+
+Example:
+
+`"neptune"`
+
+approximate_quote_24h_volume
+
+string
+
+The approximate trading volume for the product in the last 24 hours based on the current quote.
+
+Example:
+
+`"1908432"`
+
+new_at
+
+string<RFC3339 Timestamp>
+
+The timestamp when the product was listed. This is only populated if product has new tag.
+
+Example:
+
+`"2021-07-01T00:00:00Z"`
+
+market_cap
+
+string
+
+The market capitalization of the product's base asset.
+
+Example:
+
+`"1500000000000"`
+
+icon_color
+
+string
+
+color for icon display
+
+Example:
+
+`"red"`
+
+icon_url
+
+string
+
+A URL to the icon image.
+
+Example:
+
+`"https://example.com"`
+
+display_name_overwrite
+
+string
+
+An alternative name to display for the product.
+
+Example:
+
+`"Bitcoin Perpetual"`
+
+about_description
+
+string
+
+description used in about section for an asset
+
+Example:
+
+`"nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil."`
+
+best_bid_price
+
+string
+
+best_ask_price
+
+string
+
+high_24h
+
+string
+
+low_24h
+
+string
+
+future_product_details
+
+object
+
+equity_product_details
+
+object
+
+Equity-specific identity, trading availability, session, and sizing details. Populated when product_type is EQUITY.

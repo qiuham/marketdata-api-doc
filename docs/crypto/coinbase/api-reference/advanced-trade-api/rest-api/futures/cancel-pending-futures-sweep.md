@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/cancel-pending-futures-sweep
 api_type: REST
-updated_at: 2026-10-06 19:06:43.775601
+updated_at: 2026-10-07 19:07:30.348152
 ---
 
 # Cancel Pending US Derivatives Sweep
 
 **Endpoint:** `DELETE https://api.coinbase.com/api/v3/brokerage/cfm/sweeps`
 
-US DerivativesCancel Pending US Derivatives SweepCancel the pending sweep of funds from FCM wallet to USD Spot walletDELETE/api/v3/brokerage/cfm/sweepsCancel Pending Futures Sweep
+
+Cancel the pending sweep of funds from FCM wallet to USD Spot wallet
     
     
     curl --request DELETE \
@@ -125,4 +126,24 @@ US DerivativesCancel Pending US Derivatives SweepCancel the pending sweep of fun
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.ResponseA successful response.successboolean
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Response
+
+A successful response.
+
+success
+
+boolean

@@ -2,14 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade
 api_type: Trading
-updated_at: 2026-10-06 19:06:43.717540
+updated_at: 2026-10-07 19:07:30.264748
 ---
 
 # Get Convert Trade
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/convert/trade/{trade_id}`
 
-ConvertGet Convert TradeGets a list of information about a convert trade with a specified trade id, source account, and target accountGET/api/v3/brokerage/convert/trade/{trade_id}Get Convert Trade
+
+Gets a list of information about a convert trade with a specified trade id, source account, and target account
     
     
     curl --request GET \
@@ -2542,4 +2543,52 @@ ConvertGet Convert TradeGets a list of information about a convert trade with a 
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parameterstrade_idstringrequiredThe ID of the trade to commit.Query Parametersfrom_accountstringrequiredThe currency of the account to convert from (e.g. USD).to_accountstringrequiredThe currency of the account to convert to (e.g. USDC).ResponseA successful response.tradeobjectShow child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Path Parameters
+
+trade_id
+
+string
+
+required
+
+The ID of the trade to commit.
+
+#### Query Parameters
+
+from_account
+
+string
+
+required
+
+The currency of the account to convert from (e.g. USD).
+
+to_account
+
+string
+
+required
+
+The currency of the account to convert to (e.g. USDC).
+
+#### Response
+
+A successful response.
+
+trade
+
+object

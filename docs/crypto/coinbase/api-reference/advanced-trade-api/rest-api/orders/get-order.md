@@ -2,14 +2,17 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order
 api_type: Trading
-updated_at: 2026-10-06 19:06:44.450028
+updated_at: 2026-10-07 19:07:31.519355
 ---
 
 # Get Order
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/orders/historical/{order_id}`
 
-OrdersGet OrderGet a single order by order ID. **Equities:** The response identifies equity orders with `product_type: EQUITY`. Use `displayed_order_config` for the equity time in force and `equity_trading_session` for the session in which the order is eligible to execute.GET/api/v3/brokerage/orders/historical/{order_id}Get Order
+
+Get a single order by order ID.
+
+**Equities:** The response identifies equity orders with `product_type: EQUITY`. Use `displayed_order_config` for the equity time in force and `equity_trading_session` for the session in which the order is eligible to execute.
     
     
     curl --request GET \
@@ -412,4 +415,50 @@ OrdersGet OrderGet a single order by order ID. **Equities:** The response identi
       ]
     }
 
-AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Path Parametersorder_idstringrequiredThe ID of the order.Query Parametersclient_order_idstring(Deprecated) Client Order ID to fetch the order with.user_native_currencystring(Deprecated) Native currency to fetch order with. Default is `USD`.ResponseA successful response.orderobjectThe retrieved order.Show child attributes
+#### Authorizations
+
+ApiKeyOAuth2ApiKeyOAuth2
+
+Authorization
+
+string
+
+header
+
+required
+
+A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Path Parameters
+
+order_id
+
+string
+
+required
+
+The ID of the order.
+
+#### Query Parameters
+
+client_order_id
+
+string
+
+(Deprecated) Client Order ID to fetch the order with.
+
+user_native_currency
+
+string
+
+(Deprecated) Native currency to fetch order with. Default is `USD`.
+
+#### Response
+
+A successful response.
+
+order
+
+object
+
+The retrieved order.

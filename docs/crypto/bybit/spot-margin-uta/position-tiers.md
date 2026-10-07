@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/position-tiers
 api_type: REST
-updated_at: 2026-10-06 18:54:15.128266
+updated_at: 2026-10-07 18:55:20.271861
 ---
 
 # Set Auto Repay Mode

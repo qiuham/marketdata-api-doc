@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay-info
 api_type: REST
-updated_at: 2026-10-06 18:52:50.741346
+updated_at: 2026-10-07 18:53:57.945600
 ---
 
 # Get Closed PnL
