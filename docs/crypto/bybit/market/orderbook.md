@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/orderbook
 api_type: Market Data
-updated_at: 2026-10-07 18:52:46.354375
+updated_at: 2026-10-08 18:49:28.232088
 ---
 
 # Get Recent Public Trades

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/open-order
 api_type: Trading
-updated_at: 2026-10-07 18:47:39.033976
+updated_at: 2026-10-08 18:46:58.190310
 ---
 
 # Get Event Contract Active Orders

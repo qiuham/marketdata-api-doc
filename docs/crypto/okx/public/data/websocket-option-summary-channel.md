@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-option-summary-channel
 anchor_id: public-data-websocket-option-summary-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:29.897905
+updated_at: 2026-10-08 19:23:06.503075
 ---
 
 # Option summary channel
@@ -37,7 +37,7 @@ Retrieve detailed pricing information of all OPTION contracts. Data will be push
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -207,7 +207,7 @@ data | Array of objects | Subscribed data
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {

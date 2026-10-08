@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-order-book-channel
 anchor_id: spread-trading-websocket-public-channel-order-book-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:15.068255
+updated_at: 2026-10-08 19:22:51.727875
 ---
 
 # Order book channel
@@ -42,7 +42,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -84,7 +84,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -337,7 +337,7 @@ Use the first 25 bids and asks in the full load to form a string (where a colon 
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -379,7 +379,7 @@ Use the first 25 bids and asks in the full load to form a string (where a colon 
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {

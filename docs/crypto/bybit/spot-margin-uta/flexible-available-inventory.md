@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/flexible-available-inventory
 api_type: REST
-updated_at: 2026-10-07 18:55:14.215462
+updated_at: 2026-10-08 18:51:48.875727
 ---
 
 # Get Historical Interest Rate

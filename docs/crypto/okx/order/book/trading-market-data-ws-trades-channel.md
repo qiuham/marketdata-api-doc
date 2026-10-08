@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-trades-channel
 anchor_id: order-book-trading-market-data-ws-trades-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:47.454446
+updated_at: 2026-10-08 19:22:24.193778
 ---
 
 # WS / Trades channel
@@ -44,7 +44,7 @@ The message is sent only once per taker order, filled price, source. The count f
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -208,7 +208,7 @@ The seqId may be the same for different trade updates that occur at the same tim
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {

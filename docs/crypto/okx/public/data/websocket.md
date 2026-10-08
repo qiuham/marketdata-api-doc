@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket
 anchor_id: public-data-websocket
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:28.002271
+updated_at: 2026-10-08 19:23:04.613740
 ---
 
 # WebSocket
@@ -42,7 +42,7 @@ The triggering scenarios for incremental data are:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -524,7 +524,7 @@ Retrieve the open interest. Data will be pushed every 3 seconds when there are u
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -668,7 +668,7 @@ Retrieve funding rate. Data will be pushed in 30s to 90s.
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -844,7 +844,7 @@ Retrieve the maximum buy price and minimum sell price of instruments. Data will 
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -989,7 +989,7 @@ Retrieve detailed pricing information of all OPTION contracts. Data will be push
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -1162,7 +1162,7 @@ The estimated price, calculated based on index price during the 30-minute period
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -1328,7 +1328,7 @@ Retrieve the mark price. Data will be pushed every 200 ms when the mark price ch
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "mark-price",
@@ -1467,7 +1467,7 @@ Retrieve index tickers data. Push data every 100ms if there are any changes, oth
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -1611,7 +1611,7 @@ Retrieve the candlesticks data of the mark price. The push frequency is the fast
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1774,7 +1774,7 @@ Retrieve the candlesticks data of the index. The push frequency is the fastest i
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1934,7 +1934,7 @@ Retrieve the recent liquidation orders. This data doesn’t represent the total 
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -2068,7 +2068,7 @@ For more ADL details, please refer to [Introduction to Auto-deleveraging](https:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "adl-warning",
@@ -2255,7 +2255,7 @@ Retrieve the most up-to-date economic calendar data. This endpoint is only appli
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2426,7 +2426,7 @@ Only applicable when revision happens
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -2890,7 +2890,7 @@ data | Array of objects | 订阅数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3031,7 +3031,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3199,7 +3199,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3341,7 +3341,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3509,7 +3509,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3672,7 +3672,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "mark-price",
@@ -3808,7 +3808,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -3948,7 +3948,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -4110,7 +4110,7 @@ data | Array of Arrays | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -4271,7 +4271,7 @@ data | Array of Arrays | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -4407,7 +4407,7 @@ data | Array of objects | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "adl-warning",
@@ -4591,7 +4591,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data
 anchor_id: order-book-trading-market-data
 api_type: API
-updated_at: 2026-10-07 19:23:42.479476
+updated_at: 2026-10-08 19:22:19.212175
 ---
 
 # Market Data
@@ -1195,7 +1195,7 @@ The fastest rate is 1 update/100ms. There will be no update if the event is not 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "tickers",
@@ -1363,7 +1363,7 @@ Retrieve the candlesticks data of an instrument. the push frequency is the faste
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1551,7 +1551,7 @@ The message is sent only once per taker order, filled price, source. The count f
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -1717,7 +1717,7 @@ Retrieve the recent trades data. Data will be pushed whenever there is a trade. 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1894,7 +1894,7 @@ Identity verification refers to [Login](/docs-v5/en/#overview-websocket-login)
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {
@@ -2184,7 +2184,7 @@ Retrieve the recent trades data. Data will be pushed whenever there is a trade. 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",
@@ -2340,7 +2340,7 @@ Retrieve call auction details.
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",
@@ -3634,7 +3634,7 @@ ts | String | 数据产生时间，Unix时间戳的毫秒数格式，如 `159702
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "tickers",
@@ -3797,7 +3797,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -3978,7 +3978,7 @@ data | Array of Arrays | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -4141,7 +4141,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -4313,7 +4313,7 @@ books50-l2-tbt50档深度频道，只允许交易手续费等级VIP4及以上的
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {
@@ -4598,7 +4598,7 @@ asks和bids值数组举例说明： ["411.8", "10", "0", "4"]
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",
@@ -4759,7 +4759,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",

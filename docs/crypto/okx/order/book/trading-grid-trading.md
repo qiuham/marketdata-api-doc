@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading
 anchor_id: order-book-trading-grid-trading
 api_type: API
-updated_at: 2026-10-07 19:23:10.708342
+updated_at: 2026-10-08 19:21:47.477814
 ---
 
 # Grid Trading
@@ -2209,7 +2209,7 @@ Retrieve spot grid algo orders. Data will be pushed when triggered by events suc
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2524,7 +2524,7 @@ Retrieve contract grid algo orders. Data will be pushed when triggered by events
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2856,7 +2856,7 @@ Please ignore the empty data.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -3045,7 +3045,7 @@ Please ignore the empty data.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5418,7 +5418,7 @@ tag | String | 订单标签
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5733,7 +5733,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -6064,7 +6064,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -6252,7 +6252,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-price-limit-channel
 anchor_id: public-data-websocket-price-limit-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:29.583334
+updated_at: 2026-10-08 19:23:06.188721
 ---
 
 # Price limit channel
@@ -37,7 +37,7 @@ Retrieve the maximum buy price and minimum sell price of instruments. Data will 
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -182,7 +182,7 @@ Return "" when enabled is false
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {

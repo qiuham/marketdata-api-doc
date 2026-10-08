@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/adl-alert
 api_type: WebSocket
-updated_at: 2026-10-07 18:56:33.888112
+updated_at: 2026-10-08 18:53:03.230471
 ---
 
 # Insurance Pool

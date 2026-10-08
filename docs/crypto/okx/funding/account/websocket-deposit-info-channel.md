@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-websocket-deposit-info-channel
 anchor_id: funding-account-websocket-deposit-info-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:50.285507
+updated_at: 2026-10-08 19:23:26.756086
 ---
 
 # Deposit info channel
@@ -45,7 +45,7 @@ Supports subscriptions for accounts
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -230,7 +230,7 @@ If the deposit comes from internal transfer, this field displays the withdrawal 
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

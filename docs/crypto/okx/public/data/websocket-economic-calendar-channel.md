@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-economic-calendar-channel
 anchor_id: public-data-websocket-economic-calendar-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:32.411360
+updated_at: 2026-10-08 19:23:09.008548
 ---
 
 # Economic calendar channel
@@ -43,7 +43,7 @@ Retrieve the most up-to-date economic calendar data. This endpoint is only appli
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -215,7 +215,7 @@ Only applicable when revision happens
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

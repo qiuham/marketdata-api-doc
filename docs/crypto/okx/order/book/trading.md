@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-10-07 19:22:55.706753
+updated_at: 2026-10-08 19:21:32.561533
 ---
 
 # Order Book Trading
@@ -4075,7 +4075,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4127,7 +4127,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4617,7 +4617,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4667,7 +4667,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -7645,7 +7645,7 @@ Retrieve algo orders (includes `trigger` order, `oco` order, `conditional` order
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -7700,7 +7700,7 @@ Retrieve algo orders (includes `trigger` order, `oco` order, `conditional` order
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -8056,7 +8056,7 @@ Retrieve advance algo orders (including Iceberg order, TWAP order, Trailing orde
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -8109,7 +8109,7 @@ Retrieve advance algo orders (including Iceberg order, TWAP order, Trailing orde
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -10560,7 +10560,7 @@ Retrieve spot grid algo orders. Data will be pushed when triggered by events suc
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -10875,7 +10875,7 @@ Retrieve contract grid algo orders. Data will be pushed when triggered by events
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -11207,7 +11207,7 @@ Please ignore the empty data.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -11396,7 +11396,7 @@ Please ignore the empty data.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -14927,7 +14927,7 @@ Retrieve recurring buy orders. Data will be pushed when triggered by events. It 
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -17480,7 +17480,7 @@ The notification when failing to lead trade.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -18801,7 +18801,7 @@ The fastest rate is 1 update/100ms. There will be no update if the event is not 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "tickers",
@@ -18969,7 +18969,7 @@ Retrieve the candlesticks data of an instrument. the push frequency is the faste
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -19157,7 +19157,7 @@ The message is sent only once per taker order, filled price, source. The count f
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -19323,7 +19323,7 @@ Retrieve the recent trades data. Data will be pushed whenever there is a trade. 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -19500,7 +19500,7 @@ Identity verification refers to [Login](/docs-v5/en/#overview-websocket-login)
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {
@@ -19790,7 +19790,7 @@ Retrieve the recent trades data. Data will be pushed whenever there is a trade. 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",
@@ -19946,7 +19946,7 @@ Retrieve call auction details.
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",
@@ -20084,8 +20084,8 @@ The SBE XML schema is now available for download:
   * The `bbo-tbt` channel is **available to users of any trading fee tier** but requires login. The `trades` and `books-l2-tbt` channels are restricted to users with a trading fee tier of **VIP4** or above in the live trading environment. Other users will receive error code 64003. In the demo trading environment, these channels require **VIP1** or above.  
 
   * SBE channels will use a new WebSocket URL.  
-Live trading: `wss://ws.okx.com:8443/ws/v5/public-sbe`  
-Demo trading: `wss://wspap.okx.com:8443/ws/v5/public-sbe`   
+Live trading: `wss://ws.okx.com/ws/v5/public-sbe`  
+Demo trading: `wss://wspap.okx.com/ws/v5/public-sbe`   
 
   * Both JSON and SBE format data will be available on the same connection, distinguishable by WebSocket frame type. opcode `1` indicates JSON, while opcode `2` indicates SBE.  
 
@@ -24322,7 +24322,7 @@ type | String | 仓位正资产(`posBal`)的单位类型，仅适用于杠杆逐
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -24372,7 +24372,7 @@ type | String | 仓位正资产(`posBal`)的单位类型，仅适用于杠杆逐
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -24855,7 +24855,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -24905,7 +24905,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -27831,7 +27831,7 @@ tradeQuoteCcy | String | 用于交易的计价币种。
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -27882,7 +27882,7 @@ tradeQuoteCcy | String | 用于交易的计价币种。
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -28226,7 +28226,7 @@ false：不自动借币
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -28277,7 +28277,7 @@ false：不自动借币
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -30722,7 +30722,7 @@ tag | String | 订单标签
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -31037,7 +31037,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -31368,7 +31368,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -31556,7 +31556,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -35090,7 +35090,7 @@ algoClOrdId | String | 用户自定义策略ID
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -37656,7 +37656,7 @@ copyTraders | Array of objects | 跟单员信息
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -38961,7 +38961,7 @@ ts | String | 数据产生时间，Unix时间戳的毫秒数格式，如 `159702
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "tickers",
@@ -39124,7 +39124,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -39305,7 +39305,7 @@ data | Array of Arrays | 订阅的数据
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -39468,7 +39468,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -39640,7 +39640,7 @@ books50-l2-tbt50档深度频道，只允许交易手续费等级VIP4及以上的
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {
@@ -39925,7 +39925,7 @@ asks和bids值数组举例说明： ["411.8", "10", "0", "4"]
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",
@@ -40086,7 +40086,7 @@ data | Array of objects | 订阅的数据
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",
@@ -40223,8 +40223,8 @@ SBE XML schema 已经发布：
   * `bbo-tbt` 频道**无用户等级限制** ，但需登录后方可订阅；`trades` 与 `books-l2-tbt` 频道在实盘环境仅对交易费等级 **VIP4 及以上** 用户开放，其他用户接入将收到错误码64003。在模拟盘环境仅对交易费等级 **VIP1** 及以上 用户开放。  
 
   * SBE 频道将使用新的 WebSocket URL。  
-实盘交易：`wss://ws.okx.com:8443/ws/v5/public-sbe`  
-模拟盘交易：`wss://wspap.okx.com:8443/ws/v5/public-sbe`   
+实盘交易：`wss://ws.okx.com/ws/v5/public-sbe`  
+模拟盘交易：`wss://wspap.okx.com/ws/v5/public-sbe`   
 
   * 同一个连接上会同时存在 JSON 和 SBE 格式的数据，可以通过 WebSocket 帧类型区分。opcode `1` 表示 JSON，opcode `2` 表示 SBE。  
 

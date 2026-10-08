@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading
 anchor_id: order-book-trading-copy-trading
 api_type: API
-updated_at: 2026-10-07 19:23:33.700133
+updated_at: 2026-10-08 19:22:10.434071
 ---
 
 # Copy Trading
@@ -2019,7 +2019,7 @@ The notification when failing to lead trade.
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -4173,7 +4173,7 @@ copyTraders | Array of objects | 跟单员信息
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

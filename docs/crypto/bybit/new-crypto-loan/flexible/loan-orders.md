@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/loan-orders
 api_type: REST
-updated_at: 2026-10-07 18:53:21.702878
+updated_at: 2026-10-08 18:50:01.980767
 ---
 
 # Get Flexible Loans

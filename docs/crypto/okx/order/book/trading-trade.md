@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade
 anchor_id: order-book-trading-trade
 api_type: API
-updated_at: 2026-10-07 19:22:56.283419
+updated_at: 2026-10-08 19:21:33.098031
 ---
 
 # Trade
@@ -4073,7 +4073,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4125,7 +4125,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4615,7 +4615,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -4665,7 +4665,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -10109,7 +10109,7 @@ type | String | 仓位正资产(`posBal`)的单位类型，仅适用于杠杆逐
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -10159,7 +10159,7 @@ type | String | 仓位正资产(`posBal`)的单位类型，仅适用于杠杆逐
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -10642,7 +10642,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -10692,7 +10692,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()

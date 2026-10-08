@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-10-07 18:55:13.598114
+updated_at: 2026-10-08 18:51:48.255237
 ---
 
 # Get Historical Interest Rate

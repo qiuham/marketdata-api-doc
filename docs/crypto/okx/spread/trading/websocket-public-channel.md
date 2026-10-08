@@ -3,13 +3,13 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel
 anchor_id: spread-trading-websocket-public-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:14.746183
+updated_at: 2026-10-08 19:22:51.409756
 ---
 
 # WebSocket Public Channel
 
-* Production Trading URL: `wss://ws.okx.com:8443/ws/v5/business`  
-  * Demo Trading URL: `wss://wspap.okx.com:8443/ws/v5/business`
+* Production Trading URL: `wss://ws.okx.com/ws/v5/business`  
+  * Demo Trading URL: `wss://wspap.okx.com/ws/v5/business`
 
 ### Order book channel
 
@@ -47,7 +47,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -89,7 +89,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -334,7 +334,7 @@ Retrieve the recent trades data from `sprd-public-trades`. Data will be pushed w
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -480,7 +480,7 @@ Retrieve the last traded price, bid price, ask price. The fastest rate is 1 upda
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -639,7 +639,7 @@ Retrieve the candlesticks data of an instrument. The push frequency is the faste
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {
@@ -760,8 +760,8 @@ The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,confir
 
 # WebSocket公共频道
 
-* 实盘地址: `wss://ws.okx.com:8443/ws/v5/business`  
-  * 模拟盘地址: `wss://wspap.okx.com:8443/ws/v5/business`
+* 实盘地址: `wss://ws.okx.com/ws/v5/business`  
+  * 模拟盘地址: `wss://wspap.okx.com/ws/v5/business`
 
 ### 深度频道 
 
@@ -800,7 +800,7 @@ The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,confir
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -842,7 +842,7 @@ The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,confir
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1090,7 +1090,7 @@ asks和bids值数组举例说明： ["411.8", "10", "4"]
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1241,7 +1241,7 @@ sz | String | 成交数量
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -1404,7 +1404,7 @@ vol24h
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {

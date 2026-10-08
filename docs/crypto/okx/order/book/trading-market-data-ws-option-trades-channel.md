@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-option-trades-channel
 anchor_id: order-book-trading-market-data-ws-option-trades-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:48.404237
+updated_at: 2026-10-08 19:22:25.142494
 ---
 
 # WS / Option trades channel
@@ -39,7 +39,7 @@ Retrieve the recent trades data. Data will be pushed whenever there is a trade. 
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",
@@ -197,7 +197,7 @@ The first data you receive after subscribing may be cached from the previous tra
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "option-trades",

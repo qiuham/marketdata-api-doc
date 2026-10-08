@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-private-channel-rfqs-channel
 anchor_id: block-trading-websocket-private-channel-rfqs-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:00.182775
+updated_at: 2026-10-08 19:22:36.902914
 ---
 
 # Rfqs channel
@@ -43,7 +43,7 @@ Retrieve the RFQs sent or received by the user. Data will be pushed whenever the
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -276,7 +276,7 @@ state: pending_fill is a kind of moment state, and this channel doesn't update i
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

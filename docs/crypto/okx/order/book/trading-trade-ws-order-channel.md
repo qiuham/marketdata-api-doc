@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-order-channel
 anchor_id: order-book-trading-trade-ws-order-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:04.765889
+updated_at: 2026-10-08 19:21:41.573645
 ---
 
 # WS / Order channel
@@ -48,7 +48,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -100,7 +100,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -588,7 +588,7 @@ For market orders, it's likely the orders channel will show order state as "fill
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -638,7 +638,7 @@ For market orders, it's likely the orders channel will show order state as "fill
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()

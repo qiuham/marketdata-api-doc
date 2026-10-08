@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/query-fund-transfer-result
 api_type: REST
-updated_at: 2026-10-07 18:52:04.511738
+updated_at: 2026-10-08 18:48:47.803234
 ---
 
 # Get NAV Chart

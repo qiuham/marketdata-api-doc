@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-call-auction-details-channel
 anchor_id: order-book-trading-market-data-ws-call-auction-details-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:48.716952
+updated_at: 2026-10-08 19:22:25.455508
 ---
 
 # WS / Call auction details channel
@@ -39,7 +39,7 @@ Retrieve call auction details.
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",
@@ -192,7 +192,7 @@ During call auction, users can get the updates of equilibrium price, matched siz
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [{
             "channel": "call-auction-details",

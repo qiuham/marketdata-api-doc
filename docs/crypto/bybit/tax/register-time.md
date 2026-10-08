@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/register-time
 api_type: REST
-updated_at: 2026-10-07 18:55:58.781864
+updated_at: 2026-10-08 18:52:30.256100
 ---
 
 # Get User Register Date

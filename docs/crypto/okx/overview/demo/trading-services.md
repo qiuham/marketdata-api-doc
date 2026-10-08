@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-demo-trading-services
 anchor_id: overview-demo-trading-services
 api_type: API
-updated_at: 2026-10-07 19:22:29.925370
+updated_at: 2026-10-08 19:21:06.998644
 ---
 
 # Demo Trading Services
@@ -14,11 +14,11 @@ The Demo Trading URL:
 
   * REST: `https://openapi.okx.com`  
 
-  * Public WebSocket: `wss://wspap.okx.com:8443/ws/v5/public`  
+  * Public WebSocket: `wss://wspap.okx.com/ws/v5/public`  
 
-  * Private WebSocket: `wss://wspap.okx.com:8443/ws/v5/private`  
+  * Private WebSocket: `wss://wspap.okx.com/ws/v5/private`  
 
-  * Business WebSocket: `wss://wspap.okx.com:8443/ws/v5/business`
+  * Business WebSocket: `wss://wspap.okx.com/ws/v5/business`
 
 OKX account can be used for login on Demo Trading. If you already have an OKX account, you can log in directly.
 
@@ -62,10 +62,10 @@ Try [demo trading explorer](/demo-trading-explorer/v5/en)
 模拟盘API交易地址如下： 
 
   * REST：`https://openapi.okx.com`
-  * WebSocket公共频道：`wss://wspap.okx.com:8443/ws/v5/public`  
+  * WebSocket公共频道：`wss://wspap.okx.com/ws/v5/public`  
 
-  * WebSocket私有频道：`wss://wspap.okx.com:8443/ws/v5/private`
-  * WebSocket业务频道：`wss://wspap.okx.com:8443/ws/v5/business`
+  * WebSocket私有频道：`wss://wspap.okx.com/ws/v5/private`
+  * WebSocket业务频道：`wss://wspap.okx.com/ws/v5/business`
 
 模拟盘的账户与欧易的账户是互通的，如果您已经有欧易账户，可以直接登录。
 

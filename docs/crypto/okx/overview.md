@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview
 anchor_id: overview
 api_type: API
-updated_at: 2026-10-07 19:22:23.146762
+updated_at: 2026-10-08 19:21:00.201785
 ---
 
 # Overview
@@ -520,10 +520,10 @@ The Production Trading URL:
 
   * REST: `https://openapi.okx.com`  
 
-  * Public WebSocket: `wss://ws.okx.com:8443/ws/v5/public`  
+  * Public WebSocket: `wss://ws.okx.com/ws/v5/public`  
 
-  * Private WebSocket: `wss://ws.okx.com:8443/ws/v5/private`
-  * Business WebSocket: `wss://ws.okx.com:8443/ws/v5/business`
+  * Private WebSocket: `wss://ws.okx.com/ws/v5/private`
+  * Business WebSocket: `wss://ws.okx.com/ws/v5/business`
 
 ## Demo Trading Services
 
@@ -533,11 +533,11 @@ The Demo Trading URL:
 
   * REST: `https://openapi.okx.com`  
 
-  * Public WebSocket: `wss://wspap.okx.com:8443/ws/v5/public`  
+  * Public WebSocket: `wss://wspap.okx.com/ws/v5/public`  
 
-  * Private WebSocket: `wss://wspap.okx.com:8443/ws/v5/private`  
+  * Private WebSocket: `wss://wspap.okx.com/ws/v5/private`  
 
-  * Business WebSocket: `wss://wspap.okx.com:8443/ws/v5/business`
+  * Business WebSocket: `wss://wspap.okx.com/ws/v5/business`
 
 OKX account can be used for login on Demo Trading. If you already have an OKX account, you can log in directly.
 
@@ -1375,10 +1375,10 @@ WebSocket有一种消息类型(event=`notice`)。
 
   * REST：`https://openapi.okx.com`  
 
-  * WebSocket公共频道：`wss://ws.okx.com:8443/ws/v5/public`  
+  * WebSocket公共频道：`wss://ws.okx.com/ws/v5/public`  
 
-  * WebSocket私有频道：`wss://ws.okx.com:8443/ws/v5/private`
-  * WebSocket业务频道：`wss://ws.okx.com:8443/ws/v5/business`
+  * WebSocket私有频道：`wss://ws.okx.com/ws/v5/private`
+  * WebSocket业务频道：`wss://ws.okx.com/ws/v5/business`
 
 ## 模拟盘交易 
 
@@ -1387,10 +1387,10 @@ WebSocket有一种消息类型(event=`notice`)。
 模拟盘API交易地址如下： 
 
   * REST：`https://openapi.okx.com`
-  * WebSocket公共频道：`wss://wspap.okx.com:8443/ws/v5/public`  
+  * WebSocket公共频道：`wss://wspap.okx.com/ws/v5/public`  
 
-  * WebSocket私有频道：`wss://wspap.okx.com:8443/ws/v5/private`
-  * WebSocket业务频道：`wss://wspap.okx.com:8443/ws/v5/business`
+  * WebSocket私有频道：`wss://wspap.okx.com/ws/v5/private`
+  * WebSocket业务频道：`wss://wspap.okx.com/ws/v5/business`
 
 模拟盘的账户与欧易的账户是互通的，如果您已经有欧易账户，可以直接登录。
 

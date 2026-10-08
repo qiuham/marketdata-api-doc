@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-websocket-account-channel
 anchor_id: trading-account-websocket-account-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:22:53.230394
+updated_at: 2026-10-08 19:21:30.216697
 ---
 
 # Account channel
@@ -46,7 +46,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -101,7 +101,7 @@ Concurrent connection to this channel will be restricted by the following rules:
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -491,7 +491,7 @@ Return "0" when autoLendStatus is `unsupported/off/pending`. Return matched amou
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -543,7 +543,7 @@ Return "0" when autoLendStatus is `unsupported/off/pending`. Return matched amou
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -616,7 +616,7 @@ args | Array of objects | 是 | 请求订阅的频道列表
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()

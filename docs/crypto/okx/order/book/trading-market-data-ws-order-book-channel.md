@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-ws-order-book-channel
 anchor_id: order-book-trading-market-data-ws-order-book-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:48.090371
+updated_at: 2026-10-08 19:22:24.828360
 ---
 
 # WS / Order book channel
@@ -64,7 +64,7 @@ Identity verification refers to [Login](/docs-v5/en/#overview-websocket-login)
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {
@@ -375,7 +375,7 @@ books50-l2-tbt50档深度频道，只允许交易手续费等级VIP4及以上的
     
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
           {

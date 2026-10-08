@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-algo-trading-ws-algo-orders-channel
 anchor_id: order-book-trading-algo-trading-ws-algo-orders-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:09.953167
+updated_at: 2026-10-08 19:21:46.727378
 ---
 
 # WS / Algo orders channel
@@ -46,7 +46,7 @@ Retrieve algo orders (includes `trigger` order, `oco` order, `conditional` order
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -101,7 +101,7 @@ Retrieve algo orders (includes `trigger` order, `oco` order, `conditional` order
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -458,7 +458,7 @@ Only applicable to `trigger order`, `trailing order` and `twap order`
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -509,7 +509,7 @@ Only applicable to `trigger order`, `trailing order` and `twap order`
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

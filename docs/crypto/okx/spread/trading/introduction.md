@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-introduction
 anchor_id: spread-trading-introduction
 api_type: API
-updated_at: 2026-10-07 19:24:02.824747
+updated_at: 2026-10-08 19:22:39.524965
 ---
 
 # Introduction

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-websocket-public-channel-block-tickers-channel
 anchor_id: block-trading-websocket-public-channel-block-tickers-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:02.081543
+updated_at: 2026-10-08 19:22:38.794642
 ---
 
 # Block tickers channel
@@ -37,7 +37,7 @@ The data will be pushed when triggered by transaction execution event. In additi
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [{
             "channel": "block-tickers",
@@ -182,7 +182,7 @@ If it is `SPOT`/`MARGIN`, the value is the quantity in base currency.
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [{
             "channel": "block-tickers",

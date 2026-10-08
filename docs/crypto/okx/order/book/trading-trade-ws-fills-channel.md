@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-fills-channel
 anchor_id: order-book-trading-trade-ws-fills-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:23:05.080888
+updated_at: 2026-10-08 19:21:41.888035
 ---
 
 # WS / Fills channel
@@ -48,7 +48,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -98,7 +98,7 @@ For `EVENTS`, only data for the YES side is returned regardless of whether the a
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -272,7 +272,7 @@ data | Array of objects | Subscribed data
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()
@@ -322,7 +322,7 @@ data | Array of objects | Subscribed data
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/private",
+            url = "wss://ws.okx.com/ws/v5/private",
             useServerTime=False
         )
         await ws.start()

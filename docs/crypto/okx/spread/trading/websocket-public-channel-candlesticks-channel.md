@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-candlesticks-channel
 anchor_id: spread-trading-websocket-public-channel-candlesticks-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:16.013040
+updated_at: 2026-10-08 19:22:52.664602
 ---
 
 # Candlesticks channel
@@ -38,7 +38,7 @@ Retrieve the candlesticks data of an instrument. The push frequency is the faste
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {
@@ -191,7 +191,7 @@ The data returned will be arranged in an array like this: [ts,o,h,l,c,vol,confir
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {

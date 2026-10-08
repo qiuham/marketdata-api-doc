@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy
 anchor_id: order-book-trading-recurring-buy
 api_type: API
-updated_at: 2026-10-07 19:23:28.960841
+updated_at: 2026-10-08 19:22:05.693082
 ---
 
 # Recurring Buy
@@ -786,7 +786,7 @@ Retrieve recurring buy orders. Data will be pushed when triggered by events. It 
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2114,7 +2114,7 @@ algoClOrdId | String | 用户自定义策略ID
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()

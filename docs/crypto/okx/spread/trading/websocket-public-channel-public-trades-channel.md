@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-public-trades-channel
 anchor_id: spread-trading-websocket-public-channel-public-trades-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:15.381130
+updated_at: 2026-10-08 19:22:52.039351
 ---
 
 # Public Trades channel
@@ -37,7 +37,7 @@ Retrieve the recent trades data from `sprd-public-trades`. Data will be pushed w
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -186,7 +186,7 @@ For `FUTURES`/`SWAP`/`OPTION`, the unit is contract.
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {

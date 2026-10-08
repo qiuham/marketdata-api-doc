@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-sbe-market-data
 anchor_id: order-book-trading-sbe-market-data
 api_type: API
-updated_at: 2026-10-07 19:23:49.030419
+updated_at: 2026-10-08 19:22:25.770155
 ---
 
 # SBE Market Data
@@ -26,8 +26,8 @@ The SBE XML schema is now available for download:
   * The `bbo-tbt` channel is **available to users of any trading fee tier** but requires login. The `trades` and `books-l2-tbt` channels are restricted to users with a trading fee tier of **VIP4** or above in the live trading environment. Other users will receive error code 64003. In the demo trading environment, these channels require **VIP1** or above.  
 
   * SBE channels will use a new WebSocket URL.  
-Live trading: `wss://ws.okx.com:8443/ws/v5/public-sbe`  
-Demo trading: `wss://wspap.okx.com:8443/ws/v5/public-sbe`   
+Live trading: `wss://ws.okx.com/ws/v5/public-sbe`  
+Demo trading: `wss://wspap.okx.com/ws/v5/public-sbe`   
 
   * Both JSON and SBE format data will be available on the same connection, distinguishable by WebSocket frame type. opcode `1` indicates JSON, while opcode `2` indicates SBE.  
 
@@ -277,8 +277,8 @@ SBE XML schema 已经发布：
   * `bbo-tbt` 频道**无用户等级限制** ，但需登录后方可订阅；`trades` 与 `books-l2-tbt` 频道在实盘环境仅对交易费等级 **VIP4 及以上** 用户开放，其他用户接入将收到错误码64003。在模拟盘环境仅对交易费等级 **VIP1** 及以上 用户开放。  
 
   * SBE 频道将使用新的 WebSocket URL。  
-实盘交易：`wss://ws.okx.com:8443/ws/v5/public-sbe`  
-模拟盘交易：`wss://wspap.okx.com:8443/ws/v5/public-sbe`   
+实盘交易：`wss://ws.okx.com/ws/v5/public-sbe`  
+模拟盘交易：`wss://wspap.okx.com/ws/v5/public-sbe`   
 
   * 同一个连接上会同时存在 JSON 和 SBE 格式的数据，可以通过 WebSocket 帧类型区分。opcode `1` 表示 JSON，opcode `2` 表示 SBE。  
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rate-limits-sub-account-rate-limit
 anchor_id: overview-rate-limits-sub-account-rate-limit
 api_type: API
-updated_at: 2026-10-07 19:22:32.389151
+updated_at: 2026-10-08 19:21:09.469148
 ---
 
 # Sub-account rate limit

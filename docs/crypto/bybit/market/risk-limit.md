@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/risk-limit
 api_type: Market Data
-updated_at: 2026-10-07 18:52:51.061716
+updated_at: 2026-10-08 18:49:32.912844
 ---
 
 # Adjust Collateral Amount

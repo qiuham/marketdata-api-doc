@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-post-amend-profit-sharing-ratio
 anchor_id: order-book-trading-copy-trading-post-amend-profit-sharing-ratio
 api_type: API
-updated_at: 2026-10-07 19:23:37.109416
+updated_at: 2026-10-08 19:22:13.847338
 ---
 
 # POST / Amend profit sharing ratio

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-exchange-list-public
 anchor_id: funding-account-rest-api-get-exchange-list-public
 api_type: REST
-updated_at: 2026-10-07 19:24:43.421101
+updated_at: 2026-10-08 19:23:19.913026
 ---
 
 # Get exchange list (public)

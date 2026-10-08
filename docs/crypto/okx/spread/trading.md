@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading
 anchor_id: spread-trading
 api_type: API
-updated_at: 2026-10-07 19:24:02.515042
+updated_at: 2026-10-08 19:22:39.215012
 ---
 
 # Spread Trading
@@ -2066,8 +2066,8 @@ data | Array of objects | Data
   
 ## WebSocket Private Channel
 
-  * Production Trading URL: `wss://ws.okx.com:8443/ws/v5/business`
-  * Demo Trading URL: `wss://wspap.okx.com:8443/ws/v5/business`
+  * Production Trading URL: `wss://ws.okx.com/ws/v5/business`
+  * Demo Trading URL: `wss://wspap.okx.com/ws/v5/business`
 
 ### Order channel
 
@@ -2104,7 +2104,7 @@ Retrieve order information from the `sprd-order` Websocket channel. Data will no
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2151,7 +2151,7 @@ Retrieve order information from the `sprd-order` Websocket channel. Data will no
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2379,7 +2379,7 @@ You may receive multiple notifications if an Order of yours interacts with more 
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2426,7 +2426,7 @@ You may receive multiple notifications if an Order of yours interacts with more 
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -2569,8 +2569,8 @@ Only applicable to contracts, return "" for spot
   
 ## WebSocket Public Channel
 
-  * Production Trading URL: `wss://ws.okx.com:8443/ws/v5/business`
-  * Demo Trading URL: `wss://wspap.okx.com:8443/ws/v5/business`
+  * Production Trading URL: `wss://ws.okx.com/ws/v5/business`
+  * Demo Trading URL: `wss://wspap.okx.com/ws/v5/business`
 
 ### Order book channel
 
@@ -2608,7 +2608,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -2650,7 +2650,7 @@ Retrieve order book data. Available channels:
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -2895,7 +2895,7 @@ Retrieve the recent trades data from `sprd-public-trades`. Data will be pushed w
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -3041,7 +3041,7 @@ Retrieve the last traded price, bid price, ask price. The fastest rate is 1 upda
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -3200,7 +3200,7 @@ Retrieve the candlesticks data of an instrument. The push frequency is the faste
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {
@@ -5383,8 +5383,8 @@ data | Array of objects | 请求成功后返回的数据
   
 ## WebSocket私有频道 
 
-  * 实盘地址: `wss://ws.okx.com:8443/ws/v5/business`
-  * 模拟盘地址: `wss://wspap.okx.com:8443/ws/v5/business`
+  * 实盘地址: `wss://ws.okx.com/ws/v5/business`
+  * 模拟盘地址: `wss://wspap.okx.com/ws/v5/business`
 
 ### 订单频道 
 
@@ -5422,7 +5422,7 @@ data | Array of objects | 请求成功后返回的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5470,7 +5470,7 @@ data | Array of objects | 请求成功后返回的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5702,7 +5702,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5750,7 +5750,7 @@ data | Array of objects | 订阅的数据
             apiKey = "YOUR_API_KEY",
             passphrase = "YOUR_PASSPHRASE",
             secretKey = "YOUR_SECRET_KEY",
-            url = "wss://ws.okx.com:8443/ws/v5/business",
+            url = "wss://ws.okx.com/ws/v5/business",
             useServerTime=False
         )
         await ws.start()
@@ -5899,8 +5899,8 @@ data | Array of objects | Subscribed data
   
 ## WebSocket公共频道 
 
-  * 实盘地址: `wss://ws.okx.com:8443/ws/v5/business`
-  * 模拟盘地址: `wss://wspap.okx.com:8443/ws/v5/business`
+  * 实盘地址: `wss://ws.okx.com/ws/v5/business`
+  * 模拟盘地址: `wss://wspap.okx.com/ws/v5/business`
 
 ### 深度频道 
 
@@ -5939,7 +5939,7 @@ data | Array of objects | Subscribed data
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -5981,7 +5981,7 @@ data | Array of objects | Subscribed data
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -6229,7 +6229,7 @@ asks和bids值数组举例说明： ["411.8", "10", "4"]
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -6380,7 +6380,7 @@ sz | String | 成交数量
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
             {
@@ -6543,7 +6543,7 @@ vol24h
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/business")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/business")
         await ws.start()
         args = [
           {

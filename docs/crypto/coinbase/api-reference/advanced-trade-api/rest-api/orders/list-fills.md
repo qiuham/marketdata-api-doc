@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills
 api_type: Trading
-updated_at: 2026-10-07 19:07:31.285088
+updated_at: 2026-10-08 19:05:52.539367
 ---
 
 # List Fills

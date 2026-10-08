@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-index-tickers-channel
 anchor_id: public-data-websocket-index-tickers-channel
 api_type: WebSocket
-updated_at: 2026-10-07 19:24:30.840676
+updated_at: 2026-10-08 19:23:07.443460
 ---
 
 # Index tickers channel
@@ -37,7 +37,7 @@ Retrieve index tickers data. Push data every 100ms if there are any changes, oth
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
@@ -181,7 +181,7 @@ data | Array of objects | Subscribed data
         print(message)
     
     async def main():
-        ws = WsPublicAsync(url="wss://wspap.okx.com:8443/ws/v5/public")
+        ws = WsPublicAsync(url="wss://wspap.okx.com/ws/v5/public")
         await ws.start()
         args = [
             {
