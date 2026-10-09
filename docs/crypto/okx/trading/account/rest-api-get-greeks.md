@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-greeks
 anchor_id: trading-account-rest-api-get-greeks
 api_type: REST
-updated_at: 2026-10-08 19:21:22.974357
+updated_at: 2026-10-09 19:16:45.835253
 ---
 
 # Get Greeks

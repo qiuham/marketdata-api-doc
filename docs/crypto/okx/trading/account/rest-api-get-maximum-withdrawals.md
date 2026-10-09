@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-maximum-withdrawals
 anchor_id: trading-account-rest-api-get-maximum-withdrawals
 api_type: REST
-updated_at: 2026-10-08 19:21:20.162564
+updated_at: 2026-10-09 19:16:42.808032
 ---
 
 # Get maximum withdrawals

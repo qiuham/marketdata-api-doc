@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/redeem
 api_type: REST
-updated_at: 2026-10-08 18:48:46.565126
+updated_at: 2026-10-09 18:46:55.082336
 ---
 
 # Get NAV Chart

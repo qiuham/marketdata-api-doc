@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual
 api_type: Guide
-updated_at: 2026-10-08 19:05:54.545859
+updated_at: 2026-10-09 19:01:18.145169
 ---
 
 # Advanced Trade INTX Perpetuals — Retired

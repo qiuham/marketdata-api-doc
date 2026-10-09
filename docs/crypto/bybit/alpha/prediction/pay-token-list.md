@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/pay-token-list
 api_type: REST
-updated_at: 2026-10-08 18:44:32.125150
+updated_at: 2026-10-09 18:42:44.211519
 ---
 
 # Get Position History

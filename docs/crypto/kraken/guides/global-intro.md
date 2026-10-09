@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/guides/global-intro
 api_type: Guide
-updated_at: 2026-10-08 19:20:44.799255
+updated_at: 2026-10-09 19:16:07.812075
 ---
 
 # Exchange overview

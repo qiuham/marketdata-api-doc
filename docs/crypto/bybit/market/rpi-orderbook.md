@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/rpi-orderbook
 api_type: Market Data
-updated_at: 2026-10-08 18:49:33.532761
+updated_at: 2026-10-09 18:47:40.510737
 ---
 
 # Adjust Collateral Amount

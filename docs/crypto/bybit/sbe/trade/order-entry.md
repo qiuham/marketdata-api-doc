@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/trade/order-entry
 api_type: Trading
-updated_at: 2026-10-08 18:51:37.413679
+updated_at: 2026-10-09 18:49:42.187270
 ---
 
 # Get Coin State

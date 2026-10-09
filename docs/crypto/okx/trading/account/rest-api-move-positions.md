@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-move-positions
 anchor_id: trading-account-rest-api-move-positions
 api_type: REST
-updated_at: 2026-10-08 19:21:27.012338
+updated_at: 2026-10-09 19:16:49.854457
 ---
 
 # Move positions

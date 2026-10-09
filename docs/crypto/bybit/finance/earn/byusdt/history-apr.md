@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/history-apr
 api_type: REST
-updated_at: 2026-10-08 18:47:53.970860
+updated_at: 2026-10-09 18:46:03.948573
 ---
 
 # Place Order

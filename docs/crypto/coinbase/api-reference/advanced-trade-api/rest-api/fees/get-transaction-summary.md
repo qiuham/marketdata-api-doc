@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary
 api_type: REST
-updated_at: 2026-10-08 19:05:51.371118
+updated_at: 2026-10-09 19:01:14.893498
 ---
 
 # Get Transaction Summary

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-10-08 18:50:26.496169
+updated_at: 2026-10-09 18:48:32.358384
 ---
 
 # Get Delay Liquidation Status

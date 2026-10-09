@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-10-08 18:48:17.843263
+updated_at: 2026-10-09 18:46:27.226905
 ---
 
 # Get Airdrop Products

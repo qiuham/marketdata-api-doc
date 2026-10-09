@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sports-group-stage-detail
 api_type: REST
-updated_at: 2026-10-08 18:44:39.014764
+updated_at: 2026-10-09 18:42:51.329573
 ---
 
 # Get Sports Group Stage Detail
