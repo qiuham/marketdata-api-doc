@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/portfolios
 api_type: Guide
-updated_at: 2026-10-09 19:01:18.162969
+updated_at: 2026-10-10 19:00:52.425452
 ---
 
 # Advanced Trade Portfolios
@@ -12,6 +12,10 @@ Advanced Trade API supports trading in [multiple portfolios](/api-reference/adva
 ## Max Number
 
 The maximum number of portfolios allowed is 100.
+
+## Creating Portfolios
+
+Create portfolios by API with [Create Portfolio](/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio), or on coinbase.com: go to **Portfolio** > **Spot** on [Coinbase Advanced](https://www.coinbase.com/advanced-portfolio/spot), open the **All portfolios** dropdown above your balance, and select **New portfolio**. The same dropdown lists all of your portfolios.
 
 ## API Keys
 

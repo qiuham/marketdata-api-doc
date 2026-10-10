@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/hyperliquid",
   "total": 37,
-  "updated_at": "2026-10-09 19:15:23.337047",
+  "updated_at": "2026-10-10 19:14:36.178874",
   "documents_by_type": {
     "other": [
       {
@@ -23,7 +23,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:27.024370"
+        "updated_at": "2026-10-10 19:09:45.994736"
       },
       {
         "id": "asset-ids",
@@ -35,7 +35,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:35.152197"
+        "updated_at": "2026-10-10 19:09:54.765161"
       },
       {
         "id": "bridge2",
@@ -59,7 +59,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:44.343347"
+        "updated_at": "2026-10-10 19:10:03.614691"
       },
       {
         "id": "error-responses",
@@ -71,7 +71,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:53.276864"
+        "updated_at": "2026-10-10 19:10:12.417595"
       },
       {
         "id": "exchange-endpoint",
@@ -83,7 +83,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:02.570610"
+        "updated_at": "2026-10-10 19:10:21.716825"
       },
       {
         "id": "hip-3-deployer-actions",
@@ -95,7 +95,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:11.580108"
+        "updated_at": "2026-10-10 19:10:30.612578"
       },
       {
         "id": "hip-4-deployer-actions",
@@ -107,7 +107,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:20.592916"
+        "updated_at": "2026-10-10 19:10:39.454499"
       },
       {
         "id": "perpetuals",
@@ -119,7 +119,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:38.852258"
+        "updated_at": "2026-10-10 19:10:56.658480"
       },
       {
         "id": "spot",
@@ -131,7 +131,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:46.744622"
+        "updated_at": "2026-10-10 19:11:05.517544"
       },
       {
         "id": "info-endpoint",
@@ -143,7 +143,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:29.801032"
+        "updated_at": "2026-10-10 19:10:47.739244"
       },
       {
         "id": "nonces-and-api-wallets",
@@ -155,7 +155,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:11:55.674384"
+        "updated_at": "2026-10-10 19:11:14.417625"
       },
       {
         "id": "notation",
@@ -167,7 +167,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:03.632934"
+        "updated_at": "2026-10-10 19:11:23.183913"
       },
       {
         "id": "optimizing-latency",
@@ -179,7 +179,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:12.574888"
+        "updated_at": "2026-10-10 19:11:31.939603"
       },
       {
         "id": "priority-fees",
@@ -191,7 +191,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:21.405650"
+        "updated_at": "2026-10-10 19:11:40.698177"
       },
       {
         "id": "rate-limits-and-user-limits",
@@ -203,7 +203,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:30.341749"
+        "updated_at": "2026-10-10 19:11:49.431671"
       },
       {
         "id": "signing",
@@ -215,7 +215,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:39.291031"
+        "updated_at": "2026-10-10 19:11:58.208687"
       },
       {
         "id": "tick-and-lot-size",
@@ -227,7 +227,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:48.125250"
+        "updated_at": "2026-10-10 19:12:07.046648"
       },
       {
         "id": "usdc",
@@ -239,7 +239,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:12:57.273576"
+        "updated_at": "2026-10-10 19:12:15.874645"
       },
       {
         "id": "post-requests",
@@ -251,7 +251,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:22.145945"
+        "updated_at": "2026-10-10 19:12:33.464473"
       },
       {
         "id": "subscriptions",
@@ -263,7 +263,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:31.076042"
+        "updated_at": "2026-10-10 19:12:42.323552"
       },
       {
         "id": "timeouts-and-heartbeats",
@@ -275,7 +275,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:39.987491"
+        "updated_at": "2026-10-10 19:12:51.078905"
       },
       {
         "id": "websocket",
@@ -287,7 +287,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:12.729495"
+        "updated_at": "2026-10-10 19:12:24.667297"
       },
       {
         "id": "api",
@@ -299,7 +299,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:18.021249"
+        "updated_at": "2026-10-10 19:09:37.148525"
       },
       {
         "id": "dual-block-architecture",
@@ -311,7 +311,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:57.015463"
+        "updated_at": "2026-10-10 19:13:08.797857"
       },
       {
         "id": "hypercore-less-than-greater-than-hyperevm-transfers",
@@ -323,7 +323,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:05.880654"
+        "updated_at": "2026-10-10 19:13:17.602067"
       },
       {
         "id": "interacting-with-hypercore",
@@ -335,7 +335,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:14.765037"
+        "updated_at": "2026-10-10 19:13:26.428371"
       },
       {
         "id": "interaction-timings",
@@ -347,7 +347,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:23.645574"
+        "updated_at": "2026-10-10 19:13:35.195585"
       },
       {
         "id": "json-rpc",
@@ -359,7 +359,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:31.583847"
+        "updated_at": "2026-10-10 19:13:44.087847"
       },
       {
         "id": "raw-hyperevm-block-data",
@@ -371,7 +371,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:40.365667"
+        "updated_at": "2026-10-10 19:13:53.056377"
       },
       {
         "id": "wrapped-hype",
@@ -383,7 +383,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:49.277822"
+        "updated_at": "2026-10-10 19:14:00.928894"
       },
       {
         "id": "hyperevm",
@@ -395,7 +395,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:13:49.020449"
+        "updated_at": "2026-10-10 19:13:00.015375"
       },
       {
         "id": "foundation-non-validating-node-for-infra-providers",
@@ -407,7 +407,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:15:10.234830"
+        "updated_at": "2026-10-10 19:14:22.251902"
       },
       {
         "id": "foundation-non-validating-node",
@@ -419,7 +419,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:15:15.395031"
+        "updated_at": "2026-10-10 19:14:27.349284"
       },
       {
         "id": "l1-data-schemas",
@@ -431,7 +431,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:15:23.337047"
+        "updated_at": "2026-10-10 19:14:36.178874"
       },
       {
         "id": "nodes",
@@ -443,7 +443,7 @@
         "source_url": "",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:14:58.466396"
+        "updated_at": "2026-10-10 19:14:09.708160"
       }
     ],
     "REST": [
@@ -457,7 +457,7 @@
         "source_url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-09 19:10:09.035324"
+        "updated_at": "2026-10-10 19:09:28.361597"
       }
     ]
   },
@@ -472,7 +472,7 @@
       "source_url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:09.035324"
+      "updated_at": "2026-10-10 19:09:28.361597"
     },
     {
       "id": "activation-gas-fee",
@@ -484,7 +484,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:27.024370"
+      "updated_at": "2026-10-10 19:09:45.994736"
     },
     {
       "id": "asset-ids",
@@ -496,7 +496,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:35.152197"
+      "updated_at": "2026-10-10 19:09:54.765161"
     },
     {
       "id": "bridge2",
@@ -520,7 +520,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:44.343347"
+      "updated_at": "2026-10-10 19:10:03.614691"
     },
     {
       "id": "error-responses",
@@ -532,7 +532,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:53.276864"
+      "updated_at": "2026-10-10 19:10:12.417595"
     },
     {
       "id": "exchange-endpoint",
@@ -544,7 +544,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:02.570610"
+      "updated_at": "2026-10-10 19:10:21.716825"
     },
     {
       "id": "hip-3-deployer-actions",
@@ -556,7 +556,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:11.580108"
+      "updated_at": "2026-10-10 19:10:30.612578"
     },
     {
       "id": "hip-4-deployer-actions",
@@ -568,7 +568,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:20.592916"
+      "updated_at": "2026-10-10 19:10:39.454499"
     },
     {
       "id": "perpetuals",
@@ -580,7 +580,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:38.852258"
+      "updated_at": "2026-10-10 19:10:56.658480"
     },
     {
       "id": "spot",
@@ -592,7 +592,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:46.744622"
+      "updated_at": "2026-10-10 19:11:05.517544"
     },
     {
       "id": "info-endpoint",
@@ -604,7 +604,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:29.801032"
+      "updated_at": "2026-10-10 19:10:47.739244"
     },
     {
       "id": "nonces-and-api-wallets",
@@ -616,7 +616,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:11:55.674384"
+      "updated_at": "2026-10-10 19:11:14.417625"
     },
     {
       "id": "notation",
@@ -628,7 +628,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:03.632934"
+      "updated_at": "2026-10-10 19:11:23.183913"
     },
     {
       "id": "optimizing-latency",
@@ -640,7 +640,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:12.574888"
+      "updated_at": "2026-10-10 19:11:31.939603"
     },
     {
       "id": "priority-fees",
@@ -652,7 +652,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:21.405650"
+      "updated_at": "2026-10-10 19:11:40.698177"
     },
     {
       "id": "rate-limits-and-user-limits",
@@ -664,7 +664,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:30.341749"
+      "updated_at": "2026-10-10 19:11:49.431671"
     },
     {
       "id": "signing",
@@ -676,7 +676,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:39.291031"
+      "updated_at": "2026-10-10 19:11:58.208687"
     },
     {
       "id": "tick-and-lot-size",
@@ -688,7 +688,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:48.125250"
+      "updated_at": "2026-10-10 19:12:07.046648"
     },
     {
       "id": "usdc",
@@ -700,7 +700,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:12:57.273576"
+      "updated_at": "2026-10-10 19:12:15.874645"
     },
     {
       "id": "post-requests",
@@ -712,7 +712,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:22.145945"
+      "updated_at": "2026-10-10 19:12:33.464473"
     },
     {
       "id": "subscriptions",
@@ -724,7 +724,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:31.076042"
+      "updated_at": "2026-10-10 19:12:42.323552"
     },
     {
       "id": "timeouts-and-heartbeats",
@@ -736,7 +736,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:39.987491"
+      "updated_at": "2026-10-10 19:12:51.078905"
     },
     {
       "id": "websocket",
@@ -748,7 +748,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:12.729495"
+      "updated_at": "2026-10-10 19:12:24.667297"
     },
     {
       "id": "api",
@@ -760,7 +760,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:10:18.021249"
+      "updated_at": "2026-10-10 19:09:37.148525"
     },
     {
       "id": "dual-block-architecture",
@@ -772,7 +772,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:57.015463"
+      "updated_at": "2026-10-10 19:13:08.797857"
     },
     {
       "id": "hypercore-less-than-greater-than-hyperevm-transfers",
@@ -784,7 +784,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:05.880654"
+      "updated_at": "2026-10-10 19:13:17.602067"
     },
     {
       "id": "interacting-with-hypercore",
@@ -796,7 +796,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:14.765037"
+      "updated_at": "2026-10-10 19:13:26.428371"
     },
     {
       "id": "interaction-timings",
@@ -808,7 +808,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:23.645574"
+      "updated_at": "2026-10-10 19:13:35.195585"
     },
     {
       "id": "json-rpc",
@@ -820,7 +820,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:31.583847"
+      "updated_at": "2026-10-10 19:13:44.087847"
     },
     {
       "id": "raw-hyperevm-block-data",
@@ -832,7 +832,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:40.365667"
+      "updated_at": "2026-10-10 19:13:53.056377"
     },
     {
       "id": "wrapped-hype",
@@ -844,7 +844,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:49.277822"
+      "updated_at": "2026-10-10 19:14:00.928894"
     },
     {
       "id": "hyperevm",
@@ -856,7 +856,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:13:49.020449"
+      "updated_at": "2026-10-10 19:13:00.015375"
     },
     {
       "id": "foundation-non-validating-node-for-infra-providers",
@@ -868,7 +868,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:15:10.234830"
+      "updated_at": "2026-10-10 19:14:22.251902"
     },
     {
       "id": "foundation-non-validating-node",
@@ -880,7 +880,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:15:15.395031"
+      "updated_at": "2026-10-10 19:14:27.349284"
     },
     {
       "id": "l1-data-schemas",
@@ -892,7 +892,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:15:23.337047"
+      "updated_at": "2026-10-10 19:14:36.178874"
     },
     {
       "id": "nodes",
@@ -904,7 +904,7 @@
       "source_url": "",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-09 19:14:58.466396"
+      "updated_at": "2026-10-10 19:14:09.708160"
     }
   ]
 }

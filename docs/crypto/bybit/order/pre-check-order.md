@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/pre-check-order
 api_type: Trading
-updated_at: 2026-10-09 18:48:31.124407
+updated_at: 2026-10-10 18:47:54.637166
 ---
 
 # Get Delay Liquidation Status

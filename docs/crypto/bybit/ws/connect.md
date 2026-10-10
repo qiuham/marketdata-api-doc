@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-10-09 18:51:19.128964
+updated_at: 2026-10-10 18:50:45.387894
 ---
 
 # Connect

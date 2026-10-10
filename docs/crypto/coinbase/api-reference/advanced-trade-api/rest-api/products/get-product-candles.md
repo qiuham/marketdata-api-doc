@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-candles
 api_type: Market Data
-updated_at: 2026-10-09 19:01:17.173032
+updated_at: 2026-10-10 19:00:51.693840
 ---
 
 # Get Product Candles
@@ -171,7 +171,13 @@ The UNIX timestamp indicating the start of the time interval.
 
 end
 
-string
+stringProducts
+
+# Get Product Candles
+
+Get rates for a single product by product ID, grouped in buckets.
+
+GET
 
 required
 

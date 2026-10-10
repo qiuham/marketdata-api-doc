@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-10-09 18:46:39.716654
+updated_at: 2026-10-10 18:46:00.787759
 ---
 
 # Settle Fund Profit

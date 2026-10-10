@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert-small-balance/request-quote
 api_type: REST
-updated_at: 2026-10-09 18:43:18.207205
+updated_at: 2026-10-10 18:42:37.510039
 ---
 
 # Confirm a Quote
