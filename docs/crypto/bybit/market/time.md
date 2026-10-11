@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/time
 api_type: Market Data
-updated_at: 2026-10-10 18:47:04.006934
+updated_at: 2026-10-11 18:47:23.057048
 ---
 
 # Adjust Collateral Amount

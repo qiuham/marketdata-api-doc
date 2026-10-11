@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/delivery-price
 api_type: Market Data
-updated_at: 2026-10-10 18:46:39.242862
+updated_at: 2026-10-11 18:46:59.592705
 ---
 
 # Get Funding Rate History

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/smp
 api_type: REST
-updated_at: 2026-10-10 18:49:07.466974
+updated_at: 2026-10-11 18:49:20.517192
 ---
 
 # Get Coin State

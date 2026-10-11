@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/enable-unitransfer-subuid
 api_type: REST
-updated_at: 2026-10-10 18:41:01.865969
+updated_at: 2026-10-11 18:41:32.393207
 ---
 
 # Enable Universal Transfer for Sub UID

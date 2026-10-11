@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-sub-list
 api_type: REST
-updated_at: 2026-10-10 18:41:45.970518
+updated_at: 2026-10-11 18:42:15.190647
 ---
 
 # Get LP Pay Token List

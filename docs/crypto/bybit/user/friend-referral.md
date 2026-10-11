@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/friend-referral
 api_type: REST
-updated_at: 2026-10-10 18:50:05.678366
+updated_at: 2026-10-11 18:50:17.138761
 ---
 
 # Get Friend Referrals

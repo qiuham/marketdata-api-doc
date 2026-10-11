@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/all-liquidation
 api_type: WebSocket
-updated_at: 2026-10-10 18:50:33.386818
+updated_at: 2026-10-11 18:50:44.184846
 ---
 
 # Insurance Pool

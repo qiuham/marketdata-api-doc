@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-10-10 18:48:07.682671
+updated_at: 2026-10-11 18:48:23.823257
 ---
 
 # Get Closed PnL
