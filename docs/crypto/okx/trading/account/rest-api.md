@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-10-11 19:15:49.525102
+updated_at: 2026-10-12 19:20:50.466945
 ---
 
 # REST API
@@ -6340,7 +6340,288 @@ Error code | HTTP status code | Error message
 50030 | 200 | You don't have permission to use this API endpoint  
 50014 | 200 | Parameter {param0} can not be empty  
 51000 | 200 | Parameter error  
-50016 | 200 | Parameter {param0} does not match parameter {param1}
+50016 | 200 | Parameter {param0} does not match parameter {param1}  
+  
+### GET / Get GLP v2 overview
+
+Retrieve active GLP enrollments, current tiers, estimated tiers, tier requirements, and week-to-date performance for the authenticated account. A sub-account API key retrieves the master account's GLP data.
+
+#### Rate Limit: 5 requests per 2 seconds
+
+#### Rate limit rule: User ID
+
+#### Permission: Read
+
+#### HTTP Request
+
+`GET /api/v5/users/glp/v2/overview`
+
+> Request Example
+    
+    
+    GET /api/v5/users/glp/v2/overview
+    
+
+#### Request Parameters
+
+No request parameters.
+
+> Response Example
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "programs": [
+                    {
+                        "bizId": "16",
+                        "program": "GLP_B",
+                        "side": "MAKER",
+                        "instrument": "PERP",
+                        "currentTier": "Tier 2",
+                        "estNextTier": "Tier 2",
+                        "estNextStatus": "qualify",
+                        "gracePeriodEndTime": "",
+                        "requirement": [
+                            {
+                                "tier": "Tier 1",
+                                "share": "0.005"
+                            },
+                            {
+                                "tier": "Tier 2",
+                                "share": "0.003"
+                            }
+                        ],
+                        "performance": [
+                            {
+                                "date": "1726531200000",
+                                "assessPeriod": "PREVIOUS",
+                                "share": "0.0035",
+                                "vol": "140000"
+                            },
+                            {
+                                "date": "1726876800000",
+                                "assessPeriod": "CURRENT",
+                                "share": "0.004",
+                                "vol": "200"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+programs | Array of objects | Active GLP enrollments. Empty array when none available.  
+> bizId | String | Product and trading-side identifier.  
+`14`: SPOT MAKER  
+`15`: FUT_NTO MAKER  
+`16`: PERP MAKER  
+`17`: SPOT TAKER  
+`18`: FUT_NTO TAKER  
+`19`: PERP TAKER  
+> program | String | GLP program name.  
+`GLP_A`  
+`GLP_B`  
+> side | String | Trading side.  
+`MAKER`  
+`TAKER`  
+> instrument | String | GLP product category.  
+`SPOT`: Spot trading  
+`PERP`: Perpetuals  
+`FUT_NTO`: Expiry Futures and Nitro  
+> currentTier | String | GLP tier currently in effect. Empty string when unavailable.  
+> estNextTier | String | Estimated GLP tier based on latest assessment. Empty string when unavailable.  
+> estNextStatus | String | Estimated tier outcome.  
+`disqualify`  
+`downgrade`  
+`qualify`  
+`upgrade`  
+Empty string when unavailable.  
+> gracePeriodEndTime | String | Earliest date on which a downgrade can take effect. Unix timestamp in milliseconds. Empty string when not applicable.  
+> requirement | Array of objects | Market-share thresholds for GLP tiers.  
+>> tier | String | GLP tier name.  
+>> share | String | Required market share as a decimal fraction. `"0.007"` = 0.7%. `null` when unavailable.  
+> performance | Array of objects | Week-to-date performance by trading date.  
+>> date | String | Trading date. Unix timestamp in milliseconds.  
+>> assessPeriod | String | Assessment period containing this trading date.  
+`PREVIOUS`  
+`CURRENT`  
+>> share | String | Week-to-date market share as a decimal fraction. `null` when unavailable.  
+>> vol | String | Week-to-date trading volume. `null` when unavailable.  
+  
+### GET / Get GLP v2 assessment details
+
+Retrieve daily and week-to-date performance for the selected GLP product and trading side within the current assessment period. A sub-account API key retrieves the master account's GLP data.
+
+#### Rate Limit: 5 requests per 2 seconds
+
+#### Rate limit rule: User ID
+
+#### Permission: Read
+
+#### HTTP Request
+
+`GET /api/v5/users/glp/v2/details`
+
+> Request Example
+    
+    
+    GET /api/v5/users/glp/v2/details?bizId=16
+    
+
+#### Request Parameters
+
+**Parameter** | **Type** | **Required** | **Description**  
+---|---|---|---  
+bizId | String | Yes | Product and trading-side identifier.  
+`14`: SPOT MAKER  
+`15`: FUT_NTO MAKER  
+`16`: PERP MAKER  
+`17`: SPOT TAKER  
+`18`: FUT_NTO TAKER  
+`19`: PERP TAKER  
+  
+> Response Example
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "assessStartTime": "1726790400000",
+                "assessEndTime": "1727308800000",
+                "performance": [
+                    {
+                        "date": "1726790400000",
+                        "origVol": "100",
+                        "origShare": "0.004",
+                        "adjVol": "200",
+                        "adjShare": "0.004",
+                        "accOrigVol": "100",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "200",
+                        "accAdjShare": "0.004"
+                    },
+                    {
+                        "date": "1726876800000",
+                        "origVol": "200",
+                        "origShare": "0.004",
+                        "adjVol": "400",
+                        "adjShare": "0.004",
+                        "accOrigVol": "300",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "600",
+                        "accAdjShare": "0.004"
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+assessStartTime | String | Start of the assessment period. Unix timestamp in milliseconds.  
+assessEndTime | String | End of the assessment period. Unix timestamp in milliseconds.  
+performance | Array of objects | Daily and week-to-date performance. Empty array when no data available.  
+> date | String | Trading date. Unix timestamp in milliseconds.  
+> origVol | String | Daily trading volume before weighting. `null` when unavailable.  
+> origShare | String | Daily market share as a decimal fraction. `null` when unavailable.  
+> adjVol | String | Adjusted daily trading volume. `null` when unavailable.  
+> adjShare | String | Adjusted daily market share as a decimal fraction. `null` when unavailable.  
+> accOrigVol | String | Week-to-date trading volume before weighting. `null` when unavailable.  
+> accOrigShare | String | Week-to-date market share as a decimal fraction. `null` when unavailable.  
+> accAdjVol | String | Adjusted week-to-date trading volume. `null` when unavailable.  
+> accAdjShare | String | Adjusted week-to-date market share as a decimal fraction. `null` when unavailable.  
+  
+### GET / Get GLP v2 performance history
+
+Retrieve weekly assessment results, tier outcomes, and performance metrics for the selected GLP product and trading side. A sub-account API key retrieves the master account's GLP data.
+
+#### Rate Limit: 5 requests per 2 seconds
+
+#### Rate limit rule: User ID
+
+#### Permission: Read
+
+#### HTTP Request
+
+`GET /api/v5/users/glp/v2/history/performance`
+
+> Request Example
+    
+    
+    GET /api/v5/users/glp/v2/history/performance?bizId=16
+    
+
+#### Request Parameters
+
+**Parameter** | **Type** | **Required** | **Description**  
+---|---|---|---  
+bizId | String | Yes | Product and trading-side identifier.  
+`14`: SPOT MAKER  
+`15`: FUT_NTO MAKER  
+`16`: PERP MAKER  
+`17`: SPOT TAKER  
+`18`: FUT_NTO TAKER  
+`19`: PERP TAKER  
+  
+> Response Example
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "performance": [
+                    {
+                        "assessStartTime": "1726185600000",
+                        "assessEndTime": "1726704000000",
+                        "tier": "Tier 3",
+                        "nextTier": "Tier 2",
+                        "accOrigVol": "100000",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "200000",
+                        "accAdjShare": "0.004",
+                        "assessResult": "upgrade"
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### Response Parameters
+
+**Parameter** | **Type** | **Description**  
+---|---|---  
+performance | Array of objects | Weekly assessment results. Empty array when no history available.  
+> assessStartTime | String | Start of the assessment period. Unix timestamp in milliseconds.  
+> assessEndTime | String | End of the assessment period. Unix timestamp in milliseconds.  
+> tier | String | GLP tier used for this assessment.  
+> nextTier | String | Tier determined by this assessment. Empty string when unavailable.  
+> accOrigVol | String | Trading volume for the assessment period before weighting. `null` when unavailable.  
+> accOrigShare | String | Market share for the assessment period as a decimal fraction. `null` when unavailable.  
+> accAdjVol | String | Adjusted trading volume for the assessment period. `null` when unavailable.  
+> accAdjShare | String | Adjusted market share for the assessment period as a decimal fraction. `null` when unavailable.  
+> assessResult | String | Tier outcome.  
+`disqualify`  
+`downgrade`  
+`qualify`  
+`upgrade`  
+Empty string when unavailable.
 
 ---
 
@@ -12695,4 +12976,285 @@ share | Object | 各池类型的市场份额（小数字符串，4 位小数，�
 50030 | 200 | 您无权使用此 API 端点  
 50014 | 200 | 参数 {param0} 不能为空  
 51000 | 200 | 参数错误  
-50016 | 200 | 参数 {param0} 与参数 {param1} 不匹配
+50016 | 200 | 参数 {param0} 与参数 {param1} 不匹配  
+  
+### 获取 GLP v2 概览 
+
+获取当前账户的 GLP 注册信息、当前等级、预估等级、等级要求及本周绩效。子账户 API key 获取的是主账户的 GLP 数据。
+
+#### 限速：5次/2s
+
+#### 限速规则：User ID
+
+#### 权限：读取
+
+#### HTTP请求
+
+`GET /api/v5/users/glp/v2/overview`
+
+> 请求示例
+    
+    
+    GET /api/v5/users/glp/v2/overview
+    
+
+#### 请求参数
+
+无请求参数。
+
+> 返回示例
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "programs": [
+                    {
+                        "bizId": "16",
+                        "program": "GLP_B",
+                        "side": "MAKER",
+                        "instrument": "PERP",
+                        "currentTier": "Tier 2",
+                        "estNextTier": "Tier 2",
+                        "estNextStatus": "qualify",
+                        "gracePeriodEndTime": "",
+                        "requirement": [
+                            {
+                                "tier": "Tier 1",
+                                "share": "0.005"
+                            },
+                            {
+                                "tier": "Tier 2",
+                                "share": "0.003"
+                            }
+                        ],
+                        "performance": [
+                            {
+                                "date": "1726531200000",
+                                "assessPeriod": "PREVIOUS",
+                                "share": "0.0035",
+                                "vol": "140000"
+                            },
+                            {
+                                "date": "1726876800000",
+                                "assessPeriod": "CURRENT",
+                                "share": "0.004",
+                                "vol": "200"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+programs | Array of objects | 当前 GLP 注册信息。无可用数据时返回空数组。  
+> bizId | String | 产品及交易方向标识。  
+`14`：SPOT MAKER  
+`15`：FUT_NTO MAKER  
+`16`：PERP MAKER  
+`17`：SPOT TAKER  
+`18`：FUT_NTO TAKER  
+`19`：PERP TAKER  
+> program | String | GLP 项目名称。  
+`GLP_A`  
+`GLP_B`  
+> side | String | 交易方向。  
+`MAKER`  
+`TAKER`  
+> instrument | String | GLP 产品类别。  
+`SPOT`：现货  
+`PERP`：永续合约  
+`FUT_NTO`：交割合约及 Nitro  
+> currentTier | String | 当前生效的 GLP 等级。不可用时返回空字符串。  
+> estNextTier | String | 基于最新考核的预估 GLP 等级。不可用时返回空字符串。  
+> estNextStatus | String | 预估等级结果。  
+`disqualify`  
+`downgrade`  
+`qualify`  
+`upgrade`  
+不可用时返回空字符串。  
+> gracePeriodEndTime | String | 降级最早生效日期。Unix 毫秒时间戳。不适用时返回空字符串。  
+> requirement | Array of objects | GLP 等级的市场份额门槛。  
+>> tier | String | GLP 等级名称。  
+>> share | String | 所需市场份额，以小数表示。`"0.007"` = 0.7%。不可用时为 `null`。  
+> performance | Array of objects | 按交易日统计的本周绩效。  
+>> date | String | 交易日。Unix 毫秒时间戳。  
+>> assessPeriod | String | 该交易日所属的考核周期。  
+`PREVIOUS`  
+`CURRENT`  
+>> share | String | 本周市场份额，以小数表示。不可用时为 `null`。  
+>> vol | String | 本周交易量。不可用时为 `null`。  
+  
+### 获取 GLP v2 考核详情 
+
+获取所选 GLP 产品及交易方向在当前考核周期内的每日和本周绩效。子账户 API key 获取的是主账户的 GLP 数据。
+
+#### 限速：5次/2s
+
+#### 限速规则：User ID
+
+#### 权限：读取
+
+#### HTTP请求
+
+`GET /api/v5/users/glp/v2/details`
+
+> 请求示例
+    
+    
+    GET /api/v5/users/glp/v2/details?bizId=16
+    
+
+#### 请求参数
+
+**参数名** | **类型** | **是否必须** | **描述**  
+---|---|---|---  
+bizId | String | 是 | 产品及交易方向标识。  
+`14`：SPOT MAKER  
+`15`：FUT_NTO MAKER  
+`16`：PERP MAKER  
+`17`：SPOT TAKER  
+`18`：FUT_NTO TAKER  
+`19`：PERP TAKER  
+  
+> 返回示例
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "assessStartTime": "1726790400000",
+                "assessEndTime": "1727308800000",
+                "performance": [
+                    {
+                        "date": "1726790400000",
+                        "origVol": "100",
+                        "origShare": "0.004",
+                        "adjVol": "200",
+                        "adjShare": "0.004",
+                        "accOrigVol": "100",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "200",
+                        "accAdjShare": "0.004"
+                    },
+                    {
+                        "date": "1726876800000",
+                        "origVol": "200",
+                        "origShare": "0.004",
+                        "adjVol": "400",
+                        "adjShare": "0.004",
+                        "accOrigVol": "300",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "600",
+                        "accAdjShare": "0.004"
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+assessStartTime | String | 考核周期开始时间。Unix 毫秒时间戳。  
+assessEndTime | String | 考核周期结束时间。Unix 毫秒时间戳。  
+performance | Array of objects | 每日及本周绩效。无可用数据时返回空数组。  
+> date | String | 交易日。Unix 毫秒时间戳。  
+> origVol | String | 加权前的每日交易量。不可用时为 `null`。  
+> origShare | String | 每日市场份额，以小数表示。不可用时为 `null`。  
+> adjVol | String | 调整后的每日交易量。不可用时为 `null`。  
+> adjShare | String | 调整后的每日市场份额，以小数表示。不可用时为 `null`。  
+> accOrigVol | String | 加权前的本周累计交易量。不可用时为 `null`。  
+> accOrigShare | String | 本周累计市场份额，以小数表示。不可用时为 `null`。  
+> accAdjVol | String | 调整后的本周累计交易量。不可用时为 `null`。  
+> accAdjShare | String | 调整后的本周累计市场份额，以小数表示。不可用时为 `null`。  
+  
+### 获取 GLP v2 历史绩效 
+
+获取所选 GLP 产品及交易方向的每周考核结果、等级变更和绩效指标。子账户 API key 获取的是主账户的 GLP 数据。
+
+#### 限速：5次/2s
+
+#### 限速规则：User ID
+
+#### 权限：读取
+
+#### HTTP请求
+
+`GET /api/v5/users/glp/v2/history/performance`
+
+> 请求示例
+    
+    
+    GET /api/v5/users/glp/v2/history/performance?bizId=16
+    
+
+#### 请求参数
+
+**参数名** | **类型** | **是否必须** | **描述**  
+---|---|---|---  
+bizId | String | 是 | 产品及交易方向标识。  
+`14`：SPOT MAKER  
+`15`：FUT_NTO MAKER  
+`16`：PERP MAKER  
+`17`：SPOT TAKER  
+`18`：FUT_NTO TAKER  
+`19`：PERP TAKER  
+  
+> 返回示例
+    
+    
+    {
+        "code": "0",
+        "msg": "",
+        "data": [
+            {
+                "performance": [
+                    {
+                        "assessStartTime": "1726185600000",
+                        "assessEndTime": "1726704000000",
+                        "tier": "Tier 3",
+                        "nextTier": "Tier 2",
+                        "accOrigVol": "100000",
+                        "accOrigShare": "0.004",
+                        "accAdjVol": "200000",
+                        "accAdjShare": "0.004",
+                        "assessResult": "upgrade"
+                    }
+                ]
+            }
+        ]
+    }
+    
+
+#### 返回参数
+
+**参数名** | **类型** | **描述**  
+---|---|---  
+performance | Array of objects | 每周考核结果。无历史数据时返回空数组。  
+> assessStartTime | String | 考核周期开始时间。Unix 毫秒时间戳。  
+> assessEndTime | String | 考核周期结束时间。Unix 毫秒时间戳。  
+> tier | String | 本次考核使用的 GLP 等级。  
+> nextTier | String | 本次考核确定的等级。不可用时返回空字符串。  
+> accOrigVol | String | 考核周期内加权前的交易量。不可用时为 `null`。  
+> accOrigShare | String | 考核周期内市场份额，以小数表示。不可用时为 `null`。  
+> accAdjVol | String | 考核周期内调整后的交易量。不可用时为 `null`。  
+> accAdjShare | String | 考核周期内调整后的市场份额，以小数表示。不可用时为 `null`。  
+> assessResult | String | 等级变更结果。  
+`disqualify`  
+`downgrade`  
+`qualify`  
+`upgrade`  
+不可用时返回空字符串。

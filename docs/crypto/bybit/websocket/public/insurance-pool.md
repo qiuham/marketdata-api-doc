@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/insurance-pool
 api_type: WebSocket
-updated_at: 2026-10-11 18:50:45.415869
+updated_at: 2026-10-12 18:54:29.860633
 ---
 
 # Insurance Pool

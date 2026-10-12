@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-trade-api-ws-place-order
 anchor_id: spread-trading-websocket-trade-api-ws-place-order
 api_type: WebSocket
-updated_at: 2026-10-11 19:17:26.039048
+updated_at: 2026-10-12 19:22:31.476587
 ---
 
 # WS / Place order

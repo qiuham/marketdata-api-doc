@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/index-kline
 api_type: Market Data
-updated_at: 2026-10-11 18:47:05.164549
+updated_at: 2026-10-12 18:50:20.970621
 ---
 
 # Get Historical Volatility

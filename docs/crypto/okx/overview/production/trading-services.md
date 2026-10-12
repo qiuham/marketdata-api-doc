@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-production-trading-services
 anchor_id: overview-production-trading-services
 api_type: API
-updated_at: 2026-10-11 19:15:44.439405
+updated_at: 2026-10-12 19:20:44.874017
 ---
 
 # Production Trading Services

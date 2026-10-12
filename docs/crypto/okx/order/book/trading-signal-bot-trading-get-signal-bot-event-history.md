@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-get-signal-bot-event-history
 anchor_id: order-book-trading-signal-bot-trading-get-signal-bot-event-history
 api_type: API
-updated_at: 2026-10-11 19:16:42.511270
+updated_at: 2026-10-12 19:21:46.780550
 ---
 
 # GET / Signal bot event history

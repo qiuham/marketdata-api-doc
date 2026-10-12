@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-okusd-get-okusd-limits
 anchor_id: financial-product-okusd-get-okusd-limits
 api_type: API
-updated_at: 2026-10-11 19:18:17.747415
+updated_at: 2026-10-12 19:23:24.809454
 ---
 
 # GET / OKUSD limits

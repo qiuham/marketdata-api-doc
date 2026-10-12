@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/reinvest
 api_type: REST
-updated_at: 2026-10-11 18:45:32.107317
+updated_at: 2026-10-12 18:48:34.981268
 ---
 
 # Remove Liquidity

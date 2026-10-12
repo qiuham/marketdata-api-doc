@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
 api_type: Position
-updated_at: 2026-10-11 18:48:30.004830
+updated_at: 2026-10-12 18:51:56.948079
 ---
 
 # Move Position

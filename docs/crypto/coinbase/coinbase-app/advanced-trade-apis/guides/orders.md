@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/orders
 api_type: Guide
-updated_at: 2026-10-11 19:00:43.874467
+updated_at: 2026-10-12 19:05:43.680348
 ---
 
 # Advanced API Order Management

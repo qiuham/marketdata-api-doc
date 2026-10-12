@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/list-sub-apikeys
 api_type: REST
-updated_at: 2026-10-11 18:50:21.560523
+updated_at: 2026-10-12 18:54:03.431585
 ---
 
 # Modify Sub API Key

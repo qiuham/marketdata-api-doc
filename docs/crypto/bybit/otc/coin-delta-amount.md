@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-10-11 18:48:13.355258
+updated_at: 2026-10-12 18:51:38.105130
 ---
 
 # Get Delay Liquidation Status

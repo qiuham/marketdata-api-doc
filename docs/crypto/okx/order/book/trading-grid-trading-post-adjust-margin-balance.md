@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-post-adjust-margin-balance
 anchor_id: order-book-trading-grid-trading-post-adjust-margin-balance
 api_type: API
-updated_at: 2026-10-11 19:16:29.391750
+updated_at: 2026-10-12 19:21:33.360271
 ---
 
 # POST / Adjust margin balance

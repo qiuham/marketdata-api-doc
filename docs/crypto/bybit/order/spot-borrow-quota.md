@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-10-11 18:48:12.136003
+updated_at: 2026-10-12 18:51:36.867773
 ---
 
 # Get Delay Liquidation Status
