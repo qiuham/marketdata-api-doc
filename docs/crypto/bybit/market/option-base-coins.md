@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/option-base-coins
 api_type: Market Data
-updated_at: 2026-10-12 18:50:32.860346
+updated_at: 2026-10-13 18:51:25.919070
 ---
 
 # Get Recent Public Trades

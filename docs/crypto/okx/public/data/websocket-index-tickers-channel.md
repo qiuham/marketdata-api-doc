@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-index-tickers-channel
 anchor_id: public-data-websocket-index-tickers-channel
 api_type: WebSocket
-updated_at: 2026-10-12 19:22:50.186511
+updated_at: 2026-10-13 19:26:27.544995
 ---
 
 # Index tickers channel

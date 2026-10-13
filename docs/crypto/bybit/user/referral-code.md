@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-10-12 18:54:09.078182
+updated_at: 2026-10-13 18:54:58.210824
 ---
 
 # Delete Sub UID

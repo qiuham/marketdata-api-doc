@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/flexible-saving/auto-savings
 api_type: REST
-updated_at: 2026-10-12 18:49:19.150202
+updated_at: 2026-10-13 18:50:13.000193
 ---
 
 # Get Airdrop Products

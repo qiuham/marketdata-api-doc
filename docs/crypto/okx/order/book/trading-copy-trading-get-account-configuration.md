@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-account-configuration
 anchor_id: order-book-trading-copy-trading-get-account-configuration
 api_type: API
-updated_at: 2026-10-12 19:21:55.760704
+updated_at: 2026-10-13 19:25:33.494103
 ---
 
 # GET / Account configuration

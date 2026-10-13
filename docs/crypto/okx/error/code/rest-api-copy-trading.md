@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-copy-trading
 anchor_id: error-code-rest-api-copy-trading
 api_type: REST
-updated_at: 2026-10-12 19:23:44.120038
+updated_at: 2026-10-13 19:27:21.090913
 ---
 
 # Copy trading

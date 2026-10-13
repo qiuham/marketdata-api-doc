@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-demo-trading-services
 anchor_id: overview-demo-trading-services
 api_type: API
-updated_at: 2026-10-12 19:20:45.183656
+updated_at: 2026-10-13 19:24:23.879059
 ---
 
 # Demo Trading Services
@@ -41,17 +41,6 @@ Note: `x-simulated-trading: 1` needs to be added to the header of the Demo Tradi
     OK-ACCESS-TIMESTAMP: 2020-03-28T12:21:41.274Z
     
     x-simulated-trading: 1
-    
-
-### Demo Trading Explorer
-
-You need to sign in to your OKX account before accessing the explorer. The interface only allow access to the demo trading environment.
-
-  * Clicking `Try it out` button in Parameters Panel and editing request parameters.
-
-  * Clicking `Execute` button to send your request. You can check response in Responses panel.
-
-Try [demo trading explorer](/demo-trading-explorer/v5/en)
 
 ---
 
@@ -89,14 +78,3 @@ Try [demo trading explorer](/demo-trading-explorer/v5/en)
     OK-ACCESS-TIMESTAMP: 2020-03-28T12:21:41.274Z
     
     x-simulated-trading: 1
-    
-
-### 模拟盘交互式浏览器 
-
-该功能接口用户需先登录，接口只会请求模拟环境
-
-  * Parameters 面板中点击`Try it out`按钮，编辑请求参数。
-
-  * 点击`Execute`按钮发送请求。Responses 面板中查看请求结果。
-
-立即体验 [交互式浏览器](/demo-trading-explorer/v5/zh)

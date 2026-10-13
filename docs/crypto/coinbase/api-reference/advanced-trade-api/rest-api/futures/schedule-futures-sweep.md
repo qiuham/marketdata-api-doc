@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/schedule-futures-sweep
 api_type: REST
-updated_at: 2026-10-12 19:05:41.824251
+updated_at: 2026-10-13 19:08:46.449423
 ---
 
 # Schedule US Derivatives Sweep

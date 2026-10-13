@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/unified-trans-amnt
 api_type: Account
-updated_at: 2026-10-12 18:44:48.166333
+updated_at: 2026-10-13 18:45:46.829728
 ---
 
 # Get Wallet Balance

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview
 anchor_id: overview
 api_type: API
-updated_at: 2026-10-12 19:20:38.351180
+updated_at: 2026-10-13 19:24:17.060150
 ---
 
 # Overview
@@ -561,16 +561,6 @@ Note: `x-simulated-trading: 1` needs to be added to the header of the Demo Tradi
     
     x-simulated-trading: 1
     
-
-### Demo Trading Explorer
-
-You need to sign in to your OKX account before accessing the explorer. The interface only allow access to the demo trading environment.
-
-  * Clicking `Try it out` button in Parameters Panel and editing request parameters.
-
-  * Clicking `Execute` button to send your request. You can check response in Responses panel.
-
-Try [demo trading explorer](/demo-trading-explorer/v5/en)
 
 ## General Info
 
@@ -1415,16 +1405,6 @@ WebSocket有一种消息类型(event=`notice`)。
     
     x-simulated-trading: 1
     
-
-### 模拟盘交互式浏览器 
-
-该功能接口用户需先登录，接口只会请求模拟环境
-
-  * Parameters 面板中点击`Try it out`按钮，编辑请求参数。
-
-  * 点击`Execute`按钮发送请求。Responses 面板中查看请求结果。
-
-立即体验 [交互式浏览器](/demo-trading-explorer/v5/zh)
 
 ## 基本信息 
 

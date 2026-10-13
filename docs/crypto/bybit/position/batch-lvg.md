@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-10-12 18:51:50.607798
+updated_at: 2026-10-13 18:52:41.425872
 ---
 
 # Get Closed PnL

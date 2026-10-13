@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/batch-query
 api_type: REST
-updated_at: 2026-10-12 18:53:51.505816
+updated_at: 2026-10-13 18:54:40.805035
 ---
 
 # Get User Register Date

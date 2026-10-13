@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#affiliate-rest-api-get-performance-summary
 anchor_id: affiliate-rest-api-get-performance-summary
 api_type: REST
-updated_at: 2026-10-12 19:23:36.522619
+updated_at: 2026-10-13 19:27:13.626183
 ---
 
 # Get performance summary

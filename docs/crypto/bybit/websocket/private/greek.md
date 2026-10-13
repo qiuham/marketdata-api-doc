@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/greek
 api_type: WebSocket
-updated_at: 2026-10-12 18:54:21.644290
+updated_at: 2026-10-13 18:55:10.669877
 ---
 
 # Strategy

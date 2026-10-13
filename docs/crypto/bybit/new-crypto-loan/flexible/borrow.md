@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/borrow
 api_type: REST
-updated_at: 2026-10-12 18:51:06.854311
+updated_at: 2026-10-13 18:51:59.148107
 ---
 
 # Borrow
