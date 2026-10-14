@@ -2,33 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/renew-order
 api_type: REST
-updated_at: 2026-10-13 18:51:50.588152
+updated_at: 2026-10-14 18:50:56.380781
 ---
 
-# Create Supply Order
+# Get Repayment History
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-fixed/supply`
+GET`/v5/crypto-loan-fixed/repayment-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Currency to supply  
-orderAmount| **true**|  string| Amount to supply  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-availableSource| false| string| Source account for supply. `0`: Funding Account; `1`: Earn Flexible Account; `2`: ALL. Default: `0`  
+repayId| false| string| Repayment order ID  
+loanCurrency| false| string| Loan coin name  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Supply order ID  
+list| array| Object  
+> details| array| Object  
+>> loanCurrency| string| Loan coin name  
+>> repayAmount| long| Repay amount  
+>> loanId| string| Loan ID. One repayment may involve multiple loan contracts.  
+> loanCurrency| string| Loan coin name  
+> repayAmount| long| Repay amount  
+> repayId| string| Repay order ID  
+> repayStatus| integer| Status, `1`: success, `2`: processing, `3`: fail  
+> repayTime| long| Repay time  
+> repayType| integer| Repay type, `1`: repay by user; `2`: repay by liquidation; `3`: auto repay; `4`: overdue repay; `5`: repay by delisting; `6`: repay by delay liquidation; `7`: repay by currency; `8`: transfer to flexible loan  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
 
@@ -39,21 +50,12 @@ orderId| string| Supply order ID
 
     
     
-    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
+    GET /v5/crypto-loan-fixed/repayment-history?repayId=1780 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: XXXXXXX  
+    X-BAPI-TIMESTAMP: 1752714738425  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 104  
-      
-    {  
-        "orderCurrency": "USDT",  
-        "orderAmount": "2002.21",  
-        "annualRate": "0.35",  
-        "term": "7"  
-    }  
     
     
     
@@ -63,11 +65,8 @@ orderId| string| Supply order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_lending_order_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderAmount="2002.21",  
-        annualRate="0.35",  
-        term="7",  
+    print(session.get_repayment_history_fixed_crypto_loan(  
+        repayId="1780",  
     ))  
     
     
@@ -82,38 +81,70 @@ orderId| string| Supply order ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "orderId": "13007"  
+            "list": [  
+                {  
+                    "details": [  
+                        {  
+                            "loanCurrency": "ETH",  
+                            "loanId": "568",  
+                            "repayAmount": "0.1"  
+                        },  
+                        {  
+                            "loanCurrency": "ETH",  
+                            "loanId": "571",  
+                            "repayAmount": "1.4"  
+                        }  
+                    ],  
+                    "loanCurrency": "ETH",  
+                    "repayAmount": "1.5",  
+                    "repayId": "1782",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752717174353,  
+                    "repayType": 1  
+                }  
+            ],  
+            "nextPageCursor": "1674"  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1752717183557  
     }
 
 ---
 
-# 創建存款單
+# 查詢還款紀錄
 
 > 權限: "現貨"  
->  頻率: 1次/秒
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-fixed/supply`
+GET`/v5/crypto-loan-fixed/repayment-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 出借幣種  
-orderAmount| **true**|  string| 出借金額  
-annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
-term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-availableSource| false| string| 出借資金來源帳戶。`0`: 資金帳戶；`1`: 靈活賺幣帳戶；`2`: 全部。預設值：`0`  
+repayId| false| string| 還款訂單ID  
+loanCurrency| false| string| 借款幣種  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 存款單ID  
+list| array| Object  
+> details| array| Object  
+>> loanCurrency| string| 借款幣種名稱  
+>> repayAmount| long| 還款金額  
+>> loanId| string| 借款合約 ID。一筆還款可能涉及多個借款合約。  
+> loanCurrency| string| 借款幣種名稱  
+> repayAmount| long| 還款金額  
+> repayId| string| 還款訂單 ID  
+> repayStatus| integer| 狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
+> repayTime| long| 還款時間  
+> repayType| integer| 還款類型，`1`: 用戶還款；`2`: 強制平倉還款；`3`: 自動還款；`4`: 逾期還款；`5`: 下架還款；`6`: 延期強平還款；`7`: 兌幣還款；`8`: 轉活期還款  
+nextPageCursor| string| 下一頁游標  
   
 ### 請求示例
 
@@ -124,21 +155,12 @@ orderId| string| 存款單ID
 
     
     
-    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
+    GET /v5/crypto-loan-fixed/repayment-history?repayId=1780 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: XXXXXXX  
+    X-BAPI-TIMESTAMP: 1752714738425  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 104  
-      
-    {  
-        "orderCurrency": "USDT",  
-        "orderAmount": "2002.21",  
-        "annualRate": "0.35",  
-        "term": "7"  
-    }  
     
     
     
@@ -148,11 +170,8 @@ orderId| string| 存款單ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_lending_order_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderAmount="2002.21",  
-        annualRate="0.35",  
-        term="7",  
+    print(session.get_repayment_history_fixed_crypto_loan(  
+        repayId="1780",  
     ))  
     
     
@@ -167,8 +186,30 @@ orderId| string| 存款單ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "orderId": "13007"  
+            "list": [  
+                {  
+                    "details": [  
+                        {  
+                            "loanCurrency": "ETH",  
+                            "loanId": "568",  
+                            "repayAmount": "0.1"  
+                        },  
+                        {  
+                            "loanCurrency": "ETH",  
+                            "loanId": "571",  
+                            "repayAmount": "1.4"  
+                        }  
+                    ],  
+                    "loanCurrency": "ETH",  
+                    "repayAmount": "1.5",  
+                    "repayId": "1782",  
+                    "repayStatus": 1,  
+                    "repayTime": 1752717174353,  
+                    "repayType": 1  
+                }  
+            ],  
+            "nextPageCursor": "1674"  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1752717183557  
     }

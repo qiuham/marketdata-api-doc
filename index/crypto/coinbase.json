@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/coinbase",
   "total": 78,
-  "updated_at": "2026-10-13 19:08:51.681413",
+  "updated_at": "2026-10-14 19:08:20.337925",
   "documents_by_type": {
     "Account": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/get-account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:45.160791"
+        "updated_at": "2026-10-14 19:08:12.145230"
       },
       {
         "id": "list-accounts",
@@ -35,7 +35,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/list-accounts",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-12 19:05:41.164976"
+        "updated_at": "2026-10-14 19:08:12.243296"
       },
       {
         "id": "allocate-portfolio",
@@ -47,7 +47,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.727100"
+        "updated_at": "2026-10-14 19:08:15.446348"
       },
       {
         "id": "get-perpetuals-portfolio-summary",
@@ -59,7 +59,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.798606"
+        "updated_at": "2026-10-14 19:08:15.522138"
       },
       {
         "id": "get-portfolio-balances",
@@ -71,7 +71,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.092296"
+        "updated_at": "2026-10-14 19:08:15.796981"
       },
       {
         "id": "create-portfolio",
@@ -83,7 +83,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.151107"
+        "updated_at": "2026-10-14 19:08:15.968949"
       },
       {
         "id": "delete-portfolio",
@@ -107,7 +107,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.460630"
+        "updated_at": "2026-10-14 19:08:16.262430"
       },
       {
         "id": "get-portfolio-breakdown",
@@ -119,7 +119,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.579653"
+        "updated_at": "2026-10-14 19:08:16.473409"
       },
       {
         "id": "list-portfolios",
@@ -143,7 +143,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.495667"
+        "updated_at": "2026-10-14 19:08:16.549323"
       }
     ],
     "Trading": [
@@ -169,7 +169,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:45.159610"
+        "updated_at": "2026-10-14 19:08:12.519844"
       },
       {
         "id": "get-convert-trade",
@@ -181,7 +181,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:45.731747"
+        "updated_at": "2026-10-14 19:08:12.862527"
       },
       {
         "id": "cancel-order",
@@ -193,7 +193,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/cancel-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.771472"
+        "updated_at": "2026-10-14 19:08:14.344434"
       },
       {
         "id": "close-position",
@@ -205,7 +205,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/close-position",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.920682"
+        "updated_at": "2026-10-14 19:08:14.445545"
       },
       {
         "id": "create-order",
@@ -217,7 +217,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/create-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.056309"
+        "updated_at": "2026-10-14 19:08:14.578635"
       },
       {
         "id": "edit-order-preview",
@@ -229,7 +229,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.210174"
+        "updated_at": "2026-10-14 19:08:14.805281"
       },
       {
         "id": "edit-order",
@@ -241,7 +241,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.247241"
+        "updated_at": "2026-10-14 19:08:14.672965"
       },
       {
         "id": "get-order",
@@ -253,7 +253,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.289664"
+        "updated_at": "2026-10-14 19:08:14.868507"
       },
       {
         "id": "list-fills",
@@ -265,7 +265,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.343843"
+        "updated_at": "2026-10-14 19:08:14.953248"
       },
       {
         "id": "list-orders",
@@ -277,7 +277,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.480314"
+        "updated_at": "2026-10-14 19:08:15.093704"
       },
       {
         "id": "preview-orders",
@@ -289,7 +289,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/preview-orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.661196"
+        "updated_at": "2026-10-14 19:08:15.286022"
       },
       {
         "id": "api-reference",
@@ -313,7 +313,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/postman-files",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.883413"
+        "updated_at": "2026-10-14 19:08:19.215229"
       },
       {
         "id": "rest-api",
@@ -325,7 +325,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.952083"
+        "updated_at": "2026-10-14 19:08:19.340605"
       },
       {
         "id": "rest-scopes",
@@ -337,7 +337,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-scopes",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.969376"
+        "updated_at": "2026-10-14 19:08:19.406569"
       },
       {
         "id": "sandbox",
@@ -349,7 +349,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/sandbox",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:51.029721"
+        "updated_at": "2026-10-14 19:08:19.531726"
       }
     ],
     "REST": [
@@ -363,7 +363,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:45.649527"
+        "updated_at": "2026-10-14 19:08:12.727300"
       },
       {
         "id": "get-transaction-summary",
@@ -375,7 +375,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:45.606226"
+        "updated_at": "2026-10-14 19:08:13.036022"
       },
       {
         "id": "cancel-pending-futures-sweep",
@@ -399,7 +399,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.065727"
+        "updated_at": "2026-10-14 19:08:13.146314"
       },
       {
         "id": "get-futures-balance-summary",
@@ -411,7 +411,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.065060"
+        "updated_at": "2026-10-14 19:08:13.278078"
       },
       {
         "id": "get-futures-position",
@@ -423,7 +423,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-position",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.023672"
+        "updated_at": "2026-10-14 19:08:13.484831"
       },
       {
         "id": "get-intraday-margin-setting",
@@ -435,7 +435,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.144921"
+        "updated_at": "2026-10-14 19:08:13.429183"
       },
       {
         "id": "list-futures-positions",
@@ -447,7 +447,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.467599"
+        "updated_at": "2026-10-14 19:08:13.871346"
       },
       {
         "id": "list-futures-sweeps",
@@ -459,7 +459,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.404062"
+        "updated_at": "2026-10-14 19:08:13.754217"
       },
       {
         "id": "schedule-futures-sweep",
@@ -483,7 +483,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.529993"
+        "updated_at": "2026-10-14 19:08:13.944551"
       },
       {
         "id": "introduction",
@@ -495,7 +495,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:46.727284"
+        "updated_at": "2026-10-14 19:08:14.140521"
       },
       {
         "id": "get-payment-method",
@@ -507,7 +507,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.750352"
+        "updated_at": "2026-10-14 19:08:15.367919"
       },
       {
         "id": "list-payment-methods",
@@ -519,7 +519,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:47.705479"
+        "updated_at": "2026-10-14 19:08:15.366921"
       },
       {
         "id": "get-perpetuals-position",
@@ -531,7 +531,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.028111"
+        "updated_at": "2026-10-14 19:08:15.721732"
       },
       {
         "id": "list-perpetuals-positions",
@@ -543,7 +543,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.131511"
+        "updated_at": "2026-10-14 19:08:15.901377"
       },
       {
         "id": "opt-in-or-out",
@@ -567,7 +567,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-server-time",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.463643"
+        "updated_at": "2026-10-14 19:08:17.711674"
       },
       {
         "id": "sdk",
@@ -579,7 +579,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/sdk",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:51.122407"
+        "updated_at": "2026-10-14 19:08:19.597577"
       }
     ],
     "Market Data": [
@@ -593,7 +593,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.759960"
+        "updated_at": "2026-10-14 19:08:16.741475"
       },
       {
         "id": "get-market-trades",
@@ -605,7 +605,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-market-trades",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.782332"
+        "updated_at": "2026-10-14 19:08:16.702800"
       },
       {
         "id": "get-product-book",
@@ -617,7 +617,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.880144"
+        "updated_at": "2026-10-14 19:08:16.898742"
       },
       {
         "id": "get-product-candles",
@@ -629,7 +629,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-candles",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.026768"
+        "updated_at": "2026-10-14 19:08:17.012883"
       },
       {
         "id": "get-product",
@@ -641,7 +641,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:48.984434"
+        "updated_at": "2026-10-14 19:08:17.090595"
       },
       {
         "id": "list-products",
@@ -653,7 +653,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/list-products",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.181836"
+        "updated_at": "2026-10-14 19:08:17.246428"
       },
       {
         "id": "get-public-market-trades",
@@ -677,7 +677,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-book",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.423464"
+        "updated_at": "2026-10-14 19:08:17.517556"
       },
       {
         "id": "get-public-product-candles",
@@ -689,7 +689,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.403805"
+        "updated_at": "2026-10-14 19:08:17.473696"
       },
       {
         "id": "get-public-product",
@@ -701,7 +701,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.293609"
+        "updated_at": "2026-10-14 19:08:17.392365"
       },
       {
         "id": "list-public-products",
@@ -713,7 +713,7 @@
         "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/list-public-products",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.589599"
+        "updated_at": "2026-10-14 19:08:17.754328"
       }
     ],
     "Guide": [
@@ -727,7 +727,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.681094"
+        "updated_at": "2026-10-14 19:08:17.826872"
       },
       {
         "id": "deribit-partners",
@@ -739,7 +739,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/deribit-partners",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.796074"
+        "updated_at": "2026-10-14 19:08:17.908667"
       },
       {
         "id": "intx-partners",
@@ -751,7 +751,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.832697"
+        "updated_at": "2026-10-14 19:08:17.981146"
       },
       {
         "id": "isolated-positions",
@@ -763,7 +763,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:49.892990"
+        "updated_at": "2026-10-14 19:08:18.318227"
       },
       {
         "id": "overview",
@@ -775,7 +775,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.043849"
+        "updated_at": "2026-10-14 19:08:18.190342"
       },
       {
         "id": "technical",
@@ -787,7 +787,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.095436"
+        "updated_at": "2026-10-14 19:08:18.379282"
       },
       {
         "id": "futures",
@@ -799,7 +799,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/futures",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.157065"
+        "updated_at": "2026-10-14 19:08:18.410809"
       },
       {
         "id": "oauth-access",
@@ -811,7 +811,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/oauth-access",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.179927"
+        "updated_at": "2026-10-14 19:08:18.474121"
       },
       {
         "id": "orders",
@@ -823,7 +823,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.249502"
+        "updated_at": "2026-10-14 19:08:18.661579"
       },
       {
         "id": "perpetual",
@@ -835,7 +835,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.421496"
+        "updated_at": "2026-10-14 19:08:18.735452"
       },
       {
         "id": "portfolios",
@@ -847,7 +847,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/portfolios",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.487601"
+        "updated_at": "2026-10-14 19:08:18.779172"
       },
       {
         "id": "sdk-rest-api",
@@ -859,7 +859,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.544411"
+        "updated_at": "2026-10-14 19:08:18.862662"
       },
       {
         "id": "overview",
@@ -871,7 +871,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.748477"
+        "updated_at": "2026-10-14 19:08:19.182418"
       }
     ],
     "WebSocket": [
@@ -885,7 +885,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.576470"
+        "updated_at": "2026-10-14 19:08:18.973481"
       },
       {
         "id": "websocket",
@@ -897,7 +897,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/websocket",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:50.663625"
+        "updated_at": "2026-10-14 19:08:19.120293"
       },
       {
         "id": "websocket-authentication",
@@ -909,7 +909,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:51.503615"
+        "updated_at": "2026-10-14 19:08:19.978261"
       },
       {
         "id": "websocket-channels",
@@ -945,7 +945,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:51.397699"
+        "updated_at": "2026-10-14 19:08:20.093482"
       },
       {
         "id": "websocket-rate-limits",
@@ -957,7 +957,7 @@
         "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-10-13 19:08:51.681413"
+        "updated_at": "2026-10-14 19:08:20.337925"
       }
     ]
   },
@@ -972,7 +972,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/allocate-portfolio",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.727100"
+      "updated_at": "2026-10-14 19:08:15.446348"
     },
     {
       "id": "create-portfolio",
@@ -984,7 +984,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/create-portfolio",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.151107"
+      "updated_at": "2026-10-14 19:08:15.968949"
     },
     {
       "id": "delete-portfolio",
@@ -1008,7 +1008,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.460630"
+      "updated_at": "2026-10-14 19:08:16.262430"
     },
     {
       "id": "get-account",
@@ -1020,7 +1020,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/get-account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:45.160791"
+      "updated_at": "2026-10-14 19:08:12.145230"
     },
     {
       "id": "get-perpetuals-portfolio-summary",
@@ -1032,7 +1032,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-portfolio-summary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.798606"
+      "updated_at": "2026-10-14 19:08:15.522138"
     },
     {
       "id": "get-portfolio-breakdown",
@@ -1044,7 +1044,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/get-portfolio-breakdown",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.579653"
+      "updated_at": "2026-10-14 19:08:16.473409"
     },
     {
       "id": "get-portfolio-balances",
@@ -1056,7 +1056,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-portfolio-balances",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.092296"
+      "updated_at": "2026-10-14 19:08:15.796981"
     },
     {
       "id": "list-accounts",
@@ -1068,7 +1068,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/list-accounts",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-12 19:05:41.164976"
+      "updated_at": "2026-10-14 19:08:12.243296"
     },
     {
       "id": "list-portfolios",
@@ -1092,7 +1092,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/move-portfolios-funds",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.495667"
+      "updated_at": "2026-10-14 19:08:16.549323"
     },
     {
       "id": "orders",
@@ -1104,7 +1104,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.249502"
+      "updated_at": "2026-10-14 19:08:18.661579"
     },
     {
       "id": "faq",
@@ -1116,7 +1116,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.681094"
+      "updated_at": "2026-10-14 19:08:17.826872"
     },
     {
       "id": "perpetual",
@@ -1128,7 +1128,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/perpetual",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.421496"
+      "updated_at": "2026-10-14 19:08:18.735452"
     },
     {
       "id": "portfolios",
@@ -1140,7 +1140,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/portfolios",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.487601"
+      "updated_at": "2026-10-14 19:08:18.779172"
     },
     {
       "id": "futures",
@@ -1152,7 +1152,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/futures",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.157065"
+      "updated_at": "2026-10-14 19:08:18.410809"
     },
     {
       "id": "deribit-partners",
@@ -1164,7 +1164,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/deribit-partners",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.796074"
+      "updated_at": "2026-10-14 19:08:17.908667"
     },
     {
       "id": "overview",
@@ -1176,7 +1176,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.043849"
+      "updated_at": "2026-10-14 19:08:18.190342"
     },
     {
       "id": "intx-partners",
@@ -1188,7 +1188,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.832697"
+      "updated_at": "2026-10-14 19:08:17.981146"
     },
     {
       "id": "isolated-positions",
@@ -1200,7 +1200,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.892990"
+      "updated_at": "2026-10-14 19:08:18.318227"
     },
     {
       "id": "sdk-rest-api",
@@ -1212,7 +1212,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.544411"
+      "updated_at": "2026-10-14 19:08:18.862662"
     },
     {
       "id": "oauth-access",
@@ -1224,7 +1224,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/oauth-access",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.179927"
+      "updated_at": "2026-10-14 19:08:18.474121"
     },
     {
       "id": "technical",
@@ -1236,7 +1236,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/technical",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.095436"
+      "updated_at": "2026-10-14 19:08:18.379282"
     },
     {
       "id": "overview",
@@ -1248,7 +1248,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.748477"
+      "updated_at": "2026-10-14 19:08:19.182418"
     },
     {
       "id": "get-best-bid-ask",
@@ -1260,7 +1260,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-best-bid-ask",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.759960"
+      "updated_at": "2026-10-14 19:08:16.741475"
     },
     {
       "id": "get-market-trades",
@@ -1272,7 +1272,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-market-trades",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.782332"
+      "updated_at": "2026-10-14 19:08:16.702800"
     },
     {
       "id": "get-product",
@@ -1284,7 +1284,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.984434"
+      "updated_at": "2026-10-14 19:08:17.090595"
     },
     {
       "id": "get-product-book",
@@ -1296,7 +1296,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-book",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.880144"
+      "updated_at": "2026-10-14 19:08:16.898742"
     },
     {
       "id": "get-product-candles",
@@ -1308,7 +1308,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-candles",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.026768"
+      "updated_at": "2026-10-14 19:08:17.012883"
     },
     {
       "id": "get-public-market-trades",
@@ -1332,7 +1332,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.293609"
+      "updated_at": "2026-10-14 19:08:17.392365"
     },
     {
       "id": "get-public-product-book",
@@ -1344,7 +1344,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-book",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.423464"
+      "updated_at": "2026-10-14 19:08:17.517556"
     },
     {
       "id": "get-public-product-candles",
@@ -1356,7 +1356,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-product-candles",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.403805"
+      "updated_at": "2026-10-14 19:08:17.473696"
     },
     {
       "id": "list-products",
@@ -1368,7 +1368,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/list-products",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.181836"
+      "updated_at": "2026-10-14 19:08:17.246428"
     },
     {
       "id": "list-public-products",
@@ -1380,7 +1380,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/list-public-products",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.589599"
+      "updated_at": "2026-10-14 19:08:17.754328"
     },
     {
       "id": "cancel-pending-futures-sweep",
@@ -1404,7 +1404,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.727284"
+      "updated_at": "2026-10-14 19:08:14.140521"
     },
     {
       "id": "get-api-key-permissions",
@@ -1416,7 +1416,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/data-api/get-api-key-permissions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:45.649527"
+      "updated_at": "2026-10-14 19:08:12.727300"
     },
     {
       "id": "get-current-margin-window",
@@ -1428,7 +1428,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.065727"
+      "updated_at": "2026-10-14 19:08:13.146314"
     },
     {
       "id": "get-intraday-margin-setting",
@@ -1440,7 +1440,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-intraday-margin-setting",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.144921"
+      "updated_at": "2026-10-14 19:08:13.429183"
     },
     {
       "id": "get-payment-method",
@@ -1452,7 +1452,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.750352"
+      "updated_at": "2026-10-14 19:08:15.367919"
     },
     {
       "id": "get-perpetuals-position",
@@ -1464,7 +1464,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/get-perpetuals-position",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.028111"
+      "updated_at": "2026-10-14 19:08:15.721732"
     },
     {
       "id": "get-server-time",
@@ -1476,7 +1476,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-server-time",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:49.463643"
+      "updated_at": "2026-10-14 19:08:17.711674"
     },
     {
       "id": "get-transaction-summary",
@@ -1488,7 +1488,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/fees/get-transaction-summary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:45.606226"
+      "updated_at": "2026-10-14 19:08:13.036022"
     },
     {
       "id": "get-futures-balance-summary",
@@ -1500,7 +1500,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.065060"
+      "updated_at": "2026-10-14 19:08:13.278078"
     },
     {
       "id": "get-futures-position",
@@ -1512,7 +1512,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-position",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.023672"
+      "updated_at": "2026-10-14 19:08:13.484831"
     },
     {
       "id": "list-payment-methods",
@@ -1524,7 +1524,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.705479"
+      "updated_at": "2026-10-14 19:08:15.366921"
     },
     {
       "id": "list-perpetuals-positions",
@@ -1536,7 +1536,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:48.131511"
+      "updated_at": "2026-10-14 19:08:15.901377"
     },
     {
       "id": "list-futures-positions",
@@ -1548,7 +1548,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-positions",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.467599"
+      "updated_at": "2026-10-14 19:08:13.871346"
     },
     {
       "id": "list-futures-sweeps",
@@ -1560,7 +1560,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/list-futures-sweeps",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.404062"
+      "updated_at": "2026-10-14 19:08:13.754217"
     },
     {
       "id": "opt-in-or-out",
@@ -1584,7 +1584,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/sdk",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:51.122407"
+      "updated_at": "2026-10-14 19:08:19.597577"
     },
     {
       "id": "schedule-futures-sweep",
@@ -1608,7 +1608,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/set-intraday-margin-settings",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.529993"
+      "updated_at": "2026-10-14 19:08:13.944551"
     },
     {
       "id": "sandbox",
@@ -1620,7 +1620,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/sandbox",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:51.029721"
+      "updated_at": "2026-10-14 19:08:19.531726"
     },
     {
       "id": "postman-files",
@@ -1632,7 +1632,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/postman-files",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.883413"
+      "updated_at": "2026-10-14 19:08:19.215229"
     },
     {
       "id": "rest-api",
@@ -1644,7 +1644,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.952083"
+      "updated_at": "2026-10-14 19:08:19.340605"
     },
     {
       "id": "rest-scopes",
@@ -1656,7 +1656,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-scopes",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.969376"
+      "updated_at": "2026-10-14 19:08:19.406569"
     },
     {
       "id": "cancel-order",
@@ -1668,7 +1668,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/cancel-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.771472"
+      "updated_at": "2026-10-14 19:08:14.344434"
     },
     {
       "id": "close-position",
@@ -1680,7 +1680,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/close-position",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:46.920682"
+      "updated_at": "2026-10-14 19:08:14.445545"
     },
     {
       "id": "api-reference",
@@ -1716,7 +1716,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/create-convert-quote",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:45.159610"
+      "updated_at": "2026-10-14 19:08:12.519844"
     },
     {
       "id": "create-order",
@@ -1728,7 +1728,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/create-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.056309"
+      "updated_at": "2026-10-14 19:08:14.578635"
     },
     {
       "id": "edit-order",
@@ -1740,7 +1740,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.247241"
+      "updated_at": "2026-10-14 19:08:14.672965"
     },
     {
       "id": "edit-order-preview",
@@ -1752,7 +1752,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.210174"
+      "updated_at": "2026-10-14 19:08:14.805281"
     },
     {
       "id": "get-convert-trade",
@@ -1764,7 +1764,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:45.731747"
+      "updated_at": "2026-10-14 19:08:12.862527"
     },
     {
       "id": "get-order",
@@ -1776,7 +1776,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/get-order",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.289664"
+      "updated_at": "2026-10-14 19:08:14.868507"
     },
     {
       "id": "list-fills",
@@ -1788,7 +1788,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-fills",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.343843"
+      "updated_at": "2026-10-14 19:08:14.953248"
     },
     {
       "id": "list-orders",
@@ -1800,7 +1800,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/list-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.480314"
+      "updated_at": "2026-10-14 19:08:15.093704"
     },
     {
       "id": "preview-orders",
@@ -1812,7 +1812,7 @@
       "source_url": "https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/preview-orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:47.661196"
+      "updated_at": "2026-10-14 19:08:15.286022"
     },
     {
       "id": "websocket-authentication",
@@ -1824,7 +1824,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-authentication",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:51.503615"
+      "updated_at": "2026-10-14 19:08:19.978261"
     },
     {
       "id": "websocket-channels",
@@ -1860,7 +1860,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-overview",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:51.397699"
+      "updated_at": "2026-10-14 19:08:20.093482"
     },
     {
       "id": "websocket-rate-limits",
@@ -1872,7 +1872,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:51.681413"
+      "updated_at": "2026-10-14 19:08:20.337925"
     },
     {
       "id": "websocket",
@@ -1884,7 +1884,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.663625"
+      "updated_at": "2026-10-14 19:08:19.120293"
     },
     {
       "id": "sdk-websocket",
@@ -1896,7 +1896,7 @@
       "source_url": "https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/sdk-websocket",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-10-13 19:08:50.576470"
+      "updated_at": "2026-10-14 19:08:18.973481"
     }
   ]
 }

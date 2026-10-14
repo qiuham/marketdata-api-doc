@@ -2,103 +2,195 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query-cap
 api_type: REST
-updated_at: 2026-10-13 18:53:05.766210
+updated_at: 2026-10-14 18:52:26.215384
 ---
 
-# Introduction
+# Set Rate Limit
 
-## API Rate Limit Rules for PROs
+> API rate limit: 50 req per second
 
-Upcoming changes for pro account
+info
 
-Starting **August 13, 2025** , Bybit will roll out a new institutional API rate limit framework designed to enhance performance for high-frequency trading clients. The new system introduces a centralized institution-level rate cap with flexible per-UID configurations, enabling greater efficiency and scalability. Please refer to the [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/) for more information.
+  * If the UID requesting this endpoint is a master account, UIDs passed to the `uids` parameter must be subaccounts of the master account.
+  * If the UID requesting this endpoint is not a master account, the UID passed to the `uids` parameter must be the UID of the subaccount requesting this endpoint.
+  * Only institutional users can request this endpoint.
 
-### UID-level rate limit
 
-Maximum limit for a single UID.
 
-| Unified Account  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-Default| 10/s| 10/s| 20/s  
-PRO1| 200/s| 200/s| 200/s  
-PRO2| 400/s| 400/s| 400/s  
-PRO3| 600/s| 600/s| 600/s  
-PRO4| 800/s| 800/s| 800/s  
-PRO5| 1000/s| 1000/s| 1000/s  
-PRO6| 1200/s| 1200/s| 1200/s  
-MM1| 600/s| 600/s| 600/s  
-MM2| 800/s| 800/s| 800/s  
-MM3| 1000/s| 1000/s| 1000/s  
+### HTTP Request
+
+POST`/v5/apilimit/set`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+list| **true**|  array| Object  
+> uids| **true**|  string| Multiple UIDs separated by commas  
+> [bizType](/docs/v5/enum#biztype)| **true**|  string| Business type  
+> rate| **true**|  integer| API rate limit per second  
   
-### Institutional-level rate limit
+### Response Parameters
 
-Aggregate limit across all main and sub UIDs.
-
-| Unified Account  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-PRO1| 10000/s| 10000/s| 10000/s  
-PRO2| 20000/s| 20000/s| 20000/s  
-PRO3| 30000/s| 30000/s| 30000/s  
-PRO4| 40000/s| 40000/s| 40000/s  
-PRO5| 50000/s| 50000/s| 50000/s  
-PRO6| 60000/s| 60000/s| 60000/s  
-MM1| 30000/s| 30000/s| 30000/s  
-MM2| 40000/s| 40000/s| 40000/s  
-MM3| 50000/s| 50000/s| 50000/s  
+Parameter| Type| Comments  
+---|---|---  
+list| array| Object  
+> uids| string| Multiple UIDs separated by commas  
+> [bizType](/docs/v5/enum#biztype)| string| Business type  
+> rate| integer| API rate limit per second  
+> success| boolean| Whether or not the request was successful  
+> [msg](/docs/v5/enum#msg)| string| Result message  
   
-instructions for API rate limit
+### Request Example
 
-  * All of the existing subaccounts still have their original API rate limits.
-  * The default API rate limit for a new subaccount is not counted in the institutional-level API rate limit. 
-  * The default API rate limit for a new sub is: 10/s for futures, 10/s for options, 20/s for spot.
-  * If the aggregate institutional-level API rate limit is exceeded, you must reduce one or several account's API rate limit(s) first. After the API rate limit is less than the aggregate institutional API rate limit, you can increase the API rate limit of an account.
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    POST /v5/apilimit/set HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1711420489915  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "list": [  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_api_rate_limit(  
+        list=[  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
+    ))  
+    
+    
+    
+      
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "result": [  
+                {  
+                    "uids": "290118",  
+                    "bizType": "SPOT",  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1754894296913  
+    }
 
 ---
 
-# 限頻介紹
+# 設定 API 限頻
 
-## PROs接口限頻規則
+### 設定 API 限頻
 
-即將到來的變更
+> API 限頻：每秒 50 個請求
 
-自**2025年8月13日** 起，Bybit 將推出全新機構 API 限頻框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
+信息
 
-### UID 層級:
+  * 如果請求接口使用者是母帳戶，需要提頻的uid必須是所屬該母帳戶
+  * 如果請求使用者非母帳戶，則提頻的uid必須是自己
+  * UID必須屬於機構用户
 
-| 統一帳戶  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-Default| 10/s| 10/s| 20/s  
-PRO1| 200/s| 200/s| 200/s  
-PRO2| 400/s| 400/s| 400/s  
-PRO3| 600/s| 600/s| 600/s  
-PRO4| 800/s| 800/s| 800/s  
-PRO5| 1000/s| 1000/s| 1000/s  
-PRO6| 1200/s| 1200/s| 1200/s  
-MM1| 600/s| 600/s| 600/s  
-MM2| 800/s| 800/s| 800/s  
-MM3| 1000/s| 1000/s| 1000/s  
+
+
+### HTTP 請求
+
+POST`/v5/apilimit/set`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+list| true| array| Object  
+> uids| true| string| uid列表，多個以逗號隔開  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| true| string| 業務類型  
+> rate| true| integer| api rate limit 每秒限頻  
   
-### 主帳戶和子帳戶層級 (（機構 API 限頻配額）):
+### 響應參數
 
-| 統一帳戶  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-PRO1| 10000/s| 10000/s| 10000/s  
-PRO2| 20000/s| 20000/s| 20000/s  
-PRO3| 30000/s| 30000/s| 30000/s  
-PRO4| 40000/s| 40000/s| 40000/s  
-PRO5| 50000/s| 50000/s| 50000/s  
-PRO6| 60000/s| 60000/s| 60000/s  
-MM1| 30000/s| 30000/s| 30000/s  
-MM2| 40000/s| 40000/s| 40000/s  
-MM3| 50000/s| 50000/s| 50000/s  
+參數| 類型| 說明  
+---|---|---  
+list| array| Object  
+> uids| string| uid列表，多個以逗號隔開  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
+> rate| integer| api rate limit 每秒限頻  
+> success| boolean| 是否成功  
+> [msg](/docs/zh-TW/v5/enum#msg)| string| 結果訊息  
   
-API 限頻說明
+### 請求實例
+    
+    
+    POST /v5/apilimit/set HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1711420489915  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "list": [  
+            {  
+                "uids": "106293838",  
+                "bizType": "DERIVATIVES",  
+                "rate": 50  
+            }  
+        ]  
+    }  
+    
 
-  * 所有現有子帳戶仍享有原有的 API 限頻。
-  * 新子帳戶的預設 API 限頻不計入機構 API 限頻總配額。
-  * 新子帳戶的預設 API 限頻為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
-  * 如果超出機構 API 限頻總配額，您只能先降低帳戶的 API 限頻。當 API 限頻總配額低於機構 API 限頻總配額後，您才能提高帳戶的 API 限頻。
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "result": [  
+                {  
+                    "uids": "290118",  
+                    "bizType": "SPOT",  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1754894296913  
+    }

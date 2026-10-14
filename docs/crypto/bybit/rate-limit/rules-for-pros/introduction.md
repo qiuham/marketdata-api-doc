@@ -2,103 +2,133 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/introduction
 api_type: REST
-updated_at: 2026-10-13 18:53:06.999357
+updated_at: 2026-10-14 18:52:31.520808
 ---
 
-# Introduction
+# Cancel All Quotes
 
-## API Rate Limit Rules for PROs
+Cancel all active quotes. **Up to 50 requests per second**
 
-Upcoming changes for pro account
+### HTTP Request
 
-Starting **August 13, 2025** , Bybit will roll out a new institutional API rate limit framework designed to enhance performance for high-frequency trading clients. The new system introduces a centralized institution-level rate cap with flexible per-UID configurations, enabling greater efficiency and scalability. Please refer to the [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/) for more information.
+POST`/v5/rfq/cancel-all-quotes`
 
-### UID-level rate limit
+### Request Parameters
 
-Maximum limit for a single UID.
+None
 
-| Unified Account  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-Default| 10/s| 10/s| 20/s  
-PRO1| 200/s| 200/s| 200/s  
-PRO2| 400/s| 400/s| 400/s  
-PRO3| 600/s| 600/s| 600/s  
-PRO4| 800/s| 800/s| 800/s  
-PRO5| 1000/s| 1000/s| 1000/s  
-PRO6| 1200/s| 1200/s| 1200/s  
-MM1| 600/s| 600/s| 600/s  
-MM2| 800/s| 800/s| 800/s  
-MM3| 1000/s| 1000/s| 1000/s  
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+result| Object|   
+> rfqId| string| Inquiry ID  
+> quoteId| string| Quote ID  
+> quoteLinkId| string| Custom quote ID  
+> code| string| Whether or not cancellation was a success, `0`: success  
+> msg| string| Cancellation failure reason  
   
-### Institutional-level rate limit
+### Request Example
 
-Aggregate limit across all main and sub UIDs.
+  * HTTP
+  * Python
 
-| Unified Account  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-PRO1| 10000/s| 10000/s| 10000/s  
-PRO2| 20000/s| 20000/s| 20000/s  
-PRO3| 30000/s| 30000/s| 30000/s  
-PRO4| 40000/s| 40000/s| 40000/s  
-PRO5| 50000/s| 50000/s| 50000/s  
-PRO6| 60000/s| 60000/s| 60000/s  
-MM1| 30000/s| 30000/s| 30000/s  
-MM2| 40000/s| 40000/s| 40000/s  
-MM3| 50000/s| 50000/s| 50000/s  
-  
-instructions for API rate limit
 
-  * All of the existing subaccounts still have their original API rate limits.
-  * The default API rate limit for a new subaccount is not counted in the institutional-level API rate limit. 
-  * The default API rate limit for a new sub is: 10/s for futures, 10/s for options, 20/s for spot.
-  * If the aggregate institutional-level API rate limit is exceeded, you must reduce one or several account's API rate limit(s) first. After the API rate limit is less than the aggregate institutional API rate limit, you can increase the API rate limit of an account.
+    
+    
+    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 115  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.cancel_all_quotes())  
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": [  
+            {  
+                "rfqId": "175740723913299909861293671607573",  
+                "quoteLinkId": "",  
+                "quoteId": "1757407497684679708210572531298710",  
+                "code": 0,  
+                "msg": ""  
+            }  
+        ],  
+        "retExtInfo": {},  
+        "time": 1757407503982  
+    }
 
 ---
 
-# 限頻介紹
+# 取消所有報價單
 
-## PROs接口限頻規則
+取消所有報價單。**每秒最多 50 次請求**
 
-即將到來的變更
+### HTTP 請求
 
-自**2025年8月13日** 起，Bybit 將推出全新機構 API 限頻框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
+POST`/v5/rfq/cancel-all-quotes`
 
-### UID 層級:
+### 請求參數
 
-| 統一帳戶  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-Default| 10/s| 10/s| 20/s  
-PRO1| 200/s| 200/s| 200/s  
-PRO2| 400/s| 400/s| 400/s  
-PRO3| 600/s| 600/s| 600/s  
-PRO4| 800/s| 800/s| 800/s  
-PRO5| 1000/s| 1000/s| 1000/s  
-PRO6| 1200/s| 1200/s| 1200/s  
-MM1| 600/s| 600/s| 600/s  
-MM2| 800/s| 800/s| 800/s  
-MM3| 1000/s| 1000/s| 1000/s  
+無
+
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+result| object|   
+> data| Array of object|   
+>> rfqId| string| 詢價單 ID  
+>> quoteId| string| 報價單 ID  
+>> quoteLinkId| string| 報價單自定義 ID  
+>> code| string| 取消成功或失敗，0 表示取消成功  
+>> msg| string| 取消失敗原因  
   
-### 主帳戶和子帳戶層級 (（機構 API 限頻配額）):
+### 請求示例
+    
+    
+    POST /v5/rfq/cancel-all-quotes HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 115  
+    
 
-| 統一帳戶  
----|---  
-Level\Product| **Futures**| **Option**| **Spot**  
-PRO1| 10000/s| 10000/s| 10000/s  
-PRO2| 20000/s| 20000/s| 20000/s  
-PRO3| 30000/s| 30000/s| 30000/s  
-PRO4| 40000/s| 40000/s| 40000/s  
-PRO5| 50000/s| 50000/s| 50000/s  
-PRO6| 60000/s| 60000/s| 60000/s  
-MM1| 30000/s| 30000/s| 30000/s  
-MM2| 40000/s| 40000/s| 40000/s  
-MM3| 50000/s| 50000/s| 50000/s  
-  
-API 限頻說明
-
-  * 所有現有子帳戶仍享有原有的 API 限頻。
-  * 新子帳戶的預設 API 限頻不計入機構 API 限頻總配額。
-  * 新子帳戶的預設 API 限頻為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
-  * 如果超出機構 API 限頻總配額，您只能先降低帳戶的 API 限頻。當 API 限頻總配額低於機構 API 限頻總配額後，您才能提高帳戶的 API 限頻。
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": [  
+            {  
+                "rfqId": "175740723913299909861293671607573",  
+                "quoteLinkId": "",  
+                "quoteId": "1757407497684679708210572531298710",  
+                "code": 0,  
+                "msg": ""  
+            }  
+        ],  
+        "retExtInfo": {},  
+        "time": 1757407503982  
+    }

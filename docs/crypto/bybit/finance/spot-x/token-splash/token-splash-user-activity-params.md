@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/token-splash/token-splash-user-activity-params
 api_type: REST
-updated_at: 2026-10-13 18:51:01.057825
+updated_at: 2026-10-14 18:49:56.685746
 ---
 
 # Get Institution Whitelist IP

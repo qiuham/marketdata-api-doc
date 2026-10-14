@@ -2,53 +2,30 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/repayment-available-amount
 api_type: REST
-updated_at: 2026-10-13 18:54:03.911395
+updated_at: 2026-10-14 18:53:34.168115
 ---
 
-# Set Auto Repay Mode
-
-Set spot automatic repayment mode
-
-info
-
-  1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
-  2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
-  3. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency. 
-  4. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay)
-
-
+# Get Available Amount to Repay
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/repayment-available-amount`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.  
-autoRepayMode| **true**|  string| 
-
-  * `1`: On
-  * `0`: Off
-
+currency| **true**|  string| Coin name, uppercase only  
   
-  
-* * *
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-data| array| Object  
-> currency| string| Coin name, uppercase only.  
-> autoRepayMode| string| 
-
-  * `1`: On
-  * `0`: Off
-
+currency| string| Coin name, uppercase only  
+lossLessRepaymentAmount| string| Repayment amount = min(spot coin available balance, coin borrow amount)  
   
-  
+* * *
+
 ### Request Example
 
   * HTTP
@@ -58,18 +35,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/repayment-available-amount?currency=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -79,9 +50,8 @@ data| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_repay_mode(  
-        currency="ETH",  
-        autoRepayMode="1"  
+    print(session.spot_margin_trade_get_repayment_available_amount(  
+        currency="BTC"  
     ))  
     
     
@@ -94,65 +64,38 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "Success",  
         "result": {  
-            "data": [  
-                {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
-                }  
-            ]  
+            "lossLessRepaymentAmount": "0.02000000",  
+            "currency": "BTC"  
         },  
         "retExtInfo": {},  
-        "time": 1766976677678  
+        "time": 1756273388821  
     }
 
 ---
 
-# 設定現貨自動還款模式
-
-設定現貨自動還款模式
-
-信息
-
-  1. 若未指定`currency`參數，則所有幣種均啟用自動還款。
-  2. 如果將某幣種的`autoRepayMode`設定為 1，系統將每小時 0 分鐘和 30 分鐘自動以該幣種進行非資產轉換還款。
-  3. 無損還款金額為該貨幣的現貨可用餘額與該貨幣的負債中的較小者。
-  4. 如果你錯過了0分和30分的自動還款批次，你可以手動調接口進行還款。
-
-
+# 查詢負債幣種可還款金額
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/repayment-available-amount`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| 幣名稱，僅限大寫. 若未指定`currency`參數，則所有幣種均啟用自動還款。  
-autoRepayMode| **true**|  string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
+currency| **true**|  string| 幣名稱，僅限大寫  
   
-  
-* * *
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-data| array| Object  
-> currency| string| 幣名稱，僅限大寫.  
-> autoRepayMode| string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
+currency| string| 幣名稱，僅限大寫  
+lossLessRepaymentAmount| string| 還款金額=min(現貨幣可用餘額，借幣金額)  
   
-  
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -162,18 +105,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/repayment-available-amount?currency=BTC HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -189,15 +126,11 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "Success",  
         "result": {  
-            "data": [  
-                {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
-                }  
-            ]  
+            "lossLessRepaymentAmount": "0.02000000",  
+            "currency": "BTC"  
         },  
         "retExtInfo": {},  
-        "time": 1766976677678  
+        "time": 1756273388821  
     }

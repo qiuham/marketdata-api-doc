@@ -2,81 +2,87 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/tickers
 api_type: Market Data
-updated_at: 2026-10-13 18:51:33.263642
+updated_at: 2026-10-14 18:50:35.907534
 ---
 
-# Adjust Collateral Amount
-
-You can increase or reduce your collateral amount. When you reduce, please obey the [Get Max. Allowed Collateral Reduction Amount](/docs/v5/new-crypto-loan/reduce-max-collateral-amt)
-
-> Permission: "Spot trade"  
->  UID rate limit: 1 req / second
+# Get Bybit Server Time
 
 info
 
-  * The adjusted collateral amount will be returned to or deducted from the Funding wallet.
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-common/adjust-ltv`
+GET`/v5/market/time`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| **true**|  string| Collateral coin  
-amount| **true**|  string| Adjustment amount  
-direction| **true**|  string| `0`: add collateral; `1`: reduce collateral  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-adjustId| long| Collateral adjustment transaction ID  
-  
+timeSecond| string| Bybit server timestamp (sec)  
+timeNano| string| Bybit server timestamp (nano)  
+[](/docs/api-explorer/v5/market/time)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Java
+  * Go
   * Node.js
 
 
     
     
-    POST /v5/crypto-loan-common/adjust-ltv HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627997649  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 69  
-      
-    {  
-        "currency": "BTC",  
-        "amount": "0.08",  
-        "direction": "1"  
-    }  
+    GET /v5/market/time HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    session = HTTP(testnet=True)  
+    print(session.get_server_time())  
+    
+    
+    
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    client.getServerTime(System.out::println);  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
-    print(session.adjust_collateral_amount_new_crypto_loan(  
-        currency="BTC",  
-        amount="0.08",  
-        direction="1",  
-    ))  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getServerTime()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -84,88 +90,97 @@ adjustId| long| Collateral adjustment transaction ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "adjustId": 27511  
+            "timeSecond": "1688639403",  
+            "timeNano": "1688639403423213947"  
         },  
         "retExtInfo": {},  
-        "time": 1752627997915  
+        "time": 1688639403423  
     }
 
 ---
 
-# 調整質押金額
+# Bybit服務器時間
 
-您可以增加或減少質押金額. 選擇減少時, 請先確認[允許減少的最大質押數量](/docs/zh-TW/v5/new-crypto-loan/reduce-max-collateral-amt)
-
-> 權限: "現貨"  
->  頻率: 1次/秒
+獲取Bybit服務器時間
 
 信息
 
-  * 調整的質押數量會在資金帳戶進行返還或者扣減
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-common/adjust-ltv`
+GET`/v5/market/time`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| **true**|  string| 質押幣種  
-amount| **true**|  string| 調整金額  
-direction| **true**|  string| `0`: 增加質押金; `1`: 減少質押金  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-adjustId| long| 質押金調整交易ID  
-  
+timeSecond| string| Bybit服務器時間戳 (秒)  
+timeNano| string| Bybit 服務器時間戳 (微秒)  
+[](/docs/zh-TW/api-explorer/v5/market/time)
+
+* * *
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Go
+  * Java
   * Node.js
 
 
     
     
-    POST /v5/crypto-loan-common/adjust-ltv HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752627997649  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 69  
-      
-    {  
-        "currency": "BTC",  
-        "amount": "0.08",  
-        "direction": "1"  
-    }  
+    GET /v5/market/time HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    session = HTTP(testnet=True)  
+    print(session.get_server_time())  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
-    print(session.adjust_collateral_amount_new_crypto_loan(  
-        currency="BTC",  
-        amount="0.08",  
-        direction="1",  
-    ))  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
     
     
     
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    client.getServerTime(System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getServerTime()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -173,10 +188,11 @@ adjustId| long| 質押金調整交易ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "adjustId": 27511  
+            "timeSecond": "1688639403",  
+            "timeNano": "1688639403423213947"  
         },  
         "retExtInfo": {},  
-        "time": 1752627997915  
+        "time": 1688639403423  
     }

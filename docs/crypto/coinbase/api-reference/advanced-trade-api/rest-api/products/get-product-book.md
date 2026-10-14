@@ -2,15 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product-book
 api_type: Market Data
-updated_at: 2026-10-13 19:08:48.880144
+updated_at: 2026-10-14 19:08:16.898742
 ---
 
 # Get Product Book
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/product_book`
 
-
-Get a list of bids/asks for a single product. The amount of detail shown can be customized with the limit parameter.
+ProductsGet Product BookGet a list of bids/asks for a single product. The amount of detail shown can be customized with the limit parameter.GET/api/v3/brokerage/product_bookGet Product Book
     
     
     curl --request GET \
@@ -145,64 +144,4 @@ Get a list of bids/asks for a single product. The amount of detail shown can be 
       ]
     }
 
-#### Authorizations
-
-ApiKeyOAuth2ApiKeyOAuth2
-
-Authorization
-
-string
-
-header
-
-required
-
-A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
-
-#### Query Parameters
-
-product_id
-
-string
-
-required
-
-The trading pair (e.g. 'BTC-USD').
-
-limit
-
-integer<int32>
-
-The number of bid/asks to be returned.
-
-aggregation_price_increment
-
-string
-
-The minimum price intervals at which buy and sell orders are grouped or combined in the order book.
-
-#### Response
-
-A successful response.
-
-pricebook
-
-object
-
-required
-
-last
-
-string
-
-mid_market
-
-string
-
-spread_bps
-
-string
-
-spread_absolute
-
-string
+AuthorizationsApiKeyOAuth2ApiKeyOAuth2AuthorizationstringheaderrequiredA bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.Query Parametersproduct_idstringrequiredThe trading pair (e.g. 'BTC-USD').limitinteger<int32>The number of bid/asks to be returned.aggregation_price_incrementstringThe minimum price intervals at which buy and sell orders are grouped or combined in the order book.ResponseA successful response.pricebookobjectrequiredShow child attributeslaststringmid_marketstringspread_bpsstringspread_absolutestring

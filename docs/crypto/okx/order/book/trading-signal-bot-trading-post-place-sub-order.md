@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-place-sub-order
 anchor_id: order-book-trading-signal-bot-trading-post-place-sub-order
 api_type: API
-updated_at: 2026-10-13 19:25:23.625928
+updated_at: 2026-10-14 19:24:43.189190
 ---
 
 # POST / Place sub order

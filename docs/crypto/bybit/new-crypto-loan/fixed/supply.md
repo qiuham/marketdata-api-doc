@@ -2,33 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/supply
 api_type: REST
-updated_at: 2026-10-13 18:51:53.066629
+updated_at: 2026-10-14 18:51:02.886840
 ---
 
-# Create Supply Order
+# Get Available Inventory
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-fixed/supply`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Currency to supply  
-orderAmount| **true**|  string| Amount to supply  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-availableSource| false| string| Source account for supply. `0`: Funding Account; `1`: Earn Flexible Account; `2`: ALL. Default: `0`  
+currency| **true**|  string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Supply order ID  
+currency| string| Coin name  
+availableInventory| string| Available inventory of the lending pool  
+updateTime| string| Update timestamp  
   
 ### Request Example
 
@@ -39,21 +37,12 @@ orderId| string| Supply order ID
 
     
     
-    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 104  
-      
-    {  
-        "orderCurrency": "USDT",  
-        "orderAmount": "2002.21",  
-        "annualRate": "0.35",  
-        "term": "7"  
-    }  
     
     
     
@@ -63,11 +52,8 @@ orderId| string| Supply order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_lending_order_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderAmount="2002.21",  
-        annualRate="0.35",  
-        term="7",  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -80,40 +66,40 @@ orderId| string| Supply order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "13007"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1678886400000  
     }
 
 ---
 
-# 創建存款單
+# 查詢活期可借存量
 
 > 權限: "現貨"  
->  頻率: 1次/秒
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-fixed/supply`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 出借幣種  
-orderAmount| **true**|  string| 出借金額  
-annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
-term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-availableSource| false| string| 出借資金來源帳戶。`0`: 資金帳戶；`1`: 靈活賺幣帳戶；`2`: 全部。預設值：`0`  
+currency| **true**|  string| 幣種名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 存款單ID  
+currency| string| 幣種名稱  
+availableInventory| string| 借貸池可用存量  
+updateTime| string| 更新時間戳  
   
 ### 請求示例
 
@@ -124,21 +110,12 @@ orderId| string| 存款單ID
 
     
     
-    POST /v5/crypto-loan-fixed/supply HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652261840  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 104  
-      
-    {  
-        "orderCurrency": "USDT",  
-        "orderAmount": "2002.21",  
-        "annualRate": "0.35",  
-        "term": "7"  
-    }  
     
     
     
@@ -148,11 +125,8 @@ orderId| string| 存款單ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_lending_order_fixed_crypto_loan(  
-        orderCurrency="USDT",  
-        orderAmount="2002.21",  
-        annualRate="0.35",  
-        term="7",  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -165,10 +139,12 @@ orderId| string| 存款單ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "13007"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752633650147  
+        "time": 1678886400000  
     }

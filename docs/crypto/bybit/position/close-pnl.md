@@ -2,66 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-pnl
 api_type: Position
-updated_at: 2026-10-13 18:52:42.052970
+updated_at: 2026-10-14 18:52:02.243635
 ---
 
-# Get Closed PnL
+# Add Or Reduce Margin
 
-Query user's closed profit and loss records
+Manually add or reduce margin for **isolated** margin position
 
 ### HTTP Request
 
-GET`/v5/position/closed-pnl`
+POST`/v5/position/add-margin`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+margin| **true**|  string| Add or reduce. To add, then `10`; To reduce, then `-10`. Support up to 4 decimal  
+[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode position, this param is **required**
 
-  * startTime and endTime are not passed, return 7 days by default
-  * Only startTime is passed, return range between startTime and startTime+7 days
-  * Only endTime is passed, return range between endTime-7 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
 
   
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 [category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> orderId| string| Order ID  
-> side| string| `Buy`, `Sell`  
-> qty| string| Order qty  
-> orderPrice| string| Order price  
-> [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
-> execType| string| Exec type  
-`Trade`, `BustTrade`  
-`SessionSettlePnL`  
-`Settle`, `MovePosition`  
-`ForwardSplitSettle`, `ReverseSplitSettle`  
-> closedSize| string| Closed size  
-> cumEntryValue| string| Cumulated Position value  
-> avgEntryPrice| string| Average entry price  
-> cumExitValue| string| Cumulated exit position value  
-> avgExitPrice| string| Average exit price  
-> closedPnl| string| Closed PnL  
-> fillCount| string| The number of fills in a single order  
-> leverage| string| leverage  
-> openFee| string| Open position trading fee  
-> closeFee| string| Close position trading fee  
-> createdTime| string| The created time (ms)  
-> updatedTime| string| The updated time (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/position/close-pnl)
+symbol| string| Symbol name  
+[positionIdx](/docs/v5/enum#positionidx)| integer| Position idx, used to identify positions in different position modes
+
+  * `0`: One-Way Mode
+  * `1`: Buy side of both side mode
+  * `2`: Sell side of both side mode
+
+  
+riskId| integer| Risk limit ID  
+riskLimitValue| string| Risk limit value  
+size| string| Position size  
+avgPrice| string| Average entry price  
+liqPrice| string| Liquidation price  
+bustPrice| string| Bankruptcy price  
+markPrice| string| Last mark price  
+positionValue| string| Position value  
+leverage| string| Position leverage  
+autoAddMargin| integer| Whether to add margin automatically. `0`: false, `1`: true  
+[positionStatus](/docs/v5/enum#positionstatus)| String| Position status. `Normal`, `Liq`, `Adl`  
+positionIM| string| Initial margin  
+positionMM| string| Maintenance margin  
+takeProfit| string| Take profit price  
+stopLoss| string| Stop loss price  
+trailingStop| string| Trailing stop (The distance from market price)  
+unrealisedPnl| string| Unrealised PnL  
+cumRealisedPnl| string| Cumulative realised pnl  
+createdTime| string| Timestamp of the first time a position was created on this symbol (ms)  
+updatedTime| string| Position updated timestamp (ms)  
+[](/docs/api-explorer/v5/position/manual-add-margin)
 
 * * *
 
@@ -75,12 +75,21 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/position/closed-pnl?category=linear&limit=1 HTTP/1.1  
+    POST /v5/position/add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1684234363665  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 97  
+      
+    {  
+        "category": "inverse",  
+        "symbol": "ETHUSD",  
+        "margin": "0.01",  
+        "positionIdx": 0  
+    }  
     
     
     
@@ -90,9 +99,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_closed_pnl(  
+    print(session.add_or_reduce_margin(  
         category="linear",  
-        limit=1,  
+        symbol="BTCUSDT",  
+        margin="10"  
     ))  
     
     
@@ -102,8 +112,8 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var closPnlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).build();  
-    client.getClosePnlList(closPnlRequest, System.out::println);  
+    var updateMarginRequest = PositionDataRequest.builder().category(CategoryType.INVERSE).symbol("ETHUSDT").margin("0.0001").build();  
+    client.modifyPositionMargin(updateMarginRequest, System.out::println);  
     
     
     
@@ -116,9 +126,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-        .getClosedPnL({  
+        .addOrReduceMargin({  
             category: 'linear',  
-            limit: 1,  
+            symbol: 'BTCUSDT',  
+            margin: '10',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -135,95 +146,87 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "orderType": "Market",  
-                    "leverage": "3",  
-                    "updatedTime": "1672214887236",  
-                    "side": "Sell",  
-                    "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",  
-                    "closedPnl": "-47.4065323",  
-                    "avgEntryPrice": "1194.97516667",  
-                    "qty": "3",  
-                    "cumEntryValue": "3584.9255",  
-                    "createdTime": "1672214887231",  
-                    "orderPrice": "1122.95",  
-                    "closedSize": "3",  
-                    "avgExitPrice": "1180.59833333",  
-                    "execType": "Trade",  
-                    "fillCount": "4",  
-                    "cumExitValue": "3541.795"  
-                }  
-            ]  
+            "category": "inverse",  
+            "symbol": "ETHUSD",  
+            "positionIdx": 0,  
+            "riskId": 11,  
+            "riskLimitValue": "500",  
+            "size": "200",  
+            "positionValue": "0.11033265",  
+            "avgPrice": "1812.70004844",  
+            "liqPrice": "1550.80",  
+            "bustPrice": "1544.20",  
+            "markPrice": "1812.90",  
+            "leverage": "12",  
+            "autoAddMargin": 0,  
+            "positionStatus": "Normal",  
+            "positionIM": "0.01926611",  
+            "positionMM": "0",  
+            "unrealisedPnl": "0.00001217",  
+            "cumRealisedPnl": "-0.04618929",  
+            "stopLoss": "0.00",  
+            "takeProfit": "0.00",  
+            "trailingStop": "0.00",  
+            "createdTime": "1672737740039",  
+            "updatedTime": "1684234363788"  
         },  
         "retExtInfo": {},  
-        "time": 1672284129153  
+        "time": 1684234363789  
     }
 
 ---
 
-# 查詢平倉盈虧
+# 手動增加或減少保證金
 
-獲取當前用戶的所有平倉盈虧數據，返回結果按照`createdTime`降序排列.
-
-信息
-
-  * 支持查詢過去730天的平倉盈虧紀錄
-
-
+手動增加或減少保證金，僅適用於**逐倉** 保證金模式
 
 ### HTTP 請求
 
-GET`/v5/position/closed-pnl`
+POST`/v5/position/add-margin`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 [category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
+symbol| **true**|  string| 合約名稱  
+margin| **true**|  string| 增加或減少的保證金金額. 增加, 則為正數, 比如`10`; 減少, 則為負數, 比如`-10`. 最多支持4位小數  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
 
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+7天的數據
-  * 若只傳endTime，則查詢endTime-7天和endTime的數據
+  * `0`: 單向持倉模式
+  * `1`: 買側雙向持倉模式
+  * `2`: 賣側雙向持倉模式
 
   
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 [category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> orderId| string| 訂單Id  
-> side| string| 買賣方向 `Buy`, `Side`  
-> qty| string| 訂單數量  
-> orderPrice| string| 訂單價格  
-> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. `Market`,`Limit`  
-> execType| string| 執行類型. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`, `MovePosition`, `ForwardSplitSettle`, `ReverseSplitSettle`  
-> closedSize| string| 平倉數量  
-> cumEntryValue| string| 被平倉位的累計入場價值  
-> avgEntryPrice| string| 平均入場價格  
-> cumExitValue| string| 被平倉位的累計出場價值  
-> avgExitPrice| string| 平均出場價格  
-> closedPnl| string| 被平倉位的盈虧  
-> fillCount| string| 成交筆數  
-> leverage| string| 持倉槓桿  
-> openFee| string| 開倉手續費(平攤)  
-> closeFee| string| 平倉手續費(平攤)  
-> createdTime| string| 創建時間 (毫秒)  
-> updatedTime| string| 更新時間 (毫秒)  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/position/close-pnl)
+symbol| string| 合約名称  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| integer| 倉位標識符, 用于在不同仓位模式下标识仓位  
+riskId| integer| 风险限额ID，參見[風險限額](/docs/zh-TW/v5/v5/market/risk-limit)接口  
+riskLimitValue| string| 當前風險限額ID對應的持倉限制量  
+size| string| 當前倉位的合约數量  
+avgPrice| string| 當前倉位的平均入場價格  
+liqPrice| string| 倉位強平價格  
+bustPrice| string| 倉位破產價格  
+markPrice| string| 最新標記價格  
+positionValue| string| 仓位的價值  
+leverage| string| 當前倉位的槓桿  
+autoAddMargin| integer| 是否自動追加保證金. `0`: 否, `1`: 是  
+[positionStatus](/docs/zh-TW/v5/enum#positionstatus)| String| 倉位状态. `Normal`, `Liq`, `Adl`  
+positionIM| string| 倉位起始保證金  
+positionMM| string| 倉位維持保證金  
+takeProfit| string| 止盈價格  
+stopLoss| string| 止損價格  
+trailingStop| string| 追蹤止損（與當前價格的距離）  
+unrealisedPnl| string| 未结盈亏  
+cumRealisedPnl| string| 累计已结盈亏  
+createdTime| string| 倉位創建時間  
+updatedTime| string| 倉位數據更新時間  
+[](/docs/zh-TW/api-explorer/v5/position/manual-add-margin)
 
 * * *
 
@@ -237,25 +240,25 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/position/closed-pnl?category=linear&limit=1 HTTP/1.1  
+    POST /v5/position/add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1684234363665  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 97  
+      
+    {  
+        "category": "inverse",  
+        "symbol": "ETHUSD",  
+        "margin": "0.01",  
+        "positionIdx": 0  
+    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_closed_pnl(  
-        category="linear",  
-        limit=1,  
-    ))  
+      
     
     
     
@@ -264,8 +267,8 @@ nextPageCursor| string| 游標，用於翻頁
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var closPnlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).build();  
-    client.getClosePnlList(closPnlRequest, System.out::println);  
+    var updateMarginRequest = PositionDataRequest.builder().category(CategoryType.INVERSE).symbol("ETHUSDT").margin("0.0001").build();  
+    client.modifyPositionMargin(updateMarginRequest, System.out::println);  
     
     
     
@@ -278,9 +281,10 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-        .getClosedPnL({  
+        .addOrReduceMargin({  
             category: 'linear',  
-            limit: 1,  
+            symbol: 'BTCUSDT',  
+            margin: '10',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -297,30 +301,30 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699%2C5a373bfe-188d-4913-9c81-d57ab5be8068%3A1672214887231423699",  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "orderType": "Market",  
-                    "leverage": "3",  
-                    "updatedTime": "1672214887236",  
-                    "side": "Sell",  
-                    "orderId": "5a373bfe-188d-4913-9c81-d57ab5be8068",  
-                    "closedPnl": "-47.4065323",  
-                    "avgEntryPrice": "1194.97516667",  
-                    "qty": "3",  
-                    "cumEntryValue": "3584.9255",  
-                    "createdTime": "1672214887231",  
-                    "orderPrice": "1122.95",  
-                    "closedSize": "3",  
-                    "avgExitPrice": "1180.59833333",  
-                    "execType": "Trade",  
-                    "fillCount": "4",  
-                    "cumExitValue": "3541.795"  
-                }  
-            ]  
+            "category": "inverse",  
+            "symbol": "ETHUSD",  
+            "positionIdx": 0,  
+            "riskId": 11,  
+            "riskLimitValue": "500",  
+            "size": "200",  
+            "positionValue": "0.11033265",  
+            "avgPrice": "1812.70004844",  
+            "liqPrice": "1550.80",  
+            "bustPrice": "1544.20",  
+            "markPrice": "1812.90",  
+            "leverage": "12",  
+            "autoAddMargin": 0,  
+            "positionStatus": "Normal",  
+            "positionIM": "0.01926611",  
+            "positionMM": "0",  
+            "unrealisedPnl": "0.00001217",  
+            "cumRealisedPnl": "-0.04618929",  
+            "stopLoss": "0.00",  
+            "takeProfit": "0.00",  
+            "trailingStop": "0.00",  
+            "createdTime": "1672737740039",  
+            "updatedTime": "1684234363788"  
         },  
         "retExtInfo": {},  
-        "time": 1672284129153  
+        "time": 1684234363789  
     }

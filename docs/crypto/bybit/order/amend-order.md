@@ -2,57 +2,67 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/amend-order
 api_type: Trading
-updated_at: 2026-10-13 18:52:11.296867
+updated_at: 2026-10-14 18:51:24.742503
 ---
 
-# Amend Order
+# Cancel All Orders
+
+Cancel all open orders
 
 info
 
-You can only modify **unfilled** or **partially filled** orders.
+  * Support cancel orders by `symbol`/`baseCoin`/`settleCoin`. If you pass multiple of these params, the system will process one of param, which priority is `symbol` > `baseCoin` > `settleCoin`.
+  * **NOTE** : category=_option_ , you can cancel all option open orders without passing any of those three params. However, for "linear" and "inverse", you must specify one of those three params.
+  * **NOTE** : category=_spot_ , you can cancel all spot open orders (normal order by default) without passing other params.
+
+
+
+info
+
+**Spot** : no limit  
+**Futures** : cancel up to 500 orders (System **picks up 500 orders randomly to cancel** when you have over 500 orders)  
+**Options** : no limit
 
 ### HTTP Request
 
-POST`/v5/order/amend`
+POST`/v5/order/cancel-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`, `spot`, `option`  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-orderId| false| string| Order ID. Either `orderId` or `orderLinkId` is required  
-orderLinkId| false| string| User customised order ID. Either `orderId` or `orderLinkId` is required  
-orderIv| false| string| Implied volatility. `option` **only**. Pass the real value, e.g for 10%, 0.1 should be passed  
-triggerPrice| false| string| 
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `inverse`, `spot`, `option`  
+symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
+`linear`&`inverse`: **Required** if not passing baseCoin or settleCoin  
+baseCoin| false| string| Base coin, uppercase only. `linear` & `inverse`: If cancel all by baseCoin, it will cancel all of the corresponding category's orders. **Required** if not passing symbol or settleCoin  
+settleCoin| false| string| Settle coin, uppercase only 
 
-  * For Perps & Futures, it is the conditional order trigger price. If you expect the price to rise to trigger your conditional order, make sure:  
-_triggerPrice > market price_  
-Else, _triggerPrice < market price_
-  * For spot, it is the TP/SL and Conditional order trigger price
+  * `linear` & `inverse`: **Required** if not passing symbol or baseCoin
+  * `option`: USDT or USDC
+  * Not support `spot`
 
   
-qty| false| string| Order quantity after modification. Do not pass it if not modify the qty  
-price| false| string| Order price after modification. Do not pass it if not modify the price  
-tpslMode| false| string| TP/SL mode 
+orderFilter| false| string| 
 
-  * `Full`: entire position for TP/SL. Then, tpOrderType or slOrderType must be `Market`
-  * `Partial`: partial position tp/sl. Limit TP/SL order are supported. Note: When create limit tp/sl, tpslMode is **required** and it must be `Partial`
+  * category=`spot`, you can pass `Order`, `tpslOrder`, `StopOrder`, `OcoOrder`, `BidirectionalTpslOrder`  
+If not passed, `Order` by default
+  * category=`linear` or `inverse`, you can pass `Order`, `StopOrder`,`OpenOrder`  
+If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order
+  * category=`option`, you can pass `Order`,`StopOrder`  
+If not passed, all kinds of orders will be cancelled, like active order, conditional order, TP/SL order and trailing stop order
 
-Valid for `linear` & `inverse`  
-takeProfit| false| string| Take profit price after modification. If pass "0", it means cancel the existing take profit of the order. Do not pass it if you do not want to modify the take profit  
-stopLoss| false| string| Stop loss price after modification. If pass "0", it means cancel the existing stop loss of the order. Do not pass it if you do not want to modify the stop loss  
-[tpTriggerBy](/docs/v5/enum#triggerby)| false| string| The price type to trigger take profit. When set a take profit, this param is **required** if no initial value for the order  
-[slTriggerBy](/docs/v5/enum#triggerby)| false| string| The price type to trigger stop loss. When set a take profit, this param is **required** if no initial value for the order  
-[triggerBy](/docs/v5/enum#triggerby)| false| string| Trigger price type  
-tpLimitPrice| false| string| Limit order price when take profit is triggered. Only working when original order sets partial limit tp/sl. _Option not supported_  
-slLimitPrice| false| string| Limit order price when stop loss is triggered. Only working when original order sets partial limit tp/sl. _Option not supported`_  
+  
+[stopOrderType](/docs/v5/enum#stopordertype)| false| string| Stop order type `Stop`
+
+  * Only used for category=`linear` or `inverse` and orderFilter=`StopOrder`,you can cancel conditional orders except TP/SL order and Trailing stop orders with this param
+
+  
   
 info
 
-The acknowledgement of an amend order request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+The acknowledgement of create/amend/cancel order requests indicates that the request was sucessfully accepted. The request is asynchronous so please use the websocket to confirm the order status.
 
-[](/docs/api-explorer/v5/trade/amend-order)
+[](/docs/api-explorer/v5/trade/cancel-all)
 
 * * *
 
@@ -60,8 +70,10 @@ The acknowledgement of an amend order request indicates that the request was suc
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Order ID  
-orderLinkId| string| User customised order ID  
+list| array| Object  
+> orderId| string| Order ID  
+> orderLinkId| string| User customised order ID  
+success| string| "1": success, "0": fail. [UTA1.0](/docs/v5/acct-mode#uta-10) (inverse) does not return this field  
   
 ### Request Example
 
@@ -74,23 +86,18 @@ orderLinkId| string| User customised order ID
 
     
     
-    POST /v5/order/amend HTTP/1.1  
+    POST /v5/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672217108106  
+    X-BAPI-TIMESTAMP: 1672219779140  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "category": "linear",  
-        "symbol": "ETHPERP",  
-        "orderLinkId": "linear-004",  
-        "triggerPrice": "1145",  
-        "qty": "0.15",  
-        "price": "1050",  
-        "takeProfit": "0",  
-        "stopLoss": "0"  
+      "category": "linear",  
+      "symbol": null,  
+      "settleCoin": "USDT"  
     }  
     
     
@@ -101,15 +108,9 @@ orderLinkId| string| User customised order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.amend_order(  
+    print(session.cancel_all_orders(  
         category="linear",  
-        symbol="ETHPERP",  
-        orderLinkId="linear-004",  
-        triggerPrice="1145",  
-        qty="0.15",  
-        price="1050",  
-        takeProfit="0",  
-        stopLoss="0",  
+        settleCoin="USDT",  
     ))  
     
     
@@ -120,19 +121,15 @@ orderLinkId| string| User customised order ID
     import com.bybit.api.client.service.BybitApiClientFactory;  
     BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");  
     BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();  
-    var amendOrderRequest = TradeOrderRequest.builder().orderId("1523347543495541248").category(ProductType.LINEAR).symbol("XRPUSDT")  
-                            .price("0.5")  // setting a new price, for example  
-                            .qty("15")  // and a new quantity  
-                            .build();  
-    var amendedOrder = client.amendOrder(amendOrderRequest);  
-    System.out.println(amendedOrder);  
+    var cancelAllOrdersRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).baseCoin("USDT").build();  
+    client.cancelAllOrder(cancelAllOrdersRequest, System.out::println);  
     
     
     
     using bybit.net.api.ApiServiceImp;  
     using bybit.net.api.Models.Trade;  
     BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");  
-    var orderInfoString = await TradeService.AmendOrder(orderId: "1523347543495541248", category:Category.LINEAR, symbol: "XRPUSDT", price:"0.5", qty:"15");  
+    var orderInfoString = await TradeService.CancelAllOrder(category: Category.LINEAR, baseCoin:"USDT");  
     Console.WriteLine(orderInfoString);  
     
     
@@ -146,15 +143,9 @@ orderLinkId| string| User customised order ID
     });  
       
     client  
-        .amendOrder({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            orderLinkId: 'linear-004',  
-            triggerPrice: '1145',  
-            qty: '0.15',  
-            price: '1050',  
-            takeProfit: '0',  
-            stopLoss: '0',  
+        .cancelAllOrders({  
+        category: 'linear',  
+        settleCoin: 'USDT',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -171,69 +162,80 @@ orderLinkId| string| User customised order ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "c6f055d9-7f21-4079-913d-e6523a9cfffa",  
-            "orderLinkId": "linear-004"  
+            "list": [  
+                {  
+                    "orderId": "1616024329462743808",  
+                    "orderLinkId": "1616024329462743809"  
+                },  
+                {  
+                    "orderId": "1616024287544869632",  
+                    "orderLinkId": "1616024287544869633"  
+                }  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1672217093461  
+        "time": 1707381118116  
     }
 
 ---
 
-# 修改委託單
+# 撤銷所有訂單
 
-important
+信息
 
-您只能修改那些**未成交** 或者**部分成交** 的訂單。
+  * 支持按照symbol/baseCoin/settleCoin撤銷訂單，若您傳入了多個參數組合, 系統僅會處理其中一個參數，其中優先級為`symbol` > `baseCoin` > `settleCoin`.
+  * **注意** : 當`category`=_option_ , 您可以不傳人三個參數中的任何一個，就能取消所有期權的委託單。但是, 對於`linear`和`inverse`, 您必需指定三個參數的其中一個。
+  * **注意** : 當`category`=_spot_ , 您可以不傳人任何參數，就能取消所有現貨的委託單 (默認普通單)。
+
+
+
+信息
+
+**現貨** : 無限制  
+**期貨** : 最多取消500單 (當您訂單數量超過500單時, 系統會**隨機挑選500單** 進行取消)  
+**期權** : 統無限制
 
 ### HTTP請求
 
-POST`/v5/order/amend`
+POST`/v5/order/cancel-all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`, `spot`, `option`  
-symbol| **true**|  string| 合約名稱  
-orderId| false| string| 訂單Id. `orderId`和`orderLinkId`必傳其中一個  
-orderLinkId| false| string| 用戶自定義訂單Id. `orderId`和`orderLinkId`必傳其中一個  
-orderIv| false| string| 隱含波動率. 僅`option`有效. 按照實際值傳入, e.g., 對於10%, 則傳入0.1  
-triggerPrice| false| string| 
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `spot`, `linear`, `inverse`, `option`  
+symbol| false| string| 合約名稱  
+對於`linear` & `inverse`: 若不傳`baseCoin`和`settleCoin`, 該字段**必傳**  
+baseCoin| false| string| 交易幣種 
 
-  * 對於期貨, 是條件單觸發價格參數. 若您希望市場價是要上升後觸發, 確保:  
-_triggerPrice > 市場價格_  
-否則, _triggerPrice < 市場價格_
-  * 對於現貨, 這是下止盈止損單或者條件單的觸發價格參數
+  * `linear` & `inverse`: 當通過baseCoin來全部撤單時, 會將對應category的訂單全部撤掉。若不傳`symbol`和`baseCoin`, 則該字段**必傳**
 
   
-qty| false| string| 修改後的訂單數量. 若不修改，請不要傳該字段  
-price| false| string| 修改後的訂單價格. 若不修改，請不要傳該字段  
-tpslMode| false| string| 止盈止損模式 
+settleCoin| false| string| 結算幣種 
 
-  * `Full`: 全部倉位止盈止損. 此時, tpOrderType或者slOrderType必須傳`Market`
-  * `Partial`: 部分倉位止盈止損. 支持創建限價止盈止損. 注意: 創建限價止盈止損時, tpslMode**必傳** 且為Partial
+  * 對於`linear` & `inverse`: 該字段**必傳** , 若不傳`symbol`和`baseCoin`
+  * `option`: USDC或者USDT
+  * 該字段不支持`spot`
 
-僅對`linear`和`inverse`有效  
-takeProfit| false| string| 修改後的止盈價格. 當傳"0"時, 表示取消當前訂單上設置的止盈. 若不修改，請不要傳該字段  
   
-stopLoss| false| string| 修改後的止損價格. 當傳"0"時, 表示取消當前訂單上設置的止損. 若不修改，請不要傳該字段  
-  
-[tpTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止盈價格觸發類型. 若下單時未設置該值，則調用該接口修改止盈價格時，該字段**必傳**  
-[slTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止損價格觸發類型. 若下單時未設置該值，則調用該接口修改止損價格時，該字段**必傳**  
-[triggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 觸發價格的觸發類型  
-tpLimitPrice| false| string| 觸發止盈後轉換為限價單的價格  
-當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效  
-  
-slLimitPrice| false| string| 觸發止損後轉換為限價單的價格  
-當且僅當原始訂單下單時創建的是部分止盈止損限價單, 本字段才有效  
-  
-  
-信息
+orderFilter| false| string| 
 
-ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+  * category=`spot`, 該字段可以傳:   
+`Order`(普通單), `tpslOrder`(止盈止損單)  
+`StopOrder`(條件單), `OcoOrder`  
+`BidirectionalTpslOrder`(現貨雙向止盈止損訂單)  
+若不傳, 則默認是撤掉`Order`單
+  * 當category=`linear` 或者 `inverse`, 該字段可以傳`Order`(普通單), `StopOrder`(條件單, 包括止盈止損單和追蹤出場單), `OpenOrder`(僅取消開倉單). 若不傳, 則所有類型的訂單都會被撤掉
+  * 當category=`option`, 該字段可以傳`Order`,`StopOrder`, 若不傳, 則撤掉這兩種類型下所有訂單
 
-[](/docs/zh-TW/api-explorer/v5/trade/amend-order)
+  
+[stopOrderType](/docs/zh-TW/v5/enum#stopordertype)| false| string| 條件單類型, `Stop`
+
+  * 僅用於當category=`linear` 或者 `inverse`以及orderFilter=`StopOrder`時, 若想僅取消條件單 (不包括止盈止損單和追蹤出場單), 則可以傳入該字段
+
+  
+[](/docs/zh-TW/api-explorer/v5/trade/cancel-all)
 
 * * *
 
@@ -241,9 +243,15 @@ ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 訂單Id  
-orderLinkId| string| 用戶自定義訂單Id  
+list| array| Object  
+> orderId| string| 訂單ID  
+> orderLinkId| string| 用戶自定義的訂單ID  
+success| string| "1": 成功, "0": 失敗  
   
+信息
+
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+
 ### 請求示例
 
   * HTTP
@@ -255,23 +263,18 @@ orderLinkId| string| 用戶自定義訂單Id
 
     
     
-    POST /v5/order/amend HTTP/1.1  
+    POST /v5/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672217108106  
+    X-BAPI-TIMESTAMP: 1672219779140  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "category": "linear",  
-        "symbol": "ETHPERP",  
-        "orderLinkId": "linear-004",  
-        "triggerPrice": "1145",  
-        "qty": "0.15",  
-        "price": "1050",  
-        "takeProfit": "0",  
-        "stopLoss": "0"  
+      "category": "linear",  
+      "symbol": null,  
+      "settleCoin": "USDT"  
     }  
     
     
@@ -282,15 +285,9 @@ orderLinkId| string| 用戶自定義訂單Id
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.amend_order(  
+    print(session.cancel_all_orders(  
         category="linear",  
-        symbol="ETHPERP",  
-        orderLinkId="linear-004",  
-        triggerPrice="1145",  
-        qty="0.15",  
-        price="1050",  
-        takeProfit="0",  
-        stopLoss="0",  
+        settleCoin="USDT",  
     ))  
     
     
@@ -301,19 +298,15 @@ orderLinkId| string| 用戶自定義訂單Id
     import com.bybit.api.client.service.BybitApiClientFactory;  
     BybitApiClientFactory factory = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET");  
     BybitApiAsyncTradeRestClient client = factory.newAsyncTradeRestClient();  
-    var amendOrderRequest = TradeOrderRequest.builder().orderId("1523347543495541248").category(ProductType.LINEAR).symbol("XRPUSDT")  
-                            .price("0.5")  // setting a new price, for example  
-                            .qty("15")  // and a new quantity  
-                            .build();  
-    var amendedOrder = client.amendOrder(amendOrderRequest);  
-    System.out.println(amendedOrder);  
+    var cancelAllOrdersRequest = TradeOrderRequest.builder().category(ProductType.LINEAR).baseCoin("USDT").build();  
+    client.cancelAllOrder(cancelAllOrdersRequest, System.out::println);  
     
     
     
     using bybit.net.api.ApiServiceImp;  
     using bybit.net.api.Models.Trade;  
     BybitTradeService tradeService = new(apiKey: "xxxxxxxxxxxxxx", apiSecret: "xxxxxxxxxxxxxxxxxxxxx");  
-    var orderInfoString = await TradeService.AmendOrder(orderId: "1523347543495541248", category:Category.LINEAR, symbol: "XRPUSDT", price:"0.5", qty:"15");  
+    var orderInfoString = await TradeService.CancelAllOrder(category: Category.LINEAR, baseCoin:"USDT");  
     Console.WriteLine(orderInfoString);  
     
     
@@ -327,15 +320,9 @@ orderLinkId| string| 用戶自定義訂單Id
     });  
       
     client  
-        .amendOrder({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            orderLinkId: 'linear-004',  
-            triggerPrice: '1145',  
-            qty: '0.15',  
-            price: '1050',  
-            takeProfit: '0',  
-            stopLoss: '0',  
+        .cancelAllOrders({  
+        category: 'linear',  
+        settleCoin: 'USDT',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -352,9 +339,18 @@ orderLinkId| string| 用戶自定義訂單Id
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderId": "c6f055d9-7f21-4079-913d-e6523a9cfffa",  
-            "orderLinkId": "linear-004"  
+            "list": [  
+                {  
+                    "orderId": "1616024329462743808",  
+                    "orderLinkId": "1616024329462743809"  
+                },  
+                {  
+                    "orderId": "1616024287544869632",  
+                    "orderLinkId": "1616024287544869633"  
+                }  
+            ],  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1672217093461  
+        "time": 1707381118116  
     }

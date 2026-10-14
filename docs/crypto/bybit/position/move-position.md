@@ -2,151 +2,74 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position
 api_type: Position
-updated_at: 2026-10-13 18:52:48.212836
+updated_at: 2026-10-14 18:52:09.532895
 ---
 
-# Move Position
+# Get Pre-upgrade Closed PnL
 
-You can move positions between sub-master, master-sub, or sub-sub UIDs when necessary
+Query user's closed profit and loss records from before you upgraded the account to a Unified account. The results are sorted by `updatedTime` in descending order. it only supports to query USDT perpetual, Inverse perpetual and Inverse Futures.
 
 info
 
-  * The endpoint can only be called by master UID api key
-  * UIDs must be the same master-sub account relationship
-  * The trades generated from move-position endpoint will not be displayed in the Recent Trade (Rest API & Websocket)
-  * There is no trading fee
-  * `fromUid` and `toUid` both should be Unified trading accounts, and they need to be one-way mode when moving the positions
-  * Please note that once executed, you will get execType=`MovePosition` entry from [Get Trade History](/docs/v5/order/execution), [Get Closed Pnl](/docs/v5/position/close-pnl), and stream from [Execution](/docs/v5/websocket/private/execution).
-  * TradFi perpetual contracts (including forex, stock, and commodities) are supported starting from 2026-08-06
-
-
+By `category`="linear", you can query USDT Perps data occurred during classic account  
+By `category`="inverse", you can query Inverse Contract data occurred during **classic account or[UTA1.0](/docs/v5/acct-mode#uta-10)**
 
 ### HTTP Request
 
-POST`/v5/position/move-positions`
+GET`/v5/pre-upgrade/position/closed-pnl`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-fromUid| **true**|  string| From UID 
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+startTime| false| integer| The start timestamp (ms) 
 
-  * Must be UTA
-  * Must be in one-way mode for Futures
-
-  
-toUid| **true**|  string| To UID 
-
-  * Must be UTA
-  * Must be in one-way mode for Futures
+  * startTime and endTime are not passed, return 7 days by default
+  * Only startTime is passed, return range between startTime and startTime+7 days
+  * Only endTime is passed, return range between endTime-7 days and endTime
+  * If both are passed, the rule is endTime - startTime <= 7 days
 
   
-list| **true**|  array| Object. Up to 25 legs per request  
-> [category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `spot`, `option`,`inverse`  
-> symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-> price| **true**|  string| Trade price 
-
-  * `linear`&`inverse`: the price needs to be between [95% of mark price, 105% of mark price]
-  * `spot`&`option`: the price needs to follow the price rule from [Instruments Info](/docs/v5/market/instrument)
-
-  
-> side| **true**|  string| Trading side of `fromUid`
-
-  * For example, `fromUid` has a long position, when side=`Sell`, then once executed, the position of `fromUid` will be reduced or open a short position depending on `qty` input
-
-  
-> qty| **true**|  string| Executed qty 
-
-  * The value must satisfy the qty rule from [Instruments Info](/docs/v5/market/instrument), in particular, category=`linear` is able to input `maxOrderQty` * 5
-
-  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-retCode| integer| Result code. `0` means request is successfully accepted  
-retMsg| string| Result message  
-result| map| Object  
-> blockTradeId| string| Block trade ID  
-> status| string| Status. `Processing`, `Rejected`  
-> rejectParty| string| 
-
-  * `""` means initial validation is passed, please check the order status via [Get Move Position History](/docs/v5/position/move-position-history)
-  * `Taker`, `Maker` when status=`Rejected`
-  * `bybit` means error is occurred on the Bybit side
-
-  
+category| string| Product type  
+list| array| Object  
+> symbol| string| Symbol name  
+> orderId| string| Order ID  
+> side| string| `Buy`, `Side`  
+> qty| string| Order qty  
+> orderPrice| string| Order price  
+> [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
+> execType| string| Exec type. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`  
+> closedSize| string| Closed size  
+> cumEntryValue| string| Cumulated Position value  
+> avgEntryPrice| string| Average entry price  
+> cumExitValue| string| Cumulated exit position value  
+> avgExitPrice| string| Average exit price  
+> closedPnl| string| Closed PnL  
+> fillCount| string| The number of fills in a single order  
+> leverage| string| leverage  
+> createdTime| string| The created time (ms)  
+> updatedTime| string| The updated time (ms)  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
-
-  * HTTP
-  * Python
-  * Java
-  * Node.js
-
-
     
     
-    POST /v5/position/move-positions HTTP/1.1  
+    GET /v5/pre-upgrade/position/closed-pnl?category=linear&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1697447928051  
+    X-BAPI-TIMESTAMP: 1682580911998  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "fromUid": "100307601",  
-        "toUid": "592324",  
-        "list": [  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01"  
-            }  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.move_position(  
-        fromUid="100307601",  
-        toUid="592324",  
-        list=[  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01",  
-            }  
-        ]  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
-                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
-    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
-    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
-    
-    
-    
-      
     
 
 ### Response Example
@@ -156,156 +79,103 @@ result| map| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
-            "status": "Processing",  
-            "rejectParty": ""  
-        }  
+            "list": [  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
+                    "side": "Sell",  
+                    "qty": "0.200",  
+                    "orderPrice": "27203.40",  
+                    "orderType": "Market",  
+                    "execType": "Trade",  
+                    "closedSize": "0.200",  
+                    "cumEntryValue": "5588.88",  
+                    "avgEntryPrice": "27944.40",  
+                    "cumExitValue": "5726.4252",  
+                    "avgExitPrice": "28632.13",  
+                    "closedPnl": "204.25510011",  
+                    "fillCount": "22",  
+                    "leverage": "10",  
+                    "createdTime": "1682487465732",  
+                    "updatedTime": "1682487465732"  
+                }  
+            ],  
+            "category": "linear",  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1682580912259  
     }
 
 ---
 
-# 移倉
+# 查詢升級前平倉盈虧
 
-您可以在同一個母子帳戶體系下移動期貨、期權的倉位, 以及現貨的幣幣交易
+支持查詢升級到統一帳戶之前發生的USDT永續 / 反向合約, 返回結果按照`updatedTime`降序排列
 
-信息
-
-  * 該接口僅支持母帳戶的api key訪問
-  * 移倉間的UID和調用者的UID必須是同一個母子帳戶體系
-  * 該移倉生成的交易將不會出現在公有行情的成交中(包括Rest API和Websocket)
-  * 該操作不會產生手續費
-  * `fromUid` 和 `toUid`都必須是統一交易帳戶, 並且對於期貨而言, 倉位需要處於單向模式下
-  * 請注意一旦成交, [查詢成交紀錄](/docs/zh-TW/v5/order/execution), [查詢平倉盈虧](/docs/zh-TW/v5/position/close-pnl), 以及私有推送[成交](/docs/zh-TW/v5/websocket/private/execution)會返回execType=`MovePosition`的數據
-  * TradFi 永續合約（包括外匯、股票及大宗商品）自 2026-08-06 起支持
-
-
+通過category=linear, 查詢到在經典帳戶期間產生的USDT永續數據  
+通過category=inverse, 查詢到在經典帳戶或者統一帳戶1.0期間產生的反向合約數據
 
 ### HTTP 請求
 
-POST`/v5/position/move-positions`
+GET`/v5/pre-upgrade/position/closed-pnl`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-fromUid| **true**|  string| 原UID 
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型
 
-  * 必須是統一交易帳戶
-  * 期貨倉位必須有處於單向持倉模式
-
-  
-toUid| **true**|  string| 目標UID 
-
-  * 必須是統一交易帳戶
-  * 期貨倉位必須有處於單向持倉模式
+  * `linear`, `inverse`
 
   
-list| **true**|  array| Object. 單次請求最多支持25腿  
-> [category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `spot`, `option`,`inverse`  
-> symbol| **true**|  string| 合約名稱/幣對名  
-> price| **true**|  string| 訂單價格 
+symbol| **true**|  string| 合約名稱  
+startTime| false| integer| 開始時間戳 (毫秒) 
 
-  * `linear`和`inverse`: 價格需要位於[95% _標記價格, 105%_ 標記價格]之間
-  * `spot`和`option`: 價格需要遵循[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的價格上下限和精度
-
-  
-> side| **true**|  string| 是`fromUid`的交易方向 
-
-  * 例如, `fromUid`持有多倉, 如果選擇side=`Sell`, 則執行後, `fromUid`的多倉會被減倉或者開了空倉取決於`qty`的大小
+  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
+  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
+  * 若只傳startTime，則查詢startTime和startTime+7天的數據
+  * 若只傳endTime，則查詢endTime-7天和endTime的數據
 
   
-> qty| **true**|  string| 交易數量
-
-  * 該數字需要滿足[查詢可交易產品的規格信息](/docs/zh-TW/v5/market/instrument)的qty規則, 特別的, 對於linear, 可以支持5倍的`maxOrderQty`
-
-  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-retCode| integer| 響應碼. `0`表示請求被成功接受  
-retMsg| string| 響應信息  
-result| map| Object  
-> blockTradeId| string| 大宗交易訂單ID  
-> status| string| 訂單狀態. `Processing`, `Rejected`  
-> rejectParty| string| 
-
-  * `""`表示初始校驗通過, 需要進一步通過[查詢移倉歷史](/docs/zh-TW/v5/position/move-position-history)接口來確認最終狀態
-  * `Taker`, `Maker`: 當status=`Rejected`返回
-  * `bybit`表示處理過程中的錯誤發生在Bybit側
-
-  
+[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
+list| array| Object  
+> symbol| string| 合約名稱  
+> orderId| string| 訂單Id  
+> side| string| 買賣方向 `Buy`, `Side`  
+> qty| string| 訂單數量  
+> orderPrice| string| 訂單價格  
+> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. `Market`,`Limit`  
+> execType| string| 執行類型. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`  
+> closedSize| string| 平倉數量  
+> cumEntryValue| string| 被平倉位的累計入場價值  
+> avgEntryPrice| string| 平均入場價格  
+> cumExitValue| string| 被平倉位的累計出場價值  
+> avgExitPrice| string| 平均出場價格  
+> closedPnl| string| 被平倉位的盈虧  
+> fillCount| string| 成交筆數  
+> leverage| string| 持倉槓桿  
+> createdTime| string| 創建時間 (毫秒)  
+> updatedTime| string| 更新時間 (毫秒)  
+nextPageCursor| string| 游標，用於翻頁  
   
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Java
-  * Node.js
-
-
     
     
-    POST /v5/position/move-positions HTTP/1.1  
+    GET /v5/pre-upgrade/position/closed-pnl?category=linear&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1697447928051  
+    X-BAPI-TIMESTAMP: 1682580911998  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "fromUid": "100307601",  
-        "toUid": "592324",  
-        "list": [  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01"  
-            }  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.move_position(  
-        fromUid="100307601",  
-        toUid="592324",  
-        list=[  
-            {  
-                "category": "spot",  
-                "symbol": "BTCUSDT",  
-                "price": "100",  
-                "side": "Sell",  
-                "qty": "0.01",  
-            }  
-        ]  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var movePositionsRequest = Arrays.asList(MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("BTCUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build(),  
-                    MovePositionDetailsRequest.builder().category(CategoryType.SPOT.getCategoryTypeId()).symbol("ETHUSDT").side(Side.SELL.getTransactionSide()).price("100").qty("0.01").build());  
-    var batchMovePositionsRequest = BatchMovePositionRequest.builder().fromUid("123456").toUid("456789").list(movePositionsRequest).build();  
-    System.out.println(client.batchMovePositions(batchMovePositionsRequest));  
-    
-    
-    
-      
     
 
 ### 響應示例
@@ -315,8 +185,30 @@ result| map| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "blockTradeId": "e9bb926c95f54cf1ba3e315a58b8597b",  
-            "status": "Processing",  
-            "rejectParty": ""  
-        }  
+            "list": [  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
+                    "side": "Sell",  
+                    "qty": "0.200",  
+                    "orderPrice": "27203.40",  
+                    "orderType": "Market",  
+                    "execType": "Trade",  
+                    "closedSize": "0.200",  
+                    "cumEntryValue": "5588.88",  
+                    "avgEntryPrice": "27944.40",  
+                    "cumExitValue": "5726.4252",  
+                    "avgExitPrice": "28632.13",  
+                    "closedPnl": "204.25510011",  
+                    "fillCount": "22",  
+                    "leverage": "10",  
+                    "createdTime": "1682487465732",  
+                    "updatedTime": "1682487465732"  
+                }  
+            ],  
+            "category": "linear",  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1682580912259  
     }

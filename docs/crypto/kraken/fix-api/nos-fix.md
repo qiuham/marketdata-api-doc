@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/fix-api/nos-fix
 api_type: REST
-updated_at: 2026-10-12 19:20:19.325938
+updated_at: 2026-10-14 19:23:07.614967
 ---
 
 # Send order
@@ -408,8 +408,6 @@ broker
 string<iiban>
 
 Valid Broker IIBAN on whose behalf the order is sent. The format must follow the usual IIBAN pattern `XXXX YYYY ZZZZ WWWW` or machine pattern `XXXXYYYYZZZZWWWW`.
-
-Note: This is currently available exclusively in the Kraken pre-prod environments.
 
 #### Response
 

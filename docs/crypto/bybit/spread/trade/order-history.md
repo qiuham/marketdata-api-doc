@@ -2,155 +2,185 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/order-history
 api_type: Trading
-updated_at: 2026-10-13 18:54:26.590122
+updated_at: 2026-10-14 18:54:00.863298
 ---
 
-# Orderbook
+# Order
 
-Subscribe to the spread orderbook stream.
+Subscribe to the order stream to see changes to your orders in **real-time**.
 
-### Depths
+**Topic:** `spread.order`  
 
-Level 25 data, push frequency: **20ms**
-
-**Topic:**  
-`orderbook.{depth}.{symbol}` e.g., orderbook.25.SOLUSDT_SOL/USDT
-
-### Process snapshot/delta
-
-To process `snapshot` and `delta` messages, please follow these rules:
-
-Once you have subscribed successfully, you will receive a `snapshot`. The WebSocket will keep pushing `delta` messages every time the orderbook changes. If you receive a new `snapshot` message, you will have to reset your local orderbook. If there is a problem on Bybit's end, a `snapshot` will be re-sent, which is guaranteed to contain the latest data.
-
-To apply `delta` updates:
-
-  * If you receive an amount that is `0`, delete the entry
-  * If you receive an amount that does not exist, insert it
-  * If the entry exists, you simply update the value
-
-
-
-See working code examples of this logic in the [FAQ](https://bybit-exchange.github.io/docs/faq#how-can-i-process-websocket-snapshot-and-delta-messages).
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+id| string| Message ID  
 topic| string| Topic name  
-type| string| Data type. `snapshot`,`delta`  
-ts| number| The timestamp (ms) that the system generates the data  
-data| map| Object  
-> s| string| Symbol name  
-> b| array| Bids. For `snapshot` stream. Sorted by price in descending order  
->> b[0]| string| Bid price  
->> b[1]| string| Bid size 
-
-  * The delta data has size=0, which means that all quotations for this price have been filled or cancelled
-
-  
-> a| array| Asks. For `snapshot` stream. Sorted by price in ascending order  
->> a[0]| string| Ask price  
->> a[1]| string| Ask size 
-
-  * The delta data has size=0, which means that all quotations for this price have been filled or cancelled
-
-  
-> u| integer| Update ID
-
-  * Occasionally, you'll receive "u"=1, which is a snapshot data due to the restart of the service. So please overwrite your local orderbook
-
-  
-> seq| integer| Cross sequence  
-cts| number| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/spread/websocket/public/trade)  
+creationTime| number| Data created timestamp (ms)  
+data| array| Object  
+> category| string| Category name, `combination`, `spot_leg`, `future_leg`  
+> symbol| string| Combo or leg's symbol name  
+> parentOrderId| string| Leg's parent order ID  
+> orderId| string| Combo or leg's order ID  
+> orderLinkId| string| Combo's user customised order ID  
+> side| string| Combo or leg's order side, `Buy`, `Sell`  
+> orderStatus| string| Combo or leg's order status  
+> [cancelType](/docs/v5/enum#canceltype)| string| Cancel type  
+> [rejectReason](/docs/v5/enum#rejectreason)| string| Reject reason  
+> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
+> price| string| Order price  
+> qty| string| Order qty  
+> avgPrice| string| Average filled price  
+> leavesQty| string| The remaining qty not executed  
+> leavesValue| string| The estimated value not executed  
+> cumExecQty| string| Cumulative executed order qty  
+> cumExecValue| string| Cumulative executed order value  
+> cumExecFee| string| Deprecated. Cumulative executed trading fee  
+> orderType| string| Order type. `Market`,`Limit`  
+> isLeverage| string| Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.  
+> createdTime| string| Order created timestamp (ms)  
+> updatedTime| string| Order updated timestamp (ms)  
+> feeCurrency| string| Deprecated. Trading fee currency for Spot leg only  
+> createType| string| Order create type  
+> closedPnl| string| Closed profit and loss for each close position order  
+> cumFeeDetail| json| Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`  
   
 ### Subscribe Example
     
     
     {  
         "op": "subscribe",  
-        "args": ["orderbook.25.SOLUSDT_SOL/USDT"]  
+        "args": [  
+            "spread.order"  
+        ]  
     }  
     
 
-### Event Example
+### Stream Example
     
     
     {  
-        "topic": "orderbook.25.SOLUSDT_SOL/USDT",  
-        "ts": 1744165512257,  
-        "type": "delta",  
-        "data": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [],  
-            "a": [  
-                [  
-                    "22.3755",  
-                    "4.7"  
-                ]  
-            ],  
-            "u": 64892,  
-            "seq": 299084  
-        },  
-        "cts": 1744165512234  
+        "topic": "spread.order",  
+        "id": "1448939_SOLUSDT_28732003549",  
+        "creationTime": 1744170555912,  
+        "data": [  
+            {  
+                "category": "combination",  
+                "symbol": "SOLUSDT_SOL/USDT",  
+                "parentOrderId": "",  
+                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
+                "orderLinkId": "",  
+                "side": "Buy",  
+                "orderStatus": "Filled",  
+                "cancelType": "UNKNOWN",  
+                "rejectReason": "EC_NoError",  
+                "timeInForce": "GTC",  
+                "price": "14",  
+                "qty": "2",  
+                "avgPrice": "",  
+                "leavesQty": "0",  
+                "leavesValue": "",  
+                "cumExecQty": "2",  
+                "cumExecValue": "",  
+                "cumExecFee": "",  
+                "orderType": "Limit",  
+                "isLeverage": "",  
+                "createdTime": "1744170534447",  
+                "updatedTime": "1744170555905",  
+                "feeCurrency": "",  
+                "createType": "CreateByUser",  
+                "closedPnl": "",  
+                "cumFeeDetail": {  
+                    "MNT": "0.00242968"  
+                }  
+            },  
+            {  
+                "category": "future_leg",  
+                "symbol": "SOLUSDT",  
+                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
+                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
+                "orderLinkId": "",  
+                "side": "Buy",  
+                "orderStatus": "Filled",  
+                "cancelType": "UNKNOWN",  
+                "rejectReason": "EC_NoError",  
+                "timeInForce": "GTC",  
+                "price": "118.2",  
+                "qty": "2",  
+                "avgPrice": "118.2",  
+                "leavesQty": "0",  
+                "leavesValue": "0",  
+                "cumExecQty": "2",  
+                "cumExecValue": "236.4",  
+                "cumExecFee": "0.01182",  
+                "orderType": "Limit",  
+                "isLeverage": "",  
+                "createdTime": "1744170534447",  
+                "updatedTime": "1744170555910",  
+                "feeCurrency": "",  
+                "createType": "CreateByFutureSpread",  
+                "closedPnl": "0",  
+                "cumFeeDetail": {  
+                    "MNT": "0.00242968"  
+                }  
+            }  
+        ]  
     }
 
 ---
 
-# 深度
+# 訂單
 
-訂閱深度的推送
+訂閱價差交易訂單推送
 
-**Topic:**  
-`orderbook.{depth}.{symbol}` e.g., orderbook.25.SOLUSDT_SOL/USDT
-
-25 檔數據, 推送頻率: **20ms**
-
-信息
-
-  * 訂閱成功後，會立即得到一個當前快照包的推送消息.
-  * websocket將會繼續推送這些增量數據. 收到snapshot的報文，就需要重置本地的orderbook.
-  * `snapshot`=全量orderbook, `delta`=增量orderbook
-  * 如果因為Bybit服務原因，會重新發送snapshot報文，該報文已保證是最新且準確的.
-
+**Topic:** `spread.order`  
 
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+id| string| 消息ID  
 topic| string| Topic名  
-type| string| 數據類型. `snapshot`,`delta`  
-ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| map| Object  
-> s| string| 價差產品名稱  
-> b| array| Bid, 買方. `snapshot`數據，是按照價格從大到小  
->> b[0]| string| 買方報價  
->> b[1]| string| 買方數量 
-
-  * 增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷
-
-  
-> a| array| Ask, 賣方. `snapshot`數據，是按照價格從小到大  
->> a[0]| string| 賣方報價  
->> a[1]| string| 賣方數量 
-
-  * 增量數據的推送當出現size=0時，這意味著該價位的報價單全部成交或者全部撤銷
-
-  
-> u| integer| 更新id 
-
-  * 一般情況下該id是連續的。偶爾會因後台的重啟而發送"u"=1的全量數據，接收到後請覆蓋本地保存的orderbook
-
-  
-> seq| integer| 撮合版本號  
-cts| number| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](/docs/zh-TW/v5/spread/websocket/public/trade)頻道中的`T`進行關聯  
+creationTime| number| 消息數據創建時間 (ms)  
+data| array<object>|   
+> category| string| 組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿  
+> symbol| string| 組合或單腿的合約名稱  
+> parentOrderId| string| 單腿訂單的所屬組合訂單ID  
+> orderId| string| 組合或單腿的訂單ID  
+> orderLinkId| string| 組合單的用戶自定義ID  
+> side| string| 組合或單腿的訂單方向, `Buy`, `Sell`  
+> orderStatus| string| 組合或單腿的訂單狀態  
+> [cancelType](/docs/zh-TW/v5/enum#canceltype)| string| 訂單被取消類型  
+> [rejectReason](/docs/zh-TW/v5/enum#rejectreason)| string| 拒絕原因  
+> timeInForce| string| 執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
+> price| string| 訂單價格  
+> qty| string| 訂單數量  
+> avgPrice| string| 平均成交價格  
+> leavesQty| string| 訂單剩餘未成交的數量  
+> leavesValue| string| 訂單剩餘未成交的價值  
+> cumExecQty| string| 訂單累計成交數量  
+> cumExecValue| string| 訂單累計成交價值  
+> cumExecFee| string| 已棄用. 訂單累計成交的手續費  
+> orderType| string| 訂單類型. `Market`,`Limit`  
+> isLeverage| string| 帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"  
+> createdTime| string| 創建訂單的時間戳 (毫秒)  
+> updatedTime| string| 訂單更新的時間戳 (毫秒)  
+> feeCurrency| string| 已棄用. 手續費幣種, 僅適用於現貨單腿訂單  
+> [createType](/docs/zh-TW/v5/enum#createtype)| string| 訂單創建類型  
+> closedPnl| string| 平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費  
+> cumFeeDetail| json| 累積交易費詳情, 替代`cumExecFee`和`feeCurrency`  
   
 ### 訂閱示例
     
     
     {  
         "op": "subscribe",  
-        "args": ["orderbook.25.SOLUSDT_SOL/USDT"]  
+        "args": [  
+            "spread.order"  
+        ]  
     }  
     
 
@@ -158,20 +188,69 @@ cts| number| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用�
     
     
     {  
-        "topic": "orderbook.25.SOLUSDT_SOL/USDT",  
-        "ts": 1744165512257,  
-        "type": "delta",  
-        "data": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [],  
-            "a": [  
-                [  
-                    "22.3755",  
-                    "4.7"  
-                ]  
-            ],  
-            "u": 64892,  
-            "seq": 299084  
-        },  
-        "cts": 1744165512234  
+        "topic": "spread.order",  
+        "id": "1448939_SOLUSDT_28732003549",  
+        "creationTime": 1744170555912,  
+        "data": [  
+            {  
+                "category": "combination",  
+                "symbol": "SOLUSDT_SOL/USDT",  
+                "parentOrderId": "",  
+                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
+                "orderLinkId": "",  
+                "side": "Buy",  
+                "orderStatus": "Filled",  
+                "cancelType": "UNKNOWN",  
+                "rejectReason": "EC_NoError",  
+                "timeInForce": "GTC",  
+                "price": "14",  
+                "qty": "2",  
+                "avgPrice": "",  
+                "leavesQty": "0",  
+                "leavesValue": "",  
+                "cumExecQty": "2",  
+                "cumExecValue": "",  
+                "cumExecFee": "",  
+                "orderType": "Limit",  
+                "isLeverage": "",  
+                "createdTime": "1744170534447",  
+                "updatedTime": "1744170555905",  
+                "feeCurrency": "",  
+                "createType": "CreateByUser",  
+                "closedPnl": "",  
+                "cumFeeDetail": {  
+                    "MNT": "0.00242968"  
+                }  
+            },  
+            {  
+                "category": "future_leg",  
+                "symbol": "SOLUSDT",  
+                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
+                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
+                "orderLinkId": "",  
+                "side": "Buy",  
+                "orderStatus": "Filled",  
+                "cancelType": "UNKNOWN",  
+                "rejectReason": "EC_NoError",  
+                "timeInForce": "GTC",  
+                "price": "118.2",  
+                "qty": "2",  
+                "avgPrice": "118.2",  
+                "leavesQty": "0",  
+                "leavesValue": "0",  
+                "cumExecQty": "2",  
+                "cumExecValue": "236.4",  
+                "cumExecFee": "0.01182",  
+                "orderType": "Limit",  
+                "isLeverage": "",  
+                "createdTime": "1744170534447",  
+                "updatedTime": "1744170555910",  
+                "feeCurrency": "",  
+                "createType": "CreateByFutureSpread",  
+                "closedPnl": "0",  
+                "cumFeeDetail": {  
+                    "MNT": "0.00242968"  
+                }  
+            }  
+        ]  
     }

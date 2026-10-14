@@ -2,52 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-auto-repay-mode
 api_type: REST
-updated_at: 2026-10-13 18:54:04.531104
+updated_at: 2026-10-14 18:53:38.791288
 ---
 
-# Set Auto Repay Mode
+# Get Tiered Collateral Ratio
 
-Set spot automatic repayment mode
+UTA loan tiered collateral ratio
 
 info
 
-  1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
-  2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
-  3. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency. 
-  4. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay)
-
-
+Does not need authentication.
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/collateral`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.  
-autoRepayMode| **true**|  string| 
-
-  * `1`: On
-  * `0`: Off
-
+currency| false| string| Coin name, uppercase only  
   
-  
-* * *
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-data| array| Object  
-> currency| string| Coin name, uppercase only.  
-> autoRepayMode| string| 
-
-  * `1`: On
-  * `0`: Off
-
-  
+list| array| Object  
+> currency| string| Coin name  
+> collateralRatioList| array| Object  
+>> maxQty| string| Upper limit(in coin) of the tiered range, `""` means positive infinity  
+>> minQty| string| lower limit(in coin) of the tiered range  
+>> collateralRatio| string| Collateral ratio  
   
 ### Request Example
 
@@ -58,30 +43,17 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
+    GET /v5/spot-margin-trade/collateral?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_repay_mode(  
-        currency="ETH",  
-        autoRepayMode="1"  
+    print(session.get_tiered_collateral_ratio(  
+        currency="BTC",  
     ))  
     
     
@@ -94,64 +66,60 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
+            "list": [  
                 {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
+                    "currency": "BTC",  
+                    "collateralRatioList": [  
+                        {  
+                            "minQty": "0",  
+                            "maxQty": "1000000",  
+                            "collateralRatio": "0.85"  
+                        },  
+                        {  
+                            "minQty": "1000000",  
+                            "maxQty": "",  
+                            "collateralRatio": "0"  
+                        }  
+                    ]  
                 }  
             ]  
         },  
-        "retExtInfo": {},  
-        "time": 1766976677678  
+        "retExtInfo": "{}",  
+        "time": 1739848984945  
     }
 
 ---
 
-# 設定現貨自動還款模式
+# 查詢階梯價值率
 
-設定現貨自動還款模式
+查詢統一帳戶借貸的階梯價值率
 
 信息
 
-  1. 若未指定`currency`參數，則所有幣種均啟用自動還款。
-  2. 如果將某幣種的`autoRepayMode`設定為 1，系統將每小時 0 分鐘和 30 分鐘自動以該幣種進行非資產轉換還款。
-  3. 無損還款金額為該貨幣的現貨可用餘額與該貨幣的負債中的較小者。
-  4. 如果你錯過了0分和30分的自動還款批次，你可以手動調接口進行還款。
-
-
+不需要鑒權
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/collateral`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| 幣名稱，僅限大寫. 若未指定`currency`參數，則所有幣種均啟用自動還款。  
-autoRepayMode| **true**|  string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
+currency| false| string| 幣種名稱  
   
-  
-* * *
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-data| array| Object  
-> currency| string| 幣名稱，僅限大寫.  
-> autoRepayMode| string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
-  
+list| array| Object  
+> currency| string| 幣種名稱  
+> collateralRatioList| array| Object  
+>> maxQty| string| 梯度區間上限, 單位是幣種, 如"BTC", `""`表示正無窮  
+>> minQty| string| 梯度區間下限, 單位是幣種, 如"BTC", 最小值是0  
+>> collateralRatio| string| 抵押率  
   
 ### 請求示例
 
@@ -162,22 +130,18 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
+    GET /v5/spot-margin-trade/collateral?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_tiered_collateral_ratio(  
+        currency="BTC",  
+    ))  
     
     
     
@@ -189,15 +153,26 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
+            "list": [  
                 {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
+                    "currency": "BTC",  
+                    "collateralRatioList": [  
+                        {  
+                            "minQty": "0",  
+                            "maxQty": "1000000",  
+                            "collateralRatio": "0.85"  
+                        },  
+                        {  
+                            "minQty": "1000000",  
+                            "maxQty": "",  
+                            "collateralRatio": "0"  
+                        }  
+                    ]  
                 }  
             ]  
         },  
-        "retExtInfo": {},  
-        "time": 1766976677678  
+        "retExtInfo": "{}",  
+        "time": 1739848984945  
     }

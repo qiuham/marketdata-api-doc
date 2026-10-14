@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-activity-log
 api_type: REST
-updated_at: 2026-10-13 18:50:51.155775
+updated_at: 2026-10-14 18:49:44.852946
 ---
 
 # Get Launchpool User Activity Log

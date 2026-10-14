@@ -2,40 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/supply-contract%20copy
 api_type: REST
-updated_at: 2026-10-13 18:51:56.664257
+updated_at: 2026-10-14 18:51:03.516542
 ---
 
-# Borrow
+# Get Available Inventory
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
-
-info
-
-  * The loan funds are released to the Funding wallet.
-  * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
-
-
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-flexible/borrow`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanCurrency| **true**|  string| Loan coin name  
-loanAmount| **true**|  string| Amount to borrow  
-collateralList| false| array<object>| Collateral coin list, supports putting up to 100 currency in the array  
-> currency| false| string| Currency used to mortgage  
-> amount| false| string| Amount to mortgage  
+currency| **true**|  string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Loan order ID  
+currency| string| Coin name  
+availableInventory| string| Available inventory of the lending pool  
+updateTime| string| Update timestamp  
   
 ### Request Example
 
@@ -46,29 +37,12 @@ orderId| string| Loan order ID
 
     
     
-    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569210041  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 244  
-      
-    {  
-        "loanCurrency": "BTC",  
-        "loanAmount": "0.1",  
-        "collateralList": [  
-            {  
-                "currency": "USDT",  
-                "amount": "1000"  
-            },  
-            {  
-                "currency": "ETH",  
-                "amount": "1"  
-            }  
-        ]  
-    }  
     
     
     
@@ -78,19 +52,8 @@ orderId| string| Loan order ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.borrow_flexible_crypto_loan(  
-        loanCurrency="BTC",  
-        loanAmount="0.1",  
-        collateralList=[  
-            {  
-                "currency": "USDT",  
-                "amount": "1000"  
-            },  
-            {  
-                "currency": "ETH",  
-                "amount": "1"  
-            }  
-        ]  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -103,47 +66,40 @@ orderId| string| Loan order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "1363"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752569209682  
+        "time": 1678886400000  
     }
 
 ---
 
-# 借款
+# 查詢活期可借存量
 
 > 權限: "現貨"  
->  頻率: 1次/秒
-
-信息
-
-  * 借款發放到資金帳戶
-  * 質押金將從資金帳戶扣減, 因此確保資金帳戶有足額質押幣種
-
-
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-flexible/borrow`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanCurrency| **true**|  string| 借款幣種名稱  
-loanAmount| **true**|  string| 借款金額  
-collateralList| false| array<object>| 抵押幣種清單，最多支持放入 100 種幣種  
-> currency| false| string| 用於抵押的幣種  
-> amount| false| string| 抵押金額  
+currency| **true**|  string| 幣種名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 借款單ID  
+currency| string| 幣種名稱  
+availableInventory| string| 借貸池可用存量  
+updateTime| string| 更新時間戳  
   
 ### 請求示例
 
@@ -154,29 +110,12 @@ orderId| string| 借款單ID
 
     
     
-    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569210041  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 244  
-      
-    {  
-        "loanCurrency": "BTC",  
-        "loanAmount": "0.1",  
-        "collateralList": [  
-            {  
-                "currency": "USDT",  
-                "amount": "1000"  
-            },  
-            {  
-                "currency": "ETH",  
-                "amount": "1"  
-            }  
-        ]  
-    }  
     
     
     
@@ -186,19 +125,8 @@ orderId| string| 借款單ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.borrow_flexible_crypto_loan(  
-        loanCurrency="BTC",  
-        loanAmount="0.1",  
-        collateralList=[  
-            {  
-                "currency": "USDT",  
-                "amount": "1000"  
-            },  
-            {  
-                "currency": "ETH",  
-                "amount": "1"  
-            }  
-        ]  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -211,10 +139,12 @@ orderId| string| 借款單ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "1363"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752569209682  
+        "time": 1678886400000  
     }

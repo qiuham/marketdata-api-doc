@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-set-fee-type
 anchor_id: trading-account-rest-api-set-fee-type
 api_type: REST
-updated_at: 2026-10-13 19:24:36.038948
+updated_at: 2026-10-14 19:23:51.385621
 ---
 
 # Set fee type

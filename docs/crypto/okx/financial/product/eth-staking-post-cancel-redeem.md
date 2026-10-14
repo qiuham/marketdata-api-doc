@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-post-cancel-redeem
 anchor_id: financial-product-eth-staking-post-cancel-redeem
 api_type: API
-updated_at: 2026-10-13 19:26:56.936338
+updated_at: 2026-10-14 19:26:21.885064
 ---
 
 # POST / Cancel redeem

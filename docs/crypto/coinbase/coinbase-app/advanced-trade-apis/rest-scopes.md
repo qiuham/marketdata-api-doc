@@ -2,17 +2,14 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-scopes
 api_type: Trading
-updated_at: 2026-10-13 19:08:50.969376
+updated_at: 2026-10-14 19:08:19.406569
 ---
 
 # Advanced Trade Scope & Permissions
 
-Per-endpoint OAuth and API key scopes for Advanced Trade REST.
-
-A CDP API key needs `view`, `trade`, or `transfer`. An OAuth token needs the OAuth scope listed for that endpoint. Public methods need neither. On Global Derivatives, `public/auth` takes a CDP JWT (or OAuth token) in the request to mint the access token — it does not need a key scope.
+RESTAdvanced Trade Scope & PermissionsPer-endpoint OAuth and API key scopes for Advanced Trade REST.A CDP API key needs `view`, `trade`, or `transfer`. An OAuth token needs the OAuth scope listed for that endpoint. Public methods need neither. On Global Derivatives, `public/auth` takes a CDP JWT (or OAuth token) in the request to mint the access token — it does not need a key scope.
 
   * Spot and US Derivatives
-
   * Global Derivatives
 
 Endpoint| OAuth 2.0 Scope| API Key Scope  
@@ -62,7 +59,6 @@ GET /intx/positions/{portfolio_uuid}/{symbol}| `wallet:transactions:read`| `view
 GET /intx/balances/{portfolio_uuid}| `wallet:transactions:read`| `view`  
 POST /intx/multi_asset_collateral| `wallet:buys:create`| `trade`  
 POST /intx/allocate| `wallet:transactions:transfer`| `transfer`  
-  
 Endpoint| OAuth 2.0 Scope| API Key Scope  
 ---|---|---  
 private/buy| `wallet:buys:create`| `trade`  

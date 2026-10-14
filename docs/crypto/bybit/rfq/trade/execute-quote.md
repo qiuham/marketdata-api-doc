@@ -2,44 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/execute-quote
 api_type: Trading
-updated_at: 2026-10-13 18:53:19.258919
+updated_at: 2026-10-14 18:52:46.135758
 ---
 
-# Execute Quote
+# Get RFQ Configuration
 
-Execute quote – only for the creator of the RFQ. **Up to 50 requests** per second.
+RFQ Config. **Up to 50 requests** per second.
 
 info
 
-This endpoint is asynchronous. You must check the [Get Trade History](/docs/v5/rfq/trade/trade-list) endpoint or listen to the [Execution](/docs/v5/rfq/websocket/private/transaction) WebSocket topic to confirm if the execution was successful.
+  * Query for information on the quoting party that can participate in your transaction, your own deskCode and other configuration information.
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-POST`/v5/rfq/execute-quote`
+GET`/v5/rfq/config`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-rfqId| **true**|  string| Inquiry ID  
-quoteId| **true**|  string| Quote ID  
-quoteSide| **true**|  string| The direction of the quote is `Buy` or `Sell` . When the direction of the quote is `Buy` , for the maker, the execution direction is the same as the direction in legs, and for the taker, it is opposite. Conversely, the same applies  
-isHedge| false| boolean| Whether to simultaneously execute the hedge leg in the RFQ. The execution direction is determined by `quoteSide`. Default: `false`  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| object|   
-> rfqId| string| Inquiry ID  
->rfqLinkId| string|   
-> quoteId| string| Quote ID  
-> status| string| Order status: 
-
-  * `PendingFill`: Order has been sent to the matching engine but not yet filled.
-  * `Failed`: Order failed
-
-  
+result| array| Order ID  
+list| Object|   
+> deskCode| string| Your deskCode, a unique identification code  
+> maxLegs| integer| Maximum number of legs  
+> maxLP| integer| The maximum number of LPs (liquidity providers) selected in the inquiry  
+> maxActiveRfq| integer| The maximum number of unfinished inquiry orders allowed by a user  
+> rfqExpireTime| integer| Inquiry expiration time (mins)  
+> minLimitQtySpotOrder| integer| Spot minimum order quantity  
+>minLimitQtyContractOrder| integer| Contract minimum order quantity  
+> minLimitQtyOptionOrder| integer| Option minimum order  
+> strategyTypes| array| Product strategy  
+>> strategyName| string| Strategy name  
+> counterparties| array| Information on the quoters who can participate in the transaction  
+>> traderName| string| Name of the quoter  
+>> deskCode| string| The unique identification code of the quoting party  
+>> type| string| Quoter type. `LP` is an automated market maker connected via API, null means a normal quoting party  
   
 ### Request Example
 
@@ -49,20 +53,12 @@ result| object|
 
     
     
-    POST /v5/rfq/execute-quote HTTP/1.1  
+    GET /v5/rfq/create-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-     {  
-      "rfqId":"1754364447601610516653123084412812",  
-      "quoteId": "111",  
-      "quoteSide":"Buy"  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
     
     
@@ -72,11 +68,7 @@ result| object|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.execute_quote(  
-        rfqId="1754364447601610516653123084412812",  
-        quoteId="111",  
-        quoteSide="Buy"  
-    ))  
+    print(session.get_rfq_config())  
     
 
 ### Response Example
@@ -86,72 +78,92 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "175740700350925204128457980089654",  
-            "rfqLinkId": "",  
-            "quoteId": "1757407015586174663206671159484665",  
-            "status": "PendingFill"  
+            "deskCode": "1nu9d1",  
+            "maxLegs": 25,  
+            "maxLP": 50,  
+            "rfqExpireTime": 10,  
+            "maxActiveRfq": 10,  
+            "minLimitQtySpotOrder": 10,  
+            "minLimitQtyContractOrder": 10,  
+            "minLimitQtyOptionOrder": 1,  
+            "strategyTypes": [  
+                {  
+                    "strategyName": "custom"  
+                },  
+                {  
+                    "strategyName": "FundingRate"  
+                },  
+                {  
+                    "strategyName": "CarryTrade"  
+                },  
+                ...,  
+            ],  
+            "counterparties": [  
+                {  
+                    "traderName": "1zQkH0y7Y3acALM",  
+                    "deskCode": "gIMhjitYqE9WG5F",  
+                    "type": "LP"  
+                },  
+                {  
+                    "traderName": "Bernie LP",  
+                    "deskCode": "Bernie",  
+                    "type": "LP"  
+                },  
+                ...,  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1757407058177  
+        "time": 1756870672013  
     }
 
 ---
 
-# 執行報價
+# rfq配寘資訊
 
-執行報價，僅限詢價單的創建者使用。**每秒最多 50 次請求**
+査詢rfq配寘資訊 **每秒最多 50 次請求**
 
 信息
 
-  * 執行成功，只是已經發送撮合，並不能說明訂單已經成交，用戶需要通過査詢介面/v5/rfq/trade-list或監聽toipic:rfq.open.trades來獲取執行結果
-
-
+查詢可參與交易的報價方資訊，以及自己的 deskCode 和其他配置資訊。 **在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況**
 
 ### HTTP 請求
 
-POST`/v5/rfq/execute-quote`
+GET`/v5/rfq/config`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-rfqId| **true**|  string| 詢價單 ID  
-quoteId| **true**|  string| 報價單 ID  
-quoteSide| **true**|  string| 報價方向，`Buy` 或 `Sell` 。當報價方向為 `Buy` 時，對於 maker，執行方向與 legs 中的方向一致，對於 taker 則相反；反之亦然  
-isHedge| false| boolean| 是否同時執行詢價單中的 hedge 腿，執行方向取決於 `quoteSide`；預設為 `false`  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| object|   
-> rfqId| string| 詢價單 ID  
-> rfqLinkId| string| 自定義詢價單 ID  
-> quoteId| string| 報價單 ID  
-> status| string| 訂單狀態： 
-
-  * `PendingFill`：已經發送撮合，待執行，執行結果需要通過査詢/v5/rfq/trade-list獲取或者監聽rfq.open.trades獲取
-  * `Failed`：驗證失敗
-
-  
+result| array| 訂單 ID  
+list| Object|   
+> deskCode| string| 自己的 deskCode，唯一識別代碼  
+> maxLegs| integer| 最大腿數  
+> maxLP| integer| 詢價單中可選的最大 LP 數量  
+> maxActiveRfq| integer| 使用者允許的未完成詢價單最大數量  
+> rfqExpireTime| integer| 詢價過期時間，分鐘  
+> minLimitQtySpotOrder| integer| 現貨最小下單量乘數  
+> minLimitQtyContractOrder| integer| 合約最小下單量乘數  
+> minLimitQtyOptionOrder| integer| 期權最小下單量乘數  
+> strategyTypes| array| 產品策略  
+>> strategyName| string| 策略名稱  
+> counterparties| array| 可參與交易的報價方資訊  
+>> traderName| string| 報價方名稱  
+>> deskCode| string| 報價方的唯一識別代碼，公開可見；報價和詢價的相關介面使用此代碼表示報價方  
+>> type| string| 報價方類型:`LP`指通過API連接的自動做市商，為空表示普通報價方  
   
 ### 請求示例
     
     
-    POST /v5/rfq/execute-quote HTTP/1.1  
+    GET /v5/rfq/create-rfq HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744083949347  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 115  
-      
-     {  
-      "rfqId":"1754364447601610516653123084412812",  
-      "quoteId": "111",  
-      "quoteSide":"Buy"  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
 
 ### 響應示例
@@ -161,11 +173,40 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "175740700350925204128457980089654",  
-            "rfqLinkId": "",  
-            "quoteId": "1757407015586174663206671159484665",  
-            "status": "PendingFill"  
+            "deskCode": "1nu9d1",  
+            "maxLegs": 25,  
+            "maxLP": 50,  
+            "rfqExpireTime": 10,  
+            "maxActiveRfq": 10,  
+            "minLimitQtySpotOrder": 10,  
+            "minLimitQtyContractOrder": 10,  
+            "minLimitQtyOptionOrder": 1,  
+            "strategyTypes": [  
+                {  
+                    "strategyName": "custom"  
+                },  
+                {  
+                    "strategyName": "FundingRate"  
+                },  
+                {  
+                    "strategyName": "CarryTrade"  
+                },  
+                ...,  
+            ],  
+            "counterparties": [  
+                {  
+                    "traderName": "1zQkH0y7Y3acALM",  
+                    "deskCode": "gIMhjitYqE9WG5F",  
+                    "type": "LP"  
+                },  
+                {  
+                    "traderName": "Bernie LP",  
+                    "deskCode": "Bernie",  
+                    "type": "LP"  
+                },  
+                ...,  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1757407058177  
+        "time": 1756870672013  
     }

@@ -2,36 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/unpaid-loan-order
 api_type: REST
-updated_at: 2026-10-13 18:52:05.226958
+updated_at: 2026-10-14 18:51:17.291929
 ---
 
-# Get Flexible Loans
+# Get Max. Allowed Collateral Reduction Amount
 
-Query for your ongoing loans
+Retrieve the maximum redeemable amount of your collateral asset based on LTV.
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-flexible/ongoing-coin`
+GET`/v5/crypto-loan-common/max-collateral-amount`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanCurrency| false| string| Loan coin name  
+currency| **true**|  string| Collateral coin  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> hourlyInterestRate| string| Latest hourly flexible interest rate  
-> loanCurrency| string| Loan coin  
-> totalDebt| string| Unpaid principal and interest  
-> unpaidAmount| string| Unpaid principal  
-> unpaidInterest| string| Unpaid interest  
+maxCollateralAmount| string| Maximum reduction amount  
   
 ### Request Example
 
@@ -42,11 +37,11 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1  
+    GET /v5/crypto-loan-common/max-collateral-amount?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570124973  
+    X-BAPI-TIMESTAMP: 1752627687351  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -57,8 +52,8 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_flexible_loans_flexible_crypto_loan(  
-        loanCurrency="BTC",  
+    print(session.get_max_allowed_collateral_reduction_amount_new_crypto_loan(  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -73,47 +68,36 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "hourlyInterestRate": "0.0000018847396",  
-                    "loanCurrency": "ETH",  
-                    "totalDebt": "0.10000019",  
-                    "unpaidAmount": "0.1",  
-                    "unpaidInterest": "0.00000019"  
-                }  
-            ]  
+            "maxCollateralAmount": "0.08585184"  
         },  
         "retExtInfo": {},  
-        "time": 1760452029499  
+        "time": 1752627687596  
     }
 
 ---
 
-# 查詢借款中信息
+# 查詢最大可減少的質押金額
+
+查詢某個借貸訂單允許的最大可減少質押金額
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-flexible/ongoing-coin`
+GET`/v5/crypto-loan-common/max-collateral-amount`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanCurrency| false| string| 借款幣種  
+currency| **true**|  string| 質押幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> hourlyInterestRate| string| 最新每小時彈性利率  
-> loanCurrency| string| 借款幣種  
-> totalDebt| string| 未償還本金與利息總額  
-> unpaidAmount| string| 未償還本金  
-> unpaidInterest| string| 未償還利息  
+maxCollateralAmount| string| 最大可減少金額  
   
 ### 請求示例
 
@@ -124,11 +108,11 @@ list| array| Object
 
     
     
-    GET /v5/crypto-loan-flexible/ongoing-coin?loanCurrency=BTC HTTP/1.1  
+    GET /v5/crypto-loan-common/max-collateral-amount?currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752570124973  
+    X-BAPI-TIMESTAMP: 1752627687351  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -139,8 +123,8 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_flexible_loans_flexible_crypto_loan(  
-        loanCurrency="BTC",  
+    print(session.get_max_allowed_collateral_reduction_amount_new_crypto_loan(  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -155,16 +139,8 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "list": [  
-                {  
-                    "hourlyInterestRate": "0.0000018847396",  
-                    "loanCurrency": "ETH",  
-                    "totalDebt": "0.10000019",  
-                    "unpaidAmount": "0.1",  
-                    "unpaidInterest": "0.00000019"  
-                }  
-            ]  
+            "maxCollateralAmount": "0.08585184"  
         },  
         "retExtInfo": {},  
-        "time": 1760452029499  
+        "time": 1752627687596  
     }

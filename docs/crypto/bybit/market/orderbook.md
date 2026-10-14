@@ -2,66 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/orderbook
 api_type: Market Data
-updated_at: 2026-10-13 18:51:27.172398
+updated_at: 2026-10-14 18:50:28.667424
 ---
 
-# Get Recent Public Trades
+# Get Premium Index Price Kline
 
-Query recent public trading history in Bybit.
+Query for historical [premium index](https://www.bybit.com/data/basic/linear/index-price/premium-index?symbol=BTCUSDT) klines. Charts are returned in groups based on the requested interval.
 
-> **Covers: Spot / USDT contract / USDC contract / Inverse contract / Option**
-
-You can download archived historical trades from the [website](https://www.bybit.com/en/derivative-activity/history-data)
+> **Covers: USDT and USDC perpetual**
 
 ### HTTP Request
 
-GET`/v5/market/recent-trade`
+GET`/v5/market/premium-index-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `spot`,`linear`,`inverse`,`option`  
-[symbol](/docs/v5/enum#symbol)| false| string| Symbol name, like `BTCUSDT`, uppercase only 
-
-  * **required** for spot/linear/inverse
-  * optional for option
-
-  
-baseCoin| false| string| Base coin, uppercase only 
-
-  * Apply to `option` **only**
-  * If the field is not passed, return **BTC** data by default
-
-  
-optionType| false| string| Option type. `Call` or `Put`. Apply to `option` **only**  
-limit| false| integer| Limit for data size per page 
-
-  * `spot`: [1,60], default: `60`
-  * others: [1,1000], default: `500`
-
-  
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`W`,`M`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `200`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Products category  
-list| array| Object  
-> execId| string| Execution ID  
-> symbol| string| Symbol name  
-> price| string| Trade price  
-> size| string| Trade size  
-> side| string| Side of taker `Buy`, `Sell`  
-> time| string| Trade time (ms)  
-> isBlockTrade| boolean| Whether the trade is block trade  
-> isRPITrade| boolean| Whether the trade is RPI trade  
-> mP| string| Mark price, unique field for `option`  
-> iP| string| Index price, unique field for `option`  
-> mIv| string| Mark iv, unique field for `option`  
-> iv| string| iv, unique field for `option`  
-> seq| string| cross sequence  
-[](/docs/api-explorer/v5/market/recent-trade)
+[category](/docs/v5/enum#category)| string| Product type  
+symbol| string| Symbol name  
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `start`
+
+  
+> list[0]| string| Start time of the candle (ms)  
+> list[1]| string| Open price  
+> list[2]| string| Highest price  
+> list[3]| string| Lowest price  
+> list[4]| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/premium-index-kline)
 
 * * *
 
@@ -69,24 +51,26 @@ list| array| Object
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/recent-trade?category=spot&symbol=BTCUSDT&limit=1 HTTP/1.1  
+    GET /v5/market/premium-index-price-kline?category=linear&symbol=BTCUSDT&interval=D&start=1652112000000&end=1652544000000 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_public_trade_history(  
-        category="spot",  
+    session = HTTP()  
+    print(session.get_premium_index_price_kline(  
+        category="linear",  
         symbol="BTCUSDT",  
-        limit=1,  
+        inverval="D",  
+        start=1652112000000,  
+        end=1652544000000,  
     ))  
     
     
@@ -97,8 +81,8 @@ list| array| Object
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetPublicRecentTrades(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetPremiumIndexPriceKline(context.Background())  
     
     
     
@@ -107,8 +91,8 @@ list| array| Object
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var recentTrade = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-30JUN23-2050-C").build();  
-    client.getRecentTradeData(recentTrade, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getPremiumIndexPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -119,10 +103,12 @@ list| array| Object
     });  
       
     client  
-        .getPublicTradingHistory({  
-            category: 'spot',  
+        .getPremiumIndexPriceKline({  
+            category: 'linear',  
             symbol: 'BTCUSDT',  
-            limit: 1,  
+            interval: 'D',  
+            start: 1652112000000,  
+            end: 1652544000000,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -139,79 +125,74 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "spot",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "execId": "2100000000007764263",  
-                    "symbol": "BTCUSDT",  
-                    "price": "16618.49",  
-                    "size": "0.00012",  
-                    "side": "Buy",  
-                    "time": "1672052955758",  
-                    "isBlockTrade": false,  
-                    "isRPITrade": true,  
-                    "seq":"123456"  
-                }  
+                [  
+                    "1652486400000",  
+                    "-0.000587",  
+                    "-0.000344",  
+                    "-0.000480",  
+                    "-0.000344"  
+                ],  
+                [  
+                    "1652400000000",  
+                    "-0.000989",  
+                    "-0.000561",  
+                    "-0.000587",  
+                    "-0.000587"  
+                ]  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672053054358  
+        "time": 1672765216291  
     }
 
 ---
 
-# 查詢平台最近成交歷史
+# 查詢溢價指數價格K線數據
 
-獲取平台最近成交數據
+查詢溢價指數價格K線數據
 
-> **覆蓋範圍: 現貨 / USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
-
-您可以從這個[地址](https://www.bybit.com/en/derivative-activity/history-data) 下載到歸檔的更多的歷史成交數據:
+> **覆蓋範圍: USDT和USDC永續**
 
 ### HTTP請求
 
-GET`/v5/market/recent-trade`
+GET`/v5/market/premium-index-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `spot`,`linear`,`inverse`,`option`  
-[symbol](/docs/zh-TW/v5/enum#symbol)| false| string| 合約名稱
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`
 
-  * 現貨/期貨**必傳**
-  * 期權選傳
+  * 當`category`不指定時, 默認是`linear`
 
   
-baseCoin| false| string| 交易幣種. 僅`option`, 若不傳, 則默認返回BTC數據  
-optionType| false| string| 期權類型. `Call` 或 `Put`. 僅`option`  
-limit| false| integer| 每頁數量限制.
-
-  * `spot`: [1,60], 默认: `60`.
-  * others: [1,1000], 默認: `500`
-
-  
+symbol| **true**|  string| 合約名稱  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `1000`]. 默認: `200`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> execId| string| 成交id  
-> symbol| string| 合約名稱  
-> price| string| 成交價格  
-> size| string| 成交數量  
-> side| string| 吃單方向. `Buy`, `Sell`  
-> time| string| 成交時間戳 (毫秒)  
-> isBlockTrade| boolean| 成交類型是否為大宗交易  
-> isRPITrade| boolean| 成交類型是否為RPI交易  
-> mP| string| 標記價格, 期權的特有字段  
-> iP| string| 指數價格, 期權的特有字段  
-> mIv| string| 標記iv, 期權的特有字段  
-> iv| string| iv, 期權的特有字段  
-> seq| string| 撮合版本號  
-[](/docs/zh-TW/api-explorer/v5/market/recent-trade)
+[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
+symbol| string| 合約名稱  
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
+  
+> list[0]| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]| string| 開始價格  
+> list[2]| string| 最高價格  
+> list[3]| string| 最低價格  
+> list[4]| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/premium-index-kline)
 
 * * *
 
@@ -219,24 +200,26 @@ list| array| Object
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/recent-trade?category=spot&symbol=BTCUSDT&limit=1 HTTP/1.1  
+    GET /v5/market/premium-index-price-kline?category=linear&symbol=BTCUSDT&interval=D&start=1652112000000&end=1652544000000 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_public_trade_history(  
-        category="spot",  
+    session = HTTP()  
+    print(session.get_premium_index_price_kline(  
+        category="linear",  
         symbol="BTCUSDT",  
-        limit=1,  
+        inverval="D",  
+        start=1652112000000,  
+        end=1652544000000,  
     ))  
     
     
@@ -247,8 +230,8 @@ list| array| Object
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetPublicRecentTrades(context.Background())  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetPremiumIndexPriceKline(context.Background())  
     
     
     
@@ -257,8 +240,8 @@ list| array| Object
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var recentTrade = MarketDataRequest.builder().category(CategoryType.OPTION).symbol("ETH-30JUN23-2050-C").build();  
-    client.getRecentTradeData(recentTrade, System.out::println);  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getPremiumIndexPriceLinesData(marketKLineRequest, System.out::println);  
     
     
     
@@ -269,10 +252,12 @@ list| array| Object
     });  
       
     client  
-        .getPublicTradingHistory({  
-            category: 'spot',  
+        .getPremiumIndexPriceKline({  
+            category: 'linear',  
             symbol: 'BTCUSDT',  
-            limit: 1,  
+            interval: 'D',  
+            start: 1652112000000,  
+            end: 1652544000000,  
         })  
         .then((response) => {  
             console.log(response);  
@@ -289,20 +274,25 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "category": "spot",  
+            "symbol": "BTCPERP",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "execId": "2100000000007764263",  
-                    "symbol": "BTCUSDT",  
-                    "price": "16618.49",  
-                    "size": "0.00012",  
-                    "side": "Buy",  
-                    "time": "1672052955758",  
-                    "isBlockTrade": false,  
-                    "isRPITrade": true  
-                }  
-            ]  
+                [  
+                    "1672026540000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000"  
+                ],  
+                [  
+                    "1672026480000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000",  
+                    "0.000000"  
+                ]  
+                ]  
         },  
         "retExtInfo": {},  
-        "time": 1672053054358  
+        "time": 1672026605042  
     }
