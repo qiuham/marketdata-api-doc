@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/repay-collateral
 api_type: REST
-updated_at: 2026-10-14 18:51:12.089046
+updated_at: 2026-10-15 18:50:29.406415
 ---
 
 # Get Repayment History

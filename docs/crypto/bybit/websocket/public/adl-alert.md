@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/adl-alert
 api_type: WebSocket
-updated_at: 2026-10-14 18:55:00.166312
+updated_at: 2026-10-15 18:53:35.305044
 ---
 
 # Full Orderbook

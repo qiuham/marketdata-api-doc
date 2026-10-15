@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-option-trades-by-instrument-family
 anchor_id: order-book-trading-market-data-get-option-trades-by-instrument-family
 api_type: API
-updated_at: 2026-10-14 19:25:02.179131
+updated_at: 2026-10-15 19:20:33.885760
 ---
 
 # GET / Option trades by instrument family

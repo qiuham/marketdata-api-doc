@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-create-signal-bot
 anchor_id: order-book-trading-signal-bot-trading-post-create-signal-bot
 api_type: API
-updated_at: 2026-10-14 19:24:39.646748
+updated_at: 2026-10-15 19:20:12.328099
 ---
 
 # POST / Create signal bot

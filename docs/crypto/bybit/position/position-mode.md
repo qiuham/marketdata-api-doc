@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/position-mode
 api_type: Position
-updated_at: 2026-10-14 18:52:10.812009
+updated_at: 2026-10-15 18:51:16.725025
 ---
 
 # Get Pre-upgrade Closed PnL

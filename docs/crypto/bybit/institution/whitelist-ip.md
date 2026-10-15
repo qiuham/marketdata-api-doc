@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/whitelist-ip
 api_type: REST
-updated_at: 2026-10-14 18:49:59.216152
+updated_at: 2026-10-15 18:49:30.186075
 ---
 
 # Get Institution Whitelist IP

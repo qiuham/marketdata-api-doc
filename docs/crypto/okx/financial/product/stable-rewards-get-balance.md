@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards-get-balance
 anchor_id: financial-product-stable-rewards-get-balance
 api_type: API
-updated_at: 2026-10-14 19:26:26.053002
+updated_at: 2026-10-15 19:21:53.075879
 ---
 
 # GET / Balance

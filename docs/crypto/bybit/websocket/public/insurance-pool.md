@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/insurance-pool
 api_type: WebSocket
-updated_at: 2026-10-14 18:55:06.096141
+updated_at: 2026-10-15 18:53:39.976084
 ---
 
 # RPI Orderbook

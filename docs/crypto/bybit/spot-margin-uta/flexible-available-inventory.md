@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/flexible-available-inventory
 api_type: REST
-updated_at: 2026-10-14 18:53:26.373117
+updated_at: 2026-10-15 18:52:18.289685
 ---
 
 # Get Auto Repay Mode

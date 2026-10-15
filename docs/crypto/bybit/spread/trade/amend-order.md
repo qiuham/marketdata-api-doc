@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/amend-order
 api_type: Trading
-updated_at: 2026-10-14 18:53:53.030434
+updated_at: 2026-10-15 18:52:40.083363
 ---
 
 # Get Max Qty
