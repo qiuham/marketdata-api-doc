@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/manage-investment-plan
 api_type: REST
-updated_at: 2026-10-15 18:48:53.798138
+updated_at: 2026-10-16 18:44:26.037529
 ---
 
 # Settle Fund Profit

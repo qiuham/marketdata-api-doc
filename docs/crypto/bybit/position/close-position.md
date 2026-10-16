@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-10-15 18:51:10.097100
+updated_at: 2026-10-16 18:46:39.266491
 ---
 
 # Add Or Reduce Margin

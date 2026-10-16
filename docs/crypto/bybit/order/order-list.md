@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/order-list
 api_type: Trading
-updated_at: 2026-10-15 18:50:51.401589
+updated_at: 2026-10-16 18:46:21.155583
 ---
 
 # Get Coin Delta Amount

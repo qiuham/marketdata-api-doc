@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/leverage
 api_type: Position
-updated_at: 2026-10-15 18:51:11.355189
+updated_at: 2026-10-16 18:46:40.525704
 ---
 
 # Add Or Reduce Margin

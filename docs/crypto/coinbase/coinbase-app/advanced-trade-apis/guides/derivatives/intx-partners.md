@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/intx-partners
 api_type: Guide
-updated_at: 2026-10-15 19:04:12.225452
+updated_at: 2026-10-16 18:59:22.852301
 ---
 
 # INTX Retail API Partners — Migration Guide

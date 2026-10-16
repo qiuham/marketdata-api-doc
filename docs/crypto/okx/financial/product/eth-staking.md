@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking
 anchor_id: financial-product-eth-staking
 api_type: API
-updated_at: 2026-10-15 19:21:47.777539
+updated_at: 2026-10-16 19:16:47.127251
 ---
 
 # ETH staking

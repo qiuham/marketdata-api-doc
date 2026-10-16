@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/fee-group-info
 api_type: Market Data
-updated_at: 2026-10-15 18:49:35.292838
+updated_at: 2026-10-16 18:45:06.621919
 ---
 
 # Get Funding Rate History

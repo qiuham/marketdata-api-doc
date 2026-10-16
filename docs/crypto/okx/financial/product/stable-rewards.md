@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-stable-rewards
 anchor_id: financial-product-stable-rewards
 api_type: API
-updated_at: 2026-10-15 19:21:52.452399
+updated_at: 2026-10-16 19:16:51.806912
 ---
 
 # Stable Rewards

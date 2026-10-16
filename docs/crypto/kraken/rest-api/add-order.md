@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/rest-api/add-order
 api_type: REST
-updated_at: 2026-10-15 19:18:55.812975
+updated_at: 2026-10-16 19:13:53.866463
 ---
 
 # Add Order

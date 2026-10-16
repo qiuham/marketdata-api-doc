@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/apr-history
 api_type: REST
-updated_at: 2026-10-15 18:48:25.008334
+updated_at: 2026-10-16 18:43:57.747433
 ---
 
 # Get Coupon List

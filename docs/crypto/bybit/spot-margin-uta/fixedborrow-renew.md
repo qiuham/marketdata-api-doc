@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-10-15 18:52:17.670387
+updated_at: 2026-10-16 18:47:44.771438
 ---
 
 # Get Auto Repay Mode

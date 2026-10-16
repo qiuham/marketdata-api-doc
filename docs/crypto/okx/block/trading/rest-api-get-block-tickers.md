@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-block-tickers
 anchor_id: block-trading-rest-api-get-block-tickers
 api_type: REST
-updated_at: 2026-10-15 19:20:47.062305
+updated_at: 2026-10-16 19:15:46.194260
 ---
 
 # Get block tickers

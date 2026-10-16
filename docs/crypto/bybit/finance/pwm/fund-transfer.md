@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/fund-transfer
 api_type: REST
-updated_at: 2026-10-15 18:48:59.716178
+updated_at: 2026-10-16 18:44:31.808719
 ---
 
 # Get Asset Trend

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-10-15 18:52:05.866187
+updated_at: 2026-10-16 18:47:33.155062
 ---
 
 # Self Match Prevention
