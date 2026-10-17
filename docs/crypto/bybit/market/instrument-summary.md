@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/instrument-summary
 api_type: Market Data
-updated_at: 2026-10-16 18:45:13.186534
+updated_at: 2026-10-17 18:41:46.679401
 ---
 
 # Get Insurance Pool

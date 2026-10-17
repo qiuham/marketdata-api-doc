@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-delta-hedge-currencies
 anchor_id: public-data-rest-api-get-delta-hedge-currencies
 api_type: REST
-updated_at: 2026-10-16 19:16:15.604175
+updated_at: 2026-10-17 19:12:31.653852
 ---
 
 # Get Delta hedge currencies

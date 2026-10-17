@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-swap
 anchor_id: error-code-rest-api-swap
 api_type: REST
-updated_at: 2026-10-16 19:17:10.976937
+updated_at: 2026-10-17 19:13:27.050093
 ---
 
 # Swap

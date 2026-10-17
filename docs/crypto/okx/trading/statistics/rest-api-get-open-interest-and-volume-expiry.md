@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-open-interest-and-volume-expiry
 anchor_id: trading-statistics-rest-api-get-open-interest-and-volume-expiry
 api_type: REST
-updated_at: 2026-10-16 19:16:25.283471
+updated_at: 2026-10-17 19:12:41.342395
 ---
 
 # Get open interest and volume (expiry)

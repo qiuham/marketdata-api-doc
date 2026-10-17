@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-deposit-address
 anchor_id: funding-account-rest-api-get-deposit-address
 api_type: REST
-updated_at: 2026-10-16 19:16:29.776209
+updated_at: 2026-10-17 19:12:45.839106
 ---
 
 # Get deposit address

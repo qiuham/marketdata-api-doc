@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-grid-trading-get-rsi-back-testing-public
 anchor_id: order-book-trading-grid-trading-get-rsi-back-testing-public
 api_type: API
-updated_at: 2026-10-16 19:15:03.658307
+updated_at: 2026-10-17 19:11:19.605787
 ---
 
 # GET / RSI back testing (public)

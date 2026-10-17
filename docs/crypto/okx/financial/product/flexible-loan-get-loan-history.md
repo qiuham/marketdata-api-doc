@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-loan-history
 anchor_id: financial-product-flexible-loan-get-loan-history
 api_type: API
-updated_at: 2026-10-16 19:17:00.917187
+updated_at: 2026-10-17 19:13:16.994730
 ---
 
 # GET / Loan history

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-margin-long-short-ratio
 anchor_id: trading-statistics-rest-api-get-margin-long-short-ratio
 api_type: REST
-updated_at: 2026-10-16 19:16:22.795562
+updated_at: 2026-10-17 19:12:38.850027
 ---
 
 # Get margin long/short ratio

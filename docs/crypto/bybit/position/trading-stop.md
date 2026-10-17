@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/trading-stop
 api_type: Position
-updated_at: 2026-10-16 18:46:46.301215
+updated_at: 2026-10-17 18:43:19.058863
 ---
 
 # Get Pre-upgrade Closed PnL

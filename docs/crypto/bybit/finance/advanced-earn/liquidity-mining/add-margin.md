@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/add-margin
 api_type: REST
-updated_at: 2026-10-16 18:43:28.362493
+updated_at: 2026-10-17 18:40:02.446003
 ---
 
 # Get Liquidation Records

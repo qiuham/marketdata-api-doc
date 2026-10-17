@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data
 anchor_id: public-data
 api_type: API
-updated_at: 2026-10-16 19:16:04.477292
+updated_at: 2026-10-17 19:12:20.506059
 ---
 
 # Public Data
