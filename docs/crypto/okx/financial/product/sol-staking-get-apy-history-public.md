@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-sol-staking-get-apy-history-public
 anchor_id: financial-product-sol-staking-get-apy-history-public
 api_type: API
-updated_at: 2026-10-17 19:13:07.560783
+updated_at: 2026-10-18 19:14:49.873567
 ---
 
 # GET / APY history (Public)

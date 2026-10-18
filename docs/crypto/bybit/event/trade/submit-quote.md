@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/submit-quote
 api_type: Trading
-updated_at: 2026-10-17 18:39:34.314217
+updated_at: 2026-10-18 18:40:16.417886
 ---
 
 # Execution

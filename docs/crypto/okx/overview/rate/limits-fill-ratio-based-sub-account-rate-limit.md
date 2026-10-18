@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rate-limits-fill-ratio-based-sub-account-rate-limit
 anchor_id: overview-rate-limits-fill-ratio-based-sub-account-rate-limit
 api_type: API
-updated_at: 2026-10-17 19:10:33.282034
+updated_at: 2026-10-18 19:12:18.621782
 ---
 
 # Fill ratio based sub-account rate limit

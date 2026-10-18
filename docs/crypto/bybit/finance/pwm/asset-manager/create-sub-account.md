@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-sub-account
 api_type: REST
-updated_at: 2026-10-17 18:40:58.650567
+updated_at: 2026-10-18 18:41:45.068794
 ---
 
 # Settle Fund Profit

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-10-17 18:40:49.782653
+updated_at: 2026-10-18 18:41:35.516245
 ---
 
 # Get Airdrop Products
