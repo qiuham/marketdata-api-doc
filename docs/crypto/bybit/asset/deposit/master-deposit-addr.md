@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/master-deposit-addr
 api_type: REST
-updated_at: 2026-10-18 18:38:26.823471
+updated_at: 2026-10-19 18:46:55.664642
 ---
 
 # Get Sub Deposit Address

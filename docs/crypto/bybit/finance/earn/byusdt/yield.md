@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/yield
 api_type: REST
-updated_at: 2026-10-18 18:41:16.142511
+updated_at: 2026-10-19 18:49:53.434832
 ---
 
 # Get Coupon List

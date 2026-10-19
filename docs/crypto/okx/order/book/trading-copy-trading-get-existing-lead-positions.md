@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-existing-lead-positions
 anchor_id: order-book-trading-copy-trading-get-existing-lead-positions
 api_type: API
-updated_at: 2026-10-18 19:13:21.013122
+updated_at: 2026-10-19 19:23:18.586466
 ---
 
 # GET / Existing lead positions

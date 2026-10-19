@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-futures-balance-summary
 api_type: REST
-updated_at: 2026-10-18 18:57:20.309779
+updated_at: 2026-10-19 19:06:41.172964
 ---
 
 # Get US Derivatives Balance Summary
