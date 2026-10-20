@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/move-position
 api_type: Position
-updated_at: 2026-10-19 18:52:57.501222
+updated_at: 2026-10-20 18:47:44.097720
 ---
 
 # Get Pre-upgrade Closed PnL

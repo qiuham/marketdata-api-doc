@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-eth-staking-post-redeem
 anchor_id: financial-product-eth-staking-post-redeem
 api_type: API
-updated_at: 2026-10-19 19:24:45.538546
+updated_at: 2026-10-20 19:17:37.900316
 ---
 
 # POST / Redeem

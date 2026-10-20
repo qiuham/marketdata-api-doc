@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-pnl
 api_type: Position
-updated_at: 2026-10-19 18:52:51.185418
+updated_at: 2026-10-20 18:47:37.788201
 ---
 
 # Add Or Reduce Margin

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/trade/order-entry
 api_type: Trading
-updated_at: 2026-10-19 18:53:51.518308
+updated_at: 2026-10-20 18:48:33.248084
 ---
 
 # Self Match Prevention

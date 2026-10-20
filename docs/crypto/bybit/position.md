@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position
 api_type: REST
-updated_at: 2026-10-19 18:52:46.081589
+updated_at: 2026-10-20 18:47:33.302573
 ---
 
 # Get Futures Leverage

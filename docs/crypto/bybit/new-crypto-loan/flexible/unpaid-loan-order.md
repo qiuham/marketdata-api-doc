@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/unpaid-loan-order
 api_type: REST
-updated_at: 2026-10-19 18:52:13.246896
+updated_at: 2026-10-20 18:47:02.979046
 ---
 
 # Get Max. Allowed Collateral Reduction Amount

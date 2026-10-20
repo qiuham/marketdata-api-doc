@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/list-perpetuals-positions
 api_type: REST
-updated_at: 2026-10-19 19:06:42.223805
+updated_at: 2026-10-20 19:00:17.770533
 ---
 
 # List Perpetuals Positions

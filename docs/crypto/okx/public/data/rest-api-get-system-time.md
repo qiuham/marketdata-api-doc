@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-system-time
 anchor_id: public-data-rest-api-get-system-time
 api_type: REST
-updated_at: 2026-10-19 19:24:07.043860
+updated_at: 2026-10-20 19:16:59.510714
 ---
 
 # Get system time

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-amend-multiple-orders
 anchor_id: order-book-trading-trade-post-amend-multiple-orders
 api_type: API
-updated_at: 2026-10-19 19:22:41.892663
+updated_at: 2026-10-20 19:15:34.755487
 ---
 
 # POST / Amend multiple orders

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-post-redeem
 anchor_id: financial-product-dual-investment-post-redeem
 api_type: API
-updated_at: 2026-10-19 19:25:00.934569
+updated_at: 2026-10-20 19:17:53.265930
 ---
 
 # POST / Redeem

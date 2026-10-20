@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-place-order
 anchor_id: spread-trading-rest-api-place-order
 api_type: REST
-updated_at: 2026-10-19 19:23:52.320822
+updated_at: 2026-10-20 19:16:44.827321
 ---
 
 # Place order

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-borrow-interest-and-limit
 anchor_id: trading-account-rest-api-get-borrow-interest-and-limit
 api_type: REST
-updated_at: 2026-10-19 19:22:25.589437
+updated_at: 2026-10-20 19:15:18.615694
 ---
 
 # Get borrow interest and limit

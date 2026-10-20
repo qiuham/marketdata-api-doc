@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/cancel-quote
 api_type: Trading
-updated_at: 2026-10-19 18:48:43.692067
+updated_at: 2026-10-20 18:43:55.193023
 ---
 
 # Get Event Contract Active Orders
