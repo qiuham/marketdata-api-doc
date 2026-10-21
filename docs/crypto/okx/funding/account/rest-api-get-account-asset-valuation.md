@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-account-asset-valuation
 anchor_id: funding-account-rest-api-get-account-asset-valuation
 api_type: REST
-updated_at: 2026-10-20 19:17:18.091897
+updated_at: 2026-10-21 19:20:16.510161
 ---
 
 # Get account asset valuation

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/ws/connect
 api_type: REST
-updated_at: 2026-10-20 18:50:11.822450
+updated_at: 2026-10-21 18:51:32.379116
 ---
 
 # Connect
@@ -15,7 +15,8 @@ USDT, USDC perpetual & USDT Futures: `wss://stream.bybit.com/v5/public/linear`
 Inverse contract: `wss://stream.bybit.com/v5/public/inverse`  
 Spread trading: `wss://stream.bybit.com/v5/public/spread`  
 RFQ: `wss://stream.bybit.com/v5/public/rfq`  
-USDT/USDC Options: `wss://stream.bybit.com/v5/public/option`
+USDT/USDC Options: `wss://stream.bybit.com/v5/public/option`  
+Event Trading: `wss://stream.bybit.com/v5/public/event`
 
   * **Testnet:**  
 Spot: `wss://stream-testnet.bybit.com/v5/public/spot`  
@@ -23,10 +24,13 @@ USDT,USDC perpetual & USDT Futures: `wss://stream-testnet.bybit.com/v5/public/li
 Inverse contract: `wss://stream-testnet.bybit.com/v5/public/inverse`  
 Spread trading: `wss://stream-testnet.bybit.com/v5/public/spread`  
 RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`  
-USDT/USDC Options: `wss://stream-testnet.bybit.com/v5/public/option`
+USDT/USDC Options: `wss://stream-testnet.bybit.com/v5/public/option`  
+Event Trading: `wss://stream-testnet.bybit.com/v5/public/event`
 
 
 
+
+**Event Trading remarks:** Currently only available to market makers (MM). Public access may be considered in the future.
 
 **[WebSocket private stream](/docs/v5/websocket/private/order):**
 
@@ -351,7 +355,8 @@ USDT, USDC永續 & USDC交割: `wss://stream.bybit.com/v5/public/linear`
 反向合約: `wss://stream.bybit.com/v5/public/inverse`  
 期權: `wss://stream.bybit.com/v5/public/option`  
 RFQ: `wss://stream.bybit.com/v5/public/rfq`  
-價差交易: `wss://stream.bybit.com/v5/public/spread`
+價差交易: `wss://stream.bybit.com/v5/public/spread`  
+事件合約: `wss://stream.bybit.com/v5/public/event`
 
   * **測試網:**  
 現貨: `wss://stream-testnet.bybit.com/v5/public/spot`  
@@ -359,10 +364,13 @@ USDT和USDC永續: `wss://stream-testnet.bybit.com/v5/public/linear`
 反向合約: `wss://stream-testnet.bybit.com/v5/public/inverse`  
 期權: `wss://stream-testnet.bybit.com/v5/public/option`  
 RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`  
-價差交易: `wss://stream-testnet.bybit.com/v5/public/spread`
+價差交易: `wss://stream-testnet.bybit.com/v5/public/spread`  
+事件合約: `wss://stream-testnet.bybit.com/v5/public/event`
 
 
 
+
+**事件合約備註：** 目前僅對做市商（MM）開放，未來可能考慮向公眾開放。
 
 **[WebSocket私有頻道](/docs/zh-TW/v5/websocket/private/order):**
 

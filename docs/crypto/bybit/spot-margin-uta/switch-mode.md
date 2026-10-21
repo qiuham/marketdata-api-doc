@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode
 api_type: REST
-updated_at: 2026-10-20 18:48:56.070696
+updated_at: 2026-10-21 18:50:08.492890
 ---
 
 # Get Tiered Collateral Ratio

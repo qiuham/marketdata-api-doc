@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/dcp
 api_type: Trading
-updated_at: 2026-10-20 18:47:15.908554
+updated_at: 2026-10-21 18:48:19.305886
 ---
 
 # Get Open & Closed Orders

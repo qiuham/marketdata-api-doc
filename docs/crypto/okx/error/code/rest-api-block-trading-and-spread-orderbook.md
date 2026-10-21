@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-block-trading-and-spread-orderbook
 anchor_id: error-code-rest-api-block-trading-and-spread-orderbook
 api_type: REST
-updated_at: 2026-10-20 19:18:02.123294
+updated_at: 2026-10-21 19:21:00.534547
 ---
 
 # Block Trading and Spread Orderbook

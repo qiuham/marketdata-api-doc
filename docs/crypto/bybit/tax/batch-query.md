@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/batch-query
 api_type: REST
-updated_at: 2026-10-20 18:49:25.545767
+updated_at: 2026-10-21 18:50:41.055584
 ---
 
 # Get Batch Export Report Status

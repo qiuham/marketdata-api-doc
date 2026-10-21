@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-leverage-estimated-info
 anchor_id: trading-account-rest-api-get-leverage-estimated-info
 api_type: REST
-updated_at: 2026-10-20 19:15:15.498053
+updated_at: 2026-10-21 19:18:13.675558
 ---
 
 # Get leverage estimated info

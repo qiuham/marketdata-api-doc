@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/repay-info
 api_type: REST
-updated_at: 2026-10-20 18:47:32.682224
+updated_at: 2026-10-21 18:48:38.073864
 ---
 
 # Get Futures Leverage

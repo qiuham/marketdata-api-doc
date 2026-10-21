@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/websocket/private/inquiry
 api_type: WebSocket
-updated_at: 2026-10-20 18:48:21.063417
+updated_at: 2026-10-21 18:49:30.573999
 ---
 
 # RFQ
