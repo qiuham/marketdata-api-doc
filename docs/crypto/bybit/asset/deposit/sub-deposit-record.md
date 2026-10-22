@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/sub-deposit-record
 api_type: REST
-updated_at: 2026-10-21 18:42:49.297475
+updated_at: 2026-10-22 18:42:37.778214
 ---
 
 # Confirm a Quote

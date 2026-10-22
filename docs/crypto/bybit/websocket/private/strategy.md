@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/private/strategy
 api_type: WebSocket
-updated_at: 2026-10-21 18:51:16.968983
+updated_at: 2026-10-22 18:50:53.413544
 ---
 
 # Full Orderbook

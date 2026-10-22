@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/coinstate
 api_type: REST
-updated_at: 2026-10-21 18:49:48.037635
+updated_at: 2026-10-22 18:49:24.336587
 ---
 
 # Get Fixed-Rate Borrow Contract Info

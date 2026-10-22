@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-easy-convert-currency-list
 anchor_id: order-book-trading-trade-get-easy-convert-currency-list
 api_type: API
-updated_at: 2026-10-21 19:18:35.693288
+updated_at: 2026-10-22 19:17:29.089280
 ---
 
 # GET / Easy convert currency list

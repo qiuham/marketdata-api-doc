@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/stop-strategy
 api_type: REST
-updated_at: 2026-10-21 18:50:38.562523
+updated_at: 2026-10-22 18:50:16.387328
 ---
 
 # Get Batch Export Report Status

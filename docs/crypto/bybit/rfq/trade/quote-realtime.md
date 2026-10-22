@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/quote-realtime
 api_type: Trading
-updated_at: 2026-10-21 18:49:23.579420
+updated_at: 2026-10-22 18:49:00.009647
 ---
 
 # Get RFQ Configuration

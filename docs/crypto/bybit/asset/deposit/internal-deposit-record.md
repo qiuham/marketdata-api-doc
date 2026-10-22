@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/internal-deposit-record
 api_type: REST
-updated_at: 2026-10-21 18:42:43.669361
+updated_at: 2026-10-22 18:42:32.415605
 ---
 
 # Get Sub Deposit Address

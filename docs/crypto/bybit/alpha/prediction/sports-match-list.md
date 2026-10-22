@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sports-match-list
 api_type: REST
-updated_at: 2026-10-21 18:42:05.231913
+updated_at: 2026-10-22 18:41:54.745822
 ---
 
 # Get Asset List

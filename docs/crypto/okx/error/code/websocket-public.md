@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-websocket-public
 anchor_id: error-code-websocket-public
 api_type: WebSocket
-updated_at: 2026-10-21 19:21:01.776340
+updated_at: 2026-10-22 19:19:55.309547
 ---
 
 # Public
