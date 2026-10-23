@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/create-order
 api_type: Trading
-updated_at: 2026-10-22 18:47:57.570102
+updated_at: 2026-10-23 18:49:02.490778
 ---
 
 # Get Open & Closed Orders

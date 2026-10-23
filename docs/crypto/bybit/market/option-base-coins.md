@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/option-base-coins
 api_type: Market Data
-updated_at: 2026-10-22 18:47:02.059839
+updated_at: 2026-10-23 18:48:05.458498
 ---
 
 # Get Premium Index Price Kline

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/invest-more
 api_type: REST
-updated_at: 2026-10-22 18:46:09.741623
+updated_at: 2026-10-23 18:47:15.326341
 ---
 
 # Get Pending Investment Plan Detail

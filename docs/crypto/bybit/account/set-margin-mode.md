@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
 api_type: Account
-updated_at: 2026-10-22 18:41:11.519937
+updated_at: 2026-10-23 18:42:08.305504
 ---
 
 # Get SMP Group ID

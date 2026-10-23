@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/cancel-order
 api_type: Trading
-updated_at: 2026-10-22 19:01:52.298158
+updated_at: 2026-10-23 19:03:32.042036
 ---
 
 # Cancel Orders
@@ -196,6 +196,7 @@ Example:
     
     
     ["0000-00000", "1111-11111"]
+    
 
 #### Response
 

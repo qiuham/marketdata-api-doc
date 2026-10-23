@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-websocket-account-greeks-channel
 anchor_id: trading-account-websocket-account-greeks-channel
 api_type: WebSocket
-updated_at: 2026-10-22 19:17:22.323684
+updated_at: 2026-10-23 19:19:29.102293
 ---
 
 # Account greeks channel

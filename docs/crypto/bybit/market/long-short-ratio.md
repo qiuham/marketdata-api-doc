@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/long-short-ratio
 api_type: Market Data
-updated_at: 2026-10-22 18:46:56.569361
+updated_at: 2026-10-23 18:47:59.160961
 ---
 
 # Get New Delivery Price

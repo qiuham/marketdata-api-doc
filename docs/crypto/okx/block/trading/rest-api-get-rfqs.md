@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-rfqs
 anchor_id: block-trading-rest-api-get-rfqs
 api_type: REST
-updated_at: 2026-10-22 19:18:26.973423
+updated_at: 2026-10-23 19:20:33.908134
 ---
 
 # Get rfqs

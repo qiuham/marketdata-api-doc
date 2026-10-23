@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-post-add-investment
 anchor_id: order-book-trading-recurring-buy-post-add-investment
 api_type: API
-updated_at: 2026-10-22 19:18:01.291979
+updated_at: 2026-10-23 19:20:08.135002
 ---
 
 # POST / Add investment
