@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/price-history
 api_type: REST
-updated_at: 2026-10-23 18:42:47.116121
+updated_at: 2026-10-24 18:38:33.877394
 ---
 
 # Get Sports Group Stage Detail

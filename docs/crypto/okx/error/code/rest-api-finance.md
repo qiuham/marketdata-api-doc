@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code-rest-api-finance
 anchor_id: error-code-rest-api-finance
 api_type: REST
-updated_at: 2026-10-23 19:21:58.834666
+updated_at: 2026-10-24 19:14:54.756521
 ---
 
 # Finance

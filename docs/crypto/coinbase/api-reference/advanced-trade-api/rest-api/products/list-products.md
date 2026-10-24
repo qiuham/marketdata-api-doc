@@ -2,15 +2,18 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/list-products
 api_type: Market Data
-updated_at: 2026-10-23 19:03:33.187738
+updated_at: 2026-10-24 18:57:19.149873
 ---
 
 # List Products
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/products`
 
-
-Get a list of the available currency pairs for trading.
+Products
+    
+    # List Products
+    
+    Get a list of the available currency pairs for trading.
     
     
     curl --request GET \

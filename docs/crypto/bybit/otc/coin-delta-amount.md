@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/coin-delta-amount
 api_type: REST
-updated_at: 2026-10-23 18:49:10.768151
+updated_at: 2026-10-24 18:44:21.661721
 ---
 
 # Get Coin Delta Amount

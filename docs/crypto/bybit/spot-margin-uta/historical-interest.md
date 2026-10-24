@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
 api_type: REST
-updated_at: 2026-10-23 18:50:50.305447
+updated_at: 2026-10-24 18:45:47.475285
 ---
 
 # Get Available Amount to Repay

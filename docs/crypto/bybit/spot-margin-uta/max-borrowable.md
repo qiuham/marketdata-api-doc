@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/max-borrowable
 api_type: REST
-updated_at: 2026-10-23 18:50:51.541609
+updated_at: 2026-10-24 18:45:48.712166
 ---
 
 # Get Available Amount to Repay

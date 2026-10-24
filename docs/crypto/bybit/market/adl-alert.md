@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/adl-alert
 api_type: Market Data
-updated_at: 2026-10-23 18:47:45.340024
+updated_at: 2026-10-24 18:43:03.286326
 ---
 
 # Get Funding Rate History

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-copy-trading-get-my-lead-traders
 anchor_id: order-book-trading-copy-trading-get-my-lead-traders
 api_type: API
-updated_at: 2026-10-23 19:20:14.801419
+updated_at: 2026-10-24 19:13:10.689022
 ---
 
 # GET / My lead traders

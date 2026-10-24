@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-mmp-config
 anchor_id: block-trading-rest-api-get-mmp-config
 api_type: REST
-updated_at: 2026-10-23 19:20:32.008080
+updated_at: 2026-10-24 19:13:27.896677
 ---
 
 # Get MMP Config

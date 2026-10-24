@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade
 api_type: Trading
-updated_at: 2026-10-23 19:03:31.522871
+updated_at: 2026-10-24 18:57:17.674193
 ---
 
 # Get Convert Trade
