@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api
 anchor_id: sub-account-rest-api
 api_type: REST
-updated_at: 2026-10-24 19:14:24.332001
+updated_at: 2026-10-25 19:15:49.082040
 ---
 
 # REST API

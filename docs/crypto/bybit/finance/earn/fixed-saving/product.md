@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/product
 api_type: REST
-updated_at: 2026-10-24 18:42:11.071714
+updated_at: 2026-10-25 18:42:54.399055
 ---
 
 # Get Airdrop Products

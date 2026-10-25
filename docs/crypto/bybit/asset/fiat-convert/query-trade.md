@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/query-trade
 api_type: REST
-updated_at: 2026-10-24 18:39:25.170174
+updated_at: 2026-10-25 18:40:01.806976
 ---
 
 # Get Reference Price

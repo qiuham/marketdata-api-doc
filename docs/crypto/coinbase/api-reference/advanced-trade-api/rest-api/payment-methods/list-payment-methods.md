@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/list-payment-methods
 api_type: REST
-updated_at: 2026-10-24 18:57:18.594980
+updated_at: 2026-10-25 18:58:27.891349
 ---
 
 # List Payment Methods
@@ -109,7 +109,149 @@ Get a list of payment methods for the current user.
     request["Authorization"] = 'Bearer <token>'
     
     response = http.request(request)
+    puts response.read_bodyPayment Methods
+
+# List Payment Methods
+
+Get a list of payment methods for the current user.
+
+GET
+
+/
+
+api
+
+/
+
+v3
+
+/
+
+brokerage
+
+/
+
+payment_methods
+
+List Payment Methods
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/payment_methods \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/payment_methods"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/payment_methods', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/payment_methods",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/payment_methods"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/payment_methods")
+      .header("Authorization", "Bearer <token>")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/payment_methods")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
     puts response.read_body
+    
+    
+    {
+      "payment_methods": [
+        {
+          "id": "8bfc20d7-f7c6-4422-bf07-8243ca4169fe",
+          "type": "ACH",
+          "name": "ALLY BANK ******1234",
+          "currency": "USD",
+          "verified": true,
+          "allow_buy": true,
+          "allow_sell": true,
+          "allow_deposit": true,
+          "allow_withdraw": true,
+          "created_at": "2021-05-31T09:59:59Z",
+          "updated_at": "2021-05-31T09:59:59Z"
+        }
+      ]
+    }
     
     
     {
