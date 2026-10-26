@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/loan-info
 api_type: REST
-updated_at: 2026-10-25 18:45:13.062335
+updated_at: 2026-10-26 18:58:31.601330
 ---
 
 # Get Product Info

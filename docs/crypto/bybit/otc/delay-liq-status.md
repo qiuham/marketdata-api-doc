@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/delay-liq-status
 api_type: REST
-updated_at: 2026-10-25 18:45:12.433139
+updated_at: 2026-10-26 18:58:30.979574
 ---
 
 # Get Product Info

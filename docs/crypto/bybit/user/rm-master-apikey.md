@@ -2,40 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-master-apikey
 api_type: REST
-updated_at: 2026-10-25 18:47:32.439725
+updated_at: 2026-10-26 19:01:24.392684
 ---
 
-# Delete Sub API Key
+# Delete Sub UID
 
-Delete the api key of sub account. Use the sub api key pending to be delete to call the endpoint or use the master api key to delete corresponding sub account api key
+Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
+Use **master** user's api key**.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint.
+The API key must have one of the below permissions in order to call this endpoint
 
-  * sub API key: "Account Transfer", "Sub Member Transfer"
-  * master API Key: "Account Transfer", "Sub Member Transfer", "Withdrawal"
-
+  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
 
-danger
-
-BE CAREFUL! The Sub account API key will be invalid immediately after calling the endpoint.
 
 ### HTTP Request
 
-POST`/v5/user/delete-sub-api`
+POST`/v5/user/del-submember`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-apikey| false| string| Sub account api key 
-
-  * You must pass this param when you use master account manage sub account api key settings
-  * If you use corresponding sub uid api key call this endpoint, `apikey` param cannot be passed, otherwise throwing an error
-
-  
+subMemberId| **true**|  string| Sub UID  
   
 ### Response Parameters
 
@@ -50,16 +41,17 @@ None
 
     
     
-    POST /v5/user/delete-sub-api HTTP/1.1  
+    POST /v5/user/del-submember HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431922953  
+    X-BAPI-TIMESTAMP: 1698907012755  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
     Content-Type: application/json  
+    Content-Length: 34  
       
     {  
-      
+        "subMemberId": "112725187"  
     }  
     
     
@@ -70,7 +62,9 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.delete_sub_api_key())  
+    print(session.delete_sub_uid(  
+        subMemberId="112725187"  
+    ))  
     
     
     
@@ -83,7 +77,9 @@ None
     });  
       
     client  
-      .deleteSubApiKey()  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -97,45 +93,38 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1676431924719  
+        "time": 1698907012962  
     }
 
 ---
 
-# 刪除子帳戶下的API Key
+# 刪除子帳戶
 
-刪除子帳戶下的api key。使用待刪除的子帳戶api key調用接口或者使用母帳戶調用刪除指定api key
+刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
+
+  
+僅可使用**母**帳戶api key調用.
 
 提示
 
 在調用接口時，使用的API key至少需要擁有以下其中一種權限
 
-  * 子API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）"
   * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 
 
 
-危險
-
-當心! 用於調用本接口後, 對應的子帳戶api key會立馬失效。
-
 ### HTTP 請求
 
-POST`/v5/user/delete-sub-api`
+POST`/v5/user/del-submember`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-apikey| false| string| 子帳戶的api key 
-
-  * 當您要使用母帳戶來管理子帳戶的key時, 該字段必傳
-  * 如果您是用對應的子帳戶api key修改本身, 該字段請不要傳入, 否則報錯
-
-  
+subMemberId| **true**|  string| Sub UID  
   
 ### 返回參數
 
@@ -150,27 +139,22 @@ apikey| false| string| 子帳戶的api key
 
     
     
-    POST /v5/user/delete-sub-api HTTP/1.1  
+    POST /v5/user/del-submember HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676431922953  
+    X-BAPI-TIMESTAMP: 1698907012755  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXXX  
     Content-Type: application/json  
+    Content-Length: 34  
       
     {  
-      
+        "subMemberId": "112725187"  
     }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.delete_sub_api_key())  
+      
     
     
     
@@ -183,7 +167,9 @@ apikey| false| string| 子帳戶的api key
     });  
       
     client  
-      .deleteSubApiKey()  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -197,8 +183,8 @@ apikey| false| string| 子帳戶的api key
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1676431924719  
+        "time": 1698907012962  
     }

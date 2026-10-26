@@ -2,59 +2,189 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-subuid
 api_type: REST
-updated_at: 2026-10-25 18:47:36.525833
+updated_at: 2026-10-26 19:01:25.628633
 ---
 
-# Dcp
+# Delete Sub UID
 
-Subscribe to the dcp stream to trigger DCP function.
+Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
+Use **master** user's api key**.
 
-For example, connection A subscribes "dcp.xxx", connection B does not and connection C subscribes "dcp.xxx".
+tip
 
-  1. If A is alive, B is dead, C is alive, then this case will not trigger DCP.
-  2. If A is alive, B is dead, C is dead, then this case will not trigger DCP.
-  3. If A is dead, B is alive, C is dead, then DCP is triggered when reach the timeWindow threshold
+The API key must have one of the below permissions in order to call this endpoint
+
+  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
 
 
-To sum up, for those private connections subscribing "dcp" topic are all dead, then DCP will be triggered.
+### HTTP Request
 
-**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+POST`/v5/user/del-submember`
 
-### Subscribe Example
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+subMemberId| **true**|  string| Sub UID  
+  
+### Response Parameters
+
+None
+
+### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    POST /v5/user/del-submember HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXXX  
+    Content-Type: application/json  
+    Content-Length: 34  
+      
+    {  
+        "subMemberId": "112725187"  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.delete_sub_uid(  
+        subMemberId="112725187"  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
+
+### Response Example
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "dcp.future"  
-        ]  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1698907012962  
     }
 
 ---
 
-# 斷線保護
+# 刪除子帳戶
 
-通過訂閱DCP流來觸發功能
+刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
 
-**舉例:** 私有連接A訂閱了"dcp.xxx", 私有連接B沒有訂閱"dcp.xxx", 私有連接C訂閱了"dcp.xxx".
+  
+僅可使用**母**帳戶api key調用.
 
-  1. 如果連接A在線, 連接B斷線, 連接C在線, 那麼這種情況下不會觸發DCP功能.
-  2. 如果連接A在線, 連接B斷線, 連接C斷線, 那麼這種情況下不會觸發DCP功能.
-  3. 如果連接A斷線, 連接B在線, 連接C斷線, 那麼這種情況下就會當達到時間窗口的閾值後觸發斷線保護機制.
+提示
+
+在調用接口時，使用的API key至少需要擁有以下其中一種權限
+
+  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 
 
 
-綜上, 只有當所有訂閱了"dcp.xxx"的私有連接斷線後, 斷線保護機制才會被觸發.
+### HTTP 請求
 
-**Topic:** `dcp.future`, `dcp.spot`, `dcp.option`
+POST`/v5/user/del-submember`
 
-### 訂閱示例
+### 請求參數
+
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+subMemberId| **true**|  string| Sub UID  
+  
+### 返回參數
+
+無
+
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
+    
+    
+    POST /v5/user/del-submember HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXXX  
+    Content-Type: application/json  
+    Content-Length: 34  
+      
+    {  
+        "subMemberId": "112725187"  
+    }  
+    
+    
+    
+      
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .deleteSubMember({  
+        subMemberId: 'subUID',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
+
+### 響應示例
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "dcp.future"  
-        ]  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1698907012962  
     }

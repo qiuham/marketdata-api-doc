@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-long-short-ratio
 anchor_id: trading-statistics-rest-api-get-long-short-ratio
 api_type: REST
-updated_at: 2026-10-25 19:15:33.499905
+updated_at: 2026-10-26 19:32:03.254834
 ---
 
 # Get long/short ratio

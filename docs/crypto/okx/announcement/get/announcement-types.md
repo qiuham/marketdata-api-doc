@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#announcement-get-announcement-types
 anchor_id: announcement-get-announcement-types
 api_type: API
-updated_at: 2026-10-25 19:16:17.884398
+updated_at: 2026-10-26 19:32:47.049320
 ---
 
 # GET / Announcement types

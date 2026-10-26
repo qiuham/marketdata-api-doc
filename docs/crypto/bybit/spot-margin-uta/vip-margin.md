@@ -2,54 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
 api_type: REST
-updated_at: 2026-10-25 18:46:48.722247
+updated_at: 2026-10-26 19:00:25.614002
 ---
 
-# Get Tickers
+# Get VIP Margin Data
 
-Query for the latest price snapshot, best bid/ask price, and trading volume of different spread combinations in the last 24 hours.
+This margin data is for **Unified account** in particular.
 
 info
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Does not need authentication.
 
 ### HTTP Request
 
-GET`/v5/spread/tickers`
+GET`/v5/spot-margin-trade/data`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Spread combination symbol name  
+[vipLevel](/docs/v5/enum#viplevel)| false| string| VIP level  
+currency| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Ticker info  
-> symbol| string| Spread combination symbol name  
-> bidPrice| string| Bid 1 price  
-> bidSize| string| Bid 1 size  
-> askPrice| string| Ask 1 price  
-> askSize| string| Ask 1 size  
-> lastPrice| string| Last trade price  
-> highPrice24h| string| The highest price in the last 24 hours  
-> lowPrice24h| string| The lowest price in the last 24 hours  
-> prevPrice24h| string| Price 24 hours ago  
-> volume24h| string| Volume for 24h  
-  
+vipCoinList| array| Object  
+> list| array| Object  
+>> borrowable| boolean| Whether it is allowed to be borrowed  
+>> collateralRatio| string| Due to the new Tiered Collateral value logic, this field will no longer be accurate starting on February 19, 2025. Please refer to [Get Tiered Collateral Ratio](/docs/v5/spot-margin-uta/tier-collateral-ratio)  
+>> currency| string| Coin name  
+>> hourlyBorrowRate| string| Borrow interest rate per hour  
+>> liquidationOrder| string| Liquidation order  
+>> marginCollateral| boolean| Whether it can be used as a margin collateral currency  
+>> maxBorrowingAmount| string| Max borrow amount  
+> vipLevel| string| VIP level  
+[](/docs/api-explorer/v5/spot-margin-uta/vip-margin)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spot-margin-trade/data?vipLevel=No VIP&currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -60,9 +62,29 @@ list| array<object>| Ticker info
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_tickers(  
-        symbol="SOLUSDT_SOL/USDT"  
-    ))  
+    print(session.spot_margin_trade_get_vip_margin_data())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getVIPMarginData({  
+        vipLevel: 'No VIP',  
+        currency: 'BTC',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -70,70 +92,109 @@ list| array<object>| Ticker info
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
+            "vipCoinList": [  
                 {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
+                    "list": [  
+                        {  
+                            "borrowable": true,  
+                            "collateralRatio": "0.95",  
+                            "currency": "BTC",  
+                            "hourlyBorrowRate": "0.0000015021220000",  
+                            "liquidationOrder": "11",  
+                            "marginCollateral": true,  
+                            "maxBorrowingAmount": "3"  
+                        }  
+                    ],  
+                    "vipLevel": "No VIP"  
                 }  
             ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1744079413254  
+        }  
     }
 
 ---
 
-# 查詢最新行情信息
+# 查詢不同VIP的槓桿數據
 
-可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
+查詢**統一帳戶** 下不同VIP等級的槓桿數據
 
-警告
+信息
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+不需要鑒權
 
+### HTTP 請求
 
-
-### HTTP請求
-
-GET`/v5/spread/tickers`
+GET`/v5/spot-margin-trade/data`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 價差產品名稱  
+[vipLevel](/docs/zh-TW/v5/enum#viplevel)| false| string| VIP 等級  
+currency| false| string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 行情信息  
-> symbol| string| 價差產品名稱  
-> bidPrice| string| 買1價  
-> bidSize| string| 買1價的數量  
-> askPrice| string| 賣1價  
-> askSize| string| 賣1價的數量  
-> lastPrice| string| 最新市場成交價  
-> highPrice24h| string| 最近24小時的最高價  
-> lowPrice24h| string| 最近24小時的最低價  
-> prevPrice24h| string| 24小時前的整點市價  
-> volume24h| string| 最近24小時成交量  
-  
+vipCoinList| array| Object  
+> list| array| Object  
+>> borrowable| boolean| 幣種是否支持借貸  
+>> collateralRatio| string| 由於新的階梯價值率邏輯, 該字段從2025年2月19日開始不再準確。請使用[查詢階梯價值率](/docs/zh-TW/v5/spot-margin-uta/tier-collateral-ratio)  
+>> currency| string| 幣種名稱  
+>> hourlyBorrowRate| string| 每小時借貸利率  
+>> liquidationOrder| string| 強平順序  
+>> marginCollateral| boolean| 幣種是否支持作為保證金  
+>> maxBorrowingAmount| string| 最大借貸額度  
+> vipLevel| string| VIP 等級  
+[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/vip-margin)
+
+* * *
+
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spot-margin-trade/data?vipLevel=No VIP&currency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spot_margin_trade_get_vip_margin_data())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getVIPMarginData({  
+        vipLevel: 'No VIP',  
+        currency: 'BTC',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -141,23 +202,23 @@ list| array<object>| 行情信息
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
+            "vipCoinList": [  
                 {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
+                    "list": [  
+                        {  
+                            "borrowable": true,  
+                            "collateralRatio": "0.95",  
+                            "currency": "BTC",  
+                            "hourlyBorrowRate": "0.0000015020640000",  
+                            "liquidationOrder": "11",  
+                            "marginCollateral": true,  
+                            "maxBorrowingAmount": "3"  
+                        }  
+                    ],  
+                    "vipLevel": "No VIP"  
                 }  
             ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1744079413254  
+        }  
     }

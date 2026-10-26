@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading
 anchor_id: spread-trading
 api_type: API
-updated_at: 2026-10-25 19:14:59.820789
+updated_at: 2026-10-26 19:31:29.998127
 ---
 
 # Spread Trading
@@ -731,7 +731,7 @@ state | String | No | State
 `filled`  
 beginId | String | No | Start order ID the request to begin with. Pagination of data to return records newer than the requested order Id, not including beginId  
 endId | String | No | End order ID the request to end with. Pagination of data to return records earlier than the requested order Id, not including endId  
-begin | String | No | Filter with a begin timestamp. Unix timestamp format in milliseconds, e.g. `1597026383085`. Date older than 7 days will be truncated.  
+begin | String | No | Filter with a begin timestamp. Unix timestamp format in milliseconds, e.g. `1597026383085`  
 end | String | No | Filter with an end timestamp. Unix timestamp format in milliseconds, e.g. `1597026383085`  
 limit | String | No | Number of results per request. The maximum is 100. The default is 100  
   
