@@ -2,81 +2,76 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/trade
 api_type: WebSocket
-updated_at: 2026-10-26 19:02:01.475284
+updated_at: 2026-10-27 18:41:42.658337
 ---
 
 # Connect
 
-**[WebSocket public stream](/docs/v5/websocket/public/orderbook):**
+## WebSocket endpoints
 
-  * **Mainnet:**  
-Spot: `wss://stream.bybit.com/v5/public/spot`  
-USDT, USDC perpetual & USDT Futures: `wss://stream.bybit.com/v5/public/linear`  
-Inverse contract: `wss://stream.bybit.com/v5/public/inverse`  
-Spread trading: `wss://stream.bybit.com/v5/public/spread`  
-RFQ: `wss://stream.bybit.com/v5/public/rfq`  
-USDT/USDC Options: `wss://stream.bybit.com/v5/public/option`  
-Event Trading: `wss://stream.bybit.com/v5/public/event`
+Choose the environment for your connection.
 
-  * **Testnet:**  
-Spot: `wss://stream-testnet.bybit.com/v5/public/spot`  
-USDT,USDC perpetual & USDT Futures: `wss://stream-testnet.bybit.com/v5/public/linear`  
-Inverse contract: `wss://stream-testnet.bybit.com/v5/public/inverse`  
-Spread trading: `wss://stream-testnet.bybit.com/v5/public/spread`  
-RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`  
-USDT/USDC Options: `wss://stream-testnet.bybit.com/v5/public/option`  
-Event Trading: `wss://stream-testnet.bybit.com/v5/public/event`
+  * Mainnet
+  * Testnet
 
 
 
+**[Public stream](/docs/v5/websocket/public/orderbook)**
 
-**Event Trading remarks:** Currently only available to market makers (MM). Public access may be considered in the future.
+Market| WebSocket URL  
+---|---  
+Spot| `wss://stream.bybit.com/v5/public/spot`  
+USDT/USDC perpetual & USDT Futures| `wss://stream.bybit.com/v5/public/linear`  
+Inverse contract| `wss://stream.bybit.com/v5/public/inverse`  
+Spread trading| `wss://stream.bybit.com/v5/public/spread`  
+RFQ| `wss://stream.bybit.com/v5/public/rfq`  
+USDT/USDC Options| `wss://stream.bybit.com/v5/public/option`  
+Event Trading| `wss://stream.bybit.com/v5/public/event`  
+  
+**Private stream, Order Entry & system status**
 
-**[WebSocket private stream](/docs/v5/websocket/private/order):**
+Connection| WebSocket URL  
+---|---  
+[Private stream](/docs/v5/websocket/private/order)| `wss://stream.bybit.com/v5/private`  
+[Order Entry](/docs/v5/websocket/trade/guideline)| `wss://stream.bybit.com/v5/trade`  
+[GET System Status](/docs/v5/websocket/system/system-status)| `wss://stream.bybit.com/v5/public/misc/status`  
+  
+**[Public stream](/docs/v5/websocket/public/orderbook)**
 
-  * **Mainnet:**  
-`wss://stream.bybit.com/v5/private`
+Market| WebSocket URL  
+---|---  
+Spot| `wss://stream-testnet.bybit.com/v5/public/spot`  
+USDT/USDC perpetual & USDT Futures| `wss://stream-testnet.bybit.com/v5/public/linear`  
+Inverse contract| `wss://stream-testnet.bybit.com/v5/public/inverse`  
+Spread trading| `wss://stream-testnet.bybit.com/v5/public/spread`  
+RFQ| `wss://stream-testnet.bybit.com/v5/public/rfq`  
+USDT/USDC Options| `wss://stream-testnet.bybit.com/v5/public/option`  
+Event Trading| `wss://stream-testnet.bybit.com/v5/public/event`  
+  
+**Private stream, Order Entry & system status**
 
-  * **Testnet:**  
-`wss://stream-testnet.bybit.com/v5/private`
+Connection| WebSocket URL  
+---|---  
+[Private stream](/docs/v5/websocket/private/order)| `wss://stream-testnet.bybit.com/v5/private`  
+[Order Entry](/docs/v5/websocket/trade/guideline)| `wss://stream-testnet.bybit.com/v5/trade`  
+[GET System Status](/docs/v5/websocket/system/system-status)| `wss://stream-testnet.bybit.com/v5/public/misc/status`  
+  
+**Notes:** Event Trading is currently available to market makers (MM) only; public access may be considered in the future. Order Entry does not support Spread trading.
 
+Regional mainnet hostnames
 
+For mainnet access, use the hostname associated with your account registration site.
 
-
-**[WebSocket Order Entry](/docs/v5/websocket/trade/guideline):**
-
-  * **Mainnet:**  
-`wss://stream.bybit.com/v5/trade` (Spread trading is not supported)
-
-  * **Testnet:**  
-`wss://stream-testnet.bybit.com/v5/trade` (Spread trading is not supported)
-
-
-
-
-**[WebSocket GET System Status](/docs/v5/websocket/system/system-status):**
-
-  * **Mainnet:**  
-`wss://stream.bybit.com/v5/public/misc/status`
-
-  * **Testnet:**  
-`wss://stream-testnet.bybit.com/v5/public/misc/status`
-
-
-
-
-info
-
-  * If your account is registered from [www.bybit.tr](http://www.bybit.tr), please use `stream.bybit.tr` for mainnet access
-  * If your account is registered from [www.bybit.id](http://www.bybit.id), please use `stream.bybit.id` for mainnet access
-  * If your account is registered from [www.bybit.kz](http://www.bybit.kz), please use `stream.bybit.kz` for mainnet access
-  * If your account is registered from [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge), please use `stream.bybitgeorgia.ge` for mainnet access
-  * If your account is registered from [www.manepa.jp](http://www.manepa.jp), please use `stream.manepa.jp` for mainnet access
-  * If you are international account users from Bybit Brazil, please processed to use `stream.bybit.com`, no code change from usder end.
-  * If you are international account users from Bybit Argentina, please processed to use `stream.bybit.com`, no code change from usder end.
-  * If your account is registered from [www.spark-fintech.com](http://www.spark-fintech.com), please use `stream.spark-fintech.com` for mainnet access
-
-
+Registration site| Mainnet hostname  
+---|---  
+[www.bybit.tr](http://www.bybit.tr)| `stream.bybit.tr`  
+[www.bybit.id](http://www.bybit.id)| `stream.bybit.id`  
+[www.bybit.kz](http://www.bybit.kz)| `stream.bybit.kz`  
+[www.bybitgeorgia.ge](http://www.bybitgeorgia.ge)| `stream.bybitgeorgia.ge`  
+[www.manepa.jp](http://www.manepa.jp)| `stream.manepa.jp`  
+[www.spark-fintech.com](http://www.spark-fintech.com)| `stream.spark-fintech.com`  
+  
+International account users from Bybit Brazil or Argentina should continue to use `stream.bybit.com`; no code change is required.
 
 Customise Private Connection Alive Time
 
@@ -173,13 +168,17 @@ Due to network complexity, your may get disconnected at any time. Please follow 
 
 
 
-## Public channel - Args limits
+## Public channel
+
+### Args limits
 
 Regardless of Perpetual, Futures, Options or Spot, for one public connection, you cannot have length of "args" array over 21,000 characters.
 
-  * Spot can input up to 10 args for each subscription request sent to one connection
+  * Spot can input up to **10 args for each subscription** request sent to one connection
   * Options can input up to 2000 args for a single connection
-  * No args limit for Futures and Spread for now
+  * No args limit for Spread
+  * Spot can input up to 100 args for a single connection (effecive from 26 Nov, 2026)
+  * Futures can input up to 100 args for a single connection (effecive from 26 Nov, 2026)
 
 
 
@@ -347,76 +346,71 @@ You can dynamically subscribe and unsubscribe from topics without unsubscribing 
 
 # 訂閱WebSocket
 
-**[WebSocket公共頻道](/docs/zh-TW/v5/websocket/public/orderbook):**
+## WebSocket 連接地址
 
-  * **主網:**  
-現貨: `wss://stream.bybit.com/v5/public/spot`  
-USDT, USDC永續 & USDC交割: `wss://stream.bybit.com/v5/public/linear`  
-反向合約: `wss://stream.bybit.com/v5/public/inverse`  
-期權: `wss://stream.bybit.com/v5/public/option`  
-RFQ: `wss://stream.bybit.com/v5/public/rfq`  
-價差交易: `wss://stream.bybit.com/v5/public/spread`  
-事件合約: `wss://stream.bybit.com/v5/public/event`
+請選擇對應的連接環境。
 
-  * **測試網:**  
-現貨: `wss://stream-testnet.bybit.com/v5/public/spot`  
-USDT和USDC永續: `wss://stream-testnet.bybit.com/v5/public/linear`  
-反向合約: `wss://stream-testnet.bybit.com/v5/public/inverse`  
-期權: `wss://stream-testnet.bybit.com/v5/public/option`  
-RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`  
-價差交易: `wss://stream-testnet.bybit.com/v5/public/spread`  
-事件合約: `wss://stream-testnet.bybit.com/v5/public/event`
+  * 主網
+  * 測試網
 
 
 
+**[WebSocket 公共頻道](/docs/zh-TW/v5/websocket/public/orderbook)**
 
-**事件合約備註：** 目前僅對做市商（MM）開放，未來可能考慮向公眾開放。
+市場| WebSocket URL  
+---|---  
+現貨| `wss://stream.bybit.com/v5/public/spot`  
+USDT、USDC 永續及 USDT 交割| `wss://stream.bybit.com/v5/public/linear`  
+反向合約| `wss://stream.bybit.com/v5/public/inverse`  
+價差交易| `wss://stream.bybit.com/v5/public/spread`  
+RFQ| `wss://stream.bybit.com/v5/public/rfq`  
+期權| `wss://stream.bybit.com/v5/public/option`  
+事件合約| `wss://stream.bybit.com/v5/public/event`  
+  
+**私有頻道、WebSocket 交易及系統狀態**
 
-**[WebSocket私有頻道](/docs/zh-TW/v5/websocket/private/order):**
+連接類型| WebSocket URL  
+---|---  
+[WebSocket 私有頻道](/docs/zh-TW/v5/websocket/private/order)| `wss://stream.bybit.com/v5/private`  
+[WebSocket 交易](/docs/zh-TW/v5/websocket/trade/guideline)| `wss://stream.bybit.com/v5/trade`  
+[取得系統狀態](/docs/zh-TW/v5/websocket/system/system-status)| `wss://stream.bybit.com/v5/public/misc/status`  
+  
+**[WebSocket 公共頻道](/docs/zh-TW/v5/websocket/public/orderbook)**
 
-  * **主網:**  
-`wss://stream.bybit.com/v5/private`
+市場| WebSocket URL  
+---|---  
+現貨| `wss://stream-testnet.bybit.com/v5/public/spot`  
+USDT 和 USDC 永續| `wss://stream-testnet.bybit.com/v5/public/linear`  
+反向合約| `wss://stream-testnet.bybit.com/v5/public/inverse`  
+價差交易| `wss://stream-testnet.bybit.com/v5/public/spread`  
+RFQ| `wss://stream-testnet.bybit.com/v5/public/rfq`  
+期權| `wss://stream-testnet.bybit.com/v5/public/option`  
+事件合約| `wss://stream-testnet.bybit.com/v5/public/event`  
+  
+**私有頻道、WebSocket 交易及系統狀態**
 
-  * **測試網:**  
-`wss://stream-testnet.bybit.com/v5/private`
+連接類型| WebSocket URL  
+---|---  
+[WebSocket 私有頻道](/docs/zh-TW/v5/websocket/private/order)| `wss://stream-testnet.bybit.com/v5/private`  
+[WebSocket 交易](/docs/zh-TW/v5/websocket/trade/guideline)| `wss://stream-testnet.bybit.com/v5/trade`  
+[取得系統狀態](/docs/zh-TW/v5/websocket/system/system-status)| `wss://stream-testnet.bybit.com/v5/public/misc/status`  
+  
+**備註：** 事件合約目前僅對做市商（MM）開放，未來可能考慮向公眾開放。WebSocket 交易不支援價差交易。
 
+地區主網域名
 
+主網連接請使用與帳戶註冊站點對應的 WebSocket 域名。
 
-
-**[WebSocket交易](/docs/zh-TW/v5/websocket/trade/guideline):**
-
-  * **主網:**  
-`wss://stream.bybit.com/v5/trade` (價差交易不支持)
-
-  * **測試網:**  
-`wss://stream-testnet.bybit.com/v5/trade` (價差交易不支持)
-
-
-
-
-**[Websocket取得系統狀態](/docs/zh-TW/v5/websocket/system/system-status):**
-
-  * **主網:**  
-`wss://stream.bybit.com/v5/public/misc/status`
-
-  * **測試網:**  
-`wss://stream-testnet.bybit.com/v5/public/misc/status`
-
-
-
-
-信息
-
-  * 土耳其站：如果您的帳戶是在 [www.bybit.tr](http://www.bybit.tr) 註冊, 請使用`stream.bybit.tr`進行主網連接
-  * 印尼站：如果您的帳戶是在 [www.bybit.id](http://www.bybit.id) 註冊, 請使用`stream.bybit.id`進行主網連接
-  * 哈薩克斯坦站：如果您的帳戶是在 [www.bybit.kz](http://www.bybit.kz), 請使用 `stream.bybit.kz` 進行主網連接
-  * 喬治亞站：如果您的帳戶是在 [www.bybitgeorgia.ge](http://www.bybitgeorgia.ge) 註冊, 請使用 `stream.bybitgeorgia.ge` 進行主網連接
-  * 日本站：如果您的帳戶是在 [www.manepa.jp](http://www.manepa.jp) 註冊, 請使用 `stream.manepa.jp` 進行主網連接
-  * 巴西國際站：巴西國際賬號用戶請繼續使用 `stream.bybit.com`，用戶側沒有額外代碼修改
-  * 阿根廷國際站：阿根廷國際賬號用戶請繼續使用 `stream.bybit.com`，用戶側沒有額外代碼修改
-  * 香港站：如果您的帳戶是在 [www.spark-fintech.com](http://www.spark-fintech.com) 註冊, 請使用 `stream.spark-fintech.com` 進行主網連接進行主網連接
-
-
+註冊站點| 主網域名  
+---|---  
+土耳其站（[www.bybit.tr）](http://www.bybit.tr%EF%BC%89)| `stream.bybit.tr`  
+印尼站（[www.bybit.id）](http://www.bybit.id%EF%BC%89)| `stream.bybit.id`  
+哈薩克斯坦站（[www.bybit.kz）](http://www.bybit.kz%EF%BC%89)| `stream.bybit.kz`  
+喬治亞站（[www.bybitgeorgia.ge）](http://www.bybitgeorgia.ge%EF%BC%89)| `stream.bybitgeorgia.ge`  
+日本站（[www.manepa.jp）](http://www.manepa.jp%EF%BC%89)| `stream.manepa.jp`  
+香港站（[www.spark-fintech.com）](http://www.spark-fintech.com%EF%BC%89)| `stream.spark-fintech.com`  
+  
+巴西或阿根廷國際站帳戶請繼續使用 `stream.bybit.com`；用戶端無須修改代碼。
 
 自定義私有連接存活時長
 
@@ -517,9 +511,11 @@ RFQ: `wss://stream-testnet.bybit.com/v5/public/rfq`
 
 不管是期貨、現貨、期權, 對於單個連接, args裡的數組元素長度總和不能超過21,000個字符
 
-  * 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求，但單個連接沒有args訂閱限制
+  * 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求
   * 期權單個連接，至多訂閱2000個args
-  * 期貨和價差交易單個連接沒有args限制
+  * 價差交易單個連接沒有args限制
+  * 現貨單個連接支持最多100個args (2026年11月26日開始生效)
+  * 合約單個連接支持最多100個args (2026年11月26日開始生效)
 
 
 

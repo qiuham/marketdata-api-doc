@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/spot-borrow-quota
 api_type: Trading
-updated_at: 2026-10-26 18:58:25.768306
+updated_at: 2026-10-27 18:38:46.333183
 ---
 
 # Get Coin Delta Amount

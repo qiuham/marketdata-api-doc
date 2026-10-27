@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-websocket
 anchor_id: overview-websocket
 api_type: WebSocket
-updated_at: 2026-10-26 19:29:53.744784
+updated_at: 2026-10-27 19:07:10.957842
 ---
 
 # WebSocket
@@ -379,9 +379,24 @@ Client will receive the information in the following scenarios:
     }
     
 
+  * WebSocket port 8443 retirement  
+
+When a connection is established on port 8443, the notification message will be sent once after the handshake succeeds, indicating that port 8443 will soon be retired. The connection stays open. Users are encouraged to migrate to port 443.
+
+> Response Example
+    
+    
+    {
+        "event": "notice",
+        "code": "64010",
+        "msg": "WebSocket port 8443 will be retired soon. Please migrate to port 443.",
+        "connId": "d7d6f1f5"
+    }
+    
+
   
   
-The feature is supported by WebSocket Public (/ws/v5/public) and Private (/ws/v5/private) for now.
+The `notice` message type is supported by all WebSocket endpoints (/ws/v5/public, /ws/v5/private, /ws/v5/business, and /ws/v5/public-sbe).
 
 ---
 
@@ -740,6 +755,21 @@ WebSocket有一种消息类型(event=`notice`)。
     }
     
 
+  * WebSocket 8443 端口下线
+
+通过 8443 端口建立连接时，握手成功后会推送一次信息，告知用户 8443 端口即将下线。连接不会断开。用户需尽快迁移至 443 端口。
+
+> 返回示例
+    
+    
+    {
+        "event": "notice",
+        "code": "64010",
+        "msg": "WebSocket port 8443 will be retired soon. Please migrate to port 443.",
+        "connId": "d7d6f1f5"
+    }
+    
+
   
   
-目前支持WebSocket公共频道(/ws/v5/public)和私有频道(/ws/v5/private)。
+`notice` 消息类型目前支持所有WebSocket端点（/ws/v5/public、/ws/v5/private、/ws/v5/business和/ws/v5/public-sbe）。

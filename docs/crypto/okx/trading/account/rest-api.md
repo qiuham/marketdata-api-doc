@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-10-26 19:30:01.494789
+updated_at: 2026-10-27 19:07:18.657341
 ---
 
 # REST API
@@ -1543,7 +1543,7 @@ You may refer to "pnl" for the fee payment
 
 Apply for bill data since 1 February, 2021 except for the current quarter.
 
-#### Rate Limit: 1 request per 10 seconds
+#### Rate Limit: 12 requests per day
 
 #### Rate limit rule: User ID
 
@@ -8153,7 +8153,7 @@ fillFwdPx | String | 成交时的远期价格，仅适用于 `期权`，其他�
 
 申请自 2021 年 2 月 1 日以来的账单数据，不包括当前季度。
 
-#### 限速：1次/10s
+#### 限速：12 次/天
 
 #### 限速规则：User ID
 

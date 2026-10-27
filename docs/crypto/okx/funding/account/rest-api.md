@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api
 anchor_id: funding-account-rest-api
 api_type: REST
-updated_at: 2026-10-26 19:32:06.008801
+updated_at: 2026-10-27 19:09:23.353566
 ---
 
 # REST API

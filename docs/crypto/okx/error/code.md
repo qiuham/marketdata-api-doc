@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#error-code
 anchor_id: error-code
 api_type: API
-updated_at: 2026-10-26 19:32:47.434864
+updated_at: 2026-10-27 19:10:04.783087
 ---
 
 # Error Code
@@ -1198,7 +1198,7 @@ Error Code | HTTP Status Code | Error Message
 
 ### Public
 
-Error Code from 60000 to 64002
+Error Code from 60000 to 64010
 
 #### General Class
 
@@ -1232,6 +1232,7 @@ Error Code | Error Message
 64004 | Subscribe to both {channelName} and books-l2-tbt for {instId} is not allowed. Unsubscribe books-l2-tbt first.  
 64007 | Operation {0} failed due to WebSocket internal error. Please try again later.  
 64008 | The connection will soon be closed for a service upgrade. Please reconnect.  
+64010 | WebSocket port 8443 will be retired soon. Please migrate to port 443.  
   
 #### Close Frame
 
@@ -2430,7 +2431,7 @@ WebSocket 错误消息均为英文，中文错误消息仅供参考
 
 ### 公共 
 
-错误码从 60000 到 64002
+错误码从 60000 到 64010
 
 #### 通用类
 
@@ -2464,6 +2465,7 @@ WebSocket 错误消息均为英文，中文错误消息仅供参考
 64004 | 不允许为 {instId} 同时订阅 {channelName} 以及 books-l2-tbt。请先取消订阅 books-l2-tbt。  
 64007 | 由于 WebSocket 内部错误导致操作 {0} 失败，请稍后再试。  
 64008 | 因服务升级，该连接即将关闭。请重新连接。  
+64010 | WebSocket 8443 端口即将下线，请迁移至 443 端口。  
   
 #### 关闭帧
 

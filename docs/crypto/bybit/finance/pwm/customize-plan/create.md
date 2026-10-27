@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/create
 api_type: REST
-updated_at: 2026-10-26 18:56:20.914184
+updated_at: 2026-10-27 18:36:53.922251
 ---
 
 # Get Asset Trend

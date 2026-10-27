@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-10-26 18:59:54.378880
+updated_at: 2026-10-27 18:40:03.825192
 ---
 
 # Get Coin State

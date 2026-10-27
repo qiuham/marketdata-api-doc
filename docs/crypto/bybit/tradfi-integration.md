@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tradfi-integration
 api_type: REST
-updated_at: 2026-10-26 19:01:07.668895
+updated_at: 2026-10-27 18:41:01.457459
 ---
 
 # Get Friend Referrals

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/crypto-loan-position
 api_type: REST
-updated_at: 2026-10-26 18:57:36.756234
+updated_at: 2026-10-27 18:37:59.104825
 ---
 
 # Create Borrow Order

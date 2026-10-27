@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/websocket/book
 api_type: WebSocket
-updated_at: 2026-10-26 19:29:34.004936
+updated_at: 2026-10-27 19:06:51.358769
 ---
 
 # Exchange overview
@@ -43,6 +43,7 @@ Workflow| What you need| Where to start
 ---|---|---  
 **Market data**|  Public endpoints — no API key needed| REST `GET /0/public/*` or WebSocket public channels  
 **Algorithmic trading**|  Private order endpoints + real-time execution data| REST or WebSocket v2 `executions` channel  
+**Execution algos (TWAP)**|  Spot REST Algo Trading endpoints — Kraken executes the strategy for you| [Algo Trading overview](/exchange/guides/algo-trading/overview)  
 **Market making**|  Low-latency order entry, live book, cancel-on-disconnect| WebSocket v2 or FIX  
 **Account management**|  Balances, ledger, funding| REST private endpoints  
 **HFT**|  Deterministic sequencing, colocation, FIX replay| FIX 4.4 or WebSocket (Spot); REST or WebSocket (Derivatives)  

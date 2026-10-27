@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/ltv
 api_type: REST
-updated_at: 2026-10-26 18:50:39.042486
+updated_at: 2026-10-27 18:31:47.919448
 ---
 
 # Set Risk Limit
