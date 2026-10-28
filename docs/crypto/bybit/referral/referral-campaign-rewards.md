@@ -2,54 +2,54 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-campaign-rewards
 api_type: REST
-updated_at: 2026-10-27 18:39:28.133877
+updated_at: 2026-10-28 18:40:52.440148
 ---
 
-# Get Referral User Identity Profile
+# Get Referral Commission Records
 
-Get the authenticated user's referral identity, relationship indicators, and available commission information.
+Query referral commission records for the authenticated inviter.
 
 info
 
-  * Authentication is required. The user ID is derived from the API key; do not provide a user ID in the request body.
-  * If the user is an affiliate, `isAffiliate` is `true` and M1 inviter status is not queried.
-  * `inviterAffiliateUserId` and `inviterUserId` are relationship indicators: `1` when the respective record exists and `0` otherwise; they are not user IDs. The relationships are queried independently, and missing records are not errors.
-  * `commissionInfo` is returned only when an M1 inviter record's user ID matches the authenticated user and the commission query succeeds. It uses this endpoint's dedicated commission-info payload; its fields copy the source commission result and may therefore be `0` when the source value is `0`.
-  * Request and response property names use the proto's explicit camelCase JSON names. Actual gateway serialization, including int64 and enum representation, has not been independently verified.
+  * Authentication is required. The inviter is identified from the API key; do not provide a user ID for the inviter in the request body.
+  * `userId` in the response is a masked invitee ID.
+  * An empty `userIdList` does not filter by invitee ID.
+  * Time filters use `YYYY-MM-DD HH:mm:ss`. When either value cannot be parsed, an empty string is passed downstream; downstream handling is not established here. The endpoint does not apply a default past-week time range.
+  * Request and response property names use the proto's explicit camelCase JSON names; actual gateway serialization has not been independently verified.
 
 
 
 ### HTTP Request
 
-POST`/v5/referral/user/identity-profile`
+POST`/v5/referral/commission/records`
 
 ### Request Parameters
 
-No request parameters are required. Send an empty JSON object.
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+userIdList| false| array| Invitee ID list. An empty list returns records without filtering by invitee ID.  
+> userId| false| integer| Invitee ID  
+startTime| false| string| Start time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified.  
+endTime| false| string| End time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified.  
+page| false| integer| One-based page number. `0` is treated as `1`.  
+pageSize| false| integer| Number of records per page. `0` or a value greater than `200` is treated as `10`.  
+productLine| false| integer| Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha.  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-isAffiliate| boolean| Whether the current user is an affiliate  
-isM1| boolean| Whether the current user is an M1 inviter. This is checked only when the user is not an affiliate.  
-inviterAffiliateId| integer| Affiliate ID from the affiliate direct-customer relationship. `0` if no relationship is found.  
-inviterAffiliateUserId| integer| Affiliate direct-customer relationship indicator: `1` when a record exists, otherwise `0`. This is not the affiliate user's actual ID.  
-inviterUserId| integer| Invitation relationship indicator: `1` when a record exists for the current user as invitee, otherwise `0`. This is not the inviter's actual ID.  
-commissionInfo| object| Commission information for this endpoint. Returned only when a matching M1 inviter record and commission data are available.  
-> totalCommission| string| Total accumulated commission amount  
-> yesterdayCommission| string| Commission amount earned yesterday  
-> totalFriends| integer| Total number of invited friends  
-> qualifiedFriends| integer| Number of invitees eligible for commission  
-> walletBalance| string| Commission wallet balance  
-> qualifiedFriendsQuarterTotalTradeVolume| string| Current-quarter trading volume of qualified invitees  
-> curQuarterActiveFriendsCount| integer| Number of active invitees in the current quarter. Copied from the source commission result and may be `0` when the source value is `0`.  
-> hasOldReferral| integer| Legacy referral-commission programme indicator  
-> degradeType| integer| Commission downgrade status: `0` unknown or not downgraded, `1` downgraded due to active invitee count, `2` downgraded due to invitee trading volume.  
-> commissionRate| string| Current commission rate  
-> upgradeUnifiedAccount| integer| Unified Trading Account status: `0` unknown, `1` upgraded, `2` upgrading, `3` not upgraded.  
-> withdrawalSwitch| integer| Commission withdrawal switch: `1` enabled, `2` disabled. Copied from the source commission result and may be `0` when the source value is `0`.  
-> lastQuarterQualifiedFriendsCount| integer| Number of qualified invitees in the previous quarter. Copied from the source commission result and may be `0` when the source value is `0`.  
+records| array| Referral commission records  
+> userId| string| Masked invitee ID, in the format of first character + `***` \+ last character  
+> paymentTime| integer| Commission payment time as a Unix timestamp in seconds  
+> rate| string| Commission rate  
+> businessUnit| integer| Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha. Unrecognized values are returned as `0`.  
+> commissionOriginCoin| string| Original commission currency  
+> commissionOriginAmount| string| Commission amount in the original currency  
+> commissionUsdtAmount| string| Commission value in USDT  
+> commissionStatus| integer| Commission status: `0` unknown, `1` awaiting credit, `2` settled. Unrecognized values are returned as `0`.  
+> isBoostM2| boolean| Whether the invitee associated with the commission is a Boost user. This field may not be present.  
+total| integer| Total number of records  
   
 ### Request Example
 
@@ -58,7 +58,7 @@ commissionInfo| object| Commission information for this endpoint. Returned only 
 
     
     
-    POST /v5/referral/user/identity-profile HTTP/1.1  
+    POST /v5/referral/commission/records HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1753286400000  
@@ -66,73 +66,90 @@ commissionInfo| object| Commission information for this endpoint. Returned only 
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
       
-    {}  
+    {  
+      "userIdList": [201, 202],  
+      "startTime": "2025-03-01 10:20:30",  
+      "endTime": "2025-03-08 11:22:33",  
+      "page": 3,  
+      "pageSize": 200,  
+      "productLine": 1  
+    }  
     
 
 ### Response Example
+
+The following illustrates the field structure only; it is not a default ProtoJSON serialization or a gateway-validated response.
     
     
     {  
       "retCode": 0,  
-      "retMsg": "OK",  
+      "retMsg": "",  
       "result": {  
-        "isAffiliate": false,  
-        "isM1": false,  
-        "inviterAffiliateId": 0,  
-        "inviterAffiliateUserId": 0,  
-        "inviterUserId": 0  
+        "records": [  
+          {  
+            "userId": "1***6",  
+            "paymentTime": 1740916800,  
+            "rate": "0.20",  
+            "businessUnit": 1,  
+            "commissionOriginCoin": "BTC",  
+            "commissionOriginAmount": "1.25",  
+            "commissionUsdtAmount": "250",  
+            "commissionStatus": 2  
+          }  
+        ],  
+        "total": 29  
       },  
       "retExtInfo": {},  
-      "time": 1672211918471  
+      "time": 1753286400000  
     }
 
 ---
 
-# 查詢邀請使用者身分資料
+# 查詢邀請返佣紀錄
 
-查詢已驗證使用者的邀請身分、關係標識與可用返佣資訊。
+查詢已驗證邀請人的邀請返佣紀錄。
 
 信息
 
-  * 需要鑑權。使用者 ID 由 API Key 識別；請勿在請求體中傳入使用者 ID。
-  * 若使用者為代理商，`isAffiliate` 為 `true`，且不會查詢 M1 邀請人狀態。
-  * `inviterAffiliateUserId` 與 `inviterUserId` 為關係標識：存在相應紀錄時為 `1`，否則為 `0`；它們不是使用者 ID。兩種關係會分別查詢，找不到紀錄不視為錯誤。
-  * 僅在 M1 邀請人紀錄的使用者 ID 與已驗證使用者相符，且返佣查詢成功時，才會回傳 `commissionInfo`。它使用本接口專用的返佣資訊負載；欄位複製自來源返佣結果，因此來源值為 `0` 時也可能為 `0`。
-  * 請求與回應的欄位名稱使用 Proto 明確定義的 camelCase JSON 名稱；實際閘道序列化（包括 int64 與列舉值的表示）尚未獨立驗證。
+  * 需要鑑權。邀請人由 API Key 識別；請勿在請求體中傳入邀請人的使用者 ID。
+  * 回應中的 `userId` 為已遮罩的受邀人 ID。
+  * 空的 `userIdList` 不會按受邀人 ID 篩選。
+  * 時間篩選使用 `YYYY-MM-DD HH:mm:ss`。任一值無法解析時，會將空字串傳至下游；下游如何處理尚未在此確認。此接口不會預設查詢過去一週。
+  * 請求與回應的欄位名稱使用 Proto 明確定義的 camelCase JSON 名稱；實際閘道序列化尚未獨立驗證。
 
 
 
 ### HTTP請求
 
-POST`/v5/referral/user/identity-profile`
+POST`/v5/referral/commission/records`
 
 ### 請求參數
 
-無需請求參數。請傳送空的 JSON 物件。
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+userIdList| false| array| 受邀人 ID 列表。空列表不會按受邀人 ID 篩選。  
+> userId| false| integer| 受邀人 ID  
+startTime| false| string| 開始時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效值會以空字串傳至下游；其處理方式尚未驗證。  
+endTime| false| string| 結束時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效值會以空字串傳至下游；其處理方式尚未驗證。  
+page| false| integer| 頁碼，`0` 會視為 `1`。  
+pageSize| false| integer| 每頁紀錄數。`0` 或大於 `200` 的值會視為 `10`。  
+productLine| false| integer| 產品線：`0` 未知、`1` 現貨、`2` 合約、`3` 期權、`4` USDC 永續、`6` TradeFi、`9` Alpha。  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-isAffiliate| boolean| 目前使用者是否為代理商  
-isM1| boolean| 目前使用者是否為 M1 邀請人。僅在使用者不是代理商時查詢。  
-inviterAffiliateId| integer| 代理商直客關係中的代理商 ID。找不到關係時為 `0`。  
-inviterAffiliateUserId| integer| 代理商直客關係標識：存在紀錄時為 `1`，否則為 `0`。這不是代理商使用者的實際 ID。  
-inviterUserId| integer| 邀請關係標識：目前使用者作為受邀人時若存在紀錄則為 `1`，否則為 `0`。這不是邀請人的實際 ID。  
-commissionInfo| object| 本接口的返佣資訊。僅在可取得相符的 M1 邀請人紀錄及返佣資料時回傳。  
-> totalCommission| string| 累計返佣金額  
-> yesterdayCommission| string| 昨日取得的返佣金額  
-> totalFriends| integer| 累計受邀好友數  
-> qualifiedFriends| integer| 符合返佣資格的受邀人數  
-> walletBalance| string| 返佣錢包餘額  
-> qualifiedFriendsQuarterTotalTradeVolume| string| 本季符合資格受邀人的交易量  
-> curQuarterActiveFriendsCount| integer| 本季活躍受邀人數。複製自來源返佣結果，來源值為 `0` 時可能為 `0`。  
-> hasOldReferral| integer| 舊版邀請返佣計畫標識  
-> degradeType| integer| 返佣降級狀態：`0` 未知或未降級、`1` 因活躍受邀人數降級、`2` 因受邀人交易量降級。  
-> commissionRate| string| 目前返佣比例  
-> upgradeUnifiedAccount| integer| 統一交易帳戶狀態：`0` 未知、`1` 已升級、`2` 升級中、`3` 未升級。  
-> withdrawalSwitch| integer| 返佣提現開關：`1` 開啟、`2` 關閉。複製自來源返佣結果，來源值為 `0` 時可能為 `0`。  
-> lastQuarterQualifiedFriendsCount| integer| 上季符合資格的受邀人數。複製自來源返佣結果，來源值為 `0` 時可能為 `0`。  
+records| array| 邀請返佣紀錄  
+> userId| string| 已遮罩的受邀人 ID，格式為首字元 + `***` \+ 末字元  
+> paymentTime| integer| 返佣支付時間，Unix 秒級時間戳  
+> rate| string| 返佣比例  
+> businessUnit| integer| 產品線：`0` 未知、`1` 現貨、`2` 合約、`3` 期權、`4` USDC 永續、`6` TradeFi、`9` Alpha。未識別值回傳 `0`。  
+> commissionOriginCoin| string| 原始返佣幣種  
+> commissionOriginAmount| string| 原始幣種的返佣金額  
+> commissionUsdtAmount| string| 以 USDT 計價的返佣金額  
+> commissionStatus| integer| 返佣狀態：`0` 未知、`1` 待入帳、`2` 已結算。未識別值回傳 `0`。  
+> isBoostM2| boolean| 與該返佣關聯的受邀人是否為 Boost 使用者。此欄位可能不會出現。  
+total| integer| 總紀錄數  
   
 ### 請求示例
 
@@ -141,7 +158,7 @@ commissionInfo| object| 本接口的返佣資訊。僅在可取得相符的 M1 �
 
     
     
-    POST /v5/referral/user/identity-profile HTTP/1.1  
+    POST /v5/referral/commission/records HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1753286400000  
@@ -149,22 +166,37 @@ commissionInfo| object| 本接口的返佣資訊。僅在可取得相符的 M1 �
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
       
-    {}  
+    {  
+      "userIdList": [201, 202],  
+      "startTime": "2025-03-01 10:20:30",  
+      "endTime": "2025-03-08 11:22:33",  
+      "page": 3,  
+      "pageSize": 200,  
+      "productLine": 1  
+    }  
     
 
 ### 響應示例
+
+以下僅示意欄位結構，並非預設 ProtoJSON 序列化結果，也未經閘道驗證。
     
     
     {  
       "retCode": 0,  
-      "retMsg": "OK",  
+      "retMsg": "",  
       "result": {  
-        "isAffiliate": false,  
-        "isM1": false,  
-        "inviterAffiliateId": 0,  
-        "inviterAffiliateUserId": 0,  
-        "inviterUserId": 0  
+        "records": [{  
+          "userId": "1***6",  
+          "paymentTime": 1740916800,  
+          "rate": "0.20",  
+          "businessUnit": 1,  
+          "commissionOriginCoin": "BTC",  
+          "commissionOriginAmount": "1.25",  
+          "commissionUsdtAmount": "250",  
+          "commissionStatus": 2  
+        }],  
+        "total": 29  
       },  
       "retExtInfo": {},  
-      "time": 1672211918471  
+      "time": 1753286400000  
     }

@@ -2,42 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/bind-uid
 api_type: REST
-updated_at: 2026-10-27 18:38:46.948474
+updated_at: 2026-10-28 18:40:12.000441
 ---
 
-# Get Coin Delta Amount
+# Bind Or Unbind UID
 
-Query coin delta amount details for institutional loan hedge product.
+For the institutional loan product, you can bind new UIDs to the risk unit or unbind UID from the risk unit.
 
 info
 
-  * Unified account only
-  * Optional `coin` filter; if omitted, returns all coins
+  * The risk unit designated UID cannot be unbound.
+  * The UID you want to bind must be upgraded to UTA Pro.
 
 
 
 ### HTTP Request
 
-GET`/v5/ins-loan/coin-delta-amount`
+POST`/v5/ins-loan/association-uid`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Coin name, uppercase only. e.g. `BTC`. If not passed, returns all coins  
+uid| **true**|  string| UID 
+
+  * **Bind**  
+a) the key used must be from one of UIDs in the risk unit;   
+b) input UID must not have an INS loan
+  * **Unbind**  
+a) the key used must be from one of UIDs in the risk unit;   
+b) input UID cannot be the same as the UID used to access the API
+
+  
+operate| **true**|  string| `0`: bind, `1`: unbind  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-riskUnitDeltaAmount| string| Risk unit total delta amount limit (USD)  
-riskUnitDeltaAvailableAmount| string| Risk unit available delta amount (USD)  
-riskUnitDelta| string| Risk unit delta value  
-list| array| Object  
-> coin| string| Coin name  
-> coinDeltaSize| string| Coin delta size (quantity)  
-> coinDeltaAvailableAmount| string| Coin delta available amount (USD)  
-> coinDeltaAmount| string| Coin delta total amount limit (USD)  
+uid| string| UID  
+operate| string| `0`: bind, `1`: unbind  
   
 ### Request Example
 
@@ -48,20 +52,51 @@ list| array| Object
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/ins-loan/association-uid HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
+    X-BAPI-TIMESTAMP: 1699257853101  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
-    
-    
-    
+    Content-Type: application/json  
+    Content-Length: 43  
       
+    {  
+        "uid": "592324",  
+        "operate": "0"  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.bind_or_unbind_uid(uid="592324", operate="0"))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .bindOrUnbindUID({  
+        uid: 'yourUID',  
+        operate: '0', // 0 for bind, 1 for unbind  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -71,63 +106,52 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
-                {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
-                },  
-                {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
-                }  
-            ]  
+            "uid": "592324",  
+            "operate": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1699257746135  
     }
 
 ---
 
-# 查詢幣種 Delta 額度
+# 綁定/解綁UID
 
-查詢機構借貸對沖產品的幣種 Delta 額度詳情。
+對於場外借貸產品, 您可以自行綁定新的UID到風險單元內或者解綁某個UID
 
 信息
 
-  * 僅支持統一帳戶
-  * `coin` 為可選篩選參數，若不傳則返回所有幣種
+  * 風險單元的主UID不能解綁
+  * 綁定的UID必須升級到了UTA Pro
 
 
 
 ### HTTP 請求
 
-GET`/v5/ins-loan/coin-delta-amount`
+POST`/v5/ins-loan/association-uid`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱，僅大寫。如 `BTC`。若不傳，返回所有幣種  
+uid| **true**|  string| UID
+
+  * **綁定**  
+a) 調用接口的key必須來自風險單元內的任意uid;   
+b) 目標帳戶不能有機構借貸
+  * **解綁**  
+a) 調用接口的key必須來自風險單元內的任意uid;   
+b) 準備解綁的uid不能和調用接口的uid一樣
+
   
-### 返回參數
+operate| **true**|  string| `0`: 綁定, `1`: 解綁  
+  
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-riskUnitDeltaAmount| string| 風險單元 Delta 總額度限制（USD）  
-riskUnitDeltaAvailableAmount| string| 風險單元可用 Delta 額度（USD）  
-riskUnitDelta| string| 風險單元 Delta 值  
-list| array| Object  
-> coin| string| 幣種名稱  
-> coinDeltaSize| string| 幣種 Delta 數量  
-> coinDeltaAvailableAmount| string| 幣種可用 Delta 額度（USD）  
-> coinDeltaAmount| string| 幣種 Delta 總額度限制（USD）  
+uid| string| UID  
+operate| string| `0`: 綁定, `1`: 解綁  
   
 ### 請求示例
 
@@ -138,47 +162,63 @@ list| array| Object
 
     
     
-    GET /v5/ins-loan/coin-delta-amount?coin=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/ins-loan/association-uid HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1716192000000  
+    X-BAPI-TIMESTAMP: 1699257853101  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
-    
-    
-    
+    Content-Type: application/json  
+    Content-Length: 43  
       
+    {  
+        "uid": "592324",  
+        "operate": "0"  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.bind_or_unbind_uid(uid="592324", operate="0"))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .bindOrUnbindUID({  
+        uid: 'yourUID',  
+        operate: '0', // 0 for bind, 1 for unbind  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "riskUnitDeltaAmount": "500000",  
-            "riskUnitDeltaAvailableAmount": "350000",  
-            "riskUnitDelta": "0.8",  
-            "list": [  
-                {  
-                    "coin": "BTC",  
-                    "coinDeltaSize": "10",  
-                    "coinDeltaAvailableAmount": "200000",  
-                    "coinDeltaAmount": "300000"  
-                },  
-                {  
-                    "coin": "ETH",  
-                    "coinDeltaSize": "100",  
-                    "coinDeltaAvailableAmount": "150000",  
-                    "coinDeltaAmount": "200000"  
-                }  
-            ]  
+            "uid": "592324",  
+            "operate": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1716192000000  
+        "time": 1699257746135  
     }

@@ -2,970 +2,189 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/public-trade
 api_type: Market Data
-updated_at: 2026-10-27 18:39:59.322329
+updated_at: 2026-10-28 18:41:26.275798
 ---
 
-# SBE Public Trade Integration
+# Self Match Prevention
 
-## Overview
+## What is SMP?
 
-  * **Channel:** Private MM WebSocket only (not available on public WS).
-  * **Topic:** `publicTrade.sbe.<symbol>`.
-  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
-  * **Push frequency** : real-time
-  * Messages are delivered in-order per symbol group. A single packet may contain 1–1024 trades
+With the Self Match Prevention function users can choose the execution method when placing an order. When the counterparty is the same UID or belongs to the same specified SMP group, the execution can be effected accordingly:
 
-
-
-## Flow
-
-### Ping / Pong (JSON control frames)
-
-**Send Ping**
-    
-    
-    {"req_id": "100001", "op": "ping"}  
-    
-
-**Receive Pong**
-    
-    
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
-    
-
-### Subscribe
-
-  * Topic format: `publicTrade.sbe.<symbol>`
+  1. Cancel maker: Cancel the maker order when executed; taker order remains.
+  2. Cancel taker: Cancel the taker order when executed; maker order remains.
+  3. Cancel both: Cancel both taker and maker orders when executed.
 
 
 
-**Subscribe request**
-    
-    
-    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
-    
+Once an order is placed in the orderbook, its smpType becomes invalid. This means that, for example, if you place a taker order without an smpType (`smpType=None`) that matches against your existing maker order set with `smpType=CancelMaker`, the taker will execute. This is because the maker order's `smpType=CancelMaker` became invalid once it placed in the orderbook.
 
-**Subscription confirmation**
-    
-    
-    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
-    
+## How to set SMP?
 
-## SBE XML Template (Public Trade)
+Check request params of [Place Order](/docs/v5/order/create-order). Specify parameter `smpType` when placing the order
 
-[sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+## What is SMP Trade Group?
 
-## Field Reference
+  * SMP is available for any user by UID level.
+  * SMP Trade Group Management is only available for institutions at present.
 
-**Message:** `PublicTradeEvent` (id = 20002)
 
-Field Name| ID| SBE Type| Unit / Format| Notes  
----|---|---|---|---  
-ts| 1| int64| µs| System generation time at market data service.  
-priceExponent| 2| int8| exponent| Decimal places for price. Display price = priceMantissa × 10^`priceExponent`.  
-sizeExponent| 3| int8| exponent| Decimal places for size. Display size = sizeMantissa × 10^`sizeExponent`.  
-tradeItems| 40| group(`groupSize16Encoding`)| -| Repeating trade items  
-symbol| 55| varString8| UTF-8| 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.  
-  
-### Each tradeItems[i] entry
 
-Field (id)| Type| Description  
+**SMP Trade Group** : refers to a group of UIDs. When any of the UIDs in this group places an order and the SMP execution policy is selected, it will be triggered when the maker order under any of the UIDs in this group is matched.
+
+**More details** :
+
+  1. Each UID can only join one SMP Trade Group.
+
+  2. SMP Trade Group is a UID-level management group, so when a main-account joins an SMP Trade Group, all the subaccounts under this main-account will automatically join the Trade Group as well.
+
+
+
+  * If the main-account has already joined an SMP Trade Group, and a subaccount is created after it, this new subaccount will automatically join the same SMP Trade Group by default.
+  * A subaccount does not have to be tied to the same SMP Trading Group as the main-account. It is only the default behaviour. It can be reset into different groups manually if needed.
+
+
+  3. The relationship between SMP Trade Group and UIDs can be changed: when a UID joins a new SMP Trade Group or is removed from an SMP Trade Group. This operation will not affect the pre-existing orders, it will only affect the newly placed orders after the relationship has changed.
+
+
+
+**Notes** : Based on this, we strongly suggest that when there will be an SMP Trade Group change, you should cancel all pre-existing orders to avoid an unexpected execution.
+
+  4. The SMP Trade Group has a higher priority on SMP execution, so an individual UID is only taken into account when there is no SMP Trade Group on either side.
+
+  5. Once the order is standing in the orderbook, its SMP flag doesn't matter any more. The system always follows the tag on the latter order.
+
+
+
+
+**Examples** :  
+1st of Jan: UID1 joins SMP Trade Group A, and places Order1;  
+2nd of Jan: UID1 is removed from SMP Trade Group A, but Order1 is still active and "New"
+
+  * case1: If UID1 joined SMP Trade Group B, and placed Order2, if Order2 meets Order1, it will be executed since they belong to two different groups.
+  * case2: If UID1 did not join any other groups after being removed from SMP Trade Group A, and placed Order2, if Order2 meets Order1, the SMP will be triggered because UID1 did not have a group when it placed Order2, so SMP was triggered at the UID level (the same UID1).
+
+
+
+## How to manage my UIDs & SMP Trade Group?
+
+You can contact your institutional business manager or email Bybit via: [institutional_services@bybit.com](mailto:institutional_services@bybit.com)
+
+## SMP across Bybit Global vs. Bybit compliant sites
+
+  * **Bybit Global:** Institutional clients can choose whether to enable SMP.
+  * **Bybit compliant sites:** SMP is **enabled by default for all users**.
+    * **Note:** Most compliant sites currently support **spot trading only**.
+
+
+
+**Rollout schedule** :  
+
+
+The first site to go live will be **Bybit Turkey** , followed by:
+
+  * **Turkey:** 2026/01/27
+  * **Kazakhstan:** 2026/02/24
+  * **Georgia:** 2026/03/10
+  * **Other compliant sites (in development):** SMP will be enabled **immediately upon launch**.
+
+
+
+**Site-specific SMP behavior** (effective 2026-08-04):
+
+Site| Product| Behavior  
 ---|---|---  
-fillTime (1)| int64| Trade fill timestamp(µs)  
-price (2)| int64| Apply priceExponent. Display ask size = `size × 10^sizeExponent`.  
-size (3)| int64| Apply sizeExponent. Display ask size = `size × 10^sizeExponent`.  
-seq (4)| int64| Cross sequence id  
-side (5)| SideType(uint8)| Side of taker  
-isBlockTrade (6)| BoolEnum(uint8)| IsBlockTrade(0 = not blockTrade, 1 = blockTrade)  
-isRPI (7)| BoolEnum(uint8)| IsRPI (0 = not RPI, 1 = RPI)  
-execId (100)| varString8| Trade ID  
-  
-#### SideType
-
-  * `0`: UNKOWN
-  * `1`: BUY
-  * `2`: SELL
-  * `254`: NON_REPRESENTABLE
-
-
-
-#### BoolEnum
-
-  * `0`: FALSE
-  * `1`: TRUE
-  * `254`: NON_REPRESENTABLE
-
-
-
-## Integration Script
-
-### Python
-    
-    
-    import json  
-    import struct  
-    import websocket  
-    from typing import Tuple  
-      
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-    SYMBOL = "BTCUSDT"  
-    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
-      
-      
-    # ---------------- SBE helpers ----------------  
-    def apply_exp(mantissa: int, exp: int) -> float:  
-        # display = mantissa * 10^exp  
-        # exp can be negative  
-        return mantissa * (10.0**exp)  
-      
-      
-    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
-        if off + 1 > len(buf):  
-            raise ValueError("varString8: missing length")  
-      
-        ln = buf[off]  
-        off += 1  
-      
-        if off + ln > len(buf):  
-            raise ValueError("varString8: out of range")  
-      
-        s = buf[off : off + ln].decode("utf-8", errors="replace")  
-        off += ln  
-        return s, off  
-      
-      
-    def parse_public_trade_event(buf: bytes) -> dict:  
-        # messageHeader: <HHHH  
-        if len(buf) < 8:  
-            raise ValueError("too short for header")  
-      
-        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
-        off = 8  
-      
-        if template_id != 20002:  
-            raise ValueError(f"unexpected templateId={template_id}")  
-      
-        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
-        if len(buf) < off + 8 + 1 + 1:  
-            raise ValueError("too short for fixed fields")  
-      
-        ts = struct.unpack_from("<q", buf, off)[0]  
-        off += 8  
-      
-        price_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        size_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        # group header: blockLength(uint16), numInGroup(uint16)  
-        if len(buf) < off + 4:  
-            raise ValueError("too short for group header")  
-      
-        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
-        off += 4  
-      
-        trades = []  
-        for _ in range(num_in_group):  
-            entry_start = off  
-      
-            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
-            fill_time = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            price_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            size_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            seq = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            side = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_block = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_rpi = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            # Skip any future extension bytes in fixed part  
-            fixed_consumed = off - entry_start  
-            if fixed_consumed < grp_block_len:  
-                off += grp_block_len - fixed_consumed  
-            elif fixed_consumed > grp_block_len:  
-                # schema mismatch vs blockLength  
-                raise ValueError(  
-                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
-                )  
-            exec_id, off = read_varstring8(buf, off)  
-            trades.append(  
-                {  
-                    "fillTime": fill_time,  
-                    "priceMantissa": price_m,  
-                    "sizeMantissa": size_m,  
-                    "price": apply_exp(price_m, price_exp),  
-                    "size": apply_exp(size_m, size_exp),  
-                    "seq": seq,  
-                    "side": side,  
-                    "isBlockTrade": bool(is_block),  
-                    "isRPI": bool(is_rpi),  
-                    "execId": exec_id,  
-                }  
-            )  
-      
-        symbol, off = read_varstring8(buf, off)  
-      
-        return {  
-            "header": {  
-                "blockLength": block_len,  
-                "templateId": template_id,  
-                "schemaId": schema_id,  
-                "version": version,  
-            },  
-            "ts": ts,  
-            "priceExponent": price_exp,  
-            "sizeExponent": size_exp,  
-            "symbol": symbol,  
-            "tradeItems": trades,  
-            "parsed_length": off,  
-        }  
-      
-      
-    # ---------------- WS handlers ----------------  
-    def on_open(ws):  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("subscribed:", TOPIC)  
-      
-      
-    def on_message(ws, message):  
-        if isinstance(message, (bytes, bytearray)):  
-            evt = parse_public_trade_event(message)  
-      
-            # print first trade only (example)  
-            if evt["tradeItems"]:  
-                t0 = evt["tradeItems"][0]  
-                print(  
-                    evt["symbol"],  
-                    "trades=",  
-                    len(evt["tradeItems"]),  
-                    "first:",  
-                    t0["price"],  
-                    "@",  
-                    t0["size"],  
-                    "seq=",  
-                    t0["seq"],  
-                )  
-        else:  
-            print("TEXT:", message)  
-      
-      
-    def on_error(ws, err):  
-        print("WS error:", err)  
-      
-      
-    def on_close(ws, *_):  
-        print("closed")  
-      
-      
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)  
-    
-
-### Golang
-    
-    
-    package main  
-      
-    import (  
-            "encoding/binary"  
-            "encoding/json"  
-            "fmt"  
-            "log"  
-            "math"  
-            "time"  
-      
-            "github.com/gorilla/websocket"  
-    )  
-      
-    const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-            Symbol = "BTCUSDT"  
-            Topic  = "publicTrade.sbe." + Symbol  
-    )  
-      
-    func applyExp(mantissa int64, exp int8) float64 {  
-            return float64(mantissa) * math.Pow10(int(exp))  
-    }  
-      
-    func readVarString8(buf []byte, off int) (string, int, error) {  
-            if off+1 > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: missing length")  
-            }  
-            ln := int(buf[off])  
-            off++  
-            if off+ln > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: out of range")  
-            }  
-            s := string(buf[off : off+ln])  
-            off += ln  
-            return s, off, nil  
-    }  
-      
-    type TradeItem struct {  
-            FillTime     int64   `json:"fillTime"`  
-            PriceMant    int64   `json:"priceMantissa"`  
-            SizeMant     int64   `json:"sizeMantissa"`  
-            Price        float64 `json:"price"`  
-            Size         float64 `json:"size"`  
-            Seq          int64   `json:"seq"`  
-            Side         uint8   `json:"side"`  
-            IsBlockTrade bool    `json:"isBlockTrade"`  
-            IsRPI        bool    `json:"isRPI"`  
-            ExecID       string   `json:"execId"`  
-    }  
-      
-    type PublicTradeEvent struct {  
-            Header struct {  
-                    BlockLength uint16 `json:"blockLength"`  
-                    TemplateID  uint16 `json:"templateId"`  
-                    SchemaID    uint16 `json:"schemaId"`  
-                    Version     uint16 `json:"version"`  
-            } `json:"header"`  
-      
-            Ts            int64       `json:"ts"`  
-            PriceExponent int8        `json:"priceExponent"`  
-            SizeExponent  int8        `json:"sizeExponent"`  
-            TradeItems    []TradeItem `json:"tradeItems"`  
-            Symbol        string      `json:"symbol"`  
-            ParsedLength  int         `json:"parsed_length"`  
-    }  
-      
-    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
-            if len(buf) < 8 {  
-                    return nil, fmt.Errorf("too short for header")  
-            }  
-            off := 0  
-            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
-            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
-            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
-            off += 8  
-      
-            if tid != 20002 {  
-                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
-            }  
-            if off+8+1+1 > len(buf) {  
-                    return nil, fmt.Errorf("too short for fixed fields")  
-            }  
-            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
-            off += 8  
-            priceExp := int8(buf[off])  
-            off++  
-            sizeExp := int8(buf[off])  
-            off++  
-      
-            // group header  
-            if off+4 > len(buf) {  
-                    return nil, fmt.Errorf("too short for group header")  
-            }  
-            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
-            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            off += 4  
-      
-            items := make([]TradeItem, 0, int(numInGroup))  
-            for i := 0; i < int(numInGroup); i++ {  
-                    entryStart := off  
-      
-                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
-                    if off+needMin > len(buf) {  
-                            return nil, fmt.Errorf("too short for trade entry %d", i)  
-                    }  
-      
-                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-      
-                    side := uint8(buf[off]); off++  
-                    isBlock := uint8(buf[off]); off++  
-                    isRpi := uint8(buf[off]); off++  
-      
-                    fixedConsumed := off - entryStart  
-                    if fixedConsumed < int(grpBlockLen) {  
-                            off += int(grpBlockLen) - fixedConsumed  
-                    } else if fixedConsumed > int(grpBlockLen) {  
-                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
-                    }  
-      
-                     execID, off2, err := readVarString8(buf, off)  
-                    if err != nil {  
-                            return nil, err  
-                    }  
-                    off = off2  
-      
-      
-                    items = append(items, TradeItem{  
-                            FillTime:     fillTime,  
-                            PriceMant:    priceM,  
-                            SizeMant:     sizeM,  
-                            Price:        applyExp(priceM, priceExp),  
-                            Size:         applyExp(sizeM, sizeExp),  
-                            Seq:          seq,  
-                            Side:         side,  
-                            IsBlockTrade: isBlock != 0,  
-                            IsRPI:        isRpi != 0,  
-                            ExecID:       execID,  
-                    })  
-            }  
-      
-            symbol, off2, err := readVarString8(buf, off)  
-            if err != nil {  
-                    return nil, err  
-            }  
-            off = off2  
-      
-            evt := &PublicTradeEvent{  
-                    Ts:            ts,  
-                    PriceExponent: priceExp,  
-                    SizeExponent:  sizeExp,  
-                    TradeItems:    items,  
-                    Symbol:        symbol,  
-                    ParsedLength:  off,  
-            }  
-            evt.Header.BlockLength = blk  
-            evt.Header.TemplateID = tid  
-            evt.Header.SchemaID = sid  
-            evt.Header.Version = ver  
-            return evt, nil  
-    }  
-      
-    func main() {  
-            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
-            c, _, err := d.Dial(WSURL, nil)  
-            if err != nil {  
-                    log.Fatal(err)  
-            }  
-            defer c.Close()  
-      
-            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
-            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
-                    log.Fatal(err)  
-            }  
-            log.Println("subscribed:", Topic)  
-      
-            for {  
-                    mt, msg, err := c.ReadMessage()  
-                    if err != nil {  
-                            log.Fatal(err)  
-                    }  
-                    if mt == websocket.BinaryMessage {  
-                            evt, err := parsePublicTradeEvent(msg)  
-                            if err != nil {  
-                                    log.Println("decode error:", err)  
-                                    continue  
-                            }  
-                            if len(evt.TradeItems) > 0 {  
-                                    t0 := evt.TradeItems[0]  
-                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
-                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
-                            }  
-                    } else {  
-                            log.Println("TEXT:", string(msg))  
-                    }  
-            }  
-    }
+Kazakhstan (KAZ)| Derivatives| SMP is **mandatory**. All derivative orders have SMP force-enabled.  
+Turkey (TUR), Kazakhstan (KAZ), Georgia (GEO)| Spot| If `smpType` is `None`, an invalid value, or not provided, it is automatically set to `CancelMaker`.
 
 ---
 
-# SBE Public Trade 接入指南
+# 自成交攔截
 
-## 總覽
+## 什麼是自成交？
 
-  * **Channel:** 僅支援MMWS域名
-  * **Topic:** `publicTrade.sbe.<symbol>`.
-  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-  * **推送頻率** :即時 
-  * 訊息會依照每個商品(symbol)群組以順序方式傳遞。單一封包可能包含 1–1024 筆成交資訊。
+提供自成交攔截(Self Match Prevention)功能，用戶在下單時可以選擇執行方式。當交易對手為相同的UID或屬於相同指定的SMP群組時，可按照以下方式進行執行：
 
-
-
-## 流程
-
-### Ping / Pong (JSON 控制 frame)
-
-**Send Ping**
-    
-    
-    {"req_id": "100001", "op": "ping"}  
-    
-
-**Receive Pong**
-    
-    
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
-    
-
-### 訂閱
-
-  * Topic format: `publicTrade.sbe.<symbol>`
+  1. 取消maker單：當執行時取消maker訂單，但taker訂單仍保留。
+  2. 取消taker單：當執行時取消taker訂單，但maker訂單仍保留。
+  3. 兩者皆取消：當執行時取消taker單和maker單。
 
 
 
-**訂閱示例**
-    
-    
-    {"op": "subscribe","req_id":"100001","args": ["publicTrade.sbe.BTCUSDT"]}  
-    
+## 如何設置自成交類型?
 
-**訂閱回報**
-    
-    
-    {"success":true,"ret_msg":"","conn_id":"d5phu6rboasumi7uds7g-223s","req_id":"100001","op":"subscribe"}  
-    
+[創建訂單](/docs/zh-TW/v5/order/create-order)接口, 可以通過`smpType`參數來設定smp類型
 
-## SBE XML 模板 (Public Trade)
+## 什麼是SMP交易群組?
 
-[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
+  * 任何用戶都可使用SMP功能，僅單UID維度。
+  * SMP交易群組管理功能目前僅適用於機構。
 
-## 欄位參考
 
-**Message:** `PublicTradeEvent` (id = 20002)
 
-欄位名稱| ID| SBE 型別| 單位 / 格式| 備註  
----|---|---|---|---  
-ts| 1| int64| µs| 行情服务產生資料的系統時間戳  
-priceExponent| 2| int8| exponent| 價格的小數位數。顯示價格 = priceMantissa × 10^`priceExponent`  
-sizeExponent| 3| int8| exponent| 數量的小數位數。顯示數量 = sizeMantissa × 10^`sizeExponent`  
-tradeItems| 40| group  
-(`groupSize16Encoding`)| -| 重複的成交項目(Repeating trade items)  
-symbol| 55| varString8| UTF-8| 1-byte 長度 + bytes,例如:`0x07 "BTCUSDT"`  
-  
-### 每個 tradeItems[i] 條目
+**SMP交易群組** ：指一組UID。當此群組中的任何UID下單並選擇SMP執行政策時，只要該群組中任何UID的限價單被匹配，就會觸發SMP執行政策。
 
-欄位(id)| 型別| 說明  
+**更多細節** ：
+
+  1. 每個UID只能加入一個SMP交易群組。
+
+  2. SMP交易群組是UID級別的管理群組，因此當主帳戶加入SMP交易群組時，所有屬於該主帳戶的子帳戶也會自動加入該交易群組。
+
+
+
+  * 如果主帳戶已經加入某個SMP交易群組，則在其之後創建子帳戶，這個新的子帳戶將自動默認加入相同的SMP交易群組。
+  * 子帳戶不必與主帳戶綁定到相同的SMP交易群組。這只是自動加入相同群組的默認機制。如果真的需要，可以手動重置為不同的群組。
+
+
+  3. SMP交易群組和UID之間的關聯可以更改，例如UID加入新的SMP交易群組或從SMP交易群組中刪除，這將不會影響現有的訂單，而僅會影響關係更改後新下的訂單
+
+
+
+**注意** : 基於這點，我們強烈建議在SMP交易群組發生變更時，最好取消所有現有訂單，以避免意外執行。
+
+  4. SMP交易群組在SMP執行中具有較高優先級，當任何一方沒有群組時，UID才會生效。
+
+  5. 一旦訂單進入訂單簿，其 smp 標誌就不再重要。系統始終遵循後一個訂單的smp標籤。
+
+
+
+
+**示例** ：  
+1月1日：UID1加入SMP交易群組A，並下訂單1；  
+1月2日：UID1被從SMP交易群組A中移除，但訂單1仍然處於活躍狀態且為“新”狀態。
+
+  * 情況1：如果UID1加入了SMP交易群組B並下了訂單2，如果訂單2與訂單1相符，它將被執行，因為它們屬於兩個不同的群組。
+  * 情況2：如果UID1在被從SMP交易群組A中移除後沒有加入任何其他群組並下了訂單2，如果訂單2與訂單1相符，SMP將被觸發，因為UID1在下訂單2時沒有群組，所以SMP在UID級別（同一個UID1）被觸發。
+
+
+
+## 如何管理我的UID及SMP交易群組?
+
+您可以聯繫您的機構業務經理或通過電子郵件聯繫Bybit，電子郵件地址為: [institutional_services@bybit.com](mailto:institutional_services@bybit.com)
+
+## Bybit Global 與 Bybit 合規站點之間的 SMP
+
+  * **Bybit Global:** 機構客戶可自行選擇是否啟用 SMP
+  * **Bybit 合規站點:** SMP 將 **預設為所有用戶啟用**
+    * **注意:** 多數合規站點目前僅支援 **現貨交易**
+
+
+
+**上線排期** :   
+
+
+首個上線站點為 **Bybit 土耳其站** , 其後依序為:
+
+  * **土耳其站:** 2026/01/27
+  * **哈薩克斯坦站:** 2026/02/24
+  * **格魯吉亞站:** 2026/03/10
+  * **其他合規站點 (開發中):** 將於站點上線時 **立即啟用 SMP** 。
+
+
+
+**各站點 SMP 特殊規則** （2026-08-04 起生效）：
+
+站點| 產品| 行為  
 ---|---|---  
-fillTime(1)| int64| 成交撮合時間戳(µs)  
-price(2)| int64| 套用 priceExponent。顯示價格 = `price × 10^priceExponent`。  
-size(3)| int64| 套用 sizeExponent。顯示數量 = `size × 10^sizeExponent`。  
-seq(4)| int64| 撮合序列 ID  
-side(5)| SideType(uint8)| taker單方向  
-isBlockTrade(6)| BoolEnum(uint8)| 是否為大宗交易(0 = 非 blockTrade,1 = blockTrade)  
-isRPI(7)| BoolEnum(uint8)| 是否為 RPI(0 = 非 RPI,1 = RPI)  
-execId(100)| varString8| 成交 ID  
-  
-#### SideType
-
-  * `0`: UNKOWN
-  * `1`: BUY
-  * `2`: SELL
-  * `254`: NON_REPRESENTABLE
-
-
-
-#### BoolEnum
-
-  * `0`: FALSE
-  * `1`: TRUE
-  * `254`: NON_REPRESENTABLE
-
-
-
-## 接入示例
-
-### Python
-    
-    
-    import json  
-    import struct  
-    import websocket  
-    from typing import Tuple  
-      
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-    SYMBOL = "BTCUSDT"  
-    TOPIC = f"publicTrade.sbe.{SYMBOL}"  
-      
-      
-    # ---------------- SBE helpers ----------------  
-    def apply_exp(mantissa: int, exp: int) -> float:  
-        # display = mantissa * 10^exp  
-        # exp can be negative  
-        return mantissa * (10.0**exp)  
-      
-      
-    def read_varstring8(buf: bytes, off: int) -> Tuple[str, int]:  
-        if off + 1 > len(buf):  
-            raise ValueError("varString8: missing length")  
-      
-        ln = buf[off]  
-        off += 1  
-      
-        if off + ln > len(buf):  
-            raise ValueError("varString8: out of range")  
-      
-        s = buf[off : off + ln].decode("utf-8", errors="replace")  
-        off += ln  
-        return s, off  
-      
-      
-    def parse_public_trade_event(buf: bytes) -> dict:  
-        # messageHeader: <HHHH  
-        if len(buf) < 8:  
-            raise ValueError("too short for header")  
-      
-        block_len, template_id, schema_id, version = struct.unpack_from("<HHHH", buf, 0)  
-        off = 8  
-      
-        if template_id != 20002:  
-            raise ValueError(f"unexpected templateId={template_id}")  
-      
-        # fixed fields: ts(int64), priceExp(int8), sizeExp(int8)  
-        if len(buf) < off + 8 + 1 + 1:  
-            raise ValueError("too short for fixed fields")  
-      
-        ts = struct.unpack_from("<q", buf, off)[0]  
-        off += 8  
-      
-        price_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        size_exp = struct.unpack_from("<b", buf, off)[0]  
-        off += 1  
-      
-        # group header: blockLength(uint16), numInGroup(uint16)  
-        if len(buf) < off + 4:  
-            raise ValueError("too short for group header")  
-      
-        grp_block_len, num_in_group = struct.unpack_from("<HH", buf, off)  
-        off += 4  
-      
-        trades = []  
-        for _ in range(num_in_group):  
-            entry_start = off  
-      
-            # Parse fields in-order (don’t assume padding; only skip remaining bytes up to grp_block_len)  
-            fill_time = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            price_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            size_m = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            seq = struct.unpack_from("<q", buf, off)[0]  
-            off += 8  
-      
-            side = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_block = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            is_rpi = struct.unpack_from("<B", buf, off)[0]  
-            off += 1  
-      
-            # Skip any future extension bytes in fixed part  
-            fixed_consumed = off - entry_start  
-            if fixed_consumed < grp_block_len:  
-                off += grp_block_len - fixed_consumed  
-            elif fixed_consumed > grp_block_len:  
-                # schema mismatch vs blockLength  
-                raise ValueError(  
-                    f"group blockLength too small: {grp_block_len} < {fixed_consumed}"  
-                )  
-            exec_id, off = read_varstring8(buf, off)  
-            trades.append(  
-                {  
-                    "fillTime": fill_time,  
-                    "priceMantissa": price_m,  
-                    "sizeMantissa": size_m,  
-                    "price": apply_exp(price_m, price_exp),  
-                    "size": apply_exp(size_m, size_exp),  
-                    "seq": seq,  
-                    "side": side,  
-                    "isBlockTrade": bool(is_block),  
-                    "isRPI": bool(is_rpi),  
-                    "execId": exec_id,  
-                }  
-            )  
-      
-        symbol, off = read_varstring8(buf, off)  
-      
-        return {  
-            "header": {  
-                "blockLength": block_len,  
-                "templateId": template_id,  
-                "schemaId": schema_id,  
-                "version": version,  
-            },  
-            "ts": ts,  
-            "priceExponent": price_exp,  
-            "sizeExponent": size_exp,  
-            "symbol": symbol,  
-            "tradeItems": trades,  
-            "parsed_length": off,  
-        }  
-      
-      
-    # ---------------- WS handlers ----------------  
-    def on_open(ws):  
-        ws.send(json.dumps({"op": "subscribe", "args": [TOPIC]}))  
-        print("subscribed:", TOPIC)  
-      
-      
-    def on_message(ws, message):  
-        if isinstance(message, (bytes, bytearray)):  
-            evt = parse_public_trade_event(message)  
-      
-            # print first trade only (example)  
-            if evt["tradeItems"]:  
-                t0 = evt["tradeItems"][0]  
-                print(  
-                    evt["symbol"],  
-                    "trades=",  
-                    len(evt["tradeItems"]),  
-                    "first:",  
-                    t0["price"],  
-                    "@",  
-                    t0["size"],  
-                    "seq=",  
-                    t0["seq"],  
-                )  
-        else:  
-            print("TEXT:", message)  
-      
-      
-    def on_error(ws, err):  
-        print("WS error:", err)  
-      
-      
-    def on_close(ws, *_):  
-        print("closed")  
-      
-      
-    if __name__ == "__main__":  
-        websocket.enableTrace(False)  
-        ws = websocket.WebSocketApp(  
-            WS_URL,  
-            on_open=on_open,  
-            on_message=on_message,  
-            on_error=on_error,  
-            on_close=on_close,  
-        )  
-        ws.run_forever(ping_interval=20, ping_timeout=10)    
-    
-
-### Golang
-    
-    
-    package main  
-      
-    import (  
-            "encoding/binary"  
-            "encoding/json"  
-            "fmt"  
-            "log"  
-            "math"  
-            "time"  
-      
-            "github.com/gorilla/websocket"  
-    )  
-      
-    const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
-            Symbol = "BTCUSDT"  
-            Topic  = "publicTrade.sbe." + Symbol  
-    )  
-      
-    func applyExp(mantissa int64, exp int8) float64 {  
-            return float64(mantissa) * math.Pow10(int(exp))  
-    }  
-      
-    func readVarString8(buf []byte, off int) (string, int, error) {  
-            if off+1 > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: missing length")  
-            }  
-            ln := int(buf[off])  
-            off++  
-            if off+ln > len(buf) {  
-                    return "", off, fmt.Errorf("varString8: out of range")  
-            }  
-            s := string(buf[off : off+ln])  
-            off += ln  
-            return s, off, nil  
-    }  
-      
-    type TradeItem struct {  
-            FillTime     int64   `json:"fillTime"`  
-            PriceMant    int64   `json:"priceMantissa"`  
-            SizeMant     int64   `json:"sizeMantissa"`  
-            Price        float64 `json:"price"`  
-            Size         float64 `json:"size"`  
-            Seq          int64   `json:"seq"`  
-            Side         uint8   `json:"side"`  
-            IsBlockTrade bool    `json:"isBlockTrade"`  
-            IsRPI        bool    `json:"isRPI"`  
-            ExecID       string   `json:"execId"`  
-    }  
-      
-    type PublicTradeEvent struct {  
-            Header struct {  
-                    BlockLength uint16 `json:"blockLength"`  
-                    TemplateID  uint16 `json:"templateId"`  
-                    SchemaID    uint16 `json:"schemaId"`  
-                    Version     uint16 `json:"version"`  
-            } `json:"header"`  
-      
-            Ts            int64       `json:"ts"`  
-            PriceExponent int8        `json:"priceExponent"`  
-            SizeExponent  int8        `json:"sizeExponent"`  
-            TradeItems    []TradeItem `json:"tradeItems"`  
-            Symbol        string      `json:"symbol"`  
-            ParsedLength  int         `json:"parsed_length"`  
-    }  
-      
-    func parsePublicTradeEvent(buf []byte) (*PublicTradeEvent, error) {  
-            if len(buf) < 8 {  
-                    return nil, fmt.Errorf("too short for header")  
-            }  
-            off := 0  
-            blk := binary.LittleEndian.Uint16(buf[off : off+2])  
-            tid := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            sid := binary.LittleEndian.Uint16(buf[off+4 : off+6])  
-            ver := binary.LittleEndian.Uint16(buf[off+6 : off+8])  
-            off += 8  
-      
-            if tid != 20002 {  
-                    return nil, fmt.Errorf("unexpected templateId=%d", tid)  
-            }  
-            if off+8+1+1 > len(buf) {  
-                    return nil, fmt.Errorf("too short for fixed fields")  
-            }  
-            ts := int64(binary.LittleEndian.Uint64(buf[off : off+8]))  
-            off += 8  
-            priceExp := int8(buf[off])  
-            off++  
-            sizeExp := int8(buf[off])  
-            off++  
-      
-            // group header  
-            if off+4 > len(buf) {  
-                    return nil, fmt.Errorf("too short for group header")  
-            }  
-            grpBlockLen := binary.LittleEndian.Uint16(buf[off : off+2])  
-            numInGroup := binary.LittleEndian.Uint16(buf[off+2 : off+4])  
-            off += 4  
-      
-            items := make([]TradeItem, 0, int(numInGroup))  
-            for i := 0; i < int(numInGroup); i++ {  
-                    entryStart := off  
-      
-                    needMin := 8 + 8 + 8 + 8 + 1 + 1 + 1 + 8  
-                    if off+needMin > len(buf) {  
-                            return nil, fmt.Errorf("too short for trade entry %d", i)  
-                    }  
-      
-                    fillTime := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    priceM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    sizeM := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-                    seq := int64(binary.LittleEndian.Uint64(buf[off : off+8])); off += 8  
-      
-                    side := uint8(buf[off]); off++  
-                    isBlock := uint8(buf[off]); off++  
-                    isRpi := uint8(buf[off]); off++  
-      
-                    fixedConsumed := off - entryStart  
-                    if fixedConsumed < int(grpBlockLen) {  
-                            off += int(grpBlockLen) - fixedConsumed  
-                    } else if fixedConsumed > int(grpBlockLen) {  
-                            return nil, fmt.Errorf("group blockLength too small: %d < %d", grpBlockLen, fixedConsumed)  
-                    }  
-      
-                     execID, off2, err := readVarString8(buf, off)  
-                    if err != nil {  
-                            return nil, err  
-                    }  
-                    off = off2  
-      
-      
-                    items = append(items, TradeItem{  
-                            FillTime:     fillTime,  
-                            PriceMant:    priceM,  
-                            SizeMant:     sizeM,  
-                            Price:        applyExp(priceM, priceExp),  
-                            Size:         applyExp(sizeM, sizeExp),  
-                            Seq:          seq,  
-                            Side:         side,  
-                            IsBlockTrade: isBlock != 0,  
-                            IsRPI:        isRpi != 0,  
-                            ExecID:       execID,  
-                    })  
-            }  
-      
-            symbol, off2, err := readVarString8(buf, off)  
-            if err != nil {  
-                    return nil, err  
-            }  
-            off = off2  
-      
-            evt := &PublicTradeEvent{  
-                    Ts:            ts,  
-                    PriceExponent: priceExp,  
-                    SizeExponent:  sizeExp,  
-                    TradeItems:    items,  
-                    Symbol:        symbol,  
-                    ParsedLength:  off,  
-            }  
-            evt.Header.BlockLength = blk  
-            evt.Header.TemplateID = tid  
-            evt.Header.SchemaID = sid  
-            evt.Header.Version = ver  
-            return evt, nil  
-    }  
-      
-    func main() {  
-            d := websocket.Dialer{HandshakeTimeout: 10 * time.Second}  
-            c, _, err := d.Dial(WSURL, nil)  
-            if err != nil {  
-                    log.Fatal(err)  
-            }  
-            defer c.Close()  
-      
-            sub, _ := json.Marshal(map[string]any{"op": "subscribe", "args": []string{Topic}})  
-            if err := c.WriteMessage(websocket.TextMessage, sub); err != nil {  
-                    log.Fatal(err)  
-            }  
-            log.Println("subscribed:", Topic)  
-      
-            for {  
-                    mt, msg, err := c.ReadMessage()  
-                    if err != nil {  
-                            log.Fatal(err)  
-                    }  
-                    if mt == websocket.BinaryMessage {  
-                            evt, err := parsePublicTradeEvent(msg)  
-                            if err != nil {  
-                                    log.Println("decode error:", err)  
-                                    continue  
-                            }  
-                            if len(evt.TradeItems) > 0 {  
-                                    t0 := evt.TradeItems[0]  
-                                    log.Printf("%s trades=%d first=%.8f@%.8f seq=%d",  
-                                            evt.Symbol, len(evt.TradeItems), t0.Price, t0.Size, t0.Seq)  
-                            }  
-                    } else {  
-                            log.Println("TEXT:", string(msg))  
-                    }  
-            }  
-    }
+哈薩克斯坦（KAZ）| 衍生品| SMP **強制開啟** 。所有衍生品訂單均強制啟用 SMP。  
+土耳其（TUR）、哈薩克斯坦（KAZ）、格魯吉亞（GEO）| 現貨| 若 `smpType` 為 `None`、非法值或未傳值，系統將自動設為 `CancelMaker`。

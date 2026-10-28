@@ -2,35 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/page-subuid
 api_type: REST
-updated_at: 2026-10-27 18:41:13.224315
+updated_at: 2026-10-28 18:42:37.804566
 ---
 
-# Delete Sub UID
+# Get Referral Code
 
-Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
-Use **master** user's api key**.
+Query the referral codes owned by the current user and their corresponding referral registration links.
 
-tip
+info
 
-The API key must have one of the below permissions in order to call this endpoint
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+  * Sub-accounts will return the master account's referral codes
+  * Only active (non-expired) referral codes are returned
 
 
 
 ### HTTP Request
 
-POST`/v5/user/del-submember`
+GET`/v5/user/invitation/code`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-subMemberId| **true**|  string| Sub UID  
-  
+No request parameters required. User identity is derived from the API Key.
+
 ### Response Parameters
 
-None
+Parameter| Type| Comments  
+---|---|---  
+referralCodes| array| List of referral codes owned by the user  
+> referralCode| string| The referral code string  
+> referralLink| string| The referral registration link for the user's site. URL structure: `https://{domain}/{lang}/invite/?ref={referralCode}`  
+> scene| integer| Referral code scene type. `1`: Affiliate; `2`: Friend  
+  
+* * *
 
 ### Request Example
 
@@ -41,51 +44,20 @@ None
 
     
     
-    POST /v5/user/del-submember HTTP/1.1  
+    GET /v5/user/invitation/code HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-TIMESTAMP: 1753286400000  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 34  
+    X-BAPI-SIGN: XXXXX  
+    
+    
+    
       
-    {  
-        "subMemberId": "112725187"  
-    }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.delete_sub_uid(  
-        subMemberId="112725187"  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -94,41 +66,55 @@ None
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "referralCodes": [  
+                {  
+                    "referralCode": "AFFIL001",  
+                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
+                    "scene": 1  
+                },  
+                {  
+                    "referralCode": "FRIEND01",  
+                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
+                    "scene": 2  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1753286400000  
     }
 
 ---
 
-# 刪除子帳戶
+# 查詢邀請碼
 
-刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
+查詢當前用戶持有的邀請碼及其對應站點的邀請注冊鏈接。
 
-  
-僅可使用**母**帳戶api key調用.
+信息
 
-提示
-
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+  * 子帳號將返回母帳號的邀請碼
+  * 僅返回有效期內（未過期）的邀請碼
 
 
 
 ### HTTP 請求
 
-POST`/v5/user/del-submember`
+GET`/v5/user/invitation/code`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-subMemberId| **true**|  string| Sub UID  
-  
+無請求參數。用戶身份從 API Key 中獲取。
+
 ### 返回參數
 
-無
+參數| 類型| 說明  
+---|---|---  
+referralCodes| array| 用戶持有的邀請碼列表  
+> referralCode| string| 邀請碼字符串  
+> referralLink| string| 對應站點的邀請注冊鏈接。URL 結構：`https://{domain}/{lang}/invite/?ref={referralCode}`  
+> scene| integer| 邀請碼場景類型。`1`: 代理商（Affiliate）；`2`: 好友（Friend）  
+  
+* * *
 
 ### 請求示例
 
@@ -139,18 +125,12 @@ subMemberId| **true**|  string| Sub UID
 
     
     
-    POST /v5/user/del-submember HTTP/1.1  
+    GET /v5/user/invitation/code HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-TIMESTAMP: 1753286400000  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 34  
-      
-    {  
-        "subMemberId": "112725187"  
-    }  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -158,33 +138,29 @@ subMemberId| **true**|  string| Sub UID
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
-### 響應示例
+### 返回示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "referralCodes": [  
+                {  
+                    "referralCode": "AFFIL001",  
+                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
+                    "scene": 1  
+                },  
+                {  
+                    "referralCode": "FRIEND01",  
+                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
+                    "scene": 2  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1753286400000  
     }

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-signal-bot-trading-post-amend-tpsl
 anchor_id: order-book-trading-signal-bot-trading-post-amend-tpsl
 api_type: API
-updated_at: 2026-10-27 19:08:09.907528
+updated_at: 2026-10-28 19:09:22.158767
 ---
 
 # POST / Amend TPSL

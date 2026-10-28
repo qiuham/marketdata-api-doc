@@ -2,74 +2,182 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/position-mode
 api_type: Position
-updated_at: 2026-10-27 18:39:10.700705
+updated_at: 2026-10-28 18:40:34.933040
 ---
 
-# Get Pre-upgrade Closed PnL
+# Set Trading Stop
 
-Query user's closed profit and loss records from before you upgraded the account to a Unified account. The results are sorted by `updatedTime` in descending order. it only supports to query USDT perpetual, Inverse perpetual and Inverse Futures.
+Set the take profit, stop loss or trailing stop for the position.
+
+tip
+
+Passing these parameters will create conditional orders by the system internally. The system will cancel these orders if the position is closed, and adjust the qty according to the size of the open position.
 
 info
 
-By `category`="linear", you can query USDT Perps data occurred during classic account  
-By `category`="inverse", you can query Inverse Contract data occurred during **classic account or[UTA1.0](/docs/v5/acct-mode#uta-10)**
+New version of TP/SL function supports both holding entire position TP/SL orders and holding partial position TP/SL orders.
+
+  * Full position TP/SL orders: This API can be used to modify the parameters of existing TP/SL orders.
+  * Partial position TP/SL orders: This API can only add partial position TP/SL orders.
+
+
+
+note
+
+Under the new version of TP/SL function, when calling this API to perform one-sided take profit or stop loss modification on existing TP/SL orders on the holding position, it will cause the paired tp/sl orders to lose binding relationship. This means that when calling the cancel API through the tp/sl order ID, it will only cancel the corresponding one-sided take profit or stop loss order ID.
 
 ### HTTP Request
 
-GET`/v5/pre-upgrade/position/closed-pnl`
+POST`/v5/position/trading-stop`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`, `option`  
 symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
+tpslMode| **true**|  string| TP/SL mode
 
-  * startTime and endTime are not passed, return 7 days by default
-  * Only startTime is passed, return range between startTime and startTime+7 days
-  * Only endTime is passed, return range between endTime-7 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
+  * `Full`: entire position TP/SL, option supports "tpslMode"=`Full` only
+  * `Partial`: partial position TP/SL
 
   
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+[positionIdx](/docs/v5/enum#positionidx)| true| integer| Used to identify positions in different position modes. 
+
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
+
+  
+takeProfit| false| string| Cannot be less than 0, 0 means cancel TP  
+stopLoss| false| string| Cannot be less than 0, 0 means cancel SL  
+trailingStop| false| string| Trailing stop by price distance. Cannot be less than 0, 0 means cancel TS  
+[tpTriggerBy](/docs/v5/enum#triggerby)| false| string| Take profit trigger price type  
+[slTriggerBy](/docs/v5/enum#triggerby)| false| string| Stop loss trigger price type  
+activePrice| false| string| Trailing stop trigger price. Trailing stop will be triggered when this price is reached **only**  
+tpSize| false| string| Take profit size  
+valid for TP/SL partial mode, note: the value of tpSize and slSize must equal  
+slSize| false| string| Stop loss size  
+valid for TP/SL partial mode, note: the value of tpSize and slSize must equal  
+tpLimitPrice| false| string| The limit order price when take profit price is triggered. Only works when tpslMode=Partial and tpOrderType=Limit  
+slLimitPrice| false| string| The limit order price when stop loss price is triggered. Only works when tpslMode=Partial and slOrderType=Limit  
+tpOrderType| false| string| The order type when take profit is triggered. `Market`(default), `Limit`  
+For tpslMode=Full, it only supports tpOrderType="Market"  
+slOrderType| false| string| The order type when stop loss is triggered. `Market`(default), `Limit`  
+For tpslMode=Full, it only supports slOrderType="Market"  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-category| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> orderId| string| Order ID  
-> side| string| `Buy`, `Side`  
-> qty| string| Order qty  
-> orderPrice| string| Order price  
-> [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
-> execType| string| Exec type. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`  
-> closedSize| string| Closed size  
-> cumEntryValue| string| Cumulated Position value  
-> avgEntryPrice| string| Average entry price  
-> cumExitValue| string| Cumulated exit position value  
-> avgExitPrice| string| Average exit price  
-> closedPnl| string| Closed PnL  
-> fillCount| string| The number of fills in a single order  
-> leverage| string| leverage  
-> createdTime| string| The created time (ms)  
-> updatedTime| string| The updated time (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-  
+None
+
+[](/docs/api-explorer/v5/position/trading-stop)
+
+* * *
+
 ### Request Example
+
+  * HTTP
+  * Python
+  * Java
+  * Node.js
+
+
     
     
-    GET /v5/pre-upgrade/position/closed-pnl?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/trading-stop HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682580911998  
+    X-BAPI-TIMESTAMP: 1672283124270  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "category":"linear",  
+        "symbol": "XRPUSDT",  
+        "takeProfit": "0.6",  
+        "stopLoss": "0.2",  
+        "tpTriggerBy": "MarkPrice",  
+        "slTriggerBy": "IndexPrice",  
+        "tpslMode": "Partial",  
+        "tpOrderType": "Limit",  
+        "slOrderType": "Limit",  
+        "tpSize": "50",  
+        "slSize": "50",  
+        "tpLimitPrice": "0.57",  
+        "slLimitPrice": "0.21",  
+        "positionIdx": 0  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_trading_stop(  
+        category="linear",  
+        symbol="XRPUSDT",  
+        takeProfit="0.6",  
+        stopLoss="0.2",  
+        tpTriggerBy="MarkPrice",  
+        slTriggerB="IndexPrice",  
+        tpslMode="Partial",  
+        tpOrderType="Limit",  
+        slOrderType="Limit",  
+        tpSize="50",  
+        slSize="50",  
+        tpLimitPrice="0.57",  
+        slLimitPrice="0.21",  
+        positionIdx=0,  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setTradingStopRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("XRPUSDT").takeProfit("0.6").stopLoss("0.2").tpTriggerBy(TriggerBy.MARK_PRICE).slTriggerBy(TriggerBy.LAST_PRICE)  
+                    .tpslMode(TpslMode.PARTIAL).tpOrderType(TradeOrderType.LIMIT).slOrderType(TradeOrderType.LIMIT).tpSize("50").slSize("50").tpLimitPrice("0.57").slLimitPrice("0.21").build();  
+    client.setTradingStop(setTradingStopRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setTradingStop({  
+            category: 'linear',  
+            symbol: 'XRPUSDT',  
+            takeProfit: '0.6',  
+            stopLoss: '0.2',  
+            tpTriggerBy: 'MarkPrice',  
+            slTriggerBy: 'IndexPrice',  
+            tpslMode: 'Partial',  
+            tpOrderType: 'Limit',  
+            slOrderType: 'Limit',  
+            tpSize: '50',  
+            slSize: '50',  
+            tpLimitPrice: '0.57',  
+            slLimitPrice: '0.21',  
+            positionIdx: 0,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -78,104 +186,179 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
-                    "side": "Sell",  
-                    "qty": "0.200",  
-                    "orderPrice": "27203.40",  
-                    "orderType": "Market",  
-                    "execType": "Trade",  
-                    "closedSize": "0.200",  
-                    "cumEntryValue": "5588.88",  
-                    "avgEntryPrice": "27944.40",  
-                    "cumExitValue": "5726.4252",  
-                    "avgExitPrice": "28632.13",  
-                    "closedPnl": "204.25510011",  
-                    "fillCount": "22",  
-                    "leverage": "10",  
-                    "createdTime": "1682487465732",  
-                    "updatedTime": "1682487465732"  
-                }  
-            ],  
-            "category": "linear",  
-            "nextPageCursor": ""  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1682580912259  
+        "time": 1672283125359  
     }
 
 ---
 
-# 查詢升級前平倉盈虧
+# 設置止盈止損
 
-支持查詢升級到統一帳戶之前發生的USDT永續 / 反向合約, 返回結果按照`updatedTime`降序排列
+該接口可以設置止盈、止損和追蹤止損
 
-通過category=linear, 查詢到在經典帳戶期間產生的USDT永續數據  
-通過category=inverse, 查詢到在經典帳戶或者統一帳戶1.0期間產生的反向合約數據
+提示
+
+在提交請求後，系統內部將會自動創建對應類型的條件單。若倉位被平，系統將會調整相關條件訂單數量或者取消這些條件單。
+
+信息
+
+新版止盈止損, 支持既持有全部止盈止損單, 也可以持有部分止盈止損單
+
+  * 全部倉位止盈止損單: 該接口可用於修改該類型的止盈止損單的參數
+  * 部分倉位止盈止損單: 該接口僅能新增部分倉位止盈止損單
+
+
+
+備註
+
+新版止盈止損下, 調用該接口對持倉上的已有的止盈止損進行單邊止盈或者止損修改時, 會導致成對的tp/sl訂單失去綁定關係, 這意味著當通過tp/sl訂單ID調用 取消接口時, 只會取消對應訂單ID的單邊止盈或止損.
 
 ### HTTP 請求
 
-GET`/v5/pre-upgrade/position/closed-pnl`
+POST`/v5/position/trading-stop`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型
-
-  * `linear`, `inverse`
-
-  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`, `option`  
 symbol| **true**|  string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
+tpslMode| **true**|  string| 止盈止損模式. `Full`: 全部倉位止盈止損, 期權僅支持`Full` `Partial`: 部分倉位止盈止損  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| true| integer| 倉位標識，用戶識別倉位. 
 
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+7天的數據
-  * 若只傳endTime，則查詢endTime-7天和endTime的數據
+  * `0`: 單向持倉
+  * `1`: 買側雙向持倉
+  * `2`: 賣側雙向持倉
 
   
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
-  
+takeProfit| false| string| 止盈價格. 等於0表示取消止盈，若不修改，則不要傳遞該參數  
+stopLoss| false| string| 止損價格. 等於0表示取消止損，若不修改，則不要傳遞該參數  
+trailingStop| false| string| 追蹤止損, 僅支持按價差設置. 等於0表示取消追蹤止損，若不修改，則不要傳遞該參數  
+[tpTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止盈價格類型  
+[slTriggerBy](/docs/zh-TW/v5/enum#triggerby)| false| string| 止損價格類型  
+activePrice| false| string| 追蹤止損激活價格. 追蹤止損會在到達該價格時觸發  
+tpSize| false| string| 止盈倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等  
+slSize| false| string| 止損倉位數量. 僅部分止盈止損時有效. 注意: tpSize和slSize的數值必須相等  
+tpLimitPrice| false| string| 觸發止盈後轉換為限價單的價格  
+僅tpslMode=Partial且tpOrderType=Limit時有效  
+slLimitPrice| false| string| 觸發止損後轉換為限價單的價格  
+僅tpslMode=Partial且slOrderType=Limit時有效  
+tpOrderType| false| string| 止盈觸發後的訂單類型. `Market`(默認), `Limit`  
+對於tpslMode=Full時, 僅支持tpOrderType=Market  
+slOrderType| false| string| 止損觸發後的訂單類型. `Market`(默認), `Limit`  
+對於tpslMode=Full時, 僅支持slOrderType=Market  
+[](/docs/zh-TW/api-explorer/v5/position/trading-stop)
+
+* * *
+
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> orderId| string| 訂單Id  
-> side| string| 買賣方向 `Buy`, `Side`  
-> qty| string| 訂單數量  
-> orderPrice| string| 訂單價格  
-> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. `Market`,`Limit`  
-> execType| string| 執行類型. `Trade`, `BustTrade`, `SessionSettlePnL`, `Settle`  
-> closedSize| string| 平倉數量  
-> cumEntryValue| string| 被平倉位的累計入場價值  
-> avgEntryPrice| string| 平均入場價格  
-> cumExitValue| string| 被平倉位的累計出場價值  
-> avgExitPrice| string| 平均出場價格  
-> closedPnl| string| 被平倉位的盈虧  
-> fillCount| string| 成交筆數  
-> leverage| string| 持倉槓桿  
-> createdTime| string| 創建時間 (毫秒)  
-> updatedTime| string| 更新時間 (毫秒)  
-nextPageCursor| string| 游標，用於翻頁  
-  
+無
+
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Java
+  * Node.js
+
+
     
     
-    GET /v5/pre-upgrade/position/closed-pnl?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/trading-stop HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682580911998  
+    X-BAPI-TIMESTAMP: 1672283124270  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "category":"linear",  
+        "symbol": "XRPUSDT",  
+        "takeProfit": "0.6",  
+        "stopLoss": "0.2",  
+        "tpTriggerBy": "MarkPrice",  
+        "slTriggerBy": "IndexPrice",  
+        "tpslMode": "Partial",  
+        "tpOrderType": "Limit",  
+        "slOrderType": "Limit",  
+        "tpSize": "50",  
+        "tpLimitPrice": "0.57",  
+        "slLimitPrice": "0.21",  
+        "positionIdx": 0  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_trading_stop(  
+        category="linear",  
+        symbol="XRPUSDT",  
+        takeProfit="0.6",  
+        stopLoss="0.2",  
+        tpTriggerBy="MarkPrice",  
+        slTriggerB="IndexPrice",  
+        tpslMode="Partial",  
+        tpOrderType="Limit",  
+        slOrderType="Limit",  
+        tpSize="50",  
+        slSize="50",  
+        tpLimitPrice="0.57",  
+        slLimitPrice="0.21",  
+        positionIdx=0,  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setTradingStopRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("XRPUSDT").takeProfit("0.6").stopLoss("0.2").tpTriggerBy(TriggerBy.MARK_PRICE).slTriggerBy(TriggerBy.LAST_PRICE)  
+                    .tpslMode(TpslMode.PARTIAL).tpOrderType(TradeOrderType.LIMIT).slOrderType(TradeOrderType.LIMIT).tpSize("50").slSize("50").tpLimitPrice("0.57").slLimitPrice("0.21").build();  
+    client.setTradingStop(setTradingStopRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setTradingStop({  
+            category: 'linear',  
+            symbol: 'XRPUSDT',  
+            takeProfit: '0.6',  
+            stopLoss: '0.2',  
+            tpTriggerBy: 'MarkPrice',  
+            slTriggerBy: 'IndexPrice',  
+            tpslMode: 'Partial',  
+            tpOrderType: 'Limit',  
+            slOrderType: 'Limit',  
+            tpSize: '50',  
+            slSize: '50',  
+            tpLimitPrice: '0.57',  
+            slLimitPrice: '0.21',  
+            positionIdx: 0,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -184,31 +367,7 @@ nextPageCursor| string| 游標，用於翻頁
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "list": [  
-                {  
-                    "symbol": "BTCUSDT",  
-                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
-                    "side": "Sell",  
-                    "qty": "0.200",  
-                    "orderPrice": "27203.40",  
-                    "orderType": "Market",  
-                    "execType": "Trade",  
-                    "closedSize": "0.200",  
-                    "cumEntryValue": "5588.88",  
-                    "avgEntryPrice": "27944.40",  
-                    "cumExitValue": "5726.4252",  
-                    "avgExitPrice": "28632.13",  
-                    "closedPnl": "204.25510011",  
-                    "fillCount": "22",  
-                    "leverage": "10",  
-                    "createdTime": "1682487465732",  
-                    "updatedTime": "1682487465732"  
-                }  
-            ],  
-            "category": "linear",  
-            "nextPageCursor": ""  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1682580912259  
+        "time": 1672283125359  
     }

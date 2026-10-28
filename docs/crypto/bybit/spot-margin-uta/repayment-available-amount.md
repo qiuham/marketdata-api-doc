@@ -2,53 +2,32 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/repayment-available-amount
 api_type: REST
-updated_at: 2026-10-27 18:40:22.418561
+updated_at: 2026-10-28 18:41:49.797581
 ---
 
-# Set Auto Repay Mode
+# Get Status And Leverage
 
-Set spot automatic repayment mode
-
-info
-
-  1. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.
-  2. If `autoRepayMode` of a currency is set to 1, the system will automatically make repayments without asset conversion to that currency at 0 and 30 minutes every hour.
-  3. The amount of repayments without asset conversion is the minimum of available spot balance in that currency and liability of that currency. 
-  4. If you missed the automatic repayment batches for 0 and 30 minutes every hour, you can manually make the repayment via the API. Please refer to [Manual Repay Without Asset Conversion](/docs/v5/account/no-convert-repay)
-
-
+Query the Spot margin status and leverage
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/state`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| false| string| Coin name, uppercase only. If `currency` is not passed, spot automatic repayment will be enabled for all currencies.  
-autoRepayMode| **true**|  string| 
-
-  * `1`: On
-  * `0`: Off
-
-  
-  
-* * *
+None
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-data| array| Object  
-> currency| string| Coin name, uppercase only.  
-> autoRepayMode| string| 
+spotLeverage| string| Spot margin leverage. Returns `""` if the margin trade is turned off  
+spotMarginMode| string| Spot margin status. `1`: on, `0`: off  
+effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal places, truncate downwards  
+[](/docs/api-explorer/v5/spot-margin-uta/status)
 
-  * `1`: On
-  * `0`: Off
+* * *
 
-  
-  
 ### Request Example
 
   * HTTP
@@ -58,18 +37,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/state HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -79,14 +52,26 @@ data| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_auto_repay_mode(  
-        currency="ETH",  
-        autoRepayMode="1"  
-    ))  
+    print(session.spot_margin_trade_get_status_and_leverage())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSpotMarginState()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -94,64 +79,39 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
-                {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
-                }  
-            ]  
+            "spotLeverage": "10",  
+            "spotMarginMode": "1",  
+            "effectiveLeverage": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1766976677678  
+        "time": 1692696841231  
     }
 
 ---
 
-# 設定現貨自動還款模式
+# 查詢開關狀態和倍數
 
-設定現貨自動還款模式
+查詢統一帳戶下槓桿交易的開關狀態和槓桿倍數
 
-信息
-
-  1. 若未指定`currency`參數，則所有幣種均啟用自動還款。
-  2. 如果將某幣種的`autoRepayMode`設定為 1，系統將每小時 0 分鐘和 30 分鐘自動以該幣種進行非資產轉換還款。
-  3. 無損還款金額為該貨幣的現貨可用餘額與該貨幣的負債中的較小者。
-  4. 如果你錯過了0分和30分的自動還款批次，你可以手動調接口進行還款。
-
-
+> **覆蓋範圍: 全倉槓桿 (統一帳戶)**
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/set-auto-repay-mode`
+GET`/v5/spot-margin-trade/state`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| false| string| 幣名稱，僅限大寫. 若未指定`currency`參數，則所有幣種均啟用自動還款。  
-autoRepayMode| **true**|  string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
-  
-  
-* * *
+無
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-data| array| Object  
-> currency| string| 幣名稱，僅限大寫.  
-> autoRepayMode| string| 
-
-  * `1`: 開啟
-  * `0`: 關閉
-
-  
+spotLeverage| string| 槓桿倍數. 如果處於關閉狀態的話, 則返回 `""`  
+spotMarginMode| string| 開關狀態. `1`: 開啟, `0`: 關閉  
+effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，向下截取  
   
 ### 請求示例
 
@@ -162,18 +122,12 @@ data| array| Object
 
     
     
-    POST /v5/spot-margin-trade/set-auto-repay-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/spot-margin-trade/state HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672299806626  
+    X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "currency": "ETH",  
-        "autoRepayMode":"1"  
-    }  
     
     
     
@@ -181,7 +135,22 @@ data| array| Object
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSpotMarginState()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -189,15 +158,12 @@ data| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "data": [  
-                {  
-                    "currency": "ETH",  
-                    "autoRepayMode": "1"  
-                }  
-            ]  
+            "spotLeverage": "10",  
+            "spotMarginMode": "1",  
+            "effectiveLeverage": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1766976677678  
+        "time": 1692696841231  
     }

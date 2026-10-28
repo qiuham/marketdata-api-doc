@@ -2,38 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-10-27 18:38:59.119531
+updated_at: 2026-10-28 18:40:27.142001
 ---
 
-# Get Futures Leverage
+# Set Leverage
 
-Query isolated leverage setting for futures symbols. Unlike [Get Position Info](/docs/v5/position/v5/position), this endpoint does not require an open position to retrieve the leverage setting.
+info
+
+According to the risk limit, leverage affects the maximum position value that can be opened, that is, the greater the leverage, the smaller the maximum position value that can be opened, and vice versa. [Learn more](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
 
 ### HTTP Request
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/set-leverage`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+buyLeverage| **true**|  string| [`1`, max leverage]
+
+  * one-way mode: `buyLeverage` must be the same as `sellLeverage`
+  * Hedge mode:   
+isolated margin: `buyLeverage` and `sellLeverage` can be different;   
+cross margin: `buyLeverage` must be the same as `sellLeverage`
+
   
+sellLeverage| **true**|  string| [`1`, max leverage]  
+[](/docs/api-explorer/v5/position/leverage)
+
+* * *
+
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-[category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> leverage| string| Leverage  
-> side| string| Meaningless field, pls ignore. `Buy`, `Sell`, `""`  
-> positionIdx| integer| Position mode. `0`: one-way; `1`: two-way Buy; `2`: two-way Sell  
-  
-info
-
-Under Portfolio Margin mode, this endpoint returns an error.
+None
 
 ### Request Example
 
@@ -45,24 +48,70 @@ Under Portfolio Margin mode, this endpoint returns an error.
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/set-leverage HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1672281605082  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
-    
-    
-    
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "buyLeverage": "6",  
+        "sellLeverage": "6"  
       
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_leverage(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        buyLeverage="6",  
+        sellLeverage="6",  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
+    client.setPositionLeverage(setLeverageRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setLeverage({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            buyLeverage: '6',  
+            sellLeverage: '6',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -71,58 +120,45 @@ Under Portfolio Margin mode, this endpoint returns an error.
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1672281607343  
     }
 
 ---
 
-# 查詢合約槓桿
+# 設置槓桿
 
-查詢合約交易對的逐倉槓桿設置。與[查詢持倉](/docs/zh-TW/v5/position/v5/position)不同，此接口無需持有倉位即可查詢槓桿設置。
+信息
+
+根據風險限額, 槓桿影響最大可開數量, 即槓桿越大, 最大可開倉數量越小, 反之亦然。[了解更多](https://www.bybit.com/zh-MY/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
 
 ### HTTP 請求
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/set-leverage`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`(USDT合約, USDC合約), `inverse`  
-symbol| false| string| 合約名稱，如 `BTCUSDT`，僅支持大寫  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
+symbol| **true**|  string| 合約名稱  
+buyLeverage| **true**|  string| [`1`, 最大槓桿數]
+
+  * 單倉: `buyLeverage` 必須等於`sellLeverage`
+  * 雙倉:   
+逐倉保證金: `buyLeverage`可以與`sellLeverage`不相等;   
+全倉保證金: `buyLeverage` 必須等於`sellLeverage`
+
   
+sellLeverage| **true**|  string| [`1`, 最大槓桿數]  
+[](/docs/zh-TW/api-explorer/v5/position/leverage)
+
+* * *
+
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> leverage| string| 槓桿倍數  
-> side| string| 無意義, 可以忽略 `Buy`, `Sell`, `""`  
-> positionIdx| integer| 持倉模式。`0`: 單向持倉；`1`: 雙向持倉-多頭；`2`: 雙向持倉-空頭  
-  
-信息
-
-在組合保證金模式下，此接口會返回錯誤。
+無
 
 ### 請求示例
 
@@ -134,24 +170,70 @@ list| array| Object
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/set-leverage HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1672281605082  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
-    
-    
-    
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "buyLeverage": "6",  
+        "sellLeverage": "6"  
       
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_leverage(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        buyLeverage="6",  
+        sellLeverage="6",  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
+    client.setPositionLeverage(setLeverageRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .setLeverage({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            buyLeverage: '6',  
+            sellLeverage: '6',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -160,23 +242,7 @@ list| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1672281607343  
     }

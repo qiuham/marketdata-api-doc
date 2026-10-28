@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan-get-accrued-interest
 anchor_id: financial-product-flexible-loan-get-accrued-interest
 api_type: REST
-updated_at: 2026-10-27 19:09:57.196595
+updated_at: 2026-10-28 19:11:10.994101
 ---
 
 # GET / Accrued interest

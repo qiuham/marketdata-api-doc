@@ -2,39 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/strategy-list
 api_type: REST
-updated_at: 2026-10-27 18:40:55.587956
+updated_at: 2026-10-28 18:42:20.169979
 ---
 
-# Get User Register Date
+# Get System Status
 
-Get User Register Date
+Get the system status when there is a platform maintenance or service incident.
+
+info
+
+Please note currently system maintenance that may result in short interruption (lasting less than 10 seconds) or websocket disconnection (users can immediately reconnect) will not be announced.
 
 ### HTTP Request
 
-POST `/fht/compliance/tax/v3/private/registertime`
+GET`/v5/system/status`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+id| false| string| id. Unique identifier  
+[state](/docs/v5/enum#state)| false| string| system state  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-registerTime| string| UNIX Time. This is in seconds. Date that the specific user registers on the platform  
+list| array| Object  
+> id| string| Id. Unique identifier  
+> title| string| Title of system maintenance  
+> [state](/docs/v5/enum#state)| string| System state  
+> begin| string| Start time of system maintenance, timestamp in milliseconds  
+> end| string| End time of system maintenance, timestamp in milliseconds. Before maintenance is completed, it is the expected end time; After maintenance is completed, it will be changed to the actual end time.  
+> href| string| Hyperlink to system maintenance details. Default value is empty string  
+> [serviceTypes](/docs/v5/enum#servicetypes)| array<int>| Service Type  
+> [product](/docs/v5/enum#product)| array<int>| Product  
+> uidSuffix| array<int>| Affected UID tail number  
+> [maintainType](/docs/v5/enum#maintaintype)| string| Maintenance type  
+> [env](/docs/v5/enum#env)| string| Environment  
   
 ### Request Example
+
+  * HTTP
+  * Python
+
+
     
     
-    POST /fht/compliance/tax/v3/private/registertime HTTP/1.1  
+    GET /v5/system/status HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: xxxxxxxxxxxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1671183584043  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    {}  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_price_limit(  
+        category="linear",  
+        symbol="BTCUSDT",  
+    ))  
     
 
 ### Response Example
@@ -42,44 +69,197 @@ registerTime| string| UNIX Time. This is in seconds. Date that the specific user
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "registerTime": "1634515200"  
+            "list": [  
+                {  
+                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t06",  
+                    "state": "completed",  
+                    "begin": "1751596902000",  
+                    "end": "1751597011000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t05",  
+                    "state": "completed",  
+                    "begin": "1751254200000",  
+                    "end": "1751254500000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        4  
+                    ],  
+                    "product": [  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t04",  
+                    "state": "completed",  
+                    "begin": "1751017967000",  
+                    "end": "1751018096000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2  
+                    ],  
+                    "product": [  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t03",  
+                    "state": "completed",  
+                    "begin": "1751017532000",  
+                    "end": "1751017658000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
+                    "title": "t02",  
+                    "state": "completed",  
+                    "begin": "1751013817000",  
+                    "end": "1751013890000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "product": [  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
+                    "title": "t01",  
+                    "state": "completed",  
+                    "begin": "1751012688000",  
+                    "end": "1751012760000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2,  
+                        3,  
+                        4  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 2  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1671183584270  
+        "time": 1751858399649  
     }
 
 ---
 
-# 查詢特定用戶在平台註冊日期
+# 取得系統狀態
+
+大型平台維護或服務故障時取得系統狀態
+
+信息
+
+請注意，目前有些情況下, 服務發佈導致短暫停頓（持續時間少於 10 秒）或 WebSocket 中斷（使用者可立即重連），此類情況不會在此通知。
 
 ### HTTP 請求
 
-POST `/fht/compliance/tax/v3/private/registertime`
+GET`/v5/system/status`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+id| false| string| Id, 唯一標識  
+[state](/docs/zh-TW/v5/enum#state)| false| string| 系統的狀態  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-registerTime| string| 特定用戶在平台上註冊的日期 (秒級unix時間戳)  
+list| array| Object  
+> id| string| Id, 唯一標識  
+> title| string| 系統維​​護說明的標題  
+> [state](/docs/zh-TW/v5/enum#state)| string| 系統的狀態  
+> begin| string| 系統維​​護的開始時間，Unix時間戳記的毫秒數格式  
+> end| string| 交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間  
+> href| string| 系統維​​護詳情的超級連結,若無回傳值，預設值為空  
+> [serviceTypes](/docs/zh-TW/v5/enum#servicetypes)| array<int>| 服務類型  
+> [product](/docs/zh-TW/v5/enum#product)| array<int>| 產品  
+> uidSuffix| array<int>| 維護期間受影響的UID尾號  
+> [maintainType](/docs/zh-TW/v5/enum#maintaintype)| string| 維護類型  
+> [env](/docs/zh-TW/v5/enum#env)| string| 環境  
   
 ### 請求示例
+
+  * HTTP
+  * Python
+
+
     
     
-    POST /fht/compliance/tax/v3/private/registertime HTTP/1.1  
+    GET /v5/system/status HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: xxxxxxxxxxxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1671183584043  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    {}  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_price_limit(  
+        category="linear",  
+        symbol="BTCUSDT",  
+    ))  
     
 
 ### 響應示例
@@ -87,10 +267,134 @@ registerTime| string| 特定用戶在平台上註冊的日期 (秒級unix時間�
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "registerTime": "1634515200"  
+            "list": [  
+                {  
+                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t06",  
+                    "state": "completed",  
+                    "begin": "1751596902000",  
+                    "end": "1751597011000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t05",  
+                    "state": "completed",  
+                    "begin": "1751254200000",  
+                    "end": "1751254500000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        4  
+                    ],  
+                    "product": [  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t04",  
+                    "state": "completed",  
+                    "begin": "1751017967000",  
+                    "end": "1751018096000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2  
+                    ],  
+                    "product": [  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t03",  
+                    "state": "completed",  
+                    "begin": "1751017532000",  
+                    "end": "1751017658000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
+                    "title": "t02",  
+                    "state": "completed",  
+                    "begin": "1751013817000",  
+                    "end": "1751013890000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "product": [  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
+                    "title": "t01",  
+                    "state": "completed",  
+                    "begin": "1751012688000",  
+                    "end": "1751012760000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2,  
+                        3,  
+                        4  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 2  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1671183584270  
+        "time": 1751858399649  
     }

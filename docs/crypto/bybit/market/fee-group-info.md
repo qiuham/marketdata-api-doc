@@ -2,265 +2,198 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/fee-group-info
 api_type: Market Data
-updated_at: 2026-10-27 18:37:30.172150
+updated_at: 2026-10-28 18:38:54.095039
 ---
 
-# Get Funding Rate History
+# Get Full Depth Orderbook
 
-Query for historical funding rates. Each symbol has a different funding interval. For example, if the interval is 8 hours and the current time is UTC 12, then it returns the last funding rate, which settled at UTC 8.
+Query for full orderbook depth data.
 
-To query the funding rate interval, please refer to the [instruments-info](/docs/v5/market/instrument) endpoint.
+> **Covers: Spot / USDT contract / USDC contract / Inverse contract**
 
-> **Covers: USDT and USDC perpetual / Inverse perpetual**
+  * Return up to **10,000** levels per side.
+
+
 
 info
 
-  * Passing only `startTime` returns an error.
-  * Passing only `endTime` returns 200 records up till `endTime`.
-  * Passing neither returns 200 records up till the current time.
+  * The response is in the snapshot format.
+  * Use this REST endpoint to initialize your local order book, then apply delta updates from the [WebSocket full orderbook stream](/docs/v5/websocket/public/full-ob).
+  * Retail Price Improvement (RPI) orders will not be included in the response.
 
 
 
 ### HTTP Request
 
-GET`/v5/market/funding/history`
+GET`/v5/market/full_orderbook`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms)  
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `200`]. Default: `200`  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `spot`, `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> fundingRate| string| Funding rate  
-> fundingRateTimestamp| string| Funding rate timestamp (ms)  
-[](/docs/api-explorer/v5/market/history-fund-rate)
+s| string| Symbol name  
+b| array| Bid, buyer. Sorted by price in descending order  
+> b[0]| string| Bid price  
+> b[1]| string| Bid size  
+a| array| Ask, seller. Sorted by price in ascending order  
+> a[0]| string| Ask price  
+> a[1]| string| Ask size  
+ts| integer| The timestamp (ms) that the system generates the data  
+u| integer| Update ID, is always in sequence, corresponds to `u` in the [WebSocket full orderbook stream](/docs/v5/websocket/public/full-ob)  
+seq| integer| Cross sequence 
 
-* * *
+  * You can use this field to compare different levels orderbook data, and for the smaller seq, then it means the data is generated earlier.
 
+  
+cts| integer| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/websocket/public/trade)  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * GO
-  * Java
+  * Go
   * Node.js
 
 
     
     
-    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
+    GET /v5/market/full_orderbook?category=spot&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP()  
-    print(session.get_funding_rate_history(  
-        category="linear",  
-        symbol="ETHPERP",  
-        limit=1,  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
-    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
+    
+    
+    
       
-    client  
-        .getFundingRateHistory({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            limit: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    
+    
+    
+      
     
 
 ### Response Example
     
     
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "fundingRate": "0.0001",  
-                    "fundingRateTimestamp": "1672041600000"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672051897447  
-    }
+    {"retCode":0,"retMsg":"OK","result":{"s":"BTCUSDT","a":[["62998.2","0.198738"],["62998.3","0.088547"],["62998.4","0.293984"],["62998.5","0.161343"],["62998.6","0.161342"],  
+    ["62998.7","0.088547"],["62998.8","0.088547"],["62998.9","0.065597"],["63086.1","0.004041"],...  
+    ["198857.1","2303.920815"],["199700.1","0.12"],["200000","0.00961"],["200999","0.1"],  
+    ["202510.2","2303.920815"],["206163.2","2303.920815"],["209816.3","2303.920815"],  
+    ["213228.9","0.026903"],["213469.3","2303.920815"],["217122.4","2303.920815"],["220775.5","2303.920815"],  
+    ["224428.5","2303.920815"],["228081.6","2303.920815"],["231734.6","2303.920815"],["234551.8","0.024213"],  
+    ["235387.7","2303.920815"],["239040.8","2303.920815"],["242693.8","2303.920815"],["246346.9","2303.920815"],  
+    ["250000","2303.920815"],["336808","0.002"],["899900","0.03"],["900000","0.01"],["901350","0.001"],["911182.1","0.003733"],  
+    ["1111111","9.79063"],["10000000","0.003"],["980070546.6","0.000225"],["999999999","4.785"],["10000000000","0.0001"]],  
+    "b":[["62998.1","0.396837"],["62998","0.396838"],["62997.9","0.293985"],["62997.8","0.161342"],["62997.7","0.119525"],  
+    ["62997.6","0.088547"],["62997.5","0.065597"],["62996.7","0.0993"],["62984","19.76866"],...["1999.6","0.058786"],  
+    ["1870.9","1"],["1800","1.01"],["1600","1.666666"],["1268.1","0.02"],["1073.7","1"],["1033","0.503388"],["1000","18.864945"],  
+    ["833.3","0.012"],["831.4","0.012028"],["630","10"],["530","1"],["500","5.457686"],["419.9","0.024763"],["350","1"],  
+    ["111","0.001"],["100","11.5101"],["90","1"],["85.6","4"],["78","7"],["50","1.03"],["30","0.0005"],["28.9","0.093461"],  
+    ["25","0.001"],["21","1"],["10","6.621391"],["8","7"],["5","7.621"],["4.2","1.19"],["4.1","2.38"],["2","12.52"],["1","241.879901"],  
+    ["0.4","10"],["0.1","10"]],"ts":1784103578352,"u":439925,"seq":2164890076,"cts":1784103578350},"retExtInfo":{},"time":1784103579732}
 
 ---
 
-# 查詢歷史資金費率
+# 全深度訂單簿
 
-查詢資金費率，每個symbol的資金費率產生週期不同。假設資金費率為8小時，當前時間是UTC12點，則返回的是上一個結算即UTC8點產生的資金費率。如要查詢symbol的資金費率時間間隔，請查詢[可交易產品規格](/docs/zh-TW/v5/market/instrument)接口
+獲取全深度訂單簿數據
 
-> **覆蓋範圍: USDT和USDC永續 / 反向永續**
+> **覆蓋範圍: 現貨 / USDT永續 / USDC永續 / 反向合約**
 
-時間入参規則
+  * 每側最多返回 **10,000** 檔數據。
 
-  * 只傳`startTime`會報錯
-  * 只傳`endTime`，則返回endTime往前的200條數據
-  * 都不傳，返回當前時間的往前200條數據
+
+
+信息
+
+  * 響應為切片（snapshot）格式。
+  * 請使用此 REST 接口初始化本地訂單簿，再通過 [WebSocket 全深度訂單簿](/docs/zh-TW/v5/websocket/public/full-ob) 應用增量更新。
+  * 零售價格優化（RPI）訂單不會包含在響應中。
 
 
 
 ### HTTP請求
 
-GET`/v5/market/funding/history`
+GET`/v5/market/full_orderbook`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
-symbol| **true**|  string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒)  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `200`]. 默認: `200`  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `spot`, `linear`, `inverse`  
+symbol| **true**|  string| 合約名稱, 例如 `BTCUSDT`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> fundingRate| string| 資金費率  
-> fundingRateTimestamp| string| 資金費率時間戳 (毫秒)  
-[](/docs/zh-TW/api-explorer/v5/market/history-fund-rate)
+s| string| 合約名稱  
+b| array| Bid, 買方. 按照價格從大到小  
+> b[0]| string| 買方報價  
+> b[1]| string| 買方數量  
+a| array| Ask, 賣方. 按照價格從小到大  
+> a[0]| string| 賣方報價  
+> a[1]| string| 賣方數量  
+ts| integer| 行情服務生成數據時間戳（毫秒）  
+u| integer| 表示數據連續性的id, 它和[wss全深度訂單簿](/docs/zh-TW/v5/websocket/public/full-ob)的`u`對齊  
+seq| integer| 撮合版本號 
 
-* * *
+  * 該字段可以用於關聯不同檔位的 orderbook，如果值越小，則說明數據生成越早
 
+  
+cts| integer| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與[平台成交](/docs/zh-TW/v5/websocket/public/trade)頻道中的`T`進行關聯  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * GO
-  * Java
+  * Go
   * Node.js
 
 
     
     
-    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
+    GET /v5/market/full_orderbook?category=spot&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP()  
-    print(session.get_funding_rate_history(  
-        category="linear",  
-        symbol="ETHPERP",  
-        limit=1,  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
-    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
+    
+    
+    
       
-    client  
-        .getFundingRateHistory({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            limit: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    
+    
+    
+      
     
 
 ### 響應示例
     
     
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "fundingRate": "0.0001",  
-                    "fundingRateTimestamp": "1672041600000"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672051897447  
-    }
+    ```json  
+    {"retCode":0,"retMsg":"OK","result":{"s":"BTCUSDT","a":[["62998.2","0.198738"],["62998.3","0.088547"],["62998.4","0.293984"],["62998.5","0.161343"],["62998.6","0.161342"],  
+    ["62998.7","0.088547"],["62998.8","0.088547"],["62998.9","0.065597"],["63086.1","0.004041"],...  
+    ["198857.1","2303.920815"],["199700.1","0.12"],["200000","0.00961"],["200999","0.1"],  
+    ["202510.2","2303.920815"],["206163.2","2303.920815"],["209816.3","2303.920815"],  
+    ["213228.9","0.026903"],["213469.3","2303.920815"],["217122.4","2303.920815"],["220775.5","2303.920815"],  
+    ["224428.5","2303.920815"],["228081.6","2303.920815"],["231734.6","2303.920815"],["234551.8","0.024213"],  
+    ["235387.7","2303.920815"],["239040.8","2303.920815"],["242693.8","2303.920815"],["246346.9","2303.920815"],  
+    ["250000","2303.920815"],["336808","0.002"],["899900","0.03"],["900000","0.01"],["901350","0.001"],["911182.1","0.003733"],  
+    ["1111111","9.79063"],["10000000","0.003"],["980070546.6","0.000225"],["999999999","4.785"],["10000000000","0.0001"]],  
+    "b":[["62998.1","0.396837"],["62998","0.396838"],["62997.9","0.293985"],["62997.8","0.161342"],["62997.7","0.119525"],  
+    ["62997.6","0.088547"],["62997.5","0.065597"],["62996.7","0.0993"],["62984","19.76866"],...["1999.6","0.058786"],  
+    ["1870.9","1"],["1800","1.01"],["1600","1.666666"],["1268.1","0.02"],["1073.7","1"],["1033","0.503388"],["1000","18.864945"],  
+    ["833.3","0.012"],["831.4","0.012028"],["630","10"],["530","1"],["500","5.457686"],["419.9","0.024763"],["350","1"],  
+    ["111","0.001"],["100","11.5101"],["90","1"],["85.6","4"],["78","7"],["50","1.03"],["30","0.0005"],["28.9","0.093461"],  
+    ["25","0.001"],["21","1"],["10","6.621391"],["8","7"],["5","7.621"],["4.2","1.19"],["4.1","2.38"],["2","12.52"],["1","241.879901"],  
+    ["0.4","10"],["0.1","10"]],"ts":1784103578352,"u":439925,"seq":2164890076,"cts":1784103578350},"retExtInfo":{},"time":1784103579732}

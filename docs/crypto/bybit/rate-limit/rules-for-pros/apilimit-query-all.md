@@ -2,44 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query-all
 api_type: REST
-updated_at: 2026-10-27 18:39:22.384016
+updated_at: 2026-10-28 18:40:46.769752
 ---
 
-# Set Rate Limit
+# Get Rate Limit Cap
 
 > API rate limit: 50 req per second
 
 info
 
-  * If the UID requesting this endpoint is a master account, UIDs passed to the `uids` parameter must be subaccounts of the master account.
-  * If the UID requesting this endpoint is not a master account, the UID passed to the `uids` parameter must be the UID of the subaccount requesting this endpoint.
-  * Only institutional users can request this endpoint.
+  * Get your institutions's total rate limit usage and cap, across the board.
+  * Main UIDs or sub UIDs can query this endpoint, but a main UID can only see the rate limits of subs below it, and not the subs of other main UIDs.
 
 
 
 ### HTTP Request
 
-POST`/v5/apilimit/set`
+GET`/v5/apilimit/query-cap`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-list| **true**|  array| Object  
-> uids| **true**|  string| Multiple UIDs separated by commas  
-> [bizType](/docs/v5/enum#biztype)| **true**|  string| Business type  
-> rate| **true**|  integer| API rate limit per second  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> uids| string| Multiple UIDs separated by commas  
 > [bizType](/docs/v5/enum#biztype)| string| Business type  
-> rate| integer| API rate limit per second  
-> success| boolean| Whether or not the request was successful  
-> [msg](/docs/v5/enum#msg)| string| Result message  
+> totalRate| integer| Total API rate limit usage accross all subaccounts and master account  
+> insCap| integer| Institutional-level API rate limit per second (depends on your pro level)  
+> uidCap| integer| UID-level API rate limit per second  
   
 ### Request Example
 
@@ -50,23 +43,14 @@ list| array| Object
 
     
     
-    POST /v5/apilimit/set HTTP/1.1  
+    GET /v5/apilimit/query-cap HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1711420489915  
+    X-BAPI-TIMESTAMP: 1728460942776  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-      
-    {  
-        "list": [  
-            {  
-                "uids": "106293838",  
-                "bizType": "DERIVATIVES",  
-                "rate": 50  
-            }  
-        ]  
-    }  
+    Content-Length: 2  
     
     
     
@@ -76,15 +60,7 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_api_rate_limit(  
-        list=[  
-            {  
-                "uids": "106293838",  
-                "bizType": "DERIVATIVES",  
-                "rate": 50  
-            }  
-        ]  
-    ))  
+    print(session.get_api_rate_limit_cap())  
     
     
     
@@ -98,99 +74,107 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "result": [  
+            "list": [  
                 {  
-                    "uids": "290118",  
-                    "bizType": "SPOT",  
-                    "rate": 600,  
-                    "success": true,  
-                    "msg": "API limit updated successfully"  
+                    "insCap": "30000",  
+                    "uidCap": "600",  
+                    "totalRate": "29882",  
+                    "bizType": "SPOT"  
+                },  
+                {  
+                    "insCap": "30000",  
+                    "uidCap": "600",  
+                    "totalRate": "29882",  
+                    "bizType": "OPTIONS"  
+                },  
+                {  
+                    "insCap": "40000",  
+                    "uidCap": "800",  
+                    "totalRate": "39932",  
+                    "bizType": "DERIVATIVES"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1754894296913  
+        "time": 1758857589872  
     }
 
 ---
 
-# 設定 API 限頻
+# 查詢 Ins level的限頻上限和使用量
 
-### 設定 API 限頻
+### 查詢 Ins level的限頻上限和使用量
 
-> API 限頻：每秒 50 個請求
+> API 限頻：每秒 50 次請求  
+> 
 
 信息
 
-  * 如果請求接口使用者是母帳戶，需要提頻的uid必須是所屬該母帳戶
-  * 如果請求使用者非母帳戶，則提頻的uid必須是自己
-  * UID必須屬於機構用户
+  * 查詢 Ins 等級的限頻上限和使用量
+  * 僅允許透過main UID或來自sub-INS的子帳戶 UID 的API key進行查詢
+  * 目前已刪除的子帳戶仍會占用限頻額度，我們正在優化中。
 
 
 
 ### HTTP 請求
 
-POST`/v5/apilimit/set`
+GET`/v5/apilimit/query-cap`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-list| true| array| Object  
-> uids| true| string| uid列表，多個以逗號隔開  
-> [bizType](/docs/zh-TW/v5/enum#biztype)| true| string| 業務類型  
-> rate| true| integer| api rate limit 每秒限頻  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> uids| string| uid列表，多個以逗號隔開  
 > [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> rate| integer| api rate limit 每秒限頻  
-> success| boolean| 是否成功  
-> [msg](/docs/zh-TW/v5/enum#msg)| string| 結果訊息  
+> totalRate| integer| 所有子帳號與主帳號的 API 限頻總使用量  
+> insCap| integer| 基於 Ins 等級的每秒 API 限頻  
+> uidCap| integer| 基於 UID 等級的每秒 API 限頻  
   
-### 請求實例
+### 請求範例
     
     
-    POST /v5/apilimit/set HTTP/1.1  
+    GET /v5/apilimit/query-cap HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1711420489915  
+    X-BAPI-TIMESTAMP: 1728460942776  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-      
-    {  
-        "list": [  
-            {  
-                "uids": "106293838",  
-                "bizType": "DERIVATIVES",  
-                "rate": 50  
-            }  
-        ]  
-    }  
+    Content-Length: 2  
     
 
-### 響應示例
+### 響應範例
     
     
     {  
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "result": [  
+            "list": [  
                 {  
-                    "uids": "290118",  
-                    "bizType": "SPOT",  
-                    "rate": 600,  
-                    "success": true,  
-                    "msg": "API limit updated successfully"  
+                    "insCap": "30000",  
+                    "uidCap": "600",  
+                    "totalRate": "29882",  
+                    "bizType": "SPOT"  
+                },  
+                {  
+                    "insCap": "30000",  
+                    "uidCap": "600",  
+                    "totalRate": "29882",  
+                    "bizType": "OPTIONS"  
+                },  
+                {  
+                    "insCap": "40000",  
+                    "uidCap": "800",  
+                    "totalRate": "39932",  
+                    "bizType": "DERIVATIVES"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1754894296913  
+        "time": 1758857589872  
     }

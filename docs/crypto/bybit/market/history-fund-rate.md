@@ -2,265 +2,169 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/history-fund-rate
 api_type: Market Data
-updated_at: 2026-10-27 18:37:31.410123
+updated_at: 2026-10-28 18:38:58.294035
 ---
 
-# Get Funding Rate History
+# Get Instrument Summary
 
-Query for historical funding rates. Each symbol has a different funding interval. For example, if the interval is 8 hours and the current time is UTC 12, then it returns the last funding rate, which settled at UTC 8.
-
-To query the funding rate interval, please refer to the [instruments-info](/docs/v5/market/instrument) endpoint.
-
-> **Covers: USDT and USDC perpetual / Inverse perpetual**
-
-info
-
-  * Passing only `startTime` returns an error.
-  * Passing only `endTime` returns 200 records up till `endTime`.
-  * Passing neither returns 200 records up till the current time.
-
-
+Query summary information and trading increments for linear and option instruments.
 
 ### HTTP Request
 
-GET`/v5/market/funding/history`
+GET`/v5/market/instrument-summary`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`,`inverse`  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms)  
-endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `200`]. Default: `200`  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `option`  
+symbol| false| string| Symbol name  
+[symbolType](/docs/v5/enum#symboltype)| false| string| Instrument type  
+marketRegion| false| string| Market region: `HK`, `US`, `CN`, `KR`, etc.  
+baseCoin| false| string| Base coin, e.g. `NVDA`, `TSLA`  
+limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `500`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 category| string| Product type  
+nextPageCursor| string| Cursor for the next page  
 list| array| Object  
 > symbol| string| Symbol name  
-> fundingRate| string| Funding rate  
-> fundingRateTimestamp| string| Funding rate timestamp (ms)  
-[](/docs/api-explorer/v5/market/history-fund-rate)
-
-* * *
-
+> symbolType| string| Instrument type  
+> displayName| string| Display name shown in the UI  
+> baseCoin| string| Base coin  
+> settleCoin| string| Settlement coin  
+> fullName| string| Full name. Returns an empty string for `option`  
+> marketRegion| string| Market region of the underlying asset, used to determine its trading calendar and market hours. `US`: United States; `CN`: Mainland China; `HK`: Hong Kong; `KR`: South Korea. Returns an empty string for `option` or when not applicable  
+> underlyingTicker| string| Stock ticker, security code, or asset symbol in the underlying asset's native market. Returns an empty string for `option`  
+> priceIndex| string| The corresponding TradFi perpetual symbol used as the price index; for example, NVDA options use `NVDAUSDT`. Returns an empty string for `linear`  
+> qtyStep| string| Quantity step  
+> tickSize| string| Price tick size  
+> deliveryTime| string| Delivery timestamp (ms). Returns `0` for `linear`  
+  
 ### Request Example
 
   * HTTP
-  * Python
-  * GO
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP()  
-    print(session.get_funding_rate_history(  
-        category="linear",  
-        symbol="ETHPERP",  
-        limit=1,  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
-    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
-      
-    client  
-        .getFundingRateHistory({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            limit: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
+    Host: api.bybit.com  
     
 
 ### Response Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "fundingRate": "0.0001",  
-                    "fundingRateTimestamp": "1672041600000"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672051897447  
+      "retCode": 0,  
+      "retMsg": "OK",  
+      "result": {  
+        "category": "linear",  
+        "list": [  
+          {  
+            "symbol": "0GUSDT",  
+            "symbolType": "",  
+            "displayName": "0GUSDT",  
+            "baseCoin": "0G",  
+            "settleCoin": "USDT",  
+            "fullName": "0G",  
+            "marketRegion": "",  
+            "underlyingTicker": "",  
+            "qtyStep": "0.1",  
+            "tickSize": "0.0001",  
+            "priceIndex": "",  
+            "deliveryTime": "0"  
+          }  
+        ],  
+        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
+      },  
+      "retExtInfo": {},  
+      "time": 1791944863432  
     }
 
 ---
 
-# 查詢歷史資金費率
+# 查詢交易對摘要
 
-查詢資金費率，每個symbol的資金費率產生週期不同。假設資金費率為8小時，當前時間是UTC12點，則返回的是上一個結算即UTC8點產生的資金費率。如要查詢symbol的資金費率時間間隔，請查詢[可交易產品規格](/docs/zh-TW/v5/market/instrument)接口
+查詢線性合約與期權交易對的摘要資訊及交易精度。
 
-> **覆蓋範圍: USDT和USDC永續 / 反向永續**
+### HTTP 請求
 
-時間入参規則
-
-  * 只傳`startTime`會報錯
-  * 只傳`endTime`，則返回endTime往前的200條數據
-  * 都不傳，返回當前時間的往前200條數據
-
-
-
-### HTTP請求
-
-GET`/v5/market/funding/history`
+GET`/v5/market/instrument-summary`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`,`inverse`  
-symbol| **true**|  string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒)  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `200`]. 默認: `200`  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型：`linear`、`option`  
+symbol| false| string| 交易對名稱  
+[symbolType](/docs/zh-TW/v5/enum#symboltype)| false| string| 交易對類型  
+marketRegion| false| string| 市場區域：`HK`、`US`、`CN`、`KR` 等  
+baseCoin| false| string| 基礎幣種，例如 `NVDA`、`TSLA`  
+limit| false| integer| 每頁資料筆數。[`1`, `1000`]。預設：`500`  
+cursor| false| string| 游標。使用響應中的 `nextPageCursor` 取得下一頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 category| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> fundingRate| string| 資金費率  
-> fundingRateTimestamp| string| 資金費率時間戳 (毫秒)  
-[](/docs/zh-TW/api-explorer/v5/market/history-fund-rate)
-
-* * *
-
+nextPageCursor| string| 下一頁游標  
+list| array| 物件  
+> symbol| string| 交易對名稱  
+> symbolType| string| 交易對類型  
+> displayName| string| 與 UI 一致的顯示名稱  
+> baseCoin| string| 基礎幣種  
+> settleCoin| string| 結算幣種  
+> fullName| string| 完整名稱。`option` 時返回空字串  
+> marketRegion| string| 標的資產所屬的市場區域，用於判斷其交易日曆與市場交易時段。`US`：美國市場；`CN`：中國大陸市場；`HK`：香港市場；`KR`：韓國市場。`option` 或不適用時返回空字串  
+> underlyingTicker| string| 標的資產在其原生市場中的股票代號、證券代碼或資產符號。`option` 時返回空字串  
+> priceIndex| string| 對應的 TradFi 永續合約價格指數；例如 NVDA 期權對應 `NVDAUSDT`。`linear` 時返回空字串  
+> qtyStep| string| 數量步長  
+> tickSize| string| 價格最小變動單位  
+> deliveryTime| string| 交割時間戳（毫秒）。`linear` 時返回 `0`  
+  
 ### 請求示例
 
   * HTTP
-  * Python
-  * GO
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/funding/history?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP()  
-    print(session.get_funding_rate_history(  
-        category="linear",  
-        symbol="ETHPERP",  
-        limit=1,  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetFundingRateHistory(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var fundingHistoryRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSD).startTime(1632046800000L).endTime(1632133200000L).limit(150).build();  
-    client.getFundingHistory(fundingHistoryRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
-      
-    client  
-        .getFundingRateHistory({  
-            category: 'linear',  
-            symbol: 'ETHPERP',  
-            limit: 1,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
+    Host: api.bybit.com  
     
 
 ### 響應示例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "ETHPERP",  
-                    "fundingRate": "0.0001",  
-                    "fundingRateTimestamp": "1672041600000"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672051897447  
+      "retCode": 0,  
+      "retMsg": "OK",  
+      "result": {  
+        "category": "linear",  
+        "list": [  
+          {  
+            "symbol": "0GUSDT",  
+            "symbolType": "",  
+            "displayName": "0GUSDT",  
+            "baseCoin": "0G",  
+            "settleCoin": "USDT",  
+            "fullName": "0G",  
+            "marketRegion": "",  
+            "underlyingTicker": "",  
+            "qtyStep": "0.1",  
+            "tickSize": "0.0001",  
+            "priceIndex": "",  
+            "deliveryTime": "0"  
+          }  
+        ],  
+        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
+      },  
+      "retExtInfo": {},  
+      "time": 1791944863432  
     }

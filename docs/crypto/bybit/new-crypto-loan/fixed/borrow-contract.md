@@ -2,24 +2,23 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/borrow-contract
 api_type: REST
-updated_at: 2026-10-27 18:38:03.924244
+updated_at: 2026-10-28 18:39:28.448750
 ---
 
-# Cancel Supply Order
+# Cancel Borrow Order
 
 > Permission: "Spot trade"  
 >  UID rate limit: 1 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-fixed/supply-order-cancel`
+POST`/v5/crypto-loan-fixed/borrow-order-cancel`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| **true**|  string| Order ID of fixed supply order  
-refundedAccount| false| string| Account to receive the refund. `0`: Funding Account; `1`: EasyEarn. Default: `0`  
+orderId| **true**|  string| Order ID of fixed borrow order  
   
 ### Response Parameters
 
@@ -34,17 +33,17 @@ None
 
     
     
-    POST /v5/crypto-loan-fixed/supply-order-cancel HTTP/1.1  
+    POST /v5/crypto-loan-fixed/borrow-order-cancel HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652612736  
+    X-BAPI-TIMESTAMP: 1752652457987  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 26  
       
     {  
-        "orderId": "13577"  
+        "orderId": "13009"  
     }  
     
     
@@ -55,8 +54,8 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_lending_order_fixed_crypto_loan(  
-        orderId="13577",  
+    print(session.create_lending_order_fixed_crypto_loan(  
+        orderId="13009",  
     ))  
     
     
@@ -72,26 +71,25 @@ None
         "retMsg": "ok",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1752652613638  
+        "time": 1752652458684  
     }
 
 ---
 
-# 撤銷存款單
+# 撤銷借款單
 
 > 權限: "現貨"  
 >  頻率: 1次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-fixed/supply-order-cancel`
+POST`/v5/crypto-loan-fixed/borrow-order-cancel`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| **true**|  string| 存款單ID  
-refundedAccount| false| string| 退款返回的目標帳戶。`0`: 資金帳戶；`1`: EasyEarn。預設值：`0`  
+orderId| **true**|  string| 借款單ID  
   
 ### 響應參數
 
@@ -106,17 +104,17 @@ refundedAccount| false| string| 退款返回的目標帳戶。`0`: 資金帳戶�
 
     
     
-    POST /v5/crypto-loan-fixed/supply-order-cancel HTTP/1.1  
+    POST /v5/crypto-loan-fixed/borrow-order-cancel HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752652612736  
+    X-BAPI-TIMESTAMP: 1752652457987  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
     Content-Length: 26  
       
     {  
-        "orderId": "13577"  
+        "orderId": "13009"  
     }  
     
     
@@ -127,8 +125,8 @@ refundedAccount| false| string| 退款返回的目標帳戶。`0`: 資金帳戶�
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.cancel_lending_order_fixed_crypto_loan(  
-        orderId="13577",  
+    print(session.create_lending_order_fixed_crypto_loan(  
+        orderId="13009",  
     ))  
     
     
@@ -144,5 +142,5 @@ refundedAccount| false| string| 退款返回的目標帳戶。`0`: 資金帳戶�
         "retMsg": "ok",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1752652613638  
+        "time": 1752652458684  
     }

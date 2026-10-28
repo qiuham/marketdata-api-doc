@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/pay-token-list
 api_type: Trading
-updated_at: 2026-10-27 18:33:06.656201
+updated_at: 2026-10-28 18:34:35.337253
 ---
 
 # Get Payment Token List

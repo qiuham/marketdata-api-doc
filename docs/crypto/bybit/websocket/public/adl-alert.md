@@ -2,207 +2,197 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/adl-alert
 api_type: WebSocket
-updated_at: 2026-10-27 18:41:31.671587
+updated_at: 2026-10-28 18:42:56.020947
 ---
 
-# Insurance Pool
+# ADL Alert
 
-Subscribe to get the update of insurance pool balance 
+Subscribe to ADL alerts and insurance pool information.
+
+> **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
 Push frequency: **1s**
 
 **Topic:**  
-USDT contracts: `insurance.USDT`  
-USDC contracts: `insurance.USDC` (**note** : all USDC Perpetuals, USDC Futures have their own shared insurance pools)  
-Inverse contracts: `insurance.inverse`
+`adlAlert.{coin}`
 
-info
+Available filters:
 
-  * Shared insurance pool data is **not** pushed, please refer to Rest API [Get Insurance](/docs/v5/market/insurance) to understand which symbols belong to isolated or shared insurance pools.
-  * No event will be published if the balances of all insurance pools remain unchanged.
+  * `adlAlert.USDT` for USDT Perpetual/Delivery
+  * `adlAlert.USDC` for USDC Perpetual/Delivery
+  * `adlAlert.inverse` for Inverse contracts.
 
 
+
+For more information on how ADL is triggered, see the [ADL endpoint](/docs/v5/market/adl-alert).
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name  
-type| string| Data type. `snapshot`, `delta`  
-ts| number| The timestamp (ms) that the system generates the data  
-data| Object|   
-> coin| string| Insurance pool coin  
-> symbols| string| Symbol name  
-> balance| string| Balance  
-> updateTime| string| Data updated timestamp (ms)  
+list| array| Object  
+> c| string| Token of the insurance pool  
+> s| string| Trading pair name  
+> b| string| Balance of the insurance fund. Used to determine if ADL is triggered. For shared insurance pool, the "b" field will follow a T+1 refresh mechanism and will be updated daily at 00:00 UTC.  
+> mb| string| Deprecated, always return "". Maximum balance of the insurance pool in the last 8 hours  
+> i_pr| string| PnL ratio threshold for triggering **contract PnL drawdown ADL**
+
+  * ADL is triggered when the symbol's PnL drawdown ratio in the last 8 hours exceeds this value
+
+  
+> pr| string| Symbol's PnL drawdown ratio in the last 8 hours. Used to determine whether ADL is triggered or stopped  
+> adl_tt| string| Trigger threshold for **contract PnL drawdown ADL**
+
+  * This condition is only effective when the insurance pool balance is greater than this value; if so, an 8 hours drawdown exceeding n% may trigger ADL
+
+  
+> adl_sr| string| Stop ratio threshold for **contract PnL drawdown ADL**
+
+  * ADL stops when the symbol's 8 hours drawdown ratio falls below this value
+
+  
   
 ### Subscribe Example
-
-  * JSON
-  * Python
-
-
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "insurance.USDT",  
-            "insurance.USDC"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="linear",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.insurance_pool_stream(  
-        contract_group=["USDT", "USDC"],  
-        callback=handle_message  
-    )  
-    while True:  
-        sleep(1)  
+    {"op": "subscribe", "args": ["adlAlert.USDT"]}  
     
 
 ### Response Example
     
     
     {  
-        "topic": "insurance.USDT",  
-        "type": "delta",  
-        "ts": 1747722930000,  
-        "data": [  
-            {  
-                "coin": "USDT",  
-                "symbols": "GRIFFAINUSDT",  
-                "balance": "25614.92972633",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "CGPTUSDT",  
-                "balance": "100000.27064825",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "GOATUSDT",  
-                "balance": "20352.32665441",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "XTERUSDT",  
-                "balance": "19998.81533291",  
-                "updateTime": "1747722930000"  
-            }  
-        ]  
+      "topic": "adlAlert.USDT",  
+      "type": "snapshot",  
+      "ts": 1757736794000,  
+      "data": [  
+        {  
+          "c": "USDT",  
+          "s": "FWOGUSDT",  
+          "b": -5421.29889888,  
+          "mb": -5421.29889888,  
+          "i_pr": -0.3,  
+          "pr": 0,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        {  
+          "c": "USDT",  
+          "s": "ZORAUSDT",  
+          "b": 19873.46255153,  
+          "mb": 19874.97612833,  
+          "i_pr": -0.3,  
+          "pr": 0.000174,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        {  
+          "c": "USDT",  
+          "s": "BERAUSDT",  
+          "b": 453.36427074,  
+          "mb": 453.36427074,  
+          "i_pr": -0.3,  
+          "pr": 0.24576,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        ...,  
+      ]  
     }
 
 ---
 
-# 保險池餘額
+# ADL告警
 
-訂閱來獲取保險池的餘額變動
+訂閱按組劃分保險池 ADL 告警及相關資訊
+
+> **覆蓋範圍：USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
 推送頻率: **1秒**
 
 **Topic:**  
-USDT合約: `insurance.USDT`  
-USDC合約: `insurance.USDC` (**注意** : 目前所有的USDC永續, USDC交割有各自的共享保險池  
-反向合約: `insurance.inverse`
+`adlAlert.{coin}`
 
-信息
+可用類型為:
 
-  * 共享保險池的餘額數據不推送, 可以調用[查詢保險基金](/docs/zh-TW/v5/market/insurance)接口獲取到每個合約屬於共享還是獨立保險池
-  * 如果1秒內沒有任何保險池子的餘額發生變化, 將不會有消息下發
+  * `adlAlert.USDT` 用於USDT 永續、交割
+  * `adlAlert.USDC` 用於USDC 永續、交割
+  * `adlAlert.inverse` 用於反向合約
 
 
+
+規則詳情請參考 [查詢ADL告警](/docs/zh-TW/v5/market/adl-alert)
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| Topic名  
-type| string| 數據類型. `snapshot`, `delta`  
-ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| Object|   
-> coin| string| 保險池幣種  
-> symbols| string| 合約名稱  
-> balance| string| 保險基金的幣種餘額  
-> updateTime| string| 餘額更新時間戳  
+list| array| Object  
+> c| string| 保險池所屬幣種  
+> s| string| 交易對名稱  
+> b| string| 保險基金餘額，用於判斷是否觸發 ADL。對於共用保險池，balance 將採用 T+1 刷新機制，並於每日 UTC 時間 00:00 更新。  
+> mb| string| 被棄用，並將傳回空字串。最近 8 小時內的保險池最大餘額  
+> i_pr| string| 觸發 **合約盈虧回撤 ADL** 的盈虧比例閾值 
+
+  * 當 symbol 在 8 小時內的盈虧回撤比例大於該值時，觸發 ADL
+
+  
+> pr| string| symbol 在 8 小時內的回撤比例，用於判斷 ADL 是否觸發或停止  
+> adl_tt| string| **合約盈虧回撤 ADL** 的觸發閾值 
+
+  * 僅當保險池餘額大於該值時，8 小時內回撤 n% 的觸發條件才會生效
+
+  
+> adl_sr| string| **合約盈虧回撤 ADL** 的停止比例閾值 
+
+  * 當 symbol 在 8 小時內的回撤比例小於該值時，ADL 停止
+
+  
   
 ### 訂閱示例
+    
+    
+    {"op": "subscribe", "args": ["adlAlert.USDT"]}  
+    
 
-  * JSON
-  * Python
-
-
+### 響應示例
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "insurance.USDT",  
-            "insurance.USDC"  
-        ]  
-    }  
-    
-    
-    
-    from pybit.unified_trading import WebSocket  
-    from time import sleep  
-    ws = WebSocket(  
-        testnet=True,  
-        channel_type="linear",  
-    )  
-    def handle_message(message):  
-        print(message)  
-    ws.insurance_pool_stream(  
-        contract_group=["USDT", "USDC"],  
-        callback=handle_message  
-    )  
-    while True:  
-        sleep(1)  
-    
-
-### 消息示例
-    
-    
-    {  
-        "topic": "insurance.USDT",  
-        "type": "delta",  
-        "ts": 1747722930000,  
-        "data": [  
-            {  
-                "coin": "USDT",  
-                "symbols": "GRIFFAINUSDT",  
-                "balance": "25614.92972633",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "CGPTUSDT",  
-                "balance": "100000.27064825",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "GOATUSDT",  
-                "balance": "20352.32665441",  
-                "updateTime": "1747722930000"  
-            },  
-            {  
-                "coin": "USDT",  
-                "symbols": "XTERUSDT",  
-                "balance": "19998.81533291",  
-                "updateTime": "1747722930000"  
-            }  
-        ]  
+      "topic": "adlAlert.USDT",  
+      "type": "snapshot",  
+      "ts": 1757736794000,  
+      "data": [  
+        {  
+          "c": "USDT",  
+          "s": "FWOGUSDT",  
+          "b": -5421.29889888,  
+          "mb": -5421.29889888,  
+          "i_pr": -0.3,  
+          "pr": 0,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        {  
+          "c": "USDT",  
+          "s": "ZORAUSDT",  
+          "b": 19873.46255153,  
+          "mb": 19874.97612833,  
+          "i_pr": -0.3,  
+          "pr": 0.000174,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        {  
+          "c": "USDT",  
+          "s": "BERAUSDT",  
+          "b": 453.36427074,  
+          "mb": 453.36427074,  
+          "i_pr": -0.3,  
+          "pr": 0.24576,  
+          "adl_tt": 10000,  
+          "adl_sr": -0.25  
+        },  
+        ...,  
+      ]  
     }

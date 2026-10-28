@@ -2,87 +2,69 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/time
 api_type: Market Data
-updated_at: 2026-10-27 18:37:54.552623
+updated_at: 2026-10-28 18:39:22.152903
 ---
 
-# Get Bybit Server Time
+# Get Available Inventory
 
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+> Permission: "Spot trade"  
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/market/time`
+GET`/v5/crypto-loan-fixed/available-inventory`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+currency| **true**|  string| Coin name, uppercase only  
+term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
+annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-timeSecond| string| Bybit server timestamp (sec)  
-timeNano| string| Bybit server timestamp (nano)  
-[](/docs/api-explorer/v5/market/time)
-
-* * *
-
+currency| string| Coin name  
+term| string| Loan term  
+annualRate| string| Annual borrow rate  
+availableInventory| string| Available inventory of the lending pool  
+updateTime| string| Update timestamp  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Java
-  * Go
   * Node.js
 
 
     
     
-    GET /v5/market/time HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/crypto-loan-fixed/available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: XXXXXX  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_server_time())  
-    
-    
-    
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    client.getServerTime(System.out::println);  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
+    print(session.get_available_inventory_fixed_crypto_loan(  
+        currency="USDT",  
+        term="7",  
+        annualRate="0.02",  
+    ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-    });  
-      
-    client  
-      .getServerTime()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -92,95 +74,78 @@ timeNano| string| Bybit server timestamp (nano)
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "timeSecond": "1688639403",  
-            "timeNano": "1688639403423213947"  
+            "currency": "USDT",  
+            "term": "7",  
+            "annualRate": "0.02",  
+            "availableInventory": "50000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1688639403423  
+        "time": 1678886400000  
     }
 
 ---
 
-# Bybit服務器時間
+# 查詢定期可借存量
 
-獲取Bybit服務器時間
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+> 權限: "現貨"  
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/market/time`
+GET`/v5/crypto-loan-fixed/available-inventory`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+currency| **true**|  string| 幣種名稱，僅限大寫  
+term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
+annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-timeSecond| string| Bybit服務器時間戳 (秒)  
-timeNano| string| Bybit 服務器時間戳 (微秒)  
-[](/docs/zh-TW/api-explorer/v5/market/time)
-
-* * *
-
+currency| string| 幣種名稱  
+term| string| 借款期限  
+annualRate| string| 借款年利率  
+availableInventory| string| 借貸池可用存量  
+updateTime| string| 更新時間戳  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Go
-  * Java
   * Node.js
 
 
     
     
-    GET /v5/market/time HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/crypto-loan-fixed/available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: XXXXXX  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_server_time())  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    client.NewUtaBybitServiceNoParams().GetServerTime(context.Background())  
+    print(session.get_available_inventory_fixed_crypto_loan(  
+        currency="USDT",  
+        term="7",  
+        annualRate="0.02",  
+    ))  
     
     
     
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    client.getServerTime(System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-    });  
-      
-    client  
-      .getServerTime()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -190,9 +155,12 @@ timeNano| string| Bybit 服務器時間戳 (微秒)
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "timeSecond": "1688639403",  
-            "timeNano": "1688639403423213947"  
+            "currency": "USDT",  
+            "term": "7",  
+            "annualRate": "0.02",  
+            "availableInventory": "50000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1688639403423  
+        "time": 1678886400000  
     }

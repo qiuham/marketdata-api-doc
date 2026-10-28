@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/position
 api_type: Trading
-updated_at: 2026-10-27 18:35:21.014537
+updated_at: 2026-10-28 18:36:46.037259
 ---
 
 # Execution

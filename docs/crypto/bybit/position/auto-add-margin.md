@@ -2,38 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-10-27 18:38:58.504891
+updated_at: 2026-10-28 18:40:23.757612
 ---
 
-# Get Futures Leverage
+# Set Auto Add Margin
 
-Query isolated leverage setting for futures symbols. Unlike [Get Position Info](/docs/v5/position/v5/position), this endpoint does not require an open position to retrieve the leverage setting.
+Turn on/off auto-add-margin for **isolated** margin position
 
 ### HTTP Request
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/set-auto-add-margin`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`(USDT Contract, USDC Contract), `inverse`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear` (USDT Contract, USDC Contract)  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+autoAddMargin| **true**|  integer| Turn on/off. `0`: off. `1`: on  
+[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode position, this param is **required**
+
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
+
+  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-[category](/docs/v5/enum#category)| string| Product type  
-list| array| Object  
-> symbol| string| Symbol name  
-> leverage| string| Leverage  
-> side| string| Meaningless field, pls ignore. `Buy`, `Sell`, `""`  
-> positionIdx| integer| Position mode. `0`: one-way; `1`: two-way Buy; `2`: two-way Sell  
-  
-info
+None
 
-Under Portfolio Margin mode, this endpoint returns an error.
+[](/docs/api-explorer/v5/position/auto-add-margin)
+
+* * *
 
 ### Request Example
 
@@ -45,24 +46,68 @@ Under Portfolio Margin mode, this endpoint returns an error.
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/set-auto-add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1675255134857  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "autoAddmargin": 1,  
+        "positionIdx": null  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_auto_add_margin(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        autoAddmargin=1,  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
+    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+        .setAutoAddMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            autoAddMargin: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -71,58 +116,42 @@ Under Portfolio Margin mode, this endpoint returns an error.
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1675255135069  
     }
 
 ---
 
-# 查詢合約槓桿
+# 設置自動追加保證金
 
-查詢合約交易對的逐倉槓桿設置。與[查詢持倉](/docs/zh-TW/v5/position/v5/position)不同，此接口無需持有倉位即可查詢槓桿設置。
+開關自動追加保證金，僅適用於**逐倉** 保證金模式
 
 ### HTTP 請求
 
-GET`/v5/position/symbol-info`
+POST`/v5/position/set-auto-add-margin`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`(USDT合約, USDC合約), `inverse`  
-symbol| false| string| 合約名稱，如 `BTCUSDT`，僅支持大寫  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`  
+symbol| **true**|  string| 合約名稱  
+autoAddMargin| **true**|  integer| 是否自動追加保證金. `0`: 關閉. `1`: 開啟  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
+
+  * `0`: 單向持倉模式
+  * `1`: 買側雙向持倉模式
+  * `2`: 賣側雙向持倉模式
+
   
+[](/docs/zh-TW/api-explorer/v5/position/auto-add-margin)
+
+* * *
+
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
-list| array| Object  
-> symbol| string| 合約名稱  
-> leverage| string| 槓桿倍數  
-> side| string| 無意義, 可以忽略 `Buy`, `Sell`, `""`  
-> positionIdx| integer| 持倉模式。`0`: 單向持倉；`1`: 雙向持倉-多頭；`2`: 雙向持倉-空頭  
-  
-信息
-
-在組合保證金模式下，此接口會返回錯誤。
+無
 
 ### 請求示例
 
@@ -134,24 +163,68 @@ list| array| Object
 
     
     
-    GET /v5/position/symbol-info?category=linear&symbol=BTCUSDT HTTP/1.1  
+    POST /v5/position/set-auto-add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672284128523  
+    X-BAPI-TIMESTAMP: 1675255134857  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "category": "linear",  
+        "symbol": "BTCUSDT",  
+        "autoAddmargin": 1,  
+        "positionIdx": null  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.set_auto_add_margin(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        autoAddmargin=1,  
+    ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setAutoAddMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").autoAddMargin(AutoAddMargin.ON).build();  
+    client.setAutoAddMargin(setAutoAddMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+        .setAutoAddMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            autoAddMargin: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -160,23 +233,7 @@ list| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "category": "linear",  
-            "list": [  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 2  
-                },  
-                {  
-                    "symbol": "MNTUSDT",  
-                    "leverage": "10",  
-                    "side": "Sell",  
-                    "positionIdx": 1  
-                }  
-            ]  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1781518340920  
+        "time": 1675255135069  
     }

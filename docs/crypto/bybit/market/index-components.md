@@ -2,288 +2,169 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/index-components
 api_type: Market Data
-updated_at: 2026-10-27 18:37:34.741388
+updated_at: 2026-10-28 18:38:58.913932
 ---
 
-# Get Insurance Pool
+# Get Instrument Summary
 
-Query for Bybit [insurance pool](https://www.bybit.com/en/announcement-info/insurance-fund/) data (BTC/USDT/USDC etc)
-
-info
-
-  * The isolated insurance pool balance is updated every 1 minute, and shared insurance pool balance is updated every 24 hours
-  * Please note that you may receive data from the previous minute. This is due to multiple backend containers starting at different times, which may cause a slight delay. You can always rely on the latest minute data for accuracy.
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Query summary information and trading increments for linear and option instruments.
 
 ### HTTP Request
 
-GET`/v5/market/insurance`
+GET`/v5/market/instrument-summary`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| coin, uppercase only. Default: return all insurance coins  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `option`  
+symbol| false| string| Symbol name  
+[symbolType](/docs/v5/enum#symboltype)| false| string| Instrument type  
+marketRegion| false| string| Market region: `HK`, `US`, `CN`, `KR`, etc.  
+baseCoin| false| string| Base coin, e.g. `NVDA`, `TSLA`  
+limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `500`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-updatedTime| string| Data updated time (ms)  
+category| string| Product type  
+nextPageCursor| string| Cursor for the next page  
 list| array| Object  
-> coin| string| Coin  
-> symbols| string| 
-
-  * symbols with `"BTCUSDT,ETHUSDT,SOLUSDT"` mean these contracts are shared with one insurance pool
-  * For an isolated insurance pool, it returns one contract
-
+> symbol| string| Symbol name  
+> symbolType| string| Instrument type  
+> displayName| string| Display name shown in the UI  
+> baseCoin| string| Base coin  
+> settleCoin| string| Settlement coin  
+> fullName| string| Full name. Returns an empty string for `option`  
+> marketRegion| string| Market region of the underlying asset, used to determine its trading calendar and market hours. `US`: United States; `CN`: Mainland China; `HK`: Hong Kong; `KR`: South Korea. Returns an empty string for `option` or when not applicable  
+> underlyingTicker| string| Stock ticker, security code, or asset symbol in the underlying asset's native market. Returns an empty string for `option`  
+> priceIndex| string| The corresponding TradFi perpetual symbol used as the price index; for example, NVDA options use `NVDAUSDT`. Returns an empty string for `linear`  
+> qtyStep| string| Quantity step  
+> tickSize| string| Price tick size  
+> deliveryTime| string| Delivery timestamp (ms). Returns `0` for `linear`  
   
-> balance| string| Balance  
-> value| string| USD value  
-[](/docs/api-explorer/v5/market/insurance)
-
-* * *
-
 ### Request Example
 
   * HTTP
-  * Python
-  * GO
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/insurance?coin=USDT HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_insurance(  
-        coin="USDT",  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketInsurance(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var insuranceRequest = MarketDataRequest.builder().coin("BTC").build();  
-    var insuranceData = client.getInsurance(insuranceRequest);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
-      
-    client  
-        .getInsurance({  
-            coin: 'USDT',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
+    Host: api.bybit.com  
     
 
 ### Response Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "updatedTime": "1714003200000",  
-            "list": [  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "MERLUSDT,10000000AIDOGEUSDT,ZEUSUSDT",  
-                    "balance": "902178.57602476",  
-                    "value": "901898.0963091522"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "SOLUSDT,OMNIUSDT,ALGOUSDT",  
-                    "balance": "14454.51626125",  
-                    "value": "14449.515598975464"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "XLMUSDT,WUSDT",  
-                    "balance": "23.45018235",  
-                    "value": "22.992864174376344"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "AGIUSDT,WIFUSDT",  
-                    "balance": "10002",  
-                    "value": "9998.896846613574"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1714028451228  
+      "retCode": 0,  
+      "retMsg": "OK",  
+      "result": {  
+        "category": "linear",  
+        "list": [  
+          {  
+            "symbol": "0GUSDT",  
+            "symbolType": "",  
+            "displayName": "0GUSDT",  
+            "baseCoin": "0G",  
+            "settleCoin": "USDT",  
+            "fullName": "0G",  
+            "marketRegion": "",  
+            "underlyingTicker": "",  
+            "qtyStep": "0.1",  
+            "tickSize": "0.0001",  
+            "priceIndex": "",  
+            "deliveryTime": "0"  
+          }  
+        ],  
+        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
+      },  
+      "retExtInfo": {},  
+      "time": 1791944863432  
     }
 
 ---
 
-# 查詢保險基金
+# 查詢交易對摘要
 
-查詢Bybit平台的保險基金的數據，包含所有保險池的數據
+查詢線性合約與期權交易對的摘要資訊及交易精度。
 
-信息
+### HTTP 請求
 
-  * 獨立保險池的餘額數據每1分鐘更新一次, 共享保險池的餘額數據每24小時更新一次
-  * 請注意，您可能會收到前一分鐘的數據。這是由於多個後端容器在不同的時間啟動，這會造成数据延遲。您始終可以依賴最新的那一分鐘數據來確保準確性。 *在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
-
-### HTTP請求
-
-GET`/v5/market/insurance`
+GET`/v5/market/instrument-summary`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱. 默認: 返回目前所有的保險池幣種  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型：`linear`、`option`  
+symbol| false| string| 交易對名稱  
+[symbolType](/docs/zh-TW/v5/enum#symboltype)| false| string| 交易對類型  
+marketRegion| false| string| 市場區域：`HK`、`US`、`CN`、`KR` 等  
+baseCoin| false| string| 基礎幣種，例如 `NVDA`、`TSLA`  
+limit| false| integer| 每頁資料筆數。[`1`, `1000`]。預設：`500`  
+cursor| false| string| 游標。使用響應中的 `nextPageCursor` 取得下一頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-updateTime| string| 數據最近更新的時間戳 (ms)  
-list| array| Object  
-> coin| string| 保險池的幣種  
-> symbols| string| 
-
-  * 對於共享保險池, 返回的symbols裡會有多個合約, 比如`"BTCUSDT,ETHUSDT,SOLUSDT"`
-  * 對於獨立保險池, 將會返回一個合約
-
+category| string| 產品類型  
+nextPageCursor| string| 下一頁游標  
+list| array| 物件  
+> symbol| string| 交易對名稱  
+> symbolType| string| 交易對類型  
+> displayName| string| 與 UI 一致的顯示名稱  
+> baseCoin| string| 基礎幣種  
+> settleCoin| string| 結算幣種  
+> fullName| string| 完整名稱。`option` 時返回空字串  
+> marketRegion| string| 標的資產所屬的市場區域，用於判斷其交易日曆與市場交易時段。`US`：美國市場；`CN`：中國大陸市場；`HK`：香港市場；`KR`：韓國市場。`option` 或不適用時返回空字串  
+> underlyingTicker| string| 標的資產在其原生市場中的股票代號、證券代碼或資產符號。`option` 時返回空字串  
+> priceIndex| string| 對應的 TradFi 永續合約價格指數；例如 NVDA 期權對應 `NVDAUSDT`。`linear` 時返回空字串  
+> qtyStep| string| 數量步長  
+> tickSize| string| 價格最小變動單位  
+> deliveryTime| string| 交割時間戳（毫秒）。`linear` 時返回 `0`  
   
-> balance| string| 保險基金的幣種數量  
-> value| string| 保險基金的幣種價值，折合成USD的價值  
-[](/docs/zh-TW/api-explorer/v5/market/insurance)
-
-* * *
-
 ### 請求示例
 
   * HTTP
-  * Python
-  * GO
-  * Java
-  * Node.js
 
 
     
     
-    GET /v5/market/insurance?coin=USDT HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(testnet=True)  
-    print(session.get_insurance(  
-        coin="USDT",  
-    ))  
-    
-    
-    
-    import (  
-        "context"  
-        "fmt"  
-        bybit "github.com/bybit-exchange/bybit.go.api"  
-    )  
-    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
-    client.NewUtaBybitServiceWithParams(params).GetMarketInsurance(context.Background())  
-    
-    
-    
-    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var insuranceRequest = MarketDataRequest.builder().coin("BTC").build();  
-    var insuranceData = client.getInsurance(insuranceRequest);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-    });  
-      
-    client  
-        .getInsurance({  
-            coin: 'USDT',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
+    Host: api.bybit.com  
     
 
 ### 響應示例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "updatedTime": "1714003200000",  
-            "list": [  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "MERLUSDT,10000000AIDOGEUSDT,ZEUSUSDT",  
-                    "balance": "902178.57602476",  
-                    "value": "901898.0963091522"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "SOLUSDT,OMNIUSDT,ALGOUSDT",  
-                    "balance": "14454.51626125",  
-                    "value": "14449.515598975464"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "XLMUSDT,WUSDT",  
-                    "balance": "23.45018235",  
-                    "value": "22.992864174376344"  
-                },  
-                {  
-                    "coin": "USDT",  
-                    "symbols": "AGIUSDT,WIFUSDT",  
-                    "balance": "10002",  
-                    "value": "9998.896846613574"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1714028451228  
+      "retCode": 0,  
+      "retMsg": "OK",  
+      "result": {  
+        "category": "linear",  
+        "list": [  
+          {  
+            "symbol": "0GUSDT",  
+            "symbolType": "",  
+            "displayName": "0GUSDT",  
+            "baseCoin": "0G",  
+            "settleCoin": "USDT",  
+            "fullName": "0G",  
+            "marketRegion": "",  
+            "underlyingTicker": "",  
+            "qtyStep": "0.1",  
+            "tickSize": "0.0001",  
+            "priceIndex": "",  
+            "deliveryTime": "0"  
+          }  
+        ],  
+        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
+      },  
+      "retExtInfo": {},  
+      "time": 1791944863432  
     }

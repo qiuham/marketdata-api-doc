@@ -2,24 +2,26 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/repay-history
 api_type: REST
-updated_at: 2026-10-27 18:38:12.279324
+updated_at: 2026-10-28 18:39:39.264055
 ---
 
-# Get Repayment History
+# Get Supply Order Info
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/repayment-history`
+GET`/v5/crypto-loan-fixed/supply-order-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-repayId| false| string| Repayment order ID  
-loanCurrency| false| string| Loan coin name  
+orderId| false| string| Supply order ID  
+orderCurrency| false| string| Supply coin name  
+state| false| string| Supply order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled  
+term| false| string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
 limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
 cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
@@ -28,17 +30,14 @@ cursor| false| string| Cursor. Use the `nextPageCursor` token from the response 
 Parameter| Type| Comments  
 ---|---|---  
 list| array| Object  
-> details| array| Object  
->> loanCurrency| string| Loan coin name  
->> repayAmount| long| Repay amount  
->> loanId| string| Loan ID. One repayment may involve multiple loan contracts.  
-> loanCurrency| string| Loan coin name  
-> repayAmount| long| Repay amount  
-> repayId| string| Repay order ID  
-> repayStatus| integer| Status, `1`: success, `2`: processing, `3`: fail  
-> repayTime| long| Repay time  
-> repayType| integer| Repay type, `1`: repay by user; `2`: repay by liquidation; `3`: auto repay; `4`: overdue repay; `5`: repay by delisting; `6`: repay by delay liquidation; `7`: repay by currency; `8`: transfer to flexible loan  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+> annualRate| string| Annual rate for the supply  
+> orderId| long| Supply order ID  
+> orderTime| string| Order created time  
+> filledQty| string| Filled qty  
+> orderQty| string| Order qty  
+> orderCurrency| string| Coin name  
+> state| integer| Supply order status, `1`: matching; `2`: partially filled and cancelled; `3`: Fully filled; `4`: Cancelled; `5`: fail  
+> term| integer| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
 nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
@@ -50,11 +49,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan-fixed/repayment-history?repayId=1780 HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-info?orderId=13564 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: XXXXXXX  
-    X-BAPI-TIMESTAMP: 1752714738425  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752655992606  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -65,8 +64,8 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_repayment_history_fixed_crypto_loan(  
-        repayId="1780",  
+    print(session.get_lending_orders_fixed_crypto_loan(  
+        orderId="13564",  
     ))  
     
     
@@ -83,49 +82,41 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "result": {  
             "list": [  
                 {  
-                    "details": [  
-                        {  
-                            "loanCurrency": "ETH",  
-                            "loanId": "568",  
-                            "repayAmount": "0.1"  
-                        },  
-                        {  
-                            "loanCurrency": "ETH",  
-                            "loanId": "571",  
-                            "repayAmount": "1.4"  
-                        }  
-                    ],  
-                    "loanCurrency": "ETH",  
-                    "repayAmount": "1.5",  
-                    "repayId": "1782",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752717174353,  
-                    "repayType": 1  
+                    "annualRate": "0.01",  
+                    "filledQty": "800",  
+                    "orderCurrency": "USDT",  
+                    "orderId": 13564,  
+                    "orderQty": "1020",  
+                    "orderTime": "1752482751043",  
+                    "state": 2,  
+                    "term": 7  
                 }  
             ],  
-            "nextPageCursor": "1674"  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1752717183557  
+        "time": 1752655993869  
     }
 
 ---
 
-# 查詢還款紀錄
+# 查詢個人存款訂單
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/repayment-history`
+GET`/v5/crypto-loan-fixed/supply-order-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-repayId| false| string| 還款訂單ID  
-loanCurrency| false| string| 借款幣種  
+orderId| false| string| 存款訂單 ID  
+orderCurrency| false| string| 存款幣種名稱  
+state| false| string| 存款訂單狀態，`1`: 等待匹配; `2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消  
+term| false| string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
 limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
 cursor| false| string| 游標，用於分頁  
   
@@ -134,16 +125,14 @@ cursor| false| string| 游標，用於分頁
 參數| 類型| 說明  
 ---|---|---  
 list| array| Object  
-> details| array| Object  
->> loanCurrency| string| 借款幣種名稱  
->> repayAmount| long| 還款金額  
->> loanId| string| 借款合約 ID。一筆還款可能涉及多個借款合約。  
-> loanCurrency| string| 借款幣種名稱  
-> repayAmount| long| 還款金額  
-> repayId| string| 還款訂單 ID  
-> repayStatus| integer| 狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
-> repayTime| long| 還款時間  
-> repayType| integer| 還款類型，`1`: 用戶還款；`2`: 強制平倉還款；`3`: 自動還款；`4`: 逾期還款；`5`: 下架還款；`6`: 延期強平還款；`7`: 兌幣還款；`8`: 轉活期還款  
+> annualRate| string| 存款年化利率  
+> orderId| long| 存款訂單 ID  
+> orderTime| string| 訂單建立時間  
+> filledQty| string| 成交數量  
+> orderQty| string| 訂單數量  
+> orderCurrency| string| 幣種名稱  
+> state| integer| 存款訂單狀態，`1`: 等待匹配；`2`: 部分成交並已取消；`3`: 全部成交；`4`: 已取消；`5`: 失敗  
+> term| integer| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
 nextPageCursor| string| 下一頁游標  
   
 ### 請求示例
@@ -155,11 +144,11 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan-fixed/repayment-history?repayId=1780 HTTP/1.1  
+    GET /v5/crypto-loan-fixed/supply-order-info?orderId=13564 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: XXXXXXX  
-    X-BAPI-TIMESTAMP: 1752714738425  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752655992606  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -170,8 +159,8 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_repayment_history_fixed_crypto_loan(  
-        repayId="1780",  
+    print(session.get_lending_orders_fixed_crypto_loan(  
+        orderId="13564",  
     ))  
     
     
@@ -188,28 +177,18 @@ nextPageCursor| string| 下一頁游標
         "result": {  
             "list": [  
                 {  
-                    "details": [  
-                        {  
-                            "loanCurrency": "ETH",  
-                            "loanId": "568",  
-                            "repayAmount": "0.1"  
-                        },  
-                        {  
-                            "loanCurrency": "ETH",  
-                            "loanId": "571",  
-                            "repayAmount": "1.4"  
-                        }  
-                    ],  
-                    "loanCurrency": "ETH",  
-                    "repayAmount": "1.5",  
-                    "repayId": "1782",  
-                    "repayStatus": 1,  
-                    "repayTime": 1752717174353,  
-                    "repayType": 1  
+                    "annualRate": "0.01",  
+                    "filledQty": "800",  
+                    "orderCurrency": "USDT",  
+                    "orderId": 13564,  
+                    "orderQty": "1020",  
+                    "orderTime": "1752482751043",  
+                    "state": 2,  
+                    "term": 7  
                 }  
             ],  
-            "nextPageCursor": "1674"  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1752717183557  
+        "time": 1752655993869  
     }

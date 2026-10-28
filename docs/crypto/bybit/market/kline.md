@@ -2,83 +2,126 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/kline
 api_type: Market Data
-updated_at: 2026-10-27 18:37:41.181169
+updated_at: 2026-10-28 18:39:05.514333
 ---
 
-# Get New Delivery Price
+# Get Mark Price Kline
 
-Get historical option delivery prices.
+Query for historical [mark price](https://www.bybit.com/en-US/help-center/s/article/Glossary-Bybit-Trading-Terms) klines. Charts are returned in groups based on the requested interval.
 
-> **Covers: Option**
-
-info
-
-  * It is recommended to query this endpoint 1 minute after settlement is completed, because the data returned by this endpoint may be delayed by 1 minute.
-  * By default, the most recent 50 records are returned in reverse order of "deliveryTime".
-
-
+> **Covers: USDT contract / USDC contract / Inverse contract / Options**
 
 ### HTTP Request
 
-GET`/v5/market/new-delivery-price`
+GET`/v5/market/mark-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. _Valid for`option` only_  
-baseCoin| **true**|  string| Base coin, uppercase only. _Valid for`option` only_  
-settleCoin| false| string| Settle coin, uppercase only. Default: `USDT`.  
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`,`inverse`, `option`
+
+  * When `category` is not passed, use `linear` by default
+
+  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. futures: [`1`, `1000`], option: [`1`, `500`]. Default: `200`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 category| string| Product type  
-list| array| Object  
-> deliveryPrice| string| Delivery price  
-> deliveryTime| string| Delivery timestamp (ms)  
+symbol| string| Symbol name  
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `startTime`
+
   
+> list[0]: startTime| string| Start time of the candle (ms)  
+> list[1]: openPrice| string| Open price  
+> list[2]: highPrice| string| Highest price  
+> list[3]: lowPrice| string| Lowest price  
+> list[4]: closePrice| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/mark-kline)
+
 * * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/new-delivery-price?category=option&baseCoin=BTC HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_new_delivery_price(  
-        category="option",  
-        baseCoin="BTC"  
+    session = HTTP(testnet=True)  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
     
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
+    client  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -86,283 +129,143 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "category": "option",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "deliveryPrice": "111675.89830854",  
-                    "deliveryTime": "1756080000000"  
-                },  
-                {  
-                    "deliveryPrice": "114990.41430239",  
-                    "deliveryTime": "1755993600000"  
-                },  
-                {  
-                    "deliveryPrice": "115792.27557281",  
-                    "deliveryTime": "1755907200000"  
-                },  
-                {  
-                    "deliveryPrice": "113162.32041387",  
-                    "deliveryTime": "1755820800000"  
-                },  
-                {  
-                    "deliveryPrice": "113852.00497157",  
-                    "deliveryTime": "1755734400000"  
-                },  
-                {  
-                    "deliveryPrice": "113604.53226162",  
-                    "deliveryTime": "1755648000000"  
-                },  
-                {  
-                    "deliveryPrice": "114828.99222851",  
-                    "deliveryTime": "1755561600000"  
-                },  
-                {  
-                    "deliveryPrice": "115321.04746356",  
-                    "deliveryTime": "1755475200000"  
-                },  
-                {  
-                    "deliveryPrice": "117969.66726839",  
-                    "deliveryTime": "1755388800000"  
-                },  
-                {  
-                    "deliveryPrice": "117622.21555318",  
-                    "deliveryTime": "1755302400000"  
-                },  
-                {  
-                    "deliveryPrice": "118846.72206411",  
-                    "deliveryTime": "1755216000000"  
-                },  
-                {  
-                    "deliveryPrice": "121778.983223",  
-                    "deliveryTime": "1755129600000"  
-                },  
-                {  
-                    "deliveryPrice": "119383.31934289",  
-                    "deliveryTime": "1755043200000"  
-                },  
-                {  
-                    "deliveryPrice": "119030.19489407",  
-                    "deliveryTime": "1754956800000"  
-                },  
-                {  
-                    "deliveryPrice": "121725.4933271",  
-                    "deliveryTime": "1754870400000"  
-                },  
-                {  
-                    "deliveryPrice": "117780.91332268",  
-                    "deliveryTime": "1754784000000"  
-                },  
-                {  
-                    "deliveryPrice": "116795.39864682",  
-                    "deliveryTime": "1754697600000"  
-                },  
-                {  
-                    "deliveryPrice": "116880.31622213",  
-                    "deliveryTime": "1754611200000"  
-                },  
-                {  
-                    "deliveryPrice": "114782.09402227",  
-                    "deliveryTime": "1754524800000"  
-                },  
-                {  
-                    "deliveryPrice": "114212.80688625",  
-                    "deliveryTime": "1754438400000"  
-                },  
-                {  
-                    "deliveryPrice": "114046.80650192",  
-                    "deliveryTime": "1754352000000"  
-                },  
-                {  
-                    "deliveryPrice": "114668.76736223",  
-                    "deliveryTime": "1754265600000"  
-                },  
-                {  
-                    "deliveryPrice": "113691.29780823",  
-                    "deliveryTime": "1754179200000"  
-                },  
-                {  
-                    "deliveryPrice": "113947.55450439",  
-                    "deliveryTime": "1754092800000"  
-                },  
-                {  
-                    "deliveryPrice": "114786.86096974",  
-                    "deliveryTime": "1754006400000"  
-                },  
-                {  
-                    "deliveryPrice": "118693.64929462",  
-                    "deliveryTime": "1753920000000"  
-                },  
-                {  
-                    "deliveryPrice": "118218.22353841",  
-                    "deliveryTime": "1753833600000"  
-                },  
-                {  
-                    "deliveryPrice": "118953.66791589",  
-                    "deliveryTime": "1753747200000"  
-                },  
-                {  
-                    "deliveryPrice": "118894.70314174",  
-                    "deliveryTime": "1753660800000"  
-                },  
-                {  
-                    "deliveryPrice": "118137.86446229",  
-                    "deliveryTime": "1753574400000"  
-                },  
-                {  
-                    "deliveryPrice": "117344.01937262",  
-                    "deliveryTime": "1753488000000"  
-                },  
-                {  
-                    "deliveryPrice": "115166.35343924",  
-                    "deliveryTime": "1753401600000"  
-                },  
-                {  
-                    "deliveryPrice": "118217.70562761",  
-                    "deliveryTime": "1753315200000"  
-                },  
-                {  
-                    "deliveryPrice": "118444.57154255",  
-                    "deliveryTime": "1753228800000"  
-                },  
-                {  
-                    "deliveryPrice": "118155.53638794",  
-                    "deliveryTime": "1753142400000"  
-                },  
-                {  
-                    "deliveryPrice": "119370.88939816",  
-                    "deliveryTime": "1753056000000"  
-                },  
-                {  
-                    "deliveryPrice": "118080.35649338",  
-                    "deliveryTime": "1752969600000"  
-                },  
-                {  
-                    "deliveryPrice": "118197.36884665",  
-                    "deliveryTime": "1752883200000"  
-                },  
-                {  
-                    "deliveryPrice": "119644.49252705",  
-                    "deliveryTime": "1752796800000"  
-                },  
-                {  
-                    "deliveryPrice": "118316.40871555",  
-                    "deliveryTime": "1752710400000"  
-                },  
-                {  
-                    "deliveryPrice": "118216.19126195",  
-                    "deliveryTime": "1752624000000"  
-                },  
-                {  
-                    "deliveryPrice": "116746.02994227",  
-                    "deliveryTime": "1752537600000"  
-                },  
-                {  
-                    "deliveryPrice": "122778.73513717",  
-                    "deliveryTime": "1752451200000"  
-                },  
-                {  
-                    "deliveryPrice": "117973.83741111",  
-                    "deliveryTime": "1752364800000"  
-                },  
-                {  
-                    "deliveryPrice": "117741.30111399",  
-                    "deliveryTime": "1752278400000"  
-                },  
-                {  
-                    "deliveryPrice": "117851.19238216",  
-                    "deliveryTime": "1752192000000"  
-                },  
-                {  
-                    "deliveryPrice": "111263.21196833",  
-                    "deliveryTime": "1752105600000"  
-                },  
-                {  
-                    "deliveryPrice": "108721.62176788",  
-                    "deliveryTime": "1752019200000"  
-                },  
-                {  
-                    "deliveryPrice": "108410.57999842",  
-                    "deliveryTime": "1751932800000"  
-                },  
-                {  
-                    "deliveryPrice": "108969.06709828",  
-                    "deliveryTime": "1751846400000"  
-                }  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756110714178  
+        "time": 1672026361839  
     }
 
 ---
 
-# 查詢期權歷史交割價格
+# 查詢標記價格K線數據
 
-查詢平台期權歷史交割價格，支持期權
+查詢標記價格K線
 
-> **覆蓋範圍: 期權**
-
-信息
-
-  * 建議結算完成後1分鐘後查詢此接口，因為此接口返回的資料可能會延遲1分鐘。
-  * 默認返回最近50筆記錄，以"deliveryTime"倒序排列。
-
-
+> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
 
 ### HTTP請求
 
-GET`/v5/market/new-delivery-price`
+GET`/v5/market/mark-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. 僅支持`option`  
-baseCoin| **true**|  string| 交易貨幣. 默認: `BTC`. 僅支持`option`  
-settleCoin| false| string| 結算貨幣，僅限大寫。默認：`USDT`。  
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`,`inverse`,`option`
+
+  * 當`category`不指定時, 默認是`linear`
+
+  
+symbol| **true**|  string| 合約名稱  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. 合約: [`1`, `1000`], 期權: [`1`, `500`]. 默認: `200`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 category| string| 產品類型  
-list| array| Object  
-> deliveryPrice| string| 交割價格  
-> deliveryTime| string| 交割時間戳 (毫秒)  
+symbol| string| 合約名稱  
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
   
+> list[0]: startTime| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]: openPrice| string| 開始價格  
+> list[2]: highPrice| string| 最高價格  
+> list[3]: lowPrice| string| 最低價格  
+> list[4]: closePrice| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/mark-kline)
+
 * * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * GO
+  * Go
   * Java
   * Node.js
 
 
     
     
-    GET /v5/market/new-delivery-price?category=option&baseCoin=BTC HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(testnet=True)  
+    print(session.get_mark_price_kline(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
+    ))  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
-    
-    
-    
-      
+    client  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -370,212 +273,20 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "category": "option",  
+            "symbol": "BTCUSDT",  
+            "category": "linear",  
             "list": [  
-                {  
-                    "deliveryPrice": "111675.89830854",  
-                    "deliveryTime": "1756080000000"  
-                },  
-                {  
-                    "deliveryPrice": "114990.41430239",  
-                    "deliveryTime": "1755993600000"  
-                },  
-                {  
-                    "deliveryPrice": "115792.27557281",  
-                    "deliveryTime": "1755907200000"  
-                },  
-                {  
-                    "deliveryPrice": "113162.32041387",  
-                    "deliveryTime": "1755820800000"  
-                },  
-                {  
-                    "deliveryPrice": "113852.00497157",  
-                    "deliveryTime": "1755734400000"  
-                },  
-                {  
-                    "deliveryPrice": "113604.53226162",  
-                    "deliveryTime": "1755648000000"  
-                },  
-                {  
-                    "deliveryPrice": "114828.99222851",  
-                    "deliveryTime": "1755561600000"  
-                },  
-                {  
-                    "deliveryPrice": "115321.04746356",  
-                    "deliveryTime": "1755475200000"  
-                },  
-                {  
-                    "deliveryPrice": "117969.66726839",  
-                    "deliveryTime": "1755388800000"  
-                },  
-                {  
-                    "deliveryPrice": "117622.21555318",  
-                    "deliveryTime": "1755302400000"  
-                },  
-                {  
-                    "deliveryPrice": "118846.72206411",  
-                    "deliveryTime": "1755216000000"  
-                },  
-                {  
-                    "deliveryPrice": "121778.983223",  
-                    "deliveryTime": "1755129600000"  
-                },  
-                {  
-                    "deliveryPrice": "119383.31934289",  
-                    "deliveryTime": "1755043200000"  
-                },  
-                {  
-                    "deliveryPrice": "119030.19489407",  
-                    "deliveryTime": "1754956800000"  
-                },  
-                {  
-                    "deliveryPrice": "121725.4933271",  
-                    "deliveryTime": "1754870400000"  
-                },  
-                {  
-                    "deliveryPrice": "117780.91332268",  
-                    "deliveryTime": "1754784000000"  
-                },  
-                {  
-                    "deliveryPrice": "116795.39864682",  
-                    "deliveryTime": "1754697600000"  
-                },  
-                {  
-                    "deliveryPrice": "116880.31622213",  
-                    "deliveryTime": "1754611200000"  
-                },  
-                {  
-                    "deliveryPrice": "114782.09402227",  
-                    "deliveryTime": "1754524800000"  
-                },  
-                {  
-                    "deliveryPrice": "114212.80688625",  
-                    "deliveryTime": "1754438400000"  
-                },  
-                {  
-                    "deliveryPrice": "114046.80650192",  
-                    "deliveryTime": "1754352000000"  
-                },  
-                {  
-                    "deliveryPrice": "114668.76736223",  
-                    "deliveryTime": "1754265600000"  
-                },  
-                {  
-                    "deliveryPrice": "113691.29780823",  
-                    "deliveryTime": "1754179200000"  
-                },  
-                {  
-                    "deliveryPrice": "113947.55450439",  
-                    "deliveryTime": "1754092800000"  
-                },  
-                {  
-                    "deliveryPrice": "114786.86096974",  
-                    "deliveryTime": "1754006400000"  
-                },  
-                {  
-                    "deliveryPrice": "118693.64929462",  
-                    "deliveryTime": "1753920000000"  
-                },  
-                {  
-                    "deliveryPrice": "118218.22353841",  
-                    "deliveryTime": "1753833600000"  
-                },  
-                {  
-                    "deliveryPrice": "118953.66791589",  
-                    "deliveryTime": "1753747200000"  
-                },  
-                {  
-                    "deliveryPrice": "118894.70314174",  
-                    "deliveryTime": "1753660800000"  
-                },  
-                {  
-                    "deliveryPrice": "118137.86446229",  
-                    "deliveryTime": "1753574400000"  
-                },  
-                {  
-                    "deliveryPrice": "117344.01937262",  
-                    "deliveryTime": "1753488000000"  
-                },  
-                {  
-                    "deliveryPrice": "115166.35343924",  
-                    "deliveryTime": "1753401600000"  
-                },  
-                {  
-                    "deliveryPrice": "118217.70562761",  
-                    "deliveryTime": "1753315200000"  
-                },  
-                {  
-                    "deliveryPrice": "118444.57154255",  
-                    "deliveryTime": "1753228800000"  
-                },  
-                {  
-                    "deliveryPrice": "118155.53638794",  
-                    "deliveryTime": "1753142400000"  
-                },  
-                {  
-                    "deliveryPrice": "119370.88939816",  
-                    "deliveryTime": "1753056000000"  
-                },  
-                {  
-                    "deliveryPrice": "118080.35649338",  
-                    "deliveryTime": "1752969600000"  
-                },  
-                {  
-                    "deliveryPrice": "118197.36884665",  
-                    "deliveryTime": "1752883200000"  
-                },  
-                {  
-                    "deliveryPrice": "119644.49252705",  
-                    "deliveryTime": "1752796800000"  
-                },  
-                {  
-                    "deliveryPrice": "118316.40871555",  
-                    "deliveryTime": "1752710400000"  
-                },  
-                {  
-                    "deliveryPrice": "118216.19126195",  
-                    "deliveryTime": "1752624000000"  
-                },  
-                {  
-                    "deliveryPrice": "116746.02994227",  
-                    "deliveryTime": "1752537600000"  
-                },  
-                {  
-                    "deliveryPrice": "122778.73513717",  
-                    "deliveryTime": "1752451200000"  
-                },  
-                {  
-                    "deliveryPrice": "117973.83741111",  
-                    "deliveryTime": "1752364800000"  
-                },  
-                {  
-                    "deliveryPrice": "117741.30111399",  
-                    "deliveryTime": "1752278400000"  
-                },  
-                {  
-                    "deliveryPrice": "117851.19238216",  
-                    "deliveryTime": "1752192000000"  
-                },  
-                {  
-                    "deliveryPrice": "111263.21196833",  
-                    "deliveryTime": "1752105600000"  
-                },  
-                {  
-                    "deliveryPrice": "108721.62176788",  
-                    "deliveryTime": "1752019200000"  
-                },  
-                {  
-                    "deliveryPrice": "108410.57999842",  
-                    "deliveryTime": "1751932800000"  
-                },  
-                {  
-                    "deliveryPrice": "108969.06709828",  
-                    "deliveryTime": "1751846400000"  
-                }  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1756110714178  
+        "time": 1672026361839  
     }

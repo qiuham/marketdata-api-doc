@@ -2,17 +2,16 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-subuid
 api_type: REST
-updated_at: 2026-10-27 18:41:15.695302
+updated_at: 2026-10-28 18:42:43.127308
 ---
 
-# Delete Sub UID
+# Get Sub UID List (Limited)
 
-Delete a sub UID. If a sub-account’s asset balance is greater than 0.001 USDT, it cannot be deleted.  
-Use **master** user's api key**.
+Get at most 1,000 sub UID of master account, please use [Get Sub UID List (Unlimited)](/docs/v5/user/page-subuid) if you have more subaccounts. Use **master user's api key** **only**.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint
+The API key must have one of the below permissions in order to call this endpoint..
 
   * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
@@ -20,18 +19,35 @@ The API key must have one of the below permissions in order to call this endpoin
 
 ### HTTP Request
 
-POST`/v5/user/del-submember`
+GET`/v5/user/query-sub-members`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-subMemberId| **true**|  string| Sub UID  
-  
-### Response Parameters
-
 None
 
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+subMembers| array| Object  
+> uid| string| Sub user Id  
+> username| string| Username  
+> memberType| integer| `1`: normal subaccount, `6`: custodial sub account  
+> status| integer| The status of the user account
+
+  * `1`: normal
+  * `2`: login banned
+  * `4`: frozen 
+
+  
+> accountMode| integer| The account mode of the user account
+
+  * `5`: UTA2.0
+  * `6`: UTA2.0 Pro
+
+  
+> remark| string| The remark  
+  
 ### Request Example
 
   * HTTP
@@ -41,18 +57,12 @@ None
 
     
     
-    POST /v5/user/del-submember HTTP/1.1  
+    GET /v5/user/query-sub-members HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 34  
-      
-    {  
-        "subMemberId": "112725187"  
-    }  
     
     
     
@@ -62,9 +72,7 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.delete_sub_uid(  
-        subMemberId="112725187"  
-    ))  
+    print(session.get_sub_uid())  
     
     
     
@@ -77,9 +85,7 @@ None
     });  
       
     client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
+      .getSubUIDList()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -93,20 +99,36 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
+        "retMsg": "",  
+        "result": {  
+            "subMembers": [  
+                {  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
+                },  
+                {  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1760388036728  
     }
 
 ---
 
-# 刪除子帳戶
+# 查詢子帳戶UID列表 (限制)
 
-刪除子帳戶. 如果子帳號資產餘額大於 0.001U, 禁止刪除
-
-  
-僅可使用**母**帳戶api key調用.
+最多返回1000個子帳戶, 適合子帳戶較少的母帳戶調用, 需使用**母** 帳戶的API key。如您有較多的子帳戶, 請使用[查詢子帳戶UID列表 (無限制)](/docs/zh-TW/v5/user/page-subuid)接口。
 
 提示
 
@@ -118,18 +140,35 @@ None
 
 ### HTTP 請求
 
-POST`/v5/user/del-submember`
+GET`/v5/user/query-sub-members`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-subMemberId| **true**|  string| Sub UID  
-  
-### 返回參數
-
 無
 
+### 返回參數
+
+參數| 類型| 說明  
+---|---|---  
+subMembers| array| Object  
+> uid| string| 子帳戶userId  
+> username| string| 用戶名  
+> memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
+> status| integer| 帳戶狀態.
+
+  * `1`: 正常
+  * `2`: 登陸封禁
+  * `4`: 凍結 
+
+  
+> accountMode| integer| 帳戶模式.
+
+  * `5`: UTA2.0 帳戶
+  * `6`: UTA2.0 Pro 帳戶
+
+  
+> remark| string| 備註  
+  
 ### 請求示例
 
   * HTTP
@@ -139,22 +178,22 @@ subMemberId| **true**|  string| Sub UID
 
     
     
-    POST /v5/user/del-submember HTTP/1.1  
+    GET /v5/user/query-sub-members HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1698907012755  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 34  
-      
-    {  
-        "subMemberId": "112725187"  
-    }  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_uid())  
     
     
     
@@ -167,9 +206,7 @@ subMemberId| **true**|  string| Sub UID
     });  
       
     client  
-      .deleteSubMember({  
-        subMemberId: 'subUID',  
-      })  
+      .getSubUIDList()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -183,8 +220,27 @@ subMemberId| **true**|  string| Sub UID
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
+        "retMsg": "",  
+        "result": {  
+            "subMembers": [  
+                {  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
+                },  
+                {  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1698907012962  
+        "time": 1760388036728  
     }
