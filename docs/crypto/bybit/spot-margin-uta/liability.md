@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/liability
 api_type: REST
-updated_at: 2026-10-28 18:41:45.340301
+updated_at: 2026-10-29 18:41:58.564112
 ---
 
 # Get Max Borrowable Amount

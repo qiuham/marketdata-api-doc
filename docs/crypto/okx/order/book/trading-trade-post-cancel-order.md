@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-cancel-order
 anchor_id: order-book-trading-trade-post-cancel-order
 api_type: API
-updated_at: 2026-10-28 19:08:53.825254
+updated_at: 2026-10-29 19:09:14.724850
 ---
 
 # POST / Cancel order

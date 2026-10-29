@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/loan-info
 api_type: REST
-updated_at: 2026-10-28 18:40:16.675982
+updated_at: 2026-10-29 18:40:29.982493
 ---
 
 # Get Margin Coin Info

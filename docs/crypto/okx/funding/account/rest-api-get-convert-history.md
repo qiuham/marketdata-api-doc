@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-convert-history
 anchor_id: funding-account-rest-api-get-convert-history
 api_type: REST
-updated_at: 2026-10-28 19:10:43.691938
+updated_at: 2026-10-29 19:11:02.083550
 ---
 
 # Get convert history

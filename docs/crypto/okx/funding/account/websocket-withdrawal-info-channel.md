@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-websocket-withdrawal-info-channel
 anchor_id: funding-account-websocket-withdrawal-info-channel
 api_type: WebSocket
-updated_at: 2026-10-28 19:10:48.717564
+updated_at: 2026-10-29 19:11:07.053664
 ---
 
 # Withdrawal info channel

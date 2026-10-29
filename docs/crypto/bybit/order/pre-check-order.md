@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/pre-check-order
 api_type: Trading
-updated_at: 2026-10-28 18:40:10.757279
+updated_at: 2026-10-29 18:40:24.129979
 ---
 
 # Bind Or Unbind UID

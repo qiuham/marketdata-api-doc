@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/delivery-price
 api_type: Market Data
-updated_at: 2026-10-28 18:38:53.468574
+updated_at: 2026-10-29 18:39:09.850999
 ---
 
 # Get Full Depth Orderbook

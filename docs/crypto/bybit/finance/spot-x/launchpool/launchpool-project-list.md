@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-project-list
 api_type: REST
-updated_at: 2026-10-28 18:38:41.136998
+updated_at: 2026-10-29 18:38:57.911309
 ---
 
 # Get Token Splash Project List

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-convert-currency-pair
 anchor_id: funding-account-rest-api-get-convert-currency-pair
 api_type: REST
-updated_at: 2026-10-28 19:10:42.754592
+updated_at: 2026-10-29 19:11:01.154520
 ---
 
 # Get convert currency pair

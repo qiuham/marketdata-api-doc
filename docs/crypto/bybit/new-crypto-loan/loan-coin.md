@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/loan-coin
 api_type: REST
-updated_at: 2026-10-28 18:39:51.869204
+updated_at: 2026-10-29 18:40:07.121198
 ---
 
 # Obtain Max Loan Amount

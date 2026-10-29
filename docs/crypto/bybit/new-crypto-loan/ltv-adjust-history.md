@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/ltv-adjust-history
 api_type: REST
-updated_at: 2026-10-28 18:39:52.490029
+updated_at: 2026-10-29 18:40:07.735656
 ---
 
 # Obtain Max Loan Amount

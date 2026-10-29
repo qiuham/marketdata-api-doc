@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/product
 api_type: REST
-updated_at: 2026-10-28 18:38:36.685261
+updated_at: 2026-10-29 18:38:53.310671
 ---
 
 # Get Launchpool User Activity Log
