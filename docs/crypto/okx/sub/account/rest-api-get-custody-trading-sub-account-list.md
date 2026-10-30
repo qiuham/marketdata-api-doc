@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-get-custody-trading-sub-account-list
 anchor_id: sub-account-rest-api-get-custody-trading-sub-account-list
 api_type: REST
-updated_at: 2026-10-29 19:11:12.077688
+updated_at: 2026-10-30 19:08:38.997599
 ---
 
 # Get custody trading sub-account list

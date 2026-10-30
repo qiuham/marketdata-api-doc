@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode
 api_type: REST
-updated_at: 2026-10-29 18:42:08.049044
+updated_at: 2026-10-30 18:39:15.597713
 ---
 
 # Get Orderbook

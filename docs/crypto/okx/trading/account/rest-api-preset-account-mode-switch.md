@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-preset-account-mode-switch
 anchor_id: trading-account-rest-api-preset-account-mode-switch
 api_type: REST
-updated_at: 2026-10-29 19:09:04.331092
+updated_at: 2026-10-30 19:06:28.973231
 ---
 
 # Preset account mode switch

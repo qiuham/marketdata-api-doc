@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/loan-orders
 api_type: REST
-updated_at: 2026-10-29 18:40:01.483658
+updated_at: 2026-10-30 18:37:04.671351
 ---
 
 # Collateral Repayment

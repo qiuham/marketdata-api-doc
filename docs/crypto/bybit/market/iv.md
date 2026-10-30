@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/iv
 api_type: Market Data
-updated_at: 2026-10-29 18:39:20.909538
+updated_at: 2026-10-30 18:36:22.325372
 ---
 
 # Get Mark Price Kline

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/open-interest
 api_type: Market Data
-updated_at: 2026-10-29 18:39:26.654558
+updated_at: 2026-10-30 18:36:28.373053
 ---
 
 # Get Orderbook

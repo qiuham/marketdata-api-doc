@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/postman-files
 api_type: Trading
-updated_at: 2026-10-29 18:53:41.386527
+updated_at: 2026-10-30 18:51:06.941194
 ---
 
 # Advanced Trade Postman Files
@@ -52,7 +52,7 @@ Once the files are imported, you need to configure your environment variables.
 Variable| Current value  
 ---|---  
 `name`| `"organizations/{ORG_ID}/apiKeys/{KEY_ID}"` (Include quotes)  
-`privateKey`| `"-----BEGIN EC PRIVATE KEY-----\{KEY}\n-----END EC PRIVATE KEY-----\n"` (Include quotes)  
+`privateKey`| `"\-----BEGIN EC PRIVATE KEY-----\\{KEY}\n-----END EC PRIVATE KEY-----\n"` (Include quotes)  
   
 Ensure that the values are entered exactly as shown, including the quotes.
 

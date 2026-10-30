@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/submit-info
 api_type: REST
-updated_at: 2026-10-29 18:35:24.385483
+updated_at: 2026-10-30 18:32:17.351457
 ---
 
 # Confirm a Quote

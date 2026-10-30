@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/enum
 api_type: REST
-updated_at: 2026-10-29 18:36:50.806398
+updated_at: 2026-10-30 18:33:47.989404
 ---
 
 # Introduction

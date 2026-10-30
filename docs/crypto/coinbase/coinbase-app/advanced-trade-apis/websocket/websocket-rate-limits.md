@@ -2,12 +2,11 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/websocket/websocket-rate-limits
 api_type: WebSocket
-updated_at: 2026-10-29 18:53:41.887883
+updated_at: 2026-10-30 18:51:07.446969
 ---
 
 # Advanced Trade WebSocket Rate Limits
 
 WebSocket connections and unauthenticated messages are each limited to **8 per second per IP**. Read the stream and keep the messages you need — for example to build a live order book or track trades. **See Also:**
-
-  * [WebSocket Best Practices](/coinbase-app/advanced-trade-apis/guides/websocket)
-  * [WebSocket Endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints)
+     * [WebSocket Best Practices](/coinbase-app/advanced-trade-apis/guides/websocket)
+     * [WebSocket Endpoints](/coinbase-app/advanced-trade-apis/websocket/websocket-endpoints)

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/vip-margin
 api_type: REST
-updated_at: 2026-10-29 18:42:09.272941
+updated_at: 2026-10-30 18:39:16.832971
 ---
 
 # Get Orderbook
