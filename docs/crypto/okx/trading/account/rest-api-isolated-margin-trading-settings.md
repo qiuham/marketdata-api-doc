@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-isolated-margin-trading-settings
 anchor_id: trading-account-rest-api-isolated-margin-trading-settings
 api_type: REST
-updated_at: 2026-10-30 19:06:24.287277
+updated_at: 2026-10-31 19:05:41.422189
 ---
 
 # Isolated margin trading settings

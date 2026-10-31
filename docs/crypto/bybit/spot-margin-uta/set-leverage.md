@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-leverage
 api_type: REST
-updated_at: 2026-10-30 18:39:11.507563
+updated_at: 2026-10-31 18:37:49.377524
 ---
 
 # Get Status And Leverage

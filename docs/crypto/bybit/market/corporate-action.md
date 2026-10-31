@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/corporate-action
 api_type: Market Data
-updated_at: 2026-10-30 18:36:10.465135
+updated_at: 2026-10-31 18:34:35.820683
 ---
 
 # Get Full Depth Orderbook

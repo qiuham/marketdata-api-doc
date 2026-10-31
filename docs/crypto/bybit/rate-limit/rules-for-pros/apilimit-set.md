@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-set
 api_type: REST
-updated_at: 2026-10-30 18:38:09.663440
+updated_at: 2026-10-31 18:36:44.728858
 ---
 
 # Get Referral Commission Records

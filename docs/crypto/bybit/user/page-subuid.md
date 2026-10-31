@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/page-subuid
 api_type: REST
-updated_at: 2026-10-30 18:39:59.176612
+updated_at: 2026-10-31 18:38:45.410251
 ---
 
 # Get Referral Code

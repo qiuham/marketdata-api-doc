@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/fixed/cancel-supply
 api_type: REST
-updated_at: 2026-10-30 18:36:51.656772
+updated_at: 2026-10-31 18:35:19.437882
 ---
 
 # Collateral Repayment

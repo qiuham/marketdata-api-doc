@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/yield-history
 api_type: REST
-updated_at: 2026-10-30 18:35:22.210955
+updated_at: 2026-10-31 18:33:40.571299
 ---
 
 # Create Investment Plan

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/leverage
 api_type: REST
-updated_at: 2026-10-30 18:34:17.400747
+updated_at: 2026-10-31 18:32:34.220834
 ---
 
 # Get Product Info
