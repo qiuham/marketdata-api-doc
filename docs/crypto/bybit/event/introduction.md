@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/introduction
 api_type: REST
-updated_at: 2026-10-31 18:32:05.630874
+updated_at: 2026-11-01 18:31:49.625728
 ---
 
 # Introduction

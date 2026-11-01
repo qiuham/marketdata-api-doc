@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tax/batch-create
 api_type: REST
-updated_at: 2026-10-31 18:38:31.482904
+updated_at: 2026-11-01 18:37:45.820745
 ---
 
 # Get API Key Information

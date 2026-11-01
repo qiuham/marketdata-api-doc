@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-campaign-rewards
 api_type: REST
-updated_at: 2026-10-31 18:36:46.588796
+updated_at: 2026-11-01 18:36:11.348571
 ---
 
 # Get Referral Commission Records

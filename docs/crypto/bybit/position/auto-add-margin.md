@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-10-31 18:36:15.044749
+updated_at: 2026-11-01 18:35:42.036499
 ---
 
 # Set Auto Add Margin

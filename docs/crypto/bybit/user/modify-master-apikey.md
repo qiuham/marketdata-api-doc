@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/modify-master-apikey
 api_type: REST
-updated_at: 2026-10-31 18:38:44.179856
+updated_at: 2026-11-01 18:37:58.536158
 ---
 
 # Get Referral Code
