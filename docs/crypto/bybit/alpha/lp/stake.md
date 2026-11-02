@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/stake
 api_type: REST
-updated_at: 2026-11-01 18:29:19.473809
+updated_at: 2026-11-02 18:31:35.872003
 ---
 
 # Get Order Book

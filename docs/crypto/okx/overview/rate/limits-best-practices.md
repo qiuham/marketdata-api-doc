@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-rate-limits-best-practices
 anchor_id: overview-rate-limits-best-practices
 api_type: API
-updated_at: 2026-11-01 19:04:11.193423
+updated_at: 2026-11-02 19:05:18.315466
 ---
 
 # Best practices

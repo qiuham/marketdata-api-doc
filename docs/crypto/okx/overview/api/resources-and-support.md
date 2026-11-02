@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#overview-api-resources-and-support
 anchor_id: overview-api-resources-and-support
 api_type: API
-updated_at: 2026-11-01 19:04:01.890314
+updated_at: 2026-11-02 19:05:09.052046
 ---
 
 # API Resources and Support
@@ -28,7 +28,7 @@ updated_at: 2026-11-01 19:04:01.890314
   * Please take 1 minute to help us improve: [API Satisfaction Survey](https://forms.gle/Ehou2xFv5GE1xUGr9)
   * If you have any API-related inquiries, you can reach out to us by scanning the code below via the OKX APP.
 
-![API Technical Support QR Code](images/APISupport-b5a4ebca.jpeg)
+![API Technical Support QR Code](images/APISupport-117c8d03.jpeg)
 
 ---
 
@@ -52,4 +52,4 @@ updated_at: 2026-11-01 19:04:01.890314
   * 如有问题,您可以通过欧易 App 扫码进群与技术专员联系。  
 打开 App，点击左上角全功能图标，再点击右上角扫码图标，扫描右侧二维码即可。
 
-![API 技术支持二维码](images/APISupport-b5a4ebca.jpeg)
+![API 技术支持二维码](images/APISupport-117c8d03.jpeg)

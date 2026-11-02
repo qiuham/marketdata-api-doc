@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/delay-liq-status
 api_type: REST
-updated_at: 2026-11-01 18:35:34.173656
+updated_at: 2026-11-02 18:37:30.437484
 ---
 
 # Get Margin Coin Info

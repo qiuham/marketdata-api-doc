@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-one-click-repay-history
 anchor_id: order-book-trading-trade-get-one-click-repay-history
 api_type: API
-updated_at: 2026-11-01 19:04:42.657364
+updated_at: 2026-11-02 19:05:48.630383
 ---
 
 # GET / One-click repay history

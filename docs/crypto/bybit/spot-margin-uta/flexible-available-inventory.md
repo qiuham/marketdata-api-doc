@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/flexible-available-inventory
 api_type: REST
-updated_at: 2026-11-01 18:37:04.274298
+updated_at: 2026-11-02 18:38:56.287113
 ---
 
 # Get Max Borrowable Amount
