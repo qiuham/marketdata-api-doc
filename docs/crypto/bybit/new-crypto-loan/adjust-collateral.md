@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/adjust-collateral
 api_type: REST
-updated_at: 2026-11-02 18:36:39.312000
+updated_at: 2026-11-03 18:36:12.815640
 ---
 
 # Get Available Inventory

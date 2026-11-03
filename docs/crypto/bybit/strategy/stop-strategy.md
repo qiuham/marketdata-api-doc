@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/stop-strategy
 api_type: REST
-updated_at: 2026-11-02 18:39:31.690347
+updated_at: 2026-11-03 18:39:21.967348
 ---
 
 # Get System Status

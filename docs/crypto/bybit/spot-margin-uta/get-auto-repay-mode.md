@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/get-auto-repay-mode
 api_type: REST
-updated_at: 2026-11-02 18:38:56.903629
+updated_at: 2026-11-03 18:38:43.972139
 ---
 
 # Get Max Borrowable Amount

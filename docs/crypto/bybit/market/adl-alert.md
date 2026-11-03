@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/adl-alert
 api_type: Market Data
-updated_at: 2026-11-02 18:36:10.139548
+updated_at: 2026-11-03 18:35:40.606481
 ---
 
 # Get Full Depth Orderbook

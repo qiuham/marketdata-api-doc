@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/derivatives/isolated-positions
 api_type: Guide
-updated_at: 2026-11-02 18:50:19.851901
+updated_at: 2026-11-03 18:51:19.756250
 ---
 
 # Isolated Positions API Guide

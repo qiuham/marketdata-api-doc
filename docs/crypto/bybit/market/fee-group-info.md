@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/fee-group-info
 api_type: Market Data
-updated_at: 2026-11-02 18:36:12.013631
+updated_at: 2026-11-03 18:35:42.488466
 ---
 
 # Get Full Depth Orderbook
