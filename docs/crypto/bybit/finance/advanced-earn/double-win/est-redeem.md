@@ -2,56 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/est-redeem
 api_type: REST
-updated_at: 2026-11-03 18:33:42.744997
+updated_at: 2026-11-04 18:34:23.482010
 ---
 
-# Get Product Info
+# Get Position Info
 
 info
 
-Does not need authentication
+  * Requires Earn permission on the API key.
+  * Returns active positions only. Settled positions are not returned.
+
+
 
 ### HTTP Request
 
-GET`/v5/earn/advance/product`
+GET`/v5/earn/advance/position`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 category| **true**|  string| Product category. `DoubleWin`  
-coin| false| string| Underlying asset to filter by, uppercase only, e.g. `BTC`, `ETH`  
-duration| false| string| Product duration, e.g. `1d`, `2d`, `3d`  
+productId| false| string| Filter by product ID  
+coin| false| string| Filter by underlying asset, e.g. `BTC`, `ETH`  
+limit| false| int| Number of items per page. Default: 20, Max: 20  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 category| string| Product category. `DoubleWin`  
+nextPageCursor| string| Cursor for the next page. Empty string if no more data  
 list| array| Object  
-> category| string| Product category  
+> positionId| string| Position ID  
 > productId| string| Product ID  
+> category| string| Product category  
 > investCoin| string| Investment coin, e.g. `USDT`  
 > underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
-> duration| string| Product duration, e.g. `1d`, `2d`, `3d`  
-> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
-> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> amount| string| Position amount in `investCoin`  
+> leverage| string| Leverage multiplier  
+> initialPrice| string| Underlying asset index price at position creation  
+> lowerPrice| string| Lower bound of the price range  
+> upperPrice| string| Upper bound of the price range  
+> duration| string| Product term, e.g. `1d`, `3d`  
 > settlementTime| string| Settlement time, Unix timestamp in ms  
-> expectReceiveAt| string| Expected time to receive settlement funds, Unix timestamp in ms  
-> minPurchaseAmount| string| Minimum single order amount  
-> orderPrecisionDigital| int| Order amount precision (decimal places)  
-> isRfqProduct| bool| `false`: fixed price range product; `true`: RFQ custom price range product  
-> lowerPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Lower price buffer offset. Actual lower price = `initialPrice - lowerPriceBuffer`  
-> upperPriceBuffer| string| **Fixed range only** (`isRfqProduct=false`). Upper price buffer offset. Actual upper price = `initialPrice + upperPriceBuffer`  
-> minDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Minimum allowed deviation ratio of the custom price from current price  
-> maxDeviationRatio| string| **RFQ only** (`isRfqProduct=true`). Maximum allowed deviation ratio of the custom price from current price  
-> priceTickSize| string| **RFQ only** (`isRfqProduct=true`). Price tick size. Custom lower/upper prices must be a multiple of this value  
+> createdTime| string| Position creation time, Unix timestamp in ms  
+> status| string| `Active`: holding; `Redeeming`: early redemption in progress  
+> redeemable| bool| Whether the position can be redeemed now. `false` if a pending redeem order exists or less than 30 minutes remain until settlement  
+> accountType| string| Staking account: `FUND` or `UNIFIED`  
+> orderId| string| Staking order ID  
   
+* * *
+
 ### Request Example
     
     
-    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
+    GET /v5/earn/advance/position?category=DoubleWin&productId=20001 HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -64,79 +76,92 @@ list| array| Object
             "category": "DoubleWin",  
             "list": [  
                 {  
+                    "positionId": "2848",  
+                    "productId": "14084",  
                     "category": "DoubleWin",  
-                    "productId": "14092",  
                     "investCoin": "USDT",  
                     "underlyingAsset": "BTC",  
-                    "duration": "2d",  
-                    "expectReceiveAt": "1775290500000",  
-                    "minPurchaseAmount": "10",  
-                    "subscribeStartAt": "1775088000000",  
-                    "subscribeEndAt": "1775174399000",  
-                    "settlementTime": "1775289600000",  
-                    "orderPrecisionDigital": 4,  
-                    "isRfqProduct": true,  
-                    "lowerPriceBuffer": "",  
-                    "upperPriceBuffer": "",  
-                    "minDeviationRatio": "0.01",  
-                    "maxDeviationRatio": "0.15",  
-                    "priceTickSize": "500"  
+                    "amount": "150",  
+                    "leverage": "9.3309793178843419",  
+                    "initialPrice": "66445.69",  
+                    "lowerPrice": "66245.69",  
+                    "upperPrice": "66645.69",  
+                    "duration": "1d",  
+                    "settlementTime": "1775203200000",  
+                    "createdTime": "1775107014000",  
+                    "status": "Active",  
+                    "redeemable": true,  
+                    "accountType": "FUND",  
+                    "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1775100184409  
+        "time": 1775107714828  
     }
 
 ---
 
-# 查詢產品資訊
+# 查詢倉位資訊
 
 信息
 
-無需身份驗證
+  * API 金鑰需要具備 Earn（理財）權限。
+  * 僅返回活躍倉位，已結算的倉位不返回。
+
+
 
 ### HTTP 請求
 
-GET`/v5/earn/advance/product`
+GET`/v5/earn/advance/position`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 category| **true**|  string| 產品類別，`DoubleWin`  
-coin| false| string| 標的資產篩選，僅限大寫，例如：`BTC`, `ETH`  
-duration| false| string| 產品期限篩選，例如：`1d`, `2d`, `3d`  
+productId| false| string| 按產品 ID 篩選  
+coin| false| string| 按標的資產篩選，例如：`BTC`, `ETH`  
+limit| false| int| 每頁返回數量。預設：20，最大：20  
+cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 category| string| 產品類別，`DoubleWin`  
+nextPageCursor| string| 下一頁游標，為空字串表示無更多資料  
 list| array| 列表  
-> category| string| 產品類別  
+> positionId| string| 倉位 ID  
 > productId| string| 產品 ID  
+> category| string| 產品類別  
 > investCoin| string| 投資幣種，例如：`USDT`  
 > underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
-> duration| string| 產品期限，例如：`1d`, `2d`, `3d`  
-> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
-> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> amount| string| 倉位金額，單位為 `investCoin`  
+> leverage| string| 槓桿倍數  
+> initialPrice| string| 建倉時的標的資產指數價格  
+> lowerPrice| string| 價格區間下限  
+> upperPrice| string| 價格區間上限  
+> duration| string| 產品期限，例如：`1d`, `3d`  
 > settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
-> expectReceiveAt| string| 預計結算資金到帳時間，毫秒級 Unix 時間戳  
-> minPurchaseAmount| string| 最小單筆申購金額  
-> orderPrecisionDigital| int| 訂單金額精度（小數位數）  
-> isRfqProduct| bool| `false`：固定區間產品；`true`：RFQ 自選區間產品  
-> lowerPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（下限），實際下限價格 = `initialPrice - lowerPriceBuffer`  
-> upperPriceBuffer| string| **僅固定區間產品有效** （`isRfqProduct=false`）。價格緩衝區間（上限），實際上限價格 = `initialPrice + upperPriceBuffer`  
-> minDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最小允許比例  
-> maxDeviationRatio| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。自選價格偏離當前價格的最大允許比例  
-> priceTickSize| string| **僅 RFQ 產品有效** （`isRfqProduct=true`）。價格步長，自選下限/上限價格須為此值的整數倍  
+> createdTime| string| 倉位創建時間，毫秒級 Unix 時間戳  
+> status| string| `Active`：持倉中；`Redeeming`：提前贖回進行中  
+> redeemable| bool| 是否可立即贖回。若存在待處理的贖回訂單，或距結算時間不足 30 分鐘，則為 `false`  
+> accountType| string| 申購帳戶：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）  
+> orderId| string| 申購訂單 ID  
   
+* * *
+
 ### 請求示例
     
     
-    GET /v5/earn/advance/product?category=DoubleWin&coin=BTC HTTP/1.1  
+    GET /v5/earn/advance/position?category=DoubleWin&productId=20001 HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -149,26 +174,27 @@ list| array| 列表
             "category": "DoubleWin",  
             "list": [  
                 {  
+                    "positionId": "2848",  
+                    "productId": "14084",  
                     "category": "DoubleWin",  
-                    "productId": "14092",  
                     "investCoin": "USDT",  
                     "underlyingAsset": "BTC",  
-                    "duration": "2d",  
-                    "expectReceiveAt": "1775290500000",  
-                    "minPurchaseAmount": "10",  
-                    "subscribeStartAt": "1775088000000",  
-                    "subscribeEndAt": "1775174399000",  
-                    "settlementTime": "1775289600000",  
-                    "orderPrecisionDigital": 4,  
-                    "isRfqProduct": true,  
-                    "lowerPriceBuffer": "",  
-                    "upperPriceBuffer": "",  
-                    "minDeviationRatio": "0.01",  
-                    "maxDeviationRatio": "0.15",  
-                    "priceTickSize": "500"  
+                    "amount": "150",  
+                    "leverage": "9.3309793178843419",  
+                    "initialPrice": "66445.69",  
+                    "lowerPrice": "66245.69",  
+                    "upperPrice": "66645.69",  
+                    "duration": "1d",  
+                    "settlementTime": "1775203200000",  
+                    "createdTime": "1775107014000",  
+                    "status": "Active",  
+                    "redeemable": true,  
+                    "accountType": "FUND",  
+                    "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1775100184409  
+        "time": 1775107714828  
     }

@@ -2,49 +2,53 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/order-price-limit
 api_type: WebSocket
-updated_at: 2026-11-03 18:40:06.804035
+updated_at: 2026-11-04 18:40:49.184637
 ---
 
-# Order Price Limit
+# Trade
 
-Subscribe to Get Order Price Limit.
+Subscribe to the recent trades stream.
 
-For derivative trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-For spot trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
+After subscription, you will be pushed trade messages in real-time.
 
-
-Push frequency: **300ms**
+Push frequency: **real-time**
 
 **Topic:**  
-`priceLimit.{symbol}`  
+`publicTrade.{symbol}`  
+**Note** : option uses baseCoin, e.g., publicTrade.BTC
+
+note
+
+  * For Futures and Spot, a single message may have up to 1024 trades. As such, multiple messages may be sent for the same `seq`.
+  * **PreLaunch contracts** : there is no feed until `ContinuousTrading` stage
+
 
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+id| string| Message id. _Unique field for option_  
 topic| string| Topic name  
+type| string| Data type. `snapshot`  
 ts| number| The timestamp (ms) that the system generates the data  
-data| array| Object.  
-> symbol| string| Symbol name  
-> buyLmt| string| Highest Bid Price  
-> sellLmt| string| Lowest Ask Price  
+data| array| Object. Sorted by the time the trade was matched in ascending order  
+> T| number| The timestamp (ms) that the order is filled  
+> s| string| Symbol name  
+> S| string| Side of taker. `Buy`,`Sell`  
+> v| string| Trade size  
+> p| string| Trade price  
+> [L](/docs/v5/enum#tickdirection)| string| Direction of price change. _Unique field for Perps & futures_  
+> i| string| Trade ID  
+> BT| boolean| Whether it is a block trade order or not  
+> RPI| boolean| Whether it is a RPI trade or not  
+> seq| integer| cross sequence  
+> mP| string| Mark price, unique field for `option`  
+> iP| string| Index price, unique field for `option`  
+> mIv| string| Mark iv, unique field for `option`  
+> iv| string| iv, unique field for `option`  
   
 ### Subscribe Example
-
-  * JSON
-  * Python
-
-
-    
-    
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "priceLimit.BTCUSDT"  
-        ]  
-    }  
-    
     
     
     from pybit.unified_trading import WebSocket  
@@ -55,7 +59,7 @@ data| array| Object.
     )  
     def handle_message(message):  
         print(message)  
-    ws.price_limit_stream(  
+    ws.trade_stream(  
         symbol="BTCUSDT",  
         callback=handle_message  
     )  
@@ -67,55 +71,68 @@ data| array| Object.
     
     
     {  
-        "topic": "priceLimit.BTCUSDT",  
-        "data": {  
-            "symbol": "BTCUSDT",  
-            "buyLmt": "114450.00",  
-            "sellLmt": "103550.00"  
-        },  
-        "ts": 1750059683782  
+        "topic": "publicTrade.BTCUSDT",  
+        "type": "snapshot",  
+        "ts": 1672304486868,  
+        "data": [  
+            {  
+                "T": 1672304486865,  
+                "s": "BTCUSDT",  
+                "S": "Buy",  
+                "v": "0.001",  
+                "p": "16578.50",  
+                "L": "PlusTick",  
+                "i": "20f43950-d8dd-5b31-9112-a178eb6023af",  
+                "BT": false,  
+                "seq": 1783284617  
+            }  
+        ]  
     }
 
 ---
 
-# 訂單價格限制
+# 平台成交
 
-訂閱訂單價格限制的推送.  
-衍生性商品交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-現貨交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
+訂閱Bybit平台上最近成交的推送.  
+從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
 
-
-推送頻率: **300毫秒**
+推送頻率: **實時**
 
 **Topic:**  
-`priceLimit.{symbol}`
+`publicTrade.{symbol}` **注意** : 期權使用baseCoin, e.g., publicTrade.BTC
+
+備註
+
+  * 對於期貨和現貨, 單條消息至多含有1024個成交, 一個撮合包如果超過1024個成交, 則會拆成多條消息下發
+  * 對於盤前合約, 直到`ContinuousTrading`(連續競價)階段, publicTrade數據才會下發
+
+
 
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+id| string| 消息 id. _期權沒有該字段_  
 topic| string| Topic名  
+type| string| 數據類型. `snapshot`  
 ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| array| Object.  
-> symbol| string| 合約名稱  
-> buyLmt| string| 最高買價  
-> sellLmt| string| 最低賣價  
+data| array| Object. 如有多條, 則數組中的元素按照匹配時間升序排序  
+> T| number| 成交時間戳 (毫秒)  
+> s| array| 合約名稱  
+> S| string| 吃單方向. `Buy`,`Sell`  
+> v| string| 成交數量  
+> p| string| 成交價格  
+> [L](/docs/zh-TW/v5/enum#tickdirection)| string| 價格變化的方向. _期權沒有該字段_  
+> i| string| 成交Id  
+> BT| boolean| 成交類型是否為大宗交易  
+> RPI| boolean| 成交類型是否為RPI交易  
+> seq| integer| 撮合序列號  
+> mP| string| 標記價格, 期權的特有字段  
+> iP| string| 指數價格, 期權的特有字段  
+> mIv| string| 標記iv, 期權的特有字段  
+> iv| string| iv, 期權的特有字段  
   
 ### 訂閱示例
-
-  * JSON
-  * Python
-
-
-    
-    
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "priceLimit.BTCUSDT"  
-        ]  
-    }  
-    
     
     
     from pybit.unified_trading import WebSocket  
@@ -126,7 +143,7 @@ data| array| Object.
     )  
     def handle_message(message):  
         print(message)  
-    ws.price_limit_stream(  
+    ws.trade_stream(  
         symbol="BTCUSDT",  
         callback=handle_message  
     )  
@@ -138,11 +155,20 @@ data| array| Object.
     
     
     {  
-        "topic": "priceLimit.BTCUSDT",  
-        "data": {  
-            "symbol": "BTCUSDT",  
-            "buyLmt": "114450.00",  
-            "sellLmt": "103550.00"  
-        },  
-        "ts": 1750059683782  
+        "topic": "publicTrade.BTCUSDT",  
+        "type": "snapshot",  
+        "ts": 1672304486868,  
+        "data": [  
+            {  
+                "T": 1672304486865,  
+                "s": "BTCUSDT",  
+                "S": "Buy",  
+                "v": "0.001",  
+                "p": "16578.50",  
+                "L": "PlusTick",  
+                "i": "20f43950-d8dd-5b31-9112-a178eb6023af",  
+                "BT": false,  
+                "seq": 1783284617  
+            }  
+        ]  
     }

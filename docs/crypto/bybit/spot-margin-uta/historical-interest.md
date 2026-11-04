@@ -2,14 +2,14 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/historical-interest
 api_type: REST
-updated_at: 2026-11-03 18:38:44.590831
+updated_at: 2026-11-04 18:39:24.638707
 ---
 
-# Get Max Borrowable Amount
+# Get Liability Info
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/max-borrowable`
+GET`/v5/spot-margin-trade/liability`
 
 ### Request Parameters
 
@@ -22,7 +22,11 @@ currency| **true**|  string| Coin name, uppercase only
 Parameter| Type| Comments  
 ---|---|---  
 currency| string| Coin name, uppercase only  
-maxLoan| string| Max borrowable amount  
+totalBorrowAmount| string| Total liability = borrowSize  
+fixedBorrowAmount| string| Fixed-rate liability  
+flexibleBorrowAmount| string| Floating-rate liability = borrowSize - fixedBorrowAmount  
+spotTotalBorrow| string| Spot liability + open order liability  
+derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - reservation  
   
 * * *
 
@@ -35,7 +39,7 @@ maxLoan| string| Max borrowable amount
 
     
     
-    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/liability?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -50,7 +54,7 @@ maxLoan| string| Max borrowable amount
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_max_borrowable(  
+    print(session.spot_margin_trade_get_liability(  
         currency="BTC"  
     ))  
     
@@ -66,20 +70,24 @@ maxLoan| string| Max borrowable amount
         "retCode": 0,  
         "retMsg": "Success",  
         "result": {  
-            "maxLoan": "17.54689892",  
-            "currency": "BTC"  
+            "currency": "BTC",  
+            "totalBorrowAmount": "0.05000000",  
+            "fixedBorrowAmount": "0.02000000",  
+            "flexibleBorrowAmount": "0.03000000",  
+            "spotTotalBorrow": "0.04000000",  
+            "derivativesBorrow": "0.01000000"  
         },  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1756273388821  
     }
 
 ---
 
-# 查詢最大可借數
+# 查詢負債信息
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/max-borrowable`
+GET`/v5/spot-margin-trade/liability`
 
 ### 請求參數
 
@@ -92,7 +100,11 @@ currency| **true**|  string| 幣名稱，僅限大寫
 參數| 類型| 說明  
 ---|---|---  
 currency| string| 幣名稱，僅限大寫  
-maxLoan| string| 最高可藉金額  
+totalBorrowAmount| string| 總負債 = borrowSize  
+fixedBorrowAmount| string| 固定利率負債  
+flexibleBorrowAmount| string| 活期利率負債 = borrowSize - fixedBorrowAmount  
+spotTotalBorrow| string| 現貨負債 + 掛單負債  
+derivativesBorrow| string| 衍生品負債 = borrowSize - spotBorrow - reservation  
   
 * * *
 
@@ -105,7 +117,7 @@ maxLoan| string| 最高可藉金額
 
     
     
-    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
+    GET /v5/spot-margin-trade/liability?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -128,9 +140,13 @@ maxLoan| string| 最高可藉金額
         "retCode": 0,  
         "retMsg": "Success",  
         "result": {  
-            "maxLoan": "17.54689892",  
-            "currency": "BTC"  
+            "currency": "BTC",  
+            "totalBorrowAmount": "0.05000000",  
+            "fixedBorrowAmount": "0.02000000",  
+            "flexibleBorrowAmount": "0.03000000",  
+            "spotTotalBorrow": "0.04000000",  
+            "derivativesBorrow": "0.01000000"  
         },  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1756273388821  
     }

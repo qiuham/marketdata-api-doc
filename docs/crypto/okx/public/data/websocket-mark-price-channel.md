@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-websocket-mark-price-channel
 anchor_id: public-data-websocket-mark-price-channel
 api_type: WebSocket
-updated_at: 2026-11-03 19:08:43.669724
+updated_at: 2026-11-04 19:08:54.635290
 ---
 
 # Mark price channel

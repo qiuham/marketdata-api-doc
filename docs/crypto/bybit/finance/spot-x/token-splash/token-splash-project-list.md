@@ -2,73 +2,54 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/token-splash/token-splash-project-list
 api_type: REST
-updated_at: 2026-11-03 18:35:30.561266
+updated_at: 2026-11-04 18:36:11.554647
 ---
 
-# Get Token Splash Project List
-
-Query the Token Splash activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
+# Get Institution IP Change Log
 
 info
 
-  * Authentication is **not** required
-  * Only released, main-site public activities are returned
-  * `nextPageCursor` being an empty string indicates the last page
-  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
-  * `registrationStartTime` = min of non-zero values among `signUpBeginTime` and `tradeSignUpBeginTime`
-
-
+This endpoint must be requested with a main account API key.
 
 ### HTTP Request
 
-GET`/v5/spot-x/token-splash/project/list`
+GET`/v5/ins/ip/changelog`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-status| **true**|  integer| Activity phase filter. `0`: Upcoming (registration not yet started); `1`: Ongoing; `2`: Ended (announcement time has passed)  
-projectId| false| string| Exact activity code. Use to query a single project  
-activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
-cursor| false| string| Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page  
-limit| false| integer| Number of items per page. Default: `10`. Max: `10`  
+startTime| false| string| Filter start time, Unix timestamp in milliseconds  
+endTime| false| string| Filter end time, Unix timestamp in milliseconds  
+limit| false| integer| Records per page. Range: [1, 50]. Default: 20  
+cursor| false| string| Pagination cursor. Use the `nextPageCursor` value from the previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Activity items for the current page  
-> status| integer| Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
-> projectId| string| Unique activity code  
-> activityCoin| string| The coin that the activity is centered on  
-> rewardCoin| string| The coin distributed as the reward. Resolved in priority order: new pool token → old pool token → trade pool token  
-> totalReward| string| Total reward pool size (sum of new, old, and trade prize pool amounts)  
-> participantCount| string| Total number of registered participants  
-> registrationStartTime| string| Earliest registration start time, Unix timestamp in milliseconds. Equals `min(signUpBeginTime, tradeSignUpBeginTime)`, ignoring zero values  
-> activityEndTime| string| Activity end time, Unix timestamp in milliseconds. Equals `max(announceTime, tradeAnnounceTime)`  
-nextPageCursor| string| Cursor for the next page. Empty string means last page  
+list| array| Array of IP change records  
+> operationType| string| Action type: `ADD`, `REMOVE`, `ENABLE`, or `DISABLE`  
+> ipAddress| string| The IP address affected by the operation  
+> domainType| string| Connection protocol. `GW` for HTTP hostname, `WS` for WebSocket hostname  
+> changeReason| string| The reason of the change  
+> createdAt| string| Operation timestamp in UTC+0, ISO 8601 format  
+nextPageCursor| string| Opaque token for retrieving the next page of results  
   
-* * *
-
 ### Request Example
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
+    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1779362662315  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
     
 
 ### Response Example
@@ -80,91 +61,75 @@ nextPageCursor| string| Cursor for the next page. Empty string means last page
         "result": {  
             "list": [  
                 {  
-                    "status": 1,  
-                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
-                    "activityCoin": "BTC",  
-                    "rewardCoin": "USDT",  
-                    "totalReward": "100000",  
-                    "participantCount": "3456",  
-                    "registrationStartTime": "1704067200000",  
-                    "activityEndTime": "1706745600000"  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "193.118.167.247",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                },  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "18.99.43.128/25",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
+            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
         },  
-        "retExtInfo": {},  
-        "time": 1705000000000  
+        "time": 1779362027705  
     }
 
 ---
 
-# 查詢 Token Splash 項目列表
-
-查詢 Token Splash 活動（項目）列表。結果按創建時間倒序排列（最新優先），支持游標分頁。
+# 查詢機構 IP 變更記錄
 
 信息
 
-  * 無需鑒權
-  * 僅返回已發布的主站公開活動
-  * `nextPageCursor` 為空字符串時表示已到最後一頁
-  * `activityEndTime` = max(`announceTime`, `tradeAnnounceTime`)
-  * `registrationStartTime` = `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值
-
-
+此接口必須使用主帳戶 API key 請求。
 
 ### HTTP 請求
 
-GET`/v5/spot-x/token-splash/project/list`
+GET`/v5/ins/ip/changelog`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
+參數| 是否必填| 類型| 說明  
 ---|---|---|---  
-status| **true**|  integer| 活動階段篩選。`0`: 即將開始（報名未開始）；`1`: 進行中；`2`: 已結束（公告時間已過）  
-projectId| false| string| 精確活動代碼，用於查詢單個項目  
-activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
-cursor| false| string| 分頁游標，傳入上一次響應中的 `nextPageCursor`。首頁請求無需傳入  
-limit| false| integer| 每頁數量，默認 `10`，最大 `10`  
+startTime| false| string| 篩選起始時間，Unix 毫秒時間戳  
+endTime| false| string| 篩選結束時間，Unix 毫秒時間戳  
+limit| false| integer| 每頁記錄數。範圍: [1, 50]。預設: 20  
+cursor| false| string| 分頁游標。使用上一頁響應中的 `nextPageCursor` 值  
   
-### 返回參數
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 當前頁的活動列表  
-> status| integer| 活動狀態。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
-> projectId| string| 唯一活動代碼  
-> activityCoin| string| 活動對應的幣種  
-> rewardCoin| string| 實際發放的獎勵幣種。優先級順序：新池代幣 → 舊池代幣 → 交易池代幣  
-> totalReward| string| 獎勵池總量（新池、舊池及交易池金額之和）  
-> participantCount| string| 已報名參與人數  
-> registrationStartTime| string| 最早報名開始時間，毫秒級 Unix 時間戳。等於 `signUpBeginTime` 和 `tradeSignUpBeginTime` 中非零值的最小值  
-> activityEndTime| string| 活動結束時間，毫秒級 Unix 時間戳。等於 `max(announceTime, tradeAnnounceTime)`  
-nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後一頁  
+list| array| IP 變更記錄列表  
+> operationType| string| 操作類型: `ADD`, `REMOVE`, `ENABLE`, 或 `DISABLE`  
+> ipAddress| string| 受該操作影響的 IP 位址  
+> domainType| string| 連接協議。`GW` 表示 HTTP hostname，`WS` 表示 WebSocket hostname  
+> changeReason| string| 變更原因  
+> createdAt| string| 操作時間戳，UTC+0，ISO 8601 格式  
+nextPageCursor| string| 用於查詢下一頁的不透明 token  
   
-* * *
-
 ### 請求示例
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-x/token-splash/project/list?status=1&limit=10 HTTP/1.1  
+    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1779362662315  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
@@ -173,18 +138,21 @@ nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後�
         "result": {  
             "list": [  
                 {  
-                    "status": 1,  
-                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
-                    "activityCoin": "BTC",  
-                    "rewardCoin": "USDT",  
-                    "totalReward": "100000",  
-                    "participantCount": "3456",  
-                    "registrationStartTime": "1704067200000",  
-                    "activityEndTime": "1706745600000"  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "193.118.167.247",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                },  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "18.99.43.128/25",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
+            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
         },  
-        "retExtInfo": {},  
-        "time": 1705000000000  
+        "time": 1779362027705  
     }

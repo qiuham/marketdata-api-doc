@@ -2,54 +2,63 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/introduction
 api_type: REST
-updated_at: 2026-11-03 18:37:46.826596
+updated_at: 2026-11-04 18:38:26.286755
 ---
 
-# Get Referral Commission Records
+# Get Referral Campaign Rewards
 
-Query referral commission records for the authenticated inviter.
+Get the referral rules and configured campaign tasks and rewards for the current site. This endpoint returns static campaign configuration only; it does not return the user's task progress, reward claims, or payout records.
 
 info
 
-  * Authentication is required. The inviter is identified from the API key; do not provide a user ID for the inviter in the request body.
-  * `userId` in the response is a masked invitee ID.
-  * An empty `userIdList` does not filter by invitee ID.
-  * Time filters use `YYYY-MM-DD HH:mm:ss`. When either value cannot be parsed, an empty string is passed downstream; downstream handling is not established here. The endpoint does not apply a default past-week time range.
-  * Request and response property names use the proto's explicit camelCase JSON names; actual gateway serialization has not been independently verified.
+  * Authentication is required. The user and site are derived from the authenticated gateway context; do not provide a user ID or site selector in the request body.
+  * The response envelope, `rebateRule`, and each embedded campaign JSON string use camelCase field names. Campaigns are returned in base, fiat, then earn order when active. Each `tasks` entry has `schemaVersion: 2`.
+  * A reward-configuration lookup failure skips only that task. Other tasks and campaigns are retained.
+  * `rebateRule` is site configuration and does not indicate the tier matched by the current user.
 
 
 
 ### HTTP Request
 
-POST`/v5/referral/commission/records`
+POST`/v5/referral/campaign/rewards`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-userIdList| false| array| Invitee ID list. An empty list returns records without filtering by invitee ID.  
-> userId| false| integer| Invitee ID  
-startTime| false| string| Start time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified.  
-endTime| false| string| End time in `YYYY-MM-DD HH:mm:ss` format. An invalid value is passed downstream as an empty string; its handling is unverified.  
-page| false| integer| One-based page number. `0` is treated as `1`.  
-pageSize| false| integer| Number of records per page. `0` or a value greater than `200` is treated as `10`.  
-productLine| false| integer| Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha.  
-  
+No request parameters are required. Send an empty JSON object.
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-records| array| Referral commission records  
-> userId| string| Masked invitee ID, in the format of first character + `***` \+ last character  
-> paymentTime| integer| Commission payment time as a Unix timestamp in seconds  
-> rate| string| Commission rate  
-> businessUnit| integer| Product line: `0` unknown, `1` spot, `2` contracts, `3` options, `4` USDC perpetual, `6` TradeFi, `9` Alpha. Unrecognized values are returned as `0`.  
-> commissionOriginCoin| string| Original commission currency  
-> commissionOriginAmount| string| Commission amount in the original currency  
-> commissionUsdtAmount| string| Commission value in USDT  
-> commissionStatus| integer| Commission status: `0` unknown, `1` awaiting credit, `2` settled. Unrecognized values are returned as `0`.  
-> isBoostM2| boolean| Whether the invitee associated with the commission is a Boost user. This field may not be present.  
-total| integer| Total number of records  
+rebateRule| object| Referral rules configured for the site  
+> depositAmount| integer| Deposit threshold. Currency and precision are not specified.  
+> tradeAmount| integer| Trading threshold. Currency and precision are not specified.  
+> rebateRatioRules| array| Tiered referral commission rules  
+>> rebateRatio| integer| Referral commission rate, from 0 to 100  
+>> referralCount| integer| Required number of qualified invitees  
+>> hasTradeCondition| boolean| Whether the tier requires trading volume  
+>> tradeAmountCondition| integer| Trading-volume threshold for the tier  
+> rebateDurationDays| integer| Number of days that the referral commission lasts  
+> tradefiDepositAmount| integer| Currently not populated; a default value of `0` does not confirm a threshold  
+> tradefiTradeAmount| integer| Currently not populated; a default value of `0` does not confirm a threshold  
+tasks| array| Campaign JSON strings, in base, fiat, then earn order. Parse each string to access the fields below.  
+> schemaVersion| integer| Campaign JSON schema version. The current value is always `2`.  
+> source| string| Campaign source: `base`, `fiat`, or `earn`  
+> campaignId| string| Campaign configuration ID; not a user reward-record ID  
+> tasks| array| Configured tasks and one-hop M1/M2 related tasks. May be empty if task details cannot be assembled.  
+>> id| integer| Task ID  
+>> awardType| integer| Task reward type. See [awardType](/docs/v5/enum#awardtype). Type `100` retrieves reward-packet details; reward details are not currently assembled for types `95` and `97`. This value does not mean that a reward has been claimed.  
+>> ruleTitle| array | null| English title of each valid rule. `null` when there are no valid rules.  
+>> ruleDescription| array | null| English description of each valid rule. Corresponds to `ruleTitle` by index.  
+>> ruleParam| array | null| First parameter of each valid rule. Corresponds to `ruleTitle` by index.  
+>> taskAwards| array| Rewards for completing the task  
+>> m1Awards| array| M1 rewards with `UserRelateType=REFERRAL`  
+>>> id| integer| Regular reward ID or reward packet ID  
+>>> name| string| English reward name. Reward packets use `UP TO &lt;value_usd&gt;` or `EARN &lt;value_usd&gt;`.  
+>>> type| string| English reward type. Always `Packet` for reward packets.  
+>>> productLine| string| English product type. Empty for reward packets.  
+>>> startTime| string| Start time in UTC RFC 3339 format. Empty when unavailable or for reward packets.  
+>>> endTime| string| End time in UTC RFC 3339 format. Empty when unavailable.  
   
 ### Request Example
 
@@ -58,7 +67,7 @@ total| integer| Total number of records
 
     
     
-    POST /v5/referral/commission/records HTTP/1.1  
+    POST /v5/referral/campaign/rewards HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1753286400000  
@@ -66,38 +75,25 @@ total| integer| Total number of records
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
       
-    {  
-      "userIdList": [201, 202],  
-      "startTime": "2025-03-01 10:20:30",  
-      "endTime": "2025-03-08 11:22:33",  
-      "page": 3,  
-      "pageSize": 200,  
-      "productLine": 1  
-    }  
+    {}  
     
 
 ### Response Example
-
-The following illustrates the field structure only; it is not a default ProtoJSON serialization or a gateway-validated response.
     
     
     {  
       "retCode": 0,  
       "retMsg": "",  
       "result": {  
-        "records": [  
-          {  
-            "userId": "1***6",  
-            "paymentTime": 1740916800,  
-            "rate": "0.20",  
-            "businessUnit": 1,  
-            "commissionOriginCoin": "BTC",  
-            "commissionOriginAmount": "1.25",  
-            "commissionUsdtAmount": "250",  
-            "commissionStatus": 2  
-          }  
-        ],  
-        "total": 29  
+        "rebateRule": {  
+          "depositAmount": 0,  
+          "tradeAmount": 0,  
+          "rebateRatioRules": [],  
+          "rebateDurationDays": 30  
+        },  
+        "tasks": [  
+          "{\"schemaVersion\":2,\"source\":\"base\",\"campaignId\":\"sample\",\"tasks\":[{\"id\":7,\"awardType\":100,\"ruleTitle\":[\"Deposit\"],\"ruleDescription\":[\"Deposit $100\"],\"ruleParam\":[\"100\"],\"taskAwards\":[{\"id\":92,\"name\":\"EARN 10\",\"type\":\"Packet\",\"productLine\":\"\",\"startTime\":\"\",\"endTime\":\"\"}],\"m1Awards\":[]}]}"  
+        ]  
       },  
       "retExtInfo": {},  
       "time": 1753286400000  
@@ -105,51 +101,60 @@ The following illustrates the field structure only; it is not a default ProtoJSO
 
 ---
 
-# 查詢邀請返佣紀錄
+# 查詢邀請活動獎勵
 
-查詢已驗證邀請人的邀請返佣紀錄。
+查詢目前站點的邀請規則、已設定的活動任務與獎勵。本接口僅回傳靜態活動設定，不會回傳使用者任務進度、獎勵領取或支付紀錄。
 
 信息
 
-  * 需要鑑權。邀請人由 API Key 識別；請勿在請求體中傳入邀請人的使用者 ID。
-  * 回應中的 `userId` 為已遮罩的受邀人 ID。
-  * 空的 `userIdList` 不會按受邀人 ID 篩選。
-  * 時間篩選使用 `YYYY-MM-DD HH:mm:ss`。任一值無法解析時，會將空字串傳至下游；下游如何處理尚未在此確認。此接口不會預設查詢過去一週。
-  * 請求與回應的欄位名稱使用 Proto 明確定義的 camelCase JSON 名稱；實際閘道序列化尚未獨立驗證。
+  * 需要鑑權。使用者與站點由已驗證的閘道上下文識別；請勿在請求體中傳入使用者 ID 或站點選擇器。
+  * 響應封套、`rebateRule` 與每個內嵌活動 JSON 字串皆使用 camelCase 欄位名稱。若有啟用中的活動，會依 base、fiat、earn 順序回傳。每個 `tasks` 元素皆帶有 `schemaVersion: 2`。
+  * 若某任務的獎勵設定查詢失敗，只會略過該任務；其他任務與活動仍會保留。
+  * `rebateRule` 為站點設定，不代表目前使用者實際符合的層級。
 
 
 
 ### HTTP請求
 
-POST`/v5/referral/commission/records`
+POST`/v5/referral/campaign/rewards`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-userIdList| false| array| 受邀人 ID 列表。空列表不會按受邀人 ID 篩選。  
-> userId| false| integer| 受邀人 ID  
-startTime| false| string| 開始時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效值會以空字串傳至下游；其處理方式尚未驗證。  
-endTime| false| string| 結束時間，格式為 `YYYY-MM-DD HH:mm:ss`。無效值會以空字串傳至下游；其處理方式尚未驗證。  
-page| false| integer| 頁碼，`0` 會視為 `1`。  
-pageSize| false| integer| 每頁紀錄數。`0` 或大於 `200` 的值會視為 `10`。  
-productLine| false| integer| 產品線：`0` 未知、`1` 現貨、`2` 合約、`3` 期權、`4` USDC 永續、`6` TradeFi、`9` Alpha。  
-  
+無需請求參數。請傳送空的 JSON 物件。
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-records| array| 邀請返佣紀錄  
-> userId| string| 已遮罩的受邀人 ID，格式為首字元 + `***` \+ 末字元  
-> paymentTime| integer| 返佣支付時間，Unix 秒級時間戳  
-> rate| string| 返佣比例  
-> businessUnit| integer| 產品線：`0` 未知、`1` 現貨、`2` 合約、`3` 期權、`4` USDC 永續、`6` TradeFi、`9` Alpha。未識別值回傳 `0`。  
-> commissionOriginCoin| string| 原始返佣幣種  
-> commissionOriginAmount| string| 原始幣種的返佣金額  
-> commissionUsdtAmount| string| 以 USDT 計價的返佣金額  
-> commissionStatus| integer| 返佣狀態：`0` 未知、`1` 待入帳、`2` 已結算。未識別值回傳 `0`。  
-> isBoostM2| boolean| 與該返佣關聯的受邀人是否為 Boost 使用者。此欄位可能不會出現。  
-total| integer| 總紀錄數  
+rebateRule| object| 站點設定的邀請規則  
+> depositAmount| integer| 入金門檻；幣種與精度未指定。  
+> tradeAmount| integer| 交易門檻；幣種與精度未指定。  
+> rebateRatioRules| array| 分層邀請返佣規則  
+>> rebateRatio| integer| 邀請返佣比例，範圍為 0 至 100  
+>> referralCount| integer| 所需符合資格的受邀人數  
+>> hasTradeCondition| boolean| 該層級是否要求交易量  
+>> tradeAmountCondition| integer| 該層級的交易量門檻  
+> rebateDurationDays| integer| 邀請返佣持續天數  
+> tradefiDepositAmount| integer| 目前未填入；預設值 `0` 不代表已確認門檻。  
+> tradefiTradeAmount| integer| 目前未填入；預設值 `0` 不代表已確認門檻。  
+tasks| array| 活動 JSON 字串，依 base、fiat、earn 順序排列。請解析每個字串以取得以下欄位。  
+> schemaVersion| integer| 活動 JSON schema 版本；目前固定為 `2`。  
+> source| string| 活動來源：`base`、`fiat` 或 `earn`  
+> campaignId| string| 活動設定 ID，不是使用者獎勵紀錄 ID。  
+> tasks| array| 已設定任務及一層 M1/M2 關聯任務。任務資訊無法組裝時可能為空。  
+>> id| integer| 任務 ID  
+>> awardType| integer| 任務獎勵類型。請參閱 [awardType](/docs/zh-TW/v5/enum#awardtype)。類型 `100` 會查詢獎勵包詳細資料；目前不會組裝類型 `95` 與 `97` 的獎勵詳細資料。此值不代表獎勵已被領取。  
+>> ruleTitle| array | null| 每項有效規則的英文標題；沒有有效規則時為 `null`。  
+>> ruleDescription| array | null| 每項有效規則的英文描述，索引與 `ruleTitle` 相對應。  
+>> ruleParam| array | null| 每項有效規則的第一個參數，索引與 `ruleTitle` 相對應。  
+>> taskAwards| array| 完成該任務的獎勵  
+>> m1Awards| array| `UserRelateType=REFERRAL` 的 M1 獎勵  
+>>> id| integer| 一般獎勵 ID 或獎勵包 ID  
+>>> name| string| 英文獎勵名稱；獎勵包使用 `UP TO &lt;value_usd&gt;` 或 `EARN &lt;value_usd&gt;`。  
+>>> type| string| 英文獎勵類型；獎勵包固定為 `Packet`。  
+>>> productLine| string| 英文產品類型；獎勵包為空字串。  
+>>> startTime| string| UTC RFC 3339 格式開始時間；沒有資料或獎勵包時為空字串。  
+>>> endTime| string| UTC RFC 3339 格式結束時間；沒有資料時為空字串。  
   
 ### 請求示例
 
@@ -158,7 +163,7 @@ total| integer| 總紀錄數
 
     
     
-    POST /v5/referral/commission/records HTTP/1.1  
+    POST /v5/referral/campaign/rewards HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1753286400000  
@@ -166,36 +171,25 @@ total| integer| 總紀錄數
     X-BAPI-SIGN: XXXXX  
     Content-Type: application/json  
       
-    {  
-      "userIdList": [201, 202],  
-      "startTime": "2025-03-01 10:20:30",  
-      "endTime": "2025-03-08 11:22:33",  
-      "page": 3,  
-      "pageSize": 200,  
-      "productLine": 1  
-    }  
+    {}  
     
 
 ### 響應示例
-
-以下僅示意欄位結構，並非預設 ProtoJSON 序列化結果，也未經閘道驗證。
     
     
     {  
       "retCode": 0,  
       "retMsg": "",  
       "result": {  
-        "records": [{  
-          "userId": "1***6",  
-          "paymentTime": 1740916800,  
-          "rate": "0.20",  
-          "businessUnit": 1,  
-          "commissionOriginCoin": "BTC",  
-          "commissionOriginAmount": "1.25",  
-          "commissionUsdtAmount": "250",  
-          "commissionStatus": 2  
-        }],  
-        "total": 29  
+        "rebateRule": {  
+          "depositAmount": 0,  
+          "tradeAmount": 0,  
+          "rebateRatioRules": [],  
+          "rebateDurationDays": 30  
+        },  
+        "tasks": [  
+          "{\"schemaVersion\":2,\"source\":\"base\",\"campaignId\":\"sample\",\"tasks\":[{\"id\":7,\"awardType\":100,\"ruleTitle\":[\"Deposit\"],\"ruleDescription\":[\"Deposit $100\"],\"ruleParam\":[\"100\"],\"taskAwards\":[{\"id\":92,\"name\":\"EARN 10\",\"type\":\"Packet\",\"productLine\":\"\",\"startTime\":\"\",\"endTime\":\"\"}],\"m1Awards\":[]}]}"  
+        ]  
       },  
       "retExtInfo": {},  
       "time": 1753286400000  

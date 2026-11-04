@@ -2,54 +2,62 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/product-quote
 api_type: REST
-updated_at: 2026-11-03 18:33:49.073629
+updated_at: 2026-11-04 18:34:29.520121
 ---
 
-# Get Product Info
+# Get Position Info
 
 info
 
-Does not need authentication. **Up to 50 requests** per second per IP .
+  * Need authentication. **Up to 10 requests** per second.
+  * Query your active Dual Assets positions. Requires Earn permission on the API key.
 
-[Bybit Dual Asset FAQ](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
+
 
 ### HTTP Request
 
-GET `/v5/earn/advance/product`
+GET `/v5/earn/advance/position`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product category,`DualAssets`  
-coin| false| string| Coin name, uppercase only  
-duration| false| string| Product duration, eg:8h, 1d, 3d, 6d, 12d  
+[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product type, e.g. `DualAssets`  
+productId| false| string| Product ID  
+coin| false| string| Coin  
+limit| false| int| Number of items per page. Default: 20, Max: 20  
+cursor| false| string| Pagination cursor. Use nextPageCursor from previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 [category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
+nextPageCursor| string| Cursor for the next page. Empty string if no more data  
 list| array| Object  
-> [category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
+> positionId| string| Position ID  
 > productId| string| Product ID  
-> baseCoin| string| Base Coin  
-> quoteCoin| string| Quote Coin  
-> expectReceiveAt| string| Expected time to receive the transfer, Unix timestamp in milliseconds  
-> duration| string| Product duration, eg:8h, 1d, 3d  
-> [status](/docs/v5/enum#advanced-earn-product-status)| string| `Available`,`NotAvailable`  
-> isVipProduct| boolean| Whether it is a VIP product  
-> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
-> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
-> applyStartAt| string| Interest accrual start time, Unix timestamp in ms  
-> settlementTime| string| Interest accrual end time, Unix timestamp in ms  
-> minPurchaseQuoteAmount| string| Minimum purchase amount in quote currency  
-> minPurchaseBaseAmount| string| Minimum purchase amount in base currency  
-> remainingAmountQuote| string| Remaining quota for Buy Low direction  
-> remainingAmountBase| string| Remaining quota for Sell High direction  
-> orderPrecisionDigitalQuote| int| Precision for Buy Low direction  
-> orderPrecisionDigitalBase| int| Precision for Sell High direction  
+> [category](/docs/v5/enum#advanced-earn-category)| string| Product category, `DualAssets`  
+> baseCoin| string| Base coin  
+> quoteCoin| string| Quote coin  
+> investCoin| string| Invest coin. `BuyLow`: same as quoteCoin; `SellHigh`: same as baseCoin  
+> amount| string| Position amount, unit is investCoin  
+> apyE8| string| Confirmed annualized yield in e8 precision  
+> direction| string| Direction: `BuyLow`, `SellHigh`  
+> targetPrice| string| Target price in USDT  
+> settlementTime| string| Settlement time, unix timestamp in ms  
+> [status](/docs/v5/enum#advanced-earn-position-status)| string| `Active`: Staking, `Redeeming`: Redeeming  
+> orderId| string| Staking order ID  
+> duration| string| Product term, e.g. 8h, 1d, 2d, 3d  
+> expectReturnCoin| string| Expected settlement coin  
+> expectReturnAmount| string| Expected settlement amount  
+> accountType| string| Staking account: `FUND`, `UNIFIED`  
+> toAccountType| string| Settlement account: `FUND`, currently only supports settlement to `Fund` account  
+> yieldStartAt| int64| Yield start time, unix timestamp in ms  
+> yieldEndAt| int64| Yield end time, unix timestamp in ms  
   
+* * *
+
 ### Request Example
 
   * HTTP
@@ -57,8 +65,12 @@ list| array| Object
 
     
     
-    GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1  
+    GET /v5/earn/advance/position?category=DualAssets HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -71,78 +83,89 @@ list| array| Object
             "category": "DualAssets",  
             "list": [  
                 {  
+                    "positionId": "19035",  
+                    "productId": "36320",  
                     "category": "DualAssets",  
-                    "productId": "36340",  
-                    "baseCoin": "XRP",  
+                    "baseCoin": "ETH",  
                     "quoteCoin": "USDT",  
-                    "expectReceiveAt": "1773908399000",  
-                    "duration": "1d",  
-                    "status": "Available",  
-                    "isVipProduct": false,  
-                    "subscribeStartAt": "1773734400000",  
-                    "subscribeEndAt": "1773820799000",  
-                    "applyStartAt": "1773734400000",  
-                    "settlementTime": "1773907199000",  
-                    "minPurchaseQuoteAmount": "10",  
-                    "minPurchaseBaseAmount": "10",  
-                    "remainingAmountQuote": "1000000",  
-                    "remainingAmountBase": "10000",  
-                    "orderPrecisionDigitalQuote": 4,  
-                    "orderPrecisionDigitalBase": 2  
+                    "investCoin": "USDT",  
+                    "amount": "20",  
+                    "apyE8": "902700000",  
+                    "direction": "BuyLow",  
+                    "targetPrice": "2325",  
+                    "settlementTime": "1774079999000",  
+                    "status": "Active",  
+                    "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",  
+                    "duration": "3d",  
+                    "expectReturnCoin": "USDT",  
+                    "expectReturnAmount": "21.4838",  
+                    "accountType": "UNIFIED",  
+                    "toAccountType": "FUND",  
+                    "yieldStartAt": "1773820799000",  
+                    "yieldEndAt": "1774079999000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773814359231  
+        "time": 1773815399307  
     }
 
 ---
 
-# 查詢產品資訊
+# 查詢倉位資訊
 
 信息
 
-無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
+  * 需要身份驗證。每秒**最多 10 次請求** 。
+  * 查詢您當前生效的雙幣投資倉位。API 金鑰需要具備 Earn (理財) 權限。
 
-[Bybit 雙幣投資常見問題解答](https://www.bybit.com/en/help-center/article/Dual-Asset-Mining-FAQ)
+
 
 ### HTTP 請求
 
-GET `/v5/earn/advance/product`
+GET `/v5/earn/advance/position`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類別，`DualAssets`  
-coin| false| string| 幣種名稱，僅限大寫  
-duration| false| string| 產品期限，例如：8h, 1d, 3d, 6d, 12d  
+[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類型，例如 `DualAssets`  
+productId| false| string| 產品 ID  
+coin| false| string| 幣種  
+limit| false| int| 每頁數量。預設值：20，最大值：20  
+cursor| false| string| 分頁游標。請使用上一次請求返回的 `nextPageCursor`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 [category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
+nextPageCursor| string| 下一頁的游標。如果沒有更多資料則為空字串  
 list| array| 列表  
-> [category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
+> positionId| string| 倉位 ID  
 > productId| string| 產品 ID  
+> [category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| 產品類別，`DualAssets`  
 > baseCoin| string| 基礎幣種 (Base Coin)  
 > quoteCoin| string| 計價幣種 (Quote Coin)  
-> expectReceiveAt| string| 預計到帳時間，毫秒級 Unix 時間戳  
-> duration| string| 產品期限，例如：8h, 1d, 3d  
-> [status](/docs/zh-TW/v5/enum#advanced-earn-product-status)| string| `Available` (可用), `NotAvailable` (不可用)  
-> isVipProduct| boolean| 是否為 VIP 產品  
-> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
-> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
-> applyStartAt| string| 計息開始時間，毫秒級 Unix 時間戳  
-> settlementTime| string| 計息結束時間（結算時間），毫秒級 Unix 時間戳  
-> minPurchaseQuoteAmount| string| 計價幣種的最小申購金額  
-> minPurchaseBaseAmount| string| 基礎幣種的最小申購金額  
-> remainingAmountQuote| string| 低買 (Buy Low) 方向的剩餘額度  
-> remainingAmountBase| string| 高賣 (Sell High) 方向的剩餘額度  
-> orderPrecisionDigitalQuote| int| 低買方向的訂單精度  
-> orderPrecisionDigitalBase| int| 高賣方向的訂單精度  
+> investCoin| string| 投資幣種。`BuyLow` (低買)：與計價幣種相同；`SellHigh` (高賣)：與基礎幣種相同  
+> amount| string| 倉位數量，單位為 `investCoin` (投資幣種)  
+> apyE8| string| 已確認的年化收益率（e8 精度）  
+> direction| string| 方向：`BuyLow` (低買), `SellHigh` (高賣)  
+> targetPrice| string| 目標價格（掛鉤價），單位為 USDT  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> [status](/docs/zh-TW/v5/enum#advanced-earn-position-status)| string| `Active`: 申購中 (生效中), `Redeeming`: 贖回中  
+> orderId| string| 申購訂單 ID  
+> duration| string| 產品期限，例如 8h, 1d, 2d, 3d  
+> expectReturnCoin| string| 預計結算幣種  
+> expectReturnAmount| string| 預計結算數量  
+> accountType| string| 申購帳戶：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)  
+> toAccountType| string| 結算帳戶：`FUND`，目前僅支援結算至資金帳戶 (Fund)  
+> yieldStartAt| int64| 計息開始時間，毫秒級 Unix 時間戳  
+> yieldEndAt| int64| 計息結束時間，毫秒級 Unix 時間戳  
   
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -150,8 +173,12 @@ list| array| 列表
 
     
     
-    GET /v5/earn/advance/product?category=DualAssets&coin=XRP HTTP/1.1  
+    GET /v5/earn/advance/position?category=DualAssets HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -164,27 +191,30 @@ list| array| 列表
             "category": "DualAssets",  
             "list": [  
                 {  
+                    "positionId": "19035",  
+                    "productId": "36320",  
                     "category": "DualAssets",  
-                    "productId": "36340",  
-                    "baseCoin": "XRP",  
+                    "baseCoin": "ETH",  
                     "quoteCoin": "USDT",  
-                    "expectReceiveAt": "1773908399000",  
-                    "duration": "1d",  
-                    "status": "Available",  
-                    "isVipProduct": false,  
-                    "subscribeStartAt": "1773734400000",  
-                    "subscribeEndAt": "1773820799000",  
-                    "applyStartAt": "1773734400000",  
-                    "settlementTime": "1773907199000",  
-                    "minPurchaseQuoteAmount": "10",  
-                    "minPurchaseBaseAmount": "10",  
-                    "remainingAmountQuote": "1000000",  
-                    "remainingAmountBase": "10000",  
-                    "orderPrecisionDigitalQuote": 4,  
-                    "orderPrecisionDigitalBase": 2  
+                    "investCoin": "USDT",  
+                    "amount": "20",  
+                    "apyE8": "902700000",  
+                    "direction": "BuyLow",  
+                    "targetPrice": "2325",  
+                    "settlementTime": "1774079999000",  
+                    "status": "Active",  
+                    "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",  
+                    "duration": "3d",  
+                    "expectReturnCoin": "USDT",  
+                    "expectReturnAmount": "21.4838",  
+                    "accountType": "UNIFIED",  
+                    "toAccountType": "FUND",  
+                    "yieldStartAt": "1773820799000",  
+                    "yieldEndAt": "1774079999000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1773814359231  
+        "time": 1773815399307  
     }

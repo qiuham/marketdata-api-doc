@@ -2,67 +2,62 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/sign-agreement
 api_type: REST
-updated_at: 2026-11-03 18:39:47.485244
+updated_at: 2026-11-04 18:40:26.948488
 ---
 
-# Get Sub UID List (Limited)
+# Sign Agreement
 
-Get at most 1,000 sub UID of master account, please use [Get Sub UID List (Unlimited)](/docs/v5/user/page-subuid) if you have more subaccounts. Use **master user's api key** **only**.
+To trade commodity contracts, please complete the agreement signing first. Once completed, you will be able to trade all metals commodity contracts.
 
-tip
+info
 
-The API key must have one of the below permissions in order to call this endpoint..
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
+  * Only the master account can sign the agreement via this endpoint. Subaccounts are not supported for this action.
+  * Once the master account has signed, all subaccounts will be eligible to trade.
+  * The API key must have at least one of the following permissions to call this endpoint: Account Transfer, Subaccount Transfer, or Withdrawal.
 
 
 
 ### HTTP Request
 
-GET`/v5/user/query-sub-members`
+POST`/v5/user/agreement`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+category| false| integer| `2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`3`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. This field remains supported, but new enum values will no longer be added here — use `categoryV2` instead._  
+categoryV2| false| integer| `1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`2`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._  
+agree| **true**|  boolean| `true`  
+  
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-subMembers| array| Object  
-> uid| string| Sub user Id  
-> username| string| Username  
-> memberType| integer| `1`: normal subaccount, `6`: custodial sub account  
-> status| integer| The status of the user account
+None
 
-  * `1`: normal
-  * `2`: login banned
-  * `4`: frozen 
-
-  
-> accountMode| integer| The account mode of the user account
-
-  * `5`: UTA2.0
-  * `6`: UTA2.0 Pro
-
-  
-> remark| string| The remark  
-  
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/user/query-sub-members HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430318405  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 40  
+      
+    {  
+        "agree": true,  
+        "categoryV2": 2  
+    }  
     
     
     
@@ -72,26 +67,10 @@ subMembers| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_uid())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getSubUIDList()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    print(session.sign_agreement(  
+        category=2,  
+        agree=True  
+    ))  
     
 
 ### Response Example
@@ -99,120 +78,61 @@ subMembers| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "subMembers": [  
-                {  
-                    "uid": "106314365",  
-                    "username": "xxxx02",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 5  
-                },  
-                {  
-                    "uid": "106279879",  
-                    "username": "xxxx01",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 6  
-                }  
-            ]  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1760388036728  
+        "time": 1772695037330  
     }
 
 ---
 
-# 查詢子帳戶UID列表 (限制)
+# 簽署協議
 
-最多返回1000個子帳戶, 適合子帳戶較少的母帳戶調用, 需使用**母** 帳戶的API key。如您有較多的子帳戶, 請使用[查詢子帳戶UID列表 (無限制)](/docs/zh-TW/v5/user/page-subuid)接口。
+通過該接口, 您可以完成貴金融合約協議的簽署, 只有在完成簽署後, 才能進行交易貴金屬合約
 
-提示
+信息
 
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
+  * 請使用母帳戶調用接口, 子帳戶不支持。一旦母帳戶簽署後，所有子帳戶都可以交易
+  * API key權限需要擁有其中之一"帳戶劃轉, 母子帳戶劃轉, 提幣"
 
 
 
 ### HTTP 請求
 
-GET`/v5/user/query-sub-members`
+POST`/v5/user/agreement`
 
 ### 請求參數
 
-無
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+category| false| integer| `2`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`3`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。該字段仍然可用，但後續新增的枚舉值將不再添加至此字段，請使用 `categoryV2`。_  
+categoryV2| false| integer| `1`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`2`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。建議使用此字段，後續新增的枚舉值將統一添加至此字段。_  
+agree| **true**|  boolean| `true`  
+  
 ### 返回參數
 
-參數| 類型| 說明  
----|---|---  
-subMembers| array| Object  
-> uid| string| 子帳戶userId  
-> username| string| 用戶名  
-> memberType| integer| `1`: 普通子帳戶, `6`: 託管子帳戶  
-> status| integer| 帳戶狀態.
+無
 
-  * `1`: 正常
-  * `2`: 登陸封禁
-  * `4`: 凍結 
-
-  
-> accountMode| integer| 帳戶模式.
-
-  * `5`: UTA2.0 帳戶
-  * `6`: UTA2.0 Pro 帳戶
-
-  
-> remark| string| 備註  
-  
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/user/query-sub-members HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430318405  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_sub_uid())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
+    Content-Type: application/json  
+    Content-Length: 40  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getSubUIDList()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    {  
+        "agree": true,  
+        "categoryV2": 2  
+    }  
     
 
 ### 響應示例
@@ -220,27 +140,8 @@ subMembers| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "subMembers": [  
-                {  
-                    "uid": "106314365",  
-                    "username": "xxxx02",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 5  
-                },  
-                {  
-                    "uid": "106279879",  
-                    "username": "xxxx01",  
-                    "memberType": 1,  
-                    "status": 1,  
-                    "remark": "",  
-                    "accountMode": 6  
-                }  
-            ]  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1760388036728  
+        "time": 1772695037330  
     }

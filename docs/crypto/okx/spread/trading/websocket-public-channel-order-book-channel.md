@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-public-channel-order-book-channel
 anchor_id: spread-trading-websocket-public-channel-order-book-channel
 api_type: WebSocket
-updated_at: 2026-11-03 19:08:27.990899
+updated_at: 2026-11-04 19:08:39.005601
 ---
 
 # Order book channel

@@ -2,32 +2,34 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rfq/trade/cancel-quote
 api_type: Trading
-updated_at: 2026-11-03 18:37:59.077684
+updated_at: 2026-11-04 18:38:39.451781
 ---
 
-# Create RFQ
+# Create Quote
 
-Create RFQ. **Up to 50 requests** per second.
+Create a quote. **Up to 50 requests** per second. The quoting party sends a quote in response to the inquirier.
 
 info
 
-  * Only supports UTA2.0 accounts
-  * Only supports full position and combined margin mode
-  * Not supported by demo users
-  * Cannot choose oneself as the bidder
+  * Only support UTA2.0 accounts
+  * Cannot quote for your own inquiry
+  * One request reports in two directions
+  * You must pass at least one quoteBuyList and quoteSellList
+  * If you would like to quote a spot quote, please ensure the corresponding collateral asset is enabled using [Set Collateral Coin](/docs/v5/account/set-collateral) or [Batch Set Collateral Coin](/docs/v5/account/batch-set-collateral)
+  * Quoting the hedge leg is optional. To include a hedge leg quote, add it to `quoteBuyList` or `quoteSellList`. If the RFQ already carries a `price` for the hedge leg, omitting the price when quoting the hedge leg will fall back to the price specified in the RFQ
 
 
 
 ### HTTP Request
 
-POST`/v5/rfq/create-rfq`
+POST`/v5/rfq/create-quote`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-counterparties| **true**|  array| Spread combination symbol name  
-rfqLinkId| false| string| Custom RFQ ID
+rfqId| **true**|  string| Inquiry ID  
+quoteLinkId| false| string| Custom quote ID: 
 
   * The length should be between 1-32 bits 
   * Combination of letters (case sensitive) and numbers
@@ -35,37 +37,38 @@ rfqLinkId| false| string| Custom RFQ ID
   * Open orders must have a unique ID whereas orders that have reached a final/terminated status do not have to be unique. 
 
   
-anonymous| false| boolean| Whether or not it is anonymous inquiry. The default value is `false`. When it is `true` the identity of the inquiring party will not be revealed even after the transaction is concluded. When `anonymous` is `true`, the `deskCode` field returned by [Get RFQ](/docs/v5/rfq/trade/rfq-list) will be an empty string  
-strategyType| false| string| Strategy type, if it is a custom inquiry, strategyType is `custom`, if it is a product combination provided by the system, it is the combination type; the default is `custom`; non-custom combinations have rate optimization, currently 50%; the transaction rate between LPs is currently 30%  
-list| **true**|  array of objects| Combination transaction list 
+anonymous| false| boolean| Whether or not it is anonymous quote. The default value is `false`. When it is `true` the identity of the quoting party will not be revealed even after the transaction is concluded.  
+expireIn| false| integer| Duration of the quote (in secs). [`10`, `120`]. Default: `60`  
+quoteBuyList| false| array of objects| Quote direction 
 
-  * Use [Get RFQ Configuration](/docs/v5/rfq/trade/rfq-config) to confirm the maximum length of the combination (`maxLegs`)
-  * The base coin and settle coin of all combinations must be the same
-  * Symbols under the same category must be unique
+  * In the `Buy` direction, for the maker (the quoting party), the execution direction is the same as the direction of the legs
+  * For the taker (the inquiring party) it is opposite direction
 
   
 > category| **true**|  string| Product type: Unified account: `spot`, `linear`,`option`  
-> symbol| **true**|  string| Name of the transaction contract. No inquiries are allowed in the last 30 minutes before contract settlement  
-> side| **true**|  string| Inquiry transaction direction: `Buy` , `Sell`  
-> qty| **true**|  string| If the number of transactions exceeds the position size, the position will then open in the reverse direction  
-hedge| false| array of objects| Delta Hedge leg object (single object, not an array). The entire `hedge` object is optional; if omitted, this RFQ has no hedge leg  
-> category| **true**|  string| Product type. Only `linear` is supported initially (perpetual / linear delivery futures)  
-> symbol| **true**|  string| Hedge contract name, e.g. `BTCUSDT` (perpetual) or `BTC-27JUN25` (linear delivery futures). The underlying asset must match the main strategy legs (`list`). Cross-asset hedging is not supported  
-> side| **true**|  string| Inquiry transaction direction: `Buy`, `Sell`  
-> qty| **true**|  string| Trade quantity. If it exceeds the position size, the position will open in the reverse direction  
-> price| false| string| Taker's desired Delta Hedge execution price, passed to the market maker for reference only. The maker may override this price in `create-quote`. Price validation reuses the existing derivatives limit-price logic; out-of-range values are automatically corrected  
+> symbol| **true**|  string| Name of the trading contract  
+> price| **true**|  string| Quote price  
+quoteSellList| false| array of objects| Ask direction 
+
+  * In the `Sell` direction, for the maker (the quoting party), the execution direction is opposite to the direction of the legs
+  * For the taker (the inquiring party) it is the same direction
+
+  
+> category| **true**|  string| Product type: Unified account: `spot`, `linear`,`option`  
+> symbol| **true**|  string| Name of the trading contract  
+> price| **true**|  string| Quote price  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Order ID  
-list| array of objects|   
+result| object|   
 > rfqId| string| Inquiry ID  
-> rfqLinkId| string| Custom inquiry ID  
-> status| string| Status of the RFQ: `Active` `Canceled` `Filled` `Expired` `Failed`  
-> expiresAt| string| The inquiry's expiration time (ms)  
-> deskCode| string| Inquiring party's unique identification code  
+> quoteId| string| Quote ID  
+> quoteLinkId| string| Custom quote ID  
+> expiresAt| string| The quote's expiration time (ms)  
+> deskCode| string| Quoter's unique identification code  
+> status| string| Status of quotation: `Active` `Canceled` `Filled` `Expired` `Failed`  
   
 ### Request Example
 
@@ -75,7 +78,7 @@ list| array of objects|
 
     
     
-    POST /v5/rfq/create-rfq HTTP/1.1  
+    POST /v5/rfq/create-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -85,25 +88,19 @@ list| array of objects|
     Content-Length: 115  
       
     {  
-        "counterparties": ["SPMAKERTEST"],  
-        "rfqLinkId": "V2-Integration-Test-RFQ",  
-        "anonymous": false,  
-        "strategyType": "custom",  
-        "list": [  
-            {  
-                "category": "option",  
-                "symbol": "BTC-25JUL25-100000-C",  
-                "side": "Buy",  
-                "qty": "100"  
-            }  
-        ],  
-        "hedge": [  
+      "rfqId":"1754364447601610516653123084412812",   
+      "quoteBuyList": [  
             {  
                 "category": "linear",  
                 "symbol": "BTCUSDT",  
-                "side": "Sell",  
-                "qty": "46",  
-                "price": "121500.0"  
+                "price": "106000"  
+            }  
+        ],  
+        "quoteSellList":[  
+            {  
+                "category": "linear",  
+                "symbol": "BTCUSDT",  
+                "price": "126500"  
             }  
         ]  
     }  
@@ -116,26 +113,20 @@ list| array of objects|
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_rfq(  
-        counterparties=["SPMAKERTEST"],  
-        rfqLinkId="V2-Integration-Test-RFQ",  
-        anonymous=False,  
-        strategyType="custom",  
-        list=[  
-            {  
-                "category": "option",  
-                "symbol": "BTC-25JUL25-100000-C",  
-                "side": "Buy",  
-                "qty": "100"  
-            }  
-        ],  
-        hedge=[  
+    print(session.create_quote(  
+        rfqId="1754364447601610516653123084412812",  
+        quoteBuyList=[  
             {  
                 "category": "linear",  
                 "symbol": "BTCUSDT",  
-                "side": "Sell",  
-                "qty": "46",  
-                "price": "121500.0"  
+                "price": "106000"  
+            }  
+        ],  
+        quoteSellList=[  
+            {  
+                "category": "linear",  
+                "symbol": "BTCUSDT",  
+                "price": "126500"  
             }  
         ]  
     ))  
@@ -148,84 +139,78 @@ list| array of objects|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "17526315514105706281",  
-            "rfqLinkId": "rfq00993",  
-            "status": "Active",  
-            "expiresAt": "1752632151414",  
-            "deskCode": "LP2"  
+            "rfqId": "175740578143743543930777169307022",  
+            "quoteId": "1757405933130044334361923221559805",  
+            "quoteLinkId": "",  
+            "expiresAt": "1757405993126",  
+            "deskCode": "test0904",  
+            "status": "Active"  
         },  
         "retExtInfo": {},  
-        "time": 1752631551419  
+        "time": 1757405933132  
     }
 
 ---
 
-# 詢價
+# 報價
 
-創建詢價單 **每秒最多 50 次請求**
+建立報價。**每秒最多 50 次請求**
 
 信息
 
   * 僅支持 UTA2.0 帳戶
-  * 僅支持全倉與組合保證金模式
-  * 不支持模擬用戶 
-  * 不能選擇自己作為報價方
+  * 無法對自己提出的詢價進行報價
+  * 一個請求報價包含兩個方向
+  * 至少需傳遞 quoteBuyList 或 quoteSellList
+  * 若需進行現貨報價，請先通過 [設置抵押品幣種](/docs/zh-TW/v5/account/set-collateral) 或 [批量設置抵押品幣種](/docs/zh-TW/v5/account/batch-set-collateral) 啟用相應的抵押幣種
+  * 可以選擇是否對 hedge 腿進行報價。如需對 hedge 腿報價，請將其加入 `quoteBuyList` 或 `quoteSellList`；若詢價單已攜帶 hedge 腿的 `price`，報價時不傳價格則自動使用詢價中的 `price`
 
 
 
 ### HTTP 請求
 
-POST`/v5/rfq/create-rfq`
+POST`/v5/rfq/create-quote`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-counterparties| **true**|  Array of deskCode| 希望接收詢價的報價方列表,可透過 `/v5/rfq/config`獲取  
-rfqLinkId| false| string| 自定義詢價單 ID： 
+rfqId| **true**|  string| 詢價單 ID  
+quoteLinkId| false| string| 報價自定義 ID： 
 
   * 長度應介於 1-32 位 
   * 字母（區分大小寫）與數字的組合，可以是純字母或純數字 
-  * 指定 rfqLinkId 僅檢查最近 3 個月的資料 
+  * 指定 quoteLinkId 僅檢查最近 3 個月的資料 
   * 非終端狀態僅能保證在 24 小時內的唯一性，而終端狀態不保證唯一性 
 
   
-anonymous| false| boolean| 是否為匿名詢價，`true` 表示匿名詢價，`false` 表示公開詢價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給報價方。當 `anonymous` 為 `true` 時，[獲取詢價單](/docs/zh-TW/v5/rfq/trade/rfq-list) 返回的 `deskCode` 為空字串  
-strategyType| false| string| 策略類型，若為自定義詢價，strategyType 為 `custom`，若為系統提供的產品，則為組合類型；預設為 `custom`；非自定義組合具有費率優化，目前為 50%；LP 之間的交易費率目前為 30%  
-list| true| array of objects| 組合交易清單 
-
-  * 通過 [rfq配寘資訊](/docs/zh-TW/v5/rfq/trade/rfq-config) 確認所提供的最大腿數 (`maxLegs`)
-  * 所有組合的 basecoin 和 settleCoin 必須相同
-  * 同類型下的 symbol 必須唯一
-
-  
+anonymous| false| boolean| 是否為匿名報價，`true` 表示匿名報價，`false` 表示公開報價，預設值為 `false` ，當為 `true` 時，即使交易執行後，身份也不會透露給詢價方。  
+expireIn| false| integer| 報價的有效持續時間（以秒為單位）. [`10`, `120`]. 默認: `60`  
+quoteBuyList| false| array of objects| 買入方向，報價方向為 `Buy`，對於 maker（報價方），執行方向與 legs 中的方向一致，對於 taker（詢價方）則相反  
 > category| true| string| 產品類型：統一帳戶：`spot`, `linear`, `option`  
-> symbol| true| string| 交易合約名稱，合約結算前 30 分鐘不允許詢價  
-> side| true| string| 詢價交易方向：`Buy` , `Sell`  
-> qty| true| string| 交易數量，超過倉位的Size，則反向開倉  
-hedge| false| array of objects| Delta Hedge 腿對象（單個對象，非陣列）；整個 `hedge` 對象均為可選，不填則本筆 RFQ 無 hedge 腿  
-> category| **true**|  string| 產品類型，初期僅支持 `linear`（永續合約 / 線性交割期貨）  
-> symbol| **true**|  string| 對冲合約名稱，如 `BTCUSDT`（永續）或 `BTC-27JUN25`（線性交割期貨）。底層資產須與主策略腿（`list`）一致，不支持跨資產對冲  
-> side| **true**|  string| 詢價單交易方向：`Buy`, `Sell`  
-> qty| **true**|  string| 交易數量，超過倉位的 Size，則反向開倉  
-> price| false| string| Taker 期望的 Delta Hedge 執行價格，僅作為參考透傳給做市商；Maker 可在 `create-quote` 中覆蓋此價格。價格校驗復用主網現有衍生品限價邏輯，超限自動修正  
+> symbol| true| string| 交易合約名稱  
+> price| true| string| 報價價格  
+quoteSellList| false| array of objects| 賣出方向，報價方向為 `Sell`，對於 maker（報價方），執行方向與 legs 中的方向相反，對於 taker（詢價方）則一致  
+> category| true| string| 產品類型：統一帳戶：`spot`, `linear`, `option`  
+> symbol| true| string| 交易合約名稱  
+> price| true| string| 報價價格  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| 訂單 ID  
-list| array<object>|   
+result| object|   
 > rfqId| string| 詢價單 ID  
-> rfqLinkId| string| 自定義詢價單 ID  
-> status| string| 詢價單狀態： `Active` `Canceled` `Filled` `Expired` `Failed`  
-> expiresAt| string| 詢價單的到期時間，為 Unix 時間戳的毫秒格式  
-> deskCode| string| 詢價方唯一識別碼  
+> quoteId| string| 報價單 ID  
+> quoteLinkId| string| 報價自定義 ID  
+> expiresAt| string| 報價單的到期時間，為 Unix 時間戳的毫秒格式  
+> deskCode| string| 報價方唯一識別碼  
+> status| string| 報價單狀態：`Active` `Canceled` `Filled` `Expired` `Failed`  
   
 ### 請求示例
     
     
-    POST /v5/rfq/create-rfq HTTP/1.1  
+    POST /v5/rfq/create-quote HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -235,25 +220,19 @@ list| array<object>|
     Content-Length: 115  
       
     {  
-        "counterparties": ["SPMAKERTEST"],  
-        "rfqLinkId": "V2-Integration-Test-RFQ",  
-        "anonymous": false,  
-        "strategyType": "custom",  
-        "list": [  
-            {  
-                "category": "option",  
-                "symbol": "BTC-25JUL25-100000-C",  
-                "side": "Buy",  
-                "qty": "100"  
-            }  
-        ],  
-        "hedge": [  
+      "rfqId":"1754364447601610516653123084412812",   
+      "quoteBuyList": [  
             {  
                 "category": "linear",  
                 "symbol": "BTCUSDT",  
-                "side": "Sell",  
-                "qty": "46",  
-                "price": "121500.0"  
+                "price": "106000"  
+            }  
+        ],  
+        "quoteSellList":[  
+            {  
+                "category": "linear",  
+                "symbol": "BTCUSDT",  
+                "price": "126500"  
             }  
         ]  
     }  
@@ -266,12 +245,13 @@ list| array<object>|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "rfqId": "17526315514105706281",  
-            "rfqLinkId": "rfq00993",  
-            "status": "Active",  
-            "expiresAt": "1752632151414",  
-            "deskCode": "LP2"  
+            "rfqId": "175740578143743543930777169307022",  
+            "quoteId": "1757405933130044334361923221559805",  
+            "quoteLinkId": "",  
+            "expiresAt": "1757405993126",  
+            "deskCode": "test0904",  
+            "status": "Active"  
         },  
         "retExtInfo": {},  
-        "time": 1752631551419  
+        "time": 1757405933132  
     }

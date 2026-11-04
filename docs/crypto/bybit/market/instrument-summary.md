@@ -2,169 +2,287 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/instrument-summary
 api_type: Market Data
-updated_at: 2026-11-03 18:35:49.493129
+updated_at: 2026-11-04 18:36:30.534425
 ---
 
-# Get Instrument Summary
+# Get Long Short Ratio
 
-Query summary information and trading increments for linear and option instruments.
+This refers to the net long and short positions as percentages of all position holders during the selected time.   
+Long account ratio = Number of holders with long positions / Total number of holders   
+Short account ratio = Number of holders with short positions / Total number of holders   
+Long-short account ratio = Long account ratio / Short account ratio
+
+info
+
+  * The earliest query start time is July 20, 2020
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-GET`/v5/market/instrument-summary`
+GET`/v5/market/account-ratio`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`, `option`  
-symbol| false| string| Symbol name  
-[symbolType](/docs/v5/enum#symboltype)| false| string| Instrument type  
-marketRegion| false| string| Market region: `HK`, `US`, `CN`, `KR`, etc.  
-baseCoin| false| string| Base coin, e.g. `NVDA`, `TSLA`  
-limit| false| integer| Limit for data size per page. [`1`, `1000`]. Default: `500`  
+[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`(USDT Contract),`inverse`  
+[symbol](/docs/v5/enum#symbol)| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[period](/docs/v5/enum#datarecordingperiod)| **true**|  string| Data recording period. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
+startTime| false| string| The start timestamp (ms)  
+endTime| false| string| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. [`1`, `500`]. Default: `50`  
 cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-nextPageCursor| string| Cursor for the next page  
 list| array| Object  
 > symbol| string| Symbol name  
-> symbolType| string| Instrument type  
-> displayName| string| Display name shown in the UI  
-> baseCoin| string| Base coin  
-> settleCoin| string| Settlement coin  
-> fullName| string| Full name. Returns an empty string for `option`  
-> marketRegion| string| Market region of the underlying asset, used to determine its trading calendar and market hours. `US`: United States; `CN`: Mainland China; `HK`: Hong Kong; `KR`: South Korea. Returns an empty string for `option` or when not applicable  
-> underlyingTicker| string| Stock ticker, security code, or asset symbol in the underlying asset's native market. Returns an empty string for `option`  
-> priceIndex| string| The corresponding TradFi perpetual symbol used as the price index; for example, NVDA options use `NVDAUSDT`. Returns an empty string for `linear`  
-> qtyStep| string| Quantity step  
-> tickSize| string| Price tick size  
-> deliveryTime| string| Delivery timestamp (ms). Returns `0` for `linear`  
-  
+> buyRatio| string| The ratio of the number of long position  
+> sellRatio| string| The ratio of the number of short position  
+> timestamp| string| Timestamp (ms)  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[](/docs/api-explorer/v5/market/long-short-ratio)
+
+* * *
+
 ### Request Example
 
   * HTTP
+  * Python
+  * GO
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_long_short_ratio(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        period="1h",  
+        limit=2,  
+        startTime="1696089600000",  
+        endTime="1696262400000"  
+    ))  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
+    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
+    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getLongShortRatio({  
+        category: 'linear',  
+        symbol: 'BTCUSDT',  
+        period: '1h',  
+        limit: 100,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
     
     
     {  
-      "retCode": 0,  
-      "retMsg": "OK",  
-      "result": {  
-        "category": "linear",  
-        "list": [  
-          {  
-            "symbol": "0GUSDT",  
-            "symbolType": "",  
-            "displayName": "0GUSDT",  
-            "baseCoin": "0G",  
-            "settleCoin": "USDT",  
-            "fullName": "0G",  
-            "marketRegion": "",  
-            "underlyingTicker": "",  
-            "qtyStep": "0.1",  
-            "tickSize": "0.0001",  
-            "priceIndex": "",  
-            "deliveryTime": "0"  
-          }  
-        ],  
-        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
-      },  
-      "retExtInfo": {},  
-      "time": 1791944863432  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "list": [  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "buyRatio": "0.49",  
+                    "sellRatio": "0.51",  
+                    "timestamp": "1696262400000"  
+                },  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "buyRatio": "0.4927",  
+                    "sellRatio": "0.5073",  
+                    "timestamp": "1696258800000"  
+                }  
+            ],  
+            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
+        },  
+        "retExtInfo": {},  
+        "time": 1731567491688  
     }
 
 ---
 
-# 查詢交易對摘要
+# 查詢多空比
 
-查詢線性合約與期權交易對的摘要資訊及交易精度。
+指選定時間內淨多頭部位和淨空頭部位佔所有持有者的百分比。  
+多頭帳戶比例 = 多頭持倉者數 / 總持倉者數量   
+空頭帳戶比例 = 空頭持倉者數 / 總持倉者數   
+多空帳戶比例 = 多頭帳戶比例 / 空頭帳戶比例   
 
-### HTTP 請求
 
-GET`/v5/market/instrument-summary`
+信息
+
+  * 查詢起始時間最早為2020年7月20日
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+
+
+
+### HTTP請求
+
+GET`/v5/market/account-ratio`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型：`linear`、`option`  
-symbol| false| string| 交易對名稱  
-[symbolType](/docs/zh-TW/v5/enum#symboltype)| false| string| 交易對類型  
-marketRegion| false| string| 市場區域：`HK`、`US`、`CN`、`KR` 等  
-baseCoin| false| string| 基礎幣種，例如 `NVDA`、`TSLA`  
-limit| false| integer| 每頁資料筆數。[`1`, `1000`]。預設：`500`  
-cursor| false| string| 游標。使用響應中的 `nextPageCursor` 取得下一頁  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`(USDT永續, USDT交割),`inverse`  
+[symbol](/docs/zh-TW/v5/enum#symbol)| **true**|  string| 合約名稱  
+[period](/docs/zh-TW/v5/enum#datarecordingperiod)| **true**|  string| 數據週期. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
+startTime| false| string| 開始時間戳 (毫秒)  
+endTime| false| string| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `500`]. 默認: `50`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-nextPageCursor| string| 下一頁游標  
-list| array| 物件  
-> symbol| string| 交易對名稱  
-> symbolType| string| 交易對類型  
-> displayName| string| 與 UI 一致的顯示名稱  
-> baseCoin| string| 基礎幣種  
-> settleCoin| string| 結算幣種  
-> fullName| string| 完整名稱。`option` 時返回空字串  
-> marketRegion| string| 標的資產所屬的市場區域，用於判斷其交易日曆與市場交易時段。`US`：美國市場；`CN`：中國大陸市場；`HK`：香港市場；`KR`：韓國市場。`option` 或不適用時返回空字串  
-> underlyingTicker| string| 標的資產在其原生市場中的股票代號、證券代碼或資產符號。`option` 時返回空字串  
-> priceIndex| string| 對應的 TradFi 永續合約價格指數；例如 NVDA 期權對應 `NVDAUSDT`。`linear` 時返回空字串  
-> qtyStep| string| 數量步長  
-> tickSize| string| 價格最小變動單位  
-> deliveryTime| string| 交割時間戳（毫秒）。`linear` 時返回 `0`  
-  
+list| array| Object  
+> symbol| string| 合約名稱  
+> buyRatio| string| 持有多倉比例  
+> sellRatio| string| 持有空倉的比例  
+> timestamp| string| 時間戳 (毫秒)  
+nextPageCursor| string| 游標，用於分頁  
+[](/docs/zh-TW/api-explorer/v5/market/long-short-ratio)
+
+* * *
+
 ### 請求示例
 
   * HTTP
+  * Python
+  * GO
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/market/instrument-summary?category=linear HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+      
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
+    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
+    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+    });  
+      
+    client  
+      .getLongShortRatio({  
+        category: 'linear',  
+        symbol: 'BTCUSDT',  
+        period: '1h',  
+        limit: 100,  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
     
     
     {  
-      "retCode": 0,  
-      "retMsg": "OK",  
-      "result": {  
-        "category": "linear",  
-        "list": [  
-          {  
-            "symbol": "0GUSDT",  
-            "symbolType": "",  
-            "displayName": "0GUSDT",  
-            "baseCoin": "0G",  
-            "settleCoin": "USDT",  
-            "fullName": "0G",  
-            "marketRegion": "",  
-            "underlyingTicker": "",  
-            "qtyStep": "0.1",  
-            "tickSize": "0.0001",  
-            "priceIndex": "",  
-            "deliveryTime": "0"  
-          }  
-        ],  
-        "nextPageCursor": "first%3D0GUSDT%26last%3DMYXUSDT"  
-      },  
-      "retExtInfo": {},  
-      "time": 1791944863432  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "list": [  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "buyRatio": "0.49",  
+                    "sellRatio": "0.51",  
+                    "timestamp": "1696262400000"  
+                },  
+                {  
+                    "symbol": "BTCUSDT",  
+                    "buyRatio": "0.4927",  
+                    "sellRatio": "0.5073",  
+                    "timestamp": "1696258800000"  
+                }  
+            ],  
+            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
+        },  
+        "retExtInfo": {},  
+        "time": 1731567491688  
     }

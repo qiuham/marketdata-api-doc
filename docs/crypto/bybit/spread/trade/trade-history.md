@@ -2,274 +2,127 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/trade-history
 api_type: Trading
-updated_at: 2026-11-03 18:39:10.589382
+updated_at: 2026-11-04 18:39:53.541935
 ---
 
-# Get Trade History
+# Ticker
 
-info
+Subscribe to the ticker stream.
 
-  * In self-trade cases, both the maker and taker single-leg trades will be returned in the same request.
-  * Single leg executions can also be found with "execType"=`FutureSpread` via [Get Trade History](/docs/v5/order/execution)
+Push frequency: **100ms**
 
+**Topic:**  
+`tickers.{symbol}`
 
-
-### HTTP Request
-
-GET`/v5/spread/execution/list`
-
-### Request Parameters
-
-Parameter| Required| Type| Comments  
----|---|---|---  
-symbol| false| string| Spread combination symbol name  
-orderId| false| string| Spread combination order ID  
-orderLinkId| false| string| User customised order ID  
-startTime| false| long| The start timestamp (ms)
-
-  * startTime and endTime are not passed, return 7 days by default
-  * Only startTime is passed, return range between startTime and startTime+7 days
-  * Only endTime is passed, return range between endTime-7 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 7 days
-
-  
-endTime| false| long| The end timestamp (ms)  
-limit| false| integer| Limit for parent order data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Trade info  
+topic| string| Topic name  
+type| string| Data type. `snapshot`  
+ts| number| The timestamp (ms) that the system generates the data  
+data| map| Object  
 > symbol| string| Spread combination symbol name  
-> orderLinkId| string| User customised order ID  
-> side| string| Side, `Buy`, `Sell`  
-> orderId| string| Spread combination order ID  
-> execPrice| string| Combo Exec price  
-> execTime| string| Combo exec timestamp (ms)  
-> execType| string| Combo exec type, `Trade`  
-> execQty| string| Combo exec qty  
-> execId| string| Combo exec ID  
-> legs| array<object>| Legs execution info  
->> symbol| string| Leg symbol name  
->> side| string| Leg order side, `Buy`, `Sell`  
->> execPrice| string| Leg exec price  
->> execTime| string| Leg exec timestamp (ms)  
->> execValue| string| Leg exec value  
->> [execType](/docs/v5/enum#exectype)| string| Leg exec type  
->> category| string| Leg category, `linear`, `spot`  
->> execQty| string| Leg exec qty  
->> execFee| string| Leg exec fee, deprecated for Spot leg  
->> execFeeV2| string| Leg exec fee, used for Spot leg only  
->> feeCurrency| string| Leg fee currency  
->> execId| string| Leg exec ID  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+> bidPrice| string| Bid 1 price  
+> bidSize| string| Bid 1 size  
+> askPrice| string| Ask 1 price  
+> askSize| string| Ask 1 size  
+> lastPrice| string| Last trade price  
+> highPrice24h| string| The highest price in the last 24 hours  
+> lowPrice24h| string| The lowest price in the last 24 hours  
+> prevPrice24h| string| Price 24 hours ago  
+> volume24h| string| Volume for 24h  
   
-### Request Example
-
-  * HTTP
-  * Python
-
-
-    
-    
-    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1744105738529  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.spread_get_trade_history(  
-        orderId="5e010c35-2b44-4f03-8081-8fa31fb73376"  
-    ))  
-    
-
-### Response Example
+### Subscribe Example
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "Success",  
-        "result": {  
-            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
-                    "execPrice": "21",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Buy",  
-                            "execPrice": "124.1",  
-                            "execTime": "1744104992224",  
-                            "execValue": "248.2",  
-                            "execType": "FutureSpread",  
-                            "category": "linear",  
-                            "execQty": "2",  
-                            "execFee": "0.039712",  
-                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Sell",  
-                            "execPrice": "103.1152",  
-                            "execTime": "1744104992224",  
-                            "execValue": "206.2304",  
-                            "execType": "FutureSpread",  
-                            "category": "spot",  
-                            "execQty": "2",  
-                            "execFee": "0.06186912",  
-                            "execId": "2110000000061481958"  
-                        }  
-                    ],  
-                    "execTime": "1744104992220",  
-                    "execType": "Trade",  
-                    "execQty": "2",  
-                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1744105105169  
+        "op": "subscribe",  
+        "args": [  
+            "tickers.SOLUSDT_SOL/USDT"  
+        ]  
+    }  
+    
+
+### Event Example
+    
+    
+    {  
+        "topic": "tickers.SOLUSDT_SOL/USDT",  
+        "ts": 1744168585009,  
+        "type": "snapshot",  
+        "data": {  
+            "symbol": "SOLUSDT_SOL/USDT",  
+            "bidPrice": "20.3359",  
+            "bidSize": "1.7",  
+            "askPrice": "",  
+            "askSize": "",  
+            "lastPrice": "21.8182",  
+            "highPrice24h": "24.2356",  
+            "lowPrice24h": "-3",  
+            "prevPrice24h": "22.1468",  
+            "volume24h": "23309.9"  
+        }  
     }
 
 ---
 
-# 查詢價差成交歷史
+# 行情
 
-信息
+訂閱行情數據推送
 
-  * 在自成交場景下, 單腿成交的maker和taker的兩筆成交都會返回, 他們的execId一樣
-  * 單腿的成交信息也會出現[查詢成交歷史](/docs/zh-TW/v5/order/order-list)接口中, 標記是"execType"=`FutureSpread`
+推送頻率: **100ms**
 
+**Topic:**  
+`tickers.{symbol}`
 
-
-### HTTP請求
-
-GET`/v5/spread/execution/list`
-
-### 請求參數
-
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-symbol| false| string| 價差產品名稱  
-orderId| false| string| 價差訂單ID  
-orderLinkId| false| string| 用戶自定義ID  
-startTime| false| long| 開始時間戳 (毫秒)
-
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-  * 若只傳startTime，則查詢startTime和startTime+7天的數據
-  * 若只傳endTime，則查詢endTime-7天和endTime的數據
-
-  
-endTime| false| long| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
-  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 成交信息  
+topic| string| Topic名  
+type| string| 數據類型. `snapshot`  
+ts| number| 行情服務生成數據的時間戳 (毫秒)  
+data| map| Object  
 > symbol| string| 價差產品名稱  
-> orderLinkId| string| 用戶自定義ID  
-> side| string| 訂單方向, `Buy`, `Sell`  
-> orderId| string| 價差訂單ID  
-> execPrice| string| 價差訂單成交價格  
-> execTime| string| 價差訂單成交時間(毫秒)  
-> execType| string| 價差訂單成交類型, `Trade`  
-> execQty| string| 價差訂單成交數量  
-> execId| string| 價差訂單成交ID  
-> legs| array<object>| 單腿成交信息  
->> symbol| string| 單腿合約名稱  
->> side| string| 單腿訂單方向 `Buy`, `Sell`  
->> execPrice| string| 單腿成交價格  
->> execTime| string| 單腿成交時間 (毫秒)  
->> execValue| string| 單腿成交價值  
->> [execType](/docs/zh-TW/v5/enum#exectype)| string| 單腿成交類型  
->> category| string| 單腿合約類型 `linear`: 合約, `spot`: 現貨  
->> execQty| string| 單腿成交數量  
->> execFee| string| 單腿交易手續費用  
->> execFeeV2| string| 僅用於現貨單腿交易手續費用  
->> feeCurrency| string| 單腿交易手續費幣種  
->> execId| string| 單腿成交ID  
-nextPageCursor| string| 游標，用於翻頁  
+> bidPrice| string| 買1價  
+> bidSize| string| 買1數量  
+> askPrice| string| 賣1價  
+> askSize| string| 賣1數量  
+> lastPrice| string| 最後成交個價  
+> highPrice24h| string| 最近24小時的最高價  
+> lowPrice24h| string| 最近24小時的最低價  
+> prevPrice24h| string| 24小時前的整點市價  
+> volume24h| string| 最近24小時成交量  
   
-### 請求示例
-    
-    
-    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXX  
-    X-BAPI-TIMESTAMP: 1744105738529  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    
-
-### 響應示例
+### 訂閱示例
     
     
     {  
-        "retCode": 0,  
-        "retMsg": "Success",  
-        "result": {  
-            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "orderLinkId": "",  
-                    "side": "Buy",  
-                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
-                    "execPrice": "21",  
-                    "legs": [  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Buy",  
-                            "execPrice": "124.1",  
-                            "execTime": "1744104992224",  
-                            "execValue": "248.2",  
-                            "execType": "FutureSpread",  
-                            "category": "linear",  
-                            "execQty": "2",  
-                            "execFee": "0.039712",  
-                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
-                        },  
-                        {  
-                            "symbol": "SOLUSDT",  
-                            "side": "Sell",  
-                            "execPrice": "103.1152",  
-                            "execTime": "1744104992224",  
-                            "execValue": "206.2304",  
-                            "execType": "FutureSpread",  
-                            "category": "spot",  
-                            "execQty": "2",  
-                            "execFee": "0.06186912",  
-                            "execId": "2110000000061481958"  
-                        }  
-                    ],  
-                    "execTime": "1744104992220",  
-                    "execType": "Trade",  
-                    "execQty": "2",  
-                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1744105105169  
+        "op": "subscribe",  
+        "args": [  
+            "tickers.SOLUSDT_SOL/USDT"  
+        ]  
+    }  
+    
+
+### 推送示例
+    
+    
+    {  
+        "topic": "tickers.SOLUSDT_SOL/USDT",  
+        "ts": 1744168585009,  
+        "type": "snapshot",  
+        "data": {  
+            "symbol": "SOLUSDT_SOL/USDT",  
+            "bidPrice": "20.3359",  
+            "bidSize": "1.7",  
+            "askPrice": "",  
+            "askSize": "",  
+            "lastPrice": "21.8182",  
+            "highPrice24h": "24.2356",  
+            "lowPrice24h": "-3",  
+            "prevPrice24h": "22.1468",  
+            "volume24h": "23309.9"  
+        }  
     }

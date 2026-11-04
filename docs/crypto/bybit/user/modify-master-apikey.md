@@ -2,62 +2,82 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/modify-master-apikey
 api_type: REST
-updated_at: 2026-11-03 18:39:40.191372
+updated_at: 2026-11-04 18:40:19.691292
 ---
 
-# Get Referral Code
+# Get Sub UID List (Unlimited)
 
-Query the referral codes owned by the current user and their corresponding referral registration links.
+This API is applicable to the client who has over 10k sub accounts. Use **master user's api key** **only**.
 
-info
+tip
 
-  * Sub-accounts will return the master account's referral codes
-  * Only active (non-expired) referral codes are returned
+The API key must have one of the below permissions in order to call this endpoint..
+
+  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
 
 
 
 ### HTTP Request
 
-GET`/v5/user/invitation/code`
+GET`/v5/user/submembers`
 
 ### Request Parameters
 
-No request parameters required. User identity is derived from the API Key.
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+pageSize| false| string| Data size per page. Return up to 100 records per request  
+nextCursor| false| string| Cursor. Use the `nextCursor` token from the response to retrieve the next page of the result set  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-referralCodes| array| List of referral codes owned by the user  
-> referralCode| string| The referral code string  
-> referralLink| string| The referral registration link for the user's site. URL structure: `https://{domain}/{lang}/invite/?ref={referralCode}`  
-> scene| integer| Referral code scene type. `1`: Affiliate; `2`: Friend  
-  
-* * *
+subMembers| array| Object  
+> uid| string| Sub user Id  
+> username| string| Username  
+> memberType| integer| `1`: standard subaccount, `4`: copy trading account, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683), `14`: general AI account, `15`: ByCustody subacct, `16`: Bybit AI  
+> status| integer| The status of the user account
 
+  * `1`: normal
+  * `2`: login banned
+  * `4`: frozen 
+
+  
+> accountMode| integer| The account mode of the user account
+
+  * `5`: UTA2.0
+  * `6`: UTA2.0 Pro
+
+  
+> remark| string| The remark  
+nextCursor| string| The next page cursor value. "0" means no more pages  
+  
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/user/invitation/code HTTP/1.1  
+    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430318405  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
-      
-    
-    
-    
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_uid_list_unlimited(  
+        pageSize="1",  
+    ))  
     
 
 ### Response Example
@@ -65,102 +85,136 @@ referralCodes| array| List of referral codes owned by the user
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "referralCodes": [  
+            "subMembers": [  
                 {  
-                    "referralCode": "AFFIL001",  
-                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
-                    "scene": 1  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
                 },  
                 {  
-                    "referralCode": "FRIEND01",  
-                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
-                    "scene": 2  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
                 }  
-            ]  
+            ],  
+            "nextCursor": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1753286400000  
+        "time": 1760388041006  
     }
 
 ---
 
-# 查詢邀請碼
+# 查詢子帳戶UID列表 (無限制)
 
-查詢當前用戶持有的邀請碼及其對應站點的邀請注冊鏈接。
+通過翻頁獲取當前母帳戶下所有的子帳戶列表，適合超過擁有1萬個子帳戶的母帳戶進行調用。需使用**母** 帳戶的API key。
 
-信息
+提示
 
-  * 子帳號將返回母帳號的邀請碼
-  * 僅返回有效期內（未過期）的邀請碼
+在調用接口時，使用的API key至少需要擁有以下其中一種權限
+
+  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
 
 
 
 ### HTTP 請求
 
-GET`/v5/user/invitation/code`
+GET`/v5/user/submembers`
 
 ### 請求參數
 
-無請求參數。用戶身份從 API Key 中獲取。
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+pageSize| false| string| 數據頁大小. 每次至多返回100條  
+nextCursor| false| string| 游標. 傳入響應中的`nextCursor`來獲取下一頁的數據  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-referralCodes| array| 用戶持有的邀請碼列表  
-> referralCode| string| 邀請碼字符串  
-> referralLink| string| 對應站點的邀請注冊鏈接。URL 結構：`https://{domain}/{lang}/invite/?ref={referralCode}`  
-> scene| integer| 邀請碼場景類型。`1`: 代理商（Affiliate）；`2`: 好友（Friend）  
-  
-* * *
+subMembers| array| Object  
+> uid| string| 子帳戶userId  
+> username| string| 用戶名  
+> memberType| integer| `1`: 普通子帳戶, `4`: 跟單帶單子帳戶, `6`: [託管子帳戶](https://www.bybit.com/en/help-center/article?id=000001683), `14`: 通用AI子帳戶, `15`: ByCustody子帳戶, `16`: Bybit AI  
+> status| integer| 帳戶狀態.
 
+  * `1`: 正常
+  * `2`: 登陸封禁
+  * `4`: 凍結 
+
+  
+> accountMode| integer| 帳戶模式.
+
+  * `5`: UTA2.0 帳戶
+  * `6`: UTA2.0 Pro 帳戶
+
+  
+> remark| string| 備註  
+nextCursor| string| 下一頁數據的游標. 返回"0"表示沒有更多的數據了  
+  
 ### 請求示例
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/user/invitation/code HTTP/1.1  
+    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
-    X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1676430318405  
+    X-BAPI-RECV-WINDOW: 5000  
     
     
     
-      
-    
-    
-    
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_uid_list_unlimited(  
+        pageSize="1",  
+    ))  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "referralCodes": [  
+            "subMembers": [  
                 {  
-                    "referralCode": "AFFIL001",  
-                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
-                    "scene": 1  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 5  
                 },  
                 {  
-                    "referralCode": "FRIEND01",  
-                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
-                    "scene": 2  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
+                    "status": 1,  
+                    "remark": "",  
+                    "accountMode": 6  
                 }  
-            ]  
+            ],  
+            "nextCursor": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1753286400000  
+        "time": 1760388041006  
     }

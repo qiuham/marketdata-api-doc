@@ -2,229 +2,201 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/dual-asset-offer
 api_type: WebSocket
-updated_at: 2026-11-03 18:34:16.202676
+updated_at: 2026-11-04 18:34:59.277270
 ---
 
-# Dual Asset Offers
+# Get Order List
 
-### WebSocket public URL
+info
 
-  * **Mainnet:**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **Testnet:**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
+  * Pass `orderLinkId` or `orderId` alone to retrieve a single order. Omit both to query the full order list with optional filters.
 
 
 
+### HTTP Request
 
+GET`/v5/earn/token/order`
 
-### Desc
+### Request Parameters
 
-  * Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
-
-  * Push scope: **Full snapshot of all online product quotes**
-
-  * Recommended usage pattern:
-
-    1. Call [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) to get initial quotes
-    2. Subscribe to the WebSocket topic for real-time updates
-    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
-    4. If WebSocket disconnects, fallback to the REST endpoint 
-
-
-
-### Topic: `earn.dualassets.offers`
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
+orderLinkId| false| string| User-customised order ID. Pass to retrieve a single order  
+orderId| false| string| System order ID. Pass to retrieve a single order  
+orderType| false| string| Filter by order type: `Mint`, `Redeem`. Returns all types if omitted  
+startTime| false| integer| Start timestamp in seconds. Default: 1 year ago  
+endTime| false| integer| End timestamp in seconds. Default: current time  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
+limit| false| integer| Number of items per page. Default: `20`, Max: `100`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name  
-data| array| Object  
-> p| int64| Product ID  
-> c| string| Current price  
-> b| array of objects| Buy low price list  
->> s| string| Selected price  
->> a| int64| Annualized yield, e8 precision  
->> m| string| Max investment amount at this price point  
->> x| string| Quote expiration time,Unix timestamp in ms  
-> s| array of objects| Sell high price list  
->> s| string| Selected price  
->> a| int64| Annualized yield, e8 precision  
->> m| string| Max investment amount at this price point  
->> x| string| Quote expiration time,Unix timestamp in ms  
+list| array| Order list  
+> orderId| string| System order ID  
+> orderLinkId| string| User-customised order ID  
+> orderType| string| Order type: `Mint`, `Redeem`. Note: TradFi-originated balance changes (e.g. close-PnL, commission, dividend) are also surfaced under `Redeem`. Use `externalEventType` to distinguish a TradFi-driven redemption from a user-initiated one  
+> fromCoin| string| Source coin  
+> toCoin| string| Destination coin  
+> fromAmount| string| Source amount  
+> toAmount| string| Amount credited (after deducting fees)  
+> serviceFee| string| Service fee  
+> fromAccount| string| Source account type. `Mint`: `FlexibleSaving`; `Redeem`: `UNIFIED`; `Redeem` (TradFi-originated): `TRADFI`  
+> toAccount| string| Destination account type. `Mint`: `UNIFIED`; `Redeem`: `FlexibleSaving`; `Redeem` (TradFi-originated): `TRADFI`  
+> externalEventType| string| External event that triggered the order. Empty for user-initiated orders. Populated only for TradFi (MT5) account events: `RPL_CLOSE` (realised PnL on position close, includes swap/overnight fee), `COMMISSION` (position-open commission), `DIVIDEND` (index dividend), `ROLLOVER` (contract rollover), `RISK_ADJUSTMENT` (risk-control adjustment)  
+> status| string| Order status: `Success`, `Processing`, `Fail`  
+> createdTime| string| Order creation time, unix timestamp in seconds  
+nextPageCursor| string| Cursor for the next page. Empty string means no more data  
   
-### Subscribe Example
+* * *
+
+### Request Example
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "earn.dualassets.offers"  
-        ]  
-    }  
+    GET /v5/earn/token/order?coin=BYUSDT HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
-### Stream Example
+### Response Example
     
     
     {  
-      "topic": "earn.dualassets.offers",  
-      "data": [  
-        {  
-          "p": "36352",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "list": [  
+                {  
+                    "orderId": "9985caf3-7b24-452e-bb28-afbc5b52805f",  
+                    "orderLinkId": "byusdt-order-001",  
+                    "orderType": "Mint",  
+                    "fromCoin": "USDT",  
+                    "toCoin": "BYUSDT",  
+                    "fromAmount": "108",  
+                    "toAmount": "108",  
+                    "serviceFee": "0",  
+                    "status": "Success",  
+                    "createdTime": "1775179628"  
+                },  
+                {  
+                    "orderId": "63581995-4e3b-4ffa-9a20-c8415e7ed558",  
+                    "orderLinkId": "",  
+                    "orderType": "Mint",  
+                    "fromCoin": "USDT",  
+                    "toCoin": "BYUSDT",  
+                    "fromAmount": "588",  
+                    "toAmount": "588",  
+                    "serviceFee": "0",  
+                    "status": "Success",  
+                    "createdTime": "1775177332"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
-        {  
-          "p": "36382",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        }  
-      ]  
+        "retExtInfo": {},  
+        "time": 1775179790446  
     }
 
 ---
 
-# 雙幣投資報價
+# 查詢訂單列表
 
-### WebSocket URL
+信息
 
-  * **主網 (Mainnet):**  
-理財 (Earn): `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **測試網 (Testnet):**  
-理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`  
+  * 單獨傳入 `orderLinkId` 或 `orderId` 可查詢單筆訂單。兩者均不傳入時，可搭配可選篩選條件查詢訂單列表。
 
 
 
+### HTTP 請求
 
+GET`/v5/earn/token/order`
 
-### 描述 (Desc)
+### 請求參數
 
-  * 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
-
-  * 推播範圍：**所有上線產品報價的完整快照**
-
-  * 建議使用方式：
-
-    1. 使用 [獲取產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote) 以獲取初始報價
-    2. 訂閱 WebSocket 主題以獲取即時更新
-    3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
-    4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
-
-
-
-### 主題 (Topic): `earn.dualassets.offers`
-
-### 回應參數
+參數| 必填| 類型| 說明  
+---|---|---|---  
+coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
+orderLinkId| false| string| 用戶自定義訂單 ID。傳入可查詢單筆訂單  
+orderId| false| string| 系統訂單 ID。傳入可查詢單筆訂單  
+orderType| false| string| 按訂單類型篩選：`Mint`、`Redeem`。不傳入時返回所有類型  
+startTime| false| integer| 開始時間，秒級時間戳。預設：1 年前  
+endTime| false| integer| 結束時間，秒級時間戳。預設：當前時間  
+cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
+limit| false| integer| 每頁返回數量。預設：`20`，最大：`100`  
+  
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| 主題名稱  
-data| array| 列表  
-> p| int64| 產品 ID  
-> c| string| 當前價格  
-> b| array of objects| 低買價格列表  
->> s| string| 所選價格  
->> a| int64| 年化收益率，e8 精度  
->> m| string| 該價位的最大投資金額  
->> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
-> s| array of objects| 高賣價格列表  
->> s| string| 所選價格  
->> a| int64| 年化收益率，e8 精度  
->> m| string| 該價位的最大投資金額  
->> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
+list| array| 訂單列表  
+> orderId| string| 系統訂單 ID  
+> orderLinkId| string| 用戶自定義訂單 ID  
+> orderType| string| 訂單類型：`Mint`、`Redeem`。注意：TradFi 產生的餘額變動（如平倉盈虧、佣金、分紅等）也會以 `Redeem` 呈現，可透過 `externalEventType` 區分 TradFi 觸發的贖回與用戶主動贖回  
+> fromCoin| string| 來源幣種  
+> toCoin| string| 目標幣種  
+> fromAmount| string| 來源金額  
+> toAmount| string| 到帳金額（扣除手續費後）  
+> serviceFee| string| 服務費  
+> fromAccount| string| 資金來源帳戶類型。`Mint`：`FlexibleSaving`；`Redeem`：`UNIFIED`；`Redeem`（TradFi 觸發）：`TRADFI`  
+> toAccount| string| 資金目標帳戶類型。`Mint`：`UNIFIED`；`Redeem`：`FlexibleSaving`；`Redeem`（TradFi 觸發）：`TRADFI`  
+> externalEventType| string| 觸發訂單的外部事件類型。用戶主動操作時為空。僅在 TradFi（MT5）帳戶事件觸發時填入：`RPL_CLOSE`（平倉實現盈虧，含隔夜/掉期費）、`COMMISSION`（開倉佣金）、`DIVIDEND`（指數分紅）、`ROLLOVER`（合約換倉）、`RISK_ADJUSTMENT`（風控調整）  
+> status| string| 訂單狀態：`Success`（成功）、`Processing`（處理中）、`Fail`（失敗）  
+> createdTime| string| 訂單建立時間，秒級 Unix 時間戳  
+nextPageCursor| string| 下一頁游標，為空表示無更多資料  
   
-### 訂閱範例
+* * *
+
+### 請求示例
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "earn.dualassets.offers"  
-        ]  
-    }  
+    GET /v5/earn/token/order?coin=BYUSDT HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
-### 推播範例
+### 響應示例
     
     
     {  
-      "topic": "earn.dualassets.offers",  
-      "data": [  
-        {  
-          "p": "36352",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "list": [  
+                {  
+                    "orderId": "9985caf3-7b24-452e-bb28-afbc5b52805f",  
+                    "orderLinkId": "byusdt-order-001",  
+                    "orderType": "Mint",  
+                    "fromCoin": "USDT",  
+                    "toCoin": "BYUSDT",  
+                    "fromAmount": "108",  
+                    "toAmount": "108",  
+                    "serviceFee": "0",  
+                    "status": "Success",  
+                    "createdTime": "1775179628"  
+                },  
+                {  
+                    "orderId": "63581995-4e3b-4ffa-9a20-c8415e7ed558",  
+                    "orderLinkId": "",  
+                    "orderType": "Mint",  
+                    "fromCoin": "USDT",  
+                    "toCoin": "BYUSDT",  
+                    "fromAmount": "588",  
+                    "toAmount": "588",  
+                    "serviceFee": "0",  
+                    "status": "Success",  
+                    "createdTime": "1775177332"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
-        {  
-          "p": "36382",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        }  
-      ]  
+        "retExtInfo": {},  
+        "time": 1775179790446  
     }

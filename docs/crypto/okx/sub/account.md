@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account
 anchor_id: sub-account
 api_type: API
-updated_at: 2026-11-03 19:09:04.251447
+updated_at: 2026-11-04 19:09:15.277360
 ---
 
 # Sub-account
@@ -419,7 +419,7 @@ If `ip` is set to "", then no IP addresses is linked to the APIKey.
             "subAcct": "yongxu",
             "label": "v5",
             "apiKey": "******",
-            "perm": "read,trade",
+            "perm": "read_only,trade",
             "ip": "1.1.1.1",
             "ts": "1597026383085"
         }]
@@ -1674,7 +1674,7 @@ ip | String | 否 | 子账户APIKey绑定ip地址，多个ip用半角逗号隔�
             "subAcct": "yongxu",
             "label": "v5",
             "apiKey": "******",
-            "perm": "read,trade",
+            "perm": "read_only,trade",
             "ip": "1.1.1.1",
             "ts": "1597026383085"
         }]

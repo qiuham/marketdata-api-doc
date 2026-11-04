@@ -2,38 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/repay-collateral
 api_type: REST
-updated_at: 2026-11-03 18:36:39.667017
+updated_at: 2026-11-04 18:37:21.580174
 ---
 
-# Collateral Repayment
+# Get Collateral Adjustment History
+
+Query for your LTV adjustment history.
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
-
-info
-
-  * Pay interest first, then repay the principal.
-  * There are limits on the repayment amount in a single transaction. Please read this [announcement](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/) before repaying with collateral
-  * When repaying with collateral, Bybit will charge a repayment fee. The applicable fee rate is the higher of the repayment fee rates for the collateral asset and the debt asset. You can call this endpoint: [View fee rates by asset](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) to get "reapyFee" where "pledgeEnable" = 1 for coins' repayment fee rates 
-
-
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-flexible/repay-collateral`
+GET`/v5/crypto-loan-common/adjustment-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanCurrency| **true**|  string| Loan coin name  
-collateralCoin| **true**|  string| Collateral currencies: Use commas to separate multiple collateral currencies  
-amount| **true**|  string| Repay amount  
+adjustId| false| string| Collateral adjustment transaction ID  
+collateralCurrency| false| string| Collateral coin name  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
-None
-
+Parameter| Type| Comments  
+---|---|---  
+list| array| Object  
+> collateralCurrency| string| Collateral coin  
+> amount| string| amount  
+> adjustId| long| Collateral adjustment transaction ID  
+> adjustTime| long| Adjust timestamp  
+> preLTV| string| LTV before the adjustment  
+> afterLTV| string| LTV after the adjustment  
+> direction| integer| The direction of adjustment, `0`: add collateral; `1`: reduce collateral  
+> status| integer| The status of adjustment, `1`: success; `2`: processing; `3`: fail  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+  
 ### Request Example
 
   * HTTP
@@ -43,20 +49,12 @@ None
 
     
     
-    POST /v5/crypto-loan-flexible/repay-collateral HTTP/1.1  
+    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-      "loanCurrency": "USDT",  
-      "amount": "500",  
-      "collateralCoin":"BTC"  
-    }  
     
     
     
@@ -66,10 +64,9 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_flexible_crypto_loan(  
-        loanCurrency="USDT",  
-        amount="500",  
-        collateralCoin="BTC",  
+    print(session.get_ltv_adjustment_history_new_crypto_loan(  
+        limit="2",  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -83,45 +80,72 @@ None
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "list": [  
+                {  
+                    "adjustId": 27511,  
+                    "adjustTime": 1752627997907,  
+                    "afterLTV": "0.813743",  
+                    "amount": "0.08",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.524602",  
+                    "status": 1  
+                },  
+                {  
+                    "adjustId": 27491,  
+                    "adjustTime": 1752218558913,  
+                    "afterLTV": "0.41983",  
+                    "amount": "0.03",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.372314",  
+                    "status": 1  
+                }  
+            ],  
+            "nextPageCursor": "27491"  
+        },  
         "retExtInfo": {},  
-        "time": 1756971550401  
+        "time": 1752628288732  
     }
 
 ---
 
-# 抵押品還款
+# 查詢質押金調整歷史
+
+查詢增減質押金的操作歷史
 
 > 權限: "現貨"  
->  頻率: 1次/秒
-
-信息
-
-  * 優先還款利息，再還款本金。
-  * 單筆還款金額有限制, 在使用抵押品還款前, 請仔細閱讀該[公告](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/)
-  * 使用抵押物還款時，Bybit 將收取還款手續費。適用的手續費率為抵押資產和債務資產的還款手續費率中較高的一個。 您可以調此接口：[按資產查看手續費率](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) 取得"reapyFee"，其中"pledgeEnable"= 1，以查看各幣種的還款手續費率。
-
-
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-flexible/repay-collateral`
+GET`/v5/crypto-loan-common/adjustment-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanCurrency| **true**|  string| 借款幣種  
-collateralCoin| **true**|  string| 抵押品幣種: 多個抵押品幣種使用英文逗號分開  
-amount| **true**|  string| 還款金額  
+adjustId| false| string| 質押金調整操作ID  
+collateralCurrency| false| string| 質押幣種  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+list| array| Object  
+> collateralCurrency| string| 抵押幣種  
+> amount| string| 金額  
+> adjustId| long| 抵押調整交易 ID  
+> adjustTime| long| 調整時間戳  
+> preLTV| string| 調整前質押率（LTV）  
+> afterLTV| string| 調整後質押率（LTV）  
+> direction| integer| 調整方向，`0`: 增加抵押；`1`: 減少抵押  
+> status| integer| 調整狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
+nextPageCursor| string| 下一頁游標  
   
-無
-
 ### 請求示例
 
   * HTTP
@@ -131,20 +155,12 @@ amount| **true**|  string| 還款金額
 
     
     
-    POST /v5/crypto-loan-flexible/repay-collateral HTTP/1.1  
+    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-      "loanCurrency": "USDT",  
-      "amount": "500",  
-      "collateralCoin":"BTC"  
-    }  
     
     
     
@@ -154,10 +170,9 @@ amount| **true**|  string| 還款金額
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_flexible_crypto_loan(  
-        loanCurrency="USDT",  
-        amount="500",  
-        collateralCoin="BTC",  
+    print(session.get_ltv_adjustment_history_new_crypto_loan(  
+        limit="2",  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -171,7 +186,31 @@ amount| **true**|  string| 還款金額
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "list": [  
+                {  
+                    "adjustId": 27511,  
+                    "adjustTime": 1752627997907,  
+                    "afterLTV": "0.813743",  
+                    "amount": "0.08",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.524602",  
+                    "status": 1  
+                },  
+                {  
+                    "adjustId": 27491,  
+                    "adjustTime": 1752218558913,  
+                    "afterLTV": "0.41983",  
+                    "amount": "0.03",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.372314",  
+                    "status": 1  
+                }  
+            ],  
+            "nextPageCursor": "27491"  
+        },  
         "retExtInfo": {},  
-        "time": 1756971550401  
+        "time": 1752628288732  
     }

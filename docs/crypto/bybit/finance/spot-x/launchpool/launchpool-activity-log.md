@@ -2,52 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-activity-log
 api_type: REST
-updated_at: 2026-11-03 18:35:24.473295
+updated_at: 2026-11-04 18:36:05.451583
 ---
 
-# Get Launchpool User Activity Log
+# Get Puzzle Project List
 
-Query the authenticated user's Launchpool staking operation records (stake-in, redeem, interest, etc.).
+Query the Spot-X Puzzle activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
 
 info
 
-  * Authentication is required
-  * `startTime` and `endTime` must be provided **together** (both or neither)
-  * All filter fields are optional; omitting all fields returns all records
+  * Authentication is **not** required
+  * Only main-site public activities are returned
+  * `nextPageCursor` being an empty string indicates the last page
 
 
 
 ### HTTP Request
 
-POST`/v5/spot-x/launchpool/user/activity-log`
+GET`/v5/spot-x/puzzle/project/list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-stakeCoin| false| string| Filter by stake coin symbol, e.g. `USDT`  
-type| false| integer| Filter by operation type. `0`: PLEDGE (manual stake-in); `1`: REDEEM (manual redeem); `2`: INTEREST (reward credit); `3`: AUTO_REDEEM (auto principal return); `4`: LOAN_PLEDGE (leveraged stake-in); `5`: LOAN_REDEEM (manual leveraged redeem); `6`: LOAN_AUTO_REDEEM (auto leveraged maturity redemption); `7`: LOAN_RISKRATE_AUTO_REDEEM (leveraged liquidation); `8`: RISK_USER_AUTO_REDEEM (risk-control forced redeem, non-leveraged); `9`: LOAN_RISK_USER_AUTO_REDEEM (risk-control forced redeem, leveraged); `10`: EARN_REWARD (earn product reward credit)  
-status| false| integer| Filter by record status. `0`: Pending; `1`: Success; `2`: Failed  
-startTime| false| string| Query start time, 13-digit Unix timestamp in milliseconds. Must be used together with `endTime`  
-endTime| false| string| Query end time, 13-digit Unix timestamp in milliseconds. Must be used together with `startTime`  
-pageSize| false| integer| Number of records per page. Default: `10`. Max: `10`  
-current| false| integer| Page number (1-based). Default: `1`. Max: `100`  
+status| **true**|  integer| Activity phase filter. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
+projectId| false| string| Exact activity code. Use to query a single project  
+activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
+cursor| false| string| Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page  
+limit| false| integer| Number of items per page. Default: `10`. Max: `10`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Operation records for the current page  
-> stakeCoin| string| The coin that was staked or redeemed  
-> rewardCoin| string| The reward coin associated with this operation  
-> amount| string| Operation amount  
-> type| integer| Operation type code. See request `type` field for full mapping  
-> status| integer| Record status. `0`: Pending; `1`: Success; `2`: Failed  
-> createdTime| string| Record creation time, Unix timestamp in milliseconds  
-> orderId| string| Unique order/operation identifier  
-total| integer| Total number of records matching the filter  
-pageSize| integer| Page size used for this response  
-current| integer| Current page number  
+list| array| Activity items for the current page  
+> projectId| string| Unique activity code  
+> activityCoin| string| The coin that the activity is centered on  
+> rewardCoin| string| The coin distributed as the reward  
+> status| integer| Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
+> startTime| string| Activity start time, Unix timestamp in milliseconds  
+> endTime| string| Activity end time, Unix timestamp in milliseconds  
+> totalReward| string| Total reward pool size  
+> participantCount| string| Total number of registered participants  
+nextPageCursor| string| Cursor for the next page. Empty string means last page  
   
 * * *
 
@@ -60,21 +57,8 @@ current| integer| Current page number
 
     
     
-    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
+    GET /v5/spot-x/puzzle/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-      
-    {  
-        "stakeCoin": "USDT",  
-        "type": 0,  
-        "status": 1,  
-        "pageSize": 10,  
-        "current": 1  
-    }  
     
     
     
@@ -94,18 +78,17 @@ current| integer| Current page number
         "result": {  
             "list": [  
                 {  
-                    "stakeCoin": "USDT",  
-                    "rewardCoin": "BTC",  
-                    "amount": "1000",  
-                    "type": 0,  
+                    "projectId": "PUZZLE_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "rewardCoin": "USDT",  
                     "status": 1,  
-                    "createdTime": "1704067200000",  
-                    "orderId": "ORDER_123456"  
+                    "startTime": "1704067200000",  
+                    "endTime": "1706745600000",  
+                    "totalReward": "50000",  
+                    "participantCount": "1234"  
                 }  
             ],  
-            "total": 25,  
-            "pageSize": 10,  
-            "current": 1  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  
@@ -113,49 +96,46 @@ current| integer| Current page number
 
 ---
 
-# 查詢 Launchpool 用戶操作記錄
+# 查詢 Puzzle 項目列表
 
-查詢當前用戶的 Launchpool 質押操作記錄（質押、贖回、利息等）。
+查詢 Spot-X Puzzle 活動（項目）列表。結果按創建時間倒序排列（最新優先），支持游標分頁。
 
 信息
 
-  * 需要鑒權
-  * `startTime` 和 `endTime` 必須同時傳入（要麼都傳，要麼都不傳）
-  * 所有篩選字段均為可選；不傳任何字段時返回全部記錄
+  * 無需鑒權
+  * 僅返回主站公開活動
+  * `nextPageCursor` 為空字符串時表示已到最後一頁
 
 
 
 ### HTTP 請求
 
-POST`/v5/spot-x/launchpool/user/activity-log`
+GET`/v5/spot-x/puzzle/project/list`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-stakeCoin| false| string| 按質押幣種篩選，如 `USDT`  
-type| false| integer| 按操作類型篩選。`0`: PLEDGE（手動質押）；`1`: REDEEM（手動贖回）；`2`: INTEREST（獎勵發放）；`3`: AUTO_REDEEM（到期自動還本）；`4`: LOAN_PLEDGE（槓桿質押）；`5`: LOAN_REDEEM（手動槓桿贖回）；`6`: LOAN_AUTO_REDEEM（槓桿到期自動贖回）；`7`: LOAN_RISKRATE_AUTO_REDEEM（槓桿強平）；`8`: RISK_USER_AUTO_REDEEM（風控強制贖回，非槓桿）；`9`: LOAN_RISK_USER_AUTO_REDEEM（風控強制贖回，槓桿）；`10`: EARN_REWARD（理財產品獎勵）  
-status| false| integer| 按記錄狀態篩選。`0`: 處理中；`1`: 成功；`2`: 失敗  
-startTime| false| string| 查詢開始時間，13 位毫秒級 Unix 時間戳字符串。必須與 `endTime` 同時傳入  
-endTime| false| string| 查詢結束時間，13 位毫秒級 Unix 時間戳字符串。必須與 `startTime` 同時傳入  
-pageSize| false| integer| 每頁記錄數，默認 `10`，最大 `10`  
-current| false| integer| 頁碼（從 1 開始），默認 `1`，最大 `100`  
+status| **true**|  integer| 活動階段篩選。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
+projectId| false| string| 精確活動代碼，用於查詢單個項目  
+activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
+cursor| false| string| 分頁游標，傳入上一次響應中的 `nextPageCursor`。首頁請求無需傳入  
+limit| false| integer| 每頁數量，默認 `10`，最大 `10`  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 當前頁的操作記錄  
-> stakeCoin| string| 質押或贖回的幣種  
-> rewardCoin| string| 該操作關聯的獎勵幣種  
-> amount| string| 操作金額  
-> type| integer| 操作類型代碼，詳見請求參數 `type` 說明  
-> status| integer| 記錄狀態。`0`: 處理中；`1`: 成功；`2`: 失敗  
-> createdTime| string| 記錄創建時間，毫秒級 Unix 時間戳  
-> orderId| string| 唯一訂單/操作標識符  
-total| integer| 符合篩選條件的記錄總數  
-pageSize| integer| 本次響應使用的每頁條數  
-current| integer| 當前頁碼  
+list| array| 當前頁的活動列表  
+> projectId| string| 唯一活動代碼  
+> activityCoin| string| 活動對應的幣種  
+> rewardCoin| string| 實際發放的獎勵幣種  
+> status| integer| 活動狀態。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
+> startTime| string| 活動開始時間，毫秒級 Unix 時間戳  
+> endTime| string| 活動結束時間，毫秒級 Unix 時間戳  
+> totalReward| string| 獎勵池總量  
+> participantCount| string| 已報名參與人數  
+nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後一頁  
   
 * * *
 
@@ -168,21 +148,8 @@ current| integer| 當前頁碼
 
     
     
-    POST /v5/spot-x/launchpool/user/activity-log HTTP/1.1  
+    GET /v5/spot-x/puzzle/project/list?status=1&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1705000000000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-      
-    {  
-        "stakeCoin": "USDT",  
-        "type": 0,  
-        "status": 1,  
-        "pageSize": 10,  
-        "current": 1  
-    }  
     
     
     
@@ -202,18 +169,17 @@ current| integer| 當前頁碼
         "result": {  
             "list": [  
                 {  
-                    "stakeCoin": "USDT",  
-                    "rewardCoin": "BTC",  
-                    "amount": "1000",  
-                    "type": 0,  
+                    "projectId": "PUZZLE_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "rewardCoin": "USDT",  
                     "status": 1,  
-                    "createdTime": "1704067200000",  
-                    "orderId": "ORDER_123456"  
+                    "startTime": "1704067200000",  
+                    "endTime": "1706745600000",  
+                    "totalReward": "50000",  
+                    "participantCount": "1234"  
                 }  
             ],  
-            "total": 25,  
-            "pageSize": 10,  
-            "current": 1  
+            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  

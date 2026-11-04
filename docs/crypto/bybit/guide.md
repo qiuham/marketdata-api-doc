@@ -2,10 +2,10 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/guide
 api_type: REST
-updated_at: 2026-11-03 18:35:34.693784
+updated_at: 2026-11-04 18:36:12.794082
 ---
 
-# Get Institution Whitelist IP
+# Get Institution IP Change Log
 
 info
 
@@ -13,20 +13,28 @@ This endpoint must be requested with a main account API key.
 
 ### HTTP Request
 
-GET`/v5/ins/whitelist/ip`
+GET`/v5/ins/ip/changelog`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+startTime| false| string| Filter start time, Unix timestamp in milliseconds  
+endTime| false| string| Filter end time, Unix timestamp in milliseconds  
+limit| false| integer| Records per page. Range: [1, 50]. Default: 20  
+cursor| false| string| Pagination cursor. Use the `nextPageCursor` value from the previous response  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Object  
-> name| string| Client name  
-> endpointDomain| string| Dedicated hostname assigned exclusively to this client  
-> ipList| array| Array of whitelisted IP addresses  
+list| array| Array of IP change records  
+> operationType| string| Action type: `ADD`, `REMOVE`, `ENABLE`, or `DISABLE`  
+> ipAddress| string| The IP address affected by the operation  
+> domainType| string| Connection protocol. `GW` for HTTP hostname, `WS` for WebSocket hostname  
+> changeReason| string| The reason of the change  
+> createdAt| string| Operation timestamp in UTC+0, ISO 8601 format  
+nextPageCursor| string| Opaque token for retrieving the next page of results  
   
 ### Request Example
 
@@ -35,7 +43,7 @@ result| array| Object
 
     
     
-    GET /v5/ins/whitelist/ip HTTP/1.1  
+    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -50,31 +58,31 @@ result| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1"  
-                ]  
-            },  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1",  
-                    "35.78.100.2"  
-                ]  
-            }  
-        ],  
-        "time": 1779362854157  
+        "result": {  
+            "list": [  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "193.118.167.247",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                },  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "18.99.43.128/25",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                }  
+            ],  
+            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
+        },  
+        "time": 1779362027705  
     }
 
 ---
 
-# 查詢機構 IP 白名單
+# 查詢機構 IP 變更記錄
 
 信息
 
@@ -82,20 +90,28 @@ result| array| Object
 
 ### HTTP 請求
 
-GET`/v5/ins/whitelist/ip`
+GET`/v5/ins/ip/changelog`
 
 ### 請求參數
 
-無
-
+參數| 是否必填| 類型| 說明  
+---|---|---|---  
+startTime| false| string| 篩選起始時間，Unix 毫秒時間戳  
+endTime| false| string| 篩選結束時間，Unix 毫秒時間戳  
+limit| false| integer| 每頁記錄數。範圍: [1, 50]。預設: 20  
+cursor| false| string| 分頁游標。使用上一頁響應中的 `nextPageCursor` 值  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| Object  
-> name| string| 客戶名稱  
-> endpointDomain| string| 分配給該客戶專用的 hostname  
-> ipList| array| 白名單 IP 位址列表  
+list| array| IP 變更記錄列表  
+> operationType| string| 操作類型: `ADD`, `REMOVE`, `ENABLE`, 或 `DISABLE`  
+> ipAddress| string| 受該操作影響的 IP 位址  
+> domainType| string| 連接協議。`GW` 表示 HTTP hostname，`WS` 表示 WebSocket hostname  
+> changeReason| string| 變更原因  
+> createdAt| string| 操作時間戳，UTC+0，ISO 8601 格式  
+nextPageCursor| string| 用於查詢下一頁的不透明 token  
   
 ### 請求示例
 
@@ -104,7 +120,7 @@ result| array| Object
 
     
     
-    GET /v5/ins/whitelist/ip HTTP/1.1  
+    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -119,24 +135,24 @@ result| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1"  
-                ]  
-            },  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1",  
-                    "35.78.100.2"  
-                ]  
-            }  
-        ],  
-        "time": 1779362854157  
+        "result": {  
+            "list": [  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "193.118.167.247",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                },  
+                {  
+                    "operationType": "DISABLE",  
+                    "ipAddress": "18.99.43.128/25",  
+                    "domainType": "WS",  
+                    "changeReason": "do not meet the requirement",  
+                    "createdAt": "2026-05-21T06:02:36Z"  
+                }  
+            ],  
+            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
+        },  
+        "time": 1779362027705  
     }

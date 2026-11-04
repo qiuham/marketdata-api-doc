@@ -2,61 +2,59 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/place-order
 api_type: REST
-updated_at: 2026-11-03 18:34:22.332936
+updated_at: 2026-11-04 18:35:05.262386
 ---
 
-# Place Order
+# Get APR History
 
 info
 
-  * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order List](/docs/v5/finance/earn/byusdt/order) to track order status.
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-  * **Mint** : Transfers USDT from your Flexible Saving account to mint byUSDT.
-  * **Redeem** : Burns byUSDT and returns USDT to your Unified Trading Account (UTA).
+Does not need authentication.
 
+note
 
+You can query up to 6 months of historical APR data.
 
 ### HTTP Request
 
-POST`/v5/earn/token/place-order`
+GET`/v5/earn/apr-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
-orderLinkId| **true**|  string| User-customised order ID (max 36 characters). Used for idempotency and order lookup  
-orderType| **true**|  string| Order type: `Mint` (USDT → byUSDT), `Redeem` (byUSDT → USDT)  
-amount| **true**|  string| Order amount (decimal string). For `Mint`: USDT quantity; for `Redeem`: byUSDT quantity  
-accountType| **true**|  string| Account type. For `Mint`: must be `FlexibleSaving`; for `Redeem`: must be `UNIFIED`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
+productId| **true**|  string| Product ID, from [GET /v5/earn/product](/docs/v5/finance/earn/easy-onchain/product-info)  
+startTime| false| integer| Start timestamp (ms). If neither `startTime` nor `endTime` is provided, the last 7 days of data is returned by default  
+endTime| false| integer| End timestamp (ms). The difference between `endTime` and `startTime` must be less than or equal to 182 days  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID (UUID)  
-orderLinkId| string| User-customised order ID  
+list| array| Object  
+> timestamp| string| Unix timestamp (ms) at midnight of the corresponding date  
+> apr| string| APR, decimal string, e.g., `"0.055"` represents 5.5%  
   
-* * *
-
 ### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/token/place-order HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
       
-    {  
-        "coin": "BYUSDT",  
-        "orderLinkId": "my-order-001",  
-        "orderType": "Mint",  
-        "amount": "100.00",  
-        "accountType": "FlexibleSaving"  
-    }  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -64,69 +62,95 @@ orderLinkId| string| User-customised order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "orderId": "550e8400-e29b-41d4-a716-446655440000",  
-            "orderLinkId": "my-order-001"  
+            "list": [  
+                {  
+                    "timestamp": "1773705600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773619200000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773532800000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773446400000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773360000000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773273600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773187200000",  
+                    "apr": "15%"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1773741812091  
     }
 
 ---
 
-# 下單
+# 查詢歷史 APR
 
 信息
 
-  * 訂單為非同步處理。成功響應表示訂單已被接受，而非已完成結算。請使用[查詢訂單列表](/docs/zh-TW/v5/finance/earn/byusdt/order)追蹤訂單狀態。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-  * **Mint（鑄造）** ：將 USDT 從活期理財帳戶轉入，鑄造 byUSDT。
-  * **Redeem（贖回）** ：銷毀 byUSDT，將 USDT 返還至統一交易帳戶（UTA）。
+不需要鑒權
 
+備註
 
+最多可查詢 6 個月的歷史 APR 數據。
 
 ### HTTP 請求
 
-POST`/v5/earn/token/place-order`
+GET`/v5/earn/apr-history`
 
 ### 請求參數
 
-參數| 必填| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 36 個字元），用於冪等性控制及訂單查詢  
-orderType| **true**|  string| 訂單類型：`Mint`（USDT → byUSDT）、`Redeem`（byUSDT → USDT）  
-amount| **true**|  string| 訂單金額（十進位字串）。`Mint` 時為 USDT 數量；`Redeem` 時為 byUSDT 數量  
-accountType| **true**|  string| 帳戶類型。`Mint` 時必須為 `FlexibleSaving`；`Redeem` 時必須為 `UNIFIED`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
+productId| **true**|  string| 產品 ID，從 [GET /v5/earn/product](/docs/zh-TW/v5/finance/earn/easy-onchain/product-info) 獲取  
+startTime| false| integer| 查詢開始時間戳 (ms)。若 `startTime` 和 `endTime` 均不傳，默認返回最近 7 天的數據  
+endTime| false| integer| 查詢結束時間戳 (ms)，與 `startTime` 的間隔不超過 182 天  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID（UUID）  
-orderLinkId| string| 用戶自定義訂單 ID  
+list| array| Object  
+> timestamp| string| 該記錄對應日期零點的 Unix 毫秒時間戳  
+> apr| string| APR，decimal 字符串，如 `"0.055"` 表示 5.5%  
   
-* * *
-
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/token/place-order HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
       
-    {  
-        "coin": "BYUSDT",  
-        "orderLinkId": "my-order-001",  
-        "orderType": "Mint",  
-        "amount": "100.00",  
-        "accountType": "FlexibleSaving"  
-    }  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -134,11 +158,39 @@ orderLinkId| string| 用戶自定義訂單 ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "orderId": "550e8400-e29b-41d4-a716-446655440000",  
-            "orderLinkId": "my-order-001"  
+            "list": [  
+                {  
+                    "timestamp": "1773705600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773619200000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773532800000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773446400000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773360000000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773273600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773187200000",  
+                    "apr": "15%"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1773741812091  
     }

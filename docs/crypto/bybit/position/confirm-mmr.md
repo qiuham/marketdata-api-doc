@@ -2,38 +2,24 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/confirm-mmr
 api_type: Position
-updated_at: 2026-11-03 18:37:22.987874
+updated_at: 2026-11-04 18:38:00.818478
 ---
 
-# Set Leverage
+# Confirm New Risk Limit
 
-info
-
-According to the risk limit, leverage affects the maximum position value that can be opened, that is, the greater the leverage, the smaller the maximum position value that can be opened, and vice versa. [Learn more](https://www.bybit.com/en/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
+It is only applicable when the user is marked as only reducing positions (please see the isReduceOnly field in the [Get Position Info](/docs/v5/position) interface). After the user actively adjusts the risk level, this interface is called to try to calculate the adjusted risk level, and if it passes (retCode=0), the system will remove the position reduceOnly mark. You are recommended to call [Get Position Info](/docs/v5/position) to check `isReduceOnly` field.
 
 ### HTTP Request
 
-POST`/v5/position/set-leverage`
+POST`/v5/position/confirm-pending-mmr`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 [category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-buyLeverage| **true**|  string| [`1`, max leverage]
-
-  * one-way mode: `buyLeverage` must be the same as `sellLeverage`
-  * Hedge mode:   
-isolated margin: `buyLeverage` and `sellLeverage` can be different;   
-cross margin: `buyLeverage` must be the same as `sellLeverage`
-
+symbol| **true**|  string| Symbol name  
   
-sellLeverage| **true**|  string| [`1`, max leverage]  
-[](/docs/api-explorer/v5/position/leverage)
-
-* * *
-
 ### Response Parameters
 
 None
@@ -48,20 +34,18 @@ None
 
     
     
-    POST /v5/position/set-leverage HTTP/1.1  
+    POST /v5/position/confirm-pending-mmr HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672281605082  
+    X-BAPI-TIMESTAMP: 1698051123673  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 53  
       
     {  
         "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "buyLeverage": "6",  
-        "sellLeverage": "6"  
-      
+        "symbol": "BTCUSDT"  
     }  
     
     
@@ -72,11 +56,9 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_leverage(  
+    print(session.confirm_new_risk_limit(  
         category="linear",  
-        symbol="BTCUSDT",  
-        buyLeverage="6",  
-        sellLeverage="6",  
+        symbol="BTCUSDT"  
     ))  
     
     
@@ -86,32 +68,12 @@ None
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
-    client.setPositionLeverage(setLeverageRequest, System.out::println);  
+    var confirmNewRiskRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").build();  
+    client.confirmPositionRiskLimit(confirmNewRiskRequest, System.out::println);  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setLeverage({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            buyLeverage: '6',  
-            sellLeverage: '6',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### Response Example
@@ -122,20 +84,18 @@ None
         "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1672281607343  
+        "time": 1698051124588  
     }
 
 ---
 
-# 設置槓桿
+# 確認新的風險限額
 
-信息
-
-根據風險限額, 槓桿影響最大可開數量, 即槓桿越大, 最大可開倉數量越小, 反之亦然。[了解更多](https://www.bybit.com/zh-MY/help-center/article/Risk-Limit-Perpetual-and-FuturesBybit_Perpetual_Contract_mechanism)
+僅適用於當用戶被標記為僅減倉 (請看[持倉](/docs/zh-TW/v5/position)接口中的isReduceOnly字段) 時, 在用戶主動調整風險水位後, 調用該接口來試算調整後的風 險水平, 若通過(retCode=0), 則系統會移除僅減倉標記, 推薦自行再調用下倉位接口確認`isReduceOnly`字段是否變成false
 
 ### HTTP 請求
 
-POST`/v5/position/set-leverage`
+POST`/v5/position/confirm-pending-mmr`
 
 ### 請求參數
 
@@ -143,19 +103,7 @@ POST`/v5/position/set-leverage`
 ---|---|---|---  
 [category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
 symbol| **true**|  string| 合約名稱  
-buyLeverage| **true**|  string| [`1`, 最大槓桿數]
-
-  * 單倉: `buyLeverage` 必須等於`sellLeverage`
-  * 雙倉:   
-逐倉保證金: `buyLeverage`可以與`sellLeverage`不相等;   
-全倉保證金: `buyLeverage` 必須等於`sellLeverage`
-
   
-sellLeverage| **true**|  string| [`1`, 最大槓桿數]  
-[](/docs/zh-TW/api-explorer/v5/position/leverage)
-
-* * *
-
 ### 響應參數
 
 無
@@ -170,36 +118,23 @@ sellLeverage| **true**|  string| [`1`, 最大槓桿數]
 
     
     
-    POST /v5/position/set-leverage HTTP/1.1  
+    POST /v5/position/confirm-pending-mmr HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672281605082  
+    X-BAPI-TIMESTAMP: 1698051123673  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 53  
       
     {  
         "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "buyLeverage": "6",  
-        "sellLeverage": "6"  
-      
+        "symbol": "BTCUSDT"  
     }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.set_leverage(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        buyLeverage="6",  
-        sellLeverage="6",  
-    ))  
+      
     
     
     
@@ -208,32 +143,12 @@ sellLeverage| **true**|  string| [`1`, 最大槓桿數]
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setLeverageRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").buyLeverage("5").sellLeverage("5").build();  
-    client.setPositionLeverage(setLeverageRequest, System.out::println);  
+    var confirmNewRiskRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").build();  
+    client.confirmPositionRiskLimit(confirmNewRiskRequest, System.out::println);  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setLeverage({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            buyLeverage: '6',  
-            sellLeverage: '6',  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
     
 
 ### 響應示例
@@ -244,5 +159,5 @@ sellLeverage| **true**|  string| [`1`, 最大槓桿數]
         "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1672281607343  
+        "time": 1698051124588  
     }

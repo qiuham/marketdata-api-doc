@@ -2,68 +2,64 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/set-auto-invest
 api_type: REST
-updated_at: 2026-11-03 18:34:45.774818
+updated_at: 2026-11-04 18:35:24.953863
 ---
 
-# Get Airdrop Products
+# Get/Set Auto Savings Settings
+
+Query or update Flexible Saving auto savings settings.
+
+note
+
+  * `GET` queries the auto savings switch, position limit, and APR.
+  * `POST` enables or disables auto savings.
+
+
 
 info
 
-Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
+  * API key permission: `Earn`
+  * Get Auto Savings Settings: 10 requests per second per UID
+  * Set Auto Savings Settings: 5 requests per second per UID
+
+
+
+## Get Auto Savings Settings
+
+Query the user's Flexible Saving auto savings settings and current APR by coin. Omit `coins` to return all supported coins. You can specify up to 50 coins.
 
 ### HTTP Request
 
-GET`/v5/earn/hold-to-earn/product`
+GET`/v5/earn/flexible-saving/auto-savings`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coins| false| array| Coin names to query. Pass repeated query parameters, for example `coins=BTC&coins=ETH`. Omit to query all supported coins. Maximum: `50`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-products| array| Object  
-> coinName| string| Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`  
-> yields| array| Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)  
->> coinName| string| Yield coin name  
->> apy| string| Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin  
->> personalApy| string| Personal APR for this yield coin, formatted for direct display including the `%` suffix, e.g., `"5.285982%"`. Reflects the user's individual rate after applying their personal multiplier  
->> multiplier| string| Personal coefficient applied to the base APR. Returns `"1"` when the user has no position in this product  
-> status| string| Product stage, `NotStarted`, `Online`, `Ended`  
-> apy| string| Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday  
-> personalApy| string| Sum of personal APR across all yield coins, formatted for direct display including the `%` suffix, e.g., `"6.52459%"`  
-> announcementUrl| string| Activity rules announcement URL  
+selectedAll| boolean| Whether auto savings is enabled globally  
+coins| array| Supported or requested coins and their auto savings settings  
+> coin| string| Coin name  
+> isSelected| boolean| Whether auto savings is enabled for this coin  
+> maxStakingAmount| string| Maximum auto savings position amount, expressed in this coin  
+> apr| string| Current APR as a decimal rate. For example, `0.05` means 5%  
   
-info
-
-  * Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
-  * When `coinName != yields.coinName`, it is a cross-coin airdrop
-  * Results are sorted by product creation time, newest first.
-
-
-
 * * *
 
 ### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -71,121 +67,139 @@ info
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "products": [  
+            "selectedAll": false,  
+            "coins": [  
                 {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%",  
-                            "personalApy": "0.421208%",  
-                            "multiplier": "2"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "apy": "0.210604%",  
-                    "personalApy": "0.421208%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                    "coin": "BTC",  
+                    "isSelected": true,  
+                    "maxStakingAmount": "10",  
+                    "apr": "0.05"  
                 },  
                 {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%",  
-                            "personalApy": "0.029978%",  
-                            "multiplier": "1"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "apy": "0.029978%",  
-                    "personalApy": "0.029978%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%",  
-                            "personalApy": "10%",  
-                            "multiplier": "1"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "apy": "10%",  
-                    "personalApy": "10%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                    "coin": "ETH",  
+                    "isSelected": false,  
+                    "maxStakingAmount": "100",  
+                    "apr": "0.04"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1779348459085  
+        "time": 1672211918471  
+    }  
+    
+
+## Set Auto Savings Settings
+
+Enable or disable Flexible Saving auto savings for one coin or all supported coins. Omit `coin` or pass an empty string to update the global setting.
+
+When enabling, set `purchaseImmediately` to `true` to asynchronously subscribe the available Funding Account balance. When it is `false` or omitted, only the setting is updated. This parameter is ignored when disabling auto savings.
+
+### HTTP Request
+
+POST`/v5/earn/flexible-saving/auto-savings`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coin| false| string| Coin to update. Omit or pass an empty string to update the global setting  
+isSelected| **true**|  boolean| Whether to enable auto savings  
+purchaseImmediately| false| boolean| When enabling, asynchronously subscribe the available Funding Account balance. Default: `false`. Ignored when disabling  
+  
+### Response Parameters
+
+None
+
+* * *
+
+### Request Example
+    
+    
+    POST /v5/earn/flexible-saving/auto-savings HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "coin": "BTC",  
+        "isSelected": true,  
+        "purchaseImmediately": false  
+    }  
+    
+
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672211918471  
     }
 
 ---
 
-# 獲取空投產品列表
+# 查詢/設定自動儲蓄設定
+
+查詢或設定活期理財自動儲蓄。
+
+備註
+
+  * `GET` 查詢自動儲蓄開關、持倉上限及 APR。
+  * `POST` 開啟或關閉自動儲蓄。
+
+
 
 信息
 
-不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
+  * API key 權限：`Earn`
+  * 查詢自動儲蓄設定：每個 UID 每秒 10 次請求
+  * 設定自動儲蓄設定：每個 UID 每秒 5 次請求
+
+
+
+## 查詢自動儲蓄設定
+
+查詢使用者的活期理財自動儲蓄設定及各幣種目前 APR。省略 `coins` 可回傳所有支援的幣種；最多可指定 50 個幣種。
 
 ### HTTP 請求
 
-GET`/v5/earn/hold-to-earn/product`
+GET`/v5/earn/flexible-saving/auto-savings`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+coins| false| array| 欲查詢的幣種。以重複的查詢參數傳入，例如 `coins=BTC&coins=ETH`。省略時查詢所有支援的幣種。最多 `50` 個  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-products| array| Object  
-> coinName| string| **投資幣種** 名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）  
-> yields| string| **收益幣種** 明細  
->> coinName| string| 收益幣種  
->> apy| string| 該收益幣種**昨日 APR** ，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`  
->> personalApy| string| 該收益幣種的個人 APR，含 `%` 後綴，如 `"5.285982%"`。反映用戶套用個人倍率後的實際利率  
->> multiplier| string| 個人係數，適用於基礎 APR。未持倉時返回 `"1"`  
-> status| string| 產品當前階段，`NotStarted`, `Online`, `Ended`  
-> apy| string| **昨日綜合APR** ，昨日無收益時返回 `"0%"`  
-> personalApy| string| 所有收益幣種個人 APR 之和，含 `%` 後綴，如 `"6.52459%"`  
-> announcementUrl| string| **活動規則連結** （公告頁 URL）  
+selectedAll| boolean| 是否已全域啟用自動儲蓄  
+coins| array| 支援或指定幣種的自動儲蓄設定  
+> coin| string| 幣種名稱  
+> isSelected| boolean| 是否已為此幣種啟用自動儲蓄  
+> maxStakingAmount| string| 此幣種可進行自動儲蓄的最大持倉數量  
+> apr| string| 目前 APR，以小數利率表示。例如 `0.05` 代表 5%  
   
-信息
-
-  * 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
-  * 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
-  * 結果按產品創建時間倒序排列（較新在前）。
-
-
-
 * * *
 
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/hold-to-earn/product HTTP/1.1  
+    GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1  
     Host: api.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -193,56 +207,78 @@ products| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "products": [  
+            "selectedAll": false,  
+            "coins": [  
                 {  
-                    "coinName": "USDE",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDE",  
-                            "apy": "0.210604%",  
-                            "personalApy": "0.421208%",  
-                            "multiplier": "2"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "apy": "0.210604%",  
-                    "personalApy": "0.421208%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                    "coin": "BTC",  
+                    "isSelected": true,  
+                    "maxStakingAmount": "10",  
+                    "apr": "0.05"  
                 },  
                 {  
-                    "coinName": "USDTB",  
-                    "yields": [  
-                        {  
-                            "coinName": "USDTB",  
-                            "apy": "0.029978%",  
-                            "personalApy": "0.029978%",  
-                            "multiplier": "1"  
-                        }  
-                    ],  
-                    "status": "Online",  
-                    "apy": "0.029978%",  
-                    "personalApy": "0.029978%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
-                },  
-                {  
-                    "coinName": "USD1",  
-                    "yields": [  
-                        {  
-                            "coinName": "WLFI",  
-                            "apy": "10%",  
-                            "personalApy": "10%",  
-                            "multiplier": "1"  
-                        }  
-                    ],  
-                    "status": "Ended",  
-                    "apy": "10%",  
-                    "personalApy": "10%",  
-                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                    "coin": "ETH",  
+                    "isSelected": false,  
+                    "maxStakingAmount": "100",  
+                    "apr": "0.04"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1779348459085  
+        "time": 1672211918471  
+    }  
+    
+
+## 設定自動儲蓄設定
+
+為單一幣種或所有支援的幣種啟用或停用活期理財自動儲蓄。省略 `coin` 或傳入空字串可更新全域設定。
+
+啟用時，將 `purchaseImmediately` 設為 `true` 可非同步申購資金帳戶中的可用餘額。設定為 `false` 或省略時，僅會更新設定。停用自動儲蓄時，此參數會被忽略。
+
+### HTTP 請求
+
+POST`/v5/earn/flexible-saving/auto-savings`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+coin| false| string| 要更新的幣種。省略或傳入空字串可更新全域設定  
+isSelected| **true**|  boolean| 是否啟用自動儲蓄  
+purchaseImmediately| false| boolean| 啟用時，非同步申購資金帳戶中的可用餘額。預設：`false`。停用時會被忽略  
+  
+### 響應參數
+
+無
+
+* * *
+
+### 請求示例
+    
+    
+    POST /v5/earn/flexible-saving/auto-savings HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "coin": "BTC",  
+        "isSelected": true,  
+        "purchaseImmediately": false  
+    }  
+    
+
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {},  
+        "retExtInfo": {},  
+        "time": 1672211918471  
     }

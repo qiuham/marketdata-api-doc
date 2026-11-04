@@ -2,35 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/ltv-adjust-history
 api_type: REST
-updated_at: 2026-11-03 18:36:45.144404
+updated_at: 2026-11-04 18:37:24.068162
 ---
 
-# Obtain Max Loan Amount
+# Get Collateral Adjustment History
+
+Query for your LTV adjustment history.
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-common/max-loan`
+GET`/v5/crypto-loan-common/adjustment-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| **true**|  string| Coin to borrow  
-collateralList| false| array<object>|   
-> amount| **true**|  string| Collateral amount. Only check funding account balance  
-> ccy| **true**|  string| Collateral coin. Both `amount` & `ccy` are required, when you pass "collateralList"  
+adjustId| false| string| Collateral adjustment transaction ID  
+collateralCurrency| false| string| Collateral coin name  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-currency| string| Coin to borrow  
-maxLoan| string| Based on your current collateral, and with the option to add more collateral, you can borrow up to `maxLoan`  
-notionalUsd| string| Nontional USD value  
-remainingQuota| string| The **remaining** individual platform borrowing limit (shared between main and sub accounts)  
+list| array| Object  
+> collateralCurrency| string| Collateral coin  
+> amount| string| amount  
+> adjustId| long| Collateral adjustment transaction ID  
+> adjustTime| long| Adjust timestamp  
+> preLTV| string| LTV before the adjustment  
+> afterLTV| string| LTV after the adjustment  
+> direction| integer| The direction of adjustment, `0`: add collateral; `1`: reduce collateral  
+> status| integer| The status of adjustment, `1`: success; `2`: processing; `3`: fail  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
 
@@ -41,28 +49,12 @@ remainingQuota| string| The **remaining** individual platform borrowing limit (s
 
     
     
-    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
+    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1768532512103  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 208  
-      
-    {  
-        "currency": "BTC",  
-        "collateralList": [  
-            {  
-                "ccy": "XRP",  
-                "amount": "1000"  
-            },  
-            {  
-                "ccy": "USDT",  
-                "amount": "1000"  
-            }  
-        ]  
-    }  
     
     
     
@@ -72,18 +64,9 @@ remainingQuota| string| The **remaining** individual platform borrowing limit (s
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_max_loan_amount_new_crypto_loan(  
-        currency="BTC",  
-        collateralList=[  
-            {  
-                "ccy": "XRP",  
-                "amount": "1000"  
-            },  
-            {  
-                "ccy": "USDT",  
-                "amount": "1000"  
-            }  
-        ]  
+    print(session.get_ltv_adjustment_history_new_crypto_loan(  
+        limit="2",  
+        collateralCurrency="BTC",  
     ))  
     
     
@@ -98,43 +81,70 @@ remainingQuota| string| The **remaining** individual platform borrowing limit (s
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "currency": "BTC",  
-            "maxLoan": "0.1722",  
-            "notionalUsd": "16456.06",  
-            "remainingQuota": "9999999.9421"  
+            "list": [  
+                {  
+                    "adjustId": 27511,  
+                    "adjustTime": 1752627997907,  
+                    "afterLTV": "0.813743",  
+                    "amount": "0.08",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.524602",  
+                    "status": 1  
+                },  
+                {  
+                    "adjustId": 27491,  
+                    "adjustTime": 1752218558913,  
+                    "afterLTV": "0.41983",  
+                    "amount": "0.03",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.372314",  
+                    "status": 1  
+                }  
+            ],  
+            "nextPageCursor": "27491"  
         },  
         "retExtInfo": {},  
-        "time": 1768533990031  
+        "time": 1752628288732  
     }
 
 ---
 
-# 獲取最大可借
+# 查詢質押金調整歷史
+
+查詢增減質押金的操作歷史
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-common/max-loan`
+GET`/v5/crypto-loan-common/adjustment-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| **true**|  string| 借款幣種  
-collateralList| false| array<object>|   
-> amount| **true**|  string| 抵押品金額. 僅檢查資金錢包可用  
-> ccy| **true**|  string| 抵押品幣種. 當要傳入"collateralList"時, `amount` & `ccy`兩個參數必填  
+adjustId| false| string| 質押金調整操作ID  
+collateralCurrency| false| string| 質押幣種  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-currency| string| 借款幣種  
-maxLoan| string| 根據已抵押數額, 以及入參時是否新增抵押, 計算出最多可借金額  
-notionalUsd| string| 美元價值  
-remainingQuota| string| 該帳戶(母子帳戶共享)在平台上**剩餘** 可借額度  
+list| array| Object  
+> collateralCurrency| string| 抵押幣種  
+> amount| string| 金額  
+> adjustId| long| 抵押調整交易 ID  
+> adjustTime| long| 調整時間戳  
+> preLTV| string| 調整前質押率（LTV）  
+> afterLTV| string| 調整後質押率（LTV）  
+> direction| integer| 調整方向，`0`: 增加抵押；`1`: 減少抵押  
+> status| integer| 調整狀態，`1`: 成功；`2`: 處理中；`3`: 失敗  
+nextPageCursor| string| 下一頁游標  
   
 ### 請求示例
 
@@ -145,32 +155,25 @@ remainingQuota| string| 該帳戶(母子帳戶共享)在平台上**剩餘** 可�
 
     
     
-    POST /v5/crypto-loan-common/max-loan HTTP/1.1  
+    GET /v5/crypto-loan-common/adjustment-history?limit=2&collateralCurrency=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1768532512103  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 208  
-      
-    {  
-        "currency": "BTC",  
-        "collateralList": [  
-            {  
-                "ccy": "XRP",  
-                "amount": "1000"  
-            },  
-            {  
-                "ccy": "USDT",  
-                "amount": "1000"  
-            }  
-        ]  
-    }  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_ltv_adjustment_history_new_crypto_loan(  
+        limit="2",  
+        collateralCurrency="BTC",  
+    ))  
     
     
     
@@ -184,11 +187,30 @@ remainingQuota| string| 該帳戶(母子帳戶共享)在平台上**剩餘** 可�
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "currency": "BTC",  
-            "maxLoan": "0.1722",  
-            "notionalUsd": "16456.06",  
-            "remainingQuota": "9999999.9421"  
+            "list": [  
+                {  
+                    "adjustId": 27511,  
+                    "adjustTime": 1752627997907,  
+                    "afterLTV": "0.813743",  
+                    "amount": "0.08",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.524602",  
+                    "status": 1  
+                },  
+                {  
+                    "adjustId": 27491,  
+                    "adjustTime": 1752218558913,  
+                    "afterLTV": "0.41983",  
+                    "amount": "0.03",  
+                    "collateralCurrency": "BTC",  
+                    "direction": 1,  
+                    "preLTV": "0.372314",  
+                    "status": 1  
+                }  
+            ],  
+            "nextPageCursor": "27491"  
         },  
         "retExtInfo": {},  
-        "time": 1768533990031  
+        "time": 1752628288732  
     }

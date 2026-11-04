@@ -2,37 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/transaction-log
 api_type: REST
-updated_at: 2026-11-03 18:37:40.059958
+updated_at: 2026-11-04 18:38:17.490236
 ---
 
-# Get Rate Limit Cap
+# Get All Rate Limits
 
 > API rate limit: 50 req per second
 
 info
 
-  * Get your institutions's total rate limit usage and cap, across the board.
-  * Main UIDs or sub UIDs can query this endpoint, but a main UID can only see the rate limits of subs below it, and not the subs of other main UIDs.
+  * Query for all your UID-level rate limits, including all master accounts and subaccounts.
 
 
 
 ### HTTP Request
 
-GET`/v5/apilimit/query-cap`
+GET`/v5/apilimit/query-all`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+limit| false| string| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+uids| false| string| Multiple UIDs across different master accounts, separated by commas. Returns all master accounts and subaccounts by default  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+nextPageCursor| string| Refer to the `cursor` request parameter  
 list| array| Object  
+> uids| string| Multiple UIDs separated by commas  
 > [bizType](/docs/v5/enum#biztype)| string| Business type  
-> totalRate| integer| Total API rate limit usage accross all subaccounts and master account  
-> insCap| integer| Institutional-level API rate limit per second (depends on your pro level)  
-> uidCap| integer| UID-level API rate limit per second  
+> rate| integer| API Rate limit per second  
   
 ### Request Example
 
@@ -43,7 +46,7 @@ list| array| Object
 
     
     
-    GET /v5/apilimit/query-cap HTTP/1.1  
+    GET /v5/apilimit/query-all HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -60,7 +63,7 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_api_rate_limit_cap())  
+    print(session.get_all_api_rate_limits())  
     
     
     
@@ -76,68 +79,69 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "insCap": "30000",  
-                    "uidCap": "600",  
-                    "totalRate": "29882",  
-                    "bizType": "SPOT"  
+                    "uids": "104270393,1674166,1190923,101446030",  
+                    "bizType": "SPOT",  
+                    "rate": 223  
                 },  
                 {  
-                    "insCap": "30000",  
-                    "uidCap": "600",  
-                    "totalRate": "29882",  
-                    "bizType": "OPTIONS"  
+                    "uids": "104074050,104394193,104126066",  
+                    "bizType": "OPTIONS",  
+                    "rate": 223  
                 },  
                 {  
-                    "insCap": "40000",  
-                    "uidCap": "800",  
-                    "totalRate": "39932",  
-                    "bizType": "DERIVATIVES"  
+                    "uids": "104154966,103803484,103995540,100445068",  
+                    "bizType": "DERIVATIVES",  
+                    "rate": 298  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1758857589872  
+        "time": 1758857701702  
     }
 
 ---
 
-# 查詢 Ins level的限頻上限和使用量
+# 查詢所有 API 限頻
 
-### 查詢 Ins level的限頻上限和使用量
+### 查詢所有 API 限頻
 
-> API 限頻：每秒 50 次請求  
+> API 限頻 50 次請求  
 > 
 
 信息
 
-  * 查詢 Ins 等級的限頻上限和使用量
-  * 僅允許透過main UID或來自sub-INS的子帳戶 UID 的API key進行查詢
-  * 目前已刪除的子帳戶仍會占用限頻額度，我們正在優化中。
+  * 查詢所有 UID 等級的限頻，包括主帳戶及所有子帳戶。
+  * 僅允許透過main UID或來自sub-INS API key的子帳戶 UID 進行查詢
 
 
 
 ### HTTP 請求
 
-GET`/v5/apilimit/query-cap`
+GET`/v5/apilimit/query-all`
 
 ### 請求參數
 
-無
-
+參數| 必填| 類型| 說明  
+---|---|---|---  
+limit| false| string| 每頁資料大小限制。[`1`, `1000`]。預設值：`1000`  
+cursor| false| string| 游標。使用回應中的 `nextPageCursor` 令牌以取得下一頁結果集  
+uids| false| string| 跨主帳戶的多個 UID，以逗號分隔。預設返回所有主帳戶及子帳戶的限頻  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+nextPageCursor| string| 用於取得下一頁資料  
 list| array| Object  
+> uids| string| 多個 UID，以逗號分隔。  
 > [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> totalRate| integer| 所有子帳號與主帳號的 API 限頻總使用量  
-> insCap| integer| 基於 Ins 等級的每秒 API 限頻  
-> uidCap| integer| 基於 UID 等級的每秒 API 限頻  
+> rate| integer| 每秒 API 限頻  
   
 ### 請求範例
     
     
-    GET /v5/apilimit/query-cap HTTP/1.1  
+    GET /v5/apilimit/query-all HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -156,25 +160,23 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "insCap": "30000",  
-                    "uidCap": "600",  
-                    "totalRate": "29882",  
-                    "bizType": "SPOT"  
+                    "uids": "104270393,1674166,1190923,101446030",  
+                    "bizType": "SPOT",  
+                    "rate": 223  
                 },  
                 {  
-                    "insCap": "30000",  
-                    "uidCap": "600",  
-                    "totalRate": "29882",  
-                    "bizType": "OPTIONS"  
+                    "uids": "104074050,104394193,104126066",  
+                    "bizType": "OPTIONS",  
+                    "rate": 223  
                 },  
                 {  
-                    "insCap": "40000",  
-                    "uidCap": "800",  
-                    "totalRate": "39932",  
-                    "bizType": "DERIVATIVES"  
+                    "uids": "104154966,103803484,103995540,100445068",  
+                    "bizType": "DERIVATIVES",  
+                    "rate": 298  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1758857589872  
+        "time": 1758857701702  
     }

@@ -2,35 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/crypto-loan-position
 api_type: REST
-updated_at: 2026-11-03 18:36:14.055269
+updated_at: 2026-11-04 18:36:53.195534
 ---
 
-# Get Available Inventory
+# Get Crypto Loan Position
 
 > Permission: "Spot trade"  
 >  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-GET`/v5/crypto-loan-fixed/available-inventory`
+GET`/v5/crypto-loan-common/position`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| **true**|  string| Coin name, uppercase only  
-term| **true**|  string| Fixed term `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-currency| string| Coin name  
-term| string| Loan term  
-annualRate| string| Annual borrow rate  
-availableInventory| string| Available inventory of the lending pool  
-updateTime| string| Update timestamp  
+borrowList| array| Object  
+> fixedTotalDebt| string| Total debt of fixed loan (coin)  
+> fixedTotalDebtUSD| string| Total debt of fixed loan (USD)  
+> flexibleHourlyInterestRate| string| Flebible loan hourly interest rate  
+> flexibleTotalDebt| string| Total debt of flexible loan (coin)  
+> flexibleTotalDebtUSD| string| Total debt of flexible loan (USD)  
+> loanCurrency| string| Loan coin  
+collateralList| array| Object  
+> amount| string| Collateral amount in coin  
+> amountUSD| string| Collateral amount in USD (after tierd collateral ratio calculation)  
+> currency| string| Collateral coin  
+ltv| string| LTV  
+supplyList| array| Object  
+> amount| string| Supply amount in coin  
+> amountUSD| string| Supply amount in USD  
+> currency| string| Supply coin  
+totalCollateral| string| Total collateral amount (USD)  
+totalDebt| string| Total debt (fixed + flexible, in USD)  
+totalSupply| string| Total supply amount (USD)  
+colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
   
 ### Request Example
 
@@ -41,11 +52,11 @@ updateTime| string| Update timestamp
 
     
     
-    GET /v5/crypto-loan-fixed/available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -56,11 +67,7 @@ updateTime| string| Update timestamp
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_available_inventory_fixed_crypto_loan(  
-        currency="USDT",  
-        term="7",  
-        annualRate="0.02",  
-    ))  
+    print(session.get_position_new_crypto_loan())  
     
     
     
@@ -72,46 +79,104 @@ updateTime| string| Update timestamp
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "currency": "USDT",  
-            "term": "7",  
-            "annualRate": "0.02",  
-            "availableInventory": "50000000",  
-            "updateTime": "1699272487"  
+            "borrowList": [  
+                {  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
+                },  
+                {  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
+                }  
+            ],  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1678886400000  
+        "time": 1752627962000  
     }
 
 ---
 
-# 查詢定期可借存量
+# 查詢質押借幣持倉
 
 > 權限: "現貨"  
 >  頻率: 5次/秒
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan-fixed/available-inventory`
+GET`/v5/crypto-loan-common/position`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| **true**|  string| 幣種名稱，僅限大寫  
-term| **true**|  string| 固定期限 `7`: 7 天；`14`: 14 天；`30`: 30 天；`90`: 90 天；`180`: 180 天  
-annualRate| **true**|  string| 可自訂年利率，例如 `0.02` 表示 2%  
-  
+None
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-currency| string| 幣種名稱  
-term| string| 借款期限  
-annualRate| string| 借款年利率  
-availableInventory| string| 借貸池可用存量  
-updateTime| string| 更新時間戳  
+borrowList| array| Object  
+> fixedTotalDebt| string| 定期借款總負債（幣）  
+> fixedTotalDebtUSD| string| 定期借款總負債（美元）  
+> flexibleHourlyInterestRate| string| 活期借款每小時利率  
+> flexibleTotalDebt| string| 活期借款總負債（幣）  
+> flexibleTotalDebtUSD| string| 活期借款總負債（美元）  
+> loanCurrency| string| 借款幣種  
+collateralList| array| Object  
+> amount| string| 抵押金額（幣）  
+> amountUSD| string| 抵押金額（USD，經分層抵押率計算後）  
+> currency| string| 抵押幣種  
+ltv| string| 質押率（LTV）  
+supplyList| array| Object  
+> amount| string| 出借金額（幣）  
+> amountUSD| string| 出借金額（USD）  
+> currency| string| 出借幣種  
+totalCollateral| string| 抵押總金額（USD）  
+totalDebt| string| 總負債金額（定期 + 活期，USD）  
+totalSupply| string| 出借總金額（USD）  
+colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
   
 ### 請求示例
 
@@ -122,11 +187,11 @@ updateTime| string| 更新時間戳
 
     
     
-    GET /v5/crypto-loan-fixed/available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
+    GET /v5/crypto-loan-common/position HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: XXXXXX  
+    X-BAPI-TIMESTAMP: 1752628288472  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -137,11 +202,7 @@ updateTime| string| 更新時間戳
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_available_inventory_fixed_crypto_loan(  
-        currency="USDT",  
-        term="7",  
-        annualRate="0.02",  
-    ))  
+    print(session.get_position_new_crypto_loan())  
     
     
     
@@ -153,14 +214,61 @@ updateTime| string| 更新時間戳
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "currency": "USDT",  
-            "term": "7",  
-            "annualRate": "0.02",  
-            "availableInventory": "50000000",  
-            "updateTime": "1699272487"  
+            "borrowList": [  
+                {  
+                    "fixedTotalDebt": "0",  
+                    "fixedTotalDebtUSD": "0",  
+                    "flexibleHourlyInterestRate": "0.0000001361462",  
+                    "flexibleTotalDebt": "0.08800022",  
+                    "flexibleTotalDebtUSD": "9355.37",  
+                    "loanCurrency": "BTC"  
+                },  
+                {  
+                    "fixedTotalDebt": "0.1",  
+                    "fixedTotalDebtUSD": "282.8",  
+                    "flexibleHourlyInterestRate": "0.00000188498892",  
+                    "flexibleTotalDebt": "0",  
+                    "flexibleTotalDebtUSD": "0",  
+                    "loanCurrency": "ETH"  
+                }  
+            ],  
+            "collateralList": [  
+                {  
+                    "amount": "0.12",  
+                    "amountUSD": "9930.11",  
+                    "currency": "BTC"  
+                },  
+                {  
+                    "amount": "2",  
+                    "amountUSD": "4524.81",  
+                    "currency": "ETH"  
+                },  
+                {  
+                    "amount": "4002.12",  
+                    "amountUSD": "3201.69",  
+                    "currency": "USDT"  
+                },  
+                {  
+                    "amount": "1000",  
+                    "amountUSD": "724.8",  
+                    "currency": "USDC"  
+                }  
+            ],  
+            "ltv": "0.524344",  
+            "supplyList": [  
+                {  
+                    "amount": "800.13041095890410959",  
+                    "amountUSD": "800.13",  
+                    "currency": "USDT"  
+                }  
+            ],  
+            "totalCollateral": "18381.41",  
+            "totalDebt": "9638.17",  
+            "totalSupply": "800.13",  
+            "colRes": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1678886400000  
+        "time": 1752627962000  
     }

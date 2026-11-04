@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-introduction-basic-concepts
 anchor_id: spread-trading-introduction-basic-concepts
 api_type: API
-updated_at: 2026-11-03 19:08:15.982132
+updated_at: 2026-11-04 19:08:26.994434
 ---
 
 # Basic Concepts

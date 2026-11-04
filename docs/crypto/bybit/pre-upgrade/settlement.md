@@ -2,63 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/settlement
 api_type: REST
-updated_at: 2026-11-03 18:37:36.299183
+updated_at: 2026-11-04 18:38:16.868418
 ---
 
-# Get Pre-upgrade USDC Session Settlement
+# Get All Rate Limits
 
-Query session settlement records of USDC perpetual before you upgrade the account to Unified account.
+> API rate limit: 50 req per second
 
 info
 
-  * By category="option", you can query USDC Perps settlement data occurred during classic account
-  * USDC Perpeual support the recent 6 months data. Please download older data via GUI
+  * Query for all your UID-level rate limits, including all master accounts and subaccounts.
 
 
 
 ### HTTP Request
 
-GET`/v5/pre-upgrade/asset/settlement-record`
+GET`/v5/apilimit/query-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Used for pagination  
+limit| false| string| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+uids| false| string| Multiple UIDs across different master accounts, separated by commas. Returns all master accounts and subaccounts by default  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
+nextPageCursor| string| Refer to the `cursor` request parameter  
 list| array| Object  
-> symbol| string| Symbol name  
-> side| string| `Buy`,`Sell`  
-> size| string| Position size  
-> sessionAvgPrice| string| Settlement price  
-> markPrice| string| Mark price  
-> realisedPnl| string| Realised PnL  
-> createdTime| string| Created time (ms)  
-nextPageCursor| string| Cursor. Used for pagination  
+> uids| string| Multiple UIDs separated by commas  
+> [bizType](/docs/v5/enum#biztype)| string| Business type  
+> rate| integer| API Rate limit per second  
   
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    GET /v5/pre-upgrade/asset/settlement-record?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/apilimit/query-all HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686809850982  
+    X-BAPI-TIMESTAMP: 1728460942776  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 2  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_all_api_rate_limits())  
     
     
     
@@ -70,109 +75,108 @@ nextPageCursor| string| Cursor. Used for pagination
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "25%3A0%2C25%3A0",  
-            "category": "linear",  
             "list": [  
                 {  
-                    "realisedPnl": "45.76",  
-                    "symbol": "ETHPERP",  
-                    "side": "Sell",  
-                    "markPrice": "1668.44",  
-                    "size": "-0.5",  
-                    "createdTime": "1686787200000",  
-                    "sessionAvgPrice": "1668.41"  
+                    "uids": "104270393,1674166,1190923,101446030",  
+                    "bizType": "SPOT",  
+                    "rate": 223  
+                },  
+                {  
+                    "uids": "104074050,104394193,104126066",  
+                    "bizType": "OPTIONS",  
+                    "rate": 223  
+                },  
+                {  
+                    "uids": "104154966,103803484,103995540,100445068",  
+                    "bizType": "DERIVATIVES",  
+                    "rate": 298  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1686809851749  
+        "time": 1758857701702  
     }
 
 ---
 
-# 查詢升級前USDC結算紀錄
+# 查詢所有 API 限頻
 
-查詢升級到統一帳戶之前發生的USDC永續的結算紀錄
+### 查詢所有 API 限頻
+
+> API 限頻 50 次請求  
+> 
 
 信息
 
-  * 僅支持查詢最近6個月的數據, 對於更老的數據, 請前往網頁端下載
-  * 通過category=linear, 查詢到在經典帳戶期間產生的USDC永續結算數據
+  * 查詢所有 UID 等級的限頻，包括主帳戶及所有子帳戶。
+  * 僅允許透過main UID或來自sub-INS API key的子帳戶 UID 進行查詢
 
 
 
 ### HTTP 請求
 
-GET`/v5/pre-upgrade/asset/settlement-record`
+GET`/v5/apilimit/query-all`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 必填| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`  
-symbol| false| string| 合約名稱  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
+limit| false| string| 每頁資料大小限制。[`1`, `1000`]。預設值：`1000`  
+cursor| false| string| 游標。使用回應中的 `nextPageCursor` 令牌以取得下一頁結果集  
+uids| false| string| 跨主帳戶的多個 UID，以逗號分隔。預設返回所有主帳戶及子帳戶的限頻  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
+nextPageCursor| string| 用於取得下一頁資料  
 list| array| Object  
-> symbol| string| 合約名稱  
-> side| string| `Buy`,`Sell`  
-> size| string| 倉位大小  
-> sessionAvgPrice| string| 結算價格  
-> markPrice| string| 標記價格  
-> realisedPnl| string| 已實現盈虧  
-> createdTime| string| 結算時間 (毫秒)  
-nextPageCursor| string| 游標，用於翻頁  
+> uids| string| 多個 UID，以逗號分隔。  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
+> rate| integer| 每秒 API 限頻  
   
-### 請求示例
-
-  * HTTP
-  * Python
-
-
+### 請求範例
     
     
-    GET /v5/pre-upgrade/asset/settlement-record?category=linear&symbol=ETHPERP&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    GET /v5/apilimit/query-all HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686809850982  
+    X-BAPI-TIMESTAMP: 1728460942776  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    
-    
-    
-      
+    Content-Length: 2  
     
 
-### 響應示例
+### 響應範例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "25%3A0%2C25%3A0",  
-            "category": "linear",  
             "list": [  
                 {  
-                    "realisedPnl": "45.76",  
-                    "symbol": "ETHPERP",  
-                    "side": "Sell",  
-                    "markPrice": "1668.44",  
-                    "size": "-0.5",  
-                    "createdTime": "1686787200000",  
-                    "sessionAvgPrice": "1668.41"  
+                    "uids": "104270393,1674166,1190923,101446030",  
+                    "bizType": "SPOT",  
+                    "rate": 223  
+                },  
+                {  
+                    "uids": "104074050,104394193,104126066",  
+                    "bizType": "OPTIONS",  
+                    "rate": 223  
+                },  
+                {  
+                    "uids": "104154966,103803484,103995540,100445068",  
+                    "bizType": "DERIVATIVES",  
+                    "rate": 298  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1686809851749  
+        "time": 1758857701702  
     }

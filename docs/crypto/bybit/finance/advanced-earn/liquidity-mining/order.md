@@ -2,15 +2,16 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/order
 api_type: REST
-updated_at: 2026-11-03 18:34:01.331246
+updated_at: 2026-11-04 18:34:41.699084
 ---
 
-# Remove Liquidity
+# Reinvest
 
 info
 
   * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
-  * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been completed. Use [Get Order Info](/docs/v5/finance/advanced-earn/liquidity-mining/order) to track order status.
+  * Reinvests the claimable yield of the specified position back into the pool.
+  * Orders are processed asynchronously. A successful response means the order was accepted. Use [Get Order Info](/docs/v5/finance/advanced-earn/liquidity-mining/order) to track order status.
   * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
   * Only one pending order is allowed per position at a time.
 
@@ -18,7 +19,7 @@ info
 
 ### HTTP Request
 
-POST`/v5/earn/liquidity-mining/remove-liquidity`
+POST`/v5/earn/liquidity-mining/reinvest`
 
 ### Request Parameters
 
@@ -26,9 +27,8 @@ Parameter| Required| Type| Comments
 ---|---|---|---  
 productId| **true**|  string| Product ID  
 orderLinkId| **true**|  string| User-customised order ID (max 40 characters)  
-positionId| **true**|  string| Position ID to remove liquidity from. Obtain from [Get Position Info](/docs/v5/finance/advanced-earn/liquidity-mining/position)  
-removeRate| false| integer| Withdrawal percentage (integer, 1–100). Defaults to `100` (full withdrawal) if not provided or set to `0`  
-removeType| false| string| Withdrawal mode: `Normal` (default, returns both coins proportionally), `SingleQuoteCoin` (returns quoteCoin only), `SingleBaseCoin` (returns baseCoin only)  
+positionId| **true**|  string| Position ID to reinvest. Obtain from [Get Position Info](/docs/v5/finance/advanced-earn/liquidity-mining/position)  
+leverage| false| string| Leverage multiplier (integer only); defaults to `"1"` (no leverage)  
   
 ### Response Parameters
 
@@ -42,7 +42,7 @@ orderLinkId| string| User-customised order ID
 ### Request Example
     
     
-    POST /v5/earn/liquidity-mining/remove-liquidity HTTP/1.1  
+    POST /v5/earn/liquidity-mining/reinvest HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -51,11 +51,9 @@ orderLinkId| string| User-customised order ID
     Content-Type: application/json  
       
     {  
-        "productId": "1001",  
-        "orderLinkId": "lm-remove-001-20260312",  
-        "positionId": "5001",  
-        "removeRate": 50,  
-        "removeType": "Normal"  
+        "productId": "5",  
+        "orderLinkId": "lm-reinvest-01",  
+        "positionId": "1498"  
     }  
     
 
@@ -66,8 +64,8 @@ orderLinkId| string| User-customised order ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",  
-            "orderLinkId": "lm-remove-001-20260312"  
+            "orderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",  
+            "orderLinkId": "lm-reinvest-01"  
         },  
         "retExtInfo": {},  
         "time": 1741651200000  
@@ -75,12 +73,13 @@ orderLinkId| string| User-customised order ID
 
 ---
 
-# 移除流動性
+# 複利再投
 
 信息
 
   * 需要身份驗證。每個 UID 每秒**最多 5 次請求** 。API 金鑰需要具備 Earn（理財）權限。
-  * 訂單為非同步處理。成功響應表示訂單已被接受，而非已完成。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/order)追蹤訂單狀態。
+  * 將指定持倉的可領取收益再投入流動性池。
+  * 訂單為非同步處理。成功響應表示訂單已被接受。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/order)追蹤訂單狀態。
   * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
   * 每個持倉同一時間只允許存在一筆待處理訂單。
 
@@ -88,7 +87,7 @@ orderLinkId| string| User-customised order ID
 
 ### HTTP 請求
 
-POST`/v5/earn/liquidity-mining/remove-liquidity`
+POST`/v5/earn/liquidity-mining/reinvest`
 
 ### 請求參數
 
@@ -96,9 +95,8 @@ POST`/v5/earn/liquidity-mining/remove-liquidity`
 ---|---|---|---  
 productId| **true**|  string| 產品 ID  
 orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 40 個字元）  
-positionId| **true**|  string| 要移除流動性的持倉 ID。可從[查詢持倉資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/position)獲取  
-removeRate| false| integer| 提取百分比（整數，1–100）。不提供或設為 `0` 時預設為 `100`（全額提取）  
-removeType| false| string| 提取模式：`Normal`（預設，按比例返還兩種幣種）、`SingleQuoteCoin`（僅返還計價幣種）、`SingleBaseCoin`（僅返還基礎幣種）  
+positionId| **true**|  string| 要執行再投資的持倉 ID。可從[查詢持倉資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/position)獲取  
+leverage| false| string| 槓桿倍數（僅限整數）；默認為 `"1"`（不使用槓桿）  
   
 ### 響應參數
 
@@ -112,7 +110,7 @@ orderLinkId| string| 用戶自定義訂單 ID
 ### 請求示例
     
     
-    POST /v5/earn/liquidity-mining/remove-liquidity HTTP/1.1  
+    POST /v5/earn/liquidity-mining/reinvest HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -121,11 +119,9 @@ orderLinkId| string| 用戶自定義訂單 ID
     Content-Type: application/json  
       
     {  
-        "productId": "1001",  
-        "orderLinkId": "lm-remove-001-20260312",  
-        "positionId": "5001",  
-        "removeRate": 50,  
-        "removeType": "Normal"  
+        "productId": "5",  
+        "orderLinkId": "lm-reinvest-01",  
+        "positionId": "1498"  
     }  
     
 
@@ -136,8 +132,8 @@ orderLinkId| string| 用戶自定義訂單 ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",  
-            "orderLinkId": "lm-remove-001-20260312"  
+            "orderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",  
+            "orderLinkId": "lm-reinvest-01"  
         },  
         "retExtInfo": {},  
         "time": 1741651200000  

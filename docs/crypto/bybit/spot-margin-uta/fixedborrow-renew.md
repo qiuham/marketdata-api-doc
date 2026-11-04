@@ -2,27 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-renew
 api_type: REST
-updated_at: 2026-11-03 18:38:39.716577
+updated_at: 2026-11-04 18:39:22.775677
 ---
 
-# Renew Fixed-Rate Borrow
+# Get Liability Info
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/fixedborrow-renew`
+GET`/v5/spot-margin-trade/liability`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanId| **true**|  string| Loan ID  
-qty| false| string| Renewal quantity. If not specified, the entire remaining amount will be renewed; if specified, the renewal will be based on the entered quantity  
+currency| **true**|  string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| string| `Success` / `Failure`  
+currency| string| Coin name, uppercase only  
+totalBorrowAmount| string| Total liability = borrowSize  
+fixedBorrowAmount| string| Fixed-rate liability  
+flexibleBorrowAmount| string| Floating-rate liability = borrowSize - fixedBorrowAmount  
+spotTotalBorrow| string| Spot liability + open order liability  
+derivativesBorrow| string| Derivatives liability = borrowSize - spotBorrow - reservation  
   
 * * *
 
@@ -35,17 +39,12 @@ result| string| `Success` / `Failure`
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow-renew HTTP/1.1  
+    GET /v5/spot-margin-trade/liability?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "loanId": "2092341042506646784"  
-    }  
     
     
     
@@ -55,8 +54,8 @@ result| string| `Success` / `Failure`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_fixed_borrow_renew(  
-        loanId="2092341042506646784"  
+    print(session.spot_margin_trade_get_liability(  
+        currency="BTC"  
     ))  
     
     
@@ -69,32 +68,43 @@ result| string| `Success` / `Failure`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": "Success",  
+        "retMsg": "Success",  
+        "result": {  
+            "currency": "BTC",  
+            "totalBorrowAmount": "0.05000000",  
+            "fixedBorrowAmount": "0.02000000",  
+            "flexibleBorrowAmount": "0.03000000",  
+            "spotTotalBorrow": "0.04000000",  
+            "derivativesBorrow": "0.01000000"  
+        },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1756273388821  
     }
 
 ---
 
-# 固定利率借款續借
+# 查詢負債信息
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/fixedborrow-renew`
+GET`/v5/spot-margin-trade/liability`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanId| **true**|  string| 借款合約 ID  
-qty| false| string| 續借數量。未輸入則將剩餘全部金額續借；輸入則按輸入的數量續借  
+currency| **true**|  string| 幣名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| string| `Success`：成功 / `Failure`：失敗  
+currency| string| 幣名稱，僅限大寫  
+totalBorrowAmount| string| 總負債 = borrowSize  
+fixedBorrowAmount| string| 固定利率負債  
+flexibleBorrowAmount| string| 活期利率負債 = borrowSize - fixedBorrowAmount  
+spotTotalBorrow| string| 現貨負債 + 掛單負債  
+derivativesBorrow| string| 衍生品負債 = borrowSize - spotBorrow - reservation  
   
 * * *
 
@@ -107,17 +117,12 @@ result| string| `Success`：成功 / `Failure`：失敗
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow-renew HTTP/1.1  
+    GET /v5/spot-margin-trade/liability?currency=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1692696840996  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "loanId": "2092341042506646784"  
-    }  
     
     
     
@@ -133,8 +138,15 @@ result| string| `Success`：成功 / `Failure`：失敗
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": "Success",  
+        "retMsg": "Success",  
+        "result": {  
+            "currency": "BTC",  
+            "totalBorrowAmount": "0.05000000",  
+            "fixedBorrowAmount": "0.02000000",  
+            "flexibleBorrowAmount": "0.03000000",  
+            "spotTotalBorrow": "0.04000000",  
+            "derivativesBorrow": "0.01000000"  
+        },  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1756273388821  
     }

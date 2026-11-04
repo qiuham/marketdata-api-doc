@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-reset-the-api-key-of-a-sub-account
 anchor_id: sub-account-rest-api-reset-the-api-key-of-a-sub-account
 api_type: REST
-updated_at: 2026-11-03 19:09:06.183669
+updated_at: 2026-11-04 19:09:17.210864
 ---
 
 # Reset the API Key of a sub-account
@@ -77,7 +77,7 @@ If `ip` is set to "", then no IP addresses is linked to the APIKey.
             "subAcct": "yongxu",
             "label": "v5",
             "apiKey": "******",
-            "perm": "read,trade",
+            "perm": "read_only,trade",
             "ip": "1.1.1.1",
             "ts": "1597026383085"
         }]
@@ -170,7 +170,7 @@ ip | String | 否 | 子账户APIKey绑定ip地址，多个ip用半角逗号隔�
             "subAcct": "yongxu",
             "label": "v5",
             "apiKey": "******",
-            "perm": "read,trade",
+            "perm": "read_only,trade",
             "ip": "1.1.1.1",
             "ts": "1597026383085"
         }]

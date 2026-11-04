@@ -2,39 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/orderbook
 api_type: Market Data
-updated_at: 2026-11-03 18:38:58.342424
+updated_at: 2026-11-04 18:39:40.801373
 ---
 
-# Get Orderbook
+# Cancel All Orders
 
-Query spread orderbook depth data.
+Cancel all open orders
 
 ### HTTP Request
 
-GET`/v5/spread/orderbook`
+POST`/v5/spread/order/cancel-all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Spread combination symbol name  
-limit| false| integer| Limit size for each bid and ask [`1`, `25`]. Default: `1`  
+symbol| false| string| Spread combination symbol name 
+
+  * When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.
+  * When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled
+
   
+cancelAll| false| boolean| `true`, `false`  
+  
+info
+
+The acknowledgement of cancel all orders request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-s| string| Spread combination symbol name  
-b| array| Bid, buyer. Sorted by price in descending order  
-> b[0]| string| Bid price  
-> b[1]| string| Bid size  
-a| array| Ask, seller. Sorted by price in ascending order  
-> a[0]| string| Ask price  
-> a[1]| string| Ask size  
-ts| integer| The timestamp (ms) that the system generates the data  
-u| integer| Update ID. Is always in sequence. Corresponds to `u` in the 25-level [WebSocket orderbook stream](https://bybit-exchange.github.io/docs/v5/spread/websocket/public/orderbook)  
-seq| integer| Cross sequence  
-cts| integer| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/spread/websocket/public/trade)  
+list| array<object>|   
+> orderId| string| Order ID  
+> orderLinkId| string| User customised order ID  
+success| string| The field can be ignored  
   
 ### Request Example
 
@@ -44,8 +46,19 @@ cts| integer| The timestamp from the matching engine when this orderbook data is
 
     
     
-    GET /v5/spread/orderbook?symbol=SOLUSDT_SOL/USDT&limit=1 HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 49  
+      
+    {  
+        "symbol": null,  
+        "cancelAll": true  
+    }  
     
     
     
@@ -55,9 +68,8 @@ cts| integer| The timestamp from the matching engine when this orderbook data is
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_orderbook(  
-        symbol="SOLUSDT_SOL/USDT",  
-        limit=1  
+    print(session.spread_cancel_all_orders(  
+        cancelAll=True  
     ))  
     
 
@@ -66,66 +78,70 @@ cts| integer| The timestamp from the matching engine when this orderbook data is
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [  
-                [  
-                    "21.0000",  
-                    "0.1"  
-                ]  
+            "list": [  
+                {  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
+                }  
             ],  
-            "a": [  
-                [  
-                    "23.0107",  
-                    "4.6"  
-                ]  
-            ],  
-            "u": 46977,  
-            "ts": 1744077242177,  
-            "seq": 213110,  
-            "cts": 1744076329043  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744077243583  
+        "time": 1744090940933  
     }
 
 ---
 
-# 查詢深度
+# 價差-全部撤單
 
 ### HTTP請求
 
-GET`/v5/spread/orderbook`
+POST`/v5/spread/order/cancel-all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 價差產品名稱  
-limit| false| integer| 深度限制 [`1`, `25`]. 默認: `1`  
+symbol| false| string| 價差產品名稱 
+
+  * 當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.
+  * 當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消
+
   
+cancelAll| false| boolean| `true`, `false`  
+  
+信息
+
+ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-s| string| 價差產品名稱  
-b| array| Bid, 買方. 按照價格從大到小  
-> b[0]| string| 買方報價  
-> b[1]| string| 買方數量  
-a| array| Ask, 賣方. 按照價格從小到大  
-> a[0]| string| 賣方報價  
-> a[1]| string| 賣方數量  
-ts| integer| 行情服務生成數據時間戳（毫秒）  
-u| integer| 表示數據連續性的id, 它和wss推送裡的25檔的`u`對齊  
-seq| integer| 撮合版本號  
-cts| integer| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與平台成交頻道中的T進行關聯  
+list| array<object>|   
+> orderId| string| 價差訂單ID  
+> orderLinkId| string| 用戶自定義訂單ID  
+success| string| 該字段可以忽略, 無實際意義  
   
 ### 請求示例
     
     
-    GET /v5/spread/orderbook?symbol=SOLUSDT_SOL/USDT&limit=1 HTTP/1.1  
+    POST /v5/spread/order/cancel-all HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1744090967121  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 49  
+      
+    {  
+         
+        "symbol": null,  
+        "cancelAll": true  
+    }  
     
 
 ### 響應示例
@@ -133,26 +149,16 @@ cts| integer| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用�
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "s": "SOLUSDT_SOL/USDT",  
-            "b": [  
-                [  
-                    "21.0000",  
-                    "0.1"  
-                ]  
+            "list": [  
+                {  
+                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
+                    "orderLinkId": ""  
+                }  
             ],  
-            "a": [  
-                [  
-                    "23.0107",  
-                    "4.6"  
-                ]  
-            ],  
-            "u": 46977,  
-            "ts": 1744077242177,  
-            "seq": 213110,  
-            "cts": 1744076329043  
+            "success": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1744077243583  
+        "time": 1744090940933  
     }

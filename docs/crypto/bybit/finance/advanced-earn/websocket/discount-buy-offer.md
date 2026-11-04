@@ -2,10 +2,10 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/discount-buy-offer
 api_type: WebSocket
-updated_at: 2026-11-03 18:34:14.959631
+updated_at: 2026-11-04 18:34:54.938199
 ---
 
-# Dual Asset Offers
+# Double Win Offers
 
 ### WebSocket public URL
 
@@ -20,211 +20,137 @@ Earn: `wss://stream-testnet.bybit.com/v5/public/fp`
 
 
 
-### Desc
+info
 
-  * Subscribe to the `earn.dualassets.offers` topic to receive real-time quote updates for all online Dual Assets products.
-
-  * Push scope: **Full snapshot of all online product quotes**
-
-  * Recommended usage pattern:
-
-    1. Call [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) to get initial quotes
-    2. Subscribe to the WebSocket topic for real-time updates
-    3. Use the latest selectPrice + apyE8 from WebSocket when placing orders
-    4. If WebSocket disconnects, fallback to the REST endpoint 
+  * Subscribing to this topic does not require authentication.
+  * This topic pushes **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Custom Product Quote](/docs/v5/finance/advanced-earn/double-win/leverage) to obtain a quote on demand.
+  * **Recommended usage** : call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) to refresh before re-subscribing.
 
 
 
-### Topic: `earn.dualassets.offers`
+### Topic: `earn.doublewin.offers`
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name  
+topic| string| Topic name. `earn.doublewin.offers`  
 data| array| Object  
-> p| int64| Product ID  
-> c| string| Current price  
-> b| array of objects| Buy low price list  
->> s| string| Selected price  
->> a| int64| Annualized yield, e8 precision  
->> m| string| Max investment amount at this price point  
->> x| string| Quote expiration time,Unix timestamp in ms  
-> s| array of objects| Sell high price list  
->> s| string| Selected price  
->> a| int64| Annualized yield, e8 precision  
->> m| string| Max investment amount at this price point  
->> x| string| Quote expiration time,Unix timestamp in ms  
+> p| string| Product ID  
+> c| string| Current index price of the underlying asset  
+> l| string| Current maximum leverage multiplier  
+> m| string| Maximum single order amount at current quote  
+> e| string| Quote expiry time, Unix timestamp in ms  
   
-### Subscribe Example
+### Push Example
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "earn.dualassets.offers"  
+        "topic": "earn.doublewin.offers",  
+        "data": [  
+            {  
+                "p": "14082",  
+                "c": "2050.99",  
+                "l": "37.78",  
+                "m": "1000",  
+                "e": "1775111431407"  
+            },  
+            {  
+                "p": "14083",  
+                "c": "2050.99",  
+                "l": "75.57",  
+                "m": "700",  
+                "e": "1775111431552"  
+            },  
+            {  
+                "p": "14088",  
+                "c": "66647.87",  
+                "l": "23.25",  
+                "m": "500",  
+                "e": "1775111432115"  
+            },  
+            {  
+                "p": "14089",  
+                "c": "66647.87",  
+                "l": "23.25",  
+                "m": "1000",  
+                "e": "1775111432115"  
+            }  
         ]  
-    }  
-    
-
-### Stream Example
-    
-    
-    {  
-      "topic": "earn.dualassets.offers",  
-      "data": [  
-        {  
-          "p": "36352",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        },  
-        {  
-          "p": "36382",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        }  
-      ]  
     }
 
 ---
 
-# 雙幣投資報價
+# 漲跌雙贏報價
 
-### WebSocket URL
+### WebSocket 公共頻道網址
 
-  * **主網 (Mainnet):**  
-理財 (Earn): `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **測試網 (Testnet):**  
-理財 (Earn): `wss://stream-testnet.bybit.com/v5/public/fp`  
+  * **主網：**  
+Earn: `wss://stream.bybit.com/v5/public/fp`  
 
 
+  * **測試網：**  
+Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
 
 
 
-### 描述 (Desc)
 
-  * 訂閱 `earn.dualassets.offers` 主題，以接收所有上線雙幣投資產品的即時報價更新。
 
-  * 推播範圍：**所有上線產品報價的完整快照**
+信息
 
-  * 建議使用方式：
-
-    1. 使用 [獲取產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote) 以獲取初始報價
-    2. 訂閱 WebSocket 主題以獲取即時更新
-    3. 下單時，請使用來自 WebSocket 的最新 selectPrice 與 apyE8
-    4. 若 WebSocket 斷線，請改用 REST 介面 (fallback)
+  * 訂閱此頻道無需身份驗證。
+  * 本頻道**僅推送固定區間產品** （`isRfqProduct=false`）。RFQ 產品需調用[查詢自選區間產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/leverage)進行主動詢價。
+  * **推薦使用方式** ：初始化時調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)獲取當前報價，再訂閱本頻道保持即時更新。WebSocket 斷線後，請先調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)重新整理，再重新訂閱。
 
 
 
-### 主題 (Topic): `earn.dualassets.offers`
+### 頻道：`earn.doublewin.offers`
 
-### 回應參數
+### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| 主題名稱  
+topic| string| 頻道名稱，`earn.doublewin.offers`  
 data| array| 列表  
-> p| int64| 產品 ID  
-> c| string| 當前價格  
-> b| array of objects| 低買價格列表  
->> s| string| 所選價格  
->> a| int64| 年化收益率，e8 精度  
->> m| string| 該價位的最大投資金額  
->> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
-> s| array of objects| 高賣價格列表  
->> s| string| 所選價格  
->> a| int64| 年化收益率，e8 精度  
->> m| string| 該價位的最大投資金額  
->> x| string| 報價過期時間，Unix 時間戳 (毫秒)  
+> p| string| 產品 ID  
+> c| string| 標的資產當前指數價格  
+> l| string| 當前最大槓桿倍數  
+> m| string| 當前報價下的最大單筆下單金額  
+> e| string| 報價到期時間，毫秒級 Unix 時間戳  
   
-### 訂閱範例
+### 推送示例
     
     
     {  
-        "op": "subscribe",  
-        "args": [  
-            "earn.dualassets.offers"  
+        "topic": "earn.doublewin.offers",  
+        "data": [  
+            {  
+                "p": "14082",  
+                "c": "2050.99",  
+                "l": "37.78",  
+                "m": "1000",  
+                "e": "1775111431407"  
+            },  
+            {  
+                "p": "14083",  
+                "c": "2050.99",  
+                "l": "75.57",  
+                "m": "700",  
+                "e": "1775111431552"  
+            },  
+            {  
+                "p": "14088",  
+                "c": "66647.87",  
+                "l": "23.25",  
+                "m": "500",  
+                "e": "1775111432115"  
+            },  
+            {  
+                "p": "14089",  
+                "c": "66647.87",  
+                "l": "23.25",  
+                "m": "1000",  
+                "e": "1775111432115"  
+            }  
         ]  
-    }  
-    
-
-### 推播範例
-    
-    
-    {  
-      "topic": "earn.dualassets.offers",  
-      "data": [  
-        {  
-          "p": "36352",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "979209000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        },  
-        {  
-          "p": "36382",  
-          "c": "74168.46",  
-          "b": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "2000",  
-              "x": "1773825237781"  
-            }  
-          ],  
-          "s": [  
-            {  
-              "s": "74142",  
-              "a": "890190000",  
-              "m": "0.02697492",  
-              "x": "1773825237781"  
-            }  
-          ]  
-        }  
-      ]  
     }

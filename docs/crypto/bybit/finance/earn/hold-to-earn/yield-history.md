@@ -2,42 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/yield-history
 api_type: REST
-updated_at: 2026-11-03 18:34:50.691491
+updated_at: 2026-11-04 18:35:29.590276
 ---
 
-# Create Investment Plan
+# Create Fund (Pending Subscription)
 
 info
 
-  1. Each institution can create a maximum of **10 investment plans**. Each user can hold a maximum of **20 investment plans**.
-  2. The fund must be in **`PendingSubscribe`** (pending subscription) status. Otherwise, error code `180040` is returned.
+  1. Each institution can create a maximum of **10 funds**.
+  2. A newly created fund will have a status of **`PendingSubscribe`** (pending subscription).
 
 
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/create-investment-plan`
+POST`/v5/earn/pwm/asset-manager/create-fund`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-accountUid| **true**|  string| Target user UID  
-planName| **true**|  string| Investment plan name, max 50 characters  
-planType| **true**|  string| Plan type: `stable` / `advanced`  
-investmentDistribution| **true**|  array| Fund configuration list. At least 1 fund required  
-> productId| **true**|  string| Fund ID (must be a fund under this institution's management)  
-> amount| **true**|  string| Configured amount (base coin)  
+fundName| **true**|  string| Fund name, 1–50 characters  
+coin| **true**|  string| Base coin. Supported values: `BTC`, `ETH`, `USDT`, `USDC`, `SOL`, `MNT`, `XRP`  
+profitShareRate| **true**|  string| High-watermark profit sharing rate (%), range: 0–100  
+managementFeeRate| **true**|  string| Management fee rate (annualized %), range: 0–100  
+fundIntroduction| false| string| Fund introduction ID (must be in the institution's allowed list)  
 reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Unique identifier of the newly created investment plan  
-planType| string| Plan type: `stable` / `advanced`  
-accountUid| string| Target user UID  
-status| string| Plan status. Fixed as `PendingSubscription` upon creation  
+fundId| string| Unique identifier of the newly created fund  
+fundName| string| Fund name  
+coin| string| Fund denomination coin  
+status| string| Fund status. Fixed as `PendingSubscription` upon creation. Possible values: `PendingSubscribe` / `Active` / `Closing` / `Closed`  
+profitShareRate| string| Profit sharing rate (%)  
+managementFeeRate| string| Management fee rate (annualized %)  
+accountUid| string| Fund main sub-account UID automatically created by the system  
 createdTime| string| Creation timestamp (milliseconds)  
   
 * * *
@@ -45,7 +47,7 @@ createdTime| string| Creation timestamp (milliseconds)
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -54,16 +56,11 @@ createdTime| string| Creation timestamp (milliseconds)
     Content-Type: application/json  
       
     {  
-        "accountUid": "800001",  
-        "planName": "Conservative Growth Plan",  
-        "planType": "stable",  
-        "investmentDistribution": [  
-            {  
-                "productId": "12345",  
-                "amount": "100000.00"  
-            }  
-        ],  
-        "reqLinkId": "create-plan-001"  
+        "fundName": "BTC Alpha Fund",  
+        "coin": "BTC",  
+        "profitShareRate": "20.00",  
+        "managementFeeRate": "2.00",  
+        "reqLinkId": "create-fund-001"  
     }  
     
 
@@ -74,49 +71,54 @@ createdTime| string| Creation timestamp (milliseconds)
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "planType": "stable",  
-            "accountUid": "800001",  
+            "fundId": "12345",  
+            "fundName": "BTC Alpha Fund",  
+            "coin": "BTC",  
             "status": "pending_subscribe",  
+            "profitShareRate": "20.00",  
+            "managementFeeRate": "2.00",  
+            "accountUid": "0",  
             "createdTime": "1640000000000"  
         }  
     }
 
 ---
 
-# 機構創建投資計劃
+# 機構創建待申購基金
 
 信息
 
-  1. 每個機構最多創建 **10 個投資計劃** 。每個用戶最多擁有 **20 個投資計劃** 。
-  2. 基金狀態必須為 **`PendingSubscribe`** （待申購），否則返回錯誤碼 `180040`。
+  1. 每個機構最多創建 **10 個基金** 。
+  2. 基金創建後狀態為 **`PendingSubscribe`** （待申購）。
 
 
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/create-investment-plan`
+POST`/v5/earn/pwm/asset-manager/create-fund`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-accountUid| **true**|  string| 目標用戶UID  
-planName| **true**|  string| 投資計劃名稱，最大50字符  
-planType| **true**|  string| 計劃類型：`stable`（穩健增值）/ `advanced`（進階收益）  
-investmentDistribution| **true**|  array| 基金配置列表，至少包含1個基金  
-> productId| **true**|  string| 基金ID（必須是該機構管轄的基金）  
-> amount| **true**|  string| 配置金額（本位幣）  
+fundName| **true**|  string| 基金名稱，長度1-50字符  
+coin| **true**|  string| 本位幣，支持：`BTC`、`ETH`、`USDT`、`USDC`、`SOL`、`MNT`、`XRP`  
+profitShareRate| **true**|  string| 高水位利潤分成比例（%），範圍0-100  
+managementFeeRate| **true**|  string| 管理費率（年化%），範圍0-100  
+fundIntroduction| false| string| 基金簡介ID（需在機構允許列表中）  
 reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 新創建的投資計劃唯一標識  
-planType| string| 計劃類型：`stable` / `advanced`  
-accountUid| string| 目標用戶UID  
-status| string| 計劃狀態，創建後固定為 `PendingSubscription`  
+fundId| string| 新創建的基金唯一標識  
+fundName| string| 基金名稱  
+coin| string| 基金計價幣種  
+status| string| 基金狀態，創建後固定為 `PendingSubscription`（待申購）。枚舉值：`PendingSubscribe`（待申購）/ `Active`（運行中）/ `Closing`（關閉中）/ `Closed`（已關閉）  
+profitShareRate| string| 利潤分成比例（%）  
+managementFeeRate| string| 管理費率（年化%）  
+accountUid| string| 系統自動創建的基金主子賬戶UID  
 createdTime| string| 創建時間戳（毫秒）  
   
 * * *
@@ -124,7 +126,7 @@ createdTime| string| 創建時間戳（毫秒）
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/create-investment-plan HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -133,16 +135,11 @@ createdTime| string| 創建時間戳（毫秒）
     Content-Type: application/json  
       
     {  
-        "accountUid": "800001",  
-        "planName": "Conservative Growth Plan",  
-        "planType": "stable",  
-        "investmentDistribution": [  
-            {  
-                "productId": "12345",  
-                "amount": "100000.00"  
-            }  
-        ],  
-        "reqLinkId": "create-plan-001"  
+        "fundName": "BTC Alpha Fund",  
+        "coin": "BTC",  
+        "profitShareRate": "20.00",  
+        "managementFeeRate": "2.00",  
+        "reqLinkId": "create-fund-001"  
     }  
     
 
@@ -153,10 +150,13 @@ createdTime| string| 創建時間戳（毫秒）
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "planId": "10088",  
-            "planType": "stable",  
-            "accountUid": "800001",  
+            "fundId": "12345",  
+            "fundName": "BTC Alpha Fund",  
+            "coin": "BTC",  
             "status": "pending_subscribe",  
+            "profitShareRate": "20.00",  
+            "managementFeeRate": "2.00",  
+            "accountUid": "0",  
             "createdTime": "1640000000000"  
         }  
     }

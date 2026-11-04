@@ -2,48 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/redeem
 api_type: REST
-updated_at: 2026-11-03 18:35:16.438926
+updated_at: 2026-11-04 18:35:54.910762
 ---
 
-# Get NAV Chart
+# Get Fund Transfer Records
 
 info
 
-  * Authentication is not required.
-  * `startTime` defaults to 7 days before `endTime`. `endTime` defaults to current time.
-  * The time span (`endTime - startTime`) must not exceed 180 days.
-  * **Rate Limit:** 20 req/s (IP)
-
-
+This endpoint must be called using the API key of the fund custodian sub-account.
 
 ### HTTP Request
 
-GET`/v5/earn/rwa/nav-chart`
+GET`/v5/earn/pwm/query-fund-transfer-result`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  integer| Product ID  
-startTime| false| integer| Start timestamp (Unix seconds). Default: `endTime - 7 days`  
-endTime| false| integer| End timestamp (Unix seconds). Default: now  
+transferId| false| string| Transfer request ID. If omitted, returns up to the 20 most recent non-terminal transfer records within the past month. Records older than one month may have been archived  
+fromUserId| false| int64| Source UID  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-productId| integer| Product ID  
-list| array| NAV data points in ascending order by date  
-> date| string| Date in `YYYY-MM-DD` format (UTC)  
-> nav| string| NAV (Net Asset Value per share) on the given date  
+transferId| string| Transfer ID  
+status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
+fromUserId| int64| Source UID  
+toUserId| int64| Destination UID  
+amount| string| Transfer amount  
+coin| string| Coin  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/rwa/nav-chart?productId=1001 HTTP/1.1  
+    GET /v5/earn/pwm/query-fund-transfer-result?transferId=4fdf-re-4343-frewr HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -53,63 +53,56 @@ list| array| NAV data points in ascending order by date
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "productId": 1001,  
-            "list": [  
-                {  
-                    "date": "2024-03-10",  
-                    "nav": "1.024"  
-                },  
-                {  
-                    "date": "2024-03-11",  
-                    "nav": "1.025"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1710691200000  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS",  
+            "fromUserId": 1237488,  
+            "toUserId": 1237489,  
+            "amount": "12.3456",  
+            "coin": "USDT"  
+        }  
     }
 
 ---
 
-# 獲取NAV歷史數據
+# 查詢劃轉流水
 
 信息
 
-  * 無需身份驗證。
-  * `startTime` 默認為 `endTime` 的 7 天前；`endTime` 默認為當前時間。
-  * 時間跨度（`endTime - startTime`）不得超過 180 天。
-  * **頻率限制：** 20 次/秒（IP）
-
-
+此接口必須使用基金托管子賬號的 API Key 操作。
 
 ### HTTP 請求
 
-GET`/v5/earn/rwa/nav-chart`
+GET`/v5/earn/pwm/query-fund-transfer-result`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  integer| 產品 ID  
-startTime| false| integer| 起始時間戳（Unix 秒）。默認：`endTime - 7 天`  
-endTime| false| integer| 結束時間戳（Unix 秒）。默認：當前時間  
+transferId| false| string| 劃轉請求ID。不傳默認返回最近20條（一個月內）未到終態的劃轉記錄，超過時間的記錄可能已歸檔  
+fromUserId| false| int64| 資金劃出UID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-productId| integer| 產品 ID  
-list| array| NAV 數據點列表，按日期升序排列  
-> date| string| 日期，格式 `YYYY-MM-DD`（UTC）  
-> nav| string| 當日 NAV（單份淨值）  
+transferId| string| 劃轉ID  
+status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
+fromUserId| int64| 資金劃出UID  
+toUserId| int64| 資金劃入UID  
+amount| string| 劃轉金額  
+coin| string| 幣種  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/rwa/nav-chart?productId=1001 HTTP/1.1  
+    GET /v5/earn/pwm/query-fund-transfer-result?transferId=4fdf-re-4343-frewr HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -119,18 +112,11 @@ list| array| NAV 數據點列表，按日期升序排列
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "productId": 1001,  
-            "list": [  
-                {  
-                    "date": "2024-03-10",  
-                    "nav": "1.024"  
-                },  
-                {  
-                    "date": "2024-03-11",  
-                    "nav": "1.025"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1710691200000  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS",  
+            "fromUserId": 1237488,  
+            "toUserId": 1237489,  
+            "amount": "12.3456",  
+            "coin": "USDT"  
+        }  
     }

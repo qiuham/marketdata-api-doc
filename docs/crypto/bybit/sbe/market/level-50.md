@@ -2,396 +2,745 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/level-50
 api_type: Market Data
-updated_at: 2026-11-03 18:38:20.086557
+updated_at: 2026-11-04 18:39:03.909427
 ---
 
-# SBE Level 50 Integration
+# SBE Order Entry Integration
 
 ## Overview
 
   * **Channel:** Private MM WebSocket only (not available on public WS).
-  * **Topic:** `ob.50.sbe.{symbol}` (snapshot or delta, every 20 ms).
-  * **Format:** SBE binary frames (`opcode = 2`), little-endian.
-  * **Depth:** 50 levels per side (no RPI in this stream).
-  * **Units:** timestamps in microseconds (µs); price/size are mantissas with exponents.
+  * **Transport:** WebSocket binary frames — each frame contains exactly one SBE message (no JSON).
+  * **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 2`.
+  * **Purpose:** High-performance, low-latency order entry — create, replace, and cancel orders individually or in batch.
+  * **Compression:** Disabled to avoid head-of-line blocking and CPU overhead.
 
 
 
-## Flow
+## Testnet
 
-### Ping / Pong (JSON control frames)
+Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
-**Send Ping**
+## SBE XML Template
+
+[sbe xml template](/docs/v5/sbe/sbe-basic-info#ws-order-entry-sbe-xml-template)
+
+## Connection
+
+### Connection Lifecycle
+
+  1. Open WebSocket connection.
+  2. Send **AuthReq** (`templateId = 1`).
+  3. Receive **AuthResp** (`templateId = 2`) — proceed only if `retCode = 0`.
+  4. Send order requests (**CreateOrderReqV5** , **ReplaceOrderReqV5** , **CancelOrderReqV5** , or batch variants).
+  5. Receive the corresponding response for each request.
+  6. Send **PingReq** (`templateId = 3`) periodically; expect **PongResp** (`templateId = 4`) in return.
+
+
+
+### Heartbeat
+
+  * Send a **PingReq** every **10 s** to keep the connection alive.
+  * If no data is received within **2 × heartbeat interval** , reconnect and re-authenticate.
+
+
+
+### Reconnect Strategy
+
+  * Use exponential backoff with jitter.
+  * Re-authenticate immediately after reconnect before resuming order flow.
+  * Use `orderLinkId` for client-side idempotency — query order status before resubmitting.
+
+
+
+## Authentication Flow
+
+### Send AuthReq
+
+Signature: HMAC-SHA256 over `"GET/realtime{expires}"`, where `expires` is a future Unix timestamp in milliseconds.
     
     
-    {"req_id": "100001", "op": "ping"}  
+    import hashlib, hmac, struct, time  
+      
+    def generate_signature(api_secret: str, expires: int) -> str:  
+        message = f"GET/realtime{expires}"  
+        return hmac.new(  
+            api_secret.encode("utf-8"),  
+            message.encode("utf-8"),  
+            hashlib.sha256,  
+        ).hexdigest()  
     
 
-**Receive Pong**
+### Receive AuthResp
     
     
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    {  
+      "header": {  
+        "block_length": 132,  
+        "template_id": 2,  
+        "schema_id": 2,  
+        "version": 2  
+      },  
+      "reqId": "req_00000000001",  
+      "retCode": 0,  
+      "connId": "d30fdpbboasp1pjbe7r0",  
+      "retMsg": "OK"  
+    }  
     
 
-### Subscribe
-
-  * Topic format: `ob.50.sbe.<symbol>`
-
+  * `retCode = 0` — authentication succeeded.
+  * Any non-zero `retCode` is a failure; read `retMsg` for the cause.
 
 
-**Subscribe request**
+
+## Order Operations
+
+### Create Order
+
+Send **CreateOrderReqV5** (`templateId = 5`), receive **CreateOrderRespV5** (`templateId = 6`).
+
+  * `price` and `qty` use **Decimal64** : `value = mantissa × 10^exponent`.
+  * `orderLinkId` is a fixed 64-byte char field (null-padded); used for client-side deduplication.
+
+
+
+**CreateOrderRespV5 decode example:**
     
     
-    {"op": "subscribe", "args": ["ob.50.sbe.BTCUSDT"]}  
+    {  
+      "header": {  
+        "block_length": 364,  
+        "template_id": 6,  
+        "schema_id": 2,  
+        "version": 2  
+      },  
+      "respHeader": {  
+        "reqId": "req_00000000002",  
+        "connId": "d30fdpbboasp1pjbe7r0",  
+        "traceId": "abc123def456789",  
+        "timeNow": 1780902835759344,  
+        "inTime": 1780902835758533,  
+        "bapiLimit": 1000,  
+        "bapiLimitStatus": 999,  
+        "bapiLimitResetTimestamp": 1780902835758  
+      },  
+      "retCode": 0,  
+      "result": {  
+        "orderId": "1912284048591699456",  
+        "orderLinkId": "cli_order_001"  
+      },  
+      "retMsg": "OK"  
+    }  
     
 
-**Subscription confirmation**
-    
-    
-    {"success": true,"ret_msg": "","conn_id": "d30fdpbboasp1pjbe7r0","req_id": "xxx","op": "subscribe"}  
-    
+### Replace Order
 
-## SBE XML Template (L50 OB)
+Send **ReplaceOrderReqV5** (`templateId = 7`), receive **ReplaceOrderRespV5** (`templateId = 8`).
 
-[sbe xml template](/docs/v5/sbe/sbe-basic-info#market-sbe-xml-template)
+  * Identify the order to replace by `orderId` **or** `orderLinkId` (at least one required).
+  * Submit new `qty` and/or `price` as Decimal64.
 
-## Field Reference
 
-**Message:** `OBL50Event` (id = 20001)
 
-Field Name| ID| SBE Type| Unit / Format| Notes  
----|---|---|---|---  
-ts| 1| int64| µs| System generation time at push side (dispatcher).  
-seq| 2| int64| integer| Cross-sequence id (monotonic per feed; not guaranteed continuous).  
-cts| 3| int64| µs| Matching-engine creation time of this OB snapshot or delta; used for latency measurements.  
-u| 4| int64| integer| Update id (monotonic per symbol). Useful to check continuity.  
-priceExponent| 5| int8| exponent| Decimal places for price. Display price = mantissa × 10^`priceExponent`.  
-sizeExponent| 6| int8| exponent| Decimal places for size. Display size = mantissa × 10^`sizeExponent`.  
-pkgType| 7| uint8 (`pkgTypeEnum`)| integer| Package type (0 = snapshot, 1 = delta).  
-asks| 40| group(`groupSize16Encoding`)| —| Sell side updates (up to 50 levels).  
-bids| 41| group(`groupSize16Encoding`)| —| Buy side updates (up to 50 levels).  
-symbol| 55| varString8| UTF-8| 1-byte length + bytes, e.g., `0x07 "BTCUSDT"`.  
-  
-### Asks Group
+### Cancel Order
 
-Field (id)| Type| Description  
+Send **CancelOrderReqV5** (`templateId = 9`), receive **CancelOrderRespV5** (`templateId = 10`).
+
+  * Identify the order to cancel by `orderId` **or** `orderLinkId`.
+
+
+
+## Batch Operations
+
+All batch requests embed an **ApiRequestHeader** at the top, followed by the `category` field, then a **repeating group** of order items. The group is prefixed by a `groupSize16Encoding` header (uint16 `blockLength` \+ uint16 `numInGroup`).
+
+Operation| Request Template ID| Response Template ID  
 ---|---|---  
-price (1)| int64| Ask price mantissa. Display ask price = `price × 10^priceExponent`.  
-size (2)| int64| Ask size mantissa. Display ask size = `size × 10^sizeExponent`.  
+Batch Create| 11| 12  
+Batch Replace| 13| 14  
+Batch Cancel| 15| 16  
   
-### Bids Group
+Each response group item carries its own `code` and `msg` (varString8), plus `orderId` / `orderLinkId` for the acknowledged order. A top-level `retMsg` (varString8) follows all groups.
 
-Field (id)| Type| Description  
----|---|---  
-price (1)| int64| Bid price mantissa. Display bid price = `price × 10^priceExponent`.  
-size (2)| int64| Bid size mantissa. Display bid size = `size × 10^sizeExponent`.  
+## Error Handling
+
+**CommonErrResp** (`templateId = 17`) is returned when the server cannot associate an error with a specific request message.
+
+Fields: `respHeader` (ApiRespHeader), `retCode` (int32), `retMsg` (varString8).
+
+## SBE Message Structure
+
+### Message Header (8 bytes)
+
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+blockLength| uint16| 2| Fixed-body length  
+templateId| uint16| 2| Message type identifier  
+schemaId| uint16| 2| Fixed = 2  
+version| uint16| 2| Fixed = 2  
   
-## Order Book Update Logic
+### Composite Types
 
-### Rules for the u (Update ID) Field
+#### `ApiRequestHeader` (140 bytes)
 
-#### Behavior of `u`
+Embedded at the start of every request message.
 
-  * Field `u` increases **monotonically** for all snapshots and deltas.
-  * Field `u` **does not reset** , unless there is a system restart or precision change.
-  * Field `u = 1` always indicates a **snapshot** , and continuity checks must stop.
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+reqId| char[64]| 64| Client request ID (optional; echoed in response)  
+timestamp| uint64| 8| Client timestamp (milliseconds); must satisfy: `server_time − recvWindow ≤ timestamp < server_time + 1000`  
+recvWindow| uint32| 4| Acceptable time window (milliseconds); default 5000  
+referer| char[64]| 64| Broker / source identifier  
+  
+#### `ApiRespHeader` (232 bytes)
 
+Embedded at the start of every response message.
 
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+reqId| char[64]| 64| Echoed client request ID  
+connId| char[64]| 64| Connection identifier  
+traceId| char[64]| 64| Trace ID for diagnostics  
+timeNow| int64| 8| Server timestamp (microseconds)  
+inTime| int64| 8| Message ingress timestamp (microseconds)  
+bapiLimit| int64| 8| Total rate limit  
+bapiLimitStatus| int64| 8| Remaining rate limit tokens  
+bapiLimitResetTimestamp| int64| 8| Rate-limit reset timestamp (milliseconds)  
+  
+#### `CommonOrderRespData` (128 bytes)
 
-#### Continuity Validation
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+orderId| char[64]| 64| Exchange-assigned order ID  
+orderLinkId| char[64]| 64| Echoed client order ID  
+  
+#### `Decimal64` (9 bytes)
 
-Continuity must be checked **only when`u != 1`**.
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+exponent| int8| 1| Power of 10  
+mantissa| int64| 8| Significand  
+  
+`actual_value = mantissa × 10^exponent`. Example: price 69000.00 → `exponent=0, mantissa=69000`; qty 0.01 → `exponent=-2, mantissa=1`.
 
-Condition| Action  
+### Enumerations
+
+Enum| Values (uint8)  
 ---|---  
-`u != 1`| Validate continuity: next `u` should follow previous `u + 1`.  
-`u == 1`| Special snapshot (service restart / precision change). **Do not** perform continuity checks.  
+`CategoryType`| 0=UNKNOWN, 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION, 254=NON_REPRESENTABLE  
+`SideType`| 0=UNKNOWN, 1=BUY, 2=SELL, 254=NON_REPRESENTABLE  
+`OrderType`| 0=UNKNOWN, 1=MARKET, 2=LIMIT, 254=NON_REPRESENTABLE  
+`TimeInForceType`| 0=UNKNOWN, 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI, 254=NON_REPRESENTABLE  
+`PositionIdxType`| 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL, 253=UNKNOWN, 254=NON_REPRESENTABLE  
+`MarketUnitType`| 0=UNKNOWN, 1=BASE_COIN, 2=QUOTE_COIN, 254=NON_REPRESENTABLE  
+`SmpType`| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH, 254=NON_REPRESENTABLE  
+`BoolEnum`| 0=FALSE, 1=TRUE, 254=NON_REPRESENTABLE  
   
-### Rules for Order Book Maintenance
+### Message Field Tables
 
-#### First Message of connection and reconnection
+#### `AuthReq` (id=1, blockLength=200)
 
-After subscribing, the **first message is always a snapshot** , clients must initialize the local book with it.
-
-#### Snapshot Handling
-
-A snapshot must always **replace the entire local order book**
-
-Snapshots may appear:
-
-  * after initial subscription
-  * when the number of changed levels > 100 (extreme market condition auto-fallback)
-  * after internal service restart
-  * after exponent / precision changes
-
-
-
-#### Delta Handling
-
-A delta applies **incrementally** :
-
-  * Insert/update levels with `size > 0`,remove levels when `size == 0`,continue continuity checks using the `u` field.
-
-
-
-**Extreme Market Condition Handling**
-
-  * When a delta contains **more than 100 combined bid+ask updates** (buy + sell), the system automatically sends a **full snapshot** instead of a delta.
-  * Ensures client books resync cleanly.
-  * Prevents explosion of delta packets during high churn.
-  * Keeps snapshot size fixed length for predictable decoding.
-
-
-
-### Example Push Update
-
-Below is a real case where the connection stays healthy and messages arrive in order:
-
-u| Type| Notes  
----|---|---  
-10000| snapshot| First message after subscription.  
-10001| delta| Incremental updates. Must **apply changes** to the existing book.  
-10002| delta| Normal incremental update.  
-10003| snapshot| Large market move (> 100 level changes). Use snapshot to **replace** local book.  
-10004| delta| Continue delta from the new snapshot.  
-1| snapshot| Service restarted / precision changed — reset `u` to 1.  
-2| delta| New continuity sequence.  
-3| delta| —  
-4| delta| —  
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| reqId| char[64]| 64| Client request ID  
+2| apiKey| char[64]| 64| API Key (null-padded)  
+3| expires| uint64| 8| Expiry timestamp (milliseconds); must be in future  
+4| signature| char[64]| 64| HMAC-SHA256 over `"GET/realtime{expires}"`  
   
-## Integration Script
+#### `AuthResp` (id=2, blockLength=132)
 
-### Python
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| reqId| char[64]| 64| Echoed request ID  
+2| retCode| int32| 4| 0 = OK  
+3| connId| char[64]| 64| Connection identifier  
+20| retMsg| varString16| variable| `"OK"` on success; error text otherwise  
+  
+#### `PingReq` (id=3, blockLength=8)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| timestamp| uint64| 8| Client timestamp (milliseconds)  
+  
+#### `PongResp` (id=4, blockLength=16)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| timestamp| uint64| 8| Echoed client timestamp (milliseconds)  
+2| pongTime| uint64| 8| Server pong timestamp (milliseconds)  
+  
+#### `CreateOrderReqV5` (id=5, blockLength=242)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| Request header  
+2| category| CategoryType| 1| 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION  
+3| symbolId| int64| 8| Internal numeric symbol ID  
+4| side| SideType| 1| 1=BUY, 2=SELL  
+5| orderType| OrderType| 1| 1=MARKET, 2=LIMIT  
+6| qty| Decimal64| 9| Order quantity  
+7| price| Decimal64| 9| Order price; set mantissa=0 for MARKET orders  
+8| orderLinkId| char[64]| 64| Client order ID (null-padded)  
+9| timeInForce| TimeInForceType| 1| 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI  
+10| positionIdx| PositionIdxType| 1| 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL  
+11| marketUnit| MarketUnitType| 1| 1=BASE_COIN, 2=QUOTE_COIN  
+12| isLeverage| BoolEnum| 1| 0=FALSE, 1=TRUE  
+13| reduceOnly| BoolEnum| 1| 0=FALSE, 1=TRUE  
+14| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
+15| mmp| BoolEnum| 1| Market Maker Protection  
+16| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
+17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE; added in schema version 2; Supported order combinations: (1) `orderType=Market`; (2) `orderType=Limit` with `timeInForce=IOC` or `FOK`. See [announcement](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
+  
+#### `CreateOrderRespV5` (id=6, blockLength=364)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| respHeader| ApiRespHeader| 232| Response header  
+2| retCode| int32| 4| 0 = accepted  
+3| result| CommonOrderRespData| 128| Order identifiers  
+20| retMsg| varString16| variable| `"OK"` on success  
+  
+#### `ReplaceOrderReqV5` (id=7, blockLength=295)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| Request header  
+2| category| CategoryType| 1| Product category  
+3| symbolId| int64| 8| Internal numeric symbol ID  
+4| orderId| char[64]| 64| Order to replace (use orderId or orderLinkId)  
+5| orderLinkId| char[64]| 64| Client order ID of the order to replace  
+6| qty| Decimal64| 9| New quantity  
+7| price| Decimal64| 9| New price  
+  
+#### `ReplaceOrderRespV5` (id=8, blockLength=364)
+
+Same layout as `CreateOrderRespV5`.
+
+#### `CancelOrderReqV5` (id=9, blockLength=277)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| Request header  
+2| category| CategoryType| 1| Product category  
+3| symbolId| int64| 8| Internal numeric symbol ID  
+4| orderId| char[64]| 64| Order to cancel (use orderId or orderLinkId)  
+5| orderLinkId| char[64]| 64| Client order ID of the order to cancel  
+  
+#### `CancelOrderRespV5` (id=10, blockLength=364)
+
+Same layout as `CreateOrderRespV5`.
+
+#### `BatchCreateOrderReqV5` (id=11)
+
+Fixed body (141 bytes): `header` (ApiRequestHeader, 140 bytes) + `category` (uint8, 1 byte).
+
+Followed by repeating group `request` (groupSize16Encoding header + items):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8| Internal numeric symbol ID  
+2| side| SideType| 1| 1=BUY, 2=SELL  
+3| orderType| OrderType| 1| 1=MARKET, 2=LIMIT  
+4| qty| Decimal64| 9| Order quantity  
+5| price| Decimal64| 9| Order price  
+6| orderLinkId| char[64]| 64| Client order ID  
+7| timeInForce| TimeInForceType| 1| 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI  
+8| positionIdx| PositionIdxType| 1| Position mode  
+9| marketUnit| MarketUnitType| 1| 1=BASE_COIN, 2=QUOTE_COIN  
+10| isLeverage| BoolEnum| 1| 0=FALSE, 1=TRUE  
+11| reduceOnly| BoolEnum| 1| 0=FALSE, 1=TRUE  
+12| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
+13| mmp| BoolEnum| 1| Market Maker Protection  
+14| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
+  
+Per-item blockLength = 100 bytes.
+
+#### `BatchCreateOrderRespV5` (id=12)
+
+Fixed body (236 bytes): `respHeader` (232 bytes) + `retCode` (int32, 4 bytes).
+
+Followed by repeating group `list` (per-item blockLength = 141 bytes):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| code| int32| 4| Per-order result code  
+2| category| CategoryType| 1|   
+3| symbolId| int64| 8|   
+4| orderId| char[64]| 64| Exchange order ID  
+5| orderLinkId| char[64]| 64| Client order ID  
+20| msg| varString16| variable| Per-order message  
+  
+Followed by top-level `retMsg` (varString16).
+
+#### `BatchReplaceOrderReqV5` (id=13)
+
+Fixed body (141 bytes): same as BatchCreateOrderReqV5.
+
+Repeating group `request` (per-item blockLength = 154 bytes):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8|   
+2| orderId| char[64]| 64| Order to replace  
+3| orderLinkId| char[64]| 64|   
+4| qty| Decimal64| 9| New quantity  
+5| price| Decimal64| 9| New price  
+  
+#### `BatchReplaceOrderRespV5` (id=14)
+
+Fixed body (236 bytes). Repeating group `list` (per-item blockLength = 141 bytes, same fields as BatchCreateOrderRespV5). Followed by `retMsg` (varString16).
+
+#### `BatchCancelOrderReqV5` (id=15)
+
+Fixed body (141 bytes). Repeating group `request` (per-item blockLength = 136 bytes):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8|   
+2| orderId| char[64]| 64| Order to cancel  
+3| orderLinkId| char[64]| 64|   
+  
+#### `BatchCancelOrderRespV5` (id=16)
+
+Same layout as `BatchReplaceOrderRespV5`.
+
+#### `CommonErrResp` (id=17, blockLength=236)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| respHeader| ApiRespHeader| 232| Response header  
+2| retCode| int32| 4| Error code  
+20| retMsg| varString16| variable| Error description  
+  
+## Integration Example
     
     
+    import hashlib  
+    import hmac  
     import json  
     import logging  
     import struct  
     import threading  
     import time  
-    from datetime import datetime  
-    from typing import Dict, Any, List, Tuple  
+    from typing import Any, Dict, Optional, Tuple  
       
     import websocket  
       
     logging.basicConfig(  
-        filename='logfile_ob50.log',  
+        filename="logfile_order_entry.log",  
         level=logging.INFO,  
-        format='%(asctime)s %(levelname)s %(message)s'  
+        format="%(asctime)s %(levelname)s %(message)s",  
     )  
       
-    # -------------------------------------------------------------------  
-    # Config  
-    # -------------------------------------------------------------------  
+    WS_URL = "wss://stream-testnet.bybits.org/v5/trade-sbe"  
+    API_KEY = "your_api_key"  
+    API_SECRET = "your_api_secret"  
+    RECV_WINDOW = 5000  
       
-    # L50 SBE order book topic  
-    TOPIC = "ob.50.sbe.BTCUSDT"  
+    SCHEMA_ID = 2  
+    VERSION = 2  
       
-    # Adjust URL for spot / contract environment as needed:  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    # Template IDs  
+    TMPL_AUTH_REQ     = 1  
+    TMPL_AUTH_RESP    = 2  
+    TMPL_PING_REQ     = 3  
+    TMPL_PONG_RESP    = 4  
+    TMPL_CREATE_REQ   = 5  
+    TMPL_CREATE_RESP  = 6  
+    TMPL_REPLACE_REQ  = 7  
+    TMPL_REPLACE_RESP = 8  
+    TMPL_CANCEL_REQ   = 9  
+    TMPL_CANCEL_RESP  = 10  
+    TMPL_ERR_RESP     = 17  
       
-    # -------------------------------------------------------------------  
-    # SBE Parser for OBL50Event (template_id = 20001)  
-    #  
-    # XML schema:  
-    #   ts(int64), seq(int64), cts(int64), u(int64),  
-    #   priceExponent(int8), sizeExponent(int8),  
-    #   pkgType(uint8)   # 0 = SNAPSHOT, 1 = DELTA  
-    #   group asks: blockLen(uint16), numInGroup(uint16),  
-    #               then numInGroup * [ price(int64), size(int64) ]  
-    #   group bids: same as asks  
-    #   symbol(varString8)  
-    # -------------------------------------------------------------------  
+    # Enum values  
+    CATEGORY_LINEAR  = 2  
+    SIDE_BUY         = 1  
+    SIDE_SELL        = 2  
+    ORDER_TYPE_LIMIT  = 2  
+    ORDER_TYPE_MARKET = 1  
+    TIF_GTC          = 1  
+    POSITION_ONE_WAY = 0  
+    MARKET_UNIT_BASE = 1  
+    BOOL_FALSE       = 0  
+    BOOL_TRUE        = 1  
+    SMP_NONE         = 0  
       
-    class SBEOBL50Parser:  
-        def __init__(self):  
-            # message header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
+    # Struct formats (little-endian, no padding)  
+    HDR_FMT         = "<HHHH"   # messageHeader: 8 bytes  
+    HDR_SZ          = struct.calcsize(HDR_FMT)  
       
-            # fixed body fields:  
-            # ts, seq, cts, u   -> 4 x int64  
-            # priceExponent, sizeExponent -> 2 x int8  
-            # pkgType -> uint8  
-            self.body_fmt = "<qqqqbbB"   # 4*q + 2*b + B  
-            self.body_sz = struct.calcsize(self.body_fmt)  
+    API_REQ_HDR_FMT = "<64sQI64s"   # ApiRequestHeader: 140 bytes  
+    API_REQ_HDR_SZ  = struct.calcsize(API_REQ_HDR_FMT)  
       
-            # group header for repeating groups: blockLength(uint16), numInGroup(uint16)  
-            self.group_hdr_fmt = "<HH"  
-            self.group_hdr_sz = struct.calcsize(self.group_hdr_fmt)  
+    API_RESP_HDR_FMT = "<64s64s64sqqqqq"  # ApiRespHeader: 232 bytes  
+    API_RESP_HDR_SZ  = struct.calcsize(API_RESP_HDR_FMT)  
       
-            # each group entry: price(int64), size(int64)  
-            self.level_fmt = "<qq"  
-            self.level_sz = struct.calcsize(self.level_fmt)  
+    COMMON_RESP_FMT = "<64s64s"   # CommonOrderRespData: 128 bytes  
+    COMMON_RESP_SZ  = struct.calcsize(COMMON_RESP_FMT)  
       
-            self.target_template_id = 20001  
+    DECIMAL64_FMT = "<bq"         # Decimal64: 9 bytes  
+    DECIMAL64_SZ  = struct.calcsize(DECIMAL64_FMT)  
       
-        # ---------------- core small helpers ----------------  
-      
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
-                "version": version,  
-            }  
-      
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> Tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-            if length == 0:  
-                return "", offset  
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-            s = data[offset: offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            return value / (10 ** exponent) if exponent >= 0 else value * (10 ** (-exponent))  
-      
-        def _parse_levels(self, data: bytes, offset: int) -> Tuple[List[Dict[str, float]], int]:  
-            """  
-            Parse one repeating group (asks or bids).  
-            Layout:  
-               uint16 blockLength  
-               uint16 numInGroup  
-               numInGroup * [ price(int64), size(int64) ] (within blockLength)  
-            """  
-            if offset + self.group_hdr_sz > len(data):  
-                raise ValueError("insufficient data for group header")  
-            block_len, num_in_group = struct.unpack_from(self.group_hdr_fmt, data, offset)  
-            offset += self.group_hdr_sz  
-      
-            if block_len < self.level_sz:  
-                raise ValueError(f"blockLength({block_len}) < level_sz({self.level_sz})")  
-      
-            levels = []  
-            for _ in range(num_in_group):  
-                if offset + block_len > len(data):  
-                    raise ValueError("insufficient data for group entry")  
-                # we only care about first 16 bytes (price, size)  
-                price_m, size_m = struct.unpack_from(self.level_fmt, data, offset)  
-                offset += block_len  # skip the whole block (safe if future adds extra fields)  
-      
-                levels.append({  
-                    "price_m": price_m,  
-                    "size_m": size_m,  
-                })  
-            return levels, offset  
-      
-        # ---------------- public parse ----------------  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(f"unsupported template_id={hdr['template_id']}")  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for OBL50Event body")  
-      
-            # parse fixed body  
-            (ts, seq, cts, u,  
-             price_exp, size_exp, pkg_type) = struct.unpack_from(  
-                self.body_fmt, data, self.header_sz  
-            )  
-      
-            offset = self.header_sz + self.body_sz  
-      
-            # asks group  
-            asks_raw, offset = self._parse_levels(data, offset)  
-            # bids group  
-            bids_raw, offset = self._parse_levels(data, offset)  
-            # symbol  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # apply exponents  
-            asks = [  
-                {  
-                    "price": self._apply_exponent(l["price_m"], price_exp),  
-                    "size": self._apply_exponent(l["size_m"], size_exp),  
-                }  
-                for l in asks_raw  
-            ]  
-            bids = [  
-                {  
-                    "price": self._apply_exponent(l["price_m"], price_exp),  
-                    "size": self._apply_exponent(l["size_m"], size_exp),  
-                }  
-                for l in bids_raw  
-            ]  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "pkg_type": pkg_type,   # 0 = SNAPSHOT, 1 = DELTA  
-                "symbol": symbol,  
-                "asks": asks,  
-                "bids": bids,  
-                "parsed_length": offset,  
-            }  
+    _req_counter = 0  
       
       
-    parser = SBEOBL50Parser()  
+    def _next_req_id() -> str:  
+        global _req_counter  
+        _req_counter += 1  
+        return f"req_{_req_counter:012d}"  
       
-    # -------------------------------------------------------------------  
-    # WebSocket handlers  
-    # -------------------------------------------------------------------  
+      
+    def _encode_sbe_header(block_length: int, template_id: int) -> bytes:  
+        return struct.pack(HDR_FMT, block_length, template_id, SCHEMA_ID, VERSION)  
+      
+      
+    def _parse_sbe_header(data: bytes) -> Dict[str, Any]:  
+        bl, tid, sid, ver = struct.unpack_from(HDR_FMT, data, 0)  
+        return {"block_length": bl, "template_id": tid, "schema_id": sid, "version": ver}  
+      
+      
+    def _encode_str(s: str, length: int) -> bytes:  
+        return s.encode("utf-8").ljust(length, b"\x00")[:length]  
+      
+      
+    def _decode_str(b: bytes) -> str:  
+        return b.rstrip(b"\x00").decode("utf-8")  
+      
+      
+    def _encode_decimal64(mantissa: int, exponent: int) -> bytes:  
+        """Pack a Decimal64. value = mantissa × 10^exponent."""  
+        return struct.pack(DECIMAL64_FMT, exponent, mantissa)  
+      
+      
+    def _parse_varstring16(data: bytes, offset: int) -> Tuple[str, int]:  
+        """Parse a varString16: uint16 length prefix + UTF-8 data."""  
+        (length,) = struct.unpack_from("<H", data, offset)  
+        offset += 2  
+        s = data[offset: offset + length].decode("utf-8")  
+        offset += length  
+        return s, offset  
+      
+      
+    def _encode_api_req_header(req_id: str = "", referer: str = "") -> bytes:  
+        ts = int(time.time() * 1000)  
+        return struct.pack(  
+            API_REQ_HDR_FMT,  
+            _encode_str(req_id, 64),  
+            ts,  
+            RECV_WINDOW,  
+            _encode_str(referer, 64),  
+        )  
+      
+      
+    def _parse_api_resp_header(data: bytes, offset: int) -> Tuple[Dict[str, Any], int]:  
+        (req_id, conn_id, trace_id,  
+         time_now, in_time,  
+         bapi_limit, bapi_limit_status, bapi_limit_reset) = struct.unpack_from(  
+            API_RESP_HDR_FMT, data, offset  
+        )  
+        offset += API_RESP_HDR_SZ  
+        return {  
+            "reqId":                    _decode_str(req_id),  
+            "connId":                   _decode_str(conn_id),  
+            "traceId":                  _decode_str(trace_id),  
+            "timeNow":                  time_now,  
+            "inTime":                   in_time,  
+            "bapiLimit":                bapi_limit,  
+            "bapiLimitStatus":          bapi_limit_status,  
+            "bapiLimitResetTimestamp":  bapi_limit_reset,  
+        }, offset  
+      
+      
+    # ----------------------------- Encoders -----------------------------  
+      
+    def encode_auth_req(api_key: str, api_secret: str) -> bytes:  
+        req_id  = _next_req_id()  
+        expires = int(time.time() * 1000) + 10_000  
+        message = f"GET/realtime{expires}"  
+        signature = hmac.new(  
+            api_secret.encode("utf-8"),  
+            message.encode("utf-8"),  
+            hashlib.sha256,  
+        ).hexdigest()  
+      
+        body = struct.pack(  
+            "<64s64sQ64s",  
+            _encode_str(req_id, 64),  
+            _encode_str(api_key, 64),  
+            expires,  
+            _encode_str(signature, 64),  
+        )  
+        return _encode_sbe_header(200, TMPL_AUTH_REQ) + body  
+      
+      
+    def encode_ping_req() -> bytes:  
+        body = struct.pack("<Q", int(time.time() * 1000))  
+        return _encode_sbe_header(8, TMPL_PING_REQ) + body  
+      
+      
+    def encode_create_order(  
+        category: int,  
+        symbol_id: int,  
+        side: int,  
+        order_type: int,  
+        qty_mantissa: int,  
+        qty_exponent: int,  
+        price_mantissa: int,  
+        price_exponent: int,  
+        order_link_id: str,  
+        time_in_force: int = TIF_GTC,  
+        position_idx: int = POSITION_ONE_WAY,  
+        market_unit: int = MARKET_UNIT_BASE,  
+        is_leverage: int = BOOL_FALSE,  
+        reduce_only: int = BOOL_FALSE,  
+        close_on_trigger: int = BOOL_FALSE,  
+        mmp: int = BOOL_FALSE,  
+        smp_type: int = SMP_NONE,  
+        rpi_taker_access: int = BOOL_FALSE,  
+        req_id: str = "",  
+        referer: str = "",  
+    ) -> bytes:  
+        body = (  
+            _encode_api_req_header(req_id or _next_req_id(), referer)  # 140 bytes  
+            + struct.pack("<Bq", category, symbol_id)                   # 9 bytes  
+            + struct.pack("<BB", side, order_type)                      # 2 bytes  
+            + _encode_decimal64(qty_mantissa, qty_exponent)             # 9 bytes  
+            + _encode_decimal64(price_mantissa, price_exponent)         # 9 bytes  
+            + _encode_str(order_link_id, 64)                            # 64 bytes  
+            + struct.pack("<BBBBBBBB",  
+                          time_in_force, position_idx, market_unit,  
+                          is_leverage, reduce_only, close_on_trigger,  
+                          mmp, smp_type)                                # 8 bytes  
+            + struct.pack("<B", rpi_taker_access)                       # 1 byte (sinceVersion=2)  
+        )  
+        return _encode_sbe_header(242, TMPL_CREATE_REQ) + body  
+      
+      
+    def encode_cancel_order(  
+        category: int,  
+        symbol_id: int,  
+        order_id: str = "",  
+        order_link_id: str = "",  
+        req_id: str = "",  
+        referer: str = "",  
+    ) -> bytes:  
+        body = (  
+            _encode_api_req_header(req_id or _next_req_id(), referer)  
+            + struct.pack("<Bq", category, symbol_id)  
+            + _encode_str(order_id, 64)  
+            + _encode_str(order_link_id, 64)  
+        )  
+        return _encode_sbe_header(277, TMPL_CANCEL_REQ) + body  
+      
+      
+    # ----------------------------- Parsers -----------------------------  
+      
+    def parse_auth_resp(data: bytes) -> Dict[str, Any]:  
+        hdr = _parse_sbe_header(data)  
+        offset = HDR_SZ  
+        req_id_b, ret_code, conn_id_b = struct.unpack_from("<64si64s", data, offset)  
+        offset += 132  
+        ret_msg, _ = _parse_varstring16(data, offset)  
+        return {  
+            "header":  hdr,  
+            "reqId":   _decode_str(req_id_b),  
+            "retCode": ret_code,  
+            "connId":  _decode_str(conn_id_b),  
+            "retMsg":  ret_msg,  
+        }  
+      
+      
+    def parse_order_resp(data: bytes) -> Dict[str, Any]:  
+        """Handles CreateOrderRespV5, ReplaceOrderRespV5, CancelOrderRespV5 (same layout)."""  
+        hdr = _parse_sbe_header(data)  
+        offset = HDR_SZ  
+        resp_header, offset = _parse_api_resp_header(data, offset)  
+        (ret_code,) = struct.unpack_from("<i", data, offset)  
+        offset += 4  
+        order_id_b, order_link_id_b = struct.unpack_from(COMMON_RESP_FMT, data, offset)  
+        offset += COMMON_RESP_SZ  
+        ret_msg, _ = _parse_varstring16(data, offset)  
+        return {  
+            "header":     hdr,  
+            "respHeader": resp_header,  
+            "retCode":    ret_code,  
+            "result": {  
+                "orderId":     _decode_str(order_id_b),  
+                "orderLinkId": _decode_str(order_link_id_b),  
+            },  
+            "retMsg": ret_msg,  
+        }  
+      
+      
+    def parse_pong_resp(data: bytes) -> Dict[str, Any]:  
+        hdr = _parse_sbe_header(data)  
+        ts, pong_time = struct.unpack_from("<QQ", data, HDR_SZ)  
+        return {"header": hdr, "timestamp": ts, "pongTime": pong_time}  
+      
+      
+    PARSERS = {  
+        TMPL_AUTH_RESP:    parse_auth_resp,  
+        TMPL_CREATE_RESP:  parse_order_resp,  
+        TMPL_REPLACE_RESP: parse_order_resp,  
+        TMPL_CANCEL_RESP:  parse_order_resp,  
+        TMPL_PONG_RESP:    parse_pong_resp,  
+    }  
+      
+    # ----------------------------- WebSocket handlers -----------------------------  
       
     def on_message(ws, message):  
         try:  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
+            if not isinstance(message, (bytes, bytearray)):  
+                logging.warning("unexpected text frame: %r", message)  
+                return  
       
-                pkg_type = decoded["pkg_type"]  
-                pkg_str = "SNAPSHOT" if pkg_type == 0 else "DELTA" if pkg_type == 1 else f"UNKNOWN({pkg_type})"  
+            data = bytes(message)  
+            hdr  = _parse_sbe_header(data)  
+            tid  = hdr["template_id"]  
+            parser = PARSERS.get(tid)  
       
-                asks = decoded["asks"]  
-                bids = decoded["bids"]  
+            if parser is None:  
+                logging.warning("unhandled templateId=%s", tid)  
+                return  
       
-                best_ask = asks[0] if asks else {"price": 0.0, "size": 0.0}  
-                best_bid = bids[0] if bids else {"price": 0.0, "size": 0.0}  
+            decoded = parser(data)  
+            logging.info("templateId=%s %s", tid, decoded)  
       
-                logging.info(  
-                    "SBE %s u=%s seq=%s type=%s asks=%d bids=%d "  
-                    "BEST bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"], decoded["u"], decoded["seq"], pkg_str,  
-                    len(asks), len(bids),  
-                    best_bid["price"], best_bid["size"],  
-                    best_ask["price"], best_ask["size"],  
-                    decoded["ts"],  
-                )  
+            if tid == TMPL_AUTH_RESP:  
+                print("auth:", decoded)  
+                if decoded["retCode"] == 0:  
+                    # Send a sample limit buy order after successful auth  
+                    # qty=0.01 → mantissa=1, exponent=-2  
+                    # price=69000 → mantissa=69000, exponent=0  
+                    order = encode_create_order(  
+                        category=CATEGORY_LINEAR,  
+                        symbol_id=123456,  
+                        side=SIDE_BUY,  
+                        order_type=ORDER_TYPE_LIMIT,  
+                        qty_mantissa=1,  
+                        qty_exponent=-2,  
+                        price_mantissa=69000,  
+                        price_exponent=0,  
+                        order_link_id=_next_req_id(),  
+                        referer="my_broker",  
+                    )  
+                    ws.send(order)  
+                else:  
+                    logging.error("auth failed retCode=%s retMsg=%s",  
+                                  decoded["retCode"], decoded["retMsg"])  
       
+            elif tid in (TMPL_CREATE_RESP, TMPL_REPLACE_RESP, TMPL_CANCEL_RESP):  
                 print(  
-                    f"{decoded['symbol']}  u={decoded['u']}  seq={decoded['seq']}  {pkg_str}  "  
-                    f"levels: asks={len(asks)} bids={len(bids)}  "  
-                    f"BEST: bid {best_bid['price']:.8f} x {best_bid['size']:.8f}  |  "  
-                    f"ask {best_ask['price']:.8f} x {best_ask['size']:.8f}"  
+                    f"order resp templateId={tid} retCode={decoded['retCode']} "  
+                    f"orderId={decoded['result']['orderId']} "  
+                    f"orderLinkId={decoded['result']['orderLinkId']} "  
+                    f"retMsg={decoded['retMsg']}"  
                 )  
       
-            else:  
-                # text frame: control / errors / ping-pong  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print("TEXT:", obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-                    print("TEXT(non-json):", message)  
+            elif tid == TMPL_PONG_RESP:  
+                print("pong:", decoded)  
+      
         except Exception as e:  
             logging.exception("decode error: %s", e)  
             print("decode error:", e)  
@@ -407,31 +756,20 @@ u| Type| Notes
         logging.info("connection closed")  
       
       
-    def ping_per(ws):  
+    def on_open(ws):  
+        print("opened")  
+        ws.send(encode_auth_req(API_KEY, API_SECRET))  
+        print("auth request sent")  
+        threading.Thread(target=_ping_loop, args=(ws,), daemon=True).start()  
+      
+      
+    def _ping_loop(ws):  
         while True:  
             try:  
-                ws.send(json.dumps({"op": "ping"}))  
+                ws.send(encode_ping_req())  
             except Exception:  
                 return  
             time.sleep(10)  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        # background ping thread  
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-      
-      
-    def on_pong(ws, *_):  
-        print("pong received")  
-      
-      
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
       
       
     def connWS():  
@@ -441,8 +779,6 @@ u| Type| Notes
             on_message=on_message,  
             on_error=on_error,  
             on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
         )  
         ws.run_forever(ping_interval=20, ping_timeout=10)  
       
@@ -450,568 +786,766 @@ u| Type| Notes
     if __name__ == "__main__":  
         websocket.enableTrace(False)  
         connWS()  
-          
     
 
-### Golang
-    
-    
-    // sbe_ob50_client.go  
-    package main  
-      
-    import (  
-        "bytes"  
-        "compress/flate"  
-        "encoding/binary"  
-        "encoding/json"  
-        "fmt"  
-        "log"  
-        "math"  
-        "time"  
-      
-        "github.com/gorilla/websocket"  
-        "yourmodule/quote" // generated SBE package  
-    )  
-      
-    const (  
-        WSURL   = "wss://stream.bybit.com/v5/market/sbe"  
-        CHANNEL = "ob.50.sbe.BTCUSDT"  
-    )  
-      
-    func toReal(mantissa int64, exponent int8) float64 {  
-        return float64(mantissa) * math.Pow10(int(exponent))  
-    }  
-      
-    func decodeOBL50(buf []byte) (*quote.OBL50Event, error) {  
-        var hdr quote.MessageHeader  
-        reader := bytes.NewReader(buf)  
-      
-        // decode messageHeader (little endian)  
-        if err := binary.Read(reader, binary.LittleEndian, &hdr); err != nil {  
-            return nil, fmt.Errorf("read header: %w", err)  
-        }  
-      
-        if hdr.TemplateId != 20001 {  
-            return nil, fmt.Errorf("unexpected templateId: %d", hdr.TemplateId)  
-        }  
-      
-        var msg quote.OBL50Event  
-        // many generators provide WrapForDecode; here assume we can read the fixed block then groups  
-        if err := msg.Decode(reader, int(hdr.BlockLength), int(hdr.Version)); err != nil {  
-            return nil, fmt.Errorf("decode OBL50: %w", err)  
-        }  
-      
-        return &msg, nil  
-    }  
-      
-    func main() {  
-        book := NewOrderBook()  
-      
-        dialer := websocket.Dialer{  
-            HandshakeTimeout: 10 * time.Second,  
-            EnableCompression: false,  
-        }  
-      
-        conn, _, err := dialer.Dial(WSURL, nil)  
-        if err != nil {  
-            log.Fatalf("dial: %v", err)  
-        }  
-        defer conn.Close()  
-      
-        // subscribe  
-        sub := map[string]interface{}{  
-            "op":   "subscribe",  
-            "args": []string{CHANNEL},  
-        }  
-        if err := conn.WriteJSON(sub); err != nil {  
-            log.Fatalf("subscribe: %v", err)  
-        }  
-      
-        for {  
-            mt, data, err := conn.ReadMessage()  
-            if err != nil {  
-                log.Fatalf("read: %v", err)  
-            }  
-      
-            if mt == websocket.TextMessage {  
-                // control JSON or pong etc  
-                var m map[string]interface{}  
-                _ = json.Unmarshal(data, &m)  
-                continue  
-            }  
-      
-            // if server wraps SBE in per-message deflate, you may need to decompress:  
-            if isDeflatedFrame(data) {  
-                data, err = inflate(data)  
-                if err != nil {  
-                    log.Printf("inflate error: %v", err)  
-                    continue  
-                }  
-            }  
-      
-            msg, err := decodeOBL50(data)  
-            if err != nil {  
-                log.Printf("decode error: %v", err)  
-                continue  
-            }  
-      
-            u := msg.U  
-            pkgType := msg.PkgType // 0 snapshot, 1 delta  
-            pxExp := msg.PriceExponent  
-            szExp := msg.SizeExponent  
-      
-            // extract levels  
-            var asks, bids [][2]float64  
-            for _, a := range msg.Asks {  
-                p := toReal(a.Price, pxExp)  
-                sz := toReal(a.Size, szExp)  
-                asks = append(asks, [2]float64{p, sz})  
-            }  
-            for _, b := range msg.Bids {  
-                p := toReal(b.Price, pxExp)  
-                sz := toReal(b.Size, szExp)  
-                bids = append(bids, [2]float64{p, sz})  
-            }  
-      
-            // continuity logic:  
-            if u == 1 {  
-                // service restart / precision change snapshot  
-                book.Asks.SnapshotFrom(asks)  
-                book.Bids.SnapshotFrom(bids)  
-                book.LastU = 1  
-                fmt.Printf("[RESET SNAPSHOT] u=%d seq=%d symbol=%s\n", u, msg.Seq, msg.Symbol)  
-                continue  
-            }  
-      
-            if book.LastU != 0 && u != book.LastU+1 {  
-                log.Printf("[WARN] u jump: lastU=%d newU=%d – consider resync", book.LastU, u)  
-            }  
-      
-            if pkgType == quote.PkgTypeEnum_SNAPSHOT {  
-                book.Asks.SnapshotFrom(asks)  
-                book.Bids.SnapshotFrom(bids)  
-            } else {  
-                for _, lv := range asks {  
-                    book.Asks.Apply(lv[0], lv[1])  
-                }  
-                for _, lv := range bids {  
-                    book.Bids.Apply(lv[0], lv[1])  
-                }  
-            }  
-      
-            book.LastU = u  
-            bestBid := book.Bids.BestBid()  
-            bestAsk := book.Asks.BestAsk()  
-            fmt.Printf("u=%d pkgType=%d bestBid=%.5f bestAsk=%.5f\n", u, pkgType, bestBid, bestAsk)  
-        }  
-    }  
-      
-    // helpers (optional, depending on ws framing)  
-    func isDeflatedFrame(data []byte) bool {  
-        // placeholder: detect by protocol; many setups know from WS sub-protocol  
-        return false  
-    }  
-      
-    func inflate(data []byte) ([]byte, error) {  
-        r := flate.NewReader(bytes.NewReader(data))  
-        defer r.Close()  
-      
-        var out bytes.Buffer  
-        if _, err := out.ReadFrom(r); err != nil {  
-            return nil, err  
-        }  
-        return out.Bytes(), nil  
-    }
+## Limits & Errors
+
+  * **Rate limits** are surfaced in every response's `ApiRespHeader` (`bapiLimit`, `bapiLimitStatus`, `bapiLimitResetTimestamp`).
+  * Non-zero `retCode` in any response indicates failure; read `retMsg` (varString16) for the diagnostic message.
+  * **CommonErrResp** (`templateId = 17`) is sent when the server cannot associate the error with a specific request.
+  * In batch responses, each group item carries its own `code` and `msg` — check per-item codes individually.
+  * On socket close, reconnect and re-authenticate before resuming; use `orderLinkId` to detect duplicates.
+
+
+
+## Compatibility Notes
+
+  * **Byte order:** little-endian for all numeric primitives.
+  * **Decimal64:** packed as `int8 (exponent) + int64 (mantissa)` = 9 bytes, no alignment padding. `value = mantissa × 10^exponent`.
+  * **BoolEnum:** encoded as `uint8`; valid values are 0 (FALSE) and 1 (TRUE). Value 254 signals a non-representable state.
+  * **Fixed-length strings:** null-padded to declared length; strip trailing `\x00` on decode.
+  * **varString16:** prefixed by a 2-byte `uint16` length; follows all fixed fields in the message body.
+  * **Repeating groups:** prefixed by `groupSize16Encoding` (uint16 `blockLength` \+ uint16 `numInGroup`), before the group items.
+  * Client clock must be NTP/PTP-synchronized; server rejects frames where the timestamp falls outside the `recvWindow`.
 
 ---
 
-# SBE Level 50 接入指南
+# SBE Order Entry 接入指南
 
 ## 總覽
 
-  * **Channel:** 僅支援MMWS域名
-  * **Topic:** `ob.50.sbe.{symbol}` (每 20 ms 推送 snapshot 或 delta).
-  * **Format:** SBE 二進制 frame (`opcode = 2`), little-endian.
-  * **Depth:** 每一側 50 檔深度, 此頻道內不包含 RPI.
-  * **Units:** 時間戳為 microseconds (µs), price/size 為 mantissa 搭配 exponent.
+  * **Channel:** 僅支援私有 MM WebSocket, 不開放於 public WS.
+  * **Transport:** WebSocket 二進制 frames — 每個 frame 包含一則 SBE 信息 (無 JSON).
+  * **Encoding:** SBE (Simple Binary Encoding), little-endian. `schemaId = 2`, `version = 2`.
+  * **Purpose:** 高效能低延遲下單 — 單筆或批次建立、修改、取消訂單.
+  * **Compression:** 停用壓縮以避免隊頭阻塞與 CPU 開銷.
 
 
 
-## 流程
+## 測試網
 
-### Ping / Pong (JSON 控制 frame)
+測試網URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
 
-**Send Ping**
+## SBE XML 模板 (交易)
+
+[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E4%BA%A4%E6%98%93-sbe-xml-template)
+
+## 連接
+
+### 連線生命週期
+
+  1. 建立 WebSocket 連線.
+  2. 送出 **AuthReq** (`templateId = 1`).
+  3. 接收 **AuthResp** (`templateId = 2`) — 僅在 `retCode = 0` 時繼續.
+  4. 送出訂單請求 (**CreateOrderReqV5** 、**ReplaceOrderReqV5** 、**CancelOrderReqV5** 或批次變體).
+  5. 接收每筆請求的對應回應.
+  6. 定期送出 **PingReq** (`templateId = 3`); 預期收到 **PongResp** (`templateId = 4`).
+
+
+
+### 心跳 (Heartbeat)
+
+  * 每 **10 秒** 送出一次 **PingReq** 以維持連線.
+  * 若 **2 × 心跳間隔** 內未收到任何資料, 請重新連線並重新驗證身份.
+
+
+
+### 重連策略
+
+  * 使用指數退避加抖動 (exponential backoff with jitter).
+  * 重連後立即重新驗證身份, 再恢復下單流程.
+  * 使用 `orderLinkId` 進行客戶端冪等性控制 — 重新提交前先查詢訂單狀態.
+
+
+
+## 驗證流程
+
+### 送出 AuthReq
+
+簽名: 對 `"GET/realtime{expires}"` 執行 HMAC-SHA256, 其中 `expires` 為未來的 Unix 時間戳 (毫秒).
     
     
-    {"req_id": "100001", "op": "ping"}  
+    import hashlib, hmac, struct, time  
+      
+    def generate_signature(api_secret: str, expires: int) -> str:  
+        message = f"GET/realtime{expires}"  
+        return hmac.new(  
+            api_secret.encode("utf-8"),  
+            message.encode("utf-8"),  
+            hashlib.sha256,  
+        ).hexdigest()  
     
 
-**Receive Pong**
+### 接收 AuthResp
     
     
-    {"success": true,"ret_msg": "pong","conn_id": "xxxxx-xx","req_id": "","op": "ping"}  
+    {  
+      "header": {  
+        "block_length": 132,  
+        "template_id": 2,  
+        "schema_id": 2,  
+        "version": 2  
+      },  
+      "reqId": "req_00000000001",  
+      "retCode": 0,  
+      "connId": "d30fdpbboasp1pjbe7r0",  
+      "retMsg": "OK"  
+    }  
     
 
-### 訂閱
-
-  * Topic 格式: `ob.50.sbe.<symbol>`
-
+  * `retCode = 0` — 驗證成功.
+  * 任何非零 `retCode` 均為失敗; 請讀取 `retMsg` 了解原因.
 
 
-**訂閱示例**
+
+## 訂單操作
+
+### 建立訂單 (Create Order)
+
+送出 **CreateOrderReqV5** (`templateId = 5`), 接收 **CreateOrderRespV5** (`templateId = 6`).
+
+  * `price` 與 `qty` 使用 **Decimal64** : `value = mantissa × 10^exponent`.
+  * `orderLinkId` 為固定 64 位元組 char 欄位 (補 null); 用於客戶端去重.
+
+
+
+**CreateOrderRespV5 解碼示例:**
     
     
-    {"op": "subscribe", "args": ["ob.50.sbe.BTCUSDT"]}  
+    {  
+      "header": {  
+        "block_length": 364,  
+        "template_id": 6,  
+        "schema_id": 2,  
+        "version": 2  
+      },  
+      "respHeader": {  
+        "reqId": "req_00000000002",  
+        "connId": "d30fdpbboasp1pjbe7r0",  
+        "traceId": "abc123def456789",  
+        "timeNow": 1780902835759344,  
+        "inTime": 1780902835758533,  
+        "bapiLimit": 1000,  
+        "bapiLimitStatus": 999,  
+        "bapiLimitResetTimestamp": 1757497370000  
+      },  
+      "retCode": 0,  
+      "result": {  
+        "orderId": "1912284048591699456",  
+        "orderLinkId": "cli_order_001"  
+      },  
+      "retMsg": "OK"  
+    }  
     
 
-**訂閱回報**
-    
-    
-    {"success": true,"ret_msg": "","conn_id": "d30fdpbboasp1pjbe7r0","req_id": "xxx","op": "subscribe"}  
-    
+### 修改訂單 (Replace Order)
 
-## SBE XML 模板 (L50 OB)
+送出 **ReplaceOrderReqV5** (`templateId = 7`), 接收 **ReplaceOrderRespV5** (`templateId = 8`).
 
-[sbe xml template](/docs/zh-TW/v5/sbe/sbe-basic-info#%E8%A1%8C%E6%83%85-sbe-xml-template)
+  * 透過 `orderId` **或** `orderLinkId` 識別要修改的訂單 (至少提供一個).
+  * 以 Decimal64 格式提交新的 `qty` 及/或 `price`.
 
-## SBE Level 50 欄位參考
 
-**Message:** `OBL50Event` (id = 20001)
 
-Field Name| ID| SBE Type| Unit / Format| Notes  
----|---|---|---|---  
-ts| 1| int64| µs| 系統在推送側生成資料的時間戳 (dispatcher).  
-seq| 2| int64| integer| Cross-sequence id, 每個 feed 單調遞增, 但不保證連續.  
-cts| 3| int64| µs| 撮合引擎生成此 OB snapshot 或 delta 的時間戳, 可用於延遲測量.  
-u| 4| int64| integer| Update id, 每個 symbol 單調遞增, 用於檢查連續性.  
-priceExponent| 5| int8| exponent| 價格小數位數, 顯示價格 = mantissa × 10^`priceExponent`.  
-sizeExponent| 6| int8| exponent| 數量小數位數, 顯示數量 = mantissa × 10^`sizeExponent`.  
-pkgType| 7| uint8 (`pkgTypeEnum`)| integer| 封包型別 (0 = snapshot, 1 = delta).  
-asks| 40| group(`groupSize16Encoding`)| —| 賣方 order book 更新, 最多 50 檔.  
-bids| 41| group(`groupSize16Encoding`)| —| 買方 order book 更新, 最多 50 檔.  
-symbol| 55| varString8| UTF-8| 1 位長度 byte + 實際資料, 例如 `0x07 "BTCUSDT"`.  
-  
-### Asks Group
+### 取消訂單 (Cancel Order)
 
-Field (id)| Type| Description  
+送出 **CancelOrderReqV5** (`templateId = 9`), 接收 **CancelOrderRespV5** (`templateId = 10`).
+
+  * 透過 `orderId` **或** `orderLinkId` 識別要取消的訂單.
+
+
+
+## 批次操作
+
+所有批次請求在最前面嵌入一個 **ApiRequestHeader** , 接著是 `category` 欄位, 然後是一個**重複群組 (repeating group)** 的訂單項目。群組前綴為 `groupSize16Encoding` 標頭 (uint16 `blockLength` \+ uint16 `numInGroup`).
+
+操作| 請求 Template ID| 回應 Template ID  
 ---|---|---  
-price (1)| int64| 賣價 mantissa, 顯示價格 = `price × 10^priceExponent`.  
-size (2)| int64| 賣量 mantissa, 顯示數量 = `size × 10^sizeExponent`.  
+批次建立 (Batch Create)| 11| 12  
+批次修改 (Batch Replace)| 13| 14  
+批次取消 (Batch Cancel)| 15| 16  
   
-### Bids Group
+每筆回應群組項目包含各自的 `code` 與 `msg` (varString16), 以及已確認訂單的 `orderId` / `orderLinkId`。所有群組之後附有頂層 `retMsg` (varString16).
 
-Field (id)| Type| Description  
----|---|---  
-price (1)| int64| 買價 mantissa, 顯示價格 = `price × 10^priceExponent`.  
-size (2)| int64| 買量 mantissa, 顯示數量 = `size × 10^sizeExponent`.  
+## 錯誤處理
+
+**CommonErrResp** (`templateId = 17`) 用於伺服器無法將錯誤關聯至特定請求信息時回傳。
+
+欄位: `respHeader` (ApiRespHeader)、`retCode` (int32)、`retMsg` (varString16).
+
+## SBE 信息結構
+
+### 信息標頭 (8 bytes)
+
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+blockLength| uint16| 2| 固定主體長度 Fixed-body length  
+templateId| uint16| 2| 信息型別識別碼 Message type identifier  
+schemaId| uint16| 2| 固定值 = 2 Fixed = 2  
+version| uint16| 2| 固定值 = 2 Fixed = 2  
   
-## OrderBook 更新邏輯
+### 複合型別 (Composite Types)
 
-### `u` (Update ID) 欄位規則
+#### `ApiRequestHeader` (140 bytes)
 
-#### `u` 的行為
+每則請求信息開頭嵌入此結構。
 
-  * 欄位 `u` 總是**單調遞增**.
-  * 欄位 `u` 通常**不會重置** , 除非系統重啟或精度 (precision) 改變.
-  * 當 `u = 1` 時永遠代表一個 **snapshot**
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+reqId| char[64]| 64| 客戶端請求 ID (選填; 回應中會回傳) Client request ID (optional; echoed in response)  
+timestamp| uint64| 8| 客戶端時間戳 (毫秒); 須滿足: `server_time − recvWindow ≤ timestamp < server_time + 1000`  
+recvWindow| uint32| 4| 可接受的時間窗口 (毫秒); 預設 5000 Acceptable time window (milliseconds); default 5000  
+referer| char[64]| 64| 券商 / 來源識別碼 Broker / source identifier  
+  
+#### `ApiRespHeader` (232 bytes)
 
+每則回應信息開頭嵌入此結構。
 
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+reqId| char[64]| 64| 回傳的客戶端請求 ID Echoed client request ID  
+connId| char[64]| 64| 連線識別碼 Connection identifier  
+traceId| char[64]| 64| 診斷用 Trace ID Trace ID for diagnostics  
+timeNow| int64| 8| 伺服器時間戳 (微秒) Server timestamp (microseconds)  
+inTime| int64| 8| 信息接收時間戳 (微秒) Message ingress timestamp (microseconds)  
+bapiLimit| int64| 8| 總速率限制 Total rate limit  
+bapiLimitStatus| int64| 8| 剩餘速率限制 token Remaining rate limit tokens  
+bapiLimitResetTimestamp| int64| 8| 速率限制重置時間戳 (毫秒) Rate-limit reset timestamp (milliseconds)  
+  
+#### `CommonOrderRespData` (128 bytes)
 
-#### 連續性檢查
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+orderId| char[64]| 64| 交易所指定的訂單 ID Exchange-assigned order ID  
+orderLinkId| char[64]| 64| 回傳的客戶端訂單 ID Echoed client order ID  
+  
+#### `Decimal64` (9 bytes)
 
-只有在 **`u != 1`** 時才需要進行連續性檢查.
+Field| Type| Size (bytes)| Description  
+---|---|---|---  
+exponent| int8| 1| 10 的次方 Power of 10  
+mantissa| int64| 8| 有效數字 Significand  
+  
+`actual_value = mantissa × 10^exponent`. 示例: 價格 69000.00 → `exponent=0, mantissa=69000`; 數量 0.01 → `exponent=-2, mantissa=1`.
 
-Condition| Action  
+### 枚舉型別 (Enumerations)
+
+Enum| Values (uint8)  
 ---|---  
-`u != 1`| 驗證連續性: 下一個 `u` 應該等於前一個 `u + 1`.  
-`u == 1`| 特殊 snapshot (服務重啟或精度變更), **不應** 執行連續性檢查.  
+`CategoryType`| 0=UNKNOWN, 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION, 254=NON_REPRESENTABLE  
+`SideType`| 0=UNKNOWN, 1=BUY, 2=SELL, 254=NON_REPRESENTABLE  
+`OrderType`| 0=UNKNOWN, 1=MARKET, 2=LIMIT, 254=NON_REPRESENTABLE  
+`TimeInForceType`| 0=UNKNOWN, 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI, 254=NON_REPRESENTABLE  
+`PositionIdxType`| 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL, 253=UNKNOWN, 254=NON_REPRESENTABLE  
+`MarketUnitType`| 0=UNKNOWN, 1=BASE_COIN, 2=QUOTE_COIN, 254=NON_REPRESENTABLE  
+`SmpType`| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH, 254=NON_REPRESENTABLE  
+`BoolEnum`| 0=FALSE, 1=TRUE, 254=NON_REPRESENTABLE  
   
-### OrderBook 維護規則
+### 信息欄位表
 
-#### 首次連結與重連
+#### `AuthReq` (id=1, blockLength=200)
 
-訂閱完成後, **第一條信息一定是 snapshot** , 客戶端使用該 snapshot 初始化本地 orderbook.
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| reqId| char[64]| 64| 客戶端請求 ID Client request ID  
+2| apiKey| char[64]| 64| API Key (補 null) API Key (null-padded)  
+3| expires| uint64| 8| 到期時間戳 (毫秒); 必須為未來時間 Expiry timestamp (milliseconds); must be in future  
+4| signature| char[64]| 64| HMAC-SHA256 of `"GET/realtime{expires}"`  
+  
+#### `AuthResp` (id=2, blockLength=132)
 
-#### 快照處理
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| reqId| char[64]| 64| 回傳的請求 ID Echoed request ID  
+2| retCode| int32| 4| 0 = 成功 0 = OK  
+3| connId| char[64]| 64| 連線識別碼 Connection identifier  
+20| retMsg| varString16| variable| 成功時為 `"OK"`; 否則為錯誤描述 `"OK"` on success; error text otherwise  
+  
+#### `PingReq` (id=3, blockLength=8)
 
-收到Snapshot 一定要 **完全取代** 本地 orderbook
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| timestamp| uint64| 8| 客戶端時間戳 (毫秒) Client timestamp (milliseconds)  
+  
+#### `PongResp` (id=4, blockLength=16)
 
-Snapshot 可能出現於:
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| timestamp| uint64| 8| 回傳的客戶端時間戳 (毫秒) Echoed client timestamp (milliseconds)  
+2| pongTime| uint64| 8| 伺服器 pong 時間戳 (毫秒) Server pong timestamp (milliseconds)  
+  
+#### `CreateOrderReqV5` (id=5, blockLength=242)
 
-  * 初始化訂閱之後
-  * 當單次變更的價位數超過 100 檔 (極端行情自動回退機制)
-  * 內部服務重啟之後
-  * exponent / precision 變更之後
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| 請求標頭 Request header  
+2| category| CategoryType| 1| 1=SPOT, 2=LINEAR, 3=INVERSE, 4=OPTION  
+3| symbolId| int64| 8| 內部數字型 symbol ID Internal numeric symbol ID  
+4| side| SideType| 1| 1=BUY, 2=SELL  
+5| orderType| OrderType| 1| 1=MARKET, 2=LIMIT  
+6| qty| Decimal64| 9| 訂單數量 Order quantity  
+7| price| Decimal64| 9| 訂單價格; MARKET 單設 mantissa=0 Order price; set mantissa=0 for MARKET orders  
+8| orderLinkId| char[64]| 64| 客戶端訂單 ID (補 null) Client order ID (null-padded)  
+9| timeInForce| TimeInForceType| 1| 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI  
+10| positionIdx| PositionIdxType| 1| 0=ONE_WAY, 1=HEDGE_BUY, 2=HEDGE_SELL  
+11| marketUnit| MarketUnitType| 1| 1=BASE_COIN, 2=QUOTE_COIN  
+12| isLeverage| BoolEnum| 1| 0=FALSE, 1=TRUE  
+13| reduceOnly| BoolEnum| 1| 0=FALSE, 1=TRUE  
+14| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
+15| mmp| BoolEnum| 1| 造市商保護 Market Maker Protection  
+16| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
+17| rpiTakerAccess| BoolEnum| 1| 0=FALSE, 1=TRUE；schema version 2 新增；支持的訂單組合：(1) `orderType=Market`；(2) `orderType=Limit` 且 `timeInForce=IOC` 或 `FOK`。相關[公告](https://announcements.bybit.com/en/article/rpi-liquidity-now-available-to-api-taker-orders-bltb943887bfa4c4d17/)  
+  
+#### `CreateOrderRespV5` (id=6, blockLength=364)
 
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| respHeader| ApiRespHeader| 232| 回應標頭 Response header  
+2| retCode| int32| 4| 0 = 已接受 0 = accepted  
+3| result| CommonOrderRespData| 128| 訂單識別碼 Order identifiers  
+20| retMsg| varString16| variable| 成功時為 `"OK"` `"OK"` on success  
+  
+#### `ReplaceOrderReqV5` (id=7, blockLength=295)
 
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| 請求標頭 Request header  
+2| category| CategoryType| 1| 產品類別 Product category  
+3| symbolId| int64| 8| 內部數字型 symbol ID Internal numeric symbol ID  
+4| orderId| char[64]| 64| 要修改的訂單 (使用 orderId 或 orderLinkId) Order to replace (use orderId or orderLinkId)  
+5| orderLinkId| char[64]| 64| 要修改訂單的客戶端訂單 ID Client order ID of the order to replace  
+6| qty| Decimal64| 9| 新數量 New quantity  
+7| price| Decimal64| 9| 新價格 New price  
+  
+#### `ReplaceOrderRespV5` (id=8, blockLength=364)
 
-#### 增量處理
+與 `CreateOrderRespV5` 結構相同。
 
-Delta 以 **增量方式** 套用:
+#### `CancelOrderReqV5` (id=9, blockLength=277)
 
-  * 當 `size > 0` 時插入或更新對應價位,當 `size == 0` 時刪除對應價位,持續使用欄位 `u` 進行連續性檢查.
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| header| ApiRequestHeader| 140| 請求標頭 Request header  
+2| category| CategoryType| 1| 產品類別 Product category  
+3| symbolId| int64| 8| 內部數字型 symbol ID Internal numeric symbol ID  
+4| orderId| char[64]| 64| 要取消的訂單 (使用 orderId 或 orderLinkId) Order to cancel (use orderId or orderLinkId)  
+5| orderLinkId| char[64]| 64| 要取消訂單的客戶端訂單 ID Client order ID of the order to cancel  
+  
+#### `CancelOrderRespV5` (id=10, blockLength=364)
 
+與 `CreateOrderRespV5` 結構相同。
 
+#### `BatchCreateOrderReqV5` (id=11)
 
-**極端行情處理**
+固定主體 (141 bytes): `header` (ApiRequestHeader, 140 bytes) + `category` (uint8, 1 byte).
 
-  * 當某一筆 delta 包含 **超過 100 檔 bid+ask 更新** (買賣加總), 系統會自動改為推送 **完整 snapshot** , 不再推送該筆 delta.
-  * 確保客戶端 orderbook 能夠乾淨地重新同步.
-  * 避免在高頻變動時產生大量 delta 封包.
-  * Snapshot 大小固定, 解碼行為更可預期.
+後接重複群組 `request` (groupSize16Encoding 標頭 + 群組項目):
 
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8| 內部數字型 symbol ID Internal numeric symbol ID  
+2| side| SideType| 1| 1=BUY, 2=SELL  
+3| orderType| OrderType| 1| 1=MARKET, 2=LIMIT  
+4| qty| Decimal64| 9| 訂單數量 Order quantity  
+5| price| Decimal64| 9| 訂單價格 Order price  
+6| orderLinkId| char[64]| 64| 客戶端訂單 ID Client order ID  
+7| timeInForce| TimeInForceType| 1| 1=GTC, 2=POST_ONLY, 3=IOC, 4=FOK, 5=RPI  
+8| positionIdx| PositionIdxType| 1| 倉位模式 Position mode  
+9| marketUnit| MarketUnitType| 1| 1=BASE_COIN, 2=QUOTE_COIN  
+10| isLeverage| BoolEnum| 1| 0=FALSE, 1=TRUE  
+11| reduceOnly| BoolEnum| 1| 0=FALSE, 1=TRUE  
+12| closeOnTrigger| BoolEnum| 1| 0=FALSE, 1=TRUE  
+13| mmp| BoolEnum| 1| 造市商保護 Market Maker Protection  
+14| smpType| SmpType| 1| 0=UNKNOWN, 1=CANCEL_TAKER, 2=CANCEL_MAKER, 3=CANCEL_BOTH  
+  
+每項目 blockLength = 100 bytes。
 
+#### `BatchCreateOrderRespV5` (id=12)
 
-### 推送更新示例
+固定主體 (236 bytes): `respHeader` (232 bytes) + `retCode` (int32, 4 bytes).
 
-以下是真實情境, 連接穩定且信息按順序到達:
+後接重複群組 `list` (每項目 blockLength = 141 bytes):
 
-u| Type| Notes  
----|---|---  
-10000| snapshot| 訂閱後收到的第一則信息.  
-10001| delta| 增量更新, 必須 **將變更套用** 在現有本地 orderbook 上.  
-10002| delta| 正常的增量更新.  
-10003| snapshot| 市場大幅波動, 變更價位數 > 100, 系統改以 snapshot 推送並 **重建** 本地 orderbook.  
-10004| delta| 從最新 snapshot 繼續推送 delta.  
-1| snapshot| 服務重啟或精度變更, 導致 `u` 重設為 1.  
-2| delta| 新一輪連續序列的開始.  
-3| delta| —  
-4| delta| —  
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| code| int32| 4| 每筆訂單結果碼 Per-order result code  
+2| category| CategoryType| 1|   
+3| symbolId| int64| 8|   
+4| orderId| char[64]| 64| 交易所訂單 ID Exchange order ID  
+5| orderLinkId| char[64]| 64| 客戶端訂單 ID Client order ID  
+20| msg| varString16| variable| 每筆訂單訊息 Per-order message  
+  
+後接頂層 `retMsg` (varString16).
+
+#### `BatchReplaceOrderReqV5` (id=13)
+
+固定主體 (141 bytes): 與 BatchCreateOrderReqV5 相同.
+
+重複群組 `request` (每項目 blockLength = 154 bytes):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8|   
+2| orderId| char[64]| 64| 要修改的訂單 Order to replace  
+3| orderLinkId| char[64]| 64|   
+4| qty| Decimal64| 9| 新數量 New quantity  
+5| price| Decimal64| 9| 新價格 New price  
+  
+#### `BatchReplaceOrderRespV5` (id=14)
+
+固定主體 (236 bytes). 重複群組 `list` (每項目 blockLength = 141 bytes, 欄位同 BatchCreateOrderRespV5). 後接 `retMsg` (varString16).
+
+#### `BatchCancelOrderReqV5` (id=15)
+
+固定主體 (141 bytes). 重複群組 `request` (每項目 blockLength = 136 bytes):
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| symbolId| int64| 8|   
+2| orderId| char[64]| 64| 要取消的訂單 Order to cancel  
+3| orderLinkId| char[64]| 64|   
+  
+#### `BatchCancelOrderRespV5` (id=16)
+
+與 `BatchReplaceOrderRespV5` 結構相同。
+
+#### `CommonErrResp` (id=17, blockLength=236)
+
+ID| Field| Type| Size (bytes)| Description  
+---|---|---|---|---  
+1| respHeader| ApiRespHeader| 232| 回應標頭 Response header  
+2| retCode| int32| 4| 錯誤碼 Error code  
+20| retMsg| varString16| variable| 錯誤描述 Error description  
   
 ## 接入示例
-
-### Python
     
     
+    import hashlib  
+    import hmac  
     import json  
     import logging  
     import struct  
     import threading  
     import time  
-    from datetime import datetime  
-    from typing import Dict, Any, List, Tuple  
+    from typing import Any, Dict, Optional, Tuple  
       
     import websocket  
       
     logging.basicConfig(  
-        filename='logfile_ob50.log',  
+        filename="logfile_order_entry.log",  
         level=logging.INFO,  
-        format='%(asctime)s %(levelname)s %(message)s'  
+        format="%(asctime)s %(levelname)s %(message)s",  
     )  
       
-    # -------------------------------------------------------------------  
-    # Config  
-    # -------------------------------------------------------------------  
+    WS_URL = "wss://stream-testnet.bybits.org/v5/trade-sbe"  
+    API_KEY = "your_api_key"  
+    API_SECRET = "your_api_secret"  
+    RECV_WINDOW = 5000  
       
-    # L50 SBE order book topic  
-    TOPIC = "ob.50.sbe.BTCUSDT"  
+    SCHEMA_ID = 2  
+    VERSION = 2  
       
-    # Adjust URL for spot / contract environment as needed:  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    # Template IDs  
+    TMPL_AUTH_REQ     = 1  
+    TMPL_AUTH_RESP    = 2  
+    TMPL_PING_REQ     = 3  
+    TMPL_PONG_RESP    = 4  
+    TMPL_CREATE_REQ   = 5  
+    TMPL_CREATE_RESP  = 6  
+    TMPL_REPLACE_REQ  = 7  
+    TMPL_REPLACE_RESP = 8  
+    TMPL_CANCEL_REQ   = 9  
+    TMPL_CANCEL_RESP  = 10  
+    TMPL_ERR_RESP     = 17  
       
-    # -------------------------------------------------------------------  
-    # SBE Parser for OBL50Event (template_id = 20001)  
-    #  
-    # XML schema:  
-    #   ts(int64), seq(int64), cts(int64), u(int64),  
-    #   priceExponent(int8), sizeExponent(int8),  
-    #   pkgType(uint8)   # 0 = SNAPSHOT, 1 = DELTA  
-    #   group asks: blockLen(uint16), numInGroup(uint16),  
-    #               then numInGroup * [ price(int64), size(int64) ]  
-    #   group bids: same as asks  
-    #   symbol(varString8)  
-    # -------------------------------------------------------------------  
+    # Enum values  
+    CATEGORY_LINEAR  = 2  
+    SIDE_BUY         = 1  
+    SIDE_SELL        = 2  
+    ORDER_TYPE_LIMIT  = 2  
+    ORDER_TYPE_MARKET = 1  
+    TIF_GTC          = 1  
+    POSITION_ONE_WAY = 0  
+    MARKET_UNIT_BASE = 1  
+    BOOL_FALSE       = 0  
+    BOOL_TRUE        = 1  
+    SMP_NONE         = 0  
       
-    class SBEOBL50Parser:  
-        def __init__(self):  
-            # message header: blockLength, templateId, schemaId, version  
-            self.header_fmt = "<HHHH"  
-            self.header_sz = struct.calcsize(self.header_fmt)  
+    # Struct formats (little-endian, no padding)  
+    HDR_FMT         = "<HHHH"   # messageHeader: 8 bytes  
+    HDR_SZ          = struct.calcsize(HDR_FMT)  
       
-            # fixed body fields:  
-            # ts, seq, cts, u   -> 4 x int64  
-            # priceExponent, sizeExponent -> 2 x int8  
-            # pkgType -> uint8  
-            self.body_fmt = "<qqqqbbB"   # 4*q + 2*b + B  
-            self.body_sz = struct.calcsize(self.body_fmt)  
+    API_REQ_HDR_FMT = "<64sQI64s"   # ApiRequestHeader: 140 bytes  
+    API_REQ_HDR_SZ  = struct.calcsize(API_REQ_HDR_FMT)  
       
-            # group header for repeating groups: blockLength(uint16), numInGroup(uint16)  
-            self.group_hdr_fmt = "<HH"  
-            self.group_hdr_sz = struct.calcsize(self.group_hdr_fmt)  
+    API_RESP_HDR_FMT = "<64s64s64sqqqqq"  # ApiRespHeader: 232 bytes  
+    API_RESP_HDR_SZ  = struct.calcsize(API_RESP_HDR_FMT)  
       
-            # each group entry: price(int64), size(int64)  
-            self.level_fmt = "<qq"  
-            self.level_sz = struct.calcsize(self.level_fmt)  
+    COMMON_RESP_FMT = "<64s64s"   # CommonOrderRespData: 128 bytes  
+    COMMON_RESP_SZ  = struct.calcsize(COMMON_RESP_FMT)  
       
-            self.target_template_id = 20001  
+    DECIMAL64_FMT = "<bq"         # Decimal64: 9 bytes  
+    DECIMAL64_SZ  = struct.calcsize(DECIMAL64_FMT)  
       
-        # ---------------- core small helpers ----------------  
-      
-        def _parse_header(self, data: bytes) -> Dict[str, Any]:  
-            if len(data) < self.header_sz:  
-                raise ValueError("insufficient data for SBE header")  
-            block_length, template_id, schema_id, version = struct.unpack_from(  
-                self.header_fmt, data, 0  
-            )  
-            return {  
-                "block_length": block_length,  
-                "template_id": template_id,  
-                "schema_id": schema_id,  
-                "version": version,  
-            }  
-      
-        @staticmethod  
-        def _parse_varstring8(data: bytes, offset: int) -> Tuple[str, int]:  
-            if offset + 1 > len(data):  
-                raise ValueError("insufficient data for varString8 length")  
-            (length,) = struct.unpack_from("<B", data, offset)  
-            offset += 1  
-            if length == 0:  
-                return "", offset  
-            if offset + length > len(data):  
-                raise ValueError("insufficient data for varString8 bytes")  
-            s = data[offset: offset + length].decode("utf-8")  
-            offset += length  
-            return s, offset  
-      
-        @staticmethod  
-        def _apply_exponent(value: int, exponent: int) -> float:  
-            return value / (10 ** exponent) if exponent >= 0 else value * (10 ** (-exponent))  
-      
-        def _parse_levels(self, data: bytes, offset: int) -> Tuple[List[Dict[str, float]], int]:  
-            """  
-            Parse one repeating group (asks or bids).  
-            Layout:  
-               uint16 blockLength  
-               uint16 numInGroup  
-               numInGroup * [ price(int64), size(int64) ] (within blockLength)  
-            """  
-            if offset + self.group_hdr_sz > len(data):  
-                raise ValueError("insufficient data for group header")  
-            block_len, num_in_group = struct.unpack_from(self.group_hdr_fmt, data, offset)  
-            offset += self.group_hdr_sz  
-      
-            if block_len < self.level_sz:  
-                raise ValueError(f"blockLength({block_len}) < level_sz({self.level_sz})")  
-      
-            levels = []  
-            for _ in range(num_in_group):  
-                if offset + block_len > len(data):  
-                    raise ValueError("insufficient data for group entry")  
-                # we only care about first 16 bytes (price, size)  
-                price_m, size_m = struct.unpack_from(self.level_fmt, data, offset)  
-                offset += block_len  # skip the whole block (safe if future adds extra fields)  
-      
-                levels.append({  
-                    "price_m": price_m,  
-                    "size_m": size_m,  
-                })  
-            return levels, offset  
-      
-        # ---------------- public parse ----------------  
-      
-        def parse(self, data: bytes) -> Dict[str, Any]:  
-            hdr = self._parse_header(data)  
-            if hdr["template_id"] != self.target_template_id:  
-                raise NotImplementedError(f"unsupported template_id={hdr['template_id']}")  
-      
-            if len(data) < self.header_sz + self.body_sz:  
-                raise ValueError("insufficient data for OBL50Event body")  
-      
-            # parse fixed body  
-            (ts, seq, cts, u,  
-             price_exp, size_exp, pkg_type) = struct.unpack_from(  
-                self.body_fmt, data, self.header_sz  
-            )  
-      
-            offset = self.header_sz + self.body_sz  
-      
-            # asks group  
-            asks_raw, offset = self._parse_levels(data, offset)  
-            # bids group  
-            bids_raw, offset = self._parse_levels(data, offset)  
-            # symbol  
-            symbol, offset = self._parse_varstring8(data, offset)  
-      
-            # apply exponents  
-            asks = [  
-                {  
-                    "price": self._apply_exponent(l["price_m"], price_exp),  
-                    "size": self._apply_exponent(l["size_m"], size_exp),  
-                }  
-                for l in asks_raw  
-            ]  
-            bids = [  
-                {  
-                    "price": self._apply_exponent(l["price_m"], price_exp),  
-                    "size": self._apply_exponent(l["size_m"], size_exp),  
-                }  
-                for l in bids_raw  
-            ]  
-      
-            return {  
-                "header": hdr,  
-                "ts": ts,  
-                "seq": seq,  
-                "cts": cts,  
-                "u": u,  
-                "price_exponent": price_exp,  
-                "size_exponent": size_exp,  
-                "pkg_type": pkg_type,   # 0 = SNAPSHOT, 1 = DELTA  
-                "symbol": symbol,  
-                "asks": asks,  
-                "bids": bids,  
-                "parsed_length": offset,  
-            }  
+    _req_counter = 0  
       
       
-    parser = SBEOBL50Parser()  
+    def _next_req_id() -> str:  
+        global _req_counter  
+        _req_counter += 1  
+        return f"req_{_req_counter:012d}"  
       
-    # -------------------------------------------------------------------  
-    # WebSocket handlers  
-    # -------------------------------------------------------------------  
+      
+    def _encode_sbe_header(block_length: int, template_id: int) -> bytes:  
+        return struct.pack(HDR_FMT, block_length, template_id, SCHEMA_ID, VERSION)  
+      
+      
+    def _parse_sbe_header(data: bytes) -> Dict[str, Any]:  
+        bl, tid, sid, ver = struct.unpack_from(HDR_FMT, data, 0)  
+        return {"block_length": bl, "template_id": tid, "schema_id": sid, "version": ver}  
+      
+      
+    def _encode_str(s: str, length: int) -> bytes:  
+        return s.encode("utf-8").ljust(length, b"\x00")[:length]  
+      
+      
+    def _decode_str(b: bytes) -> str:  
+        return b.rstrip(b"\x00").decode("utf-8")  
+      
+      
+    def _encode_decimal64(mantissa: int, exponent: int) -> bytes:  
+        """Pack a Decimal64. value = mantissa × 10^exponent."""  
+        return struct.pack(DECIMAL64_FMT, exponent, mantissa)  
+      
+      
+    def _parse_varstring16(data: bytes, offset: int) -> Tuple[str, int]:  
+        """Parse a varString16: uint16 length prefix + UTF-8 data."""  
+        (length,) = struct.unpack_from("<H", data, offset)  
+        offset += 2  
+        s = data[offset: offset + length].decode("utf-8")  
+        offset += length  
+        return s, offset  
+      
+      
+    def _encode_api_req_header(req_id: str = "", referer: str = "") -> bytes:  
+        ts = int(time.time() * 1000)  
+        return struct.pack(  
+            API_REQ_HDR_FMT,  
+            _encode_str(req_id, 64),  
+            ts,  
+            RECV_WINDOW,  
+            _encode_str(referer, 64),  
+        )  
+      
+      
+    def _parse_api_resp_header(data: bytes, offset: int) -> Tuple[Dict[str, Any], int]:  
+        (req_id, conn_id, trace_id,  
+         time_now, in_time,  
+         bapi_limit, bapi_limit_status, bapi_limit_reset) = struct.unpack_from(  
+            API_RESP_HDR_FMT, data, offset  
+        )  
+        offset += API_RESP_HDR_SZ  
+        return {  
+            "reqId":                    _decode_str(req_id),  
+            "connId":                   _decode_str(conn_id),  
+            "traceId":                  _decode_str(trace_id),  
+            "timeNow":                  time_now,  
+            "inTime":                   in_time,  
+            "bapiLimit":                bapi_limit,  
+            "bapiLimitStatus":          bapi_limit_status,  
+            "bapiLimitResetTimestamp":  bapi_limit_reset,  
+        }, offset  
+      
+      
+    # ----------------------------- Encoders -----------------------------  
+      
+    def encode_auth_req(api_key: str, api_secret: str) -> bytes:  
+        req_id  = _next_req_id()  
+        expires = int(time.time() * 1000) + 10_000  
+        message = f"GET/realtime{expires}"  
+        signature = hmac.new(  
+            api_secret.encode("utf-8"),  
+            message.encode("utf-8"),  
+            hashlib.sha256,  
+        ).hexdigest()  
+      
+        body = struct.pack(  
+            "<64s64sQ64s",  
+            _encode_str(req_id, 64),  
+            _encode_str(api_key, 64),  
+            expires,  
+            _encode_str(signature, 64),  
+        )  
+        return _encode_sbe_header(200, TMPL_AUTH_REQ) + body  
+      
+      
+    def encode_ping_req() -> bytes:  
+        body = struct.pack("<Q", int(time.time() * 1000))  
+        return _encode_sbe_header(8, TMPL_PING_REQ) + body  
+      
+      
+    def encode_create_order(  
+        category: int,  
+        symbol_id: int,  
+        side: int,  
+        order_type: int,  
+        qty_mantissa: int,  
+        qty_exponent: int,  
+        price_mantissa: int,  
+        price_exponent: int,  
+        order_link_id: str,  
+        time_in_force: int = TIF_GTC,  
+        position_idx: int = POSITION_ONE_WAY,  
+        market_unit: int = MARKET_UNIT_BASE,  
+        is_leverage: int = BOOL_FALSE,  
+        reduce_only: int = BOOL_FALSE,  
+        close_on_trigger: int = BOOL_FALSE,  
+        mmp: int = BOOL_FALSE,  
+        smp_type: int = SMP_NONE,  
+        rpi_taker_access: int = BOOL_FALSE,  
+        req_id: str = "",  
+        referer: str = "",  
+    ) -> bytes:  
+        body = (  
+            _encode_api_req_header(req_id or _next_req_id(), referer)  # 140 bytes  
+            + struct.pack("<Bq", category, symbol_id)                   # 9 bytes  
+            + struct.pack("<BB", side, order_type)                      # 2 bytes  
+            + _encode_decimal64(qty_mantissa, qty_exponent)             # 9 bytes  
+            + _encode_decimal64(price_mantissa, price_exponent)         # 9 bytes  
+            + _encode_str(order_link_id, 64)                            # 64 bytes  
+            + struct.pack("<BBBBBBBB",  
+                          time_in_force, position_idx, market_unit,  
+                          is_leverage, reduce_only, close_on_trigger,  
+                          mmp, smp_type)                                # 8 bytes  
+            + struct.pack("<B", rpi_taker_access)                       # 1 byte (sinceVersion=2)  
+        )  
+        return _encode_sbe_header(242, TMPL_CREATE_REQ) + body  
+      
+      
+    def encode_cancel_order(  
+        category: int,  
+        symbol_id: int,  
+        order_id: str = "",  
+        order_link_id: str = "",  
+        req_id: str = "",  
+        referer: str = "",  
+    ) -> bytes:  
+        body = (  
+            _encode_api_req_header(req_id or _next_req_id(), referer)  
+            + struct.pack("<Bq", category, symbol_id)  
+            + _encode_str(order_id, 64)  
+            + _encode_str(order_link_id, 64)  
+        )  
+        return _encode_sbe_header(277, TMPL_CANCEL_REQ) + body  
+      
+      
+    # ----------------------------- Parsers -----------------------------  
+      
+    def parse_auth_resp(data: bytes) -> Dict[str, Any]:  
+        hdr = _parse_sbe_header(data)  
+        offset = HDR_SZ  
+        req_id_b, ret_code, conn_id_b = struct.unpack_from("<64si64s", data, offset)  
+        offset += 132  
+        ret_msg, _ = _parse_varstring16(data, offset)  
+        return {  
+            "header":  hdr,  
+            "reqId":   _decode_str(req_id_b),  
+            "retCode": ret_code,  
+            "connId":  _decode_str(conn_id_b),  
+            "retMsg":  ret_msg,  
+        }  
+      
+      
+    def parse_order_resp(data: bytes) -> Dict[str, Any]:  
+        """Handles CreateOrderRespV5, ReplaceOrderRespV5, CancelOrderRespV5 (same layout)."""  
+        hdr = _parse_sbe_header(data)  
+        offset = HDR_SZ  
+        resp_header, offset = _parse_api_resp_header(data, offset)  
+        (ret_code,) = struct.unpack_from("<i", data, offset)  
+        offset += 4  
+        order_id_b, order_link_id_b = struct.unpack_from(COMMON_RESP_FMT, data, offset)  
+        offset += COMMON_RESP_SZ  
+        ret_msg, _ = _parse_varstring16(data, offset)  
+        return {  
+            "header":     hdr,  
+            "respHeader": resp_header,  
+            "retCode":    ret_code,  
+            "result": {  
+                "orderId":     _decode_str(order_id_b),  
+                "orderLinkId": _decode_str(order_link_id_b),  
+            },  
+            "retMsg": ret_msg,  
+        }  
+      
+      
+    def parse_pong_resp(data: bytes) -> Dict[str, Any]:  
+        hdr = _parse_sbe_header(data)  
+        ts, pong_time = struct.unpack_from("<QQ", data, HDR_SZ)  
+        return {"header": hdr, "timestamp": ts, "pongTime": pong_time}  
+      
+      
+    PARSERS = {  
+        TMPL_AUTH_RESP:    parse_auth_resp,  
+        TMPL_CREATE_RESP:  parse_order_resp,  
+        TMPL_REPLACE_RESP: parse_order_resp,  
+        TMPL_CANCEL_RESP:  parse_order_resp,  
+        TMPL_PONG_RESP:    parse_pong_resp,  
+    }  
+      
+    # ----------------------------- WebSocket handlers -----------------------------  
       
     def on_message(ws, message):  
         try:  
-            if isinstance(message, (bytes, bytearray)):  
-                decoded = parser.parse(message)  
+            if not isinstance(message, (bytes, bytearray)):  
+                logging.warning("unexpected text frame: %r", message)  
+                return  
       
-                pkg_type = decoded["pkg_type"]  
-                pkg_str = "SNAPSHOT" if pkg_type == 0 else "DELTA" if pkg_type == 1 else f"UNKNOWN({pkg_type})"  
+            data = bytes(message)  
+            hdr  = _parse_sbe_header(data)  
+            tid  = hdr["template_id"]  
+            parser = PARSERS.get(tid)  
       
-                asks = decoded["asks"]  
-                bids = decoded["bids"]  
+            if parser is None:  
+                logging.warning("unhandled templateId=%s", tid)  
+                return  
       
-                best_ask = asks[0] if asks else {"price": 0.0, "size": 0.0}  
-                best_bid = bids[0] if bids else {"price": 0.0, "size": 0.0}  
+            decoded = parser(data)  
+            logging.info("templateId=%s %s", tid, decoded)  
       
-                logging.info(  
-                    "SBE %s u=%s seq=%s type=%s asks=%d bids=%d "  
-                    "BEST bid=%.8f@%.8f ask=%.8f@%.8f ts=%s",  
-                    decoded["symbol"], decoded["u"], decoded["seq"], pkg_str,  
-                    len(asks), len(bids),  
-                    best_bid["price"], best_bid["size"],  
-                    best_ask["price"], best_ask["size"],  
-                    decoded["ts"],  
-                )  
+            if tid == TMPL_AUTH_RESP:  
+                print("auth:", decoded)  
+                if decoded["retCode"] == 0:  
+                    # Send a sample limit buy order after successful auth  
+                    # qty=0.01 → mantissa=1, exponent=-2  
+                    # price=69000 → mantissa=69000, exponent=0  
+                    order = encode_create_order(  
+                        category=CATEGORY_LINEAR,  
+                        symbol_id=123456,  
+                        side=SIDE_BUY,  
+                        order_type=ORDER_TYPE_LIMIT,  
+                        qty_mantissa=1,  
+                        qty_exponent=-2,  
+                        price_mantissa=69000,  
+                        price_exponent=0,  
+                        order_link_id=_next_req_id(),  
+                        referer="my_broker",  
+                    )  
+                    ws.send(order)  
+                else:  
+                    logging.error("auth failed retCode=%s retMsg=%s",  
+                                  decoded["retCode"], decoded["retMsg"])  
       
+            elif tid in (TMPL_CREATE_RESP, TMPL_REPLACE_RESP, TMPL_CANCEL_RESP):  
                 print(  
-                    f"{decoded['symbol']}  u={decoded['u']}  seq={decoded['seq']}  {pkg_str}  "  
-                    f"levels: asks={len(asks)} bids={len(bids)}  "  
-                    f"BEST: bid {best_bid['price']:.8f} x {best_bid['size']:.8f}  |  "  
-                    f"ask {best_ask['price']:.8f} x {best_ask['size']:.8f}"  
+                    f"order resp templateId={tid} retCode={decoded['retCode']} "  
+                    f"orderId={decoded['result']['orderId']} "  
+                    f"orderLinkId={decoded['result']['orderLinkId']} "  
+                    f"retMsg={decoded['retMsg']}"  
                 )  
       
-            else:  
-                # text frame: control / errors / ping-pong  
-                try:  
-                    obj = json.loads(message)  
-                    logging.info("TEXT %s", obj)  
-                    print("TEXT:", obj)  
-                except json.JSONDecodeError:  
-                    logging.warning("non-JSON text frame: %r", message)  
-                    print("TEXT(non-json):", message)  
+            elif tid == TMPL_PONG_RESP:  
+                print("pong:", decoded)  
+      
         except Exception as e:  
             logging.exception("decode error: %s", e)  
             print("decode error:", e)  
@@ -1027,31 +1561,20 @@ u| Type| Notes
         logging.info("connection closed")  
       
       
-    def ping_per(ws):  
+    def on_open(ws):  
+        print("opened")  
+        ws.send(encode_auth_req(API_KEY, API_SECRET))  
+        print("auth request sent")  
+        threading.Thread(target=_ping_loop, args=(ws,), daemon=True).start()  
+      
+      
+    def _ping_loop(ws):  
         while True:  
             try:  
-                ws.send(json.dumps({"op": "ping"}))  
+                ws.send(encode_ping_req())  
             except Exception:  
                 return  
             time.sleep(10)  
-      
-      
-    def on_open(ws):  
-        print("opened")  
-        sub = {"op": "subscribe", "args": [TOPIC]}  
-        ws.send(json.dumps(sub))  
-        print("subscribed:", TOPIC)  
-      
-        # background ping thread  
-        threading.Thread(target=ping_per, args=(ws,), daemon=True).start()  
-      
-      
-    def on_pong(ws, *_):  
-        print("pong received")  
-      
-      
-    def on_ping(ws, *_):  
-        print("ping received @", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))  
       
       
     def connWS():  
@@ -1061,8 +1584,6 @@ u| Type| Notes
             on_message=on_message,  
             on_error=on_error,  
             on_close=on_close,  
-            on_ping=on_ping,  
-            on_pong=on_pong,  
         )  
         ws.run_forever(ping_interval=20, ping_timeout=10)  
       
@@ -1070,175 +1591,24 @@ u| Type| Notes
     if __name__ == "__main__":  
         websocket.enableTrace(False)  
         connWS()  
-      
     
 
-### Golang
-    
-    
-    // sbe_ob50_client.go  
-    package main  
-      
-    import (  
-        "bytes"  
-        "compress/flate"  
-        "encoding/binary"  
-        "encoding/json"  
-        "fmt"  
-        "log"  
-        "math"  
-        "time"  
-      
-        "github.com/gorilla/websocket"  
-        "yourmodule/quote" // generated SBE package  
-    )  
-      
-    const (  
-        WSURL   = "wss://stream.bybit.com/v5/market/sbe"  
-        CHANNEL = "ob.50.sbe.BTCUSDT"  
-    )  
-      
-    func toReal(mantissa int64, exponent int8) float64 {  
-        return float64(mantissa) * math.Pow10(int(exponent))  
-    }  
-      
-    func decodeOBL50(buf []byte) (*quote.OBL50Event, error) {  
-        var hdr quote.MessageHeader  
-        reader := bytes.NewReader(buf)  
-      
-        // decode messageHeader (little endian)  
-        if err := binary.Read(reader, binary.LittleEndian, &hdr); err != nil {  
-            return nil, fmt.Errorf("read header: %w", err)  
-        }  
-      
-        if hdr.TemplateId != 20001 {  
-            return nil, fmt.Errorf("unexpected templateId: %d", hdr.TemplateId)  
-        }  
-      
-        var msg quote.OBL50Event  
-        // many generators provide WrapForDecode; here assume we can read the fixed block then groups  
-        if err := msg.Decode(reader, int(hdr.BlockLength), int(hdr.Version)); err != nil {  
-            return nil, fmt.Errorf("decode OBL50: %w", err)  
-        }  
-      
-        return &msg, nil  
-    }  
-      
-    func main() {  
-        book := NewOrderBook()  
-      
-        dialer := websocket.Dialer{  
-            HandshakeTimeout: 10 * time.Second,  
-            EnableCompression: false,  
-        }  
-      
-        conn, _, err := dialer.Dial(WSURL, nil)  
-        if err != nil {  
-            log.Fatalf("dial: %v", err)  
-        }  
-        defer conn.Close()  
-      
-        // subscribe  
-        sub := map[string]interface{}{  
-            "op":   "subscribe",  
-            "args": []string{CHANNEL},  
-        }  
-        if err := conn.WriteJSON(sub); err != nil {  
-            log.Fatalf("subscribe: %v", err)  
-        }  
-      
-        for {  
-            mt, data, err := conn.ReadMessage()  
-            if err != nil {  
-                log.Fatalf("read: %v", err)  
-            }  
-      
-            if mt == websocket.TextMessage {  
-                // control JSON or pong etc  
-                var m map[string]interface{}  
-                _ = json.Unmarshal(data, &m)  
-                continue  
-            }  
-      
-            // if server wraps SBE in per-message deflate, you may need to decompress:  
-            if isDeflatedFrame(data) {  
-                data, err = inflate(data)  
-                if err != nil {  
-                    log.Printf("inflate error: %v", err)  
-                    continue  
-                }  
-            }  
-      
-            msg, err := decodeOBL50(data)  
-            if err != nil {  
-                log.Printf("decode error: %v", err)  
-                continue  
-            }  
-      
-            u := msg.U  
-            pkgType := msg.PkgType // 0 snapshot, 1 delta  
-            pxExp := msg.PriceExponent  
-            szExp := msg.SizeExponent  
-      
-            // extract levels  
-            var asks, bids [][2]float64  
-            for _, a := range msg.Asks {  
-                p := toReal(a.Price, pxExp)  
-                sz := toReal(a.Size, szExp)  
-                asks = append(asks, [2]float64{p, sz})  
-            }  
-            for _, b := range msg.Bids {  
-                p := toReal(b.Price, pxExp)  
-                sz := toReal(b.Size, szExp)  
-                bids = append(bids, [2]float64{p, sz})  
-            }  
-      
-            // continuity logic:  
-            if u == 1 {  
-                // service restart / precision change snapshot  
-                book.Asks.SnapshotFrom(asks)  
-                book.Bids.SnapshotFrom(bids)  
-                book.LastU = 1  
-                fmt.Printf("[RESET SNAPSHOT] u=%d seq=%d symbol=%s\n", u, msg.Seq, msg.Symbol)  
-                continue  
-            }  
-      
-            if book.LastU != 0 && u != book.LastU+1 {  
-                log.Printf("[WARN] u jump: lastU=%d newU=%d – consider resync", book.LastU, u)  
-            }  
-      
-            if pkgType == quote.PkgTypeEnum_SNAPSHOT {  
-                book.Asks.SnapshotFrom(asks)  
-                book.Bids.SnapshotFrom(bids)  
-            } else {  
-                for _, lv := range asks {  
-                    book.Asks.Apply(lv[0], lv[1])  
-                }  
-                for _, lv := range bids {  
-                    book.Bids.Apply(lv[0], lv[1])  
-                }  
-            }  
-      
-            book.LastU = u  
-            bestBid := book.Bids.BestBid()  
-            bestAsk := book.Asks.BestAsk()  
-            fmt.Printf("u=%d pkgType=%d bestBid=%.5f bestAsk=%.5f\n", u, pkgType, bestBid, bestAsk)  
-        }  
-    }  
-      
-    // helpers (optional, depending on ws framing)  
-    func isDeflatedFrame(data []byte) bool {  
-        // placeholder: detect by protocol; many setups know from WS sub-protocol  
-        return false  
-    }  
-      
-    func inflate(data []byte) ([]byte, error) {  
-        r := flate.NewReader(bytes.NewReader(data))  
-        defer r.Close()  
-      
-        var out bytes.Buffer  
-        if _, err := out.ReadFrom(r); err != nil {  
-            return nil, err  
-        }  
-        return out.Bytes(), nil  
-    }
+## 速率限制與錯誤
+
+  * **速率限制** 體現在每筆回應的 `ApiRespHeader` 中 (`bapiLimit`、`bapiLimitStatus`、`bapiLimitResetTimestamp`).
+  * 任何回應中非零的 `retCode` 表示失敗; 請讀取 `retMsg` (varString16) 了解診斷訊息.
+  * **CommonErrResp** (`templateId = 17`) 在伺服器無法將錯誤關聯至特定請求時回傳.
+  * 在批次回應中, 每個群組項目包含各自的 `code` 與 `msg` — 請逐項檢查.
+  * 連線關閉時, 重連並重新驗證後再恢復下單; 使用 `orderLinkId` 偵測重複.
+
+
+
+## 相容性說明
+
+  * **位元組順序:** 所有數值基本型別均為 little-endian.
+  * **Decimal64:** 打包格式為 `int8 (exponent) + int64 (mantissa)` = 9 bytes, 無對齊填充. `value = mantissa × 10^exponent`.
+  * **BoolEnum:** 編碼為 `uint8`; 有效值為 0 (FALSE) 與 1 (TRUE). 值 254 表示不可表示的狀態.
+  * **固定長度字串:** 補 null 至宣告長度; 解碼時去除尾部 `\x00`.
+  * **varString16:** 以 2 位元組 `uint16` 長度前綴; 位於信息主體所有固定欄位之後.
+  * **重複群組:** 前綴為 `groupSize16Encoding` (uint16 `blockLength` \+ uint16 `numInGroup`), 在群組項目之前.
+  * 客戶端時鐘必須與 NTP/PTP 同步; 伺服器會拒絕時間戳落在 `recvWindow` 範圍外的 frame.

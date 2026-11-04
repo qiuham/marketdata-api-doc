@@ -2,38 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/borrow
 api_type: REST
-updated_at: 2026-11-03 18:36:37.808684
+updated_at: 2026-11-04 18:37:16.639247
 ---
 
-# Collateral Repayment
+# Repay
+
+Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
 
 > Permission: "Spot trade"  
 >  UID rate limit: 1 req / second
 
 info
 
-  * Pay interest first, then repay the principal.
-  * There are limits on the repayment amount in a single transaction. Please read this [announcement](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/) before repaying with collateral
-  * When repaying with collateral, Bybit will charge a repayment fee. The applicable fee rate is the higher of the repayment fee rates for the collateral asset and the debt asset. You can call this endpoint: [View fee rates by asset](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) to get "reapyFee" where "pledgeEnable" = 1 for coins' repayment fee rates 
+  * The repaid amount will be deducted from the Funding wallet.
+  * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
 
 
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-flexible/repay-collateral`
+POST`/v5/crypto-loan-flexible/repay`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 loanCurrency| **true**|  string| Loan coin name  
-collateralCoin| **true**|  string| Collateral currencies: Use commas to separate multiple collateral currencies  
-amount| **true**|  string| Repay amount  
+amount| **true**|  string| Amount to repay  
   
 ### Response Parameters
 
-None
-
+Parameter| Type| Comments  
+---|---|---  
+repayId| string| Repayment transaction ID  
+  
 ### Request Example
 
   * HTTP
@@ -43,7 +45,7 @@ None
 
     
     
-    POST /v5/crypto-loan-flexible/repay-collateral HTTP/1.1  
+    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -53,9 +55,8 @@ None
     Content-Length: 52  
       
     {  
-      "loanCurrency": "USDT",  
-      "amount": "500",  
-      "collateralCoin":"BTC"  
+        "loanCurrency": "BTC",  
+        "amount": "0.005"  
     }  
     
     
@@ -66,10 +67,9 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_flexible_crypto_loan(  
-        loanCurrency="USDT",  
-        amount="500",  
-        collateralCoin="BTC",  
+    print(session.repay_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+        loanAmount="0.005",  
     ))  
     
     
@@ -83,45 +83,46 @@ None
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "repayId": "1771"  
+        },  
         "retExtInfo": {},  
-        "time": 1756971550401  
+        "time": 1752569614549  
     }
 
 ---
 
-# 抵押品還款
+# 還款
+
+您可以選擇提前還款, 並且支持部分還款, 如果存在利息, 將優先還利息
 
 > 權限: "現貨"  
 >  頻率: 1次/秒
 
 信息
 
-  * 優先還款利息，再還款本金。
-  * 單筆還款金額有限制, 在使用抵押品還款前, 請仔細閱讀該[公告](https://announcements.bybit.com/article/crypto-loan-manual-repayment-update-bltde33509ddde5e8fd/)
-  * 使用抵押物還款時，Bybit 將收取還款手續費。適用的手續費率為抵押資產和債務資產的還款手續費率中較高的一個。 您可以調此接口：[按資產查看手續費率](https://www.bybit.com/x-api/spot/api/fixed-loan/v1/coin-config) 取得"reapyFee"，其中"pledgeEnable"= 1，以查看各幣種的還款手續費率。
+  * 還款金額將從資金帳戶扣除
+  * 非完全還清操作, 系統將不會主動退還質押金, 但是您可以自行減少質押金
 
 
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-flexible/repay-collateral`
+POST`/v5/crypto-loan-flexible/repay`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 loanCurrency| **true**|  string| 借款幣種  
-collateralCoin| **true**|  string| 抵押品幣種: 多個抵押品幣種使用英文逗號分開  
 amount| **true**|  string| 還款金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+repayId| string| 還款訂單ID  
   
-無
-
 ### 請求示例
 
   * HTTP
@@ -131,7 +132,7 @@ amount| **true**|  string| 還款金額
 
     
     
-    POST /v5/crypto-loan-flexible/repay-collateral HTTP/1.1  
+    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
@@ -141,9 +142,8 @@ amount| **true**|  string| 還款金額
     Content-Length: 52  
       
     {  
-      "loanCurrency": "USDT",  
-      "amount": "500",  
-      "collateralCoin":"BTC"  
+        "loanCurrency": "BTC",  
+        "amount": "0.005"  
     }  
     
     
@@ -154,10 +154,9 @@ amount| **true**|  string| 還款金額
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.collateral_repayment_flexible_crypto_loan(  
-        loanCurrency="USDT",  
-        amount="500",  
-        collateralCoin="BTC",  
+    print(session.repay_flexible_crypto_loan(  
+        loanCurrency="BTC",  
+        loanAmount="0.005",  
     ))  
     
     
@@ -171,7 +170,9 @@ amount| **true**|  string| 還款金額
     {  
         "retCode": 0,  
         "retMsg": "ok",  
-        "result": {},  
+        "result": {  
+            "repayId": "1771"  
+        },  
         "retExtInfo": {},  
-        "time": 1756971550401  
+        "time": 1752569614549  
     }

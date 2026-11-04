@@ -2,12 +2,12 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/fund-subuid-list
 api_type: REST
-updated_at: 2026-11-03 18:39:35.687339
+updated_at: 2026-11-04 18:40:18.448245
 ---
 
-# Get Fund Custodial Sub Acct
+# Get Sub UID List (Unlimited)
 
-The institutional client can query the fund custodial sub accounts.
+This API is applicable to the client who has over 10k sub accounts. Use **master user's api key** **only**.
 
 tip
 
@@ -19,7 +19,7 @@ The API key must have one of the below permissions in order to call this endpoin
 
 ### HTTP Request
 
-GET`/v5/user/escrow_sub_members`
+GET`/v5/user/submembers`
 
 ### Request Parameters
 
@@ -33,41 +33,39 @@ nextCursor| false| string| Cursor. Use the `nextCursor` token from the response 
 Parameter| Type| Comments  
 ---|---|---  
 subMembers| array| Object  
-> uid| string| Sub userId  
-> username| string| User name  
-> memberType| integer| `12`: Fund custodial account  
-> status| integer| Account state.
+> uid| string| Sub user Id  
+> username| string| Username  
+> memberType| integer| `1`: standard subaccount, `4`: copy trading account, `6`: [custodial subaccount](https://www.bybit.com/en/help-center/article?id=000001683), `14`: general AI account, `15`: ByCustody subacct, `16`: Bybit AI  
+> status| integer| The status of the user account
 
   * `1`: normal
-  * `2`: forbidden login
+  * `2`: login banned
   * `4`: frozen 
 
   
-> accountMode| integer| Account mode.
+> accountMode| integer| The account mode of the user account
 
-  * `1`: classic account
-  * `3`: UTA account 
+  * `5`: UTA2.0
+  * `6`: UTA2.0 Pro
 
   
-> remark| string| Remark  
+> remark| string| The remark  
 nextCursor| string| The next page cursor value. "0" means no more pages  
   
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/user/escrow_sub_members?pageSize=2 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739763787703  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
@@ -77,13 +75,9 @@ nextCursor| string| The next page cursor value. "0" means no more pages
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_escrow_sub_members(  
-        pageSize="2"  
+    print(session.get_sub_uid_list_unlimited(  
+        pageSize="1",  
     ))  
-    
-    
-    
-      
     
 
 ### Response Example
@@ -95,33 +89,33 @@ nextCursor| string| The next page cursor value. "0" means no more pages
         "result": {  
             "subMembers": [  
                 {  
-                    "uid": "104274894",  
-                    "username": "Private_Wealth_Management",  
-                    "memberType": 12,  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
                     "status": 1,  
-                    "remark": "earn fund",  
-                    "accountMode": 3  
+                    "remark": "",  
+                    "accountMode": 5  
                 },  
                 {  
-                    "uid": "104274884",  
-                    "username": "Private_Wealth_Management",  
-                    "memberType": 12,  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
                     "status": 1,  
-                    "remark": "earn fund",  
-                    "accountMode": 3  
+                    "remark": "",  
+                    "accountMode": 6  
                 }  
             ],  
-            "nextCursor": "344"  
+            "nextCursor": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1739763788699  
+        "time": 1760388041006  
     }
 
 ---
 
-# 查詢基金託管子帳戶列表
+# 查詢子帳戶UID列表 (無限制)
 
-託管機構可以通過這個接口查詢到基金託管子帳戶列表
+通過翻頁獲取當前母帳戶下所有的子帳戶列表，適合超過擁有1萬個子帳戶的母帳戶進行調用。需使用**母** 帳戶的API key。
 
 提示
 
@@ -133,7 +127,7 @@ nextCursor| string| The next page cursor value. "0" means no more pages
 
 ### HTTP 請求
 
-GET`/v5/user/escrow_sub_members`
+GET`/v5/user/submembers`
 
 ### 請求參數
 
@@ -149,7 +143,7 @@ nextCursor| false| string| 游標. 傳入響應中的`nextCursor`來獲取下一
 subMembers| array| Object  
 > uid| string| 子帳戶userId  
 > username| string| 用戶名  
-> memberType| integer| `12`: 基金託管子帳戶  
+> memberType| integer| `1`: 普通子帳戶, `4`: 跟單帶單子帳戶, `6`: [託管子帳戶](https://www.bybit.com/en/help-center/article?id=000001683), `14`: 通用AI子帳戶, `15`: ByCustody子帳戶, `16`: Bybit AI  
 > status| integer| 帳戶狀態.
 
   * `1`: 正常
@@ -159,8 +153,8 @@ subMembers| array| Object
   
 > accountMode| integer| 帳戶模式.
 
-  * `1`: 經典帳戶
-  * `3`: UTA帳戶 
+  * `5`: UTA2.0 帳戶
+  * `6`: UTA2.0 Pro 帳戶
 
   
 > remark| string| 備註  
@@ -174,17 +168,24 @@ nextCursor| string| 下一頁數據的游標. 返回"0"表示沒有更多的數�
 
     
     
-    GET /v5/user/escrow_sub_members?pageSize=2 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/user/submembers?pageSize=1 HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739763787703  
+    X-BAPI-TIMESTAMP: 1676430318405  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_uid_list_unlimited(  
+        pageSize="1",  
+    ))  
     
 
 ### 響應示例
@@ -196,24 +197,24 @@ nextCursor| string| 下一頁數據的游標. 返回"0"表示沒有更多的數�
         "result": {  
             "subMembers": [  
                 {  
-                    "uid": "104274894",  
-                    "username": "Private_Wealth_Management",  
-                    "memberType": 12,  
+                    "uid": "106314365",  
+                    "username": "xxxx02",  
+                    "memberType": 1,  
                     "status": 1,  
-                    "remark": "earn fund",  
-                    "accountMode": 3  
+                    "remark": "",  
+                    "accountMode": 5  
                 },  
                 {  
-                    "uid": "104274884",  
-                    "username": "Private_Wealth_Management",  
-                    "memberType": 12,  
+                    "uid": "106279879",  
+                    "username": "xxxx01",  
+                    "memberType": 1,  
                     "status": 1,  
-                    "remark": "earn fund",  
-                    "accountMode": 3  
+                    "remark": "",  
+                    "accountMode": 6  
                 }  
             ],  
-            "nextCursor": "344"  
+            "nextCursor": "0"  
         },  
         "retExtInfo": {},  
-        "time": 1739763788699  
+        "time": 1760388041006  
     }

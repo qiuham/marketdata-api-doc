@@ -2,46 +2,100 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/whitelist-ip
 api_type: REST
-updated_at: 2026-11-03 18:35:36.551257
+updated_at: 2026-11-04 18:36:17.886640
 ---
 
-# Get Institution Whitelist IP
+# Get Fee Group Structure
+
+Query for the [group fee structure](https://www.bybit.com/en/help-center/article/Group-Fee-Structure-Symbol-Grouping) and fee rates.
+
+note
+
+The new grouped fee structure only applies to Pro-level and Market Maker clients. It does not apply to retail traders.
+
+For more details please refer to the [fee structure update announcement](https://announcements.bybit.com/article/bybit-fee-structure-update-for-pro-and-market-maker-clients-blt06875b6d623e7581/).
+
+> **Covers: USDT Perpetual / USDT Delivery / USDC Perpetual / USDC Delivery / Inverse Contracts**
 
 info
 
-This endpoint must be requested with a main account API key.
+  * **Weighted maker volume** = Σ(Maker volume on pair × Group weighting factor (`weightingFactor`))
+  * **Weighted maker share** = (Your total weighted maker volume ÷ Bybit's total weighted maker volume)
+  * _Note: Bybit's total weighted maker volume is not provided by the API. Weighted maker share will be provided in the monthly MM report_.
+
+
 
 ### HTTP Request
 
-GET`/v5/ins/whitelist/ip`
+GET`/v5/market/fee-group-info`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+productType| **true**|  string| Product type. `contract` only  
+[groupId](/docs/v5/enum#groupid)| false| string| Group ID. `1`, `5`, `6`, `7`, `9`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Object  
-> name| string| Client name  
-> endpointDomain| string| Dedicated hostname assigned exclusively to this client  
-> ipList| array| Array of whitelisted IP addresses  
+list| array| List of fee group objects  
+> [groupName](/docs/v5/enum#groupname)| string| Fee group name  
+> weightingFactor| integer| Group weighting factor  
+> symbolsNumbers| integer| No. of symbols  
+> symbols| array| Symbol name  
+> feeRates| object| Fee rate details for different categories. `pro`, `marketMaker`  
+>> pro| array| Pro-level fee structures  
+>>> level| string| Pro level name. `Pro 1`, `Pro 2`, `Pro 3`, `Pro 4`, `Pro 5`, `Pro 6`  
+>>> takerFeeRate| string| Taker fee rate  
+>>> makerFeeRate| string| Maker fee rate  
+>> marketMaker| array| Market Maker-level fee structures  
+>>> level| string| Market Maker level name. `MM 1`, `MM 2`, `MM 3`  
+>>> makerRebate| string| Maker rebate fee rate  
+>>> rpiMakerRebate| string| Maker rebate fee rate for RPI orders  
+> updateTime| string| Latest data update timestamp (ms)  
   
+* * *
+
 ### Request Example
 
   * HTTP
+  * Python
+  * Go
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/ins/whitelist/ip HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1779362662315  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/market/fee-group-info?productType=contract HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_fee_group_info(  
+        productType="contract",  
+        groupId="1"  
+    ))  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### Response Example
@@ -50,93 +104,2920 @@ result| array| Object
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1"  
-                ]  
-            },  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1",  
-                    "35.78.100.2"  
-                ]  
-            }  
-        ],  
-        "time": 1779362854157  
+        "result": {  
+            "list": [  
+                {  
+                    "groupName": "Innovation-Zone",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 121,  
+                    "symbols": [  
+                        "JELLYJELLYUSDT",  
+                        "TACUSDT",  
+                        "ZKPUSDT",  
+                        "COAIUSDT",  
+                        "OPGUSDT",  
+                        "BLESSUSDT",  
+                        "LIGHTUSDT",  
+                        "ATUSDT",  
+                        "FHEUSDT",  
+                        "FIGHTUSDT",  
+                        "DBRUSDT",  
+                        "AIGENSYNUSDT",  
+                        "LABUSDT",  
+                        "UBUSDT",  
+                        "SOSOUSDT",  
+                        "GPSUSDT",  
+                        "HEMIUSDT",  
+                        "CAPUSDT",  
+                        "HAEDALUSDT",  
+                        "ALPINEUSDT",  
+                        "OUSDT",  
+                        "BOBAUSDT",  
+                        "VELVETUSDT",  
+                        "CTRUSDT",  
+                        "BTRUSDT",  
+                        "BMTUSDT",  
+                        "ELSAUSDT",  
+                        "OPENUSDT",  
+                        "CLOUSDT",  
+                        "MUSDT",  
+                        "FOLKSUSDT",  
+                        "VVVUSDT",  
+                        "GRVTUSDT",  
+                        "B2USDT",  
+                        "JCTUSDT",  
+                        "DOLOUSDT",  
+                        "AKEUSDT",  
+                        "SPORTFUNUSDT",  
+                        "LUMIAUSDT",  
+                        "CYSUSDT",  
+                        "CROSSUSDT",  
+                        "ARIAUSDT",  
+                        "SCRTUSDT",  
+                        "STOUSDT",  
+                        "ASRUSDT",  
+                        "PEAQUSDT",  
+                        "USUSDT",  
+                        "AGIUSDT",  
+                        "DOSUSDT",  
+                        "BROCCOLIUSDT",  
+                        "TMXUSDT",  
+                        "BASEDUSDT",  
+                        "POWERUSDT",  
+                        "SAPIENUSDT",  
+                        "FLOCKUSDT",  
+                        "AEONUSDT",  
+                        "ASPUSDT",  
+                        "TRIAUSDT",  
+                        "TURTLEUSDT",  
+                        "BRUSDT",  
+                        "MYXUSDT",  
+                        "DUSKUSDT",  
+                        "PROMPTUSDT",  
+                        "BEATUSDT",  
+                        "CLANKERUSDT",  
+                        "SIRENUSDT",  
+                        "ALLOUSDT",  
+                        "MAGMAUSDT",  
+                        "PHAROSUSDT",  
+                        "USELESSUSDT",  
+                        "TRUSTUSDT",  
+                        "PTBUSDT",  
+                        "RECALLUSDT",  
+                        "4USDT",  
+                        "NAORISUSDT",  
+                        "BILLUSDT",  
+                        "GWEIUSDT",  
+                        "DOODUSDT",  
+                        "BUSDT",  
+                        "BLUAIUSDT",  
+                        "AWEUSDT",  
+                        "GIGGLEUSDT",  
+                        "AIOZUSDT",  
+                        "EPICUSDT",  
+                        "PRLUSDT",  
+                        "ESPORTSUSDT",  
+                        "XNYUSDT",  
+                        "BLENDUSDT",  
+                        "QUSDT",  
+                        "APRUSDT",  
+                        "TLMUSDT",  
+                        "ACXUSDT",  
+                        "INUSDT",  
+                        "TUTUSDT",  
+                        "GENIUSUSDT",  
+                        "AZTECUSDT",  
+                        "BIRBUSDT",  
+                        "ACUUSDT",  
+                        "IRYSUSDT",  
+                        "XPINUSDT",  
+                        "ARXUSDT",  
+                        "XDCUSDT",  
+                        "HANAUSDT",  
+                        "CUSDT",  
+                        "UAIUSDT",  
+                        "BANKUSDT",  
+                        "ZESTUSDT",  
+                        "MITOUSDT",  
+                        "BSBUSDT",  
+                        "RAVEUSDT",  
+                        "CASHCATUSDT",  
+                        "AVNTUSDT",  
+                        "NESAUSDT",  
+                        "EVAAUSDT",  
+                        "PIEVERSEUSDT",  
+                        "STBLUSDT",  
+                        "PLAYSOUTUSDT",  
+                        "1000TAGUSDT",  
+                        "TAUSDT",  
+                        "SPACEUSDT",  
+                        "AIOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "Pre-listing",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 4,  
+                    "symbols": [  
+                        "ANTHROPICUSDT",  
+                        "MOONSHOTUSDT",  
+                        "BPUSDT",  
+                        "OPENAIUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G1(Major Coins)",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 4,  
+                    "symbols": [  
+                        "SOLUSDT",  
+                        "BTCUSDT",  
+                        "ETHUSDT",  
+                        "XRPUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.0001"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00022",  
+                                "makerFeeRate": "0.000025"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.0002",  
+                                "makerFeeRate": "0.00001"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00015",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G2(High Growth)",  
+                    "weightingFactor": 5,  
+                    "symbolsNumbers": 38,  
+                    "symbols": [  
+                        "OPUSDT",  
+                        "1000BONKUSDT",  
+                        "XRPUSD",  
+                        "CRVUSDT",  
+                        "AAVEUSDT",  
+                        "GOATUSDT",  
+                        "UNIUSDT",  
+                        "POPCATUSDT",  
+                        "WLDUSDT",  
+                        "BTCUSD",  
+                        "TRBUSDT",  
+                        "ENAUSDT",  
+                        "WIFUSDT",  
+                        "MOODENGUSDT",  
+                        "ETHUSD",  
+                        "ARBUSDT",  
+                        "ADAUSDT",  
+                        "NEARUSDT",  
+                        "SUIUSDT",  
+                        "GALAUSDT",  
+                        "INITUSDT",  
+                        "LTCUSDT",  
+                        "TRUMPUSDT",  
+                        "WCTUSDT",  
+                        "HYPEUSDT",  
+                        "SOLAYERUSDT",  
+                        "LINKUSDT",  
+                        "FARTCOINUSDT",  
+                        "PNUTUSDT",  
+                        "KAITOUSDT",  
+                        "DOGEUSDT",  
+                        "ONDOUSDT",  
+                        "1000PEPEUSDT",  
+                        "TIAUSDT",  
+                        "BNBUSDT",  
+                        "AVAXUSDT",  
+                        "VIRTUALUSDT",  
+                        "1000NEIROCTOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0.000125"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0.0001"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.000275",  
+                                "makerFeeRate": "0.000075"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0.000025"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G3(Mid-Tier Liquidity)",  
+                    "weightingFactor": 8,  
+                    "symbolsNumbers": 79,  
+                    "symbols": [  
+                        "SANDUSDT",  
+                        "RENDERUSDT",  
+                        "SHIB1000USDT",  
+                        "STRKUSDT",  
+                        "NOTUSDT",  
+                        "1000FLOKIUSDT",  
+                        "COMPUSDT",  
+                        "ZKUSDT",  
+                        "XMRUSDT",  
+                        "BIGTIMEUSDT",  
+                        "MOVEUSDT",  
+                        "XLMUSDT",  
+                        "APTUSDT",  
+                        "LTCUSD",  
+                        "PENDLEUSDT",  
+                        "DOTUSDT",  
+                        "BSVUSDT",  
+                        "ETCUSDT",  
+                        "ETHFIUSDT",  
+                        "GMTUSDT",  
+                        "DYDXUSDT",  
+                        "ZROUSDT",  
+                        "1000TURBOUSDT",  
+                        "VETUSDT",  
+                        "THETAUSDT",  
+                        "MANAUSDT",  
+                        "PAXGUSDT",  
+                        "PYTHUSDT",  
+                        "MEWUSDT",  
+                        "JASMYUSDT",  
+                        "DOTUSD",  
+                        "GRTUSDT",  
+                        "NEOUSDT",  
+                        "ADAUSD",  
+                        "ALGOUSDT",  
+                        "XAUTUSDT",  
+                        "BOMEUSDT",  
+                        "MAGICUSDT",  
+                        "SOLUSD",  
+                        "ORDIUSDT",  
+                        "AXSUSDT",  
+                        "BERAUSDT",  
+                        "PENGUUSDT",  
+                        "MASKUSDT",  
+                        "IMXUSDT",  
+                        "TAOUSDT",  
+                        "SUIUSD",  
+                        "RUNEUSDT",  
+                        "INJUSDT",  
+                        "MNTUSDT",  
+                        "GASUSDT",  
+                        "BCHUSDT",  
+                        "PEOPLEUSDT",  
+                        "AUCTIONUSDT",  
+                        "JTOUSDT",  
+                        "JUPUSDT",  
+                        "ATOMUSDT",  
+                        "MEUSDT",  
+                        "ARKUSDT",  
+                        "APEUSDT",  
+                        "EIGENUSDT",  
+                        "SUSDT",  
+                        "ENSUSDT",  
+                        "USUALUSDT",  
+                        "IOTAUSDT",  
+                        "DOGEUSD",  
+                        "COWUSDT",  
+                        "STXUSDT",  
+                        "POLUSDT",  
+                        "ARKMUSDT",  
+                        "CAKEUSDT",  
+                        "FILUSDT",  
+                        "SEIUSDT",  
+                        "LDOUSDT",  
+                        "XTZUSDT",  
+                        "HBARUSDT",  
+                        "TRXUSDT",  
+                        "ICPUSDT",  
+                        "KASUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.000075"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00026",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G4(Mid-Tier Activation)",  
+                    "weightingFactor": 15,  
+                    "symbolsNumbers": 101,  
+                    "symbols": [  
+                        "SHELLUSDT",  
+                        "FLOWUSDT",  
+                        "CHILLGUYUSDT",  
+                        "AIXBTUSDT",  
+                        "MERLUSDT",  
+                        "WAVESUSDT",  
+                        "10000SATSUSDT",  
+                        "ORCAUSDT",  
+                        "ACTUSDT",  
+                        "1000RATSUSDT",  
+                        "BANUSDT",  
+                        "PARTIUSDT",  
+                        "PLUMEUSDT",  
+                        "ATHUSDT",  
+                        "AGLDUSDT",  
+                        "SUPERUSDT",  
+                        "SUSHIUSDT",  
+                        "ANIMEUSDT",  
+                        "VANAUSDT",  
+                        "REZUSDT",  
+                        "CARVUSDT",  
+                        "AKTUSDT",  
+                        "LPTUSDT",  
+                        "ALCHUSDT",  
+                        "ZORAUSDT",  
+                        "MELANIAUSDT",  
+                        "XAIUSDT",  
+                        "SSVUSDT",  
+                        "WALUSDT",  
+                        "PUFFERUSDT",  
+                        "XCNUSDT",  
+                        "MAVIAUSDT",  
+                        "KERNELUSDT",  
+                        "DEEPUSDT",  
+                        "XVGUSDT",  
+                        "SNTUSDT",  
+                        "BLURUSDT",  
+                        "MEMEUSDT",  
+                        "ARCUSDT",  
+                        "CGPTUSDT",  
+                        "MANTAUSDT",  
+                        "KAVAUSDT",  
+                        "BABYUSDT",  
+                        "ZBCNUSDT",  
+                        "MUBARAKUSDT",  
+                        "RAREUSDT",  
+                        "PORTALUSDT",  
+                        "ZEREBROUSDT",  
+                        "API3USDT",  
+                        "B3USDT",  
+                        "COOKIEUSDT",  
+                        "AEROUSDT",  
+                        "PUNDIXUSDT",  
+                        "BANANAUSDT",  
+                        "HMSTRUSDT",  
+                        "CATIUSDT",  
+                        "NMRUSDT",  
+                        "LRCUSDT",  
+                        "SONICUSDT",  
+                        "1000TOSHIUSDT",  
+                        "PIPPINUSDT",  
+                        "IOUSDT",  
+                        "HIVEUSDT",  
+                        "AVAAIUSDT",  
+                        "SIGNUSDT",  
+                        "KMNOUSDT",  
+                        "DYMUSDT",  
+                        "CROUSDT",  
+                        "ARUSDT",  
+                        "TAIKOUSDT",  
+                        "BIOUSDT",  
+                        "RSRUSDT",  
+                        "PIXELUSDT",  
+                        "KSMUSDT",  
+                        "DRIFTUSDT",  
+                        "1000CATUSDT",  
+                        "ICXUSDT",  
+                        "EGLDUSDT",  
+                        "ROSEUSDT",  
+                        "ZETAUSDT",  
+                        "MOCAUSDT",  
+                        "ZECUSDT",  
+                        "NILUSDT",  
+                        "BEAMUSDT",  
+                        "BBUSDT",  
+                        "SAFEUSDT",  
+                        "SPXUSDT",  
+                        "1000000BABYDOGEUSDT",  
+                        "GRIFFAINUSDT",  
+                        "FIDAUSDT",  
+                        "GRASSUSDT",  
+                        "SAGAUSDT",  
+                        "CELOUSDT",  
+                        "RAYDIUMUSDT",  
+                        "GUNUSDT",  
+                        "WUSDT",  
+                        "CETUSUSDT",  
+                        "BRETTUSDT",  
+                        "1000000MOGUSDT",  
+                        "CVCUSDT",  
+                        "HYPERUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.0001",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G5(Long Tail)",  
+                    "weightingFactor": 20,  
+                    "symbolsNumbers": 238,  
+                    "symbols": [  
+                        "MOVRUSDT",  
+                        "ALTUSDT",  
+                        "MTLUSDT",  
+                        "SOMIUSDT",  
+                        "ASTRUSDT",  
+                        "IOSTUSDT",  
+                        "DOGEUSDT-25SEP26",  
+                        "RESOLVUSDT",  
+                        "YBUSDT",  
+                        "1000BTTUSDT",  
+                        "ZAMAUSDT",  
+                        "ETHBTCUSDT",  
+                        "1000XECUSDT",  
+                        "XRPUSDT-11SEP26",  
+                        "SENTUSDT",  
+                        "UNIUSD",  
+                        "10000NEXUSDT",  
+                        "OGUSDT",  
+                        "MINAUSDT",  
+                        "SLXUSDT",  
+                        "1000LUNCUSDT",  
+                        "ETHUSDU26",  
+                        "LITUSDT",  
+                        "OPNUSDT",  
+                        "IDUSDT",  
+                        "BATUSDT",  
+                        "YFIUSDT",  
+                        "SYRUPUSDT",  
+                        "MIRAUSDT",  
+                        "CVXUSDT",  
+                        "SUNUSDT",  
+                        "CYBERUSDT",  
+                        "HYPEUSD",  
+                        "SLPUSDT",  
+                        "USDCUSDT",  
+                        "DOGEUSDT-11SEP26",  
+                        "BTCUSDT-25SEP26",  
+                        "RLCUSDT",  
+                        "KNCUSDT",  
+                        "BCHUSD",  
+                        "SKYUSDT",  
+                        "POLYXUSDT",  
+                        "COTIUSDT",  
+                        "ETHUSDT-28AUG26",  
+                        "LINEAUSDT",  
+                        "XRPUSDT-04SEP26",  
+                        "LAUSDT",  
+                        "AAVEUSD",  
+                        "ONGUSDT",  
+                        "PHAUSDT",  
+                        "FLRUSDT",  
+                        "MMTUSDT",  
+                        "DASHUSDT",  
+                        "MNTUSDT-11SEP26",  
+                        "OPUSD",  
+                        "XRPUSDT-28AUG26",  
+                        "SOPHUSDT",  
+                        "SOLUSDT-25SEP26",  
+                        "BARDUSDT",  
+                        "XANUSDT",  
+                        "BTCUSDT-26MAR27",  
+                        "KGENUSDT",  
+                        "BTCUSDU26",  
+                        "VELODROMEUSDT",  
+                        "ONTUSDT",  
+                        "BICOUSDT",  
+                        "BANDUSDT",  
+                        "ENJUSDT",  
+                        "HYPEUSDT-11SEP26",  
+                        "AVAXUSD",  
+                        "CHZUSDT",  
+                        "DOGEUSDT-04SEP26",  
+                        "DIAUSDT",  
+                        "ASTERUSDT",  
+                        "QNTUSDT",  
+                        "ALICEUSDT",  
+                        "AUSDT",  
+                        "BTCUSDT-25DEC26",  
+                        "ACEUSDT",  
+                        "BNTUSDT",  
+                        "MORPHOUSDT",  
+                        "BTCUSDT-25JUN27",  
+                        "ESPUSDT",  
+                        "EDUUSDT",  
+                        "NOMUSDT",  
+                        "RVNUSDT",  
+                        "RIVERUSDT",  
+                        "STORJUSDT",  
+                        "WOOUSDT",  
+                        "ENSOUSDT",  
+                        "0GUSDT",  
+                        "OGNUSDT",  
+                        "LUNA2USDT",  
+                        "HUSDT",  
+                        "ARPAUSDT",  
+                        "ZKCUSDT",  
+                        "GLMUSDT",  
+                        "EDGEUSDT",  
+                        "FUSDT",  
+                        "FOGOUSDT",  
+                        "BLASTUSDT",  
+                        "EDENUSDT",  
+                        "AEVOUSDT",  
+                        "TNSRUSDT",  
+                        "MNTUSDT-04SEP26",  
+                        "XRPUSDT-25SEP26",  
+                        "GMXUSDT",  
+                        "METUSDT",  
+                        "AXLUSDT",  
+                        "SOLUSDT-28AUG26",  
+                        "MNTUSDT-28AUG26",  
+                        "OKBUSDT",  
+                        "HYPEUSDT-25SEP26",  
+                        "PUMPFUNUSDT",  
+                        "MAVUSDT",  
+                        "TRUTHUSDT",  
+                        "ORDERUSDT",  
+                        "ERAUSDT",  
+                        "LQTYUSDT",  
+                        "ZENUSDT",  
+                        "INXUSDT",  
+                        "ETHUSDT-26MAR27",  
+                        "WAXPUSDT",  
+                        "CCUSDT",  
+                        "PROVEUSDT",  
+                        "CFXUSDT",  
+                        "BANANAS31USDT",  
+                        "SXTUSDT",  
+                        "SAHARAUSDT",  
+                        "SKRUSDT",  
+                        "AVAUSDT",  
+                        "CFGUSDT",  
+                        "SKYAI1USDT",  
+                        "ZBTUSDT",  
+                        "EULUSDT",  
+                        "USDEUSDT",  
+                        "TREEUSDT",  
+                        "LSKUSDT",  
+                        "ACHUSDT",  
+                        "FLUIDUSDT",  
+                        "ETCUSD",  
+                        "TWTUSDT",  
+                        "ETHUSDT-11SEP26",  
+                        "COREUSDT",  
+                        "FLUXUSDT",  
+                        "SOLUSDT-04SEP26",  
+                        "HOLOUSDT",  
+                        "APEXUSDT",  
+                        "NIGHTUSDT",  
+                        "NEWTUSDT",  
+                        "HEIUSDT",  
+                        "RONINUSDT",  
+                        "HOMEUSDT",  
+                        "POWRUSDT",  
+                        "1INCHUSDT",  
+                        "ETHUSDT-30OCT26",  
+                        "METISUSDT",  
+                        "LYNUSDT",  
+                        "DEXEUSDT",  
+                        "ETHUSDT-25DEC26",  
+                        "XVSUSDT",  
+                        "BREVUSDT",  
+                        "UMAUSDT",  
+                        "ETHUSDZ26",  
+                        "JSTUSDT",  
+                        "SOLUSDT-11SEP26",  
+                        "WETUSDT",  
+                        "BTCUSDT-11SEP26",  
+                        "IOTXUSDT",  
+                        "HYPEUSDT-04SEP26",  
+                        "2ZUSDT",  
+                        "NEARUSD",  
+                        "STEEMUSDT",  
+                        "MONUSDT",  
+                        "BELUSDT",  
+                        "CKBUSDT",  
+                        "DATAUSDT",  
+                        "CHRUSDT",  
+                        "THEUSDT",  
+                        "YGGUSDT",  
+                        "USTCUSDT",  
+                        "STGUSDT",  
+                        "FILUSD",  
+                        "TOWNSUSDT",  
+                        "ZRXUSDT",  
+                        "XAUTUSDT-25SEP26",  
+                        "RLUSDUSDT",  
+                        "BTWUSDT",  
+                        "REUSDT",  
+                        "GRAMUSDT",  
+                        "ZILUSDT",  
+                        "C98USDT",  
+                        "TUSDT",  
+                        "ICNTUSDT",  
+                        "CHIPUSDT",  
+                        "SNXUSDT",  
+                        "REDUSDT",  
+                        "XAUTUSDT-04SEP26",  
+                        "ETHUSDT-04SEP26",  
+                        "ROBOUSDT",  
+                        "BTCUSDT-28AUG26",  
+                        "MNTUSDT-25SEP26",  
+                        "BTCUSDT-04SEP26",  
+                        "SOONUSDT",  
+                        "KITEUSDT",  
+                        "XAUTUSDT-28AUG26",  
+                        "USD1USDT",  
+                        "NXPCUSDT",  
+                        "KATUSDT",  
+                        "SKLUSDT",  
+                        "BTCUSDZ26",  
+                        "XPLUSDT",  
+                        "ETHUSDT-25JUN27",  
+                        "VELOUSDT",  
+                        "APTUSD",  
+                        "CTCUSDT",  
+                        "HNTUSDT",  
+                        "FORMUSDT",  
+                        "LINKUSD",  
+                        "RPLUSDT",  
+                        "MNTUSD",  
+                        "SPKUSDT",  
+                        "DOGEUSDT-28AUG26",  
+                        "SQDUSDT",  
+                        "MEGAUSDT",  
+                        "ETHUSDT-25SEP26",  
+                        "QTUMUSDT",  
+                        "FFUSDT",  
+                        "BTCUSDT-30OCT26",  
+                        "ILVUSDT",  
+                        "XAUTUSDT-11SEP26",  
+                        "STABLEUSDT",  
+                        "KAIAUSDT",  
+                        "WLFIUSDT",  
+                        "XLMUSD",  
+                        "HYPEUSDT-28AUG26",  
+                        "ANKRUSDT",  
+                        "HUMAUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.0001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000125",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "USDC",  
+                    "weightingFactor": 8,  
+                    "symbolsNumbers": 68,  
+                    "symbols": [  
+                        "WLDPERP",  
+                        "TRXPERP",  
+                        "LINKPERP",  
+                        "WLFIPERP",  
+                        "ICPPERP",  
+                        "MNTPERP",  
+                        "WIFPERP",  
+                        "UNIPERP",  
+                        "HYPEPERP",  
+                        "1000NEIROCTOPERP",  
+                        "STRKPERP",  
+                        "SEIPERP",  
+                        "XMRPERP",  
+                        "NIGHTPERP",  
+                        "FILPERP",  
+                        "MOODENGPERP",  
+                        "PAXGPERP",  
+                        "ONDOPERP",  
+                        "ETCPERP",  
+                        "BTCPERP",  
+                        "TIAPERP",  
+                        "AAVEPERP",  
+                        "SOLPERP",  
+                        "FARTCOINPERP",  
+                        "ASTERPERP",  
+                        "ARBPERP",  
+                        "POPCATPERP",  
+                        "OPPERP",  
+                        "XRPPERP",  
+                        "DOGEPERP",  
+                        "EIGENPERP",  
+                        "SHIB1000PERP",  
+                        "ETHFIPERP",  
+                        "DOTPERP",  
+                        "XLMPERP",  
+                        "NOTPERP",  
+                        "SUIPERP",  
+                        "MERLPERP",  
+                        "1000BONKPERP",  
+                        "TWTPERP",  
+                        "ETHPERP",  
+                        "PNUTPERP",  
+                        "TAOPERP",  
+                        "RESOLVPERP",  
+                        "LTCPERP",  
+                        "AEVOPERP",  
+                        "PENGUPERP",  
+                        "HBARPERP",  
+                        "XPLPERP",  
+                        "CRVPERP",  
+                        "HPERP",  
+                        "ORDIPERP",  
+                        "AVNTPERP",  
+                        "PUMPFUNPERP",  
+                        "VIRTUALPERP",  
+                        "PENDLEPERP",  
+                        "TRUMPPERP",  
+                        "INJPERP",  
+                        "BCHPERP",  
+                        "KASPERP",  
+                        "1000PEPEPERP",  
+                        "ENAPERP",  
+                        "SPXPERP",  
+                        "SAHARAPERP",  
+                        "ICNTPERP",  
+                        "BNBPERP",  
+                        "POLPERP",  
+                        "XAUTPERP"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.000275",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000015",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G9(Stock & Commodity Tradfi Perp",  
+                    "weightingFactor": 10,  
+                    "symbolsNumbers": 221,  
+                    "symbols": [  
+                        "SHAZUSDT",  
+                        "GIGADEVICEUSDT",  
+                        "BBXUSDT",  
+                        "CBRSUSDT",  
+                        "VUSDT",  
+                        "AMGNUSDT",  
+                        "BEUSDT",  
+                        "XAGUSDT",  
+                        "MAGSUSDT",  
+                        "SOXXUSDT",  
+                        "PDDUSDT",  
+                        "ADBEUSDT",  
+                        "BNCUSDT",  
+                        "COSTUSDT",  
+                        "BITOUSDT",  
+                        "WDCUSDT",  
+                        "BACUSDT",  
+                        "LRCXUSDT",  
+                        "GEUSDT",  
+                        "ONDSUSDT",  
+                        "SHEINUSDT",  
+                        "XLEUSDT",  
+                        "SNDKUSDT",  
+                        "TERUSDT",  
+                        "MRNAUSDT",  
+                        "USARUSDT",  
+                        "ADIUSDT",  
+                        "CIFRUSDT",  
+                        "NVOUSDT",  
+                        "JNJUSDT",  
+                        "SKHYUSDT",  
+                        "TSLAUSDT",  
+                        "BZUSDT",  
+                        "CATSTOCKUSDT",  
+                        "TZAUSDT",  
+                        "BSPUSDT",  
+                        "IBMUSDT",  
+                        "GSUSDT",  
+                        "ARKKUSDT",  
+                        "INTWUSDT",  
+                        "MUUUSDT",  
+                        "AALUSDT",  
+                        "ONUSDT",  
+                        "SKUUUSDT",  
+                        "FUTUUSDT",  
+                        "METAUSDT",  
+                        "AVGOUSDT",  
+                        "MCDUSDT",  
+                        "ASTSUSDT",  
+                        "CLUSDT",  
+                        "COHRUSDT",  
+                        "MINIMAXUSDT",  
+                        "UNITREEUSDT",  
+                        "NFLXUSDT",  
+                        "CRWDUSDT",  
+                        "DJTUSDT",  
+                        "XIAOMIUSDT",  
+                        "MAUSDT",  
+                        "WMTUSDT",  
+                        "QCOMUSDT",  
+                        "SNXXUSDT",  
+                        "RAMUSDT",  
+                        "FLNCUSDT",  
+                        "TSEMUSDT",  
+                        "NVDAUSDT",  
+                        "SMHUSDT",  
+                        "LYTEUSDT",  
+                        "DELLUSDT",  
+                        "COINUSDT",  
+                        "KLACUSDT",  
+                        "MSTUUSDT",  
+                        "PLTRUSDT",  
+                        "XBIUSDT",  
+                        "ZMUSDT",  
+                        "PANWUSDT",  
+                        "GLWUSDT",  
+                        "NBISUSDT",  
+                        "UNHUSDT",  
+                        "LITEUSDT",  
+                        "RIOTUSDT",  
+                        "RDWUSDT",  
+                        "MARAUSDT",  
+                        "INTCUSDT",  
+                        "INFQUSDT",  
+                        "CRMUSDT",  
+                        "MOUSDT",  
+                        "HOODUSDT",  
+                        "GMESTOCKUSDT",  
+                        "KOUSDT",  
+                        "TMFUSDT",  
+                        "EBAYUSDT",  
+                        "GEVUSDT",  
+                        "SAMSUNGEMUSDT",  
+                        "RIVNUSDT",  
+                        "JDUSDT",  
+                        "HIMSUSDT",  
+                        "APLDUSDT",  
+                        "QQQUSDT",  
+                        "XAUUSDT",  
+                        "PENGSTOCKUSDT",  
+                        "MVLLUSDT",  
+                        "UBERUSDT",  
+                        "MNSTUSDT",  
+                        "FLEXUSDT",  
+                        "CRWVUSDT",  
+                        "GOOGLUSDT",  
+                        "ARMUSDT",  
+                        "HANMIUSDT",  
+                        "SMCIUSDT",  
+                        "NVDLUSDT",  
+                        "ORCLUSDT",  
+                        "APPSTOCKUSDT",  
+                        "AMATUSDT",  
+                        "SOXLUSDT",  
+                        "IRENUSDT",  
+                        "XLVUSDT",  
+                        "PURRUSDT",  
+                        "KODEX200USDT",  
+                        "TTWOUSDT",  
+                        "TXNUSDT",  
+                        "CSOPSAMSUNG2LUSDT",  
+                        "XLPUSDT",  
+                        "NOWUSDT",  
+                        "FLYUSDT",  
+                        "TQQQUSDT",  
+                        "MUUSDT",  
+                        "KSTRUSDT",  
+                        "ISRGUSDT",  
+                        "POPMARTUSDT",  
+                        "MRKUSDT",  
+                        "CIENUSDT",  
+                        "SNOWUSDT",  
+                        "SAMSUNGUSDT",  
+                        "SQQQUSDT",  
+                        "JPMUSDT",  
+                        "LLYUSDT",  
+                        "HDUSDT",  
+                        "STXXUSDT",  
+                        "MRVLUSDT",  
+                        "PEPUSDT",  
+                        "PYPLUSDT",  
+                        "OUSTUSDT",  
+                        "SPYUSDT",  
+                        "SKDDUSDT",  
+                        "ZHIPUUSDT",  
+                        "AAPLUSDT",  
+                        "XLFUSDT",  
+                        "HPEUSDT",  
+                        "IONQUSDT",  
+                        "QNTXUSDT",  
+                        "FWDIUSDT",  
+                        "DKNGUSDT",  
+                        "SONYUSDT",  
+                        "KUAISHOUUSDT",  
+                        "DDOGUSDT",  
+                        "HYUNDAIUSDT",  
+                        "EWJUSDT",  
+                        "NETUSDT",  
+                        "CRDOUSDT",  
+                        "AAOIUSDT",  
+                        "AMZNUSDT",  
+                        "SOFIUSDT",  
+                        "MSFTUSDT",  
+                        "CSOPSKHYNIX2LUSDT",  
+                        "VSTUSDT",  
+                        "TBTUSDT",  
+                        "TSLLUSDT",  
+                        "BABAUSDT",  
+                        "IWMUSDT",  
+                        "SSPCUSDT",  
+                        "REGNUSDT",  
+                        "KORUUSDT",  
+                        "VRTUSDT",  
+                        "AEHRUSDT",  
+                        "EWTUSDT",  
+                        "TENCENTUSDT",  
+                        "POETUSDT",  
+                        "WENSTOCKUSDT",  
+                        "EWYUSDT",  
+                        "AMCUSDT",  
+                        "GILDUSDT",  
+                        "CXMTUSDT",  
+                        "XOMUSDT",  
+                        "CLSKUSDT",  
+                        "SPOTUSDT",  
+                        "XLKUSDT",  
+                        "MSTRUSDT",  
+                        "GDXUSDT",  
+                        "ANETUSDT",  
+                        "AMDSTOCKUSDT",  
+                        "BXUSDT",  
+                        "AXTIUSDT",  
+                        "MEITUANUSDT",  
+                        "ALABUSDT",  
+                        "CRCLUSDT",  
+                        "RDDTUSDT",  
+                        "NOKIAUSDT",  
+                        "ASMLUSDT",  
+                        "VRTXSTOCKUSDT",  
+                        "TSMUSDT",  
+                        "INTUUSDT",  
+                        "SPXLUSDT",  
+                        "NCLDUSDT",  
+                        "NAVERUSDT",  
+                        "XLUUSDT",  
+                        "BIIBUSDT",  
+                        "BRKBUSDT",  
+                        "ZHONGJIUSDT",  
+                        "LGELECTRONICSUSDT",  
+                        "SOXSUSDT",  
+                        "SKHYNIXUSDT",  
+                        "SPCHUSDT",  
+                        "RKLBUSDT",  
+                        "BOTUSDT",  
+                        "SMICUSDT",  
+                        "SPCXUSDT",  
+                        "DRAMUSDT",  
+                        "UVXYUSDT",  
+                        "BMNRUSDT",  
+                        "SHOPUSDT",  
+                        "CSCOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.0002",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00016",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00015",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00014",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.000125",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1787900967496  
     }
 
 ---
 
-# 查詢機構 IP 白名單
+# 查詢分組手續費结构
+
+查詢[分組手續費結構](https://www.bybit.com/en/help-center/article/Group-Fee-Structure-Symbol-Grouping)相關信息及費率
+
+備註
+
+新的分組費率結構僅適用於專業級別和做市商客戶, 不適用於散戶交易者
+
+更多詳情請參考[費率結構更新公告](https://announcements.bybit.com/article/bybit-fee-structure-update-for-pro-and-market-maker-clients-blt06875b6d623e7581/)
+
+> **覆蓋範圍: USDT 永續 / USDT 交割 / USDC 永續 / USDC 交割 / 反向合約**
 
 信息
 
-此接口必須使用主帳戶 API key 請求。
+  * **加權 Maker 交易量** = Σ(單個交易對的 Maker 交易量 × `weightingFactor`組別權重係數)
+  * **加權 Maker 份額** = (您的加權 Maker 總交易量 ÷ Bybit 加權 Maker 總交易量)  
+_注意: Bybit 加權 Maker 總交易量不會通過 API 提供，加權 Maker 份額將會在每月的做市商報告中提供_
+
+
 
 ### HTTP 請求
 
-GET`/v5/ins/whitelist/ip`
+GET`/v5/market/fee-group-info`
 
 ### 請求參數
 
-無
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+productType| **true**|  string| 產品類型, 僅支援`contract`  
+[groupId](/docs/zh-TW/v5/enum#groupid)| false| string| 分組ID, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`  
+  
 ### 響應參數
 
-參數| 類型| 說明  
+Parameter| Type| Comments  
 ---|---|---  
-result| array| Object  
-> name| string| 客戶名稱  
-> endpointDomain| string| 分配給該客戶專用的 hostname  
-> ipList| array| 白名單 IP 位址列表  
+list| array| Object  
+> [groupName](/docs/zh-TW/v5/enum#groupname)| string| 費率群組名稱  
+> weightingFactor| integer| 分組權重  
+> symbolsNumbers| integer| 分组交易对数量  
+> symbols| array| 合約名稱  
+> feeRates| object| 不同類別的費率詳細資訊, `pro`, `marketMaker`  
+>> pro| array| Pro 等級費率結構  
+>>> level| string| Pro 等級名稱, `Pro 1`, `Pro 2`, `Pro 3`, `Pro 4`, `Pro 5`, `Pro 6`  
+>>> takerFeeRate| string| 吃單手續費率  
+>>> makerFeeRate| string| 掛單手續費率  
+>> marketMaker| array| 做市商等級費率結構  
+>>> level| string| 做市商等級名稱, `MM 1`, `MM 2`, `MM 3`  
+>>> makerRebate| string| 掛單返佣率  
+>>> rpiMakerRebate| string| RPI掛單返佣率  
+> updateTime| string| 數據最近更新的時間戳 (毫秒)  
   
-### 請求示例
+* * *
+
+### Request Example
 
   * HTTP
+  * Python
+  * Go
+  * Java
+  * Node.js
 
 
     
     
-    GET /v5/ins/whitelist/ip HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1779362662315  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/market/fee-group-info?productType=contract HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
+    
+    
+    
+      
     
 
-### 響應示例
+### Response Example
     
     
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "cabxxx0bnh.bybit-aws.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1"  
-                ]  
-            },  
-            {  
-                "name": "CoinXXX",  
-                "endpointDomain": "vgjzztjbx91ajfj.bybit.com",  
-                "ipList": [  
-                    "13.112.01.101",  
-                    "35.78.100.1",  
-                    "35.78.100.2"  
-                ]  
-            }  
-        ],  
-        "time": 1779362854157  
+        "result": {  
+            "list": [  
+                {  
+                    "groupName": "Innovation-Zone",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 121,  
+                    "symbols": [  
+                        "JELLYJELLYUSDT",  
+                        "TACUSDT",  
+                        "ZKPUSDT",  
+                        "COAIUSDT",  
+                        "OPGUSDT",  
+                        "BLESSUSDT",  
+                        "LIGHTUSDT",  
+                        "ATUSDT",  
+                        "FHEUSDT",  
+                        "FIGHTUSDT",  
+                        "DBRUSDT",  
+                        "AIGENSYNUSDT",  
+                        "LABUSDT",  
+                        "UBUSDT",  
+                        "SOSOUSDT",  
+                        "GPSUSDT",  
+                        "HEMIUSDT",  
+                        "CAPUSDT",  
+                        "HAEDALUSDT",  
+                        "ALPINEUSDT",  
+                        "OUSDT",  
+                        "BOBAUSDT",  
+                        "VELVETUSDT",  
+                        "CTRUSDT",  
+                        "BTRUSDT",  
+                        "BMTUSDT",  
+                        "ELSAUSDT",  
+                        "OPENUSDT",  
+                        "CLOUSDT",  
+                        "MUSDT",  
+                        "FOLKSUSDT",  
+                        "VVVUSDT",  
+                        "GRVTUSDT",  
+                        "B2USDT",  
+                        "JCTUSDT",  
+                        "DOLOUSDT",  
+                        "AKEUSDT",  
+                        "SPORTFUNUSDT",  
+                        "LUMIAUSDT",  
+                        "CYSUSDT",  
+                        "CROSSUSDT",  
+                        "ARIAUSDT",  
+                        "SCRTUSDT",  
+                        "STOUSDT",  
+                        "ASRUSDT",  
+                        "PEAQUSDT",  
+                        "USUSDT",  
+                        "AGIUSDT",  
+                        "DOSUSDT",  
+                        "BROCCOLIUSDT",  
+                        "TMXUSDT",  
+                        "BASEDUSDT",  
+                        "POWERUSDT",  
+                        "SAPIENUSDT",  
+                        "FLOCKUSDT",  
+                        "AEONUSDT",  
+                        "ASPUSDT",  
+                        "TRIAUSDT",  
+                        "TURTLEUSDT",  
+                        "BRUSDT",  
+                        "MYXUSDT",  
+                        "DUSKUSDT",  
+                        "PROMPTUSDT",  
+                        "BEATUSDT",  
+                        "CLANKERUSDT",  
+                        "SIRENUSDT",  
+                        "ALLOUSDT",  
+                        "MAGMAUSDT",  
+                        "PHAROSUSDT",  
+                        "USELESSUSDT",  
+                        "TRUSTUSDT",  
+                        "PTBUSDT",  
+                        "RECALLUSDT",  
+                        "4USDT",  
+                        "NAORISUSDT",  
+                        "BILLUSDT",  
+                        "GWEIUSDT",  
+                        "DOODUSDT",  
+                        "BUSDT",  
+                        "BLUAIUSDT",  
+                        "AWEUSDT",  
+                        "GIGGLEUSDT",  
+                        "AIOZUSDT",  
+                        "EPICUSDT",  
+                        "PRLUSDT",  
+                        "ESPORTSUSDT",  
+                        "XNYUSDT",  
+                        "BLENDUSDT",  
+                        "QUSDT",  
+                        "APRUSDT",  
+                        "TLMUSDT",  
+                        "ACXUSDT",  
+                        "INUSDT",  
+                        "TUTUSDT",  
+                        "GENIUSUSDT",  
+                        "AZTECUSDT",  
+                        "BIRBUSDT",  
+                        "ACUUSDT",  
+                        "IRYSUSDT",  
+                        "XPINUSDT",  
+                        "ARXUSDT",  
+                        "XDCUSDT",  
+                        "HANAUSDT",  
+                        "CUSDT",  
+                        "UAIUSDT",  
+                        "BANKUSDT",  
+                        "ZESTUSDT",  
+                        "MITOUSDT",  
+                        "BSBUSDT",  
+                        "RAVEUSDT",  
+                        "CASHCATUSDT",  
+                        "AVNTUSDT",  
+                        "NESAUSDT",  
+                        "EVAAUSDT",  
+                        "PIEVERSEUSDT",  
+                        "STBLUSDT",  
+                        "PLAYSOUTUSDT",  
+                        "1000TAGUSDT",  
+                        "TAUSDT",  
+                        "SPACEUSDT",  
+                        "AIOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "Pre-listing",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 4,  
+                    "symbols": [  
+                        "ANTHROPICUSDT",  
+                        "MOONSHOTUSDT",  
+                        "BPUSDT",  
+                        "OPENAIUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G1(Major Coins)",  
+                    "weightingFactor": 1,  
+                    "symbolsNumbers": 4,  
+                    "symbols": [  
+                        "SOLUSDT",  
+                        "BTCUSDT",  
+                        "ETHUSDT",  
+                        "XRPUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.0001"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00022",  
+                                "makerFeeRate": "0.000025"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.0002",  
+                                "makerFeeRate": "0.00001"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00015",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G2(High Growth)",  
+                    "weightingFactor": 5,  
+                    "symbolsNumbers": 38,  
+                    "symbols": [  
+                        "OPUSDT",  
+                        "1000BONKUSDT",  
+                        "XRPUSD",  
+                        "CRVUSDT",  
+                        "AAVEUSDT",  
+                        "GOATUSDT",  
+                        "UNIUSDT",  
+                        "POPCATUSDT",  
+                        "WLDUSDT",  
+                        "BTCUSD",  
+                        "TRBUSDT",  
+                        "ENAUSDT",  
+                        "WIFUSDT",  
+                        "MOODENGUSDT",  
+                        "ETHUSD",  
+                        "ARBUSDT",  
+                        "ADAUSDT",  
+                        "NEARUSDT",  
+                        "SUIUSDT",  
+                        "GALAUSDT",  
+                        "INITUSDT",  
+                        "LTCUSDT",  
+                        "TRUMPUSDT",  
+                        "WCTUSDT",  
+                        "HYPEUSDT",  
+                        "SOLAYERUSDT",  
+                        "LINKUSDT",  
+                        "FARTCOINUSDT",  
+                        "PNUTUSDT",  
+                        "KAITOUSDT",  
+                        "DOGEUSDT",  
+                        "ONDOUSDT",  
+                        "1000PEPEUSDT",  
+                        "TIAUSDT",  
+                        "BNBUSDT",  
+                        "AVAXUSDT",  
+                        "VIRTUALUSDT",  
+                        "1000NEIROCTOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0.000125"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0.0001"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.000275",  
+                                "makerFeeRate": "0.000075"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0.000025"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G3(Mid-Tier Liquidity)",  
+                    "weightingFactor": 8,  
+                    "symbolsNumbers": 79,  
+                    "symbols": [  
+                        "SANDUSDT",  
+                        "RENDERUSDT",  
+                        "SHIB1000USDT",  
+                        "STRKUSDT",  
+                        "NOTUSDT",  
+                        "1000FLOKIUSDT",  
+                        "COMPUSDT",  
+                        "ZKUSDT",  
+                        "XMRUSDT",  
+                        "BIGTIMEUSDT",  
+                        "MOVEUSDT",  
+                        "XLMUSDT",  
+                        "APTUSDT",  
+                        "LTCUSD",  
+                        "PENDLEUSDT",  
+                        "DOTUSDT",  
+                        "BSVUSDT",  
+                        "ETCUSDT",  
+                        "ETHFIUSDT",  
+                        "GMTUSDT",  
+                        "DYDXUSDT",  
+                        "ZROUSDT",  
+                        "1000TURBOUSDT",  
+                        "VETUSDT",  
+                        "THETAUSDT",  
+                        "MANAUSDT",  
+                        "PAXGUSDT",  
+                        "PYTHUSDT",  
+                        "MEWUSDT",  
+                        "JASMYUSDT",  
+                        "DOTUSD",  
+                        "GRTUSDT",  
+                        "NEOUSDT",  
+                        "ADAUSD",  
+                        "ALGOUSDT",  
+                        "XAUTUSDT",  
+                        "BOMEUSDT",  
+                        "MAGICUSDT",  
+                        "SOLUSD",  
+                        "ORDIUSDT",  
+                        "AXSUSDT",  
+                        "BERAUSDT",  
+                        "PENGUUSDT",  
+                        "MASKUSDT",  
+                        "IMXUSDT",  
+                        "TAOUSDT",  
+                        "SUIUSD",  
+                        "RUNEUSDT",  
+                        "INJUSDT",  
+                        "MNTUSDT",  
+                        "GASUSDT",  
+                        "BCHUSDT",  
+                        "PEOPLEUSDT",  
+                        "AUCTIONUSDT",  
+                        "JTOUSDT",  
+                        "JUPUSDT",  
+                        "ATOMUSDT",  
+                        "MEUSDT",  
+                        "ARKUSDT",  
+                        "APEUSDT",  
+                        "EIGENUSDT",  
+                        "SUSDT",  
+                        "ENSUSDT",  
+                        "USUALUSDT",  
+                        "IOTAUSDT",  
+                        "DOGEUSD",  
+                        "COWUSDT",  
+                        "STXUSDT",  
+                        "POLUSDT",  
+                        "ARKMUSDT",  
+                        "CAKEUSDT",  
+                        "FILUSDT",  
+                        "SEIUSDT",  
+                        "LDOUSDT",  
+                        "XTZUSDT",  
+                        "HBARUSDT",  
+                        "TRXUSDT",  
+                        "ICPUSDT",  
+                        "KASUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.000075"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0.00005"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00026",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G4(Mid-Tier Activation)",  
+                    "weightingFactor": 15,  
+                    "symbolsNumbers": 101,  
+                    "symbols": [  
+                        "SHELLUSDT",  
+                        "FLOWUSDT",  
+                        "CHILLGUYUSDT",  
+                        "AIXBTUSDT",  
+                        "MERLUSDT",  
+                        "WAVESUSDT",  
+                        "10000SATSUSDT",  
+                        "ORCAUSDT",  
+                        "ACTUSDT",  
+                        "1000RATSUSDT",  
+                        "BANUSDT",  
+                        "PARTIUSDT",  
+                        "PLUMEUSDT",  
+                        "ATHUSDT",  
+                        "AGLDUSDT",  
+                        "SUPERUSDT",  
+                        "SUSHIUSDT",  
+                        "ANIMEUSDT",  
+                        "VANAUSDT",  
+                        "REZUSDT",  
+                        "CARVUSDT",  
+                        "AKTUSDT",  
+                        "LPTUSDT",  
+                        "ALCHUSDT",  
+                        "ZORAUSDT",  
+                        "MELANIAUSDT",  
+                        "XAIUSDT",  
+                        "SSVUSDT",  
+                        "WALUSDT",  
+                        "PUFFERUSDT",  
+                        "XCNUSDT",  
+                        "MAVIAUSDT",  
+                        "KERNELUSDT",  
+                        "DEEPUSDT",  
+                        "XVGUSDT",  
+                        "SNTUSDT",  
+                        "BLURUSDT",  
+                        "MEMEUSDT",  
+                        "ARCUSDT",  
+                        "CGPTUSDT",  
+                        "MANTAUSDT",  
+                        "KAVAUSDT",  
+                        "BABYUSDT",  
+                        "ZBCNUSDT",  
+                        "MUBARAKUSDT",  
+                        "RAREUSDT",  
+                        "PORTALUSDT",  
+                        "ZEREBROUSDT",  
+                        "API3USDT",  
+                        "B3USDT",  
+                        "COOKIEUSDT",  
+                        "AEROUSDT",  
+                        "PUNDIXUSDT",  
+                        "BANANAUSDT",  
+                        "HMSTRUSDT",  
+                        "CATIUSDT",  
+                        "NMRUSDT",  
+                        "LRCUSDT",  
+                        "SONICUSDT",  
+                        "1000TOSHIUSDT",  
+                        "PIPPINUSDT",  
+                        "IOUSDT",  
+                        "HIVEUSDT",  
+                        "AVAAIUSDT",  
+                        "SIGNUSDT",  
+                        "KMNOUSDT",  
+                        "DYMUSDT",  
+                        "CROUSDT",  
+                        "ARUSDT",  
+                        "TAIKOUSDT",  
+                        "BIOUSDT",  
+                        "RSRUSDT",  
+                        "PIXELUSDT",  
+                        "KSMUSDT",  
+                        "DRIFTUSDT",  
+                        "1000CATUSDT",  
+                        "ICXUSDT",  
+                        "EGLDUSDT",  
+                        "ROSEUSDT",  
+                        "ZETAUSDT",  
+                        "MOCAUSDT",  
+                        "ZECUSDT",  
+                        "NILUSDT",  
+                        "BEAMUSDT",  
+                        "BBUSDT",  
+                        "SAFEUSDT",  
+                        "SPXUSDT",  
+                        "1000000BABYDOGEUSDT",  
+                        "GRIFFAINUSDT",  
+                        "FIDAUSDT",  
+                        "GRASSUSDT",  
+                        "SAGAUSDT",  
+                        "CELOUSDT",  
+                        "RAYDIUMUSDT",  
+                        "GUNUSDT",  
+                        "WUSDT",  
+                        "CETUSUSDT",  
+                        "BRETTUSDT",  
+                        "1000000MOGUSDT",  
+                        "CVCUSDT",  
+                        "HYPERUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.0003",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00025",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.0001",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G5(Long Tail)",  
+                    "weightingFactor": 20,  
+                    "symbolsNumbers": 238,  
+                    "symbols": [  
+                        "MOVRUSDT",  
+                        "ALTUSDT",  
+                        "MTLUSDT",  
+                        "SOMIUSDT",  
+                        "ASTRUSDT",  
+                        "IOSTUSDT",  
+                        "DOGEUSDT-25SEP26",  
+                        "RESOLVUSDT",  
+                        "YBUSDT",  
+                        "1000BTTUSDT",  
+                        "ZAMAUSDT",  
+                        "ETHBTCUSDT",  
+                        "1000XECUSDT",  
+                        "XRPUSDT-11SEP26",  
+                        "SENTUSDT",  
+                        "UNIUSD",  
+                        "10000NEXUSDT",  
+                        "OGUSDT",  
+                        "MINAUSDT",  
+                        "SLXUSDT",  
+                        "1000LUNCUSDT",  
+                        "ETHUSDU26",  
+                        "LITUSDT",  
+                        "OPNUSDT",  
+                        "IDUSDT",  
+                        "BATUSDT",  
+                        "YFIUSDT",  
+                        "SYRUPUSDT",  
+                        "MIRAUSDT",  
+                        "CVXUSDT",  
+                        "SUNUSDT",  
+                        "CYBERUSDT",  
+                        "HYPEUSD",  
+                        "SLPUSDT",  
+                        "USDCUSDT",  
+                        "DOGEUSDT-11SEP26",  
+                        "BTCUSDT-25SEP26",  
+                        "RLCUSDT",  
+                        "KNCUSDT",  
+                        "BCHUSD",  
+                        "SKYUSDT",  
+                        "POLYXUSDT",  
+                        "COTIUSDT",  
+                        "ETHUSDT-28AUG26",  
+                        "LINEAUSDT",  
+                        "XRPUSDT-04SEP26",  
+                        "LAUSDT",  
+                        "AAVEUSD",  
+                        "ONGUSDT",  
+                        "PHAUSDT",  
+                        "FLRUSDT",  
+                        "MMTUSDT",  
+                        "DASHUSDT",  
+                        "MNTUSDT-11SEP26",  
+                        "OPUSD",  
+                        "XRPUSDT-28AUG26",  
+                        "SOPHUSDT",  
+                        "SOLUSDT-25SEP26",  
+                        "BARDUSDT",  
+                        "XANUSDT",  
+                        "BTCUSDT-26MAR27",  
+                        "KGENUSDT",  
+                        "BTCUSDU26",  
+                        "VELODROMEUSDT",  
+                        "ONTUSDT",  
+                        "BICOUSDT",  
+                        "BANDUSDT",  
+                        "ENJUSDT",  
+                        "HYPEUSDT-11SEP26",  
+                        "AVAXUSD",  
+                        "CHZUSDT",  
+                        "DOGEUSDT-04SEP26",  
+                        "DIAUSDT",  
+                        "ASTERUSDT",  
+                        "QNTUSDT",  
+                        "ALICEUSDT",  
+                        "AUSDT",  
+                        "BTCUSDT-25DEC26",  
+                        "ACEUSDT",  
+                        "BNTUSDT",  
+                        "MORPHOUSDT",  
+                        "BTCUSDT-25JUN27",  
+                        "ESPUSDT",  
+                        "EDUUSDT",  
+                        "NOMUSDT",  
+                        "RVNUSDT",  
+                        "RIVERUSDT",  
+                        "STORJUSDT",  
+                        "WOOUSDT",  
+                        "ENSOUSDT",  
+                        "0GUSDT",  
+                        "OGNUSDT",  
+                        "LUNA2USDT",  
+                        "HUSDT",  
+                        "ARPAUSDT",  
+                        "ZKCUSDT",  
+                        "GLMUSDT",  
+                        "EDGEUSDT",  
+                        "FUSDT",  
+                        "FOGOUSDT",  
+                        "BLASTUSDT",  
+                        "EDENUSDT",  
+                        "AEVOUSDT",  
+                        "TNSRUSDT",  
+                        "MNTUSDT-04SEP26",  
+                        "XRPUSDT-25SEP26",  
+                        "GMXUSDT",  
+                        "METUSDT",  
+                        "AXLUSDT",  
+                        "SOLUSDT-28AUG26",  
+                        "MNTUSDT-28AUG26",  
+                        "OKBUSDT",  
+                        "HYPEUSDT-25SEP26",  
+                        "PUMPFUNUSDT",  
+                        "MAVUSDT",  
+                        "TRUTHUSDT",  
+                        "ORDERUSDT",  
+                        "ERAUSDT",  
+                        "LQTYUSDT",  
+                        "ZENUSDT",  
+                        "INXUSDT",  
+                        "ETHUSDT-26MAR27",  
+                        "WAXPUSDT",  
+                        "CCUSDT",  
+                        "PROVEUSDT",  
+                        "CFXUSDT",  
+                        "BANANAS31USDT",  
+                        "SXTUSDT",  
+                        "SAHARAUSDT",  
+                        "SKRUSDT",  
+                        "AVAUSDT",  
+                        "CFGUSDT",  
+                        "SKYAI1USDT",  
+                        "ZBTUSDT",  
+                        "EULUSDT",  
+                        "USDEUSDT",  
+                        "TREEUSDT",  
+                        "LSKUSDT",  
+                        "ACHUSDT",  
+                        "FLUIDUSDT",  
+                        "ETCUSD",  
+                        "TWTUSDT",  
+                        "ETHUSDT-11SEP26",  
+                        "COREUSDT",  
+                        "FLUXUSDT",  
+                        "SOLUSDT-04SEP26",  
+                        "HOLOUSDT",  
+                        "APEXUSDT",  
+                        "NIGHTUSDT",  
+                        "NEWTUSDT",  
+                        "HEIUSDT",  
+                        "RONINUSDT",  
+                        "HOMEUSDT",  
+                        "POWRUSDT",  
+                        "1INCHUSDT",  
+                        "ETHUSDT-30OCT26",  
+                        "METISUSDT",  
+                        "LYNUSDT",  
+                        "DEXEUSDT",  
+                        "ETHUSDT-25DEC26",  
+                        "XVSUSDT",  
+                        "BREVUSDT",  
+                        "UMAUSDT",  
+                        "ETHUSDZ26",  
+                        "JSTUSDT",  
+                        "SOLUSDT-11SEP26",  
+                        "WETUSDT",  
+                        "BTCUSDT-11SEP26",  
+                        "IOTXUSDT",  
+                        "HYPEUSDT-04SEP26",  
+                        "2ZUSDT",  
+                        "NEARUSD",  
+                        "STEEMUSDT",  
+                        "MONUSDT",  
+                        "BELUSDT",  
+                        "CKBUSDT",  
+                        "DATAUSDT",  
+                        "CHRUSDT",  
+                        "THEUSDT",  
+                        "YGGUSDT",  
+                        "USTCUSDT",  
+                        "STGUSDT",  
+                        "FILUSD",  
+                        "TOWNSUSDT",  
+                        "ZRXUSDT",  
+                        "XAUTUSDT-25SEP26",  
+                        "RLUSDUSDT",  
+                        "BTWUSDT",  
+                        "REUSDT",  
+                        "GRAMUSDT",  
+                        "ZILUSDT",  
+                        "C98USDT",  
+                        "TUSDT",  
+                        "ICNTUSDT",  
+                        "CHIPUSDT",  
+                        "SNXUSDT",  
+                        "REDUSDT",  
+                        "XAUTUSDT-04SEP26",  
+                        "ETHUSDT-04SEP26",  
+                        "ROBOUSDT",  
+                        "BTCUSDT-28AUG26",  
+                        "MNTUSDT-25SEP26",  
+                        "BTCUSDT-04SEP26",  
+                        "SOONUSDT",  
+                        "KITEUSDT",  
+                        "XAUTUSDT-28AUG26",  
+                        "USD1USDT",  
+                        "NXPCUSDT",  
+                        "KATUSDT",  
+                        "SKLUSDT",  
+                        "BTCUSDZ26",  
+                        "XPLUSDT",  
+                        "ETHUSDT-25JUN27",  
+                        "VELOUSDT",  
+                        "APTUSD",  
+                        "CTCUSDT",  
+                        "HNTUSDT",  
+                        "FORMUSDT",  
+                        "LINKUSD",  
+                        "RPLUSDT",  
+                        "MNTUSD",  
+                        "SPKUSDT",  
+                        "DOGEUSDT-28AUG26",  
+                        "SQDUSDT",  
+                        "MEGAUSDT",  
+                        "ETHUSDT-25SEP26",  
+                        "QTUMUSDT",  
+                        "FFUSDT",  
+                        "BTCUSDT-30OCT26",  
+                        "ILVUSDT",  
+                        "XAUTUSDT-11SEP26",  
+                        "STABLEUSDT",  
+                        "KAIAUSDT",  
+                        "WLFIUSDT",  
+                        "XLMUSD",  
+                        "HYPEUSDT-28AUG26",  
+                        "ANKRUSDT",  
+                        "HUMAUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00028",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.0001",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000125",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "USDC",  
+                    "weightingFactor": 8,  
+                    "symbolsNumbers": 68,  
+                    "symbols": [  
+                        "WLDPERP",  
+                        "TRXPERP",  
+                        "LINKPERP",  
+                        "WLFIPERP",  
+                        "ICPPERP",  
+                        "MNTPERP",  
+                        "WIFPERP",  
+                        "UNIPERP",  
+                        "HYPEPERP",  
+                        "1000NEIROCTOPERP",  
+                        "STRKPERP",  
+                        "SEIPERP",  
+                        "XMRPERP",  
+                        "NIGHTPERP",  
+                        "FILPERP",  
+                        "MOODENGPERP",  
+                        "PAXGPERP",  
+                        "ONDOPERP",  
+                        "ETCPERP",  
+                        "BTCPERP",  
+                        "TIAPERP",  
+                        "AAVEPERP",  
+                        "SOLPERP",  
+                        "FARTCOINPERP",  
+                        "ASTERPERP",  
+                        "ARBPERP",  
+                        "POPCATPERP",  
+                        "OPPERP",  
+                        "XRPPERP",  
+                        "DOGEPERP",  
+                        "EIGENPERP",  
+                        "SHIB1000PERP",  
+                        "ETHFIPERP",  
+                        "DOTPERP",  
+                        "XLMPERP",  
+                        "NOTPERP",  
+                        "SUIPERP",  
+                        "MERLPERP",  
+                        "1000BONKPERP",  
+                        "TWTPERP",  
+                        "ETHPERP",  
+                        "PNUTPERP",  
+                        "TAOPERP",  
+                        "RESOLVPERP",  
+                        "LTCPERP",  
+                        "AEVOPERP",  
+                        "PENGUPERP",  
+                        "HBARPERP",  
+                        "XPLPERP",  
+                        "CRVPERP",  
+                        "HPERP",  
+                        "ORDIPERP",  
+                        "AVNTPERP",  
+                        "PUMPFUNPERP",  
+                        "VIRTUALPERP",  
+                        "PENDLEPERP",  
+                        "TRUMPPERP",  
+                        "INJPERP",  
+                        "BCHPERP",  
+                        "KASPERP",  
+                        "1000PEPEPERP",  
+                        "ENAPERP",  
+                        "SPXPERP",  
+                        "SAHARAPERP",  
+                        "ICNTPERP",  
+                        "BNBPERP",  
+                        "POLPERP",  
+                        "XAUTPERP"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00032",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.000275",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00024",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00021",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000015",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.00004",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                },  
+                {  
+                    "groupName": "G9(Stock & Commodity Tradfi Perp",  
+                    "weightingFactor": 10,  
+                    "symbolsNumbers": 221,  
+                    "symbols": [  
+                        "SHAZUSDT",  
+                        "GIGADEVICEUSDT",  
+                        "BBXUSDT",  
+                        "CBRSUSDT",  
+                        "VUSDT",  
+                        "AMGNUSDT",  
+                        "BEUSDT",  
+                        "XAGUSDT",  
+                        "MAGSUSDT",  
+                        "SOXXUSDT",  
+                        "PDDUSDT",  
+                        "ADBEUSDT",  
+                        "BNCUSDT",  
+                        "COSTUSDT",  
+                        "BITOUSDT",  
+                        "WDCUSDT",  
+                        "BACUSDT",  
+                        "LRCXUSDT",  
+                        "GEUSDT",  
+                        "ONDSUSDT",  
+                        "SHEINUSDT",  
+                        "XLEUSDT",  
+                        "SNDKUSDT",  
+                        "TERUSDT",  
+                        "MRNAUSDT",  
+                        "USARUSDT",  
+                        "ADIUSDT",  
+                        "CIFRUSDT",  
+                        "NVOUSDT",  
+                        "JNJUSDT",  
+                        "SKHYUSDT",  
+                        "TSLAUSDT",  
+                        "BZUSDT",  
+                        "CATSTOCKUSDT",  
+                        "TZAUSDT",  
+                        "BSPUSDT",  
+                        "IBMUSDT",  
+                        "GSUSDT",  
+                        "ARKKUSDT",  
+                        "INTWUSDT",  
+                        "MUUUSDT",  
+                        "AALUSDT",  
+                        "ONUSDT",  
+                        "SKUUUSDT",  
+                        "FUTUUSDT",  
+                        "METAUSDT",  
+                        "AVGOUSDT",  
+                        "MCDUSDT",  
+                        "ASTSUSDT",  
+                        "CLUSDT",  
+                        "COHRUSDT",  
+                        "MINIMAXUSDT",  
+                        "UNITREEUSDT",  
+                        "NFLXUSDT",  
+                        "CRWDUSDT",  
+                        "DJTUSDT",  
+                        "XIAOMIUSDT",  
+                        "MAUSDT",  
+                        "WMTUSDT",  
+                        "QCOMUSDT",  
+                        "SNXXUSDT",  
+                        "RAMUSDT",  
+                        "FLNCUSDT",  
+                        "TSEMUSDT",  
+                        "NVDAUSDT",  
+                        "SMHUSDT",  
+                        "LYTEUSDT",  
+                        "DELLUSDT",  
+                        "COINUSDT",  
+                        "KLACUSDT",  
+                        "MSTUUSDT",  
+                        "PLTRUSDT",  
+                        "XBIUSDT",  
+                        "ZMUSDT",  
+                        "PANWUSDT",  
+                        "GLWUSDT",  
+                        "NBISUSDT",  
+                        "UNHUSDT",  
+                        "LITEUSDT",  
+                        "RIOTUSDT",  
+                        "RDWUSDT",  
+                        "MARAUSDT",  
+                        "INTCUSDT",  
+                        "INFQUSDT",  
+                        "CRMUSDT",  
+                        "MOUSDT",  
+                        "HOODUSDT",  
+                        "GMESTOCKUSDT",  
+                        "KOUSDT",  
+                        "TMFUSDT",  
+                        "EBAYUSDT",  
+                        "GEVUSDT",  
+                        "SAMSUNGEMUSDT",  
+                        "RIVNUSDT",  
+                        "JDUSDT",  
+                        "HIMSUSDT",  
+                        "APLDUSDT",  
+                        "QQQUSDT",  
+                        "XAUUSDT",  
+                        "PENGSTOCKUSDT",  
+                        "MVLLUSDT",  
+                        "UBERUSDT",  
+                        "MNSTUSDT",  
+                        "FLEXUSDT",  
+                        "CRWVUSDT",  
+                        "GOOGLUSDT",  
+                        "ARMUSDT",  
+                        "HANMIUSDT",  
+                        "SMCIUSDT",  
+                        "NVDLUSDT",  
+                        "ORCLUSDT",  
+                        "APPSTOCKUSDT",  
+                        "AMATUSDT",  
+                        "SOXLUSDT",  
+                        "IRENUSDT",  
+                        "XLVUSDT",  
+                        "PURRUSDT",  
+                        "KODEX200USDT",  
+                        "TTWOUSDT",  
+                        "TXNUSDT",  
+                        "CSOPSAMSUNG2LUSDT",  
+                        "XLPUSDT",  
+                        "NOWUSDT",  
+                        "FLYUSDT",  
+                        "TQQQUSDT",  
+                        "MUUSDT",  
+                        "KSTRUSDT",  
+                        "ISRGUSDT",  
+                        "POPMARTUSDT",  
+                        "MRKUSDT",  
+                        "CIENUSDT",  
+                        "SNOWUSDT",  
+                        "SAMSUNGUSDT",  
+                        "SQQQUSDT",  
+                        "JPMUSDT",  
+                        "LLYUSDT",  
+                        "HDUSDT",  
+                        "STXXUSDT",  
+                        "MRVLUSDT",  
+                        "PEPUSDT",  
+                        "PYPLUSDT",  
+                        "OUSTUSDT",  
+                        "SPYUSDT",  
+                        "SKDDUSDT",  
+                        "ZHIPUUSDT",  
+                        "AAPLUSDT",  
+                        "XLFUSDT",  
+                        "HPEUSDT",  
+                        "IONQUSDT",  
+                        "QNTXUSDT",  
+                        "FWDIUSDT",  
+                        "DKNGUSDT",  
+                        "SONYUSDT",  
+                        "KUAISHOUUSDT",  
+                        "DDOGUSDT",  
+                        "HYUNDAIUSDT",  
+                        "EWJUSDT",  
+                        "NETUSDT",  
+                        "CRDOUSDT",  
+                        "AAOIUSDT",  
+                        "AMZNUSDT",  
+                        "SOFIUSDT",  
+                        "MSFTUSDT",  
+                        "CSOPSKHYNIX2LUSDT",  
+                        "VSTUSDT",  
+                        "TBTUSDT",  
+                        "TSLLUSDT",  
+                        "BABAUSDT",  
+                        "IWMUSDT",  
+                        "SSPCUSDT",  
+                        "REGNUSDT",  
+                        "KORUUSDT",  
+                        "VRTUSDT",  
+                        "AEHRUSDT",  
+                        "EWTUSDT",  
+                        "TENCENTUSDT",  
+                        "POETUSDT",  
+                        "WENSTOCKUSDT",  
+                        "EWYUSDT",  
+                        "AMCUSDT",  
+                        "GILDUSDT",  
+                        "CXMTUSDT",  
+                        "XOMUSDT",  
+                        "CLSKUSDT",  
+                        "SPOTUSDT",  
+                        "XLKUSDT",  
+                        "MSTRUSDT",  
+                        "GDXUSDT",  
+                        "ANETUSDT",  
+                        "AMDSTOCKUSDT",  
+                        "BXUSDT",  
+                        "AXTIUSDT",  
+                        "MEITUANUSDT",  
+                        "ALABUSDT",  
+                        "CRCLUSDT",  
+                        "RDDTUSDT",  
+                        "NOKIAUSDT",  
+                        "ASMLUSDT",  
+                        "VRTXSTOCKUSDT",  
+                        "TSMUSDT",  
+                        "INTUUSDT",  
+                        "SPXLUSDT",  
+                        "NCLDUSDT",  
+                        "NAVERUSDT",  
+                        "XLUUSDT",  
+                        "BIIBUSDT",  
+                        "BRKBUSDT",  
+                        "ZHONGJIUSDT",  
+                        "LGELECTRONICSUSDT",  
+                        "SOXSUSDT",  
+                        "SKHYNIXUSDT",  
+                        "SPCHUSDT",  
+                        "RKLBUSDT",  
+                        "BOTUSDT",  
+                        "SMICUSDT",  
+                        "SPCXUSDT",  
+                        "DRAMUSDT",  
+                        "UVXYUSDT",  
+                        "BMNRUSDT",  
+                        "SHOPUSDT",  
+                        "CSCOUSDT"  
+                    ],  
+                    "feeRates": {  
+                        "pro": [  
+                            {  
+                                "level": "Pro 1",  
+                                "takerFeeRate": "0.0002",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 2",  
+                                "takerFeeRate": "0.00018",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 3",  
+                                "takerFeeRate": "0.00016",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 4",  
+                                "takerFeeRate": "0.00015",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 5",  
+                                "takerFeeRate": "0.00014",  
+                                "makerFeeRate": "0"  
+                            },  
+                            {  
+                                "level": "Pro 6",  
+                                "takerFeeRate": "0.000125",  
+                                "makerFeeRate": "0"  
+                            }  
+                        ],  
+                        "marketMaker": [  
+                            {  
+                                "level": "MM 1",  
+                                "makerRebate": "-0.000025",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 2",  
+                                "makerRebate": "-0.00005",  
+                                "rpiMakerRebate": "0"  
+                            },  
+                            {  
+                                "level": "MM 3",  
+                                "makerRebate": "-0.000075",  
+                                "rpiMakerRebate": "0"  
+                            }  
+                        ]  
+                    },  
+                    "updateTime": "1781605234098"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1787900967496  
     }

@@ -2,31 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-auto-repay-mode
 api_type: REST
-updated_at: 2026-11-03 18:38:50.809093
+updated_at: 2026-11-04 18:39:30.693364
 ---
 
-# Get Status And Leverage
+# Set Leverage
 
-Query the Spot margin status and leverage
+Set the user's maximum leverage in spot cross margin
+
+caution
+
+Your account needs to activate spot margin first; i.e., you must have finished the quiz on web / app.   
+The updated leverage must be less than or equal to the maximum leverage of the currency
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/state`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### Request Parameters
 
-None
+Parameter| Required| Type| Comments  
+---|---|---|---  
+leverage| **true**|  string| Leverage. [`2`, `10`].  
+currency| false| string| Coin name, uppercase only  
+[](/docs/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
 
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-spotLeverage| string| Spot margin leverage. Returns `""` if the margin trade is turned off  
-spotMarginMode| string| Spot margin status. `1`: on, `0`: off  
-effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal places, truncate downwards  
-[](/docs/api-explorer/v5/spot-margin-uta/status)
-
-* * *
+None
 
 ### Request Example
 
@@ -37,12 +41,17 @@ effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal pl
 
     
     
-    GET /v5/spot-margin-trade/state HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "leverage": "4"  
+    }  
     
     
     
@@ -52,7 +61,9 @@ effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal pl
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_status_and_leverage())  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
+    ))  
     
     
     
@@ -65,7 +76,7 @@ effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal pl
     });  
       
     client  
-      .getSpotMarginState()  
+      .setSpotMarginLeverage('4')  
       .then((response) => {  
         console.log(response);  
       })  
@@ -80,39 +91,42 @@ effectiveLeverage| string| actual leverage ratio. Precision retains 2 decimal pl
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "spotLeverage": "10",  
-            "spotMarginMode": "1",  
-            "effectiveLeverage": "1"  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1692696841231  
+        "time": 1672710944282  
     }
 
 ---
 
-# 查詢開關狀態和倍數
+# 全倉槓桿設置
 
-查詢統一帳戶下槓桿交易的開關狀態和槓桿倍數
+全倉槓桿設置用戶最大槓桿倍數
 
 > **覆蓋範圍: 全倉槓桿 (統一帳戶)**
 
+警告
+
+需要先開啟全倉槓桿，才能調整槓桿。  
+更新後的槓桿必須小於或等於該幣的最大槓桿
+
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/state`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### 請求參數
 
-無
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+leverage| **true**|  string| 槓桿倍數 (整數), 支持區間 [`2`, `10`]  
+currency| false| string| 幣名稱，僅限大寫  
+[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
 
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-spotLeverage| string| 槓桿倍數. 如果處於關閉狀態的話, 則返回 `""`  
-spotMarginMode| string| 開關狀態. `1`: 開啟, `0`: 關閉  
-effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，向下截取  
-  
+無
+
 ### 請求示例
 
   * HTTP
@@ -122,16 +136,29 @@ effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，
 
     
     
-    GET /v5/spot-margin-trade/state HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "leverage": "4"  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
+    ))  
     
     
     
@@ -144,7 +171,7 @@ effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，
     });  
       
     client  
-      .getSpotMarginState()  
+      .setSpotMarginLeverage('4')  
       .then((response) => {  
         console.log(response);  
       })  
@@ -159,11 +186,7 @@ effectiveLeverage| string| 實際借貸槓桿倍數。 精度保留2位小數，
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {  
-            "spotLeverage": "10",  
-            "spotMarginMode": "1",  
-            "effectiveLeverage": "1"  
-        },  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1692696841231  
+        "time": 1672710944282  
     }

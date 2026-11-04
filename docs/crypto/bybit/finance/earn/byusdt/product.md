@@ -2,74 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/product
 api_type: REST
-updated_at: 2026-11-03 18:34:26.676102
+updated_at: 2026-11-04 18:35:06.503792
 ---
 
-# Get Coupon List
+# Get APR History
 
 info
 
-  * Authentication required.
-  * **Rate Limit:** 10 req/s (UID)
+Does not need authentication.
 
+note
 
-
-Query the user's interest-rate coupons (`interestCards`) and Dual Assets reward cards (`awardCards`, e.g. trial funds / zero-cost vouchers) for the given product category.
-
-Returned cards include all states: `InUse`, `NotUse`, `Expired`, and `AlreadyUsed`.
-
-To apply a coupon when placing an order, pass its `awardId` and `specCode` in the `interestCard` field of the corresponding place-order request:
-
-  * `FlexibleSaving` → [Place Order](/docs/v5/finance/earn/easy-onchain/create-order)
-  * `DualAssets` → [Place Order](/docs/v5/finance/advanced-earn/dual-asset/create-order)
-
-
+You can query up to 6 months of historical APR data.
 
 ### HTTP Request
 
-GET`/v5/earn/coupons`
+GET`/v5/earn/apr-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| Product category: `FlexibleSaving`, `DualAssets`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
+productId| **true**|  string| Product ID, from [GET /v5/earn/product](/docs/v5/finance/earn/easy-onchain/product-info)  
+startTime| false| integer| Start timestamp (ms). If neither `startTime` nor `endTime` is provided, the last 7 days of data is returned by default  
+endTime| false| integer| End timestamp (ms). The difference between `endTime` and `startTime` must be less than or equal to 182 days  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-interestCards| array| Interest-rate coupon list  
-> awardId| integer| Coupon unique ID  
-> specCode| string| Coupon spec code  
-> coin| string| Coin name, e.g. `USDT`, `BTC`  
-> apy| string| Bonus APY rate as a decimal string, e.g. `"0.03"` = 3%  
-> duration| integer| Coupon validity period (days)  
-> claimedAt| integer| Claim time (Unix seconds)  
-> expireAt| integer| Expiry time (Unix seconds)  
-> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
-> status| string| Coupon status. `InUse`: currently in use, `NotUse`: claimed but not yet used, `Expired`: expired without being used, `AlreadyUsed`: used and settled  
-> currentPnl| string| Bonus interest accrued so far  
-> limitPnl| string| Bonus interest cap  
-> positionEffectiveAmount| string| Effective principal amount for the bonus calculation  
-> productId| integer| Linked product ID; populated for `InUse` / `AlreadyUsed`, `0` otherwise  
-> category| string| Product category the coupon applies to: `FlexibleSaving`, `DualAssets`  
-awardCards| array| Dual Assets reward card list (trial fund / zero-cost voucher)  
-> awardId| integer| Reward card unique ID  
-> specCode| string| Reward card spec code  
-> claimedAt| integer| Claim time (Unix seconds)  
-> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
-> expireAt| integer| Expiry time (Unix seconds)  
-> status| string| Card status. Same semantics as `interestCards > status`  
-> amount| string| Trial / zero-cost voucher amount  
-> limitPnlPercentage| string| PnL percentage cap, e.g. `"0.23"` = 23%  
-> baseCoin| string| Base coin name  
-> quoteCoin| string| Quote coin name  
-> direction| integer| Dual Assets direction: `1` = BuyLow, `2` = SellHigh  
-> category| string| Product category the card applies to: `FlexibleSaving`, `DualAssets`  
+list| array| Object  
+> timestamp| string| Unix timestamp (ms) at midnight of the corresponding date  
+> apr| string| APR, decimal string, e.g., `"0.055"` represents 5.5%  
   
-* * *
-
 ### Request Example
 
   * HTTP
@@ -79,12 +45,8 @@ awardCards| array| Dual Assets reward card list (trial fund / zero-cost voucher)
 
     
     
-    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1759983699446  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
+    Host: api-testnet.bybit.com  
     
     
     
@@ -100,99 +62,76 @@ awardCards| array| Dual Assets reward card list (trial fund / zero-cost voucher)
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "interestCards": [  
+            "list": [  
                 {  
-                    "awardId": 1001,  
-                    "specCode": "FS_APY_3PCT_30D",  
-                    "coin": "USDT",  
-                    "apy": "0.03",  
-                    "duration": 30,  
-                    "claimedAt": 1759900800,  
-                    "expireAt": 1762492800,  
-                    "usedAt": 0,  
-                    "status": "NotUse",  
-                    "currentPnl": "0",  
-                    "limitPnl": "100",  
-                    "positionEffectiveAmount": "0",  
-                    "productId": 0,  
-                    "category": "FlexibleSaving"  
+                    "timestamp": "1773705600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773619200000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773532800000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773446400000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773360000000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773273600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773187200000",  
+                    "apr": "15%"  
                 }  
-            ],  
-            "awardCards": []  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1759983699446  
+        "time": 1773741812091  
     }
 
 ---
 
-# 查詢優惠券列表
+# 查詢歷史 APR
 
 信息
 
-  * 需要身份驗證。
-  * **頻率限制：** 10 次/秒（UID）
+不需要鑒權
 
+備註
 
-
-查詢用戶在指定產品類別下的利率優惠券（`interestCards`）和雙幣投資獎勵卡（`awardCards`，如體驗金/零成本券）。
-
-返回所有狀態的卡券：`InUse`（使用中）、`NotUse`（未使用）、`Expired`（已過期）、`AlreadyUsed`（已使用）。
-
-下單時如需使用優惠券，請在對應下單請求的 `interestCard` 字段中傳入 `awardId` 和 `specCode`：
-
-  * `FlexibleSaving` → [下單](/docs/zh-TW/v5/finance/earn/easy-onchain/create-order)
-  * `DualAssets` → [下單](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/create-order)
-
-
+最多可查詢 6 個月的歷史 APR 數據。
 
 ### HTTP 請求
 
-GET`/v5/earn/coupons`
+GET`/v5/earn/apr-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| 產品類別：`FlexibleSaving`、`DualAssets`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
+productId| **true**|  string| 產品 ID，從 [GET /v5/earn/product](/docs/zh-TW/v5/finance/earn/easy-onchain/product-info) 獲取  
+startTime| false| integer| 查詢開始時間戳 (ms)。若 `startTime` 和 `endTime` 均不傳，默認返回最近 7 天的數據  
+endTime| false| integer| 查詢結束時間戳 (ms)，與 `startTime` 的間隔不超過 182 天  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-interestCards| array| 利率優惠券列表  
-> awardId| integer| 優惠券唯一ID  
-> specCode| string| 優惠券規格碼  
-> coin| string| 幣種名稱，如 `USDT`、`BTC`  
-> apy| string| 加成APY（小數字符串），如 `"0.03"` = 3%  
-> duration| integer| 優惠券有效期（天）  
-> claimedAt| integer| 領取時間（Unix秒）  
-> expireAt| integer| 到期時間（Unix秒）  
-> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
-> status| string| 狀態。`InUse`：使用中，`NotUse`：未使用，`Expired`：已過期，`AlreadyUsed`：已使用  
-> currentPnl| string| 已累計加成利息  
-> limitPnl| string| 加成利息上限  
-> positionEffectiveAmount| string| 計算加成的有效本金  
-> productId| integer| 關聯產品ID；`InUse`/`AlreadyUsed` 時有值，否則為 `0`  
-> category| string| 優惠券適用的產品類別：`FlexibleSaving`、`DualAssets`  
-awardCards| array| 雙幣投資獎勵卡列表（體驗金/零成本券）  
-> awardId| integer| 獎勵卡唯一ID  
-> specCode| string| 獎勵卡規格碼  
-> claimedAt| integer| 領取時間（Unix秒）  
-> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
-> expireAt| integer| 到期時間（Unix秒）  
-> status| string| 狀態，語義同 `interestCards > status`  
-> amount| string| 體驗金/零成本券金額  
-> limitPnlPercentage| string| 收益上限比例，如 `"0.23"` = 23%  
-> baseCoin| string| 標的幣種  
-> quoteCoin| string| 計價幣種  
-> direction| integer| 雙幣方向：`1` = 低買（BuyLow），`2` = 高賣（SellHigh）  
-> category| string| 獎勵卡適用的產品類別：`FlexibleSaving`、`DualAssets`  
+list| array| Object  
+> timestamp| string| 該記錄對應日期零點的 Unix 毫秒時間戳  
+> apr| string| APR，decimal 字符串，如 `"0.055"` 表示 5.5%  
   
-* * *
-
 ### 請求示例
 
   * HTTP
@@ -202,12 +141,8 @@ awardCards| array| 雙幣投資獎勵卡列表（體驗金/零成本券）
 
     
     
-    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1759983699446  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
+    Host: api-testnet.bybit.com  
     
     
     
@@ -223,28 +158,39 @@ awardCards| array| 雙幣投資獎勵卡列表（體驗金/零成本券）
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "interestCards": [  
+            "list": [  
                 {  
-                    "awardId": 1001,  
-                    "specCode": "FS_APY_3PCT_30D",  
-                    "coin": "USDT",  
-                    "apy": "0.03",  
-                    "duration": 30,  
-                    "claimedAt": 1759900800,  
-                    "expireAt": 1762492800,  
-                    "usedAt": 0,  
-                    "status": "NotUse",  
-                    "currentPnl": "0",  
-                    "limitPnl": "100",  
-                    "positionEffectiveAmount": "0",  
-                    "productId": 0,  
-                    "category": "FlexibleSaving"  
+                    "timestamp": "1773705600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773619200000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773532800000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773446400000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773360000000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773273600000",  
+                    "apr": "15%"  
+                },  
+                {  
+                    "timestamp": "1773187200000",  
+                    "apr": "15%"  
                 }  
-            ],  
-            "awardCards": []  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1759983699446  
+        "time": 1773741812091  
     }

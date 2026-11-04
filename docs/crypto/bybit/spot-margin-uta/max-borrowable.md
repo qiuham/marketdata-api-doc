@@ -2,29 +2,35 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/max-borrowable
 api_type: REST
-updated_at: 2026-11-03 18:38:45.828101
+updated_at: 2026-11-04 18:39:28.829174
 ---
 
-# Get Max Borrowable Amount
+# Set Leverage
+
+Set the user's maximum leverage in spot cross margin
+
+caution
+
+Your account needs to activate spot margin first; i.e., you must have finished the quiz on web / app.   
+The updated leverage must be less than or equal to the maximum leverage of the currency
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/max-borrowable`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| **true**|  string| Coin name, uppercase only  
-  
+leverage| **true**|  string| Leverage. [`2`, `10`].  
+currency| false| string| Coin name, uppercase only  
+[](/docs/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
+
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-currency| string| Coin name, uppercase only  
-maxLoan| string| Max borrowable amount  
-  
-* * *
+None
 
 ### Request Example
 
@@ -35,12 +41,17 @@ maxLoan| string| Max borrowable amount
 
     
     
-    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "leverage": "4"  
+    }  
     
     
     
@@ -50,13 +61,28 @@ maxLoan| string| Max borrowable amount
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spot_margin_trade_get_max_borrowable(  
-        currency="BTC"  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
     ))  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .setSpotMarginLeverage('4')  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -64,37 +90,42 @@ maxLoan| string| Max borrowable amount
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
-        "result": {  
-            "maxLoan": "17.54689892",  
-            "currency": "BTC"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1672710944282  
     }
 
 ---
 
-# 查詢最大可借數
+# 全倉槓桿設置
+
+全倉槓桿設置用戶最大槓桿倍數
+
+> **覆蓋範圍: 全倉槓桿 (統一帳戶)**
+
+警告
+
+需要先開啟全倉槓桿，才能調整槓桿。  
+更新後的槓桿必須小於或等於該幣的最大槓桿
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/max-borrowable`
+POST`/v5/spot-margin-trade/set-leverage`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| **true**|  string| 幣名稱，僅限大寫  
-  
+leverage| **true**|  string| 槓桿倍數 (整數), 支持區間 [`2`, `10`]  
+currency| false| string| 幣名稱，僅限大寫  
+[](/docs/zh-TW/api-explorer/v5/spot-margin-uta/set-leverage)
+
+* * *
+
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-currency| string| 幣名稱，僅限大寫  
-maxLoan| string| 最高可藉金額  
-  
-* * *
+無
 
 ### 請求示例
 
@@ -105,20 +136,48 @@ maxLoan| string| 最高可藉金額
 
     
     
-    GET /v5/spot-margin-trade/max-borrowable?currency=BTC HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/spot-margin-trade/set-leverage HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1672299806626  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "leverage": "4"  
+    }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spot_margin_trade_set_leverage(  
+        leverage="4",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .setSpotMarginLeverage('4')  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -126,11 +185,8 @@ maxLoan| string| 最高可藉金額
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
-        "result": {  
-            "maxLoan": "17.54689892",  
-            "currency": "BTC"  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1756261353733  
+        "time": 1672710944282  
     }

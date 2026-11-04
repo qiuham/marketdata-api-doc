@@ -2,38 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/all
 api_type: REST
-updated_at: 2026-11-03 18:35:04.804183
+updated_at: 2026-11-04 18:35:43.568496
 ---
 
-# Get Asset Trend
+# Get All Investment Plans
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+GET`/v5/earn/pwm/investment-plan/all`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| **true**|  string| Investment plan ID  
-startTime| false| int| Start timestamp (ms). Default: current time minus 7 days  
-endTime| false| int| End timestamp (ms). Default: current time  
+planId| false| string| Investment plan ID. Returns all plans if omitted  
+status| false| string| Filter by status: `PendingSubscription` / `Active` / `Closed`. Returns all if omitted  
+limit| false| int| Page size. Default: `20`, max: `50`  
+cursor| false| string| Pagination cursor  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-planId| string| Investment plan ID  
-dataPoints| array| Asset data point list, sorted in ascending order by date  
-> date| string| Date in `YYYY-MM-DD` format  
-> assetValueUsd| string| Total plan assets on that day (USD valuation), taken from the daily settlement snapshot  
+list| array| Investment plan list  
+> planId| string| Unique identifier of the investment plan  
+> planName| string| Investment plan name  
+> planType| string| Plan type: `stable` / `advanced`  
+> status| string| Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed)  
+> source| string| Creation source: `consultant` (created by consultant) / `direct` (self-created by client) / `institution` (created by institution)  
+> currentAssetUsd| string| Total current assets of the plan (USD valuation). When status is `PendingSubscription`, this is the configured amount  
+> accumulateYieldUsd| string| Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`  
+> investmentDistribution| array| Investment distribution list  
+>> category| string| Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+>> coin| string| Denominated coin  
+>> productId| string| Subscribed product ID. For funds, this corresponds to `fundId`  
+>> currentAmount| string| Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount  
+> createdTime| string| Creation timestamp (milliseconds)  
+nextPageCursor| string| Next page cursor. Empty string indicates no more data  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -47,51 +59,73 @@ dataPoints| array| Asset data point list, sorted in ascending order by date
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
-            "dataPoints": [  
+            "list": [  
                 {  
-                    "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
-                },  
-                {  
-                    "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
+                    "planId": "10001",  
+                    "planName": "Conservative Growth Plan",  
+                    "planType": "stable",  
+                    "status": "Active",  
+                    "source": "consultant",  
+                    "currentAssetUsd": "200137.50",  
+                    "accumulateYieldUsd": "2137.50",  
+                    "investmentDistribution": [  
+                        {  
+                            "category": "fundPool",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "currentAmount": "50000.00"  
+                        }  
+                    ],  
+                    "createdTime": "1700000000000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         }  
     }
 
 ---
 
-# 查詢資產趨勢曲線
+# 查詢所有投資計劃
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/asset-trend`
+GET`/v5/earn/pwm/investment-plan/all`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| **true**|  string| 投資計劃ID  
-startTime| false| int| 起始時間戳（ms），默認當前時間-7天  
-endTime| false| int| 結束時間戳（ms），默認當前時間  
+planId| false| string| 投資計劃ID，不傳返回全部  
+status| false| string| 篩選狀態：`PendingSubscription` / `Active` / `Closed`，不傳返回全部  
+limit| false| int| 分頁大小，默認 `20`，最大 `50`  
+cursor| false| string| 分頁游標  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-planId| string| 投資計劃ID  
-dataPoints| array| 資產數據點列表，按日期升序排列  
-> date| string| 日期，格式 `YYYY-MM-DD`  
-> assetValueUsd| string| 當日計劃總資產（USD估值），取每日結算快照值  
+list| array| 投資計劃列表  
+> planId| string| 投資計劃唯一標識  
+> planName| string| 投資計劃名稱  
+> planType| string| 計劃類型：`stable` / `advanced`  
+> status| string| 計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）  
+> source| string| 創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）  
+> currentAssetUsd| string| 當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額  
+> accumulateYieldUsd| string| 累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`  
+> investmentDistribution| array| 投資分佈比例列表  
+>> category| string| 產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+>> coin| string| 本位幣種  
+>> productId| string| 申購的對應產品ID，基金對應為 `fundId`  
+>> currentAmount| string| 投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量  
+> createdTime| string| 創建時間戳（毫秒）  
+nextPageCursor| string| 下一頁游標，為空表示無更多數據  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/asset-trend?planId=10001 HTTP/1.1  
+    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -105,16 +139,26 @@ dataPoints| array| 資產數據點列表，按日期升序排列
     {  
         "retCode": 0,  
         "result": {  
-            "planId": "10001",  
-            "dataPoints": [  
+            "list": [  
                 {  
-                    "date": "2024-11-01",  
-                    "assetValueUsd": "198500.00"  
-                },  
-                {  
-                    "date": "2024-11-02",  
-                    "assetValueUsd": "199100.00"  
+                    "planId": "10001",  
+                    "planName": "Conservative Growth Plan",  
+                    "planType": "stable",  
+                    "status": "Active",  
+                    "source": "consultant",  
+                    "currentAssetUsd": "200137.50",  
+                    "accumulateYieldUsd": "2137.50",  
+                    "investmentDistribution": [  
+                        {  
+                            "category": "fundPool",  
+                            "productId": "430",  
+                            "coin": "USDT",  
+                            "currentAmount": "50000.00"  
+                        }  
+                    ],  
+                    "createdTime": "1700000000000"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": ""  
         }  
     }

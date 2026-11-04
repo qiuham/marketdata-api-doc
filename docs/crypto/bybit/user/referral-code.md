@@ -2,62 +2,75 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-11-03 18:39:42.047736
+updated_at: 2026-11-04 18:40:24.465585
 ---
 
-# Get Referral Code
+# Sign Agreement
 
-Query the referral codes owned by the current user and their corresponding referral registration links.
+To trade commodity contracts, please complete the agreement signing first. Once completed, you will be able to trade all metals commodity contracts.
 
 info
 
-  * Sub-accounts will return the master account's referral codes
-  * Only active (non-expired) referral codes are returned
+  * Only the master account can sign the agreement via this endpoint. Subaccounts are not supported for this action.
+  * Once the master account has signed, all subaccounts will be eligible to trade.
+  * The API key must have at least one of the following permissions to call this endpoint: Account Transfer, Subaccount Transfer, or Withdrawal.
 
 
 
 ### HTTP Request
 
-GET`/v5/user/invitation/code`
+POST`/v5/user/agreement`
 
 ### Request Parameters
 
-No request parameters required. User identity is derived from the API Key.
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+category| false| integer| `2`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`3`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. This field remains supported, but new enum values will no longer be added here — use `categoryV2` instead._  
+categoryV2| false| integer| `1`: Metals commodity contracts (XAU & XAG). Stock perps share this agreement  
+`2`: Crude oil commodity contract  
+ _Either`category` or `categoryV2` is required. Recommend using this field; new enum values will be added here going forward._  
+agree| **true**|  boolean| `true`  
+  
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-referralCodes| array| List of referral codes owned by the user  
-> referralCode| string| The referral code string  
-> referralLink| string| The referral registration link for the user's site. URL structure: `https://{domain}/{lang}/invite/?ref={referralCode}`  
-> scene| integer| Referral code scene type. `1`: Affiliate; `2`: Friend  
-  
-* * *
+None
 
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    GET /v5/user/invitation/code HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    
-    
-    
+    Content-Type: application/json  
+    Content-Length: 40  
       
+    {  
+        "agree": true,  
+        "categoryV2": 2  
+    }  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.sign_agreement(  
+        category=2,  
+        agree=True  
+    ))  
     
 
 ### Response Example
@@ -65,102 +78,70 @@ referralCodes| array| List of referral codes owned by the user
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "referralCodes": [  
-                {  
-                    "referralCode": "AFFIL001",  
-                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
-                    "scene": 1  
-                },  
-                {  
-                    "referralCode": "FRIEND01",  
-                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
-                    "scene": 2  
-                }  
-            ]  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1753286400000  
+        "time": 1772695037330  
     }
 
 ---
 
-# 查詢邀請碼
+# 簽署協議
 
-查詢當前用戶持有的邀請碼及其對應站點的邀請注冊鏈接。
+通過該接口, 您可以完成貴金融合約協議的簽署, 只有在完成簽署後, 才能進行交易貴金屬合約
 
 信息
 
-  * 子帳號將返回母帳號的邀請碼
-  * 僅返回有效期內（未過期）的邀請碼
+  * 請使用母帳戶調用接口, 子帳戶不支持。一旦母帳戶簽署後，所有子帳戶都可以交易
+  * API key權限需要擁有其中之一"帳戶劃轉, 母子帳戶劃轉, 提幣"
 
 
 
 ### HTTP 請求
 
-GET`/v5/user/invitation/code`
+POST`/v5/user/agreement`
 
 ### 請求參數
 
-無請求參數。用戶身份從 API Key 中獲取。
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+category| false| integer| `2`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`3`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。該字段仍然可用，但後續新增的枚舉值將不再添加至此字段，請使用 `categoryV2`。_  
+categoryV2| false| integer| `1`: 貴金屬(黃金、白銀)合約協議，股票永續合約共用此協議  
+`2`: 原油合約協議  
+ _`category` 與 `categoryV2` 二選一必傳。建議使用此字段，後續新增的枚舉值將統一添加至此字段。_  
+agree| **true**|  boolean| `true`  
+  
 ### 返回參數
 
-參數| 類型| 說明  
----|---|---  
-referralCodes| array| 用戶持有的邀請碼列表  
-> referralCode| string| 邀請碼字符串  
-> referralLink| string| 對應站點的邀請注冊鏈接。URL 結構：`https://{domain}/{lang}/invite/?ref={referralCode}`  
-> scene| integer| 邀請碼場景類型。`1`: 代理商（Affiliate）；`2`: 好友（Friend）  
-  
-* * *
+無
 
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/user/invitation/code HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
+    POST /v5/user/agreement HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1772695036541  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    
-    
-    
+    Content-Type: application/json  
+    Content-Length: 40  
       
-    
-    
-    
-      
+    {  
+        "agree": true,  
+        "categoryV2": 2  
+    }  
     
 
-### 返回示例
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "referralCodes": [  
-                {  
-                    "referralCode": "AFFIL001",  
-                    "referralLink": "https://www.bybit.com/en/invite/?ref=AFFIL001",  
-                    "scene": 1  
-                },  
-                {  
-                    "referralCode": "FRIEND01",  
-                    "referralLink": "https://www.bybit.com/ru-RU/invite/?ref=FRIEND01",  
-                    "scene": 2  
-                }  
-            ]  
-        },  
+        "retMsg": "success",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1753286400000  
+        "time": 1772695037330  
     }

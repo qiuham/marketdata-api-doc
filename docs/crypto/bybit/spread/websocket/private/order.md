@@ -2,19 +2,17 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/private/order
 api_type: WebSocket
-updated_at: 2026-11-03 18:39:14.887908
+updated_at: 2026-11-04 18:39:54.781919
 ---
 
-# Trade
+# Ticker
 
-Subscribe to the public trades stream.
+Subscribe to the ticker stream.
 
-After subscription, you will be pushed trade messages in real-time.
-
-Push frequency: **real-time**
+Push frequency: **100ms**
 
 **Topic:**  
-`publicTrade.{symbol}`
+`tickers.{symbol}`
 
 ### Response Parameters
 
@@ -23,61 +21,60 @@ Parameter| Type| Comments
 topic| string| Topic name  
 type| string| Data type. `snapshot`  
 ts| number| The timestamp (ms) that the system generates the data  
-data| array| Object. Sorted by the time the trade was matched in ascending order  
-> T| number| The timestamp (ms) that the order is filled  
-> s| string| Symbol name  
-> S| string| Side of taker. `Buy`,`Sell`  
-> v| string| Trade size  
-> p| string| Trade price  
-> [L](/docs/v5/enum#tickdirection)| string| Direction of price change  
-> i| string| Trade ID  
-> seq| integer| Cross sequence  
+data| map| Object  
+> symbol| string| Spread combination symbol name  
+> bidPrice| string| Bid 1 price  
+> bidSize| string| Bid 1 size  
+> askPrice| string| Ask 1 price  
+> askSize| string| Ask 1 size  
+> lastPrice| string| Last trade price  
+> highPrice24h| string| The highest price in the last 24 hours  
+> lowPrice24h| string| The lowest price in the last 24 hours  
+> prevPrice24h| string| Price 24 hours ago  
+> volume24h| string| Volume for 24h  
   
 ### Subscribe Example
     
     
     {  
         "op": "subscribe",  
-        "id": "test-001-perp",  
         "args": [  
-            "publicTrade.SOLUSDT_SOL/USDT"  
+            "tickers.SOLUSDT_SOL/USDT"  
         ]  
     }  
     
 
-### Response Example
+### Event Example
     
     
     {  
-        "topic": "publicTrade.SOLUSDT_SOL/USDT",  
-        "ts": 1744170142723,  
+        "topic": "tickers.SOLUSDT_SOL/USDT",  
+        "ts": 1744168585009,  
         "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1744170142720,  
-                "s": "SOLUSDT_SOL/USDT",  
-                "S": "Sell",  
-                "v": "2.5",  
-                "p": "19.3928",  
-                "L": "MinusTick",  
-                "i": "31d0fc58-933b-57b3-8378-f73da06da843",  
-                "seq": 1783284617  
-            }  
-        ]  
+        "data": {  
+            "symbol": "SOLUSDT_SOL/USDT",  
+            "bidPrice": "20.3359",  
+            "bidSize": "1.7",  
+            "askPrice": "",  
+            "askSize": "",  
+            "lastPrice": "21.8182",  
+            "highPrice24h": "24.2356",  
+            "lowPrice24h": "-3",  
+            "prevPrice24h": "22.1468",  
+            "volume24h": "23309.9"  
+        }  
     }
 
 ---
 
-# 平台成交
+# 行情
 
-訂閱Bybit平台上價差交易最近成交的推送.  
-從用戶訂閱開始, 實時推送增量交易歷史, 有成交數據就推送.
+訂閱行情數據推送
 
-推送頻率: **real-time**
+推送頻率: **100ms**
 
 **Topic:**  
-`publicTrade.{symbol}`  
-
+`tickers.{symbol}`
 
 ### 響應參數
 
@@ -86,24 +83,25 @@ data| array| Object. Sorted by the time the trade was matched in ascending order
 topic| string| Topic名  
 type| string| 數據類型. `snapshot`  
 ts| number| 行情服務生成數據的時間戳 (毫秒)  
-data| array| Object. 如有多條, 則數組中的元素按照匹配時間升序排序  
-> T| number| 成交時間戳 (毫秒)  
-> s| array| 合約名稱  
-> S| string| 吃單方向. `Buy`,`Sell`  
-> v| string| 成交數量  
-> p| string| 成交價格  
-> [L](/docs/zh-TW/v5/enum#tickdirection)| string| 價格變化的方向. _期權沒有該字段_  
-> i| string| 成交Id  
-> seq| integer| 撮合版本號  
+data| map| Object  
+> symbol| string| 價差產品名稱  
+> bidPrice| string| 買1價  
+> bidSize| string| 買1數量  
+> askPrice| string| 賣1價  
+> askSize| string| 賣1數量  
+> lastPrice| string| 最後成交個價  
+> highPrice24h| string| 最近24小時的最高價  
+> lowPrice24h| string| 最近24小時的最低價  
+> prevPrice24h| string| 24小時前的整點市價  
+> volume24h| string| 最近24小時成交量  
   
 ### 訂閱示例
     
     
     {  
         "op": "subscribe",  
-        "id": "test-001-perp",  
         "args": [  
-            "publicTrade.SOLUSDT_SOL/USDT"  
+            "tickers.SOLUSDT_SOL/USDT"  
         ]  
     }  
     
@@ -112,19 +110,19 @@ data| array| Object. 如有多條, 則數組中的元素按照匹配時間升序
     
     
     {  
-        "topic": "publicTrade.SOLUSDT_SOL/USDT",  
-        "ts": 1744170142723,  
+        "topic": "tickers.SOLUSDT_SOL/USDT",  
+        "ts": 1744168585009,  
         "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1744170142720,  
-                "s": "SOLUSDT_SOL/USDT",  
-                "S": "Sell",  
-                "v": "2.5",  
-                "p": "19.3928",  
-                "L": "MinusTick",  
-                "i": "31d0fc58-933b-57b3-8378-f73da06da843",  
-                "seq": 1783284617  
-            }  
-        ]  
+        "data": {  
+            "symbol": "SOLUSDT_SOL/USDT",  
+            "bidPrice": "20.3359",  
+            "bidSize": "1.7",  
+            "askPrice": "",  
+            "askSize": "",  
+            "lastPrice": "21.8182",  
+            "highPrice24h": "24.2356",  
+            "lowPrice24h": "-3",  
+            "prevPrice24h": "22.1468",  
+            "volume24h": "23309.9"  
+        }  
     }

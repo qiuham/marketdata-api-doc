@@ -2,241 +2,141 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/submit-quote
 api_type: Trading
-updated_at: 2026-11-03 18:33:25.970052
+updated_at: 2026-11-04 18:34:07.435583
 ---
 
-# Execution
+# Submit Quote
 
-Subscribe to the `execution` or `execution.event` topic to receive real-time Event Contract execution (trade) updates.
-
-**Topic:** `execution` / `execution.event`
+Submit a payout ratio quote for an Event Contract symbol.
 
 info
 
-  * Authentication is required before subscribing to private topics.
-  * Pushed when an Event Contract order is filled (fully or partially).
+  * Only **Event Contract maker accounts** are allowed to access this endpoint.
 
 
 
+### HTTP Request
+
+POST`/v5/event/quotes`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+symbol| **true**|  string| Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`  
+orderLinkId| **true**|  string| User-defined order ID  
+grossPayoutRatio| **true**|  string| Gross payout ratio reported by the institution  
+amount| **true**|  string| Amount for this quote (settle coin)  
+cancelAfterMs| false| integer| Automatically cancel the order after this many milliseconds. `0` uses the instrument's [`quoteMaxValidMs`](/docs/v5/event/market/instrument-info) configuration. A non-zero value must not exceed `quoteMaxValidMs`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Message ID  
-topic| string| Topic name  
-creationTime| number| Data created timestamp (ms)  
-data| array| Object  
-> category| string| Product type. `event`  
-> transId| string| Transaction ID  
-> execId| string| Execution ID  
-> orderId| string| Order ID  
-> orderLinkId| string| User-defined order ID  
-> symbol| string| Symbol name  
-> symbolId| integer| Symbol ID  
-> baseCoin| string| Base coin  
-> quoteCoin| string| Quote coin  
-> settleCoin| string| Settle coin  
-> side| string| Side: `Buy` or `Sell`  
-> feeCoin| string| Fee coin  
-> [execType](/docs/v5/enum#exectype)| string| Execution type: `Trade`, `Settle`  
-> execPrice| string| Execution price (payout ratio)  
-> execValue| string| Execution value  
-> execFee| string| Execution fee  
-> execFeeRate| string| Execution fee rate  
-> orderPrice| string| Order price  
-> ecContractType| integer| Event contract type  
-> ecDirection| integer| Direction  
-> ecDurationWindow| integer| Duration window in seconds  
-> ecTargetPrice| string| Target price. Target type only.  
-> ecLowerBound| string| Lower bound. Range type only.  
-> ecUpperBound| string| Upper bound. Range type only.  
-> ecOrderValue| string| Event Contract order value  
-> ecIndexPrice| string| Index price at execution  
-> ecPayout| string| Event Contract payout amount for this execution  
-> entryPrice| string| Entry price  
-> settlePrice| string| Settlement price  
-> grossPayoutRatio| string| Gross payout ratio  
-> sessionRpl| string| Session realised PnL  
-> transTime| string| Transaction time in milliseconds  
-> settleTimeMs| string| Settlement time in milliseconds  
-> crossSeq| string| Cross sequence number  
-> [timeInForce](/docs/v5/enum#timeinforce)| string| Time in force, e.g. `GoodTillCancel`  
-> extraFees| array| Extra fees  
+orderLinkId| string| User-defined order ID  
+orderId| string| Order ID  
   
-### Subscribe Example
+* * *
+
+### Request Example
     
     
+    POST /v5/event/quotes HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1694402559000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
     {  
-        "op": "subscribe",  
-        "args": [  
-            "execution"  
-        ]  
+        "orderLinkId": "xxxx",  
+        "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+        "grossPayoutRatio": "0.5",  
+        "amount": "100",  
+        "cancelAfterMs": 5000  
     }  
     
 
-### Stream Example
+### Response Example
     
     
     {  
-        "topic": "execution",  
-        "id": "1509583_ETHUSDT-5MIN-UP_1311",  
-        "creationTime": 1787635282379,  
-        "data": [  
-            {  
-                "category": "event",  
-                "transId": "0176bba4-66fa-542b-af33-cea000a83dc0",  
-                "execId": "0176bba4-66fa-542b-af33-cea000a83dc0",  
-                "orderId": "746a6c87-a6dd-4008-8889-37e694046681",  
-                "orderLinkId": "cjm1119",  
-                "symbol": "ETHUSDT-5MIN-UP",  
-                "symbolId": 500000,  
-                "baseCoin": "ETH",  
-                "quoteCoin": "USDT",  
-                "settleCoin": "USDT",  
-                "side": "Sell",  
-                "feeCoin": "USDT",  
-                "execType": "Trade",  
-                "execPrice": "3.5",  
-                "execValue": "100",  
-                "execFee": "4.28571429",  
-                "execFeeRate": "0.04285715",  
-                "orderPrice": "3.5",  
-                "ecContractType": 1,  
-                "ecDirection": 1,  
-                "ecDurationWindow": 300,  
-                "ecTargetPrice": "",  
-                "ecLowerBound": "",  
-                "ecUpperBound": "",  
-                "ecOrderValue": "5000",  
-                "ecPayout": "350",  
-                "entryPrice": "3.5",  
-                "settlePrice": "2503.50730825",  
-                "grossPayoutRatio": "3.5",  
-                "sessionRpl": "0",  
-                "transTime": "1787635282374",  
-                "settleTimeMs": "1787635582374",  
-                "crossSeq": "1311",  
-                "timeInForce": "GoodTillCancel",  
-                "extraFees": []  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "orderLinkId": "xxxxxx",  
+            "orderId": "xxxxxxxxxxefffff"  
+        },  
+        "retExtInfo": {},  
+        "time": 1672217377164  
     }
 
 ---
 
-# 成交
+# 提交報價
 
-訂閱 `execution` 或 `execution.event` 主題，實時接收 Event Contract 成交更新推送。
-
-**Topic：** `execution` / `execution.event`
+為 Event Contract 交易對提交賠付比率報價。
 
 信息
 
-  * 訂閱私有主題前需先完成身份驗證。
-  * 當 Event Contract 訂單發生成交（完全或部分成交）時推送。
+  * 僅 **Event Contract maker 帳戶** 可訪問此接口。
 
 
 
+### HTTP 請求
+
+POST`/v5/event/quotes`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+symbol| **true**|  string| 交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`  
+orderLinkId| **true**|  string| 用戶自定義訂單 ID  
+grossPayoutRatio| **true**|  string| 機構報出的毛賠付比率  
+amount| **true**|  string| 本次報價金額（結算幣種）  
+cancelAfterMs| 否| integer| 下單後經過指定毫秒數自動撤銷訂單。`0` 使用該合約的 [`quoteMaxValidMs`](/docs/zh-TW/v5/event/market/instrument-info) 配置值；非 `0` 的值不得超過 `quoteMaxValidMs`  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 消息 ID  
-topic| string| Topic 名稱  
-creationTime| number| 數據創建時間戳（毫秒）  
-data| array| 對象  
-> category| string| 產品類型。`event`  
-> transId| string| 交易 ID  
-> execId| string| 成交 ID  
-> orderId| string| 訂單 ID  
-> orderLinkId| string| 用戶自定義訂單 ID  
-> symbol| string| 交易對名稱  
-> symbolId| integer| 交易對 ID  
-> baseCoin| string| 標的幣種  
-> quoteCoin| string| 計價幣種  
-> settleCoin| string| 結算幣種  
-> side| string| 方向：`Buy` 或 `Sell`  
-> feeCoin| string| 手續費幣種  
-> [execType](/docs/zh-TW/v5/enum#exectype)| string| 成交類型：`Trade`、`Settle`  
-> execPrice| string| 成交價格（賠付比率）  
-> execValue| string| 成交金額  
-> execFee| string| 成交手續費  
-> execFeeRate| string| 成交手續費率  
-> orderPrice| string| 訂單價格  
-> ecContractType| integer| 事件合約類型  
-> ecDirection| integer| 方向  
-> ecDurationWindow| integer| 持續時間窗口（秒）  
-> ecTargetPrice| string| 目標價格，僅 Target 類型適用  
-> ecLowerBound| string| 下限價格，僅 Range 類型適用  
-> ecUpperBound| string| 上限價格，僅 Range 類型適用  
-> ecOrderValue| string| Event Contract 訂單金額  
-> ecIndexPrice| string| 成交時的指數價格  
-> ecPayout| string| 本次成交的 Event Contract 賠付金額  
-> entryPrice| string| 入場價格  
-> settlePrice| string| 結算價格  
-> grossPayoutRatio| string| 毛賠付比率  
-> sessionRpl| string| 本次持倉已結盈虧  
-> transTime| string| 成交時間（毫秒）  
-> settleTimeMs| string| 結算時間（毫秒）  
-> crossSeq| string| 跨業務序號  
-> [timeInForce](/docs/zh-TW/v5/enum#timeinforce)| string| 訂單有效期，如 `GoodTillCancel`  
-> extraFees| array| 額外費用  
+orderLinkId| string| 用戶自定義訂單 ID  
+orderId| string| 訂單 ID  
   
-### 訂閱示例
+* * *
+
+### 請求示例
     
     
+    POST /v5/event/quotes HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1694402559000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
     {  
-        "op": "subscribe",  
-        "args": [  
-            "execution"  
-        ]  
+        "orderLinkId": "xxxx",  
+        "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+        "grossPayoutRatio": "0.5",  
+        "amount": "100",  
+        "cancelAfterMs": 5000  
     }  
     
 
-### 推送示例
+### 返回示例
     
     
     {  
-        "topic": "execution",  
-        "id": "1509583_ETHUSDT-5MIN-UP_1311",  
-        "creationTime": 1787635282379,  
-        "data": [  
-            {  
-                "category": "event",  
-                "transId": "0176bba4-66fa-542b-af33-cea000a83dc0",  
-                "execId": "0176bba4-66fa-542b-af33-cea000a83dc0",  
-                "orderId": "746a6c87-a6dd-4008-8889-37e694046681",  
-                "orderLinkId": "cjm1119",  
-                "symbol": "ETHUSDT-5MIN-UP",  
-                "symbolId": 500000,  
-                "baseCoin": "ETH",  
-                "quoteCoin": "USDT",  
-                "settleCoin": "USDT",  
-                "side": "Sell",  
-                "feeCoin": "USDT",  
-                "execType": "Trade",  
-                "execPrice": "3.5",  
-                "execValue": "100",  
-                "execFee": "4.28571429",  
-                "execFeeRate": "0.04285715",  
-                "orderPrice": "3.5",  
-                "ecContractType": 1,  
-                "ecDirection": 1,  
-                "ecDurationWindow": 300,  
-                "ecTargetPrice": "",  
-                "ecLowerBound": "",  
-                "ecUpperBound": "",  
-                "ecOrderValue": "5000",  
-                "ecPayout": "350",  
-                "entryPrice": "3.5",  
-                "settlePrice": "2503.50730825",  
-                "grossPayoutRatio": "3.5",  
-                "sessionRpl": "0",  
-                "transTime": "1787635282374",  
-                "settleTimeMs": "1787635582374",  
-                "crossSeq": "1311",  
-                "timeInForce": "GoodTillCancel",  
-                "extraFees": []  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "OK",  
+        "result": {  
+            "orderLinkId": "xxxxxx",  
+            "orderId": "xxxxxxxxxxefffff"  
+        },  
+        "retExtInfo": {},  
+        "time": 1672217377164  
     }
