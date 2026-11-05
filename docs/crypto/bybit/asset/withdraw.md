@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw
 api_type: REST
-updated_at: 2026-11-04 18:32:37.432612
+updated_at: 2026-11-05 18:34:13.762093
 ---
 
 # Get available VASPs

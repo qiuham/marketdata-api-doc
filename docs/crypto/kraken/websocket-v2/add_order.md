@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/websocket-v2/add_order
 api_type: WebSocket
-updated_at: 2026-11-04 19:06:31.741417
+updated_at: 2026-11-05 19:08:13.889850
 ---
 
 # Add Order

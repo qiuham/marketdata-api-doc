@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/corporate-action
 api_type: Market Data
-updated_at: 2026-11-04 18:36:19.407654
+updated_at: 2026-11-05 18:37:55.133556
 ---
 
 # Get Fee Group Structure

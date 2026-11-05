@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/strategy/strategy-list
 api_type: REST
-updated_at: 2026-11-04 18:40:02.625112
+updated_at: 2026-11-05 18:41:37.453359
 ---
 
 # Get Strategy List
@@ -23,8 +23,8 @@ symbol| false| string| Symbol name, e.g. `BTCUSDT`
 status| false| string| Strategy status. `2`: running, `3`: terminated, `4`: terminated but orders are not filled, `5`: paused, `6`: untriggered  
 category| false| string| Product type. `UTA_USDT`, `UTA_USDC`, `UTA_USDC_FUTURE`, `UTA_SPOT`, `UTA_INVERSE`, `UTA_INVERSE_FUTURE`, `UTA_USDT_FUTURE`  
 strategyType| false| string| Strategy type. `twap`, `chaseOrder`, `iceberg`, `pov`  
-beginTimeE0| false| int64| Start time in seconds (Unix timestamp)  
-endTimeE0| false| int64| End time in seconds (Unix timestamp)  
+beginTimeE0| false| int64| Start time in seconds (Unix timestamp). The range between `beginTimeE0` and `endTimeE0` cannot exceed one year  
+endTimeE0| false| int64| End time in seconds (Unix timestamp). The range between `beginTimeE0` and `endTimeE0` cannot exceed one year  
 pageSize| false| integer| Limit for data size per page. Default: `20`, max: `50`  
 cursor| false| string| Cursor for pagination, returned from the previous response  
   
@@ -188,8 +188,8 @@ symbol| false| string| 交易對名稱，例如 `BTCUSDT`
 status| false| string| 策略狀態。`2`：執行中，`3`：已終止，`4`：已終止但訂單還未成交, `5`：已暫停，`6`：待觸發  
 category| false| string| 產品類型。`UTA_USDT`、`UTA_USDC`、`UTA_USDC_FUTURE`、`UTA_SPOT`、`UTA_INVERSE`、`UTA_INVERSE_FUTURE`、`UTA_USDT_FUTURE`  
 strategyType| false| string| 策略類型。`twap`、`chaseOrder`、`iceberg`、`pov`  
-beginTimeE0| false| int64| 起始時間（Unix 時間戳，秒）  
-endTimeE0| false| int64| 結束時間（Unix 時間戳，秒）  
+beginTimeE0| false| int64| 起始時間（Unix 時間戳，秒）。`beginTimeE0` 與 `endTimeE0` 的時間範圍不可超過一年  
+endTimeE0| false| int64| 結束時間（Unix 時間戳，秒）。`beginTimeE0` 與 `endTimeE0` 的時間範圍不可超過一年  
 pageSize| false| integer| 每頁資料筆數。默認：`20`，最大：`50`  
 cursor| false| string| 分頁游標，從上一次響應中返回  
   

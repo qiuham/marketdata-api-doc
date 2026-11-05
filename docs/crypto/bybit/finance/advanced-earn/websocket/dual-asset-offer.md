@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/dual-asset-offer
 api_type: WebSocket
-updated_at: 2026-11-04 18:34:59.277270
+updated_at: 2026-11-05 18:36:32.610229
 ---
 
 # Get Order List

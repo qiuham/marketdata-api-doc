@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-11-04 18:39:05.981234
+updated_at: 2026-11-05 18:40:40.268168
 ---
 
 # SBE Order Entry Integration

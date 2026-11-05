@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/puzzle/puzzle-project-list
 api_type: REST
-updated_at: 2026-11-04 18:36:07.940643
+updated_at: 2026-11-05 18:37:43.836643
 ---
 
 # Get Puzzle Project List

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/liquidation-records
 api_type: REST
-updated_at: 2026-11-04 18:34:41.079942
+updated_at: 2026-11-05 18:36:13.257779
 ---
 
 # Reinvest
