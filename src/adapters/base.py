@@ -66,6 +66,10 @@ class ProductAdapter(ABC):
         if limit is not None:
             sources = sources[:limit]
         pages = [self.extract(source) for source in sources]
+        if not pages and limit != 0:
+            # An empty result almost always means the source changed (redesign, blocked page), not
+            # that every document was removed. Treat it as a failure so the old docs are not wiped.
+            raise RuntimeError(f"{self.product_id}: found 0 documents; keeping the existing docs")
 
         if self.config.get("output", {}).get("clean_before_crawl", False):
             self._clean_output_dir(project_root, output_dir)

@@ -18,7 +18,7 @@
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
 | cn | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-10-30 |
-| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 0 | - |
+| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 22 | 2026-10-20 |
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
 | crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-11 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
@@ -85,7 +85,7 @@ marketdata-api-doc/
 │   │   └── stock/
 │   │       └── zhongtai/
 │   │           ├── xtp/                            # 36 Markdown docs
-│   │           └── xtppro/                         # 0 Markdown docs
+│   │           └── xtppro/                         # 22 Markdown docs
 │   ├── crypto/
 │   │   ├── binance/                                # 825 Markdown docs
 │   │   ├── bybit/                                  # 546 Markdown docs
