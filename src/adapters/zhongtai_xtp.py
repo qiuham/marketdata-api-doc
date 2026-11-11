@@ -107,7 +107,17 @@ class ZhongtaiXtpAdapter(ProductAdapter):
         for attempt in range(4):
             try:
                 with urllib.request.urlopen(req, timeout=30) as response:
-                    return json.loads(response.read().decode("utf-8"))
+                    body = response.read().decode("utf-8")
+                    content_type = response.headers.get("Content-Type", "")
+                try:
+                    return json.loads(body)
+                except json.JSONDecodeError as exc:
+                    # 2026-11-06 the portal was redesigned: the old /jeecg-boot doc API now serves the
+                    # site's HTML shell instead of JSON. Say so instead of a bare JSONDecodeError.
+                    raise RuntimeError(
+                        f"XTP doc API returned non-JSON ({content_type or 'unknown type'}, "
+                        f"starts with {body[:40]!r}); the site may have been redesigned: {url}"
+                    ) from exc
             except (urllib.error.URLError, IncompleteRead, ConnectionError, TimeoutError) as exc:
                 # HTTPError subclasses URLError; permanent HTTP failures must not retry.
                 if isinstance(exc, urllib.error.HTTPError) and exc.code not in {

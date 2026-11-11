@@ -59,18 +59,21 @@ class ProductAdapter(ABC):
     def crawl(self, project_root: str | Path, limit: int | None = None) -> list[Path]:
         project_root = Path(project_root).resolve()
         output_dir = self.output_dir(project_root)
+
+        # Fetch everything before touching the output directory: if the source is down or
+        # changed shape, discover()/extract() raise here and the existing docs stay as they are.
+        sources = self.discover()
+        if limit is not None:
+            sources = sources[:limit]
+        pages = [self.extract(source) for source in sources]
+
         if self.config.get("output", {}).get("clean_before_crawl", False):
             self._clean_output_dir(project_root, output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        sources = self.discover()
-        if limit is not None:
-            sources = sources[:limit]
-
         written: list[Path] = []
         used_paths: set[str] = set()
-        for source in sources:
-            page = self.extract(source)
+        for page in pages:
             relative_path = page.relative_path or f"{slugify_title(page.title)}.md"
             relative_path = self._dedupe(relative_path, used_paths)
             used_paths.add(relative_path)

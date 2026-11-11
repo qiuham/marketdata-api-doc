@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import traceback
 from pathlib import Path
 
 from src.utils.config import load_product_configs, safe_id
@@ -27,16 +28,28 @@ def cmd_crawl(args: argparse.Namespace) -> int:
     indexer = DocumentIndexer(PROJECT_ROOT)
     products = load_product_configs(PROJECT_ROOT) if args.all else [_find_product(args.product)]
     total_written = 0
+    failed: list[str] = []
     for product in products:
-        adapter = get_adapter(product)
-        written = adapter.crawl(PROJECT_ROOT, limit=args.limit)
+        product_id = product.get("id")
+        try:
+            adapter = get_adapter(product)
+            written = adapter.crawl(PROJECT_ROOT, limit=args.limit)
+        except Exception as exc:  # noqa: BLE001 - one broken source must not stop the others
+            # Keep this product's existing docs; report it and move on to the next product.
+            failed.append(product_id)
+            traceback.print_exc()
+            print(f"::error title=Crawl failed: {product_id}::{type(exc).__name__}: {exc}")
+            continue
         data = indexer.generate_product_index(product)
         total_written += len(written)
-        print(f"Crawled {product.get('id')}: {len(written)} files, indexed {data['total']} docs")
+        print(f"Crawled {product_id}: {len(written)} files, indexed {data['total']} docs")
     indexer.generate_catalog()
     ReadmeUpdater(PROJECT_ROOT).update()
-    print(f"Done: {len(products)} products, {total_written} files")
-    return 0
+    print(f"Done: {len(products) - len(failed)}/{len(products)} products, {total_written} files")
+    if failed:
+        print(f"Failed products (existing docs kept): {', '.join(failed)}")
+    # Fail the run only when nothing could be crawled, so the other products still get committed.
+    return 1 if failed and len(failed) == len(products) else 0
 
 
 def cmd_list(_: argparse.Namespace) -> int:
