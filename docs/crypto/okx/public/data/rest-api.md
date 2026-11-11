@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api
 anchor_id: public-data-rest-api
 api_type: REST
-updated_at: 2026-11-05 19:10:21.147711
+updated_at: 2026-11-11 14:17:16.114566
 ---
 
 # REST API
@@ -3018,6 +3018,7 @@ pairType | String | MM Program classification type.
 `A`: High liquidity tier  
 `B-Crypto`: Medium/low liquidity crypto assets  
 `B-TradFi`: Traditional finance instruments (SWAP only)  
+`Type Special`: GLP Special Pair  
   
 ### Get Delta hedge currencies
 
@@ -6064,6 +6065,7 @@ pairType | String | MM 计划分类类型
 `A`：高流动性品种  
 `B-Crypto`：中低流动性加密资产  
 `B-TradFi`：传统金融品种（仅 SWAP）  
+`Type Special`：GLP 特殊交易对  
   
 ### 获取 Delta 对冲币种 
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-public-trades-public
 anchor_id: spread-trading-rest-api-get-public-trades-public
 api_type: REST
-updated_at: 2026-11-05 19:10:15.154452
+updated_at: 2026-11-11 14:17:15.549561
 ---
 
 # Get public trades (Public)

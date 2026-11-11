@@ -18,14 +18,14 @@
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
 | cn | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-10-30 |
-| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 22 | 2026-10-20 |
+| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 0 | - |
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 544 | 2026-11-05 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-05 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-11 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-05 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-05 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 518 | 2026-11-05 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-11 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-11 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 518 | 2026-11-11 |
 
 ## 快速开始
 
@@ -85,10 +85,10 @@ marketdata-api-doc/
 │   │   └── stock/
 │   │       └── zhongtai/
 │   │           ├── xtp/                            # 36 Markdown docs
-│   │           └── xtppro/                         # 22 Markdown docs
+│   │           └── xtppro/                         # 0 Markdown docs
 │   ├── crypto/
 │   │   ├── binance/                                # 825 Markdown docs
-│   │   ├── bybit/                                  # 544 Markdown docs
+│   │   ├── bybit/                                  # 546 Markdown docs
 │   │   ├── coinbase/                               # 78 Markdown docs
 │   │   ├── gateio/                                 # 66 Markdown docs
 │   │   ├── hyperliquid/                            # 37 Markdown docs

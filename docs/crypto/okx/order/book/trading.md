@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading
 anchor_id: order-book-trading
 api_type: API
-updated_at: 2026-11-05 19:08:59.809559
+updated_at: 2026-11-11 14:17:12.013184
 ---
 
 # Order Book Trading
@@ -106,7 +106,6 @@ ordType | String | Yes | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)   
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -152,7 +151,6 @@ rpiTakerAccess | Boolean | No | Default `false`.
 When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
 A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
 Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
-`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
 rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
@@ -446,7 +444,6 @@ ordType | String | Yes | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -494,7 +491,6 @@ rpiTakerAccess | Boolean | No | Default `false`.
 When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
 A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
 Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
-`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
 rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
@@ -1427,7 +1423,6 @@ ordType | String | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -1610,7 +1605,6 @@ ordType | String | No | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `live`   
 `partially_filled`  
@@ -1730,7 +1724,6 @@ ordType | String | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -1899,7 +1892,6 @@ ordType | String | No | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `canceled`  
 `filled`  
@@ -2027,7 +2019,6 @@ ordType | String | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -2203,7 +2194,6 @@ ordType | String | No | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `canceled`   
 `filled`  
@@ -2329,7 +2319,6 @@ ordType | String | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -3913,7 +3902,6 @@ ordType | String | Yes | Order type
 `ioc`: Immediate-or-cancel order   
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures).   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 outcome | String | Conditional | The market outcome users trade on.  
@@ -4385,7 +4373,6 @@ For options, use coin as unit (e.g. BTC, ETH)
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > side | String | Order side, `buy` `sell`  
 > posSide | String | Position side   
 `net`   
@@ -4874,7 +4861,6 @@ Only applicable to `FUTURES`/`SWAP`.
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > sz | String | Yes | Quantity to buy or sell.  
 > px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -4922,7 +4908,6 @@ The account-level acctStpMode will be used to place orders. The default value of
 When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
 A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
 Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
-`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
 > rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 expTime | String | No | Request effective deadline. Unix timestamp format in milliseconds, e.g. `1597026383085`  
   
@@ -5161,7 +5146,6 @@ Only applicable to `FUTURES`/`SWAP`.
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)  
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > sz | String | Yes | Quantity to buy or sell.  
 > px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -5204,7 +5188,6 @@ Only applicable to `SPOT` and `SPOT margin` `market` orders.
 When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
 A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
 Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
-`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
 > rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 > stpMode | String | No | Self trade prevention mode.   
 `cancel_maker`,`cancel_taker`, `cancel_both`  
@@ -19447,13 +19430,11 @@ For `FUTURES`/`SWAP`/`OPTION`, the unit is contract.
 
 Retrieve order book data. Best ask price may be lower than the best bid price during the pre-open period.  
 
-Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by-tick 1 depth level, `bbo-rpi-tbt` tick-by-tick 1 depth level of RPI orders only, `books50-l2-tbt` tick-by-tick 50 depth levels, and `books-l2-tbt` for tick-by-tick 400 depth levels.   
+Use `books` for 400 depth levels, `books-rpi` for 400 depth levels of consolidated organic and RPI depth, `books5` for 5 depth levels, `bbo-tbt` tick-by-tick 1 depth level, `bbo-rpi-tbt` tick-by-tick 1 depth level of RPI orders only, `books50-l2-tbt` tick-by-tick 50 depth levels, and `books-l2-tbt` for tick-by-tick 400 depth levels.   
 
   * `books`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
 
-  * `books-elp`: (Deprecated; use `books-rpi`) only push ELP orders. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms for the changes in the order book during that period of time.   
-
-  * `books-rpi`: consolidated organic and RPI depth. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms. No `checksum`; sequencing relies on `seqId`/`prevSeqId`. Each `asks`/`bids` element is `[price, totalQty, nonRpiQty, count]`. Supersedes `books-elp`.
+  * `books-rpi`: consolidated organic and RPI depth. 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 100 ms. No `checksum`; sequencing relies on `seqId`/`prevSeqId`. Each `asks`/`bids` element is `[price, totalQty, nonRpiQty, count]`.
   * `books5`: 5 depth levels snapshot will be pushed in the initial push. Snapshot data will be pushed every 100 ms when there are changes in the 5 depth levels snapshot.  
 
   * `bbo-tbt`: 1 depth level snapshot will be pushed in the initial push. Snapshot data will be pushed every 10 ms when there are changes in the 1 depth level snapshot.   
@@ -19463,7 +19444,7 @@ Use `books` for 400 depth levels, `books5` for 5 depth levels, `bbo-tbt` tick-by
   * `books-l2-tbt`: 400 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.   
 
   * `books50-l2-tbt`: 50 depth levels will be pushed in the initial full snapshot. Incremental data will be pushed every 10 ms for the changes in the order book during that period of time.
-  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> bbo-rpi-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5.
+  * The push sequence for order book channels within the same connection and trading symbols is fixed as: bbo-tbt -> bbo-rpi-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-rpi -> books5.
   * Users can not simultaneously subscribe to `books-l2-tbt` and `books50-l2-tbt/books` channels for the same trading symbol. 
     * For more details, please refer to the changelog [2024-07-17](/docs-v5/log_en/#2024-07-17)
 
@@ -19534,6 +19515,7 @@ op | String | Yes | Operation
 args | Array of objects | Yes | List of subscribed channels  
 > channel | String | Yes | Channel name  
 `books`  
+`books-rpi`  
 `books5`  
 `bbo-tbt`  
 `bbo-rpi-tbt`  
@@ -19681,14 +19663,13 @@ For `bbo-rpi-tbt`, only RPI orders are returned, including hidden RPI orders. Re
 > ts | String | Order book generation time, Unix timestamp format in milliseconds, e.g. `1597026383085`   
 Exception: For the `bbo-tbt` and `bbo-rpi-tbt` channels, `ts` is the timestamp when the book is generated by matching engine.  
 > checksum | Integer | ~~Checksum~~ (Deprecated). The field remains in the push for `books`, `books-l2-tbt`, and `books50-l2-tbt`, but its value is fixed to `0` and must no longer be used for integrity verification. Please use `seqId/prevSeqId` to verify data continuity and accuracy.  
-> prevSeqId | Integer | Sequence ID of the last sent message. Only applicable to `books`, `books-l2-tbt`, `books50-l2-tbt`  
+> prevSeqId | Integer | Sequence ID of the last sent message. Only applicable to `books`, `books-rpi`, `books-l2-tbt`, `books50-l2-tbt`  
 > seqId | Integer | Sequence ID of the current message, implementation details below  
 An example of the array of asks and bids values: ["411.8", "10", "0", "4"]  
 \- "411.8" is the depth price  
 \- "10" is the quantity at the price (number of contracts for derivatives, quantity in base currency for Spot and Spot Margin)  
 \- "0" is part of a deprecated feature and it is always "0"  
-\- "4" is the number of orders at the price.  If you need to subscribe to many 50 or 400 depth level channels, it is recommended to subscribe through multiple websocket connections, with each of less than 30 channels.  The order book data will be updated around once a second during the call auction.  `books/books5/bbo-tbt/books-l2-tbt/books50-l2-tbt` don't return ELP orders  
-`books-elp` only return ELP orders, including both valid and invalid parts (invalid parts means ELP buy orders with a price higher than best bid of non-ELP orders; or ELP sell orders with a price lower than best ask of non-ELP orders). Users should distinguish valid and invalid parts using the best bid/ask price of non-ELP orders.  `books-rpi` returns visible RPI orders only.  
+\- "4" is the number of orders at the price.  If you need to subscribe to many 50 or 400 depth level channels, it is recommended to subscribe through multiple websocket connections, with each of less than 30 channels.  The order book data will be updated around once a second during the call auction.  `books-rpi` returns visible RPI orders only.  
 `bbo-rpi-tbt` only returns RPI orders, including both visible and hidden parts. Hidden parts are RPI buy orders priced above the organic best ask, RPI sell orders priced below the organic best bid, or RPI buy and sell orders crossing each other within the organic spread. Use the organic best bid/ask from `bbo-tbt` to distinguish visible from hidden parts.  
 An example of the array of asks and bids values for `bbo-rpi-tbt`: ["111.06", "55", "0", "2"]  
 \- "111.06" is the depth price  
@@ -19760,6 +19741,34 @@ Exceptions:
           ],
           "ts": "1792022400010",
           "seqId": 363996337
+        }
+      ]
+    }
+    
+
+> Push Data Example of books-rpi channel: Full Snapshot
+    
+    
+    {
+      "arg": {
+        "channel": "books-rpi",
+        "instId": "BTC-USDT-SWAP"
+      },
+      "action": "snapshot",
+      "data": [
+        {
+          "asks": [
+            ["67855.2", "0.5", "0.5", "1"],
+            ["67856.0", "1.3", "1.0", "4"],
+            ["67860.5", "0.3", "0", "1"]
+          ],
+          "bids": [
+            ["67854.8", "1.7", "1.2", "3"],
+            ["67853.0", "0.8", "0.8", "1"]
+          ],
+          "ts": "1785310731002",
+          "prevSeqId": -1,
+          "seqId": 332042172451
         }
       ]
     }
@@ -20250,9 +20259,6 @@ Channel | XML Template ID and message name
 bbo-tbt | 1000: BboTbtChannelEvent  
 books-l2-tbt | 1001: BooksL2TbtChannelEvent  
 1002: BooksL2TbtExponentUpdateEvent  
-books-l2-tbt-elp   
-(It is not enabled) | 1003: BooksL2TbtElpChannelEvent  
-1004: BooksL2TbtElpExponentUpdateEvent  
 trades | 1005: TradesChannelEvent  
   
   * How to manage a local order book correctly
@@ -20453,7 +20459,6 @@ ordType | String | 是 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -20495,7 +20500,6 @@ rpiTakerAccess | Boolean | 否 | 默认值为 `false`。
 设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
 当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
 改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
-`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
 rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   
@@ -20786,7 +20790,6 @@ ordType | String | 是 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -20830,7 +20833,6 @@ rpiTakerAccess | Boolean | 否 | 默认值为 `false`。
 设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
 当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
 改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
-`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
 rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   
@@ -21742,7 +21744,6 @@ ordType | String | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -21922,7 +21923,6 @@ ordType | String | 否 | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `live`：等待成交  
 `partially_filled`：部分成交  
@@ -22040,7 +22040,6 @@ ordType | String | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -22214,7 +22213,6 @@ ordType | String | 否 | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `canceled`：撤单成功   
 `filled`：完全成交  
@@ -22340,7 +22338,6 @@ ordType | String | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -22513,7 +22510,6 @@ ordType | String | 否 | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `canceled`：撤单成功   
 `filled`：完全成交  
@@ -22639,7 +22635,6 @@ ordType | String | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  
@@ -24208,7 +24203,6 @@ ordType | String | 是 | 订单类型
 `ioc`：立即成交并取消剩余   
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`类型的订单  
 outcome | String | 可选 | 用户交易的市场结果方向。  
@@ -24663,7 +24657,6 @@ data | Array of objects | 订阅的数据
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > side | String | 订单方向，`buy` `sell`  
 > posSide | String | 持仓方向  
 `long`：开平仓模式开多  
@@ -25156,7 +25149,6 @@ args | Array of objects | 是 | 请求参数
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > sz | String | 是 | 委托数量  
 > px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -25201,7 +25193,6 @@ Cancel both不支持FOK
 设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
 当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
 改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
-`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
 > rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
@@ -25437,7 +25428,6 @@ args | Array of objects | 是 | 请求参数
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > sz | String | 是 | 委托数量  
 > px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -25482,7 +25472,6 @@ Cancel both不支持FOK
 设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
 当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
 改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
-`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
 > rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 expTime | String | 否 | 请求有效截止时间。Unix时间戳的毫秒数格式，如 `1597026383085`  
   
@@ -39627,13 +39616,11 @@ data | Array of objects | 订阅的数据
   
 ### WS / 深度频道 
 
-获取深度数据。在提前挂单阶段，best ask的价格有机会低于best bid。`books`是400档频道，`books5`是5档频道， `bbo-tbt`是先1档后实时推送的频道，`bbo-rpi-tbt`是仅含RPI订单、先1档后实时推送的频道，`books-l2-tbt`是先400档后实时推送的频道，`books50-l2-tbt`是先50档后实时推的频道；
+获取深度数据。在提前挂单阶段，best ask的价格有机会低于best bid。`books`是400档频道，`books-rpi`是合并有机和 RPI 深度的400档频道，`books5`是5档频道， `bbo-tbt`是先1档后实时推送的频道，`bbo-rpi-tbt`是仅含RPI订单、先1档后实时推送的频道，`books-l2-tbt`是先400档后实时推送的频道，`books50-l2-tbt`是先50档后实时推的频道；
 
   * `books` 首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
 
-  * `books-elp`（已弃用，请使用 `books-rpi`）仅推送ELP订单，首次推400档快照数据，以后增量推送，每100毫秒推送一次变化的数据  
-
-  * `books-rpi`：合并有机和 RPI 深度。初始全量推送 400 档，之后每 100ms 推送增量。无 `checksum`，排序依赖 `seqId`/`prevSeqId`。每个 `asks`/`bids` 元素为 `[price, totalQty, nonRpiQty, count]`。取代 `books-elp`。
+  * `books-rpi`：合并有机和 RPI 深度。初始全量推送 400 档，之后每 100ms 推送增量。无 `checksum`，排序依赖 `seqId`/`prevSeqId`。每个 `asks`/`bids` 元素为 `[price, totalQty, nonRpiQty, count]`。
   * `books5` 首次推5档快照数据，以后定量推送，每100毫秒当5档快照数据有变化推送一次5档数据  
 
   * `bbo-tbt` 首次推1档快照数据，以后定量推送，每10毫秒当1档快照数据有变化推送一次1档数据  
@@ -39643,7 +39630,7 @@ data | Array of objects | 订阅的数据
   * `books-l2-tbt` 首次推400档快照数据，以后增量推送，每10毫秒推送一次变化的数据  
 
   * `books50-l2-tbt` 首次推50档快照数据，以后增量推送，每10毫秒推送一次变化的数据
-  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> bbo-rpi-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-elp -> books-rpi -> books5。
+  * 单个连接、交易产品维度，深度频道的推送顺序固定为：bbo-tbt -> bbo-rpi-tbt -> books-l2-tbt -> books50-l2-tbt -> books -> books-rpi -> books5。
   * 在相同连接下，用户将无法为相同交易产品同时订阅 `books-l2-tbt` 以及 `books50-l2-tbt/books`频道 
     * 更多细节，请参阅更新日志 [2024-07-17](/docs-v5/log_zh/#2024-07-17)
 
@@ -39711,6 +39698,7 @@ op | String | 是 | 操作
 args | Array of objects | 是 | 请求订阅的频道列表  
 > channel | String | 是 | 频道名  
 `books`  
+`books-rpi`  
 `books5`  
 `bbo-tbt`  
 `bbo-rpi-tbt`  
@@ -39854,14 +39842,13 @@ data | Array of objects | 订阅的数据
 > ts | String | 数据更新时间戳，Unix时间戳的毫秒数格式，如 `1597026383085`   
 例外： 对于`bbo-tbt` 和 `bbo-rpi-tbt` 频道，`ts` 为撮合引擎触发时的时间戳  
 > checksum | Integer | ~~检验和~~ （已弃用）。该字段仍会在 `books`、`books-l2-tbt`、`books50-l2-tbt` 推送中保留，但其值固定为 `0`，不应再用于数据完整性校验。请改用 `seqId/prevSeqId` 校验数据的连续性和准确性。  
-> prevSeqId | Integer | 上一个推送的序列号。仅适用 `books`，`books-l2-tbt`，`books50-l2-tbt`  
+> prevSeqId | Integer | 上一个推送的序列号。仅适用 `books`，`books-rpi`，`books-l2-tbt`，`books50-l2-tbt`  
 > seqId | Integer | 推送的序列号 （下方注解）  
 asks和bids值数组举例说明： ["411.8", "10", "0", "4"]  
 \- 411.8为深度价格  
 \- 10为此价格的数量 （合约交易为张数，现货/币币杠杆为交易币的数量  
 \- 0该字段已弃用(始终为0)  
-\- 4为此价格的订单数量  如果需要订阅多个50或400档频道，建议通过多个链接进行订阅，每个链接低于30条频道。  集合竞价期间，深度数据大约每秒更新一次  `books/books5/bbo-tbt/books-l2-tbt/books50-l2-tbt`不包含ELP订单  
-`books-elp`仅返回 ELP 订单，包含有效部分及无效部分（无效部分指 ELP 买单价格高于非 ELP 订单最佳买单价；或 ELP 卖单价格低于非 ELP 订单最佳卖单价）。用户需根据非 ELP 订单的最佳买/卖价区分有效部分和无效部分。  `books-rpi` 仅返回可见的 RPI 订单。  
+\- 4为此价格的订单数量  如果需要订阅多个50或400档频道，建议通过多个链接进行订阅，每个链接低于30条频道。  集合竞价期间，深度数据大约每秒更新一次  `books-rpi` 仅返回可见的 RPI 订单。  
 `bbo-rpi-tbt` 仅返回 RPI 订单，包含可见部分及隐藏部分。隐藏部分指价格高于有机最佳卖价的 RPI 买单、价格低于有机最佳买价的 RPI 卖单，或在有机买卖价差内相互交叉的 RPI 买单和卖单。用户可根据 `bbo-tbt` 的有机最佳买/卖价区分可见部分和隐藏部分。  
 `bbo-rpi-tbt` 的 asks 和 bids 值数组举例说明：["111.06", "55", "0", "2"]  
 \- 111.06为深度价格  
@@ -39933,6 +39920,34 @@ asks和bids值数组举例说明： ["411.8", "10", "0", "4"]
           ],
           "ts": "1792022400010",
           "seqId": 363996337
+        }
+      ]
+    }
+    
+
+> books-rpi 频道推送示例：全量
+    
+    
+    {
+      "arg": {
+        "channel": "books-rpi",
+        "instId": "BTC-USDT-SWAP"
+      },
+      "action": "snapshot",
+      "data": [
+        {
+          "asks": [
+            ["67855.2", "0.5", "0.5", "1"],
+            ["67856.0", "1.3", "1.0", "4"],
+            ["67860.5", "0.3", "0", "1"]
+          ],
+          "bids": [
+            ["67854.8", "1.7", "1.2", "3"],
+            ["67853.0", "0.8", "0.8", "1"]
+          ],
+          "ts": "1785310731002",
+          "prevSeqId": -1,
+          "seqId": 332042172451
         }
       ]
     }
@@ -40427,9 +40442,6 @@ SBE XML schema 已经发布：
 bbo-tbt | 1000: BboTbtChannelEvent  
 books-l2-tbt | 1001: BooksL2TbtChannelEvent  
 1002: BooksL2TbtExponentUpdateEvent  
-books-l2-tbt-elp   
-（未启用） | 1003: BooksL2TbtElpChannelEvent  
-1004: BooksL2TbtElpExponentUpdateEvent  
 trades | 1005: TradesChannelEvent  
   
   * 如何正确管理本地订单簿

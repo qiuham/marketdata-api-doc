@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/convert/get-convert-trade
 api_type: Trading
-updated_at: 2026-11-05 18:53:42.493917
+updated_at: 2026-11-11 14:04:20.358907
 ---
 
 # Get Convert Trade
@@ -2556,6 +2556,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+view
+
+ApiKey
+
+wallet:trades:read
+
+OAuth2
+
+View your cryptocurrency conversions.
 
 #### Path Parameters
 

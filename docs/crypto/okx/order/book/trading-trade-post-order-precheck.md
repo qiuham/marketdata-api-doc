@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-order-precheck
 anchor_id: order-book-trading-trade-post-order-precheck
 api_type: API
-updated_at: 2026-11-05 19:09:08.599307
+updated_at: 2026-11-11 14:17:12.581472
 ---
 
 # POST / Order precheck
@@ -58,7 +58,6 @@ ordType | String | Yes | Order type
 `ioc`: Immediate-or-cancel order   
 `optimal_limit_ioc`: Market order with immediate-or-cancel order (applicable only to Expiry Futures and Perpetual Futures).   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 outcome | String | Conditional | The market outcome users trade on.  
@@ -231,7 +230,6 @@ ordType | String | 是 | 订单类型
 `ioc`：立即成交并取消剩余   
 `optimal_limit_ioc`：市价委托立即成交并取消剩余（仅适用交割、永续）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`类型的订单  
 outcome | String | 可选 | 用户交易的市场结果方向。  

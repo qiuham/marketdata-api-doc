@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-place-order
 anchor_id: order-book-trading-trade-post-place-order
 api_type: API
-updated_at: 2026-11-05 19:09:00.762134
+updated_at: 2026-11-11 14:17:12.302140
 ---
 
 # POST / Place order
@@ -100,7 +100,6 @@ ordType | String | Yes | Order type
 `mmp`: Market Maker Protection (only applicable to Option in Portfolio Margin mode)   
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 sz | String | Yes | Quantity to buy or sell  
 px | String | Conditional | Order price. Only applicable to `limit`,`post_only`,`fok`,`ioc`,`mmp`,`mmp_and_post_only` order.  
 When placing an option order, one of px/pxUsd/pxVol must be filled in, and only one can be filled in  
@@ -146,7 +145,6 @@ rpiTakerAccess | Boolean | No | Default `false`.
 When `true`, the order can access RPI liquidity, for `limit`, `market`, `fok`, and `ioc` orders.  
 A speedbump applies to all `ordType` including `post_only` when `rpiTakerAccess` is `true`.  
 Not inherited on amend — must be re-specified on each amend request (omitted = `false` for that amend).  
-`isElpTakerAccess` remains accepted as an alias until October 31, 2026.  
 rpiPxRound | Boolean | No | Default `false`. Effective only on RPI maker orders (`ordType: rpi`). When `true`, a price that violates the RPI maker spacing rule is auto-rounded outward to the nearest placeable, non-crossing level instead of being rejected. Silently ignored on non-RPI orders and on `OPTION`/`EVENTS`.  
 attachAlgoOrds | Array of objects | No | Attached TP/SL or trailing stop order information  
 > attachAlgoClOrdId | String | No | Client-supplied Algo ID when placing order with attached TP/SL or trailing stop  
@@ -432,7 +430,6 @@ ordType | String | 是 | 订单类型
 `mmp`：做市商保护(仅适用于组合保证金账户模式下的期权订单)  
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 sz | String | 是 | 委托数量  
 px | String | 可选 | 委托价格，仅适用于`limit`、`post_only`、`fok`、`ioc`、`mmp`、`mmp_and_post_only`类型的订单  
 期权下单时，px/pxUsd/pxVol 只能填一个  
@@ -474,7 +471,6 @@ rpiTakerAccess | Boolean | 否 | 默认值为 `false`。
 设为 `true` 时，订单可使用 RPI 流动性，适用于 `limit`、`market`、`fok`、`ioc` 订单。  
 当 `rpiTakerAccess` 为 `true` 时，减速带机制在下单和改单时均适用于所有 `ordType`，包括 `post_only`。  
 改单时不会从原始订单继承，必须每次显式指定（省略则该次改单视为 `false`）。  
-`isElpTakerAccess` 在 2026年10月31日前作为别名继续被接受。  
 rpiPxRound | Boolean | 否 | 默认值为 `false`。仅对 RPI 做市商订单（`ordType: rpi`）生效。设为 `true` 时，违反 RPI 做市商间距规则的价格将自动向外取整至最近的合规价位，而非被拒绝。对非 RPI 订单及 `OPTION`/`EVENTS` 无效。  
 attachAlgoOrds | Array of objects | 否 | 附带止盈止损或移动止盈止损订单信息  
 > attachAlgoClOrdId | String | 否 | 下单附带止盈止损或移动止盈止损时，客户自定义的策略订单ID   

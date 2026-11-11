@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api
 anchor_id: trading-account-rest-api
 api_type: REST
-updated_at: 2026-11-05 19:08:38.015083
+updated_at: 2026-11-11 14:17:10.421612
 ---
 
 # REST API
@@ -72,7 +72,6 @@ instId | String | No | Instrument ID
                 "ctVal": "",
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
-                "elp": "0",
                 "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
@@ -199,18 +198,11 @@ openType | String | Open type
 `pre_quote`: pre-quote  
 `call_auction`: call auction   
 Only applicable to `SPOT`/`MARGIN`, return "" for all other business lines  
-elp | String | ELP maker permission  
-`0`: ELP is not enabled for this symbol  
-`1`: ELP is enabled for this symbol, but current users don't have permission to place ELP orders for it.   
-`2`: ELP is enabled for this symbol, and current users have permission to place ELP orders for it.   
-  
-It doesn't mean there will be ELP liquidity when elp is `1/2`.  
 rpi | String | RPI maker permission.  
 `0`: not enabled for this instrument  
 `1`: enabled, but the current user has no permission to place RPI orders  
 `2`: enabled and permitted  
 A `1`/`2` value does not imply RPI liquidity is present.  
-`elp` remains accepted as an alias until October 31, 2026.  
 expTime | String | Expiry time   
 Applicable to `SPOT`/`MARGIN`/`FUTURES`/`SWAP`/`OPTION`. For `FUTURES`/`OPTION`, it is natural delivery/exercise time. It is the instrument offline time when there is `SPOT/MARGIN/FUTURES/SWAP/` manual offline. Update once change.  
 lever | String | Max Leverage,   
@@ -2312,9 +2304,11 @@ ccy | String | Currency used for margin
 maxBuy | String | `SPOT`/`MARGIN`: The maximum quantity in base currency that you can buy  
 The cross-margin order under `Futures mode` mode, quantity of coins is based on base currency.  
 `FUTURES`/`SWAP`/`OPTIONS`: The maximum quantity of contracts that you can buy  
+In long/short position mode, the position tier limit uses the long-side remaining for `FUTURES`/`SWAP`  
 maxSell | String | `SPOT`/`MARGIN`: The maximum quantity in quote currency that you can sell  
 The cross-margin order under `Futures mode` mode, quantity of coins is based on base currency.  
 `FUTURES`/`SWAP`/`OPTIONS`: The maximum quantity of contracts that you can sell  
+In long/short position mode, the position tier limit uses the short-side remaining for `FUTURES`/`SWAP`  
   
 ### Get maximum available balance/equity
 
@@ -2399,8 +2393,10 @@ The default value is the quote currency of the `instId`, for example: for `BTC-U
 **Parameter** | **Type** | **Description**  
 ---|---|---  
 instId | String | Instrument ID  
-availBuy | String | Maximum available balance/equity to buy  
-availSell | String | Maximum available balance/equity to sell  
+availBuy | String | Maximum available balance/equity to buy.  
+In long/short position mode, the position tier limit uses the long-side remaining for `FUTURES`/`SWAP`  
+availSell | String | Maximum available balance/equity to sell.  
+In long/short position mode, the position tier limit uses the short-side remaining for `FUTURES`/`SWAP`  
 In the case of SPOT/MARGIN, availBuy is in the quote currency, and availSell is in the base currency.  
 In the case of MARGIN with cross tdMode, both availBuy and availSell are in the currency passed in **ccy**. 
 
@@ -2618,10 +2614,11 @@ instId | String | Conditional | Instrument ID, e.g. BTC-USDT
 It is required for these scenarioes: `SWAP` and `FUTURES`, Margin isolation, Margin cross in `Futures mode`.  
 ccy | String | Conditional | Currency used for margin, e.g. BTC  
 It is required for isolated margin and cross margin in `Futures mode`, `Multi-currency margin` and `Portfolio margin`  
-posSide | String | No | posSide  
+posSide | String | No | Position side  
 `net`: The default value  
 `long`  
 `short`  
+In long/short position mode, it is recommended to specify `long` or `short` for accurate direction-specific results  
   
 > Response Example
     
@@ -2664,7 +2661,8 @@ estMgn | String | The estimated margin needed by position under the correspondin
 For the `MARGIN` position, it is margin in base currency  
 estQuoteMgn | String | The estimated margin (in quote currency) needed by position under the corresponding leverage  
 estMaxAmt | String | For `MARGIN`, it is the estimated maximum loan in base currency under the corresponding leverage  
-For `SWAP` and `FUTURES`, it is the estimated maximum quantity of contracts that can be opened under the corresponding leverage  
+For `SWAP` and `FUTURES`, it is the estimated maximum quantity of contracts that can be opened under the corresponding leverage.  
+In long/short position mode, the position tier limit is calculated based on the direction specified by `posSide`  
 estQuoteMaxAmt | String | The `MARGIN` estimated maximum loan in quote currency under the corresponding leverage.  
 existOrd | Boolean | Whether there is pending orders   
 `true`  
@@ -2846,7 +2844,6 @@ Users can use instruments endpoint to fetch the mapping of an instrument ID and 
                 "exercise": "",
                 "feeGroup": [
                     {
-                        "elpMaker": "-0.0008",
                         "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
@@ -2884,9 +2881,7 @@ K2 parameter for `EVENTS` maker fee formula: `K2 × C × (P × (1-P))` (C = numb
 > groupId | String | Instrument trading fee group ID  
   
 **instType and groupId should be used together to determine a trading fee group. Users should use this endpoint together with[instruments endpoint](/docs-v5/en/#trading-account-rest-api-get-instruments) to get the trading fee of a specific symbol.**  
-> elpMaker | String | ELP Maker effective fee rate. Returns `""` if ELP is not applicable to the instrument.  
 > rpiMaker | String | RPI maker effective fee rate. Returns `""` if RPI is not applicable to the instrument.  
-`elpMaker` remains accepted as an alias until October 31, 2026.  
 delivery | String | Delivery fee rate  
 exercise | String | Fee rate for exercising the option  
 instType | String | Instrument type  
@@ -6690,7 +6685,6 @@ instId | String | 否 | 产品ID
                 "ctVal": "",
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
-                "elp": "0",
                 "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
@@ -6808,18 +6802,11 @@ openType | String | 开盘类型
 `pre_quote`: 提前挂单  
 `call_auction`: 集合竞价   
 只适用于`SPOT`/`MARGIN`，其他业务线返回""  
-elp | String | ELP 下单权限  
-`0`：该币对不支持 ELP  
-`1`：该币对支持 ELP 但用户没有权限为其下 ELP 订单  
-`2`：该币对支持 ELP 且用户有权限为其下 ELP 订单  
-  
-`1/2`不代表深度中一定有 ELP 挂单  
 rpi | String | RPI 做市商权限。  
 `0`：该产品未开通 RPI  
 `1`：该产品已开通 RPI，但当前用户无权下 RPI 订单  
 `2`：已开通且有权限  
 `1`/`2` 不代表当前存在 RPI 流动性。  
-`elp` 在 2026年10月31日前作为别名继续被接受。  
 expTime | String | 产品下线时间  
 适用于`币币/杠杆/交割/永续/期权`，对于 `交割/期权`，为交割/行权日期；亦可以为产品下线时间，有变动就会推送。  
 lever | String | 该`instId`支持的最大杠杆倍数，不适用于`币币`、`期权`  
@@ -8937,9 +8924,11 @@ ccy | String | 保证金币种
 maxBuy | String | `币币/币币杠杆`：最大可买的交易币数量  
 `合约模式`下的全仓杠杆订单，为交易币数量  
 `交割`/`永续`/`期权`：最大可开多的合约张数  
+开平仓模式下，`交割`/`永续`的梯度档位按多头方向单独计算  
 maxSell | String | `币币/币币杠杆`：最大可卖的计价币数量  
 `合约模式`下的全仓杠杆订单，为交易币数量  
 `交割`/`永续`/`期权`：最大可开空的合约张数  
+开平仓模式下，`交割`/`永续`的梯度档位按空头方向单独计算  
   
 ### 获取最大可用余额/保证金 
 
@@ -9021,8 +9010,10 @@ tradeQuoteCcy | String | 否 | 用于交易的计价币种。仅适用于`币币
 **参数名** | **类型** | **描述**  
 ---|---|---  
 instId | String | 产品ID  
-availBuy | String | 最大买入可用余额/保证金  
-availSell | String | 最大卖出可用余额/保证金  
+availBuy | String | 最大买入可用余额/保证金。  
+开平仓模式下，`交割`/`永续`的梯度档位按多头方向单独计算  
+availSell | String | 最大卖出可用余额/保证金。  
+开平仓模式下，`交割`/`永续`的梯度档位按空头方向单独计算  
 币币/币币杠杆时availBuy为计价货币，availSell为交易货币。  
 全仓币币杠杆时，availBuy和availSell均为指定保证金的币种。 
 
@@ -9250,6 +9241,7 @@ posSide | String | 否 | 持仓方向
 `long`: 开平模式下的多仓  
 `short`：开平模式下的空仓  
 适用于`交割`/`永续`。  
+开平仓模式下，建议传入 `long` 或 `short` 以获取准确的方向差异化结果  
   
 > 返回结果
     
@@ -9293,7 +9285,8 @@ estMgn | String | 对应杠杆倍数下，仓位预估所需的保证金数量
 对于交割或永续仓位，为仓位所需保证金  
 estQuoteMgn | String | 对应杠杆倍数下，仓位预估所需的计价货币保证金数量  
 estMaxAmt | String | 对于杠杆，为对应杠杆倍数下，交易货币预估最大可借  
-对于交割和永续，为对应杠杆倍数下，预估的最大可开张数  
+对于交割和永续，为对应杠杆倍数下，预估的最大可开张数。  
+开平仓模式下，梯度档位根据 `posSide` 参数按方向单独计算  
 estQuoteMaxAmt | String | 对应杠杆倍数下，杠杆计价货币预估最大可借  
 existOrd | Boolean | 当前是否存在挂单   
 `true`：存在挂单  
@@ -9476,7 +9469,6 @@ groupId 和 instId/instFamily 只能传入其一
                 "exercise": "",
                 "feeGroup": [
                     {
-                        "elpMaker": "-0.0008",
                         "rpiMaker": "-0.0008",
                         "groupId": "1",
                         "maker": "-0.0008",
@@ -9514,9 +9506,7 @@ feeGroup | Array of objects | 手续费分组
 > groupId | String | 交易产品手续费分组ID  
   
 **用户需要同时使用instType和groupId来确定一个交易产品的交易手续费分组；用户应该将此接口和[获取交易产品基础信息](/docs-v5/zh/#trading-account-rest-api-get-instruments)一起使用，以获取特定交易产品的手续费率**  
-> elpMaker | String | ELP Maker 有效费率。若 ELP 不适用于该交易产品，则返回 `""`。  
 > rpiMaker | String | RPI 做市商有效费率。若 RPI 不适用于该产品，返回 `""`。  
-`elpMaker` 在 2026年10月31日前作为别名继续被接受。  
 delivery | String | 交割手续费率  
 exercise | String | 行权手续费率  
 instType | String | 产品类型  

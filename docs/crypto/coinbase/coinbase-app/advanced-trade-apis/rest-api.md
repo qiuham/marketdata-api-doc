@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/rest-api
 api_type: Trading
-updated_at: 2026-11-05 18:53:45.417368
+updated_at: 2026-11-11 14:04:22.707309
 ---
 
 # Advanced Trade REST Endpoints

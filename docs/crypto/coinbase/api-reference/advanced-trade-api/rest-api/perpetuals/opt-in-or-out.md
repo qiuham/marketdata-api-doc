@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/perpetuals/opt-in-or-out
 api_type: REST
-updated_at: 2026-11-05 18:53:43.958149
+updated_at: 2026-11-11 14:04:21.477634
 ---
 
 # Opt In or Out of Multi Asset Collateral
@@ -172,6 +172,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+trade
+
+ApiKey
+
+wallet:buys:create
+
+OAuth2
+
+Place, edit, and cancel orders.
 
 #### Body
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-recurring-buy-get-recurring-buy-sub-orders
 anchor_id: order-book-trading-recurring-buy-get-recurring-buy-sub-orders
 api_type: API
-updated_at: 2026-11-05 19:09:35.273994
+updated_at: 2026-11-11 14:17:13.850621
 ---
 
 # GET / Recurring buy sub orders

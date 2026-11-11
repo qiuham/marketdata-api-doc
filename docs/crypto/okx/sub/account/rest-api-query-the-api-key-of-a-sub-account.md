@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#sub-account-rest-api-query-the-api-key-of-a-sub-account
 anchor_id: sub-account-rest-api-query-the-api-key-of-a-sub-account
 api_type: REST
-updated_at: 2026-11-05 19:10:56.604682
+updated_at: 2026-11-11 14:17:17.807215
 ---
 
 # Query the API Key of a sub-account

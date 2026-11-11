@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-get-order-history-last-7-days
 anchor_id: order-book-trading-trade-get-order-history-last-7-days
 api_type: API
-updated_at: 2026-11-05 19:09:03.611367
+updated_at: 2026-11-11 14:17:12.425911
 ---
 
 # GET / Order history (last 7 days)
@@ -74,7 +74,6 @@ ordType | String | No | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 state | String | No | State  
 `canceled`  
 `filled`  
@@ -202,7 +201,6 @@ ordType | String | Order type
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode)   
 `op_fok`: Simple options (fok)  
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 side | String | Order side  
 posSide | String | Position side  
 tdMode | String | Trade mode  
@@ -384,7 +382,6 @@ ordType | String | 否 | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 state | String | 否 | 订单状态  
 `canceled`：撤单成功   
 `filled`：完全成交  
@@ -510,7 +507,6 @@ ordType | String | 订单类型
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 side | String | 订单方向  
 posSide | String | 持仓方向  
 tdMode | String | 交易模式  

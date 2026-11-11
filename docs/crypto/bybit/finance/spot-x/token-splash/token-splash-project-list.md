@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/token-splash/token-splash-project-list
 api_type: REST
-updated_at: 2026-11-05 18:37:47.243554
+updated_at: 2026-11-11 14:01:11.570853
 ---
 
 # Get Institution IP Change Log

@@ -2,41 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/orderbook
 api_type: Market Data
-updated_at: 2026-11-05 18:41:15.554688
+updated_at: 2026-11-11 14:01:52.838938
 ---
 
-# Cancel All Orders
+# Get Tickers
 
-Cancel all open orders
+Query for the latest price snapshot, best bid/ask price, and trading volume of different spread combinations in the last 24 hours.
+
+info
+
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+
+
 
 ### HTTP Request
 
-POST`/v5/spread/order/cancel-all`
+GET`/v5/spread/tickers`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| false| string| Spread combination symbol name 
-
-  * When a symbol is specified, all orders for that symbol will be cancelled regardless of the `cancelAll` field.
-  * When a symbol is not specified and `cancelAll`=true, all orders, regardless of the symbol, will be cancelled
-
+symbol| **true**|  string| Spread combination symbol name  
   
-cancelAll| false| boolean| `true`, `false`  
-  
-info
-
-The acknowledgement of cancel all orders request indicates that the request was sucessfully accepted. This request is asynchronous so please use the websocket to confirm the order status.
-
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>|   
-> orderId| string| Order ID  
-> orderLinkId| string| User customised order ID  
-success| string| The field can be ignored  
+list| array<object>| Ticker info  
+> symbol| string| Spread combination symbol name  
+> bidPrice| string| Bid 1 price  
+> bidSize| string| Bid 1 size  
+> askPrice| string| Ask 1 price  
+> askSize| string| Ask 1 size  
+> lastPrice| string| Last trade price  
+> highPrice24h| string| The highest price in the last 24 hours  
+> lowPrice24h| string| The lowest price in the last 24 hours  
+> prevPrice24h| string| Price 24 hours ago  
+> volume24h| string| Volume for 24h  
   
 ### Request Example
 
@@ -46,19 +49,8 @@ success| string| The field can be ignored
 
     
     
-    POST /v5/spread/order/cancel-all HTTP/1.1  
+    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744090967121  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-        "symbol": null,  
-        "cancelAll": true  
-    }  
     
     
     
@@ -68,8 +60,8 @@ success| string| The field can be ignored
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_cancel_all_orders(  
-        cancelAll=True  
+    print(session.spread_get_tickers(  
+        symbol="SOLUSDT_SOL/USDT"  
     ))  
     
 
@@ -78,70 +70,70 @@ success| string| The field can be ignored
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
             "list": [  
                 {  
-                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
-                    "orderLinkId": ""  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "bidPrice": "",  
+                    "bidSize": "",  
+                    "askPrice": "",  
+                    "askSize": "",  
+                    "lastPrice": "19.444",  
+                    "highPrice24h": "23.8353",  
+                    "lowPrice24h": "0",  
+                    "prevPrice24h": "20",  
+                    "volume24h": "24694.9"  
                 }  
-            ],  
-            "success": "1"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744090940933  
+        "time": 1744079413254  
     }
 
 ---
 
-# 價差-全部撤單
+# 查詢最新行情信息
+
+可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
+
+警告
+
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+
+
 
 ### HTTP請求
 
-POST`/v5/spread/order/cancel-all`
+GET`/v5/spread/tickers`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| false| string| 價差產品名稱 
-
-  * 當指定`symbol`時, 這個symbol的所有活動單都會被取消, 不管`cancelAll`參數如何設置.
-  * 當不指定`symbol`時, 並且`cancelAll`=true, 所有symbol的活動單都會被取消
-
+symbol| **true**|  string| 價差產品名稱  
   
-cancelAll| false| boolean| `true`, `false`  
-  
-信息
-
-ack僅表示請求被成功接受. 請使用websocket-order推送來確認訂單狀態
-
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>|   
-> orderId| string| 價差訂單ID  
-> orderLinkId| string| 用戶自定義訂單ID  
-success| string| 該字段可以忽略, 無實際意義  
+list| array<object>| 行情信息  
+> symbol| string| 價差產品名稱  
+> bidPrice| string| 買1價  
+> bidSize| string| 買1價的數量  
+> askPrice| string| 賣1價  
+> askSize| string| 賣1價的數量  
+> lastPrice| string| 最新市場成交價  
+> highPrice24h| string| 最近24小時的最高價  
+> lowPrice24h| string| 最近24小時的最低價  
+> prevPrice24h| string| 24小時前的整點市價  
+> volume24h| string| 最近24小時成交量  
   
 ### 請求示例
     
     
-    POST /v5/spread/order/cancel-all HTTP/1.1  
+    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1744090967121  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-         
-        "symbol": null,  
-        "cancelAll": true  
-    }  
     
 
 ### 響應示例
@@ -149,16 +141,23 @@ success| string| 該字段可以忽略, 無實際意義
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "Success",  
         "result": {  
             "list": [  
                 {  
-                    "orderId": "11ec47f3-f0a2-4b2a-b302-236f2a2d53a2",  
-                    "orderLinkId": ""  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "bidPrice": "",  
+                    "bidSize": "",  
+                    "askPrice": "",  
+                    "askSize": "",  
+                    "lastPrice": "19.444",  
+                    "highPrice24h": "23.8353",  
+                    "lowPrice24h": "0",  
+                    "prevPrice24h": "20",  
+                    "volume24h": "24694.9"  
                 }  
-            ],  
-            "success": "1"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1744090940933  
+        "time": 1744079413254  
     }

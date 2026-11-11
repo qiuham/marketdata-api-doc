@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/futures/get-current-margin-window
 api_type: REST
-updated_at: 2026-11-05 18:53:42.661514
+updated_at: 2026-11-11 14:04:20.483429
 ---
 
 # Get Current Margin Window
@@ -144,6 +144,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+view
+
+ApiKey
+
+wallet:user:read
+
+OAuth2
+
+View your account information.
 
 #### Query Parameters
 

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/asset-detail
 api_type: Trading
-updated_at: 2026-11-05 18:33:06.124406
+updated_at: 2026-11-11 14:00:19.274984
 ---
 
 # Get Asset List

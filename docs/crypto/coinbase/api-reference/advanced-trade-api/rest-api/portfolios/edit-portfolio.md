@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/portfolios/edit-portfolio
 api_type: Account
-updated_at: 2026-11-05 18:53:44.124515
+updated_at: 2026-11-11 14:04:21.568087
 ---
 
 # Edit Portfolio
@@ -170,6 +170,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+trade
+
+ApiKey
+
+wallet:user:update
+
+OAuth2
+
+Update your account information.
 
 #### Path Parameters
 

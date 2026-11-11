@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-ws-order-channel
 anchor_id: order-book-trading-trade-ws-order-channel
 api_type: WebSocket
-updated_at: 2026-11-05 19:09:08.931088
+updated_at: 2026-11-11 14:17:12.610850
 ---
 
 # WS / Order channel
@@ -358,7 +358,6 @@ For options, use coin as unit (e.g. BTC, ETH)
 `mmp_and_post_only`: Market Maker Protection and Post-only order(only applicable to Option in Portfolio Margin mode).   
 `op_fok`: Simple options (fok)   
 `rpi`: Retail Price Improvement order  
-`elp`: Enhanced Liquidity Program order (Deprecated; use `rpi`. Accepted until October 31, 2026.)  
 > side | String | Order side, `buy` `sell`  
 > posSide | String | Position side   
 `net`   
@@ -891,7 +890,6 @@ data | Array of objects | 订阅的数据
 `mmp_and_post_only`：做市商保护且只做maker单(仅适用于组合保证金账户模式下的期权订单)   
 `op_fok`：期权简选（全部成交或立即取消）  
 `rpi`：Retail Price Improvement 订单  
-`elp`：流动性增强计划订单（已弃用，请使用 `rpi`。2026年10月31日前仍可使用。）  
 > side | String | 订单方向，`buy` `sell`  
 > posSide | String | 持仓方向  
 `long`：开平仓模式开多  

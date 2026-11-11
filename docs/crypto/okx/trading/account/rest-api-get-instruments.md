@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-instruments
 anchor_id: trading-account-rest-api-get-instruments
 api_type: REST
-updated_at: 2026-11-05 19:08:38.340658
+updated_at: 2026-11-11 14:17:10.444620
 ---
 
 # Get instruments
@@ -70,7 +70,6 @@ instId | String | No | Instrument ID
                 "ctVal": "",
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
-                "elp": "0",
                 "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
@@ -197,18 +196,11 @@ openType | String | Open type
 `pre_quote`: pre-quote  
 `call_auction`: call auction   
 Only applicable to `SPOT`/`MARGIN`, return "" for all other business lines  
-elp | String | ELP maker permission  
-`0`: ELP is not enabled for this symbol  
-`1`: ELP is enabled for this symbol, but current users don't have permission to place ELP orders for it.   
-`2`: ELP is enabled for this symbol, and current users have permission to place ELP orders for it.   
-  
-It doesn't mean there will be ELP liquidity when elp is `1/2`.  
 rpi | String | RPI maker permission.  
 `0`: not enabled for this instrument  
 `1`: enabled, but the current user has no permission to place RPI orders  
 `2`: enabled and permitted  
 A `1`/`2` value does not imply RPI liquidity is present.  
-`elp` remains accepted as an alias until October 31, 2026.  
 expTime | String | Expiry time   
 Applicable to `SPOT`/`MARGIN`/`FUTURES`/`SWAP`/`OPTION`. For `FUTURES`/`OPTION`, it is natural delivery/exercise time. It is the instrument offline time when there is `SPOT/MARGIN/FUTURES/SWAP/` manual offline. Update once change.  
 lever | String | Max Leverage,   
@@ -365,7 +357,6 @@ instId | String | 否 | 产品ID
                 "ctVal": "",
                 "ctValCcy": "",
                 "contTdSwTime": "1704876947000",
-                "elp": "0",
                 "rpi": "0",
                 "expTime": "",
                 "futureSettlement": false,
@@ -483,18 +474,11 @@ openType | String | 开盘类型
 `pre_quote`: 提前挂单  
 `call_auction`: 集合竞价   
 只适用于`SPOT`/`MARGIN`，其他业务线返回""  
-elp | String | ELP 下单权限  
-`0`：该币对不支持 ELP  
-`1`：该币对支持 ELP 但用户没有权限为其下 ELP 订单  
-`2`：该币对支持 ELP 且用户有权限为其下 ELP 订单  
-  
-`1/2`不代表深度中一定有 ELP 挂单  
 rpi | String | RPI 做市商权限。  
 `0`：该产品未开通 RPI  
 `1`：该产品已开通 RPI，但当前用户无权下 RPI 订单  
 `2`：已开通且有权限  
 `1`/`2` 不代表当前存在 RPI 流动性。  
-`elp` 在 2026年10月31日前作为别名继续被接受。  
 expTime | String | 产品下线时间  
 适用于`币币/杠杆/交割/永续/期权`，对于 `交割/期权`，为交割/行权日期；亦可以为产品下线时间，有变动就会推送。  
 lever | String | 该`instId`支持的最大杠杆倍数，不适用于`币币`、`期权`  

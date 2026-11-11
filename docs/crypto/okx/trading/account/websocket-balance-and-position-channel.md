@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-websocket-balance-and-position-channel
 anchor_id: trading-account-websocket-balance-and-position-channel
 api_type: WebSocket
-updated_at: 2026-11-05 19:08:58.032785
+updated_at: 2026-11-11 14:17:11.141535
 ---
 
 # Balance and position channel
@@ -178,6 +178,8 @@ data | Array of objects | Subscribed data
 `set_leverage`  
 `interest_deduction`  
 `settlement`  
+`ca_rebase`  
+`coin_ca_rebase`  
 > balData | Array of objects | Balance data  
 >> ccy | String | Currency  
 >> cashBal | String | Cash Balance  
@@ -385,6 +387,8 @@ data | Array of objects | 订阅的数据
 `set_leverage`：设置杠杆  
 `interest_deduction`：扣息  
 `settlement`：交割结算  
+`ca_rebase`：合约公司行动（CA）rebase  
+`coin_ca_rebase`：现货公司行动（CA）rebase  
 > balData | String | 余额数据  
 >> ccy | String | 币种  
 >> cashBal | String | 币种余额  

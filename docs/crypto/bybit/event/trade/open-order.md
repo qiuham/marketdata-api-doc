@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/open-order
 api_type: Trading
-updated_at: 2026-11-05 18:35:35.837520
+updated_at: 2026-11-11 14:00:47.195952
 ---
 
 # Submit Quote

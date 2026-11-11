@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/orders/edit-order-preview
 api_type: Trading
-updated_at: 2026-11-05 18:53:43.443941
+updated_at: 2026-11-11 14:04:21.050613
 ---
 
 # Edit Order Preview
@@ -544,6 +544,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+view
+
+ApiKey
+
+wallet:buys:create
+
+OAuth2
+
+Place, edit, and cancel orders.
 
 #### Body
 

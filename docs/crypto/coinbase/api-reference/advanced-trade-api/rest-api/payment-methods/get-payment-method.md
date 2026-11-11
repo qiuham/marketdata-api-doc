@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method
 api_type: REST
-updated_at: 2026-11-05 18:53:43.704350
+updated_at: 2026-11-11 14:04:21.176018
 ---
 
 # Get Payment Method
@@ -151,6 +151,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+view
+
+ApiKey
+
+wallet:payment-methods:read
+
+OAuth2
+
+View your payment methods.
 
 #### Path Parameters
 

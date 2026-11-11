@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/cancel-all
 api_type: Trading
-updated_at: 2026-11-05 18:35:30.790292
+updated_at: 2026-11-11 14:00:46.192663
 ---
 
 # Get Event Contract Trade History

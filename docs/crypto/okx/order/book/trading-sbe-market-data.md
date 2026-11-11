@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-sbe-market-data
 anchor_id: order-book-trading-sbe-market-data
 api_type: API
-updated_at: 2026-11-05 19:09:53.179852
+updated_at: 2026-11-11 14:17:14.517045
 ---
 
 # SBE Market Data
@@ -154,9 +154,6 @@ Channel | XML Template ID and message name
 bbo-tbt | 1000: BboTbtChannelEvent  
 books-l2-tbt | 1001: BooksL2TbtChannelEvent  
 1002: BooksL2TbtExponentUpdateEvent  
-books-l2-tbt-elp   
-(It is not enabled) | 1003: BooksL2TbtElpChannelEvent  
-1004: BooksL2TbtElpExponentUpdateEvent  
 trades | 1005: TradesChannelEvent  
   
   * How to manage a local order book correctly
@@ -405,9 +402,6 @@ SBE XML schema 已经发布：
 bbo-tbt | 1000: BboTbtChannelEvent  
 books-l2-tbt | 1001: BooksL2TbtChannelEvent  
 1002: BooksL2TbtExponentUpdateEvent  
-books-l2-tbt-elp   
-（未启用） | 1003: BooksL2TbtElpChannelEvent  
-1004: BooksL2TbtElpExponentUpdateEvent  
 trades | 1005: TradesChannelEvent  
   
   * 如何正确管理本地订单簿

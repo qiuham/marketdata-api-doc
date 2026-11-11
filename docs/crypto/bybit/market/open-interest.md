@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/open-interest
 api_type: Market Data
-updated_at: 2026-11-05 18:38:14.347477
+updated_at: 2026-11-11 14:01:17.159609
 ---
 
 # Get Order Price Limit

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-maximum-available-balance-equity
 anchor_id: trading-account-rest-api-get-maximum-available-balance-equity
 api_type: REST
-updated_at: 2026-11-05 19:08:42.735321
+updated_at: 2026-11-11 14:17:10.611280
 ---
 
 # Get maximum available balance/equity
@@ -89,8 +89,10 @@ The default value is the quote currency of the `instId`, for example: for `BTC-U
 **Parameter** | **Type** | **Description**  
 ---|---|---  
 instId | String | Instrument ID  
-availBuy | String | Maximum available balance/equity to buy  
-availSell | String | Maximum available balance/equity to sell  
+availBuy | String | Maximum available balance/equity to buy.  
+In long/short position mode, the position tier limit uses the long-side remaining for `FUTURES`/`SWAP`  
+availSell | String | Maximum available balance/equity to sell.  
+In long/short position mode, the position tier limit uses the short-side remaining for `FUTURES`/`SWAP`  
 In the case of SPOT/MARGIN, availBuy is in the quote currency, and availSell is in the base currency.  
 In the case of MARGIN with cross tdMode, both availBuy and availSell are in the currency passed in **ccy**.
 
@@ -176,7 +178,9 @@ tradeQuoteCcy | String | 否 | 用于交易的计价币种。仅适用于`币币
 **参数名** | **类型** | **描述**  
 ---|---|---  
 instId | String | 产品ID  
-availBuy | String | 最大买入可用余额/保证金  
-availSell | String | 最大卖出可用余额/保证金  
+availBuy | String | 最大买入可用余额/保证金。  
+开平仓模式下，`交割`/`永续`的梯度档位按多头方向单独计算  
+availSell | String | 最大卖出可用余额/保证金。  
+开平仓模式下，`交割`/`永续`的梯度档位按空头方向单独计算  
 币币/币币杠杆时availBuy为计价货币，availSell为交易货币。  
 全仓币币杠杆时，availBuy和availSell均为指定保证金的币种。

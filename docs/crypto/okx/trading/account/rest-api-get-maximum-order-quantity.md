@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-maximum-order-quantity
 anchor_id: trading-account-rest-api-get-maximum-order-quantity
 api_type: REST
-updated_at: 2026-11-05 19:08:42.424962
+updated_at: 2026-11-11 14:17:10.603376
 ---
 
 # Get maximum order quantity
@@ -96,9 +96,11 @@ ccy | String | Currency used for margin
 maxBuy | String | `SPOT`/`MARGIN`: The maximum quantity in base currency that you can buy  
 The cross-margin order under `Futures mode` mode, quantity of coins is based on base currency.  
 `FUTURES`/`SWAP`/`OPTIONS`: The maximum quantity of contracts that you can buy  
+In long/short position mode, the position tier limit uses the long-side remaining for `FUTURES`/`SWAP`  
 maxSell | String | `SPOT`/`MARGIN`: The maximum quantity in quote currency that you can sell  
 The cross-margin order under `Futures mode` mode, quantity of coins is based on base currency.  
-`FUTURES`/`SWAP`/`OPTIONS`: The maximum quantity of contracts that you can sell
+`FUTURES`/`SWAP`/`OPTIONS`: The maximum quantity of contracts that you can sell  
+In long/short position mode, the position tier limit uses the short-side remaining for `FUTURES`/`SWAP`
 
 ---
 
@@ -192,6 +194,8 @@ ccy | String | 保证金币种
 maxBuy | String | `币币/币币杠杆`：最大可买的交易币数量  
 `合约模式`下的全仓杠杆订单，为交易币数量  
 `交割`/`永续`/`期权`：最大可开多的合约张数  
+开平仓模式下，`交割`/`永续`的梯度档位按多头方向单独计算  
 maxSell | String | `币币/币币杠杆`：最大可卖的计价币数量  
 `合约模式`下的全仓杠杆订单，为交易币数量  
-`交割`/`永续`/`期权`：最大可开空的合约张数
+`交割`/`永续`/`期权`：最大可开空的合约张数  
+开平仓模式下，`交割`/`永续`的梯度档位按空头方向单独计算

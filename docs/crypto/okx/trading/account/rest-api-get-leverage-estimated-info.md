@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-leverage-estimated-info
 anchor_id: trading-account-rest-api-get-leverage-estimated-info
 api_type: REST
-updated_at: 2026-11-05 19:08:43.666912
+updated_at: 2026-11-11 14:17:10.635685
 ---
 
 # Get leverage estimated info
@@ -39,10 +39,11 @@ instId | String | Conditional | Instrument ID, e.g. BTC-USDT
 It is required for these scenarioes: `SWAP` and `FUTURES`, Margin isolation, Margin cross in `Futures mode`.  
 ccy | String | Conditional | Currency used for margin, e.g. BTC  
 It is required for isolated margin and cross margin in `Futures mode`, `Multi-currency margin` and `Portfolio margin`  
-posSide | String | No | posSide  
+posSide | String | No | Position side  
 `net`: The default value  
 `long`  
 `short`  
+In long/short position mode, it is recommended to specify `long` or `short` for accurate direction-specific results  
   
 > Response Example
     
@@ -85,7 +86,8 @@ estMgn | String | The estimated margin needed by position under the correspondin
 For the `MARGIN` position, it is margin in base currency  
 estQuoteMgn | String | The estimated margin (in quote currency) needed by position under the corresponding leverage  
 estMaxAmt | String | For `MARGIN`, it is the estimated maximum loan in base currency under the corresponding leverage  
-For `SWAP` and `FUTURES`, it is the estimated maximum quantity of contracts that can be opened under the corresponding leverage  
+For `SWAP` and `FUTURES`, it is the estimated maximum quantity of contracts that can be opened under the corresponding leverage.  
+In long/short position mode, the position tier limit is calculated based on the direction specified by `posSide`  
 estQuoteMaxAmt | String | The `MARGIN` estimated maximum loan in quote currency under the corresponding leverage.  
 existOrd | Boolean | Whether there is pending orders   
 `true`  
@@ -135,6 +137,7 @@ posSide | String | 否 | 持仓方向
 `long`: 开平模式下的多仓  
 `short`：开平模式下的空仓  
 适用于`交割`/`永续`。  
+开平仓模式下，建议传入 `long` 或 `short` 以获取准确的方向差异化结果  
   
 > 返回结果
     
@@ -178,7 +181,8 @@ estMgn | String | 对应杠杆倍数下，仓位预估所需的保证金数量
 对于交割或永续仓位，为仓位所需保证金  
 estQuoteMgn | String | 对应杠杆倍数下，仓位预估所需的计价货币保证金数量  
 estMaxAmt | String | 对于杠杆，为对应杠杆倍数下，交易货币预估最大可借  
-对于交割和永续，为对应杠杆倍数下，预估的最大可开张数  
+对于交割和永续，为对应杠杆倍数下，预估的最大可开张数。  
+开平仓模式下，梯度档位根据 `posSide` 参数按方向单独计算  
 estQuoteMaxAmt | String | 对应杠杆倍数下，杠杆计价货币预估最大可借  
 existOrd | Boolean | 当前是否存在挂单   
 `true`：存在挂单  
