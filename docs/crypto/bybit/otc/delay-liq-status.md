@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/delay-liq-status
 api_type: REST
-updated_at: 2026-11-11 14:01:30.192372
+updated_at: 2026-11-11 18:29:32.018994
 ---
 
 # Get LTV

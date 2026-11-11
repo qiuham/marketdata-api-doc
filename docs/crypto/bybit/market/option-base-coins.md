@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/option-base-coins
 api_type: Market Data
-updated_at: 2026-11-11 14:01:17.171467
+updated_at: 2026-11-11 18:29:16.661186
 ---
 
 # Get Order Price Limit

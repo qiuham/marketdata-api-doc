@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-11-11 14:01:02.836003
+updated_at: 2026-11-11 18:29:00.595587
 ---
 
 # Create Fund (Pending Subscription)

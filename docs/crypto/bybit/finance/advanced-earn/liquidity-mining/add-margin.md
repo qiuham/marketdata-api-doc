@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/add-margin
 api_type: REST
-updated_at: 2026-11-11 14:00:53.574471
+updated_at: 2026-11-11 18:28:48.413006
 ---
 
 # Claim Interest

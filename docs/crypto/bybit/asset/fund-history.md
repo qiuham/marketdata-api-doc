@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fund-history
 api_type: REST
-updated_at: 2026-11-11 14:00:30.404232
+updated_at: 2026-11-11 18:28:19.918738
 ---
 
 # Get Sub UID

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/apr-history
 api_type: REST
-updated_at: 2026-11-11 14:00:58.791613
+updated_at: 2026-11-11 18:28:54.934824
 ---
 
 # Get APR History

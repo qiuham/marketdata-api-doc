@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/reduce-max-collateral-amt
 api_type: REST
-updated_at: 2026-11-11 14:01:26.696892
+updated_at: 2026-11-11 18:29:27.735405
 ---
 
 # Batch Cancel Order

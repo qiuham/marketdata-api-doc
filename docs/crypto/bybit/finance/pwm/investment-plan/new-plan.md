@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/new-plan
 api_type: REST
-updated_at: 2026-11-11 14:01:08.130264
+updated_at: 2026-11-11 18:29:06.584294
 ---
 
 # Get Fund Transfer Records

@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/accounts/list-accounts
 api_type: Account
-updated_at: 2026-11-05 18:53:42.245326
+updated_at: 2026-11-11 18:32:59.045014
 ---
 
 # List Accounts
@@ -165,6 +165,18 @@ header
 required
 
 A bearer token signed using your API Key Secret, see [Creating API Keys](/coinbase-app/authentication-authorization/api-key-authentication) section of our docs for more information. See [Scope & Permissions](/coinbase-app/advanced-trade-apis/rest-scopes) for the permission each endpoint requires.
+
+#### Scopes
+
+view
+
+ApiKey
+
+wallet:accounts:read
+
+OAuth2
+
+View your accounts.
 
 #### Query Parameters
 

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/friend-referral
 api_type: REST
-updated_at: 2026-11-11 14:01:59.843383
+updated_at: 2026-11-11 18:30:07.615507
 ---
 
 # Modify Master API Key
