@@ -8,8 +8,6 @@ name: Crawl Docs
         required: true
         type: choice
         options:
-          - zhongtai-xtp
-          - zhongtai-xtppro
           - binance
           - bybit
           - coinbase

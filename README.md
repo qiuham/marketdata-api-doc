@@ -6,7 +6,7 @@
 
 - **范围优先**：顶层按 `cn`、`us`、`crypto` 组织；`cn` / `us` 下面再按 `stock`、`futures`、`options` 等资产类别分层。
 - **路径保持短**：传统市场路径采用 `范围/资产/提供方/产品`，crypto 路径采用 `crypto/提供方`；业务类型如 `gateways`、`exchanges`、`brokers`、`data-vendors` 放在元数据和索引里。
-- **产品独立**：每个接入对象都有独立 `product_id`，例如 `zhongtai-xtp`、`zhongtai-xtppro`。
+- **产品独立**：每个接入对象都有独立 `product_id`，例如 `binance`、`okx`。
 - **文档统一**：落地为 Markdown，并使用 YAML frontmatter 记录来源、范围、资产类别、提供方、产品、接口类型和更新时间。
 - **索引友好**：每个产品生成独立 JSON 索引，同时生成全局 `index/catalog.json`，方便 AI、搜索和后续工具读取。
 - **采集可插拔**：公开网页、SDK、PDF、Word、头文件、本地手工文档都通过 adapter 或 ingest 流程进入同一套结构。
@@ -17,8 +17,6 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| cn | 中泰证券 | [中泰 XTP 3.0](./docs/cn/stock/zhongtai/xtp/) | ✅ | 36 | 2026-10-30 |
-| cn | 中泰证券 | [中泰 XTP Pro](./docs/cn/stock/zhongtai/xtppro/) | ✅ | 22 | 2026-10-20 |
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
 | crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-11 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
@@ -34,7 +32,7 @@
 PYTHONPATH=. python src/main.py list
 
 # 爬取单个产品
-PYTHONPATH=. python src/main.py crawl -p zhongtai-xtp
+PYTHONPATH=. python src/main.py crawl -p okx
 
 # 生成全部产品索引和全局 catalog
 PYTHONPATH=. python src/main.py index --all
@@ -68,9 +66,7 @@ marketdata-api-doc/
 │   │   ├── gateio.yaml
 │   │   ├── hyperliquid.yaml
 │   │   ├── kraken.yaml
-│   │   ├── okx.yaml
-│   │   ├── zhongtai-xtp.yaml
-│   │   └── zhongtai-xtppro.yaml
+│   │   └── okx.yaml
 │   └── legacy/           # 兼容旧项目的源站配置
 │       └── crypto/
 │           ├── binance.yaml
@@ -81,24 +77,16 @@ marketdata-api-doc/
 │           ├── kraken.yaml
 │           └── okx.yaml
 ├── docs/                 # Markdown 文档
-│   ├── cn/
-│   │   └── stock/
-│   │       └── zhongtai/
-│   │           ├── xtp/                            # 36 Markdown docs
-│   │           └── xtppro/                         # 22 Markdown docs
-│   ├── crypto/
-│   │   ├── binance/                                # 825 Markdown docs
-│   │   ├── bybit/                                  # 546 Markdown docs
-│   │   ├── coinbase/                               # 78 Markdown docs
-│   │   ├── gateio/                                 # 66 Markdown docs
-│   │   ├── hyperliquid/                            # 37 Markdown docs
-│   │   ├── kraken/                                 # 243 Markdown docs
-│   │   └── okx/                                    # 518 Markdown docs
-│   └── us/
+│   └── crypto/
+│       ├── binance/                                # 825 Markdown docs
+│       ├── bybit/                                  # 546 Markdown docs
+│       ├── coinbase/                               # 78 Markdown docs
+│       ├── gateio/                                 # 66 Markdown docs
+│       ├── hyperliquid/                            # 37 Markdown docs
+│       ├── kraken/                                 # 243 Markdown docs
+│       └── okx/                                    # 518 Markdown docs
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
-│   ├── cn/stock/zhongtai-xtp.json
-│   ├── cn/stock/zhongtai-xtppro.json
 │   ├── crypto/binance.json
 │   ├── crypto/bybit.json
 │   ├── crypto/coinbase.json
@@ -110,12 +98,9 @@ marketdata-api-doc/
 │   ├── adapters/         # 采集/导入适配器
 │   │   ├── __init__.py
 │   │   ├── base.py
-│   │   ├── crypto_legacy.py
-│   │   ├── zhongtai_xtp.py
-│   │   └── zhongtai_xtppro.py
+│   │   └── crypto_legacy.py
 │   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
 │   │   ├── __init__.py
-│   │   ├── browser.py
 │   │   ├── config.py
 │   │   ├── indexer.py
 │   │   ├── markdown.py
@@ -128,26 +113,17 @@ marketdata-api-doc/
 
 ## Frontmatter 规范
 
-每篇文档都应该带上前置信息，至少包含：
+每篇文档都带上前置信息。例如 `docs/crypto/okx/affiliate.md`：
 
 ```yaml
-id: zhongtai-xtp-2056206185257816066
-scope: cn
-asset_class: stock
-domain: gateways
-provider: zhongtai
-product: xtp
-product_id: zhongtai-xtp
-api_type: market_data
-source_type: http_api
-source_url: https://xtp.zts.com.cn/jeecg-boot/xtp/tree/getTreeData?id=2056206185257816066
-version: XTP 3.0
-updated_at: 2026-05-18
+exchange: okx
+source_url: https://www.okx.com/docs-v5/en/#affiliate
+anchor_id: affiliate
+api_type: API
+updated_at: 2026-11-11 14:17:18.632567
 ```
 
 ## 已接入范围
 
-- `cn/stock/zhongtai/xtp`：中泰 XTP 3.0，A 股极速交易柜台 API 文档。
-- `cn/stock/zhongtai/xtppro`：中泰 XTP Pro，A 股极速交易柜台 Pro API 文档。
 - `crypto/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。
