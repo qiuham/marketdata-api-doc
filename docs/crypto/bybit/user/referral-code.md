@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/referral-code
 api_type: REST
-updated_at: 2026-11-11 18:30:09.329860
+updated_at: 2026-11-12 18:30:37.853295
 ---
 
 # Delete Sub API Key

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/get-investment-plan
 api_type: REST
-updated_at: 2026-11-11 18:29:02.044838
+updated_at: 2026-11-12 18:29:22.037936
 ---
 
 # Manage Order

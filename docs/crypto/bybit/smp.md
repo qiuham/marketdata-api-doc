@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/smp
 api_type: REST
-updated_at: 2026-11-11 18:29:51.247049
+updated_at: 2026-11-12 18:30:18.249045
 ---
 
 # Fixed-Rate Borrow

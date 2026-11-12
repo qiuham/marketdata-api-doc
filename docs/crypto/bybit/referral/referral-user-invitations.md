@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-user-invitations
 api_type: REST
-updated_at: 2026-11-11 18:29:41.726639
+updated_at: 2026-11-12 18:30:07.522459
 ---
 
 # Accept non-LP Quote

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/premium-index-kline
 api_type: Market Data
-updated_at: 2026-11-11 18:29:17.989883
+updated_at: 2026-11-12 18:29:40.098142
 ---
 
 # Get RPI Orderbook

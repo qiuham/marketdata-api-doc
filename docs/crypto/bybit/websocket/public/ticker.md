@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/websocket/public/ticker
 api_type: WebSocket
-updated_at: 2026-11-11 18:30:16.890188
+updated_at: 2026-11-12 18:30:46.164558
 ---
 
 # Connect
@@ -176,9 +176,7 @@ Regardless of Perpetual, Futures, Options or Spot, for one public connection, yo
 
   * Spot can input up to **10 args for each subscription** request sent to one connection
   * Options can input up to 2000 args for a single connection
-  * No args limit for Spread
-  * Spot can input up to 100 args for a single connection (TBD)
-  * Futures can input up to 100 args for a single connection (TBD)
+  * No args limit for Futures & Spread connections
 
 
 
@@ -513,9 +511,7 @@ RFQ| `wss://stream-testnet.bybit.com/v5/public/rfq`
 
   * 現貨每次向單一連接僅能發送不超過10個參數的訂閱請求
   * 期權單個連接，至多訂閱2000個args
-  * 價差交易單個連接沒有args限制
-  * 現貨單個連接支持最多100個args (待確認)
-  * 合約單個連接支持最多100個args (待確認)
+  * 期貨、價差交易單個連接沒有args限制
 
 
 

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-get-currencies
 anchor_id: funding-account-rest-api-get-currencies
 api_type: REST
-updated_at: 2026-11-11 18:45:48.948364
+updated_at: 2026-11-12 18:46:42.028116
 ---
 
 # Get currencies

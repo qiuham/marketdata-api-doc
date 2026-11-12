@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/market/orderbook
 api_type: Market Data
-updated_at: 2026-11-11 18:28:40.274357
+updated_at: 2026-11-12 18:28:58.091972
 ---
 
 # Get Event Contract Trade History

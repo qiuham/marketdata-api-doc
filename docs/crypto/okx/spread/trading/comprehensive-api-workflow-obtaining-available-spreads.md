@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-comprehensive-api-workflow-obtaining-available-spreads
 anchor_id: spread-trading-comprehensive-api-workflow-obtaining-available-spreads
 api_type: API
-updated_at: 2026-11-11 18:45:46.798863
+updated_at: 2026-11-12 18:46:39.713735
 ---
 
 # Obtaining Available Spreads

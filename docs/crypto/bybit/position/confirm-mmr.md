@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/confirm-mmr
 api_type: Position
-updated_at: 2026-11-11 18:29:34.736511
+updated_at: 2026-11-12 18:29:59.969584
 ---
 
 # Confirm New Risk Limit

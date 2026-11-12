@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-set
 api_type: REST
-updated_at: 2026-11-11 18:29:40.470616
+updated_at: 2026-11-12 18:30:06.066724
 ---
 
 # Get Referral Campaign Rewards

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-websocket-trade-api-ws-cancel-order
 anchor_id: spread-trading-websocket-trade-api-ws-cancel-order
 api_type: WebSocket
-updated_at: 2026-11-11 18:45:47.127223
+updated_at: 2026-11-12 18:46:40.066349
 ---
 
 # WS / Cancel order
