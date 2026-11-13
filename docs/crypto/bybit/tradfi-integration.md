@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tradfi-integration
 api_type: REST
-updated_at: 2026-11-12 18:30:34.445271
+updated_at: 2026-11-13 18:28:54.150329
 ---
 
 # Create Sub UID API Key

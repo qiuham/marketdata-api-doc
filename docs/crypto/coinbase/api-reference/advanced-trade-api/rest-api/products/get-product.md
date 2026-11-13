@@ -2,7 +2,7 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/products/get-product
 api_type: Market Data
-updated_at: 2026-11-12 18:33:43.752991
+updated_at: 2026-11-13 18:31:35.332949
 ---
 
 # Get Product
@@ -859,28 +859,248 @@ Example:
 
 `"nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil."`
 
-best_bid_price
+best_bid_priceProducts
 
-string
+# Get Product
 
-best_ask_price
+Get information on a single product by product ID.
 
-string
+**Equities:** Use the canonical `product_id` returned by the Products API, not the display ticker. Equity responses include `equity_product_details`, which describes the security, current trading session, order-size permissions, and halt or liquidate-only state.
 
-high_24h
+GET
 
-string
+/
 
-low_24h
+api
 
-string
+/
 
-future_product_details
+v3
 
-object
+/
 
-equity_product_details
+brokerage
 
-object
+/
 
-Equity-specific identity, trading availability, session, and sizing details. Populated when product_type is EQUITY.
+products
+
+/
+
+{product_id}
+
+Get Product
+    
+    
+    curl --request GET \
+      --url https://api.coinbase.com/api/v3/brokerage/products/{product_id} \
+      --header 'Authorization: Bearer <token>'
+    
+    
+    import requests
+    
+    url = "https://api.coinbase.com/api/v3/brokerage/products/{product_id}"
+    
+    headers = {"Authorization": "Bearer <token>"}
+    
+    response = requests.get(url, headers=headers)
+    
+    print(response.text)
+    
+    
+    const options = {method: 'GET', headers: {Authorization: 'Bearer <token>'}};
+    
+    fetch('https://api.coinbase.com/api/v3/brokerage/products/{product_id}', options)
+      .then(res => res.json())
+      .then(res => console.log(res))
+      .catch(err => console.error(err));
+    
+    
+    <?php
+    
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+      CURLOPT_URL => "https://api.coinbase.com/api/v3/brokerage/products/{product_id}",
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => "",
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 30,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => "GET",
+      CURLOPT_HTTPHEADER => [
+        "Authorization: Bearer <token>"
+      ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    
+    curl_close($curl);
+    
+    if ($err) {
+      echo "cURL Error #:" . $err;
+    } else {
+      echo $response;
+    }
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"net/http"
+    	"io"
+    )
+    
+    func main() {
+    
+    	url := "https://api.coinbase.com/api/v3/brokerage/products/{product_id}"
+    
+    	req, _ := http.NewRequest("GET", url, nil)
+    
+    	req.Header.Add("Authorization", "Bearer <token>")
+    
+    	res, _ := http.DefaultClient.Do(req)
+    
+    	defer res.Body.Close()
+    	body, _ := io.ReadAll(res.Body)
+    
+    	fmt.Println(string(body))
+    
+    }
+    
+    
+    HttpResponse<String> response = Unirest.get("https://api.coinbase.com/api/v3/brokerage/products/{product_id}")
+      .header("Authorization", "Bearer <token>")
+      .asString();
+    
+    
+    require 'uri'
+    require 'net/http'
+    
+    url = URI("https://api.coinbase.com/api/v3/brokerage/products/{product_id}")
+    
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    
+    request = Net::HTTP::Get.new(url)
+    request["Authorization"] = 'Bearer <token>'
+    
+    response = http.request(request)
+    puts response.read_body
+    
+    
+    {
+      "product_id": "BTC-USD",
+      "price": "140.21",
+      "price_percentage_change_24h": "9.43%",
+      "volume_24h": "1908432",
+      "volume_percentage_change_24h": "9.43%",
+      "base_increment": "0.00000001",
+      "quote_increment": "0.00000001",
+      "quote_min_size": "0.00000001",
+      "quote_max_size": "1000",
+      "base_min_size": "0.00000001",
+      "base_max_size": "1000",
+      "base_name": "Bitcoin",
+      "quote_name": "US Dollar",
+      "watched": true,
+      "is_disabled": false,
+      "new": true,
+      "status": "<string>",
+      "cancel_only": true,
+      "limit_only": true,
+      "post_only": true,
+      "trading_disabled": false,
+      "auction_mode": true,
+      "base_display_symbol": "BTC",
+      "quote_display_symbol": "USD",
+      "product_type": "UNKNOWN_PRODUCT_TYPE",
+      "quote_currency_id": "USD",
+      "base_currency_id": "BTC",
+      "fcm_trading_session_details": {
+        "is_session_open": true,
+        "open_time": "<string>",
+        "close_time": "<string>",
+        "session_state": "FCM_TRADING_SESSION_STATE_UNDEFINED",
+        "after_hours_order_entry_disabled": true,
+        "closed_reason": "FCM_TRADING_SESSION_CLOSED_REASON_UNDEFINED",
+        "maintenance": {
+          "start_time": "<string>",
+          "end_time": "<string>"
+        }
+      },
+      "mid_market_price": "140.22",
+      "alias": "BTC-USD",
+      "alias_to": [
+        "BTC-USDC"
+      ],
+      "view_only": true,
+      "price_increment": "0.00000001",
+      "display_name": "BTC PERP",
+      "product_venue": "neptune",
+      "approximate_quote_24h_volume": "1908432",
+      "new_at": "2021-07-01T00:00:00Z",
+      "market_cap": "1500000000000",
+      "icon_color": "red",
+      "icon_url": "https://example.com",
+      "display_name_overwrite": "Bitcoin Perpetual",
+      "about_description": "nano Crude Oil Futures is a monthly cash-settled contract that allows participants to manage risk, trade on margin, or speculate on the price of oil.",
+      "best_bid_price": "<string>",
+      "best_ask_price": "<string>",
+      "high_24h": "<string>",
+      "low_24h": "<string>",
+      "future_product_details": {
+        "venue": "<string>",
+        "contract_code": "<string>",
+        "contract_expiry": "<string>",
+        "contract_size": "<string>",
+        "contract_root_unit": "<string>",
+        "group_description": "<string>",
+        "contract_expiry_timezone": "<string>",
+        "group_short_description": "<string>",
+        "risk_managed_by": "UNKNOWN_RISK_MANAGEMENT_TYPE",
+        "contract_expiry_type": "UNKNOWN_CONTRACT_EXPIRY_TYPE",
+        "perpetual_details": {
+          "open_interest": "<string>",
+          "funding_rate": "<string>",
+          "funding_time": "<string>",
+          "max_leverage": "<string>",
+          "base_asset_uuid": "<string>",
+          "underlying_type": "<string>"
+        },
+        "contract_display_name": "<string>",
+        "time_to_expiry_ms": "<string>",
+        "non_crypto": true,
+        "contract_expiry_name": "<string>",
+        "twenty_four_by_seven": true,
+        "funding_interval": "<string>",
+        "open_interest": "<string>",
+        "funding_rate": "<string>",
+        "funding_time": "<string>",
+        "display_name": "<string>"
+    
+    string
+    
+    best_ask_price
+    
+    string
+    
+    high_24h
+    
+    string
+    
+    low_24h
+    
+    string
+    
+    future_product_details
+    
+    object
+
+    equity_product_details
+    
+    object
+    
+    Equity-specific identity, trading availability, session, and sizing details. Populated when product_type is EQUITY.

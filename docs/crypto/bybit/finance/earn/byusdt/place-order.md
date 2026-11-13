@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/place-order
 api_type: REST
-updated_at: 2026-11-12 18:29:14.437102
+updated_at: 2026-11-13 18:27:38.137525
 ---
 
 # Get APR History

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/add-liquidity
 api_type: REST
-updated_at: 2026-11-12 18:29:07.333569
+updated_at: 2026-11-13 18:27:31.935912
 ---
 
 # Claim Interest

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-11-12 18:29:38.705039
+updated_at: 2026-11-13 18:27:59.511072
 ---
 
 # Get Order Price Limit

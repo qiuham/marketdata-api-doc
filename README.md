@@ -18,12 +18,12 @@
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-12 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-12 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-13 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-13 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-12 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-12 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-12 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-13 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-13 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-13 |
 
 ## 快速开始
 

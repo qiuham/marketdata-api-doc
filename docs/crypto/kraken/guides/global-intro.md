@@ -2,16 +2,14 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/guides/global-intro
 api_type: Guide
-updated_at: 2026-11-12 18:46:18.536102
+updated_at: 2026-11-13 18:43:54.398413
 ---
 
 # Exchange overview
 
 Kraken’s Exchange APIs give you programmatic access to two separate trading engines — **Spot** and **Derivatives** — each with its own endpoints, rate limits, and authentication flows.
 
-## 
-
-Markets
+## Markets
 
 | Spot| Derivatives  
 ---|---|---  
@@ -21,9 +19,7 @@ Base URL (REST)| `https://api.kraken.com`| `https://futures.kraken.com`
 WebSocket| `wss://ws.kraken.com/v2`| `wss://futures.kraken.com/ws/v1`  
 Sandbox| UAT available on request via Account Manager| `https://demo-futures.kraken.com` (self-service)  
   
-## 
-
-Protocols
+## Protocols
 
 All three protocols are available for both Spot and Derivatives, but with different capabilities on each engine.
 
@@ -35,9 +31,7 @@ Protocol| Best for
   
 See [Choose your protocol](/exchange/guides/general/api-comparison) for a full feature matrix, latency comparison, and guidance on which protocol to use.
 
-## 
-
-Workflows
+## Workflows
 
 Workflow| What you need| Where to start  
 ---|---|---  
@@ -50,9 +44,7 @@ Workflow| What you need| Where to start
 **Sub-accounts**|  Multi-account management| REST `CreateSubaccount`, FIX Tags 78/79  
 **Earn**|  Allocate/deallocate to staking products| REST Earn endpoints  
   
-## 
-
-Feature matrix
+## Feature matrix
 
 Feature| Spot REST| Spot WebSocket| Spot FIX| Derivatives REST| Derivatives WebSocket| Derivatives FIX  
 ---|---|---|---|---|---|---  
@@ -63,15 +55,11 @@ Funding| ✅| —| —| ✅| —| —
 Earn| ✅| —| —| —| —| —  
 Subaccounts| ✅| —| —| ✅| —| —  
   
-## 
-
-Performance and hosting
+## Performance and hosting
 
 For latency-sensitive strategies, Kraken offers connectivity options from AWS London (~2 ms) to direct colocation at Equinix London (~200 μs). See [Colocation and connectivity](/exchange/guides/general/colocation) for the full breakdown.
 
-## 
-
-Getting started
+## Getting started
 
 ## [Choose your protocolDetailed comparison of REST, WebSocket, and FIX for each market](/exchange/guides/general/api-comparison)
 

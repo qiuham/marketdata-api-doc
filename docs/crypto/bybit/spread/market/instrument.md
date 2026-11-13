@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/instrument
 api_type: Market Data
-updated_at: 2026-11-12 18:30:26.170887
+updated_at: 2026-11-13 18:28:46.616684
 ---
 
 # Get Tickers

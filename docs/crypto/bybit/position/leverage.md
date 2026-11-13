@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/leverage
 api_type: Position
-updated_at: 2026-11-12 18:30:01.382704
+updated_at: 2026-11-13 18:28:20.463364
 ---
 
 # Switch Position Mode

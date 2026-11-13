@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/get-auto-repay-mode
 api_type: REST
-updated_at: 2026-11-12 18:30:21.436313
+updated_at: 2026-11-13 18:28:42.478022
 ---
 
 # Get Historical Interest Rate

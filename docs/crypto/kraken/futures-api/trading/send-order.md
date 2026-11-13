@@ -2,7 +2,7 @@
 exchange: kraken
 source_url: https://docs.kraken.com/api/docs/futures-api/trading/send-order
 api_type: REST
-updated_at: 2026-11-12 18:46:17.372175
+updated_at: 2026-11-13 18:43:53.633403
 ---
 
 # Send order

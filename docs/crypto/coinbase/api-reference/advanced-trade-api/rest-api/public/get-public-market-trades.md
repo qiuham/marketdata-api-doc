@@ -2,15 +2,18 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/public/get-public-market-trades
 api_type: Market Data
-updated_at: 2026-11-12 18:33:43.823139
+updated_at: 2026-11-13 18:31:35.355577
 ---
 
 # Get Public Market Trades
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/market/products/{product_id}/ticker`
 
-
-Get snapshot information by product ID about the last trades (ticks) and best bid/ask.
+,Public
+    
+    # Get Public Market Trades
+    
+    Get snapshot information by product ID about the last trades (ticks) and best bid/ask.
     
     
     curl --request GET \

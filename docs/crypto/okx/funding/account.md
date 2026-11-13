@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account
 anchor_id: funding-account
 api_type: API
-updated_at: 2026-11-12 18:46:41.843935
+updated_at: 2026-11-13 18:44:18.892909
 ---
 
 # Funding Account
@@ -1363,6 +1363,9 @@ depId | String | Deposit ID
 fromWdId | String | Internal transfer initiator's withdrawal ID  
 If the deposit comes from internal transfer, this field displays the withdrawal ID of the internal transfer initiator, and will return "" in other cases  
 actualDepBlkConfirm | String | The actual amount of blockchain confirmed in a single deposit  
+xstockMultiplier | String | Conversion multiplier for this deposit  
+xstockShareAmount | String | Converted on-platform share amount  
+xstockShareName | String | Name of the corresponding on-platform asset  
 About deposit state  
 **Waiting for confirmation** is that the required number of blockchain confirmations has not been reached.   
 **Deposit credited** is that there is sufficient number of blockchain confirmations for the currency to be credited to the account, but it cannot be withdrawn yet.   
@@ -5518,6 +5521,9 @@ depId | String | 充值记录 ID
 fromWdId | String | 内部转账发起者提币申请 ID  
 如果该笔充值来自于内部转账，则该字段展示内部转账发起者的提币申请 ID，其他情况返回""  
 actualDepBlkConfirm | String | 最新的充币网络确认数  
+xstockMultiplier | String | 该笔充值的换算系数  
+xstockShareAmount | String | 换算后的站内份额  
+xstockShareName | String | 对应的站内资产名称  
 关于充值状态  
 **等待确认** 是没有达到充币确认数。  
 **确认到账** 是够充币确认数，且币已经到账户中，但是不可提。  

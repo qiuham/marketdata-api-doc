@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-vips
 api_type: REST
-updated_at: 2026-11-12 18:30:06.098527
+updated_at: 2026-11-13 18:28:25.052055
 ---
 
 # Get Referral Campaign Rewards

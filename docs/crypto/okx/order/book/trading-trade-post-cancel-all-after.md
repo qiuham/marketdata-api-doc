@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-trade-post-cancel-all-after
 anchor_id: order-book-trading-trade-post-cancel-all-after
 api_type: API
-updated_at: 2026-11-12 18:46:36.238527
+updated_at: 2026-11-13 18:44:12.228309
 ---
 
 # POST / Cancel All After

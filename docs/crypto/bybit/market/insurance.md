@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/insurance
 api_type: Market Data
-updated_at: 2026-11-12 18:29:36.962033
+updated_at: 2026-11-13 18:27:58.236002
 ---
 
 # Get Long Short Ratio

@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-dual-investment-get-order-history
 anchor_id: financial-product-dual-investment-get-order-history
 api_type: API
-updated_at: 2026-11-12 18:46:43.602448
+updated_at: 2026-11-13 18:44:20.984914
 ---
 
 # GET / Order history

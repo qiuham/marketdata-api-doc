@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/auto-add-margin
 api_type: Position
-updated_at: 2026-11-12 18:29:59.905893
+updated_at: 2026-11-13 18:28:18.920385
 ---
 
 # Confirm New Risk Limit
