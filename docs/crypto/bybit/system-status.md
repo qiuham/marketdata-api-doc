@@ -2,63 +2,66 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/system-status
 api_type: REST
-updated_at: 2026-11-13 18:28:52.723580
+updated_at: 2026-11-13 19:25:33.329181
 ---
 
-# Get Batch Export Report Status
+# Get System Status
 
-Query the status and download URL of every task in a batch using the `batchId` returned by [Batch Request Export Reports](/docs/v5/tax/batch-create).
+Get the system status when there is a platform maintenance or service incident.
 
 info
 
-  * Rate limit: **20 requests per second** , per UID and endpoint.
-  * The recommended polling interval is **30 seconds**.
-  * The batch must be accessible to the authenticated user.
-  * When a task's `status` is `2`, its `url` contains a JSON-encoded string with `Basepath` and `Files`. For all other statuses, `url` is an empty string.
-  * The batch has finished processing when every task has status `2` (succeeded) or `-1` (failed). Check each task's status to determine whether its report was generated successfully.
-
-
+Please note currently system maintenance that may result in short interruption (lasting less than 10 seconds) or websocket disconnection (users can immediately reconnect) will not be announced.
 
 ### HTTP Request
 
-GET `/v5/fht/compliance/tax/private/batch_query`
+GET`/v5/system/status`
 
 ### Request Parameters
 
-Pass the parameter in the query string.
-
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-batchId| **true**|  string| Batch ID in UUID format, returned by [Batch Request Export Reports](/docs/v5/tax/batch-create).  
+id| false| string| id. Unique identifier  
+[state](/docs/v5/enum#state)| false| string| system state  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-items| array| List of task objects in the batch.  
-> type| string| Report type. See [supported report types](/docs/v5/tax/batch-create#report-types).  
-> number| string| Report subcategory number, used together with `type`.  
-> status| integer (int32)| 
-
-  * `0`: Queued
-  * `1`: Processing
-  * `2`: Succeeded
-  * `-1`: Failed
-
-  
-> url| string| Download URL. Populated when `status` is `2`; otherwise, an empty string. URL of files (Basepath + Files). To shorten the time it takes to generate the report, it could generate multiple files. _Do take note of this and combine the several files using the same base path when requesting the data export_  
-> queryId| string| Report generation query ID for the task. Populated while the task is processing or after completion.  
+list| array| Object  
+> id| string| Id. Unique identifier  
+> title| string| Title of system maintenance  
+> [state](/docs/v5/enum#state)| string| System state  
+> begin| string| Start time of system maintenance, timestamp in milliseconds  
+> end| string| End time of system maintenance, timestamp in milliseconds. Before maintenance is completed, it is the expected end time; After maintenance is completed, it will be changed to the actual end time.  
+> href| string| Hyperlink to system maintenance details. Default value is empty string  
+> [serviceTypes](/docs/v5/enum#servicetypes)| array<int>| Service Type  
+> [product](/docs/v5/enum#product)| array<int>| Product  
+> uidSuffix| array<int>| Affected UID tail number  
+> [maintainType](/docs/v5/enum#maintaintype)| string| Maintenance type  
+> [env](/docs/v5/enum#env)| string| Environment  
   
 ### Request Example
+
+  * HTTP
+  * Python
+
+
     
     
-    GET /v5/fht/compliance/tax/private/batch_query?batchId=b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10 HTTP/1.1  
+    GET /v5/system/status HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: xxxxxxxxxxxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1790035230000  
-    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_price_limit(  
+        category="linear",  
+        symbol="BTCUSDT",  
+    ))  
     
 
 ### Response Example
@@ -68,95 +71,195 @@ items| array| List of task objects in the batch.
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "items": [  
+            "list": [  
                 {  
-                    "type": "TRADE",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/_SUCCESS\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00000-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00997-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\"]}",  
-                    "queryId": "2104839833489960960"  
+                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t06",  
+                    "state": "completed",  
+                    "begin": "1751596902000",  
+                    "end": "1751597011000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
                 },  
                 {  
-                    "type": "EARN",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/_SUCCESS\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00000-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00001-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\"]}",  
-                    "queryId": "2104839833871642624"  
+                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t05",  
+                    "state": "completed",  
+                    "begin": "1751254200000",  
+                    "end": "1751254500000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        4  
+                    ],  
+                    "product": [  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 1  
                 },  
                 {  
-                    "type": "DEPOSIT&WITHDRAWAL",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/_SUCCESS\",\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/part-00000-a8f75a9b-637f-4865-af11-5e4609e4a415-c000.csv\"]}",  
-                    "queryId": "2104839834236547072"  
+                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t04",  
+                    "state": "completed",  
+                    "begin": "1751017967000",  
+                    "end": "1751018096000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2  
+                    ],  
+                    "product": [  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t03",  
+                    "state": "completed",  
+                    "begin": "1751017532000",  
+                    "end": "1751017658000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
+                    "title": "t02",  
+                    "state": "completed",  
+                    "begin": "1751013817000",  
+                    "end": "1751013890000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "product": [  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
+                    "title": "t01",  
+                    "state": "completed",  
+                    "begin": "1751012688000",  
+                    "end": "1751012760000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2,  
+                        3,  
+                        4  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 2  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1790669270665  
-    }  
-    
-
-### Error Codes
-
-See [Tax Error Codes](/docs/v5/error#tax).
+        "time": 1751858399649  
+    }
 
 ---
 
-# 查詢批量報告導出狀態
+# 取得系統狀態
 
-使用[批量創建導出報告請求](/docs/zh-TW/v5/tax/batch-create)返回的 `batchId`，查詢該批次內所有子任務的狀態及下載地址。
+大型平台維護或服務故障時取得系統狀態
 
 信息
 
-  * 限流：每個 UID 每個接口 **20 次/秒** 。
-  * 建議每 **30 秒** 輪詢一次。
-  * 當前已認證用戶必須有權訪問該批次。
-  * 子任務的 `status` 為 `2` 時，`url` 返回包含 `Basepath` 和 `Files` 的 JSON 字符串；其他狀態下，`url` 為空字符串。
-  * 所有子任務的狀態均為 `2`（成功）或 `-1`（失敗）時，該批次處理完成。請逐項檢查狀態，確認報告是否成功生成。
-
-
+請注意，目前有些情況下, 服務發佈導致短暫停頓（持續時間少於 10 秒）或 WebSocket 中斷（使用者可立即重連），此類情況不會在此通知。
 
 ### HTTP 請求
 
-GET `/v5/fht/compliance/tax/private/batch_query`
+GET`/v5/system/status`
 
 ### 請求參數
 
-通過 URL 查詢字符串傳入參數。
-
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-batchId| **true**|  string| [批量創建導出報告請求](/docs/zh-TW/v5/tax/batch-create)返回的批次 ID，格式為 UUID。  
+id| false| string| Id, 唯一標識  
+[state](/docs/zh-TW/v5/enum#state)| false| string| 系統的狀態  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-items| array| 批次內的子任務對象列表。  
-> type| string| 報告類型，參見[支持的報告類型](/docs/zh-TW/v5/tax/batch-create#%E5%A0%B1%E5%91%8A%E9%A1%9E%E5%9E%8B)。  
-> number| string| 報告子類編號，與 `type` 組合使用。  
-> status| integer (int32)| 
-
-  * `0`：隊列中
-  * `1`：生成中
-  * `2`：成功
-  * `-1`：失敗
-
-  
-> url| string| 下載地址。`status` 為 `2` 時有值，其他狀態下為空字符串。 文件的URL網址 (Basepath+Files)。為了縮短生成報告所需的時間，它可以生成多個文件。 _請注意這一點，並在請求數據導出時使用相同的基本路徑組合多個文件_  
-> queryId| string| 該子任務的報告生成查詢 ID，在任務處理中或完成後有值。  
+list| array| Object  
+> id| string| Id, 唯一標識  
+> title| string| 系統維​​護說明的標題  
+> [state](/docs/zh-TW/v5/enum#state)| string| 系統的狀態  
+> begin| string| 系統維​​護的開始時間，Unix時間戳記的毫秒數格式  
+> end| string| 交易全面開放的時間，Unix時間戳記的毫秒數格式。在維護完成前，是預期結束時間；維護完成後，會變更為實際結束時間  
+> href| string| 系統維​​護詳情的超級連結,若無回傳值，預設值為空  
+> [serviceTypes](/docs/zh-TW/v5/enum#servicetypes)| array<int>| 服務類型  
+> [product](/docs/zh-TW/v5/enum#product)| array<int>| 產品  
+> uidSuffix| array<int>| 維護期間受影響的UID尾號  
+> [maintainType](/docs/zh-TW/v5/enum#maintaintype)| string| 維護類型  
+> [env](/docs/zh-TW/v5/enum#env)| string| 環境  
   
 ### 請求示例
+
+  * HTTP
+  * Python
+
+
     
     
-    GET /v5/fht/compliance/tax/private/batch_query?batchId=b5f4a3e2-1c8d-4f96-9a03-2e7b8c6d4f10 HTTP/1.1  
+    GET /v5/system/status HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN-TYPE: 2  
-    X-BAPI-SIGN: xxxxxxxxxxxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1790035230000  
-    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_price_limit(  
+        category="linear",  
+        symbol="BTCUSDT",  
+    ))  
     
 
 ### 響應示例
@@ -166,35 +269,132 @@ items| array| 批次內的子任務對象列表。
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "items": [  
+            "list": [  
                 {  
-                    "type": "TRADE",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/_SUCCESS\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00000-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\",\"20260929/6b1b3341-6940-47a7-b112-5949e496736f/part-00997-92859919-c8bf-47ce-b349-9cdcf44e8045-c000.csv\"]}",  
-                    "queryId": "2104839833489960960"  
+                    "id": "4d95b2a0-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t06",  
+                    "state": "completed",  
+                    "begin": "1751596902000",  
+                    "end": "1751597011000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
                 },  
                 {  
-                    "type": "EARN",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/_SUCCESS\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00000-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\",\"20260929/d64081bf-955b-4a96-b2f9-aa2f49760611/part-00001-0f0a3b1a-cdd3-43d0-8afa-1159893220a8-c000.csv\"]}",  
-                    "queryId": "2104839833871642624"  
+                    "id": "19bb6f82-587f-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t05",  
+                    "state": "completed",  
+                    "begin": "1751254200000",  
+                    "end": "1751254500000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        4  
+                    ],  
+                    "product": [  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 1  
                 },  
                 {  
-                    "type": "DEPOSIT&WITHDRAWAL",  
-                    "number": "1",  
-                    "status": 2,  
-                    "url": "{\"Basepath\":\"https://prod-bybit-tax-api-1705-rz.s3.ap-southeast-1.amazonaws.com/\",\"Files\":[\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/_SUCCESS\",\"20260929/db47d025-ba66-4dee-98b8-8860d891fdb9/part-00000-a8f75a9b-637f-4865-af11-5e4609e4a415-c000.csv\"]}",  
-                    "queryId": "2104839834236547072"  
+                    "id": "25f4bc8c-533c-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t04",  
+                    "state": "completed",  
+                    "begin": "1751017967000",  
+                    "end": "1751018096000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        2  
+                    ],  
+                    "product": [  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 1,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "679a9c5f-533b-11f0-bcc9-56f28c94d6ea",  
+                    "title": "t03",  
+                    "state": "completed",  
+                    "begin": "1751017532000",  
+                    "end": "1751017658000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4  
+                    ],  
+                    "product": [  
+                        1,  
+                        2  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "c8990f96-5332-11f0-8fd3-c241b123dd9e",  
+                    "title": "t02",  
+                    "state": "completed",  
+                    "begin": "1751013817000",  
+                    "end": "1751013890000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        5,  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "product": [  
+                        4,  
+                        3,  
+                        2,  
+                        1  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 2,  
+                    "env": 1  
+                },  
+                {  
+                    "id": "f9d6842d-5331-11f0-8fd3-c241b123dd9e",  
+                    "title": "t01",  
+                    "state": "completed",  
+                    "begin": "1751012688000",  
+                    "end": "1751012760000",  
+                    "href": "",  
+                    "serviceTypes": [  
+                        1,  
+                        2,  
+                        3,  
+                        4,  
+                        5  
+                    ],  
+                    "product": [  
+                        1,  
+                        2,  
+                        3,  
+                        4  
+                    ],  
+                    "uidSuffix": [],  
+                    "maintainType": 3,  
+                    "env": 2  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1790669270665  
-    }  
-    
-
-### 錯誤碼
-
-參見[報稅錯誤碼](/docs/zh-TW/v5/error#%E5%A0%B1%E7%A8%85)。
+        "time": 1751858399649  
+    }

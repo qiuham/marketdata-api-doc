@@ -2,37 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/reward/get-issue-voucher
 api_type: REST
-updated_at: 2026-11-13 18:27:14.936954
+updated_at: 2026-11-13 19:22:16.186165
 ---
 
-# Get Voucher Spec
+# Get Issued Voucher
 
 ### HTTP Request
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/award/distribution-record`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| **true**|  string| Voucher ID  
+accountId| **true**|  string| User ID  
+awardId| **true**|  string| Voucher ID  
+specCode| **true**|  string| Customised unique spec code, up to 8 characters  
+withUsedAmount| false| boolean| Whether or not to return the amount used by the user 
+
+  * `true`
+  * `false` (default)
+
+  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Voucher ID  
-coin| string| Coin  
-amountUnit| string| 
-
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
-  
-productLine| string| Product line  
-subProductLine| string| Sub product line  
-totalAmount| Object| Total amount of voucher  
-usedAmount| string| Used amount of voucher  
+accountId| string| User ID  
+awardId| string| Voucher ID  
+specCode| string| Spec code  
+amount| string| Amount of voucher  
+isClaimed| boolean| `true`, `false`  
+startAt| string| Claim start timestamp (sec)  
+endAt| string| Claim end timestamp (sec)  
+effectiveAt| string| Voucher effective timestamp (sec) after claimed  
+ineffectiveAt| string| Voucher inactive timestamp (sec) after claimed  
+usedAmount| string| Amount used by the user  
   
 ### Request Example
 
@@ -43,17 +49,20 @@ usedAmount| string| Used amount of voucher
 
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/award/distribution-record HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1726112099846  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
+    Content-Length: 111  
       
     {  
-        "id": "80209"  
+        "accountId": "5714139",  
+        "awardId": "189528",  
+        "specCode": "demo000",  
+        "withUsedAmount": false  
     }  
     
     
@@ -64,7 +73,7 @@ usedAmount| string| Used amount of voucher
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_voucher_spec(  
+    print(session.get_issued_voucher(  
         id="80209",  
     ))  
     
@@ -79,12 +88,9 @@ usedAmount| string| Used amount of voucher
     });  
       
     client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
+      .getBrokerIssuedVoucher({  
+        id: '80209',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -100,48 +106,55 @@ usedAmount| string| Used amount of voucher
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
-        },  
-        "retExtInfo": {},  
-        "time": 1726107086313  
+            "accountId": "5714139",  
+            "awardId": "189528",  
+            "specCode": "demo000",  
+            "amount": "1",  
+            "isClaimed": true,  
+            "startAt": "1725926400",  
+            "endAt": "1733788800",  
+            "effectiveAt": "1726531200",  
+            "ineffectiveAt": "1733817600",  
+            "usedAmount": "",  
+        }  
     }
 
 ---
 
-# 查詢代金券參數
+# 查詢已發放代金券
 
 ### HTTP 請求
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/award/distribution-record`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-id| **true**|  string| 代金券ID  
+accountId| **true**|  string| 用戶ID  
+awardId| **true**|  string| 代金券ID  
+specCode| **true**|  string| 自定義標識碼  
+withUsedAmount| false| boolean| 是否返回用戶已使用金額 
+
+  * `true`
+  * `false` (默認)
+
+  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 代金券ID  
-coin| string| 幣種  
-amountUnit| string| 計價單位
-
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
-  
-productLine| string| 業務線  
-subProductLine| string| 子業務線  
-totalAmount| Object| 代金券總金額  
-usedAmount| string| 代金券已發出金額  
+accountId| string| 用戶ID  
+awardId| string| 代金券ID  
+specCode| string| 自定義標識碼  
+amount| string| 代金券金額  
+isClaimed| boolean| 是否已領取`true`, `false`  
+startAt| string| 可領取開始時間 (秒級時間戳)  
+endAt| string| 可領取結束始時間 (秒級時間戳)  
+effectiveAt| string| 領取後生效時間 (秒級時間戳)  
+ineffectiveAt| string| 領取後失效時間 (秒級時間戳)  
+usedAmount| string| 用戶已使用金額  
   
 ### 請求示例
 
@@ -152,17 +165,20 @@ usedAmount| string| 代金券已發出金額
 
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/award/distribution-record HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1726112099846  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
+    Content-Length: 111  
       
     {  
-        "id": "80209"  
+        "accountId": "5714139",  
+        "awardId": "189528",  
+        "specCode": "demo000",  
+        "withUsedAmount": false  
     }  
     
     
@@ -173,7 +189,7 @@ usedAmount| string| 代金券已發出金額
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_voucher_spec(  
+    print(session.get_issued_voucher(  
         id="80209",  
     ))  
     
@@ -188,12 +204,9 @@ usedAmount| string| 代金券已發出金額
     });  
       
     client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
+      .getBrokerIssuedVoucher({  
+        id: '80209',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -209,14 +222,15 @@ usedAmount| string| 代金券已發出金額
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
-        },  
-        "retExtInfo": {},  
-        "time": 1726107086313  
+            "accountId": "5714139",  
+            "awardId": "189528",  
+            "specCode": "demo000",  
+            "amount": "1",  
+            "isClaimed": true,  
+            "startAt": "1725926400",  
+            "endAt": "1733788800",  
+            "effectiveAt": "1726531200",  
+            "ineffectiveAt": "1733817600",  
+            "usedAmount": "",  
+        }  
     }

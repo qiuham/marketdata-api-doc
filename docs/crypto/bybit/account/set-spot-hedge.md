@@ -2,27 +2,33 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-spot-hedge
 api_type: Account
-updated_at: 2026-11-13 18:26:42.888808
+updated_at: 2026-11-13 19:20:55.428338
 ---
 
-# Get SMP Group ID
+# Set Spot Hedging
 
-Query the SMP group ID of self match prevention
+You can turn on/off Spot hedging feature in Portfolio margin
 
 ### HTTP Request
 
-GET`/v5/account/smp-group`
+POST`/v5/account/set-hedging-mode`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+setHedgingMode| **true**|  string| `ON`, `OFF`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default  
-  
+retCode| integer| Result code  
+retMsg| string| Result message  
+[](/docs/api-explorer/v5/account/set-spot-hedge)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -32,12 +38,18 @@ smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default
 
     
     
-    GET /v5/account/smp-group HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/account/set-hedging-mode HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1702363848192  
+    X-BAPI-TIMESTAMP: 1700117968580  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 31  
+      
+    {  
+        "setHedgingMode": "OFF"  
+    }  
     
     
     
@@ -47,7 +59,9 @@ smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_smp_group())  
+    print(session.set_hedging_mode(  
+        setHedgingMode="OFF"  
+    ))  
     
     
     
@@ -60,7 +74,9 @@ smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default
     });  
       
     client  
-      .getSMPGroup()  
+      .setSpotHedging({  
+        setHedgingMode: 'ON' | 'OFF',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -74,34 +90,35 @@ smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "smpGroup": 0  
-        },  
-        "retExtInfo": {},  
-        "time": 1702363848539  
+        "retMsg": "SUCCESS"  
     }
 
 ---
 
-# 查詢SMP組ID
+# 設置現貨對衝
 
-查詢自成交攔截的SMP交易群組ID
+您可以開關現貨對從功能, 僅限統一帳戶組合保證金模式下
 
 ### HTTP 請求
 
-GET`/v5/account/smp-group`
+POST`/v5/account/set-hedging-mode`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+setHedgingMode| **true**|  string| `ON`, `OFF`  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`  
-  
+retCode| integer| Result code  
+retMsg| string| Result message  
+[](/docs/zh-TW/api-explorer/v5/account/set-spot-hedge)
+
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -111,12 +128,18 @@ smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`
 
     
     
-    GET /v5/account/smp-group HTTP/1.1  
-    Host: api.bybit.com  
+    POST /v5/account/set-hedging-mode HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1702363848192  
+    X-BAPI-TIMESTAMP: 1700117968580  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 31  
+      
+    {  
+        "setHedgingMode": "OFF"  
+    }  
     
     
     
@@ -133,7 +156,9 @@ smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`
     });  
       
     client  
-      .getSMPGroup()  
+      .setSpotHedging({  
+        setHedgingMode: 'ON' | 'OFF',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -147,10 +172,5 @@ smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "smpGroup": 0  
-        },  
-        "retExtInfo": {},  
-        "time": 1702363848539  
+        "retMsg": "SUCCESS"  
     }

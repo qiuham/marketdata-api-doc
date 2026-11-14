@@ -2,178 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/rate-limit/introduction
 api_type: REST
-updated_at: 2026-11-13 18:27:13.751677
+updated_at: 2026-11-13 19:22:12.895546
 ---
 
-# Get Rate Limit Cap
+# Introduction
 
-> API rate limit: 5 req per second
+## API Rate Limit For Exchange Broker Client
 
-info
+By default, all accounts under the Exchange Broker entity are subject to the default API rate limits. If you have special requirements based on your business needs, please contact your **account manager** to apply for a higher Exchange Broker–level cap and subaccount UID caps. Once approved, you will be able to allocate the rate limit quota across each subaccount accordingly.
 
-  * Get your exchange broker account entity total rate limit usage and cap, across the board
-  * Only Main UIDs can query this endpoint
-  * Only exchange broker account can call this endpoint
-  * If you never apply for a specifical config via account manager, it gives empty response.
+instructions for API rate limit
 
-
-
-### HTTP Request
-
-GET`/v5/broker/apilimit/query-cap`
-
-### Request Parameters
-
-None
-
-### Response Parameters
-
-Parameter| Type| Comments  
----|---|---  
-list| array| Object  
-> [bizType](/docs/v5/enum#biztype)| string| Business type  
-> totalRate| string| Total API rate limit usage accross all subaccounts and master account  
-> ebCap| string| Entity-level API rate limit per second  
-> uidCap| string| UID-level API rate limit per second  
-  
-### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
+  * All of the existing subaccounts still have their original API rate limits.
+  * The default API rate limit for a new subaccount is not counted in the eb-level API rate limit. 
+  * If the aggregate eb-level API rate limit is exceeded, you must reduce one or several account's API rate limit(s) first. After the API rate limit is less than the aggregate eb API rate limit cap, you can increase the API rate limit of an account.
 
 
-    
-    
-    GET /v5/broker/apilimit/query-cap HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 2  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_broker_rate_limit_cap())  
-    
-    
-    
-      
-    
 
-### Response Example
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "825",  
-                    "bizType": "SPOT"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "OPTIONS"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "DERIVATIVES"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1770610126806  
-    }
+## Default Rate limit
+
+| Unified Account  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+Default| 10/s| 10/s| 20/s
 
 ---
 
-# 查詢EB帳戶的速率上限和使用量
+# 限頻介紹
 
-> API 限速：每秒 1 次請求
+## 交易所經紀商API頻率規則
+
+預設情況下，交易所經紀商（Exchange Broker）實體底下的所有帳戶都適用於標準的 API 速率限制。 若您基於業務需求有特殊要求，請聯繫您的**客戶經理** （Account Manager） 申請更高的 Exchange Broker 層級上限以及子帳戶 UID 的速率限制上限。審核通過後，您即可依需求將速率限制配額分配至各個子帳戶。
 
 信息
 
-  * 查詢EB帳戶級別的總的頻率蓋帽以及所有子帳戶頻率分配量
-  * 僅EB母帳戶可以訪問該接口
-  * 對於沒有通過客戶經理申請過頻率蓋帽的EB帳戶, 返回為空
+  * 所有現有子帳戶仍享有原有的 API 速率限制。
+  * 新子帳戶的預設 API 速率限制不計入EB API 速率限制總配額。
+  * 如果超出EB API 速率限制總配額，您只能先降低帳戶的 API 速率限制。當 API 速率限制總配額低於機構 API 速率限制總配額後，您才能提高帳戶的 API 速率限制。
 
 
 
-### HTTP 請求
+## UID默認頻率
 
-GET`/v5/broker/apilimit/query-cap`
-
-### 請求參數
-
-無
-
-### 響應參數
-
-參數| 類型| 說明  
----|---|---  
-list| array| Object  
-> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> totalRate| string| 所有子帳號的 API 速率限制總使用量  
-> ebCap| string| 基於EB帳戶維度的每秒 API 限速蓋帽  
-> uidCap| string| 基於 UID 等級的每秒 API 限速  
-  
-### 請求範例
-    
-    
-    GET /v5/broker/apilimit/query-cap HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 2  
-    
-
-### 響應範例
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "825",  
-                    "bizType": "SPOT"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "OPTIONS"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "DERIVATIVES"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1770610126806  
-    }
+| 統一帳戶  
+---|---  
+Level\Product| **期貨**| **期權**| **現貨**  
+默認| 10/s| 10/s| 20/s

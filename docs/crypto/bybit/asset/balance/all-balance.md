@@ -2,40 +2,52 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/all-balance
 api_type: REST
-updated_at: 2026-11-13 18:26:56.078201
+updated_at: 2026-11-13 19:21:27.288351
 ---
 
-# Confirm a Quote
+# Get All Coins Balance
 
-info
+You could get all coin balance of all account types under the master account, and sub account.
 
-  * API key permission: `Convert`
-  * API rate limit: `5 req /s`
-  * The exchange is async; please check the final status by calling the query [Get Exchange History](/docs/v5/asset/convert-small-balance/exchange-history).
-  * Make sure you confirm the quote before it expires.
+important
+
+  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-POST`/v5/asset/covert/small-balance-execute`
+GET`/v5/asset/transfer/query-account-coins-balance`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-quoteId| **true**|  string| The quote ID from [Request a Quote](/docs/v5/asset/convert-small-balance/request-quote#response-parameters)  
+memberId| false| string| User Id. It is **required** when you use master api key to check sub account coin balance  
+[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type  
+coin| false| string| Coin name, uppercase only 
+
+  * Query all coins if not passed
+  * Can query multiple coins, separated by comma. `USDT,USDC,ETH`
+
+**Note:** this field is **mandatory** for accountType=`UNIFIED`, and supports up to 10 coins each request  
+withBonus| false| integer| `0`(default): not query bonus. `1`: query bonus  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-quoteId| string| Quote ID  
-exchangeTxId| string| Exchange ID, the same value as `quoteId`  
-submitTime| string| Submit ts  
-status| string| `init`, `processing`, `success`, `failure`, `partial_fulfillment`  
-msg| string| By default is `""`  
-  
+[accountType](/docs/v5/enum#accounttype)| string| Account type  
+memberId| string| UserID  
+balance| array| Object  
+> coin| string| Currency  
+> walletBalance| string| Wallet balance  
+> transferBalance| string| Transferable balance  
+> bonus| string| Bonus  
+[](/docs/api-explorer/v5/asset/all-balance)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -45,18 +57,12 @@ msg| string| By default is `""`
 
     
     
-    POST /v5/asset/covert/small-balance-execute HTTP/1.1  
+    GET /v5/asset/transfer/query-account-coins-balance?accountType=FUND&coin=USDC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1766128195297  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1675866354698  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-        "quoteId": "1010075157602517596339322880"  
-    }  
     
     
     
@@ -66,13 +72,29 @@ msg| string| By default is `""`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote_small_balance(  
-        quoteId="1010075157602517596339322880",  
+    print(session.get_coins_balance(  
+        accountType="FUND",  
+        coin="USDC",  
     ))  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getAllCoinsBalance({ accountType: 'FUND', coin: 'USDC' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -80,71 +102,79 @@ msg| string| By default is `""`
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "success",  
         "result": {  
-            "quoteId": "1010075157602517596339322880",  
-            "exchangeTxId": "1010075157602517596339322880",  
-            "submitTime": "1766128195512",  
-            "status": "processing",  
-            "msg": ""  
+            "memberId": "XXXX",  
+            "accountType": "FUND",  
+            "balance": [  
+                {  
+                    "coin": "USDC",  
+                    "transferBalance": "0",  
+                    "walletBalance": "0",  
+                    "bonus": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1766128195512  
+        "time": 1675866354913  
     }
 
 ---
 
-# 確認報價
+# 查詢賬戶所有幣種余額
 
-信息
+支持查詢母帳戶的各個帳戶類型的幣種餘額，以及母帳戶下各子帳戶的各個帳戶類型的幣種餘額。
 
-  * API密鑰權限: `Convert`
-  * API速率限制: `5 req /s`
-  * 兌換為異步操作；請通過調用 [獲取兌換記錄](/docs/zh-TW/v5/asset/convert-small-balance/exchange-history) 查詢最終狀態。
-  * 請確保在報價過期之前確認報價。
+important
+
+  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
 ### HTTP 請求
 
-POST`/v5/asset/covert/small-balance-execute`
+GET`/v5/asset/transfer/query-account-coins-balance`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-quoteId| **true**|  string| 來自 [請求報價](/docs/zh-TW/v5/asset/convert-small-balance/request-quote#response-parameters) 的報價ID  
+memberId| false| string| 用戶ID. 當使用母帳號api key查詢子帳戶的幣種餘額時，該字段**必傳**  
+[accountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 賬戶類型  
+coin| false| string| 幣種類型, 支持傳入多個幣種   
+**注意:** 對於accountType=UNIFIED, coin參數是**必傳** 字段, 並且最多支持單次查詢10個幣種  
+withBonus| false| integer| 是否查詢體驗金. `0`(默認)：不查詢; `1`：查詢  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-quoteId| string| 報價ID  
-exchangeTxId| string| 兌換ID，與 `quoteId` 值相同  
-submitTime| string| 提交時間戳  
-status| string| `init`, `processing`, `success`, `failure`, `partial_fulfillment`  
-msg| string| 默認為 `""`  
-  
+[accountType](/docs/zh-TW/v5/enum#accounttype)| string| 賬戶類型  
+memberId| string| 用戶ID  
+balance| Object|   
+> coin| string| 幣種類型  
+> walletBalance| string| 錢包余額  
+> transferBalance| string| 可划余額  
+> bonus| string| 体验金  
+[](/docs/zh-TW/api-explorer/v5/asset/all-balance)
+
+* * *
+
 ### 請求示例
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    POST /v5/asset/covert/small-balance-execute HTTP/1.1  
+    GET /v5/asset/transfer/query-account-coins-balance?accountType=FUND&coin=USDC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1766128195297  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1675866354698  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    Content-Type: application/json  
-    Content-Length: 49  
-      
-    {  
-        "quoteId": "1010075157602517596339322880"  
-    }  
     
     
     
@@ -154,9 +184,29 @@ msg| string| 默認為 `""`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote_small_balance(  
-        quoteId="1010075157602517596339322880",  
+    print(session.get_coins_balance(  
+        accountType="FUND",  
+        coin="USDC",  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getAllCoinsBalance({ accountType: 'FUND', coin: 'USDC' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -164,14 +214,25 @@ msg| string| 默認為 `""`
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "success",  
         "result": {  
-            "quoteId": "1010075157602517596339322880",  
-            "exchangeTxId": "1010075157602517596339322880",  
-            "submitTime": "1766128195512",  
-            "status": "processing",  
-            "msg": ""  
+            "memberId": "533285",  
+            "accountType": "FUND",  
+            "balance": [  
+                {  
+                    "coin": "USDT",  
+                    "transferBalance": "1010",  
+                    "walletBalance": "1010",  
+                    "bonus": ""  
+                },  
+                {  
+                    "coin": "USDC",  
+                    "transferBalance": "0",  
+                    "walletBalance": "0",  
+                    "bonus": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1766128195512  
+        "time": 1675865290069  
     }

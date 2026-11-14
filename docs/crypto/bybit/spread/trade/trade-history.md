@@ -2,255 +2,274 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/trade/trade-history
 api_type: Trading
-updated_at: 2026-11-13 18:28:49.300339
+updated_at: 2026-11-13 19:25:26.864643
 ---
 
-# Order
+# Get Trade History
 
-Subscribe to the order stream to see changes to your orders in **real-time**.
+info
 
-**Topic:** `spread.order`  
+  * In self-trade cases, both the maker and taker single-leg trades will be returned in the same request.
+  * Single leg executions can also be found with "execType"=`FutureSpread` via [Get Trade History](/docs/v5/order/execution)
 
 
+
+### HTTP Request
+
+GET`/v5/spread/execution/list`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+symbol| false| string| Spread combination symbol name  
+orderId| false| string| Spread combination order ID  
+orderLinkId| false| string| User customised order ID  
+startTime| false| long| The start timestamp (ms)
+
+  * startTime and endTime are not passed, return 7 days by default
+  * Only startTime is passed, return range between startTime and startTime+7 days
+  * Only endTime is passed, return range between endTime-7 days and endTime
+  * If both are passed, the rule is endTime - startTime <= 7 days
+
+  
+endTime| false| long| The end timestamp (ms)  
+limit| false| integer| Limit for parent order data size per page. [`1`, `50`]. Default: `20`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Message ID  
-topic| string| Topic name  
-creationTime| number| Data created timestamp (ms)  
-data| array| Object  
-> category| string| Category name, `combination`, `spot_leg`, `future_leg`  
-> symbol| string| Combo or leg's symbol name  
-> parentOrderId| string| Leg's parent order ID  
-> orderId| string| Combo or leg's order ID  
-> orderLinkId| string| Combo's user customised order ID  
-> side| string| Combo or leg's order side, `Buy`, `Sell`  
-> orderStatus| string| Combo or leg's order status  
-> [cancelType](/docs/v5/enum#canceltype)| string| Cancel type  
-> [rejectReason](/docs/v5/enum#rejectreason)| string| Reject reason  
-> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> price| string| Order price  
-> qty| string| Order qty  
-> avgPrice| string| Average filled price  
-> leavesQty| string| The remaining qty not executed  
-> leavesValue| string| The estimated value not executed  
-> cumExecQty| string| Cumulative executed order qty  
-> cumExecValue| string| Cumulative executed order value  
-> cumExecFee| string| Deprecated. Cumulative executed trading fee  
-> orderType| string| Order type. `Market`,`Limit`  
-> isLeverage| string| Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.  
-> createdTime| string| Order created timestamp (ms)  
-> updatedTime| string| Order updated timestamp (ms)  
-> feeCurrency| string| Deprecated. Trading fee currency for Spot leg only  
-> createType| string| Order create type  
-> closedPnl| string| Closed profit and loss for each close position order  
-> cumFeeDetail| json| Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`  
+list| array<object>| Trade info  
+> symbol| string| Spread combination symbol name  
+> orderLinkId| string| User customised order ID  
+> side| string| Side, `Buy`, `Sell`  
+> orderId| string| Spread combination order ID  
+> execPrice| string| Combo Exec price  
+> execTime| string| Combo exec timestamp (ms)  
+> execType| string| Combo exec type, `Trade`  
+> execQty| string| Combo exec qty  
+> execId| string| Combo exec ID  
+> legs| array<object>| Legs execution info  
+>> symbol| string| Leg symbol name  
+>> side| string| Leg order side, `Buy`, `Sell`  
+>> execPrice| string| Leg exec price  
+>> execTime| string| Leg exec timestamp (ms)  
+>> execValue| string| Leg exec value  
+>> [execType](/docs/v5/enum#exectype)| string| Leg exec type  
+>> category| string| Leg category, `linear`, `spot`  
+>> execQty| string| Leg exec qty  
+>> execFee| string| Leg exec fee, deprecated for Spot leg  
+>> execFeeV2| string| Leg exec fee, used for Spot leg only  
+>> feeCurrency| string| Leg fee currency  
+>> execId| string| Leg exec ID  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
-### Subscribe Example
+### Request Example
+
+  * HTTP
+  * Python
+
+
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "spread.order"  
-        ]  
-    }  
+    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: XXXXX  
+    X-BAPI-TIMESTAMP: 1744105738529  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.spread_get_trade_history(  
+        orderId="5e010c35-2b44-4f03-8081-8fa31fb73376"  
+    ))  
     
 
-### Stream Example
+### Response Example
     
     
     {  
-        "topic": "spread.order",  
-        "id": "1448939_SOLUSDT_28732003549",  
-        "creationTime": 1744170555912,  
-        "data": [  
-            {  
-                "category": "combination",  
-                "symbol": "SOLUSDT_SOL/USDT",  
-                "parentOrderId": "",  
-                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "14",  
-                "qty": "2",  
-                "avgPrice": "",  
-                "leavesQty": "0",  
-                "leavesValue": "",  
-                "cumExecQty": "2",  
-                "cumExecValue": "",  
-                "cumExecFee": "",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555905",  
-                "feeCurrency": "",  
-                "createType": "CreateByUser",  
-                "closedPnl": "",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
+        "retCode": 0,  
+        "retMsg": "Success",  
+        "result": {  
+            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
+            "list": [  
+                {  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderLinkId": "",  
+                    "side": "Buy",  
+                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                    "execPrice": "21",  
+                    "legs": [  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "side": "Buy",  
+                            "execPrice": "124.1",  
+                            "execTime": "1744104992224",  
+                            "execValue": "248.2",  
+                            "execType": "FutureSpread",  
+                            "category": "linear",  
+                            "execQty": "2",  
+                            "execFee": "0.039712",  
+                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
+                        },  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "side": "Sell",  
+                            "execPrice": "103.1152",  
+                            "execTime": "1744104992224",  
+                            "execValue": "206.2304",  
+                            "execType": "FutureSpread",  
+                            "category": "spot",  
+                            "execQty": "2",  
+                            "execFee": "0.06186912",  
+                            "execId": "2110000000061481958"  
+                        }  
+                    ],  
+                    "execTime": "1744104992220",  
+                    "execType": "Trade",  
+                    "execQty": "2",  
+                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
                 }  
-            },  
-            {  
-                "category": "future_leg",  
-                "symbol": "SOLUSDT",  
-                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "118.2",  
-                "qty": "2",  
-                "avgPrice": "118.2",  
-                "leavesQty": "0",  
-                "leavesValue": "0",  
-                "cumExecQty": "2",  
-                "cumExecValue": "236.4",  
-                "cumExecFee": "0.01182",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555910",  
-                "feeCurrency": "",  
-                "createType": "CreateByFutureSpread",  
-                "closedPnl": "0",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            }  
-        ]  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1744105105169  
     }
 
 ---
 
-# 訂單
+# 查詢價差成交歷史
 
-訂閱價差交易訂單推送
+信息
 
-**Topic:** `spread.order`  
+  * 在自成交場景下, 單腿成交的maker和taker的兩筆成交都會返回, 他們的execId一樣
+  * 單腿的成交信息也會出現[查詢成交歷史](/docs/zh-TW/v5/order/order-list)接口中, 標記是"execType"=`FutureSpread`
 
 
+
+### HTTP請求
+
+GET`/v5/spread/execution/list`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+symbol| false| string| 價差產品名稱  
+orderId| false| string| 價差訂單ID  
+orderLinkId| false| string| 用戶自定義ID  
+startTime| false| long| 開始時間戳 (毫秒)
+
+  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
+  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
+  * 若只傳startTime，則查詢startTime和startTime+7天的數據
+  * 若只傳endTime，則查詢endTime-7天和endTime的數據
+
+  
+endTime| false| long| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
+cursor| false| string| 游標，用於翻頁  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 消息ID  
-topic| string| Topic名  
-creationTime| number| 消息數據創建時間 (ms)  
-data| array<object>|   
-> category| string| 組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿  
-> symbol| string| 組合或單腿的合約名稱  
-> parentOrderId| string| 單腿訂單的所屬組合訂單ID  
-> orderId| string| 組合或單腿的訂單ID  
-> orderLinkId| string| 組合單的用戶自定義ID  
-> side| string| 組合或單腿的訂單方向, `Buy`, `Sell`  
-> orderStatus| string| 組合或單腿的訂單狀態  
-> [cancelType](/docs/zh-TW/v5/enum#canceltype)| string| 訂單被取消類型  
-> [rejectReason](/docs/zh-TW/v5/enum#rejectreason)| string| 拒絕原因  
-> timeInForce| string| 執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> price| string| 訂單價格  
-> qty| string| 訂單數量  
-> avgPrice| string| 平均成交價格  
-> leavesQty| string| 訂單剩餘未成交的數量  
-> leavesValue| string| 訂單剩餘未成交的價值  
-> cumExecQty| string| 訂單累計成交數量  
-> cumExecValue| string| 訂單累計成交價值  
-> cumExecFee| string| 已棄用. 訂單累計成交的手續費  
-> orderType| string| 訂單類型. `Market`,`Limit`  
-> isLeverage| string| 帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"  
-> createdTime| string| 創建訂單的時間戳 (毫秒)  
-> updatedTime| string| 訂單更新的時間戳 (毫秒)  
-> feeCurrency| string| 已棄用. 手續費幣種, 僅適用於現貨單腿訂單  
-> [createType](/docs/zh-TW/v5/enum#createtype)| string| 訂單創建類型  
-> closedPnl| string| 平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費  
-> cumFeeDetail| json| 累積交易費詳情, 替代`cumExecFee`和`feeCurrency`  
+list| array<object>| 成交信息  
+> symbol| string| 價差產品名稱  
+> orderLinkId| string| 用戶自定義ID  
+> side| string| 訂單方向, `Buy`, `Sell`  
+> orderId| string| 價差訂單ID  
+> execPrice| string| 價差訂單成交價格  
+> execTime| string| 價差訂單成交時間(毫秒)  
+> execType| string| 價差訂單成交類型, `Trade`  
+> execQty| string| 價差訂單成交數量  
+> execId| string| 價差訂單成交ID  
+> legs| array<object>| 單腿成交信息  
+>> symbol| string| 單腿合約名稱  
+>> side| string| 單腿訂單方向 `Buy`, `Sell`  
+>> execPrice| string| 單腿成交價格  
+>> execTime| string| 單腿成交時間 (毫秒)  
+>> execValue| string| 單腿成交價值  
+>> [execType](/docs/zh-TW/v5/enum#exectype)| string| 單腿成交類型  
+>> category| string| 單腿合約類型 `linear`: 合約, `spot`: 現貨  
+>> execQty| string| 單腿成交數量  
+>> execFee| string| 單腿交易手續費用  
+>> execFeeV2| string| 僅用於現貨單腿交易手續費用  
+>> feeCurrency| string| 單腿交易手續費幣種  
+>> execId| string| 單腿成交ID  
+nextPageCursor| string| 游標，用於翻頁  
   
-### 訂閱示例
+### 請求示例
     
     
-    {  
-        "op": "subscribe",  
-        "args": [  
-            "spread.order"  
-        ]  
-    }  
+    GET /v5/spread/execution/list?orderId=5e010c35-2b44-4f03-8081-8fa31fb73376 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: XXXXX  
+    X-BAPI-TIMESTAMP: 1744105738529  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
     
 
-### 推送示例
+### 響應示例
     
     
     {  
-        "topic": "spread.order",  
-        "id": "1448939_SOLUSDT_28732003549",  
-        "creationTime": 1744170555912,  
-        "data": [  
-            {  
-                "category": "combination",  
-                "symbol": "SOLUSDT_SOL/USDT",  
-                "parentOrderId": "",  
-                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "14",  
-                "qty": "2",  
-                "avgPrice": "",  
-                "leavesQty": "0",  
-                "leavesValue": "",  
-                "cumExecQty": "2",  
-                "cumExecValue": "",  
-                "cumExecFee": "",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555905",  
-                "feeCurrency": "",  
-                "createType": "CreateByUser",  
-                "closedPnl": "",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
+        "retCode": 0,  
+        "retMsg": "Success",  
+        "result": {  
+            "nextPageCursor": "82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219%2C82c82077-0caa-5304-894d-58a50a342bd7%3A1744104992219",  
+            "list": [  
+                {  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "orderLinkId": "",  
+                    "side": "Buy",  
+                    "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                    "execPrice": "21",  
+                    "legs": [  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "side": "Buy",  
+                            "execPrice": "124.1",  
+                            "execTime": "1744104992224",  
+                            "execValue": "248.2",  
+                            "execType": "FutureSpread",  
+                            "category": "linear",  
+                            "execQty": "2",  
+                            "execFee": "0.039712",  
+                            "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc"  
+                        },  
+                        {  
+                            "symbol": "SOLUSDT",  
+                            "side": "Sell",  
+                            "execPrice": "103.1152",  
+                            "execTime": "1744104992224",  
+                            "execValue": "206.2304",  
+                            "execType": "FutureSpread",  
+                            "category": "spot",  
+                            "execQty": "2",  
+                            "execFee": "0.06186912",  
+                            "execId": "2110000000061481958"  
+                        }  
+                    ],  
+                    "execTime": "1744104992220",  
+                    "execType": "Trade",  
+                    "execQty": "2",  
+                    "execId": "82c82077-0caa-5304-894d-58a50a342bd7"  
                 }  
-            },  
-            {  
-                "category": "future_leg",  
-                "symbol": "SOLUSDT",  
-                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "118.2",  
-                "qty": "2",  
-                "avgPrice": "118.2",  
-                "leavesQty": "0",  
-                "leavesValue": "0",  
-                "cumExecQty": "2",  
-                "cumExecValue": "236.4",  
-                "cumExecFee": "0.01182",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555910",  
-                "feeCurrency": "",  
-                "createType": "CreateByFutureSpread",  
-                "closedPnl": "0",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            }  
-        ]  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1744105105169  
     }

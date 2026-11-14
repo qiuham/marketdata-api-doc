@@ -2,49 +2,88 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/asset-info
 api_type: REST
-updated_at: 2026-11-13 18:26:32.543777
+updated_at: 2026-11-13 19:20:36.561649
 ---
 
-# Get Lending Coin Info
+# Get Asset Info
 
-Get the basic information of lending coins
+Query Spot asset information
 
-info
-
-All `v5/lending` APIs need **SPOT** permission.
+> Apply to: classic account
 
 ### HTTP Request
 
-GET`/v5/lending/info`
+GET`/v5/asset/transfer/query-asset-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Coin name. Return all currencies by default  
+[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type. `SPOT`  
+coin| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> coin| string| Coin name  
-> maxRedeemQty| string| The maximum redeemable qty per day (measured from 0 - 24 UTC)  
-> minPurchaseQty| string| The minimum qty that can be deposited per request  
-> precision| string| Deposit quantity accuracy  
-> rate| string| Annualized interest rate. e.g. 0.0002 means 0.02%  
-> loanToPoolRatio| string| Capital utilization rate. e.g. 0.0004 means 0.04%  
-> actualApy| string| The actual annualized interest rate  
-  
+spot| Object|   
+> status| string| account status. `ACCOUNT_STATUS_NORMAL`: normal, `ACCOUNT_STATUS_UNSPECIFIED`: banned  
+> assets| array| Object  
+>> coin| string| Coin  
+>> frozen| string| Freeze amount  
+>> free| string| Free balance  
+>> withdraw| string| Amount in withdrawing  
+[](/docs/api-explorer/v5/asset/asset-info)
+
+* * *
+
 ### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/lending/info?coin=ETH HTTP/1.1  
+    GET /v5/asset/transfer/query-asset-info?accountType=SPOT&coin=ETH HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682045949295  
+    X-BAPI-TIMESTAMP: 1672136538042  
     X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_spot_asset_info(  
+        accountType="FUND",  
+        coin="USDC",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getAssetInfo({ accountType: 'FUND', coin: 'USDC' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -52,66 +91,103 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "actualApy": "0.003688421873941958",  
-                    "coin": "ETH",  
-                    "loanToPoolRatio": "0.16855491872747133044",  
-                    "maxRedeemQty": "161",  
-                    "minPurchaseQty": "0.03",  
-                    "precision": "8",  
-                    "rate": "0.003411300771389848"  
-                }  
-            ]  
+            "spot": {  
+                "status": "ACCOUNT_STATUS_NORMAL",  
+                "assets": [  
+                    {  
+                        "coin": "ETH",  
+                        "frozen": "0",  
+                        "free": "11.53485",  
+                        "withdraw": ""  
+                    }  
+                ]  
+            }  
         },  
         "retExtInfo": {},  
-        "time": 1682045942972  
+        "time": 1672136539127  
     }
 
 ---
 
-# 查詢可存入幣種信息
+# 查詢資產信息
 
-查詢可存入幣種的基本信息
-
-信息
-
-所有`v5/lending`的接口都需要**現貨** 權限
+該接口廢棄
 
 ### HTTP 請求
 
-GET`/v5/lending/info`
+GET`/v5/asset/transfer/query-asset-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱  
+accountType| **true**|  string| 賬戶類型, `SPOT`  
+coin| false| string| 幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> coin| string| 幣種名稱  
-> maxRedeemQty| string| 單用戶每天最大可贖回數量 (0 - 24 UTC)  
-> minPurchaseQty| string| 單筆最小存入數量  
-> precision| string| 精度  
-> rate| string| 年化利率. 比如: 返回0.0002 表示 0.02%  
-> loanToPoolRatio| string| 資金使用率. e.g. 0.0004 means 0.04%  
-> actualApy| string| 實際年化利率  
-  
+spot| Object|   
+> status| string| 賬戶狀態. `ACCOUNT_STATUS_NORMAL`: 正常, `ACCOUNT_STATUS_UNSPECIFIED`: 禁用  
+> assets| array| Object  
+>> coin| string| 幣種  
+>> frozen| string| 掛單凍結金額  
+>> free| string| 可用余額  
+>> withdraw| string| 提現中金額  
+[](/docs/zh-TW/api-explorer/v5/asset/asset-info)
+
+* * *
+
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/lending/info?coin=ETH HTTP/1.1  
+    GET /v5/asset/transfer/query-asset-info?accountType=SPOT&coin=ETH HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682045949295  
+    X-BAPI-TIMESTAMP: 1672136538042  
     X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_spot_asset_info(  
+        accountType="FUND",  
+        coin="USDC",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getAssetInfo({ accountType: 'FUND', coin: 'USDC' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -119,20 +195,20 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "actualApy": "0.003688421873941958",  
-                    "coin": "ETH",  
-                    "loanToPoolRatio": "0.16855491872747133044",  
-                    "maxRedeemQty": "161",  
-                    "minPurchaseQty": "0.03",  
-                    "precision": "8",  
-                    "rate": "0.003411300771389848"  
-                }  
-            ]  
-        },  
+            "spot": {  
+                "status": "ACCOUNT_STATUS_NORMAL",  
+                "assets": [  
+                    {  
+                        "coin": "ETH",  
+                        "frozen": "0",  
+                        "free": "11.53485",  
+                        "withdraw": ""  
+                    }  
+                ]  
+            }  
+    },  
         "retExtInfo": {},  
-        "time": 1682045942972  
+        "time": 1672136539127  
     }

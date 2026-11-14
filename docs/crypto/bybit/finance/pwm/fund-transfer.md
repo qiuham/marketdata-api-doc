@@ -2,55 +2,56 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/fund-transfer
 api_type: REST
-updated_at: 2026-11-13 18:27:46.088888
+updated_at: 2026-11-13 19:23:28.752949
 ---
 
-# Get All Investment Plans
+# Fund Transfer Between Sub-Accounts
+
+info
+
+This endpoint must be called using the API key of the fund custodian sub-account.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| false| string| Investment plan ID. Returns all plans if omitted  
-status| false| string| Filter by status: `PendingSubscription` / `Active` / `Closed`. Returns all if omitted  
-limit| false| int| Page size. Default: `20`, max: `50`  
-cursor| false| string| Pagination cursor  
+transferId| **true**|  string| Transfer request ID  
+fromUserId| **true**|  int64| Source UID. Must be a custodian sub-account of the current fund  
+toUserId| **true**|  int64| Destination UID. Must be a custodian sub-account of the current fund  
+amount| **true**|  string| Transfer amount  
+coin| **true**|  string| Coin name  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Investment plan list  
-> planId| string| Unique identifier of the investment plan  
-> planName| string| Investment plan name  
-> planType| string| Plan type: `stable` / `advanced`  
-> status| string| Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed)  
-> source| string| Creation source: `consultant` (created by consultant) / `direct` (self-created by client) / `institution` (created by institution)  
-> currentAssetUsd| string| Total current assets of the plan (USD valuation). When status is `PendingSubscription`, this is the configured amount  
-> accumulateYieldUsd| string| Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`  
-> investmentDistribution| array| Investment distribution list  
->> category| string| Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| Denominated coin  
->> productId| string| Subscribed product ID. For funds, this corresponds to `fundId`  
->> currentAmount| string| Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount  
-> createdTime| string| Creation timestamp (milliseconds)  
-nextPageCursor| string| Next page cursor. Empty string indicates no more data  
+transferId| string| Transfer ID  
+status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### Response Example
@@ -58,79 +59,62 @@ nextPageCursor| string| Next page cursor. Empty string indicates no more data
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }
 
 ---
 
-# 查詢所有投資計劃
+# 基金托管子賬號間資金劃轉
+
+信息
+
+此接口必須使用基金托管子賬號的 API Key 操作。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/fund-transfer`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| false| string| 投資計劃ID，不傳返回全部  
-status| false| string| 篩選狀態：`PendingSubscription` / `Active` / `Closed`，不傳返回全部  
-limit| false| int| 分頁大小，默認 `20`，最大 `50`  
-cursor| false| string| 分頁游標  
+transferId| **true**|  string| 劃轉請求ID  
+fromUserId| **true**|  int64| 資金劃出UID（必須是當前基金的基金托管賬號）  
+toUserId| **true**|  int64| 資金劃入UID（必須是當前基金的基金托管賬號）  
+amount| **true**|  string| 劃轉金額  
+coin| **true**|  string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 投資計劃列表  
-> planId| string| 投資計劃唯一標識  
-> planName| string| 投資計劃名稱  
-> planType| string| 計劃類型：`stable` / `advanced`  
-> status| string| 計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）  
-> source| string| 創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）  
-> currentAssetUsd| string| 當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額  
-> accumulateYieldUsd| string| 累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`  
-> investmentDistribution| array| 投資分佈比例列表  
->> category| string| 產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| 本位幣種  
->> productId| string| 申購的對應產品ID，基金對應為 `fundId`  
->> currentAmount| string| 投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量  
-> createdTime| string| 創建時間戳（毫秒）  
-nextPageCursor| string| 下一頁游標，為空表示無更多數據  
+transferId| string| 劃轉ID  
+status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/fund-transfer HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "transferId": "4fdf-re-4343-frewr",  
+        "fromUserId": 800001,  
+        "toUserId": 800002,  
+        "amount": "1.00",  
+        "coin": "BTC"  
+    }  
     
 
 ### 響應示例
@@ -138,27 +122,9 @@ nextPageCursor| string| 下一頁游標，為空表示無更多數據
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "transferId": "4fdf-re-4343-frewr",  
+            "status": "SUCCESS"  
         }  
     }

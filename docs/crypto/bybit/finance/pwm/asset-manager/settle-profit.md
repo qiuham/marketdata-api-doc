@@ -2,55 +2,54 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/settle-profit
 api_type: REST
-updated_at: 2026-11-13 18:27:46.028823
+updated_at: 2026-11-13 19:23:28.677175
 ---
 
-# Get All Investment Plans
+# Settle Fund Profit
+
+info
+
+This endpoint only applies to funds in **Active** status. Calling it on a **Closed** fund will return error code `180040`.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| false| string| Investment plan ID. Returns all plans if omitted  
-status| false| string| Filter by status: `PendingSubscription` / `Active` / `Closed`. Returns all if omitted  
-limit| false| int| Page size. Default: `20`, max: `50`  
-cursor| false| string| Pagination cursor  
+fundId| **true**|  string| Fund ID  
+reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Investment plan list  
-> planId| string| Unique identifier of the investment plan  
-> planName| string| Investment plan name  
-> planType| string| Plan type: `stable` / `advanced`  
-> status| string| Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed)  
-> source| string| Creation source: `consultant` (created by consultant) / `direct` (self-created by client) / `institution` (created by institution)  
-> currentAssetUsd| string| Total current assets of the plan (USD valuation). When status is `PendingSubscription`, this is the configured amount  
-> accumulateYieldUsd| string| Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`  
-> investmentDistribution| array| Investment distribution list  
->> category| string| Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| Denominated coin  
->> productId| string| Subscribed product ID. For funds, this corresponds to `fundId`  
->> currentAmount| string| Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount  
-> createdTime| string| Creation timestamp (milliseconds)  
-nextPageCursor| string| Next page cursor. Empty string indicates no more data  
+fundId| string| Fund ID  
+status| string| Profit settlement status: `Processing` / `Completed` / `Failed`. After execution, the status of the current order can be queried using the same `reqLinkId`  
+totalProfitShared| string| Total profit sharing amount settled in this round (base coin)  
+instIncome| string| Institution income in this round (base coin)  
+coin| string| Fund denomination coin  
+createdTime| string| Settlement timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
+    }  
     
 
 ### Response Example
@@ -58,79 +57,64 @@ nextPageCursor| string| Next page cursor. Empty string indicates no more data
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }
 
 ---
 
-# 查詢所有投資計劃
+# 執行指定基金的分潤
+
+信息
+
+僅對 **Active（運行中）** 狀態的基金有效。對 **Closed（已關閉）** 狀態的基金調用將返回 error code `180040`。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/asset-manager/settle-profit`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| false| string| 投資計劃ID，不傳返回全部  
-status| false| string| 篩選狀態：`PendingSubscription` / `Active` / `Closed`，不傳返回全部  
-limit| false| int| 分頁大小，默認 `20`，最大 `50`  
-cursor| false| string| 分頁游標  
+fundId| **true**|  string| 基金ID  
+reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 投資計劃列表  
-> planId| string| 投資計劃唯一標識  
-> planName| string| 投資計劃名稱  
-> planType| string| 計劃類型：`stable` / `advanced`  
-> status| string| 計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）  
-> source| string| 創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）  
-> currentAssetUsd| string| 當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額  
-> accumulateYieldUsd| string| 累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`  
-> investmentDistribution| array| 投資分佈比例列表  
->> category| string| 產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| 本位幣種  
->> productId| string| 申購的對應產品ID，基金對應為 `fundId`  
->> currentAmount| string| 投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量  
-> createdTime| string| 創建時間戳（毫秒）  
-nextPageCursor| string| 下一頁游標，為空表示無更多數據  
+fundId| string| 基金ID  
+status| string| 分潤狀態：`Processing`（分潤處理中）/ `Completed`（分潤完成）/ `Failed`（分潤失敗）。執行分潤後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態  
+totalProfitShared| string| 本次利潤分成結算總額（本位幣）  
+instIncome| string| 機構本次收入（本位幣）  
+coin| string| 基金計價幣種  
+createdTime| string| 結算時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/settle-profit HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "fundId": "12323",  
+        "reqLinkId": "settle-001"  
+    }  
     
 
 ### 響應示例
@@ -138,27 +122,13 @@ nextPageCursor| string| 下一頁游標，為空表示無更多數據
     
     {  
         "retCode": 0,  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "fundId": "12323",  
+            "status": "Processing",  
+            "totalProfitShared": "2.73",  
+            "instIncome": "1.5",  
+            "coin": "BTC",  
+            "createdTime": "1700000000000"  
         }  
     }

@@ -10,9 +10,7 @@ from .base import get_adapter, register_adapter, ExchangeAdapter, DocumentPage
 # 导入所有adapter以触发@register_adapter装饰器
 from . import binance
 from . import bybit
-from . import hyperliquid
 from . import okx
-from . import kraken
 from . import coinbase
 from . import gateio
 

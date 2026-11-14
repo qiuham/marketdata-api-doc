@@ -2,42 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/buy
 api_type: REST
-updated_at: 2026-11-13 18:26:48.481534
+updated_at: 2026-11-13 19:21:07.703778
 ---
 
-# Get Order Book
+# Execute Buy
 
-Query the full order book snapshot (bid/ask depth) for prediction outcome tokens. Useful for estimating price impact before placing a large order.
+Execute a buy order for prediction outcome tokens, paying USDC to receive outcome token shares.
 
 info
 
-  * Maximum 20 token IDs per request
-  * Returns all price levels with available quantity
-  * For current best price only, use [Get Token Price](/docs/v5/alpha/prediction/token-price) instead
+  * Must call [Get Engine Status](/docs/v5/alpha/prediction/engine-status) first to verify the engine is available
+  * Must call [Get Event Detail](/docs/v5/alpha/prediction/event-detail) to obtain `tokenId` and verify the market is open
+  * Must call [Get Order Estimate](/docs/v5/alpha/prediction/order-estimate) to preview the order
+  * Must display the estimate to the user and obtain explicit confirmation before calling this endpoint
+  * Phase 1 supports `orderType=1` (FOK) only — orders that cannot be fully filled are cancelled
+  * A `200` response is an acknowledgment only — use [Get Order List](/docs/v5/alpha/prediction/order-list) to check the final fill status
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/order-book`
+POST`/v5/alpha/prediction/buy`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-tokenIds| **true**|  array| List of outcome token IDs. Maximum 20  
+tokenId| **true**|  string| Outcome token ID to buy (from [Get Event Detail](/docs/v5/alpha/prediction/event-detail))  
+amount| **true**|  string| USDC amount to invest (positive decimal as string)  
+payTokenCode| **true**|  string| Payment token code. Phase 1 fixed to `USDC`  
+orderType| **true**|  integer| Order type. Refer to [predictionOrderType](/docs/v5/enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only  
+slippage| **true**|  string| Maximum acceptable price slippage as decimal. `0.05` = 5% tolerance  
+eventId| **true**|  string| Event ID associated with the token  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tokenId| string| Outcome token ID  
-bids| array| Buy orders sorted by price descending  
-> price| string| Bid price  
-> size| string| Available quantity (shares)  
-asks| array| Sell orders sorted by price ascending  
-> price| string| Ask price  
-> size| string| Available quantity (shares)  
+orderNo| string| Order number. Use with [Get Order List](/docs/v5/alpha/prediction/order-list) to check fill status  
   
 ### Request Example
 
@@ -48,7 +50,7 @@ asks| array| Sell orders sorted by price ascending
 
     
     
-    POST /v5/alpha/prediction/order-book HTTP/1.1  
+    POST /v5/alpha/prediction/buy HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -57,7 +59,12 @@ asks| array| Sell orders sorted by price ascending
     Content-Type: application/json  
       
     {  
-        "tokenIds": ["token_yes_123"]  
+        "tokenId": "token_yes_123",  
+        "amount": "100",  
+        "payTokenCode": "USDC",  
+        "orderType": 1,  
+        "slippage": "0.05",  
+        "eventId": "event_123"  
     }  
     
     
@@ -75,57 +82,50 @@ asks| array| Sell orders sorted by price ascending
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "tokenId": "token_yes_123",  
-                "bids": [  
-                    {"price": "0.64", "size": "1000"},  
-                    {"price": "0.63", "size": "2500"}  
-                ],  
-                "asks": [  
-                    {"price": "0.66", "size": "800"},  
-                    {"price": "0.67", "size": "1500"}  
-                ]  
-            }  
-        ],  
+        "result": {  
+            "orderNo": "ord_buy_20240101_001"  
+        },  
         "retExtInfo": {},  
         "time": 1704067200000  
     }
 
 ---
 
-# 獲取盤口
+# 執行買入
 
-查詢預測市場結果代幣的完整盤口快照（買賣深度）。適合在下大單前預估價格衝擊。如僅需當前最優價格，請使用 [獲取代幣價格](/docs/zh-TW/v5/alpha/prediction/token-price)。
+執行預測市場結果代幣的買入委托，支付 USDC 獲取結果代幣份額。
 
 信息
 
-  * 每次請求最多 20 個代幣 ID
-  * 返回所有可用數量的價格檔位
+  * 必須先調用 [獲取撮合引擎狀態](/docs/zh-TW/v5/alpha/prediction/engine-status) 確認引擎可用
+  * 必須先調用 [獲取賽事詳情](/docs/zh-TW/v5/alpha/prediction/event-detail) 獲取 `tokenId` 並確認市場開放
+  * 必須先調用 [獲取委托預估](/docs/zh-TW/v5/alpha/prediction/order-estimate) 預覽委托結果
+  * 必須向用戶展示預估結果並取得明確確認後，方可調用本接口
+  * 第一階段僅支持 `orderType=1`（FOK）——無法完全成交的委托將被取消
+  * `200` 響應僅表示委托已受理，請調用 [獲取委托記錄](/docs/zh-TW/v5/alpha/prediction/order-list) 查詢最終成交狀態
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/order-book`
+POST`/v5/alpha/prediction/buy`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-tokenIds| **true**|  array| 結果代幣 ID 列表，最多 20 個  
+tokenId| **true**|  string| 要買入的結果代幣 ID（從 [獲取賽事詳情](/docs/zh-TW/v5/alpha/prediction/event-detail) 獲取）  
+amount| **true**|  string| 投入的 USDC 金額（正數字符串）  
+payTokenCode| **true**|  string| 支付代幣代碼，第一階段固定為 `USDC`  
+orderType| **true**|  integer| 委托類型。參考 [predictionOrderType](/docs/zh-TW/v5/enum#predictionordertype-prediction-market--order-type)。第一階段：`1`（FOK）  
+slippage| **true**|  string| 最大可接受滑點（小數）。`0.05` = 5% 容忍度  
+eventId| **true**|  string| 代幣對應的賽事 ID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-tokenId| string| 結果代幣 ID  
-bids| array| 買單，按價格降序排列  
-> price| string| 買入價格  
-> size| string| 可用數量（份額）  
-asks| array| 賣單，按價格升序排列  
-> price| string| 賣出價格  
-> size| string| 可用數量（份額）  
+orderNo| string| 委托號。請調用 [獲取委托記錄](/docs/zh-TW/v5/alpha/prediction/order-list) 查詢成交狀態  
   
 ### 請求示例
 
@@ -136,7 +136,7 @@ asks| array| 賣單，按價格升序排列
 
     
     
-    POST /v5/alpha/prediction/order-book HTTP/1.1  
+    POST /v5/alpha/prediction/buy HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -145,7 +145,12 @@ asks| array| 賣單，按價格升序排列
     Content-Type: application/json  
       
     {  
-        "tokenIds": ["token_yes_123"]  
+        "tokenId": "token_yes_123",  
+        "amount": "100",  
+        "payTokenCode": "USDC",  
+        "orderType": 1,  
+        "slippage": "0.05",  
+        "eventId": "event_123"  
     }  
     
     
@@ -163,19 +168,9 @@ asks| array| 賣單，按價格升序排列
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "tokenId": "token_yes_123",  
-                "bids": [  
-                    {"price": "0.64", "size": "1000"},  
-                    {"price": "0.63", "size": "2500"}  
-                ],  
-                "asks": [  
-                    {"price": "0.66", "size": "800"},  
-                    {"price": "0.67", "size": "1500"}  
-                ]  
-            }  
-        ],  
+        "result": {  
+            "orderNo": "ord_buy_20240101_001"  
+        },  
         "retExtInfo": {},  
         "time": 1704067200000  
     }

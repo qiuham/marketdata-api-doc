@@ -2,32 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/websocket/private/position
 api_type: WebSocket
-updated_at: 2026-11-13 18:27:26.326724
+updated_at: 2026-11-13 19:22:39.318304
 ---
 
-# Trade
+# Position
 
-Subscribe to the Event Contract public trade stream. Pushed in real-time after each trade.
+Subscribe to the `position.event` topic to receive real-time Event Contract position updates.
 
-Push frequency: **real-time**
+**Topic:** `position.event`
 
-**Topic:**  
-`publicTrade.{symbol}` e.g., `publicTrade.ETHUSDT-28AUG26-2450-2570-OUT`
+info
+
+  * Authentication is required before subscribing to private topics.
+  * Pushed when a new Event Contract position is created, position value changes (partial fill), or position is settled (`cumClosedPnl` updated).
+
+
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+id| string| Message ID  
 topic| string| Topic name  
-type| string| Data type: `snapshot`  
-ts| number| Timestamp (ms) when the system generates the data  
-data| array| Object. Sorted by trade time in ascending order.  
-> T| number| Timestamp (ms) when the order is filled  
-> s| string| Symbol name  
-> r| string| Payout ratio (trade price)  
-> a| string| Trade amount (order value)  
-> i| string| Trade ID  
-> seq| integer| Cross sequence  
+creationTime| number| Data created timestamp (ms)  
+data| array| Object  
+> symbol| string| Symbol name  
+> baseCoin| string| Base coin  
+> settleCoin| string| Settle coin  
+> side| string| Position side: `Buy` (long), `Sell` (short)  
+> ecContractType| string| Event contract type: `UpDown`, `Target`, `Range`  
+> ecDirection| string| Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)  
+> avgPayoutRatio| string| Average payout ratio  
+> positionValue| string| Position value (cumulative executed value)  
+> ecSettleTime| string| Expected settlement time in milliseconds  
+> cumClosedPnl| string| Cumulative settled profit and loss  
+> createdTime| string| Position creation timestamp in milliseconds  
+> updatedTime| string| Position update timestamp in milliseconds  
+> seq| long| Cross sequence number for ordering  
   
 ### Subscribe Example
     
@@ -35,55 +46,73 @@ data| array| Object. Sorted by trade time in ascending order.
     {  
         "op": "subscribe",  
         "args": [  
-            "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT"  
+            "position.event"  
         ]  
     }  
     
 
-### Response Example
+### Stream Example
     
     
     {  
-        "topic": "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT",  
-        "ts": 1787794797536,  
-        "type": "snapshot",  
+        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
+        "topic": "position.event",  
+        "creationTime": 1694515703798,  
         "data": [  
             {  
-                "T": 1787794797534,  
-                "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
-                "r": "3.5",  
-                "a": "100",  
-                "i": "ea89cadf-6471-5fd4-8248-20b470d8478b",  
-                "seq": 49139  
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                "baseCoin": "BTC",  
+                "settleCoin": "USDT",  
+                "side": "Buy",  
+                "ecContractType": "UpDown",  
+                "ecDirection": "UP",  
+                "avgPayoutRatio": "1.85",  
+                "positionValue": "100",  
+                "ecSettleTime": "1694515498753",  
+                "cumClosedPnl": "50.5",  
+                "createdTime": "1694402559843",  
+                "updatedTime": "1694515498753",  
+                "seq": 31413030  
             }  
         ]  
     }
 
 ---
 
-# 成交
+# 持倉
 
-訂閱 Event Contract 公共成交數據流，每筆成交實時推送。
+訂閱 `position.event` 主題，實時接收 Event Contract 倉位更新推送。
 
-推送頻率：**實時**
+**Topic：** `position.event`
 
-**Topic：**  
-`publicTrade.{symbol}`，如 `publicTrade.ETHUSDT-28AUG26-2450-2570-OUT`
+信息
+
+  * 訂閱私有主題前需先完成身份驗證。
+  * 以下情況會觸發推送：新建 Event Contract 倉位（訂單成交）、倉位金額變動（部分成交）、倉位結算（`cumClosedPnl` 更新）。
+
+
 
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
+id| string| 消息 ID  
 topic| string| Topic 名稱  
-type| string| 數據類型：`snapshot`  
-ts| number| 系統生成數據的時間戳（毫秒）  
-data| array| 對象，按成交時間升序排列  
-> T| number| 訂單成交時間戳（毫秒）  
-> s| string| 交易對名稱  
-> r| string| 賠付比率（成交價格）  
-> a| string| 成交金額（訂單金額）  
-> i| string| 成交 ID  
-> seq| integer| 跨業務序號  
+creationTime| number| 數據創建時間戳（毫秒）  
+data| array| 對象  
+> symbol| string| 交易對名稱  
+> baseCoin| string| 標的幣種  
+> settleCoin| string| 結算幣種  
+> side| string| 倉位方向：`Buy`（做多）、`Sell`（做空）  
+> ecContractType| string| 事件合約類型：`UpDown`、`Target`、`Range`  
+> ecDirection| string| 方向：`UP`/`DOWN`（UpDown 類型），`ABOVE`/`BELOW`（Target 類型），`RANGE_IN`/`RANGE_OUT`（Range 類型）  
+> avgPayoutRatio| string| 平均賠付比率  
+> positionValue| string| 倉位價值（累計成交金額）  
+> ecSettleTime| string| 預計結算時間（毫秒）  
+> cumClosedPnl| string| 累計已結算盈虧  
+> createdTime| string| 倉位創建時間（毫秒）  
+> updatedTime| string| 倉位更新時間（毫秒）  
+> seq| long| 跨業務序號，用於排序  
   
 ### 訂閱示例
     
@@ -91,7 +120,7 @@ data| array| 對象，按成交時間升序排列
     {  
         "op": "subscribe",  
         "args": [  
-            "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT"  
+            "position.event"  
         ]  
     }  
     
@@ -100,17 +129,24 @@ data| array| 對象，按成交時間升序排列
     
     
     {  
-        "topic": "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT",  
-        "ts": 1787794797536,  
-        "type": "snapshot",  
+        "id": "592324d2bce751-ad38-48eb-8f42-4671d1fb4d4e",  
+        "topic": "position.event",  
+        "creationTime": 1694515703798,  
         "data": [  
             {  
-                "T": 1787794797534,  
-                "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
-                "r": "3.5",  
-                "a": "100",  
-                "i": "ea89cadf-6471-5fd4-8248-20b470d8478b",  
-                "seq": 49139  
+                "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                "baseCoin": "BTC",  
+                "settleCoin": "USDT",  
+                "side": "Buy",  
+                "ecContractType": "UpDown",  
+                "ecDirection": "UP",  
+                "avgPayoutRatio": "1.85",  
+                "positionValue": "100",  
+                "ecSettleTime": "1694515498753",  
+                "cumClosedPnl": "50.5",  
+                "createdTime": "1694402559843",  
+                "updatedTime": "1694515498753",  
+                "seq": 31413030  
             }  
         ]  
     }

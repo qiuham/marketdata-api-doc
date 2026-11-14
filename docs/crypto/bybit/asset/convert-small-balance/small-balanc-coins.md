@@ -2,41 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert-small-balance/small-balanc-coins
 api_type: REST
-updated_at: 2026-11-13 18:26:57.327567
+updated_at: 2026-11-13 19:21:31.052747
 ---
 
-# Confirm a Quote
+# Get Small Balance Coins
+
+Query small-balance coins with a USDT equivalent of less than 10 USDT, and ensure that the total amount for each conversion transaction is between 1.0e-8 and 200 USDT.
 
 info
 
-  1. The exchange is async; please check the final status by calling the query result API.
-  2. Make sure you confirm the quote before it expires.
+  * API key permission: `Convert`
+  * API rate limit: `10 req /s`
 
 
 
 ### HTTP Request
 
-POST`/v5/asset/exchange/convert-execute`
+GET`/v5/asset/covert/small-balance-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-quoteTxId| **true**|  string| The quote tx ID from [Request a Quote](/docs/v5/asset/convert/apply-quote#response-parameters)  
+accountType| **true**|  string| Wallet type `eb_convert_uta`. Only supports the Unified wallet  
+fromCoin| false| string| Source currency  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-quoteTxId| string| Quote transaction ID  
-exchangeStatus| string| Exchange status 
-
-  * init
-  * processing
-  * success
-  * failure
-
-  
+smallAssetCoins| array<object>| Small balance info  
+> fromCoin| string| Source currency  
+> supportConvert| integer| `1`: support, `2`: not supported  
+> availableBalance| string| Available balance, the value might be bigger than the actual balance you can convert  
+> baseValue| string| USDT equivalent value  
+> toAmount| string| **Ignore** , reserved field  
+> exchangeRate| string| **Ignore** , reserved field  
+> feeInfo| null| **Ignore** , reserved field  
+> taxFeeInfo| null| **Ignore** , reserved field  
+supportToCoins| array| `["MNT","USDT","USDC"]`  
   
 ### Request Example
 
@@ -47,18 +51,12 @@ exchangeStatus| string| Exchange status
 
     
     
-    POST /v5/asset/exchange/convert-execute HTTP/1.1  
+    GET /v5/asset/covert/small-balance-list?fromCoin=XRP&accountType=eb_convert_uta HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720071899789  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1766125546001  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "quoteTxId": "10100108106409343501030232064"  
-    }  
     
     
     
@@ -68,30 +66,14 @@ exchangeStatus| string| Exchange status
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote(  
-        quoteTxId="10100108106409343501030232064",  
+    print(session.get_small_balance_coins(  
+        fromCoin="XRP",  
+        accountType="eb_convert_uta",  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .confirmConvertQuote({  
-        quoteTxId: '10100108106409343501030232064',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -101,69 +83,82 @@ exchangeStatus| string| Exchange status
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "exchangeStatus": "processing",  
-            "quoteTxId": "10100108106409343501030232064"  
+            "smallAssetCoins": [  
+                {  
+                    "fromCoin": "XRP",  
+                    "supportConvert": 1,  
+                    "availableBalance": "0.0002",  
+                    "baseValue": "0.00036554008",  
+                    "toCoin": "",  
+                    "toAmount": "",  
+                    "exchangeRate": "",  
+                    "feeInfo": null,  
+                    "taxFeeInfo": null  
+                }  
+            ],  
+            "supportToCoins": [  
+                "MNT",  
+                "USDT",  
+                "USDC"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1720071900529  
+        "time": 1766125546274  
     }
 
 ---
 
-# 確認報價
+# 獲取小額資產幣種
+
+查詢USDT等值小於10 USDT的小額資產幣種，並確保每筆兌換交易的總金額在1.0e-8至200 USDT之間。
 
 信息
 
-  1. 該接口是異步的, 請通過查詢請求確認最終兌換結果
-  2. 確保您在報價單過期前確認該報價, 否則失效
+  * API密鑰權限: `Convert`
+  * API速率限制: `10 req /s`
 
 
 
 ### HTTP 請求
 
-POST`/v5/asset/exchange/convert-execute`
+GET`/v5/asset/covert/small-balance-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-quoteTxId| **true**|  string| 報價單ID, 來自於[提交報價的響應](/docs/zh-TW/v5/asset/convert/apply-quote#response-parameters)  
+accountType| **true**|  string| 錢包類型 `eb_convert_uta`，僅支持統一錢包  
+fromCoin| false| string| 源幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-quoteTxId| string| 報價單ID  
-exchangeStatus| string| 兌換狀態 
-
-  * init
-  * processing
-  * success
-  * failure
-
-  
+smallAssetCoins| array<object>| 小額資產信息  
+> fromCoin| string| 源幣種  
+> supportConvert| integer| `1`: 支持, `2`: 不支持  
+> availableBalance| string| 可用餘額, 該餘額可能比實際可轉換餘額要大  
+> baseValue| string| USDT等值金額  
+> toAmount| string| **忽略** ，保留字段  
+> exchangeRate| string| **忽略** ，保留字段  
+> feeInfo| null| **忽略** ，保留字段  
+> taxFeeInfo| null| **忽略** ，保留字段  
+supportToCoins| array| 支持的目標幣種，例如`["MNT","USDT","USDC"]`  
   
 ### 請求示例
 
   * HTTP
   * Python
-  * Node.js
 
 
     
     
-    POST /v5/asset/exchange/convert-execute HTTP/1.1  
+    GET /v5/asset/covert/small-balance-list?fromCoin=XRP&accountType=eb_convert_uta HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720071899789  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1766125546001  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "quoteTxId": "10100108106409343501030232064"  
-    }  
     
     
     
@@ -173,30 +168,10 @@ exchangeStatus| string| 兌換狀態
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote(  
-        quoteTxId="10100108106409343501030232064",  
+    print(session.get_small_balance_coins(  
+        fromCoin="XRP",  
+        accountType="eb_convert_uta",  
     ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .confirmConvertQuote({  
-        quoteTxId: '10100108106409343501030232064',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -206,9 +181,25 @@ exchangeStatus| string| 兌換狀態
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "exchangeStatus": "processing",  
-            "quoteTxId": "10100108106409343501030232064"  
+            "smallAssetCoins": [  
+                {  
+                    "fromCoin": "XRP",  
+                    "supportConvert": 1,  
+                    "availableBalance": "0.0002",  
+                    "baseValue": "0.00036554008",  
+                    "toCoin": "",  
+                    "toAmount": "",  
+                    "exchangeRate": "",  
+                    "feeInfo": null,  
+                    "taxFeeInfo": null  
+                }  
+            ],  
+            "supportToCoins": [  
+                "MNT",  
+                "USDT",  
+                "USDC"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1720071900529  
+        "time": 1766125546274  
     }

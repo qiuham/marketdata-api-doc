@@ -31,11 +31,11 @@ class BinanceAdapter(ExchangeAdapter):
             return []
 
         # 从URL提取产品路径前缀（用于过滤）
-        # 英文: https://developers.binance.com/docs/derivatives/... -> https://.../docs/derivatives/
-        # 中文: https://developers.binance.com/docs/zh-CN/derivatives/... -> https://.../docs/zh-CN/derivatives/
+        # 2026 年改版后的网址：https://developers.binance.com/{en|zh-CN}/docs/products/{产品}/...
+        # 例如 https://.../en/docs/products/spot/rest-api -> https://.../en/docs/products/spot/
         import re
         # 匹配到第二或第三个斜杠后的部分
-        match = re.match(r'(https://[^/]+/docs/(?:[^/]+/)?[^/]+/)', current_url)
+        match = re.match(r'(https://[^/]+/[^/]+/docs/products/[^/]+/)', current_url)
         if not match:
             log.warning(f"无法从URL提取产品路径: {current_url}")
             product_prefix = None
@@ -43,52 +43,33 @@ class BinanceAdapter(ExchangeAdapter):
             product_prefix = match.group(1)
             log.info(f"产品路径前缀: {product_prefix}")
 
-        # 展开所有折叠菜单（在Python中循环，让React有时间渲染）
-        collapsed_selector = self.config['crawler']['selectors']['collapsed_menu']
-        max_iterations = 50  # 防止死循环
-
-        for i in range(max_iterations):
-            # 统计折叠菜单数量
-            count = self.browser.count_elements(collapsed_selector)
-            if count == 0:
-                log.info("所有菜单已展开")
-                break
-
-            if i < 3 or i % 5 == 0:  # 只显示前3次和每5次
-                log.info(f"[轮次 {i+1}] 折叠菜单: {count} 个")
-
-            # 点击折叠菜单里的 a[role="button"]
-            js_expand = '''
-            const collapsedItems = document.querySelectorAll('.menu__list-item--collapsed');
-            let expanded = 0;
-
-            collapsedItems.forEach(item => {
-                const link = item.querySelector('a[role="button"]');
-                if (link) {
-                    try {
-                        link.click();
-                        expanded++;
-                    } catch(e) {}
-                }
-            });
-
-            expanded;
-            '''
-
+        # 2026 年改版后侧边栏是自定义组件：在含产品链接的那个 <nav> 里，反复点开 aria-expanded="false" 的项，
+        # 点到没有为止（一轮点开会露出下一层），再收这个 nav 里的全部链接。
+        js_expand = """
+        (function() {
+            const nav = [...document.querySelectorAll('nav')].find(n => n.querySelector('a[href*="/docs/products/"]'));
+            if (!nav) return -1;
+            const closed = [...nav.querySelectorAll('[aria-expanded="false"]')];
+            closed.forEach(e => { try { e.click(); } catch (x) {} });
+            return closed.length;
+        })()
+        """
+        for i in range(50):  # 防止死循环；实测 5 轮展开完
             clicked = self.browser.eval_js(js_expand)
-            if not clicked or clicked == 0:
+            if clicked is None or clicked <= 0:
+                if clicked == -1:
+                    log.warning("没找到侧边栏")
                 break
+            log.info(f"[轮次 {i+1}] 点开 {clicked} 个折叠项")
+            time.sleep(0.4)
 
-            # 不需要 sleep，Python/Browser往返间React会完成渲染
-
-        # 提取所有文档链接
-        doc_link_selector = self.config['crawler']['selectors']['doc_link']
-        js = f'''
-        Array.from(document.querySelectorAll('{doc_link_selector}'))
-            .map(a => a.href)
-            .filter(href => href && !href.endsWith('#'))
-        '''
-
+        js = """
+        (function() {
+            const nav = [...document.querySelectorAll('nav')].find(n => n.querySelector('a[href*="/docs/products/"]'));
+            if (!nav) return [];
+            return [...nav.querySelectorAll('a[href]')].map(a => a.href.split('#')[0]).filter(h => h);
+        })()
+        """
         links = self.browser.eval_js(js)
 
         if not links:
@@ -117,8 +98,8 @@ class BinanceAdapter(ExchangeAdapter):
         # 提取标题（在 article 内查找第一个 h1）
         title_js = '''
         (function() {
-            // 优先从 article 内查找 h1
-            const article = document.querySelector('main article');
+            // 优先从正文内查找 h1
+            const article = document.querySelector('main .prose');
             if (article) {
                 const h1 = article.querySelector('h1');
                 if (h1) return h1.textContent.trim();
@@ -161,14 +142,8 @@ class BinanceAdapter(ExchangeAdapter):
         html_content = self.browser.eval_js(js_extract)
 
         if not html_content:
-            log.warning(f"无法提取内容: {url}")
-            return DocumentPage(
-                url=url,
-                title=title,
-                content="",
-                metadata={},
-                raw_html=""
-            )
+            # 不存空页：抛出去由调用方记一条错误
+            raise RuntimeError(f"无法提取内容: {url}")
 
         # 转换为 Markdown
         markdown = self.md_processor.html_to_markdown(html_content)
@@ -263,17 +238,12 @@ class BinanceAdapter(ExchangeAdapter):
         """从URL提取产品目录名
 
         例如:
-        英文: https://.../docs/binance-spot-api-docs/... -> binance-spot-api-docs
-        中文: https://.../docs/zh-CN/binance-spot-api-docs/... -> binance-spot-api-docs
+        英文: https://.../en/docs/products/spot/... -> spot
+        中文: https://.../zh-CN/docs/products/spot/... -> spot
         """
         import re
-        # 先尝试匹配 /docs/{lang}/{product}/ 格式（中文）
-        match = re.search(r'/docs/(zh-CN|en|zh|ja|ko)/([^/]+)', url)
-        if match:
-            return match.group(2)
-
-        # 再尝试匹配 /docs/{product}/ 格式（英文）
-        match = re.search(r'/docs/([^/]+)/', url)
+        # 改版后的网址：/{en|zh-CN}/docs/products/{product}/...
+        match = re.search(r'/docs/products/([^/]+)', url)
         if match:
             return match.group(1)
 
@@ -369,12 +339,26 @@ class BinanceAdapter(ExchangeAdapter):
         log.info("\n" + "="*60)
         log.info("所有语言爬取完成")
 
+        # 接口规格（OpenAPI / AsyncAPI）：各语言同一份，放进主语言的临时目录，合并时一起写入
+        import tempfile
+        self._crawl_specs(f"{tempfile.gettempdir()}/crypto-api-docs/{self.name}/{lang_configs[0]['lang']}/_specs")
+
         # 如果爬取了多种语言，合并成双语文件
         if len(lang_configs) > 1:
             log.info("开始合并双语文件...")
             import tempfile
             temp_base = f"{tempfile.gettempdir()}/crypto-api-docs/{self.name}"
             final_output_dir = self.get_output_path()
+            # 先清空旧目录：只合并写入的话，网站删掉或改名的页会一直留在库里。
+            # 这次抓坏了也不怕：爬完的质量检查会把整个目录退回上一次提交。
+            if os.path.isdir(temp_base) and any(Path(temp_base).rglob('*.md')) and os.path.exists(final_output_dir):
+                from ..utils.path_generator import safe_rmtree
+                project_root = Path(__file__).parent.parent.parent
+                docs_root = project_root / self.config.get('output', {}).get('base_dir', 'docs')
+                target = Path(final_output_dir)
+                if not target.is_absolute():
+                    target = project_root / target
+                safe_rmtree(str(target), [docs_root])
             merged_count = self._merge_bilingual_files(temp_base, final_output_dir, [lc['lang'] for lc in lang_configs])
             log.success(f"合并完成：{merged_count} 个文件")
 
@@ -403,6 +387,52 @@ class BinanceAdapter(ExchangeAdapter):
         updater = ReadmeUpdater(str(project_root))
         readme_path = updater.update_exchange_table()
         log.success(f"README 已更新: {readme_path}")
+
+    def _crawl_specs(self, output_dir: str) -> int:
+        """下载配置 crawler.spec_roots 里每个接口目录的规格文件（页面上 schema.yaml 那个链接）。
+
+        2026 年改版后，接口参考在 /docs/catalog/<分类>-<产品>/api/{rest-api,ws-api,ws-streams}，
+        每个目录带一份机器可读的规格。网站有防爬验证，所以在已过验证的浏览器页面里用 fetch 取。
+        """
+        import os
+        roots = self.config['crawler'].get('spec_roots') or []
+        saved = 0
+        for root in roots:
+            try:
+                if not self.browser.open(root, wait=3):
+                    raise RuntimeError("打开失败")
+                self.browser.wait_for_element('main', timeout=30)
+                spec_url = None
+                for _ in range(20):  # 链接是页面脚本后渲染的，等它出现
+                    spec_url = self.browser.eval_js(
+                        "(()=>{const a=[...document.querySelectorAll('a[href]')].find(a=>/schema\\.(ya?ml|json)$/.test(a.href));"
+                        "return a?a.href:null})()")
+                    if spec_url:
+                        break
+                    time.sleep(1)
+                if not spec_url:
+                    raise RuntimeError("页面上没有规格链接")
+                text = None
+                for _ in range(2):  # 大的规格有 900 KB，给足时间，失败再试一次
+                    text = self.browser.eval_js(
+                        f"(async()=>{{const r=await fetch({spec_url!r});return r.ok?await r.text():null}})()", timeout=120)
+                    if text and len(text) >= 200:
+                        break
+                if not text or len(text) < 200:
+                    raise RuntimeError(f"规格下载失败: {spec_url}")
+                name = root.rstrip('/').split('/docs/catalog/')[-1].replace('/api/', '__').replace('/', '__')
+                lang = 'json' if spec_url.endswith('.json') else 'yaml'
+                page = DocumentPage(
+                    url=spec_url, title=f"{name} spec",
+                    content=f"Source: {spec_url}\n\n```{lang}\n{text.rstrip()}\n```",
+                    metadata={'exchange': self.name, 'source_url': spec_url, 'api_type': 'spec'})
+                os.makedirs(output_dir, exist_ok=True)
+                self.save_page(page, os.path.join(output_dir, f"{name}.md"))
+                saved += 1
+                log.success(f"[规格 {saved}/{len(roots)}] {name} ({len(text)} 字节)")
+            except Exception as e:
+                log.error(f"[规格] {root} - {e}")
+        return saved
 
     def _remove_trailing_separator(self, content: str) -> str:
         """移除内容末尾的 markdown 分隔线"""
@@ -491,6 +521,13 @@ class BinanceAdapter(ExchangeAdapter):
                     f.write(merged_content)
 
                 merged_count += 1
+            else:
+                # 只有主语言版本（例如接口规格、还没翻译的页）：原样复制，不能丢
+                output_file = safe_output_path(output_dir, rel_path)
+                os.makedirs(os.path.dirname(output_file), exist_ok=True)
+                import shutil
+                shutil.copy2(primary_file, output_file)
+                merged_count += 1
 
         return merged_count
 
@@ -505,7 +542,7 @@ class BinanceAdapter(ExchangeAdapter):
         # 中文: https://.../docs/zh-CN/derivatives/... -> https://.../docs/zh-CN/derivatives/
         if urls and hasattr(self, 'browser'):
             current_url = self.browser.eval_js('window.location.href')
-            match = re.match(r'(https://[^/]+/docs/(?:[^/]+/)?[^/]+/)', current_url) if current_url else None
+            match = re.match(r'(https://[^/]+/[^/]+/docs/products/[^/]+/)', current_url) if current_url else None
             product_prefix = match.group(1) if match else None
         else:
             product_prefix = None
@@ -540,7 +577,7 @@ class BinanceAdapter(ExchangeAdapter):
         # 中文: https://.../docs/zh-CN/derivatives/... -> https://.../docs/zh-CN/derivatives/
         if urls:
             current_url = browser.eval_js('window.location.href')
-            match = re.match(r'(https://[^/]+/docs/(?:[^/]+/)?[^/]+/)', current_url) if current_url else None
+            match = re.match(r'(https://[^/]+/[^/]+/docs/products/[^/]+/)', current_url) if current_url else None
             product_prefix = match.group(1) if match else None
         else:
             product_prefix = None
@@ -552,18 +589,21 @@ class BinanceAdapter(ExchangeAdapter):
         for batch_start in range(0, total, num_tabs):
             batch_urls = urls[batch_start:batch_start + num_tabs]
 
-            # 1. 批量加载URLs
-            browser.load_urls_batch(batch_urls, start_tab=0)
+            # 1. 批量加载URLs（出错只跳过这一批，不中止整个爬取）
+            try:
+                browser.ensure_tabs(len(batch_urls))  # 标签页中途会少（原因没查清），每批前补齐
+                browser.load_urls_batch(batch_urls, start_tab=0)
+            except Exception as e:
+                log.error(f"[{batch_start + 1}-{batch_start + len(batch_urls)}/{total}] 加载失败，跳过这一批: {e}")
+                continue
 
             # 2. 顺序提取内容
             for i, url in enumerate(batch_urls):
                 idx = batch_start + i + 1
                 try:
                     browser.tab_switch(i)
-
-                    # 等待页面加载完成
-                    if not browser.wait_for_element('main', timeout=30):
-                        log.warning(f"[{idx}/{total}] 页面加载超时，尝试继续")
+                    # 存盘前核对：当前标签页必须就是这一页，不然会把别的页存进这个文件
+                    browser.ensure_page(url, 'main .prose', timeout=30)
 
                     filename = url_to_filepath(url, product_prefix)
                     output_path = safe_output_path(output_dir, filename)

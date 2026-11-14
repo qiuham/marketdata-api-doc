@@ -2,31 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixed-available-inventory
 api_type: REST
-updated_at: 2026-11-13 18:28:39.563170
+updated_at: 2026-11-13 19:25:07.151821
 ---
 
-# Fixed-Rate Borrow
+# Get Fixed-Rate Available Inventory
+
+Query available inventory for fixed-rate borrowing by specifying currency, term, and annual rate. The returned value equals min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers)), rounded down to borrow precision.
+
+info
+
+  * Unified account only
+  * All three parameters (`currency`, `term`, `annualRate`) are required
+
+
 
 ### HTTP Request
 
-POST`/v5/spot-margin-trade/fixedborrow`
+GET`/v5/spot-margin-trade/fixed-available-inventory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Currency to borrow  
-orderAmount| **true**|  string| Amount to borrow  
-annualRate| **true**|  string| Customizable annual interest rate, e.g., `0.02` means 2%  
-term| **true**|  string| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-repayType| false| string| `1`: Auto Repayment (default). Enable "Auto Repayment" to automatically repay your loan using assets in your UTA account when it is due, avoiding overdue penalties. `2`: Transfer to flexible loan  
-strategyType| false| string| Fill strategy. `PARTIAL`: Allow partial fill (default); `FULL`: Full fill only. Must be uppercase; any other value is rejected  
+currency| **true**|  string| Coin name, uppercase only. e.g. `USDT`, `BTC`  
+term| **true**|  string| Loan term in days. e.g. `7`, `14`, `30`, `90`, `180`  
+annualRate| **true**|  string| Annual interest rate. e.g. `0.02` means 2%  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Loan order ID  
+currency| string| Coin name  
+term| string| Loan term in days  
+annualRate| string| Annual interest rate  
+availableInventory| string| Available inventory for borrowing. Displayed value = min(platform total lendable amount, UTA user remaining borrowing limit, `borrowLimit` of the current leverage tier from [Get Position Tiers](/docs/v5/spot-margin-uta/position-tiers))  
+updateTime| string| Last update timestamp in seconds  
   
 * * *
 
@@ -39,35 +49,16 @@ orderId| string| Loan order ID
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow HTTP/1.1  
+    GET /v5/spot-margin-trade/fixed-available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1699272487000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    X-BAPI-SIGN: XXXXX  
+    
+    
+    
       
-    {  
-        "orderCurrency": "BTC",  
-        "orderAmount": "0.01",  
-        "annualRate": "0.02",  
-        "term": "30"  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.spot_margin_trade_fixed_borrow(  
-        orderCurrency="BTC",  
-        orderAmount="0.01",  
-        annualRate="0.02",  
-        term="30"  
-    ))  
     
     
     
@@ -79,38 +70,52 @@ orderId| string| Loan order ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187"  
+            "currency": "USDT",  
+            "term": "7",  
+            "annualRate": "0.02",  
+            "availableInventory": "500000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1775616124837  
+        "time": 1672221263862  
     }
 
 ---
 
-# 固定利率借款
+# 查詢定期借貸可借額度
+
+查詢指定幣種、借款期限及年化利率下的定期借貸可借額度。返回值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`），向下取整至借幣精度。
+
+信息
+
+  * 僅支持統一帳戶
+  * `currency`、`term`、`annualRate` 三個參數均為必填
+
+
 
 ### HTTP 請求
 
-POST`/v5/spot-margin-trade/fixedborrow`
+GET`/v5/spot-margin-trade/fixed-available-inventory`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 借款幣種  
-orderAmount| **true**|  string| 借款金額  
-annualRate| **true**|  string| 自定義年化利率，例如 `0.02` 表示 2%  
-term| **true**|  string| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-repayType| false| string| `1`：自動還款（默認）。開啟「自動還款」後，借款到期時將自動使用 UTA 帳戶資產還款，避免逾期罰息。`2`：轉為活期借款  
-strategyType| false| string| 成交策略。`PARTIAL`：允許部分成交（默認）；`FULL`：僅全額成交。必須大寫，其他值均會被拒絕  
+currency| **true**|  string| 幣種名稱，僅大寫。如 `USDT`、`BTC`  
+term| **true**|  string| 借款天數。如 `7`、`14`、`30`、`90`、`180`  
+annualRate| **true**|  string| 年化利率。如 `0.02` 表示 2%  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 借款訂單 ID  
+currency| string| 幣種名稱  
+term| string| 借款天數  
+annualRate| string| 年化利率  
+availableInventory| string| 可借額度。顯示值 = min（平台可出借總額，UTA 用戶剩餘借幣上限，[查詢持倉層級](/docs/zh-TW/v5/spot-margin-uta/position-tiers)中當前槓桿檔位的 `borrowLimit`）  
+updateTime| string| 最後更新時間戳（秒）  
   
 * * *
 
@@ -123,20 +128,12 @@ orderId| string| 借款訂單 ID
 
     
     
-    POST /v5/spot-margin-trade/fixedborrow HTTP/1.1  
+    GET /v5/spot-margin-trade/fixed-available-inventory?currency=USDT&term=7&annualRate=0.02 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1699272487000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderCurrency": "BTC",  
-        "orderAmount": "0.01",  
-        "annualRate": "0.02",  
-        "term": "30"  
-    }  
+    X-BAPI-SIGN: XXXXX  
     
     
     
@@ -147,15 +144,19 @@ orderId| string| 借款訂單 ID
       
     
 
-### 響應示例
+### 返回示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "orderId": "FIXED_BORROW_4563567182f746ec9f73e4357264d8c7187"  
+            "currency": "USDT",  
+            "term": "7",  
+            "annualRate": "0.02",  
+            "availableInventory": "500000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1775616124837  
+        "time": 1672221263862  
     }

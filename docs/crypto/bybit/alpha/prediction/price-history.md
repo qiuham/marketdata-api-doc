@@ -2,50 +2,37 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/price-history
 api_type: REST
-updated_at: 2026-11-13 18:26:51.168278
+updated_at: 2026-11-13 19:21:14.272365
 ---
 
-# Get Sports Group Stage Detail
+# Get Price History
 
-Query the group stage standings and match schedule detail for a sports prediction event. Returns all groups with team standings (points, goal difference, W/D/L) and associated matches.
+Query historical price data for a prediction outcome token. Returns OHLC candlestick data for charting and analysis.
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/price-history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-eventType| **true**|  integer| Sports event type. Refer to [predictionEventType](/docs/v5/enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)  
-groupName| false| string| Filter by group name (e.g., `A`, `B`, … `L` for FIFA 2026)  
+tokenId| **true**|  string| Outcome token ID  
+interval| **true**|  string| Time interval. Refer to [predictionPriceInterval](/docs/v5/enum#predictionpriceinterval-prediction-market--price-interval)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-groups| array| Group stage data  
-> groupName| string| Group identifier (e.g., `A`)  
-> standings| array| Team standings for this group, sorted by rank  
->> rank| integer| Current rank within the group  
->> teamName| string| Team name  
->> played| integer| Matches played  
->> won| integer| Matches won  
->> drawn| integer| Matches drawn  
->> lost| integer| Matches lost  
->> goalsFor| integer| Goals scored  
->> goalsAgainst| integer| Goals conceded  
->> goalDifference| integer| Goal difference (goalsFor − goalsAgainst)  
->> points| integer| Total points  
-> matches| array| Matches in this group  
->> matchId| string| Match ID  
->> homeTeam| string| Home team name  
->> awayTeam| string| Away team name  
->> matchTime| integer| Match start timestamp (UTC milliseconds)  
->> status| integer| Match status. Refer to [predictionMatchStatus](/docs/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| Home team score (`-1` if not yet played)  
->> awayScore| integer| Away team score (`-1` if not yet played)  
->> eventId| string| Linked prediction event ID (if markets are available)  
+tokenId| string| Outcome token ID  
+interval| string| Time interval used  
+list| array| OHLC candlestick records, newest first  
+> openTime| integer| Candle open timestamp (UTC milliseconds)  
+> open| string| Open price  
+> high| string| High price  
+> low| string| Low price  
+> close| string| Close price  
+> volume| string| Trading volume in USDC for this candle  
   
 ### Request Example
 
@@ -56,7 +43,7 @@ groups| array| Group stage data
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/price-history HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -65,8 +52,8 @@ groups| array| Group stage data
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "tokenId": "token_yes_123",  
+        "interval": "1H"  
     }  
     
     
@@ -85,47 +72,24 @@ groups| array| Group stage data
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
+            "tokenId": "token_yes_123",  
+            "interval": "1H",  
+            "list": [  
                 {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        },  
-                        {  
-                            "rank": 2,  
-                            "teamName": "Brazil",  
-                            "played": 3,  
-                            "won": 2,  
-                            "drawn": 0,  
-                            "lost": 1,  
-                            "goalsFor": 5,  
-                            "goalsAgainst": 3,  
-                            "goalDifference": 2,  
-                            "points": 6  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
+                    "openTime": 1704067200000,  
+                    "open": "0.63",  
+                    "high": "0.68",  
+                    "low": "0.62",  
+                    "close": "0.65",  
+                    "volume": "12500"  
+                },  
+                {  
+                    "openTime": 1704063600000,  
+                    "open": "0.60",  
+                    "high": "0.64",  
+                    "low": "0.59",  
+                    "close": "0.63",  
+                    "volume": "9800"  
                 }  
             ]  
         },  
@@ -135,47 +99,34 @@ groups| array| Group stage data
 
 ---
 
-# 獲取小組賽詳情
+# 獲取歷史價格
 
-查詢體育預測賽事的小組賽積分榜及賽程詳情，返回所有小組的球隊排名（積分、淨勝球、勝/平/負）及關聯比賽列表。
+查詢預測市場結果代幣的歷史價格數據，返回 OHLC K 線數據，用於圖表展示與分析。
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/price-history`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-eventType| **true**|  integer| 體育賽事類型。參考 [predictionEventType](/docs/zh-TW/v5/enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）  
-groupName| false| string| 按小組名稱篩選（如 `A`、`B`……`L`，適用於 FIFA 2026）  
+tokenId| **true**|  string| 結果代幣 ID  
+interval| **true**|  string| 時間週期。參考 [predictionPriceInterval](/docs/zh-TW/v5/enum#predictionpriceinterval-prediction-market--price-interval)  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-groups| array| 小組賽數據  
-> groupName| string| 小組標識（如 `A`）  
-> standings| array| 該小組球隊積分榜，按排名升序  
->> rank| integer| 小組內當前排名  
->> teamName| string| 球隊名稱  
->> played| integer| 已參賽場數  
->> won| integer| 勝場數  
->> drawn| integer| 平場數  
->> lost| integer| 負場數  
->> goalsFor| integer| 進球數  
->> goalsAgainst| integer| 失球數  
->> goalDifference| integer| 淨勝球（進球數 − 失球數）  
->> points| integer| 總積分  
-> matches| array| 該小組的比賽列表  
->> matchId| string| 比賽 ID  
->> homeTeam| string| 主隊名稱  
->> awayTeam| string| 客隊名稱  
->> matchTime| integer| 比賽開始時間戳（UTC 毫秒）  
->> status| integer| 賽事狀態。參考 [predictionMatchStatus](/docs/zh-TW/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| 主隊得分（未開始為 `-1`）  
->> awayScore| integer| 客隊得分（未開始為 `-1`）  
->> eventId| string| 關聯的預測賽事 ID（如有開放市場）  
+tokenId| string| 結果代幣 ID  
+interval| string| 所用時間週期  
+list| array| OHLC K 線記錄，最新在前  
+> openTime| integer| K 線開盤時間戳（UTC 毫秒）  
+> open| string| 開盤價  
+> high| string| 最高價  
+> low| string| 最低價  
+> close| string| 收盤價  
+> volume| string| 該 K 線交易量（USDC）  
   
 ### 請求示例
 
@@ -186,7 +137,7 @@ groups| array| 小組賽數據
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/price-history HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -195,8 +146,8 @@ groups| array| 小組賽數據
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "tokenId": "token_yes_123",  
+        "interval": "1H"  
     }  
     
     
@@ -215,35 +166,24 @@ groups| array| 小組賽數據
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
+            "tokenId": "token_yes_123",  
+            "interval": "1H",  
+            "list": [  
                 {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
+                    "openTime": 1704067200000,  
+                    "open": "0.63",  
+                    "high": "0.68",  
+                    "low": "0.62",  
+                    "close": "0.65",  
+                    "volume": "12500"  
+                },  
+                {  
+                    "openTime": 1704063600000,  
+                    "open": "0.60",  
+                    "high": "0.64",  
+                    "low": "0.59",  
+                    "close": "0.63",  
+                    "volume": "9800"  
                 }  
             ]  
         },  

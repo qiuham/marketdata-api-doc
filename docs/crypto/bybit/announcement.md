@@ -2,118 +2,74 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/announcement
 api_type: REST
-updated_at: 2026-11-13 18:26:54.830745
+updated_at: 2026-11-13 19:21:24.066927
 ---
 
-# Get Single Coin Balance
-
-Query the balance of a specific coin in a specific [account type](/docs/v5/enum#accounttype). Supports querying sub UID's balance. Also, you can check the transferable amount from master to sub account, sub to master account or sub to sub account, especially for user who has an institutional loan.
-
-important
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+# Get Announcement
 
 ### HTTP Request
 
-GET`/v5/asset/transfer/query-account-coin-balance`
+GET`/v5/announcements/index`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-memberId| false| string| UID. **Required** when querying sub UID balance with master api key  
-toMemberId| false| string| UID. **Required** when querying the transferable balance between different UIDs  
-[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type  
-[toAccountType](/docs/v5/enum#accounttype)| false| string| To account type. **Required** when querying the transferable balance between different account types  
-coin| **true**|  string| Coin, uppercase only  
-withBonus| false| integer| `0`(default): not query bonus. `1`: query bonus  
-withTransferSafeAmount| false| integer| Whether query delay withdraw/transfer safe amount 
-
-  * `0`(default): false, `1`: true
-  * What is [delay withdraw amount](/docs/v5/asset/balance/delay-amount)?
-
-  
-withLtvTransferSafeAmount| false| integer| For OTC loan users in particular, you can check the transferable amount under risk level
-
-  * `0`(default): false, `1`: true
-  * `toAccountType` is mandatory
-
-  
+[locale](/docs/v5/enum#locale)| **true**|  string| Language symbol  
+[type](/docs/v5/enum#announcementtype)| false| string| Announcement type  
+[tag](/docs/v5/enum#announcementtag)| false| string| Announcement tag  
+page| false| integer| Page number. Default: `1`  
+limit| false| integer| Limit for data size per page. Default: `20`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-accountType| string| Account type  
-bizType| integer| Biz type  
-accountId| string| Account ID  
-memberId| string| Uid  
-balance| Object|   
-> coin| string| Coin  
-> walletBalance| string| Wallet balance  
-> transferBalance| string| Transferable balance  
-> bonus| string| bonus  
-> transferSafeAmount| string| Safe amount to transfer. Keep `""` if not query  
-> ltvTransferSafeAmount| string| Transferable amount for ins loan account. Keep `""` if not query  
-[](/docs/api-explorer/v5/asset/account-coin-balance)
-
+total| integer| Total records  
+list| array| Object  
+> title| string| Announcement title  
+> description| string| Announcement description  
+> type| Object|   
+>> title| string| The title of announcement type  
+>> [key](/docs/v5/enum#announcementtype)| string| The key of announcement type  
+> [tags](/docs/v5/enum#announcementtag)| array<string>| The tag of announcement  
+> url| string| Announcement url  
+> dateTimestamp| number| Timestamp that author fills  
+> startDataTimestamp| number| The start timestamp (ms) of the event, only valid when `list.type.key == "latest_activities"`  
+> endDataTimestamp| number| The end timestamp (ms) of the event, only valid when `list.type.key == "latest_activities"`  
+> publishTime| number| The published timestamp for the announcement  
+  
 * * *
 
 ### Request Example
 
   * HTTP
   * Python
-  * Node.js
+  * Java
 
 
     
     
-    GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=USDT&toAccountType=FUND&withLtvTransferSafeAmount=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: xxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1690254520644  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/announcements/index?locale=en-US&limit=1 HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_coin_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-        memberId=592324,  
+    session = HTTP(testnet=True)  
+    print(session.get_announcement(  
+        locale="en-US",  
+        limit=1,  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getCoinBalance({  
-        accountType: 'UNIFIED',  
-        coin: 'USDT',  
-        toAccountType: 'FUND',  
-        withLtvTransferSafeAmount: 1,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    import com.bybit.api.client.domain.announcement.LanguageSymbol;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var announcementInfoRequest = MarketDataRequest.builder().locale(LanguageSymbol.EN_US).build();  
+    client.getAnnouncementInfo(announcementInfoRequest, System.out::println);  
     
 
 ### Response Example
@@ -121,136 +77,99 @@ balance| Object|
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "accountType": "UNIFIED",  
-            "bizType": 1,  
-            "accountId": "1631385",  
-            "memberId": "1631373",  
-            "balance": {  
-                "coin": "USDT",  
-                "walletBalance": "11999",  
-                "transferBalance": "11999",  
-                "bonus": "0",  
-                "transferSafeAmount": "",  
-                "ltvTransferSafeAmount": "7602.4861"  
-            }  
+            "total": 735,  
+            "list": [  
+                {  
+                    "title": "New Listing: Arbitrum (ARB) — Deposit, Trade and Stake ARB to Share a 400,000 USDT Prize Pool!",  
+                    "description": "Bybit is excited to announce the listing of ARB on our trading platform!",  
+                    "type": {  
+                        "title": "New Listings",  
+                        "key": "new_crypto"  
+                    },  
+                    "tags": [  
+                        "Spot",  
+                        "Spot Listings"  
+                    ],  
+                    "url": "https://announcements.bybit.com/en-US/article/new-listing-arbitrum-arb-deposit-trade-and-stake-arb-to-share-a-400-000-usdt-prize-pool--bltf662314c211a8616/",  
+                    "dateTimestamp": 1679045608000,  
+                    "startDateTimestamp": 1679045608000,  
+                    "endDateTimestamp": 1679045608000  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1690254521256  
+        "time": 1679415136117  
     }
 
 ---
 
-# 查詢帳戶單個幣種餘額
-
-獲取某[帳戶類型](/docs/zh-TW/v5/enum#accounttype)下某指定幣種的餘額。支持通過輸入子帳戶id來查詢子帳戶的某個帳戶類型下的某個幣種餘額 同時, 支持查詢母子帳戶、子子帳戶、子母帳戶之間的可劃轉金額，特別是針對於擁有機構借貸的用戶。
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+# 查詢公告
 
 ### HTTP 請求
 
-GET`/v5/asset/transfer/query-account-coin-balance`
+GET`/v5/announcements/index`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-memberId| false| string| 用戶Id. 當查詢子帳號的餘額時，該字段**必傳**  
-toMemberId| false| string| 劃入帳戶UID. 當查詢不同uid間劃轉時, 該字段**必傳**  
-[accountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 帳戶類型  
-[toAccountType](/docs/zh-TW/v5/enum#accounttype)| false| string| 劃入帳戶類型. 當查詢不同帳戶類型間的劃轉時, 該字段**必傳**  
-coin| **true**|  string| 幣種  
-withBonus| false| integer| 是否查詢體驗金. `0`(默認): 不查詢,`1`: 查詢.  
-withTransferSafeAmount| false| integer| 是否查詢延遲提幣安全限額 
-
-  * `0`(默認)：否, `1`：是
-  * 什麼是[延遲提幣](/docs/zh-TW/v5/asset/balance/delay-amount)?
-
-  
-withLtvTransferSafeAmount| false| integer| 特別用於機構借貸用戶, 可以查詢風險水平內的可劃轉餘額
-
-  * `0`(default)：false, `1`：true
-  * 此時`toAccountType`字段**必傳**
-
-  
+[locale](/docs/zh-TW/v5/enum#locale)| **true**|  string| 公告語言標識  
+[type](/docs/zh-TW/v5/enum#announcementtype)| false| string| 公告類型  
+[tag](/docs/zh-TW/v5/enum#announcementtag)| false| string| 公告標籤  
+page| false| integer| 分頁頁碼. 默認: `1`  
+limit| false| integer| 每頁數據限制. 默認: `20`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-accountType| string| 賬戶類型  
-bizType| integer| 帳戶業務子類型  
-accountId| string| 賬戶ID  
-memberId| string| 用戶ID  
-balance| Object|   
-> coin| string| 幣種類型  
-> walletBalance| string| 錢包余額  
-> transferBalance| string| 可划余額  
-> bonus| string| 可用金額中包含的体验金  
-> transferSafeAmount| string| 可劃轉的安全限額. 若不查詢，則返回`""`  
-> ltvTransferSafeAmount| string| 機構借貸用戶的可劃轉餘額. 若不查詢，則返回`""`  
-[](/docs/zh-TW/api-explorer/v5/asset/account-coin-balance)
-
+total| integer| 可查詢公告總署  
+list| array| Object  
+> title| string| 公告標題  
+> description| string| 公告描述  
+> type| Object|   
+>> title| string| 公告類型名稱，多語言  
+>> [key](/docs/zh-TW/v5/enum#announcementtype)| string| 公告類型唯一鍵  
+> [tags](/docs/zh-TW/v5/enum#announcementtag)| array<string>| 公告標籤  
+> url| string| 公告鏈結  
+> dateTimestamp| number| 作者填寫的時間戳 (毫秒)  
+> startDataTimestamp| number| 事件開始時間戳 (毫秒), 僅當`list.type.key == "latest_activities"`時有效  
+> endDataTimestamp| number| 事件結束時間戳 (毫秒), 僅當`list.type.key == "latest_activities"`時有效  
+> publishTime| number| 公告發出時間戳 (毫秒)  
+  
 * * *
 
 ### 請求示例
 
   * HTTP
   * Python
-  * Node.js
+  * Java
 
 
     
     
-    GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=USDT&toAccountType=FUND&withLtvTransferSafeAmount=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: xxxxx  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1690254520644  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/announcements/index?locale=en-US&limit=1 HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_coin_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-        memberId=592324,  
+    session = HTTP(testnet=True)  
+    print(session.get_announcement(  
+        locale="en-US",  
+        limit=1,  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getCoinBalance({  
-        accountType: 'UNIFIED',  
-        coin: 'USDT',  
-        toAccountType: 'FUND',  
-        withLtvTransferSafeAmount: 1,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    import com.bybit.api.client.domain.announcement.LanguageSymbol;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var announcementInfoRequest = MarketDataRequest.builder().locale(LanguageSymbol.EN_US).build();  
+    client.getAnnouncementInfo(announcementInfoRequest, System.out::println);  
     
 
 ### 響應示例
@@ -258,21 +177,28 @@ balance| Object|
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "accountType": "UNIFIED",  
-            "bizType": 1,  
-            "accountId": "1631385",  
-            "memberId": "1631373",  
-            "balance": {  
-                "coin": "USDT",  
-                "walletBalance": "11999",  
-                "transferBalance": "11999",  
-                "bonus": "0",  
-                "transferSafeAmount": "",  
-                "ltvTransferSafeAmount": "7602.4861"  
-            }  
+            "total": 569,  
+            "list": [  
+                {  
+                    "title": "Arbitrum(ARB) 即將上線：儲值 250 ARB 即賺 25 USDT，更可解鎖 150,000 USDT 獎池！",  
+                    "description": "好消息！ ARB 即將上線 Bybit 交易平台！",  
+                    "type": {  
+                        "title": "新幣上線",  
+                        "key": "new_crypto"  
+                    },  
+                    "tags": [  
+                        "Spot",  
+                        "Spot Listings"  
+                    ],  
+                    "url": "https://announcements.bybit.com/zh-TW/article/new-listing-arbitrum-arb-deposit-250-arb-to-earn-25-usdt-share-a-150-000-usdt-prize-pool--bltf662314c211a8616/",  
+                    "dateTimestamp": 1679045608000,  
+                    "startDateTimestamp": 1679564008000,  
+                    "endDateTimestamp": 1680255208000  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1690254521256  
+        "time": 1679416172335  
     }

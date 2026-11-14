@@ -2,24 +2,25 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/order-list
 api_type: REST
-updated_at: 2026-11-13 18:26:49.787166
+updated_at: 2026-11-13 19:21:10.985026
 ---
 
-# Get Position History
+# Get Order List
 
-Query the authenticated user's closed prediction market positions. Includes settlement results (WIN/LOSE) for resolved events.
+Query the authenticated user's prediction market order history. Use this after placing a buy or sell order to check the final execution status. FOK orders will show as `FILLED` or `CANCELLED`.
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/position-history`
+POST`/v5/alpha/prediction/order-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
+status| false| integer| Filter by order status. Refer to [predictionOrderStatus](/docs/v5/enum#predictionorderstatus-prediction-market--order-status)  
 tokenId| false| string| Filter by outcome token ID  
 eventId| false| string| Filter by event ID  
-result| false| integer| Filter by position outcome. Refer to [predictionPositionResult](/docs/v5/enum#predictionpositionresult-prediction-market--position-result)  
+side| false| integer| Filter by trade direction. Refer to [predictionSide](/docs/v5/enum#predictionside-prediction-market--trade-direction)  
 days| false| integer| Look back N days. Max: `90`  
 limit| false| integer| Number of records per page  
 pageIndex| false| integer| Page number starting from `1`  
@@ -28,20 +29,21 @@ pageIndex| false| integer| Page number starting from `1`
 
 Parameter| Type| Comments  
 ---|---|---  
-positions| array| Closed position records  
-> positionId| string| Position ID  
+orders| array| Order records  
+> orderNo| string| Order number  
 > tokenId| string| Outcome token ID  
 > eventId| string| Event ID  
-> outcomeName| string| Outcome label (e.g., `YES`, `NO`)  
-> shares| string| Total shares that were held  
-> cost| string| Total USDC cost of this position  
-> avgPrice| string| Average cost price per share  
-> exitPrice| string| Price at which the position was closed  
-> realizedPnl| string| Realized profit/loss (USDC). Positive = profit  
-> realizedPnlRate| string| Realized P&L as decimal ratio  
-> result| integer| Position outcome. Refer to [predictionPositionResult](/docs/v5/enum#predictionpositionresult-prediction-market--position-result)  
-> closedAt| integer| Position close timestamp (UTC milliseconds)  
+> side| integer| Trade direction. Refer to [predictionSide](/docs/v5/enum#predictionside-prediction-market--trade-direction)  
+> orderType| integer| Order type. Refer to [predictionOrderType](/docs/v5/enum#predictionordertype-prediction-market--order-type)  
+> orderAmount| string| BUY: USDC invested. SELL: shares sold  
+> filledSize| string| Filled shares (BUY) or shares sold (SELL)  
+> filledPrice| string| Average execution price  
+> totalFee| string| Total platform fee charged (USDC)  
+> status| integer| Order status. Refer to [predictionOrderStatus](/docs/v5/enum#predictionorderstatus-prediction-market--order-status)  
+> createdAt| integer| Order creation timestamp (UTC milliseconds)  
+> updatedAt| integer| Last update timestamp (UTC milliseconds)  
 total| integer| Total matching records  
+pageIndex| integer| Current page number  
   
 ### Request Example
 
@@ -52,7 +54,7 @@ total| integer| Total matching records
 
     
     
-    POST /v5/alpha/prediction/position-history HTTP/1.1  
+    POST /v5/alpha/prediction/order-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -63,7 +65,7 @@ total| integer| Total matching records
     {  
         "limit": 20,  
         "pageIndex": 1,  
-        "days": 30  
+        "days": 7  
     }  
     
     
@@ -82,23 +84,24 @@ total| integer| Total matching records
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "positions": [  
+            "orders": [  
                 {  
-                    "positionId": "pos_456",  
-                    "tokenId": "token_yes_456",  
-                    "eventId": "event_456",  
-                    "outcomeName": "YES",  
-                    "shares": "200",  
-                    "cost": "140.00",  
-                    "avgPrice": "0.70",  
-                    "exitPrice": "1.00",  
-                    "realizedPnl": "60.00",  
-                    "realizedPnlRate": "0.429",  
-                    "result": 1,  
-                    "closedAt": 1704153600000  
+                    "orderNo": "ord_buy_20240101_001",  
+                    "tokenId": "token_yes_123",  
+                    "eventId": "event_123",  
+                    "side": 1,  
+                    "orderType": 1,  
+                    "orderAmount": "100",  
+                    "filledSize": "153.84",  
+                    "filledPrice": "0.65",  
+                    "totalFee": "1.00",  
+                    "status": 2,  
+                    "createdAt": 1704067200000,  
+                    "updatedAt": 1704067205000  
                 }  
             ],  
-            "total": 1  
+            "total": 1,  
+            "pageIndex": 1  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  
@@ -106,21 +109,22 @@ total| integer| Total matching records
 
 ---
 
-# 獲取歷史持倉
+# 獲取委托記錄
 
-查詢已登錄用戶的預測市場已平倉記錄，包含已結算賽事的結果（WIN/LOSE）。
+查詢已登錄用戶的預測市場委托歷史。在下達買入或賣出委托後，可調用此接口查詢最終成交狀態。FOK 委托將顯示為 `FILLED` 或 `CANCELLED`。
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/position-history`
+POST`/v5/alpha/prediction/order-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
+status| false| integer| 按委托狀態篩選。參考 [predictionOrderStatus](/docs/zh-TW/v5/enum#predictionorderstatus-prediction-market--order-status)  
 tokenId| false| string| 按結果代幣 ID 篩選  
 eventId| false| string| 按賽事 ID 篩選  
-result| false| integer| 按倉位結果篩選。參考 [predictionPositionResult](/docs/zh-TW/v5/enum#predictionpositionresult-prediction-market--position-result)  
+side| false| integer| 按交易方向篩選。參考 [predictionSide](/docs/zh-TW/v5/enum#predictionside-prediction-market--trade-direction)  
 days| false| integer| 回溯天數，最大 `90`  
 limit| false| integer| 每頁記錄數  
 pageIndex| false| integer| 頁碼，從 `1` 開始  
@@ -129,20 +133,21 @@ pageIndex| false| integer| 頁碼，從 `1` 開始
 
 參數| 類型| 說明  
 ---|---|---  
-positions| array| 已平倉記錄  
-> positionId| string| 持倉 ID  
+orders| array| 委托記錄  
+> orderNo| string| 委托號  
 > tokenId| string| 結果代幣 ID  
 > eventId| string| 賽事 ID  
-> outcomeName| string| 結果標籤（如 `YES`、`NO`）  
-> shares| string| 持有的總份額  
-> cost| string| 本倉位的總 USDC 成本  
-> avgPrice| string| 每份額的平均成本價  
-> exitPrice| string| 平倉價格  
-> realizedPnl| string| 已實現盈虧（USDC），正數為盈利  
-> realizedPnlRate| string| 已實現盈虧比率  
-> result| integer| 倉位結果。參考 [predictionPositionResult](/docs/zh-TW/v5/enum#predictionpositionresult-prediction-market--position-result)  
-> closedAt| integer| 平倉時間戳（UTC 毫秒）  
+> side| integer| 交易方向。參考 [predictionSide](/docs/zh-TW/v5/enum#predictionside-prediction-market--trade-direction)  
+> orderType| integer| 委托類型。參考 [predictionOrderType](/docs/zh-TW/v5/enum#predictionordertype-prediction-market--order-type)  
+> orderAmount| string| 買入：投入的 USDC；賣出：賣出的份額  
+> filledSize| string| 已成交份額（買入）或已賣出份額（賣出）  
+> filledPrice| string| 平均成交價格  
+> totalFee| string| 總手續費（USDC）  
+> status| integer| 委托狀態。參考 [predictionOrderStatus](/docs/zh-TW/v5/enum#predictionorderstatus-prediction-market--order-status)  
+> createdAt| integer| 委托創建時間戳（UTC 毫秒）  
+> updatedAt| integer| 最後更新時間戳（UTC 毫秒）  
 total| integer| 符合條件的總記錄數  
+pageIndex| integer| 當前頁碼  
   
 ### 請求示例
 
@@ -153,7 +158,7 @@ total| integer| 符合條件的總記錄數
 
     
     
-    POST /v5/alpha/prediction/position-history HTTP/1.1  
+    POST /v5/alpha/prediction/order-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -164,7 +169,7 @@ total| integer| 符合條件的總記錄數
     {  
         "limit": 20,  
         "pageIndex": 1,  
-        "days": 30  
+        "days": 7  
     }  
     
     
@@ -183,23 +188,24 @@ total| integer| 符合條件的總記錄數
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "positions": [  
+            "orders": [  
                 {  
-                    "positionId": "pos_456",  
-                    "tokenId": "token_yes_456",  
-                    "eventId": "event_456",  
-                    "outcomeName": "YES",  
-                    "shares": "200",  
-                    "cost": "140.00",  
-                    "avgPrice": "0.70",  
-                    "exitPrice": "1.00",  
-                    "realizedPnl": "60.00",  
-                    "realizedPnlRate": "0.429",  
-                    "result": 1,  
-                    "closedAt": 1704153600000  
+                    "orderNo": "ord_buy_20240101_001",  
+                    "tokenId": "token_yes_123",  
+                    "eventId": "event_123",  
+                    "side": 1,  
+                    "orderType": 1,  
+                    "orderAmount": "100",  
+                    "filledSize": "153.84",  
+                    "filledPrice": "0.65",  
+                    "totalFee": "1.00",  
+                    "status": 2,  
+                    "createdAt": 1704067200000,  
+                    "updatedAt": 1704067205000  
                 }  
             ],  
-            "total": 1  
+            "total": 1,  
+            "pageIndex": 1  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  

@@ -2,28 +2,28 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw/cancel-withdraw
 api_type: REST
-updated_at: 2026-11-13 18:27:06.329307
+updated_at: 2026-11-13 19:21:53.352515
 ---
 
-# Get available VASPs
+# Cancel Withdrawal
 
-This endpoint is used for query the available VASPs. This API distinguishes which compliance zone the user belongs to and the corresponding list of exchanges based on the user's UID.
+Cancel the withdrawal
 
 ### HTTP Request
 
-GET`/v5/asset/withdraw/vasp/list`
+POST`/v5/asset/withdraw/cancel`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+id| **true**|  string| Withdrawal ID  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-vasp| array| Exchange entity info  
-> vaspEntityId| string| Receiver platform id. When transfer to the exchanges that are not in the list, please use vaspEntityId='others'  
-> vaspName| string| Receiver platform name  
+status| integer| `0`: fail. `1`: success  
   
 ### Request Example
 
@@ -34,12 +34,17 @@ vasp| array| Exchange entity info
 
     
     
-    GET /v5/asset/withdraw/vasp/list HTTP/1.1  
+    POST /v5/asset/withdraw/cancel HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1715067106163  
+    X-BAPI-TIMESTAMP: 1672197227732  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "id": "10197"  
+    }  
     
     
     
@@ -49,7 +54,9 @@ vasp| array| Exchange entity info
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_exchange_entity_list())  
+    print(session.cancel_withdrawal(  
+        id="10197",  
+    ))  
     
     
     
@@ -62,7 +69,7 @@ vasp| array| Exchange entity info
     });  
       
     client  
-      .getExchangeEntities()  
+      .cancelWithdrawal('10197')  
       .then((response) => {  
         console.log(response);  
       })  
@@ -78,114 +85,31 @@ vasp| array| Exchange entity info
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "vasp": [  
-                {  
-                    "vaspEntityId": "basic-finance",  
-                    "vaspName": "Basic-finance"  
-                },  
-                {  
-                    "vaspEntityId": "beeblock",  
-                    "vaspName": "Beeblock"  
-                },  
-                {  
-                    "vaspEntityId": "bithumb",  
-                    "vaspName": "bithumb"  
-                },  
-                {  
-                    "vaspEntityId": "cardo",  
-                    "vaspName": "cardo"  
-                },  
-                {  
-                    "vaspEntityId": "codevasp",  
-                    "vaspName": "codevasp"  
-                },  
-                {  
-                    "vaspEntityId": "codexchange-kor",  
-                    "vaspName": "CODExchange-kor"  
-                },  
-                {  
-                    "vaspEntityId": "coinone",  
-                    "vaspName": "coinone"  
-                },  
-                {  
-                    "vaspEntityId": "dummy",  
-                    "vaspName": "Dummy"  
-                },  
-                {  
-                    "vaspEntityId": "flata-exchange",  
-                    "vaspName": "flataexchange"  
-                },  
-                {  
-                    "vaspEntityId": "fobl",  
-                    "vaspName": "Foblgate"  
-                },  
-                {  
-                    "vaspEntityId": "hanbitco",  
-                    "vaspName": "hanbitco"  
-                },  
-                {  
-                    "vaspEntityId": "hexlant",  
-                    "vaspName": "hexlant"  
-                },  
-                {  
-                    "vaspEntityId": "inex",  
-                    "vaspName": "INEX"  
-                },  
-                {  
-                    "vaspEntityId": "infiniteblock-corp",  
-                    "vaspName": "InfiniteBlock Corp"  
-                },  
-                {  
-                    "vaspEntityId": "kdac",  
-                    "vaspName": "kdac"  
-                },  
-                {  
-                    "vaspEntityId": "korbit",  
-                    "vaspName": "korbit"  
-                },  
-                {  
-                    "vaspEntityId": "paycoin",  
-                    "vaspName": "Paycoin"  
-                },  
-                {  
-                    "vaspEntityId": "qbit",  
-                    "vaspName": "Qbit"  
-                },  
-                {  
-                    "vaspEntityId": "tennten",  
-                    "vaspName": "TENNTEN"  
-                },  
-                {  
-                    "vaspEntityId": "others",  
-                    "vaspName": "Others (including Upbit)"  
-                }  
-            ]  
+            "status": 1  
         },  
         "retExtInfo": {},  
-        "time": 1715067106537  
+        "time": 1672197228408  
     }
 
 ---
 
-# 查詢交易所列表
-
-該接口主要用于在提現時需要填寫接收方交易所信息，該 API 會根據用戶 UID 區分出用戶屬於哪個合規區以及對應的交易所列表。
+# 撤銷提幣
 
 ### HTTP 請求
 
-GET`/v5/asset/withdraw/vasp/list`
+POST`/v5/asset/withdraw/cancel`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+id| **true**|  string| 提現Id  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-vasp| array| 交易所實體信息  
-> vaspEntityId| string| 接收方平台id. 當提現至交易所或者不在該列表內的平台時, 請使用vaspEntityId="others"  
-> vaspName| string| 接收方平台名稱  
+status| integer| `0`: 失敗. `1`: 成功  
   
 ### 請求示例
 
@@ -196,16 +120,29 @@ vasp| array| 交易所實體信息
 
     
     
-    GET /v5/asset/withdraw/vasp/list HTTP/1.1  
+    POST /v5/asset/withdraw/cancel HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1715067106163  
+    X-BAPI-TIMESTAMP: 1672197227732  
     X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXXX  
-    
-    
-    
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
       
+    {  
+        "id": "10197"  
+    }  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.cancel_withdrawal(  
+        id="10197",  
+    ))  
     
     
     
@@ -218,7 +155,7 @@ vasp| array| 交易所實體信息
     });  
       
     client  
-      .getExchangeEntities()  
+      .cancelWithdrawal('10197')  
       .then((response) => {  
         console.log(response);  
       })  
@@ -234,89 +171,8 @@ vasp| array| 交易所實體信息
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "vasp": [  
-                {  
-                    "vaspEntityId": "basic-finance",  
-                    "vaspName": "Basic-finance"  
-                },  
-                {  
-                    "vaspEntityId": "beeblock",  
-                    "vaspName": "Beeblock"  
-                },  
-                {  
-                    "vaspEntityId": "bithumb",  
-                    "vaspName": "bithumb"  
-                },  
-                {  
-                    "vaspEntityId": "cardo",  
-                    "vaspName": "cardo"  
-                },  
-                {  
-                    "vaspEntityId": "codevasp",  
-                    "vaspName": "codevasp"  
-                },  
-                {  
-                    "vaspEntityId": "codexchange-kor",  
-                    "vaspName": "CODExchange-kor"  
-                },  
-                {  
-                    "vaspEntityId": "coinone",  
-                    "vaspName": "coinone"  
-                },  
-                {  
-                    "vaspEntityId": "dummy",  
-                    "vaspName": "Dummy"  
-                },  
-                {  
-                    "vaspEntityId": "flata-exchange",  
-                    "vaspName": "flataexchange"  
-                },  
-                {  
-                    "vaspEntityId": "fobl",  
-                    "vaspName": "Foblgate"  
-                },  
-                {  
-                    "vaspEntityId": "hanbitco",  
-                    "vaspName": "hanbitco"  
-                },  
-                {  
-                    "vaspEntityId": "hexlant",  
-                    "vaspName": "hexlant"  
-                },  
-                {  
-                    "vaspEntityId": "inex",  
-                    "vaspName": "INEX"  
-                },  
-                {  
-                    "vaspEntityId": "infiniteblock-corp",  
-                    "vaspName": "InfiniteBlock Corp"  
-                },  
-                {  
-                    "vaspEntityId": "kdac",  
-                    "vaspName": "kdac"  
-                },  
-                {  
-                    "vaspEntityId": "korbit",  
-                    "vaspName": "korbit"  
-                },  
-                {  
-                    "vaspEntityId": "paycoin",  
-                    "vaspName": "Paycoin"  
-                },  
-                {  
-                    "vaspEntityId": "qbit",  
-                    "vaspName": "Qbit"  
-                },  
-                {  
-                    "vaspEntityId": "tennten",  
-                    "vaspName": "TENNTEN"  
-                },  
-                {  
-                    "vaspEntityId": "others",  
-                    "vaspName": "Others (including Upbit)"  
-                }  
-            ]  
+            "status": 1  
         },  
         "retExtInfo": {},  
-        "time": 1715067106537  
+        "time": 1672197228408  
     }

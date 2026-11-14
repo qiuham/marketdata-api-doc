@@ -1,37 +1,68 @@
 name: binance
 
 crawler:
-  # 多语言支持
+  # 2026 年改版后的网址（旧的 /docs/<产品>/ 会 302 跳到这里）；旧的 derivatives 拆成了 5 个产品
   languages:
     - lang: en
       start_urls:
-        - "https://developers.binance.com/docs/binance-spot-api-docs/CHANGELOG"
-        - "https://developers.binance.com/docs/derivatives/Introduction"
-        - "https://developers.binance.com/docs/margin_trading/Introduction"
-        - "https://developers.binance.com/docs/algo/Introduction"
-        - "https://developers.binance.com/docs/wallet/Introduction"
-        - "https://developers.binance.com/docs/copy_trading/Introduction"
-        - "https://developers.binance.com/docs/convert/Introduction"
-        - "https://developers.binance.com/docs/institutional_loan/Introduction"
-        - "https://developers.binance.com/docs/alpha/change-log"
-        - "https://developers.binance.com/docs/sub_account/Introduction"
+        - "https://developers.binance.com/en/docs/products/spot/CHANGELOG"
+        - "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/Introduction"
+        - "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Introduction"
+        - "https://developers.binance.com/en/docs/products/derivatives-trading-options/Introduction"
+        - "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/Introduction"
+        - "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/Introduction"
+        - "https://developers.binance.com/en/docs/products/margin-trading/Introduction"
+        - "https://developers.binance.com/en/docs/products/algo/Introduction"
+        - "https://developers.binance.com/en/docs/products/wallet/Introduction"
+        - "https://developers.binance.com/en/docs/products/copy-trading/Introduction"
+        - "https://developers.binance.com/en/docs/products/convert/Introduction"
+        - "https://developers.binance.com/en/docs/products/institutional-loan/Introduction"
+        - "https://developers.binance.com/en/docs/products/alpha/change-log"
+        - "https://developers.binance.com/en/docs/products/sub-account/Introduction"
     - lang: zh
       start_urls:
-        - "https://developers.binance.com/docs/zh-CN/binance-spot-api-docs/CHANGELOG"
-        - "https://developers.binance.com/docs/zh-CN/derivatives/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/margin_trading/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/algo/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/wallet/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/copy_trading/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/convert/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/institutional_loan/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/alpha/change-log"
-        - "https://developers.binance.com/docs/zh-CN/sub_account/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/spot/CHANGELOG"
+        - "https://developers.binance.com/zh-CN/docs/products/derivatives-trading-usds-futures/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/derivatives-trading-coin-futures/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/derivatives-trading-options/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/derivatives-trading-portfolio-margin/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/margin-trading/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/algo/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/wallet/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/copy-trading/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/convert/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/institutional-loan/Introduction"
+        - "https://developers.binance.com/zh-CN/docs/products/alpha/change-log"
+        - "https://developers.binance.com/zh-CN/docs/products/sub-account/Introduction"
+
+  # 接口规格：每个接口目录页上有一份 schema.yaml（OpenAPI / AsyncAPI），和上面 14 个产品对应
+  spec_roots:
+    - "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-institutional-loan/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api"
+    - "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/ws-streams"
+    - "https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api"
 
   selectors:
-    collapsed_menu: ".menu__list-item--collapsed"
-    doc_link: 'aside nav a:not([role="button"])'
-    main_content: "main article"
+    main_content: "main .prose"
     title: "h1"
 
 output:

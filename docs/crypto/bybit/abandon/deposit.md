@@ -2,68 +2,60 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/deposit
 api_type: REST
-updated_at: 2026-11-13 18:26:33.825885
+updated_at: 2026-11-13 19:20:37.345606
 ---
 
-# Enable Universal Transfer for Sub UID
+# Deposit Funds
+
+Lending funds to Bybit asset pool
 
 info
 
-You no longer need to configure transferable sub UIDs. Now, all sub UIDs are automatically enabled for universal transfer.
+  * normal & UMA account: deduct funds from Spot wallet
+  * UTA account: deduct funds from Unified wallet
 
-Transfer between sub-sub or main-sub
 
-Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
-
-caution
-
-Can query by the master UID's api key **only**
 
 ### HTTP Request
 
-POST`/v5/asset/transfer/save-transfer-sub-member`
+POST`/v5/lending/purchase`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subMemberIds| **true**|  array| This list has a **single item**. Separate multiple UIDs by comma, e.g., `"uid1,uid2,uid3"`  
+coin| **true**|  string| Coin name  
+quantity| **true**|  string| Deposit quantity  
+serialNo| false| string| Customised ID. If not passed, system will create one by default  
   
 ### Response Parameters
 
-None
-
+Parameter| Type| Comments  
+---|---|---  
+coin| string| Coin name  
+createdTime| string| Created timestamp (ms)  
+orderId| string| Order ID  
+quantity| string| Deposit quantity  
+serialNo| string| Serial No  
+status| string| Order status. `0`: Initial, `1`: Processing, `2`: Success, `10`: Failed  
+updatedTime| string| Updated timestamp (ms)  
+  
 ### Request Example
-
-  * HTTP
-  * Python
-
-
     
     
-    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
+    POST /v5/lending/purchase HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147595971  
+    X-BAPI-TIMESTAMP: 1682046368938  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subMemberIds": ["554117,592324,592334"]  
+        "coin": "USDC",  
+        "quantity": "20.00005",  
+        "serialNo": "test-00007"  
     }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.enable_universal_transfer_for_sub_uid(  
-        subMemberIds=["554117,592324,592334"],  
-    ))  
     
 
 ### Response Example
@@ -71,84 +63,88 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {},  
+        "retMsg": "OK",  
+        "result": {  
+            "coin": "USDC",  
+            "createdTime": "1682046369112",  
+            "orderId": "1403501100816928256",  
+            "quantity": "20.00005",  
+            "serialNo": "test-00007",  
+            "status": "0",  
+            "updatedTime": "1682046369112"  
+        },  
         "retExtInfo": {},  
-        "time": 1672147593188  
+        "time": 1682046369120  
     }
 
 ---
 
-# 配置互相劃轉的子帳號
+# 存入資金
 
 信息
 
-無需再配置可劃轉的子帳號, 該限制已移除, 默認任意子帳號之間可以劃轉
+  * 經典帳戶&UMA帳戶: 資金是從現貨錢包扣除
+  * UTA帳戶: 資金是從統一交易錢包扣除
 
-該接口用於配置開啟萬能劃轉的子帳號列表。沒有進行配置的子帳號是無法進行萬能劃轉的。
 
-提示
-
-萬能劃轉是允許您將資金直接從一個子帳號劃轉到另一個子帳號，同樣允許母子帳號間的劃轉。
-
-警告
-
-僅支持母帳號API key
 
 ### HTTP 請求
 
-POST`/v5/asset/transfer/save-transfer-sub-member`
+POST`/v5/lending/purchase`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-subMemberIds| **true**|  array<string>| 子帳號. 支持輸入多個子帳號，用逗號隔開, 比如, "uid1,uid2,uid3"  
+coin| **true**|  string| 幣種名稱  
+quantity| **true**|  string| 存入數量  
+serialNo| false| string| 序列號，即自定義ID. 若不傳入，則系統自建  
   
 ### 響應參數
 
-無
-
+參數| 類型| 說明  
+---|---|---  
+coin| string| 幣種名稱  
+createdTime| string| 創建時間戳 (毫秒)  
+orderId| string| 訂單ID  
+quantity| string| 存入數量  
+serialNo| string| 序列號  
+status| string| 訂單狀態. `0`: 初始, `1`: 處理中, `2`: 成功, `10`: 失敗  
+updatedTime| string| 更新時間戳 (毫秒)  
+  
 ### 請求示例
-
-  * HTTP
-  * Python
-
-
     
     
-    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
+    POST /v5/lending/purchase HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147595971  
+    X-BAPI-TIMESTAMP: 1682046368938  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
     {  
-        "subMemberIds": ["554117,592324,592334"]  
+        "coin": "USDC",  
+        "quantity": "20.00005",  
+        "serialNo": "test-00007"  
     }  
     
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.enable_universal_transfer_for_sub_uid(  
-        subMemberIds=["554117,592324,592334"],  
-    ))  
-    
 
-### Response Example
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {},  
+        "retMsg": "OK",  
+        "result": {  
+            "coin": "USDC",  
+            "createdTime": "1682046369112",  
+            "orderId": "1403501100816928256",  
+            "quantity": "20.00005",  
+            "serialNo": "test-00007",  
+            "status": "0",  
+            "updatedTime": "1682046369112"  
+        },  
         "retExtInfo": {},  
-        "time": 1672147593188  
+        "time": 1682046369120  
     }

@@ -2,62 +2,71 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert/convert-coin-list
 api_type: REST
-updated_at: 2026-11-13 18:26:58.506456
+updated_at: 2026-11-13 19:21:34.306671
 ---
 
-# Get Delivery Record
+# Get Convert Coin List
 
-Query delivery records of Invese Futures, USDC Futures, USDT Futures and Options, sorted by `deliveryTime` in descending order
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Query for the list of coins you can convert to/from.
 
 ### HTTP Request
 
-GET`/v5/asset/delivery-record`
+GET`/v5/asset/exchange/query-coin-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `inverse`(inverse futures), `linear`(USDT/USDC futures), `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
+[accountType](/docs/v5/enum#convertaccounttype)| **true**|  string| Wallet type 
 
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime - 30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
+  * `eb_convert_funding`
+  * `eb_convert_uta`
+  * `eb_convert_spot`
+  * `eb_convert_contract`
+  * `eb_convert_inverse`
 
   
-endTime| false| integer| The end timestamp (ms)  
-expDate| false| string| Expiry date. `25MAR22`. Default: return all  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+coin| false| string| Coin, uppercase only 
+
+  * Convert from coin (coin to sell)
+  * when side=0, coin field is ignored
+
+  
+side| false| integer| `0`: fromCoin list, the balance is given if you have it; `1`: toCoin list (coin to buy) 
+
+  * when side=1 and coin field is filled, it returns toCoin list based on coin field
+
+  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> deliveryTime| number| Delivery time (ms)  
-> symbol| string| Symbol name  
-> side| string| `Buy`,`Sell`  
-> position| string| Executed size  
-> entryPrice| string| Avg entry price  
-> deliveryPrice| string| Delivery price  
-> strike| string| Exercise price  
-> fee| string| Trading fee  
-> deliveryRpl| string| Realized PnL of the delivery  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/asset/delivery)
+coins| array<object>| Coin spec  
+> coin| string| Coin  
+> fullName| string| Full coin name  
+> icon| string| Coin icon url  
+> iconNight| string| Coin icon url (dark mode)  
+> accuracyLength| integer| Coin precision  
+> coinType| string| `crypto`  
+> balance| string| Balance 
 
-* * *
+  * When side=0, it gives available balance but cannot used to convert. To get an exact balance to convert, you need specify `side=1` and `coin` parameter
 
+  
+> uBalance| string| Coin balance in USDT worth value  
+> singleFromMinLimit| string| The minimum amount of fromCoin per transaction  
+> singleFromMaxLimit| string| The maximum amount of fromCoin per transaction  
+> disableFrom| boolean| `true`: the coin is disabled to be fromCoin, `false`: the coin is allowed to be fromCoin  
+> disableTo| boolean| `true`: the coin is disabled to be toCoin, `false`: the coin is allowed to be toCoin  
+> timePeriod| integer| Reserved field, ignored for now  
+> singleToMinLimit| string| Reserved field, ignored for now  
+> singleToMaxLimit| string| Reserved field, ignored for now  
+> dailyFromMinLimit| string| Reserved field, ignored for now  
+> dailyFromMaxLimit| string| Reserved field, ignored for now  
+> dailyToMinLimit| string| Reserved field, ignored for now  
+> dailyToMaxLimit| string| Reserved field, ignored for now  
+  
 ### Request Example
 
   * HTTP
@@ -67,11 +76,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
+    GET /v5/asset/exchange/query-coin-list?side=0&accountType=eb_convert_funding HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
+    X-BAPI-TIMESTAMP: 1720064061248  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -82,9 +91,9 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
+    print(session.get_convert_coin_list(  
+        side="0",  
+        accountType="eb_convert_funding",  
     ))  
     
     
@@ -98,7 +107,7 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
+      .getConvertCoins({ accountType: 'eb_convert_spot' })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -112,82 +121,140 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
+            "coins": [  
                 {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
+                    "coin": "BTC",  
+                    "fullName": "BTC",  
+                    "icon": "https://t1.bycsi.com/app/assets/token/0717b8c28c2373bf714c964195411d0f.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/9504b4c841194cc38f04041003ffbfdb.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "0",  
+                    "uBalance": "0",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.001",  
+                    "singleFromMaxLimit": "1",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
+                },  
+                ...  
+                {  
+                    "coin": "SOL",  
+                    "fullName": "SOL",  
+                    "icon": "https://s1.bycsi.com/app/assets/token/87ca5f1ca7229bdf0d9a16435653007c.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/383a834046655ffe5ef1be1a025791cc.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "18.05988133",  
+                    "uBalance": "2458.46990211775033220586588327",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.1",  
+                    "singleFromMaxLimit": "1250",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
+                },  
+                ...  
+                {  
+                    "coin": "ETH",  
+                    "fullName": "ETH",  
+                    "icon": "https://s1.bycsi.com/app/assets/token/d6c17c9e767e1810875c702d86ac9f32.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/9613ac8e7d62081f4ca20488ae5b168d.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "0.80264489",  
+                    "uBalance": "2596.09751650032773106431534138",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.01",  
+                    "singleFromMaxLimit": "250",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672362116184  
+        "time": 1720064061736  
     }
 
 ---
 
-# 查詢交割紀錄
+# 查詢兌換幣種列表
 
-查詢反向交割 / USDT交割 / USDC交割 / 期權的交割紀錄, 返回結果按照`deliveryTime`降序排列
-
-信息
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+您可以通過該接口獲取到各個帳戶內的兌入兌出幣種列表
 
 ### HTTP 請求
 
-GET`/v5/asset/delivery-record`
+GET`/v5/asset/exchange/query-coin-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `inverse`(反向交割), `linear`(USDT/USDC交割), `option`(期權交割)  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
+[accountType](/docs/zh-TW/v5/enum#convertaccounttype)| **true**|  string| 錢包類型 
 
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
+  * `eb_convert_funding`
+  * `eb_convert_uta`
+  * `eb_convert_spot`
+  * `eb_convert_contract`
+  * `eb_convert_inverse`
 
   
-endTime| false| integer| 結束時間 (毫秒)  
-expDate| false| string| 過期日. 格式示例: `25MAR22`. 默認: 返回所有日期數據  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
+coin| false| string| 兌出幣種
+
+  * 當side=0時, 該字段會被忽略
+
+  
+side| false| integer| `0`: 查詢兌出幣種列表, 會返回幣種餘額  
+`1`: 有傳coin的話, 會根據兌出幣種查詢支持的兌入幣種列表  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> deliveryTime| number| 交割時間戳 (毫秒)  
-> symbol| string| 合約名稱  
-> side| string| `Buy`,`Sell`  
-> position| string| 交割數量  
-> entryPrice| string| 平均入場價  
-> deliveryPrice| string| 交割價格  
-> strike| string| 行權價  
-> fee| string| 手續費，正數表支出，負數表收取  
-> deliveryRpl| string| 交割已實現盈虧  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/asset/delivery)
+coins| array<object>| 幣種信息  
+> coin| string| 幣種  
+> fullName| string| 完整幣種名  
+> icon| string| 幣種圖標url  
+> iconNight| string| 幣種圖標url (夜間模式)  
+> accuracyLength| integer| 幣種精度  
+> coinType| string| 幣種類型. `crypto`(加密貨幣)  
+> balance| string| 幣種餘額 
 
-* * *
+  * 當side=0時, 返回餘額不可直接用於兌換. 要獲取準確的可用於兌換的餘額, 應當帶上side=1和指定coin來查
 
+  
+> uBalance| string| 幣種折成USDT的價值  
+> singleFromMinLimit| string| 單筆交易最小兌出幣種數量  
+> singleFromMaxLimit| string| 單筆交易最大兌出幣種數量  
+> disableFrom| boolean| `true`: 該幣種禁止兌出, `false`: 該幣種允許兌出  
+> disableTo| boolean| `true`: 該幣入禁止兌出, `false`: 該幣種允許兌入  
+> timePeriod| integer| 保留字段, 當前可忽略  
+> singleToMinLimit| string| 保留字段, 當前可忽略  
+> singleToMaxLimit| string| 保留字段, 當前可忽略  
+> dailyFromMinLimit| string| 保留字段, 當前可忽略  
+> dailyFromMaxLimit| string| 保留字段, 當前可忽略保留字段, 當前可忽略  
+> dailyToMinLimit| string| 保留字段, 當前可忽略  
+> dailyToMaxLimit| string| 保留字段, 當前可忽略  
+  
 ### 請求示例
 
   * HTTP
@@ -197,11 +264,11 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
+    GET /v5/asset/exchange/query-coin-list?side=0&accountType=eb_convert_funding HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
+    X-BAPI-TIMESTAMP: 1720064061248  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -212,9 +279,9 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
+    print(session.get_convert_coin_list(  
+        side="0",  
+        accountType="eb_convert_funding",  
     ))  
     
     
@@ -228,7 +295,7 @@ nextPageCursor| string| 游標，用於翻頁
     });  
       
     client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
+      .getConvertCoins({ accountType: 'eb_convert_spot' })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -242,23 +309,76 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "ok",  
         "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
+            "coins": [  
                 {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
+                    "coin": "BTC",  
+                    "fullName": "BTC",  
+                    "icon": "https://t1.bycsi.com/app/assets/token/0717b8c28c2373bf714c964195411d0f.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/9504b4c841194cc38f04041003ffbfdb.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "0",  
+                    "uBalance": "0",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.001",  
+                    "singleFromMaxLimit": "1",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
+                },  
+                ...  
+                {  
+                    "coin": "SOL",  
+                    "fullName": "SOL",  
+                    "icon": "https://s1.bycsi.com/app/assets/token/87ca5f1ca7229bdf0d9a16435653007c.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/383a834046655ffe5ef1be1a025791cc.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "18.05988133",  
+                    "uBalance": "2458.46990211775033220586588327",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.1",  
+                    "singleFromMaxLimit": "1250",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
+                },  
+                ...  
+                {  
+                    "coin": "ETH",  
+                    "fullName": "ETH",  
+                    "icon": "https://s1.bycsi.com/app/assets/token/d6c17c9e767e1810875c702d86ac9f32.svg",  
+                    "iconNight": "https://t1.bycsi.com/app/assets/token/9613ac8e7d62081f4ca20488ae5b168d.svg",  
+                    "accuracyLength": 8,  
+                    "coinType": "crypto",  
+                    "balance": "0.80264489",  
+                    "uBalance": "2596.09751650032773106431534138",  
+                    "timePeriod": 0,  
+                    "singleFromMinLimit": "0.01",  
+                    "singleFromMaxLimit": "250",  
+                    "singleToMinLimit": "0",  
+                    "singleToMaxLimit": "0",  
+                    "dailyFromMinLimit": "0",  
+                    "dailyFromMaxLimit": "0",  
+                    "dailyToMinLimit": "0",  
+                    "dailyToMaxLimit": "0",  
+                    "disableFrom": false,  
+                    "disableTo": false  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672362116184  
+        "time": 1720064061736  
     }

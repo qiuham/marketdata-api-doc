@@ -2,14 +2,12 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/websocket/private/execution
 api_type: WebSocket
-updated_at: 2026-11-13 18:28:49.326339
+updated_at: 2026-11-13 19:25:26.893135
 ---
 
-# Order
+# Execution
 
-Subscribe to the order stream to see changes to your orders in **real-time**.
-
-**Topic:** `spread.order`  
+**Topic:** `spread.execution`  
 
 
 ### Response Parameters
@@ -19,33 +17,34 @@ Parameter| Type| Comments
 id| string| Message ID  
 topic| string| Topic name  
 creationTime| number| Data created timestamp (ms)  
-data| array| Object  
-> category| string| Category name, `combination`, `spot_leg`, `future_leg`  
-> symbol| string| Combo or leg's symbol name  
-> parentOrderId| string| Leg's parent order ID  
-> orderId| string| Combo or leg's order ID  
-> orderLinkId| string| Combo's user customised order ID  
-> side| string| Combo or leg's order side, `Buy`, `Sell`  
-> orderStatus| string| Combo or leg's order status  
-> [cancelType](/docs/v5/enum#canceltype)| string| Cancel type  
-> [rejectReason](/docs/v5/enum#rejectreason)| string| Reject reason  
-> timeInForce| string| Time in force, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> price| string| Order price  
-> qty| string| Order qty  
-> avgPrice| string| Average filled price  
-> leavesQty| string| The remaining qty not executed  
-> leavesValue| string| The estimated value not executed  
-> cumExecQty| string| Cumulative executed order qty  
-> cumExecValue| string| Cumulative executed order value  
-> cumExecFee| string| Deprecated. Cumulative executed trading fee  
-> orderType| string| Order type. `Market`,`Limit`  
+data| array<object>|   
+> category| string| Combo or single leg, `combination`, `spot_leg`, `future_leg`  
+> symbol| string| Combo or leg symbol name  
 > isLeverage| string| Account-wide, if Spot Margin is enabled, the spot_leg field in the execution message shows 1, combo is "", and future_leg is 0.  
-> createdTime| string| Order created timestamp (ms)  
-> updatedTime| string| Order updated timestamp (ms)  
-> feeCurrency| string| Deprecated. Trading fee currency for Spot leg only  
-> createType| string| Order create type  
-> closedPnl| string| Closed profit and loss for each close position order  
-> cumFeeDetail| json| Cumulative trading fee details instead of `cumExecFee` and `feeCurrency`  
+> orderId| string| Order ID, leg is ""  
+> orderLinkId| string| User customized order ID, leg is ""  
+> side| string| Side. `Buy`,`Sell`  
+> orderPrice| string| Order price  
+> orderQty| string| Order qty  
+> leavesQty| string| The remaining qty not executed  
+> [createType](/docs/v5/enum#createtype)| string| Order create type  
+> orderType| string| Order type. `Market`,`Limit`  
+> execFee| string| Leg exec fee, deprecated for Spot leg  
+> execFeeV2| string| Leg exec fee, used for Spot leg only  
+> feeCoin| string| Leg fee currency  
+> parentExecId| string| Combo's Execution ID, leg's event has the value  
+> execId| string| Execution ID  
+> execPrice| string| Execution price  
+> execQty| string| Execution qty  
+> execPnl| string| Profit and Loss for each close position execution  
+> [execType](/docs/v5/enum#exectype)| string| Executed type  
+> execValue| string| Executed order value  
+> execTime| string| Executed timestamp (ms)  
+> isMaker| boolean| Is maker order. `true`: maker, `false`: taker  
+> feeRate| string| Trading fee rate  
+> markPrice| string| The mark price of the symbol when executing  
+> closedSize| string| Closed position size  
+> seq| long| Cross sequence  
   
 ### Subscribe Example
     
@@ -53,7 +52,7 @@ data| array| Object
     {  
         "op": "subscribe",  
         "args": [  
-            "spread.order"  
+            "spread.execution"  
         ]  
     }  
     
@@ -61,81 +60,85 @@ data| array| Object
 ### Stream Example
     
     
+    // Combo execution  
     {  
-        "topic": "spread.order",  
-        "id": "1448939_SOLUSDT_28732003549",  
-        "creationTime": 1744170555912,  
-        "data": [  
-            {  
-                "category": "combination",  
-                "symbol": "SOLUSDT_SOL/USDT",  
-                "parentOrderId": "",  
-                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "14",  
-                "qty": "2",  
-                "avgPrice": "",  
-                "leavesQty": "0",  
-                "leavesValue": "",  
-                "cumExecQty": "2",  
-                "cumExecValue": "",  
-                "cumExecFee": "",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555905",  
-                "feeCurrency": "",  
-                "createType": "CreateByUser",  
-                "closedPnl": "",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            },  
-            {  
-                "category": "future_leg",  
-                "symbol": "SOLUSDT",  
-                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "118.2",  
-                "qty": "2",  
-                "avgPrice": "118.2",  
-                "leavesQty": "0",  
-                "leavesValue": "0",  
-                "cumExecQty": "2",  
-                "cumExecValue": "236.4",  
-                "cumExecFee": "0.01182",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555910",  
-                "feeCurrency": "",  
-                "createType": "CreateByFutureSpread",  
-                "closedPnl": "0",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            }  
-        ]  
+         "topic": "spread.execution",  
+         "id": "cvqes8141ilt347i9l20",  
+         "creationTime": 1744104992226,  
+         "data": [  
+              {  
+                   "category": "combination",  
+                   "symbol": "SOLUSDT_SOL/USDT",  
+                   "closedSize": "",  
+                   "execFee": "",  
+                   "execId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "parentExecId": "",  
+                   "execPrice": "20.9848",  
+                   "execQty": "2",  
+                   "execType": "Trade",  
+                   "execValue": "",  
+                   "feeRate": "",  
+                   "markPrice": "",  
+                   "leavesQty": "0",  
+                   "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                   "orderLinkId": "",  
+                   "orderPrice": "21",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992220",  
+                   "isLeverage": "",  
+                   "isMaker": false,  
+                   "seq": 241321,  
+                   "createType": "CreateByUser",  
+                   "execPnl": ""  
+              }  
+         ]  
+    }  
+      
+    //Future leg execution  
+    {  
+         "topic": "spread.execution",  
+         "id": "1448939_SOLUSDT_28731107101",  
+         "creationTime": 1744104992229,  
+         "data": [  
+              {  
+                   "category": "future_leg",  
+                   "symbol": "SOLUSDT",  
+                   "closedSize": "0",  
+                   "execFee": "0.039712",  
+                   "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc",  
+                   "parentExecId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "execPrice": "124.1",  
+                   "execQty": "2",  
+                   "execType": "FutureSpread",  
+                   "execValue": "248.2",  
+                   "feeRate": "0.00016",  
+                   "markPrice": "119",  
+                   "leavesQty": "0",  
+                   "orderId": "",  
+                   "orderLinkId": "",  
+                   "orderPrice": "124.1",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992224",  
+                   "isLeverage": "0",  
+                   "isMaker": false,  
+                   "seq": 28731107101,  
+                   "createType": "CreateByFutureSpread",  
+                   "execPnl": "0"  
+              }  
+         ]  
     }
 
 ---
 
-# 訂單
+# 個人成交
 
-訂閱價差交易訂單推送
+訂閱價差交易發生的成交
 
-**Topic:** `spread.order`  
+**Topic:** `spread.execution`  
 
 
 ### 響應參數
@@ -148,30 +151,31 @@ creationTime| number| 消息數據創建時間 (ms)
 data| array<object>|   
 > category| string| 組合或單腿類型, `combination`: 組合, `spot_leg`: 現貨單腿, `future_leg`: 合約單腿  
 > symbol| string| 組合或單腿的合約名稱  
-> parentOrderId| string| 單腿訂單的所屬組合訂單ID  
-> orderId| string| 組合或單腿的訂單ID  
-> orderLinkId| string| 組合單的用戶自定義ID  
-> side| string| 組合或單腿的訂單方向, `Buy`, `Sell`  
-> orderStatus| string| 組合或單腿的訂單狀態  
-> [cancelType](/docs/zh-TW/v5/enum#canceltype)| string| 訂單被取消類型  
-> [rejectReason](/docs/zh-TW/v5/enum#rejectreason)| string| 拒絕原因  
-> timeInForce| string| 執行策略, `GTC`, `FOK`, `IOC`, `PostOnly`  
-> price| string| 訂單價格  
-> qty| string| 訂單數量  
-> avgPrice| string| 平均成交價格  
-> leavesQty| string| 訂單剩餘未成交的數量  
-> leavesValue| string| 訂單剩餘未成交的價值  
-> cumExecQty| string| 訂單累計成交數量  
-> cumExecValue| string| 訂單累計成交價值  
-> cumExecFee| string| 已棄用. 訂單累計成交的手續費  
-> orderType| string| 訂單類型. `Market`,`Limit`  
 > isLeverage| string| 帳戶維度, 如果現貨槓桿打開了, 那麼對於category=spot_leg, 該字段暫時為1, 組合總是"", category=future_leg總是"0"  
-> createdTime| string| 創建訂單的時間戳 (毫秒)  
-> updatedTime| string| 訂單更新的時間戳 (毫秒)  
-> feeCurrency| string| 已棄用. 手續費幣種, 僅適用於現貨單腿訂單  
+> orderId| string| 組合訂單ID, 單腿展示""  
+> orderLinkId| string| 組合訂單IDD, 單腿展示""  
+> side| string| 組合或單腿訂單方向. `Buy`,`Sell`  
+> orderPrice| string| 組合或單腿的訂單價格  
+> orderQty| string| 組合或單腿的訂單數量  
+> leavesQty| string| 剩餘未成交數量  
 > [createType](/docs/zh-TW/v5/enum#createtype)| string| 訂單創建類型  
-> closedPnl| string| 平倉單盈虧, 部分平倉時, 減去了平攤的開倉手續費和期間產生的資金費以及平倉手續費  
-> cumFeeDetail| json| 累積交易費詳情, 替代`cumExecFee`和`feeCurrency`  
+> orderType| string| 訂單類型. `Market`,`Limit`  
+> execFee| string| 手續費, 組合暫時為""  
+> execFeeV2| string| 現貨單腿手續費  
+> feeCoin| string| 單腿交易手續費幣種  
+> parentExecId| string| 單腿的母成交ID, 即對應組合的成交ID, 組合暫時""  
+> execId| string| 成交ID  
+> execPrice| string| 成交價格  
+> execQty| string| 成交數量  
+> execPnl| string| 每筆平倉成交的盈虧, 僅合約單腿成交有效  
+> [execType](/docs/zh-TW/v5/enum#exectype)| string| 成交類型, 組合總是`Trade`  
+> execValue| string| 成交價值, 僅適用於單腿成交  
+> execTime| string| 成交時間（ms）  
+> isMaker| boolean| 是否是maker成交. `true`: maker, `false`: taker  
+> feeRate| string| 手續費率, 僅適用於單腿成交  
+> markPrice| string| 成交執行時, 該 symbol 當時的標記價格, markPrice  
+> closedSize| string| 平倉數量, 僅適用於單腿成交  
+> seq| long| 序列號, 用於關聯成交和倉位的更新  
   
 ### 訂閱示例
     
@@ -179,7 +183,7 @@ data| array<object>|
     {  
         "op": "subscribe",  
         "args": [  
-            "spread.order"  
+            "spread.execution"  
         ]  
     }  
     
@@ -187,70 +191,74 @@ data| array<object>|
 ### 推送示例
     
     
+    // Combo execution  
     {  
-        "topic": "spread.order",  
-        "id": "1448939_SOLUSDT_28732003549",  
-        "creationTime": 1744170555912,  
-        "data": [  
-            {  
-                "category": "combination",  
-                "symbol": "SOLUSDT_SOL/USDT",  
-                "parentOrderId": "",  
-                "orderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "14",  
-                "qty": "2",  
-                "avgPrice": "",  
-                "leavesQty": "0",  
-                "leavesValue": "",  
-                "cumExecQty": "2",  
-                "cumExecValue": "",  
-                "cumExecFee": "",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555905",  
-                "feeCurrency": "",  
-                "createType": "CreateByUser",  
-                "closedPnl": "",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            },  
-            {  
-                "category": "future_leg",  
-                "symbol": "SOLUSDT",  
-                "parentOrderId": "aa858ea9-f3a0-40b6-ad57-888d47307345",  
-                "orderId": "2948d2dc-f8f1-4485-a83d-0bad3dae2c31",  
-                "orderLinkId": "",  
-                "side": "Buy",  
-                "orderStatus": "Filled",  
-                "cancelType": "UNKNOWN",  
-                "rejectReason": "EC_NoError",  
-                "timeInForce": "GTC",  
-                "price": "118.2",  
-                "qty": "2",  
-                "avgPrice": "118.2",  
-                "leavesQty": "0",  
-                "leavesValue": "0",  
-                "cumExecQty": "2",  
-                "cumExecValue": "236.4",  
-                "cumExecFee": "0.01182",  
-                "orderType": "Limit",  
-                "isLeverage": "",  
-                "createdTime": "1744170534447",  
-                "updatedTime": "1744170555910",  
-                "feeCurrency": "",  
-                "createType": "CreateByFutureSpread",  
-                "closedPnl": "0",  
-                "cumFeeDetail": {  
-                    "MNT": "0.00242968"  
-                }  
-            }  
-        ]  
+         "topic": "spread.execution",  
+         "id": "cvqes8141ilt347i9l20",  
+         "creationTime": 1744104992226,  
+         "data": [  
+              {  
+                   "category": "combination",  
+                   "symbol": "SOLUSDT_SOL/USDT",  
+                   "closedSize": "",  
+                   "execFee": "",  
+                   "execId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "parentExecId": "",  
+                   "execPrice": "20.9848",  
+                   "execQty": "2",  
+                   "execType": "Trade",  
+                   "execValue": "",  
+                   "feeRate": "",  
+                   "markPrice": "",  
+                   "leavesQty": "0",  
+                   "orderId": "5e010c35-2b44-4f03-8081-8fa31fb73376",  
+                   "orderLinkId": "",  
+                   "orderPrice": "21",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992220",  
+                   "isLeverage": "",  
+                   "isMaker": false,  
+                   "seq": 241321,  
+                   "createType": "CreateByUser",  
+                   "execPnl": ""  
+              }  
+         ]  
+    }  
+      
+    //Future leg execution  
+    {  
+         "topic": "spread.execution",  
+         "id": "1448939_SOLUSDT_28731107101",  
+         "creationTime": 1744104992229,  
+         "data": [  
+              {  
+                   "category": "future_leg",  
+                   "symbol": "SOLUSDT",  
+                   "closedSize": "0",  
+                   "execFee": "0.039712",  
+                   "execId": "99a18f80-d3b5-4c6f-a1f1-8c5870e3f3bc",  
+                   "parentExecId": "82c82077-0caa-5304-894d-58a50a342bd7",  
+                   "execPrice": "124.1",  
+                   "execQty": "2",  
+                   "execType": "FutureSpread",  
+                   "execValue": "248.2",  
+                   "feeRate": "0.00016",  
+                   "markPrice": "119",  
+                   "leavesQty": "0",  
+                   "orderId": "",  
+                   "orderLinkId": "",  
+                   "orderPrice": "124.1",  
+                   "orderQty": "2",  
+                   "orderType": "Limit",  
+                   "side": "Buy",  
+                   "execTime": "1744104992224",  
+                   "isLeverage": "0",  
+                   "isMaker": false,  
+                   "seq": 28731107101,  
+                   "createType": "CreateByFutureSpread",  
+                   "execPnl": "0"  
+              }  
+         ]  
     }

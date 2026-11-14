@@ -2,59 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/create-order
 api_type: REST
-updated_at: 2026-11-13 18:27:30.704384
+updated_at: 2026-11-13 19:22:49.652417
 ---
 
-# Get Position Info
+# Place Order
 
 info
 
-  * Need authentication. **Up to 10 requests** per second.
-  * Query your active Dual Assets positions. Requires Earn permission on the API key.
+  * Need authentication. **Up to 5 requests** per second.
+  * Requires Earn permission on the API key.
+  * The order is processed asynchronously. A successful response means the order has been accepted, not settled. Use [Get Order Info](/docs/v5/finance/advanced-earn/dual-asset/order) to track the order status (Pending → Success).
+  * The `selectPrice` and `apyE8` must match a valid quote from [Get Product Quote](/docs/v5/finance/advanced-earn/dual-asset/product-quote) or the WebSocket channel. Stale quotes will be rejected.
+  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
 
 
 
 ### HTTP Request
 
-GET `/v5/earn/advance/position`
+POST `/v5/earn/advance/place-order`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 [category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product type, e.g. `DualAssets`  
-productId| false| string| Product ID  
-coin| false| string| Coin  
-limit| false| int| Number of items per page. Default: 20, Max: 20  
-cursor| false| string| Pagination cursor. Use nextPageCursor from previous response  
+productId| **true**|  string| Product ID  
+orderType| **true**|  string| Order type: `Stake`  
+amount| **true**|  string| Order amount (decimal string)  
+accountType| **true**|  string| Account type: `FUND`, `UNIFIED`  
+coin| **true**|  string| Coin name  
+orderLinkId| **true**|  string| User customised order ID (max 36 characters)  
+dualAssetsExtra| **true**|  Object| Dual Assets specific parameters  
+> orderDirection| **true**|  string| Direction: `BuyLow`, `SellHigh`  
+> selectPrice| **true**|  string| Target price selected by user. Must match a valid quote  
+> apyE8| **true**|  int64| Expected APY in e8 precision. Order fails if the confirmed APY is less than this value  
+interestCard| false| Object| Interest bonus card  
+> awardId| **true**|  int64| Interest bonus card unique ID  
+> specCode| **true**|  string| Spec_code of the interest bonus card  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-[category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
-nextPageCursor| string| Cursor for the next page. Empty string if no more data  
-list| array| Object  
-> positionId| string| Position ID  
-> productId| string| Product ID  
-> [category](/docs/v5/enum#advanced-earn-category)| string| Product category, `DualAssets`  
-> baseCoin| string| Base coin  
-> quoteCoin| string| Quote coin  
-> investCoin| string| Invest coin. `BuyLow`: same as quoteCoin; `SellHigh`: same as baseCoin  
-> amount| string| Position amount, unit is investCoin  
-> apyE8| string| Confirmed annualized yield in e8 precision  
-> direction| string| Direction: `BuyLow`, `SellHigh`  
-> targetPrice| string| Target price in USDT  
-> settlementTime| string| Settlement time, unix timestamp in ms  
-> [status](/docs/v5/enum#advanced-earn-position-status)| string| `Active`: Staking, `Redeeming`: Redeeming  
-> orderId| string| Staking order ID  
-> duration| string| Product term, e.g. 8h, 1d, 2d, 3d  
-> expectReturnCoin| string| Expected settlement coin  
-> expectReturnAmount| string| Expected settlement amount  
-> accountType| string| Staking account: `FUND`, `UNIFIED`  
-> toAccountType| string| Settlement account: `FUND`, currently only supports settlement to `Fund` account  
-> yieldStartAt| int64| Yield start time, unix timestamp in ms  
-> yieldEndAt| int64| Yield end time, unix timestamp in ms  
+orderId| string| System-generated order ID  
+orderLinkId| string| User customised order ID  
   
 * * *
 
@@ -65,12 +56,29 @@ list| array| Object
 
     
     
-    GET /v5/earn/advance/position?category=DualAssets HTTP/1.1  
+    POST /v5/earn/advance/place-order HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "category": "DualAssets",  
+        "productId": 36320,  
+        "orderType": "Stake",  
+        "amount": "20",  
+        "accountType": "UNIFIED",  
+        "coin": "USDT",  
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
+        "dualAssetsExtra": {  
+            "orderDirection": "BuyLow",  
+            "selectPrice": "2325",  
+            "apyE8": 857565000  
+        }  
+    }  
+      
     
 
 ### Response Example
@@ -80,89 +88,56 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "category": "DualAssets",  
-            "list": [  
-                {  
-                    "positionId": "19035",  
-                    "productId": "36320",  
-                    "category": "DualAssets",  
-                    "baseCoin": "ETH",  
-                    "quoteCoin": "USDT",  
-                    "investCoin": "USDT",  
-                    "amount": "20",  
-                    "apyE8": "902700000",  
-                    "direction": "BuyLow",  
-                    "targetPrice": "2325",  
-                    "settlementTime": "1774079999000",  
-                    "status": "Active",  
-                    "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",  
-                    "duration": "3d",  
-                    "expectReturnCoin": "USDT",  
-                    "expectReturnAmount": "21.4838",  
-                    "accountType": "UNIFIED",  
-                    "toAccountType": "FUND",  
-                    "yieldStartAt": "1773820799000",  
-                    "yieldEndAt": "1774079999000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
+            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
         },  
         "retExtInfo": {},  
-        "time": 1773815399307  
+        "time": 1773815412459  
     }
 
 ---
 
-# 查詢倉位資訊
+# 創建訂單
 
 信息
 
-  * 需要身份驗證。每秒**最多 10 次請求** 。
-  * 查詢您當前生效的雙幣投資倉位。API 金鑰需要具備 Earn (理財) 權限。
+  * 需要身份驗證。每秒**最多 5 次請求** 。
+  * API 金鑰需要具備 Earn (理財) 權限。
+  * 訂單採非同步處理。響應成功僅代表訂單已被接受，而非已結算。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/order)來追蹤訂單狀態（Pending → Success）。
+  * `selectPrice` 和 `apyE8` 必須與[查詢產品報價](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/product-quote)或 WebSocket 頻道的有效報價相匹配。過期的報價將被拒絕。
+  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
 
 
 
 ### HTTP 請求
 
-GET `/v5/earn/advance/position`
+POST `/v5/earn/advance/place-order`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 [category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類型，例如 `DualAssets`  
-productId| false| string| 產品 ID  
-coin| false| string| 幣種  
-limit| false| int| 每頁數量。預設值：20，最大值：20  
-cursor| false| string| 分頁游標。請使用上一次請求返回的 `nextPageCursor`  
+productId| **true**|  string| 產品 ID  
+orderType| **true**|  string| 訂單類型：`Stake` (申購)  
+amount| **true**|  string| 訂單數量（字串格式的數字）  
+accountType| **true**|  string| 帳戶類型：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)  
+coin| **true**|  string| 幣種名稱  
+orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 36 個字元）  
+dualAssetsExtra| **true**|  Object| 雙幣投資專屬參數  
+> orderDirection| **true**|  string| 方向：`BuyLow` (低買), `SellHigh` (高賣)  
+> selectPrice| **true**|  string| 用戶選擇的目標價格（掛鉤價）。必須與有效報價相匹配  
+> apyE8| **true**|  int64| 預期年化收益率（e8 精度）。如果確認的 APY 低於此數值，訂單將會失敗  
+interestCard| false| Object| 加息券 (Interest bonus card)  
+> awardId| **true**|  int64| 加息券唯一 ID  
+> specCode| **true**|  string| 加息券的特殊代碼 (Spec_code)  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-[category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
-nextPageCursor| string| 下一頁的游標。如果沒有更多資料則為空字串  
-list| array| 列表  
-> positionId| string| 倉位 ID  
-> productId| string| 產品 ID  
-> [category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| 產品類別，`DualAssets`  
-> baseCoin| string| 基礎幣種 (Base Coin)  
-> quoteCoin| string| 計價幣種 (Quote Coin)  
-> investCoin| string| 投資幣種。`BuyLow` (低買)：與計價幣種相同；`SellHigh` (高賣)：與基礎幣種相同  
-> amount| string| 倉位數量，單位為 `investCoin` (投資幣種)  
-> apyE8| string| 已確認的年化收益率（e8 精度）  
-> direction| string| 方向：`BuyLow` (低買), `SellHigh` (高賣)  
-> targetPrice| string| 目標價格（掛鉤價），單位為 USDT  
-> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
-> [status](/docs/zh-TW/v5/enum#advanced-earn-position-status)| string| `Active`: 申購中 (生效中), `Redeeming`: 贖回中  
-> orderId| string| 申購訂單 ID  
-> duration| string| 產品期限，例如 8h, 1d, 2d, 3d  
-> expectReturnCoin| string| 預計結算幣種  
-> expectReturnAmount| string| 預計結算數量  
-> accountType| string| 申購帳戶：`FUND` (資金帳戶), `UNIFIED` (統一帳戶)  
-> toAccountType| string| 結算帳戶：`FUND`，目前僅支援結算至資金帳戶 (Fund)  
-> yieldStartAt| int64| 計息開始時間，毫秒級 Unix 時間戳  
-> yieldEndAt| int64| 計息結束時間，毫秒級 Unix 時間戳  
+orderId| string| 系統生成的訂單 ID  
+orderLinkId| string| 用戶自定義訂單 ID  
   
 * * *
 
@@ -173,12 +148,28 @@ list| array| 列表
 
     
     
-    GET /v5/earn/advance/position?category=DualAssets HTTP/1.1  
+    POST /v5/earn/advance/place-order HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672280218882  
+    X-BAPI-TIMESTAMP: 1672211928338  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "category": "DualAssets",  
+        "productId": 36320,  
+        "orderType": "Stake",  
+        "amount": "20",  
+        "accountType": "UNIFIED",  
+        "coin": "USDT",  
+        "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb",  
+        "dualAssetsExtra": {  
+            "orderDirection": "BuyLow",  
+            "selectPrice": "2325",  
+            "apyE8": 857565000  
+        }  
+    }  
     
 
 ### 響應示例
@@ -188,33 +179,9 @@ list| array| 列表
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "category": "DualAssets",  
-            "list": [  
-                {  
-                    "positionId": "19035",  
-                    "productId": "36320",  
-                    "category": "DualAssets",  
-                    "baseCoin": "ETH",  
-                    "quoteCoin": "USDT",  
-                    "investCoin": "USDT",  
-                    "amount": "20",  
-                    "apyE8": "902700000",  
-                    "direction": "BuyLow",  
-                    "targetPrice": "2325",  
-                    "settlementTime": "1774079999000",  
-                    "status": "Active",  
-                    "orderId": "ef9644c2-0c98-40e5-ae33-8aa5b6d85058",  
-                    "duration": "3d",  
-                    "expectReturnCoin": "USDT",  
-                    "expectReturnAmount": "21.4838",  
-                    "accountType": "UNIFIED",  
-                    "toAccountType": "FUND",  
-                    "yieldStartAt": "1773820799000",  
-                    "yieldEndAt": "1774079999000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "orderId": "97f198e9-b14b-4703-b4a6-a4aa06ba1499",  
+            "orderLinkId": "54b3589b-da55-4b17-acdd-aa75912c9eb"  
         },  
         "retExtInfo": {},  
-        "time": 1773815399307  
+        "time": 1773815412459  
     }

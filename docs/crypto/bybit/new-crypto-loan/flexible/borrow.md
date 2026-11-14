@@ -2,39 +2,40 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/borrow
 api_type: REST
-updated_at: 2026-11-13 18:28:07.820201
+updated_at: 2026-11-13 19:24:14.013103
 ---
 
-# Repay
-
-Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+# Borrow
 
 > Permission: "Spot trade"  
 >  UID rate limit: 1 req / second
 
 info
 
-  * The repaid amount will be deducted from the Funding wallet.
-  * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
+  * The loan funds are released to the Funding wallet.
+  * The collateral funds are deducted from the Funding wallet, so make sure you have enough collateral amount in the Funding wallet.
 
 
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-flexible/repay`
+POST`/v5/crypto-loan-flexible/borrow`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 loanCurrency| **true**|  string| Loan coin name  
-amount| **true**|  string| Amount to repay  
+loanAmount| **true**|  string| Amount to borrow  
+collateralList| false| array<object>| Collateral coin list, supports putting up to 100 currency in the array  
+> currency| false| string| Currency used to mortgage  
+> amount| false| string| Amount to mortgage  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-repayId| string| Repayment transaction ID  
+orderId| string| Loan order ID  
   
 ### Request Example
 
@@ -45,18 +46,28 @@ repayId| string| Repayment transaction ID
 
     
     
-    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
+    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: 1752569210041  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 52  
+    Content-Length: 244  
       
     {  
         "loanCurrency": "BTC",  
-        "amount": "0.005"  
+        "loanAmount": "0.1",  
+        "collateralList": [  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     }  
     
     
@@ -67,9 +78,19 @@ repayId| string| Repayment transaction ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_flexible_crypto_loan(  
+    print(session.borrow_flexible_crypto_loan(  
         loanCurrency="BTC",  
-        loanAmount="0.005",  
+        loanAmount="0.1",  
+        collateralList=[  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     ))  
     
     
@@ -84,44 +105,45 @@ repayId| string| Repayment transaction ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "repayId": "1771"  
+            "orderId": "1363"  
         },  
         "retExtInfo": {},  
-        "time": 1752569614549  
+        "time": 1752569209682  
     }
 
 ---
 
-# 還款
-
-您可以選擇提前還款, 並且支持部分還款, 如果存在利息, 將優先還利息
+# 借款
 
 > 權限: "現貨"  
 >  頻率: 1次/秒
 
 信息
 
-  * 還款金額將從資金帳戶扣除
-  * 非完全還清操作, 系統將不會主動退還質押金, 但是您可以自行減少質押金
+  * 借款發放到資金帳戶
+  * 質押金將從資金帳戶扣減, 因此確保資金帳戶有足額質押幣種
 
 
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-flexible/repay`
+POST`/v5/crypto-loan-flexible/borrow`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanCurrency| **true**|  string| 借款幣種  
-amount| **true**|  string| 還款金額  
+loanCurrency| **true**|  string| 借款幣種名稱  
+loanAmount| **true**|  string| 借款金額  
+collateralList| false| array<object>| 抵押幣種清單，最多支持放入 100 種幣種  
+> currency| false| string| 用於抵押的幣種  
+> amount| false| string| 抵押金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-repayId| string| 還款訂單ID  
+orderId| string| 借款單ID  
   
 ### 請求示例
 
@@ -132,18 +154,28 @@ repayId| string| 還款訂單ID
 
     
     
-    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
+    POST /v5/crypto-loan-flexible/borrow HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: 1752569210041  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 52  
+    Content-Length: 244  
       
     {  
         "loanCurrency": "BTC",  
-        "amount": "0.005"  
+        "loanAmount": "0.1",  
+        "collateralList": [  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     }  
     
     
@@ -154,9 +186,19 @@ repayId| string| 還款訂單ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_flexible_crypto_loan(  
+    print(session.borrow_flexible_crypto_loan(  
         loanCurrency="BTC",  
-        loanAmount="0.005",  
+        loanAmount="0.1",  
+        collateralList=[  
+            {  
+                "currency": "USDT",  
+                "amount": "1000"  
+            },  
+            {  
+                "currency": "ETH",  
+                "amount": "1"  
+            }  
+        ]  
     ))  
     
     
@@ -171,8 +213,8 @@ repayId| string| 還款訂單ID
         "retCode": 0,  
         "retMsg": "ok",  
         "result": {  
-            "repayId": "1771"  
+            "orderId": "1363"  
         },  
         "retExtInfo": {},  
-        "time": 1752569614549  
+        "time": 1752569209682  
     }

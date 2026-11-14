@@ -2,63 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/fixed-saving/product
 api_type: REST
-updated_at: 2026-11-13 18:27:42.000881
+updated_at: 2026-11-13 19:23:19.011332
 ---
 
-# Get/Set Auto Savings Settings
-
-Query or update Flexible Saving auto savings settings.
-
-note
-
-  * `GET` queries the auto savings switch, position limit, and APR.
-  * `POST` enables or disables auto savings.
-
-
+# Get Product Info
 
 info
 
-  * API key permission: `Earn`
-  * Get Auto Savings Settings: 10 requests per second per UID
-  * Set Auto Savings Settings: 5 requests per second per UID
-
-
-
-## Get Auto Savings Settings
-
-Query the user's Flexible Saving auto savings settings and current APR by coin. Omit `coins` to return all supported coins. You can specify up to 50 coins.
+Does not need authentication. **Up to 50 requests** per second per IP .
 
 ### HTTP Request
 
-GET`/v5/earn/flexible-saving/auto-savings`
+GET`/v5/earn/fixed-term/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coins| false| array| Coin names to query. Pass repeated query parameters, for example `coins=BTC&coins=ETH`. Omit to query all supported coins. Maximum: `50`  
+coin| false| string| Filter by coin, e.g. `BTC`, `ETH`. Returns all coins if omitted  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-selectedAll| boolean| Whether auto savings is enabled globally  
-coins| array| Supported or requested coins and their auto savings settings  
-> coin| string| Coin name  
-> isSelected| boolean| Whether auto savings is enabled for this coin  
-> maxStakingAmount| string| Maximum auto savings position amount, expressed in this coin  
-> apr| string| Current APR as a decimal rate. For example, `0.05` means 5%  
+list| array| Product list  
+> productId| string| Product ID  
+> category| string| Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`  
+> coin| string| Staking coin  
+> duration| string| Fixed term duration, e.g. `1d`, `8h`, `2m`  
+> status| string| Product status: `Available`, `SoldOut`, `NotStarted`  
+> tieredApyList| array| Tiered APY list (if applicable)  
+>> min| string| Minimum amount for this tier  
+>> max| string| Maximum amount for this tier. `"-1"` means no upper limit  
+>> apy| string| APY for this tier  
+> minStakeAmount| string| Minimum staking amount  
+> maxStakeAmount| string| Maximum staking amount  
+> precision| integer| Coin trading precision  
+> subscribeStartAt| string| Subscription start time, unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, unix timestamp in ms  
+> allowEarlyRedemption| boolean| Whether early redemption is supported  
+> earlyRedemptionApy| string| Discounted APY applied on early redemption  
+> redemptionLimitDuration| string| Minimum hold time before early redemption is allowed, e.g. `1d`, `8h`, `2m`  
+> allowAutoReinvest| boolean| Whether auto-reinvest is supported  
+> interestCoinApyList| array| Multi-coin reward APY list  
+>> coin| string| Reward coin  
+>> apy| string| Reward APY  
+>> expectUnitEarning| string| Expected reward per unit invested (influenced by spot price of reward coin)  
+>> currentPrice| string| Current price of the reward coin  
+> isVip| boolean| Whether this is a VIP-only product  
+> creditTime| string| Estimated time for earnings to be credited, unix timestamp in ms  
+> specialUserGroupRequired| boolean| Whether purchase is restricted to a specific user group  
+> specialUserGroupInfo| string| Description of the restricted user group  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1  
+    GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -67,138 +72,163 @@ coins| array| Supported or requested coins and their auto savings settings
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "selectedAll": false,  
-            "coins": [  
+            "list": [  
                 {  
-                    "coin": "BTC",  
-                    "isSelected": true,  
-                    "maxStakingAmount": "10",  
-                    "apr": "0.05"  
+                    "productId": "427",  
+                    "category": "FixedTermSaving",  
+                    "coin": "USDT",  
+                    "duration": "30d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "50",  
+                    "maxStakeAmount": "10000",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1686704400000",  
+                    "subscribeEndAt": "1909094399000",  
+                    "allowEarlyRedemption": false,  
+                    "earlyRedemptionApy": "",  
+                    "redemptionLimitDuration": "",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "2.50%",  
+                            "expectUnitEarning": "0.002",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": false,  
+                    "creditTime": "1778718600000",  
+                    "specialUserGroupRequired": false,  
+                    "specialUserGroupInfo": ""  
                 },  
                 {  
-                    "coin": "ETH",  
-                    "isSelected": false,  
-                    "maxStakingAmount": "100",  
-                    "apr": "0.04"  
+                    "productId": "27",  
+                    "category": "FundPool",  
+                    "coin": "USDT",  
+                    "duration": "3d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "100",  
+                    "maxStakeAmount": "10000",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1722448800000",  
+                    "subscribeEndAt": "0",  
+                    "allowEarlyRedemption": true,  
+                    "earlyRedemptionApy": "0.30%",  
+                    "redemptionLimitDuration": "1d",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "9.99%",  
+                            "expectUnitEarning": "0.0008",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": false,  
+                    "creditTime": "1776391500000",  
+                    "specialUserGroupRequired": true,  
+                    "specialUserGroupInfo": "Limited Offer"  
+                },  
+                {  
+                    "productId": "12",  
+                    "category": "FundPoolPremium",  
+                    "coin": "USDT",  
+                    "duration": "3d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "1",  
+                    "maxStakeAmount": "300",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1751500800000",  
+                    "subscribeEndAt": "0",  
+                    "allowEarlyRedemption": false,  
+                    "earlyRedemptionApy": "",  
+                    "redemptionLimitDuration": "",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "19.70%",  
+                            "expectUnitEarning": "0.0016",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": true,  
+                    "creditTime": "1776391200000",  
+                    "specialUserGroupRequired": false,  
+                    "specialUserGroupInfo": ""  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672211918471  
-    }  
-    
-
-## Set Auto Savings Settings
-
-Enable or disable Flexible Saving auto savings for one coin or all supported coins. Omit `coin` or pass an empty string to update the global setting.
-
-When enabling, set `purchaseImmediately` to `true` to asynchronously subscribe the available Funding Account balance. When it is `false` or omitted, only the setting is updated. This parameter is ignored when disabling auto savings.
-
-### HTTP Request
-
-POST`/v5/earn/flexible-saving/auto-savings`
-
-### Request Parameters
-
-Parameter| Required| Type| Comments  
----|---|---|---  
-coin| false| string| Coin to update. Omit or pass an empty string to update the global setting  
-isSelected| **true**|  boolean| Whether to enable auto savings  
-purchaseImmediately| false| boolean| When enabling, asynchronously subscribe the available Funding Account balance. Default: `false`. Ignored when disabling  
-  
-### Response Parameters
-
-None
-
-* * *
-
-### Request Example
-    
-    
-    POST /v5/earn/flexible-saving/auto-savings HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "coin": "BTC",  
-        "isSelected": true,  
-        "purchaseImmediately": false  
-    }  
-    
-
-### Response Example
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
-        "retExtInfo": {},  
-        "time": 1672211918471  
+        "time": 1776067553433  
     }
 
 ---
 
-# 查詢/設定自動儲蓄設定
-
-查詢或設定活期理財自動儲蓄。
-
-備註
-
-  * `GET` 查詢自動儲蓄開關、持倉上限及 APR。
-  * `POST` 開啟或關閉自動儲蓄。
-
-
+# 查詢產品資訊
 
 信息
 
-  * API key 權限：`Earn`
-  * 查詢自動儲蓄設定：每個 UID 每秒 10 次請求
-  * 設定自動儲蓄設定：每個 UID 每秒 5 次請求
-
-
-
-## 查詢自動儲蓄設定
-
-查詢使用者的活期理財自動儲蓄設定及各幣種目前 APR。省略 `coins` 可回傳所有支援的幣種；最多可指定 50 個幣種。
+無需身份驗證。每個IP每秒最多 **50次** 請求。
 
 ### HTTP 請求
 
-GET`/v5/earn/flexible-saving/auto-savings`
+GET`/v5/earn/fixed-term/product`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coins| false| array| 欲查詢的幣種。以重複的查詢參數傳入，例如 `coins=BTC&coins=ETH`。省略時查詢所有支援的幣種。最多 `50` 個  
+coin| false| string| 依幣種篩選，例如 `BTC`、`ETH`。若省略則返回所有幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-selectedAll| boolean| 是否已全域啟用自動儲蓄  
-coins| array| 支援或指定幣種的自動儲蓄設定  
-> coin| string| 幣種名稱  
-> isSelected| boolean| 是否已為此幣種啟用自動儲蓄  
-> maxStakingAmount| string| 此幣種可進行自動儲蓄的最大持倉數量  
-> apr| string| 目前 APR，以小數利率表示。例如 `0.05` 代表 5%  
+list| array| 產品列表  
+> productId| string| 產品ID  
+> category| string| 產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`  
+> coin| string| 質押幣種  
+> duration| string| 固定期限，例如 `1d`、`8h`、`2m`  
+> status| string| 產品狀態：`Available`、`SoldOut`、`NotStarted`  
+> tieredApyList| array| 分層APY列表（如適用）  
+>> min| string| 此層最低金額  
+>> max| string| 此層最高金額，`"-1"` 表示無上限  
+>> apy| string| 此層APY  
+> minStakeAmount| string| 最低質押金額  
+> maxStakeAmount| string| 最高質押金額  
+> precision| integer| 幣種交易精度  
+> subscribeStartAt| string| 訂閱開始時間，毫秒級unix時間戳  
+> subscribeEndAt| string| 訂閱結束時間，毫秒級unix時間戳  
+> allowEarlyRedemption| boolean| 是否支持提前贖回  
+> earlyRedemptionApy| string| 提前贖回時適用的折扣APY  
+> redemptionLimitDuration| string| 允許提前贖回前的最短持有時間，例如 `1d`、`8h`、`2m`  
+> allowAutoReinvest| boolean| 是否支持自動續投  
+> interestCoinApyList| array| 多幣種獎勵APY列表  
+>> coin| string| 獎勵幣種  
+>> apy| string| 獎勵APY  
+>> expectUnitEarning| string| 每單位投資預期獎勵（受獎勵幣種現貨價格影響）  
+>> currentPrice| string| 獎勵幣種當前價格  
+> isVip| boolean| 是否為VIP專屬產品  
+> creditTime| string| 預計收益到賬時間，毫秒級unix時間戳  
+> specialUserGroupRequired| boolean| 是否限制特定用戶群體購買  
+> specialUserGroupInfo| string| 限制用戶群體的描述  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/flexible-saving/auto-savings?coins=BTC&coins=ETH HTTP/1.1  
+    GET /v5/earn/fixed-term/product?coin=BTC HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
+    X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -207,78 +237,98 @@ coins| array| 支援或指定幣種的自動儲蓄設定
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "selectedAll": false,  
-            "coins": [  
+            "list": [  
                 {  
-                    "coin": "BTC",  
-                    "isSelected": true,  
-                    "maxStakingAmount": "10",  
-                    "apr": "0.05"  
+                    "productId": "427",  
+                    "category": "FixedTermSaving",  
+                    "coin": "USDT",  
+                    "duration": "30d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "50",  
+                    "maxStakeAmount": "10000",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1686704400000",  
+                    "subscribeEndAt": "1909094399000",  
+                    "allowEarlyRedemption": false,  
+                    "earlyRedemptionApy": "",  
+                    "redemptionLimitDuration": "",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "2.50%",  
+                            "expectUnitEarning": "0.002",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": false,  
+                    "creditTime": "1778718600000",  
+                    "specialUserGroupRequired": false,  
+                    "specialUserGroupInfo": ""  
                 },  
                 {  
-                    "coin": "ETH",  
-                    "isSelected": false,  
-                    "maxStakingAmount": "100",  
-                    "apr": "0.04"  
+                    "productId": "27",  
+                    "category": "FundPool",  
+                    "coin": "USDT",  
+                    "duration": "3d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "100",  
+                    "maxStakeAmount": "10000",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1722448800000",  
+                    "subscribeEndAt": "0",  
+                    "allowEarlyRedemption": true,  
+                    "earlyRedemptionApy": "0.30%",  
+                    "redemptionLimitDuration": "1d",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "9.99%",  
+                            "expectUnitEarning": "0.0008",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": false,  
+                    "creditTime": "1776391500000",  
+                    "specialUserGroupRequired": true,  
+                    "specialUserGroupInfo": "Limited Offer"  
+                },  
+                {  
+                    "productId": "12",  
+                    "category": "FundPoolPremium",  
+                    "coin": "USDT",  
+                    "duration": "3d",  
+                    "status": "Available",  
+                    "tieredApyList": [],  
+                    "minStakeAmount": "1",  
+                    "maxStakeAmount": "300",  
+                    "precision": 4,  
+                    "subscribeStartAt": "1751500800000",  
+                    "subscribeEndAt": "0",  
+                    "allowEarlyRedemption": false,  
+                    "earlyRedemptionApy": "",  
+                    "redemptionLimitDuration": "",  
+                    "allowAutoReinvest": false,  
+                    "interestCoinApyList": [  
+                        {  
+                            "coin": "USDT",  
+                            "apy": "19.70%",  
+                            "expectUnitEarning": "0.0016",  
+                            "currentPrice": "1.00"  
+                        }  
+                    ],  
+                    "isVip": true,  
+                    "creditTime": "1776391200000",  
+                    "specialUserGroupRequired": false,  
+                    "specialUserGroupInfo": ""  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1672211918471  
-    }  
-    
-
-## 設定自動儲蓄設定
-
-為單一幣種或所有支援的幣種啟用或停用活期理財自動儲蓄。省略 `coin` 或傳入空字串可更新全域設定。
-
-啟用時，將 `purchaseImmediately` 設為 `true` 可非同步申購資金帳戶中的可用餘額。設定為 `false` 或省略時，僅會更新設定。停用自動儲蓄時，此參數會被忽略。
-
-### HTTP 請求
-
-POST`/v5/earn/flexible-saving/auto-savings`
-
-### 請求參數
-
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-coin| false| string| 要更新的幣種。省略或傳入空字串可更新全域設定  
-isSelected| **true**|  boolean| 是否啟用自動儲蓄  
-purchaseImmediately| false| boolean| 啟用時，非同步申購資金帳戶中的可用餘額。預設：`false`。停用時會被忽略  
-  
-### 響應參數
-
-無
-
-* * *
-
-### 請求示例
-    
-    
-    POST /v5/earn/flexible-saving/auto-savings HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672211918471  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "coin": "BTC",  
-        "isSelected": true,  
-        "purchaseImmediately": false  
-    }  
-    
-
-### 響應示例
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {},  
-        "retExtInfo": {},  
-        "time": 1672211918471  
+        "time": 1776067553433  
     }

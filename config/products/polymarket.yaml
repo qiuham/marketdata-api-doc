@@ -1,0 +1,27 @@
+id: polymarket
+display_name: Polymarket
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider:
+  id: polymarket
+  display_name: Polymarket
+product: api
+status: active
+priority: 160
+# Mintlify 文档站：llms.txt 分层列页，每页 .md 是原文；OpenAPI / AsyncAPI 规格一起收
+adapter: llms_txt
+source:
+  type: llms_txt
+  llms_txt: https://docs.polymarket.com/llms.txt
+  base_url: https://docs.polymarket.com/
+  include_specs: true
+  concurrency: 4
+output:
+  docs_dir: docs/crypto/polymarket
+  index_file: index/crypto/polymarket.json
+  clean_before_crawl: true
+metadata_defaults:
+  api_type: reference
+  source_type: llms_txt
+  version: ''

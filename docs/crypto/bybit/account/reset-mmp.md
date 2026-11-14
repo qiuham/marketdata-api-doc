@@ -2,32 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/reset-mmp
 api_type: Account
-updated_at: 2026-11-13 18:26:41.608820
+updated_at: 2026-11-13 19:20:52.096447
 ---
 
-# Set Delta Neutral Mode
+# Reset MMP
 
-Delta Neutral Mode is designed to enhance the trading experience for users running delta-neutral strategies. When enabled, positions that meet the Delta Neutral criteria are ranked lower in the ADL (Auto-Deleveraging) queue, reducing the risk of being auto-deleveraged during extreme market conditions. For more details, refer to the [Delta Neutral Mode](https://www.bybit.com/en/help-center/article?id=1772092051700) help article.
+info
 
-You can turn on/off the Delta Neutral mode. To query the current status, use the [Get Trade Behaviour Config](/docs/v5/account/get-user-setting-config) endpoint and check the `deltaEnable` field in the response.
+  * Once the mmp triggered, you can unfreeze the account by this endpoint, then `qtyLimit`, `deltaLimit` and `vegaLimit` will be reset to 0.
+  * If the account is not frozen, reset action can also remove previous accumulation, i.e., `qtyLimit`, `deltaLimit` and `vegaLimit` will be reset to 0.
+
+
 
 ### HTTP Request
 
-POST`/v5/account/set-delta-mode`
+POST`/v5/account/mmp-reset`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-deltaEnable| **true**|  string| `1`: Enable; `0`: Disable  
+baseCoin| **true**|  string| Base coin, uppercase only  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-resultStatus| integer| `success`;`failed`  
-  
-* * *
+None
 
 ### Request Example
 
@@ -38,17 +37,16 @@ resultStatus| integer| `success`;`failed`
 
     
     
-    POST /v5/account/set-delta-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    POST /v5/account/mmp-reset HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773113846000  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 20  
       
     {  
-        "deltaEnable": "1"  
+        "baseCoin": "ETH"  
     }  
     
     
@@ -59,13 +57,28 @@ resultStatus| integer| `success`;`failed`
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.set_delta_mode(  
-        deltaEnable="1"  
+    print(session.reset_mmp(  
+        baseCoin="ETH",  
     ))  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .resetMMP('ETH')  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -73,37 +86,33 @@ resultStatus| integer| `success`;`failed`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {},  
-        "retExtInfo": {},  
-        "time": 1773113846355  
+        "retMsg": "success"  
     }
 
 ---
 
-# 設置Delta中性模式
+# 重置市商保護凍結
 
-Delta 中性模式旨在為執行 Delta 中性策略的用戶，提升交易體驗。啟用後，符合 Delta 中性標準的倉位在 ADL (自動減倉) 佇列中的排名會較低，從而降低在極端市場條件下被自動減倉的風險。 詳情請參考 [Delta 中性模式](https://www.bybit.com/en/help-center/article?id=1772092051700)幫助文章。
+信息
 
-您可以開啟或關閉 Delta 中性模式。如需查詢當前狀態，請使用 [查詢交易行為設置](/docs/zh-TW/v5/account/get-user-setting-config) 接口，並查看響應中的 `deltaEnable` 字段。
+  * 一旦mmp被觸發, 您的帳戶可以調用該接口進行主動解凍, 解凍後, `qtyLimit`、`deltaLimit` 和 `vegaLimit` 就重置為0.
+  * 若帳戶沒有被凍結, 該重置接口能夠清除之前的交易, 即不計算重置前發生的總數量和淨交易delta, `qtyLimit`、`deltaLimit` 和 `vegaLimit` 就重置為0.
+
+
 
 ### HTTP 請求
 
-POST`/v5/account/set-delta-mode`
+POST`/v5/account/mmp-reset`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-deltaEnable| **true**|  string| `1`: 開啟；`0`: 關閉  
+baseCoin| **true**|  string| 交易幣種  
   
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-resultStatus| integer| `success`;`failed`  
-  
-* * *
+無
 
 ### 請求示例
 
@@ -114,26 +123,48 @@ resultStatus| integer| `success`;`failed`
 
     
     
-    POST /v5/account/set-delta-mode HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    POST /v5/account/mmp-reset HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773113846000  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 20  
       
     {  
-        "deltaEnable": "1"  
+        "baseCoin": "ETH"  
     }  
     
     
     
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.reset_mmp(  
+        baseCoin="ETH",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
+    client  
+        .resetMMP('ETH')  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -141,8 +172,5 @@ resultStatus| integer| `success`;`failed`
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {},  
-        "retExtInfo": {},  
-        "time": 1773113846355  
+        "retMsg": "success"  
     }

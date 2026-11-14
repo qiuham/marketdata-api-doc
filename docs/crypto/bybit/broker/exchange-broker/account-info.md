@@ -2,25 +2,22 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/account-info
 api_type: REST
-updated_at: 2026-11-13 18:27:13.714676
+updated_at: 2026-11-13 19:22:12.841617
 ---
 
-# Get Rate Limit Cap
-
-> API rate limit: 5 req per second
+# Get Account Info
 
 info
 
-  * Get your exchange broker account entity total rate limit usage and cap, across the board
-  * Only Main UIDs can query this endpoint
-  * Only exchange broker account can call this endpoint
-  * If you never apply for a specifical config via account manager, it gives empty response.
+  * Use exchange broker master account to query
 
 
+
+> API rate limit: 10 req / sec
 
 ### HTTP Request
 
-GET`/v5/broker/apilimit/query-cap`
+GET`/v5/broker/account-info`
 
 ### Request Parameters
 
@@ -30,11 +27,16 @@ None
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> [bizType](/docs/v5/enum#biztype)| string| Business type  
-> totalRate| string| Total API rate limit usage accross all subaccounts and master account  
-> ebCap| string| Entity-level API rate limit per second  
-> uidCap| string| UID-level API rate limit per second  
+subAcctQty| string| The qty of sub account has been created  
+maxSubAcctQty| string| The max limit of sub account can be created  
+baseFeeRebateRate| Object| Rebate percentage of the base fee  
+> spot| string| Rebate percentage of the base fee for spot, e.g., 10.00%  
+> derivatives| string| Rebate percentage of the base fee for derivatives, e.g., 10.00%  
+markupFeeRebateRate| Object| Rebate percentage of the mark up fee  
+> spot| string| Rebate percentage of the mark up fee for spot, e.g., 10.00%  
+> derivatives| string| Rebate percentage of the mark up fee for derivatives, e.g., 10.00%  
+> convert| string| Rebate percentage of the mark up fee for convert, e.g., 10.00%  
+ts| string| System timestamp (ms)  
   
 ### Request Example
 
@@ -45,14 +47,13 @@ list| array| Object
 
     
     
-    GET /v5/broker/apilimit/query-cap HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
+    GET /v5/broker/account-info HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
+    X-BAPI-TIMESTAMP: 1701399431920  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 2  
     
     
     
@@ -62,11 +63,26 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_broker_rate_limit_cap())  
+    print(session.get_exchange_broker_account_info())  
     
     
     
+    const { RestClientV5 } = require('bybit-api');  
       
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getExchangeBrokerAccountInfo()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -76,48 +92,38 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "825",  
-                    "bizType": "SPOT"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "OPTIONS"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "DERIVATIVES"  
-                }  
-            ]  
+            "subAcctQty": "2",  
+            "maxSubAcctQty": "20",  
+            "baseFeeRebateRate": {  
+                "spot": "10.0%",  
+                "derivatives": "10.0%"  
+            },  
+            "markupFeeRebateRate": {  
+                "spot": "6.00%",  
+                "derivatives": "9.00%",  
+                "convert": "3.00%",  
+            },  
+            "ts": "1701395633402"  
         },  
         "retExtInfo": {},  
-        "time": 1770610126806  
+        "time": 1701395633403  
     }
 
 ---
 
-# 查詢EB帳戶的速率上限和使用量
-
-> API 限速：每秒 1 次請求
+# 查詢帳戶信息
 
 信息
 
-  * 查詢EB帳戶級別的總的頻率蓋帽以及所有子帳戶頻率分配量
-  * 僅EB母帳戶可以訪問該接口
-  * 對於沒有通過客戶經理申請過頻率蓋帽的EB帳戶, 返回為空
+  * 使用經紀商的母帳戶進行查詢
 
 
+
+> API頻率: 10次/秒
 
 ### HTTP 請求
 
-GET`/v5/broker/apilimit/query-cap`
+GET`/v5/broker/account-info`
 
 ### 請求參數
 
@@ -127,53 +133,84 @@ GET`/v5/broker/apilimit/query-cap`
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> totalRate| string| 所有子帳號的 API 速率限制總使用量  
-> ebCap| string| 基於EB帳戶維度的每秒 API 限速蓋帽  
-> uidCap| string| 基於 UID 等級的每秒 API 限速  
+subAcctQty| string| 已創建的子帳戶數量  
+maxSubAcctQty| string| 允許創建的子帳戶數量上限  
+baseFeeRebateRate| Object| 基礎費率返佣  
+> spot| string| 現貨交易基礎費率返佣, 例如, 10.00%  
+> derivatives| string| 期貨交易基礎費率返佣, 例如, 10.00%  
+markupFeeRebateRate| Object| 加點費率返佣  
+> spot| string| 現貨交易加點費率返佣, 例如, 10.00%  
+> derivatives| string| 期貨交易加點費率返佣, 例如, 10.00%  
+> convert| string| 閃兌加點費率返佣, 例如, 10.00%  
+ts| string| 系統時間戳 (毫秒)  
   
-### 請求範例
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    GET /v5/broker/apilimit/query-cap HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXXX  
+    GET /v5/broker/account-info HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728460942776  
+    X-BAPI-TIMESTAMP: 1701399431920  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 2  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_exchange_broker_account_info())  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getExchangeBrokerAccountInfo()  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
-### 響應範例
+### 響應示例
     
     
     {  
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "825",  
-                    "bizType": "SPOT"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "OPTIONS"  
-                },  
-                {  
-                    "ebCap": "900",  
-                    "uidCap": "100",  
-                    "totalRate": "760",  
-                    "bizType": "DERIVATIVES"  
-                }  
-            ]  
+            "subAcctQty": "2",  
+            "maxSubAcctQty": "20",  
+            "baseFeeRebateRate": {  
+                "spot": "10.0%",  
+                "derivatives": "10.0%"  
+            },  
+            "markupFeeRebateRate": {  
+                "spot": "6.00%",  
+                "derivatives": "9.00%",  
+                "convert": "3.00%"  
+            },  
+            "ts": "1701395633402"  
         },  
         "retExtInfo": {},  
-        "time": 1770610126806  
+        "time": 1701395633403  
     }

@@ -2,63 +2,92 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/sub-deposit-record
 api_type: REST
-updated_at: 2026-11-13 18:27:00.958076
+updated_at: 2026-11-13 19:21:40.649089
 ---
 
-# Confirm a Quote
+# Get Sub Deposit Records (on-chain)
 
-info
+Query subaccount's deposit records by **main** UID's API key.
 
-  1. The exchange is async; please check the final status by calling the convert history API.
-  2. Make sure you confirm the quote before it expires.
+tip
 
-
+`endTime` \- `startTime` should be less than 30 days. Queries for the last 30 days worth of records by default.
 
 ### HTTP Request
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/asset/deposit/query-sub-member-record`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-quoteTxId| **true**|  string| The quote tx ID from [Request a Quote](/docs/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| The user's sub userId in bybit  
-webhookUrl| false| string| API URL to call when order is successful or failed (max 256 characters)  
-MerchantRequestId| false| string| Customised request ID(maximum length of 36)
-
-  * Generally it is useless, but it is convenient to track the quote request internally if you fill this field
-
-  
+id| false| string| Internal ID: Can be used to uniquely identify and filter the deposit. When combined with other parameters, this field takes the highest priority  
+txID| false| string| Transaction ID: Please note that data generated before Jan 1, 2024 cannot be queried using txID  
+subMemberId| **true**|  string| Sub UID  
+coin| false| string| Coin, uppercase only  
+startTime| false| integer| The start timestamp (ms) _Note: the query logic is actually effective based on**second** level_  
+endTime| false| integer| The end timestamp (ms) _Note: the query logic is actually effective based on**second** level_  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `50`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tradeNo| string| Trade order No  
-merchantRequestId| string| Customised request ID  
+rows| array| Object  
+> id| string| Unique ID  
+> requestId| string| Request ID  
+> coin| string| Coin  
+> chain| string| Chain  
+> amount| string| Amount  
+> txID| string| Transaction ID  
+> [status](/docs/v5/enum#depositstatus)| integer| Deposit status  
+> toAddress| string| Deposit target address  
+> tag| string| Tag of deposit target address  
+> depositFee| string| Deposit fee  
+> successAt| string| Deposit's success time  
+> confirmations| string| Number of confirmation blocks  
+> txIndex| string| Transaction sequence number  
+> blockHash| string| Hash number on the chain  
+> batchReleaseLimit| string| The deposit limit for this coin in this chain. `"-1"` means no limit  
+> depositType| string| The deposit type. `0`: normal deposit, `10`: the deposit reaches daily deposit limit, `20`: hit AML deposit, please go to web to submit materials, `50`: The deposit has been blocked due to an account or compliance restriction, pls go to web to withdraw the funds  
+> fromAddress| string| From address of deposit, only shown when the deposit comes from on-chain and from address is unique, otherwise gives `""`  
+> taxDepositRecordsId| string| This field is used for tax purposes by Bybit EU (Austria) users, declare tax id  
+> taxStatus| integer| This field is used for tax purposes by Bybit EU (Austria) users 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
   
+> travelRuleStatus| integer| Travel Rule review status, non-compliance area can ignore this field
+
+  * `0`: Approved — review passed, proceed with subsequent flow
+  * `1`: CollectInfo — counterparty info required, re-submit questionnaire
+  * `2`: Pending — under review, poll the deposit query endpoint
+  * `3`: Rejected — rejected or failed (including cancelled)
+
+  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+[](/docs/api-explorer/v5/asset/sub-deposit-record)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1  
+    GET /v5/asset/deposit/query-sub-member-record?coin=USDT&limit=1&subMemberId=592334 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720071899789  
+    X-BAPI-TIMESTAMP: 1672192441294  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
     
     
     
@@ -68,10 +97,34 @@ merchantRequestId| string| Customised request ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote_fiat_convert(  
-        quoteTxId="QuoteTaxId123456",  
-        subUserId="43456"  
+    print(session.get_sub_deposit_records(  
+        coin="USDT",  
+        limit=1,  
+        subMemberId=592334,  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSubAccountDepositRecords({  
+        coin: 'USDT',  
+        limit: 1,  
+        subMemberId: '592334',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -81,66 +134,137 @@ merchantRequestId| string| Customised request ID
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
-        }  
+            "rows": [],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1672192441742  
     }
 
 ---
 
-# 確認報價
+# 查詢子帳號的充值紀錄 (鏈上)
 
-信息
+僅能通過**主帳號** 的API key來查詢子帳號的充值紀錄
 
-  1. 兌換是異步的；請通過調用查詢結果 API 確認最終狀態 
-  2. 請確保在報價過期之前確認報價
+提示
+
+  * `endTime` \- `startTime` 需要小於等於30天. 默認查詢最近30天的紀錄
 
 
 
 ### HTTP 請求
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/asset/deposit/query-sub-member-record`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-quoteTxId| **true**|  string| 報價交易 ID，來源於 [申請報價](/docs/zh-TW/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| 用戶在 Bybit 平台的子用戶 ID  
-webhookUrl| false| string| 當訂單成功或失敗時調用的 API URL（最多 256 個字符）  
-merchantRequestId| false| string| 自定義請求 ID（最大長度為 36）
-
-  * 通常無需填寫，但如果填寫此字段，便於內部跟踪報價請求
-
-  
+id| false| string| 內部ID: 可用於唯一篩選入金紀錄. 當跟其他參數組合時, 具有最高優先級  
+txID| false| string| 鏈上交易ID: 請注意2024年1月1日之前的入金紀錄, 無法通過txID來篩選  
+subMemberId| **true**|  string| 子帳號  
+coin| false| string| 幣種  
+startTime| false| integer| 開始時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_  
+endTime| false| integer| 結束時間戳 (毫秒) _注意: 實際查詢時是秒級維度生效_  
+limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `50`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-tradeNo| string| 交易訂單號  
-merchantRequestId| string| 自定義請求 ID  
+rows| array| Object  
+> id| string| 內部ID, 唯一鍵  
+> requestId| string| 請求 ID  
+> coin| string| 幣種  
+> chain| string| 鏈名  
+> amount| string| 充值金額  
+> txID| string| 交易Id. 充值失敗或取消充值時為空  
+> [status](/docs/zh-TW/v5/enum#depositstatus)| integer| 充值狀態  
+> toAddress| string| 充值的目標地址  
+> tag| string| 充值目標地址的tag  
+> depositFee| string| 充值手續費  
+> successAt| string| 最後更新時間  
+> confirmations| string| 确认区块的数量  
+> txIndex| string| 交易序列号  
+> blockHash| string| 鏈上的哈希數  
+> batchReleaseLimit| string| 當前幣鏈每日充值限額. `"-1"`表示無限制  
+> depositType| string| 入金類型. `0`: 正常充值, `10`: 充值觸發每日限額, `20`: 觸發AML充值，請前往網頁端提交材料，`50`: 帳戶存在限制，無法正常上帳，請前往網頁端提走資金  
+> fromAddress| string| 入金來源地址, 僅當入金來自鏈上且來源地址唯一時返回地址, 其餘則返回`""`  
+> taxDepositRecordsId| string| Bybit EU（奧地利）用戶用於稅務目的, 保稅記錄id  
+> taxStatus| integer| Bybit EU（奧地利）用戶用於稅務目的 
+
+  * 0: No reporting required
+  * 1: Reporting pending
+  * 2: Reporting completed
+
   
+> travelRuleStatus| integer| Travel Rule 審核狀態，非合規區可以忽略該字段 
+
+  * `0`: Approved — 已通過，可繼續後續流程
+  * `1`: CollectInfo — 需補充對手方信息，請重新提交問卷
+  * `2`: Pending — 審核中，請輪詢入金查詢接口
+  * `3`: Rejected — 已拒絕或失敗（含取消）
+
+  
+nextPageCursor| string| 游標，用於翻頁  
+[](/docs/zh-TW/api-explorer/v5/asset/sub-deposit-record)
+
+* * *
+
 ### 請求示例
 
   * HTTP
+  * Python
+  * Node.js
 
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1    
-    Host: api-testnet.bybit.com    
-    X-BAPI-SIGN: XXXXXX    
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
-    X-BAPI-TIMESTAMP: 1720071899789    
-    X-BAPI-RECV-WINDOW: 5000    
-    Content-Type: application/json    
-    Content-Length: 52    
+    GET /v5/asset/deposit/query-sub-member-record?coin=USDT&limit=1&subMemberId=592334 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672192441294  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_sub_deposit_records(  
+        coin="USDT",  
+        limit=1,  
+        subMemberId=592334,  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getSubAccountDepositRecords({  
+        coin: 'USDT',  
+        limit: 1,  
+        subMemberId: '592334',  
+      })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -150,7 +274,9 @@ merchantRequestId| string| 自定義請求 ID
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
-        }  
+            "rows": [],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1672192441742  
     }

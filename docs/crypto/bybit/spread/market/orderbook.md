@@ -2,44 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/orderbook
 api_type: Market Data
-updated_at: 2026-11-13 18:28:46.635598
+updated_at: 2026-11-13 19:25:21.022515
 ---
 
-# Get Tickers
+# Get Orderbook
 
-Query for the latest price snapshot, best bid/ask price, and trading volume of different spread combinations in the last 24 hours.
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Query spread orderbook depth data.
 
 ### HTTP Request
 
-GET`/v5/spread/tickers`
+GET`/v5/spread/orderbook`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| **true**|  string| Spread combination symbol name  
+limit| false| integer| Limit size for each bid and ask [`1`, `25`]. Default: `1`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Ticker info  
-> symbol| string| Spread combination symbol name  
-> bidPrice| string| Bid 1 price  
-> bidSize| string| Bid 1 size  
-> askPrice| string| Ask 1 price  
-> askSize| string| Ask 1 size  
-> lastPrice| string| Last trade price  
-> highPrice24h| string| The highest price in the last 24 hours  
-> lowPrice24h| string| The lowest price in the last 24 hours  
-> prevPrice24h| string| Price 24 hours ago  
-> volume24h| string| Volume for 24h  
+s| string| Spread combination symbol name  
+b| array| Bid, buyer. Sorted by price in descending order  
+> b[0]| string| Bid price  
+> b[1]| string| Bid size  
+a| array| Ask, seller. Sorted by price in ascending order  
+> a[0]| string| Ask price  
+> a[1]| string| Ask size  
+ts| integer| The timestamp (ms) that the system generates the data  
+u| integer| Update ID. Is always in sequence. Corresponds to `u` in the 25-level [WebSocket orderbook stream](https://bybit-exchange.github.io/docs/v5/spread/websocket/public/orderbook)  
+seq| integer| Cross sequence  
+cts| integer| The timestamp from the matching engine when this orderbook data is produced. It can be correlated with `T` from [public trade channel](/docs/v5/spread/websocket/public/trade)  
   
 ### Request Example
 
@@ -49,7 +44,7 @@ list| array<object>| Ticker info
 
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spread/orderbook?symbol=SOLUSDT_SOL/USDT&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -60,8 +55,9 @@ list| array<object>| Ticker info
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_tickers(  
-        symbol="SOLUSDT_SOL/USDT"  
+    print(session.spread_get_orderbook(  
+        symbol="SOLUSDT_SOL/USDT",  
+        limit=1  
     ))  
     
 
@@ -72,67 +68,63 @@ list| array<object>| Ticker info
         "retCode": 0,  
         "retMsg": "Success",  
         "result": {  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
-                }  
-            ]  
+            "s": "SOLUSDT_SOL/USDT",  
+            "b": [  
+                [  
+                    "21.0000",  
+                    "0.1"  
+                ]  
+            ],  
+            "a": [  
+                [  
+                    "23.0107",  
+                    "4.6"  
+                ]  
+            ],  
+            "u": 46977,  
+            "ts": 1744077242177,  
+            "seq": 213110,  
+            "cts": 1744076329043  
         },  
         "retExtInfo": {},  
-        "time": 1744079413254  
+        "time": 1744077243583  
     }
 
 ---
 
-# 查詢最新行情信息
-
-可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
-
-警告
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+# 查詢深度
 
 ### HTTP請求
 
-GET`/v5/spread/tickers`
+GET`/v5/spread/orderbook`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| **true**|  string| 價差產品名稱  
+limit| false| integer| 深度限制 [`1`, `25`]. 默認: `1`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 行情信息  
-> symbol| string| 價差產品名稱  
-> bidPrice| string| 買1價  
-> bidSize| string| 買1價的數量  
-> askPrice| string| 賣1價  
-> askSize| string| 賣1價的數量  
-> lastPrice| string| 最新市場成交價  
-> highPrice24h| string| 最近24小時的最高價  
-> lowPrice24h| string| 最近24小時的最低價  
-> prevPrice24h| string| 24小時前的整點市價  
-> volume24h| string| 最近24小時成交量  
+s| string| 價差產品名稱  
+b| array| Bid, 買方. 按照價格從大到小  
+> b[0]| string| 買方報價  
+> b[1]| string| 買方數量  
+a| array| Ask, 賣方. 按照價格從小到大  
+> a[0]| string| 賣方報價  
+> a[1]| string| 賣方數量  
+ts| integer| 行情服務生成數據時間戳（毫秒）  
+u| integer| 表示數據連續性的id, 它和wss推送裡的25檔的`u`對齊  
+seq| integer| 撮合版本號  
+cts| integer| 產生此訂單簿數據時來自撮合引擎的時間戳. 可用於與平台成交頻道中的T進行關聯  
   
 ### 請求示例
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spread/orderbook?symbol=SOLUSDT_SOL/USDT&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
 
@@ -143,21 +135,24 @@ list| array<object>| 行情信息
         "retCode": 0,  
         "retMsg": "Success",  
         "result": {  
-            "list": [  
-                {  
-                    "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
-                }  
-            ]  
+            "s": "SOLUSDT_SOL/USDT",  
+            "b": [  
+                [  
+                    "21.0000",  
+                    "0.1"  
+                ]  
+            ],  
+            "a": [  
+                [  
+                    "23.0107",  
+                    "4.6"  
+                ]  
+            ],  
+            "u": 46977,  
+            "ts": 1744077242177,  
+            "seq": 213110,  
+            "cts": 1744076329043  
         },  
         "retExtInfo": {},  
-        "time": 1744079413254  
+        "time": 1744077243583  
     }

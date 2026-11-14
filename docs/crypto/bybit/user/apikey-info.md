@@ -2,80 +2,74 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/apikey-info
 api_type: REST
-updated_at: 2026-11-13 18:28:54.177797
+updated_at: 2026-11-13 19:25:35.784367
 ---
 
-# Create Sub UID API Key
+# Get API Key Information
 
-To create new API key for those newly created sub UID. Use **master user's api key** **only**.
+Get the information of the api key. Use the api key pending to be checked to call the endpoint. Both **master and sub user's api key** are applicable.
 
 tip
 
-The API key must have one of the below permissions in order to call this endpoint..
-
-  * master API key: "Account Transfer", "Subaccount Transfer", "Withdrawal"
-
-
+Any permission can access this endpoint.
 
 ### HTTP Request
 
-POST`/v5/user/create-sub-api`
+GET`/v5/user/query-api`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-subuid| **true**|  integer| Sub user Id  
-note| false| string| Set a remark  
-readOnly| **true**|  integer| `0`: Read and Write. `1`: Read only  
-ips| false| string| Set the IP bind. example: `"192.168.0.1,192.168.0.2"`**note:**
+None
 
-  * don't pass ips or pass with `"*"` means no bind
-  * No ip bound api key will be **invalid after 90 days**
-  * api key without IP bound will be invalid after **7 days** once the account password is changed
-
-  
-permissions| **true**|  Object| Tick the types of permission.
-
-  * one of below types must be passed, otherwise the error is thrown
-
-  
-> ContractTrade| false| array| Contract Trade. `["Order","Position"]`  
-> Spot| false| array| Spot Trade. `["SpotTrade"]`  
-> Options| false| array| USDC Contract. `["OptionsTrade"]`  
-> Wallet| false| array| Wallet. `["AccountTransfer","SubMemberTransferList"]`  
-_Note: Fund Custodial account is not supported_  
-> Exchange| false| array| Convert. `["ExchangeHistory"]`  
-> Earn| false| array| Earn product. `["Earn"]`  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Unique id. Internal used  
+id| string| Unique ID. Internal use  
 note| string| The remark  
 apiKey| string| Api key  
 readOnly| integer| `0`: Read and Write. `1`: Read only  
-secret| string| The secret paired with api key.
-
-  * The secret can't be queried by GET api. Please keep it properly
-
-  
+secret| string| Always `""`  
 permissions| Object| The types of permission  
-> ContractTrade| array| Permisson of contract trade  
-> Spot| array| Permisson of spot  
-> Wallet| array| Permisson of wallet  
-> Options| array| Permission of USDC Contract. It supports trade option and usdc perpetual.  
-> Derivatives| array| Permission of Unified account  
-> Exchange| array| Permission of convert  
-> Earn| array| Permission of earn product  
-> BlockTrade| array| Not applicable to sub account, always `[]`  
-> Affiliate| array| Not applicable to sub account, always `[]`  
-> FiatP2P| array| Not applicable to sub account, always `[]`  
-> FiatConvertBroker| array| Not applicable to sub account, always `[]`  
+> ContractTrade| array| Permission of contract trade `Order`, `Position`  
+> Spot| array| Permission of spot `SpotTrade`  
+> Wallet| array| Permission of wallet `AccountTransfer`, `SubMemberTransfer`(master account), `SubMemberTransferList`(sub account), `Withdraw`(master account)  
+> Options| array| Permission of USDC Contract. It supports trade option and USDC perpetual. `OptionsTrade`  
+> Derivatives| array| `DerivativesTrade`  
+> Exchange| array| Permission of convert `ExchangeHistory`  
+> Earn| array| Permission of earn product `Earn`  
+> FiatP2P| array| Permission of P2P `FiatP2POrder`, `Advertising`. Not applicable to subaccount, always `[]`  
+> FiatBitPay| array| Permission of Bybit Pay `FaitPayOrder`. Not applicable to subaccount, always `[]`  
+> FiatConvertBroker| array| Permission of fiat convert `FiatConvertBrokerOrder`. Not applicable to subaccount, always `[]`  
+> BitCard| array| Bybit card permission, `BitCard`. Not applicable to subaccount  
+> ByXPost| array| Community post permission, `ByXPost`. Not applicable to subaccount  
+> Affiliate| array| Permission of Affiliate. Only affiliate can have this permission, otherwise always `[]`  
+> BlockTrade| array| Permission of blocktrade. Not applicable to subaccount, always `[]`  
 > NFT| array| **Deprecated** , always `[]`  
-> CopyTrading| array| **Deprecated** always `[]`  
-  
+> CopyTrading| array| **Deprecated** , always `[]`  
+> Compliance| array| Compliance permission, `ComplianceAppeal`, for querying TM Onchain appeal status and submitting related materials. Available only to Bybit global master accounts with read-write API keys (`readOnly=0`). This permission is not granted by default, including for existing keys; returns `[]` when not granted.  
+ips| array| IP bound  
+type| integer| The type of api key. `1`: personal, `2`: connected to the third-party app  
+deadlineDay| integer| The remaining valid days of api key. Only for those api key with no IP bound or the password has been changed  
+expiredAt| datetime| The expiry day of the api key. Only for those api key with no IP bound or the password has been changed  
+createdAt| datetime| The create day of the api key  
+uta| integer| Whether the account to which the account upgrade to unified trade account. `0`: regular account; `1`: unified trade account  
+userID| integer| User ID  
+inviterID| integer| Inviter ID (the UID of the account which invited this account to the platform)  
+[vipLevel](/docs/v5/enum#viplevel)| string| VIP Level  
+mktMakerLevel| string| Market maker level  
+affiliateID| integer| Affiliate Id. `0` represents that there is no binding relationship.  
+rsaPublicKey| string| Rsa public key  
+isFixApi| boolean| Whether the api key is a key that has FIX API permission  
+isMaster| boolean| If this api key belongs to master account or not  
+parentUid| string| The main account uid. Returns `"0"` when the endpoint is called by main account  
+kycLevel| string| Personal account kyc level. `LEVEL_DEFAULT`, `LEVEL_1`, `LEVEL_2`  
+kycRegion| string| Personal account kyc region  
+unified| integer| **Deprecated**  
+[](/docs/api-explorer/v5/user/apikey-info)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -85,24 +79,12 @@ permissions| Object| The types of permission
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
+    GET /v5/user/query-api HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
     
     
@@ -112,16 +94,7 @@ permissions| Object| The types of permission
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
-    ))  
+    print(session.get_api_key_information())  
     
     
     
@@ -134,14 +107,7 @@ permissions| Object| The types of permission
     });  
       
     client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
-      })  
+      .getQueryApiKey()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -157,74 +123,106 @@ permissions| Object| The types of permission
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
+            "id": "2208369",  
+            "note": "testnet",  
+            "apiKey": "XXXXXXXX",  
+            "readOnly": 1,  
+            "secret": "",  
             "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
+                "ContractTrade": [  
+                    "Order",  
+                    "Position"  
+                ],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
                 "Wallet": [  
-                    "AccountTransfer"  
+                    "AccountTransfer",  
+                    "SubMemberTransfer"  
                 ],  
                 "Options": [],  
+                "Derivatives": [  
+                    "DerivativesTrade"  
+                ],  
                 "CopyTrading": [],  
                 "BlockTrade": [],  
-                "Exchange": [],  
+                "Exchange": [  
+                    "ExchangeHistory"  
+                ],  
                 "NFT": [],  
-                "Earn": ["Earn"]  
-            }  
+                "Affiliate": [],  
+                "Earn": [  
+                    "Earn"  
+                ],  
+                "FiatP2P": [  
+                    "FiatP2POrder",  
+                    "Advertising"  
+                ],  
+                "FiatConvertBroker": [  
+                    "FiatConvertBrokerOrder"  
+                ],  
+                "FiatGlobalPay": [],  
+                "FiatBitPay": [  
+                    "FaitPayOrder"  
+                ],  
+                "BitCard": [  
+                    "BitCard"  
+                ],  
+                "ByXPost": [  
+                    "ByXPost"  
+                ],  
+                "Compliance": [  
+                    "ComplianceAppeal"  
+                ]  
+            },  
+            "ips": [  
+                "18.181.170.164",  
+                "13.212.45.47",  
+                "13.212.45.48"  
+            ],  
+            "type": 1,  
+            "deadlineDay": -2,  
+            "expiredAt": "1970-01-01T00:00:00Z",  
+            "createdAt": "2025-10-13T03:20:45Z",  
+            "unified": 0,  
+            "uta": 1,  
+            "userID": 1448939,  
+            "inviterID": 0,  
+            "vipLevel": "PRO-1",  
+            "mktMakerLevel": "0",  
+            "affiliateID": 0,  
+            "rsaPublicKey": "",  
+            "isMaster": true,  
+            "parentUid": "0",  
+            "kycLevel": "LEVEL_1",  
+            "kycRegion": "MYS",  
+            "userIDInt64": "0",  
+            "inviterIDInt64": "0",  
+            "affiliateIDInt64": "0",  
+            "isFixApi": false  
         },  
         "retExtInfo": {},  
-        "time": 1676430007643  
+        "time": 1776149990532  
     }
 
 ---
 
-# 新建子帳戶的API Key
+# 查詢API Key相關信息
 
-給新建好的子帳戶創建新的API key。需使用**母** 帳戶的API key。
+獲取API key的相關信息。使用待查詢的api key調用接口。適用於母、子帳戶的api key。
 
 提示
 
-在調用接口時，使用的API key至少需要擁有以下其中一種權限
-
-  * 母API key: "Account Transfer（資產帳戶劃轉）", "Subaccount Transfer（母子帳戶劃轉）", "Withdrawal（提幣）"
-
-
+任意權限可以訪問該接口
 
 ### HTTP 請求
 
-POST`/v5/user/create-sub-api`
+GET`/v5/user/query-api`
 
 ### 請求參數
 
-參數| 是否必須| 類型| 說明  
----|---|---|---  
-subuid| **true**|  integer| 子帳戶userId  
-note| false| string| 設置備註  
-readOnly| **true**|  integer| `0`：可讀可寫. `1`：只讀  
-ips| false| string| 綁定IP. 比如: "192.168.0.1,192.168.0.2"**注意:**
+無
 
-  * 不傳參數ips 或者入参值為`"*"`意味著不綁定
-  * 不綁定IP的api key將有**90天的有效期限**
-  * 一旦帳戶密碼做了修改，帳戶下的非永久api key將在**7天後失效**
-
-  
-permissions| **true**|  Object| 勾選api key權限.
-
-  * 注意: 必須傳入以下權限類型的任意一種, 否則報錯
-
-  
-> ContractTrade| false| array| USDT合約, 幣本位合約. ["Order","Position"]  
-> Spot| false| array| 現貨. ["SpotTrade"]  
-> Wallet| false| array| 錢包. ["AccountTransfer","SubMemberTransferList"] _注意: 基金託管子帳戶不支持這兩個權限項_  
-> Options| false| array| USDC合約和期權. ["OptionsTrade"]  
-> Derivatives| false| array| ["DerivativesTrade"]  
-> Exchange| false| array| 兌換. ["ExchangeHistory"]  
-> Earn| false| array| 理財產品的權限 ["Earn"]  
-  
 ### 返回參數
 
 參數| 類型| 說明  
@@ -233,26 +231,45 @@ id| string| 唯一id. 內部使用
 note| string| 備註  
 apiKey| string| Api key  
 readOnly| integer| `0`：可讀可寫. `1`：只讀  
-secret| string| Api密鑰密碼.
-
-  * 注意: Api密鑰密碼只會在這裡出現一次，除此之外沒有任何地方還可以獲取到密碼。請妥善保存。
-
-  
+secret| string| 總是""  
 permissions| Object| 權限類型  
-> ContractTrade| array| 合約交易的權限  
-> Spot| array| 現貨交易的權限  
-> Wallet| array| 錢包的權限  
-> Options| array| USDC合約和期權  
-> Derivatives| array| 統一帳戶權限  
+> ContractTrade| array| USDT合約、幣本位合約交易的權限 `Order`, `Position`  
+> Spot| array| 現貨交易的權限 `SpotTrade`  
+> Wallet| array| 錢包的權限 `AccountTransfer`, `SubMemberTransfer`(母帳戶), `SubMemberTransferList`(子帳戶), `Withdraw`(母帳戶)  
+> Options| array| USDC合約和期權 `OptionsTrade`  
+> Derivatives| array| `DerivativesTrade`  
+> Exchange| array| 兌換的權限 `ExchangeHistory`  
 > Earn| array| 理財產品的權限 `Earn`  
-> Exchange| array| 兌換的權限  
-> BlockTrade| array| 子帳戶暫不支持，總是[]  
-> FiatP2P| array| 子帳戶暫不支持，總是[]  
-> FiatConvertBroker| array| 子帳戶暫不支持，總是[]  
-> Affiliate| array| 子帳戶暫不支持，總是[]  
-> NFT| array| **廢棄** , 總是[]  
-> CopyTrading| array| **廢棄** , 總是[]  
-  
+> FiatP2P| array| P2P `FiatP2POrder`, `Advertising`  
+> FiatBitPay| array| Bybit Pay `FaitPayOrder`。不支持子帳戶，總是 `[]`  
+> FiatConvertBroker| array| 數法兌換權限(僅支援經紀商) `FiatConvertBrokerOrder`  
+> BitCard| array| Bybit卡權限, `BitCard`. 不支持子帳戶，總是`[]`  
+> ByXPost| array| 社區帖子, `ByXPost`. 不支持子帳戶，總是`[]`  
+> Affiliate| array| 代理商權限. 僅代理商可以擁有此權限, 否則總是`[]`  
+> BlockTrade| array| 大宗交易的權限. 不支持子帳戶，總是[]  
+> Compliance| array| 合規權限 `ComplianceAppeal`，用於查詢 TM Onchain 申訴狀態及提交相關材料。僅 Bybit global 母帳戶的可讀可寫 API Key（`readOnly=0`）可擁有此權限。此權限預設不授予（包括現有 API Key）；未授予時返回 `[]`。  
+ips| array| 綁定的IP  
+type| integer| Api key類型. `1`：個人使用, `2`：綁定到第三方應用  
+deadlineDay| integer| API key失效的倒數日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
+expiredAt| datetime| API key的過期日. 針對那些未綁定IP的api key或者修改過密碼的帳戶  
+createdAt| datetime| API key的創建日  
+uta| integer| API Key所屬的帳戶是否為統一交易帳戶. `0`：經典帳戶; `1`：統一交易账户  
+userID| integer| 用戶 ID  
+inviterID| integer| 邀請人 ID（邀請該賬號加入平台的賬號的UID）  
+[vipLevel](/docs/zh-TW/v5/enum#viplevel)| string| VIP用戶等級  
+mktMakerLevel| string| market maker等級  
+affiliateID| integer| 代理商Id. `0`: 表示無任何代理綁定關係  
+rsaPublicKey| string| RSA公鑰  
+isFixApi| boolean| 該api key是否是擁有FIX API權限的密鑰  
+isMaster| boolean| 是否為主帳戶下的api key  
+parentUid| string| 主帳戶uid. 如果是主帳戶本身調用, 則返回`"0"`  
+kycLevel| string| 個人帳戶的kyc等級. `LEVEL_DEFAULT`, `LEVEL_1`， `LEVEL_2`  
+kycRegion| string| 個人帳戶的kyc地區  
+unified| integer| 該字段**已廢棄**  
+[](/docs/zh-TW/api-explorer/v5/user/apikey-info)
+
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -262,24 +279,12 @@ permissions| Object| 權限類型
 
     
     
-    POST /v5/user/create-sub-api HTTP/1.1  
+    GET /v5/user/query-api HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1676430005459  
+    X-BAPI-TIMESTAMP: 1676430842094  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "subuid": 53888000,  
-        "note": "testxxx",  
-        "readOnly": 0,  
-        "permissions": {  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        }  
-    }  
+    X-BAPI-SIGN: XXXXXX  
     
     
     
@@ -289,16 +294,7 @@ permissions| Object| 權限類型
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.create_sub_api_key(  
-        subuid=53888000,  
-        note="testxxx",  
-        readOnly=0,  
-        permissions={  
-            "Wallet": [  
-                "AccountTransfer"  
-            ]  
-        },  
-    ))  
+    print(session.get_api_key_information())  
     
     
     
@@ -311,14 +307,7 @@ permissions| Object| 權限類型
     });  
       
     client  
-      .createSubUIDAPIKey({  
-        subuid: 53888000,  
-        note: 'testxxx',  
-        readOnly: 0,  
-        permissions: {  
-          Wallet: ['AccountTransfer'],  
-        },  
-      })  
+      .getQueryApiKey()  
       .then((response) => {  
         console.log(response);  
       })  
@@ -334,25 +323,84 @@ permissions| Object| 權限類型
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "id": "16651283",  
-            "note": "testxxx",  
-            "apiKey": "xxxxx",  
-            "readOnly": 0,  
-            "secret": "xxxxxxxx",  
+            "id": "2208369",  
+            "note": "testnet",  
+            "apiKey": "XXXXXXXX",  
+            "readOnly": 1,  
+            "secret": "",  
             "permissions": {  
-                "ContractTrade": [],  
-                "Spot": [],  
+                "ContractTrade": [  
+                    "Order",  
+                    "Position"  
+                ],  
+                "Spot": [  
+                    "SpotTrade"  
+                ],  
                 "Wallet": [  
-                    "AccountTransfer"  
+                    "AccountTransfer",  
+                    "SubMemberTransfer"  
                 ],  
                 "Options": [],  
-                "Derivatives": [],  
+                "Derivatives": [  
+                    "DerivativesTrade"  
+                ],  
                 "CopyTrading": [],  
                 "BlockTrade": [],  
-                "Exchange": [],  
-                "NFT": []  
-            }  
+                "Exchange": [  
+                    "ExchangeHistory"  
+                ],  
+                "NFT": [],  
+                "Affiliate": [],  
+                "Earn": [  
+                    "Earn"  
+                ],  
+                "FiatP2P": [  
+                    "FiatP2POrder",  
+                    "Advertising"  
+                ],  
+                "FiatConvertBroker": [  
+                    "FiatConvertBrokerOrder"  
+                ],  
+                "FiatGlobalPay": [],  
+                "FiatBitPay": [  
+                    "FaitPayOrder"  
+                ],  
+                "BitCard": [  
+                    "BitCard"  
+                ],  
+                "ByXPost": [  
+                    "ByXPost"  
+                ],  
+                "Compliance": [  
+                    "ComplianceAppeal"  
+                ]  
+            },  
+            "ips": [  
+                "18.181.170.164",  
+                "13.212.45.47",  
+                "13.212.45.48"  
+            ],  
+            "type": 1,  
+            "deadlineDay": -2,  
+            "expiredAt": "1970-01-01T00:00:00Z",  
+            "createdAt": "2025-10-13T03:20:45Z",  
+            "unified": 0,  
+            "uta": 1,  
+            "userID": 1448939,  
+            "inviterID": 0,  
+            "vipLevel": "PRO-1",  
+            "mktMakerLevel": "0",  
+            "affiliateID": 0,  
+            "rsaPublicKey": "",  
+            "isMaster": true,  
+            "parentUid": "0",  
+            "kycLevel": "LEVEL_1",  
+            "kycRegion": "MYS",  
+            "userIDInt64": "0",  
+            "inviterIDInt64": "0",  
+            "affiliateIDInt64": "0",  
+            "isFixApi": false  
         },  
         "retExtInfo": {},  
-        "time": 1676430007643  
+        "time": 1776149990532  
     }

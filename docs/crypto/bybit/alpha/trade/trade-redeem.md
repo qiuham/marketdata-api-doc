@@ -2,65 +2,48 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-redeem
 api_type: Trading
-updated_at: 2026-11-13 18:26:54.800654
+updated_at: 2026-11-13 19:21:24.040454
 ---
 
-# Get Single Coin Balance
+# Execute Redeem
 
-Query the balance of a specific coin in a specific [account type](/docs/v5/enum#accounttype). Supports querying sub UID's balance. Also, you can check the transferable amount from master to sub account, sub to master account or sub to sub account, especially for user who has an institutional loan.
+Execute a sell trade to redeem on-chain tokens back to payment tokens (e.g. USDT/USDC).
 
-important
+info
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * Must call [Get Trade Quote](/docs/v5/alpha/trade/trade-quote) first to get a valid quote
+  * Must display quote details to the user and obtain explicit confirmation before calling this endpoint
+  * Pass `quoteData`, `correctingCode`, and `gas` from the quote response as-is
+  * A `200` response is only an acknowledgment — use [Get Order List](/docs/v5/alpha/trade/order-list) to check the final order status
+  * Idempotent based on `quoteDataId` — duplicate submissions return the same order number
+  * On-chain confirmation typically takes 10–60 seconds
 
 
 
 ### HTTP Request
 
-GET`/v5/asset/transfer/query-account-coin-balance`
+POST`/v5/alpha/trade/redeem`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-memberId| false| string| UID. **Required** when querying sub UID balance with master api key  
-toMemberId| false| string| UID. **Required** when querying the transferable balance between different UIDs  
-[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type  
-[toAccountType](/docs/v5/enum#accounttype)| false| string| To account type. **Required** when querying the transferable balance between different account types  
-coin| **true**|  string| Coin, uppercase only  
-withBonus| false| integer| `0`(default): not query bonus. `1`: query bonus  
-withTransferSafeAmount| false| integer| Whether query delay withdraw/transfer safe amount 
-
-  * `0`(default): false, `1`: true
-  * What is [delay withdraw amount](/docs/v5/asset/balance/delay-amount)?
-
-  
-withLtvTransferSafeAmount| false| integer| For OTC loan users in particular, you can check the transferable amount under risk level
-
-  * `0`(default): false, `1`: true
-  * `toAccountType` is mandatory
-
-  
+fromTokenCode| **true**|  string| On-chain token to sell (`DEX_<id>`). Must match the quote request, e.g. `DEX_123`  
+fromTokenAmount| **true**|  string| Amount to sell (positive decimal as string). Must match the quote request  
+toTokenCode| **true**|  string| Payment token to receive (`CEX_<id>`), e.g. `CEX_1` for USDT. Must match the quote request  
+slippage| **true**|  string| Slippage tolerance as decimal. `0.005` = 0.5%, `0.01` = 1%, `0.05` = 5%  
+quoteData| **true**|  string| Base64-encoded quote data. Must pass as-is from the `/quote` response  
+gas| **true**|  string| Estimated gas fee. Must pass as-is from the `/quote` response  
+quoteMode| **true**|  integer| Quote mode. Must be consistent with the `/quote` request. `0`: Auto, `1`: Price Priority, `2`: Success Rate Priority  
+correctingCode| **true**|  string| MD5 checksum for data integrity. Must pass as-is from the `/quote` response  
+tenant| false| string| Optional tenant identifier  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-accountType| string| Account type  
-bizType| integer| Biz type  
-accountId| string| Account ID  
-memberId| string| Uid  
-balance| Object|   
-> coin| string| Coin  
-> walletBalance| string| Wallet balance  
-> transferBalance| string| Transferable balance  
-> bonus| string| bonus  
-> transferSafeAmount| string| Safe amount to transfer. Keep `""` if not query  
-> ltvTransferSafeAmount| string| Transferable amount for ins loan account. Keep `""` if not query  
-[](/docs/api-explorer/v5/asset/account-coin-balance)
-
-* * *
-
+orderNo| string| System-generated order number. Use this to query order status via [Get Order List](/docs/v5/alpha/trade/order-list)  
+  
 ### Request Example
 
   * HTTP
@@ -70,50 +53,32 @@ balance| Object|
 
     
     
-    GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=USDT&toAccountType=FUND&withLtvTransferSafeAmount=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: xxxxx  
+    POST /v5/alpha/trade/redeem HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1690254520644  
+    X-BAPI-TIMESTAMP: 1704067200000  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_coin_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-        memberId=592324,  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
+    Content-Type: application/json  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    {  
+        "fromTokenCode": "DEX_123",  
+        "fromTokenAmount": "10000000",  
+        "toTokenCode": "CEX_1",  
+        "slippage": "0.01",  
+        "quoteData": "eyJhbGciOiJIUzI1NiJ9...",  
+        "gas": "0.0003",  
+        "quoteMode": 0,  
+        "correctingCode": "a1b2c3d4e5f6"  
+    }  
+    
+    
+    
       
-    client  
-      .getCoinBalance({  
-        accountType: 'UNIFIED',  
-        coin: 'USDT',  
-        toAccountType: 'FUND',  
-        withLtvTransferSafeAmount: 1,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -121,83 +86,55 @@ balance| Object|
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "accountType": "UNIFIED",  
-            "bizType": 1,  
-            "accountId": "1631385",  
-            "memberId": "1631373",  
-            "balance": {  
-                "coin": "USDT",  
-                "walletBalance": "11999",  
-                "transferBalance": "11999",  
-                "bonus": "0",  
-                "transferSafeAmount": "",  
-                "ltvTransferSafeAmount": "7602.4861"  
-            }  
+            "orderNo": "ORD_20240101_002"  
         },  
         "retExtInfo": {},  
-        "time": 1690254521256  
+        "time": 1704067200000  
     }
 
 ---
 
-# 查詢帳戶單個幣種餘額
+# 執行贖回
 
-獲取某[帳戶類型](/docs/zh-TW/v5/enum#accounttype)下某指定幣種的餘額。支持通過輸入子帳戶id來查詢子帳戶的某個帳戶類型下的某個幣種餘額 同時, 支持查詢母子帳戶、子子帳戶、子母帳戶之間的可劃轉金額，特別是針對於擁有機構借貸的用戶。
+執行賣出交易，將鏈上代幣贖回為支付代幣（如 USDT/USDC）。
 
 信息
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 必須先調用 [獲取交易報價](/docs/zh-TW/v5/alpha/trade/trade-quote) 以獲取有效報價
+  * 必須向用戶展示報價詳情並獲得明確確認後，才能調用此接口
+  * `quoteData`、`correctingCode` 和 `gas` 必須原樣傳入來自報價接口的返回值
+  * `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 確認最終訂單狀態
+  * 基於 `quoteDataId` 的冪等性 — 重複提交將返回相同訂單號
+  * 鏈上確認通常需要 10–60 秒
 
 
 
 ### HTTP 請求
 
-GET`/v5/asset/transfer/query-account-coin-balance`
+POST`/v5/alpha/trade/redeem`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-memberId| false| string| 用戶Id. 當查詢子帳號的餘額時，該字段**必傳**  
-toMemberId| false| string| 劃入帳戶UID. 當查詢不同uid間劃轉時, 該字段**必傳**  
-[accountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 帳戶類型  
-[toAccountType](/docs/zh-TW/v5/enum#accounttype)| false| string| 劃入帳戶類型. 當查詢不同帳戶類型間的劃轉時, 該字段**必傳**  
-coin| **true**|  string| 幣種  
-withBonus| false| integer| 是否查詢體驗金. `0`(默認): 不查詢,`1`: 查詢.  
-withTransferSafeAmount| false| integer| 是否查詢延遲提幣安全限額 
-
-  * `0`(默認)：否, `1`：是
-  * 什麼是[延遲提幣](/docs/zh-TW/v5/asset/balance/delay-amount)?
-
-  
-withLtvTransferSafeAmount| false| integer| 特別用於機構借貸用戶, 可以查詢風險水平內的可劃轉餘額
-
-  * `0`(default)：false, `1`：true
-  * 此時`toAccountType`字段**必傳**
-
-  
+fromTokenCode| **true**|  string| 要賣出的鏈上代幣（`DEX_<id>`），須與報價請求一致，如 `DEX_123`  
+fromTokenAmount| **true**|  string| 賣出數量（正數小數字符串），須與報價請求一致  
+toTokenCode| **true**|  string| 要接收的支付代幣（`CEX_<id>`），如 USDT 對應 `CEX_1`，須與報價請求一致  
+slippage| **true**|  string| 滑點容忍度（小數形式）。`0.005` = 0.5%，`0.01` = 1%，`0.05` = 5%  
+quoteData| **true**|  string| Base64 編碼的報價數據。必須原樣傳入來自 `/quote` 的返回值  
+gas| **true**|  string| 預估 Gas 費用。必須原樣傳入來自 `/quote` 的返回值  
+quoteMode| **true**|  integer| 報價模式，須與 `/quote` 請求一致。`0`: 自動，`1`: 價格優先，`2`: 成功率優先  
+correctingCode| **true**|  string| 數據完整性 MD5 校驗碼。必須原樣傳入來自 `/quote` 的返回值  
+tenant| false| string| 可選的租戶標識符  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-accountType| string| 賬戶類型  
-bizType| integer| 帳戶業務子類型  
-accountId| string| 賬戶ID  
-memberId| string| 用戶ID  
-balance| Object|   
-> coin| string| 幣種類型  
-> walletBalance| string| 錢包余額  
-> transferBalance| string| 可划余額  
-> bonus| string| 可用金額中包含的体验金  
-> transferSafeAmount| string| 可劃轉的安全限額. 若不查詢，則返回`""`  
-> ltvTransferSafeAmount| string| 機構借貸用戶的可劃轉餘額. 若不查詢，則返回`""`  
-[](/docs/zh-TW/api-explorer/v5/asset/account-coin-balance)
-
-* * *
-
+orderNo| string| 系統生成的訂單號，可通過 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 查詢訂單狀態  
+  
 ### 請求示例
 
   * HTTP
@@ -207,50 +144,32 @@ balance| Object|
 
     
     
-    GET /v5/asset/transfer/query-account-coin-balance?accountType=UNIFIED&coin=USDT&toAccountType=FUND&withLtvTransferSafeAmount=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: xxxxx  
+    POST /v5/alpha/trade/redeem HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1690254520644  
+    X-BAPI-TIMESTAMP: 1704067200000  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_coin_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-        memberId=592324,  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
+    Content-Type: application/json  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    {  
+        "fromTokenCode": "DEX_123",  
+        "fromTokenAmount": "10000000",  
+        "toTokenCode": "CEX_1",  
+        "slippage": "0.01",  
+        "quoteData": "eyJhbGciOiJIUzI1NiJ9...",  
+        "gas": "0.0003",  
+        "quoteMode": 0,  
+        "correctingCode": "a1b2c3d4e5f6"  
+    }  
+    
+    
+    
       
-    client  
-      .getCoinBalance({  
-        accountType: 'UNIFIED',  
-        coin: 'USDT',  
-        toAccountType: 'FUND',  
-        withLtvTransferSafeAmount: 1,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -258,21 +177,10 @@ balance| Object|
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "accountType": "UNIFIED",  
-            "bizType": 1,  
-            "accountId": "1631385",  
-            "memberId": "1631373",  
-            "balance": {  
-                "coin": "USDT",  
-                "walletBalance": "11999",  
-                "transferBalance": "11999",  
-                "bonus": "0",  
-                "transferSafeAmount": "",  
-                "ltvTransferSafeAmount": "7602.4861"  
-            }  
+            "orderNo": "ORD_20240101_002"  
         },  
         "retExtInfo": {},  
-        "time": 1690254521256  
+        "time": 1704067200000  
     }

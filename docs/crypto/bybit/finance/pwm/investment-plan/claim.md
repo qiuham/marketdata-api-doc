@@ -2,24 +2,21 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/claim
 api_type: REST
-updated_at: 2026-11-13 18:27:47.306746
+updated_at: 2026-11-13 19:23:31.980156
 ---
 
-# Invest More
+# Claim Withdrawable Funds
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/investment-plan/invest-more`
+POST`/v5/earn/pwm/investment-plan/claim`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 planId| **true**|  string| Investment plan ID. Must be in `Active` status  
-accountType| false| string| Source account type. Default: `FUND`  
-category| **true**|  string| Product type  
-productId| **true**|  string| Product ID  
-amount| **true**|  string| Additional investment amount (base coin)  
+toAccountType| false| string| Target account type. Default: `FUND`  
 orderLinkId| **true**|  string| User-defined order ID, max 36 characters, used for idempotency  
   
 ### Response Parameters
@@ -27,20 +24,16 @@ orderLinkId| **true**|  string| User-defined order ID, max 36 characters, used f
 Parameter| Type| Comments  
 ---|---|---  
 planId| string| Investment plan ID  
-category| string| Product type  
-productId| string| Product ID  
-coin| string| Subscription coin  
-amount| string| Additional investment amount (base coin)  
-status| string| Subscription status: `Success` / `Pending` / `failed`  
-orderLinkId| string| User-defined order ID  
-orderId| string| System-generated order ID  
+toAccountType| int| Target account type for the transfer  
+status| string| Claim status: `Success` / `processing`  
+createdTime| string| Claim timestamp (milliseconds)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/investment-plan/invest-more HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -50,11 +43,8 @@ orderId| string| System-generated order ID
       
     {  
         "planId": "10001",  
-        "accountType": "FUND",  
-        "category": "equityFund",  
-        "productId": "2001",  
-        "amount": "20000.00",  
-        "orderLinkId": "xxx"  
+        "toAccountType": "FUND",  
+        "orderLinkId": "claim-order-001"  
     }  
     
 
@@ -65,33 +55,26 @@ orderId| string| System-generated order ID
         "retCode": 0,  
         "result": {  
             "planId": "10001",  
-            "category": "equityFund",  
-            "productId": "2001",  
-            "coin": "USDT",  
-            "amount": "20000.00",  
-            "status": "Pending",  
-            "orderId": "ORD20241115002",  
-            "orderLinkId": "xxx"  
+            "toAccountType": 6,  
+            "status": "Success",  
+            "createdTime": "1701400000000"  
         }  
     }
 
 ---
 
-# 追加申購
+# 領取可提取資金
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/investment-plan/invest-more`
+POST`/v5/earn/pwm/investment-plan/claim`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 planId| **true**|  string| 投資計劃ID，須為 `Active` 狀態  
-accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
-category| **true**|  string| 產品類型  
-productId| **true**|  string| 產品ID  
-amount| **true**|  string| 追加金額（本位幣）  
+toAccountType| false| string| 目標賬戶類型，默認 `FUND`  
 orderLinkId| **true**|  string| 用戶自定義訂單ID，最長36字符，用於防重  
   
 ### 響應參數
@@ -99,20 +82,16 @@ orderLinkId| **true**|  string| 用戶自定義訂單ID，最長36字符，用�
 參數| 類型| 說明  
 ---|---|---  
 planId| string| 投資計劃ID  
-category| string| 產品類型  
-productId| string| 產品ID  
-coin| string| 申購幣種  
-amount| string| 追加金額（本位幣）  
-status| string| 申購狀態：`Success` / `Pending` / `failed`  
-orderLinkId| string| 用戶自定義訂單ID  
-orderId| string| 系統生成的訂單ID  
+toAccountType| int| 到賬目標賬戶類型  
+status| string| 提取狀態：`Success`（成功）/ `processing`（處理中）  
+createdTime| string| 提取時間戳（毫秒）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/investment-plan/invest-more HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/claim HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -122,11 +101,8 @@ orderId| string| 系統生成的訂單ID
       
     {  
         "planId": "10001",  
-        "accountType": "FUND",  
-        "category": "equityFund",  
-        "productId": "2001",  
-        "amount": "20000.00",  
-        "orderLinkId": "xxx"  
+        "toAccountType": "FUND",  
+        "orderLinkId": "claim-order-001"  
     }  
     
 
@@ -137,12 +113,8 @@ orderId| string| 系統生成的訂單ID
         "retCode": 0,  
         "result": {  
             "planId": "10001",  
-            "category": "equityFund",  
-            "productId": "2001",  
-            "coin": "USDT",  
-            "amount": "20000.00",  
-            "status": "Pending",  
-            "orderId": "ORD20241115002",  
-            "orderLinkId": "xxx"  
+            "toAccountType": 6,  
+            "status": "Success",  
+            "createdTime": "1701400000000"  
         }  
     }

@@ -2,66 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/product
 api_type: REST
-updated_at: 2026-11-13 18:27:43.210779
+updated_at: 2026-11-13 19:23:22.205884
 ---
 
-# Create Fund (Pending Subscription)
+# Get Airdrop Products
 
 info
 
-  1. Each institution can create a maximum of **10 funds**.
-  2. A newly created fund will have a status of **`PendingSubscribe`** (pending subscription).
-
-
+Does not need authentication. Guest access is supported. Authenticated users receive a product list filtered based on account eligibility.
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/create-fund`
+GET`/v5/earn/hold-to-earn/product`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-fundName| **true**|  string| Fund name, 1–50 characters  
-coin| **true**|  string| Base coin. Supported values: `BTC`, `ETH`, `USDT`, `USDC`, `SOL`, `MNT`, `XRP`  
-profitShareRate| **true**|  string| High-watermark profit sharing rate (%), range: 0–100  
-managementFeeRate| **true**|  string| Management fee rate (annualized %), range: 0–100  
-fundIntroduction| false| string| Fund introduction ID (must be in the institution's allowed list)  
-reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-fundId| string| Unique identifier of the newly created fund  
-fundName| string| Fund name  
-coin| string| Fund denomination coin  
-status| string| Fund status. Fixed as `PendingSubscription` upon creation. Possible values: `PendingSubscribe` / `Active` / `Closing` / `Closed`  
-profitShareRate| string| Profit sharing rate (%)  
-managementFeeRate| string| Management fee rate (annualized %)  
-accountUid| string| Fund main sub-account UID automatically created by the system  
-createdTime| string| Creation timestamp (milliseconds)  
+products| array| Object  
+> coinName| string| Investment coin name, e.g., `"USDE"`, `"USDTB"`, `"USD1"`  
+> yields| array| Yield coin object, e.g., `"USDE"`, `"WLFI"`. May differ from `coinName` for cross-coin airdrops (e.g., USD1 holdings → WLFI rewards)  
+>> coinName| string| Yield coin name  
+>> apy| string| Yesterday's APR, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday for the yield coin  
+>> personalApy| string| Personal APR for this yield coin, formatted for direct display including the `%` suffix, e.g., `"5.285982%"`. Reflects the user's individual rate after applying their personal multiplier  
+>> multiplier| string| Personal coefficient applied to the base APR. Returns `"1"` when the user has no position in this product  
+> status| string| Product stage, `NotStarted`, `Online`, `Ended`  
+> apy| string| Yesterday's avg APR cross all yield coins, formatted for direct display, e.g., `"10%"`, `"3.5%"`. Returns `"0%"` when no yield was distributed yesterday  
+> personalApy| string| Sum of personal APR across all yield coins, formatted for direct display including the `%` suffix, e.g., `"6.52459%"`  
+> announcementUrl| string| Activity rules announcement URL  
   
+info
+
+  * Products are filtered by compliance rules, region (EEA), Islamic account status, whitelist membership, and product status. Only products the current user is eligible to participate in are returned.
+  * When `coinName != yields.coinName`, it is a cross-coin airdrop
+  * Results are sorted by product creation time, newest first.
+
+
+
 * * *
 
 ### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1  
+    GET /v5/earn/hold-to-earn/product HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    
+    
+    
       
-    {  
-        "fundName": "BTC Alpha Fund",  
-        "coin": "BTC",  
-        "profitShareRate": "20.00",  
-        "managementFeeRate": "2.00",  
-        "reqLinkId": "create-fund-001"  
-    }  
+    
+    
+    
+      
     
 
 ### Response Example
@@ -69,78 +71,121 @@ createdTime| string| Creation timestamp (milliseconds)
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "fundId": "12345",  
-            "fundName": "BTC Alpha Fund",  
-            "coin": "BTC",  
-            "status": "pending_subscribe",  
-            "profitShareRate": "20.00",  
-            "managementFeeRate": "2.00",  
-            "accountUid": "0",  
-            "createdTime": "1640000000000"  
-        }  
+            "products": [  
+                {  
+                    "coinName": "USDE",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDE",  
+                            "apy": "0.210604%",  
+                            "personalApy": "0.421208%",  
+                            "multiplier": "2"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.210604%",  
+                    "personalApy": "0.421208%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                },  
+                {  
+                    "coinName": "USDTB",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDTB",  
+                            "apy": "0.029978%",  
+                            "personalApy": "0.029978%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.029978%",  
+                    "personalApy": "0.029978%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
+                },  
+                {  
+                    "coinName": "USD1",  
+                    "yields": [  
+                        {  
+                            "coinName": "WLFI",  
+                            "apy": "10%",  
+                            "personalApy": "10%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Ended",  
+                    "apy": "10%",  
+                    "personalApy": "10%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1779348459085  
     }
 
 ---
 
-# 機構創建待申購基金
+# 獲取空投產品列表
 
 信息
 
-  1. 每個機構最多創建 **10 個基金** 。
-  2. 基金創建後狀態為 **`PendingSubscribe`** （待申購）。
-
-
+不需要鑑權。支援訪客存取，已登入用戶將根據帳戶資格獲得過濾後的產品列表。
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/create-fund`
+GET`/v5/earn/hold-to-earn/product`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-fundName| **true**|  string| 基金名稱，長度1-50字符  
-coin| **true**|  string| 本位幣，支持：`BTC`、`ETH`、`USDT`、`USDC`、`SOL`、`MNT`、`XRP`  
-profitShareRate| **true**|  string| 高水位利潤分成比例（%），範圍0-100  
-managementFeeRate| **true**|  string| 管理費率（年化%），範圍0-100  
-fundIntroduction| false| string| 基金簡介ID（需在機構允許列表中）  
-reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-fundId| string| 新創建的基金唯一標識  
-fundName| string| 基金名稱  
-coin| string| 基金計價幣種  
-status| string| 基金狀態，創建後固定為 `PendingSubscription`（待申購）。枚舉值：`PendingSubscribe`（待申購）/ `Active`（運行中）/ `Closing`（關閉中）/ `Closed`（已關閉）  
-profitShareRate| string| 利潤分成比例（%）  
-managementFeeRate| string| 管理費率（年化%）  
-accountUid| string| 系統自動創建的基金主子賬戶UID  
-createdTime| string| 創建時間戳（毫秒）  
+products| array| Object  
+> coinName| string| **投資幣種** 名稱，如 `"USDE"`、`"USDTB"`、`"USD1"`。跨幣種空投時可與 `coinName` 不同（例如 USD1 持倉 → WLFI 獎勵）  
+> yields| string| **收益幣種** 明細  
+>> coinName| string| 收益幣種  
+>> apy| string| 該收益幣種**昨日 APR** ，已格式化為可直接展示的文案，如 `"10%"`、`"3.5%"`  
+>> personalApy| string| 該收益幣種的個人 APR，含 `%` 後綴，如 `"5.285982%"`。反映用戶套用個人倍率後的實際利率  
+>> multiplier| string| 個人係數，適用於基礎 APR。未持倉時返回 `"1"`  
+> status| string| 產品當前階段，`NotStarted`, `Online`, `Ended`  
+> apy| string| **昨日綜合APR** ，昨日無收益時返回 `"0%"`  
+> personalApy| string| 所有收益幣種個人 APR 之和，含 `%` 後綴，如 `"6.52459%"`  
+> announcementUrl| string| **活動規則連結** （公告頁 URL）  
   
+信息
+
+  * 產品列表經過合規規則、地區（EEA）、伊斯蘭帳戶、灰度名單及產品狀態多重過濾，僅返回當前用戶可見且可參與的產品。
+  * 當 `coinName != yields.coinName` 時，為跨幣種空投，前端需同時展示投資幣與收益幣。
+  * 結果按產品創建時間倒序排列（較新在前）。
+
+
+
 * * *
 
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/pwm/asset-manager/create-fund HTTP/1.1  
+    GET /v5/earn/hold-to-earn/product HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    
+    
+    
       
-    {  
-        "fundName": "BTC Alpha Fund",  
-        "coin": "BTC",  
-        "profitShareRate": "20.00",  
-        "managementFeeRate": "2.00",  
-        "reqLinkId": "create-fund-001"  
-    }  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -148,15 +193,56 @@ createdTime| string| 創建時間戳（毫秒）
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "",  
         "result": {  
-            "fundId": "12345",  
-            "fundName": "BTC Alpha Fund",  
-            "coin": "BTC",  
-            "status": "pending_subscribe",  
-            "profitShareRate": "20.00",  
-            "managementFeeRate": "2.00",  
-            "accountUid": "0",  
-            "createdTime": "1640000000000"  
-        }  
+            "products": [  
+                {  
+                    "coinName": "USDE",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDE",  
+                            "apy": "0.210604%",  
+                            "personalApy": "0.421208%",  
+                            "multiplier": "2"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.210604%",  
+                    "personalApy": "0.421208%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usde-page"  
+                },  
+                {  
+                    "coinName": "USDTB",  
+                    "yields": [  
+                        {  
+                            "coinName": "USDTB",  
+                            "apy": "0.029978%",  
+                            "personalApy": "0.029978%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Online",  
+                    "apy": "0.029978%",  
+                    "personalApy": "0.029978%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usdtb-page"  
+                },  
+                {  
+                    "coinName": "USD1",  
+                    "yields": [  
+                        {  
+                            "coinName": "WLFI",  
+                            "apy": "10%",  
+                            "personalApy": "10%",  
+                            "multiplier": "1"  
+                        }  
+                    ],  
+                    "status": "Ended",  
+                    "apy": "10%",  
+                    "personalApy": "10%",  
+                    "announcementUrl": "https://testnet.bybit.com/en/earn/usd1-page"  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1779348459085  
     }

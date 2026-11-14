@@ -2,10 +2,10 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/hourly-yield
 api_type: REST
-updated_at: 2026-11-13 18:27:39.453881
+updated_at: 2026-11-13 19:23:12.776302
 ---
 
-# Get Stake/Redeem Order History
+# Get Hourly Yield History
 
 info
 
@@ -13,22 +13,13 @@ API key needs "Earn" permission
 
 ### HTTP Request
 
-GET`/v5/earn/order`
+GET`/v5/earn/hourly-yield`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`   
-**Remarks** : currently, only flexible savings and OnChain is supported  
-orderId| false| string| Order ID. 
-
-  * For category = `OnChain`, either orderId or orderLinkId is **required**
-  * if both are passed, make sure they're matched, otherwise returning empty result
-
-  
-orderLinkId| false| string| Order link ID  
-**Remarks** : Always return the latest one if order link id is ever reused when querying by orderLinkId only  
+category| **true**|  string| `FlexibleSaving`  
 productId| false| string| Product ID  
 startTime| false| integer| The start timestamp (ms).
 
@@ -46,18 +37,14 @@ Parameter| Type| Comments
 ---|---|---  
 nextPageCursor| string| Refer to the `cursor` request parameter  
 list| array| Object  
-> coin| string| Coin name  
-> orderValue| string| amount  
-> orderType| string| `Redeem`, `Stake`  
-> orderId| string| Order ID  
-> orderLinkId| string| Order link ID  
-> status| string| Order status `Success`, `Fail`, `Pending`  
-> createdAt| string| Order created time, in milliseconds  
 > productId| string| Product ID  
-> updatedAt| string| Order updated time, in milliseconds  
-> swapOrderValue| string| Swap order value. Only for LST Onchain.  
-> estimateRedeemTime| string| Estimate redeem time, in milliseconds. Only for Onchain  
-> estimateStakeTime| string| Estimate stake time, in milliseconds. Only for Onchain  
+> coin| string| Coin name: "BTC", "ETH"  
+> id| string| Unique key (guaranteed to be unique only under the same user)  
+> amount| string| Yield Amount. Example: 10  
+> effectiveStakingAmount| string| Effective staking amount, e.g., 1000.00  
+> status| string| Order status: `Pending`, `Success`, `Fail`  
+> hourlyDate| string| Hourly yield time(ms) eg: 1755478800000  
+> createdAt| string| Order creation time in milliseconds, e.g., 1684738540561  
   
 ### Request Example
 
@@ -68,7 +55,7 @@ list| array| Object
 
     
     
-    GET /v5/earn/order?orderId=9640dc23-df1a-448a-ad24-e1a48028a51f&category=OnChain HTTP/1.1  
+    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -84,9 +71,8 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_stake_or_redemption_history(  
-        category="OnChain",  
-        orderId="9640dc23-df1a-448a-ad24-e1a48028a51f",  
+    print(session.get_hourly_yield(  
+        category="FlexibleSaving"  
     ))  
     
     
@@ -103,29 +89,24 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "coin": "USDT",  
-                    "orderValue": "1000",  
-                    "orderType": "Stake",  
-                    "orderId": "ad98d473-4e17-46da-ab30-5563f62a97fa",  
-                    "orderLinkId": "",  
-                    "status": "Success",  
-                    "createdAt": "1759983689000",  
                     "productId": "428",  
-                    "updatedAt": "1759983689000",  
-                    "swapOrderValue": "",  
-                    "estimateRedeemTime": "",  
-                    "estimateStakeTime": ""  
+                    "coin": "USDT",  
+                    "amount": "0.060810502283105022",  
+                    "effectiveStakingAmount": "1000",  
+                    "hourlyDate": "1759989600000",  
+                    "status": "Success",  
+                    "createdAt": "1759989603000"  
                 }  
             ],  
             "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1759983699446  
+        "time": 1759993045287  
     }
 
 ---
 
-# 查詢質押/贖回訂單歷史
+# 查詢每小時收益歷史
 
 信息
 
@@ -133,51 +114,38 @@ API key需要"理財""權限
 
 ### HTTP 請求
 
-GET`/v5/earn/order`
+GET`/v5/earn/hourly-yield`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數名稱| 必填| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`   
-**備註** : 本期僅支持活期理財和鏈上賺幣  
-orderId| false| string| 系統生成的訂單ID 
+category| **true**|  string| `FlexibleSaving`  
+productId| false| string| 產品 ID  
+startTime| false| integer| 開始時間戳 (ms)。
 
-  * 對於category = `OnChain`, orderId和orderLinkId二者 _必須_ 傳其一
-  * 如果都傳入, 確保二者是來自同一筆訂單, 否則返回空
-
-  
-orderLinkId| false| string| 自定義訂單ID  
-**備註** : 如果orderLinkId有復用, 則僅用orderLinkId查詢時, 總是返回最近的那筆訂單  
-productId| false| string| 產品ID  
-startTime| false| integer| 開始時間戳 (毫秒)
-
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
+  * 1\. 如果未提供 startTime 和 endTime，默認返回最近 7 天的數據。
+  * 2\. 如果提供了 startTime 和 endTime，則結束時間與開始時間的差值必須小於或等於 7 天。
 
   
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+endTime| false| integer| 結束時間戳 (ms)  
+limit| false| integer| 每頁數據大小限制。範圍：[1, 100]。默認值：50  
+cursor| false| string| 游標，使用返回的 `nextPageCursor` 查詢下一頁的數據。  
   
 ### 響應參數
 
-參數| 類型| 說明  
+參數名稱| 類型| 說明  
 ---|---|---  
 nextPageCursor| string| 游標，用於翻頁  
-list| array| Object  
-> coin| string| 幣種名稱  
-> orderValue| string| 質押/贖回數量  
-> orderType| string| `Redeem`, `Stake`  
-> orderId| string| 系統生成的訂單ID  
-> orderLinkId| string| 自定義訂單ID  
-> status| string| 訂單狀態 `Success`, `Fail`, `Pending`  
-> createdAt| string| 訂單創建時間 (毫秒)  
-> productId| string| 產品ID  
-> updatedAt| string| 訂單更新時間 (毫秒)  
-> swapOrderValue| string| 到手金額. 僅適用於 LST OnChain  
-> estimateRedeemTime| string| 預計贖回時間 毫秒級（只有贖回訂單展示）. 僅適用於 OnChain  
-> estimateStakeTime| string| 預計質押時間 毫秒級（只有質押訂單展示）.僅適用於 OnChain  
+list| array|   
+> productId| string| 產品 ID  
+> coin| string| 幣種名稱："BTC", "ETH"  
+> id| string| 唯一鍵（僅在同一用戶下保證唯一）  
+> amount| string| 收益金額  
+>effectiveStakingAmount| string| 有效持倉金額，例如：1000.00  
+> status| string| 訂單狀態：`Pending`，`Success`，`Fail`  
+> hourlyDate| string| 每小時收益時間 (ms)，例如：1755478800000  
+> createdAt| string| 訂單創建時間 (ms)，例如：1684738540561  
   
 ### 請求示例
 
@@ -188,7 +156,7 @@ list| array| Object
 
     
     
-    GET /v5/earn/order?orderId=0572b030-6a0b-423f-88c4-b6ce31c0c82d&category=FlexibleSaving HTTP/1.1  
+    GET /v5/earn/hourly-yield?category=FlexibleSaving HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -198,16 +166,7 @@ list| array| Object
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_stake_or_redemption_history(  
-        category="FlexibleSaving",  
-        orderId="0572b030-6a0b-423f-88c4-b6ce31c0c82d",  
-    ))  
+      
     
     
     
@@ -223,22 +182,17 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "coin": "USDT",  
-                    "orderValue": "1000",  
-                    "orderType": "Stake",  
-                    "orderId": "ad98d473-4e17-46da-ab30-5563f62a97fa",  
-                    "orderLinkId": "",  
-                    "status": "Success",  
-                    "createdAt": "1759983689000",  
                     "productId": "428",  
-                    "updatedAt": "1759983689000",  
-                    "swapOrderValue": "",  
-                    "estimateRedeemTime": "",  
-                    "estimateStakeTime": ""  
+                    "coin": "USDT",  
+                    "amount": "0.060810502283105022",  
+                    "effectiveStakingAmount": "1000",  
+                    "hourlyDate": "1759989600000",  
+                    "status": "Success",  
+                    "createdAt": "1759989603000"  
                 }  
             ],  
             "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1759983796197  
+        "time": 1759993045287  
     }

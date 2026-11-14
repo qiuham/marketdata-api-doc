@@ -2,63 +2,80 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-grid/create
 api_type: REST
-updated_at: 2026-11-13 18:27:09.989464
+updated_at: 2026-11-13 19:22:03.026259
 ---
 
-# Create Martingale Bot
+# Create Grid Bot
 
-Create a new futures Martingale trading bot. The bot opens an initial position and adds to it when price moves against the position, then takes profit when price reverses.
+Create a new futures grid trading bot that automatically places grid orders within a specified price range.
 
 info
 
-  * **How it works:**  
-The bot opens an initial position and scales into it when price moves adversely by `price_float_percent`. Each add multiplies the base position size by `add_position_percent`. When the accumulated position reaches the round take-profit (`round_tp_percent`), the bot closes and optionally restarts.
-
-  * **Mode (`martingale_mode`):**  
-`1`: Long — buys on dips, profits on price reversal up  
-`2`: Short — sells on rallies, profits on price reversal down
-
-  * **Auto-cycle (`auto_cycle_toggle`):**  
-`1`: Enable — restart after each round take-profit  
-`2`: Disable — stop after a single round take-profit
-
   * **Prerequisites:**  
-Call [Get Futures Martingale Limit](/docs/v5/bot/futures-martingale/get-limit) before this endpoint to validate parameter ranges.
+Call [Validate Grid Input](/docs/v5/bot/futures-grid/validate-input) before this endpoint to ensure parameters are within valid bounds.
+
+  * **Grid mode (`grid_mode`):**  
+`1`: Neutral — no directional bias  
+`2`: Long — bullish strategy  
+`3`: Short — bearish strategy
+
+  * **Grid type (`grid_type`):**  
+`1`: Arithmetic — equal price difference between grids  
+`2`: Geometric — equal price ratio between grids
+
+  * **TP/SL type (`tp_sl_type`):**  
+`1`: Both TP and SL by percentage  
+`2`: Both TP and SL by price  
+`3`: TP by price, SL by percentage  
+`4`: TP by percentage, SL by price
+
+  * **Response`bot_id`:**  
+Returned on success. Use this ID for [Get Detail](/docs/v5/bot/futures-grid/get-detail) and [Close](/docs/v5/bot/futures-grid/close).
+
+  * **`check_code`:**  
+Returned in the response to indicate specific validation errors. `FGRID_CHECK_CODE_SUCCESS` = OK.
 
   * **Rate limit:**  
 10 requests per second per UID.
 
-  * **Subject to compliance wall, GEO IP check, and KYC verification.**
+  * **Subject to compliance wall and KYC verification.**
 
 
 
 
 ### HTTP Request
 
-POST`/v5/fmartingalebot/create`
+POST`/v5/fgridbot/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| **true**|  string| Trading pair symbol, uppercase only (e.g. `BTCUSDT`)  
-martingale_mode| **true**|  integer| Strategy direction: `1` Long (buy dips), `2` Short (sell rallies)  
+grid_mode| **true**|  integer| Strategy direction: `1` Neutral, `2` Long, `3` Short  
+min_price| **true**|  string| Lower price bound of the grid range (decimal string)  
+max_price| **true**|  string| Upper price bound of the grid range (decimal string)  
+cell_number| **true**|  integer| Number of grid levels, minimum 2  
 leverage| **true**|  string| Position leverage multiplier (e.g. `"5"` means 5x). Must be >= 1  
-price_float_percent| **true**|  string| Price movement percentage to trigger a position add (e.g. `"0.015"` means add when price moves 1.5% against the position)  
-add_position_percent| **true**|  string| Position add scaling as percentage of base position size (e.g. `"1.1"` = 1.1x base; `"2"` = 2x base)  
-add_position_num| **true**|  integer| Maximum number of position adds per round  
-init_margin| **true**|  string| Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)  
-round_tp_percent| **true**|  string| Single round take-profit as percentage (e.g. `"0.03"` means close when profit reaches 3%)  
-auto_cycle_toggle| false| integer| Auto-cycle mode: `1` Enable (restart after TP), `2` Disable (stop after single TP)  
-sl_percent| false| string| Stop-loss as percentage of total margin (e.g. `"0.2"` means close when loss reaches 20%). Leave empty if not set  
-entry_price| false| string| Entry trigger price as absolute price (decimal string). Leave empty if not set  
+grid_type| **true**|  integer| Grid spacing type: `1` Arithmetic, `2` Geometric  
+total_investment| **true**|  string| Initial investment in quote currency (decimal string, e.g. `"1000"` for 1000 USDT)  
+take_profit_per| false| string| Take-profit as percentage (e.g. `"0.2"` means 20%). Used when `tp_sl_type` includes percentage-based TP  
+stop_loss_per| false| string| Stop-loss as percentage (e.g. `"0.1"` means 10%). Used when `tp_sl_type` includes percentage-based SL  
+take_profit_price| false| string| Take-profit trigger price (decimal string). Used when `tp_sl_type` includes price-based TP  
+stop_loss_price| false| string| Stop-loss trigger price (decimal string). Used when `tp_sl_type` includes price-based SL  
+tp_sl_type| false| integer| TP/SL trigger mode: `1` Both by %, `2` Both by price, `3` TP price+SL %, `4` TP %+SL price  
+entry_price| false| string| Optional entry trigger price for delayed activation (decimal string)  
+trailing_stop_per| false| string| Trailing stop exit as percentage (e.g. `"0.05"` means 5%)  
+move_up_price| false| string| Move-up price for grid shifting, not applicable when "grid_type"=`2`  
+move_down_price| false| string| Move-down price for grid shifting, not applicable when "grid_type"=`2`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 status_code| integer| `0` = success, `421` = user banned  
-bot_id| integer| Unique bot ID. Use for [Get Detail](/docs/v5/bot/futures-martingale/get-detail) and [Close](/docs/v5/bot/futures-martingale/close)  
+bot_id| integer| Unique bot ID. Use for [Get Detail](/docs/v5/bot/futures-grid/get-detail) and [Close](/docs/v5/bot/futures-grid/close)  
+check_code| string| Validation result. `FGRID_CHECK_CODE_SUCCESS` = OK. See [Validate Futures Grid Input](/docs/v5/bot/futures-grid/validate-input) for full list  
 ban_reason_text| string| Ban reason in user's locale. Returned only when `status_code=421`  
 debug_msg| string| Debug message (testnet only)  
   
@@ -67,7 +84,7 @@ debug_msg| string| Debug message (testnet only)
 ### Request Example
     
     
-    POST /v5/fmartingalebot/create HTTP/1.1  
+    POST /v5/fgridbot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -76,18 +93,23 @@ debug_msg| string| Debug message (testnet only)
     Content-Type: application/json  
       
     {  
-        "symbol": "MNTUSDT",  
-        "martingale_mode": 1,  
-        "leverage": "5",  
-        "price_float_percent": "0.16",  
-        "add_position_percent": "1.8",  
-        "add_position_num": 5,  
-        "round_tp_percent": "0.1",  
-        "init_margin": "650",  
-        "sl_percent": "0.5",  
-        "entry_price": "0.56",  
-        "auto_cycle_toggle": 2  
+        "symbol": "BTCUSDT",  
+        "grid_mode": 2,  
+        "min_price": "230000",  
+        "max_price": "800000",  
+        "cell_number": 88,  
+        "leverage": "6",  
+        "grid_type": 2,  
+        "total_investment": "950",  
+        "entry_price": "370000",  
+        "trailing_stop_per": "0.18",  
+        "tp_sl_type": 4,  
+        "stop_loss_price": "200000",  
+        "take_profit_per": "0.28"  
     }  
+      
+      
+      
     
 
 ### Response Example
@@ -97,71 +119,89 @@ debug_msg| string| Debug message (testnet only)
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "status_code": 0,  
+            "status_code": 200,  
             "debug_msg": "",  
-            "ban_reason_text": "",  
-            "bot_id": "612335280740902531"  
+            "bot_id": "612330315406398322",  
+            "check_code": "FGRID_CHECK_CODE_UNSPECIFIED",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774509868961  
+        "time": 1774506909426  
     }
 
 ---
 
-# 創建馬丁格爾機器人
+# 創建網格機器人
 
-創建一個新的合約馬丁格爾交易機器人。機器人建立初始倉位，當價格逆勢移動時加倉，反轉後止盈。
+創建一個新的合約網格交易機器人，在指定價格範圍內自動掛出網格訂單。
 
 信息
 
-  * **運作方式：**  
-機器人開立初始倉位，當價格逆勢移動 `price_float_percent` 時追加倉位。每次追加倉位以 `add_position_percent` 倍基礎倉位規模擴大。當累計倉位達到單輪止盈目標（`round_tp_percent`）時，機器人平倉並可選擇重新啟動。
-
-  * **模式（`martingale_mode`）：**  
-`1`：做多 — 逢跌買入，價格反彈時獲利  
-`2`：做空 — 逢漲賣出，價格回落時獲利
-
-  * **自動循環（`auto_cycle_toggle`）：**  
-`1`：啓用 — 每輪止盈後重新啟動  
-`2`：停用 — 單輪止盈後停止
-
   * **前置條件：**  
-在調用本端點前，請先調用[查詢合約馬丁格爾限制參數](/docs/zh-TW/v5/bot/futures-martingale/get-limit)，驗證參數範圍。
+在調用本端點前，請先調用[驗證網格輸入](/docs/zh-TW/v5/bot/futures-grid/validate-input)，確保參數在有效範圍內。
+
+  * **網格模式（`grid_mode`）：**  
+`1`：中性 — 無方向偏好  
+`2`：做多 — 看漲策略  
+`3`：做空 — 看跌策略
+
+  * **網格類型（`grid_type`）：**  
+`1`：等差 — 網格之間價格差相等  
+`2`：等比 — 網格之間價格比例相等
+
+  * **止盈止損類型（`tp_sl_type`）：**  
+`1`：止盈止損均按百分比  
+`2`：止盈止損均按價格  
+`3`：止盈按價格，止損按百分比  
+`4`：止盈按百分比，止損按價格
+
+  * **響應`bot_id`：**  
+成功時返回，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-grid/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-grid/close)。
+
+  * **`check_code`：**  
+響應中返回，表示具體驗證錯誤。`FGRID_CHECK_CODE_SUCCESS` = 正常。
 
   * **頻率限制：**  
 每個 UID 每秒最多 10 次請求。
 
-  * **受合規管控、地理位置 IP 限制及 KYC 驗證約束。**
+  * **受合規管控及 KYC 驗證約束。**
 
 
 
 
 ### HTTP請求
 
-POST`/v5/fmartingalebot/create`
+POST`/v5/fgridbot/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| **true**|  string| 交易對名稱，僅大寫（例如 `BTCUSDT`）  
-martingale_mode| **true**|  integer| 策略方向：`1` 做多（逢跌買入），`2` 做空（逢漲賣出）  
+grid_mode| **true**|  integer| 策略方向：`1` 中性，`2` 做多，`3` 做空  
+min_price| **true**|  string| 網格價格範圍下限（小數字符串）  
+max_price| **true**|  string| 網格價格範圍上限（小數字符串）  
+cell_number| **true**|  integer| 網格層數，最小為 2  
 leverage| **true**|  string| 倉位槓桿倍數（例如 `"5"` 表示 5 倍），必須 >= 1  
-price_float_percent| **true**|  string| 觸發追加倉位的價格變動百分比（例如 `"0.015"` 表示逆勢移動 1.5% 時追加）  
-add_position_percent| **true**|  string| 追加倉位規模，以基礎倉位規模百分比計（例如 `"1.1"` = 1.1 倍基礎倉位；`"2"` = 2 倍基礎倉位）  
-add_position_num| **true**|  integer| 每輪最大追加倉位次數  
-init_margin| **true**|  string| 初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）  
-round_tp_percent| **true**|  string| 單輪止盈百分比（例如 `"0.03"` 表示盈利達 3% 時平倉）  
-auto_cycle_toggle| false| integer| 自動循環模式：`1` 啓用（止盈後重啓），`2` 停用（單輪止盈後停止）  
-sl_percent| false| string| 止損百分比，以總保證金為基準（例如 `"0.2"` 表示虧損達 20% 時平倉）。不設置請留空  
-entry_price| false| string| 入場觸發價格，以絕對價格計（小數字符串）。不設置請留空  
+grid_type| **true**|  integer| 網格間距類型：`1` 等差，`2` 等比  
+total_investment| **true**|  string| 初始投資金額，以報價幣種計（小數字符串，例如 `"1000"` 表示 1000 USDT）  
+take_profit_per| false| string| 止盈百分比（例如 `"0.2"` 表示 20%），當 `tp_sl_type` 包含百分比止盈時使用  
+stop_loss_per| false| string| 止損百分比（例如 `"0.1"` 表示 10%），當 `tp_sl_type` 包含百分比止損時使用  
+take_profit_price| false| string| 止盈觸發價格（小數字符串），當 `tp_sl_type` 包含價格止盈時使用  
+stop_loss_price| false| string| 止損觸發價格（小數字符串），當 `tp_sl_type` 包含價格止損時使用  
+tp_sl_type| false| integer| 止盈止損觸發模式：`1` 均按百分比，`2` 均按價格，`3` 止盈按價格+止損按百分比，`4` 止盈按百分比+止損按價格  
+entry_price| false| string| 可選入場觸發價格，用於延遲啓動（小數字符串）  
+trailing_stop_per| false| string| 移動止損退出百分比（例如 `"0.05"` 表示 5%）  
+move_up_price| false| string| 網格移動上限價格，`grid_type`=`2` 時不適用  
+move_down_price| false| string| 網格移動下限價格，`grid_type`=`2` 時不適用  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
 status_code| integer| `0` = 成功，`421` = 用戶被封禁  
-bot_id| integer| 唯一機器人 ID，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-martingale/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-martingale/close)  
+bot_id| integer| 唯一機器人 ID，用於[查詢詳情](/docs/zh-TW/v5/bot/futures-grid/get-detail)和[關閉](/docs/zh-TW/v5/bot/futures-grid/close)  
+check_code| string| 驗證結果。`FGRID_CHECK_CODE_SUCCESS` = 正常。詳見[驗證合約網格輸入](/docs/zh-TW/v5/bot/futures-grid/validate-input)  
 ban_reason_text| string| 用戶語言的封禁原因，僅當 `status_code=421` 時返回  
 debug_msg| string| 調試信息（僅測試網）  
   
@@ -170,7 +210,7 @@ debug_msg| string| 調試信息（僅測試網）
 ### 請求示例
     
     
-    POST /v5/fmartingalebot/create HTTP/1.1  
+    POST /v5/fgridbot/create HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -179,17 +219,19 @@ debug_msg| string| 調試信息（僅測試網）
     Content-Type: application/json  
       
     {  
-        "symbol": "MNTUSDT",  
-        "martingale_mode": 1,  
-        "leverage": "5",  
-        "price_float_percent": "0.16",  
-        "add_position_percent": "1.8",  
-        "add_position_num": 5,  
-        "round_tp_percent": "0.1",  
-        "init_margin": "650",  
-        "sl_percent": "0.5",  
-        "entry_price": "0.56",  
-        "auto_cycle_toggle": 2  
+        "symbol": "BTCUSDT",  
+        "grid_mode": 2,  
+        "min_price": "230000",  
+        "max_price": "800000",  
+        "cell_number": 88,  
+        "leverage": "6",  
+        "grid_type": 2,  
+        "total_investment": "950",  
+        "entry_price": "370000",  
+        "trailing_stop_per": "0.18",  
+        "tp_sl_type": 4,  
+        "stop_loss_price": "200000",  
+        "take_profit_per": "0.28"  
     }  
     
 
@@ -200,11 +242,12 @@ debug_msg| string| 調試信息（僅測試網）
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "status_code": 0,  
+            "status_code": 200,  
             "debug_msg": "",  
-            "ban_reason_text": "",  
-            "bot_id": "612335280740902531"  
+            "bot_id": "612330315406398322",  
+            "check_code": "FGRID_CHECK_CODE_UNSPECIFIED",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774509868961  
+        "time": 1774506909426  
     }

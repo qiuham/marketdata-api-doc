@@ -2,45 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/set-deposit-acct
 api_type: REST
-updated_at: 2026-11-13 18:26:59.875237
+updated_at: 2026-11-13 19:21:37.673637
 ---
 
-# Get Sub Deposit Address
+# Set Deposit Account
 
-Query the deposit address information of SUB account.
+Set auto transfer account after deposit. The same function as the setting for Deposit on [web GUI](https://www.bybit.com/app/user/settings)
 
 info
 
-  * Use master UID's api key **only**
-  * Custodial sub account deposit address cannot be obtained
+  * Your funds will be deposited into `FUND` wallet by default. You can set the wallet for auto-transfer after deposit by this API.
+  * Only **main** UID can access.
 
 
 
 ### HTTP Request
 
-GET`/v5/asset/deposit/query-sub-member-address`
+POST`/v5/asset/deposit/deposit-to-account`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| **true**|  string| Coin, uppercase only  
-chainType| **true**|  string| Please use the value of `chain` from [coin-info](/docs/v5/asset/coin-info) endpoint  
-subMemberId| **true**|  string| Sub user ID  
+[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type `UNIFIED`, `FUND`, `EARN`(if the coin does not support flexible saving, the funds would be transferred to funding wallet)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-coin| string| Coin  
-chains| array| Object  
-> chainType| string| Chain type  
-> addressDeposit| string| The address for deposit  
-> tagDeposit| string| Tag of deposit  
-> chain| string| Chain  
-> batchReleaseLimit| string| The deposit limit for this coin in this chain. `"-1"` means no limit  
-> contractAddress| string| The contract address of the coin. Only display last 6 characters, if there is no contract address, it shows `""`  
-[](/docs/api-explorer/v5/asset/sub-deposit-addr)
+status| integer| Request result: 
+
+  * `1`: SUCCESS
+  * `0`: FAIL
+
+  
+[](/docs/api-explorer/v5/asset/set-deposit-acct)
 
 * * *
 
@@ -53,12 +49,17 @@ chains| array| Object
 
     
     
-    GET /v5/asset/deposit/query-sub-member-address?coin=USDT&chainType=TRX&subMemberId=592334 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    POST /v5/asset/deposit/deposit-to-account HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672194349421  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1676887913670  
+    X-BAPI-RECV-WINDOW: 50000  
+    Content-Type: application/json  
+      
+    {  
+        "accountType": "CONTRACT"  
+    }  
     
     
     
@@ -68,10 +69,8 @@ chains| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_deposit_address(  
-        coin="USDT",  
-        chainType="TRX",  
-        subMemberId=592334,  
+    print(session.set_deposit_account(  
+        accountType="CONTRACT",  
     ))  
     
     
@@ -85,7 +84,9 @@ chains| array| Object
     });  
       
     client  
-      .getSubDepositAddress('USDT', 'TRX', '592334')  
+      .setDepositAccount({  
+        accountType: 'CONTRACT'  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -101,56 +102,52 @@ chains| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "coin": "USDT",  
-            "chains": {  
-                "chainType": "TRC20",  
-                "addressDeposit": "XXXXXX",  
-                "tagDeposit": "",  
-                "chain": "TRX",  
-                "batchReleaseLimit": "-1",  
-                "contractAddress": "gjLj6t"  
-            }  
+            "status": 1  
         },  
         "retExtInfo": {},  
-        "time": 1736394845821  
+        "time": 1676887914363  
     }
 
 ---
 
-# 查詢子帳號充值地址
+# 設置充值帳戶
+
+設置充值後的自動轉入帳戶類型。該功能與[網頁端](https://www.bybit.com/app/user/settings)-設置-充值保持一致。
 
 信息
 
-  * 僅能使用該**母帳號** 的API key
-  * 託管子帳戶不支持獲取入金地址
+  * 資金會默認充值至資金帳戶, 通過該接口設置自動劃轉帳戶後，系統將會自動劃轉至目標帳戶。
+  * 僅支持**主帳號** 調用。
 
 
 
 ### HTTP 請求
 
-GET`/v5/asset/deposit/query-sub-member-address`
+POST`/v5/asset/deposit/deposit-to-account`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-coin| **true**|  string| 幣種  
-chainType| **true**|  string| 請使用[查詢幣種信息](/docs/zh-TW/v5/asset/coin-info)響應字段`chain`作為這個字段的輸入  
-subMemberId| **true**|  string| 子帳號Id  
+[accountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 帳戶類型 
+
+  * `UNIFIED（統一帳戶）`
+  * `FUND（資金帳戶）`
+  * `EARN（理財帳戶）`
+
   
-### 響應參數
+  
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-coin| string| 幣種  
-chains| array| Object  
-> chainType| string| 鏈類型  
-> addressDeposit| string| 充值地址  
-> tagDeposit| string| 地址的tag  
-> chain| string| 鏈名  
-> batchReleaseLimit| string| 當前幣鏈每日充值限額. `"-1"`表示無限制  
-> contractAddress| string| 合約地址, 僅展示後6位. 如果沒有合約地址, 則為空字符串`""`  
-[](/docs/zh-TW/api-explorer/v5/asset/sub-deposit-addr)
+status| integer| 請求狀態: 
+
+  * `1`: 修改成功
+  * `0`: 修改失敗
+
+  
+[](/docs/zh-TW/api-explorer/v5/asset/set-deposit-acct)
 
 * * *
 
@@ -163,12 +160,17 @@ chains| array| Object
 
     
     
-    GET /v5/asset/deposit/query-sub-member-address?coin=USDT&chainType=TRX&subMemberId=592334 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    POST /v5/asset/deposit/deposit-to-account HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672194349421  
-    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-TIMESTAMP: 1676887913670  
+    X-BAPI-RECV-WINDOW: 50000  
+    Content-Type: application/json  
+      
+    {  
+        "accountType": "CONTRACT"  
+    }  
     
     
     
@@ -178,10 +180,8 @@ chains| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_sub_deposit_address(  
-        coin="USDT",  
-        chainType="TRX",  
-        subMemberId=592334,  
+    print(session.set_deposit_account(  
+        accountType="CONTRACT",  
     ))  
     
     
@@ -195,7 +195,9 @@ chains| array| Object
     });  
       
     client  
-      .getSubDepositAddress('USDT', 'TRX', '592334')  
+      .setDepositAccount({  
+        accountType: 'CONTRACT'  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -211,16 +213,8 @@ chains| array| Object
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "coin": "USDT",  
-            "chains": {  
-                "chainType": "TRC20",  
-                "addressDeposit": "XXXXXX",  
-                "tagDeposit": "",  
-                "chain": "TRX",  
-                "batchReleaseLimit": "-1",  
-                "contractAddress": "gjLj6t"  
-            }  
+            "status": 1  
         },  
         "retExtInfo": {},  
-        "time": 1736394845821  
+        "time": 1676887914363  
     }

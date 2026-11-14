@@ -2,63 +2,53 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/set-trade-auto-repay
 api_type: REST
-updated_at: 2026-11-13 18:28:45.292518
+updated_at: 2026-11-13 19:25:18.262876
 ---
 
-# Get Tiered Collateral Ratio
+# Set Trade Auto Repay
 
-UTA loan tiered collateral ratio
+Enable or disable automatic repayment after an eligible spot trade credits a coin to the Unified account. When enabled, the credited coin can repay its own flexible-rate liability without asset conversion. This setting is disabled by default.
 
 info
 
-Does not need authentication.
+Trade auto repayment runs only in Cross and Portfolio margin modes. An Isolated margin account can save this setting, but no trade auto repayment runs while it remains in Isolated mode. This setting is separate from scheduled automatic repayment configured through [Set Auto Repay Mode](/docs/v5/spot-margin-uta/set-auto-repay-mode).
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/collateral`
+POST`/v5/spot-margin-trade/set-trade-auto-repay`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| Coin name, uppercase only  
+autoRepay| **true**|  string| `1`: enable trade auto repayment; `0`: disable trade auto repayment.  
   
+* * *
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| Coin name  
-> collateralRatioList| array| Object  
->> maxQty| string| Upper limit(in coin) of the tiered range, `""` means positive infinity  
->> minQty| string| lower limit(in coin) of the tiered range  
->> collateralRatio| string| Collateral ratio  
+autoRepay| string| Saved switch state. `1`: enabled; `0`: disabled.  
   
 ### Request Example
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-margin-trade/collateral?currency=BTC HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_tiered_collateral_ratio(  
-        currency="BTC",  
-    ))  
-    
-    
-    
+    POST /v5/spot-margin-trade/set-trade-auto-repay HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1792117143000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
       
+    {  
+        "autoRepay": "1"  
+    }  
     
 
 ### Response Example
@@ -66,86 +56,60 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "currency": "BTC",  
-                    "collateralRatioList": [  
-                        {  
-                            "minQty": "0",  
-                            "maxQty": "1000000",  
-                            "collateralRatio": "0.85"  
-                        },  
-                        {  
-                            "minQty": "1000000",  
-                            "maxQty": "",  
-                            "collateralRatio": "0"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "autoRepay": "1"  
         },  
-        "retExtInfo": "{}",  
-        "time": 1739848984945  
+        "retExtInfo": {},  
+        "time": 1792117143000  
     }
 
 ---
 
-# 查詢階梯價值率
+# 設定交易自動還款開關
 
-查詢統一帳戶借貸的階梯價值率
+開啟或關閉合格現貨交易將幣種存入統一帳戶後的自動還款功能。開啟後，入帳幣種可在無資產兌換的情況下償還同幣種的浮動利率負債。此設定預設為關閉。
 
 信息
 
-不需要鑒權
+交易自動還款僅在全倉和組合保證金模式下運行。逐倉帳戶可以保存此設定，但在維持逐倉模式期間不會執行交易自動還款。此設定與透過 [設定現貨自動還款模式](/docs/zh-TW/v5/spot-margin-uta/set-auto-repay-mode) 設定的定時自動還款相互獨立。
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/collateral`
+POST`/v5/spot-margin-trade/set-trade-auto-repay`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| 幣種名稱  
+autoRepay| **true**|  string| `1`：開啟交易自動還款；`0`：關閉交易自動還款。  
   
+* * *
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| 幣種名稱  
-> collateralRatioList| array| Object  
->> maxQty| string| 梯度區間上限, 單位是幣種, 如"BTC", `""`表示正無窮  
->> minQty| string| 梯度區間下限, 單位是幣種, 如"BTC", 最小值是0  
->> collateralRatio| string| 抵押率  
+autoRepay| string| 保存的開關狀態。`1`：開啟；`0`：關閉。  
   
 ### 請求示例
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-margin-trade/collateral?currency=BTC HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_tiered_collateral_ratio(  
-        currency="BTC",  
-    ))  
-    
-    
-    
+    POST /v5/spot-margin-trade/set-trade-auto-repay HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1792117143000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
       
+    {  
+        "autoRepay": "1"  
+    }  
     
 
 ### 響應示例
@@ -153,26 +117,10 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "currency": "BTC",  
-                    "collateralRatioList": [  
-                        {  
-                            "minQty": "0",  
-                            "maxQty": "1000000",  
-                            "collateralRatio": "0.85"  
-                        },  
-                        {  
-                            "minQty": "1000000",  
-                            "maxQty": "",  
-                            "collateralRatio": "0"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "autoRepay": "1"  
         },  
-        "retExtInfo": "{}",  
-        "time": 1739848984945  
+        "retExtInfo": {},  
+        "time": 1792117143000  
     }

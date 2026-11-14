@@ -2,48 +2,62 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/investment-plan/redeem
 api_type: REST
-updated_at: 2026-11-13 18:27:48.569419
+updated_at: 2026-11-13 19:23:35.300291
 ---
 
-# Get Fund Transfer Records
-
-info
-
-This endpoint must be called using the API key of the fund custodian sub-account.
+# Redeem
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/query-fund-transfer-result`
+POST`/v5/earn/pwm/investment-plan/redeem`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-transferId| false| string| Transfer request ID. If omitted, returns up to the 20 most recent non-terminal transfer records within the past month. Records older than one month may have been archived  
-fromUserId| false| int64| Source UID  
+planId| **true**|  string| Investment plan ID  
+category| **true**|  string| Product type  
+productId| **true**|  string| Product ID. Pass `fundId` for fund products  
+shares| Conditional| string| Number of shares to redeem. Required for fund products  
+amount| Conditional| string| Redemption amount. Required for non-fund products  
+orderLinkId| **true**|  string| User-defined order ID, max 36 characters, used for idempotency  
+positionId| Conditional| string| Position ID to redeem. Required for FundPool and On-chain Earn products  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-transferId| string| Transfer ID  
-status| string| Transfer status: `SUCCESS` / `FAILED` / `PROCESSING`  
-fromUserId| int64| Source UID  
-toUserId| int64| Destination UID  
-amount| string| Transfer amount  
-coin| string| Coin  
+orderId| string| Redemption order ID  
+planId| string| Investment plan ID  
+category| string| Product type  
+productId| string| Product ID  
+shares| string| Number of shares redeemed (returned for fund products)  
+amount| string| Redemption amount (returned for non-fund products)  
+estimatedAmount| string| Estimated redemption amount based on current share value. Actual amount is subject to settlement  
+coin| string| Redemption coin  
+status| string| Redemption status: `Success` (non-fund products redeem instantly) / `Pending` (equity funds require approval)  
+orderLinkId| string| User-defined order ID  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/query-fund-transfer-result?transferId=4fdf-re-4343-frewr HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/redeem HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "planId": "10001",  
+        "category": "equityFund",  
+        "productId": "2001",  
+        "shares": "3000",  
+        "orderLinkId": "xxx"  
+    }  
     
 
 ### Response Example
@@ -51,58 +65,74 @@ coin| string| Coin
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS",  
-            "fromUserId": 1237488,  
-            "toUserId": 1237489,  
-            "amount": "12.3456",  
-            "coin": "USDT"  
+            "orderId": "ORD20241115003",  
+            "planId": "10001",  
+            "category": "equityFund",  
+            "productId": "2001",  
+            "shares": "3000",  
+            "estimatedAmount": "3087.00",  
+            "coin": "USDT",  
+            "status": "Pending",  
+            "orderLinkId": "xxx"  
         }  
     }
 
 ---
 
-# 查詢劃轉流水
-
-信息
-
-此接口必須使用基金托管子賬號的 API Key 操作。
+# 贖回
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/query-fund-transfer-result`
+POST`/v5/earn/pwm/investment-plan/redeem`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-transferId| false| string| 劃轉請求ID。不傳默認返回最近20條（一個月內）未到終態的劃轉記錄，超過時間的記錄可能已歸檔  
-fromUserId| false| int64| 資金劃出UID  
+planId| **true**|  string| 投資計劃ID  
+category| **true**|  string| 產品類型  
+productId| **true**|  string| 產品ID（基金產品傳 `fundId`）  
+shares| 條件必填| string| 贖回份額數量（基金產品時必填）  
+amount| 條件必填| string| 贖回金額（非基金產品時必填）  
+orderLinkId| **true**|  string| 用戶自定義訂單ID，最長36字符，用於防重  
+positionId| 條件必填| string| 贖回的倉位ID（FundPool 及 On-chain Earn 產品必填）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-transferId| string| 劃轉ID  
-status| string| 劃轉狀態：`SUCCESS`（劃轉成功）/ `FAILED`（劃轉失敗）/ `PROCESSING`（劃轉中）  
-fromUserId| int64| 資金劃出UID  
-toUserId| int64| 資金劃入UID  
-amount| string| 劃轉金額  
-coin| string| 幣種  
+orderId| string| 贖回訂單ID  
+planId| string| 投資計劃ID  
+category| string| 產品類型  
+productId| string| 產品ID  
+shares| string| 贖回份額數量（基金產品返回）  
+amount| string| 贖回金額（非基金產品返回）  
+estimatedAmount| string| 預估贖回到賬金額（按當前份額價值計算，實際以結算時為準）  
+coin| string| 贖回幣種  
+status| string| 贖回狀態：`Success`（非基金產品即時贖回）/ `Pending`（淨值型基金需審批）  
+orderLinkId| string| 用戶自定義訂單ID  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/query-fund-transfer-result?transferId=4fdf-re-4343-frewr HTTP/1.1  
+    POST /v5/earn/pwm/investment-plan/redeem HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "planId": "10001",  
+        "category": "equityFund",  
+        "productId": "2001",  
+        "shares": "3000",  
+        "orderLinkId": "xxx"  
+    }  
     
 
 ### 響應示例
@@ -110,13 +140,15 @@ coin| string| 幣種
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
         "result": {  
-            "transferId": "4fdf-re-4343-frewr",  
-            "status": "SUCCESS",  
-            "fromUserId": 1237488,  
-            "toUserId": 1237489,  
-            "amount": "12.3456",  
-            "coin": "USDT"  
+            "orderId": "ORD20241115003",  
+            "planId": "10001",  
+            "category": "equityFund",  
+            "productId": "2001",  
+            "shares": "3000",  
+            "estimatedAmount": "3087.00",  
+            "coin": "USDT",  
+            "status": "Pending",  
+            "orderLinkId": "xxx"  
         }  
     }

@@ -2,195 +2,103 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/introduction
 api_type: REST
-updated_at: 2026-11-13 18:28:25.032555
+updated_at: 2026-11-13 19:24:44.684704
 ---
 
-# Get Referral Campaign Rewards
+# Introduction
 
-Get the referral rules and configured campaign tasks and rewards for the current site. This endpoint returns static campaign configuration only; it does not return the user's task progress, reward claims, or payout records.
+## API Rate Limit Rules for PROs
 
-info
+Upcoming changes for pro account
 
-  * Authentication is required. The user and site are derived from the authenticated gateway context; do not provide a user ID or site selector in the request body.
-  * The response envelope, `rebateRule`, and each embedded campaign JSON string use camelCase field names. Campaigns are returned in base, fiat, then earn order when active. Each `tasks` entry has `schemaVersion: 2`.
-  * A reward-configuration lookup failure skips only that task. Other tasks and campaigns are retained.
-  * `rebateRule` is site configuration and does not indicate the tier matched by the current user.
+Starting **August 13, 2025** , Bybit will roll out a new institutional API rate limit framework designed to enhance performance for high-frequency trading clients. The new system introduces a centralized institution-level rate cap with flexible per-UID configurations, enabling greater efficiency and scalability. Please refer to the [announcement](https://announcements.bybit.com/en/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/) for more information.
 
+### UID-level rate limit
 
+Maximum limit for a single UID.
 
-### HTTP Request
-
-POST`/v5/referral/campaign/rewards`
-
-### Request Parameters
-
-No request parameters are required. Send an empty JSON object.
-
-### Response Parameters
-
-Parameter| Type| Comments  
----|---|---  
-rebateRule| object| Referral rules configured for the site  
-> depositAmount| integer| Deposit threshold. Currency and precision are not specified.  
-> tradeAmount| integer| Trading threshold. Currency and precision are not specified.  
-> rebateRatioRules| array| Tiered referral commission rules  
->> rebateRatio| integer| Referral commission rate, from 0 to 100  
->> referralCount| integer| Required number of qualified invitees  
->> hasTradeCondition| boolean| Whether the tier requires trading volume  
->> tradeAmountCondition| integer| Trading-volume threshold for the tier  
-> rebateDurationDays| integer| Number of days that the referral commission lasts  
-> tradefiDepositAmount| integer| Currently not populated; a default value of `0` does not confirm a threshold  
-> tradefiTradeAmount| integer| Currently not populated; a default value of `0` does not confirm a threshold  
-tasks| array| Campaign JSON strings, in base, fiat, then earn order. Parse each string to access the fields below.  
-> schemaVersion| integer| Campaign JSON schema version. The current value is always `2`.  
-> source| string| Campaign source: `base`, `fiat`, or `earn`  
-> campaignId| string| Campaign configuration ID; not a user reward-record ID  
-> tasks| array| Configured tasks and one-hop M1/M2 related tasks. May be empty if task details cannot be assembled.  
->> id| integer| Task ID  
->> awardType| integer| Task reward type. See [awardType](/docs/v5/enum#awardtype). Type `100` retrieves reward-packet details; reward details are not currently assembled for types `95` and `97`. This value does not mean that a reward has been claimed.  
->> ruleTitle| array | null| English title of each valid rule. `null` when there are no valid rules.  
->> ruleDescription| array | null| English description of each valid rule. Corresponds to `ruleTitle` by index.  
->> ruleParam| array | null| First parameter of each valid rule. Corresponds to `ruleTitle` by index.  
->> taskAwards| array| Rewards for completing the task  
->> m1Awards| array| M1 rewards with `UserRelateType=REFERRAL`  
->>> id| integer| Regular reward ID or reward packet ID  
->>> name| string| English reward name. Reward packets use `UP TO &lt;value_usd&gt;` or `EARN &lt;value_usd&gt;`.  
->>> type| string| English reward type. Always `Packet` for reward packets.  
->>> productLine| string| English product type. Empty for reward packets.  
->>> startTime| string| Start time in UTC RFC 3339 format. Empty when unavailable or for reward packets.  
->>> endTime| string| End time in UTC RFC 3339 format. Empty when unavailable.  
+| Unified Account  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+Default| 10/s| 10/s| 20/s  
+PRO1| 200/s| 200/s| 200/s  
+PRO2| 400/s| 400/s| 400/s  
+PRO3| 600/s| 600/s| 600/s  
+PRO4| 800/s| 800/s| 800/s  
+PRO5| 1000/s| 1000/s| 1000/s  
+PRO6| 1200/s| 1200/s| 1200/s  
+MM1| 600/s| 600/s| 600/s  
+MM2| 800/s| 800/s| 800/s  
+MM3| 1000/s| 1000/s| 1000/s  
   
-### Request Example
+### Institutional-level rate limit
 
-  * HTTP
+Aggregate limit across all main and sub UIDs.
 
+| Unified Account  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+PRO1| 10000/s| 10000/s| 10000/s  
+PRO2| 20000/s| 20000/s| 20000/s  
+PRO3| 30000/s| 30000/s| 30000/s  
+PRO4| 40000/s| 40000/s| 40000/s  
+PRO5| 50000/s| 50000/s| 50000/s  
+PRO6| 60000/s| 60000/s| 60000/s  
+MM1| 30000/s| 30000/s| 30000/s  
+MM2| 40000/s| 40000/s| 40000/s  
+MM3| 50000/s| 50000/s| 50000/s  
+  
+instructions for API rate limit
 
-    
-    
-    POST /v5/referral/campaign/rewards HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-      
-    {}  
-    
-
-### Response Example
-    
-    
-    {  
-      "retCode": 0,  
-      "retMsg": "",  
-      "result": {  
-        "rebateRule": {  
-          "depositAmount": 0,  
-          "tradeAmount": 0,  
-          "rebateRatioRules": [],  
-          "rebateDurationDays": 30  
-        },  
-        "tasks": [  
-          "{\"schemaVersion\":2,\"source\":\"base\",\"campaignId\":\"sample\",\"tasks\":[{\"id\":7,\"awardType\":100,\"ruleTitle\":[\"Deposit\"],\"ruleDescription\":[\"Deposit $100\"],\"ruleParam\":[\"100\"],\"taskAwards\":[{\"id\":92,\"name\":\"EARN 10\",\"type\":\"Packet\",\"productLine\":\"\",\"startTime\":\"\",\"endTime\":\"\"}],\"m1Awards\":[]}]}"  
-        ]  
-      },  
-      "retExtInfo": {},  
-      "time": 1753286400000  
-    }
+  * All of the existing subaccounts still have their original API rate limits.
+  * The default API rate limit for a new subaccount is not counted in the institutional-level API rate limit. 
+  * The default API rate limit for a new sub is: 10/s for futures, 10/s for options, 20/s for spot.
+  * If the aggregate institutional-level API rate limit is exceeded, you must reduce one or several account's API rate limit(s) first. After the API rate limit is less than the aggregate institutional API rate limit, you can increase the API rate limit of an account.
 
 ---
 
-# 查詢邀請活動獎勵
+# 限頻介紹
 
-查詢目前站點的邀請規則、已設定的活動任務與獎勵。本接口僅回傳靜態活動設定，不會回傳使用者任務進度、獎勵領取或支付紀錄。
+## PROs接口限頻規則
 
-信息
+即將到來的變更
 
-  * 需要鑑權。使用者與站點由已驗證的閘道上下文識別；請勿在請求體中傳入使用者 ID 或站點選擇器。
-  * 響應封套、`rebateRule` 與每個內嵌活動 JSON 字串皆使用 camelCase 欄位名稱。若有啟用中的活動，會依 base、fiat、earn 順序回傳。每個 `tasks` 元素皆帶有 `schemaVersion: 2`。
-  * 若某任務的獎勵設定查詢失敗，只會略過該任務；其他任務與活動仍會保留。
-  * `rebateRule` 為站點設定，不代表目前使用者實際符合的層級。
+自**2025年8月13日** 起，Bybit 將推出全新機構 API 限頻框架體系，旨在為高頻交易客戶提升性能體驗。新系統將引入中心化機構級速率上限，并可按 UID 靈活配置，有效提升效率與可擴展性。請參閱[公告](https://announcements.bybit.com/zh-TW/article/update-bybit-enhances-api-rate-limits-for-institutional-traders-bltbbbf60de757d074e/)
 
+### UID 層級:
 
-
-### HTTP請求
-
-POST`/v5/referral/campaign/rewards`
-
-### 請求參數
-
-無需請求參數。請傳送空的 JSON 物件。
-
-### 響應參數
-
-參數| 類型| 說明  
----|---|---  
-rebateRule| object| 站點設定的邀請規則  
-> depositAmount| integer| 入金門檻；幣種與精度未指定。  
-> tradeAmount| integer| 交易門檻；幣種與精度未指定。  
-> rebateRatioRules| array| 分層邀請返佣規則  
->> rebateRatio| integer| 邀請返佣比例，範圍為 0 至 100  
->> referralCount| integer| 所需符合資格的受邀人數  
->> hasTradeCondition| boolean| 該層級是否要求交易量  
->> tradeAmountCondition| integer| 該層級的交易量門檻  
-> rebateDurationDays| integer| 邀請返佣持續天數  
-> tradefiDepositAmount| integer| 目前未填入；預設值 `0` 不代表已確認門檻。  
-> tradefiTradeAmount| integer| 目前未填入；預設值 `0` 不代表已確認門檻。  
-tasks| array| 活動 JSON 字串，依 base、fiat、earn 順序排列。請解析每個字串以取得以下欄位。  
-> schemaVersion| integer| 活動 JSON schema 版本；目前固定為 `2`。  
-> source| string| 活動來源：`base`、`fiat` 或 `earn`  
-> campaignId| string| 活動設定 ID，不是使用者獎勵紀錄 ID。  
-> tasks| array| 已設定任務及一層 M1/M2 關聯任務。任務資訊無法組裝時可能為空。  
->> id| integer| 任務 ID  
->> awardType| integer| 任務獎勵類型。請參閱 [awardType](/docs/zh-TW/v5/enum#awardtype)。類型 `100` 會查詢獎勵包詳細資料；目前不會組裝類型 `95` 與 `97` 的獎勵詳細資料。此值不代表獎勵已被領取。  
->> ruleTitle| array | null| 每項有效規則的英文標題；沒有有效規則時為 `null`。  
->> ruleDescription| array | null| 每項有效規則的英文描述，索引與 `ruleTitle` 相對應。  
->> ruleParam| array | null| 每項有效規則的第一個參數，索引與 `ruleTitle` 相對應。  
->> taskAwards| array| 完成該任務的獎勵  
->> m1Awards| array| `UserRelateType=REFERRAL` 的 M1 獎勵  
->>> id| integer| 一般獎勵 ID 或獎勵包 ID  
->>> name| string| 英文獎勵名稱；獎勵包使用 `UP TO &lt;value_usd&gt;` 或 `EARN &lt;value_usd&gt;`。  
->>> type| string| 英文獎勵類型；獎勵包固定為 `Packet`。  
->>> productLine| string| 英文產品類型；獎勵包為空字串。  
->>> startTime| string| UTC RFC 3339 格式開始時間；沒有資料或獎勵包時為空字串。  
->>> endTime| string| UTC RFC 3339 格式結束時間；沒有資料時為空字串。  
+| 統一帳戶  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+Default| 10/s| 10/s| 20/s  
+PRO1| 200/s| 200/s| 200/s  
+PRO2| 400/s| 400/s| 400/s  
+PRO3| 600/s| 600/s| 600/s  
+PRO4| 800/s| 800/s| 800/s  
+PRO5| 1000/s| 1000/s| 1000/s  
+PRO6| 1200/s| 1200/s| 1200/s  
+MM1| 600/s| 600/s| 600/s  
+MM2| 800/s| 800/s| 800/s  
+MM3| 1000/s| 1000/s| 1000/s  
   
-### 請求示例
+### 主帳戶和子帳戶層級 (（機構 API 限頻配額）):
 
-  * HTTP
+| 統一帳戶  
+---|---  
+Level\Product| **Futures**| **Option**| **Spot**  
+PRO1| 10000/s| 10000/s| 10000/s  
+PRO2| 20000/s| 20000/s| 20000/s  
+PRO3| 30000/s| 30000/s| 30000/s  
+PRO4| 40000/s| 40000/s| 40000/s  
+PRO5| 50000/s| 50000/s| 50000/s  
+PRO6| 60000/s| 60000/s| 60000/s  
+MM1| 30000/s| 30000/s| 30000/s  
+MM2| 40000/s| 40000/s| 40000/s  
+MM3| 50000/s| 50000/s| 50000/s  
+  
+API 限頻說明
 
-
-    
-    
-    POST /v5/referral/campaign/rewards HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1753286400000  
-    X-BAPI-RECV-WINDOW: 5000  
-    X-BAPI-SIGN: XXXXX  
-    Content-Type: application/json  
-      
-    {}  
-    
-
-### 響應示例
-    
-    
-    {  
-      "retCode": 0,  
-      "retMsg": "",  
-      "result": {  
-        "rebateRule": {  
-          "depositAmount": 0,  
-          "tradeAmount": 0,  
-          "rebateRatioRules": [],  
-          "rebateDurationDays": 30  
-        },  
-        "tasks": [  
-          "{\"schemaVersion\":2,\"source\":\"base\",\"campaignId\":\"sample\",\"tasks\":[{\"id\":7,\"awardType\":100,\"ruleTitle\":[\"Deposit\"],\"ruleDescription\":[\"Deposit $100\"],\"ruleParam\":[\"100\"],\"taskAwards\":[{\"id\":92,\"name\":\"EARN 10\",\"type\":\"Packet\",\"productLine\":\"\",\"startTime\":\"\",\"endTime\":\"\"}],\"m1Awards\":[]}]}"  
-        ]  
-      },  
-      "retExtInfo": {},  
-      "time": 1753286400000  
-    }
+  * 所有現有子帳戶仍享有原有的 API 限頻。
+  * 新子帳戶的預設 API 限頻不計入機構 API 限頻總配額。
+  * 新子帳戶的預設 API 限頻為：期貨 10 次/秒，期權 10 次/秒，現貨 20 次/秒。
+  * 如果超出機構 API 限頻總配額，您只能先降低帳戶的 API 限頻。當 API 限頻總配額低於機構 API 限頻總配額後，您才能提高帳戶的 API 限頻。

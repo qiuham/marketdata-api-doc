@@ -2,42 +2,69 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/get-user-setting-config
 api_type: Account
-updated_at: 2026-11-13 18:26:40.073197
+updated_at: 2026-11-13 19:20:49.242269
 ---
 
-# Get Pay Info
+# Get Trade Behaviour Config
 
-Query repayment collateral information for the account before repayment. This data is typically used prior to calling the [Repay](/docs/v5/account/repay) or [Repay Liability](/docs/v5/account/repay-liability) endpoints.
+You can get configuration how the system behaves when your limit order price exceeds the highest bid or lowest ask price. The response also includes whether [Delta Neutral mode](/docs/v5/account/set-delta-mode) is enabled.
+
+* * *
+
+Where x% is [priceLimitRatioX](/docs/v5/market/instrument); and y% is the [priceLimitRatioY](/docs/v5/market/instrument):
+
+Spot
+
+  * **Maximum buy price** : _Min[Max(Index Price, Index Price × (1 + x%) + 2-Minute Average Premium), Index Price × (1 + y%)]_
+  * **Minimum sell price** : _Max[Min(Index Price, Index Price × (1 – x%) + 2-Minute Average Premium), Index Price × (1 – y%)]_
+
+
+
+Futures
+
+  * **Maximum buy price** : _Min (Max (Index Price, Mark Price × (1 + x%)), Mark Price × (1 + y%))_
+  * **Minimum sell price** : _Max (Min (Index Price, Mark Price × (1 - x%)), Mark Price × (1 - y%))_
+
+
+
+Default Setting
+
+  * Spot: **lpaSpot = false.** If the order price exceeds the limit, the system rejects the request.
+
+  * Futures: **lpaPerp = false.** If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price (i.e., highest bid or lowest ask).
+
+
+
 
 ### HTTP Request
 
-GET`/v5/account/pay-info`
+GET`/v5/account/user-setting-config`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-coin| false| string| Coin name, e.g. `USDT`, `BTC`. Must be a coin with outstanding liabilities, otherwise an error will be returned. If not passed, returns the aggregated total across all liabilities.  
-  
+None
+
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-collateralInfo| object| Collateral info  
-> collateralList| array<object>| Collateral list  
->> coin| string| Coin name  
->> availableSize| string| Available size  
->> availableValue| string| Available value (in USD)  
->> coinScale| integer| Coin precision  
->> borrowSize| string| Borrow size  
->> spotHedgeAmount| string| Spot hedge amount  
->> assetFrozen| string| Frozen asset  
-borrowInfo| object| Borrow info for the queried coin.  
-> coin| string| Coin name. Only returned when `coin` is passed in the request  
-> borrowSize| string| Borrow size  
-> borrowValue| string| Borrow value (in USD)  
-> assetFrozen| string| Frozen asset  
-> availableBalance| string| Available balance  
+result| array| Object  
+> lpaSpot| boolean| 
+
+  * `true`: If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price
+  * `false`: If the order price exceeds the limit, the system rejects the request.
+
+  
+> lpaPerp| boolean| 
+
+  * `true`: If the order price exceeds the limit, the system rejects the request.
+  * `false`: If the order price exceeds the limit, the system will automatically adjust the price to the nearest allowed price.
+
+  
+> deltaEnable| boolean| Whether [Delta Neutral mode](/docs/v5/account/set-delta-mode) is enabled. `true`: enabled; `false`: disabled  
+> smsef| boolean| Whether Spot MNT fee deduction is enabled. `true`: enabled; `false`: disabled  
+> fmsef| boolean| Whether Futures MNT fee deduction is enabled. `true`: enabled; `false`: disabled  
+> smpType| integer| User SMP (Self-Match Prevention) type configuration. `0`: Default, does not trigger self-match prevention; `1`: Cancel Taker order when self-match detected; `2`: Cancel Maker order when self-match detected; `3`: Cancel both Maker and Taker orders when self-match detected  
   
 ### Request Example
 
@@ -48,16 +75,24 @@ borrowInfo| object| Borrow info for the queried coin.
 
     
     
-    GET /v5/account/pay-info?coin=SOL HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/account/user-setting-config HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773230920000  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1753255927950  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 52  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_user_setting_config())  
     
     
     
@@ -69,104 +104,76 @@ borrowInfo| object| Borrow info for the queried coin.
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "collateralInfo": {  
-                "collateralList": [  
-                    {  
-                        "availableValue": "13038.369918809215134556464993",  
-                        "coinScale": 4,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "13041.904274867704282417",  
-                        "coin": "USDT"  
-                    },  
-                    {  
-                        "availableValue": "4997.9120975285472554850",  
-                        "coinScale": 6,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "4997.912097528547255485",  
-                        "coin": "USDC"  
-                    },  
-                    {  
-                        "availableValue": "0",  
-                        "coinScale": 8,  
-                        "borrowSize": "0.10006839",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "0",  
-                        "coin": "SOL"  
-                    },  
-                    {  
-                        "availableValue": "0",  
-                        "coinScale": 9,  
-                        "borrowSize": "0.001000068",  
-                        "spotHedgeAmount": "-0.00100006728685180109293673123005419256514869630336761474609375",  
-                        "assetFrozen": "0",  
-                        "availableSize": "0",  
-                        "coin": "BTC"  
-                    },  
-                    {  
-                        "availableValue": "38488.319604591478793130841305",  
-                        "coinScale": 8,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "17.867158854367695555",  
-                        "coin": "ETH"  
-                    }  
-                ]  
-            },  
-            "borrowInfo": {  
-                "borrowSize": "0.100068384926503532",  
-                "assetFrozen": "0",  
-                "borrowValue": "9.172497619169950215718876",  
-                "coin": "SOL",  
-                "availableBalance": "0"  
-            }  
+            "lpaSpot": false,  
+            "lpaPerp": false,  
+            "smsef": false,  
+            "fmsef": false,  
+            "smpType": 0  
         },  
         "retExtInfo": {},  
-        "time": 1774344990873  
+        "time": 1773234932707  
     }
 
 ---
 
-# 查詢還款信息
+# 查詢交易行為設置
 
-查詢帳戶的還款抵押品信息。該接口返回的數據通常在調用 [有損還款](/docs/zh-TW/v5/account/repay) 或 [還款負債](/docs/zh-TW/v5/account/repay-liability) 接口之前使用。
+您可以查詢當限價單價格超過最高買價或最低賣價時，系統的行為方式。回傳結果同時包含 [Delta 中性模式](/docs/zh-TW/v5/account/set-delta-mode) 的開啟狀態。
+
+現貨
+
+  * **最高買入價格** : _Min[Max(指數價格, 指數價格 × (1 + y%) + 2分鐘平均溢價), 指數價格 × (1 + z%)]_
+  * **最低賣出價格** : _Max[Min(指數價格, 指數價格 × (1 - y%) + 2分鐘平均溢價), 指數價格 × (1 - z%)]_
+
+
+
+合約
+
+  * **最高買入價格** : _min( max( 指數價格 , 標記價格 × (1 + x%) ), 標記價格 × (1 + y%) )_
+  * **最低賣出價格** : *max( min( 指數價格 , 標記價格 × (1 - x%) ), 標記價格 × (1 - y%) )
+
+
+
+預設設定
+
+  * 現貨: **lpaSpot = false.** 若下單價格超出限制範圍，系統將拒絕該請求
+
+  * 合約: **lpaPerp = false.** 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界（即最高買價或最低賣價）。
+
+
+
 
 ### HTTP 請求
 
-GET`/v5/account/pay-info`
+GET`/v5/account/user-setting-config`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-coin| false| string| 幣種，如 `USDT`、`BTC`。必須傳入有負債的幣種，否則會報錯。不傳則返回所有負債的匯總總和  
-  
+無
+
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-collateralInfo| object| 抵押品信息  
-> collateralList| array<object>| 抵押品列表  
->> coin| string| 幣種  
->> availableSize| string| 可用數量  
->> availableValue| string| 可用價值（USD）  
->> coinScale| integer| 幣種精度  
->> borrowSize| string| 借貸數量  
->> spotHedgeAmount| string| 現貨對沖數量  
->> assetFrozen| string| 凍結資產  
-borrowInfo| object| 查詢幣種的借貸信息。  
-> coin| string| 幣種。僅在請求時傳入 `coin` 時返回  
-> borrowSize| string| 借貸數量  
-> borrowValue| string| 借貸價值（USD）  
-> assetFrozen| string| 凍結資產  
-> availableBalance| string| 可用餘額  
+result| array| Object  
+> lpaSpot| boolean| 
+
+  * `true`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界
+  * `false`: 若下單價格超出限制範圍，系統將拒絕該請求
+
+  
+> lpaPerp| boolean| 
+
+  * `true`: 若下單價格超出限制範圍，系統將拒絕該請求 
+  * `false`: 若下單價格超出限制範圍，系統會自動將價格調整至允許的最近邊界
+
+  
+> deltaEnable| boolean| [Delta 中性模式](/docs/zh-TW/v5/account/set-delta-mode) 是否已開啟。`true`: 已開啟；`false`: 已關閉  
+> smsef| boolean| 現貨MNT手續費抵扣開關。`true`: 已開啟；`false`: 已關閉  
+> fmsef| boolean| 合約MNT手續費抵扣開關。`true`: 已開啟；`false`: 已關閉  
+> smpType| integer| 用戶 SMP（自成交攔截）類型配置。`0`: 默認，不觸發自成交攔截；`1`: 自成交時取消 Taker 訂單；`2`: 自成交時取消 Maker 訂單；`3`: 自成交時同時取消 Maker 和 Taker 訂單  
   
 ### 請求示例
 
@@ -177,16 +184,24 @@ borrowInfo| object| 查詢幣種的借貸信息。
 
     
     
-    GET /v5/account/pay-info?coin=SOL HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/account/user-setting-config HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1773230920000  
+    X-BAPI-API-KEY: XXXXXX  
+    X-BAPI-TIMESTAMP: 1753255927950  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 52  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_user_setting_config())  
     
     
     
@@ -198,65 +213,14 @@ borrowInfo| object| 查詢幣種的借貸信息。
     
     {  
         "retCode": 0,  
-        "retMsg": "Success",  
+        "retMsg": "OK",  
         "result": {  
-            "collateralInfo": {  
-                "collateralList": [  
-                    {  
-                        "availableValue": "13038.369918809215134556464993",  
-                        "coinScale": 4,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "13041.904274867704282417",  
-                        "coin": "USDT"  
-                    },  
-                    {  
-                        "availableValue": "4997.9120975285472554850",  
-                        "coinScale": 6,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "4997.912097528547255485",  
-                        "coin": "USDC"  
-                    },  
-                    {  
-                        "availableValue": "0",  
-                        "coinScale": 8,  
-                        "borrowSize": "0.10006839",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "0",  
-                        "coin": "SOL"  
-                    },  
-                    {  
-                        "availableValue": "0",  
-                        "coinScale": 9,  
-                        "borrowSize": "0.001000068",  
-                        "spotHedgeAmount": "-0.00100006728685180109293673123005419256514869630336761474609375",  
-                        "assetFrozen": "0",  
-                        "availableSize": "0",  
-                        "coin": "BTC"  
-                    },  
-                    {  
-                        "availableValue": "38488.319604591478793130841305",  
-                        "coinScale": 8,  
-                        "borrowSize": "0",  
-                        "spotHedgeAmount": "0",  
-                        "assetFrozen": "0",  
-                        "availableSize": "17.867158854367695555",  
-                        "coin": "ETH"  
-                    }  
-                ]  
-            },  
-            "borrowInfo": {  
-                "borrowSize": "0.100068384926503532",  
-                "assetFrozen": "0",  
-                "borrowValue": "9.172497619169950215718876",  
-                "coin": "SOL",  
-                "availableBalance": "0"  
-            }  
+            "lpaSpot": false,  
+            "lpaPerp": false,  
+            "smsef": false,  
+            "fmsef": false,  
+            "smpType": 0  
         },  
         "retExtInfo": {},  
-        "time": 1774344990873  
+        "time": 1773234932707  
     }

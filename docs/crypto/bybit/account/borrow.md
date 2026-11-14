@@ -2,53 +2,34 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/borrow
 api_type: Account
-updated_at: 2026-11-13 18:26:37.170434
+updated_at: 2026-11-13 19:20:42.714417
 ---
 
-# Get Borrow History
+# Manual Borrow
 
-Get interest records, sorted in reverse order of creation time.
+info
+
+Borrowing via OpenAPI endpoint supports variable rate borrowing only.
 
 ### HTTP Request
 
-GET`/v5/account/borrow-history`
+POST`/v5/account/borrow`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| `USDC`,`USDT`,`BTC`,`ETH` etc, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
-
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime-30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
-
-  
-endTime| false| integer| The end time. timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+coin| **true**|  string| coin name, uppercase only  
+amount| **true**|  string| Borrow amount  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| `USDC`,`USDT`,`BTC`,`ETH`  
-> createdTime| integer| Created timestamp (ms)  
-> borrowCost| string| Interest  
-> hourlyBorrowRate| string| Hourly Borrow Rate  
-> InterestBearingBorrowSize| string| Interest Bearing Borrow Size  
-> costExemption| string| Cost exemption  
-> borrowAmount| string| Total borrow amount  
-> unrealisedLoss| string| Unrealised loss  
-> freeBorrowedAmount| string| The borrowed amount for interest free  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/account/borrow-history)
-
-* * *
-
+result| array| Object  
+> coin| string| coin name, uppercase only  
+> amount| string| Borrow amount  
+  
 ### Request Example
 
   * HTTP
@@ -58,12 +39,18 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST /v5/account/borrow HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "coin":"BTC",  
+        "amount":"0.01"  
+    }  
     
     
     
@@ -73,35 +60,14 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
+    print(session.borrow(  
+        coin="BTC",  
+        amount="0.01"  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getBorrowHistory({  
-        currency: 'USDT',  
-        startTime: 1670601600000,  
-        endTime: 1673203200000,  
-        limit: 30,  
-        cursor: 'nextPageCursorToken',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -109,73 +75,42 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
+            "coin": "BTC",  
+            "amount": "0.01"  
         },  
         "retExtInfo": {},  
-        "time": 1697442206478  
+        "time": 1756197991955  
     }
 
 ---
 
-# 查詢利息記錄
+# 手工借款
 
-獲取利息記錄，按照創建時間倒敘排列
+信息
+
+透過 OpenAPI 端點借款僅支持浮動利率借款。
 
 ### HTTP 請求
 
-GET`/v5/account/borrow-history`
+POST`/v5/account/borrow`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| USDC、USDT、BTC、ETH  
-startTime| false| integer| 開始時間戳 (毫秒) 
-
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
-
-  
-endTime| false| integer| 結束時間 (毫秒)  
-limit| false| integer| 每頁數量, 最大50. 默認每頁20條  
-cursor| false| string| 游標，用於翻頁  
+coin| **true**|  string| 幣名稱，僅限大寫  
+amount| **true**|  string| 借款金額  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| USDC、USDT、BTC、ETH  
-> createdTime| integer| 時間戳（毫秒）  
-> borrowCost| string| 利息  
-> hourlyBorrowRate| string| 利率  
-> InterestBearingBorrowSize| string| 豁免利息額度  
-> costExemption| string| 豁免計息成本  
-> borrowAmount| string| 當前總借貸  
-> unrealisedLoss| string| 浮動虧損  
-> freeBorrowedAmount| string| 借款中免息的數額  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/account/borrow-history)
-
-* * *
-
+result| array| Object  
+> coin| string| 幣名稱，僅限大寫  
+> amount| string| 借款金額  
+  
 ### 請求示例
 
   * HTTP
@@ -185,50 +120,26 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    POST /v5/account/borrow HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1675842997277  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
+    Content-Type: application/json  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
+    {  
+        "coin":"BTC",  
+        "amount":"0.01"  
+    }  
+    
+    
+    
       
-    client  
-      .getBorrowHistory({  
-        currency: 'USDT',   
-        startTime: 1670601600000,   
-        endTime: 1673203200000,   
-        limit: 30,   
-        cursor: 'nextPageCursorToken',   
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+    
+    
+    
+      
     
 
 ### 響應示例
@@ -236,23 +147,11 @@ nextPageCursor| string| 游標，用於翻頁
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "success",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
+            "coin": "BTC",  
+            "amount": "0.01"  
         },  
         "retExtInfo": {},  
-        "time": 1697442206478  
+        "time": 1756197991955  
     }

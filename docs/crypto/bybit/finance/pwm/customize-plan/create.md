@@ -2,55 +2,69 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/customize-plan/create
 api_type: REST
-updated_at: 2026-11-13 18:27:46.048235
+updated_at: 2026-11-13 19:23:28.703961
 ---
 
-# Get All Investment Plans
+# Create Customize Investment Plan
+
+info
+
+The total number of **Active** and **Pending** plans for the current user cannot exceed **20**.
 
 ### HTTP Request
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-planId| false| string| Investment plan ID. Returns all plans if omitted  
-status| false| string| Filter by status: `PendingSubscription` / `Active` / `Closed`. Returns all if omitted  
-limit| false| int| Page size. Default: `20`, max: `50`  
-cursor| false| string| Pagination cursor  
+accountType| false| string| Source account type. Default: `FUND`  
+products| **true**|  array| Product configuration list. At least 1 item required  
+> category| **true**|  string| Pass through from product query result. Product category: `flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| Pass through from product query result. May be `0`  
+> fundName| **true**|  string| Pass through from product query result. May be empty  
+> amount| **true**|  string| Subscription amount (base coin)  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Investment plan list  
-> planId| string| Unique identifier of the investment plan  
-> planName| string| Investment plan name  
-> planType| string| Plan type: `stable` / `advanced`  
-> status| string| Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed)  
-> source| string| Creation source: `consultant` (created by consultant) / `direct` (self-created by client) / `institution` (created by institution)  
-> currentAssetUsd| string| Total current assets of the plan (USD valuation). When status is `PendingSubscription`, this is the configured amount  
-> accumulateYieldUsd| string| Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`  
-> investmentDistribution| array| Investment distribution list  
->> category| string| Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| Denominated coin  
->> productId| string| Subscribed product ID. For funds, this corresponds to `fundId`  
->> currentAmount| string| Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount  
-> createdTime| string| Creation timestamp (milliseconds)  
-nextPageCursor| string| Next page cursor. Empty string indicates no more data  
+planId| string| Newly created investment plan ID  
+planName| string| Investment plan name, auto-generated in the format `PWM-{planId}`  
+status| string| Plan status. Created and subscribed in one step — `Active` upon success  
+orderLinkId| string| User-defined order ID  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "accountType": "FUND",  
+        "products": [  
+            {  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
+            },  
+            {  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
+            }  
+        ]  
+    }  
     
 
 ### Response Example
@@ -59,78 +73,75 @@ nextPageCursor| string| Next page cursor. Empty string indicates no more data
     {  
         "retCode": 0,  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }
 
 ---
 
-# 查詢所有投資計劃
+# 創建自定義投資計劃（直客模式）
+
+信息
+
+當前用戶 **Active** （運行中）和 **Pending** （待處理）狀態的計劃總數不能超過 **20** 個。
 
 ### HTTP 請求
 
-GET`/v5/earn/pwm/investment-plan/all`
+POST`/v5/earn/pwm/customize-plan/create`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-planId| false| string| 投資計劃ID，不傳返回全部  
-status| false| string| 篩選狀態：`PendingSubscription` / `Active` / `Closed`，不傳返回全部  
-limit| false| int| 分頁大小，默認 `20`，最大 `50`  
-cursor| false| string| 分頁游標  
+accountType| false| string| 資金來源賬戶類型，默認 `FUND`  
+products| **true**|  array| 產品配置列表，至少 1 個  
+> category| **true**|  string| 透傳product查詢結果，產品類別：`flexibleSavings` / `fundPool` / `fundPoolPremium` / `equityFund` / `onchainEarn`  
+> productId| **true**|  string| 透傳product查詢結果，可能為 `0`  
+> fundName| **true**|  string| 透傳product查詢結果，可能為空  
+> amount| **true**|  string| 申購金額（本位幣）  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 投資計劃列表  
-> planId| string| 投資計劃唯一標識  
-> planName| string| 投資計劃名稱  
-> planType| string| 計劃類型：`stable` / `advanced`  
-> status| string| 計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）  
-> source| string| 創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）  
-> currentAssetUsd| string| 當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額  
-> accumulateYieldUsd| string| 累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`  
-> investmentDistribution| array| 投資分佈比例列表  
->> category| string| 產品類別：`multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
->> coin| string| 本位幣種  
->> productId| string| 申購的對應產品ID，基金對應為 `fundId`  
->> currentAmount| string| 投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量  
-> createdTime| string| 創建時間戳（毫秒）  
-nextPageCursor| string| 下一頁游標，為空表示無更多數據  
+planId| string| 新創建的投資計劃ID  
+planName| string| 投資計劃名稱，自動生成格式為 `PWM-{planId}`  
+status| string| 計劃狀態，創建即申購，成功後為 `Active`  
+orderLinkId| string| 用戶自定義訂單ID  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/pwm/investment-plan/all HTTP/1.1  
+    POST /v5/earn/pwm/customize-plan/create HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "accountType": "FUND",  
+        "products": [  
+            {  
+                "category": "equityFund",  
+                "productId": "2001",  
+                "fundName": "Market Neutral Alpha",  
+                "amount": "100000.00"  
+            },  
+            {  
+                "category": "multiCoinEarning",  
+                "productId": "430",  
+                "fundName": "",  
+                "amount": "50000.00"  
+            }  
+        ]  
+    }  
     
 
 ### 響應示例
@@ -139,26 +150,9 @@ nextPageCursor| string| 下一頁游標，為空表示無更多數據
     {  
         "retCode": 0,  
         "result": {  
-            "list": [  
-                {  
-                    "planId": "10001",  
-                    "planName": "Conservative Growth Plan",  
-                    "planType": "stable",  
-                    "status": "Active",  
-                    "source": "consultant",  
-                    "currentAssetUsd": "200137.50",  
-                    "accumulateYieldUsd": "2137.50",  
-                    "investmentDistribution": [  
-                        {  
-                            "category": "fundPool",  
-                            "productId": "430",  
-                            "coin": "USDT",  
-                            "currentAmount": "50000.00"  
-                        }  
-                    ],  
-                    "createdTime": "1700000000000"  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "planId": "10050",  
+            "planName": "PWM-10050",  
+            "status": "Active",  
+            "orderLinkId": "xxx"  
         }  
     }

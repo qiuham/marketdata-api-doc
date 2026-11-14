@@ -2,199 +2,107 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/trade-notify
 api_type: REST
-updated_at: 2026-11-13 18:27:03.507775
+updated_at: 2026-11-13 19:21:46.832343
 ---
 
-# Get Sub UID
+# Trade Notify
 
-Query the sub UIDs under a main UID. It returns up to 2000 sub accounts, if you need more, please call this [endpoint](/docs/v5/user/page-subuid).
+## Trade Notify
 
-info
+### Webhook URL
 
-Query by the master UID's api key **only**
+  * **Webhook_url** : Provided in the [trade-execute](/docs/v5/asset/fiat-convert/confirm-quote) API.
 
-### HTTP Request
 
-GET`/v5/asset/transfer/query-sub-member-list`
 
-### Request Parameters
+### Webhook Method
 
-None
+  * **HTTP Method** : `POST`
 
-### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-subMemberIds| array<string>| All sub UIDs under the main UID  
-transferableSubMemberIds| array<string>| All sub UIDs that have universal transfer enabled  
-[](/docs/api-explorer/v5/asset/sub-uid-list)
+
+### Authentication
+
+  * Share the **IP whitelist** with each other.
+
+
+
+### Headers
+    
+    
+    Content-Type: application/json  
+    timestamp: xxx  
+    publicKey: xxx  
+    
 
 * * *
 
-### Request Example
+### Request Body
 
-  * HTTP
-  * Python
-  * Node.js
+The request body is in **JSON** format with the following fields:
 
-
-    
-    
-    GET /v5/asset/transfer/query-sub-member-list HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147239931  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_sub_uid())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getSubUID()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### Response Example
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "subMemberIds": [  
-                "554117",  
-                "592324",  
-                "592334",  
-                "1055262",  
-                "1072055",  
-                "1119352"  
-            ],  
-            "transferableSubMemberIds": [  
-                "554117",  
-                "592324"  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672147241320  
-    }
+Field Name| Type| Description  
+---|---|---  
+`tradeNo`| string| Trade order number  
+`status`| string| Trade status: `processing`, `success`, or `failed`  
+`quoteTxId`| string| Quote transaction ID. System generated, used to confirm the quote  
+`exchangeRate`| string| Exchange rate  
+`fromCoin`| string| Convert from coin (coin to sell)  
+`fromCoinType`| string| Coin type of `fromCoin`, either `fiat` or `crypto`  
+`toCoin`| string| Convert to coin (coin to buy)  
+`toCoinType`| string| Coin type of `toCoin`, either `fiat` or `crypto`  
+`fromAmount`| string| From coin amount (amount to sell)  
+`toAmount`| string| To coin amount (amount to buy according to the exchange rate)  
+`createdAt`| string| Trade created time
 
 ---
 
-# 查詢子帳號列表
+# 交易通知
 
-查詢某個母帳戶的子帳號列表, 返回至多2000個子帳戶, 如果您有更多, 可以調用這個[接口](/docs/zh-TW/v5/user/page-subuid).
+## 交易通知
 
-信息
+### Webhook URL
 
-僅支持母帳號API key
+  * **Webhook_url** ：在 [trade-execute](/docs/zh-TW/v5/asset/fiat-convert/confirm-quote) API 中提供
 
-### HTTP 請求
 
-GET`/v5/asset/transfer/query-sub-member-list`
 
-### 請求參數
+### Webhook Method
 
-無
+  * **HTTP Method** ：`POST`
 
-### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-subMemberIds| array<string>| 所有子帳號  
-transferableSubMemberIds| array<string>| 已經開啟了萬能劃轉的子帳號  
-[](/docs/zh-TW/api-explorer/v5/asset/sub-uid-list)
+
+### Authentication
+
+  * 雙方共享 **IP 白名單**
+
+
+
+### Headers
+    
+    
+    Content-Type: application/json  
+    timestamp: xxx  
+    publicKey: xxx  
+    
 
 * * *
 
-### 請求示例
+### Request Body
 
-  * HTTP
-  * Python
-  * Node.js
+請求體為 **JSON** 格式，包含以下欄位：
 
-
-    
-    
-    GET /v5/asset/transfer/query-sub-member-list HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147239931  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_sub_uid())  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getSubUID()  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### 響應示例
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "subMemberIds": [  
-                "554117",  
-                "592324",  
-                "592334",  
-                "1055262",  
-                "1072055",  
-                "1119352"  
-            ],  
-            "transferableSubMemberIds": [  
-                "554117",  
-                "592324"  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672147241320  
-    }
+欄位名稱| 型別| 說明  
+---|---|---  
+`tradeNo`| string| 交易訂單號  
+`status`| string| 交易狀態：`processing`、`success` 或 `failed`  
+`quoteTxId`| string| 報價交易 ID，由系統產生，用於確認報價  
+`exchangeRate`| string| 匯率  
+`fromCoin`| string| 兌出幣種（賣出的幣）  
+`fromCoinType`| string| `fromCoin` 的幣種類型，`fiat` 或 `crypto`  
+`toCoin`| string| 兌入幣種（買入的幣）  
+`toCoinType`| string| `toCoin` 的幣種類型，`fiat` 或 `crypto`  
+`fromAmount`| string| 兌出幣種數量（賣出數量）  
+`toAmount`| string| 兌入幣種數量（依照匯率計算的買入數量）  
+`createdAt`| string| 交易建立時間

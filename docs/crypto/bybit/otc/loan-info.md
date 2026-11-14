@@ -2,71 +2,106 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/otc/loan-info
 api_type: REST
-updated_at: 2026-11-13 18:28:16.190695
+updated_at: 2026-11-13 19:24:27.813695
 ---
 
-# Get LTV
+# Get Loan Orders
 
-Get your loan-to-value (LTV) ratio.
-
-important
-
-  * In cases where an institutional user makes frequent transfers, LTV calculations may become inaccurate, and this endpoint will return retCode = 100016, retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
-  * If you encounter this error, it is recommended to reduce the transfer frequency first and retry
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-  * When a user is in a state such as liquidation, transfer, or manual repayment, LTV is not calculated. We have added a new `liqStatus` to represent these states. When `liqStatus` != 0, `ltvInfo` returns empty strings for `ltv`, `unpaidAmount` and `balance`, and `unpaidInfo` and `balanceInfo` return empty arrays.
-
-
+Get up to 2 years worth of historical loan orders.
 
 ### HTTP Request
 
-GET`/v5/ins-loan/ltv-convert`
+GET`/v5/ins-loan/loan-order`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+orderId| false| string| Loan order ID. If not passed, returns all orders sorted by `loanTime` in descending order  
+startTime| false| integer| The start timestamp (ms)  
+endTime| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size. [`1`, `100`], Default: `10`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-ltvInfo| array| Object  
-> ltv| string| Risk rate 
+loanInfo| array| Object  
+> orderId| string| Loan order ID  
+> orderProductId| string| Product ID  
+> parentUid| string| The designated UID that was used to bind with the INS loan  
+> loanTime| string| Loan timestamp, in milliseconds  
+> loanCoin| string| Loan coin  
+> loanAmount| string| Loan amount  
+> unpaidAmount| string| Unpaid principal  
+> unpaidInterest| string| Unpaid interest  
+> repaidAmount| string| Repaid principal  
+> repaidInterest| string| Repaid interest  
+> interestRate| string| Daily interest rate  
+> status| string| `1`: outstanding; `2`: paid off  
+> leverage| string| The maximum leverage for this loan product  
+> supportSpot| string| Whether to support spot. `0`:false; `1`:true  
+> supportContract| string| Whether to support contract . `0`:false; `1`:true  
+> withdrawLine| string| Restrict line for withdrawal  
+> transferLine| string| Restrict line for transfer  
+> spotBuyLine| string| Restrict line for SPOT buy  
+> spotSellLine| string| Restrict line for SPOT sell  
+> contractOpenLine| string| Restrict line for USDT Perpetual open position  
+> deferredLiquidationLine| string| Line for deferred liquidation  
+> deferredLiquidationTime| string| Time for deferred liquidation  
+> reserveToken| string| Reserve token  
+> reserveQuantity| string| Reserve token qty  
+> liquidationLine| string| Line for liquidation  
+> stopLiquidationLine| string| Line for stop liquidation  
+> contractLeverage| string| The allowed default leverage for USDT Perpetual  
+> transferRatio| string| The transfer ratio for loan funds to transfer from Spot wallet to Contract wallet  
+> spotSymbols| array| The whitelist of spot trading pairs. If there is no whitelist, then "[]"  
+> contractSymbols| array| The whitelist of contract trading pairs 
 
-  * ltv is calculated in real time
-  * If you have an INS loan, it is highly recommended to query this data every second. Liquidation occurs when it reachs 0.9 (90%)
-
-. When `liqStatus` != 0, empty string is returned.  
-> rst| string| Remaining liquidation time (UTC time in seconds). When it is not triggered, it is displayed as an empty string. When `liqStatus` != 0, empty string is returned.  
-> parentUid| string| The designated Risk Unit ID that was used to bind with the INS loan  
-> subAccountUids| array| Bound user ID  
-> unpaidAmount| string| Total debt(USD). When `liqStatus` != 0, empty string is returned.  
-> unpaidInfo| array| Debt details. When `liqStatus` != 0, empty array is returned.  
->> token| string| coin  
->> unpaidQty| string| Unpaid principle  
->> unpaidInterest| string| Useless field, please ignore this for now  
-> balance| string| Total asset (margin coins converted to USDT). Please read [here](https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending) to understand the calculation. When `liqStatus` != 0, empty string is returned.  
-> balanceInfo| array| Asset details. When `liqStatus` != 0, empty array is returned.  
->> token| string| Margin coin  
->> price| string| Margin coin price  
->> qty| string| Margin coin quantity  
->> convertedAmount| string| Margin conversion amount  
-> liqStatus| integer| Liquidation status. 
-
-  * `0`: Normal
-  * `1`: Under liquidation
-  * `2`: Manual repayment in progress
-  * `3`: Transfer in progress
+  * If `supportContract`="0", then this is "[]"
+  * If there is no whitelist, this is "[]"
 
   
-liqStatus| integer| Liquidation status. 
+> supportUSDCContract| string| Whether to support USDC contract. `"0"`:false; `"1"`:true  
+> supportUSDCOptions| string| Whether to support Option. `"0"`:false; `"1"`:true  
+> supportMarginTrading| string| Whether to support Spot margin trading. `"0"`:false; `"1"`:true  
+> USDTPerpetualOpenLine| string| Restrict line to open USDT Perpetual position  
+> USDCContractOpenLine| string| Restrict line to open USDC Contract position  
+> USDCOptionsOpenLine| string| Restrict line to open Option position  
+> USDTPerpetualCloseLine| string| Restrict line to trade USDT Perpetual position  
+> USDCContractCloseLine| string| Restrict line to trade USDC Contract position  
+> USDCOptionsCloseLine| string| Restrict line to trade Option position  
+> USDCContractSymbols| array| The whitelist of USDC contract trading pairs 
 
-  * `0`: Normal
-  * `1`: Under liquidation
-  * `2`: Manual repayment in progress
-  * `3`: Transfer in progress
+  * If no whitelist symbols, it is `[]`, and you can trade any
+  * If supportUSDCContract="0", it is `[]`
 
   
+> USDCOptionsSymbols| array| The whitelist of Option symbols 
+
+  * If no whitelisted, it is `[]`, and you can trade any
+  * If supportUSDCOptions="0", it is `[]`
+
+  
+> marginLeverage| string| The allowable maximum leverage for Spot margin  
+> USDTPerpetualLeverage| array| Object 
+
+  * If supportContract="0", it is `[]`
+  * If no whitelist USDT perp symbols, it returns all trading symbols and leverage by default
+  * If there are whitelist symbols, it return those whitelist data
+
+  
+>> symbol| string| Symbol name  
+>> leverage| string| Maximum leverage  
+> USDCContractLeverage| array| Object 
+
+  * If supportUSDCContract="0", it is `[]`
+  * If no whitelist USDC contract symbols, it returns all trading symbols and leverage by default
+  * If there are whitelist symbols, it return those whitelist data
+
+  
+>> symbol| string| Symbol name  
+>> leverage| string| Maximum leverage  
   
 ### Request Example
 
@@ -77,10 +112,10 @@ liqStatus| integer| Liquidation status.
 
     
     
-    GET /v5/ins-loan/ltv-convert HTTP/1.1  
+    GET /v5/ins-loan/loan-order HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686638165351  
+    X-BAPI-TIMESTAMP: 1678687874060  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
     
@@ -92,7 +127,7 @@ liqStatus| integer| Liquidation status.
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_ltv())  
+    print(session.get_loan_orders())  
     
     
     
@@ -105,7 +140,9 @@ liqStatus| integer| Liquidation status.
     });  
       
     client  
-      .getInstitutionalLendingLTVWithLadderConversionRate()  
+      .getInstitutionalLendingLoanOrders({  
+        limit: 10,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -121,127 +158,218 @@ liqStatus| integer| Liquidation status.
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "ltvInfo": [  
+            "loanInfo": [  
                 {  
-                    "ltv": "0.75",  
-                    "rst": "",  
-                    "parentUid": "xxxxx",  
-                    "subAccountUids": [  
-                        "60568258"  
-                    ],  
-                    "unpaidAmount": "30",  
-                    "unpaidInfo": [  
+                    "orderId": "1468005106166530304",  
+                    "orderProductId": "96",  
+                    "parentUid": "1631521",  
+                    "loanTime": "1689735916000",  
+                    "loanCoin": "USDT",  
+                    "loanAmount": "204",  
+                    "unpaidAmount": "52.07924201",  
+                    "unpaidInterest": "0",  
+                    "repaidAmount": "151.92075799",  
+                    "repaidInterest": "0",  
+                    "interestRate": "0.00019178",  
+                    "status": "1",  
+                    "leverage": "4",  
+                    "supportSpot": "1",  
+                    "supportContract": "1",  
+                    "withdrawLine": "",  
+                    "transferLine": "",  
+                    "spotBuyLine": "0.71",  
+                    "spotSellLine": "0.71",  
+                    "contractOpenLine": "0.71",  
+                    "liquidationLine": "0.75",  
+                    "stopLiquidationLine": "0.35000000",  
+                    "contractLeverage": "7",  
+                    "transferRatio": "1",  
+                    "spotSymbols": [],  
+                    "contractSymbols": [],  
+                    "supportUSDCContract": "1",  
+                    "supportUSDCOptions": "1",  
+                    "USDTPerpetualOpenLine": "0.71",  
+                    "USDCContractOpenLine": "0.71",  
+                    "USDCOptionsOpenLine": "0.71",  
+                    "USDTPerpetualCloseLine": "0.71",  
+                    "USDCContractCloseLine": "0.71",  
+                    "USDCOptionsCloseLine": "0.71",  
+                    "USDCContractSymbols": [],  
+                    "USDCOptionsSymbols": [],  
+                    "deferredLiquidationLine":"",  
+                    "deferredLiquidationTime":"",  
+                    "marginLeverage": "4",  
+                    "USDTPerpetualLeverage": [  
                         {  
-                            "token": "USDT",  
-                            "unpaidQty": "30",  
-                            "unpaidInterest": "0"  
+                            "symbol": "SUSHIUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "INJUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "RDNTUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "ZRXUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "HIGHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "WAVESUSDT",  
+                            "leverage": "7"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ACHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "SUNUSDT",  
+                            "leverage": "7"  
                         }  
                     ],  
-                    "balance": "40",  
-                    "balanceInfo": [  
+                    "USDCContractLeverage": [  
                         {  
-                            "token": "USDT",  
-                            "price": "1",  
-                            "qty": "40",  
-                            "convertedAmount": "40"  
+                            "symbol": "BTCPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "BTC-Futures",  
+                            "leverage": "8"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ETH-Futures",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "SOLPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "ETHPERP",  
+                            "leverage": "8"  
                         }  
                     ]  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1686638166323  
-    }  
-      
-    When `liqStatus` != 0:  
-    {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "",  
-                    "parentUid": "100331354",  
-                    "subAccountUids": [  
-                        "100334094",  
-                        "100334098"  
-                    ],  
-                    "unpaidAmount": "",  
-                    "unpaidInfo": [],  
-                    "balance": "",  
-                    "balanceInfo": [],  
-                    "rst": "",  
-                    "liqStatus": 3  
-                }  
-            ],  
-            "liqStatus": 3  
-        },  
-        "retExtInfo": {},  
-        "time": 1766462020703  
+        "time": 1689745773187  
     }
 
 ---
 
-# 查詢風險率
+# 查詢借貸訂單信息
 
-important
+查詢借貸訂單的詳情
 
-  * 如果機構用戶頻繁轉帳，LTV 計算可能會變得不準確，此端點將返回 retCode = 100016，retMsg = "Transfers within your risk unit are too frequent. Please reduce the transfer frequency and try again."
-  * 遇到這個報錯，建議先減少轉帳頻率，再重試
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-  * 當用戶發生強平、劃轉、手工還款等過程中的狀態時，LTV不進行計算。我們新增了一個`liqStatus`來表示這些狀態。當`liqStatus`!=0時，此時`ltvInfo`裡`ltv`、`unpaidAmount`、`balance`都是空字串，`unpaidInfo`、`balanceInfo`都是空數組。
+提示
+
+  * 默認查詢過去2年的數據
+  * 最多支持查詢過去2年的數據
 
 
 
 ### HTTP 請求
 
-GET`/v5/ins-loan/ltv-convert`
+GET`/v5/ins-loan/loan-order`
 
 ### 請求參數
 
-無
-
+參數| 是否必須| 類型| 說明  
+---|---|---|---  
+orderId| false| string| 借貸訂單ID. 若不傳，則返回全部. 按照`loanTime`降序排列  
+startTime| false| integer| 開始時間戳 (毫秒)  
+endTime| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 返回數量限制. [`1`, `100`], 默認: `10`  
+  
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-ltvInfo| array| Object  
-> ltv| string| 風險率 
+loanInfo| array| Object  
+> orderId| string| 借貸訂單ID  
+> orderProductId| string| 產品ID  
+> parentUid| string| 綁定場外借貸產品的UID  
+> loanTime| string| 放款時間（毫秒）  
+> loanCoin| string| 借款幣種  
+> loanAmount| string| 借款金額  
+> unpaidAmount| string| 未還本金  
+> unpaidInterest| string| 未還利息  
+> repaidAmount| string| 已還本金  
+> repaidInterest| string| 已還利息  
+> interestRate| string| 日利率  
+> status| string| `1`：未還清; `2`：已還清  
+> leverage| string| 該借貸產品的最大槓桿倍數  
+> supportSpot| string| 是否支持現貨. `0`:否; `1`:是  
+> supportContract| string| 是否支持合約 . `0`: 否; `1`: 是  
+> supportMarginTrading| string| 是否支持現貨槓桿交易. `0`: 否; `1`: 是  
+> withdrawLine| string| 限制提幣線  
+> transferLine| string| 限制劃轉線  
+> spotBuyLine| string| 限制現貨買入線  
+> spotSellLine| string| 限制現貨交易線  
+> contractOpenLine| string| 限制USDT永續合約開倉線  
+> deferredLiquidationLine| string| 延期清算線  
+> deferredLiquidationTime| string| 延期清算時間  
+> reserveToken| string| 備付金幣種  
+> reserveQuantity| string| 備付金幣種數量  
+> liquidationLine| string| 強平線  
+> stopLiquidationLine| string| 停止強平線  
+> contractLeverage| string| 允許USDT永續默認開倉倍數  
+> transferRatio| string| 現貨帳戶到合約帳戶的借貸資金劃轉比例  
+> spotSymbols| array| 現貨交易對白名單. 若沒有配置白名單, 則返回[]  
+> contractSymbols| array| USDT永續合約交易對白名單 
 
-  * 該數據是實時計算
-  * 如果持有機構借貸, 強烈建議每秒查詢一次ltv。當達到0.9 (90%)時即觸發強平
-
-. 當 `liqStatus` != 0 時，傳回空字串。  
-> rst| string| 剩餘清算時間（UTC 時間，以秒為單位）。 未觸發時顯示為空字串。當 `liqStatus` != 0 時，傳回空字串。  
-> parentUid| string| 被指定綁定為機構借貸產品的風險單元Id  
-> subAccountUids| array| 綁定場外借貸產品的UID  
-> unpaidAmount| string| 總負債 (USD)。當 `liqStatus` != 0 時，傳回空字串。  
-> unpaidInfo| array| 負債明細。 當 `liqStatus` != 0 時，傳回空數組。  
->> token| string| 幣種  
->> unpaidQty| string| 未還本金  
->> unpaidInterest| string| 該字段無效, 暫時請忽略  
-> balance| string| 總資產(保證金幣種資產折算為USDT資產). 可以參考[這裡](https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending)了解詳細計算。當 `liqStatus` != 0 時，傳回空字串。  
-> balanceInfo| array| 資產明細。當 `liqStatus` != 0 時，傳回空數組。  
->> token| string| 保證金幣種  
->> price| string| 保證金幣種價格  
->> qty| string| 保證金數量  
->> convertedAmount| string| 保證金折算金額  
-> liqStatus| integer| 清算狀態。 
-
-  * `0`: 正常
-  * `1`: 強平
-  * `2`: 手工還款
-  * `3`: 劃轉
+  * 若沒有配置白名單, 則返回[]
+  * 若supportContract="0", 則也是[]
 
   
-liqStatus| integer| 清算狀態。 
+> supportUSDCContract| string| 是否支持USDC合約交易. `'0'`:否; `'1'`:是  
+> supportUSDCOptions| string| 是否支持期權交易. `'0'`:false; `'1'`:true  
+> USDTPerpetualOpenLine| string| 限制USDT永續的開倉線  
+> USDCContractOpenLine| string| 限制USDC合約的開倉線  
+> USDCOptionsOpenLine| string| 限制期權的開倉線  
+> USDTPerpetualCloseLine| string| 限制USDT永續的交易線  
+> USDCContractCloseLine| string| 限制USDC合約的交易線  
+> USDCOptionsCloseLine| string| 限制期權的交易線  
+> USDCContractSymbols| array| USDC合約的白名單交易對 
 
-  * `0`: 正常
-  * `1`: 強平
-  * `2`: 手工還款
-  * `3`: 劃轉
+  * 若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約
+  * 如果 supportUSDCContract="0", 則也是空數組`[]`
 
   
+> USDCOptionsSymbols| array| 期權的白名單交易對 
+
+  * 若沒有配置白名單, 則是空數組`[]`, 可以交易任何合約
+  * 如果 supportUSDCOptions="0", 則也是空數組`[]`
+
+  
+> marginLeverage| string| 全倉槓桿允許可開的最高槓桿  
+> USDTPerpetualLeverage| array| Object 
+
+  * 如果 supportContract="0", 則返回空數組`[]`
+  * 如果沒有配置USDT永續交易對白名單, 則返回所有的合約和槓桿
+  * 如果有白名單配置, 則只返回白名單列表的合約和槓桿
+
+  
+>> symbol| string| 合約名  
+>> leverage| string| 最高可開槓桿  
+> USDCContractLeverage| array| Object 
+
+  * 如果 supportUSDCContract="0", 則返回空數組`[]`
+  * 如果沒有配置USDC合約交易對白名單, 則返回所有的合約和槓桿
+  * 如果有白名單配置, 則只返回白名單列表的合約和槓桿
+
+  
+>> symbol| string| 合約名  
+>> leverage| string| 最高可開槓桿  
   
 ### 請求示例
 
@@ -252,10 +380,10 @@ liqStatus| integer| 清算狀態。
 
     
     
-    GET /v5/ins-loan/ltv-convert HTTP/1.1  
+    GET /v5/ins-loan/loan-order HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1686638165351  
+    X-BAPI-TIMESTAMP: 1678687874060  
     X-BAPI-RECV-WINDOW: 5000  
     X-BAPI-SIGN: XXXXX  
     
@@ -267,7 +395,7 @@ liqStatus| integer| 清算狀態。
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_ltv())  
+    print(session.get_loan_orders())  
     
     
     
@@ -280,7 +408,9 @@ liqStatus| integer| 清算狀態。
     });  
       
     client  
-      .getInstitutionalLendingLTVWithLadderConversionRate()  
+      .getInstitutionalLendingLoanOrders({  
+        limit: 10,  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -296,61 +426,108 @@ liqStatus| integer| 清算狀態。
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "ltvInfo": [  
+            "loanInfo": [  
                 {  
-                    "ltv": "0.75",  
-                    "rst": "",  
-                    "parentUid": "xxxxx",  
-                    "subAccountUids": [  
-                        "60568258"  
-                    ],  
-                    "unpaidAmount": "30",  
-                    "unpaidInfo": [  
+                    "orderId": "1468005106166530304",  
+                    "orderProductId": "96",  
+                    "parentUid": "1631521",  
+                    "loanTime": "1689735916000",  
+                    "loanCoin": "USDT",  
+                    "loanAmount": "204",  
+                    "unpaidAmount": "52.07924201",  
+                    "unpaidInterest": "0",  
+                    "repaidAmount": "151.92075799",  
+                    "repaidInterest": "0",  
+                    "interestRate": "0.00019178",  
+                    "status": "1",  
+                    "leverage": "4",  
+                    "supportSpot": "1",  
+                    "supportContract": "1",  
+                    "withdrawLine": "",  
+                    "transferLine": "",  
+                    "spotBuyLine": "0.71",  
+                    "spotSellLine": "0.71",  
+                    "contractOpenLine": "0.71",  
+                    "liquidationLine": "0.75",  
+                    "stopLiquidationLine": "0.35000000",  
+                    "contractLeverage": "7",  
+                    "transferRatio": "1",  
+                    "spotSymbols": [],  
+                    "contractSymbols": [],  
+                    "supportUSDCContract": "1",  
+                    "supportUSDCOptions": "1",  
+                    "USDTPerpetualOpenLine": "0.71",  
+                    "USDCContractOpenLine": "0.71",  
+                    "USDCOptionsOpenLine": "0.71",  
+                    "USDTPerpetualCloseLine": "0.71",  
+                    "USDCContractCloseLine": "0.71",  
+                    "USDCOptionsCloseLine": "0.71",  
+                    "USDCContractSymbols": [],  
+                    "USDCOptionsSymbols": [],  
+                    "deferredLiquidationLine":"",  
+                    "deferredLiquidationTime":"",  
+                    "marginLeverage": "4",  
+                    "USDTPerpetualLeverage": [  
                         {  
-                            "token": "USDT",  
-                            "unpaidQty": "30",  
-                            "unpaidInterest": "0"  
+                            "symbol": "SUSHIUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "INJUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "RDNTUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "ZRXUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "HIGHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "WAVESUSDT",  
+                            "leverage": "7"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ACHUSDT",  
+                            "leverage": "7"  
+                        },  
+                        {  
+                            "symbol": "SUNUSDT",  
+                            "leverage": "7"  
                         }  
                     ],  
-                    "balance": "40",  
-                    "balanceInfo": [  
+                    "USDCContractLeverage": [  
                         {  
-                            "token": "USDT",  
-                            "price": "1",  
-                            "qty": "40",  
-                            "convertedAmount": "40"  
+                            "symbol": "BTCPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "BTC-Futures",  
+                            "leverage": "8"  
+                        },  
+                        ...  
+                        {  
+                            "symbol": "ETH-Futures",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "SOLPERP",  
+                            "leverage": "8"  
+                        },  
+                        {  
+                            "symbol": "ETHPERP",  
+                            "leverage": "8"  
                         }  
                     ]  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1686638166323  
-    }  
-      
-    When `liqStatus` != 0:  
-    {  
-        "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "ltvInfo": [  
-                {  
-                    "ltv": "",  
-                    "parentUid": "100331354",  
-                    "subAccountUids": [  
-                        "100334094",  
-                        "100334098"  
-                    ],  
-                    "unpaidAmount": "",  
-                    "unpaidInfo": [],  
-                    "balance": "",  
-                    "balanceInfo": [],  
-                    "rst": "",  
-                    "liqStatus": 3  
-                }  
-            ],  
-            "liqStatus": 3  
-        },  
-        "retExtInfo": {},  
-        "time": 1766462020703  
+        "time": 1689745773187  
     }

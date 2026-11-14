@@ -2,46 +2,67 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-user-list
 api_type: REST
-updated_at: 2026-11-13 18:26:45.789970
+updated_at: 2026-11-13 19:21:00.937331
 ---
 
-# Get LP Pay Token List
+# Get Affiliate User List
 
-Query the list of supported payment tokens for LP staking, including user's available balance for each.
+To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.  
+Affiliate site: <https://affiliates.bybit.com>
 
-info
+tip
 
-  * Call this before staking to verify which tokens are available and check balances
-  * **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+  * Use master UID only
+  * The api key can only have "Affiliate" permission
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/lp/pay-token-list`
+GET`/v5/affiliate/aff-user-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-chainCode| false| string| Filter by blockchain identifier  
-tokenAddress| false| string| Filter by token contract address  
+size| false| integer| Limit for data size per page. [`0`, `100`]. Default: `0`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+needDeposit| false| boolean| `true`: return deposit info; `false`(default): does not return deposit info  
+need30| false| boolean| `true`: return 30 days trading info; `false`(default): does not return 30 days trading info  
+need365| false| boolean| `true`: return 365 days trading info; `false`(default): does not return 365 days trading info  
+startDate| false| string| Start date of the query period, format `YYYY-MM-DD`  
+endDate| false| string| End date of the query period, format `YYYY-MM-DD`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tokens| array| Payment token list  
-> tokenCode| string| Token identifier, e.g. `CEX_1`  
-> tokenSymbol| string| Token symbol, e.g. `USDT`  
-> chainCode| string| Blockchain identifier  
-> chainIconUrl| string| Blockchain icon URL  
-> decimals| integer| Token decimal precision  
-> availableBalance| string| User's available balance for this token  
-> tokenIconUrlDay| string| Token icon URL (light mode)  
-> tokenIconUrlNight| string| Token icon URL (dark mode)  
-> minStakeAmount| string| Minimum stake amount for this token  
-> maxStakeAmount| string| Maximum stake amount for this token  
+list| array| Object  
+> userId| string| user Id  
+> registerTime| string| user register time  
+> source| string| user registration source, from which referrer code  
+> remarks| string| The remark  
+> isKyc| boolean| Whether KYC is completed  
+> takerVol30Day| string| Taker volume in last 30 days (USDT), update at T + 1. All volume related attributes below includes Derivatives, Option, Spot volume  
+> makerVol30Day| string| Maker volume in last 30 days (USDT), update at T + 1  
+> tradeVol30Day| string| Total trading volume in last 30 days (USDT), update at T + 1  
+> depositAmount30Day| string| Deposit amount in last 30 days (USDT)  
+> takerVol365Day| string| Taker volume in the past year (USDT), update at T + 1  
+> makerVol365Day| string| Maker volume in the past year (USDT), update at T + 1  
+> tradeVol365Day| string| Total trading volume in the past year (USDT), update at T + 1  
+> depositAmount365Day| string| Total deposit amount in the past year (USDT)  
+> takerVol| string| Taker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
+> makerVol| string| Maker volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
+> tradeVol| string| Total trading volume in [`startDate`, `endDate`] (USDT), update at T + 1, includes Derivatives, Option, Spot volume  
+> startDate| string| Start date of the query period  
+> endDate| string| End date of the query period  
+> tradfiTradeVol| string| Only when `startDate` and `endDate` are in the input parameters, returns tradfi trade volume between `startDate` and `endDate`  
+> tradfiTradeVol30Day| string| tradfi trade volume in last 30 days (USDT). When `startDate` and `endDate` are in the input parameters, return 0  
+> tradfiTradeVol365Day| string| tradfi trade volume in the past year (USDT). When `startDate` and `endDate` are in the input parameters, return 0  
+> commissionsVol| json| Only when `startDate` and `endDate` are in the input parameters, returns commission between `startDate` and `endDate`  
+> commissions30Day| json| commission in last 30 days  
+> commissions365Day| json| commission in the past year  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 * * *
 
@@ -54,23 +75,50 @@ tokens| array| Payment token list
 
     
     
-    POST /v5/alpha/lp/pay-token-list HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-TIMESTAMP: 1685596324209  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_affiliate_user_list(  
+        cursor="0",  
+        size="2",  
+        need365=True,  
+        need30=True,  
+        needDeposit=True,  
+        startDate="2025-10-21",  
+        endDate="2025-10-22",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    {}  
-    
-    
-    
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
-    
-    
-    
-      
+    client  
+      .getAffiliateUserInfo({ size: 2 })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -78,78 +126,164 @@ tokens| array| Payment token list
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "tokens": [  
+            "list": [  
                 {  
-                    "tokenCode": "CEX_1",  
-                    "tokenSymbol": "USDT",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "1000",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "userId": "103895898",  
+                    "registerTime": "2024-10-29",  
+                    "source": "Default",  
+                    "remarks": "",  
+                    "isKyc": true,  
+                    "takerVol30Day": "12861.362976",  
+                    "makerVol30Day": "262.60865",  
+                    "tradeVol30Day": "13123.971626",  
+                    "depositAmount30Day": "",  
+                    "takerVol365Day": "208971.63737375",  
+                    "makerVol365Day": "33392.64275",  
+                    "tradeVol365Day": "242364.28012375",  
+                    "depositAmount365Day": "",  
+                    "takerVol": "194231.4175",  
+                    "makerVol": "32886.108",  
+                    "tradeVol": "227117.5255",  
+                    "startDate": "2025-08-21",  
+                    "endDate": "2025-10-22",  
+                    "tradfiTradeVol": "0",  
+                    "tradfiTradeVol30Day": "0",  
+                    "tradfiTradeVol365Day": "0",  
+                    "commissions30Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0.0621748",  
+                        "USDC": "0",  
+                        "USDT": "2.64288011"  
+                    },  
+                    "commissionsVol": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0",  
+                        "USDC": "0",  
+                        "USDT": "0.00835765"  
+                    },  
+                    "commissions365Day": {  
+                        "BTC": "0.00000002",  
+                        "ETH": "0.00000063",  
+                        "MNT": "0.1210605",  
+                        "USDC": "0.13462624",  
+                        "USDT": "2.79509816"  
+                    }  
                 },  
                 {  
-                    "tokenCode": "CEX_2",  
-                    "tokenSymbol": "USDC",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "500",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "userId": "1547321",  
+                    "registerTime": "2023-06-28",  
+                    "source": "Default",  
+                    "remarks": "",  
+                    "isKyc": false,  
+                    "takerVol30Day": "",  
+                    "makerVol30Day": "",  
+                    "tradeVol30Day": "",  
+                    "depositAmount30Day": "",  
+                    "takerVol365Day": "147664.35398115",  
+                    "makerVol365Day": "74696.351",  
+                    "tradeVol365Day": "222360.70498115",  
+                    "depositAmount365Day": "",  
+                    "takerVol": "30936.86124",  
+                    "makerVol": "36.032",  
+                    "tradeVol": "30972.89324",  
+                    "startDate": "2025-08-21",  
+                    "endDate": "2025-10-22",  
+                    "tradfiTradeVol": "0",  
+                    "tradfiTradeVol30Day": "0",  
+                    "tradfiTradeVol365Day": "0",  
+                    "commissions30Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0",  
+                        "USDC": "0",  
+                        "USDT": "0"  
+                    },  
+                    "commissionsVol": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "2.35583601",  
+                        "USDC": "0",  
+                        "USDT": "3.1648939"  
+                    },  
+                    "commissions365Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "8.90403178",  
+                        "USDC": "0",  
+                        "USDT": "23.89337689"  
+                    }  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "16197"  
         },  
         "retExtInfo": {},  
-        "time": 1704067200000  
+        "time": 1733205472513  
     }
 
 ---
 
-# 查詢 LP 支付代幣列表
+# 查詢代理用戶列表
 
-查詢 LP 質押所支持的支付代幣列表，包含每種代幣的用戶可用餘額。
+要使用此接口，您应该有一个代理商账户，并且在创建 API 密钥时仅勾选“代理商”权限。  
+代理商网站: <https://affiliates.bybit.com>
 
-信息
+提示
 
-  * 質押前調用本接口，確認可用代幣種類及餘額
-  * **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
+  * 僅支持使用母帳戶uid
+  * 若要查詢該接口, api key僅能擁有代理商權限, 若擁有任何其他權限想, 請移除
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/lp/pay-token-list`
+GET`/v5/affiliate/aff-user-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-chainCode| false| string| 按區塊鏈標識符過濾  
-tokenAddress| false| string| 按代幣合約地址過濾  
+size| false| integer| 每頁數量限制. [`0`, `100`]. 默認: `0`  
+cursor| false| string| 游標，用於翻頁  
+needDeposit| false| boolean| `true`: 返回入金信息; `false`(默認): 不返回入金信息  
+need30| false| boolean| `true`: 返回最近30天交易信息; `false`(default): 不返回最近30天交易信息  
+need365| false| boolean| `true`: 返回最近365天交易信息; `false`(default): 不返回最近365天交易信息  
+startDate| false| string| 查詢時段開始日期，格式為 `YYYY-MM-DD`  
+endDate| false| string| 查詢時段結束日期，格式為 `YYYY-MM-DD`  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-tokens| array| 支付代幣列表  
-> tokenCode| string| 代幣標識符，如 `CEX_1`  
-> tokenSymbol| string| 代幣符號，如 `USDT`  
-> chainCode| string| 區塊鏈標識符  
-> chainIconUrl| string| 區塊鏈圖標 URL  
-> decimals| integer| 代幣小數精度  
-> availableBalance| string| 用戶該代幣的可用餘額  
-> tokenIconUrlDay| string| 代幣圖標 URL（亮色模式）  
-> tokenIconUrlNight| string| 代幣圖標 URL（暗色模式）  
-> minStakeAmount| string| 該代幣最小質押數量  
-> maxStakeAmount| string| 該代幣最大質押數量  
+list| array| Object  
+> userId| string| 帳戶uid  
+> registerTime| string| 用戶註冊時間  
+> source| string| 用戶註冊來源，來自哪个Referrer Code  
+> remarks| string| 備註  
+> isKyc| boolean| KYC是否完成  
+> takerVol30Day| string| 過去30天的吃單交易量, T+1更新. 單位: USDT. 所有下方交易量相關的字段, 包含了期貨、期權和現貨的交易量  
+> makerVol30Day| string| 過去30天的掛單交易量, T+1更新. 單位: USDT  
+> tradeVol30Day| string| 過去30天的總交易量, T+1更新. 單位: USDT  
+> depositAmount30Day| string| 過去30天的入金金額. 單位: USDT  
+> takerVol365Day| string| 過去一年的吃單交易量, T+1更新. 單位: USDT  
+> makerVol365Day| string| 過去一年的掛單交易量, T+1更新. 單位: USDT  
+> tradeVol365Day| string| 過去一年的總交易量, T+1更新. 單位: USDT  
+> depositAmount365Day| string| 過去一年的總入金金額. 單位: USDT  
+> takerVol| string| 在 [`startDate`, `endDate`] 區間內的吃單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
+> makerVol| string| 在 [`startDate`, `endDate`] 區間內的掛單成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
+> tradeVol| string| 在 [`startDate`, `endDate`] 區間內的總成交量 (USDT)，於 T + 1 更新，包含衍生品、期權與現貨成交量  
+> startDate| string| 查詢時段開始日期  
+> endDate| string| 查詢時段結束日期  
+> tradfiTradeVol| string| 當輸入參數中包含 `startDate` 和 `endDate` 時, 返回`startDate` 和 `endDate` 之間tradfi 交易量（USDT）  
+> tradfiTradeVol30Day| string| 過去 30 天的 tradfi 交易量（USDT）。如果輸入參數包含 `startDate` 和 `endDate`，則傳回 0。  
+> tradfiTradeVol365Day| string| 過去一年的 tradfi 交易量（USDT）。如果輸入參數包含 `startDate` 和 `endDate`，則傳回 0。  
+> commissionsVol| json| 當輸入參數中包含 `startDate` 和 `endDate` 時, 返回`startDate` 和 `endDate` 之間的佣金  
+> commissions30Day| json| 過去 30 天內的佣金  
+> commissions365Day| json| 過去一年內的佣金  
+nextPageCursor| string| 游標，用於翻頁  
   
 * * *
 
@@ -162,23 +296,50 @@ tokens| array| 支付代幣列表
 
     
     
-    POST /v5/alpha/lp/pay-token-list HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/affiliate/aff-user-list?cursor=0&size=2&need365=true&need30=true&needDeposit=true&startDate=2025-10-21&endDate=2025-10-22 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-TIMESTAMP: 1685596324209  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_affiliate_user_list(  
+        cursor="0",  
+        size="2",  
+        need365=True,  
+        need30=True,  
+        needDeposit=True,  
+        startDate="2025-10-21",  
+        endDate="2025-10-22",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    {}  
-    
-    
-    
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
       
-    
-    
-    
-      
+    client  
+      .getAffiliateUserInfo({ size: 2 })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -186,35 +347,100 @@ tokens| array| 支付代幣列表
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "tokens": [  
+            "list": [  
                 {  
-                    "tokenCode": "CEX_1",  
-                    "tokenSymbol": "USDT",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "1000",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "userId": "103895898",  
+                    "registerTime": "2024-10-29",  
+                    "source": "Default",  
+                    "remarks": "",  
+                    "isKyc": true,  
+                    "takerVol30Day": "12861.362976",  
+                    "makerVol30Day": "262.60865",  
+                    "tradeVol30Day": "13123.971626",  
+                    "depositAmount30Day": "",  
+                    "takerVol365Day": "208971.63737375",  
+                    "makerVol365Day": "33392.64275",  
+                    "tradeVol365Day": "242364.28012375",  
+                    "depositAmount365Day": "",  
+                    "takerVol": "194231.4175",  
+                    "makerVol": "32886.108",  
+                    "tradeVol": "227117.5255",  
+                    "startDate": "2025-08-21",  
+                    "endDate": "2025-10-22",  
+                    "tradfiTradeVol": "0",  
+                    "tradfiTradeVol30Day": "0",  
+                    "tradfiTradeVol365Day": "0",  
+                    "commissions30Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0.0621748",  
+                        "USDC": "0",  
+                        "USDT": "2.64288011"  
+                    },  
+                    "commissionsVol": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0",  
+                        "USDC": "0",  
+                        "USDT": "0.00835765"  
+                    },  
+                    "commissions365Day": {  
+                        "BTC": "0.00000002",  
+                        "ETH": "0.00000063",  
+                        "MNT": "0.1210605",  
+                        "USDC": "0.13462624",  
+                        "USDT": "2.79509816"  
+                    }  
                 },  
                 {  
-                    "tokenCode": "CEX_2",  
-                    "tokenSymbol": "USDC",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "500",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "userId": "1547321",  
+                    "registerTime": "2023-06-28",  
+                    "source": "Default",  
+                    "remarks": "",  
+                    "isKyc": false,  
+                    "takerVol30Day": "",  
+                    "makerVol30Day": "",  
+                    "tradeVol30Day": "",  
+                    "depositAmount30Day": "",  
+                    "takerVol365Day": "147664.35398115",  
+                    "makerVol365Day": "74696.351",  
+                    "tradeVol365Day": "222360.70498115",  
+                    "depositAmount365Day": "",  
+                    "takerVol": "30936.86124",  
+                    "makerVol": "36.032",  
+                    "tradeVol": "30972.89324",  
+                    "startDate": "2025-08-21",  
+                    "endDate": "2025-10-22",  
+                    "tradfiTradeVol": "0",  
+                    "tradfiTradeVol30Day": "0",  
+                    "tradfiTradeVol365Day": "0",  
+                    "commissions30Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "0",  
+                        "USDC": "0",  
+                        "USDT": "0"  
+                    },  
+                    "commissionsVol": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "2.35583601",  
+                        "USDC": "0",  
+                        "USDT": "3.1648939"  
+                    },  
+                    "commissions365Day": {  
+                        "BTC": "0",  
+                        "ETH": "0",  
+                        "MNT": "8.90403178",  
+                        "USDC": "0",  
+                        "USDT": "23.89337689"  
+                    }  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "16197"  
         },  
         "retExtInfo": {},  
-        "time": 1704067200000  
+        "time": 1733205472513  
     }

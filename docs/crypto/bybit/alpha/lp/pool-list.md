@@ -2,42 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pool-list
 api_type: REST
-updated_at: 2026-11-13 18:26:47.091691
+updated_at: 2026-11-13 19:21:04.198733
 ---
 
-# Execute LP Redeem
+# Get LP Pool List
 
-Redeem (withdraw) liquidity from a pool position.
+Query available liquidity pools with optional filtering by token symbol.
 
 info
 
-  * Must call Get LP Position List to get a valid `positionId` before redeeming
-  * Must display redemption details (amount, expected tokens, fees) to user and obtain explicit confirmation before calling this endpoint
-  * `200` response is only an ACK — use [Get Order List](/docs/v5/alpha/trade/order-list) to check redemption status
-  * Redeemed tokens are returned to user's wallet after on-chain confirmation (typically 10–60 seconds)
-  * Partial or full redemption supported via `dercRatio`
-  * **Rate Limit:** 1 req/s (per user), 2000 req/s (global)
+  * Use this to help users discover and compare available LP pools
+  * Filter by `tokenSymbol` to find pools containing a specific token
+  * **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/lp/redeem`
+POST`/v5/alpha/lp/pool-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-positionId| **true**|  integer| Position ID (from Get LP Position List)  
-poolAddress| **true**|  string| Pool contract address  
-dercRatio| **true**|  string| Reduction ratio (0–1). `"0.25"` = redeem 25%, `"0.5"` = redeem 50%, `"1"` = close entire position  
-receiveTokenCode| false| string| Token code for receiving the redeemed amount  
+tokenSymbol| false| string| Search pools containing this token symbol, e.g. `ETH`, `USDC`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderNo| string| Order number for this redemption operation. Use this to track status via [Get Order List](/docs/v5/alpha/trade/order-list)  
+pools| array| Pool list  
+> poolAddress| string| Pool contract address  
+> poolName| string| Pool name  
+> poolTag| string| Pool category tag  
+> apy| string| Annual percentage yield  
+> tvl| string| Total value locked (USD)  
+> token0Symbol| string| First token symbol  
+> token0IconUrlDay| string| First token icon URL (light mode)  
+> token0IconUrlNight| string| First token icon URL (dark mode)  
+> token1Symbol| string| Second token symbol  
+> token1IconUrlDay| string| Second token icon URL (light mode)  
+> token1IconUrlNight| string| Second token icon URL (dark mode)  
+> chainCode| string| Blockchain identifier  
+> chainIconUrl| string| Blockchain icon URL  
   
 * * *
 
@@ -50,7 +57,7 @@ orderNo| string| Order number for this redemption operation. Use this to track s
 
     
     
-    POST /v5/alpha/lp/redeem HTTP/1.1  
+    POST /v5/alpha/lp/pool-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -59,9 +66,7 @@ orderNo| string| Order number for this redemption operation. Use this to track s
     Content-Type: application/json  
       
     {  
-        "positionId": 12345,  
-        "poolAddress": "0x1234567890abcdef",  
-        "dercRatio": "0.5"  
+        "tokenSymbol": "ETH"  
     }  
     
     
@@ -80,7 +85,23 @@ orderNo| string| Order number for this redemption operation. Use this to track s
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderNo": "LP_REDEEM_20240101_001"  
+            "pools": [  
+                {  
+                    "poolAddress": "0x1234567890abcdef",  
+                    "poolName": "ETH-USDC Pool",  
+                    "poolTag": "Trending",  
+                    "apy": "12.5",  
+                    "tvl": "1000000",  
+                    "token0Symbol": "ETH",  
+                    "token0IconUrlDay": "",  
+                    "token0IconUrlNight": "",  
+                    "token1Symbol": "USDC",  
+                    "token1IconUrlDay": "",  
+                    "token1IconUrlNight": "",  
+                    "chainCode": "",  
+                    "chainIconUrl": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  
@@ -88,39 +109,46 @@ orderNo| string| Order number for this redemption operation. Use this to track s
 
 ---
 
-# 執行 LP 贖回
+# 查詢 LP 礦池列表
 
-從流動性礦池倉位中贖回（提取）流動性。
+查詢可用的流動性礦池列表，支持按代幣符號過濾。
 
 信息
 
-  * 贖回前必須先調用查詢 LP 倉位列表接口獲取有效的 `positionId`
-  * 必須向用戶展示贖回詳情（金額、預期代幣、費用）並獲得明確確認後，才能調用此接口
-  * `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 確認最終贖回狀態
-  * 鏈上確認後代幣將返回至用戶錢包（通常需要 10–60 秒）
-  * 支持部分或全部倉位贖回（通過 `dercRatio` 指定比例）
-  * **頻率限制：** 1 次/秒（用戶），2000 次/秒（全局）
+  * 可用本接口幫助用戶發現和比較可用的 LP 礦池
+  * 傳入 `tokenSymbol` 可篩選包含指定代幣的礦池
+  * **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/lp/redeem`
+POST`/v5/alpha/lp/pool-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-positionId| **true**|  integer| 倉位ID（從查詢 LP 倉位列表接口獲取）  
-poolAddress| **true**|  string| 礦池合約地址  
-dercRatio| **true**|  string| 減倉比例（0–1）。`"0.25"` = 贖回 25%，`"0.5"` = 贖回 50%，`"1"` = 全部平倉  
-receiveTokenCode| false| string| 接收贖回金額的代幣代碼  
+tokenSymbol| false| string| 按代幣符號搜索包含該代幣的礦池，如 `ETH`、`USDC`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 跟蹤狀態  
+pools| array| 礦池列表  
+> poolAddress| string| 礦池合約地址  
+> poolName| string| 礦池名稱  
+> poolTag| string| 礦池分類標籤  
+> apy| string| 年化收益率  
+> tvl| string| 總鎖倉價值（USD）  
+> token0Symbol| string| 第一個代幣符號  
+> token0IconUrlDay| string| 第一個代幣圖標 URL（亮色模式）  
+> token0IconUrlNight| string| 第一個代幣圖標 URL（暗色模式）  
+> token1Symbol| string| 第二個代幣符號  
+> token1IconUrlDay| string| 第二個代幣圖標 URL（亮色模式）  
+> token1IconUrlNight| string| 第二個代幣圖標 URL（暗色模式）  
+> chainCode| string| 區塊鏈標識符  
+> chainIconUrl| string| 區塊鏈圖標 URL  
   
 * * *
 
@@ -133,7 +161,7 @@ orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表]
 
     
     
-    POST /v5/alpha/lp/redeem HTTP/1.1  
+    POST /v5/alpha/lp/pool-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -142,9 +170,7 @@ orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表]
     Content-Type: application/json  
       
     {  
-        "positionId": 12345,  
-        "poolAddress": "0x1234567890abcdef",  
-        "dercRatio": "0.5"  
+        "tokenSymbol": "ETH"  
     }  
     
     
@@ -163,7 +189,23 @@ orderNo| string| 本次贖回操作的訂單號，可通過 [查詢訂單列表]
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderNo": "LP_REDEEM_20240101_001"  
+            "pools": [  
+                {  
+                    "poolAddress": "0x1234567890abcdef",  
+                    "poolName": "ETH-USDC Pool",  
+                    "poolTag": "Trending",  
+                    "apy": "12.5",  
+                    "tvl": "1000000",  
+                    "token0Symbol": "ETH",  
+                    "token0IconUrlDay": "",  
+                    "token0IconUrlNight": "",  
+                    "token1Symbol": "USDC",  
+                    "token1IconUrlDay": "",  
+                    "token1IconUrlNight": "",  
+                    "chainCode": "",  
+                    "chainIconUrl": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  

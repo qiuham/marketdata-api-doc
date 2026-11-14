@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/tier-collateral-ratio
 api_type: REST
-updated_at: 2026-11-13 18:28:45.343937
+updated_at: 2026-11-13 19:25:18.338935
 ---
 
 # Get Tiered Collateral Ratio

@@ -2,37 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/rate-limit/set
 api_type: REST
-updated_at: 2026-11-13 18:27:14.887575
+updated_at: 2026-11-13 19:22:16.128734
 ---
 
-# Get Voucher Spec
+# Set Rate Limit
+
+> API rate limit: 1 req per second
+
+info
+
+  * If the UID calling this endpoint is a master account, the UIDs specified in the uids parameter must belong to its subaccounts. The master account itself cannot set a custom rate limit and can only use the default rate limit.
+  * If the UID requesting this endpoint is a subaccount, the UID can only be itself in `uids`.
+  * Only exchange broker account can call this endpoint
+
+
 
 ### HTTP Request
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/apilimit/set`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| **true**|  string| Voucher ID  
+list| **true**|  array| Object  
+> uids| **true**|  string| Multiple UIDs separated by commas, e.g., "uid1,uid2,uid3"  
+> [bizType](/docs/v5/enum#biztype)| **true**|  string| Business type  
+> rate| **true**|  integer| API rate limit per second  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-id| string| Voucher ID  
-coin| string| Coin  
-amountUnit| string| 
-
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
-  
-productLine| string| Product line  
-subProductLine| string| Sub product line  
-totalAmount| Object| Total amount of voucher  
-usedAmount| string| Used amount of voucher  
+result| array| Object  
+> uids| string| Multiple UIDs separated by commas  
+> [bizType](/docs/v5/enum#biztype)| string| Business type  
+> rate| integer| API rate limit per second  
+> success| boolean| Whether or not the request was successful  
+> [msg](/docs/v5/enum#msg)| string| Result message  
   
 ### Request Example
 
@@ -43,17 +50,22 @@ usedAmount| string| Used amount of voucher
 
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/apilimit/set HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1711420489915  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
       
     {  
-        "id": "80209"  
+        "list": [  
+            {  
+                "uids": "290118",  
+                "bizType": "SPOT",  
+                "rate": 600  
+            }  
+        ]  
     }  
     
     
@@ -64,33 +76,19 @@ usedAmount| string| Used amount of voucher
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_voucher_spec(  
-        id="80209",  
+    print(session.set_broker_rate_limit(  
+        list=[  
+            {  
+                "uids": "290118",  
+                "bizType": "SPOT",  
+                "rate": 600  
+            }  
+        ]  
     ))  
     
     
     
-    const { RestClientV5 } = require('bybit-api');  
       
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### Response Example
@@ -98,108 +96,80 @@ usedAmount| string| Used amount of voucher
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
+            "result": [  
+                {  
+                    "uids": "290118",  
+                    "bizType": "SPOT",  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1726107086313  
+        "time": 1754894296913  
     }
 
 ---
 
-# 查詢代金券參數
+# 設定 API 速率限制
+
+> API 速率限制：每秒 1 個請求
+
+信息
+
+  * 如果請求接口使用者是母帳戶，需要提頻的uid必須是所屬該母帳戶的子帳戶
+  * 如果請求使用者非母帳戶，則提頻的uid必須是本身
+  * UID必須屬於EB帳戶
+
+
 
 ### HTTP 請求
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/apilimit/set`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-id| **true**|  string| 代金券ID  
+list| **true**|  array| Object  
+> uids| **true**|  string| uid列表，多個以逗號隔開，比如: "uid1,uid2,uid3"  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| **true**|  string| 業務類型  
+> rate| **true**|  integer| api rate limit 每秒頻率  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-id| string| 代金券ID  
-coin| string| 幣種  
-amountUnit| string| 計價單位
-
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
+result| array| Object  
+> uids| string| uid列表, 多個以逗號隔開  
+> [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
+> rate| integer| api rate limit 每秒頻率  
+> success| boolean| 是否成功  
+> [msg](/docs/zh-TW/v5/enum#msg)| string| 結果訊息  
   
-productLine| string| 業務線  
-subProductLine| string| 子業務線  
-totalAmount| Object| 代金券總金額  
-usedAmount| string| 代金券已發出金額  
-  
-### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
+### 請求實例
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/apilimit/set HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1711420489915  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
       
     {  
-        "id": "80209"  
+        "list": [  
+            {  
+                "uids": "290118",  
+                "bizType": "SPOT",  
+                "rate": 600  
+            }  
+        ]  
     }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_voucher_spec(  
-        id="80209",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
     
 
 ### 響應示例
@@ -207,16 +177,18 @@ usedAmount| string| 代金券已發出金額
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
+            "result": [  
+                {  
+                    "uids": "290118",  
+                    "bizType": "SPOT",  
+                    "rate": 600,  
+                    "success": true,  
+                    "msg": "API limit updated successfully"  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1726107086313  
+        "time": 1754894296913  
     }

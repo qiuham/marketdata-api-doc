@@ -2,51 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/discount-buy/product-info
 api_type: REST
-updated_at: 2026-11-13 18:27:27.781999
+updated_at: 2026-11-13 19:22:42.713733
 ---
 
-# Get Product Quote
+# Get Product Info
 
 info
 
 Does not need authentication
 
-note
-
-  * You **must** call this endpoint before placing an order to obtain the latest pricing parameters. Pass the returned values as-is into the order request.
-  * You can also subscribe to the WebSocket topic [`earn.discountbuy.offers`](/docs/v5/finance/advanced-earn/websocket/discount-buy-offer) to receive real-time quote updates.
-
-
-
 ### HTTP Request
 
-GET`/v5/earn/advance/product-extra-info`
+GET`/v5/earn/advance/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 category| **true**|  string| Product category. `DiscountBuy`  
-productId| false| string| Product ID. Returns quotes for all products if not provided  
+coin| false| string| Filter by underlying asset, e.g. `BTC`, `ETH`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-offers| array| Object  
+list| array| Object  
+> category| string| Product category. `DiscountBuy`  
 > productId| string| Product ID  
-> currentPrice| string| Current index price of the underlying asset  
-> purchasePrice| string| Anchor buy price  
-> knockoutPrice| string| Knockout price  
-> knockoutCouponE8| string| Annualized interest rate in e8 precision. Actual rate = `knockoutCouponE8` / 1e8  
-> maxInvestmentAmount| string| Maximum investment amount for this quote  
-> instUid| string| Market maker institution ID. **Must be passed as-is when placing an order**  
-> expiredAt| string| Quote expiry time, Unix timestamp in ms. `0` means no expiry is set by the institution  
+> coin| string| Investment coin, e.g. `USDT`  
+> underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
+> settlementTime| string| Settlement time, Unix timestamp in ms  
+> duration| string| Product duration, e.g. `7d`  
+> isVipProduct| bool| Whether this is a VIP-exclusive product  
+> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> minPurchaseAmount| string| Minimum purchase amount  
+> remainingAmount| string| Remaining purchasable quota for this product  
+> orderPrecisionDigital| int| Order amount precision (decimal places)  
+> expectReceiveAt| string| Expected settlement credit time, Unix timestamp in ms. Equal to `settlementTime` \+ 15 minutes  
   
 ### Request Example
     
     
-    GET /v5/earn/advance/product-extra-info?category=DiscountBuy&productId=7037 HTTP/1.1  
+    GET /v5/earn/advance/product?category=DiscountBuy&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     
 
@@ -57,27 +55,47 @@ offers| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "offers": [  
+            "category": "",  
+            "list": [  
                 {  
+                    "category": "DiscountBuy",  
+                    "productId": "7038",  
+                    "coin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "settlementTime": "1776240000000",  
+                    "duration": "1d",  
+                    "isVipProduct": true,  
+                    "subscribeStartAt": "1776124800000",  
+                    "subscribeEndAt": "1776211199000",  
+                    "minPurchaseAmount": "100",  
+                    "remainingAmount": "10000000",  
+                    "orderPrecisionDigital": 4,  
+                    "expectReceiveAt": "1776240900000"  
+                },  
+                {  
+                    "category": "DiscountBuy",  
                     "productId": "7037",  
-                    "currentPrice": "74514.26",  
-                    "purchasePrice": "74014",  
-                    "knockoutPrice": "76000",  
-                    "knockoutCouponE8": "1000000",  
-                    "maxInvestmentAmount": "100000",  
-                    "instUid": "100307526",  
-                    "expiredAt": "1776153608188",  
-                    "category": "DiscountBuy"  
+                    "coin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "settlementTime": "1776240000000",  
+                    "duration": "1d",  
+                    "isVipProduct": false,  
+                    "subscribeStartAt": "1776124800000",  
+                    "subscribeEndAt": "1776211199000",  
+                    "minPurchaseAmount": "100",  
+                    "remainingAmount": "9998547.575",  
+                    "orderPrecisionDigital": 4,  
+                    "expectReceiveAt": "1776240900000"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1776153594375  
+        "time": 1776152654908  
     }
 
 ---
 
-# 查詢產品報價
+# 查詢產品資訊
 
 信息
 
@@ -85,40 +103,42 @@ offers| array| Object
 
 備註
 
-  * 下單前**必須** 先調用此接口取得最新報價參數，並將返回值原樣傳入下單請求。
-  * 您也可以訂閱 WebSocket 頻道 [`earn.discountbuy.offers`](/docs/zh-TW/v5/finance/advanced-earn/websocket/discount-buy-offer)，接收即時報價推送。
-
-
+僅返回當前可申購的產品。已下線、不在申購窗口內或已售罄的產品不會包含在內。
 
 ### HTTP 請求
 
-GET`/v5/earn/advance/product-extra-info`
+GET`/v5/earn/advance/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 category| **true**|  string| 產品類別，`DiscountBuy`  
-productId| false| string| 產品 ID。不傳則返回所有產品報價  
+coin| false| string| 標的資產篩選，例如：`BTC`, `ETH`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-offers| array| 列表  
+list| array| 列表  
+> category| string| 產品類別，`DiscountBuy`  
 > productId| string| 產品 ID  
-> currentPrice| string| 標的資產當前市場價格  
-> purchasePrice| string| 錨定買入價。行權結算時，標的資產將以此價格買入  
-> knockoutPrice| string| 敲出價。結算價 >= `knockoutPrice` 時敲出，返還 USDT 本金 + 利息  
-> knockoutCouponE8| string| 年化息率（e8 精度），實際利率 = `knockoutCouponE8` / 1e8，敲出時按此計算利息  
-> maxInvestmentAmount| string| 當前報價下的最大可投金額  
-> instUid| string| 做市商機構 ID，**下單時必須原樣傳入**  
-> expiredAt| string| 報價到期時間，毫秒級 Unix 時間戳。`0` 表示機構未設定有效期  
+> coin| string| 投資幣種，例如：`USDT`  
+> underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> duration| string| 產品期限，例如：`7d`  
+> isVipProduct| bool| 是否為 VIP 專屬產品  
+> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
+> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> minPurchaseAmount| string| 最小單筆申購金額  
+> remainingAmount| string| 產品剩餘可申購額度  
+> orderPrecisionDigital| int| 訂單金額精度（小數位數）  
+> expectReceiveAt| string| 預計到帳時間，毫秒級 Unix 時間戳，等於 `settlementTime` \+ 15 分鐘  
   
 ### 請求示例
     
     
-    GET /v5/earn/advance/product-extra-info?category=DiscountBuy&productId=7037 HTTP/1.1  
+    GET /v5/earn/advance/product?category=DiscountBuy&coin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
     
 
@@ -129,20 +149,40 @@ offers| array| 列表
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "offers": [  
+            "category": "",  
+            "list": [  
                 {  
+                    "category": "DiscountBuy",  
+                    "productId": "7038",  
+                    "coin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "settlementTime": "1776240000000",  
+                    "duration": "1d",  
+                    "isVipProduct": true,  
+                    "subscribeStartAt": "1776124800000",  
+                    "subscribeEndAt": "1776211199000",  
+                    "minPurchaseAmount": "100",  
+                    "remainingAmount": "10000000",  
+                    "orderPrecisionDigital": 4,  
+                    "expectReceiveAt": "1776240900000"  
+                },  
+                {  
+                    "category": "DiscountBuy",  
                     "productId": "7037",  
-                    "currentPrice": "74514.26",  
-                    "purchasePrice": "74014",  
-                    "knockoutPrice": "76000",  
-                    "knockoutCouponE8": "1000000",  
-                    "maxInvestmentAmount": "100000",  
-                    "instUid": "100307526",  
-                    "expiredAt": "1776153608188",  
-                    "category": "DiscountBuy"  
+                    "coin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "settlementTime": "1776240000000",  
+                    "duration": "1d",  
+                    "isVipProduct": false,  
+                    "subscribeStartAt": "1776124800000",  
+                    "subscribeEndAt": "1776211199000",  
+                    "minPurchaseAmount": "100",  
+                    "remainingAmount": "9998547.575",  
+                    "orderPrecisionDigital": 4,  
+                    "expectReceiveAt": "1776240900000"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1776153594375  
+        "time": 1776152654908  
     }

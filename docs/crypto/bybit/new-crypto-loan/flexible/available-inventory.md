@@ -2,39 +2,31 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/available-inventory
 api_type: REST
-updated_at: 2026-11-13 18:28:07.802576
+updated_at: 2026-11-13 19:24:13.986131
 ---
 
-# Repay
-
-Fully or partially repay a loan. If interest is due, that is paid off first, with the loaned amount being paid off only after due interest.
+# Get Available Inventory
 
 > Permission: "Spot trade"  
->  UID rate limit: 1 req / second
-
-info
-
-  * The repaid amount will be deducted from the Funding wallet.
-  * The collateral amount will not be auto returned when you don't fully repay the debt, but you can also adjust collateral amount
-
-
+>  UID rate limit: 5 req / second
 
 ### HTTP Request
 
-POST`/v5/crypto-loan-flexible/repay`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-loanCurrency| **true**|  string| Loan coin name  
-amount| **true**|  string| Amount to repay  
+currency| **true**|  string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-repayId| string| Repayment transaction ID  
+currency| string| Coin name  
+availableInventory| string| Available inventory of the lending pool  
+updateTime| string| Update timestamp  
   
 ### Request Example
 
@@ -45,19 +37,12 @@ repayId| string| Repayment transaction ID
 
     
     
-    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "loanCurrency": "BTC",  
-        "amount": "0.005"  
-    }  
     
     
     
@@ -67,9 +52,8 @@ repayId| string| Repayment transaction ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_flexible_crypto_loan(  
-        loanCurrency="BTC",  
-        loanAmount="0.005",  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -82,46 +66,40 @@ repayId| string| Repayment transaction ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "repayId": "1771"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752569614549  
+        "time": 1678886400000  
     }
 
 ---
 
-# 還款
-
-您可以選擇提前還款, 並且支持部分還款, 如果存在利息, 將優先還利息
+# 查詢活期可借存量
 
 > 權限: "現貨"  
->  頻率: 1次/秒
-
-信息
-
-  * 還款金額將從資金帳戶扣除
-  * 非完全還清操作, 系統將不會主動退還質押金, 但是您可以自行減少質押金
-
-
+>  頻率: 5次/秒
 
 ### HTTP 請求
 
-POST`/v5/crypto-loan-flexible/repay`
+GET`/v5/crypto-loan-flexible/available-inventory`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-loanCurrency| **true**|  string| 借款幣種  
-amount| **true**|  string| 還款金額  
+currency| **true**|  string| 幣種名稱，僅限大寫  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-repayId| string| 還款訂單ID  
+currency| string| 幣種名稱  
+availableInventory| string| 借貸池可用存量  
+updateTime| string| 更新時間戳  
   
 ### 請求示例
 
@@ -132,19 +110,12 @@ repayId| string| 還款訂單ID
 
     
     
-    POST /v5/crypto-loan-flexible/repay HTTP/1.1  
+    GET /v5/crypto-loan-flexible/available-inventory?currency=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1752569628364  
+    X-BAPI-TIMESTAMP: XXXXXX  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "loanCurrency": "BTC",  
-        "amount": "0.005"  
-    }  
     
     
     
@@ -154,9 +125,8 @@ repayId| string| 還款訂單ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.repay_flexible_crypto_loan(  
-        loanCurrency="BTC",  
-        loanAmount="0.005",  
+    print(session.get_available_inventory_flexible_crypto_loan(  
+        currency="USDT",  
     ))  
     
     
@@ -169,10 +139,12 @@ repayId| string| 還款訂單ID
     
     {  
         "retCode": 0,  
-        "retMsg": "ok",  
+        "retMsg": "OK",  
         "result": {  
-            "repayId": "1771"  
+            "currency": "USDT",  
+            "availableInventory": "100000000",  
+            "updateTime": "1699272487"  
         },  
         "retExtInfo": {},  
-        "time": 1752569614549  
+        "time": 1678886400000  
     }

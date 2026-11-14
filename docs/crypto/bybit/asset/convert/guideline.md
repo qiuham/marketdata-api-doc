@@ -2,263 +2,137 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/convert/guideline
 api_type: REST
-updated_at: 2026-11-13 18:26:58.577061
+updated_at: 2026-11-13 19:21:34.385123
 ---
 
-# Get Delivery Record
-
-Query delivery records of Invese Futures, USDC Futures, USDT Futures and Options, sorted by `deliveryTime` in descending order
+# Convert Guideline
 
 info
 
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  * All convert API endpoints need authentication
+  * API key permission: "Exchange"
 
 
 
-### HTTP Request
+## Workflow
 
-GET`/v5/asset/delivery-record`
+### Step 1: [Get Convert Coin List](/docs/v5/asset/convert/convert-coin-list)
 
-### Request Parameters
+  * Query the supported coin list of convert to/from in the different account types.
+  * The balance is also given when querying the convert from coin list.
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `inverse`(inverse futures), `linear`(USDT/USDC futures), `option`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
 
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime - 30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
 
-  
-endTime| false| integer| The end timestamp (ms)  
-expDate| false| string| Expiry date. `25MAR22`. Default: return all  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
-### Response Parameters
+### Step 2: [Request a Quote](/docs/v5/asset/convert/apply-quote)
 
-Parameter| Type| Comments  
+  * Select fromCoin, toCoin, acccountType, define the qty of fromCoin to get a quote
+  * There is balance pre-check at this stage.
+
+
+
+### Step 3: [Confirm a Quote](/docs/v5/asset/convert/confirm-quote)
+
+  * Confirm your quote in the valid time slot (15 secs). Once confirmed, the system processes your transactions.
+  * This operation is async, so it can be failed if you have funds transferred out. Please check the transaction result by step 4.
+
+
+
+### Step 4: [Get Convert Status](/docs/v5/asset/convert/get-convert-result)
+
+Check the final status of the coin convert.
+
+## Error
+
+Code| Msg| Comment  
 ---|---|---  
-category| string| Product type  
-list| array| Object  
-> deliveryTime| number| Delivery time (ms)  
-> symbol| string| Symbol name  
-> side| string| `Buy`,`Sell`  
-> position| string| Executed size  
-> entryPrice| string| Avg entry price  
-> deliveryPrice| string| Delivery price  
-> strike| string| Exercise price  
-> fee| string| Trading fee  
-> deliveryRpl| string| Realized PnL of the delivery  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/asset/delivery)
+32024| exceeds exchange threshold| If the real-time exchange rate (comfirm quote) and quoted rate (apply quote) differ by more than 0.5%, your convert will be rejected/cancelled  
+790000| system error, please try again later|   
+700000| parameter error|   
+700001| quote fail: no deler can be used|   
+700002| quote fial: not support quote type| when requestCoin=toCoin during request quote stage  
+700003| order status not allowed|   
+700004| order does not exit| 1\. check if quoteTxId is correct; 2. check if quoteTxId is matched with accountType  
+700005| Your available balance is insufficient or wallet does not exist|   
+700006| Low amount limit| the request amount cannot be smaller than minFromCoinLimit  
+700007| Large amount limit| the request amount cannot be larger than maxFromCoinLimit  
+700008| quote fail: price time out| 1\. the quote is expired; 2. The quoteTxId does not exist  
+700009| quoteTxId has already been used| get this error when you call confirm quote more than once before expiry time  
+700010| INS loan user cannot perform conversion|   
+700011| illegal operation| when request a quote with user A, but confirm the quote with user B  
+  
+## API Rate Limit
 
-* * *
-
-### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
-
-
-    
-    
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### Response Example
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
-                {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672362116184  
-    }
+Method| Path| Limit| Upgradable  
+---|---|---|---  
+GET| /v5/asset/exchange/query-coin-list| 100 req/s| N  
+POST| /v5/asset/exchange/quote-apply| 50 req/s| N  
+POST| /v5/asset/exchange/convert-execute| 50 req/s| N  
+GET| /v5/asset/exchange/convert-result-query| 100 req/s| N  
+GET| /v5/asset/exchange/query-convert-history| 100 req/s| N
 
 ---
 
-# 查詢交割紀錄
-
-查詢反向交割 / USDT交割 / USDC交割 / 期權的交割紀錄, 返回結果按照`deliveryTime`降序排列
+# 閃兌接入指南
 
 信息
 
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 所有接口都需要進行鑒權
+  * API key的權限要求: "兌換"
 
 
 
-### HTTP 請求
+## 流程
 
-GET`/v5/asset/delivery-record`
+### Step1 [查詢兌換幣種列表](/docs/zh-TW/v5/asset/convert/convert-coin-list)
 
-### 請求參數
+  * 查詢不同錢包內的支持的兌入兌出幣種列表
+  * 當查詢兌出幣種列表時, 會有幣種餘額返回
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `inverse`(反向交割), `linear`(USDT/USDC交割), `option`(期權交割)  
-symbol| false| string| 合約名稱  
-startTime| false| integer| 開始時間戳 (毫秒) 
 
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
 
-  
-endTime| false| integer| 結束時間 (毫秒)  
-expDate| false| string| 過期日. 格式示例: `25MAR22`. 默認: 返回所有日期數據  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
-cursor| false| string| 游標，用於翻頁  
-  
-### 響應參數
+### Step2 [申請報價](/docs/zh-TW/v5/asset/convert/apply-quote)
 
-參數| 類型| 說明  
+  * 選擇兌出幣種, 兌入幣種, 錢包類型, 設定號兌出幣種的數量來獲取報價
+  * 該階段會核驗餘額
+
+
+
+### Step3 [確認報價](/docs/zh-TW/v5/asset/convert/confirm-quote)
+
+  * 在有效時間內確認報價 (15秒). 一旦確認, 系統會處理交易
+  * 該操作環節是異步的, 所以當餘額被劃轉出去後, 最終兌換可能會失敗
+
+
+
+### Step4 [查詢報價單狀態](/docs/zh-TW/v5/asset/convert/get-convert-result)
+
+在確認報價後, 通過該接口查詢最終報價單的處理狀態
+
+## 錯誤碼
+
+錯誤碼| 消息| 備註  
 ---|---|---  
-category| string| 產品類型  
-list| array| Object  
-> deliveryTime| number| 交割時間戳 (毫秒)  
-> symbol| string| 合約名稱  
-> side| string| `Buy`,`Sell`  
-> position| string| 交割數量  
-> entryPrice| string| 平均入場價  
-> deliveryPrice| string| 交割價格  
-> strike| string| 行權價  
-> fee| string| 手續費，正數表支出，負數表收取  
-> deliveryRpl| string| 交割已實現盈虧  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/asset/delivery)
+32024| exceeds exchange threshold| 當提交報價和確認報價時的兌換率滑點超過0.5%, 那麼確認報價會被拒絕  
+790000| system error, please try again later| 系統繁忙  
+700000| parameter error| 參數錯誤  
+700001| quote fail: no deler can be used|   
+700002| quote fial: not support quote type| 在提交報價時, requestCoin=兌入幣種, 會返回該錯誤  
+700003| order status not allowed|   
+700004| order does not exit| 1\. 檢查quoteTxId是否正確; 2. 檢查quoteTxId和accountType是否匹配  
+700005| Your available balance is insufficient or wallet does not exist|   
+700006| Low amount limit| 請求的數量小於minFromCoinLimit  
+700007| Large amount limit| 請求的數量大於maxFromCoinLimit  
+700008| quote fail: price time out| 1\. 報價單已經失效; 2.傳入quoteTxId不正確  
+700009| quoteTxId has already been used| 在報價單有效期內, 同一個quoteTxId多次請求確認接口  
+700010| INS loan user cannot perform conversion|   
+700011| illegal operation| 當提交報價的是用戶A, 確認報價的是用戶B  
+  
+## API頻率
 
-* * *
-
-### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
-    
-    
-    GET /v5/asset/delivery-record?expDate=29DEC22&category=option HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672362112944  
-    X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_option_delivery_record(  
-        category="option",  
-        expDate="29DEC22",  
-    ))  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-      .getDeliveryRecord({ category: 'option', expDate: '29DEC22' })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
-    
-
-### 響應示例
-    
-    
-    {  
-        "retCode": 0,  
-        "retMsg": "OK",  
-        "result": {  
-            "nextPageCursor": "132791%3A0%2C132791%3A0",  
-            "category": "option",  
-            "list": [  
-                {  
-                    "symbol": "BTC-29DEC22-16000-P",  
-                    "side": "Buy",  
-                    "deliveryTime": 1672300800860,  
-                    "strike": "16000",  
-                    "fee": "0.00000000",  
-                    "position": "0.01",  
-                    "deliveryPrice": "16541.86369547",  
-                    "deliveryRpl": "3.5"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1672362116184  
-    }
+方法| 路徑| 頻率| 是否可提升  
+---|---|---|---  
+GET| /v5/asset/exchange/query-coin-list| 100 req/s| N  
+POST| /v5/asset/exchange/quote-apply| 50 req/s| N  
+POST| /v5/asset/exchange/convert-execute| 50 req/s| N  
+GET| /v5/asset/exchange/convert-result-query| 100 req/s| N  
+GET| /v5/asset/exchange/query-convert-history| 100 req/s| N

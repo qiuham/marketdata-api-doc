@@ -2,49 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-user-history
 api_type: REST
-updated_at: 2026-11-13 18:27:51.556774
+updated_at: 2026-11-13 19:23:41.810126
 ---
 
-# Get Puzzle Project List
+# Get Launchpool User History
 
-Query the Spot-X Puzzle activity (project) list. Results are sorted by creation time descending (newest first) and support cursor-based pagination.
+Query the authenticated user's completed Launchpool staking position history.
 
 info
 
-  * Authentication is **not** required
-  * Only main-site public activities are returned
-  * `nextPageCursor` being an empty string indicates the last page
+  * Authentication is required
+  * Returns historical (ended) staking positions, not individual transactions
+  * `startTime` and `endTime` filter by the staking period, not record creation time, and must be provided **together**
 
 
 
 ### HTTP Request
 
-GET`/v5/spot-x/puzzle/project/list`
+POST`/v5/spot-x/launchpool/user/history`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-status| **true**|  integer| Activity phase filter. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
-projectId| false| string| Exact activity code. Use to query a single project  
-activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
-cursor| false| string| Pagination cursor returned as `nextPageCursor` in the previous response. Omit for the first page  
-limit| false| integer| Number of items per page. Default: `10`. Max: `10`  
+stakeCoin| false| string| Filter by stake coin symbol, e.g. `USDT`  
+rewardCoin| false| string| Filter by reward coin symbol, e.g. `BTC`  
+startTime| false| string| Staking period start filter, 13-digit Unix timestamp in milliseconds. Filters positions whose staking start time is on or after this value. Must be used together with `endTime`  
+endTime| false| string| Staking period end filter, 13-digit Unix timestamp in milliseconds. Filters positions whose staking end time is on or before this value. Must be used together with `startTime`  
+pageSize| false| integer| Number of records per page. Default: `10`. Max: `10`  
+current| false| integer| Page number (1-based). Default: `1`. Max: `100`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Activity items for the current page  
-> projectId| string| Unique activity code  
-> activityCoin| string| The coin that the activity is centered on  
-> rewardCoin| string| The coin distributed as the reward  
-> status| integer| Activity status. `0`: Upcoming; `1`: Ongoing; `2`: Ended  
-> startTime| string| Activity start time, Unix timestamp in milliseconds  
-> endTime| string| Activity end time, Unix timestamp in milliseconds  
-> totalReward| string| Total reward pool size  
-> participantCount| string| Total number of registered participants  
-nextPageCursor| string| Cursor for the next page. Empty string means last page  
+list| array| Completed staking position records for the current page  
+> stakeCoin| string| The coin that was staked in this position  
+> rewardCoin| string| The coin earned as reward  
+> totalReward| string| Total reward earned for this completed position  
+> stakeStartTime| string| Position staking start time, Unix timestamp in milliseconds  
+> stakeEndTime| string| Position staking end time (auto-redeem time), Unix timestamp in milliseconds  
+total| integer| Total number of records matching the filter  
+pageSize| integer| Page size used for this response  
+current| integer| Current page number  
   
 * * *
 
@@ -57,8 +57,20 @@ nextPageCursor| string| Cursor for the next page. Empty string means last page
 
     
     
-    GET /v5/spot-x/puzzle/project/list?status=1&limit=10 HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/history HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1705000000000  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "rewardCoin": "BTC",  
+        "pageSize": 10,  
+        "current": 1  
+    }  
     
     
     
@@ -78,17 +90,23 @@ nextPageCursor| string| Cursor for the next page. Empty string means last page
         "result": {  
             "list": [  
                 {  
-                    "projectId": "PUZZLE_BTC_2024Q1",  
-                    "activityCoin": "BTC",  
-                    "rewardCoin": "USDT",  
-                    "status": 1,  
-                    "startTime": "1704067200000",  
-                    "endTime": "1706745600000",  
-                    "totalReward": "50000",  
-                    "participantCount": "1234"  
+                    "stakeCoin": "USDT",  
+                    "rewardCoin": "BTC",  
+                    "totalReward": "0.00250",  
+                    "stakeStartTime": "1704067200000",  
+                    "stakeEndTime": "1706745600000"  
+                },  
+                {  
+                    "stakeCoin": "MNT",  
+                    "rewardCoin": "BTC",  
+                    "totalReward": "0.00080",  
+                    "stakeStartTime": "1701388800000",  
+                    "stakeEndTime": "1704067200000"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
+            "total": 12,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  
@@ -96,46 +114,46 @@ nextPageCursor| string| Cursor for the next page. Empty string means last page
 
 ---
 
-# 查詢 Puzzle 項目列表
+# 查詢 Launchpool 用戶歷史倉位
 
-查詢 Spot-X Puzzle 活動（項目）列表。結果按創建時間倒序排列（最新優先），支持游標分頁。
+查詢當前用戶已完成的 Launchpool 質押倉位歷史記錄。
 
 信息
 
-  * 無需鑒權
-  * 僅返回主站公開活動
-  * `nextPageCursor` 為空字符串時表示已到最後一頁
+  * 需要鑒權
+  * 返回已結束的質押倉位記錄，而非單筆操作流水
+  * `startTime` 和 `endTime` 按質押期間篩選（非記錄創建時間），必須同時傳入
 
 
 
 ### HTTP 請求
 
-GET`/v5/spot-x/puzzle/project/list`
+POST`/v5/spot-x/launchpool/user/history`
 
 ### 請求參數
 
 參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-status| **true**|  integer| 活動階段篩選。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
-projectId| false| string| 精確活動代碼，用於查詢單個項目  
-activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
-cursor| false| string| 分頁游標，傳入上一次響應中的 `nextPageCursor`。首頁請求無需傳入  
-limit| false| integer| 每頁數量，默認 `10`，最大 `10`  
+stakeCoin| false| string| 按質押幣種篩選，如 `USDT`  
+rewardCoin| false| string| 按獎勵幣種篩選，如 `BTC`  
+startTime| false| string| 質押期間開始篩選，13 位毫秒級 Unix 時間戳。篩選質押開始時間大於等於該值的倉位。必須與 `endTime` 同時傳入  
+endTime| false| string| 質押期間結束篩選，13 位毫秒級 Unix 時間戳。篩選質押結束時間小於等於該值的倉位。必須與 `startTime` 同時傳入  
+pageSize| false| integer| 每頁記錄數，默認 `10`，最大 `10`  
+current| false| integer| 頁碼（從 1 開始），默認 `1`，最大 `100`  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 當前頁的活動列表  
-> projectId| string| 唯一活動代碼  
-> activityCoin| string| 活動對應的幣種  
-> rewardCoin| string| 實際發放的獎勵幣種  
-> status| integer| 活動狀態。`0`: 即將開始；`1`: 進行中；`2`: 已結束  
-> startTime| string| 活動開始時間，毫秒級 Unix 時間戳  
-> endTime| string| 活動結束時間，毫秒級 Unix 時間戳  
-> totalReward| string| 獎勵池總量  
-> participantCount| string| 已報名參與人數  
-nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後一頁  
+list| array| 當前頁的已完成質押倉位記錄  
+> stakeCoin| string| 該倉位質押的幣種  
+> rewardCoin| string| 該倉位獲得獎勵的幣種  
+> totalReward| string| 該已完成倉位的累計獎勵總量  
+> stakeStartTime| string| 倉位質押開始時間，毫秒級 Unix 時間戳  
+> stakeEndTime| string| 倉位質押結束時間（自動贖回時間），毫秒級 Unix 時間戳  
+total| integer| 符合篩選條件的記錄總數  
+pageSize| integer| 本次響應使用的每頁條數  
+current| integer| 當前頁碼  
   
 * * *
 
@@ -148,8 +166,20 @@ nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後�
 
     
     
-    GET /v5/spot-x/puzzle/project/list?status=1&limit=10 HTTP/1.1  
+    POST /v5/spot-x/launchpool/user/history HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1705000000000  
+    X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXX  
+    Content-Type: application/json  
+      
+    {  
+        "stakeCoin": "USDT",  
+        "rewardCoin": "BTC",  
+        "pageSize": 10,  
+        "current": 1  
+    }  
     
     
     
@@ -169,17 +199,23 @@ nextPageCursor| string| 下一頁游標，為空字符串時表示已到最後�
         "result": {  
             "list": [  
                 {  
-                    "projectId": "PUZZLE_BTC_2024Q1",  
-                    "activityCoin": "BTC",  
-                    "rewardCoin": "USDT",  
-                    "status": 1,  
-                    "startTime": "1704067200000",  
-                    "endTime": "1706745600000",  
-                    "totalReward": "50000",  
-                    "participantCount": "1234"  
+                    "stakeCoin": "USDT",  
+                    "rewardCoin": "BTC",  
+                    "totalReward": "0.00250",  
+                    "stakeStartTime": "1704067200000",  
+                    "stakeEndTime": "1706745600000"  
+                },  
+                {  
+                    "stakeCoin": "MNT",  
+                    "rewardCoin": "BTC",  
+                    "totalReward": "0.00080",  
+                    "stakeStartTime": "1701388800000",  
+                    "stakeEndTime": "1704067200000"  
                 }  
             ],  
-            "nextPageCursor": "eyJpZCI6MTIzfQ=="  
+            "total": 12,  
+            "pageSize": 10,  
+            "current": 1  
         },  
         "retExtInfo": {},  
         "time": 1705000000000  

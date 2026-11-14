@@ -2,52 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/collateral-coin
 api_type: REST
-updated_at: 2026-11-13 18:27:19.215992
+updated_at: 2026-11-13 19:22:22.781200
 ---
 
-# Get Completed Loan History
+# Get Collateral Coins
 
-Query for the last 6 months worth of your completed (fully paid off) loans.
+info
 
-> Permission: "Spot trade"
+Does not need authentication.
 
 ### HTTP Request
 
-GET`/v5/crypto-loan/borrow-history`
+GET`/v5/crypto-loan/collateral-data`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Loan order ID  
-loanCurrency| false| string| Loan coin name  
-collateralCurrency| false| string| Collateral coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+vipLevel| false| string| VIP level 
+
+  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(supreme VIP)
+  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
+
+  
+currency| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> borrowTime| string| The timestamp to borrow  
-> collateralCurrency| string| Collateral coin  
-> expirationTime| string| Loan maturity time, keeps `""` for flexible loan  
-> hourlyInterestRate| string| Hourly interest rate 
-
-  * Flexible loan, it is real-time interest rate
-  * Fixed term loan: it is fixed term interest rate
-
-  
-> initialCollateralAmount| string| Initial amount to mortgage  
-> initialLoanAmount| string| Initial loan amount  
-> loanCurrency| string| Loan coin  
-> loanTerm| string| Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan  
-> orderId| string| Loan order ID  
-> repaidInterest| string| Total interest repaid  
-> repaidPenaltyInterest| string| Total penalty interest repaid  
-> status| integer| Loan order status `1`: fully repaid manually; `2`: fully repaid by liquidation  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+vipCoinList| array| Object  
+> list| array| Object  
+>> collateralAccuracy| integer| Valid collateral coin precision  
+>> initialLTV| string| The Initial LTV ratio determines the initial amount of coins that can be borrowed. The initial LTV ratio may vary for different collateral  
+>> marginCallLTV| string| If the LTV ratio (Loan Amount/Collateral Amount) reaches the threshold, you will be required to add more collateral to your loan  
+>> liquidationLTV| string| If the LTV ratio (Loan Amount/Collateral Amount) reaches the threshold, Bybit will liquidate your collateral assets to repay your loan and interest in full  
+>> maxLimit| string| Collateral limit  
+> vipLevel| string| VIP level  
   
 ### Request Example
 
@@ -58,23 +49,18 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan/borrow-history?orderId=1793683005081680384 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728630979731  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/crypto-loan/collateral-data?currency=ETH&vipLevel=PRO1 HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_completed_loan_history(  
-            orderId="1793683005081680384",  
+    print(session.get_collateral_coins(  
+        currency="ETH",  
+        vipLevel="PRO1",  
     ))  
     
     
@@ -88,7 +74,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })  
+      .getCollateralCoins({  
+        currency: 'ETH',  
+        vipLevel: 'PRO1',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -104,75 +93,62 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "list": [  
+            "vipCoinList": [  
                 {  
-                    "borrowTime": "1728546174028",  
-                    "collateralCurrency": "BTC",  
-                    "expirationTime": "1729148399000",  
-                    "hourlyInterestRate": "0.0000010241",  
-                    "initialCollateralAmount": "0.0494727",  
-                    "initialLoanAmount": "1",  
-                    "loanCurrency": "ETH",  
-                    "loanTerm": "7",  
-                    "orderId": "1793569729874260992",  
-                    "repaidInterest": "0.00000515",  
-                    "repaidPenaltyInterest": "0",  
-                    "status": 1  
+                    "list": [  
+                        {  
+                            "collateralAccuracy": 8,  
+                            "currency": "ETH",  
+                            "initialLTV": "0.8",  
+                            "liquidationLTV": "0.95",  
+                            "marginCallLTV": "0.87",  
+                            "maxLimit": "32000"  
+                        }  
+                    ],  
+                    "vipLevel": "PRO1"  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1728632014857  
+        "time": 1728618590498  
     }
 
 ---
 
-# 查詢已結清的借貸歷史訂單
-
-> 權限: "現貨交易"
+# 查詢質押幣種
 
 信息
 
-支持查詢過去6個月的已完結訂單紀錄
+不需要鑒權
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan/borrow-history`
+GET`/v5/crypto-loan/collateral-data`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 借貸訂單ID  
-loanCurrency| false| string| 借貸幣種  
-collateralCurrency| false| string| 質押幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+vipLevel| false| string| Vip等級 
+
+  * `VIP0`, `VIP1`, `VIP2`, `VIP3`, `VIP4`, `VIP5`, `VIP99`(至尊VIP)
+  * `PRO1`, `PRO2`, `PRO3`, `PRO4`, `PRO5`, `PRO6`
+
+  
+currency| false| string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> borrowTime| string| 借貸時間  
-> collateralCurrency| string| 質押幣種  
-> expirationTime| string| 借貸到期時間, 活期借貸總是 `""`  
-> hourlyInterestRate| string| 按小時計利率 
-
-  * 活期借貸: 實時利率
-  * 定期借貸: 定期固定利率
-
-  
-> initialCollateralAmount| string| 初始質押金額  
-> initialLoanAmount| string| 初始借貸金額  
-> loanCurrency| string| 借貸幣種  
-> loanTerm| string| 借貸期限 `7`, `14`, `30`, `90`, `180`天, 活期總是`""`  
-> orderId| string| 借貸訂單ID  
-> repaidInterest| string| 總償還利息金額  
-> repaidPenaltyInterest| string| 總償還罰息金額  
-> status| integer| 償還方式 `1`: 主動還清`2`: 強平還清  
-nextPageCursor| string| 下一頁游標  
+vipCoinList| array| Object  
+> list| array| Object  
+>> collateralAccuracy| integer| 質押幣種精度  
+>> initialLTV| string| 初始質押率, 初始 LTV 決定了最初可借入的資產金額，因質押資產而異  
+>> marginCallLTV| string| 追加保證金率, 如果 LTV (待還本息/質押金額) 達到此閾值，系統會提醒您追加質押資產  
+>> liquidationLTV| string| 強平質押率, 如果 LTV (待還本息/質押金額) 達到此閾值，系統會對您的質押資產進行強制平倉，以全額償還本金和利息。  
+>> maxLimit| string| 抵押限額  
+> vipLevel| string| Vip等級  
   
 ### 請求示例
 
@@ -183,23 +159,18 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan/ongoing-orders?orderId=1793683005081680384 HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728630979731  
-    X-BAPI-RECV-WINDOW: 5000  
+    GET /v5/crypto-loan/collateral-data?currency=ETH&vipLevel=PRO1 HTTP/1.1  
+    Host: api.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
     session = HTTP(  
         testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_completed_loan_history(  
-            orderId="1793683005081680384",  
+    print(session.get_collateral_coins(  
+        currency="ETH",  
+        vipLevel="PRO1",  
     ))  
     
     
@@ -213,7 +184,10 @@ nextPageCursor| string| 下一頁游標
     });  
       
     client  
-      .getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })  
+      .getCollateralCoins({  
+        currency: 'ETH',  
+        vipLevel: 'PRO1',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -229,24 +203,22 @@ nextPageCursor| string| 下一頁游標
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "list": [  
+            "vipCoinList": [  
                 {  
-                    "borrowTime": "1728546174028",  
-                    "collateralCurrency": "BTC",  
-                    "expirationTime": "1729148399000",  
-                    "hourlyInterestRate": "0.0000010241",  
-                    "initialCollateralAmount": "0.0494727",  
-                    "initialLoanAmount": "1",  
-                    "loanCurrency": "ETH",  
-                    "loanTerm": "7",  
-                    "orderId": "1793569729874260992",  
-                    "repaidInterest": "0.00000515",  
-                    "repaidPenaltyInterest": "0",  
-                    "status": 1  
+                    "list": [  
+                        {  
+                            "collateralAccuracy": 8,  
+                            "currency": "ETH",  
+                            "initialLTV": "0.8",  
+                            "liquidationLTV": "0.95",  
+                            "marginCallLTV": "0.87",  
+                            "maxLimit": "32000"  
+                        }  
+                    ],  
+                    "vipLevel": "PRO1"  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1728632014857  
+        "time": 1728618590498  
     }

@@ -2,38 +2,34 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/reward/issue-voucher
 api_type: REST
-updated_at: 2026-11-13 18:27:14.960261
+updated_at: 2026-11-13 19:22:16.212630
 ---
 
-# Get Voucher Spec
+# Issue Voucher
 
 ### HTTP Request
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/award/distribute-award`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-id| **true**|  string| Voucher ID  
+accountId| **true**|  string| User ID  
+awardId| **true**|  string| Voucher ID  
+specCode| **true**|  string| Customised unique spec code, up to 8 characters  
+amount| **true**|  string| Issue amount 
+
+  * Spot airdrop supports up to 16 decimals
+  * Other types supports up to 4 decimals
+
+  
+brokerId| **true**|  string| Broker ID  
   
 ### Response Parameters
 
-Parameter| Type| Comments  
----|---|---  
-id| string| Voucher ID  
-coin| string| Coin  
-amountUnit| string| 
+None
 
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
-  
-productLine| string| Product line  
-subProductLine| string| Sub product line  
-totalAmount| Object| Total amount of voucher  
-usedAmount| string| Used amount of voucher  
-  
 ### Request Example
 
   * HTTP
@@ -43,17 +39,21 @@ usedAmount| string| Used amount of voucher
 
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/award/distribute-award HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1726110531734  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
+    Content-Length: 128  
       
     {  
-        "id": "80209"  
+        "accountId": "2846381",  
+        "awardId": "123456",  
+        "specCode": "award-001",  
+        "amount": "100",  
+        "brokerId": "v-28478"  
     }  
     
     
@@ -64,8 +64,12 @@ usedAmount| string| Used amount of voucher
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_voucher_spec(  
-        id="80209",  
+    print(session.issue_voucher(  
+        accountId="2846381",  
+        awardId="123456",  
+        specCode="award-001",  
+        amount="100",  
+        brokerId="v-28478",  
     ))  
     
     
@@ -79,12 +83,13 @@ usedAmount| string| Used amount of voucher
     });  
       
     client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
+      .issueBrokerVoucher({  
+        accountId: '2846381',  
+        awardId: '123456',  
+        specCode: 'award-001',  
+        amount: '100',  
+        brokerId: 'v-28478',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -98,51 +103,36 @@ usedAmount| string| Used amount of voucher
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
-        },  
-        "retExtInfo": {},  
-        "time": 1726107086313  
+        "retMsg": ""  
     }
 
 ---
 
-# 查詢代金券參數
+# 發放代金券
 
 ### HTTP 請求
 
-POST`/v5/broker/award/info`
+POST`/v5/broker/award/distribute-award`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-id| **true**|  string| 代金券ID  
+accountId| **true**|  string| 用戶ID  
+awardId| **true**|  string| 代金券ID  
+specCode| **true**|  string| 自定義唯一標識碼, 最長8位  
+amount| **true**|  string| 代金券金額 
+
+  * 現貨空投最多支持16位小數
+  * 其他類型最多支持4位小數
+
+  
+brokerId| **true**|  string| Broker ID  
   
 ### 響應參數
 
-參數| 類型| 說明  
----|---|---  
-id| string| 代金券ID  
-coin| string| 幣種  
-amountUnit| string| 計價單位
+無
 
-  * `AWARD_AMOUNT_UNIT_USD`
-  * `AWARD_AMOUNT_UNIT_COIN`
-
-  
-productLine| string| 業務線  
-subProductLine| string| 子業務線  
-totalAmount| Object| 代金券總金額  
-usedAmount| string| 代金券已發出金額  
-  
 ### 請求示例
 
   * HTTP
@@ -152,17 +142,21 @@ usedAmount| string| 代金券已發出金額
 
     
     
-    POST /v5/broker/award/info HTTP/1.1  
+    POST /v5/broker/award/distribute-award HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1726107086048  
+    X-BAPI-TIMESTAMP: 1726110531734  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 22  
+    Content-Length: 128  
       
     {  
-        "id": "80209"  
+        "accountId": "2846381",  
+        "awardId": "123456",  
+        "specCode": "award-001",  
+        "amount": "100",  
+        "brokerId": "v-28478"  
     }  
     
     
@@ -173,8 +167,12 @@ usedAmount| string| 代金券已發出金額
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_voucher_spec(  
-        id="80209",  
+    print(session.issue_voucher(  
+        accountId="2846381",  
+        awardId="123456",  
+        specCode="award-001",  
+        amount="100",  
+        brokerId="v-28478",  
     ))  
     
     
@@ -188,12 +186,13 @@ usedAmount| string| 代金券已發出金額
     });  
       
     client  
-      .getBrokerVoucherSpec({  
-        accountId: '5714139',  
-        awardId: '189528',  
-        specCode: 'demo000',  
-        withUsedAmount: false,  
-    })  
+      .issueBrokerVoucher({  
+        accountId: '2846381',  
+        awardId: '123456',  
+        specCode: 'award-001',  
+        amount: '100',  
+        brokerId: 'v-28478',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -207,16 +206,5 @@ usedAmount| string| 代金券已發出金額
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
-        "result": {  
-            "id": "80209",  
-            "coin": "USDT",  
-            "amountUnit": "AWARD_AMOUNT_UNIT_USD",  
-            "productLine": "PRODUCT_LINE_CONTRACT",  
-            "subProductLine": "SUB_PRODUCT_LINE_CONTRACT_DEFAULT",  
-            "totalAmount": "10000",  
-            "usedAmount": "100"  
-        },  
-        "retExtInfo": {},  
-        "time": 1726107086313  
+        "retMsg": ""  
     }

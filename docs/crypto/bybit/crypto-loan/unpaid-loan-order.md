@@ -2,49 +2,259 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/unpaid-loan-order
 api_type: REST
-updated_at: 2026-11-13 18:27:22.420804
+updated_at: 2026-11-13 19:22:29.272690
 ---
 
-# Introduction
+# Get Unpaid Loans
 
-## Overview
+Query for your ongoing loans.
 
-Event Contract is a structured product offered by Bybit that allows users to trade on the outcome of market events with a defined payout structure.
+> Permission: "Spot trade"
 
-## Access
+### HTTP Request
 
-caution
+GET`/v5/crypto-loan/ongoing-orders`
 
-Only **market makers** are permitted to call the Event Contract OpenAPI endpoints. To apply for market maker access, please contact your **Relation Manager**. Public access may be considered in the future.
+### Request Parameters
 
-## WebSocket streams
+Parameter| Required| Type| Comments  
+---|---|---|---  
+orderId| false| string| Loan order ID  
+loanCurrency| false| string| Loan coin name  
+collateralCurrency| false| string| Collateral coin name  
+loanTermType| false| string| 
 
-  * Public: [Orderbook](/docs/v5/event/websocket/public/orderbook) and [Trade](/docs/v5/event/websocket/public/public-trade).
-  * Private: [Position](/docs/v5/event/websocket/private/position), [Execution](/docs/v5/event/websocket/private/execution), and [Order](/docs/v5/event/websocket/private/order).
+  * `1`: fixed term, when query this type, `loanTerm` must be filled
+  * `2`: flexible term
+
+By default, query all types  
+loanTerm| false| string| `7`, `14`, `30`, `90`, `180` days, working when `loanTermType`=1  
+limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
+---|---|---  
+list| array| Object  
+> collateralAmount| string| Collateral amount  
+> collateralCurrency| string| Collateral coin  
+> currentLTV| string| Current LTV  
+> expirationTime| string| Loan maturity time, keeps `""` for flexible loan  
+> hourlyInterestRate| string| Hourly interest rate 
+
+  * Flexible loan, it is real-time interest rate
+  * Fixed term loan: it is fixed term interest rate
+
+  
+> loanCurrency| string| Loan coin  
+> loanTerm| string| Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan  
+> orderId| string| Loan order ID  
+> residualInterest| string| Unpaid interest  
+> residualPenaltyInterest| string| Unpaid penalty interest  
+> totalDebt| string| Unpaid principal  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+  
+### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
 
 
+    
+    
+    GET /v5/crypto-loan/ongoing-orders?orderId=1793683005081680384 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1728630979731  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.repay_crypto_loan(  
+            orderId="1794267532472646144",  
+            amount="100",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getUnpaidLoanOrders({ orderId: '1793683005081680384' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
 
-For account transaction records, see [Get Transaction Log](/docs/v5/account/transaction-log).
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "request.success",  
+        "result": {  
+            "list": [  
+                {  
+                    "collateralAmount": "0.0964687",  
+                    "collateralCurrency": "BTC",  
+                    "currentLTV": "0.4161",  
+                    "expirationTime": "1731149999000",  
+                    "hourlyInterestRate": "0.0000010633",  
+                    "loanCurrency": "USDT",  
+                    "loanTerm": "30",  
+                    "orderId": "1793683005081680384",  
+                    "residualInterest": "0.04016",  
+                    "residualPenaltyInterest": "0",  
+                    "totalDebt": "1888.005198"  
+                }  
+            ],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1728630980861  
+    }
 
 ---
 
-# 簡介
+# 查詢進行中的借貸訂單
 
-## 概述
+> 權限: "現貨交易"
 
-Event Contract 是 Bybit 提供的結構化產品，允許用戶以固定賠付結構對市場事件的結果進行交易。
+### HTTP 請求
 
-## 訪問權限
+GET`/v5/crypto-loan/ongoing-orders`
 
-警告
+### 請求參數
 
-僅**做市商** 可調用 Event Contract OpenAPI 接口。如需申請做市商資格，請聯繫您的 **Relation Manager** 。 未來可能考慮向公眾開放。
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+orderId| false| string| 借貸訂單ID  
+loanCurrency| false| string| 借貸幣種  
+collateralCurrency| false| string| 質押幣種  
+loanTermType| false| string| 
 
-## WebSocket 推送
+  * `1`: 定期, 當查詢定期時, `loanTerm`字段必傳
+  * `2`: 活期
 
-  * 公共頻道：[訂單簿](/docs/zh-TW/v5/event/websocket/public/orderbook)和[成交](/docs/zh-TW/v5/event/websocket/public/public-trade)。
-  * 私有頻道：[持倉](/docs/zh-TW/v5/event/websocket/private/position)、[成交](/docs/zh-TW/v5/event/websocket/private/execution)和[訂單](/docs/zh-TW/v5/event/websocket/private/order)。
+默認查詢所有期限類型  
+loanTerm| false| string| `7`, `14`, `30`, `90`, `180`天, 當`loanTermType`=1時有效  
+limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
+cursor| false| string| 游標，用於分頁  
+  
+### 響應參數
+
+參數| 類型| 說明  
+---|---|---  
+list| array| Object  
+> collateralAmount| string| 質押金額  
+> collateralCurrency| string| 質押幣種  
+> currentLTV| string| 當前的LTV  
+> expirationTime| string| 借貸到期時間, 活期總是`""`  
+> hourlyInterestRate| string| 按小時計利率 
+
+  * 活期借貸: 實時利率
+  * 定期借貸: 定期固定利率
+
+  
+> loanCurrency| string| 借貸幣種  
+> loanTerm| string| 借貸期限, `7`, `14`, `30`, `90`, `180`天, 活期總是`""`  
+> orderId| string| 借貸訂單ID  
+> residualInterest| string| 未償還利息  
+> residualPenaltyInterest| string| 未償還罰息  
+> totalDebt| string| 未償還本金  
+nextPageCursor| string| 下一頁游標  
+  
+### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
 
 
+    
+    
+    GET /v5/crypto-loan/ongoing-orders?orderId=1793683005081680384 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1728630979731  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.repay_crypto_loan(  
+            orderId="1794267532472646144",  
+            amount="100",  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getUnpaidLoanOrders({ orderId: '1793683005081680384' })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
+    
 
-賬戶交易記錄請參閱[獲取交易日誌](/docs/zh-TW/v5/account/transaction-log)。
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "request.success",  
+        "result": {  
+            "list": [  
+                {  
+                    "collateralAmount": "0.0964687",  
+                    "collateralCurrency": "BTC",  
+                    "currentLTV": "0.4161",  
+                    "expirationTime": "1731149999000",  
+                    "hourlyInterestRate": "0.0000010633",  
+                    "loanCurrency": "USDT",  
+                    "loanTerm": "30",  
+                    "orderId": "1793683005081680384",  
+                    "residualInterest": "0.04016",  
+                    "residualPenaltyInterest": "0",  
+                    "totalDebt": "1888.005198"  
+                }  
+            ],  
+            "nextPageCursor": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1728630980861  
+    }

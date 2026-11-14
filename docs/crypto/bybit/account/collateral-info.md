@@ -2,41 +2,59 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/collateral-info
 api_type: Account
-updated_at: 2026-11-13 18:26:38.473049
+updated_at: 2026-11-13 19:20:45.443495
 ---
 
-# Get MMP State
+# Get Collateral Info
+
+Get the collateral information of the current unified margin account, including loan interest rate, loanable amount, collateral conversion rate, whether it can be mortgaged as margin, etc.
 
 ### HTTP Request
 
-GET`/v5/account/mmp-state`
+GET`/v5/account/collateral-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-baseCoin| **true**|  string| Base coin, uppercase only  
+currency| false| string| Asset currency of all current collateral, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Object  
-> baseCoin| string| Base coin  
-> mmpEnabled| boolean| Whether the account is enabled mmp  
-> window| string| Time window (ms)  
-> frozenPeriod| string| Frozen period (ms)  
-> qtyLimit| string| Trade qty limit  
-> deltaLimit| string| Delta limit  
-> vegaLimit| string| Vega limit  
-> mmpFrozenUntil| string| Unfreeze timestamp (ms)  
-> mmpFrozen| boolean| Whether the mmp is triggered. 
+list| array| Object  
+> currency| string| Currency of all current collateral  
+> hourlyBorrowRate| string| Hourly borrow rate  
+> maxBorrowingAmount| string| Max borrow amount. This value is shared across main-sub UIDs  
+> freeBorrowingLimit| string| The maximum limit for interest-free borrowing 
 
-  * `true`: mmpFrozenUntil is meaningful
-  * `false`: please ignore the value of mmpFrozenUntil
+  * Only the borrowing caused by contracts unrealised loss has interest-free amount
+  * Spot margin borrowing always has interest
 
   
+> freeBorrowAmount| string| The amount of borrowing within your total borrowing amount that is exempt from interest charges  
+> borrowAmount| string| Borrow amount  
+> otherBorrowAmount| string| The sum of borrowing amount for other accounts under the same main account  
+> availableToBorrow| string| Available amount to borrow. This value is shared across main-sub UIDs  
+> borrowable| boolean| Whether currency can be borrowed  
+> borrowUsageRate| string| Borrow usage rate: sum of main & sub accounts borrowAmount/maxBorrowingAmount, it is an actual value, 0.5 means 50%  
+> marginCollateral| boolean| Whether it can be used as a margin collateral currency (platform), `true`: YES, `false`: NO 
+
+  * When marginCollateral=false, then collateralSwitch is meaningless
+
   
+> collateralSwitch| boolean| Whether the collateral is turned on by user (user), `true`: ON, `false`: OFF 
+
+  * When marginCollateral=true, then collateralSwitch is meaningful
+
+  
+> collateralRatio| string| **Deprecated** field. Due to the new Tiered Collateral value logic, this field will no longer be accurate starting on February 19, 2025. Please refer to [Get Tiered Collateral Ratio](/docs/v5/spot-margin-uta/tier-collateral-ratio)  
+> freeBorrowingAmount| string| **Deprecated** field, always return `""`, please refer to `freeBorrowingLimit`  
+[](/docs/api-explorer/v5/account/collateral-info)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -46,17 +64,12 @@ result| array| Object
 
     
     
-    POST /v5/account/mmp-reset HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/account/collateral-info?currency=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675842997277  
+    X-BAPI-TIMESTAMP: 1672127952719  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "baseCoin": "ETH"  
-    }  
     
     
     
@@ -66,8 +79,8 @@ result| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_mmp_state(  
-        baseCoin="ETH",  
+    print(session.get_collateral_info(  
+        currency="BTC",  
     ))  
     
     
@@ -81,7 +94,7 @@ result| array| Object
     });  
       
     client  
-        .getMMPState('ETH')  
+        .getCollateralInfo('BTC')  
         .then((response) => {  
             console.log(response);  
         })  
@@ -97,58 +110,81 @@ result| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "result": [  
+            "list": [  
                 {  
-                    "baseCoin": "BTC",  
-                    "mmpEnabled": true,  
-                    "window": "5000",  
-                    "frozenPeriod": "100000",  
-                    "qtyLimit": "0.01",  
-                    "deltaLimit": "0.01",  
-                    "vegaLimit": "500000",  
-                    "mmpFrozenUntil": "1675760625519",  
-                    "mmpFrozen": false  
+                    "availableToBorrow": "3",  
+                    "freeBorrowingAmount": "",  
+                    "freeBorrowAmount": "0",  
+                    "maxBorrowingAmount": "3",  
+                    "hourlyBorrowRate": "0.00000147",  
+                    "borrowUsageRate": "0",  
+                    "collateralSwitch": true,  
+                    "borrowAmount": "0",  
+                    "borrowable": true,  
+                    "currency": "BTC",  
+                    "otherBorrowAmount": "0",  
+                    "marginCollateral": true,  
+                    "freeBorrowingLimit": "0",  
+                    "collateralRatio": "0.95"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1675843188984  
+        "time": 1691565901952  
     }
 
 ---
 
-# 查詢市商保護配置信息
+# 查詢抵押品信息
+
+獲取當前統一保證金賬戶的抵押品信息，包括借貸利率，可藉貸金額以及抵押品折算率，是否可抵押作為保證金等信息
 
 ### HTTP 請求
 
-GET`/v5/account/mmp-state`
+GET`/v5/account/collateral-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-baseCoin| **true**|  string| Base coin  
+currency| false| string| 目前所有抵押品的資產幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| Object  
-> baseCoin| string| 交易幣種  
-> mmpEnabled| boolean| 帳戶是否開啟了mmp  
-> window| string| 時間窗口 (毫秒)  
-> frozenPeriod| string| 凍結時間長度 (毫秒)  
-> qtyLimit| string| 成交數量上限  
-> deltaLimit| string| Delta值上限  
-> vegaLimit| string| Vega 上限  
-> mmpFrozenUntil| string| 解凍時間戳 (毫秒)  
-> mmpFrozen| boolean| 當前是否觸發了mmp凍結. 
+list| array| Object  
+> currency| string| 目前所有抵押品的資產幣種  
+> hourlyBorrowRate| string| 每小時藉款利率  
+> maxBorrowingAmount| string| 最大可藉貸額度. 該值由母子帳號共享  
+> freeBorrowingLimit| string| 免息借款額上限 
 
-  * `true`: mmpFrozenUntil的值有意義
-  * `false`: 請忽略mmpFrozenUntil字段的值
+  * 僅合約浮虧時產生的借款擁有免息額度
+  * 槓桿交易的借貸總是產生利息
 
   
+> freeBorrowAmount| string| 借款總額中免息部分的借款金額  
+> borrowAmount| string| 已用借貸額度  
+> otherBorrowAmount| string| 其他帳戶的已借貸總額(同一個母帳戶下)  
+> availableToBorrow| string| 用戶剩餘可藉額度. 該值由母子帳號共享  
+> borrowable| boolean| 是否是可藉貸的幣種, `true`: 是. `false`: 否  
+> borrowUsageRate| string| 借貸資金使用率: 母子帳戶加起來的borrowAmount/maxBorrowingAmount. 這是一個真實值, 0.5则表示50%  
+> marginCollateral| boolean| 是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 
+
+  * 當marginCollateral=false時, 則collateralSwitch無意義
+
   
+> collateralSwitch| boolean| 用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 
+
+  * 僅當marginCollateral=true時, 才能主動選擇開關抵押
+
+  
+> freeBorrowingAmount| string| **廢棄** 字段, 總是返回空字符串, 請參考`freeBorrowingLimit`  
+> collateralRatio| string| **廢棄** 字段, 由於新的階梯價值率邏輯, 該字段從2025年2月19日開始不再準確。請使用[查詢階梯價值率](/docs/zh-TW/v5/spot-margin-uta/tier-collateral-ratio)  
+[](/docs/zh-TW/api-explorer/v5/account/collateral-info)
+
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -158,17 +194,12 @@ result| array| Object
 
     
     
-    POST /v5/account/mmp-reset HTTP/1.1  
-    Host: api.bybit.com  
+    GET /v5/account/collateral-info?currency=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675842997277  
+    X-BAPI-TIMESTAMP: 1672127952719  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "baseCoin": "ETH"  
-    }  
     
     
     
@@ -178,8 +209,8 @@ result| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_mmp_state(  
-        baseCoin="ETH",  
+    print(session.get_collateral_info(  
+        currency="BTC",  
     ))  
     
     
@@ -193,7 +224,7 @@ result| array| Object
     });  
       
     client  
-        .getMMPState('ETH')  
+        .getCollateralInfo('BTC')  
         .then((response) => {  
             console.log(response);  
         })  
@@ -209,20 +240,25 @@ result| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "result": [  
+            "list": [  
                 {  
-                    "baseCoin": "BTC",  
-                    "mmpEnabled": true,  
-                    "window": "5000",  
-                    "frozenPeriod": "100000",  
-                    "qtyLimit": "0.01",  
-                    "deltaLimit": "0.01",  
-                    "vegaLimit": "500000",  
-                    "mmpFrozenUntil": "1675760625519",  
-                    "mmpFrozen": false  
+                    "availableToBorrow": "3",  
+                    "freeBorrowingAmount": "",  
+                    "freeBorrowAmount": "0",  
+                    "maxBorrowingAmount": "3",  
+                    "hourlyBorrowRate": "0.00000147",  
+                    "borrowUsageRate": "0",  
+                    "collateralSwitch": true,  
+                    "borrowAmount": "0",  
+                    "borrowable": true,  
+                    "currency": "BTC",  
+                    "otherBorrowAmount": "0",  
+                    "marginCollateral": true,  
+                    "freeBorrowingLimit": "0",  
+                    "collateralRatio": "0.95"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1675843188984  
+        "time": 1691565901952  
     }

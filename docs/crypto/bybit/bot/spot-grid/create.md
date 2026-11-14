@@ -2,94 +2,76 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/spot-grid/create
 api_type: REST
-updated_at: 2026-11-13 18:27:11.457331
+updated_at: 2026-11-13 19:22:06.364404
 ---
 
-# Get Grid Bot Detail
+# Create Grid Bot
 
-Retrieve comprehensive details for a specific spot grid bot, including configuration, status, profit metrics, arbitrage count, TP/SL settings, and close reason.
+Create a new spot grid trading bot with a specified trading pair, price range, grid count, and investment amount.
 
 info
 
-  * **`grid_id`:**  
-Obtained from the [Create Spot Grid Bot](/docs/v5/bot/spot-grid/create) response or grid list queries.
+  * **Prerequisites:**  
+Call [Validate Spot Grid Input](/docs/v5/bot/spot-grid/validate-input) before this endpoint to ensure parameters are within valid ranges.  
+User must be authenticated and pass KYC/compliance checks.
 
-  * **APR fields:**  
-`grid_apr` and `total_apr` are returned as decimal ratios (e.g. `"0.15"` means 15% APR). Multiply by 100 to convert to percentage.
+  * **Investment mode (`invest_mode`):**  
+`0`: Quote only (default) — invest in quote token (e.g. USDT)  
+`1`: Base only — invest in base token (e.g. BTC)  
+`2`: Base + Quote — split investment across both tokens
 
-  * **`current_profit` / `current_per`:**  
-Only present for bots in `RUNNING` state.
+  * **Grid trailing (`enable_trailing`):**  
+When enabled, the grid automatically shifts as price moves. Requires `cell_number >= 5`.
+
+  * **Response`grid_id`:**  
+Returned on success. Use this ID for subsequent [Get Detail](/docs/v5/bot/spot-grid/get-detail) and [Close](/docs/v5/bot/spot-grid/close) operations.
 
   * **Rate limit:**  
-10 requests per second per UID.
+3 requests per second per UID.
+
+  * **Subject to compliance wall and KYC verification.**  
+If the user is banned (status_code=421), `ban_reason_text` provides a localized explanation.
 
 
 
 
 ### HTTP Request
 
-POST`/v5/grid/query-grid-detail`
+POST`/v5/grid/create-grid`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-grid_id| **true**|  string| Grid bot ID to query  
+symbol| **true**|  string| Trading pair symbol, uppercase only (e.g. `BTCUSDT`)  
+max_price| **true**|  string| Upper bound of the grid price range (decimal string)  
+min_price| **true**|  string| Lower bound of the grid price range (decimal string)  
+cell_number| **true**|  integer| Number of grid intervals, minimum 2  
+invest_mode| false| integer| Investment mode. `0`: Quote only (default), `1`: Base only, `2`: Base + Quote  
+base_investment| false| string| Investment in base token (decimal string). **Required** when `invest_mode` is `1` or `2`  
+quote_investment| false| string| Investment in quote token (decimal string). **Required** when `invest_mode` is `0` or `2`  
+entry_price| false| string| Entry trigger price (decimal string). Bot activates when market price reaches this level  
+stop_loss_price| false| string| Stop-loss trigger price (decimal string)  
+take_profit_price| false| string| Take-profit trigger price (decimal string)  
+ts_percent| false| string| Trailing stop callback ratio, range `[0, 0.99]` (e.g. `"0.05"` means 5%)  
+enable_trailing| false| boolean| Enable grid trailing (auto-shift). Requires `cell_number >= 5`. Default: `false`  
+limit_up_price| false| string| Upper limit price for grid trailing (decimal string), usd when "enable_trailing"=`true`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-status_code| integer| Business status code  
+status_code| integer| `200` = success, `421` = user banned  
+grid_id| integer| Created grid bot ID. Use for subsequent queries and close operations  
+ban_reason_text| string| Ban reason in user's locale. Returned only when `status_code=421`  
 debug_msg| string| Debug message (testnet only)  
-detail| object| Grid bot detail object (see below)  
-> grid_id| integer| Grid bot ID  
-> symbol| string| Trading pair (e.g. `BTCUSDT`)  
-> base_token| string| Base token symbol (e.g. `BTC`)  
-> quote_token| string| Quote token symbol (e.g. `USDT`)  
-> status| string| Bot lifecycle status: `RAW`, `REJECTED`, `NEW`, `INITIALIZING`, `RUNNING`, `CANCELLING`, `COMPLETED`  
-> max_price| string| Grid upper price bound (decimal string)  
-> min_price| string| Grid lower price bound (decimal string)  
-> cell_number| integer| Number of active grid intervals  
-> total_investment| string| Total investment amount in quote token (decimal string)  
-> total_profit| string| Total profit in quote token (decimal string)  
-> grid_profit| string| Grid arbitrage profit in quote token (decimal string)  
-> grid_apr| string| Grid APR as decimal ratio (e.g. `"0.15"` = 15%)  
-> total_apr| string| Total APR as decimal ratio (e.g. `"0.2"` = 20%)  
-> arbitrage_num| integer| Total number of completed arbitrage trades  
-> arbitrage_num_24| integer| Number of arbitrage trades in the last 24 hours  
-> current_price| string| Current market price (decimal string)  
-> current_profit| string| Current unrealized P&L for running bots (decimal string)  
-> current_per| string| Current P&L as decimal ratio (e.g. `"0.05"` = 5%)  
-> equity| string| Current equity in quote token (decimal string)  
-> entry_price| string| Entry trigger price if set (decimal string)  
-> stop_loss_price| string| Stop-loss price if set (decimal string)  
-> take_profit_price| string| Take-profit price if set (decimal string)  
-> close_reason| string| Reason for closure: `UNKNOWN`, `CLOSED_MANUALLY`, `CLOSED_FAILED_INITIATION`, `CLOSED_SYMBOL_DELISTED`, `CLOSED_STOP_LOSS`, `CLOSED_TAKE_PROFIT`, `CLOSED_USER_BAN`, `CLOSED_TRAILING_STOP`, `CLOSE_STANDARD_CLEARANCE`, `CLOSE_TAX_TAG_CHANGE`  
-> bot_close_code| string| Close code: `Unknown`, `Failed initiation`, `Canceled manually`, `Auto canceled (other)`, `Auto canceled (take-profit)`, `Auto canceled (stop-loss)`, `Trailing stop`  
-> ts_percent| string| Trailing stop callback as decimal ratio (e.g. `"0.05"` = 5%)  
-> is_support_ts| boolean| Whether the symbol supports trailing stop  
-> enable_trailing| boolean| Whether grid trailing is enabled  
-> limit_up_price| string| Upper limit price for grid trailing (decimal string)  
-> ori_max_price| string| Original max price before trailing shift  
-> ori_min_price| string| Original min price before trailing shift  
-> ori_cell_number| integer| Original grid count before trailing shift  
-> allow_follow| integer| Whether copy-trading is allowed: `1` yes, `0` no  
-> follow_num| integer| Number of copy-trade followers  
-> operation_time| integer| Milliseconds since bot creation  
-> create_time| integer| Creation timestamp (Unix milliseconds)  
-> end_time| integer| End timestamp (Unix milliseconds). `0` if still running  
-> used_reward_amount| string| Total voucher amount used in quote token (decimal string)  
-> settlement_assets| string| Settlement asset information on close  
-> account_type| string| Account type: `Unspecified`, `Derivatives account`, `Unified account`, `Account upgrading`, `Spot account`, `UTA account`, `Fund account`  
-> cum_withdrew_amount| string| Cumulative withdrawn profit in quote token (decimal string)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/grid/query-grid-detail HTTP/1.1  
+    POST /v5/grid/create-grid HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -97,7 +79,15 @@ detail| object| Grid bot detail object (see below)
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {"grid_id":1234567890}  
+    {  
+        "symbol": "MNTUSDT",  
+        "max_price": "1.0968",  
+        "min_price": "0.3656",  
+        "quote_investment": "200",  
+        "base_investment": "",  
+        "invest_mode": 0,  
+        "cell_number": 50  
+    }  
     
 
 ### Response Example
@@ -108,146 +98,83 @@ detail| object| Grid bot detail object (see below)
         "retMsg": "",  
         "result": {  
             "status_code": 200,  
-            "detail": {  
-                "grid_id": "612340768081708828",  
-                "symbol": "MNTUSDT",  
-                "base_token": "MNT",  
-                "quote_token": "USDT",  
-                "total_investment": "200",  
-                "total_profit": "40.4186",  
-                "max_price": "1.0968",  
-                "min_price": "0.3656",  
-                "cell_number": 50,  
-                "grid_profit": "61.3113",  
-                "grid_apr": "111.893143923675",  
-                "total_apr": "73.763945",  
-                "arbitrage_num": 291,  
-                "arbitrage_num_24": 0,  
-                "allow_follow": 1,  
-                "operation_time": "986587",  
-                "status": "RUNNING",  
-                "entry_price": "",  
-                "stop_loss_price": "",  
-                "take_profit_price": "",  
-                "current_price": "0.7279",  
-                "close_reason": "UNKNOWN_GridCloseReason",  
-                "bot_close_code": "BOT_CLOSE_CODE_UNKNOWN",  
-                "follow_num": 0,  
-                "create_time": "1774513139000",  
-                "end_time": "0",  
-                "used_reward_amount": "",  
-                "settlement_assets": "",  
-                "account_type": "BOT_ACCOUNT_TYPE_FUND",  
-                "cum_withdrew_amount": "0",  
-                "current_profit": "40.4186",  
-                "current_per": "0.202093",  
-                "spot_symbol_status": "ONLINE",  
-                "used_reward_id": "",  
-                "taker_fee_rate": "0.0006",  
-                "maker_fee_rate": "0.0004",  
-                "equity": "237.412782",  
-                "ts_exit_equity": "0",  
-                "ts_percent": "0",  
-                "is_support_ts": true,  
-                "enable_trailing": false,  
-                "limit_up_price": "",  
-                "ori_max_price": "",  
-                "ori_min_price": "",  
-                "ori_cell_number": 0  
-            },  
-            "debug_msg": ""  
+            "debug_msg": "",  
+            "grid_id": "612340768081708828",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774514125596  
+        "time": 1774513139729  
     }
 
 ---
 
-# 查詢網格機器人詳情
+# 創建網格機器人
 
-查詢指定現貨網格機器人的完整詳情，包括配置、狀態、利潤指標、套利次數、止盈止損設置及關閉原因。
+創建一個新的現貨網格交易機器人，指定交易對、價格範圍、網格數量及投資金額。
 
 信息
 
-  * **`grid_id`：**  
-從[創建現貨網格機器人](/docs/zh-TW/v5/bot/spot-grid/create)響應或網格列表查詢中獲取。
+  * **前置條件：**  
+在調用本端點前，請先調用[驗證現貨網格輸入](/docs/zh-TW/v5/bot/spot-grid/validate-input)，確保參數在有效範圍內。  
+用戶必須完成身份驗證及 KYC 合規審核。
 
-  * **APR 字段：**  
-`grid_apr` 和 `total_apr` 以小數比例返回（例如 `"0.15"` 表示 15% APR）。乘以 100 可轉換為百分比。
+  * **投資模式（`invest_mode`）：**  
+`0`：僅報價幣（默認）— 以報價幣種投資（例如 USDT）  
+`1`：僅基礎幣 — 以基礎幣種投資（例如 BTC）  
+`2`：基礎幣 + 報價幣 — 跨兩種幣種分配投資
 
-  * **`current_profit` / `current_per`：**  
-僅在機器人為 `RUNNING` 狀態時返回。
+  * **網格追蹤（`enable_trailing`）：**  
+啓用後，網格隨價格自動移動。要求 `cell_number >= 5`。
+
+  * **響應`grid_id`：**  
+成功時返回，用於後續[查詢詳情](/docs/zh-TW/v5/bot/spot-grid/get-detail)和[關閉](/docs/zh-TW/v5/bot/spot-grid/close)操作。
 
   * **頻率限制：**  
-每個 UID 每秒最多 10 次請求。
+每個 UID 每秒最多 3 次請求。
+
+  * **受合規管控及 KYC 驗證約束。**  
+若用戶被封禁（status_code=421），`ban_reason_text` 提供本地化說明。
 
 
 
 
 ### HTTP請求
 
-POST`/v5/grid/query-grid-detail`
+POST`/v5/grid/create-grid`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-grid_id| **true**|  string| 要查詢的網格機器人 ID  
+symbol| **true**|  string| 交易對名稱，僅大寫（例如 `BTCUSDT`）  
+max_price| **true**|  string| 網格價格範圍上限（小數字符串）  
+min_price| **true**|  string| 網格價格範圍下限（小數字符串）  
+cell_number| **true**|  integer| 網格間隔數量，最小為 2  
+invest_mode| false| integer| 投資模式。`0`：僅報價幣（默認），`1`：僅基礎幣，`2`：基礎幣+報價幣  
+base_investment| false| string| 基礎幣種投資金額（小數字符串）。`invest_mode` 為 `1` 或 `2` 時**必填**  
+quote_investment| false| string| 報價幣種投資金額（小數字符串）。`invest_mode` 為 `0` 或 `2` 時**必填**  
+entry_price| false| string| 入場觸發價格（小數字符串），市場價格到達此水平時機器人啓動  
+stop_loss_price| false| string| 止損觸發價格（小數字符串）  
+take_profit_price| false| string| 止盈觸發價格（小數字符串）  
+ts_percent| false| string| 移動止損回撥比例，範圍 `[0, 0.99]`（例如 `"0.05"` 表示 5%）  
+enable_trailing| false| boolean| 啓用網格追蹤（自動移動）。要求 `cell_number >= 5`。默認：`false`  
+limit_up_price| false| string| 網格追蹤上限價格（小數字符串），`enable_trailing`=`true` 時使用  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-status_code| integer| 業務狀態碼  
+status_code| integer| `200` = 成功，`421` = 用戶被封禁  
+grid_id| integer| 已創建的網格機器人 ID，用於後續查詢和關閉操作  
+ban_reason_text| string| 用戶語言的封禁原因，僅當 `status_code=421` 時返回  
 debug_msg| string| 調試信息（僅測試網）  
-detail| object| 網格機器人詳情對象（詳見下方）  
-> grid_id| integer| 網格機器人 ID  
-> symbol| string| 交易對名稱（例如 `BTCUSDT`）  
-> base_token| string| 基礎幣種（例如 `BTC`）  
-> quote_token| string| 報價幣種（例如 `USDT`）  
-> status| string| 機器人生命週期狀態：`RAW`、`REJECTED`、`NEW`、`INITIALIZING`、`RUNNING`、`CANCELLING`、`COMPLETED`  
-> max_price| string| 網格價格上限（小數字符串）  
-> min_price| string| 網格價格下限（小數字符串）  
-> cell_number| integer| 活躍網格間隔數量  
-> total_investment| string| 報價幣種總投資金額（小數字符串）  
-> total_profit| string| 報價幣種總利潤（小數字符串）  
-> grid_profit| string| 網格套利利潤，以報價幣種計（小數字符串）  
-> grid_apr| string| 網格 APR，小數比例（例如 `"0.15"` = 15%）  
-> total_apr| string| 總 APR，小數比例（例如 `"0.2"` = 20%）  
-> arbitrage_num| integer| 已完成套利交易總次數  
-> arbitrage_num_24| integer| 過去 24 小時套利交易次數  
-> current_price| string| 當前市場價格（小數字符串）  
-> current_profit| string| 運行中機器人的當前未實現盈虧（小數字符串）  
-> current_per| string| 當前盈虧小數比例（例如 `"0.05"` = 5%）  
-> equity| string| 報價幣種當前淨值（小數字符串）  
-> entry_price| string| 設置的入場觸發價格（小數字符串）  
-> stop_loss_price| string| 設置的止損價格（小數字符串）  
-> take_profit_price| string| 設置的止盈價格（小數字符串）  
-> close_reason| string| 關閉原因：`UNKNOWN`、`CLOSED_MANUALLY`、`CLOSED_FAILED_INITIATION`、`CLOSED_SYMBOL_DELISTED`、`CLOSED_STOP_LOSS`、`CLOSED_TAKE_PROFIT`、`CLOSED_USER_BAN`、`CLOSED_TRAILING_STOP`、`CLOSE_STANDARD_CLEARANCE`、`CLOSE_TAX_TAG_CHANGE`  
-> bot_close_code| string| 關閉代碼：`Unknown`、`Failed initiation`、`Canceled manually`、`Auto canceled (other)`、`Auto canceled (take-profit)`、`Auto canceled (stop-loss)`、`Trailing stop`  
-> ts_percent| string| 移動止損回撥小數比例（例如 `"0.05"` = 5%）  
-> is_support_ts| boolean| 該交易對是否支持移動止損  
-> enable_trailing| boolean| 是否啓用網格追蹤  
-> limit_up_price| string| 網格追蹤上限價格（小數字符串）  
-> ori_max_price| string| 追蹤移動前的原始最高價格  
-> ori_min_price| string| 追蹤移動前的原始最低價格  
-> ori_cell_number| integer| 追蹤移動前的原始網格數量  
-> allow_follow| integer| 是否允許跟單：`1` 是，`0` 否  
-> follow_num| integer| 跟單跟隨者數量  
-> operation_time| integer| 自機器人創建以來的毫秒數  
-> create_time| integer| 創建時間戳（Unix 毫秒）  
-> end_time| integer| 結束時間戳（Unix 毫秒），運行中返回 `0`  
-> used_reward_amount| string| 已使用的憑證金額，以報價幣種計（小數字符串）  
-> settlement_assets| string| 關閉時的資產結算信息  
-> account_type| string| 帳戶類型：`Unspecified`、`Derivatives account`、`Unified account`、`Account upgrading`、`Spot account`、`UTA account`、`Fund account`  
-> cum_withdrew_amount| string| 累計提取利潤，以報價幣種計（小數字符串）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/grid/query-grid-detail HTTP/1.1  
+    POST /v5/grid/create-grid HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -255,7 +182,15 @@ detail| object| 網格機器人詳情對象（詳見下方）
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {"grid_id":1234567890}  
+    {  
+        "symbol": "MNTUSDT",  
+        "max_price": "1.0968",  
+        "min_price": "0.3656",  
+        "quote_investment": "200",  
+        "base_investment": "",  
+        "invest_mode": 0,  
+        "cell_number": 50  
+    }  
     
 
 ### 響應示例
@@ -266,55 +201,10 @@ detail| object| 網格機器人詳情對象（詳見下方）
         "retMsg": "",  
         "result": {  
             "status_code": 200,  
-            "detail": {  
-                "grid_id": "612340768081708828",  
-                "symbol": "MNTUSDT",  
-                "base_token": "MNT",  
-                "quote_token": "USDT",  
-                "total_investment": "200",  
-                "total_profit": "40.4186",  
-                "max_price": "1.0968",  
-                "min_price": "0.3656",  
-                "cell_number": 50,  
-                "grid_profit": "61.3113",  
-                "grid_apr": "111.893143923675",  
-                "total_apr": "73.763945",  
-                "arbitrage_num": 291,  
-                "arbitrage_num_24": 0,  
-                "allow_follow": 1,  
-                "operation_time": "986587",  
-                "status": "RUNNING",  
-                "entry_price": "",  
-                "stop_loss_price": "",  
-                "take_profit_price": "",  
-                "current_price": "0.7279",  
-                "close_reason": "UNKNOWN_GridCloseReason",  
-                "bot_close_code": "BOT_CLOSE_CODE_UNKNOWN",  
-                "follow_num": 0,  
-                "create_time": "1774513139000",  
-                "end_time": "0",  
-                "used_reward_amount": "",  
-                "settlement_assets": "",  
-                "account_type": "BOT_ACCOUNT_TYPE_FUND",  
-                "cum_withdrew_amount": "0",  
-                "current_profit": "40.4186",  
-                "current_per": "0.202093",  
-                "spot_symbol_status": "ONLINE",  
-                "used_reward_id": "",  
-                "taker_fee_rate": "0.0006",  
-                "maker_fee_rate": "0.0004",  
-                "equity": "237.412782",  
-                "ts_exit_equity": "0",  
-                "ts_percent": "0",  
-                "is_support_ts": true,  
-                "enable_trailing": false,  
-                "limit_up_price": "",  
-                "ori_max_price": "",  
-                "ori_min_price": "",  
-                "ori_cell_number": 0  
-            },  
-            "debug_msg": ""  
+            "debug_msg": "",  
+            "grid_id": "612340768081708828",  
+            "ban_reason_text": ""  
         },  
         "retExtInfo": {},  
-        "time": 1774514125596  
+        "time": 1774513139729  
     }

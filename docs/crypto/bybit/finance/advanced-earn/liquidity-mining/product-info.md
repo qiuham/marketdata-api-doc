@@ -2,59 +2,65 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/liquidity-mining/product-info
 api_type: REST
-updated_at: 2026-11-13 18:27:33.147926
+updated_at: 2026-11-13 19:22:56.193528
 ---
 
-# Reinvest
+# Get Product Info
 
 info
 
-  * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
-  * Reinvests the claimable yield of the specified position back into the pool.
-  * Orders are processed asynchronously. A successful response means the order was accepted. Use [Get Order Info](/docs/v5/finance/advanced-earn/liquidity-mining/order) to track order status.
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-  * Only one pending order is allowed per position at a time.
-
-
+No authentication required. **Up to 50 requests** per second per IP.
 
 ### HTTP Request
 
-POST`/v5/earn/liquidity-mining/reinvest`
+GET`/v5/earn/liquidity-mining/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  string| Product ID  
-orderLinkId| **true**|  string| User-customised order ID (max 40 characters)  
-positionId| **true**|  string| Position ID to reinvest. Obtain from [Get Position Info](/docs/v5/finance/advanced-earn/liquidity-mining/position)  
-leverage| false| string| Leverage multiplier (integer only); defaults to `"1"` (no leverage)  
+baseCoin| false| string| Filter by base coin, e.g. `BTC`, `ETH`  
+quoteCoin| false| string| Filter by quote coin, e.g. `USDT`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User-customised order ID  
+products| array| Product list  
+> productId| string| Product ID  
+> baseCoin| string| Base coin, e.g. `BTC`  
+> quoteCoin| string| Quote coin, e.g. `USDT`  
+> status| string| Product status: `Available`, `NotAvailable`  
+> maxLeverage| integer| Maximum leverage multiplier  
+> minInvestmentQuote| string| Minimum investment amount in quoteCoin  
+> minInvestmentBase| string| Minimum investment amount in baseCoin  
+> maxInvestmentQuote| string| Maximum investment amount in quoteCoin  
+> maxInvestmentBase| string| Maximum investment amount in baseCoin  
+> minWithdrawalAmount| string| Minimum withdrawal amount (in quoteCoin)  
+> minReinvestAmount| string| Minimum reinvestment amount (in quoteCoin)  
+> baseCoinPrecision| integer| Decimal precision for baseCoin amounts  
+> quoteCoinPrecision| integer| Decimal precision for quoteCoin amounts  
+> yieldCoins| array| List of yield coins, e.g. `["BTC", "USDT"]`  
+> apyE8| integer| Current APY in e8 precision. Divide by 10^8 to get the actual rate  
+> apy7dE8| integer| 7-day APY in e8 precision. Divide by 10^8 to get the actual rate  
+> poolLiquidityValue| string| Total pool liquidity value (quoted in quoteCoin)  
+> dailyYield| string| Daily yield  
+> slippageLevels| array| Investment amount thresholds for each slippage tier  
+> slippageRateE8List| array| Slippage rates for each tier in e8 precision  
+> apyBreakdown| array| APY breakdown by coin  
+>> coin| string| Coin name  
+>> apy| string| APY for this coin  
+> apy7dBreakdown| array| 7-day APY breakdown by coin  
+>> coin| string| Coin name  
+>> apy| string| 7-day APY for this coin  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/liquidity-mining/reinvest HTTP/1.1  
+    GET /v5/earn/liquidity-mining/product?baseCoin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "productId": "5",  
-        "orderLinkId": "lm-reinvest-01",  
-        "positionId": "1498"  
-    }  
     
 
 ### Response Example
@@ -64,65 +70,107 @@ orderLinkId| string| User-customised order ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",  
-            "orderLinkId": "lm-reinvest-01"  
+            "products": [  
+                {  
+                    "productId": "5",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "status": "Available",  
+                    "maxLeverage": 3,  
+                    "minInvestmentQuote": "1",  
+                    "minInvestmentBase": "0.01",  
+                    "maxInvestmentQuote": "150000",  
+                    "maxInvestmentBase": "50",  
+                    "minWithdrawalAmount": "20",  
+                    "baseCoinPrecision": 8,  
+                    "quoteCoinPrecision": 4,  
+                    "minReinvestAmount": "10",  
+                    "yieldCoins": [  
+                        "USDT"  
+                    ],  
+                    "apyE8": "13714946",  
+                    "apy7dE8": "338344880",  
+                    "poolLiquidityValue": "1361221.17",  
+                    "dailyYield": "1028.3745",  
+                    "slippageLevels": [  
+                        "0",  
+                        "500",  
+                        "100000",  
+                        "500000"  
+                    ],  
+                    "apyBreakdown": [],  
+                    "apy7dBreakdown": [],  
+                    "slippageRateE8List": [  
+                        "0",  
+                        "100000",  
+                        "300000",  
+                        "500000"  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1775121766407  
     }
 
 ---
 
-# 複利再投
+# 查詢產品資訊
 
 信息
 
-  * 需要身份驗證。每個 UID 每秒**最多 5 次請求** 。API 金鑰需要具備 Earn（理財）權限。
-  * 將指定持倉的可領取收益再投入流動性池。
-  * 訂單為非同步處理。成功響應表示訂單已被接受。請使用[查詢訂單資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/order)追蹤訂單狀態。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-  * 每個持倉同一時間只允許存在一筆待處理訂單。
-
-
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
 ### HTTP 請求
 
-POST`/v5/earn/liquidity-mining/reinvest`
+GET`/v5/earn/liquidity-mining/product`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  string| 產品 ID  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID（最多 40 個字元）  
-positionId| **true**|  string| 要執行再投資的持倉 ID。可從[查詢持倉資訊](/docs/zh-TW/v5/finance/advanced-earn/liquidity-mining/position)獲取  
-leverage| false| string| 槓桿倍數（僅限整數）；默認為 `"1"`（不使用槓桿）  
+baseCoin| false| string| 按基礎幣種篩選，僅限大寫，例如：`BTC`, `ETH`  
+quoteCoin| false| string| 按計價幣種篩選，僅限大寫，例如：`USDT`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單 ID  
-orderLinkId| string| 用戶自定義訂單 ID  
+products| array| 產品列表  
+> productId| string| 產品 ID  
+> baseCoin| string| 基礎幣種，例如：`BTC`  
+> quoteCoin| string| 計價幣種，例如：`USDT`  
+> status| string| 產品狀態：`Available`（可用），`NotAvailable`（不可用）  
+> maxLeverage| integer| 最大槓桿倍數  
+> minInvestmentQuote| string| 計價幣種最小投資金額  
+> minInvestmentBase| string| 基礎幣種最小投資金額  
+> maxInvestmentQuote| string| 計價幣種最大投資金額  
+> maxInvestmentBase| string| 基礎幣種最大投資金額  
+> minWithdrawalAmount| string| 最小提取金額（以計價幣種計）  
+> minReinvestAmount| string| 最小再投資金額（以計價幣種計）  
+> baseCoinPrecision| integer| 基礎幣種金額小數精度  
+> quoteCoinPrecision| integer| 計價幣種金額小數精度  
+> yieldCoins| array| 收益幣種列表，例如：`["BTC", "USDT"]`  
+> apyE8| integer| 當前年化收益率（e8 精度）。除以 10^8 可得實際利率  
+> apy7dE8| integer| 7 日年化收益率（e8 精度）。除以 10^8 可得實際利率  
+> poolLiquidityValue| string| 流動性池總價值（以計價幣種計）  
+> dailyYield| string| 每日收益  
+> slippageLevels| array| 各滑點檔位對應的投資金額閾值  
+> slippageRateE8List| array| 各檔位滑點率（e8 精度）  
+> apyBreakdown| array| 按幣種拆分的年化收益率  
+>> coin| string| 幣種名稱  
+>> apy| string| 該幣種的年化收益率  
+> apy7dBreakdown| array| 按幣種拆分的 7 日年化收益率  
+>> coin| string| 幣種名稱  
+>> apy| string| 該幣種的 7 日年化收益率  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/liquidity-mining/reinvest HTTP/1.1  
+    GET /v5/earn/liquidity-mining/product?baseCoin=BTC HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "productId": "5",  
-        "orderLinkId": "lm-reinvest-01",  
-        "positionId": "1498"  
-    }  
     
 
 ### 響應示例
@@ -132,9 +180,45 @@ orderLinkId| string| 用戶自定義訂單 ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "c3d4e5f6-a7b8-9012-cdef-123456789012",  
-            "orderLinkId": "lm-reinvest-01"  
+            "products": [  
+                {  
+                    "productId": "5",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "status": "Available",  
+                    "maxLeverage": 3,  
+                    "minInvestmentQuote": "1",  
+                    "minInvestmentBase": "0.01",  
+                    "maxInvestmentQuote": "150000",  
+                    "maxInvestmentBase": "50",  
+                    "minWithdrawalAmount": "20",  
+                    "baseCoinPrecision": 8,  
+                    "quoteCoinPrecision": 4,  
+                    "minReinvestAmount": "10",  
+                    "yieldCoins": [  
+                        "USDT"  
+                    ],  
+                    "apyE8": "13714946",  
+                    "apy7dE8": "338344880",  
+                    "poolLiquidityValue": "1361221.17",  
+                    "dailyYield": "1028.3745",  
+                    "slippageLevels": [  
+                        "0",  
+                        "500",  
+                        "100000",  
+                        "500000"  
+                    ],  
+                    "apyBreakdown": [],  
+                    "apy7dBreakdown": [],  
+                    "slippageRateE8List": [  
+                        "0",  
+                        "100000",  
+                        "300000",  
+                        "500000"  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1775121766407  
     }

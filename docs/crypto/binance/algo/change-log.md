@@ -1,108 +1,172 @@
 ---
 exchange: binance
-source_url: https://developers.binance.com/docs/algo/change-log
+source_url: https://developers.binance.com/en/docs/products/algo/change-log
 api_type: REST
-updated_at: 2026-07-01 19:09:59.771394
+updated_at: 2026-11-13 20:28:43.484382
 ---
 
-# Volume Participation(VP) New Order (TRADE)
+# Change Log
 
-## API Description[​](/docs/algo/future-algo#api-description "Direct link to API Description")
+## 2026-10-09
 
-Send in a VP new order. Only support on USDⓈ-M Contracts.
-
-## HTTP Request[​](/docs/algo/future-algo#http-request "Direct link to HTTP Request")
-
-POST `/sapi/v1/algo/futures/newOrderVp `
-
-## Request Weight(UID)[​](/docs/algo/future-algo#request-weightuid "Direct link to Request Weight\(UID\)")
-
-**300**
-
-## Request Parameters[​](/docs/algo/future-algo#request-parameters "Direct link to Request Parameters")
-
-Name| Type| Mandatory| Description  
----|---|---|---  
-symbol| STRING| YES| Trading symbol eg. BTCUSDT  
-side| ENUM| YES| Trading side ( BUY or SELL )  
-positionSide| ENUM| NO| Default `BOTH` for One-way Mode ; `LONG` or `SHORT` for Hedge Mode. It must be sent in Hedge Mode.  
-quantity| DECIMAL| YES| Quantity of base asset; The notional (`quantity` * `mark price(base asset)`) must be more than the equivalent of 10,000 USDT and less than the equivalent of 1,000,000 USDT  
-urgency| ENUM| YES| Represent the relative speed of the current execution; ENUM: LOW, MEDIUM, HIGH  
-clientAlgoId| STRING| NO| A unique id among Algo orders (length should be 32 characters), If it is not sent, we will give default value  
-reduceOnly| BOOLEAN| NO| "true" or "false". Default "false"; Cannot be sent in Hedge Mode; Cannot be sent when you open a position  
-limitPrice| DECIMAL| NO| Limit price of the order; If it is not sent, will place order by market price by default  
-recvWindow| LONG| NO|   
-timestamp| LONG| YES|   
-  
->   * Total Algo open orders max allowed: `10` orders.
->   * Leverage of symbols and position mode will be the same as your futures account settings. You can set up through the trading page or fapi.
->   * Receiving `"success": true` does not mean that your order will be executed. Please use the query order endpoints (`GET sapi/v1/algo/futures/openOrders` or `GET sapi/v1/algo/futures/historicalOrders`) to check the order status. For example: Your futures balance is insufficient, or open position with reduce only or position side is inconsistent with your own setting. In these cases you will receive `"success": true`, but the order status will be `expired` after we check it.
->   * You need to enable the corresponding permission for the API key requesting this endpoint: 
->     * `Futures Trading Permission` — for Classic Trading Account mode
->     * `Portfolio Margin Trading Permission` — for Portfolio Margin Account mode
->   * Base URL: <https://api.binance.com>
-> 
+  * New endpoint for Spot Algo:
+    * `POST /sapi/v1/algo/spot/newOrderVp` to support placing a new Volume Participation (VP) order
 
 
-## Response Example[​](/docs/algo/future-algo#response-example "Direct link to Response Example")
-    
-    
-    {  
-        "clientAlgoId": "00358ce6a268403398bd34eaa36dffe7",  
-        "success": true,  
-        "code": 0,  
-        "msg": "OK"  
-    }
+
+* * *
+
+## 2026-08-25
+
+### REST API
+
+  * Added `clientAlgoId` as an optional parameter to cancel an algo order by client-defined ID. Either `algoId` or `clientAlgoId` must now be sent:
+    * `DELETE /sapi/v1/algo/futures/order`
+    * `DELETE /sapi/v1/algo/spot/order`
+
+
+
+* * *
+
+## 2025-12-26
+
+### Time-sensitive Notice
+
+  * **The following change to REST API will occur at approximately 2026-01-15 07:00 UTC:** When calling endpoints that require signatures, percent-encode payloads before computing signatures. Requests that do not follow this order will be rejected with [`-1022 INVALID_SIGNATURE`](/en/docs/products/algo/error-code#-1022-invalid_signature). Please review and update your signing logic accordingly.
+
+
+
+### REST API
+
+  * Updated documentation for REST API regarding [Signed Endpoints examples for placing an order](/en/docs/products/algo/general-info#signed-endpoint-examples-for-post-apiv3order).
+
+
+
+* * *
+
+## 2023-04-18
+
+  * New endpoints for Spot Algo：
+    * `POST /sapi/v1/algo/spot/newOrderTwap` to support new order
+    * `DELETE /sapi/v1/algo/spot/order` to support cancel Algo order
+    * `GET /sapi/v1/algo/spot/openOrders` to support query Algo open orders
+    * `GET /sapi/v1/algo/spot/historicalOrders` to support query Algo historical orders
+    * `GET /sapi/v1/algo/spot/subOrders` to support query Algo sub orders for a specified algoId
+
+
+
+* * *
+
+## 2022-04-27
+
+  * New endpoint for Futures Algo：
+    * `POST /sapi/v1/algo/futures/newOrderTwap` to support Twap new order
+
+
+
+FAQ: [Time-Weighted Average Price(Twap) Introduction](https://www.binance.com/en/support/faq/093927599fd54fd48857237f6ebec0b0)
+
+* * *
+
+## 2022-04-13
+
+  * New endpoints for Futures Algo：
+    * `POST /sapi/v1/algo/futures/newOrderVp` to support VP new order
+    * `DELETE /sapi/v1/algo/futures/order` to support cancel Algo order
+    * `GET /sapi/v1/algo/futures/openOrders` to support query Algo open orders
+    * `GET /sapi/v1/algo/futures/historicalOrders` to support query Algo historical orders
+    * `GET /sapi/v1/algo/futures/subOrders` to support query Algo sub orders for a specified algoId
+
+
+
+FAQ: [Volume Participation(VP) Introduction](https://www.binance.com/en/support/faq/b0b94dcc8eb64c2585763b8747b60702)
+
+Was this page helpful?
+
+Last modified on November 12, 2026
+
+[Introduction](/en/docs/products/algo/Introduction)[General Info](/en/docs/products/algo/general-info)
 
 ---
 
-# 成交量份额参与算法(VP)下单(TRADE)
+# 更新日志
 
-## 接口描述[​](/docs/zh-CN/algo/future-algo#接口描述 "接口描述的直接链接")
+## 2026-10-09
 
-发送VP下单 仅支持U本位合约
-
-## HTTP请求[​](/docs/zh-CN/algo/future-algo#http请求 "HTTP请求的直接链接")
-
-POST `/sapi/v1/algo/futures/newOrderVp`
-
-## 请求权重(UID)[​](/docs/zh-CN/algo/future-algo#请求权重uid "请求权重\(UID\)的直接链接")
-
-**3000**
-
-## 请求参数[​](/docs/zh-CN/algo/future-algo#请求参数 "请求参数的直接链接")
-
-名称| 类型| 是否必需| 描述  
----|---|---|---  
-symbol| STRING| YES| 交易对 eg. BTCUSDT  
-side| ENUM| YES| 买卖方向 ( BUY or SELL )  
-positionSide| ENUM| NO| 持仓方向，单向持仓模式下非必填，默认且仅可填BOTH;在双向持仓模式下必填,且仅可选择 LONG 或 SHORT  
-quantity| DECIMAL| YES| 下单数量， 以合约币种（base asset）个数下单; 名义价值 (`quantity` * `标记价格(base asset)`) 需要大于 10,000 USDT，且不超过 1,000,000 USDT  
-urgency| ENUM| YES| 代表当前执行的相对速率; ENUM: LOW（慢）, MEDIUM（中等）, HIGH（快）  
-clientAlgoId| STRING| NO| 必须传入32位，如果未发送，则自动生成  
-reduceOnly| BOOLEAN| NO| true, false; 非双开模式下默认false；双开模式下不接受此参数； 开仓不接受此参数  
-limitPrice| DECIMAL| NO| 限价单价格; 若未发送，则以市场价下单  
-recvWindow| LONG| NO|   
-timestamp| LONG| YES|   
-  
-其他信息:
-
->   * 最大所有策略订单挂单数量： 10。
->   * 杠杆倍数和持仓模式与您的合约账户设置相同，您可以通过合约交易页面设置或者通过fapi设置。
->   * 收到 `"success": true` 不代表您的订单一定会被执行。请通过查询订单接口（`GET sapi/v1/algo/futures/openOrders` 或者 `GET sapi/v1/algo/futures/historicalOrders`）以获取订单状态。 例如: 如果您的合约账户余额不足，或者开仓使用了`reduce only`参数，或者您下单选择的持仓模式与您设置的不符，这些情况您都会收到响应 `"success": true`，但订单状态会显示为 `expired`，代表订单过期。
->   * 您的 API Key 需要开通相应的权限: 
->     * `允许合约交易` 权限 — 适用于经典交易账户模式
->     * `允许组合保证金交易` 权限 — 适用于组合保证金账户模式
->   * 请使用Base URL: <https://api.binance.com>
-> 
+  * 现货策略新增接口：
+    * `POST /sapi/v1/algo/spot/newOrderVp` 支持发送成交量份额参与（VP）下单
 
 
-## 响应示例[​](/docs/zh-CN/algo/future-algo#响应示例 "响应示例的直接链接")
-    
-    
-    {  
-        "clientAlgoId": "00358ce6a268403398bd34eaa36dffe7", //用户自定义策略订单ID  
-        "success": true,  
-        "code": 0,  
-        "msg": "OK"  
-    }
+
+* * *
+
+## 2026-08-25
+
+### REST API
+
+  * 新增可选参数 `clientAlgoId`，支持通过用户自定义策略订单 ID 取消订单。现在必须发送 `algoId` 或 `clientAlgoId` 其中一个：
+    * `DELETE /sapi/v1/algo/futures/order`
+    * `DELETE /sapi/v1/algo/spot/order`
+
+
+
+* * *
+
+## 2025-12-26
+
+### 时效性通知
+
+  * **以下有关于REST API变更将在 2026-01-15 07:00 UTC 发生:** 调用需要签名的接口时，请在计算签名之前对 payload 进行百分比编码（percent-encode）。不符合此顺序的请求将被拒绝，并返回错误代码 [`-1022 签名不正确`](/zh-CN/docs/products/algo/error-code#-1022-invalid_signature)。请检查并相应地更新您代码中的签名逻辑部分。
+
+
+
+### REST API
+
+  * 更新了 REST API 文档中有关于 [签名请求示例](/zh-CN/docs/products/algo/general-info#post-apiv3order-%E7%9A%84%E7%AD%BE%E5%90%8D%E7%A4%BA%E4%BE%8B) 的部分。
+
+
+
+* * *
+
+## 2023-04-18
+
+  * 新增现货策略交易接口：
+    * `POST /sapi/v1/algo/spot/newOrderTwap` 以支持现货策略下单
+    * `DELETE /sapi/v1/algo/spot/order` 以支持现货策略委托撤单
+    * `GET /sapi/v1/algo/spot/openOrders` 以支持查询现货策略当前委托
+    * `GET /sapi/v1/algo/spot/historicalOrders` 以支持查询现货策略历史订单
+    * `GET /sapi/v1/algo/spot/subOrders` 以支持查询现货策略子订单
+
+
+
+* * *
+
+## 2022-04-27
+
+  * 新增合约策略交易接口：
+    * `POST /sapi/v1/algo/futures/newOrderTwap` 以支持合约 Twap 策略下单
+
+
+
+FAQ: [时间加权平均价格策略(Twap) 介绍](https://www.binance.com/cn/support/faq/093927599fd54fd48857237f6ebec0b0)
+
+* * *
+
+## 2022-04-13
+
+  * 新增合约策略交易接口：
+    * `POST /sapi/v1/algo/futures/newOrderVp` 以支持合约 vp 策略下单
+    * `DELETE /sapi/v1/algo/futures/order` 以支持合约策略委托撤单
+    * `GET /sapi/v1/algo/futures/openOrders` 以支持查询合约策略当前委托
+    * `GET /sapi/v1/algo/futures/historicalOrders` 以支持查询合约策略历史订单
+    * `GET /sapi/v1/algo/futures/subOrders` 以支持查询合约策略子订单
+
+
+
+FAQ: [成交量份额参与算法(VP) 介绍](https://www.binance.com/cn/support/faq/b0b94dcc8eb64c2585763b8747b60702)
+
+此页面是否有帮助？
+
+Last modified on November 12, 2026
+
+[概述](/zh-CN/docs/products/algo/Introduction)[基本信息](/zh-CN/docs/products/algo/general-info)

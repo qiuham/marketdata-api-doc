@@ -2,39 +2,55 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/mark-kline
 api_type: Market Data
-updated_at: 2026-11-13 18:27:59.511072
+updated_at: 2026-11-13 19:23:55.847953
 ---
 
-# Get Order Price Limit
+# Get Mark Price Kline
 
-For derivative trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-For spot trading order price limit, refer to [announcement](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
+Query for historical [mark price](https://www.bybit.com/en-US/help-center/s/article/Glossary-Bybit-Trading-Terms) klines. Charts are returned in groups based on the requested interval.
 
+> **Covers: USDT contract / USDC contract / Inverse contract / Options**
 
 ### HTTP Request
 
-GET`/v5/market/price-limit`
+GET`/v5/market/mark-price-kline`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| false| string| Product type. `spot`,`linear`,`inverse`
+[category](/docs/v5/enum#category)| false| string| Product type. `linear`,`inverse`, `option`
 
   * When `category` is not passed, use `linear` by default
 
   
-[symbol](/docs/v5/enum#symbol)| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+[interval](/docs/v5/enum#interval)| **true**|  string| Kline interval. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| The start timestamp (ms)  
+end| false| integer| The end timestamp (ms)  
+limit| false| integer| Limit for data size per page. futures: [`1`, `1000`], option: [`1`, `500`]. Default: `200`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+category| string| Product type  
 symbol| string| Symbol name  
-buyLmt| string| Highest Bid Price  
-sellLmt| string| Lowest Ask Price  
-ts| string| timestamp in milliseconds  
+list| array| 
+
+  * An string array of individual candle
+  * Sort in reverse by `startTime`
+
   
+> list[0]: startTime| string| Start time of the candle (ms)  
+> list[1]: openPrice| string| Open price  
+> list[2]: highPrice| string| Highest price  
+> list[3]: lowPrice| string| Lowest price  
+> list[4]: closePrice| string| Close price. _Is the last traded price when the candle is not closed_  
+[](/docs/api-explorer/v5/market/mark-kline)
+
+* * *
+
 ### Request Example
 
   * HTTP
@@ -46,31 +62,66 @@ ts| string| timestamp in milliseconds
 
     
     
-    GET /v5/market/price-limit?category=linear&symbol=BTCUSDT HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
+    session = HTTP(testnet=True)  
+    print(session.get_mark_price_kline(  
         category="linear",  
         symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
     
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
+    client  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -78,49 +129,72 @@ ts| string| timestamp in milliseconds
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
             "symbol": "BTCUSDT",  
-            "buyLmt": "105878.10",  
-            "sellLmt": "103781.60",  
-            "ts": "1750302284491"  
+            "category": "linear",  
+            "list": [  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1750302285376  
+        "time": 1672026361839  
     }
 
 ---
 
-# 查詢訂單價格限制
+# 查詢標記價格K線數據
 
-衍生性商品交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/update-contract-price-limit-enhancement-bltf9ebdcebe3089641/)  
-現貨交易訂單價格限制，請參考[公告](https://announcements.bybit.com/en/article/title-adjustments-to-bybit-s-spot-trading-limit-order-mechanism-blt786c0c5abf865983/)  
+查詢標記價格K線
 
+> **覆蓋範圍: USDT永續 / USDT交割 / USDC永續 / USDC交割 / 反向合約 / 期權**
 
 ### HTTP請求
 
-GET`/v5/market/price-limit`
+GET`/v5/market/mark-price-kline`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `spot`,`linear`,`inverse`
+[category](/docs/zh-TW/v5/enum#category)| false| string| 產品類型. `linear`,`inverse`,`option`
 
   * 當`category`不指定時, 默認是`linear`
 
   
-[symbol](/docs/zh-TW/v5/enum#symbol)| **true**|  string| 合約名稱  
+symbol| **true**|  string| 合約名稱  
+[interval](/docs/zh-TW/v5/enum#interval)| **true**|  string| 時間粒度. `1`,`3`,`5`,`15`,`30`,`60`,`120`,`240`,`360`,`720`,`D`,`M`,`W`  
+start| false| integer| 開始時間戳 (毫秒)  
+end| false| integer| 結束時間戳 (毫秒)  
+limit| false| integer| 每頁數量限制. 合約: [`1`, `1000`], 期權: [`1`, `500`]. 默認: `200`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+category| string| 產品類型  
 symbol| string| 合約名稱  
-buyLmt| string| 最高買價  
-sellLmt| string| 最低賣價  
-ts| string| 時間戳（以毫秒為單位）  
+list| array| 
+
+  * 一個字符串數組構成單個蠟燭
+  * 按照`startTime`降序排列
+
   
+> list[0]: startTime| string| 蠟燭的開始時間戳 (毫秒)  
+> list[1]: openPrice| string| 開始價格  
+> list[2]: highPrice| string| 最高價格  
+> list[3]: lowPrice| string| 最低價格  
+> list[4]: closePrice| string| 結束價格. _如果蠟燭尚未結束，則表示為最新成交價格_  
+[](/docs/zh-TW/api-explorer/v5/market/mark-kline)
+
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -132,31 +206,66 @@ ts| string| 時間戳（以毫秒為單位）
 
     
     
-    GET /v5/market/price-limit?category=linear&symbol=BTCUSDT HTTP/1.1  
+    GET /v5/market/mark-price-kline?category=linear&symbol=BTCUSDT&interval=15&start=1670601600000&end=1670608800000&limit=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-    )  
-    print(session.get_price_limit(  
+    session = HTTP(testnet=True)  
+    print(session.get_mark_price_kline(  
         category="linear",  
         symbol="BTCUSDT",  
+        interval=15,  
+        start=1670601600000,  
+        end=1670608800000,  
+        limit=1,  
     ))  
     
     
     
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
+    params := map[string]interface{}{"category": "spot", "symbol": "BTCUSDT", "interval": "1"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarkPriceKline(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.domain.CategoryType;  
+    import com.bybit.api.client.domain.market.*;  
+    import com.bybit.api.client.domain.market.request.MarketDataRequest;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
+    var marketKLineRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").marketInterval(MarketInterval.WEEKLY).build();  
+    client.getMarketPriceLinesData(marketKLineRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    
-    
-    
+    const client = new RestClientV5({  
+        testnet: true,  
+    });  
       
-    
-    
-    
-      
+    client  
+        .getMarkPriceKline({  
+            category: 'linear',  
+            symbol: 'BTCUSD',  
+            interval: '15',  
+            start: 1670601600000,  
+            end: 1670608800000,  
+            limit: 1,  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -164,13 +273,20 @@ ts| string| 時間戳（以毫秒為單位）
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
             "symbol": "BTCUSDT",  
-            "buyLmt": "105878.10",  
-            "sellLmt": "103781.60",  
-            "ts": "1750302284491"  
+            "category": "linear",  
+            "list": [  
+                [  
+                "1670608800000",  
+                "17164.16",  
+                "17164.16",  
+                "17121.5",  
+                "17131.64"  
+                ]  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1750302285376  
+        "time": 1672026361839  
     }

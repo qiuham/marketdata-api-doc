@@ -2,63 +2,62 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/exchange
 api_type: REST
-updated_at: 2026-11-13 18:27:00.993375
+updated_at: 2026-11-13 19:21:40.705593
 ---
 
-# Confirm a Quote
+# Get Coin Exchange Records
+
+Query the coin exchange records.
 
 info
 
-  1. The exchange is async; please check the final status by calling the convert history API.
-  2. Make sure you confirm the quote before it expires.
-
-
+It sometimes has 5 secs delay
 
 ### HTTP Request
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/asset/exchange/order-record`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-quoteTxId| **true**|  string| The quote tx ID from [Request a Quote](/docs/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| The user's sub userId in bybit  
-webhookUrl| false| string| API URL to call when order is successful or failed (max 256 characters)  
-MerchantRequestId| false| string| Customised request ID(maximum length of 36)
-
-  * Generally it is useless, but it is convenient to track the quote request internally if you fill this field
-
-  
+fromCoin| false| string| The currency to convert from, uppercase only. e.g,`BTC`  
+toCoin| false| string| The currency to convert to, uppercase only. e.g,`USDT`  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `10`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tradeNo| string| Trade order No  
-merchantRequestId| string| Customised request ID  
-  
+nextPageCursor| string| Refer to the `cursor` request parameter  
+orderBody| array| Object  
+> fromCoin| string| The currency to convert from  
+> fromAmount| string| The amount to convert from  
+> toCoin| string| The currency to convert to  
+> toAmount| string| The amount to convert to  
+> exchangeRate| string| Exchange rate  
+> createdTime| string| Exchange created timestamp (sec)  
+> exchangeTxId| string| Exchange transaction ID  
+[](/docs/api-explorer/v5/asset/exchange)
+
+* * *
+
 ### Request Example
 
   * HTTP
   * Python
+  * Node.js
 
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1  
+    GET /v5/asset/exchange/order-record?limit=10 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720071899789  
+    X-BAPI-TIMESTAMP: 1672990462492  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-    Content-Length: 52  
-      
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
     
     
     
@@ -68,10 +67,28 @@ merchantRequestId| string| Customised request ID
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.confirm_a_quote_fiat_convert(  
-        quoteTxId="QuoteTaxId123456",  
-        subUserId="43456"  
+    print(session.get_coin_exchange_records(  
+        limit=10,  
     ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getCoinExchangeRecords({ limit: 10 })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### Response Example
@@ -79,68 +96,109 @@ merchantRequestId| string| Customised request ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
-        }  
+            "orderBody": [  
+                {  
+                    "fromCoin": "BTC",  
+                    "fromAmount": "0.100000000000000000",  
+                    "toCoin": "ETH",  
+                    "toAmount": "1.385866230000000000",  
+                    "exchangeRate": "13.858662380000000000",  
+                    "createdTime": "1672197760",  
+                    "exchangeTxId": "145102533285208544812654440448"  
+                }  
+            ],  
+            "nextPageCursor": "173341:1672197760"  
+        },  
+        "retExtInfo": {},  
+        "time": 1672990464021  
     }
 
 ---
 
-# 確認報價
+# 查詢兌換訂單紀錄
 
-信息
+警告
 
-  1. 兌換是異步的；請通過調用查詢結果 API 確認最終狀態 
-  2. 請確保在報價過期之前確認報價
-
-
+您可能會遭遇較長的數據返回延遲
 
 ### HTTP 請求
 
-POST`/v5/fiat/trade-execute`
+GET`/v5/asset/exchange/order-record`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-quoteTxId| **true**|  string| 報價交易 ID，來源於 [申請報價](/docs/zh-TW/v5/asset/fiat-convert/quote-apply#response-parameters)  
-subUserId| **true**|  string| 用戶在 Bybit 平台的子用戶 ID  
-webhookUrl| false| string| 當訂單成功或失敗時調用的 API URL（最多 256 個字符）  
-merchantRequestId| false| string| 自定義請求 ID（最大長度為 36）
-
-  * 通常無需填寫，但如果填寫此字段，便於內部跟踪報價請求
-
-  
+fromCoin| false| string| 兌出幣種. e.g,`BTC`  
+toCoin| false| string| 兌入幣種. e.g,`USDT`  
+limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `10`  
+cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-tradeNo| string| 交易訂單號  
-merchantRequestId| string| 自定義請求 ID  
-  
+nextPageCursor| string| 游標，用於翻頁  
+orderBody| array| Object  
+> fromCoin| string| 兌出幣種  
+> fromAmount| string| 兌出金額  
+> toCoin| string| 兌入幣種  
+> toAmount| string| 兌入金額  
+> exchangeRate| string| 兌換匯率  
+> createdTime| string| 兌換創建時間戳 (秒)  
+> exchangeTxId| string| 兌換訂單號  
+[](/docs/zh-TW/api-explorer/v5/asset/exchange)
+
+* * *
+
 ### 請求示例
 
   * HTTP
+  * Python
+  * Node.js
 
 
     
     
-    POST /v5/fiat/trade-execute HTTP/1.1    
-    Host: api-testnet.bybit.com    
-    X-BAPI-SIGN: XXXXXX    
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
-    X-BAPI-TIMESTAMP: 1720071899789    
-    X-BAPI-RECV-WINDOW: 5000    
-    Content-Type: application/json    
-    Content-Length: 52    
+    GET /v5/asset/exchange/order-record?limit=10 HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672990462492  
+    X-BAPI-RECV-WINDOW: 5000  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+        api_key="xxxxxxxxxxxxxxxxxx",  
+        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
+    )  
+    print(session.get_coin_exchange_records(  
+        limit=10,  
+    ))  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
       
-    {  
-        "quoteTxId": "QuoteTaxId123456",  
-        "subUserId":"43456"  
-    }  
+    const client = new RestClientV5({  
+      testnet: true,  
+      key: 'xxxxxxxxxxxxxxxxxx',  
+      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+      .getCoinExchangeRecords({ limit: 10 })  
+      .then((response) => {  
+        console.log(response);  
+      })  
+      .catch((error) => {  
+        console.error(error);  
+      });  
     
 
 ### 響應示例
@@ -148,9 +206,21 @@ merchantRequestId| string| 自定義請求 ID
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {  
-            "tradeNo": "TradeNo123456",  
-            "merchantRequestId": ""  
-        }  
+            "orderBody": [  
+                {  
+                    "fromCoin": "BTC",  
+                    "fromAmount": "0.100000000000000000",  
+                    "toCoin": "ETH",  
+                    "toAmount": "1.385866230000000000",  
+                    "exchangeRate": "13.858662380000000000",  
+                    "createdTime": "1672197760",  
+                    "exchangeTxId": "145102533285208544812654440448"  
+                }  
+            ],  
+            "nextPageCursor": "173341:1672197760"  
+        },  
+        "retExtInfo": {},  
+        "time": 1672990464021  
     }

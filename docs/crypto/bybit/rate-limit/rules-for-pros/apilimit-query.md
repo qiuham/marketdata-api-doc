@@ -2,40 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/rate-limit/rules-for-pros/apilimit-query
 api_type: REST
-updated_at: 2026-11-13 18:28:23.596450
+updated_at: 2026-11-13 19:24:41.446785
 ---
 
-# Get All Rate Limits
+# Get Rate Limit
 
 > API rate limit: 50 req per second
 
 info
 
-  * Query for all your UID-level rate limits, including all master accounts and subaccounts.
+  * A master account can query its own and its subaccounts' API rate limit.
+  * A subaccount can only query its own API rate limit.
 
 
 
 ### HTTP Request
 
-GET`/v5/apilimit/query-all`
+GET`/v5/apilimit/query`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-limit| false| string| Limit for data size per page. [`1`, `1000`]. Default: `1000`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-uids| false| string| Multiple UIDs across different master accounts, separated by commas. Returns all master accounts and subaccounts by default  
+uids| **true**|  string| Multiple UIDs separated by commas  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
 list| array| Object  
 > uids| string| Multiple UIDs separated by commas  
 > [bizType](/docs/v5/enum#biztype)| string| Business type  
-> rate| integer| API Rate limit per second  
+> rate| integer| API rate limit per second  
   
 ### Request Example
 
@@ -46,7 +44,7 @@ list| array| Object
 
     
     
-    GET /v5/apilimit/query-all HTTP/1.1  
+    GET /v5/apilimit/query?uids=290118 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -63,7 +61,9 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_all_api_rate_limits())  
+    print(session.get_api_rate_limit(  
+        uids="290118"  
+    ))  
     
     
     
@@ -79,69 +79,59 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "uids": "104270393,1674166,1190923,101446030",  
+                    "uids": "290118",  
                     "bizType": "SPOT",  
-                    "rate": 223  
+                    "rate": 600  
                 },  
                 {  
-                    "uids": "104074050,104394193,104126066",  
-                    "bizType": "OPTIONS",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104154966,103803484,103995540,100445068",  
+                    "uids": "290118",  
                     "bizType": "DERIVATIVES",  
-                    "rate": 298  
+                    "rate": 400  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1758857701702  
+        "time": 1754894341984  
     }
 
 ---
 
-# 查詢所有 API 限頻
+# 查詢 API 限頻
 
-### 查詢所有 API 限頻
+### 查詢 API 限頻
 
-> API 限頻 50 次請求  
-> 
+> API 限頻：每秒 50 個請求
 
 信息
 
-  * 查詢所有 UID 等級的限頻，包括主帳戶及所有子帳戶。
-  * 僅允許透過main UID或來自sub-INS API key的子帳戶 UID 進行查詢
+  * 母帳戶能查詢自己和子帳戶的限頻
+  * 子帳戶只能查詢自己的限頻
 
 
 
 ### HTTP 請求
 
-GET`/v5/apilimit/query-all`
+GET`/v5/apilimit/query`
 
 ### 請求參數
 
-參數| 必填| 類型| 說明  
+參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-limit| false| string| 每頁資料大小限制。[`1`, `1000`]。預設值：`1000`  
-cursor| false| string| 游標。使用回應中的 `nextPageCursor` 令牌以取得下一頁結果集  
-uids| false| string| 跨主帳戶的多個 UID，以逗號分隔。預設返回所有主帳戶及子帳戶的限頻  
+uids| true| string| uid列表，多個以逗號隔開  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 用於取得下一頁資料  
 list| array| Object  
-> uids| string| 多個 UID，以逗號分隔。  
+> uids| string| uid列表，多個以逗號隔開  
 > [bizType](/docs/zh-TW/v5/enum#biztype)| string| 業務類型  
-> rate| integer| 每秒 API 限頻  
+> rate| integer| api rate limit 每秒限頻  
   
-### 請求範例
+### 響應參數
     
     
-    GET /v5/apilimit/query-all HTTP/1.1  
+    GET /v5/apilimit/query?uids=290118 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -151,7 +141,7 @@ list| array| Object
     Content-Length: 2  
     
 
-### 響應範例
+### 響應示例
     
     
     {  
@@ -160,23 +150,17 @@ list| array| Object
         "result": {  
             "list": [  
                 {  
-                    "uids": "104270393,1674166,1190923,101446030",  
+                    "uids": "290118",  
                     "bizType": "SPOT",  
-                    "rate": 223  
+                    "rate": 600  
                 },  
                 {  
-                    "uids": "104074050,104394193,104126066",  
-                    "bizType": "OPTIONS",  
-                    "rate": 223  
-                },  
-                {  
-                    "uids": "104154966,103803484,103995540,100445068",  
+                    "uids": "290118",  
                     "bizType": "DERIVATIVES",  
-                    "rate": 298  
+                    "rate": 400  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1758857701702  
+        "time": 1754894341984  
     }

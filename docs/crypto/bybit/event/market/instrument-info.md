@@ -2,81 +2,75 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/market/instrument-info
 api_type: Market Data
-updated_at: 2026-11-13 18:27:23.761963
+updated_at: 2026-11-13 19:22:32.554922
 ---
 
-# Get Event Contract Trade History
+# Get Instrument Info
 
-Query Event Contract trade (execution) records. Returns records in the past 2 years.
-
-info
-
-  * Only **Event Contract maker accounts** are allowed to access this endpoint.
-  * Default query window: **7 days** if `startTime`/`endTime` are not specified.
-
-
+Query Event Contract instrument information with pagination support.
 
 ### HTTP Request
 
-GET`/v5/event/trades`
+GET`/v5/event/instruments-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`  
-orderId| false| string| Order ID filter  
-orderLinkId| false| string| User-defined order ID  
-startTime| false| integer| Start time in milliseconds. Default: 7 days ago  
-endTime| false| integer| End time in milliseconds. Default: now  
-limit| false| integer| Number of items per page. Default: `50`, Range: [`1`, `100`]  
-cursor| false| string| Pagination cursor  
+symbol| false| string| Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`  
+status| false| string| `PreLaunch`, `Trading`, `Delivering`, `Closed`  
+limit| false| integer| Items per page. Default: `50`, range: [`1`, `100`]  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Event Contract trade record list  
-> orderId| string| Order ID  
-> orderLinkId| string| User-defined order ID  
-> execId| string| Execution ID  
+nextPageCursor| string| Cursor for next page  
+list| array| Instrument list  
 > symbol| string| Symbol name  
+> symbolId| integer| Symbol ID  
 > baseCoin| string| Base coin  
+> quoteCoin| string| Quote coin  
 > settleCoin| string| Settle coin  
-> side| string| Side: `Buy` or `Sell`  
-> [execType](/docs/v5/enum#exectype)| string| Execution type: `Trade`, `Settle`  
-> execPrice| string| Execution price (payout ratio)  
-> execValue| string| Execution value  
-> execFee| string| Execution fee  
-> execFeeRate| string| Execution fee rate  
-> orderPrice| string| Order price  
-> feeCoin| string| Fee coin  
-> transTime| string| Transaction time in milliseconds  
-> [timeInForce](/docs/v5/enum#timeinforce)| string| Time in force, e.g. `GTC`, `IOC`, `FOK`  
-> crossSeq| string| Cross sequence number  
-> ecPayout| string| Event Contract payout (settlement payout for this execution)  
-> ecDurationWindow| string| Duration window in seconds  
-> settleTimeMs| string| Settlement time in milliseconds  
-> ecOrderValue| string| Event Contract order value  
-> ecContractType| string| Event contract type: `UpDown`, `Target`, `Range`  
-> ecDirection| string| Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)  
-> ecTargetPrice| string| Target price. Target type only.  
-> ecLowerBound| string| Lower bound. Range type only.  
-> ecUpperBound| string| Upper bound. Range type only.  
-> extraFees| string| Extra fees (JSON string if applicable)  
-cursor| string| Cursor for next page pagination  
+> eventContractType| string| Event Contract type: `Up_Down`, `Target`, `Range`  
+> durationWindow| string| Duration window in seconds. Empty string for non-Up_Down types  
+> rvThreshold| string| Volatility threshold  
+> rebate| string| Rebate rate. `0` for Up_Down type  
+> takerFeeRate| string| Taker fee rate  
+> makerFeeRate| string| Maker fee rate  
+> launchTime| string| Launch time in milliseconds  
+> deliveryTime| string| Delivery time in milliseconds  
+> status| string| Symbol status: `PreLaunch`, `Trading`, `Delivering`, `Closed`  
+> targetPrice| string| Target price. Target type only. `"0"` for Up_Down and Range  
+> lowerBound| string| [Range only] Lower bound of the range (exclusive). If the price is below this value, Range Out wins. `"0"` for Up_Down and Target  
+> upperBound| string| [Range only] Upper bound of the range (exclusive). If the price is above this value, Range Out wins. `"0"` for Up_Down and Target  
+> callOptionSymbolId| integer| Maps to the corresponding Call option symbolId. (1) Range upper bound: call option symbolId for the upper bound Strike; (2) Target ABOVE: call option symbolId for the Strike; (3) Up_Down and Target BELOW: `0`  
+> putOptionSymbolId| integer| Maps to the corresponding Put option symbolId. (1) Range lower bound: put option symbolId for the lower bound Strike; (2) Target BELOW: put option symbolId for the Strike; (3) Up_Down and Target ABOVE: `0`  
+> feeRateRule| array| Fee rate config  
+>> minSecToDelivery| integer| Interval start — seconds from now to settlement  
+>> maxSecToDelivery| integer| Interval end — seconds from now to settlement  
+>> baseMarkup| string| Base markup  
+> lotSizeFilter| object| Lot size config  
+>> minOrderAmount| string| Minimum order amount  
+>> maxOrderAmount| string| Maximum order amount  
+>> orderAmountTickSize| string| Order amount tick size  
+>> quoteMaxValidMs| integer| Maximum validity period for a single quote (milliseconds)  
+>> quoteMinIntervalPerUserMs| integer| Minimum interval between quote requests per UID (milliseconds)  
+> quotationLimit| array| Quotation limit config  
+>> minSecToDelivery| integer| Interval start — seconds from now to settlement  
+>> maxSecToDelivery| integer| Interval end — seconds from now to settlement  
+>> quoteMaxAmountPerUser| string| Maximum cumulative quote amount per UID  
+>> quoteMinAmountPerUser| string| Minimum cumulative quote amount per UID  
+>> quoteMinAmount| string| Minimum amount per single quote  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/event/trades?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1  
+    GET /v5/event/instruments-info?status=Trading&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1694402559000  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -86,117 +80,238 @@ cursor| string| Cursor for next page pagination
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "0%2C10",  
             "list": [  
                 {  
-                    "orderId": "1234567890",  
-                    "orderLinkId": "my-order-001",  
-                    "execId": "exec-001",  
-                    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                    "symbolId": 500017,  
+                    "symbol": "BTCUSDT-15MIN-DOWN",  
                     "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
                     "settleCoin": "USDT",  
-                    "side": "Buy",  
-                    "execType": "Trade",  
-                    "execPrice": "1.95",  
-                    "execValue": "50",  
-                    "execFee": "0.5",  
-                    "execFeeRate": "0.01",  
-                    "orderPrice": "1.95",  
-                    "feeCoin": "USDT",  
-                    "transTime": "1694402559843",  
-                    "timeInForce": "GTC",  
-                    "crossSeq": "31413030",  
-                    "ecPayout": "0",  
-                    "ecDurationWindow": "300",  
-                    "settleTimeMs": "1694515498753",  
-                    "ecOrderValue": "50",  
-                    "ecContractType": "UpDown",  
-                    "ecDirection": "UP",  
-                    "ecTargetPrice": "",  
-                    "ecLowerBound": "",  
-                    "ecUpperBound": "",  
-                    "extraFees": ""  
+                    "eventContractType": "Up_Down",  
+                    "durationWindow": 900,  
+                    "rvThreshold": "0.60",  
+                    "rebate": "0",  
+                    "takerFeeRate": "0.0088",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1786000980000",  
+                    "deliveryTime": "1798779602000",  
+                    "status": "Trading",  
+                    "targetPrice": "0",  
+                    "lowerBound": "0",  
+                    "upperBound": "0",  
+                    "callOptionSymbolId": 0,  
+                    "putOptionSymbolId": 0,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0600"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "20000",  
+                            "quoteMinAmountPerUser": "10000",  
+                            "quoteMinAmount": "50"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "800",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 60000,  
+                        "quoteMinIntervalPerUserMs": 200  
+                    }  
+                },  
+                {  
+                    "symbolId": 500241,  
+                    "symbol": "ETHUSDT-22AUG26-1850-2000-OUT",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "eventContractType": "Range",  
+                    "durationWindow": "",  
+                    "rvThreshold": "0.62",  
+                    "rebate": "0.25",  
+                    "takerFeeRate": "0.008",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1787018820000",  
+                    "deliveryTime": "1787385600000",  
+                    "status": "Trading",  
+                    "targetPrice": "0",  
+                    "lowerBound": "1850",  
+                    "upperBound": "2000",  
+                    "callOptionSymbolId": 32101659,  
+                    "putOptionSymbolId": 32101656,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "baseMarkup": "0.0230"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0180"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "quoteMaxAmountPerUser": "6000000",  
+                            "quoteMinAmountPerUser": "5000",  
+                            "quoteMinAmount": "500"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "990",  
+                            "quoteMinAmountPerUser": "3000",  
+                            "quoteMinAmount": "500"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "500",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 6000000,  
+                        "quoteMinIntervalPerUserMs": 5000  
+                    }  
+                },  
+                {  
+                    "symbolId": 500239,  
+                    "symbol": "ETHUSDT-22AUG26-1850-BELOW",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "eventContractType": "Target",  
+                    "durationWindow": "",  
+                    "rvThreshold": "0.62",  
+                    "rebate": "0.25",  
+                    "takerFeeRate": "0.008",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1787051280000",  
+                    "deliveryTime": "1787385600000",  
+                    "status": "Trading",  
+                    "targetPrice": "1850",  
+                    "lowerBound": "0",  
+                    "upperBound": "0",  
+                    "callOptionSymbolId": 0,  
+                    "putOptionSymbolId": 32101656,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "baseMarkup": "0.0230"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0180"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "quoteMaxAmountPerUser": "990000",  
+                            "quoteMinAmountPerUser": "5000",  
+                            "quoteMinAmount": "500"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "9000000",  
+                            "quoteMinAmountPerUser": "3000",  
+                            "quoteMinAmount": "500"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "500",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 6000000,  
+                        "quoteMinIntervalPerUserMs": 5000  
+                    }  
                 }  
-            ],  
-            "cursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1694402560000  
+        "time": 1787108703481  
     }
 
 ---
 
-# 查詢Event Contract成交記錄
+# 查詢合約信息
 
-查詢 Event Contract 成交（執行）記錄，支持查詢過去 2 年內的數據。
-
-信息
-
-  * 僅 **Event Contract maker 帳戶** 可訪問此接口。
-  * 若未指定 `startTime`/`endTime`，默認查詢窗口為 **7 天** 。
-
-
+查詢 Event Contract 合約信息，支持分頁。
 
 ### HTTP 請求
 
-GET`/v5/event/trades`
+GET`/v5/event/instruments-info`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`  
-orderId| 否| string| 訂單 ID 篩選  
-orderLinkId| 否| string| 用戶自定義訂單 ID  
-startTime| 否| integer| 開始時間（毫秒）。默認：7 天前  
-endTime| 否| integer| 結束時間（毫秒）。默認：當前時間  
+symbol| 否| string| 交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`  
+status| 否| string| `PreLaunch`、`Trading`、`Delivering`、`Closed`  
 limit| 否| integer| 每頁數量。默認：`50`，範圍：[`1`, `100`]  
-cursor| 否| string| 分頁游標  
+cursor| 否| string| 分頁游標，使用上一次返回的 `nextPageCursor`  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Event Contract 成交記錄列表  
-> orderId| string| 訂單 ID  
-> orderLinkId| string| 用戶自定義訂單 ID  
-> execId| string| 成交 ID  
+nextPageCursor| string| 下一頁分頁游標  
+list| array| 合約列表  
 > symbol| string| 交易對名稱  
+> symbolId| integer| 交易對 ID  
 > baseCoin| string| 標的幣種  
+> quoteCoin| string| 計價幣種  
 > settleCoin| string| 結算幣種  
-> side| string| 方向：`Buy` 或 `Sell`  
-> [execType](/docs/zh-TW/v5/enum#exectype)| string| 成交類型：`Trade`、`Settle`  
-> execPrice| string| 成交價格（賠付比率）  
-> execValue| string| 成交金額  
-> execFee| string| 成交手續費  
-> execFeeRate| string| 成交手續費率  
-> orderPrice| string| 訂單價格  
-> feeCoin| string| 手續費幣種  
-> transTime| string| 成交時間（毫秒）  
-> [timeInForce](/docs/zh-TW/v5/enum#timeinforce)| string| 訂單有效期，如 `GTC`、`IOC`、`FOK`  
-> crossSeq| string| 跨業務序號  
-> ecPayout| string| Event Contract 賠付金額（本次成交的結算賠付）  
-> ecDurationWindow| string| 持續時間窗口（秒）  
-> settleTimeMs| string| 結算時間（毫秒）  
-> ecOrderValue| string| Event Contract 訂單金額  
-> ecContractType| string| 事件合約類型：`UpDown`、`Target`、`Range`  
-> ecDirection| string| 方向：`UP`/`DOWN`（UpDown 類型），`ABOVE`/`BELOW`（Target 類型），`RANGE_IN`/`RANGE_OUT`（Range 類型）  
-> ecTargetPrice| string| 目標價格，僅 Target 類型適用  
-> ecLowerBound| string| 下限價格，僅 Range 類型適用  
-> ecUpperBound| string| 上限價格，僅 Range 類型適用  
-> extraFees| string| 額外費用（適用時為 JSON 字符串）  
-cursor| string| 下一頁分頁游標  
+> eventContractType| string| 事件合約類型：`Up_Down`、`Target`、`Range`  
+> durationWindow| string| 持續時間窗口（秒）。非 Up_Down 類型返回空字符串  
+> rvThreshold| string| 波動率閾值  
+> rebate| string| 返傭比率。Up_Down 類型為 `0`  
+> takerFeeRate| string| Taker 手續費率  
+> makerFeeRate| string| Maker 手續費率  
+> launchTime| string| 上線時間（毫秒）  
+> deliveryTime| string| 交割時間（毫秒）  
+> status| string| 合約狀態：`PreLaunch`、`Trading`、`Delivering`、`Closed`  
+> targetPrice| string| 目標價格，僅 Target 類型適用。Up_Down 和 Range 類型返回 `"0"`  
+> lowerBound| string| [Range 類型] 範圍下限（不含）。低於此值則 Range Out 獲勝。Up_Down 和 Target 類型返回 `"0"`  
+> upperBound| string| [Range 類型] 範圍上限（不含）。高於此值則 Range Out 獲勝。Up_Down 和 Target 類型返回 `"0"`  
+> callOptionSymbolId| integer| 對應的 Call 期權 symbolId。(1) Range 上限：填入上限 Strike 對應的 call option symbolId；(2) Target ABOVE：填入 Strike 對應的 call option symbolId；(3) Up_Down 及 Target BELOW：填 `0`  
+> putOptionSymbolId| integer| 對應的 Put 期權 symbolId。(1) Range 下限：填入下限 Strike 對應的 put option symbolId；(2) Target BELOW：填入 Strike 對應的 put option symbolId；(3) Up_Down 及 Target ABOVE：填 `0`  
+> feeRateRule| array| 費率配置  
+>> minSecToDelivery| integer| 區間起始——距結算的秒數下限  
+>> maxSecToDelivery| integer| 區間結束——距結算的秒數上限  
+>> baseMarkup| string| 基礎 Markup  
+> lotSizeFilter| object| 訂單規模配置  
+>> minOrderAmount| string| 最小訂單金額  
+>> maxOrderAmount| string| 最大訂單金額  
+>> orderAmountTickSize| string| 訂單金額步長  
+>> quoteMaxValidMs| integer| 單次報價最長有效期（毫秒）  
+>> quoteMinIntervalPerUserMs| integer| 每個 UID 報價請求的最小時間間隔（毫秒）  
+> quotationLimit| array| 報價限額配置  
+>> minSecToDelivery| integer| 區間起始——距結算的秒數下限  
+>> maxSecToDelivery| integer| 區間結束——距結算的秒數上限  
+>> quoteMaxAmountPerUser| string| 每個 UID 累計最大報價金額  
+>> quoteMinAmountPerUser| string| 每個 UID 累計最小報價金額  
+>> quoteMinAmount| string| 單次最小報價金額  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/event/trades?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=50 HTTP/1.1  
+    GET /v5/event/instruments-info?status=Trading&limit=10 HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1694402559000  
-    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 返回示例
@@ -206,39 +321,166 @@ cursor| string| 下一頁分頁游標
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "nextPageCursor": "0%2C10",  
             "list": [  
                 {  
-                    "orderId": "1234567890",  
-                    "orderLinkId": "my-order-001",  
-                    "execId": "exec-001",  
-                    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                    "symbolId": 500017,  
+                    "symbol": "BTCUSDT-15MIN-DOWN",  
                     "baseCoin": "BTC",  
+                    "quoteCoin": "USDT",  
                     "settleCoin": "USDT",  
-                    "side": "Buy",  
-                    "execType": "Trade",  
-                    "execPrice": "1.95",  
-                    "execValue": "50",  
-                    "execFee": "0.5",  
-                    "execFeeRate": "0.01",  
-                    "orderPrice": "1.95",  
-                    "feeCoin": "USDT",  
-                    "transTime": "1694402559843",  
-                    "timeInForce": "GTC",  
-                    "crossSeq": "31413030",  
-                    "ecPayout": "0",  
-                    "ecDurationWindow": "300",  
-                    "settleTimeMs": "1694515498753",  
-                    "ecOrderValue": "50",  
-                    "ecContractType": "UpDown",  
-                    "ecDirection": "UP",  
-                    "ecTargetPrice": "",  
-                    "ecLowerBound": "",  
-                    "ecUpperBound": "",  
-                    "extraFees": ""  
+                    "eventContractType": "Up_Down",  
+                    "durationWindow": 900,  
+                    "rvThreshold": "0.60",  
+                    "rebate": "0",  
+                    "takerFeeRate": "0.0088",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1786000980000",  
+                    "deliveryTime": "1798779602000",  
+                    "status": "Trading",  
+                    "targetPrice": "0",  
+                    "lowerBound": "0",  
+                    "upperBound": "0",  
+                    "callOptionSymbolId": 0,  
+                    "putOptionSymbolId": 0,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0600"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "20000",  
+                            "quoteMinAmountPerUser": "10000",  
+                            "quoteMinAmount": "50"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "800",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 60000,  
+                        "quoteMinIntervalPerUserMs": 200  
+                    }  
+                },  
+                {  
+                    "symbolId": 500241,  
+                    "symbol": "ETHUSDT-22AUG26-1850-2000-OUT",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "eventContractType": "Range",  
+                    "durationWindow": "",  
+                    "rvThreshold": "0.62",  
+                    "rebate": "0.25",  
+                    "takerFeeRate": "0.008",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1787018820000",  
+                    "deliveryTime": "1787385600000",  
+                    "status": "Trading",  
+                    "targetPrice": "0",  
+                    "lowerBound": "1850",  
+                    "upperBound": "2000",  
+                    "callOptionSymbolId": 32101659,  
+                    "putOptionSymbolId": 32101656,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "baseMarkup": "0.0230"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0180"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "quoteMaxAmountPerUser": "6000000",  
+                            "quoteMinAmountPerUser": "5000",  
+                            "quoteMinAmount": "500"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "990",  
+                            "quoteMinAmountPerUser": "3000",  
+                            "quoteMinAmount": "500"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "500",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 6000000,  
+                        "quoteMinIntervalPerUserMs": 5000  
+                    }  
+                },  
+                {  
+                    "symbolId": 500239,  
+                    "symbol": "ETHUSDT-22AUG26-1850-BELOW",  
+                    "baseCoin": "ETH",  
+                    "quoteCoin": "USDT",  
+                    "settleCoin": "USDT",  
+                    "eventContractType": "Target",  
+                    "durationWindow": "",  
+                    "rvThreshold": "0.62",  
+                    "rebate": "0.25",  
+                    "takerFeeRate": "0.008",  
+                    "makerFeeRate": "0",  
+                    "launchTime": "1787051280000",  
+                    "deliveryTime": "1787385600000",  
+                    "status": "Trading",  
+                    "targetPrice": "1850",  
+                    "lowerBound": "0",  
+                    "upperBound": "0",  
+                    "callOptionSymbolId": 0,  
+                    "putOptionSymbolId": 32101656,  
+                    "feeRateRule": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "baseMarkup": "0.0230"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "baseMarkup": "0.0180"  
+                        }  
+                    ],  
+                    "quotationLimit": [  
+                        {  
+                            "minSecToDelivery": 0,  
+                            "maxSecToDelivery": 259200,  
+                            "quoteMaxAmountPerUser": "990000",  
+                            "quoteMinAmountPerUser": "5000",  
+                            "quoteMinAmount": "500"  
+                        },  
+                        {  
+                            "minSecToDelivery": 259200,  
+                            "maxSecToDelivery": 315360000,  
+                            "quoteMaxAmountPerUser": "9000000",  
+                            "quoteMinAmountPerUser": "3000",  
+                            "quoteMinAmount": "500"  
+                        }  
+                    ],  
+                    "lotSizeFilter": {  
+                        "minOrderAmount": "5",  
+                        "maxOrderAmount": "500",  
+                        "orderAmountTickSize": "1",  
+                        "quoteMaxValidMs": 6000000,  
+                        "quoteMinIntervalPerUserMs": 5000  
+                    }  
                 }  
-            ],  
-            "cursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1694402560000  
+        "time": 1787108703481  
     }

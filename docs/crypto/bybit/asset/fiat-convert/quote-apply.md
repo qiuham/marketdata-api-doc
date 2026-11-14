@@ -2,36 +2,43 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/quote-apply
 api_type: REST
-updated_at: 2026-11-13 18:27:02.175683
+updated_at: 2026-11-13 19:21:44.238823
 ---
 
-# Get Reference Price
+# Request a Quote
+
+info
+
+Request by the master UID's api key only
 
 ### HTTP Request
 
-GET`/v5/fiat/reference-price`
+POST`/v5/fiat/quote-apply`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Coin Pair, such as EUR-USDT  
+fromCoin| **true**|  string| Convert from coin (coin to sell)  
+fromCoinType| **true**|  string| `fiat` or `crypto`  
+toCoin| **true**|  string| Convert to coin (coin to buy)  
+toCoinType| **true**|  string| `fiat` or `crypto`  
+requestAmount| **true**|  string| request coin amount (the amount you want to sell)  
+requestCoinType| false| string| coinType you want to sell, `fiat` or `crypto`, default to `fiat`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-result| array| Array of quotes  
-> symbol| string| Trading pair symbol  
-> fiat| string| Fiat currency of the trading pair (e.g: "EUR")  
-> crypto| string| Cryptocurrency of the trading pair (e.g:"USDT")  
-> timestamp| string| Unix timestamp  
-> buys| array| Array of buy quote objects  
->> unitPrice| string| unitPrice: 1 crypto=x fiat  
->> paymentMethod| string| From coin type. `fiat` or `crypto`  
-> sells| array| Array of sell quote objects  
->> unitPrice| string| unitPrice: 1 crypto=x fiat  
->> paymentMethod| string| From coin type. `fiat` or `crypto`  
+quoteTxId| string| Quote transaction ID. It is system generated, and it is used to confirm quote  
+exchangeRate| string| Exchange rate  
+fromCoin| string| Convert from coin (coin to sell)  
+fromCoinType| string| From coin type. `fiat` or `crypto`  
+toCoin| string| Convert to coin (coin to buy)  
+toCoinType| string| To coin type. `fiat` or `crypto`  
+fromAmount| string| From coin amount (amount to sell)  
+toAmount| string| To coin amount (amount to buy according to exchange rate)  
+expiredTime| string| The expiry time for this quote (milliseconds)  
   
 ### Request Example
 
@@ -41,12 +48,22 @@ result| array| Array of quotes
 
     
     
-    GET /v5/fiat/reference-price HTTP/1.1  
+    POST /v5/fiat/quote-apply HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720074159814  
+    X-BAPI-TIMESTAMP: 1720071077014  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: XXXXXX  
+    Content-Type: application/json  
+    Content-Length: 172  
+      
+    {  
+        "fromCoin": "ETH",  
+        "fromCoinType": "fiat",  
+        "toCoin": "BTC",  
+        "toCoinType": "crypto",  
+        "requestAmount": "0.1",  
+    }  
     
     
     
@@ -56,8 +73,12 @@ result| array| Array of quotes
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_fiat_reference_price(  
-        symbol="EUR-USDT"  
+    print(session.request_a_quote_fiat_convert(  
+        fromCoin="ETH",  
+        fromCoinType="crypto",  
+        toCoin="BTC",  
+        toCoinType="crypto",  
+        requestAmount="0.1"  
     ))  
     
 
@@ -66,84 +87,56 @@ result| array| Array of quotes
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "symbol": "EUR-USDT",  
-            "fiat": "EUR",  
-            "crypto": "USDT",  
-            "timestamp": "1765181161",  
-            "buys": [  
-                {  
-                    "unitPrice": "0.8581",  
-                    "paymentMethod": "Cash Balance"  
-                },  
-                {  
-                    "unitPrice": "0.9297487",  
-                    "paymentMethod": "Credit Card"  
-                },  
-                {  
-                    "unitPrice": "0.9807915",  
-                    "paymentMethod": "Apple Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8631747",  
-                    "paymentMethod": "Google Pay"  
-                }  
-            ],  
-            "sells": [  
-                {  
-                    "unitPrice": "0.8581",  
-                    "paymentMethod": "Cash Balance"  
-                },  
-                {  
-                    "unitPrice": "0.9297487",  
-                    "paymentMethod": "Credit Card"  
-                },  
-                {  
-                    "unitPrice": "0.9807915",  
-                    "paymentMethod": "Apple Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8631747",  
-                    "paymentMethod": "Google Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8584759",  
-                    "paymentMethod": "SEPA"  
-                }  
-            ]  
+            "quoteTaxId": "QuoteTaxId123456",  
+            "exchangeRate": "1.0",  
+            "fromCoin": "ETH",  
+            "fromCoinType": "fiat",  
+            "toCoin": "BTC",  
+            "toCoinType": "crypto",  
+            "fromAmount": "0.1",  
+            "toAmount": "0.1",  
+            "expireTime": "1764561045346"  
         }  
     }
 
 ---
 
-# 獲取報價
+# 申請報價
+
+信息
+
+僅可使用主帳號 UID 的 API 密鑰進行請求 
 
 ### HTTP 請求
 
-GET`/v5/fiat/reference-price`
+POST`/v5/fiat/quote-apply`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 幣種交易對，例如 EUR-USDT  
+fromCoin| **true**|  string| 轉換的原幣種（賣出的幣種）  
+fromCoinType| **true**|  string| 原幣種類型，可選值：`fiat` 或 `crypto`  
+toCoin| **true**|  string| 轉換的目標幣種（買入的幣種）  
+toCoinType| **true**|  string| 目標幣種類型，可選值：`fiat` 或 `crypto`  
+requestAmount| **true**|  string| 請求的原幣種數量（賣出的數量）  
+requestCoinType| false| string| 你想要賣出的 coinType，填入 `fiat` 或 `crypto`，預設為 `fiat`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-result| array| 報價列表  
-> symbol| string| 幣種交易對  
-> fiat| string| 交易對中的法幣（例如："EUR"）  
-> crypto| string| 交易對中的加密貨幣（例如："USDT"）  
-> timestamp| string| Unix 時間戳  
-> buys| array| 買入報價列表  
->> unitPrice| string| 單價：1 crypto = x fiat  
->> paymentMethod| string| 支付方式,`fiat` 或 `crypto`  
-> sells| array| 賣出報價列表  
->> unitPrice| string| 單價：1 crypto = x fiat  
->> paymentMethod| string| 支付方式,`fiat` 或 `crypto`  
+quoteTxId| string| 報價交易 ID，系統生成，用於確認報價  
+exchangeRate| string| 匯率  
+fromCoin| string| 轉換的原幣種（賣出的幣種）  
+fromCoinType| string| 原幣種類型，可選值：`fiat` 或 `crypto`  
+toCoin| string| 轉換的目標幣種（買入的幣種）  
+toCoinType| string| 目標幣種類型，可選值：`fiat` 或 `crypto`  
+fromAmount| string| 原幣種數量（賣出的數量）  
+toAmount| string| 目標幣種數量（根據匯率買入的數量）  
+expiredTime| string| 該報價的過期時間（毫秒）  
   
 ### 請求示例
 
@@ -152,12 +145,22 @@ result| array| 報價列表
 
     
     
-    GET /v5/fiat/reference-price HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1720074159814  
-    X-BAPI-RECV-WINDOW: 5000  
+    POST /v5/fiat/quote-apply HTTP/1.1    
+    Host: api-testnet.bybit.com    
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx    
+    X-BAPI-TIMESTAMP: 1720071077014    
+    X-BAPI-RECV-WINDOW: 5000    
+    X-BAPI-SIGN: XXXXXX    
+    Content-Type: application/json    
+    Content-Length: 172    
+      
+    {  
+        "fromCoin": "ETH",  
+        "fromCoinType": "fiat",  
+        "toCoin": "BTC",  
+        "toCoinType": "crypto",  
+        "requestAmount": "0.1"  
+    }  
     
 
 ### 響應示例
@@ -165,51 +168,16 @@ result| array| 報價列表
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
-            "symbol": "EUR-USDT",  
-            "fiat": "EUR",  
-            "crypto": "USDT",  
-            "timestamp": "1765181161",  
-            "buys": [  
-                {  
-                    "unitPrice": "0.8581",  
-                    "paymentMethod": "Cash Balance"  
-                },  
-                {  
-                    "unitPrice": "0.9297487",  
-                    "paymentMethod": "Credit Card"  
-                },  
-                {  
-                    "unitPrice": "0.9807915",  
-                    "paymentMethod": "Apple Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8631747",  
-                    "paymentMethod": "Google Pay"  
-                }  
-            ],  
-            "sells": [  
-                {  
-                    "unitPrice": "0.8581",  
-                    "paymentMethod": "Cash Balance"  
-                },  
-                {  
-                    "unitPrice": "0.9297487",  
-                    "paymentMethod": "Credit Card"  
-                },  
-                {  
-                    "unitPrice": "0.9807915",  
-                    "paymentMethod": "Apple Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8631747",  
-                    "paymentMethod": "Google Pay"  
-                },  
-                {  
-                    "unitPrice": "0.8584759",  
-                    "paymentMethod": "SEPA"  
-                }  
-            ]  
+            "quoteTaxId": "QuoteTaxId123456",  
+            "exchangeRate": "1.0",  
+            "fromCoin": "ETH",  
+            "fromCoinType": "fiat",  
+            "toCoin": "BTC",  
+            "toCoinType": "crypto",  
+            "fromAmount": "0.1",  
+            "toAmount": "0.1",  
+            "expireTime": "1764561045346"  
         }  
     }

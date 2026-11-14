@@ -2,56 +2,57 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/get-investment-plan
 api_type: REST
-updated_at: 2026-11-13 18:27:44.708924
+updated_at: 2026-11-13 19:23:25.446910
 ---
 
-# Manage Order
+# Get Investment Plans
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/manage-order`
+GET`/v5/earn/pwm/asset-manager/get-investment-plan`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| **true**|  string| Order ID. Must be in `Pending Review` status  
-action| **true**|  string| Action to perform: `approve` / `reject`  
-reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
+planId| false| string| Investment plan ID. Returns all plans if omitted. Only plans created by the institution via Open API can be queried  
+status| false| string| Filter by status: `PendingSubscription` / `Active` / `Closed` / `Deleted`. Returns all if omitted  
+subscriptionUid| false| string| UID of the user who subscribed to the investment plan  
+limit| false| integer| Page size. Default: `20`, max: `50`  
+cursor| false| string| Pagination cursor  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Order ID  
-fundId| string| Fund ID  
-accountUid| string| Fund main account UID  
-orderStatus| string| Current order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`. After approval or rejection, the execution status can be queried using the same `reqLinkId`  
-orderType| string| Order type: `Subscribe` / `Redeem`  
-action| string| Action performed: `approve` / `reject`  
-coin| string| Coin  
-amount| string| Order amount (base coin). Subscription orders only; empty for redemption orders  
-shares| string| Order shares. Redemption orders only; empty for subscription orders  
-updatedTime| string| Order update timestamp (milliseconds)  
+list| array| Investment plan list  
+> planId| string| Investment plan ID  
+> planName| string| Investment plan name  
+> planType| string| Plan type: `stable` / `advanced`  
+> subscriptionUid| string| UID of the user who subscribed to the investment plan  
+> status| string| Plan status: `PendingSubscription` (newly configured, not yet subscribed) / `Active` (running) / `Closed` (closed) / `Deleted` (deleted)  
+> source| string| Creation source: `consultant` / `direct` / `institution`  
+> currentAssetUsd| string| Total current assets (USD valuation). When status is `PendingSubscription`, this is the configured amount  
+> accumulateYieldUsd| string| Accumulated yield (USD valuation). Returns `"0"` when status is `PendingSubscription`  
+> investmentDistribution| array| Investment distribution list  
+>> category| string| Product category: `multiCoinEarning` / `fixedYield` / `equityFund` / `onchainEarn`  
+>> coin| string| Denominated coin  
+>> productId| string| Subscribed product ID. For funds, this corresponds to `fundId`  
+>> currentAmount| string| Investment asset amount. When status is `PendingSubscription`, this is the configured coin amount; otherwise it is the current holding amount  
+> createdTime| string| Creation timestamp (milliseconds)  
+nextPageCursor| string| Next page cursor. Empty string indicates no more data (uses investment plan ID as cursor)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1  
+    GET /v5/earn/pwm/asset-manager/get-investment-plan HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderId": "500002",  
-        "action": "approve",  
-        "reqLinkId": "manage-order-001"  
-    }  
     
 
 ### Response Example
@@ -61,68 +62,81 @@ updatedTime| string| Order update timestamp (milliseconds)
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "orderId": "500002",  
-            "fundId": "100001",  
-            "accountUid": "800001",  
-            "orderStatus": "PendingReview",  
-            "orderType": "Subscribe",  
-            "action": "Approve",  
-            "coin": "BTC",  
-            "amount": "10.00000000",  
-            "shares": "",  
-            "updatedTime": "1700100000000"  
+            "list": [  
+                {  
+                    "planId": "10001",  
+                    "planName": "Conservative Growth Plan",  
+                    "planType": "stable",  
+                    "status": "Active",  
+                    "source": "institution",  
+                    "subscriptionUid": "12323434",  
+                    "currentAssetUsd": "200137.50",  
+                    "accumulateYieldUsd": "2137.50",  
+                    "investmentDistribution": [  
+                        {  
+                            "category": "equityFund",  
+                            "productId": "431",  
+                            "coin": "USDT",  
+                            "currentAmount": "50000.00"  
+                        }  
+                    ],  
+                    "createdTime": "1700000000000"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         }  
     }
 
 ---
 
-# 處理申購/贖回訂單
+# 機構查詢為客戶創建的投資計劃列表
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/manage-order`
+GET`/v5/earn/pwm/asset-manager/get-investment-plan`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| **true**|  string| 訂單ID，須為 `Pending Review` 狀態  
-action| **true**|  string| 處理動作：`approve`（批准）/ `reject`（拒絕）  
-reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
+planId| false| string| 投資計劃ID，不傳返回全部（該接口只能查詢機構 Open API 創建的投資計劃）  
+status| false| string| 篩選狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除），不傳返回全部  
+subscriptionUid| false| string| 申購投資計劃的用戶UID  
+limit| false| integer| 每頁數量，默認 `20`，最大 `50`  
+cursor| false| string| 分頁游標  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 訂單ID  
-fundId| string| 基金ID  
-accountUid| string| 基金主賬戶UID  
-orderStatus| string| 當前訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）。審批通過或拒絕後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態  
-orderType| string| 訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）  
-action| string| 執行的處理動作：`approve` / `reject`  
-coin| string| 幣種  
-amount| string| 訂單金額（本位幣），僅申購訂單有值，贖回訂單為空  
-shares| string| 訂單份額，僅贖回訂單有值，申購訂單為空  
-updatedTime| string| 訂單更新時間戳（毫秒）  
+list| array| 投資計劃列表  
+> planId| string| 投資計劃ID  
+> planName| string| 投資計劃名稱  
+> planType| string| 計劃類型：`stable`（穩健）/ `advanced`（激進）  
+> subscriptionUid| string| 申購投資計劃的用戶UID  
+> status| string| 計劃狀態：`PendingSubscription`（新配置，未申購）/ `Active`（運行中）/ `Closed`（已關閉）/ `Deleted`（已刪除）  
+> source| string| 創建來源：`consultant`（顧問創建）/ `direct`（直客自建）/ `institution`（機構創建）  
+> currentAssetUsd| string| 當前計劃總資產（USD估值），`PendingSubscription` 狀態時為配置金額  
+> accumulateYieldUsd| string| 累計收益（USD估值），`PendingSubscription` 狀態時為 `"0"`  
+> investmentDistribution| array| 投資分佈比例列表  
+>> category| string| 產品類別：`multiCoinEarning`（靈活理財）/ `fixedYield`（固定收益）/ `equityFund`（淨值型基金）/ `onchainEarn`（鏈上賺幣）  
+>> coin| string| 本位幣種  
+>> productId| string| 申購的對應產品ID，基金對應為 `fundId`  
+>> currentAmount| string| 投資資產數量，`PendingSubscription` 狀態時為後台配置幣種數量，否則為持倉幣種數量  
+> createdTime| string| 創建時間戳（毫秒）  
+nextPageCursor| string| 下一頁游標，為空表示無更多數據（使用投資計劃ID作為游標）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1  
+    GET /v5/earn/pwm/asset-manager/get-investment-plan HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1741651200000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderId": "500002",  
-        "action": "approve",  
-        "reqLinkId": "manage-order-001"  
-    }  
     
 
 ### 響應示例
@@ -132,15 +146,27 @@ updatedTime| string| 訂單更新時間戳（毫秒）
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "orderId": "500002",  
-            "fundId": "100001",  
-            "accountUid": "800001",  
-            "orderStatus": "PendingReview",  
-            "orderType": "Subscribe",  
-            "action": "Approve",  
-            "coin": "BTC",  
-            "amount": "10.00000000",  
-            "shares": "",  
-            "updatedTime": "1700100000000"  
+            "list": [  
+                {  
+                    "planId": "10001",  
+                    "planName": "Conservative Growth Plan",  
+                    "planType": "stable",  
+                    "status": "Active",  
+                    "source": "institution",  
+                    "subscriptionUid": "12323434",  
+                    "currentAssetUsd": "200137.50",  
+                    "accumulateYieldUsd": "2137.50",  
+                    "investmentDistribution": [  
+                        {  
+                            "category": "equityFund",  
+                            "productId": "431",  
+                            "coin": "USDT",  
+                            "currentAmount": "50000.00"  
+                        }  
+                    ],  
+                    "createdTime": "1700000000000"  
+                }  
+            ],  
+            "nextPageCursor": ""  
         }  
     }

@@ -2,30 +2,44 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bybit-card/asset-records
 api_type: REST
-updated_at: 2026-11-13 18:27:16.573877
+updated_at: 2026-11-13 19:22:19.532174
 ---
 
-# Query Point Records
+# Query Asset Records
 
-Query the user's card reward point transaction records. Supports pagination and filtering by time range, type, and direction.
+Query card transaction history. Supports filtering by status, last digits of card number, merchant name, transaction type, time range, etc. Results are paginated.
+
+tip
+
+`type` is required when neither `txnId` nor `orderNo` is provided. This restriction does not apply when either `txnId` or `orderNo` is present.
 
 ### HTTP Request
 
-POST`/v5/card/reward/points/records`
+POST`/v5/card/transaction/query-asset-records`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-type| false| string| Point type filter  
-pageSize| false| integer| Number of items per page. Default: `10`. Min: `1`  
-pageNo| false| integer| Page number. Default: `1`. Min: `1`  
-startTime| false| integer| Start time (Unix timestamp)  
-endTime| false| integer| End time (Unix timestamp)  
-outOrderId| false| string| External order ID  
-bizId| false| string| Point order ID  
-bizTxnId| false| string| consumeIdLifecycle  
-side| false| string| Point direction. `1`: Earn points, `2`: Deduct points  
+statusCode| false| string| Transaction status code. `0`: Pending, `1`: Cleared, `2`: Declined  
+limit| false| integer| Number of items per page. Default: `100`. Range: [`1`, `500`]  
+page| false| integer| Page number. Default: `1`. Min: `1`  
+pan4| false| string| Last 2/4 digits of card number, used to filter transactions of a specific card  
+createBeginTime| false| integer| Start time of transaction (Unix ms timestamp)  
+createEndTime| false| integer| End time of transaction (Unix ms timestamp)  
+merchName| false| string| Merchant name. Supports fuzzy search  
+type| false| string| Query type.  
+`SIDE_QUERY_AUTH`: Authorization  
+`SIDE_QUERY_FINANCIAL`: Clearing. Requires `txnId` and `orderNo`.  
+`SIDE_QUERY_REFUND`: Refund. Requires `txnId` and `orderNo`.  
+The following query types are available to all users:  
+`SIDE_QUERY_AUTH_ALL`: All authorization transactions  
+`SIDE_QUERY_AUTH_REVERSAL`: Authorization reversals  
+`SIDE_QUERY_FINANCIAL_ALL`: All clearing transactions  
+`SIDE_QUERY_FINANCIAL_REFUND`: Clearing refunds  
+txnId| false| string| Transaction ID. Exact match  
+cardToken| false| string| Card token, used to identify a specific card  
+orderNo| false| string| Order number. Exact match  
   
 ### Response Parameters
 
@@ -37,27 +51,38 @@ result| object|
 > pageSize| integer| Number of items per page  
 > pageNo| integer| Current page number  
 > totalCount| integer| Total number of records  
-> data| array| Point record list  
->> outOrderId| string| External order ID  
->> point| integer| Point amount  
->> side| string| Point direction  
->> type| string| Type  
->> subType| string| Sub-type  
->> createTime| integer| Creation time (Unix ms timestamp)  
->> updateTime| integer| Update time (Unix ms timestamp)  
->> bizId| string| Point order ID  
->> bizTxnId| string| consumeIdLifecycle  
->> transactionDate| string| Transaction date and time  
->> transactionId| string| Transaction ID  
->> transactionAmount| string| Transaction amount / Paid with fiat  
->> basicCurrency| string| Transaction currency  
->> merchCategoryDesc| string| Merchant category  
+> data| array| Transaction record list  
+>> pan4| string| Last 4 digits of card number  
+>> pan6| string| First 6 digits of card number (BIN)  
+>> tradeStatus| string| Trade status. `0`: In_Progress, `1`: Completed, `2`: Declined, `3`: Reversal  
+>> side| string| Transaction type. `1`: Authorization, `2`: Authorization Reversal, `3`: Transaction, `4`: Refund (unDeduct), `5`: Refund, `6`: Chargeback, `7`: Transaction (Direct), `8`: Refund Reversal, `9`: Chargeback Reversal, `10`: Refund Request, `11`: Refund Reversal Request, `12`: Chargeback Fee, `13`: ATM Withdrawal  
+>> basicAmount| string| Total amount  
+>> basicCurrency| string| Total amount currency code  
+>> transactionAmount| string| Amount before tax  
+>> transactionCurrency| string| Amount before tax currency code  
+>> txnCreate| integer| Transaction creation time (Unix ms timestamp)  
+>> merchCountry| string| Merchant country  
+>> merchCity| string| Merchant city  
 >> merchName| string| Merchant name  
->> merchCountry| string| Location (country)  
->> merchCity| string| Location (city)  
->> pan4| string| Card's last 4 digits  
->> payFiatAmount| string| Pay with fiat  
->> transactionCurrencyAmount| string| Pay with crypto  
+>> txnId| string| Transaction ID  
+>> declinedReason| string| Declined reason. Only populated when transaction is declined  
+>> totalFees| string| Total fees  
+>> uid| integer| User ID  
+>> transactionCurrencyAmount| string| Fiat transaction amount  
+>> fxPad| string| Fee  
+>> interchangeFee| string| Interchange fee (non-cumulative, unrelated to users, card network related)  
+>> billAmount| string| Bill amount  
+>> paidAmount| string| Transaction currency amount  
+>> paidCurrency| string| Paid currency code  
+>> bonusAmount| string| Trial bonus  
+>> foreignTransactionFee| string| Foreign transaction fee  
+>> totalTax| string| Total tax  
+>> paidFiat| string| Fiat paid amount  
+>> withdrawalFee| string| Withdrawal fee  
+>> status| string| Transaction status. `-1`: Init, `0`: Pending, `1`: Success, `2`: Fail  
+>> orderNo| string| Order number  
+>> mccCode| string| Merchant Category Code (MCC)  
+>> merchCategoryDesc| string| Merchant category description  
   
 * * *
 
@@ -70,7 +95,7 @@ result| object|
 
     
     
-    POST /v5/card/reward/points/records?pageSize=10&pageNo=1 HTTP/1.1  
+    POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -81,7 +106,7 @@ result| object|
     
     import requests  
       
-    url = "https://api-testnet.bybit.com/v5/card/reward/points/records"  
+    url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"  
     headers = {  
         "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
         "X-BAPI-SIGN": "XXXXX",  
@@ -89,8 +114,8 @@ result| object|
         "X-BAPI-RECV-WINDOW": "5000"  
     }  
     params = {  
-        "pageSize": 10,  
-        "pageNo": 1  
+        "limit": 10,  
+        "page": 1  
     }  
     response = requests.post(url, headers=headers, params=params)  
     print(response.json())  
@@ -99,14 +124,14 @@ result| object|
     
     const axios = require('axios');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/records';  
+    const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';  
     const headers = {  
       'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
       'X-BAPI-SIGN': 'XXXXX',  
       'X-BAPI-TIMESTAMP': '1672211918471',  
       'X-BAPI-RECV-WINDOW': '5000'  
     };  
-    const params = { pageSize: 10, pageNo: 1 };  
+    const params = { limit: 10, page: 1 };  
       
     axios.post(url, {}, { headers, params })  
       .then(response => console.log(response.data))  
@@ -120,31 +145,42 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "pageSize": 10,  
+            "pageSize": 100,  
             "pageNo": 1,  
-            "totalCount": 50,  
+            "totalCount": 2,  
             "data": [  
                 {  
-                    "outOrderId": "ORD20230101001",  
-                    "point": 100,  
-                    "side": "1",  
-                    "type": "CASHBACK",  
-                    "subType": "",  
-                    "createTime": 1672211918471,  
-                    "updateTime": 1672211918471,  
-                    "bizId": "BIZ20230101001",  
-                    "bizTxnId": "TXN20230101001",  
-                    "transactionDate": "2023-01-01 12:00:00",  
-                    "transactionId": "TXN20230101001",  
-                    "transactionAmount": "100.00",  
+                    "pan4": "1234",  
+                    "pan6": "456789",  
+                    "tradeStatus": "1",  
+                    "side": "3",  
+                    "basicAmount": "101.50",  
                     "basicCurrency": "USD",  
-                    "merchCategoryDesc": "Grocery Stores",  
-                    "merchName": "Amazon",  
+                    "transactionAmount": "100.00",  
+                    "transactionCurrency": "USD",  
+                    "txnCreate": 1672211918471,  
                     "merchCountry": "US",  
                     "merchCity": "New York",  
-                    "pan4": "1234",  
-                    "payFiatAmount": "0",  
-                    "transactionCurrencyAmount": "100.00"  
+                    "merchName": "Amazon",  
+                    "txnId": "TXN20230101001",  
+                    "declinedReason": "",  
+                    "totalFees": "1.50",  
+                    "uid": 100001,  
+                    "transactionCurrencyAmount": "100.00",  
+                    "fxPad": "",  
+                    "interchangeFee": "0.50",  
+                    "billAmount": "101.50",  
+                    "paidAmount": "101.50",  
+                    "paidCurrency": "USDT",  
+                    "bonusAmount": "0",  
+                    "foreignTransactionFee": "0",  
+                    "totalTax": "1.50",  
+                    "paidFiat": "0",  
+                    "withdrawalFee": "0",  
+                    "status": "1",  
+                    "orderNo": "ORD20230101001",  
+                    "mccCode": "5411",  
+                    "merchCategoryDesc": "Grocery Stores"  
                 }  
             ]  
         },  
@@ -154,27 +190,41 @@ result| object|
 
 ---
 
-# 查詢積分流水
+# 查詢資產記錄
 
-查詢用戶卡片獎勵積分變動流水，支持分頁查詢，可按時間範圍、類型和方向過濾。
+查詢卡交易歷史記錄，支持按狀態、卡號後幾位、商戶名、交易類型、時間範圍等條件篩選，返回分頁結果。
+
+提示
+
+若入參未傳 `txnId` 也未傳 `orderNo`，則 `type` 為必填項。傳入 `txnId` 或 `orderNo` 時不受此限制。
 
 ### HTTP 請求
 
-POST`/v5/card/reward/points/records`
+POST`/v5/card/transaction/query-asset-records`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-type| false| string| 積分類型過濾  
-pageSize| false| integer| 每頁條數，默認 `10`，最小值 `1`  
-pageNo| false| integer| 頁碼，默認 `1`，最小值 `1`  
-startTime| false| integer| 開始時間（時間戳）  
-endTime| false| integer| 結束時間（時間戳）  
-outOrderId| false| string| 外部訂單號  
-bizId| false| string| 積分訂單號  
-bizTxnId| false| string| consumeIdLifecycle  
-side| false| string| 積分方向。`1`: 加積分，`2`: 退積分  
+statusCode| false| string| 交易狀態碼。`0`: 待處理, `1`: 已清算, `2`: 已拒絕  
+limit| false| integer| 每頁條目數，默認 `100`，範圍：[`1`, `500`]  
+page| false| integer| 頁碼，默認 `1`，最小值 `1`  
+pan4| false| string| 卡後 2/4 位，用於篩選特定卡片的交易  
+createBeginTime| false| integer| 交易開始時間（Unix 毫秒時間戳）  
+createEndTime| false| integer| 交易截止時間（Unix 毫秒時間戳）  
+merchName| false| string| 商戶名稱，支持模糊搜索  
+type| false| string| 查詢類型。  
+`SIDE_QUERY_AUTH`: 授權交易  
+`SIDE_QUERY_FINANCIAL`: 清算交易。須傳入 `txnId` 和 `orderNo`。  
+`SIDE_QUERY_REFUND`: 退款交易。須傳入 `txnId` 和 `orderNo`。  
+以下查詢類型適用於所有用戶：  
+`SIDE_QUERY_AUTH_ALL`: 所有授權交易  
+`SIDE_QUERY_AUTH_REVERSAL`: 授權撤銷交易  
+`SIDE_QUERY_FINANCIAL_ALL`: 所有清算交易  
+`SIDE_QUERY_FINANCIAL_REFUND`: 清算退款交易  
+txnId| false| string| 交易 ID，精確匹配  
+cardToken| false| string| 卡 Token，用於標識特定卡片  
+orderNo| false| string| 訂單號，精確匹配  
   
 ### 響應參數
 
@@ -186,27 +236,38 @@ result| object|
 > pageSize| integer| 每頁條數  
 > pageNo| integer| 當前頁碼  
 > totalCount| integer| 總記錄數  
-> data| array| 積分流水列表  
->> outOrderId| string| 外部訂單號  
->> point| integer| 積分數  
->> side| string| 積分方向  
->> type| string| 類型  
->> subType| string| 子類型  
->> createTime| integer| 創建時間（Unix 毫秒時間戳）  
->> updateTime| integer| 更新時間（Unix 毫秒時間戳）  
->> bizId| string| 積分訂單號  
->> bizTxnId| string| consumeIdLifecycle  
->> transactionDate| string| 交易日期及時間  
->> transactionId| string| 交易 ID  
->> transactionAmount| string| 交易金額 / 法幣支付金額  
->> basicCurrency| string| 交易貨幣  
->> merchCategoryDesc| string| 商戶類別  
->> merchName| string| 商戶名稱  
+> data| array| 交易記錄列表  
+>> pan4| string| 卡後 4 位  
+>> pan6| string| 卡前 6 位（BIN 號）  
+>> tradeStatus| string| 交易狀態。`0`: 處理中, `1`: 已完成, `2`: 已拒絕, `3`: 已撤銷  
+>> side| string| 交易類型。`1`: 授權, `2`: 授權撤銷, `3`: 扣款, `4`: 退款（unDeduct）, `5`: 退款, `6`: 拒付, `7`: 直接扣款, `8`: 退款撤銷, `9`: 拒付撤銷, `10`: 退款請求, `11`: 退款撤銷請求, `12`: 拒付費, `13`: ATM 取款  
+>> basicAmount| string| 總金額  
+>> basicCurrency| string| 總金額幣種代碼  
+>> transactionAmount| string| 不含稅金額  
+>> transactionCurrency| string| 不含稅金額幣種代碼  
+>> txnCreate| integer| 交易創建時間（Unix 毫秒時間戳）  
 >> merchCountry| string| 商戶所在國家  
 >> merchCity| string| 商戶所在城市  
->> pan4| string| 卡後 4 位  
->> payFiatAmount| string| 法幣支付金額  
->> transactionCurrencyAmount| string| 加密貨幣支付金額  
+>> merchName| string| 商戶名稱  
+>> txnId| string| 交易 ID  
+>> declinedReason| string| 拒絕原因，僅當交易被拒絕時有值  
+>> totalFees| string| 總費用  
+>> uid| integer| 用戶 ID  
+>> transactionCurrencyAmount| string| 法幣交易金額  
+>> fxPad| string| 手續費  
+>> interchangeFee| string| 交換費（不叠加，與用戶無關，卡組相關）  
+>> billAmount| string| 賬單金額  
+>> paidAmount| string| 交易幣種金額  
+>> paidCurrency| string| 實付貨幣代碼  
+>> bonusAmount| string| 體驗金  
+>> foreignTransactionFee| string| 外幣交易手續費  
+>> totalTax| string| 總稅費  
+>> paidFiat| string| 法幣支付金額  
+>> withdrawalFee| string| 提現手續費  
+>> status| string| 交易狀態。`-1`: 初始化, `0`: 待處理, `1`: 成功, `2`: 失敗  
+>> orderNo| string| 訂單號  
+>> mccCode| string| 商戶類別代碼（MCC Code）  
+>> merchCategoryDesc| string| 商戶類別描述  
   
 * * *
 
@@ -219,7 +280,7 @@ result| object|
 
     
     
-    POST /v5/card/reward/points/records?pageSize=10&pageNo=1 HTTP/1.1  
+    POST /v5/card/transaction/query-asset-records?limit=10&page=1 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -230,7 +291,7 @@ result| object|
     
     import requests  
       
-    url = "https://api-testnet.bybit.com/v5/card/reward/points/records"  
+    url = "https://api-testnet.bybit.com/v5/card/transaction/query-asset-records"  
     headers = {  
         "X-BAPI-API-KEY": "xxxxxxxxxxxxxxxxxx",  
         "X-BAPI-SIGN": "XXXXX",  
@@ -238,8 +299,8 @@ result| object|
         "X-BAPI-RECV-WINDOW": "5000"  
     }  
     params = {  
-        "pageSize": 10,  
-        "pageNo": 1  
+        "limit": 10,  
+        "page": 1  
     }  
     response = requests.post(url, headers=headers, params=params)  
     print(response.json())  
@@ -248,14 +309,14 @@ result| object|
     
     const axios = require('axios');  
       
-    const url = 'https://api-testnet.bybit.com/v5/card/reward/points/records';  
+    const url = 'https://api-testnet.bybit.com/v5/card/transaction/query-asset-records';  
     const headers = {  
       'X-BAPI-API-KEY': 'xxxxxxxxxxxxxxxxxx',  
       'X-BAPI-SIGN': 'XXXXX',  
       'X-BAPI-TIMESTAMP': '1672211918471',  
       'X-BAPI-RECV-WINDOW': '5000'  
     };  
-    const params = { pageSize: 10, pageNo: 1 };  
+    const params = { limit: 10, page: 1 };  
       
     axios.post(url, {}, { headers, params })  
       .then(response => console.log(response.data))  
@@ -269,31 +330,42 @@ result| object|
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "pageSize": 10,  
+            "pageSize": 100,  
             "pageNo": 1,  
-            "totalCount": 50,  
+            "totalCount": 2,  
             "data": [  
                 {  
-                    "outOrderId": "ORD20230101001",  
-                    "point": 100,  
-                    "side": "1",  
-                    "type": "CASHBACK",  
-                    "subType": "",  
-                    "createTime": 1672211918471,  
-                    "updateTime": 1672211918471,  
-                    "bizId": "BIZ20230101001",  
-                    "bizTxnId": "TXN20230101001",  
-                    "transactionDate": "2023-01-01 12:00:00",  
-                    "transactionId": "TXN20230101001",  
-                    "transactionAmount": "100.00",  
+                    "pan4": "1234",  
+                    "pan6": "456789",  
+                    "tradeStatus": "1",  
+                    "side": "3",  
+                    "basicAmount": "101.50",  
                     "basicCurrency": "USD",  
-                    "merchCategoryDesc": "Grocery Stores",  
-                    "merchName": "Amazon",  
+                    "transactionAmount": "100.00",  
+                    "transactionCurrency": "USD",  
+                    "txnCreate": 1672211918471,  
                     "merchCountry": "US",  
                     "merchCity": "New York",  
-                    "pan4": "1234",  
-                    "payFiatAmount": "0",  
-                    "transactionCurrencyAmount": "100.00"  
+                    "merchName": "Amazon",  
+                    "txnId": "TXN20230101001",  
+                    "declinedReason": "",  
+                    "totalFees": "1.50",  
+                    "uid": 100001,  
+                    "transactionCurrencyAmount": "100.00",  
+                    "fxPad": "",  
+                    "interchangeFee": "0.50",  
+                    "billAmount": "101.50",  
+                    "paidAmount": "101.50",  
+                    "paidCurrency": "USDT",  
+                    "bonusAmount": "0",  
+                    "foreignTransactionFee": "0",  
+                    "totalTax": "1.50",  
+                    "paidFiat": "0",  
+                    "withdrawalFee": "0",  
+                    "status": "1",  
+                    "orderNo": "ORD20230101001",  
+                    "mccCode": "5411",  
+                    "merchCategoryDesc": "Grocery Stores"  
                 }  
             ]  
         },  

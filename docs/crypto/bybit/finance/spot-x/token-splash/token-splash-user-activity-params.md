@@ -2,54 +2,75 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/token-splash/token-splash-user-activity-params
 api_type: REST
-updated_at: 2026-11-13 18:27:52.752040
+updated_at: 2026-11-13 19:23:44.085841
 ---
 
-# Get Institution IP Change Log
+# Get Token Splash User Activity Params
+
+Query the authenticated user's participation details and trade-task progress for Token Splash activities.
 
 info
 
-This endpoint must be requested with a main account API key.
+  * Authentication is required
+  * Only returns activities where the user has already registered
+  * Only trade-task activities are returned (deposit-only task types are excluded)
+  * Only activities that have not yet reached their announcement time are returned (rewards not yet distributed)
+  * Estimated reward formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`, truncated to 4 decimal places
+
+
 
 ### HTTP Request
 
-GET`/v5/ins/ip/changelog`
+GET`/v5/spot-x/token-splash/user/activity-params`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-startTime| false| string| Filter start time, Unix timestamp in milliseconds  
-endTime| false| string| Filter end time, Unix timestamp in milliseconds  
-limit| false| integer| Records per page. Range: [1, 50]. Default: 20  
-cursor| false| string| Pagination cursor. Use the `nextPageCursor` value from the previous response  
+projectId| false| string| Filter by exact activity code. Returns data for a single project when provided  
+activityCoin| false| string| Filter by activity coin symbol (case-insensitive), e.g. `BTC`, `ETH`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Array of IP change records  
-> operationType| string| Action type: `ADD`, `REMOVE`, `ENABLE`, or `DISABLE`  
-> ipAddress| string| The IP address affected by the operation  
-> domainType| string| Connection protocol. `GW` for HTTP hostname, `WS` for WebSocket hostname  
-> changeReason| string| The reason of the change  
-> createdAt| string| Operation timestamp in UTC+0, ISO 8601 format  
-nextPageCursor| string| Opaque token for retrieving the next page of results  
+list| array| User activity items. Empty array if the user has not registered for any matching activity  
+> projectId| string| Unique activity code  
+> activityCoin| string| The coin that the activity is centered on  
+> tradeTask| object| Trade task details and the user's current progress  
+>> tradeRequiredAmount| string| Total trade volume required to earn the full reward  
+>> tradeUnit| string| The coin unit for the trade task  
+>> tradeToken| string| Token counted by the trade task. For an on-chain trade task, this is the activity token ID; for other trade tasks, this is the configured trade token  
+>> tradedAmount| string| Trade volume the user has accumulated so far  
+>> maxRewardAmount| string| Maximum reward the user can earn if the full required volume is traded  
+>> estimatedRewardAmount| string| Estimated reward based on current progress, truncated to 4 decimal places. Formula: `min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`  
+>> rewardCoin| string| Coin in which the trade-task reward is distributed  
   
+* * *
+
 ### Request Example
 
   * HTTP
+  * Python
+  * Node.js
 
 
     
     
-    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
+    GET /v5/spot-x/token-splash/user/activity-params HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1779362662315  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    X-BAPI-SIGN: XXXXX  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
 ### Response Example
@@ -61,75 +82,95 @@ nextPageCursor| string| Opaque token for retrieving the next page of results
         "result": {  
             "list": [  
                 {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "193.118.167.247",  
-                    "domainType": "WS",  
-                    "changeReason": "do not meet the requirement",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                },  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "18.99.43.128/25",  
-                    "domainType": "WS",  
-                    "changeReason": "do not meet the requirement",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
+                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "tradeTask": {  
+                        "tradeRequiredAmount": "0.5",  
+                        "tradeUnit": "BTC",  
+                        "tradeToken": "BTC",  
+                        "tradedAmount": "0.3",  
+                        "maxRewardAmount": "200",  
+                        "estimatedRewardAmount": "120.0000",  
+                        "rewardCoin": "USDT"  
+                    }  
                 }  
-            ],  
-            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
+            ]  
         },  
-        "time": 1779362027705  
+        "retExtInfo": {},  
+        "time": 1705000000000  
     }
 
 ---
 
-# 查詢機構 IP 變更記錄
+# 查詢 Token Splash 用戶活動參數
+
+查詢當前用戶在 Token Splash 活動中的參與詳情及交易任務進度。
 
 信息
 
-此接口必須使用主帳戶 API key 請求。
+  * 需要鑒權
+  * 僅返回用戶已報名的活動
+  * 僅返回交易任務類活動（不含純入金任務類型）
+  * 僅返回尚未到達公告時間的活動（獎勵尚未發放）
+  * 預估獎勵計算公式：`min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`，截斷至 4 位小數
+
+
 
 ### HTTP 請求
 
-GET`/v5/ins/ip/changelog`
+GET`/v5/spot-x/token-splash/user/activity-params`
 
 ### 請求參數
 
-參數| 是否必填| 類型| 說明  
+參數| 是否必須| 類型| 說明  
 ---|---|---|---  
-startTime| false| string| 篩選起始時間，Unix 毫秒時間戳  
-endTime| false| string| 篩選結束時間，Unix 毫秒時間戳  
-limit| false| integer| 每頁記錄數。範圍: [1, 50]。預設: 20  
-cursor| false| string| 分頁游標。使用上一頁響應中的 `nextPageCursor` 值  
+projectId| false| string| 精確活動代碼，傳入時僅返回該項目數據  
+activityCoin| false| string| 按活動幣種篩選（大小寫不敏感），如 `BTC`、`ETH`  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| IP 變更記錄列表  
-> operationType| string| 操作類型: `ADD`, `REMOVE`, `ENABLE`, 或 `DISABLE`  
-> ipAddress| string| 受該操作影響的 IP 位址  
-> domainType| string| 連接協議。`GW` 表示 HTTP hostname，`WS` 表示 WebSocket hostname  
-> changeReason| string| 變更原因  
-> createdAt| string| 操作時間戳，UTC+0，ISO 8601 格式  
-nextPageCursor| string| 用於查詢下一頁的不透明 token  
+list| array| 用戶活動列表。若用戶未報名任何匹配活動則返回空數組  
+> projectId| string| 唯一活動代碼  
+> activityCoin| string| 活動對應的幣種  
+> tradeTask| object| 交易任務詳情及用戶當前進度  
+>> tradeRequiredAmount| string| 達到全額獎勵所需的交易量  
+>> tradeUnit| string| 交易任務的幣種單位  
+>> tradeToken| string| 交易任務統計的代幣。對於鏈上交易任務，該字段為活動代幣 ID；對於其他交易任務，該字段為配置的交易代幣  
+>> tradedAmount| string| 用戶目前已累計的交易量  
+>> maxRewardAmount| string| 完成全部所需交易量可獲得的最大獎勵  
+>> estimatedRewardAmount| string| 基於當前進度的預估獎勵，截斷至 4 位小數。計算公式：`min(tradedAmount / tradeRequiredAmount, 1) × maxRewardAmount`  
+>> rewardCoin| string| 交易任務獎勵的發放幣種  
   
+* * *
+
 ### 請求示例
 
   * HTTP
+  * Python
+  * Node.js
 
 
     
     
-    GET /v5/ins/ip/changelog?limit=3 HTTP/1.1  
+    GET /v5/spot-x/token-splash/user/activity-params HTTP/1.1  
     Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: XXXXXX  
-    X-BAPI-TIMESTAMP: 1779362662315  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1705000000000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    X-BAPI-SIGN: XXXXX  
+    
+    
+    
+      
+    
+    
+    
+      
     
 
-### 響應示例
+### 返回示例
     
     
     {  
@@ -138,21 +179,20 @@ nextPageCursor| string| 用於查詢下一頁的不透明 token
         "result": {  
             "list": [  
                 {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "193.118.167.247",  
-                    "domainType": "WS",  
-                    "changeReason": "do not meet the requirement",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
-                },  
-                {  
-                    "operationType": "DISABLE",  
-                    "ipAddress": "18.99.43.128/25",  
-                    "domainType": "WS",  
-                    "changeReason": "do not meet the requirement",  
-                    "createdAt": "2026-05-21T06:02:36Z"  
+                    "projectId": "TOKENSPLASH_BTC_2024Q1",  
+                    "activityCoin": "BTC",  
+                    "tradeTask": {  
+                        "tradeRequiredAmount": "0.5",  
+                        "tradeUnit": "BTC",  
+                        "tradeToken": "BTC",  
+                        "tradedAmount": "0.3",  
+                        "maxRewardAmount": "200",  
+                        "estimatedRewardAmount": "120.0000",  
+                        "rewardCoin": "USDT"  
+                    }  
                 }  
-            ],  
-            "nextPageCursor": "eyJpZCI6NDE0LCJjcmVhdGVkQXQiOiIyMDI2LTA1LTIxVDA2OjAyOjM2In0="  
+            ]  
         },  
-        "time": 1779362027705  
+        "retExtInfo": {},  
+        "time": 1705000000000  
     }

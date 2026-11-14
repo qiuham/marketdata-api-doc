@@ -2,63 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/est-redeem
 api_type: REST
-updated_at: 2026-11-13 18:27:29.321064
+updated_at: 2026-11-13 19:22:45.996605
 ---
 
-# Get Position Info
+# Get Redeem Estimated Amount
 
 info
 
   * Requires Earn permission on the API key.
-  * Returns active positions only. Settled positions are not returned.
+  * This is a **required prerequisite** before placing a Redeem order. Pass the returned `estRedeemAmount` in `doubleWinRedeemExtra` when calling [Place Order](/docs/v5/finance/advanced-earn/double-win/create-order).
 
 
 
 ### HTTP Request
 
-GET`/v5/earn/advance/position`
+GET`/v5/earn/advance/get-redeem-est-amount-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 category| **true**|  string| Product category. `DoubleWin`  
-productId| false| string| Filter by product ID  
-coin| false| string| Filter by underlying asset, e.g. `BTC`, `ETH`  
-limit| false| int| Number of items per page. Default: 20, Max: 20  
-cursor| false| string| Pagination cursor. Use `nextPageCursor` from previous response  
+positionIds| **true**|  string| Comma-separated position IDs, max 5. e.g. `5001,5002`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product category. `DoubleWin`  
-nextPageCursor| string| Cursor for the next page. Empty string if no more data  
 list| array| Object  
+> success| bool| Whether the estimation succeeded for this position  
 > positionId| string| Position ID  
-> productId| string| Product ID  
-> category| string| Product category  
-> investCoin| string| Investment coin, e.g. `USDT`  
-> underlyingAsset| string| Underlying asset, e.g. `BTC`, `ETH`  
-> amount| string| Position amount in `investCoin`  
-> leverage| string| Leverage multiplier  
-> initialPrice| string| Underlying asset index price at position creation  
-> lowerPrice| string| Lower bound of the price range  
-> upperPrice| string| Upper bound of the price range  
-> duration| string| Product term, e.g. `1d`, `3d`  
-> settlementTime| string| Settlement time, Unix timestamp in ms  
-> createdTime| string| Position creation time, Unix timestamp in ms  
-> status| string| `Active`: holding; `Redeeming`: early redemption in progress  
-> redeemable| bool| Whether the position can be redeemed now. `false` if a pending redeem order exists or less than 30 minutes remain until settlement  
-> accountType| string| Staking account: `FUND` or `UNIFIED`  
-> orderId| string| Staking order ID  
+> estRedeemAmount| string| Estimated redeem amount in `investCoin`  
+> estRedeemTime| string| Estimated time to receive funds after redemption, Unix timestamp in ms  
+> slippageRate| string| Slippage tolerance rate for this redemption, e.g. `"0.05"` = 5%  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/advance/position?category=DoubleWin&productId=20001 HTTP/1.1  
+    GET /v5/earn/advance/get-redeem-est-amount-list?category=DoubleWin&positionIds=2847 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -73,90 +56,59 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "category": "DoubleWin",  
             "list": [  
                 {  
-                    "positionId": "2848",  
-                    "productId": "14084",  
-                    "category": "DoubleWin",  
-                    "investCoin": "USDT",  
-                    "underlyingAsset": "BTC",  
-                    "amount": "150",  
-                    "leverage": "9.3309793178843419",  
-                    "initialPrice": "66445.69",  
-                    "lowerPrice": "66245.69",  
-                    "upperPrice": "66645.69",  
-                    "duration": "1d",  
-                    "settlementTime": "1775203200000",  
-                    "createdTime": "1775107014000",  
-                    "status": "Active",  
-                    "redeemable": true,  
-                    "accountType": "FUND",  
-                    "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc"  
+                    "success": false,  
+                    "positionId": "2847",  
+                    "estRedeemAmount": "0",  
+                    "estRedeemTime": "0",  
+                    "slippageRate": "0.9"  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1775107714828  
+        "time": 1775107977370  
     }
 
 ---
 
-# 查詢倉位資訊
+# 查詢贖回預估金額
 
 信息
 
   * API 金鑰需要具備 Earn（理財）權限。
-  * 僅返回活躍倉位，已結算的倉位不返回。
+  * 這是提交贖回訂單前的**必要前置步驟** 。請將返回的 `estRedeemAmount` 透過 `doubleWinRedeemExtra` 傳入[創建訂單](/docs/zh-TW/v5/finance/advanced-earn/double-win/create-order)。
 
 
 
 ### HTTP 請求
 
-GET`/v5/earn/advance/position`
+GET`/v5/earn/advance/get-redeem-est-amount-list`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
 category| **true**|  string| 產品類別，`DoubleWin`  
-productId| false| string| 按產品 ID 篩選  
-coin| false| string| 按標的資產篩選，例如：`BTC`, `ETH`  
-limit| false| int| 每頁返回數量。預設：20，最大：20  
-cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
+positionIds| **true**|  string| 倉位 ID 列表（逗號分隔），最多 5 個，例如：`2847,2848`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類別，`DoubleWin`  
-nextPageCursor| string| 下一頁游標，為空字串表示無更多資料  
 list| array| 列表  
+> success| bool| 是否成功獲取該倉位的預估金額  
 > positionId| string| 倉位 ID  
-> productId| string| 產品 ID  
-> category| string| 產品類別  
-> investCoin| string| 投資幣種，例如：`USDT`  
-> underlyingAsset| string| 標的資產，例如：`BTC`, `ETH`  
-> amount| string| 倉位金額，單位為 `investCoin`  
-> leverage| string| 槓桿倍數  
-> initialPrice| string| 建倉時的標的資產指數價格  
-> lowerPrice| string| 價格區間下限  
-> upperPrice| string| 價格區間上限  
-> duration| string| 產品期限，例如：`1d`, `3d`  
-> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
-> createdTime| string| 倉位創建時間，毫秒級 Unix 時間戳  
-> status| string| `Active`：持倉中；`Redeeming`：提前贖回進行中  
-> redeemable| bool| 是否可立即贖回。若存在待處理的贖回訂單，或距結算時間不足 30 分鐘，則為 `false`  
-> accountType| string| 申購帳戶：`FUND`（資金帳戶），`UNIFIED`（統一帳戶）  
-> orderId| string| 申購訂單 ID  
+> estRedeemAmount| string| 以 `investCoin` 計的預估贖回金額  
+> estRedeemTime| string| 預計贖回到帳時間，毫秒級 Unix 時間戳  
+> slippageRate| string| 此次贖回的滑點容忍率，例如：`"0.9"` = 90%  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/advance/position?category=DoubleWin&productId=20001 HTTP/1.1  
+    GET /v5/earn/advance/get-redeem-est-amount-list?category=DoubleWin&positionIds=2847 HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -171,30 +123,16 @@ list| array| 列表
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "category": "DoubleWin",  
             "list": [  
                 {  
-                    "positionId": "2848",  
-                    "productId": "14084",  
-                    "category": "DoubleWin",  
-                    "investCoin": "USDT",  
-                    "underlyingAsset": "BTC",  
-                    "amount": "150",  
-                    "leverage": "9.3309793178843419",  
-                    "initialPrice": "66445.69",  
-                    "lowerPrice": "66245.69",  
-                    "upperPrice": "66645.69",  
-                    "duration": "1d",  
-                    "settlementTime": "1775203200000",  
-                    "createdTime": "1775107014000",  
-                    "status": "Active",  
-                    "redeemable": true,  
-                    "accountType": "FUND",  
-                    "orderId": "05184c23-8a98-456c-a2af-0ef1c45116cc"  
+                    "success": false,  
+                    "positionId": "2847",  
+                    "estRedeemAmount": "0",  
+                    "estRedeemTime": "0",  
+                    "slippageRate": "0.9"  
                 }  
-            ],  
-            "nextPageCursor": ""  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1775107714828  
+        "time": 1775107977370  
     }

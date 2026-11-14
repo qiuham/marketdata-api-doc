@@ -2,50 +2,34 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/account-info
 api_type: Account
-updated_at: 2026-11-13 18:26:37.119727
+updated_at: 2026-11-13 19:20:42.654804
 ---
 
-# Get Borrow History
+# Get Account Info
 
-Get interest records, sorted in reverse order of creation time.
+Query the account information, like margin mode, account mode, etc.
 
 ### HTTP Request
 
-GET`/v5/account/borrow-history`
+GET`/v5/account/info`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-currency| false| string| `USDC`,`USDT`,`BTC`,`ETH` etc, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
+None
 
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime-30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
-
-  
-endTime| false| integer| The end time. timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| `USDC`,`USDT`,`BTC`,`ETH`  
-> createdTime| integer| Created timestamp (ms)  
-> borrowCost| string| Interest  
-> hourlyBorrowRate| string| Hourly Borrow Rate  
-> InterestBearingBorrowSize| string| Interest Bearing Borrow Size  
-> costExemption| string| Cost exemption  
-> borrowAmount| string| Total borrow amount  
-> unrealisedLoss| string| Unrealised loss  
-> freeBorrowedAmount| string| The borrowed amount for interest free  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/account/borrow-history)
+[unifiedMarginStatus](/docs/v5/enum#unifiedmarginstatus)| integer| Account status  
+marginMode| string| `ISOLATED_MARGIN`, `REGULAR_MARGIN`, `PORTFOLIO_MARGIN`  
+isMasterTrader| boolean| Whether this account is a leader (copytrading). `true`, `false`  
+spotHedgingStatus| string| Whether the unified account enables Spot hedging. `ON`, `OFF`  
+updatedTime| string| Account data updated timestamp (ms)  
+dcpStatus| string| deprecated, always `OFF`. Please use [Get DCP Info](/docs/v5/account/dcp-info)  
+timeWindow| integer| deprecated, always `0`. Please use [Get DCP Info](/docs/v5/account/dcp-info)  
+smpGroup| integer| deprecated, always `0`. Please query [Get SMP Group ID](/docs/v5/account/smp-group) endpoint  
+[](/docs/api-explorer/v5/account/account-info)
 
 * * *
 
@@ -58,11 +42,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
+    GET /v5/account/info HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1672129307221  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -73,35 +57,26 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
-    ))  
+    print(session.get_account_info())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-      .getBorrowHistory({  
-        currency: 'USDT',  
-        startTime: 1670601600000,  
-        endTime: 1673203200000,  
-        limit: 30,  
-        cursor: 'nextPageCursorToken',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getAccountInfo()  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -111,68 +86,46 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1697442206478  
+            "marginMode": "REGULAR_MARGIN",  
+            "updatedTime": "1697078946000",  
+            "unifiedMarginStatus": 4,  
+            "dcpStatus": "OFF",  
+            "timeWindow": 10,  
+            "smpGroup": 0,  
+            "isMasterTrader": false,  
+            "spotHedgingStatus": "OFF"  
+        }  
     }
 
 ---
 
-# 查詢利息記錄
+# 查詢賬戶配置
 
-獲取利息記錄，按照創建時間倒敘排列
+該接口可以查詢統一帳戶的保證金模式, 當前帳戶模式等配置
 
 ### HTTP 請求
 
-GET`/v5/account/borrow-history`
+GET`/v5/account/info`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-currency| false| string| USDC、USDT、BTC、ETH  
-startTime| false| integer| 開始時間戳 (毫秒) 
+無
 
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
-
-  
-endTime| false| integer| 結束時間 (毫秒)  
-limit| false| integer| 每頁數量, 最大50. 默認每頁20條  
-cursor| false| string| 游標，用於翻頁  
-  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| USDC、USDT、BTC、ETH  
-> createdTime| integer| 時間戳（毫秒）  
-> borrowCost| string| 利息  
-> hourlyBorrowRate| string| 利率  
-> InterestBearingBorrowSize| string| 豁免利息額度  
-> costExemption| string| 豁免計息成本  
-> borrowAmount| string| 當前總借貸  
-> unrealisedLoss| string| 浮動虧損  
-> freeBorrowedAmount| string| 借款中免息的數額  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/account/borrow-history)
+[unifiedMarginStatus](/docs/zh-TW/v5/enum#unifiedmarginstatus)| integer| 帳戶狀態類型  
+marginMode| string| `ISOLATED_MARGIN`(逐倉保證金)  
+`REGULAR_MARGIN`（全倉保證金）  
+`PORTFOLIO_MARGIN`（組合保證金）  
+isMasterTrader| boolean| 是否為帶單帳戶. `true`, `false`  
+spotHedgingStatus| string| 是否開啟現貨對衝. `ON`, `OFF`  
+updatedTime| string| 賬戶數據更新的時間，毫秒時間戳  
+dcpStatus| string| **廢棄** 字段, 總是`OFF`. 請使用[查詢DCP配置](/docs/zh-TW/v5/account/dcp-info)  
+timeWindow| integer| **廢棄** 字段, 總是`0`. 請使用[查詢DCP配置](/docs/zh-TW/v5/account/dcp-info)  
+smpGroup| integer| **廢棄** 字段, 總是`0`. 請調用[查詢SMP組ID](/docs/zh-TW/v5/account/smp-group)  
+[](/docs/zh-TW/api-explorer/v5/account/account-info)
 
 * * *
 
@@ -185,11 +138,11 @@ nextPageCursor| string| 游標，用於翻頁
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
+    GET /v5/account/info HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1672129307221  
     X-BAPI-RECV-WINDOW: 5000  
     
     
@@ -200,35 +153,26 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
-    ))  
+    print(session.get_account_info())  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-      .getBorrowHistory({  
-        currency: 'USDT',   
-        startTime: 1670601600000,   
-        endTime: 1673203200000,   
-        limit: 30,   
-        cursor: 'nextPageCursorToken',   
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getAccountInfo()  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -238,21 +182,13 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
-        },  
-        "retExtInfo": {},  
-        "time": 1697442206478  
+            "marginMode": "REGULAR_MARGIN",  
+            "updatedTime": "1697078946000",  
+            "unifiedMarginStatus": 4,  
+            "dcpStatus": "OFF",  
+            "timeWindow": 10,  
+            "smpGroup": 0,  
+            "isMasterTrader": false,  
+            "spotHedgingStatus": "OFF"  
+        }  
     }

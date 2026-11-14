@@ -405,10 +405,8 @@ class BybitAdapter(ExchangeAdapter):
                 idx = batch_start + i + 1
                 try:
                     browser.tab_switch(i)
-
-                    # 等待页面加载完成
-                    if not browser.wait_for_element('article', timeout=30):
-                        log.warning(f"[{idx}/{total}] 页面加载超时，尝试继续")
+                    # 存盘前核对：当前标签页必须就是这一页，不然会把别的页存进这个文件
+                    browser.ensure_page(url, 'article', timeout=30)
 
                     filepath = url_to_filepath(url, product_prefix)
                     output_path = safe_output_path(output_dir, filepath)

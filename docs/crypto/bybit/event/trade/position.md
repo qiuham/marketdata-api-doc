@@ -2,12 +2,12 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/position
 api_type: Trading
-updated_at: 2026-11-13 18:27:25.111253
+updated_at: 2026-11-13 19:22:36.059144
 ---
 
-# Submit Quote
+# Get Event Contract Position Info
 
-Submit a payout ratio quote for an Event Contract symbol.
+Query real-time Event Contract position data. Covers UpDown, Target, and Range contract types.
 
 info
 
@@ -17,45 +17,49 @@ info
 
 ### HTTP Request
 
-POST`/v5/event/quotes`
+GET`/v5/event/positions`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-symbol| **true**|  string| Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`  
-orderLinkId| **true**|  string| User-defined order ID  
-grossPayoutRatio| **true**|  string| Gross payout ratio reported by the institution  
-amount| **true**|  string| Amount for this quote (settle coin)  
-cancelAfterMs| false| integer| Automatically cancel the order after this many milliseconds. `0` uses the instrument's [`quoteMaxValidMs`](/docs/v5/event/market/instrument-info) configuration. A non-zero value must not exceed `quoteMaxValidMs`  
+symbol| false| string| Symbol name, e.g. `ETHUSDT-28AUG26-2450-2570-OUT`. If not passed, returns all Event Contract positions  
+baseCoin| false| string| Base coin filter, e.g. `BTC`  
+settleCoin| false| string| Settle coin filter, e.g. `USDT`  
+limit| false| integer| Number of items per page. Default: `20`, Range: [`1`, `50`]  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from the response to retrieve the next page  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderLinkId| string| User-defined order ID  
-orderId| string| Order ID  
+list| array| Event Contract position list  
+> symbol| string| Symbol name  
+> baseCoin| string| Base coin  
+> settleCoin| string| Settle coin  
+> side| string| Position side: `Buy` (long), `Sell` (short)  
+> ecContractType| string| Event contract type: `UpDown`, `Target`, `Range`  
+> ecDirection| string| Direction: `UP`/`DOWN` (UpDown type), `ABOVE`/`BELOW` (Target type), `RANGE_IN`/`RANGE_OUT` (Range type)  
+> avgPayoutRatio| string| Average payout ratio  
+> positionValue| string| Position value (cumulative executed value)  
+> ecSettleTime| string| Expected settlement time in milliseconds  
+> cumClosedPnl| string| Cumulative settled profit and loss  
+> createdTime| string| Position creation timestamp in milliseconds  
+> updatedTime| string| Position update timestamp in milliseconds  
+> seq| long| Cross sequence number for ordering  
+nextPageCursor| string| Cursor for next page pagination  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/event/quotes HTTP/1.1  
+    GET /v5/event/positions?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=20 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1694402559000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderLinkId": "xxxx",  
-        "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
-        "grossPayoutRatio": "0.5",  
-        "amount": "100",  
-        "cancelAfterMs": 5000  
-    }  
     
 
 ### Response Example
@@ -65,18 +69,34 @@ orderId| string| Order ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderLinkId": "xxxxxx",  
-            "orderId": "xxxxxxxxxxefffff"  
+            "list": [  
+                {  
+                    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                    "baseCoin": "BTC",  
+                    "settleCoin": "USDT",  
+                    "side": "Buy",  
+                    "ecContractType": "UpDown",  
+                    "ecDirection": "UP",  
+                    "avgPayoutRatio": "1.85",  
+                    "positionValue": "100",  
+                    "ecSettleTime": "1694515498753",  
+                    "cumClosedPnl": "50.5",  
+                    "createdTime": "1694402559843",  
+                    "updatedTime": "1694515498753",  
+                    "seq": 31413030  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1672217377164  
+        "time": 1694402560000  
     }
 
 ---
 
-# 提交報價
+# 查詢Event Contract倉位信息
 
-為 Event Contract 交易對提交賠付比率報價。
+查詢實時 Event Contract 倉位數據，涵蓋 UpDown、Target 及 Range 合約類型。
 
 信息
 
@@ -86,45 +106,49 @@ orderId| string| Order ID
 
 ### HTTP 請求
 
-POST`/v5/event/quotes`
+GET`/v5/event/positions`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-symbol| **true**|  string| 交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`  
-orderLinkId| **true**|  string| 用戶自定義訂單 ID  
-grossPayoutRatio| **true**|  string| 機構報出的毛賠付比率  
-amount| **true**|  string| 本次報價金額（結算幣種）  
-cancelAfterMs| 否| integer| 下單後經過指定毫秒數自動撤銷訂單。`0` 使用該合約的 [`quoteMaxValidMs`](/docs/zh-TW/v5/event/market/instrument-info) 配置值；非 `0` 的值不得超過 `quoteMaxValidMs`  
+symbol| 否| string| 交易對名稱，如 `ETHUSDT-28AUG26-2450-2570-OUT`。不傳則返回所有 Event Contract 倉位  
+baseCoin| 否| string| 標的幣種篩選，如 `BTC`  
+settleCoin| 否| string| 結算幣種篩選，如 `USDT`  
+limit| 否| integer| 每頁數量。默認：`20`，範圍：[`1`, `50`]  
+cursor| 否| string| 分頁游標，使用返回結果中的 `nextPageCursor` 獲取下一頁  
   
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderLinkId| string| 用戶自定義訂單 ID  
-orderId| string| 訂單 ID  
+list| array| Event Contract 倉位列表  
+> symbol| string| 交易對名稱  
+> baseCoin| string| 標的幣種  
+> settleCoin| string| 結算幣種  
+> side| string| 倉位方向：`Buy`（做多）、`Sell`（做空）  
+> ecContractType| string| 事件合約類型：`UpDown`、`Target`、`Range`  
+> ecDirection| string| 方向：`UP`/`DOWN`（UpDown 類型），`ABOVE`/`BELOW`（Target 類型），`RANGE_IN`/`RANGE_OUT`（Range 類型）  
+> avgPayoutRatio| string| 平均賠付比率  
+> positionValue| string| 倉位價值（累計成交金額）  
+> ecSettleTime| string| 預計結算時間（毫秒）  
+> cumClosedPnl| string| 累計已結算盈虧  
+> createdTime| string| 倉位創建時間（毫秒）  
+> updatedTime| string| 倉位更新時間（毫秒）  
+> seq| long| 跨業務序號，用於排序  
+nextPageCursor| string| 下一頁分頁游標  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/event/quotes HTTP/1.1  
+    GET /v5/event/positions?symbol=ETHUSDT-28AUG26-2450-2570-OUT&limit=20 HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
     X-BAPI-TIMESTAMP: 1694402559000  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "orderLinkId": "xxxx",  
-        "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
-        "grossPayoutRatio": "0.5",  
-        "amount": "100",  
-        "cancelAfterMs": 5000  
-    }  
     
 
 ### 返回示例
@@ -134,9 +158,25 @@ orderId| string| 訂單 ID
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "orderLinkId": "xxxxxx",  
-            "orderId": "xxxxxxxxxxefffff"  
+            "list": [  
+                {  
+                    "symbol": "ETHUSDT-28AUG26-2450-2570-OUT",  
+                    "baseCoin": "BTC",  
+                    "settleCoin": "USDT",  
+                    "side": "Buy",  
+                    "ecContractType": "UpDown",  
+                    "ecDirection": "UP",  
+                    "avgPayoutRatio": "1.85",  
+                    "positionValue": "100",  
+                    "ecSettleTime": "1694515498753",  
+                    "cumClosedPnl": "50.5",  
+                    "createdTime": "1694402559843",  
+                    "updatedTime": "1694515498753",  
+                    "seq": 31413030  
+                }  
+            ],  
+            "nextPageCursor": ""  
         },  
         "retExtInfo": {},  
-        "time": 1672217377164  
+        "time": 1694402560000  
     }

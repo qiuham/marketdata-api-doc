@@ -2,107 +2,57 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/upgrade-unified-account
 api_type: Account
-updated_at: 2026-11-13 18:26:44.291642
+updated_at: 2026-11-13 19:20:57.978979
 ---
 
-# Get Wallet Balance
+# Upgrade to Unified Account Pro
 
-Obtain wallet balance, query asset information of each currency. By default, currency information with assets or liabilities of 0 is not returned.
+Upgrade Guidance
+
+Check your current account status by calling this [Get Account Info](/docs/v5/account/account-info)
+
+  * if unifiedMarginStatus=5, then it is [UTA2.0](/docs/v5/acct-mode#uta-20), you can call below upgrade endpoint to [UTA2.0](/docs/v5/acct-mode#uta-20) Pro. Check [Get Account Info](/docs/v5/account/account-info) after a while and if unifiedMarginStatus=6, then the account has successfully upgraded to [UTA2.0](/docs/v5/acct-mode#uta-20) Pro.
+  * When the user is a master account, the current user is allowed to upgrade to UTA PRO if they are a VIP or PRO level user.
+  * When the user is a sub-account, only parent accounts with VIP or PRO level are allowed to upgrade to UTA PRO.
+
+
 
 info
 
-  * Under the new logic of UTA manual borrow, `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
+please note belows:
 
-  * Old `walletBalance` = New `walletBalance` \- `spotBorrow`
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
+  1. Please avoid upgrading during these period:
+
+|   
+---|---  
+every hour| 50th minute to 5th minute of next hour  
+  
+  2. Upgrading from UTA PUBLIC to UTA PRO is prohibited daily between **07:55 and 08:05 UTC+0**  
+  
+
+  3. Please ensure: there is no open orders when upgrade from [UTA2.0](/docs/v5/acct-mode#uta-20) to [UTA2.0](/docs/v5/acct-mode#uta-20) Pro  
+  
+
+  4. During the account upgrade process, the data of **Rest API/Websocket stream** may be inaccurate due to the fact that the account-related asset data is in the processing state. It is recommended to query and use it after the upgrade is completed.
 
 
 
 ### HTTP Request
 
-GET`/v5/account/wallet-balance`
+POST`/v5/account/upgrade-to-uta`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-[accountType](/docs/v5/enum#accounttype)| **true**|  string| Account type `UNIFIED`. To get Funding wallet balance, please go to this [endpoint](/docs/v5/asset/balance/all-balance)  
-coin| false| string| Coin name, uppercase only 
+None
 
-  * If not passed, it returns non-zero asset info
-  * You can pass multiple coins to query, separated by comma. `USDT,USDC`
-
-  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> accountType| string| Account type  
-> accountIMRate| string| Account IM rate 
-
-  * You can refer to this [Glossary](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account) to understand the below fields calculation and mearning
-  * All account wide fields are **not** applicable to isolated margin
-
-  
-> accountMMRate| string| Account MM rate  
-> totalEquity| string| Account total equity (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| Account wallet balance (USD): ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| Account margin balance (USD): totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| Account available balance (USD), 
-
-  * Cross Margin: totalMarginBalance - Haircut - totalInitialMargin.
-  * Porfolio Margin: total Equity - Haircut - totalInitialMargin. 
-
-  
-> totalPerpUPL| string| Account Perps and Futures unrealised p&l (USD): ∑Each Perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| Account initial margin (USD): ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| Account maintenance margin (USD): ∑ Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| You can **ignore** this field, and refer to `accountIMRate`, which has the same calculation  
-> accountMMRateByMp| string| You can **ignore** this field, and refer to `accountMMRate`, which has the same calculation  
-> totalInitialMarginByMp| string| You can **ignore** this field, and refer to `totalInitialMargin`, which has the same calculation  
-> totalMaintenanceMarginByMp| string| You can **ignore** this field, and refer to `totalMaintenanceMargin`, which has the same calculation  
-> accountLTV| string| **Deprecated** field  
-> coin| array| Object  
->> coin| string| Coin name, such as BTC, ETH, USDT, USDC  
->> equity| string| Equity of coin. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| USD value of coin  
->> walletBalance| string| Wallet balance of coin  
->> locked| string| Locked balance due to the Spot open order  
->> spotHedgingQty| string| The spot asset qty that is used to hedge in the portfolio margin, truncate to 8 decimals and "0" by default  
->> borrowAmount| string| Borrow amount of current coin = spot liabilities + derivatives liabilities  
->> accruedInterest| string| Accrued interest  
->> totalOrderIM| string| Pre-occupied margin for order. For portfolio margin mode, it returns ""  
->> totalPositionIM| string| Sum of initial margin of all positions + Pre-occupied liquidation fee. For portfolio margin mode, it returns ""  
->> totalPositionMM| string| Sum of maintenance margin for all positions. For portfolio margin mode, it returns ""  
->> unrealisedPnl| string| Unrealised P&L  
->> cumRealisedPnl| string| Cumulative Realised P&L  
->> bonus| string| Bonus  
->> marginCollateral| boolean| Whether it can be used as a margin collateral currency (platform), `true`: YES, `false`: NO 
-
-  * When marginCollateral=false, then collateralSwitch is meaningless
-
-  
->> collateralSwitch| boolean| Whether the collateral is turned on by user (user), `true`: ON, `false`: OFF 
-
-  * When marginCollateral=true, then collateralSwitch is meaningful
-
-  
->> colRes| string| Platform level collateral restriction status. `-1`: Unknown. `0`: The restriction is not enabled. `1`: The restriction is not enabled. But the crypto is close to the platform's collateral limit. `2`: The restriction is enabled. Adding collateral, enabling the collateral switch, and switching margin mode will all be rejected. Refer to the [announcement](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates) for more details.  
->> spotBorrow| string| Borrow amount by spot margin trade and manual borrow amount (does not include borrow amount by spot margin active order). `spotBorrow` field corresponding to spot liabilities is detailed in the [ announcement](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **Deprecated** since there is no Spot wallet any more  
->> availableToWithdraw| string| **Deprecated** for `accountType=UNIFIED` from 9 Jan, 2025 
-
-  * Transferable balance: you can use [Get Transferable Amount (Unified)](/docs/v5/account/unified-trans-amnt) or [Get All Coins Balance](/docs/v5/asset/balance/all-balance) instead
-  * Derivatives available balance:   
-**isolated margin** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**cross & portfolio margin**: look at field `totalAvailableBalance`(USD), which needs to be converted into the available balance of accordingly coin through index price
-  * Spot (margin) available balance: refer to [Get Borrow Quota (Spot)](/docs/v5/order/spot-borrow-quota)
-
-  
->> availableToBorrow| string| **Deprecated** field, always return `""`. Please refer to `availableToBorrow` in the [Get Collateral Info](/docs/v5/account/collateral-info)  
-[](/docs/api-explorer/v5/account/wallet)
+unifiedUpdateStatus| string| Upgrade status. `FAIL`,`PROCESS`,`SUCCESS`  
+unifiedUpdateMsg| Object| If `PROCESS`,`SUCCESS`, it returns `null`  
+> msg| array| Error message array. Only `FAIL` will have this field  
+[](/docs/api-explorer/v5/account/upgrade-unified-account)
 
 * * *
 
@@ -110,17 +60,23 @@ list| array| Object
 
   * HTTP
   * Python
+  * GO
+  * Java
+  * .Net
   * Node.js
 
 
     
     
-    GET /v5/account/wallet-balance?accountType=UNIFIED&coin=BTC HTTP/1.1  
+    POST /v5/account/upgrade-to-uta HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672125440406  
+    X-BAPI-TIMESTAMP: 1672125123533  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {}  
     
     
     
@@ -130,26 +86,47 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_wallet_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-    ))  
+    print(session.upgrade_to_unified_trading_account())  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET")  
+    client.NewUtaBybitServiceNoParams().UpgradeToUTA(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.account.request.AccountDataRequest;  
+    import com.bybit.api.client.domain.account.AccountType;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newAccountRestClient();  
+    System.out.println(client.upgradeAccountToUTA());  
+    
+    
+    
+    using bybit.net.api;  
+    using bybit.net.api.ApiServiceImp;  
+    using bybit.net.api.Models;  
+    BybitAccountService accountService = new(apiKey: "xxxxxx", apiSecret: "xxxxx");  
+    Console.WriteLine(await accountService.UpgradeAccount());  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
-        const client = new RestClientV5({  
+    const client = new RestClientV5({  
         testnet: true,  
         key: 'xxxxxxxxxxxxxxxxxx',  
         secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getWalletBalance({  
-            accountType: 'UNIFIED',  
-            coin: 'BTC',  
-        })  
+        .upgradeToUnifiedAccount()  
         .then((response) => {  
             console.log(response);  
         })  
@@ -163,158 +140,72 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "totalEquity": "3.31216591",  
-                    "accountIMRate": "0",  
-                    "accountIMRateByMp": "0",  
-                    "totalMarginBalance": "3.00326056",  
-                    "totalInitialMargin": "0",  
-                    "totalInitialMarginByMp": "0",  
-                    "accountType": "UNIFIED",  
-                    "totalAvailableBalance": "3.00326056",  
-                    "accountMMRate": "0",  
-                    "accountMMRateByMp": "0",  
-                    "totalPerpUPL": "0",  
-                    "totalWalletBalance": "3.00326056",  
-                    "accountLTV": "0",  
-                    "totalMaintenanceMargin": "0",  
-                    "totalMaintenanceMarginByMp": "0",  
-                    "coin": [  
-                        {  
-                            "availableToBorrow": "3",  
-                            "bonus": "0",  
-                            "accruedInterest": "0",  
-                            "availableToWithdraw": "0",  
-                            "totalOrderIM": "0",  
-                            "equity": "0",  
-                            "totalPositionMM": "0",  
-                            "usdValue": "0",  
-                            "spotHedgingQty": "0.01592413",  
-                            "unrealisedPnl": "0",  
-                            "collateralSwitch": true,  
-                            "borrowAmount": "0.0",  
-                            "totalPositionIM": "0",  
-                            "walletBalance": "0",  
-                            "cumRealisedPnl": "0",  
-                            "locked": "0",  
-                            "marginCollateral": true,  
-                            "coin": "BTC",  
-                            "spotBorrow": "0"  
-                        }  
-                    ]  
-                }  
-            ]  
-        },  
+            "unifiedUpdateStatus": "FAIL",  
+            "unifiedUpdateMsg": {  
+                "msg": [  
+                    "Update account failed. You have outstanding liabilities in your Spot account.",  
+                    "Update account failed. Please close the usdc perpetual positions in USDC Account.",  
+                    "unable to upgrade, please cancel the usdt perpetual open orders in USDT account.",  
+                    "unable to upgrade, please close the usdt perpetual positions in USDT account."  
+                ]  
+        }  
+    },  
         "retExtInfo": {},  
-        "time": 1690872862481  
+        "time": 1672125124195  
     }
 
 ---
 
-# 查詢錢包餘額
+# 升級到UTA PRO
 
-獲取統一帳戶錢包餘額, 查詢各個幣種的資產信息. 默認不返回資產或負債為0的幣種信息。
+升級引導
+
+通過調用[查詢賬戶配置](/docs/zh-TW/v5/account/account-info)接口來確認當前的帳戶型態
+
+  * 如果unifiedMarginStatus=5, 則表示帳戶是[統一帳戶2.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B620), 您可以調用升級接口升級到[統一帳戶2.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B620) Pro. 調用[查詢賬戶配置](/docs/zh-TW/v5/account/account-info)接口, 如果unifiedMarginStatus=6, 則表示帳戶已經成功升級至[統一帳戶2.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B620) Pro.
+  * 當用戶為母帳戶時，當前用戶是 VIP 或 PRO 等級的用戶時，允許升級到 UTA PRO.
+  * 當用戶為子帳戶時，僅允許母帳戶為 VIP 或 PRO 等級的用戶升級到 UTA PRO.
+
+
 
 信息
 
-  * 在UTA手動借貸新邏輯下，現貨負債對應的`spotBorrow`, 請詳見[公告](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).
-  * 舊 `walletBalance` = 新 `walletBalance` \- `spotBorrow`
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+您現在可以持倉完成升級了，但請注意以下事項：
+
+  1. 升級請避開以下時段:
+
+|   
+---|---  
+每個小時| 當前時間在小時整點的前10分鐘及後5分鐘內  
+  
+  2. UTA PUBLIC 升級 UTA PRO 每天 UTC+0 **07:55～08:05** 禁止升級  
+  
+
+  3. 當從統一帳戶2.0升級到[統一帳戶2.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B620) Pro時, 確保沒有任何掛單  
+  
+
+  4. 帳戶升級過程中，可能會由於帳戶相關資產數據處於處理狀態中導致**查詢/推送** 的數據不準確，建議在完成升級後，再查詢和使用。
 
 
 
 ### HTTP 請求
 
-GET`/v5/account/wallet-balance`
+POST`/v5/account/upgrade-to-uta`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-[accountType](/docs/zh-TW/v5/enum#accounttype)| **true**|  string| 帳戶類型 `UNIFIED`
+無
 
-  * 要查詢資金帳戶餘額, 可以使用這個[接口](/docs/zh-TW/v5/asset/balance/all-balance)
-
-  
-coin| false| string| 幣種名稱 
-
-  * 不傳則返回非零資產信息
-  * 可以傳多個幣進行查詢，以逗號分隔, `USDT,USDC`
-
-  
-  
 ### 響應參數
 
-參數| 類型| 說明  
+Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> accountType| string| 帳戶類型  
-> accountIMRate| string| 帳戶初始保證金率 
-
-  * 您可以參考該[鏈結](https://www.bybit.com/en/help-center/article/Glossary-Unified-Trading-Account)了解統一帳戶下字段含義和計算方式
-  * 下面所有帳戶維度的字段都不適用於逐倉模式
-
-  
-> accountMMRate| string| 帳戶維持保證金率  
-> totalEquity| string| 總凈值為賬戶中每個幣種資產凈值的法幣估值之和 (USD): ∑Asset Equity By USD value of each asset  
-> totalWalletBalance| string| 賬戶維度換算成usd的錢包餘額: ∑Asset Wallet Balance By USD value of each asset  
-> totalMarginBalance| string| 賬戶維度換算成usd的保證金餘額: totalWalletBalance + totalPerpUPL  
-> totalAvailableBalance| string| 賬戶維度換算成usd的可用餘額: 
-
-  * 全倉保證金: totalMarginBalance - Haircut - totalInitialMargin.
-  * 組合保證金: total Equity - Haircut - totalInitialMargin 
-
-  
-> totalPerpUPL| string| 賬戶維度換算成usd的永續和USDC交割合約的浮動盈虧: ∑Each perp and USDC Futures upl by base coin  
-> totalInitialMargin| string| 賬戶維度換算成usd的總初始保證金: ∑Asset Total Initial Margin Base Coin  
-> totalMaintenanceMargin| string| 賬戶維度換算成usd的總維持保證金: ∑Asset Total Maintenance Margin Base Coin  
-> accountIMRateByMp| string| 可**忽略** , 可以使用`accountIMRate`, 算法和值保持一致  
-> accountMMRateByMp| string| 可**忽略** , 可以使用`accountMMRate`, 算法和值保持一致  
-> totalInitialMarginByMp| string| 可**忽略** , 可以使用`totalInitialMargin`, 算法和值保持一致  
-> totalMaintenanceMarginByMp| string| 可**忽略** , 可以使用`totalMaintenanceMargin`, 算法和值保持一致  
-> accountLTV| string| **廢棄** 字段  
-> coin| arrays| 幣種列表  
->> coin| string| 幣種名稱，例如 BTC, ETH, USDT, USDC  
->> equity| string| 當前幣種的資產淨值. Asset Equity = Asset Wallet Balance + Asset Perp UPL + Asset Future UPL + Asset Option Value = `walletBalance` \- `spotBorrow` \+ `unrealisedPnl` \+ Asset Option Value  
->> usdValue| string| 當前幣種折算成 usd 的價值  
->> walletBalance| string| 當前幣種的錢包餘額  
->> locked| string| 現貨掛單凍結金額  
->> spotHedgingQty| string| 用於組合保證金(PM)現貨對衝的數量, 截斷至8為小數, 默認為0  
->> borrowAmount| string| 當前幣種的已用借貸額度 = 現貨負債 + 合約浮虧導致借幣產生的借幣負債  
->> accruedInterest| string| 當前幣種的預計要在下一個利息週期收取的利息金額  
->> totalOrderIM| string| 以當前幣種結算的訂單委託預佔用保證金. 組合保證金模式下，該字段返回空字符串  
->> totalPositionIM| string| 以當前幣種結算的所有倉位起始保證金求和 + 所有倉位的預佔用平倉手續費. 組合保證金模式下，該字段返回空字符串  
->> totalPositionMM| string| 以當前幣種結算的所有倉位維持保證金求和. 組合保證金模式下，該字段返回空字符串  
->> unrealisedPnl| string| 以當前幣種結算的所有倉位的未結盈虧之和  
->> cumRealisedPnl| string| 以當前幣種結算的所有倉位的累計已結盈虧之和  
->> bonus| string| 體驗金  
->> marginCollateral| boolean| 是否可作為保證金抵押幣種(平台維度), `true`: 是. `false`: 否 
-
-  * 當marginCollateral=false時, 則collateralSwitch無意義
-
-  
->> collateralSwitch| boolean| 用戶是否開啟保證金幣種抵押(用戶維度), `true`: 是. `false`: 否 
-
-  * 僅當marginCollateral=true時, 才能主動選擇開關抵押
-
-  
->> colRes| string| 平台層面的抵押品限制狀態。`-1`: 未知。`0`: 未啟用限制。`1`: 未啟用限制，但該幣種已接近平台抵押上限。`2`: 已啟用限制，增加抵押品、開啟抵押開關及切換保證金模式的操作均將被拒絕。詳見[公告](https://announcements.bybit.com/en/article/platform-collateral-limits-launching-june-2-2026-blt7794f992398fa15f/?category=maintenance_updates)。  
->> spotBorrow| string| 現貨槓桿交易借入金額以及手工借貸金額（不包含現貨槓桿活躍訂單借入金額）。現貨負債對應的`spotBorrow`, 請詳見[公告](https://announcements.bybit.com/en/article/bybit-uta-function-optimization-manual-coin-borrowing-will-be-launched-soon-blt5d858199bd12e849/).  
->> free| string| **廢棄** , 不再有現貨錢包  
->> availableToWithdraw| string| 該字段從2025年1月9日起已經**廢棄**
-
-  * 可劃轉餘額: 可以使用[查詢可劃轉餘額(统一账户)](/docs/zh-TW/v5/account/unified-trans-amnt) 或 [查詢賬戶所有幣種余額](/docs/zh-TW/v5/asset/balance/all-balance)
-  * 合約可用餘額:   
-**逐倉** : walletBalance - totalPositionIM - totalOrderIM - locked - bonus  
-**全倉/組合保證金** : 使用字段`totalAvailableBalance`(USD), 但需要通過index price来轉換成對應幣種的可用餘額
-  * 現貨(槓桿)可用餘額: 可以使用[查詢用戶可用額度 (現貨)](/docs/zh-TW/v5/order/spot-borrow-quota)
-
-  
->> availableToBorrow| string| **廢棄** , 由於母子共享借貸限額, 總是返回`""`. 請通過[查詢抵押品信息](/docs/zh-TW/v5/account/collateral-info)接口查詢`availableToBorrow`  
-[](/docs/zh-TW/api-explorer/v5/account/wallet)
+unifiedUpdateStatus| string| 用戶賬戶的升級狀態. `PROCESS`: 處理中, `FAIL`: 失敗, `SUCCESS`: 成功  
+unifiedUpdateMsg| Object| 若是`PROCESS`,`SUCCESS`，則返回`null`  
+msg| array| 錯誤原因列表. 只有`FAIL`時，才會有`msg`這個字段  
+[](/docs/zh-TW/api-explorer/v5/account/upgrade-unified-account)
 
 * * *
 
@@ -322,17 +213,23 @@ list| array| Object
 
   * HTTP
   * Python
+  * GO
+  * Java
+  * .Net
   * Node.js
 
 
     
     
-    GET /v5/account/wallet-balance?accountType=UNIFIED&coin=BTC HTTP/1.1  
+    POST /v5/account/upgrade-to-uta HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672125440406  
+    X-BAPI-TIMESTAMP: 1672125123533  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {}  
     
     
     
@@ -342,26 +239,47 @@ list| array| Object
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_wallet_balance(  
-        accountType="UNIFIED",  
-        coin="BTC",  
-    ))  
+    print(session.upgrade_to_unified_trading_account())  
+    
+    
+    
+    import (  
+        "context"  
+        "fmt"  
+        bybit "github.com/bybit-exchange/bybit.go.api"  
+    )  
+    client := bybit.NewBybitHttpClient("YOUR_API_KEY", "YOUR_API_SECRET")  
+    client.NewUtaBybitServiceNoParams().UpgradeToUTA(context.Background())  
+    
+    
+    
+    import com.bybit.api.client.config.BybitApiConfig;  
+    import com.bybit.api.client.domain.account.request.AccountDataRequest;  
+    import com.bybit.api.client.domain.account.AccountType;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance("YOUR_API_KEY", "YOUR_API_SECRET", BybitApiConfig.TESTNET_DOMAIN).newAccountRestClient();  
+    System.out.println(client.upgradeAccountToUTA());  
+    
+    
+    
+    using bybit.net.api;  
+    using bybit.net.api.ApiServiceImp;  
+    using bybit.net.api.Models;  
+    BybitAccountService accountService = new(apiKey: "xxxxxx", apiSecret: "xxxxx");  
+    Console.WriteLine(await accountService.UpgradeAccount());  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
-        const client = new RestClientV5({  
+    const client = new RestClientV5({  
         testnet: true,  
         key: 'xxxxxxxxxxxxxxxxxx',  
         secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-        .getWalletBalance({  
-            accountType: 'UNIFIED',  
-            coin: 'BTC',  
-        })  
+        .upgradeToUnifiedAccount()  
         .then((response) => {  
             console.log(response);  
         })  
@@ -375,51 +293,18 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "list": [  
-                {  
-                    "totalEquity": "18070.32797922",  
-                    "accountIMRate": "0.0101",  
-                    "accountIMRateByMp": "0.0101",  
-                    "totalMarginBalance": "18070.32797922",  
-                    "totalInitialMargin": "182.60183684",  
-                    "totalInitialMarginByMp": "182.60183684",  
-                    "accountType": "UNIFIED",  
-                    "totalAvailableBalance": "17887.72614237",  
-                    "accountMMRate": "0",  
-                    "accountMMRateByMp": "0",  
-                    "totalPerpUPL": "-0.11001349",  
-                    "totalWalletBalance": "18070.43799271",  
-                    "accountLTV": "0.017",  
-                    "totalMaintenanceMargin": "0.38106773",  
-                    "totalMaintenanceMarginByMp": "0.38106773",  
-                    "coin": [  
-                        {  
-                            "availableToBorrow": "3",  
-                            "bonus": "0",  
-                            "accruedInterest": "0",  
-                            "availableToWithdraw": "0",  
-                            "totalOrderIM": "0",  
-                            "equity": "0",  
-                            "totalPositionMM": "0",  
-                            "usdValue": "0",  
-                            "spotHedgingQty": "0.01592413",  
-                            "unrealisedPnl": "0",  
-                            "collateralSwitch": true,  
-                            "borrowAmount": "0.0",  
-                            "totalPositionIM": "0",  
-                            "walletBalance": "0",  
-                            "cumRealisedPnl": "0",  
-                            "locked": "0",  
-                            "marginCollateral": true,  
-                            "coin": "BTC",  
-                            "spotBorrow": "0"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "unifiedUpdateStatus": "FAIL",  
+            "unifiedUpdateMsg": {  
+                "msg": [  
+                    "Update account failed. You have outstanding liabilities in your Spot account.",  
+                    "Update account failed. Please close the usdc perpetual positions in USDC Account.",  
+                    "unable to upgrade, please cancel the usdt perpetual open orders in USDT account.",  
+                    "unable to upgrade, please close the usdt perpetual positions in USDT account."  
+                ]  
+            }  
         },  
         "retExtInfo": {},  
-        "time": 1672125441042  
+        "time": 1672125124195  
     }

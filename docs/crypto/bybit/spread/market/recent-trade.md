@@ -2,44 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spread/market/recent-trade
 api_type: Market Data
-updated_at: 2026-11-13 18:28:46.653370
+updated_at: 2026-11-13 19:25:21.059460
 ---
 
-# Get Tickers
+# Get Recent Public Trades
 
-Query for the latest price snapshot, best bid/ask price, and trading volume of different spread combinations in the last 24 hours.
-
-info
-
-  * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
-
-
+Query recent public spread trading history in Bybit.
 
 ### HTTP Request
 
-GET`/v5/spread/tickers`
+GET`/v5/spread/recent-trade`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 symbol| **true**|  string| Spread combination symbol name  
+limit| false| integer| Limit for data size per page [`1`,`1000`], default: `500`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array<object>| Ticker info  
+list| array<object>| Public trade info  
+> execId| string| Execution ID  
 > symbol| string| Spread combination symbol name  
-> bidPrice| string| Bid 1 price  
-> bidSize| string| Bid 1 size  
-> askPrice| string| Ask 1 price  
-> askSize| string| Ask 1 size  
-> lastPrice| string| Last trade price  
-> highPrice24h| string| The highest price in the last 24 hours  
-> lowPrice24h| string| The lowest price in the last 24 hours  
-> prevPrice24h| string| Price 24 hours ago  
-> volume24h| string| Volume for 24h  
+> price| string| Trade price  
+> size| string| Trade size  
+> side| string| Side of taker `Buy`, `Sell`  
+> time| string| Trade time (ms)  
+> seq| string| Cross sequence  
   
 ### Request Example
 
@@ -49,7 +41,7 @@ list| array<object>| Ticker info
 
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
@@ -60,8 +52,9 @@ list| array<object>| Ticker info
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.spread_get_tickers(  
-        symbol="SOLUSDT_SOL/USDT"  
+    print(session.spread_get_public_trade_history(  
+        symbol="SOLUSDT_SOL/USDT",  
+        limit=2  
     ))  
     
 
@@ -74,65 +67,61 @@ list| array<object>| Ticker info
         "result": {  
             "list": [  
                 {  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
                     "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1744079413254  
+        "time": 1744078324682  
     }
 
 ---
 
-# 查詢最新行情信息
-
-可獲取到快照的最新市場價格，最佳買賣價格，以及過去時間內的交易量等.
-
-警告
-
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
-
-
+# 查詢最近公共成交
 
 ### HTTP請求
 
-GET`/v5/spread/tickers`
+GET`/v5/spread/recent-trade`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
 symbol| **true**|  string| 價差產品名稱  
+limit| false| integer| 每頁數量限制 [1,1000], 默認: `500`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array<object>| 行情信息  
+list| array<object>| 成交信息  
+> execId| string| 成交id  
 > symbol| string| 價差產品名稱  
-> bidPrice| string| 買1價  
-> bidSize| string| 買1價的數量  
-> askPrice| string| 賣1價  
-> askSize| string| 賣1價的數量  
-> lastPrice| string| 最新市場成交價  
-> highPrice24h| string| 最近24小時的最高價  
-> lowPrice24h| string| 最近24小時的最低價  
-> prevPrice24h| string| 24小時前的整點市價  
-> volume24h| string| 最近24小時成交量  
+> price| string| 成交價格  
+> size| string| 成交數量  
+> side| string| 吃單方向 `Buy`, `Sell`  
+> time| string| 成交時間戳 (毫秒)  
+> seq| string| 撮合版本號  
   
 ### 請求示例
     
     
-    GET /v5/spread/tickers?symbol=SOLUSDT_SOL/USDT HTTP/1.1  
+    GET /v5/spread/recent-trade?symbol=SOLUSDT_SOL/USDT&limit=2 HTTP/1.1  
     Host: api-testnet.bybit.com  
     
 
@@ -145,19 +134,25 @@ list| array<object>| 行情信息
         "result": {  
             "list": [  
                 {  
+                    "execId": "c8512970-d6fb-5039-93a5-b4196dffbe88",  
                     "symbol": "SOLUSDT_SOL/USDT",  
-                    "bidPrice": "",  
-                    "bidSize": "",  
-                    "askPrice": "",  
-                    "askSize": "",  
-                    "lastPrice": "19.444",  
-                    "highPrice24h": "23.8353",  
-                    "lowPrice24h": "0",  
-                    "prevPrice24h": "20",  
-                    "volume24h": "24694.9"  
+                    "price": "20.2805",  
+                    "size": "3.3",  
+                    "side": "Sell",  
+                    "time": "1744078324035",  
+                    "seq":"123456"  
+                },  
+                {  
+                    "execId": "92b0002e-c49d-5618-a195-4140d7e10a2b",  
+                    "symbol": "SOLUSDT_SOL/USDT",  
+                    "price": "20.843",  
+                    "size": "2.2",  
+                    "side": "Buy",  
+                    "time": "1744078322010",  
+                    "seq":"123450"  
                 }  
             ]  
         },  
         "retExtInfo": {},  
-        "time": 1744079413254  
+        "time": 1744078324682  
     }

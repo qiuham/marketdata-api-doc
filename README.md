@@ -17,13 +17,14 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-13 |
 | crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-13 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-13 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-13 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-13 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-13 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-13 |
 | crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-13 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 561 | 2026-11-13 |
 
 ## 快速开始
 
@@ -66,25 +67,25 @@ marketdata-api-doc/
 │   │   ├── gateio.yaml
 │   │   ├── hyperliquid.yaml
 │   │   ├── kraken.yaml
-│   │   └── okx.yaml
+│   │   ├── okx.yaml
+│   │   └── polymarket.yaml
 │   └── legacy/           # 兼容旧项目的源站配置
 │       └── crypto/
 │           ├── binance.yaml
 │           ├── bybit.yaml
 │           ├── coinbase.yaml
 │           ├── gateio.yaml
-│           ├── hyperliquid.yaml
-│           ├── kraken.yaml
 │           └── okx.yaml
 ├── docs/                 # Markdown 文档
 │   └── crypto/
-│       ├── binance/                                # 825 Markdown docs
+│       ├── binance/                                # 164 Markdown docs
 │       ├── bybit/                                  # 546 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── gateio/                                 # 66 Markdown docs
-│       ├── hyperliquid/                            # 37 Markdown docs
-│       ├── kraken/                                 # 243 Markdown docs
-│       └── okx/                                    # 519 Markdown docs
+│       ├── hyperliquid/                            # 36 Markdown docs
+│       ├── kraken/                                 # 447 Markdown docs
+│       ├── okx/                                    # 519 Markdown docs
+│       └── polymarket/                             # 561 Markdown docs
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
 │   ├── crypto/binance.json
@@ -93,18 +94,21 @@ marketdata-api-doc/
 │   ├── crypto/gateio.json
 │   ├── crypto/hyperliquid.json
 │   ├── crypto/kraken.json
-│   └── crypto/okx.json
+│   ├── crypto/okx.json
+│   └── crypto/polymarket.json
 ├── src/
 │   ├── adapters/         # 采集/导入适配器
 │   │   ├── __init__.py
 │   │   ├── base.py
-│   │   └── crypto_legacy.py
+│   │   ├── crypto_legacy.py
+│   │   └── llms_txt.py
 │   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
 │   │   ├── __init__.py
 │   │   ├── config.py
 │   │   ├── indexer.py
 │   │   ├── markdown.py
 │   │   ├── path_generator.py
+│   │   ├── quality.py
 │   │   └── readme_updater.py
 │   └── main.py
 ├── requirements.txt
@@ -123,7 +127,26 @@ api_type: API
 updated_at: 2026-11-11 14:17:18.632567
 ```
 
+## 采集方式
+
+| 方式 | 用在哪 | 说明 |
+|---|---|---|
+| `llms_txt` | Hyperliquid、Kraken、Polymarket | 文档站每页加 `.md` 就是原文（GitBook、Mintlify）。页面列表取自 `llms.txt`，`llms.txt` 不全时取 `sitemap.xml`（Kraken）。直接 HTTP 下载，不开浏览器；可以顺带收 OpenAPI / AsyncAPI 规格（存在 `_specs/`） |
+| `crypto_legacy` | 其余几家 | 用 `agent-browser` 打开网页取正文。多标签页并发时，存盘前核对当前标签页的网址，对不上就重开，还不对就跳过这一页 |
+
+新加一家：文档站有 `llms.txt` 的，写一份 `config/products/<id>.yaml`（`adapter: llms_txt`）就够了，例子见 `config/products/polymarket.yaml`。
+
+## 质量检查
+
+爬完每一家都查一遍（`src/utils/quality.py`），出现下面任何一种就判这一家抓坏了，把它的目录退回上一次提交，其他家照常提交：
+
+- 有 `# Untitled` 页（页面没打开）；
+- 空页超过 5%；
+- 内容完全相同、文件名不同的文件超过 2%（多标签页读错了标签）。
+
+`python src/main.py validate` 也做同样的检查：默认只警告（抓不了的旧数据不挡别家提交），加 `--strict` 判失败。
+
 ## 已接入范围
 
-- `crypto/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
+- `crypto/*`：Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX、Polymarket。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

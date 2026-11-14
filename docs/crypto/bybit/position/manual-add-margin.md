@@ -2,66 +2,68 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/manual-add-margin
 api_type: Position
-updated_at: 2026-11-13 18:28:20.489600
+updated_at: 2026-11-13 19:24:35.057356
 ---
 
-# Switch Position Mode
+# Add Or Reduce Margin
 
-It supports to switch the position mode for **USDT perpetual** and **Inverse futures**. If you are in one-way Mode, you can only open one position on Buy or Sell side. If you are in hedge mode, you can open both Buy and Sell side positions simultaneously.
+Manually add or reduce margin for **isolated** margin position
 
-tip
-
-  * Priority for configuration to take effect: symbol > coin > system default
-  * System default: one-way mode
-  * If the request is by coin (settleCoin), then all symbols based on this setteCoin that do not have position and open order will be batch switched, and new listed symbol based on this settleCoin will be the same mode you set.
-
-
-
-### Example
-
-| System default| coin| symbol  
----|---|---|---  
-Initial setting| one-way| never configured| never configured  
-Result| All USDT perpetual trading pairs are one-way mode  
-**Change 1**|  -| -| Set BTCUSDT to hedge-mode  
-Result| BTCUSDT becomes hedge-mode, and all other symbols keep one-way mode  
-list new symbol ETHUSDT| ETHUSDT is one-way mode (inherit default rules)   
-**Change 2**|  -| Set USDT to hedge-mode| -  
-Result| All current trading pairs with no positions or orders are hedge-mode, and no adjustments will be made for trading pairs with positions and orders  
-list new symbol SOLUSDT| SOLUSDT is hedge-mode (Inherit coin rule)  
-**Change 3**|  -| -| Set ASXUSDT to one-mode  
-Take effect result| AXSUSDT is one-way mode, other trading pairs have no change  
-list new symbol BITUSDT| BITUSDT is hedge-mode (Inherit coin rule)  
-  
-### The position-switch ability for each contract
-
-| UTA2.0  
----|---  
-USDT perpetual| **Support one-way & hedge-mode**  
-USDT futures| **Support one-way & hedge-mode**  
-USDC perpetual| **Support one-way & hedge-mode**  
-Inverse perpetual| **Support one-way & hedge-mode**  
-Inverse futures| **Support one-way & hedge-mode**  
-  
 ### HTTP Request
 
-POST`/v5/position/switch-mode`
+POST`/v5/position/add-margin`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, USDT Contract  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only. Either `symbol` or `coin` is **required**. `symbol` has a higher priority  
-coin| false| string| Coin, uppercase only  
-mode| **true**|  integer| Position mode. `0`: Merged Single. `3`: Both Sides  
-[](/docs/api-explorer/v5/position/position-mode)
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+margin| **true**|  string| Add or reduce. To add, then `10`; To reduce, then `-10`. Support up to 4 decimal  
+[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode position, this param is **required**
 
-* * *
+  * `0`: one-way mode
+  * `1`: hedge-mode Buy side
+  * `2`: hedge-mode Sell side
 
+  
+  
 ### Response Parameters
 
-None
+Parameter| Type| Comments  
+---|---|---  
+[category](/docs/v5/enum#category)| string| Product type  
+symbol| string| Symbol name  
+[positionIdx](/docs/v5/enum#positionidx)| integer| Position idx, used to identify positions in different position modes
+
+  * `0`: One-Way Mode
+  * `1`: Buy side of both side mode
+  * `2`: Sell side of both side mode
+
+  
+riskId| integer| Risk limit ID  
+riskLimitValue| string| Risk limit value  
+size| string| Position size  
+avgPrice| string| Average entry price  
+liqPrice| string| Liquidation price  
+bustPrice| string| Bankruptcy price  
+markPrice| string| Last mark price  
+positionValue| string| Position value  
+leverage| string| Position leverage  
+autoAddMargin| integer| Whether to add margin automatically. `0`: false, `1`: true  
+[positionStatus](/docs/v5/enum#positionstatus)| String| Position status. `Normal`, `Liq`, `Adl`  
+positionIM| string| Initial margin  
+positionMM| string| Maintenance margin  
+takeProfit| string| Take profit price  
+stopLoss| string| Stop loss price  
+trailingStop| string| Trailing stop (The distance from market price)  
+unrealisedPnl| string| Unrealised PnL  
+cumRealisedPnl| string| Cumulative realised pnl  
+createdTime| string| Timestamp of the first time a position was created on this symbol (ms)  
+updatedTime| string| Position updated timestamp (ms)  
+[](/docs/api-explorer/v5/position/manual-add-margin)
+
+* * *
 
 ### Request Example
 
@@ -73,20 +75,20 @@ None
 
     
     
-    POST /v5/position/switch-mode HTTP/1.1  
+    POST /v5/position/add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675249072041  
+    X-BAPI-TIMESTAMP: 1684234363665  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 87  
+    Content-Length: 97  
       
     {  
-        "category":"inverse",  
-        "symbol":"BTCUSDH23",  
-        "coin": null,  
-        "mode": 0  
+        "category": "inverse",  
+        "symbol": "ETHUSD",  
+        "margin": "0.01",  
+        "positionIdx": 0  
     }  
     
     
@@ -97,10 +99,10 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.switch_position_mode(  
-        category="inverse",  
-        symbol="BTCUSDH23",  
-        mode=0,  
+    print(session.add_or_reduce_margin(  
+        category="linear",  
+        symbol="BTCUSDT",  
+        margin="10"  
     ))  
     
     
@@ -109,9 +111,9 @@ None
     import com.bybit.api.client.domain.position.*;  
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newPositionRestClient();  
-    var switchPositionMode = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").positionMode(PositionMode.BOTH_SIDES).build();  
-    System.out.println(client.switchPositionMode(switchPositionMode));  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var updateMarginRequest = PositionDataRequest.builder().category(CategoryType.INVERSE).symbol("ETHUSDT").margin("0.0001").build();  
+    client.modifyPositionMargin(updateMarginRequest, System.out::println);  
     
     
     
@@ -124,10 +126,10 @@ None
     });  
       
     client  
-        .switchPositionMode({  
-            category: 'inverse',  
-            symbol: 'BTCUSDH23',  
-            mode: 0,  
+        .addOrReduceMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            margin: '10',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -143,71 +145,90 @@ None
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "category": "inverse",  
+            "symbol": "ETHUSD",  
+            "positionIdx": 0,  
+            "riskId": 11,  
+            "riskLimitValue": "500",  
+            "size": "200",  
+            "positionValue": "0.11033265",  
+            "avgPrice": "1812.70004844",  
+            "liqPrice": "1550.80",  
+            "bustPrice": "1544.20",  
+            "markPrice": "1812.90",  
+            "leverage": "12",  
+            "autoAddMargin": 0,  
+            "positionStatus": "Normal",  
+            "positionIM": "0.01926611",  
+            "positionMM": "0",  
+            "unrealisedPnl": "0.00001217",  
+            "cumRealisedPnl": "-0.04618929",  
+            "stopLoss": "0.00",  
+            "takeProfit": "0.00",  
+            "trailingStop": "0.00",  
+            "createdTime": "1672737740039",  
+            "updatedTime": "1684234363788"  
+        },  
         "retExtInfo": {},  
-        "time": 1675249072814  
+        "time": 1684234363789  
     }
 
 ---
 
-# 切換持倉模式
+# 手動增加或減少保證金
 
-該接口支持切換USDT永續的持倉模式。如果處於單向持倉模式下，您只能要麼持有多頭要麼空頭倉位；如果處於雙向持倉模式下，您可以同時持倉多頭和空頭的倉位。
+手動增加或減少保證金，僅適用於**逐倉** 保證金模式
 
-提示
+### HTTP 請求
 
-  * 配置生效優先級: symbol > coin > 系統默認
-  * 系統默認: 單向持倉
-  * 如果請求是按幣種（settleCoin），則所有基於該settleCoin的交易品種沒有持倉和活動單的將被批量切換，並且基於該settleCoin的新上市交易品種將與您設置的模式相同。
-
-
-
-### 示例
-
-| 系統默認| coin| symbol  
----|---|---|---  
-初始配置| 單向持倉| 未設置過| 未設置過  
-生效結果| 所有USDT正向交易對都是單向持倉  
-**變更 1**|  -| -| BTCUSDT 設置為雙向持倉模式  
-生效結果| 當前交易對BTCUSDT為雙向持倉，其他交易對都是單向持倉（繼承系統默認規則  
-新上線交易對 ETHUSDT| 新上線的ETHUSDT為單向持倉 （繼承系統默認規則）  
-**變更 2**|  -| USDT 設置為雙向持倉| -  
-生效結果| 當前所有未持倉未有訂單的交易對都是雙向持倉，有持倉和有委託單的交易對不做調整  
-新上線交易對 SOLUSDT| 新上線的SOLUSDT為雙向持倉 (繼承coin規則)  
-**變更 3**|  -| -| ASXUSDT 設置為單向持倉模式  
-生效結果| AXSUSDT為單向持倉模式，其餘交易對不做任何變更（繼承coin規則）  
-新上線交易對 BITUSDT| 新上線的BITUSDT為雙向持倉 (繼承coin規則)  
-  
-### 當前合約單雙向持倉切換能力
-
-| 統一帳戶2.0  
----|---  
-USDT 永續| **支持單雙向持倉**  
-USDT 交割| **支持單雙向持倉**  
-USDC 永續| **支持單雙向持倉**  
-USDC 交割| **支持單雙向持倉**  
-反向永續| **支持單雙向持倉**  
-反向交割| **支持單雙向持倉**  
-  
-### HTTP 请求
-
-POST`/v5/position/switch-mode`
+POST`/v5/position/add-margin`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, USDT 永续  
-symbol| false| string| 合約名稱. `symbol`和`coin`**必須** 傳其中一個. `symbol`有更高優先級  
-coin| false| string| 結算幣種  
-mode| **true**|  integer| 倉位模式. `0`: 單向持倉. `3`: 雙向持倉  
-[](/docs/zh-TW/api-explorer/v5/position/position-mode)
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
+symbol| **true**|  string| 合約名稱  
+margin| **true**|  string| 增加或減少的保證金金額. 增加, 則為正數, 比如`10`; 減少, 則為負數, 比如`-10`. 最多支持4位小數  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
 
-* * *
+  * `0`: 單向持倉模式
+  * `1`: 買側雙向持倉模式
+  * `2`: 賣側雙向持倉模式
 
+  
+  
 ### 響應參數
 
-無
+參數| 類型| 說明  
+---|---|---  
+[category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
+symbol| string| 合約名称  
+[positionIdx](/docs/zh-TW/v5/enum#positionidx)| integer| 倉位標識符, 用于在不同仓位模式下标识仓位  
+riskId| integer| 风险限额ID，參見[風險限額](/docs/zh-TW/v5/v5/market/risk-limit)接口  
+riskLimitValue| string| 當前風險限額ID對應的持倉限制量  
+size| string| 當前倉位的合约數量  
+avgPrice| string| 當前倉位的平均入場價格  
+liqPrice| string| 倉位強平價格  
+bustPrice| string| 倉位破產價格  
+markPrice| string| 最新標記價格  
+positionValue| string| 仓位的價值  
+leverage| string| 當前倉位的槓桿  
+autoAddMargin| integer| 是否自動追加保證金. `0`: 否, `1`: 是  
+[positionStatus](/docs/zh-TW/v5/enum#positionstatus)| String| 倉位状态. `Normal`, `Liq`, `Adl`  
+positionIM| string| 倉位起始保證金  
+positionMM| string| 倉位維持保證金  
+takeProfit| string| 止盈價格  
+stopLoss| string| 止損價格  
+trailingStop| string| 追蹤止損（與當前價格的距離）  
+unrealisedPnl| string| 未结盈亏  
+cumRealisedPnl| string| 累计已结盈亏  
+createdTime| string| 倉位創建時間  
+updatedTime| string| 倉位數據更新時間  
+[](/docs/zh-TW/api-explorer/v5/position/manual-add-margin)
+
+* * *
 
 ### 請求示例
 
@@ -219,35 +240,25 @@ mode| **true**|  integer| 倉位模式. `0`: 單向持倉. `3`: 雙向持倉
 
     
     
-    POST /v5/position/switch-mode HTTP/1.1  
+    POST /v5/position/add-margin HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
+    X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1675249072041  
+    X-BAPI-TIMESTAMP: 1684234363665  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
-    Content-Length: 87  
+    Content-Length: 97  
       
     {  
-        "category":"inverse",  
-        "symbol":"BTCUSDH23",  
-        "coin": null,  
-        "mode": 0  
+        "category": "inverse",  
+        "symbol": "ETHUSD",  
+        "margin": "0.01",  
+        "positionIdx": 0  
     }  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.switch_position_mode(  
-        category="inverse",  
-        symbol="BTCUSDH23",  
-        mode=0,  
-    ))  
+      
     
     
     
@@ -255,9 +266,9 @@ mode| **true**|  integer| 倉位模式. `0`: 單向持倉. `3`: 雙向持倉
     import com.bybit.api.client.domain.position.*;  
     import com.bybit.api.client.domain.position.request.*;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newPositionRestClient();  
-    var switchPositionMode = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").positionMode(PositionMode.BOTH_SIDES).build();  
-    System.out.println(client.switchPositionMode(switchPositionMode));  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var updateMarginRequest = PositionDataRequest.builder().category(CategoryType.INVERSE).symbol("ETHUSDT").margin("0.0001").build();  
+    client.modifyPositionMargin(updateMarginRequest, System.out::println);  
     
     
     
@@ -270,10 +281,10 @@ mode| **true**|  integer| 倉位模式. `0`: 單向持倉. `3`: 雙向持倉
     });  
       
     client  
-        .switchPositionMode({  
-            category: 'inverse',  
-            symbol: 'BTCUSDH23',  
-            mode: 0,  
+        .addOrReduceMargin({  
+            category: 'linear',  
+            symbol: 'BTCUSDT',  
+            margin: '10',  
         })  
         .then((response) => {  
             console.log(response);  
@@ -289,7 +300,31 @@ mode| **true**|  integer| 倉位模式. `0`: 單向持倉. `3`: 雙向持倉
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": {},  
+        "result": {  
+            "category": "inverse",  
+            "symbol": "ETHUSD",  
+            "positionIdx": 0,  
+            "riskId": 11,  
+            "riskLimitValue": "500",  
+            "size": "200",  
+            "positionValue": "0.11033265",  
+            "avgPrice": "1812.70004844",  
+            "liqPrice": "1550.80",  
+            "bustPrice": "1544.20",  
+            "markPrice": "1812.90",  
+            "leverage": "12",  
+            "autoAddMargin": 0,  
+            "positionStatus": "Normal",  
+            "positionIM": "0.01926611",  
+            "positionMM": "0",  
+            "unrealisedPnl": "0.00001217",  
+            "cumRealisedPnl": "-0.04618929",  
+            "stopLoss": "0.00",  
+            "takeProfit": "0.00",  
+            "trailingStop": "0.00",  
+            "createdTime": "1672737740039",  
+            "updatedTime": "1684234363788"  
+        },  
         "retExtInfo": {},  
-        "time": 1675249072814  
+        "time": 1684234363789  
     }

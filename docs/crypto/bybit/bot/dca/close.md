@@ -2,141 +2,155 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/dca/close
 api_type: REST
-updated_at: 2026-11-13 18:27:07.530685
+updated_at: 2026-11-13 19:21:56.666403
 ---
 
-# Bot Error Codes
+# Close DCA Bot
 
-HTTP-level error codes returned by the Bot APIs.
+Close a running DCA (Dollar-Cost Averaging) bot with a specified settlement mode.
 
-## Futures Combo Bot
+info
 
-Applies to: [Create](/docs/v5/bot/futures-combo/create), [Close](/docs/v5/bot/futures-combo/close), [Get Detail](/docs/v5/bot/futures-combo/get-detail), [Get Limit](/docs/v5/bot/futures-combo/get-limit)
+  * **Bot state requirement:**  
+The bot must be in a closeable state. Bots that are currently mid-investment cycle may not be closeable (returns status_code=503).
 
-error_code| error_msg| Applicable Endpoint(s)  
+  * **Settlement mode (`close_mode`):**  
+`2`: Base token mode — convert all holdings to base tokens  
+`3`: Quote token mode — convert all holdings to quote token (e.g. USDT)
+
+  * **Rate limit:**  
+3 requests per second per UID.
+
+
+
+
+### HTTP Request
+
+POST`/v5/dca/close-bot`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+bot_id| **true**|  string| DCA bot ID to close, obtained from [Create Spot DCA Bot](/docs/v5/bot/dca/create) response  
+close_mode| **true**|  string| Asset settlement mode: `2` Base token, `3` Quote token (e.g. USDT)  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
 ---|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
+status_code| integer| `200` = success, non-zero = error  
+bot_id| string| The closed DCA bot ID  
+close_mode| string| The settlement mode used, `DCA_BASE_MODE`, `DCA_QUOTE_MODE`  
+debug_msg| string| Debug message (testnet only)  
   
 * * *
 
-## Futures Grid Bot
+### Request Example
+    
+    
+    POST /v5/dca/close-bot HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "bot_id": "612349292702654770",  
+        "close_mode": 2  
+    }  
+    
 
-Applies to: [Create](/docs/v5/bot/futures-grid/create), [Close](/docs/v5/bot/futures-grid/close), [Get Detail](/docs/v5/bot/futures-grid/get-detail), [Validate Input](/docs/v5/bot/futures-grid/validate-input)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
-
-## Futures Martingale Bot
-
-Applies to: [Create](/docs/v5/bot/futures-martingale/create), [Close](/docs/v5/bot/futures-martingale/close), [Get Detail](/docs/v5/bot/futures-martingale/get-detail), [Get Limit](/docs/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
-
-## DCA Bot
-
-Applies to: [Create](/docs/v5/bot/dca/create), [Close](/docs/v5/bot/dca/close)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)| Create  
-421| User is banned| Create  
-503| Bot cannot be closed currently (investment cycle in progress)| Close  
-  
-* * *
-
-## Spot Grid Bot
-
-Applies to: [Create](/docs/v5/bot/spot-grid/create), [Close](/docs/v5/bot/spot-grid/close), [Get Detail](/docs/v5/bot/spot-grid/get-detail), [Validate Input](/docs/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| Create, Validate Input  
-401| Insufficient balance| Create  
-404| Grid bot not found| Get Detail  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)| Close  
-421| User is banned| Create
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "status_code": 200,  
+            "bot_id": "612349292702654770",  
+            "close_mode": "DCA_BASE_MODE",  
+            "debug_msg": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1774518356929  
+    }
 
 ---
 
-# 機器人錯誤碼
+# 關閉定投機器人
 
-Bot API 返回的 HTTP 層級錯誤碼。
+以指定的結算模式關閉一個正在運行的定投（DCA）機器人。
 
-## 合約組合機器人（Futures Combo Bot）
+信息
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-combo/create)、[關閉](/docs/zh-TW/v5/bot/futures-combo/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-combo/get-limit)
+  * **機器人狀態要求：**  
+機器人必須處於可關閉狀態。當前處於投資週期中的機器人可能無法關閉（返回 status_code=503）。
 
-error_code| error_msg| 適用端點  
+  * **結算模式（`close_mode`）：**  
+`2`：基礎幣模式 — 將所有資產轉換為基礎幣  
+`3`：報價幣模式 — 將所有資產轉換為報價幣（例如 USDT）
+
+  * **頻率限制：**  
+每個 UID 每秒最多 3 次請求。
+
+
+
+
+### HTTP請求
+
+POST`/v5/dca/close-bot`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+bot_id| **true**|  string| 要關閉的定投機器人 ID，從[創建現貨定投機器人](/docs/zh-TW/v5/bot/dca/create)響應中獲取  
+close_mode| **true**|  string| 資產結算模式：`2` 基礎幣，`3` 報價幣（例如 USDT）  
+  
+### 響應參數
+
+參數| 類型| 說明  
 ---|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
+status_code| integer| `200` = 成功，非零 = 錯誤  
+bot_id| string| 已關閉的定投機器人 ID  
+close_mode| string| 所使用的結算模式：`DCA_BASE_MODE`、`DCA_QUOTE_MODE`  
+debug_msg| string| 調試信息（僅測試網）  
   
 * * *
 
-## 合約網格機器人（Futures Grid Bot）
+### 請求示例
+    
+    
+    POST /v5/dca/close-bot HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672211928338  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "bot_id": "612349292702654770",  
+        "close_mode": 2  
+    }  
+    
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-grid/create)、[關閉](/docs/zh-TW/v5/bot/futures-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/futures-grid/validate-input)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
-
-## 合約馬丁格爾機器人（Futures Martingale Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-martingale/create)、[關閉](/docs/zh-TW/v5/bot/futures-martingale/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-martingale/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
-
-## 定投機器人（DCA Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/dca/create)、[關閉](/docs/zh-TW/v5/bot/dca/close)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)（參數無效，例如重複的交易對或無效的頻率）| 創建  
-421| User is banned（用戶已被封禁）| 創建  
-503| Bot cannot be closed currently (investment cycle in progress)（機器人當前無法關閉，投資週期進行中）| 關閉  
-  
-* * *
-
-## 現貨網格機器人（Spot Grid Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/spot-grid/create)、[關閉](/docs/zh-TW/v5/bot/spot-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/spot-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 創建、驗證輸入  
-401| Insufficient balance（餘額不足）| 創建  
-404| Grid bot not found（找不到網格機器人）| 查詢詳情  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)（網格無法取消，已處於取消中或已完成狀態）| 關閉  
-421| User is banned（用戶已被封禁）| 創建
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "status_code": 200,  
+            "bot_id": "612349292702654770",  
+            "close_mode": "DCA_BASE_MODE",  
+            "debug_msg": ""  
+        },  
+        "retExtInfo": {},  
+        "time": 1774518356929  
+    }

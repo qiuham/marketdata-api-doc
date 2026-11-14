@@ -15,6 +15,7 @@ name: Crawl Docs
           - hyperliquid
           - kraken
           - okx
+          - polymarket
           - all
       limit:
         description: Optional page limit for test runs, for example 3
@@ -72,7 +73,8 @@ jobs:
 
       - name: Install agent-browser
         run: |
-          npm install -g agent-browser
+          # 钉版本：新版标签页编号改成 t1、t2（哪一版开始的没核实），不钉版本时升级曾让并发爬取静默串页
+          npm install -g agent-browser@0.38.1
           agent-browser install
 
       - name: Resolve product

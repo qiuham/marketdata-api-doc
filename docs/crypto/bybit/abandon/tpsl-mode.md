@@ -2,50 +2,41 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/tpsl-mode
 api_type: REST
-updated_at: 2026-11-13 18:26:37.089548
+updated_at: 2026-11-13 19:20:42.627278
 ---
 
-# Get Borrow History
+# Set TP/SL Mode
 
-Get interest records, sorted in reverse order of creation time.
+tip
+
+ _To some extent, this endpoint is**deprecated** because now tpsl is based on order level. This API was used for position level change before._
+
+_However, you still can use it to set an implicit tpsl mode for a certain symbol because when you don't pass "tpslMode" in the place order or trading stop request, system will get the tpslMode by the default setting._
+
+Set TP/SL mode to Full or Partial
+
+info
+
+For partial TP/SL mode, you can set the TP/SL size smaller than position size.
 
 ### HTTP Request
 
-GET`/v5/account/borrow-history`
+POST`/v5/position/set-tpsl-mode`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-currency| false| string| `USDC`,`USDT`,`BTC`,`ETH` etc, uppercase only  
-startTime| false| integer| The start timestamp (ms) 
-
-  * startTime and endTime are not passed, return 30 days by default
-  * Only startTime is passed, return range between startTime and startTime + 30 days 
-  * Only endTime is passed, return range between endTime-30 days and endTime
-  * If both are passed, the rule is endTime - startTime <= 30 days
-
-  
-endTime| false| integer| The end time. timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+[category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`  
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+tpSlMode| **true**|  string| TP/SL mode. `Full`,`Partial`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> currency| string| `USDC`,`USDT`,`BTC`,`ETH`  
-> createdTime| integer| Created timestamp (ms)  
-> borrowCost| string| Interest  
-> hourlyBorrowRate| string| Hourly Borrow Rate  
-> InterestBearingBorrowSize| string| Interest Bearing Borrow Size  
-> costExemption| string| Cost exemption  
-> borrowAmount| string| Total borrow amount  
-> unrealisedLoss| string| Unrealised loss  
-> freeBorrowedAmount| string| The borrowed amount for interest free  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/account/borrow-history)
+tpSlMode| string| `Full`,`Partial`  
+[](/docs/api-explorer/v5/position/tpsl-mode)
 
 * * *
 
@@ -53,17 +44,25 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
   * HTTP
   * Python
+  * Java
   * Node.js
 
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
+    POST /v5/position/set-tpsl-mode HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1672279325035  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "symbol": "XRPUSDT",  
+        "category": "linear",  
+        "tpSlMode": "Full"  
+    }  
     
     
     
@@ -73,35 +72,44 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
+    print(session.set_tp_sl_mode(  
+        symbol="XRPUSDT",  
+        category="linear",  
+        tpSlMode="Full",  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setTpSlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").tpslMode(TpslMode.PARTIAL).build();  
+    client.swithMarginRequest(setTpSlRequest, System.out::println);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-      .getBorrowHistory({  
-        currency: 'USDT',  
-        startTime: 1670601600000,  
-        endTime: 1673203200000,  
-        limit: 30,  
-        cursor: 'nextPageCursorToken',  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .setTPSLMode({  
+            symbol: 'XRPUSDT',  
+            category: 'linear',  
+            tpSlMode: 'Full',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -111,68 +119,46 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
+            "tpSlMode": "Full"  
         },  
         "retExtInfo": {},  
-        "time": 1697442206478  
+        "time": 1672279322666  
     }
 
 ---
 
-# 查詢利息記錄
+# 設置止盈止損模式
 
-獲取利息記錄，按照創建時間倒敘排列
+提示
+
+ _某種程度上來說，該接口已經**廢棄** , 原因在於新版的止盈止損機制是基於訂單維度. 這個接口當初主要是用於倉位維度的止盈止損_
+
+ _但是, 您仍然可以使用該接口, 為某個合約設置一個隱式的止盈止損模式, 因為當您在下單接口或者設置止盈止損接口時, 不傳入字段"tpslMode"時, 系統將會獲取一個默認值, 該 默認值實際上是源於是否調用過該接口做過修改, 不曾修改過的symbol, 都是默認Full_
+
+可以將止盈止損模式設置為部分止盈止損或者全部止盈止損
+
+信息
+
+在部分止盈止損下，您可以設置小於倉位大小的止盈止損數量
 
 ### HTTP 請求
 
-GET`/v5/account/borrow-history`
+POST`/v5/position/set-tpsl-mode`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-currency| false| string| USDC、USDT、BTC、ETH  
-startTime| false| integer| 開始時間戳 (毫秒) 
-
-  * startTime 和 endTime都不傳入, 則默認返回最近30天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 30天
-  * 若只傳startTime，則查詢startTime和startTime+30天的數據
-  * 若只傳endTime，則查詢endTime-30天和endTime的數據
-
-  
-endTime| false| integer| 結束時間 (毫秒)  
-limit| false| integer| 每頁數量, 最大50. 默認每頁20條  
-cursor| false| string| 游標，用於翻頁  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`  
+symbol| **true**|  string| 合約名稱  
+tpSlMode| **true**|  string| TP/SL模式. `Full`,`Partial`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> currency| string| USDC、USDT、BTC、ETH  
-> createdTime| integer| 時間戳（毫秒）  
-> borrowCost| string| 利息  
-> hourlyBorrowRate| string| 利率  
-> InterestBearingBorrowSize| string| 豁免利息額度  
-> costExemption| string| 豁免計息成本  
-> borrowAmount| string| 當前總借貸  
-> unrealisedLoss| string| 浮動虧損  
-> freeBorrowedAmount| string| 借款中免息的數額  
-nextPageCursor| string| 游標，用於翻頁  
-[](/docs/zh-TW/api-explorer/v5/account/borrow-history)
+tpSlMode| string| `Full`,`Partial`  
+[](/docs/zh-TW/api-explorer/v5/position/tpsl-mode)
 
 * * *
 
@@ -180,17 +166,25 @@ nextPageCursor| string| 游標，用於翻頁
 
   * HTTP
   * Python
+  * Java
   * Node.js
 
 
     
     
-    GET /v5/account/borrow-history?currency=BTC&limit=1 HTTP/1.1  
+    POST /v5/position/set-tpsl-mode HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672277745427  
+    X-BAPI-TIMESTAMP: 1672279325035  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "symbol": "XRPUSDT",  
+        "category": "linear",  
+        "tpSlMode": "Full"  
+    }  
     
     
     
@@ -200,35 +194,44 @@ nextPageCursor| string| 游標，用於翻頁
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_borrow_history(  
-        currency="BTC",  
-        limit=1,  
+    print(session.set_tp_sl_mode(  
+        symbol="XRPUSDT",  
+        category="linear",  
+        tpSlMode="Full",  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var setTpSlRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").tpslMode(TpslMode.PARTIAL).build();  
+    client.swithMarginRequest(setTpSlRequest, System.out::println);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
-      key: 'xxxxxxxxxxxxxxxxxx',  
-      secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
     });  
       
     client  
-      .getBorrowHistory({  
-        currency: 'USDT',   
-        startTime: 1670601600000,   
-        endTime: 1673203200000,   
-        limit: 30,   
-        cursor: 'nextPageCursorToken',   
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .setTPSLMode({  
+            symbol: 'XRPUSDT',  
+            category: 'linear',  
+            tpSlMode: 'Full',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -238,21 +241,8 @@ nextPageCursor| string| 游標，用於翻頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "nextPageCursor": "2671153%3A1%2C2671153%3A1",  
-            "list": [  
-                {  
-                    "borrowAmount": "1.06333265702840778",  
-                    "costExemption": "0",  
-                    "freeBorrowedAmount": "0",  
-                    "createdTime": 1697439900204,  
-                    "InterestBearingBorrowSize": "1.06333265702840778",  
-                    "currency": "BTC",  
-                    "unrealisedLoss": "0",  
-                    "hourlyBorrowRate": "0.000001216904",  
-                    "borrowCost": "0.00000129"  
-                }  
-            ]  
+            "tpSlMode": "Full"  
         },  
         "retExtInfo": {},  
-        "time": 1697442206478  
+        "time": 1672279322666  
     }

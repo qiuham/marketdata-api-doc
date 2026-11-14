@@ -2,59 +2,47 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/byusdt/yield
 api_type: REST
-updated_at: 2026-11-13 18:27:38.192578
+updated_at: 2026-11-13 19:23:09.369395
 ---
 
-# Get APR History
-
-info
-
-Does not need authentication.
-
-note
-
-You can query up to 6 months of historical APR data.
+# Get Daily Yield Records
 
 ### HTTP Request
 
-GET`/v5/earn/apr-history`
+GET`/v5/earn/token/yield`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`  
-productId| **true**|  string| Product ID, from [GET /v5/earn/product](/docs/v5/finance/earn/easy-onchain/product-info)  
-startTime| false| integer| Start timestamp (ms). If neither `startTime` nor `endTime` is provided, the last 7 days of data is returned by default  
-endTime| false| integer| End timestamp (ms). The difference between `endTime` and `startTime` must be less than or equal to 182 days  
+coin| **true**|  string| Token coin. Currently only `BYUSDT` is supported  
+startTime| false| integer| Start timestamp in seconds  
+endTime| false| integer| End timestamp in seconds  
+cursor| false| string| Pagination cursor. Use `nextPageCursor` from the previous response  
+limit| false| integer| Number of items per page. Default: `5`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> timestamp| string| Unix timestamp (ms) at midnight of the corresponding date  
-> apr| string| APR, decimal string, e.g., `"0.055"` represents 5.5%  
+list| array| Daily yield record list  
+> yield| string| Base yield amount  
+> bonusYield| string| Bonus yield amount  
+> status| string| Status: `Success`, `Processing`  
+> createdTime| string| Record time, unix timestamp in seconds  
+nextPageCursor| string| Cursor for the next page. Empty string means no more data  
   
+* * *
+
 ### Request Example
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### Response Example
@@ -62,95 +50,62 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
             "list": [  
                 {  
-                    "timestamp": "1773705600000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773619200000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773532800000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773446400000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773360000000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773273600000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773187200000",  
-                    "apr": "15%"  
+                    "yield": "0.50",  
+                    "bonusYield": "0.20",  
+                    "status": "Success",  
+                    "createdTime": "1710691200"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
         },  
         "retExtInfo": {},  
-        "time": 1773741812091  
+        "time": 1741651200000  
     }
 
 ---
 
-# 查詢歷史 APR
-
-信息
-
-不需要鑒權
-
-備註
-
-最多可查詢 6 個月的歷史 APR 數據。
+# 查詢每日收益記錄
 
 ### HTTP 請求
 
-GET`/v5/earn/apr-history`
+GET`/v5/earn/token/yield`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
+參數| 必填| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`  
-productId| **true**|  string| 產品 ID，從 [GET /v5/earn/product](/docs/zh-TW/v5/finance/earn/easy-onchain/product-info) 獲取  
-startTime| false| integer| 查詢開始時間戳 (ms)。若 `startTime` 和 `endTime` 均不傳，默認返回最近 7 天的數據  
-endTime| false| integer| 查詢結束時間戳 (ms)，與 `startTime` 的間隔不超過 182 天  
+coin| **true**|  string| 代幣幣種。目前僅支援 `BYUSDT`  
+startTime| false| integer| 開始時間，秒級時間戳  
+endTime| false| integer| 結束時間，秒級時間戳  
+cursor| false| string| 分頁游標。使用上次響應中的 `nextPageCursor`  
+limit| false| integer| 每頁返回數量。預設：`5`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> timestamp| string| 該記錄對應日期零點的 Unix 毫秒時間戳  
-> apr| string| APR，decimal 字符串，如 `"0.055"` 表示 5.5%  
+list| array| 每日收益記錄列表  
+> yield| string| 基礎收益金額  
+> bonusYield| string| 加成收益金額  
+> status| string| 狀態：`Success`（成功）、`Processing`（處理中）  
+> createdTime| string| 記錄時間，秒級 Unix 時間戳  
+nextPageCursor| string| 下一頁游標，為空表示無更多資料  
   
+* * *
+
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Node.js
-
-
     
     
-    GET /v5/earn/apr-history?productId=8&category=OnChain HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    
-    
-    
-      
-    
-    
-    
-      
+    GET /v5/earn/token/yield?coin=BYUSDT&limit=5 HTTP/1.1  
+    Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1741651200000  
+    X-BAPI-RECV-WINDOW: 5000  
     
 
 ### 響應示例
@@ -158,39 +113,18 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "success",  
         "result": {  
             "list": [  
                 {  
-                    "timestamp": "1773705600000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773619200000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773532800000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773446400000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773360000000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773273600000",  
-                    "apr": "15%"  
-                },  
-                {  
-                    "timestamp": "1773187200000",  
-                    "apr": "15%"  
+                    "yield": "0.50",  
+                    "bonusYield": "0.20",  
+                    "status": "Success",  
+                    "createdTime": "1710691200"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJpZCI6MTIzNDU2fQ=="  
         },  
         "retExtInfo": {},  
-        "time": 1773741812091  
+        "time": 1741651200000  
     }

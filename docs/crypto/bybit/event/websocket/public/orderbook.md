@@ -2,32 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/websocket/public/orderbook
 api_type: WebSocket
-updated_at: 2026-11-13 18:27:26.342927
+updated_at: 2026-11-13 19:22:39.345089
 ---
 
-# Trade
+# Orderbook
 
-Subscribe to the Event Contract public trade stream. Pushed in real-time after each trade.
+Subscribe to the Event Contract orderbook stream. Supports **25 levels**.
 
-Push frequency: **real-time**
+Push frequency: **20ms**
 
 **Topic:**  
-`publicTrade.{symbol}` e.g., `publicTrade.ETHUSDT-28AUG26-2450-2570-OUT`
+`orderbook.25.{symbol}` e.g., `orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT`
+
+### Process snapshot/delta
+
+Once you have subscribed successfully, you will receive a `snapshot`. The WebSocket will keep pushing `delta` messages every time the orderbook changes. If you receive a new `snapshot` message, you will have to reset your local orderbook.
+
+To apply `delta` updates:
+
+  * If you receive a size of `0`, delete the entry
+  * If you receive an entry that does not exist, insert it
+  * If the entry exists, update the size
+
+
 
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
 topic| string| Topic name  
-type| string| Data type: `snapshot`  
+type| string| Data type: `snapshot`, `delta`  
 ts| number| Timestamp (ms) when the system generates the data  
-data| array| Object. Sorted by trade time in ascending order.  
-> T| number| Timestamp (ms) when the order is filled  
+data| map| Object  
 > s| string| Symbol name  
-> r| string| Payout ratio (trade price)  
-> a| string| Trade amount (order value)  
-> i| string| Trade ID  
-> seq| integer| Cross sequence  
+> r| array| Payout ratio orderbook entries. Up to 25 levels.  
+>> r[0]| string| Payout ratio (price)  
+>> r[1]| string| Order value (size). Size `0` means the entry should be deleted.  
+> u| integer| Update ID. If `u`=1, it is a snapshot caused by a service restart — overwrite your local orderbook.  
+> seq| integer| Cross sequence. Smaller seq means earlier data.  
+cts| number| Timestamp from the matching engine when this data is produced  
   
 ### Subscribe Example
     
@@ -35,55 +48,91 @@ data| array| Object. Sorted by trade time in ascending order.
     {  
         "op": "subscribe",  
         "args": [  
-            "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT"  
+            "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT"  
         ]  
     }  
     
 
 ### Response Example
+
+  * Snapshot
+  * Delta
+
+
     
     
     {  
-        "topic": "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT",  
-        "ts": 1787794797536,  
+        "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",  
+        "ts": 1787794783020,  
         "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1787794797534,  
-                "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
-                "r": "3.5",  
-                "a": "100",  
-                "i": "ea89cadf-6471-5fd4-8248-20b470d8478b",  
-                "seq": 49139  
-            }  
-        ]  
+        "data": {  
+            "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
+            "r": [  
+                ["3.5", "14900"],  
+                ["2.28", "500"],  
+                ["2.07", "500"]  
+            ],  
+            "u": 702,  
+            "seq": 49115  
+        },  
+        "cts": 1787794647814  
+    }  
+    
+    
+    
+    {  
+        "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",  
+        "ts": 1787798930119,  
+        "type": "delta",  
+        "data": {  
+            "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
+            "r": [  
+                ["2.39", "0"]  
+            ],  
+            "u": 724,  
+            "seq": 50266  
+        },  
+        "cts": 1787798930117  
     }
 
 ---
 
-# 成交
+# 訂單簿
 
-訂閱 Event Contract 公共成交數據流，每筆成交實時推送。
+訂閱 Event Contract 訂單簿數據流，支持 **25 檔** 行情。
 
-推送頻率：**實時**
+推送頻率：**20ms**
 
 **Topic：**  
-`publicTrade.{symbol}`，如 `publicTrade.ETHUSDT-28AUG26-2450-2570-OUT`
+`orderbook.25.{symbol}`，如 `orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT`
+
+### 快照/增量處理說明
+
+訂閱成功後，首先收到 `snapshot` 全量數據。之後每次訂單簿變動，系統推送 `delta` 增量數據。若收到新的 `snapshot`，需重置本地訂單簿。
+
+增量更新規則：
+
+  * 收到 size = `0`：刪除該條目
+  * 收到不存在的條目：插入新條目
+  * 收到已存在的條目：更新 size
+
+
 
 ### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
 topic| string| Topic 名稱  
-type| string| 數據類型：`snapshot`  
+type| string| 數據類型：`snapshot`、`delta`  
 ts| number| 系統生成數據的時間戳（毫秒）  
-data| array| 對象，按成交時間升序排列  
-> T| number| 訂單成交時間戳（毫秒）  
+data| map| 對象  
 > s| string| 交易對名稱  
-> r| string| 賠付比率（成交價格）  
-> a| string| 成交金額（訂單金額）  
-> i| string| 成交 ID  
-> seq| integer| 跨業務序號  
+> r| array| 賠付比率訂單簿條目，最多 25 檔  
+>> r[0]| string| 賠付比率（價格）  
+>> r[1]| string| 訂單金額（數量）。為 `0` 時表示該條目需刪除  
+> u| integer| 更新 ID。若 `u`=1，表示服務重啟後的快照，需重置本地訂單簿  
+> seq| integer| 跨業務序號，seq 越小說明數據越早生成  
+cts| number| 撮合引擎生成此數據的時間戳  
   
 ### 訂閱示例
     
@@ -91,26 +140,49 @@ data| array| 對象，按成交時間升序排列
     {  
         "op": "subscribe",  
         "args": [  
-            "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT"  
+            "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT"  
         ]  
     }  
     
 
 ### 推送示例
+
+  * Snapshot
+  * Delta
+
+
     
     
     {  
-        "topic": "publicTrade.ETHUSDT-28AUG26-2450-2570-OUT",  
-        "ts": 1787794797536,  
+        "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",  
+        "ts": 1787794783020,  
         "type": "snapshot",  
-        "data": [  
-            {  
-                "T": 1787794797534,  
-                "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
-                "r": "3.5",  
-                "a": "100",  
-                "i": "ea89cadf-6471-5fd4-8248-20b470d8478b",  
-                "seq": 49139  
-            }  
-        ]  
+        "data": {  
+            "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
+            "r": [  
+                ["3.5", "14900"],  
+                ["2.28", "500"],  
+                ["2.07", "500"]  
+            ],  
+            "u": 702,  
+            "seq": 49115  
+        },  
+        "cts": 1787794647814  
+    }  
+    
+    
+    
+    {  
+        "topic": "orderbook.25.ETHUSDT-28AUG26-2450-2570-OUT",  
+        "ts": 1787798930119,  
+        "type": "delta",  
+        "data": {  
+            "s": "ETHUSDT-28AUG26-2450-2570-OUT",  
+            "r": [  
+                ["2.39", "0"]  
+            ],  
+            "u": 724,  
+            "seq": 50266  
+        },  
+        "cts": 1787798930117  
     }

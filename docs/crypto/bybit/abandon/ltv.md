@@ -2,119 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/ltv
 api_type: REST
-updated_at: 2026-11-13 18:26:35.509984
+updated_at: 2026-11-13 19:20:39.532056
 ---
 
-# Set Risk Limit
-
-**Since bybit has launched auto risk limit on 12 March 2024, please click[here](https://announcements.bybit.com/en/article/risk-limit-update-transitioning-from-manual-to-auto-adjustment-bltf0fa535064561d9d/) to learn more, so it will not take effect even you set it successfully.**
+# Get LTV
 
 ### HTTP Request
 
-POST`/v5/position/set-risk-limit`
+GET`/v5/ins-loan/ltv`
 
 ### Request Parameters
 
-Parameter| Required| Type| Comments  
----|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type 
+None
 
-  * Unified account: `linear`, `inverse`
-  * Classic account: `linear`, `inverse`. _Please note that`category` is **not** involved with business logic_
-
-  
-symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-riskId| **true**|  integer| Risk limit ID  
-[positionIdx](/docs/v5/enum#positionidx)| false| integer| Used to identify positions in different position modes. For hedge mode, it is **required**
-
-  * `0`: one-way mode
-  * `1`: hedge-mode Buy side
-  * `2`: hedge-mode Sell side
-
-  
-  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-category| string| Product type  
-riskId| integer| Risk limit ID  
-riskLimitValue| string| The position limit value corresponding to this risk ID  
-[](/docs/api-explorer/v5/position/set-risk-limit)
-
-* * *
-
+ltvInfo| array| Object  
+> ltv| string| Risk rate  
+> parentUid| string| User id  
+> subAccountUids| array| Bound user id  
+> unpaidAmount| string| Total debt(USDT)  
+> unpaidInfo| array| Debt details  
+>> token| string| coin  
+>> unpaidQty| string| Unpaid principle  
+>> unpaidInterest| string| Unpaid interest  
+> balance| string| Total asset. (margin coins converted to USDT). Please read [here](https://www.bybit.com/en-US/help-center/s/article/Over-the-counter-OTC-Lending) to understand the calculation  
+> spotBalanceInfo| array| Spot asset details  
+>> token| string| Spot margin coin  
+>> price| string| Spot margin coin price  
+>> qty| string| Spot margin coin quantity  
+> contractInfo| array| Contract asset details  
+>> token| string| Contract margin coin  
+>> price| string| Contract margin coin index price  
+>> qty| string| Contract margin coin quantity (available balance of Contract account, and it is not involved with LTV calculation)  
+  
 ### Request Example
-
-  * HTTP
-  * Python
-  * Java
-  * Node.js
-
-
     
     
-    POST /v5/position/set-risk-limit HTTP/1.1  
+    GET /v5/ins-loan/ltv HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672282269774  
+    X-BAPI-TIMESTAMP: 1678688069538  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "riskId": 4,  
-        "positionIdx": null  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.set_risk_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        riskId=4,  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setRiskLimitRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").riskId(4).build();  
-    client.setRiskLimit(setRiskLimitRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setRiskLimit({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            riskId: 4,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    X-BAPI-SIGN: XXXXX  
     
 
 ### Response Example
@@ -122,128 +54,95 @@ riskLimitValue| string| The position limit value corresponding to this risk ID
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "riskId": 4,  
-            "riskLimitValue": "8000000",  
-            "category": "linear"  
+            "ltvInfo": [  
+                {  
+                    "ltv": "0.1147",  
+                    "parentUid": "999805",  
+                    "subAccountUids": [  
+                        "999805"  
+                    ],  
+                    "unpaidAmount": "",  
+                    "unpaidInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "unpaidQty": "6351.49614274",  
+                            "unpaidInterest": "264.0137162"  
+                        }  
+                    ],  
+                    "balance": "57626.875915433333333332400000000",  
+                    "spotBalanceInfo": [  
+                        {  
+                            "token": "BTC",  
+                            "price": "16375.621333333333333332",  
+                            "qty": "0.2"  
+                        },  
+                        ....  
+                        {  
+                            "token": "XRP",  
+                            "price": "0.409517",  
+                            "qty": "10000"  
+                        }  
+                    ],  
+                    "contractInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "price": "1",  
+                            "qty": "0"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1672282270571  
+        "time": 1669367335608  
     }
 
 ---
 
-# 設置風險限額
-
-**由於Bybit在2024年3月12日上線了自動調整risk limit功能, 詳情請見[這裡](https://announcements.bybit.com/zh-TW/article/risk-limit-update-transitioning-from-manual-to-auto-adjustment-bltf0fa535064561d9d/), 因此儘管接口能調通, 但是沒有任何意義**
+# 查詢風險率
 
 ### HTTP 請求
 
-POST`/v5/position/set-risk-limit`
+GET`/v5/ins-loan/ltv`
 
 ### 請求參數
 
-參數| 是否必需| 類型| 說明  
----|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 
+無
 
-  * 統一帳戶: `linear`, `inverse`
-  * 經典帳戶: `linear`, `inverse`. 這裡`category`字段不參與業務邏輯，僅做路由使用
-
-  
-symbol| **true**|  string| 合約名稱  
-riskId| **true**|  integer| 風險限額Id  
-[positionIdx](/docs/zh-TW/v5/enum#positionidx)| false| integer| 倉位標識，用於標識不同倉位, 雙向持倉模式下，該字段**必傳**
-
-  * `0`: 單向持倉模式
-  * `1`: 買側雙向持倉模式
-  * `2`: 賣側雙向持倉模式
-
-  
-  
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-category| string| 產品類型  
-riskId| integer| 風險限額Id  
-riskLimitValue| string| 風險限額Id對應的風險限額  
-[](/docs/zh-TW/api-explorer/v5/position/set-risk-limit)
-
-* * *
-
+ltvInfo| array| Object  
+> ltv| string| 風險率  
+> parentUid| string| 用戶ID  
+> subAccountUids| array| 綁定的子UID  
+> unpaidAmount| string| 總負債 (USDT)  
+> unpaidInfo| array| 負債明細  
+>> token| string| 幣種  
+>> unpaidQty| string| 未還本金  
+>> unpaidInterest| string| 未還利息  
+> balance| string| 總資產(保證金幣種資產折算為USDT資產). 可以參考[這裡](https://www.bybit.com/zh-MY/help-center/s/article/Over-the-counter-OTC-Lending)了解詳細計算  
+> spotBalanceInfo| array| 現貨資產明細  
+>> token| string| 現貨保證金幣種  
+>> price| string| 現貨保證金幣種價格  
+>> qty| string| 現貨保證金數量  
+> contractInfo| array| 合約資產明細  
+>> token| string| 合約保證金幣種  
+>> price| string| 合約保證金幣種指數價格  
+>> qty| string| 合約保證金幣種數量 (合約可用餘額，不參與LTV計算)  
+  
 ### 請求示例
-
-  * HTTP
-  * Python
-  * Java
-  * Node.js
-
-
     
     
-    POST /v5/position/set-risk-limit HTTP/1.1  
-    Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672282269774  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-        "category": "linear",  
-        "symbol": "BTCUSDT",  
-        "riskId": 4,  
-        "positionIdx": null  
-    }  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.set_risk_limit(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        riskId=4,  
-    ))  
-    
-    
-    
-    import com.bybit.api.client.domain.*;  
-    import com.bybit.api.client.domain.position.*;  
-    import com.bybit.api.client.domain.position.request.*;  
-    import com.bybit.api.client.service.BybitApiClientFactory;  
-    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
-    var setRiskLimitRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").riskId(4).build();  
-    client.setRiskLimit(setRiskLimitRequest, System.out::println);  
-    
-    
-    
-    const { RestClientV5 } = require('bybit-api');  
-      
-    const client = new RestClientV5({  
-        testnet: true,  
-        key: 'xxxxxxxxxxxxxxxxxx',  
-        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
-    });  
-      
-    client  
-        .setRiskLimit({  
-            category: 'linear',  
-            symbol: 'BTCUSDT',  
-            riskId: 4,  
-        })  
-        .then((response) => {  
-            console.log(response);  
-        })  
-        .catch((error) => {  
-            console.error(error);  
-        });  
+    curl --location --request GET 'https://api-testnet.bybit.com/spot/v3/private/margin-ltv' \  
+    --header 'X-BAPI-SIGN-TYPE: 2' \  
+    --header 'X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx' \  
+    --header 'X-BAPI-TIMESTAMP: 1669367335035' \  
+    --header 'X-BAPI-RECV-WINDOW: 5000' \  
+    --header 'X-BAPI-SIGN: XXXXXXXX'  
     
 
 ### 響應示例
@@ -251,12 +150,47 @@ riskLimitValue| string| 風險限額Id對應的風險限額
     
     {  
         "retCode": 0,  
-        "retMsg": "OK",  
+        "retMsg": "",  
         "result": {  
-            "riskId": 4,  
-            "riskLimitValue": "8000000",  
-            "category": "linear"  
+            "ltvInfo": [  
+                {  
+                    "ltv": "0.1147",  
+                    "parentUid": "999805",  
+                    "subAccountUids": [  
+                        "999805"  
+                    ],  
+                    "unpaidAmount": "",  
+                    "unpaidInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "unpaidQty": "6351.49614274",  
+                            "unpaidInterest": "264.0137162"  
+                        }  
+                    ],  
+                    "balance": "57626.875915433333333332400000000",  
+                    "spotBalanceInfo": [  
+                        {  
+                            "token": "BTC",  
+                            "price": "16375.621333333333333332",  
+                            "qty": "0.2"  
+                        },  
+                        ....  
+                        {  
+                            "token": "XRP",  
+                            "price": "0.409517",  
+                            "qty": "10000"  
+                        }  
+                    ],  
+                    "contractInfo": [  
+                        {  
+                            "token": "USDT",  
+                            "price": "1",  
+                            "qty": "0"  
+                        }  
+                    ]  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1672282270571  
+        "time": 1669367335608  
     }

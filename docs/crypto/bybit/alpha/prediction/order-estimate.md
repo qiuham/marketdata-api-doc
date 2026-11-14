@@ -2,46 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/order-estimate
 api_type: REST
-updated_at: 2026-11-13 18:26:49.767296
+updated_at: 2026-11-13 19:21:10.957787
 ---
 
-# Get Position History
+# Get Order Estimate
 
-Query the authenticated user's closed prediction market positions. Includes settlement results (WIN/LOSE) for resolved events.
+Estimate the outcome of a prediction market buy or sell order before execution. This is a **mandatory** step — always show the estimate to the user and obtain explicit confirmation before calling [Buy](/docs/v5/alpha/prediction/buy) or [Sell](/docs/v5/alpha/prediction/sell).
+
+info
+
+  * **BUY** : set `side=1`, `amount` = USDC to invest, include `payTokenCode="USDC"`
+  * **SELL** : set `side=2`, `amount` = number of shares to sell
+  * Phase 1 supports `orderType=1` (FOK) only
+  * Always display `estimatedCost`, `estimatedReceive`, `feeAmount`, and `toWin` (BUY only) to the user before proceeding
+  * Do NOT call [Buy](/docs/v5/alpha/prediction/buy) or [Sell](/docs/v5/alpha/prediction/sell) without explicit user confirmation after viewing the estimate
+
+
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/position-history`
+POST`/v5/alpha/prediction/order-estimate`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-tokenId| false| string| Filter by outcome token ID  
-eventId| false| string| Filter by event ID  
-result| false| integer| Filter by position outcome. Refer to [predictionPositionResult](/docs/v5/enum#predictionpositionresult-prediction-market--position-result)  
-days| false| integer| Look back N days. Max: `90`  
-limit| false| integer| Number of records per page  
-pageIndex| false| integer| Page number starting from `1`  
+tokenId| **true**|  string| Outcome token ID (from [Get Event Detail](/docs/v5/alpha/prediction/event-detail))  
+side| **true**|  integer| Trade direction. Refer to [predictionSide](/docs/v5/enum#predictionside-prediction-market--trade-direction)  
+eventId| **true**|  string| Event ID associated with the token  
+amount| **true**|  string| BUY: USDC to invest. SELL: number of shares to sell (positive decimal as string)  
+orderType| **true**|  integer| Order type. Refer to [predictionOrderType](/docs/v5/enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only  
+payTokenCode| false| string| Payment token code. Required for BUY. Phase 1 fixed to `USDC`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-positions| array| Closed position records  
-> positionId| string| Position ID  
-> tokenId| string| Outcome token ID  
-> eventId| string| Event ID  
-> outcomeName| string| Outcome label (e.g., `YES`, `NO`)  
-> shares| string| Total shares that were held  
-> cost| string| Total USDC cost of this position  
-> avgPrice| string| Average cost price per share  
-> exitPrice| string| Price at which the position was closed  
-> realizedPnl| string| Realized profit/loss (USDC). Positive = profit  
-> realizedPnlRate| string| Realized P&L as decimal ratio  
-> result| integer| Position outcome. Refer to [predictionPositionResult](/docs/v5/enum#predictionpositionresult-prediction-market--position-result)  
-> closedAt| integer| Position close timestamp (UTC milliseconds)  
-total| integer| Total matching records  
+avgPrice| string| Estimated average execution price per share (0–1)  
+estimatedCost| string| BUY: USDC to pay. SELL: shares to sell  
+estimatedReceive| string| BUY: estimated shares received. SELL: estimated USDC received  
+toWin| string| BUY only: amount to win if outcome is correct (shares × 1 USDC)  
+feeAmount| string| Total platform fee (USDC) = `serverFee` \+ `polymarketFee`  
+feeDetail| object| Fee breakdown  
+> serverFee| string| Platform service fee (USDC)  
+> polymarketFee| string| Polymarket protocol fee (USDC)  
+slippage| string| Slippage applied to this estimate  
   
 ### Request Example
 
@@ -52,7 +57,7 @@ total| integer| Total matching records
 
     
     
-    POST /v5/alpha/prediction/position-history HTTP/1.1  
+    POST /v5/alpha/prediction/order-estimate HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -61,9 +66,12 @@ total| integer| Total matching records
     Content-Type: application/json  
       
     {  
-        "limit": 20,  
-        "pageIndex": 1,  
-        "days": 30  
+        "tokenId": "token_yes_123",  
+        "side": 1,  
+        "eventId": "event_123",  
+        "amount": "100",  
+        "orderType": 1,  
+        "payTokenCode": "USDC"  
     }  
     
     
@@ -82,23 +90,16 @@ total| integer| Total matching records
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "positions": [  
-                {  
-                    "positionId": "pos_456",  
-                    "tokenId": "token_yes_456",  
-                    "eventId": "event_456",  
-                    "outcomeName": "YES",  
-                    "shares": "200",  
-                    "cost": "140.00",  
-                    "avgPrice": "0.70",  
-                    "exitPrice": "1.00",  
-                    "realizedPnl": "60.00",  
-                    "realizedPnlRate": "0.429",  
-                    "result": 1,  
-                    "closedAt": 1704153600000  
-                }  
-            ],  
-            "total": 1  
+            "avgPrice": "0.65",  
+            "estimatedCost": "100",  
+            "estimatedReceive": "153.84",  
+            "toWin": "153.84",  
+            "feeAmount": "1.00",  
+            "feeDetail": {  
+                "serverFee": "0.70",  
+                "polymarketFee": "0.30"  
+            },  
+            "slippage": "0.05"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  
@@ -106,43 +107,48 @@ total| integer| Total matching records
 
 ---
 
-# 獲取歷史持倉
+# 獲取委托預估
 
-查詢已登錄用戶的預測市場已平倉記錄，包含已結算賽事的結果（WIN/LOSE）。
+在執行前預估預測市場買入或賣出委托的結果。這是**必填步驟** ——在調用 [買入](/docs/zh-TW/v5/alpha/prediction/buy) 或 [賣出](/docs/zh-TW/v5/alpha/prediction/sell) 前，必須先向用戶展示預估結果並取得明確確認。
+
+信息
+
+  * **買入** ：設置 `side=1`，`amount` 為投入的 USDC，需包含 `payTokenCode="USDC"`
+  * **賣出** ：設置 `side=2`，`amount` 為賣出的份額數量
+  * 第一階段僅支持 `orderType=1`（FOK）
+  * 向用戶展示 `estimatedCost`、`estimatedReceive`、`feeAmount`，買入時還需展示 `toWin`
+  * 未取得用戶明確確認前，請勿調用 [買入](/docs/zh-TW/v5/alpha/prediction/buy) 或 [賣出](/docs/zh-TW/v5/alpha/prediction/sell)
+
+
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/position-history`
+POST`/v5/alpha/prediction/order-estimate`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-tokenId| false| string| 按結果代幣 ID 篩選  
-eventId| false| string| 按賽事 ID 篩選  
-result| false| integer| 按倉位結果篩選。參考 [predictionPositionResult](/docs/zh-TW/v5/enum#predictionpositionresult-prediction-market--position-result)  
-days| false| integer| 回溯天數，最大 `90`  
-limit| false| integer| 每頁記錄數  
-pageIndex| false| integer| 頁碼，從 `1` 開始  
+tokenId| **true**|  string| 結果代幣 ID（從 [獲取賽事詳情](/docs/zh-TW/v5/alpha/prediction/event-detail) 獲取）  
+side| **true**|  integer| 交易方向。參考 [predictionSide](/docs/zh-TW/v5/enum#predictionside-prediction-market--trade-direction)  
+eventId| **true**|  string| 代幣對應的賽事 ID  
+amount| **true**|  string| 買入：投入的 USDC；賣出：賣出的份額數量（正數字符串）  
+orderType| **true**|  integer| 委托類型。參考 [predictionOrderType](/docs/zh-TW/v5/enum#predictionordertype-prediction-market--order-type)。第一階段：`1`（FOK）  
+payTokenCode| false| string| 支付代幣代碼。買入時必填，第一階段固定為 `USDC`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-positions| array| 已平倉記錄  
-> positionId| string| 持倉 ID  
-> tokenId| string| 結果代幣 ID  
-> eventId| string| 賽事 ID  
-> outcomeName| string| 結果標籤（如 `YES`、`NO`）  
-> shares| string| 持有的總份額  
-> cost| string| 本倉位的總 USDC 成本  
-> avgPrice| string| 每份額的平均成本價  
-> exitPrice| string| 平倉價格  
-> realizedPnl| string| 已實現盈虧（USDC），正數為盈利  
-> realizedPnlRate| string| 已實現盈虧比率  
-> result| integer| 倉位結果。參考 [predictionPositionResult](/docs/zh-TW/v5/enum#predictionpositionresult-prediction-market--position-result)  
-> closedAt| integer| 平倉時間戳（UTC 毫秒）  
-total| integer| 符合條件的總記錄數  
+avgPrice| string| 預估平均成交價格（0–1）  
+estimatedCost| string| 買入：需支付的 USDC；賣出：賣出的份額  
+estimatedReceive| string| 買入：預估獲得的份額；賣出：預估獲得的 USDC  
+toWin| string| 僅限買入：若結果正確可獲得的金額（份額 × 1 USDC）  
+feeAmount| string| 總手續費（USDC）= `serverFee` \+ `polymarketFee`  
+feeDetail| object| 手續費明細  
+> serverFee| string| 平台服務費（USDC）  
+> polymarketFee| string| Polymarket 協議費（USDC）  
+slippage| string| 本次預估所用的滑點  
   
 ### 請求示例
 
@@ -153,7 +159,7 @@ total| integer| 符合條件的總記錄數
 
     
     
-    POST /v5/alpha/prediction/position-history HTTP/1.1  
+    POST /v5/alpha/prediction/order-estimate HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -162,9 +168,12 @@ total| integer| 符合條件的總記錄數
     Content-Type: application/json  
       
     {  
-        "limit": 20,  
-        "pageIndex": 1,  
-        "days": 30  
+        "tokenId": "token_yes_123",  
+        "side": 1,  
+        "eventId": "event_123",  
+        "amount": "100",  
+        "orderType": 1,  
+        "payTokenCode": "USDC"  
     }  
     
     
@@ -183,23 +192,16 @@ total| integer| 符合條件的總記錄數
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "positions": [  
-                {  
-                    "positionId": "pos_456",  
-                    "tokenId": "token_yes_456",  
-                    "eventId": "event_456",  
-                    "outcomeName": "YES",  
-                    "shares": "200",  
-                    "cost": "140.00",  
-                    "avgPrice": "0.70",  
-                    "exitPrice": "1.00",  
-                    "realizedPnl": "60.00",  
-                    "realizedPnlRate": "0.429",  
-                    "result": 1,  
-                    "closedAt": 1704153600000  
-                }  
-            ],  
-            "total": 1  
+            "avgPrice": "0.65",  
+            "estimatedCost": "100",  
+            "estimatedReceive": "153.84",  
+            "toWin": "153.84",  
+            "feeAmount": "1.00",  
+            "feeDetail": {  
+                "serverFee": "0.70",  
+                "polymarketFee": "0.30"  
+            },  
+            "slippage": "0.05"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  

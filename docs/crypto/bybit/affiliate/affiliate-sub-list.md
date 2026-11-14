@@ -2,46 +2,50 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-sub-list
 api_type: REST
-updated_at: 2026-11-13 18:26:45.765261
+updated_at: 2026-11-13 19:21:00.905528
 ---
 
-# Get LP Pay Token List
+# Get Affiliate Sub-Affiliate List
 
-Query the list of supported payment tokens for LP staking, including user's available balance for each.
+To use this endpoint, you should have an affiliate account and only tick "affiliate" permission while creating the API key.  
+Affiliate site: <https://affiliates.bybit.com>
 
-info
+tip
 
-  * Call this before staking to verify which tokens are available and check balances
-  * **Rate Limit:** 5 req/s (per user), 5000 req/s (global)
+  * Use master UID only
+  * The api key can only have "Affiliate" permission
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/lp/pay-token-list`
+GET`/v5/affiliate/affiliate-sub-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-chainCode| false| string| Filter by blockchain identifier  
-tokenAddress| false| string| Filter by token contract address  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+size| false| integer| Limit for data size per page. [`0`, `100`]. Default: `0`  
+startDate| false| string| Start date of the query period, format `YYYY-MM-DD`. The range between "startDate" and "endTime" cannot exceed 3 months  
+endDate| false| string| End date of the query period, format `YYYY-MM-DD`. "startDate" and "endDate" must either both be provided or both be omitted. If both are omitted, it returns T-1 data by default  
+subAffId| false| integer| Sub-affiliate ID for exact lookup. Pass `0` or omit to return all sub-affiliates without filtering  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tokens| array| Payment token list  
-> tokenCode| string| Token identifier, e.g. `CEX_1`  
-> tokenSymbol| string| Token symbol, e.g. `USDT`  
-> chainCode| string| Blockchain identifier  
-> chainIconUrl| string| Blockchain icon URL  
-> decimals| integer| Token decimal precision  
-> availableBalance| string| User's available balance for this token  
-> tokenIconUrlDay| string| Token icon URL (light mode)  
-> tokenIconUrlNight| string| Token icon URL (dark mode)  
-> minStakeAmount| string| Minimum stake amount for this token  
-> maxStakeAmount| string| Maximum stake amount for this token  
+list| array| Object  
+> subAffId| string| Sub-affiliate ID  
+> userId| string| Sub-affiliate UID  
+> name| string| Sub-affiliate account nickname  
+> email| string| Sub-affiliate email address (partially masked)  
+> commissionsVol| json| Commission amount per currency for the queried date range (fixed five currencies: BTC / ETH / MNT / USDC / USDT)  
+> commissionsForUsdt| string| Total commission converted to USDT for the queried date range  
+> becameAffTime| string| Time when this user became a sub-affiliate, format `YYYY-MM-DD HH:mm:ss` (UTC)  
+> startDate| string| Query start time echoed from the request parameters, format `YYYY-MM-DD HH:mm:ss`  
+> endDate| string| Query end time echoed from the request parameters, format `YYYY-MM-DD HH:mm:ss`  
+nextPageCursor| string| Refer to the `cursor` request parameter  
   
 * * *
 
@@ -54,15 +58,13 @@ tokens| array| Payment token list
 
     
     
-    POST /v5/alpha/lp/pay-token-list HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/affiliate/affiliate-sub-list?cursor=&size=100&startDate=2024-01-01&endDate=2024-01-31 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-TIMESTAMP: 1706745600000  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
-      
-    {}  
     
     
     
@@ -80,76 +82,74 @@ tokens| array| Payment token list
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "tokens": [  
+            "list": [  
                 {  
-                    "tokenCode": "CEX_1",  
-                    "tokenSymbol": "USDT",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "1000",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
-                },  
-                {  
-                    "tokenCode": "CEX_2",  
-                    "tokenSymbol": "USDC",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "500",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "subAffId": "10001",  
+                    "userId": "123456789",  
+                    "name": "sub_affiliate_nick",  
+                    "email": "sub***@example.com",  
+                    "commissionsVol": {  
+                        "BTC": "0.005",  
+                        "ETH": "0.2",  
+                        "MNT": "40.0",  
+                        "USDC": "100.0",  
+                        "USDT": "400.0"  
+                    },  
+                    "commissionsForUsdt": "550.00",  
+                    "becameAffTime": "2023-06-01 10:00:00",  
+                    "startDate": "2024-01-01 00:00:00",  
+                    "endDate": "2024-01-31 23:59:59"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJsYXN0SWQiOiIxMDAwMSJ9"  
         },  
         "retExtInfo": {},  
-        "time": 1704067200000  
+        "time": 1706745600000  
     }
 
 ---
 
-# 查詢 LP 支付代幣列表
+# 查詢子代理列表
 
-查詢 LP 質押所支持的支付代幣列表，包含每種代幣的用戶可用餘額。
+要使用此接口，您应该有一个代理商账户，并且在创建 API 密钥时仅勾选"代理商"权限。  
+代理商網站: <https://affiliates.bybit.com>
 
-信息
+提示
 
-  * 質押前調用本接口，確認可用代幣種類及餘額
-  * **頻率限制：** 5 次/秒（用戶），5000 次/秒（全局）
+  * 僅支持使用母帳戶uid
+  * 若要查詢該接口, api key僅能擁有代理商權限, 若擁有任何其他權限想, 請移除
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/lp/pay-token-list`
+GET`/v5/affiliate/affiliate-sub-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-chainCode| false| string| 按區塊鏈標識符過濾  
-tokenAddress| false| string| 按代幣合約地址過濾  
+cursor| false| string| 游標，用於翻頁  
+size| false| integer| 每頁數量限制. [`0`, `100`]. 默認: `0`  
+startDate| false| string| 查詢時段開始日期，格式為 `YYYY-MM-DD`，開始時間和結束時間跨度最大為3個月  
+endDate| false| string| 查詢時段結束日期，格式為 `YYYY-MM-DD`，開始時間和結束時間要麼同時傳入要麼都不傳，當都不傳時，默認返回T-1的數據  
+subAffId| false| integer| 子代理 ID，用於精確查詢。傳入 `0` 或不傳則返回所有子代理  
   
-### 響應參數
+### 返回參數
 
 參數| 類型| 說明  
 ---|---|---  
-tokens| array| 支付代幣列表  
-> tokenCode| string| 代幣標識符，如 `CEX_1`  
-> tokenSymbol| string| 代幣符號，如 `USDT`  
-> chainCode| string| 區塊鏈標識符  
-> chainIconUrl| string| 區塊鏈圖標 URL  
-> decimals| integer| 代幣小數精度  
-> availableBalance| string| 用戶該代幣的可用餘額  
-> tokenIconUrlDay| string| 代幣圖標 URL（亮色模式）  
-> tokenIconUrlNight| string| 代幣圖標 URL（暗色模式）  
-> minStakeAmount| string| 該代幣最小質押數量  
-> maxStakeAmount| string| 該代幣最大質押數量  
+list| array| Object  
+> subAffId| string| 子代理 ID  
+> userId| string| 子代理帳戶 uid  
+> name| string| 子代理帳戶暱稱  
+> email| string| 子代理電子郵件地址（部分遮蔽）  
+> commissionsVol| json| 查詢時段內各幣種佣金金額（固定五種幣種：BTC / ETH / MNT / USDC / USDT）  
+> commissionsForUsdt| string| 查詢時段內佣金總額折算為 USDT  
+> becameAffTime| string| 該用戶成為子代理的時間，格式為 `YYYY-MM-DD HH:mm:ss`（UTC）  
+> startDate| string| 從請求參數回傳的查詢起始時間，格式為 `YYYY-MM-DD HH:mm:ss`  
+> endDate| string| 從請求參數回傳的查詢結束時間，格式為 `YYYY-MM-DD HH:mm:ss`  
+nextPageCursor| string| 游標，用於翻頁  
   
 * * *
 
@@ -162,15 +162,13 @@ tokens| array| 支付代幣列表
 
     
     
-    POST /v5/alpha/lp/pay-token-list HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXXX  
+    GET /v5/affiliate/affiliate-sub-list?cursor=&size=100&startDate=2024-01-01&endDate=2024-01-31 HTTP/1.1  
+    Host: api-testnet.bybit.com  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1704067200000  
+    X-BAPI-TIMESTAMP: 1706745600000  
     X-BAPI-RECV-WINDOW: 5000  
+    X-BAPI-SIGN: xxxxxx  
     Content-Type: application/json  
-      
-    {}  
     
     
     
@@ -188,33 +186,27 @@ tokens| array| 支付代幣列表
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "tokens": [  
+            "list": [  
                 {  
-                    "tokenCode": "CEX_1",  
-                    "tokenSymbol": "USDT",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "1000",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
-                },  
-                {  
-                    "tokenCode": "CEX_2",  
-                    "tokenSymbol": "USDC",  
-                    "chainCode": "ETH",  
-                    "chainIconUrl": "",  
-                    "decimals": 6,  
-                    "availableBalance": "500",  
-                    "tokenIconUrlDay": "",  
-                    "tokenIconUrlNight": "",  
-                    "minStakeAmount": "",  
-                    "maxStakeAmount": ""  
+                    "subAffId": "10001",  
+                    "userId": "123456789",  
+                    "name": "sub_affiliate_nick",  
+                    "email": "sub***@example.com",  
+                    "commissionsVol": {  
+                        "BTC": "0.005",  
+                        "ETH": "0.2",  
+                        "MNT": "40.0",  
+                        "USDC": "100.0",  
+                        "USDT": "400.0"  
+                    },  
+                    "commissionsForUsdt": "550.00",  
+                    "becameAffTime": "2023-06-01 10:00:00",  
+                    "startDate": "2024-01-01 00:00:00",  
+                    "endDate": "2024-01-31 23:59:59"  
                 }  
-            ]  
+            ],  
+            "nextPageCursor": "eyJsYXN0SWQiOiIxMDAwMSJ9"  
         },  
         "retExtInfo": {},  
-        "time": 1704067200000  
+        "time": 1706745600000  
     }

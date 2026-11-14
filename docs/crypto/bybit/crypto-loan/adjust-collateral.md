@@ -2,52 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/crypto-loan/adjust-collateral
 api_type: REST
-updated_at: 2026-11-13 18:27:19.193640
+updated_at: 2026-11-13 19:22:22.753286
 ---
 
-# Get Completed Loan History
+# Adjust Collateral Amount
 
-Query for the last 6 months worth of your completed (fully paid off) loans.
+You can increase or reduce your collateral amount. When you reduce, please obey the [max. allowed reduction amount](https://bybit-exchange.github.io/docs/v5/crypto-loan/reduce-max-collateral-amt).
 
 > Permission: "Spot trade"
 
+info
+
+  * The adjusted collateral amount will be returned to or deducted from the Funding wallet.
+
+
+
 ### HTTP Request
 
-GET`/v5/crypto-loan/borrow-history`
+POST`/v5/crypto-loan/adjust-ltv`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| false| string| Loan order ID  
-loanCurrency| false| string| Loan coin name  
-collateralCurrency| false| string| Collateral coin name  
-limit| false| string| Limit for data size per page. [`1`, `100`]. Default: `10`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+orderId| **true**|  string| Loan order ID  
+amount| **true**|  string| Adjustment amount  
+direction| **true**|  string| `0`: add collateral; `1`: reduce collateral  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> borrowTime| string| The timestamp to borrow  
-> collateralCurrency| string| Collateral coin  
-> expirationTime| string| Loan maturity time, keeps `""` for flexible loan  
-> hourlyInterestRate| string| Hourly interest rate 
-
-  * Flexible loan, it is real-time interest rate
-  * Fixed term loan: it is fixed term interest rate
-
-  
-> initialCollateralAmount| string| Initial amount to mortgage  
-> initialLoanAmount| string| Initial loan amount  
-> loanCurrency| string| Loan coin  
-> loanTerm| string| Loan term, `7`, `14`, `30`, `90`, `180` days, keep `""` for flexible loan  
-> orderId| string| Loan order ID  
-> repaidInterest| string| Total interest repaid  
-> repaidPenaltyInterest| string| Total penalty interest repaid  
-> status| integer| Loan order status `1`: fully repaid manually; `2`: fully repaid by liquidation  
-nextPageCursor| string| Refer to the `cursor` request parameter  
+adjustId| string| Collateral adjustment transaction ID  
   
 ### Request Example
 
@@ -58,12 +44,20 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/crypto-loan/borrow-history?orderId=1793683005081680384 HTTP/1.1  
+    POST /v5/crypto-loan/adjust-ltv HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728630979731  
+    X-BAPI-TIMESTAMP: 1728635421137  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 85  
+      
+    {  
+        "orderId": "1794267532472646144",  
+        "amount": "0.001",  
+        "direction": "1"  
+    }  
     
     
     
@@ -73,8 +67,10 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_completed_loan_history(  
-            orderId="1793683005081680384",  
+    print(session.adjust_collateral_amount(  
+        orderId="1794267532472646144",  
+        amount="0.001",  
+        direction="1",  
     ))  
     
     
@@ -88,7 +84,11 @@ nextPageCursor| string| Refer to the `cursor` request parameter
     });  
       
     client  
-      .getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })  
+      .adjustCollateralAmount({  
+        orderId: '1794267532472646144',  
+        amount: '0.001',  
+        direction: '1',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -104,75 +104,43 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "list": [  
-                {  
-                    "borrowTime": "1728546174028",  
-                    "collateralCurrency": "BTC",  
-                    "expirationTime": "1729148399000",  
-                    "hourlyInterestRate": "0.0000010241",  
-                    "initialCollateralAmount": "0.0494727",  
-                    "initialLoanAmount": "1",  
-                    "loanCurrency": "ETH",  
-                    "loanTerm": "7",  
-                    "orderId": "1793569729874260992",  
-                    "repaidInterest": "0.00000515",  
-                    "repaidPenaltyInterest": "0",  
-                    "status": 1  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "adjustId": "1794318409405331968"  
         },  
         "retExtInfo": {},  
-        "time": 1728632014857  
+        "time": 1728635422833  
     }
 
 ---
 
-# 查詢已結清的借貸歷史訂單
+# 調整質押金額
+
+您可以增加或減少質押金額. 選擇減少時, 請先確認允許減少的最大質押數量
 
 > 權限: "現貨交易"
 
 信息
 
-支持查詢過去6個月的已完結訂單紀錄
+  * 調整的質押數量會在資金帳戶進行返還或者扣減
+
+
 
 ### HTTP 請求
 
-GET`/v5/crypto-loan/borrow-history`
+POST`/v5/crypto-loan/adjust-ltv`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| false| string| 借貸訂單ID  
-loanCurrency| false| string| 借貸幣種  
-collateralCurrency| false| string| 質押幣種  
-limit| false| string| 每頁數量限制. [`1`, `100`]. 默認: `10`  
-cursor| false| string| 游標，用於分頁  
+orderId| **true**|  string| 借貸訂單ID  
+amount| **true**|  string| 調整金額  
+direction| **true**|  string| `0`: 增加質押金; `1`: 減少質押金  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> borrowTime| string| 借貸時間  
-> collateralCurrency| string| 質押幣種  
-> expirationTime| string| 借貸到期時間, 活期借貸總是 `""`  
-> hourlyInterestRate| string| 按小時計利率 
-
-  * 活期借貸: 實時利率
-  * 定期借貸: 定期固定利率
-
-  
-> initialCollateralAmount| string| 初始質押金額  
-> initialLoanAmount| string| 初始借貸金額  
-> loanCurrency| string| 借貸幣種  
-> loanTerm| string| 借貸期限 `7`, `14`, `30`, `90`, `180`天, 活期總是`""`  
-> orderId| string| 借貸訂單ID  
-> repaidInterest| string| 總償還利息金額  
-> repaidPenaltyInterest| string| 總償還罰息金額  
-> status| integer| 償還方式 `1`: 主動還清`2`: 強平還清  
-nextPageCursor| string| 下一頁游標  
+adjustId| string| 質押金調整交易ID  
   
 ### 請求示例
 
@@ -183,12 +151,20 @@ nextPageCursor| string| 下一頁游標
 
     
     
-    GET /v5/crypto-loan/ongoing-orders?orderId=1793683005081680384 HTTP/1.1  
+    POST /v5/crypto-loan/adjust-ltv HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1728630979731  
+    X-BAPI-TIMESTAMP: 1728635421137  
     X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+    Content-Length: 85  
+      
+    {  
+        "orderId": "1794267532472646144",  
+        "amount": "0.001",  
+        "direction": "1"  
+    }  
     
     
     
@@ -198,8 +174,10 @@ nextPageCursor| string| 下一頁游標
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.get_completed_loan_history(  
-            orderId="1793683005081680384",  
+    print(session.adjust_collateral_amount(  
+        orderId="1794267532472646144",  
+        amount="0.001",  
+        direction="1",  
     ))  
     
     
@@ -213,7 +191,11 @@ nextPageCursor| string| 下一頁游標
     });  
       
     client  
-      .getCompletedLoanOrderHistory({ orderId: '1794267532472646144' })  
+      .adjustCollateralAmount({  
+        orderId: '1794267532472646144',  
+        amount: '0.001',  
+        direction: '1',  
+      })  
       .then((response) => {  
         console.log(response);  
       })  
@@ -229,24 +211,8 @@ nextPageCursor| string| 下一頁游標
         "retCode": 0,  
         "retMsg": "request.success",  
         "result": {  
-            "list": [  
-                {  
-                    "borrowTime": "1728546174028",  
-                    "collateralCurrency": "BTC",  
-                    "expirationTime": "1729148399000",  
-                    "hourlyInterestRate": "0.0000010241",  
-                    "initialCollateralAmount": "0.0494727",  
-                    "initialLoanAmount": "1",  
-                    "loanCurrency": "ETH",  
-                    "loanTerm": "7",  
-                    "orderId": "1793569729874260992",  
-                    "repaidInterest": "0.00000515",  
-                    "repaidPenaltyInterest": "0",  
-                    "status": 1  
-                }  
-            ],  
-            "nextPageCursor": ""  
+            "adjustId": "1794318409405331968"  
         },  
         "retExtInfo": {},  
-        "time": 1728632014857  
+        "time": 1728635422833  
     }

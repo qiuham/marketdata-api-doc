@@ -2,141 +2,215 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw/withdraw-address
 api_type: REST
-updated_at: 2026-11-13 18:27:07.500909
+updated_at: 2026-11-13 19:21:56.608507
 ---
 
-# Bot Error Codes
+# Get Withdrawal Address List
 
-HTTP-level error codes returned by the Bot APIs.
+Query the withdrawal addresses in the address book.
 
-## Futures Combo Bot
+tip
 
-Applies to: [Create](/docs/v5/bot/futures-combo/create), [Close](/docs/v5/bot/futures-combo/close), [Get Detail](/docs/v5/bot/futures-combo/get-detail), [Get Limit](/docs/v5/bot/futures-combo/get-limit)
+  * The API key for querying this endpoint must have withdrawal permissions.
 
-error_code| error_msg| Applicable Endpoint(s)  
+
+
+### HTTP Request
+
+GET`/v5/asset/withdraw/query-address`
+
+### Request Parameters
+
+Parameter| Required| Type| Comments  
+---|---|---|---  
+coin| false| string| Coin: 
+
+  * When passing `coin=baseCoin`, it refers to the universal addresses.
+  * When passing a coin name, it refers to the regular address on the chain.
+
+  
+chain| false| string| Chain name:
+
+  * When only passing the chain name, it returns both regular addresses and universal addresses.
+  * When passing the chain name and `coin=baseCoin`, it only returns the universal address corresponding to the chain.
+
+  
+addressType| false| integer| Address type. `0`: OnChain Address Type(Regular Address Type and Universal Address Type). `1`: Internal Transfer Address Type(Invalid "coin" & "chain" Parameters) `2`: On chain address and internal transfer address type (Invalid "coin" & "chain" Parameters)  
+limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `50`  
+cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+  
+### Response Parameters
+
+Parameter| Type| Comments  
 ---|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
+rows| array| Object  
+> coin| string| Coin  
+> chain| string| Chain name  
+> address| string| Address  
+> tag| string| Address tag  
+> remark| string| remark  
+> status| integer| Address status:`0`: Normal. `1`: New Addresses are prohibited from withdrawing coins for 24 Hours.  
+> addressType| integer| Address type. `0`: OnChain Address Type(Regular Address Type And Universal Address Type) `1`: Internal Transfer Address Type. `2`: Internal Transfer Address Type And OnChain Address Type  
+> verified| integer| Whether the address has been verified or not: `0`: Unverified Address. `1`: Verified Address.  
+> createAt| string| Address create time  
+nextPageCursor| string| Cursor. Used for pagination  
   
 * * *
 
-## Futures Grid Bot
+### Request Example
 
-Applies to: [Create](/docs/v5/bot/futures-grid/create), [Close](/docs/v5/bot/futures-grid/close), [Get Detail](/docs/v5/bot/futures-grid/get-detail), [Validate Input](/docs/v5/bot/futures-grid/validate-input)
+  * HTTP
 
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
 
-## Futures Martingale Bot
+    
+    
+    GET /v5/asset/withdraw/query-address HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672194949557  
+    X-BAPI-RECV-WINDOW: 5000  
+    
 
-Applies to: [Create](/docs/v5/bot/futures-martingale/create), [Close](/docs/v5/bot/futures-martingale/close), [Get Detail](/docs/v5/bot/futures-martingale/get-detail), [Get Limit](/docs/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| All  
-401| Authentication required| All  
-421| User group banned — `ban_reason_text` contains the localized reason| Create  
-429| Rate limit exceeded| All  
-  
-* * *
-
-## DCA Bot
-
-Applies to: [Create](/docs/v5/bot/dca/create), [Close](/docs/v5/bot/dca/close)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)| Create  
-421| User is banned| Create  
-503| Bot cannot be closed currently (investment cycle in progress)| Close  
-  
-* * *
-
-## Spot Grid Bot
-
-Applies to: [Create](/docs/v5/bot/spot-grid/create), [Close](/docs/v5/bot/spot-grid/close), [Get Detail](/docs/v5/bot/spot-grid/get-detail), [Validate Input](/docs/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| Applicable Endpoint(s)  
----|---|---  
-400| Invalid request parameters| Create, Validate Input  
-401| Insufficient balance| Create  
-404| Grid bot not found| Get Detail  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)| Close  
-421| User is banned| Create
+### Response Example
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "rows": [  
+                {  
+                    "coin": "USDT",  
+                    "chain": "ETH",  
+                    "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",  
+                    "tag": "",  
+                    "remark": "",  
+                    "status": 0,  
+                    "addressType": 0,  
+                    "verified": 0,  
+                    "createdAt": "1760951195"  
+                },  
+                {  
+                    "coin": "baseCoin",  
+                    "chain": "ETH",  
+                    "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",  
+                    "tag": "",  
+                    "remark": "Universal Address",  
+                    "status": 0,  
+                    "addressType": 0,  
+                    "verified": 0,  
+                    "createdAt": "1760951332"  
+                }  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTA1MDgsIm1heElEIjoxMDUwOX0="  
+        },  
+        "retExtInfo": {},  
+        "time": 1760960379395  
+    }
 
 ---
 
-# 機器人錯誤碼
+# 查詢地址簿提幣地址
 
-Bot API 返回的 HTTP 層級錯誤碼。
+查詢地址簿中的提幣地址
 
-## 合約組合機器人（Futures Combo Bot）
+提示
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-combo/create)、[關閉](/docs/zh-TW/v5/bot/futures-combo/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-combo/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-combo/get-limit)
+  * 查詢此端點的apikey必須具備提幣權限.
 
-error_code| error_msg| 適用端點  
+
+
+### HTTP 請求
+
+GET`/v5/asset/withdraw/query-address`
+
+### 請求參數
+
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+coin| false| string| 幣種：
+
+  * 當傳入 `coin=baseCoin` 時，表示通用地址
+  * 當傳入幣種名稱時，表示此幣種的鏈上地址
+
+  
+chain| false| string| 鏈名稱：
+
+  * 僅傳入鏈名稱時，返回普通地址和通用地址
+  * 傳入鏈名稱 + `coin=baseCoin`時，僅返回該鏈對應的通用地址
+
+  
+addressType| false| integer| 地址類型:`0`:鏈上地址類型（普通地址類型和通用地址類型）`1`:內部轉賬地址類型（"coin" 和 "chain" 參數無效）`2`:鏈上地址和內部轉賬地址類型（"coin" 和 "chain" 參數無效）  
+limit| false| integer| 每頁數據大小的限制。範圍:[`1`, `50`]。默認值:`50`  
+cursor| false| string| 游標，用於翻頁  
+  
+### 響應參數
+
+參數| 類型| 說明  
 ---|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
+rows| array| Object  
+> coin| string| 幣種  
+> chain| string| 鏈名稱  
+> address| string| 地址  
+> tag| string| 地址標籤  
+> remark| string| 備註  
+> status| integer| 地址狀態：`0`:正常`1`:新地址禁止提幣 24 小時  
+> addressType| integer| 地址類型:`0`:鏈上地址類型（普通地址類型和通用地址類型）`1`:內部轉賬地址類型`2`:內部轉賬地址類型和鏈上地址類型  
+> verified| integer| 地址是否已驗證:`0`:未驗證地址`1`:已驗證地址  
+> createAt| string| 地址創建時間  
+nextPageCursor| string| 游標，用於分頁  
   
 * * *
 
-## 合約網格機器人（Futures Grid Bot）
+### 請求示例
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-grid/create)、[關閉](/docs/zh-TW/v5/bot/futures-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/futures-grid/validate-input)
+  * HTTP
 
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
 
-## 合約馬丁格爾機器人（Futures Martingale Bot）
+    
+    
+    GET /v5/asset/withdraw/query-address HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1672194949557  
+    X-BAPI-RECV-WINDOW: 5000  
+    
 
-適用端點：[創建](/docs/zh-TW/v5/bot/futures-martingale/create)、[關閉](/docs/zh-TW/v5/bot/futures-martingale/close)、[查詢詳情](/docs/zh-TW/v5/bot/futures-martingale/get-detail)、[查詢限制參數](/docs/zh-TW/v5/bot/futures-martingale/get-limit)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 所有  
-401| Authentication required（需要身份驗證）| 所有  
-421| User group banned — `ban_reason_text` contains the localized reason（用戶群組已被封禁 — `ban_reason_text` 包含本地化原因）| 創建  
-429| Rate limit exceeded（超過頻率限制）| 所有  
-  
-* * *
-
-## 定投機器人（DCA Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/dca/create)、[關閉](/docs/zh-TW/v5/bot/dca/close)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid parameters (e.g., duplicated symbols, invalid frequency)（參數無效，例如重複的交易對或無效的頻率）| 創建  
-421| User is banned（用戶已被封禁）| 創建  
-503| Bot cannot be closed currently (investment cycle in progress)（機器人當前無法關閉，投資週期進行中）| 關閉  
-  
-* * *
-
-## 現貨網格機器人（Spot Grid Bot）
-
-適用端點：[創建](/docs/zh-TW/v5/bot/spot-grid/create)、[關閉](/docs/zh-TW/v5/bot/spot-grid/close)、[查詢詳情](/docs/zh-TW/v5/bot/spot-grid/get-detail)、[驗證輸入](/docs/zh-TW/v5/bot/spot-grid/validate-input)
-
-error_code| error_msg| 適用端點  
----|---|---  
-400| Invalid request parameters（請求參數無效）| 創建、驗證輸入  
-401| Insufficient balance（餘額不足）| 創建  
-404| Grid bot not found（找不到網格機器人）| 查詢詳情  
-405| Grid cannot be cancelled (already in CANCELLING or COMPLETED state)（網格無法取消，已處於取消中或已完成狀態）| 關閉  
-421| User is banned（用戶已被封禁）| 創建
+### 響應示例
+    
+    
+    {  
+        "retCode": 0,  
+        "retMsg": "success",  
+        "result": {  
+            "rows": [  
+                {  
+                    "coin": "USDT",  
+                    "chain": "ETH",  
+                    "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",  
+                    "tag": "",  
+                    "remark": "",  
+                    "status": 0,  
+                    "addressType": 0,  
+                    "verified": 0,  
+                    "createdAt": "1760951195"  
+                },  
+                {  
+                    "coin": "baseCoin",  
+                    "chain": "ETH",  
+                    "address": "0x48101adb67d426cb15e46be5f1d9f6ab25f311ea",  
+                    "tag": "",  
+                    "remark": "Universal Address",  
+                    "status": 0,  
+                    "addressType": 0,  
+                    "verified": 0,  
+                    "createdAt": "1760951332"  
+                }  
+            ],  
+            "nextPageCursor": "eyJtaW5JRCI6MTA1MDgsIm1heElEIjoxMDUwOX0="  
+        },  
+        "retExtInfo": {},  
+        "time": 1760960379395  
+    }

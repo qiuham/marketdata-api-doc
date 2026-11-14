@@ -2,70 +2,49 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/spot-margin-uta/fixedborrow-order-cancel
 api_type: REST
-updated_at: 2026-11-13 18:28:41.034893
+updated_at: 2026-11-13 19:25:10.403387
 ---
 
-# Get Fixed-Rate Borrow Order Quote
+# Cancel Fixed-Rate Borrow Order
+
+Request cancellation of an eligible fixed-rate borrow order. The order must be in a cancellable state. The response does not include a final order status; query the order later to confirm its status.
 
 ### HTTP Request
 
-GET`/v5/spot-margin-trade/fixedborrow-order-quote`
+POST`/v5/spot-margin-trade/fixedborrow-order-cancel`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderCurrency| **true**|  string| Coin name  
-term| false| string| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-orderBy| false| string| Sort field. `apy`: annual rate; `term`: term; `quantity`: quantity  
-sort| false| integer| Sort direction. `0`: ascending (default); `1`: descending  
-limit| false| integer| Limit for data size per page. [1, 100]. Default: `10`  
+orderId| **true**|  string| Fixed-rate borrow order ID  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| Coin name  
-> term| integer| Fixed term. `7`: 7 days; `14`: 14 days; `30`: 30 days; `90`: 90 days; `180`: 180 days  
-> annualRate| string| Annual rate  
-> qty| string| Quantity  
+result| object| Empty object. Check `retCode` to confirm the cancellation request was accepted  
   
 * * *
 
 ### Request Example
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
+    POST /v5/spot-margin-trade/fixedborrow-order-cancel HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1792117143000  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.spot_margin_trade_get_fixed_borrow_order_quote(  
-        orderCurrency="ETH",  
-        orderBy="apy",  
-        limit=10  
-    ))  
-    
-    
-    
+    Content-Type: application/json  
       
+    {  
+        "orderId": "FIXED_BORROW_example"  
+    }  
     
 
 ### Response Example
@@ -73,98 +52,54 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.026",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.033",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 90,  
-                    "annualRate": "0.038",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.1",  
-                    "qty": "0.6"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.1",  
-                    "qty": "0.1"  
-                }  
-            ]  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1792117143000  
     }
 
 ---
 
-# 查詢固定利率借款掛單報價
+# 取消固定利率借款訂單
+
+申請取消符合條件的固定利率借款訂單。訂單必須處於可取消狀態。響應不包含最終訂單狀態，請後續查詢訂單以確認其最終狀態。
 
 ### HTTP 請求
 
-GET`/v5/spot-margin-trade/fixedborrow-order-quote`
+POST`/v5/spot-margin-trade/fixedborrow-order-cancel`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderCurrency| **true**|  string| 幣種名稱  
-term| false| string| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-orderBy| false| string| 排序字段。`apy`：年化利率；`term`：期限；`quantity`：數量  
-sort| false| integer| 排序方向。`0`：升序（默認）；`1`：降序  
-limit| false| integer| 每頁返回數量，[1, 100]，默認：`10`  
+orderId| **true**|  string| 固定利率借款訂單 ID  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> orderCurrency| string| 幣種名稱  
-> term| integer| 借款期限。`7`：7天；`14`：14天；`30`：30天；`90`：90天；`180`：180天  
-> annualRate| string| 年化利率  
-> qty| string| 數量  
+result| object| 空物件。請檢查 `retCode` 以確認取消請求是否已受理  
   
 * * *
 
 ### 請求示例
 
   * HTTP
-  * Python
-  * Node.js
 
 
     
     
-    GET /v5/spot-margin-trade/fixedborrow-order-quote?orderCurrency=ETH&orderBy=apy&limit=10 HTTP/1.1  
+    POST /v5/spot-margin-trade/fixedborrow-order-cancel HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1692696840996  
+    X-BAPI-TIMESTAMP: 1792117143000  
     X-BAPI-RECV-WINDOW: 5000  
-    
-    
-    
+    Content-Type: application/json  
       
-    
-    
-    
-      
+    {  
+        "orderId": "FIXED_BORROW_example"  
+    }  
     
 
 ### 響應示例
@@ -172,41 +107,8 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
-        "result": {  
-            "list": [  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.026",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.033",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 90,  
-                    "annualRate": "0.038",  
-                    "qty": "0.1"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 30,  
-                    "annualRate": "0.1",  
-                    "qty": "0.6"  
-                },  
-                {  
-                    "orderCurrency": "ETH",  
-                    "term": 60,  
-                    "annualRate": "0.1",  
-                    "qty": "0.1"  
-                }  
-            ]  
-        },  
+        "retMsg": "OK",  
+        "result": {},  
         "retExtInfo": {},  
-        "time": 1775617874744  
+        "time": 1792117143000  
     }

@@ -2,60 +2,65 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/place-order
 api_type: REST
-updated_at: 2026-11-13 18:27:50.101725
+updated_at: 2026-11-13 19:23:38.516887
 ---
 
-# Get Product List
+# Place Order
 
 info
 
-  * Authentication is optional. The `userQuota` field is only populated for authenticated requests.
-  * **Rate Limit:** 20 req/s (IP)
+  * Orders are processed asynchronously. A successful response means the order was accepted, not settled. Use [Get Order List](/docs/v5/finance/rwa/order) to track order status.
+  * `orderLinkId` is **required** and must be unique per UID within RWA business scope. Reusing a previous `orderLinkId` returns error `180025 ORDER_ALREADY_EXISTS`.
+  * **Stake** : deducts settlement coin from `accountType` and allocates shares at next NAV.
+  * **Redeem** : locks shares and refunds settlement coin to `accountType` after settlement (T+N).
+  * **Rate Limit:** 5 req/s (UID)
 
 
 
 ### HTTP Request
 
-GET`/v5/earn/rwa/product`
+POST`/v5/earn/rwa/place-order`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Settlement coin filter (uppercase), e.g. `USDC`. Returns all if omitted  
+productId| **true**|  integer| Product ID  
+orderType| **true**|  string| Order type: `Stake` (subscription), `Redeem` (redemption)  
+coin| **true**|  string| Settlement coin (uppercase), e.g. `USDC`  
+orderLinkId| **true**|  string| User-defined idempotency key. Max 36 characters, allowed charset `[a-zA-Z0-9-_]`. Must be unique per UID within RWA scope  
+stakeAmount| false| string| Stake amount in settlement coin (decimal string). **Required when`orderType=Stake`**, ignored otherwise  
+redeemShares| false| string| Redeem share quantity (decimal string). **Required when`orderType=Redeem`**, ignored otherwise  
+accountType| false| string| Source/destination account: `FUND`, `UNIFIED`. Default: `FUND`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Product list  
-> productId| integer| Product ID  
-> coin| string| Settlement coin name (e.g. `USDC`)  
-> assetSymbol| string| Underlying asset symbol (e.g. `IGBF`); also serves as the asset name  
-> manager| string| Asset manager name  
-> baseApr| string| Base APR as decimal string (e.g. `"0.055"` = 5.5%)  
-> bonusApr| string| Bonus APR (sum of all active bonus items); empty string when no bonus is active  
-> savingType| string| Saving type: `Flexible`, `Fixed`  
-> duration| integer| Lock-up duration in days; `0` for Flexible products  
-> nav| string| Latest NAV (Net Asset Value per share), truncated to `sharePrecision`  
-> minStakeAmount| string| Minimum stake amount (in settlement coin)  
-> maxStakeAmount| string| Per-order maximum stake amount; empty string = unlimited  
-> userMaxAmount| string| Per-user maximum holding amount; empty string = unlimited  
-> userQuota| string| User's remaining stake quota for this product; empty string = unlimited or unauthenticated request  
-> minRedeemShare| string| Minimum redeem share quantity  
-> redeemFeeRate| string| Redeem fee rate as decimal string (e.g. `"0.001"` = 0.1%)  
-> subscriptionFee| string| Subscription fee rate as decimal string (e.g. `"0.001"` = 0.1%)  
-> extLink| string| External link to asset details page  
-> amountPrecision| integer| Settlement-coin amount precision (decimal places)  
-> sharePrecision| integer| Asset share precision (decimal places)  
+orderId| string| System-generated order ID (UUID)  
+orderLinkId| string| User-defined order ID (echoed back)  
   
 * * *
 
 ### Request Example
     
     
-    GET /v5/earn/rwa/product?coin=USDC HTTP/1.1  
+    POST /v5/earn/rwa/place-order HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1710691200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "productId": 1001,  
+        "orderType": "Stake",  
+        "coin": "USDC",  
+        "stakeAmount": "100",  
+        "accountType": "FUND",  
+        "orderLinkId": "my-stake-001"  
+    }  
     
 
 ### Response Example
@@ -65,29 +70,8 @@ list| array| Product list
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "productId": 1001,  
-                    "coin": "USDC",  
-                    "assetSymbol": "IGBF",  
-                    "manager": "BlackRock",  
-                    "baseApr": "0.055",  
-                    "bonusApr": "0.02",  
-                    "savingType": "Flexible",  
-                    "duration": 0,  
-                    "nav": "1.025",  
-                    "minStakeAmount": "10",  
-                    "maxStakeAmount": "100000",  
-                    "userMaxAmount": "50000",  
-                    "userQuota": "49500",  
-                    "minRedeemShare": "1",  
-                    "redeemFeeRate": "0.001",  
-                    "subscriptionFee": "0",  
-                    "extLink": "https://example.com/igbf",  
-                    "amountPrecision": 2,  
-                    "sharePrecision": 6  
-                }  
-            ]  
+            "orderId": "550e8400-e29b-41d4-a716-446655440000",  
+            "orderLinkId": "my-stake-001"  
         },  
         "retExtInfo": {},  
         "time": 1710691200000  
@@ -95,57 +79,62 @@ list| array| Product list
 
 ---
 
-# 獲取產品列表
+# 下單（認購/贖回）
 
 信息
 
-  * 無需身份驗證。`userQuota` 欄位僅在已驗證請求時返回。
-  * **頻率限制：** 20 次/秒（IP）
+  * 訂單為異步處理。成功響應僅表示訂單已被接受，並非已完成結算。請使用 [獲取訂單列表](/docs/zh-TW/v5/finance/rwa/order) 追蹤訂單狀態。
+  * `orderLinkId` **必填** ，且在 RWA 業務範圍內每個 UID 必須唯一。重複使用已存在的 `orderLinkId` 將返回錯誤 `180025 ORDER_ALREADY_EXISTS`。
+  * **認購（Stake）** ：從 `accountType` 扣除結算幣種，按下一個 NAV 分配份額。
+  * **贖回（Redeem）** ：鎖定份額，T+N 結算後將結算幣種退回至 `accountType`。
+  * **頻率限制：** 5 次/秒（UID）
 
 
 
 ### HTTP 請求
 
-GET`/v5/earn/rwa/product`
+POST`/v5/earn/rwa/place-order`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 結算幣種篩選（大寫），例如 `USDC`。不填則返回所有  
+productId| **true**|  integer| 產品 ID  
+orderType| **true**|  string| 訂單類型：`Stake`（認購）、`Redeem`（贖回）  
+coin| **true**|  string| 結算幣種（大寫），如 `USDC`  
+orderLinkId| **true**|  string| 用戶自定義冪等鍵。最長 36 位，允許字符集 `[a-zA-Z0-9-_]`，在 RWA 業務範圍內每個 UID 必須唯一  
+stakeAmount| false| string| 認購金額（結算幣種，十進制字符串）。**`orderType=Stake` 時必填**，否則忽略  
+redeemShares| false| string| 贖回份額（十進制字符串）。**`orderType=Redeem` 時必填**，否則忽略  
+accountType| false| string| 資金來源/目標賬戶：`FUND`、`UNIFIED`。默認：`FUND`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| 產品列表  
-> productId| integer| 產品 ID  
-> coin| string| 結算幣種（如 `USDC`）  
-> assetSymbol| string| 標的資產代號（如 `IGBF`），同時作為資產名稱  
-> manager| string| 資產管理方名稱  
-> baseApr| string| 基礎年化利率，十進制字符串（如 `"0.055"` = 5.5%）  
-> bonusApr| string| 額外獎勵年化利率（所有生效獎勵項之和）；無獎勵時為空字符串  
-> savingType| string| 產品類型：`Flexible`（活期）、`Fixed`（定期）  
-> duration| integer| 鎖倉天數；活期產品為 `0`  
-> nav| string| 最新 NAV（單份淨值），精度截斷至 `sharePrecision`  
-> minStakeAmount| string| 最低認購金額（結算幣種）  
-> maxStakeAmount| string| 單筆最高認購金額；空字符串 = 無限制  
-> userMaxAmount| string| 用戶最大持有金額；空字符串 = 無限制  
-> userQuota| string| 用戶剩餘可認購額度；空字符串 = 無限制或未驗證請求  
-> minRedeemShare| string| 最低贖回份額  
-> redeemFeeRate| string| 贖回費率，十進制字符串（如 `"0.001"` = 0.1%）  
-> subscriptionFee| string| 認購費率，十進制字符串（如 `"0.001"` = 0.1%）  
-> extLink| string| 資產詳情頁外部鏈接  
-> amountPrecision| integer| 結算幣種金額精度（小數位數）  
-> sharePrecision| integer| 資產份額精度（小數位數）  
+orderId| string| 系統生成的訂單 ID（UUID）  
+orderLinkId| string| 用戶自定義訂單 ID（原樣返回）  
   
 * * *
 
 ### 請求示例
     
     
-    GET /v5/earn/rwa/product?coin=USDC HTTP/1.1  
+    POST /v5/earn/rwa/place-order HTTP/1.1  
     Host: api.bybit.com  
+    X-BAPI-SIGN: XXXXX  
+    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
+    X-BAPI-TIMESTAMP: 1710691200000  
+    X-BAPI-RECV-WINDOW: 5000  
+    Content-Type: application/json  
+      
+    {  
+        "productId": 1001,  
+        "orderType": "Stake",  
+        "coin": "USDC",  
+        "stakeAmount": "100",  
+        "accountType": "FUND",  
+        "orderLinkId": "my-stake-001"  
+    }  
     
 
 ### 響應示例
@@ -155,29 +144,8 @@ list| array| 產品列表
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "list": [  
-                {  
-                    "productId": 1001,  
-                    "coin": "USDC",  
-                    "assetSymbol": "IGBF",  
-                    "manager": "BlackRock",  
-                    "baseApr": "0.055",  
-                    "bonusApr": "0.02",  
-                    "savingType": "Flexible",  
-                    "duration": 0,  
-                    "nav": "1.025",  
-                    "minStakeAmount": "10",  
-                    "maxStakeAmount": "100000",  
-                    "userMaxAmount": "50000",  
-                    "userQuota": "49500",  
-                    "minRedeemShare": "1",  
-                    "redeemFeeRate": "0.001",  
-                    "subscriptionFee": "0",  
-                    "extLink": "https://example.com/igbf",  
-                    "amountPrecision": 2,  
-                    "sharePrecision": 6  
-                }  
-            ]  
+            "orderId": "550e8400-e29b-41d4-a716-446655440000",  
+            "orderLinkId": "my-stake-001"  
         },  
         "retExtInfo": {},  
         "time": 1710691200000  

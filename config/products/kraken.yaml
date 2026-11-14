@@ -9,15 +9,19 @@ provider:
 product: api
 status: active
 priority: 150
-adapter: crypto_legacy
+# 2026 年改版成 Mintlify，旧网址都跳到新路径，浏览器采集器只能找到 6 页。
+# llms.txt 只是导读（16 个链接），所以用 sitemap.xml 列页，每页取 .md 原文
+adapter: llms_txt
 source:
-  type: legacy_crypto
-  legacy_exchange: kraken
-  concurrency: 2
+  type: llms_txt
+  sitemap: https://docs.kraken.com/sitemap.xml
+  base_url: https://docs.kraken.com/
+  concurrency: 4
 output:
   docs_dir: docs/crypto/kraken
   index_file: index/crypto/kraken.json
+  clean_before_crawl: true
 metadata_defaults:
   api_type: reference
-  source_type: legacy_crypto
+  source_type: llms_txt
   version: ''

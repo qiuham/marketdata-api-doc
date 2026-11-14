@@ -2,67 +2,89 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/product-info
 api_type: REST
-updated_at: 2026-11-13 18:27:40.762294
+updated_at: 2026-11-13 19:23:15.708964
 ---
 
-# Place Order
-
-API ker permission: `Earn`  
-API rate limit: 5 reqs / sec
+# Get Product Info
 
 info
 
-  * Orders are processed asynchronously. A successful response means the order was accepted, not that it has been settled. Use [Get Order List](/docs/v5/finance/earn/fixed-saving/order) to track order status.
-  * `orderLinkId` is used for idempotency — resubmitting the same `orderLinkId` returns an error indicating the order already exists.
-  * `auto_invest` is only applicable when `category` is `FundPool`; it is ignored for other product types.
-  * Supported account types: `FUND`, `UNIFIED`.
+Does not need authentication.
 
-
+[Bybit Saving FAQ](https://www.bybit.com/en/help-center/article/FAQ-Bybit-Savings)
 
 ### HTTP Request
 
-POST`/v5/earn/fixed-term/place-order`
+GET`/v5/earn/product`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  string| Product ID  
-category| **true**|  string| Product sub-type: `FixedTermSaving`, `FundPool`, `FundPoolPremium`  
-coin| **true**|  string| Coin name, e.g. `BTC`, `ETH`  
-amount| **true**|  string| Subscription amount (must be > 0)  
-accountType| **true**|  string| Account type: `FUND` or `UNIFIED`  
-orderLinkId| **true**|  string| User-customised idempotent ID (max 36 characters)  
-autoInvest| false| boolean| Enable auto-reinvest. Only effective when `category` is `FundPool`  
+category| **true**|  string| `FlexibleSaving`,`OnChain`  
+**Remarks** : currently, only flexible savings and on chain is supported  
+coin| false| string| Coin name, uppercase only  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| System-generated order ID  
-orderLinkId| string| User-customised idempotent ID  
+list| array| Object  
+> category| string| `FlexibleSaving`,`OnChain`  
+> estimateApr| string| Estimated APR, e.g., `3%`, `4.25%`  
+**Remarks** : 1)The Est. APR provides a dynamic preview of your potential returns, updated every 10 minutes in response to market conditions.   
+2) Please note that this is an estimate and may differ from the actual APR you will receive.  
+3) Platform Reward APRs are not shown  
+> coin| string| Coin name  
+> minStakeAmount| string| Minimum stake amount  
+> maxStakeAmount| string| Maximum stake amount  
+> precision| string| Amount precision  
+> productId| string| Product ID  
+> status| string| `Available`, `NotAvailable`  
+> bonusEvents| Array| Bonus  
+>> apr| string| Yesterday's Rewards APR  
+>> coin| string| Reward coin  
+>> announcement| string| Announcement link  
+> minRedeemAmount| string| Minimum redemption amount. Only has value in Onchain LST mode (coin != swapCoin)  
+> maxRedeemAmount| string| Maximum redemption amount. Only has value in Onchain LST mode (coin != swapCoin)  
+> duration| string| `Fixed`,`Flexible`. Product Type  
+> term| int| Unit: Day. Only when duration = `Fixed` for OnChain  
+> swapCoin| string| swap coin. Only has value in Onchain LST mode (coin != swapCoin)  
+> swapCoinPrecision| string| swap coin precision. Only has value in Onchain LST mode (coin != swapCoin)  
+> stakeExchangeRate| string| Estimated stake exchange rate. Only has value in Onchain LST mode (coin != swapCoin)  
+> redeemExchangeRate| string| Estimated redeem exchange rate. Only has value in Onchain LST mode (coin != swapCoin)  
+> rewardDistributionType| string| `Simple`: Simple interest, `Compound`: Compound interest, `Other`: LST. Only has value for Onchain  
+> rewardIntervalMinute| int| Frequency of reward distribution (minutes)  
+> redeemProcessingMinute| string| Estimated redemption minutes  
+> stakeTime| string| Staking on-chain time, in milliseconds  
+> interestCalculationTime| string| Interest accrual time, in milliseconds  
   
-* * *
-
 ### Request Example
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/fixed-term/place-order HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/earn/product?category=FlexibleSaving&coin=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_earn_product_info(  
+        category="FlexibleSaving",  
+        coin="BTC",  
+    ))  
+    
+    
+    
       
-    {  
-        "category": "FixedTermSaving",  
-        "accountType": "FUND",  
-        "amount": "201",  
-        "coin": "USDT",  
-        "productId": "724",  
-        "orderLinkId": "usdt-fixdearn-001"  
-    }  
     
 
 ### Response Example
@@ -72,73 +94,119 @@ orderLinkId| string| User-customised idempotent ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "86468516-5497-4a2b-8c4c-f9c58e01e12c",  
-            "orderLinkId": "usdt-fixdearn-001"  
+            "list": [  
+                {  
+                    "category": "FlexibleSaving",  
+                    "estimateApr": "3%",  
+                    "coin": "BTC",  
+                    "minStakeAmount": "0.001",  
+                    "maxStakeAmount": "10",  
+                    "precision": "8",  
+                    "productId": "430",  
+                    "status": "Available",  
+                    "bonusEvents": [],  
+                    "minRedeemAmount": "",  
+                    "maxRedeemAmount": "",  
+                    "duration": "",  
+                    "term": 0,  
+                    "swapCoin": "",  
+                    "swapCoinPrecision": "",  
+                    "stakeExchangeRate": "",  
+                    "redeemExchangeRate": "",  
+                    "rewardDistributionType": "",  
+                    "rewardIntervalMinute": 0,  
+                    "redeemProcessingMinute": 0,  
+                    "stakeTime": "",  
+                    "interestCalculationTime": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1776068177658  
+        "time": 1739935669110  
     }
 
 ---
 
-# 下單
-
-API key權限：`Earn`  
-API 頻率限制：每秒5次
+# 查询产品信息
 
 信息
 
-  * 訂單非同步處理。成功響應表示訂單已被接受，而非已結算。請使用[取得訂單列表](/docs/zh-TW/v5/finance/earn/fixed-saving/order)追蹤訂單狀態。
-  * `orderLinkId` 用於保證冪等性——重複提交相同的 `orderLinkId` 時，系統將返回訂單已存在的錯誤。
-  * `autoInvest` 僅在 `category` 為 `FundPool` 時有效，對其他產品類型無效。
-  * 支持的帳戶類型：`FUND`、`UNIFIED`。
+不需要鑒權
 
-
+[Bybit儲蓄 - 常見問題](https://www.bybit.com/zh-TW/help-center/article/FAQ-Bybit-Savings)
 
 ### HTTP 請求
 
-POST`/v5/earn/fixed-term/place-order`
+GET`/v5/earn/product`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  string| 產品ID  
-category| **true**|  string| 產品子類型：`FixedTermSaving`、`FundPool`、`FundPoolPremium`  
-coin| **true**|  string| 幣種名稱，例如 `BTC`、`ETH`  
-amount| **true**|  string| 訂閱金額（必須 > 0）  
-accountType| **true**|  string| 帳戶類型：`FUND` 或 `UNIFIED`  
-orderLinkId| **true**|  string| 用戶自訂冪等ID（最多36個字符）  
-autoInvest| false| boolean| 啟用自動續投。僅在 `category` 為 `FundPool` 時有效  
+category| **true**|  string| `FlexibleSaving`,`OnChain`   
+**備註** : 本期僅支持活期理財和鏈上賺幣  
+coin| false| string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 系統生成的訂單ID  
-orderLinkId| string| 用戶自訂冪等ID  
+list| array| Object  
+> category| string| `FlexibleSaving`,`OnChain`  
+> estimateApr| string| 預估年化利率, e.g., `3%`, `4.25%`  
+**備註** : 1)預估年化收益率提供潛在收益的動態預覽，根據市場行情每 10 分鐘更新一次.   
+2) 請注意，該數值僅為估算值，可能會與您獲得的實際年化收益率有所不同.  
+3) 不展示部分幣種支持的平台獎勵年化收益率  
+> coin| string| 幣種名稱  
+> minStakeAmount| string| 最小質押額  
+> maxStakeAmount| string| 最大質押額  
+> precision| string| 金額的精度  
+> productId| string| 產品ID  
+> status| string| 產品狀態 `Available`, `NotAvailable`  
+> bonusEvents| Array| 獎勵  
+>> apr| string| 昨日獎勵 APR  
+>> coin| string| 獎勵幣種  
+>> announcement| string| 公告連結  
+> minRedeemAmount| string| 最小贖回額度. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> maxRedeemAmount| string| 最大押額度 （返回可購買金額）. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> duration| string| 產品類型：`Fixed`,`Flexible`.  
+> term| int| 單位：天。只有 OnChain 定期產品類型使用  
+> swapCoin| string| 兌換幣種. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> swapCoinPrecision| string| 贖回可支援的精確度. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> stakeExchangeRate| string| 預計質押兌換率. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> redeemExchangeRate| string| 預計赎回兑换率. 只有 OnChain LST 模式有值 (coin != swapCoin)  
+> rewardDistributionType| string| 收益發放模式：`Simple`: 单利, `Compound`: 复利, `Other`: LST. 只有 OnChain 模式有值  
+> rewardIntervalMinute| int| 收益發放的頻率（分鐘）  
+> redeemProcessingMinute| string| 預計贖回分鐘  
+> stakeTime| string| 質押上鍊時間. 以毫秒為單位  
+> interestCalculationTime| string| 開始計息時間. 以毫秒為單位  
   
-* * *
-
 ### 請求示例
+
+  * HTTP
+  * Python
+  * Node.js
+
+
     
     
-    POST /v5/earn/fixed-term/place-order HTTP/1.1  
-    Host: api.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
+    GET /v5/earn/product?category=FlexibleSaving&coin=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+    
+    
+    from pybit.unified_trading import HTTP  
+    session = HTTP(  
+        testnet=True,  
+    )  
+    print(session.get_earn_product_info(  
+        category="FlexibleSaving",  
+        coin="BTC",  
+    ))  
+    
+    
+    
       
-    {  
-        "category": "FixedTermSaving",  
-        "accountType": "FUND",  
-        "amount": "201",  
-        "coin": "USDT",  
-        "productId": "724",  
-        "orderLinkId": "usdt-fixdearn-001"  
-    }  
     
 
 ### 響應示例
@@ -148,9 +216,33 @@ orderLinkId| string| 用戶自訂冪等ID
         "retCode": 0,  
         "retMsg": "",  
         "result": {  
-            "orderId": "86468516-5497-4a2b-8c4c-f9c58e01e12c",  
-            "orderLinkId": "usdt-fixdearn-001"  
+            "list": [  
+                {  
+                    "category": "FlexibleSaving",  
+                    "estimateApr": "0.3%",  
+                    "coin": "BTC",  
+                    "minStakeAmount": "0.001",  
+                    "maxStakeAmount": "200",  
+                    "precision": "8",  
+                    "productId": "3",  
+                    "status": "Available",  
+                    "bonusEvents": [],  
+                    "minRedeemAmount": "",  
+                    "maxRedeemAmount": "",  
+                    "duration": "",  
+                    "term": 0,  
+                    "swapCoin": "",  
+                    "swapCoinPrecision": "",  
+                    "stakeExchangeRate": "",  
+                    "redeemExchangeRate": "",  
+                    "rewardDistributionType": "",  
+                    "rewardIntervalMinute": 0,  
+                    "redeemProcessingMinute": 0,  
+                    "stakeTime": "",  
+                    "interestCalculationTime": ""  
+                }  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1776068177658  
+        "time": 1739935669110  
     }

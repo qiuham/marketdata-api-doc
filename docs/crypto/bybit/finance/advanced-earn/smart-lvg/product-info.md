@@ -2,155 +2,161 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/smart-lvg/product-info
 api_type: REST
-updated_at: 2026-11-13 18:27:35.696616
+updated_at: 2026-11-13 19:23:02.638124
 ---
 
-# Double Win Offers
-
-### WebSocket public URL
-
-  * **Mainnet:**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **Testnet:**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# Get Product Info
 
 info
 
-  * Subscribing to this topic does not require authentication.
-  * This topic pushes **fixed price range products** (`isRfqProduct=false`) only. For RFQ products, use [Get Custom Product Quote](/docs/v5/finance/advanced-earn/double-win/leverage) to obtain a quote on demand.
-  * **Recommended usage** : call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) on initialization to get the current quote, then subscribe to this topic to maintain a live view. If the WebSocket disconnects, call [Get Fixed Product Quote](/docs/v5/finance/advanced-earn/double-win/product-quote) to refresh before re-subscribing.
+Does not need authentication. **Up to 50 requests** per second per IP .
 
+### HTTP Request
 
+GET`/v5/earn/advance/product`
 
-### Topic: `earn.doublewin.offers`
+### Request Parameters
 
+Parameter| Required| Type| Comments  
+---|---|---|---  
+category| **true**|  string| Product category. `SmartLeverage`  
+coin| false| string| Underlying asset to filter by, uppercase only, e.g. `BTC`, `ETH`  
+duration| false| string| Product duration, e.g. `1d`, `3d`, `6d`, `12d`  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-topic| string| Topic name. `earn.doublewin.offers`  
-data| array| Object  
-> p| string| Product ID  
-> c| string| Current index price of the underlying asset  
-> l| string| Current maximum leverage multiplier  
-> m| string| Maximum single order amount at current quote  
-> e| string| Quote expiry time, Unix timestamp in ms  
+category| string| Product category  
+list| array| Object  
+> category| string| Product category  
+> productId| string| Product ID  
+> investCoin| string| Investment coin, e.g. `USDT`  
+> underlyingAsset| string| Underlying asset (price-anchored), e.g. `BTC`, `ETH`  
+> direction| string| Trade direction: `Long`, `Short`  
+> leverage| string| Fixed leverage multiplier, e.g. `3`, `5`  
+> duration| string| Product duration, e.g. `1d`, `3d`  
+> subscribeStartAt| string| Subscription start time, Unix timestamp in ms  
+> subscribeEndAt| string| Subscription end time, Unix timestamp in ms  
+> settlementTime| string| Settlement time, Unix timestamp in ms  
+> expectReceiveAt| string| Expected time to receive the transfer, Unix timestamp in ms  
+> minPurchaseAmount| string| Minimum single order amount  
+> remainingAmount| string| Remaining available quota  
+> orderPrecisionDigital| int| Order amount precision  
   
-### Push Example
+### Request Example
+    
+    
+    GET /v5/earn/advance/product?category=SmartLeverage&coin=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### Response Example
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "category": "SmartLeverage",  
+            "list": [  
+                {  
+                    "category": "SmartLeverage",  
+                    "productId": "13015",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "direction": "Short",  
+                    "leverage": "10",  
+                    "duration": "7d",  
+                    "expectReceiveAt": "1775635800000",  
+                    "subscribeStartAt": "1775001600000",  
+                    "subscribeEndAt": "1775087999000",  
+                    "settlementTime": "1775635200000",  
+                    "minPurchaseAmount": "10",  
+                    "remainingAmount": "9994748366.907",  
+                    "orderPrecisionDigital": 4  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1775001977686  
     }
 
 ---
 
-# 漲跌雙贏報價
-
-### WebSocket 公共頻道網址
-
-  * **主網：**  
-Earn: `wss://stream.bybit.com/v5/public/fp`  
-
-
-  * **測試網：**  
-Earn: `wss://stream-testnet.bybit.com/v5/public/fp`  
-
-
-
-
+# 查詢產品資訊
 
 信息
 
-  * 訂閱此頻道無需身份驗證。
-  * 本頻道**僅推送固定區間產品** （`isRfqProduct=false`）。RFQ 產品需調用[查詢自選區間產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/leverage)進行主動詢價。
-  * **推薦使用方式** ：初始化時調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)獲取當前報價，再訂閱本頻道保持即時更新。WebSocket 斷線後，請先調用[查詢固定產品報價](/docs/zh-TW/v5/finance/advanced-earn/double-win/product-quote)重新整理，再重新訂閱。
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
+### HTTP 請求
 
+GET`/v5/earn/advance/product`
 
-### 頻道：`earn.doublewin.offers`
+### 請求參數
 
+參數| 必填| 類型| 說明  
+---|---|---|---  
+category| **true**|  string| 產品類別，`SmartLeverage`  
+coin| false| string| 標的資產篩選，僅限大寫，例如：`BTC`, `ETH`  
+duration| false| string| 產品期限，例如：`1d`, `3d`, `6d`, `12d`  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-topic| string| 頻道名稱，`earn.doublewin.offers`  
-data| array| 列表  
-> p| string| 產品 ID  
-> c| string| 標的資產當前指數價格  
-> l| string| 當前最大槓桿倍數  
-> m| string| 當前報價下的最大單筆下單金額  
-> e| string| 報價到期時間，毫秒級 Unix 時間戳  
+category| string| 產品類別  
+list| array| 列表  
+> category| string| 產品類別  
+> productId| string| 產品 ID  
+> investCoin| string| 投資幣種，例如：`USDT`  
+> underlyingAsset| string| 標的資產（價格錨定），例如：`BTC`, `ETH`  
+> direction| string| 交易方向：`Long`（多頭），`Short`（空頭）  
+> leverage| string| 固定槓桿倍數，例如：`3`, `5`  
+> duration| string| 產品期限，例如：`1d`, `3d`  
+> subscribeStartAt| string| 申購開始時間，毫秒級 Unix 時間戳  
+> subscribeEndAt| string| 申購結束時間，毫秒級 Unix 時間戳  
+> settlementTime| string| 結算時間，毫秒級 Unix 時間戳  
+> expectReceiveAt| string| 預計到帳時間，毫秒級 Unix 時間戳  
+> minPurchaseAmount| string| 最小單筆申購金額  
+> remainingAmount| string| 剩餘可用額度  
+> orderPrecisionDigital| int| 訂單金額精度  
   
-### 推送示例
+### 請求示例
+    
+    
+    GET /v5/earn/advance/product?category=SmartLeverage&coin=BTC HTTP/1.1  
+    Host: api-testnet.bybit.com  
+    
+
+### 響應示例
     
     
     {  
-        "topic": "earn.doublewin.offers",  
-        "data": [  
-            {  
-                "p": "14082",  
-                "c": "2050.99",  
-                "l": "37.78",  
-                "m": "1000",  
-                "e": "1775111431407"  
-            },  
-            {  
-                "p": "14083",  
-                "c": "2050.99",  
-                "l": "75.57",  
-                "m": "700",  
-                "e": "1775111431552"  
-            },  
-            {  
-                "p": "14088",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "500",  
-                "e": "1775111432115"  
-            },  
-            {  
-                "p": "14089",  
-                "c": "66647.87",  
-                "l": "23.25",  
-                "m": "1000",  
-                "e": "1775111432115"  
-            }  
-        ]  
+        "retCode": 0,  
+        "retMsg": "",  
+        "result": {  
+            "category": "SmartLeverage",  
+            "list": [  
+                {  
+                    "category": "SmartLeverage",  
+                    "productId": "13015",  
+                    "investCoin": "USDT",  
+                    "underlyingAsset": "BTC",  
+                    "direction": "Short",  
+                    "leverage": "10",  
+                    "duration": "7d",  
+                    "expectReceiveAt": "1775635800000",  
+                    "subscribeStartAt": "1775001600000",  
+                    "subscribeEndAt": "1775087999000",  
+                    "settlementTime": "1775635200000",  
+                    "minPurchaseAmount": "10",  
+                    "remainingAmount": "9994748366.907",  
+                    "orderPrecisionDigital": 4  
+                }  
+            ]  
+        },  
+        "retExtInfo": {},  
+        "time": 1775001977686  
     }

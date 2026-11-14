@@ -2,63 +2,74 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/coupons
 api_type: REST
-updated_at: 2026-11-13 18:27:39.413120
+updated_at: 2026-11-13 19:23:12.722322
 ---
 
-# Get Stake/Redeem Order History
+# Get Coupon List
 
 info
 
-API key needs "Earn" permission
+  * Authentication required.
+  * **Rate Limit:** 10 req/s (UID)
+
+
+
+Query the user's interest-rate coupons (`interestCards`) and Dual Assets reward cards (`awardCards`, e.g. trial funds / zero-cost vouchers) for the given product category.
+
+Returned cards include all states: `InUse`, `NotUse`, `Expired`, and `AlreadyUsed`.
+
+To apply a coupon when placing an order, pass its `awardId` and `specCode` in the `interestCard` field of the corresponding place-order request:
+
+  * `FlexibleSaving` → [Place Order](/docs/v5/finance/earn/easy-onchain/create-order)
+  * `DualAssets` → [Place Order](/docs/v5/finance/advanced-earn/dual-asset/create-order)
+
+
 
 ### HTTP Request
 
-GET`/v5/earn/order`
+GET`/v5/earn/coupons`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`   
-**Remarks** : currently, only flexible savings and OnChain is supported  
-orderId| false| string| Order ID. 
-
-  * For category = `OnChain`, either orderId or orderLinkId is **required**
-  * if both are passed, make sure they're matched, otherwise returning empty result
-
-  
-orderLinkId| false| string| Order link ID  
-**Remarks** : Always return the latest one if order link id is ever reused when querying by orderLinkId only  
-productId| false| string| Product ID  
-startTime| false| integer| The start timestamp (ms).
-
-  * 1\. If both are not provided, the default is to return data from the last 7 days.
-  * 2\. If both are provided, the difference between the endTime and startTime must be less than or equal to 7 days. 
-
-  
-endTime| false| integer| The endTime timestamp (ms)  
-limit| false| integer| Limit for data size per page. Range: [1, 100]. Default: 50  
-cursor| false| string| Cursor, use the returned `nextPageCursor` to query data for the next page.  
+category| **true**|  string| Product category: `FlexibleSaving`, `DualAssets`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-list| array| Object  
-> coin| string| Coin name  
-> orderValue| string| amount  
-> orderType| string| `Redeem`, `Stake`  
-> orderId| string| Order ID  
-> orderLinkId| string| Order link ID  
-> status| string| Order status `Success`, `Fail`, `Pending`  
-> createdAt| string| Order created time, in milliseconds  
-> productId| string| Product ID  
-> updatedAt| string| Order updated time, in milliseconds  
-> swapOrderValue| string| Swap order value. Only for LST Onchain.  
-> estimateRedeemTime| string| Estimate redeem time, in milliseconds. Only for Onchain  
-> estimateStakeTime| string| Estimate stake time, in milliseconds. Only for Onchain  
+interestCards| array| Interest-rate coupon list  
+> awardId| integer| Coupon unique ID  
+> specCode| string| Coupon spec code  
+> coin| string| Coin name, e.g. `USDT`, `BTC`  
+> apy| string| Bonus APY rate as a decimal string, e.g. `"0.03"` = 3%  
+> duration| integer| Coupon validity period (days)  
+> claimedAt| integer| Claim time (Unix seconds)  
+> expireAt| integer| Expiry time (Unix seconds)  
+> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
+> status| string| Coupon status. `InUse`: currently in use, `NotUse`: claimed but not yet used, `Expired`: expired without being used, `AlreadyUsed`: used and settled  
+> currentPnl| string| Bonus interest accrued so far  
+> limitPnl| string| Bonus interest cap  
+> positionEffectiveAmount| string| Effective principal amount for the bonus calculation  
+> productId| integer| Linked product ID; populated for `InUse` / `AlreadyUsed`, `0` otherwise  
+> category| string| Product category the coupon applies to: `FlexibleSaving`, `DualAssets`  
+awardCards| array| Dual Assets reward card list (trial fund / zero-cost voucher)  
+> awardId| integer| Reward card unique ID  
+> specCode| string| Reward card spec code  
+> claimedAt| integer| Claim time (Unix seconds)  
+> usedAt| integer| Use time (Unix seconds); `0` if not yet used  
+> expireAt| integer| Expiry time (Unix seconds)  
+> status| string| Card status. Same semantics as `interestCards > status`  
+> amount| string| Trial / zero-cost voucher amount  
+> limitPnlPercentage| string| PnL percentage cap, e.g. `"0.23"` = 23%  
+> baseCoin| string| Base coin name  
+> quoteCoin| string| Quote coin name  
+> direction| integer| Dual Assets direction: `1` = BuyLow, `2` = SellHigh  
+> category| string| Product category the card applies to: `FlexibleSaving`, `DualAssets`  
   
+* * *
+
 ### Request Example
 
   * HTTP
@@ -68,26 +79,16 @@ list| array| Object
 
     
     
-    GET /v5/earn/order?orderId=9640dc23-df1a-448a-ad24-e1a48028a51f&category=OnChain HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1759983699446  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_stake_or_redemption_history(  
-        category="OnChain",  
-        orderId="9640dc23-df1a-448a-ad24-e1a48028a51f",  
-    ))  
+      
     
     
     
@@ -99,25 +100,27 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "interestCards": [  
                 {  
+                    "awardId": 1001,  
+                    "specCode": "FS_APY_3PCT_30D",  
                     "coin": "USDT",  
-                    "orderValue": "1000",  
-                    "orderType": "Stake",  
-                    "orderId": "ad98d473-4e17-46da-ab30-5563f62a97fa",  
-                    "orderLinkId": "",  
-                    "status": "Success",  
-                    "createdAt": "1759983689000",  
-                    "productId": "428",  
-                    "updatedAt": "1759983689000",  
-                    "swapOrderValue": "",  
-                    "estimateRedeemTime": "",  
-                    "estimateStakeTime": ""  
+                    "apy": "0.03",  
+                    "duration": 30,  
+                    "claimedAt": 1759900800,  
+                    "expireAt": 1762492800,  
+                    "usedAt": 0,  
+                    "status": "NotUse",  
+                    "currentPnl": "0",  
+                    "limitPnl": "100",  
+                    "positionEffectiveAmount": "0",  
+                    "productId": 0,  
+                    "category": "FlexibleSaving"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "awardCards": []  
         },  
         "retExtInfo": {},  
         "time": 1759983699446  
@@ -125,60 +128,71 @@ list| array| Object
 
 ---
 
-# 查詢質押/贖回訂單歷史
+# 查詢優惠券列表
 
 信息
 
-API key需要"理財""權限
+  * 需要身份驗證。
+  * **頻率限制：** 10 次/秒（UID）
+
+
+
+查詢用戶在指定產品類別下的利率優惠券（`interestCards`）和雙幣投資獎勵卡（`awardCards`，如體驗金/零成本券）。
+
+返回所有狀態的卡券：`InUse`（使用中）、`NotUse`（未使用）、`Expired`（已過期）、`AlreadyUsed`（已使用）。
+
+下單時如需使用優惠券，請在對應下單請求的 `interestCard` 字段中傳入 `awardId` 和 `specCode`：
+
+  * `FlexibleSaving` → [下單](/docs/zh-TW/v5/finance/earn/easy-onchain/create-order)
+  * `DualAssets` → [下單](/docs/zh-TW/v5/finance/advanced-earn/dual-asset/create-order)
+
+
 
 ### HTTP 請求
 
-GET`/v5/earn/order`
+GET`/v5/earn/coupons`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-category| **true**|  string| `FlexibleSaving`,`OnChain`   
-**備註** : 本期僅支持活期理財和鏈上賺幣  
-orderId| false| string| 系統生成的訂單ID 
-
-  * 對於category = `OnChain`, orderId和orderLinkId二者 _必須_ 傳其一
-  * 如果都傳入, 確保二者是來自同一筆訂單, 否則返回空
-
-  
-orderLinkId| false| string| 自定義訂單ID  
-**備註** : 如果orderLinkId有復用, 則僅用orderLinkId查詢時, 總是返回最近的那筆訂單  
-productId| false| string| 產品ID  
-startTime| false| integer| 開始時間戳 (毫秒)
-
-  * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
-  * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
-
-  
-endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
-cursor| false| string| 游標，用於翻頁  
+category| **true**|  string| 產品類別：`FlexibleSaving`、`DualAssets`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-nextPageCursor| string| 游標，用於翻頁  
-list| array| Object  
-> coin| string| 幣種名稱  
-> orderValue| string| 質押/贖回數量  
-> orderType| string| `Redeem`, `Stake`  
-> orderId| string| 系統生成的訂單ID  
-> orderLinkId| string| 自定義訂單ID  
-> status| string| 訂單狀態 `Success`, `Fail`, `Pending`  
-> createdAt| string| 訂單創建時間 (毫秒)  
-> productId| string| 產品ID  
-> updatedAt| string| 訂單更新時間 (毫秒)  
-> swapOrderValue| string| 到手金額. 僅適用於 LST OnChain  
-> estimateRedeemTime| string| 預計贖回時間 毫秒級（只有贖回訂單展示）. 僅適用於 OnChain  
-> estimateStakeTime| string| 預計質押時間 毫秒級（只有質押訂單展示）.僅適用於 OnChain  
+interestCards| array| 利率優惠券列表  
+> awardId| integer| 優惠券唯一ID  
+> specCode| string| 優惠券規格碼  
+> coin| string| 幣種名稱，如 `USDT`、`BTC`  
+> apy| string| 加成APY（小數字符串），如 `"0.03"` = 3%  
+> duration| integer| 優惠券有效期（天）  
+> claimedAt| integer| 領取時間（Unix秒）  
+> expireAt| integer| 到期時間（Unix秒）  
+> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
+> status| string| 狀態。`InUse`：使用中，`NotUse`：未使用，`Expired`：已過期，`AlreadyUsed`：已使用  
+> currentPnl| string| 已累計加成利息  
+> limitPnl| string| 加成利息上限  
+> positionEffectiveAmount| string| 計算加成的有效本金  
+> productId| integer| 關聯產品ID；`InUse`/`AlreadyUsed` 時有值，否則為 `0`  
+> category| string| 優惠券適用的產品類別：`FlexibleSaving`、`DualAssets`  
+awardCards| array| 雙幣投資獎勵卡列表（體驗金/零成本券）  
+> awardId| integer| 獎勵卡唯一ID  
+> specCode| string| 獎勵卡規格碼  
+> claimedAt| integer| 領取時間（Unix秒）  
+> usedAt| integer| 使用時間（Unix秒）；未使用時為 `0`  
+> expireAt| integer| 到期時間（Unix秒）  
+> status| string| 狀態，語義同 `interestCards > status`  
+> amount| string| 體驗金/零成本券金額  
+> limitPnlPercentage| string| 收益上限比例，如 `"0.23"` = 23%  
+> baseCoin| string| 標的幣種  
+> quoteCoin| string| 計價幣種  
+> direction| integer| 雙幣方向：`1` = 低買（BuyLow），`2` = 高賣（SellHigh）  
+> category| string| 獎勵卡適用的產品類別：`FlexibleSaving`、`DualAssets`  
   
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -188,26 +202,16 @@ list| array| Object
 
     
     
-    GET /v5/earn/order?orderId=0572b030-6a0b-423f-88c4-b6ce31c0c82d&category=FlexibleSaving HTTP/1.1  
-    Host: api-testnet.bybit.com  
+    GET /v5/earn/coupons?category=FlexibleSaving HTTP/1.1  
+    Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1739937044221  
+    X-BAPI-TIMESTAMP: 1759983699446  
     X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
     
     
     
-    from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_stake_or_redemption_history(  
-        category="FlexibleSaving",  
-        orderId="0572b030-6a0b-423f-88c4-b6ce31c0c82d",  
-    ))  
+      
     
     
     
@@ -219,26 +223,28 @@ list| array| Object
     
     {  
         "retCode": 0,  
-        "retMsg": "",  
+        "retMsg": "OK",  
         "result": {  
-            "list": [  
+            "interestCards": [  
                 {  
+                    "awardId": 1001,  
+                    "specCode": "FS_APY_3PCT_30D",  
                     "coin": "USDT",  
-                    "orderValue": "1000",  
-                    "orderType": "Stake",  
-                    "orderId": "ad98d473-4e17-46da-ab30-5563f62a97fa",  
-                    "orderLinkId": "",  
-                    "status": "Success",  
-                    "createdAt": "1759983689000",  
-                    "productId": "428",  
-                    "updatedAt": "1759983689000",  
-                    "swapOrderValue": "",  
-                    "estimateRedeemTime": "",  
-                    "estimateStakeTime": ""  
+                    "apy": "0.03",  
+                    "duration": 30,  
+                    "claimedAt": 1759900800,  
+                    "expireAt": 1762492800,  
+                    "usedAt": 0,  
+                    "status": "NotUse",  
+                    "currentPnl": "0",  
+                    "limitPnl": "100",  
+                    "positionEffectiveAmount": "0",  
+                    "productId": 0,  
+                    "category": "FlexibleSaving"  
                 }  
             ],  
-            "nextPageCursor": ""  
+            "awardCards": []  
         },  
         "retExtInfo": {},  
-        "time": 1759983796197  
+        "time": 1759983699446  
     }

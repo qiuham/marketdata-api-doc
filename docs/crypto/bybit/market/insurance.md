@@ -2,50 +2,47 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/insurance
 api_type: Market Data
-updated_at: 2026-11-13 18:27:58.236002
+updated_at: 2026-11-13 19:23:52.811235
 ---
 
-# Get Long Short Ratio
+# Get Insurance Pool
 
-This refers to the net long and short positions as percentages of all position holders during the selected time.   
-Long account ratio = Number of holders with long positions / Total number of holders   
-Short account ratio = Number of holders with short positions / Total number of holders   
-Long-short account ratio = Long account ratio / Short account ratio
+Query for Bybit [insurance pool](https://www.bybit.com/en/announcement-info/insurance-fund/) data (BTC/USDT/USDC etc)
 
 info
 
-  * The earliest query start time is July 20, 2020
+  * The isolated insurance pool balance is updated every 1 minute, and shared insurance pool balance is updated every 24 hours
+  * Please note that you may receive data from the previous minute. This is due to multiple backend containers starting at different times, which may cause a slight delay. You can always rely on the latest minute data for accuracy.
   * During periods of extreme market volatility, this interface may experience increased latency or temporary delays in data delivery
 
 
 
 ### HTTP Request
 
-GET`/v5/market/account-ratio`
+GET`/v5/market/insurance`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-[category](/docs/v5/enum#category)| **true**|  string| Product type. `linear`(USDT Contract),`inverse`  
-[symbol](/docs/v5/enum#symbol)| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
-[period](/docs/v5/enum#datarecordingperiod)| **true**|  string| Data recording period. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
-startTime| false| string| The start timestamp (ms)  
-endTime| false| string| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `500`]. Default: `50`  
-cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
+coin| false| string| coin, uppercase only. Default: return all insurance coins  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
+updatedTime| string| Data updated time (ms)  
 list| array| Object  
-> symbol| string| Symbol name  
-> buyRatio| string| The ratio of the number of long position  
-> sellRatio| string| The ratio of the number of short position  
-> timestamp| string| Timestamp (ms)  
-nextPageCursor| string| Refer to the `cursor` request parameter  
-[](/docs/api-explorer/v5/market/long-short-ratio)
+> coin| string| Coin  
+> symbols| string| 
+
+  * symbols with `"BTCUSDT,ETHUSDT,SOLUSDT"` mean these contracts are shared with one insurance pool
+  * For an isolated insurance pool, it returns one contract
+
+  
+> balance| string| Balance  
+> value| string| USD value  
+[](/docs/api-explorer/v5/market/insurance)
 
 * * *
 
@@ -60,24 +57,15 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
     
     
-    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    GET /v5/market/insurance?coin=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
     from pybit.unified_trading import HTTP  
-    session = HTTP(  
-        testnet=True,  
-        api_key="xxxxxxxxxxxxxxxxxx",  
-        api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
-    )  
-    print(session.get_long_short_ratio(  
-        category="linear",  
-        symbol="BTCUSDT",  
-        period="1h",  
-        limit=2,  
-        startTime="1696089600000",  
-        endTime="1696262400000"  
+    session = HTTP(testnet=True)  
+    print(session.get_insurance(  
+        coin="USDT",  
     ))  
     
     
@@ -88,40 +76,35 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
-    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
+    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarketInsurance(context.Background())  
     
     
     
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
-    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    var insuranceRequest = MarketDataRequest.builder().coin("BTC").build();  
+    var insuranceData = client.getInsurance(insuranceRequest);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
+        testnet: true,  
     });  
       
     client  
-      .getLongShortRatio({  
-        category: 'linear',  
-        symbol: 'BTCUSDT',  
-        period: '1h',  
-        limit: 100,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getInsurance({  
+            coin: 'USDT',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -131,70 +114,77 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "updatedTime": "1714003200000",  
             "list": [  
                 {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.49",  
-                    "sellRatio": "0.51",  
-                    "timestamp": "1696262400000"  
+                    "coin": "USDT",  
+                    "symbols": "MERLUSDT,10000000AIDOGEUSDT,ZEUSUSDT",  
+                    "balance": "902178.57602476",  
+                    "value": "901898.0963091522"  
                 },  
                 {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.4927",  
-                    "sellRatio": "0.5073",  
-                    "timestamp": "1696258800000"  
+                    "coin": "USDT",  
+                    "symbols": "SOLUSDT,OMNIUSDT,ALGOUSDT",  
+                    "balance": "14454.51626125",  
+                    "value": "14449.515598975464"  
+                },  
+                {  
+                    "coin": "USDT",  
+                    "symbols": "XLMUSDT,WUSDT",  
+                    "balance": "23.45018235",  
+                    "value": "22.992864174376344"  
+                },  
+                {  
+                    "coin": "USDT",  
+                    "symbols": "AGIUSDT,WIFUSDT",  
+                    "balance": "10002",  
+                    "value": "9998.896846613574"  
                 }  
-            ],  
-            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1731567491688  
+        "time": 1714028451228  
     }
 
 ---
 
-# 查詢多空比
+# 查詢保險基金
 
-指選定時間內淨多頭部位和淨空頭部位佔所有持有者的百分比。  
-多頭帳戶比例 = 多頭持倉者數 / 總持倉者數量   
-空頭帳戶比例 = 空頭持倉者數 / 總持倉者數   
-多空帳戶比例 = 多頭帳戶比例 / 空頭帳戶比例   
-
+查詢Bybit平台的保險基金的數據，包含所有保險池的數據
 
 信息
 
-  * 查詢起始時間最早為2020年7月20日
-  * 在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
+  * 獨立保險池的餘額數據每1分鐘更新一次, 共享保險池的餘額數據每24小時更新一次
+  * 請注意，您可能會收到前一分鐘的數據。這是由於多個後端容器在不同的時間啟動，這會造成数据延遲。您始終可以依賴最新的那一分鐘數據來確保準確性。 *在極端市場波動期間, 此介面可能會出現延遲增加或資料傳遞暫時延遲的情況
 
 
 
 ### HTTP請求
 
-GET`/v5/market/account-ratio`
+GET`/v5/market/insurance`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`(USDT永續, USDT交割),`inverse`  
-[symbol](/docs/zh-TW/v5/enum#symbol)| **true**|  string| 合約名稱  
-[period](/docs/zh-TW/v5/enum#datarecordingperiod)| **true**|  string| 數據週期. `5min`, `15min`, `30min`, `1h`, `4h`, `1d`  
-startTime| false| string| 開始時間戳 (毫秒)  
-endTime| false| string| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `500`]. 默認: `50`  
-cursor| false| string| 游標，用於分頁  
+coin| false| string| 幣種名稱. 默認: 返回目前所有的保險池幣種  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
+updateTime| string| 數據最近更新的時間戳 (ms)  
 list| array| Object  
-> symbol| string| 合約名稱  
-> buyRatio| string| 持有多倉比例  
-> sellRatio| string| 持有空倉的比例  
-> timestamp| string| 時間戳 (毫秒)  
-nextPageCursor| string| 游標，用於分頁  
-[](/docs/zh-TW/api-explorer/v5/market/long-short-ratio)
+> coin| string| 保險池的幣種  
+> symbols| string| 
+
+  * 對於共享保險池, 返回的symbols裡會有多個合約, 比如`"BTCUSDT,ETHUSDT,SOLUSDT"`
+  * 對於獨立保險池, 將會返回一個合約
+
+  
+> balance| string| 保險基金的幣種數量  
+> value| string| 保險基金的幣種價值，折合成USD的價值  
+[](/docs/zh-TW/api-explorer/v5/market/insurance)
 
 * * *
 
@@ -209,12 +199,16 @@ nextPageCursor| string| 游標，用於分頁
 
     
     
-    GET /v5/market/account-ratio?category=linear&symbol=BTCUSDT&period=1h&limit=2&startTime=1696089600000&endTime=1696262400000 HTTP/1.1  
+    GET /v5/market/insurance?coin=USDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     
     
     
-      
+    from pybit.unified_trading import HTTP  
+    session = HTTP(testnet=True)  
+    print(session.get_insurance(  
+        coin="USDT",  
+    ))  
     
     
     
@@ -224,40 +218,35 @@ nextPageCursor| string| 游標，用於分頁
         bybit "github.com/bybit-exchange/bybit.go.api"  
     )  
     client := bybit.NewBybitHttpClient("", "", bybit.WithBaseURL(bybit.TESTNET))  
-    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT", "period": "5min"}  
-    client.NewUtaBybitServiceWithParams(params).GetLongShortRatio(context.Background())  
+    params := map[string]interface{}{"category": "linear", "symbol": "BTCUSDT"}  
+    client.NewUtaBybitServiceWithParams(params).GetMarketInsurance(context.Background())  
     
     
     
-    import com.bybit.api.client.domain.CategoryType;  
-    import com.bybit.api.client.domain.market.*;  
     import com.bybit.api.client.domain.market.request.MarketDataRequest;  
     import com.bybit.api.client.service.BybitApiClientFactory;  
     var client = BybitApiClientFactory.newInstance().newAsyncMarketDataRestClient();  
-    var marketAccountRatioRequest = MarketDataRequest.builder().category(CategoryType.LINEAR).symbol("BTCUSDT").dataRecordingPeriod(DataRecordingPeriod.FIFTEEN_MINUTES).limit(10).build();  
-    client.getMarketAccountRatio(marketAccountRatioRequest, System.out::println);  
+    var insuranceRequest = MarketDataRequest.builder().coin("BTC").build();  
+    var insuranceData = client.getInsurance(insuranceRequest);  
     
     
     
     const { RestClientV5 } = require('bybit-api');  
       
     const client = new RestClientV5({  
-      testnet: true,  
+        testnet: true,  
     });  
       
     client  
-      .getLongShortRatio({  
-        category: 'linear',  
-        symbol: 'BTCUSDT',  
-        period: '1h',  
-        limit: 100,  
-      })  
-      .then((response) => {  
-        console.log(response);  
-      })  
-      .catch((error) => {  
-        console.error(error);  
-      });  
+        .getInsurance({  
+            coin: 'USDT',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### 響應示例
@@ -267,22 +256,34 @@ nextPageCursor| string| 游標，用於分頁
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
+            "updatedTime": "1714003200000",  
             "list": [  
                 {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.49",  
-                    "sellRatio": "0.51",  
-                    "timestamp": "1696262400000"  
+                    "coin": "USDT",  
+                    "symbols": "MERLUSDT,10000000AIDOGEUSDT,ZEUSUSDT",  
+                    "balance": "902178.57602476",  
+                    "value": "901898.0963091522"  
                 },  
                 {  
-                    "symbol": "BTCUSDT",  
-                    "buyRatio": "0.4927",  
-                    "sellRatio": "0.5073",  
-                    "timestamp": "1696258800000"  
+                    "coin": "USDT",  
+                    "symbols": "SOLUSDT,OMNIUSDT,ALGOUSDT",  
+                    "balance": "14454.51626125",  
+                    "value": "14449.515598975464"  
+                },  
+                {  
+                    "coin": "USDT",  
+                    "symbols": "XLMUSDT,WUSDT",  
+                    "balance": "23.45018235",  
+                    "value": "22.992864174376344"  
+                },  
+                {  
+                    "coin": "USDT",  
+                    "symbols": "AGIUSDT,WIFUSDT",  
+                    "balance": "10002",  
+                    "value": "9998.896846613574"  
                 }  
-            ],  
-            "nextPageCursor": "lastid%3D0%26lasttime%3D1696258800"  
+            ]  
         },  
         "retExtInfo": {},  
-        "time": 1731567491688  
+        "time": 1714028451228  
     }

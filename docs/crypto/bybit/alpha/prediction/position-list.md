@@ -2,50 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/position-list
 api_type: REST
-updated_at: 2026-11-13 18:26:51.138564
+updated_at: 2026-11-13 19:21:14.245189
 ---
 
-# Get Sports Group Stage Detail
+# Get Position List
 
-Query the group stage standings and match schedule detail for a sports prediction event. Returns all groups with team standings (points, goal difference, W/D/L) and associated matches.
+Query the authenticated user's active prediction market positions. Call this before placing a sell order to confirm the position exists.
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/position-list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-eventType| **true**|  integer| Sports event type. Refer to [predictionEventType](/docs/v5/enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)  
-groupName| false| string| Filter by group name (e.g., `A`, `B`, … `L` for FIFA 2026)  
+tokenId| false| string| Filter by outcome token ID  
+eventId| false| string| Filter by event ID  
+limit| false| integer| Number of records per page  
+pageIndex| false| integer| Page number starting from `1`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-groups| array| Group stage data  
-> groupName| string| Group identifier (e.g., `A`)  
-> standings| array| Team standings for this group, sorted by rank  
->> rank| integer| Current rank within the group  
->> teamName| string| Team name  
->> played| integer| Matches played  
->> won| integer| Matches won  
->> drawn| integer| Matches drawn  
->> lost| integer| Matches lost  
->> goalsFor| integer| Goals scored  
->> goalsAgainst| integer| Goals conceded  
->> goalDifference| integer| Goal difference (goalsFor − goalsAgainst)  
->> points| integer| Total points  
-> matches| array| Matches in this group  
->> matchId| string| Match ID  
->> homeTeam| string| Home team name  
->> awayTeam| string| Away team name  
->> matchTime| integer| Match start timestamp (UTC milliseconds)  
->> status| integer| Match status. Refer to [predictionMatchStatus](/docs/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| Home team score (`-1` if not yet played)  
->> awayScore| integer| Away team score (`-1` if not yet played)  
->> eventId| string| Linked prediction event ID (if markets are available)  
+positions| array| Active position records  
+> positionId| string| Position ID  
+> tokenId| string| Outcome token ID  
+> eventId| string| Event ID  
+> outcomeName| string| Outcome label (e.g., `YES`, `NO`, or team name)  
+> shares| string| Total shares held  
+> cost| string| Total USDC cost of this position  
+> avgPrice| string| Average cost price per share  
+> currentPrice| string| Current market price per share (0–1)  
+> value| string| Current market value of the position (USDC)  
+> unrealizedPnl| string| Unrealized profit/loss (USDC)  
+> unrealizedPnlRate| string| Unrealized P&L as decimal ratio (e.g. `0.107` = 10.7%)  
+> createdAt| integer| Position open timestamp (UTC milliseconds)  
+> finished| boolean| Whether the associated event has ended  
+total| integer| Total matching records  
+totalAssetUsd| string| Total asset value across all positions (USD)  
   
 ### Request Example
 
@@ -56,7 +52,7 @@ groups| array| Group stage data
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/position-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -65,8 +61,8 @@ groups| array| Group stage data
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "limit": 20,  
+        "pageIndex": 1  
     }  
     
     
@@ -85,49 +81,25 @@ groups| array| Group stage data
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
+            "positions": [  
                 {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        },  
-                        {  
-                            "rank": 2,  
-                            "teamName": "Brazil",  
-                            "played": 3,  
-                            "won": 2,  
-                            "drawn": 0,  
-                            "lost": 1,  
-                            "goalsFor": 5,  
-                            "goalsAgainst": 3,  
-                            "goalDifference": 2,  
-                            "points": 6  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
+                    "positionId": "pos_001",  
+                    "tokenId": "token_yes_123",  
+                    "eventId": "event_123",  
+                    "outcomeName": "YES",  
+                    "shares": "153.84",  
+                    "cost": "100.00",  
+                    "avgPrice": "0.65",  
+                    "currentPrice": "0.72",  
+                    "value": "110.77",  
+                    "unrealizedPnl": "10.77",  
+                    "unrealizedPnlRate": "0.107",  
+                    "createdAt": 1704067200000,  
+                    "finished": false  
                 }  
-            ]  
+            ],  
+            "total": 1,  
+            "totalAssetUsd": "110.77"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  
@@ -135,47 +107,43 @@ groups| array| Group stage data
 
 ---
 
-# 獲取小組賽詳情
+# 獲取持倉列表
 
-查詢體育預測賽事的小組賽積分榜及賽程詳情，返回所有小組的球隊排名（積分、淨勝球、勝/平/負）及關聯比賽列表。
+查詢已登錄用戶的預測市場當前持倉。在下賣出委托前，可先調用此接口確認持倉是否存在。
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/position-list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-eventType| **true**|  integer| 體育賽事類型。參考 [predictionEventType](/docs/zh-TW/v5/enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）  
-groupName| false| string| 按小組名稱篩選（如 `A`、`B`……`L`，適用於 FIFA 2026）  
+tokenId| false| string| 按結果代幣 ID 篩選  
+eventId| false| string| 按賽事 ID 篩選  
+limit| false| integer| 每頁記錄數  
+pageIndex| false| integer| 頁碼，從 `1` 開始  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-groups| array| 小組賽數據  
-> groupName| string| 小組標識（如 `A`）  
-> standings| array| 該小組球隊積分榜，按排名升序  
->> rank| integer| 小組內當前排名  
->> teamName| string| 球隊名稱  
->> played| integer| 已參賽場數  
->> won| integer| 勝場數  
->> drawn| integer| 平場數  
->> lost| integer| 負場數  
->> goalsFor| integer| 進球數  
->> goalsAgainst| integer| 失球數  
->> goalDifference| integer| 淨勝球（進球數 − 失球數）  
->> points| integer| 總積分  
-> matches| array| 該小組的比賽列表  
->> matchId| string| 比賽 ID  
->> homeTeam| string| 主隊名稱  
->> awayTeam| string| 客隊名稱  
->> matchTime| integer| 比賽開始時間戳（UTC 毫秒）  
->> status| integer| 賽事狀態。參考 [predictionMatchStatus](/docs/zh-TW/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| 主隊得分（未開始為 `-1`）  
->> awayScore| integer| 客隊得分（未開始為 `-1`）  
->> eventId| string| 關聯的預測賽事 ID（如有開放市場）  
+positions| array| 當前持倉記錄  
+> positionId| string| 持倉 ID  
+> tokenId| string| 結果代幣 ID  
+> eventId| string| 賽事 ID  
+> outcomeName| string| 結果標籤（如 `YES`、`NO` 或隊伍名稱）  
+> shares| string| 持有的總份額  
+> cost| string| 本倉位的總 USDC 成本  
+> avgPrice| string| 每份額的平均成本價  
+> currentPrice| string| 代幣當前市場價格（0–1）  
+> value| string| 倉位當前市值（USDC）  
+> unrealizedPnl| string| 未實現盈虧（USDC）  
+> unrealizedPnlRate| string| 未實現盈虧比率（如 `0.107` = 10.7%）  
+> createdAt| integer| 開倉時間戳（UTC 毫秒）  
+> finished| boolean| 對應賽事是否已結束  
+total| integer| 符合條件的總記錄數  
+totalAssetUsd| string| 所有倉位的總資產價值（USD）  
   
 ### 請求示例
 
@@ -186,7 +154,7 @@ groups| array| 小組賽數據
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/position-list HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -195,8 +163,8 @@ groups| array| 小組賽數據
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "limit": 20,  
+        "pageIndex": 1  
     }  
     
     
@@ -215,37 +183,25 @@ groups| array| 小組賽數據
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
+            "positions": [  
                 {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
+                    "positionId": "pos_001",  
+                    "tokenId": "token_yes_123",  
+                    "eventId": "event_123",  
+                    "outcomeName": "YES",  
+                    "shares": "153.84",  
+                    "cost": "100.00",  
+                    "avgPrice": "0.65",  
+                    "currentPrice": "0.72",  
+                    "value": "110.77",  
+                    "unrealizedPnl": "10.77",  
+                    "unrealizedPnlRate": "0.107",  
+                    "createdAt": 1704067200000,  
+                    "finished": false  
                 }  
-            ]  
+            ],  
+            "total": 1,  
+            "totalAssetUsd": "110.77"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  

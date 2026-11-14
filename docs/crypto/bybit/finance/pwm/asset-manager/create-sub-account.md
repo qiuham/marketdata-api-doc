@@ -2,44 +2,46 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/pwm/asset-manager/create-sub-account
 api_type: REST
-updated_at: 2026-11-13 18:27:44.690079
+updated_at: 2026-11-13 19:23:25.420784
 ---
 
-# Manage Order
+# Create Fund Sub-Account
+
+info
+
+  1. Sub-account creation is asynchronous. On the first call, `status` returns `pending` and `subAccountUid` returns `"0"`. Once the backend finishes creating the sub-account, calling the same endpoint with the same parameters will return `"status": "Active"` and the new sub-account UID in the `subAccountUid` field. Alternatively, you can verify whether the sub-account was created successfully by calling [Get All Funds](/docs/v5/finance/pwm/asset-manager/all-funds), which returns the list of sub-account UIDs associated with the fund.
+  2. The fund must be in **Active (Running)** status before a sub-account can be created.
+  3. Each fund supports a maximum of **30 sub-accounts** (excluding destroyed ones).
+  4. If there is already a sub-account in `pending` status being created, no new sub-account can be created until the current one completes.
+
+
 
 ### HTTP Request
 
-POST`/v5/earn/pwm/asset-manager/manage-order`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-orderId| **true**|  string| Order ID. Must be in `Pending Review` status  
-action| **true**|  string| Action to perform: `approve` / `reject`  
-reqLinkId| **true**|  string| User-defined request ID, max 36 characters, used for idempotency  
+fundId| **true**|  string| Fund ID  
+reqLinkId| **true**|  string| User-defined request ID, used to prevent duplicate creation  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-orderId| string| Order ID  
 fundId| string| Fund ID  
-accountUid| string| Fund main account UID  
-orderStatus| string| Current order status: `PendingReview` / `Pass` / `Rejected` / `Processing` / `Success` / `Failed`. After approval or rejection, the execution status can be queried using the same `reqLinkId`  
-orderType| string| Order type: `Subscribe` / `Redeem`  
-action| string| Action performed: `approve` / `reject`  
-coin| string| Coin  
-amount| string| Order amount (base coin). Subscription orders only; empty for redemption orders  
-shares| string| Order shares. Redemption orders only; empty for subscription orders  
-updatedTime| string| Order update timestamp (milliseconds)  
+subAccountUid| string| UID of the newly created sub-account. Returns `"0"` while creation is in progress. Once status is `success`, the actual UID is returned when queried with the same `reqLinkId`  
+createdTime| string| Creation timestamp (milliseconds)  
+status| string| Creation status: `pending` (creating) / `success` (created) / `destroyed` (destroyed)  
   
 * * *
 
 ### Request Example
     
     
-    POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -48,9 +50,8 @@ updatedTime| string| Order update timestamp (milliseconds)
     Content-Type: application/json  
       
     {  
-        "orderId": "500002",  
-        "action": "approve",  
-        "reqLinkId": "manage-order-001"  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
     }  
     
 
@@ -61,56 +62,52 @@ updatedTime| string| Order update timestamp (milliseconds)
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "orderId": "500002",  
             "fundId": "100001",  
-            "accountUid": "800001",  
-            "orderStatus": "PendingReview",  
-            "orderType": "Subscribe",  
-            "action": "Approve",  
-            "coin": "BTC",  
-            "amount": "10.00000000",  
-            "shares": "",  
-            "updatedTime": "1700100000000"  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }
 
 ---
 
-# 處理申購/贖回訂單
+# 創建基金子賬戶
+
+信息
+
+  1. 子賬戶創建為異步操作。第一次調用時，`status` 返回 `pending`，`subAccountUid` 返回 `"0"`。後台創建完成後，使用相同參數再次調用該接口，將返回 `"status": "Active"`，新建子賬戶的 UID 會顯示在 `subAccountUid` 字段中。也可以通過 [查詢機構管轄的基金列表](/docs/zh-TW/v5/finance/pwm/asset-manager/all-funds) 查看基金下關聯的子賬戶列表，以確認子賬戶是否創建成功。
+  2. 基金必須為 **Active（運行中）** 狀態才能創建子賬戶。
+  3. 每個基金最多支持 **30 個子賬戶** （不包括已銷毀的）。
+  4. 如果當前有處於 `pending` 狀態的子賬戶正在創建，則不允許創建新的子賬戶，需等待當前創建完成後再操作。
+
+
 
 ### HTTP 請求
 
-POST`/v5/earn/pwm/asset-manager/manage-order`
+POST`/v5/earn/pwm/asset-manager/create-sub-account`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-orderId| **true**|  string| 訂單ID，須為 `Pending Review` 狀態  
-action| **true**|  string| 處理動作：`approve`（批准）/ `reject`（拒絕）  
-reqLinkId| **true**|  string| 用戶自定義請求ID，最長36字符，用於冪等  
+fundId| **true**|  string| 基金ID  
+reqLinkId| **true**|  string| 用戶自定義請求ID，用於防止重複調用創建  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-orderId| string| 訂單ID  
 fundId| string| 基金ID  
-accountUid| string| 基金主賬戶UID  
-orderStatus| string| 當前訂單狀態：`PendingReview`（待審核）/ `Pass`（審核通過）/ `Rejected`（審核拒絕）/ `Processing`（處理中）/ `Success`（成功）/ `Failed`（失敗）。審批通過或拒絕後可以通過同一個 `reqLinkId` 查詢當前訂單的執行狀態  
-orderType| string| 訂單類型：`Subscribe`（申購）/ `Redeem`（贖回）  
-action| string| 執行的處理動作：`approve` / `reject`  
-coin| string| 幣種  
-amount| string| 訂單金額（本位幣），僅申購訂單有值，贖回訂單為空  
-shares| string| 訂單份額，僅贖回訂單有值，申購訂單為空  
-updatedTime| string| 訂單更新時間戳（毫秒）  
+subAccountUid| string| 新創建的子賬戶UID。創建中時返回 `"0"`，創建成功後使用同一個 `reqLinkId` 請求將返回實際的非零UID  
+createdTime| string| 創建時間戳（毫秒）  
+status| string| 創建狀態：`pending`（創建中）/ `success`（創建成功）/ `destroyed`（已銷毀）  
   
 * * *
 
 ### 請求示例
     
     
-    POST /v5/earn/pwm/asset-manager/manage-order HTTP/1.1  
+    POST /v5/earn/pwm/asset-manager/create-sub-account HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -119,9 +116,8 @@ updatedTime| string| 訂單更新時間戳（毫秒）
     Content-Type: application/json  
       
     {  
-        "orderId": "500002",  
-        "action": "approve",  
-        "reqLinkId": "manage-order-001"  
+        "fundId": "100001",  
+        "reqLinkId": "create-sub-001"  
     }  
     
 
@@ -132,15 +128,9 @@ updatedTime| string| 訂單更新時間戳（毫秒）
         "retCode": 0,  
         "retMsg": "success",  
         "result": {  
-            "orderId": "500002",  
             "fundId": "100001",  
-            "accountUid": "800001",  
-            "orderStatus": "PendingReview",  
-            "orderType": "Subscribe",  
-            "action": "Approve",  
-            "coin": "BTC",  
-            "amount": "10.00000000",  
-            "shares": "",  
-            "updatedTime": "1700100000000"  
+            "subAccountUid": "0",  
+            "createdTime": "1700600000000",  
+            "status": "pending"  
         }  
     }

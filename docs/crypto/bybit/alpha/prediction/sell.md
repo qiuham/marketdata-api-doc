@@ -2,50 +2,45 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/sell
 api_type: REST
-updated_at: 2026-11-13 18:26:51.200860
+updated_at: 2026-11-13 19:21:14.298352
 ---
 
-# Get Sports Group Stage Detail
+# Execute Sell
 
-Query the group stage standings and match schedule detail for a sports prediction event. Returns all groups with team standings (points, goal difference, W/D/L) and associated matches.
+Execute a sell order for prediction outcome token shares, exchanging shares for USDC.
+
+info
+
+  * Must call [Get Engine Status](/docs/v5/alpha/prediction/engine-status) first to verify the engine is available
+  * Must call [Get Position List](/docs/v5/alpha/prediction/position-list) to confirm the position exists and check available `shares`
+  * Must call [Get Order Estimate](/docs/v5/alpha/prediction/order-estimate) to preview the sell order
+  * Must display the estimate to the user and obtain explicit confirmation before calling this endpoint
+  * Phase 1 supports `orderType=1` (FOK) only — orders that cannot be fully filled are cancelled
+  * `size` is in shares, not USDC
+  * A `200` response is an acknowledgment only — use [Get Order List](/docs/v5/alpha/prediction/order-list) to check the final fill status
+
+
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/sell`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-eventType| **true**|  integer| Sports event type. Refer to [predictionEventType](/docs/v5/enum#predictioneventtype-prediction-market--event-type). Phase 1: `1` (FIFA_2026)  
-groupName| false| string| Filter by group name (e.g., `A`, `B`, … `L` for FIFA 2026)  
+tokenId| **true**|  string| Outcome token ID to sell (from [Get Position List](/docs/v5/alpha/prediction/position-list))  
+size| **true**|  string| Number of shares to sell (positive decimal as string)  
+orderType| **true**|  integer| Order type. Refer to [predictionOrderType](/docs/v5/enum#predictionordertype-prediction-market--order-type). Phase 1: `1` (FOK) only  
+slippage| **true**|  string| Maximum acceptable price slippage as decimal. `0.05` = 5% tolerance  
+eventId| **true**|  string| Event ID associated with the token  
+toTokenCode| false| string| Destination token code. Phase 1 fixed to `USDC`  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-groups| array| Group stage data  
-> groupName| string| Group identifier (e.g., `A`)  
-> standings| array| Team standings for this group, sorted by rank  
->> rank| integer| Current rank within the group  
->> teamName| string| Team name  
->> played| integer| Matches played  
->> won| integer| Matches won  
->> drawn| integer| Matches drawn  
->> lost| integer| Matches lost  
->> goalsFor| integer| Goals scored  
->> goalsAgainst| integer| Goals conceded  
->> goalDifference| integer| Goal difference (goalsFor − goalsAgainst)  
->> points| integer| Total points  
-> matches| array| Matches in this group  
->> matchId| string| Match ID  
->> homeTeam| string| Home team name  
->> awayTeam| string| Away team name  
->> matchTime| integer| Match start timestamp (UTC milliseconds)  
->> status| integer| Match status. Refer to [predictionMatchStatus](/docs/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| Home team score (`-1` if not yet played)  
->> awayScore| integer| Away team score (`-1` if not yet played)  
->> eventId| string| Linked prediction event ID (if markets are available)  
+orderNo| string| Order number. Use with [Get Order List](/docs/v5/alpha/prediction/order-list) to check fill status  
   
 ### Request Example
 
@@ -56,7 +51,7 @@ groups| array| Group stage data
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/sell HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -65,8 +60,12 @@ groups| array| Group stage data
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "tokenId": "token_yes_123",  
+        "size": "50",  
+        "orderType": 1,  
+        "slippage": "0.05",  
+        "eventId": "event_123",  
+        "toTokenCode": "USDC"  
     }  
     
     
@@ -85,49 +84,7 @@ groups| array| Group stage data
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
-                {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        },  
-                        {  
-                            "rank": 2,  
-                            "teamName": "Brazil",  
-                            "played": 3,  
-                            "won": 2,  
-                            "drawn": 0,  
-                            "lost": 1,  
-                            "goalsFor": 5,  
-                            "goalsAgainst": 3,  
-                            "goalDifference": 2,  
-                            "points": 6  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "orderNo": "ord_sell_20240101_001"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  
@@ -135,47 +92,42 @@ groups| array| Group stage data
 
 ---
 
-# 獲取小組賽詳情
+# 執行賣出
 
-查詢體育預測賽事的小組賽積分榜及賽程詳情，返回所有小組的球隊排名（積分、淨勝球、勝/平/負）及關聯比賽列表。
+執行預測市場結果代幣份額的賣出委托，將份額兌換為 USDC。
+
+信息
+
+  * 必須先調用 [獲取撮合引擎狀態](/docs/zh-TW/v5/alpha/prediction/engine-status) 確認引擎可用
+  * 必須先調用 [獲取持倉列表](/docs/zh-TW/v5/alpha/prediction/position-list) 確認持倉存在並查看可用 `shares`
+  * 必須先調用 [獲取委托預估](/docs/zh-TW/v5/alpha/prediction/order-estimate) 預覽賣出委托
+  * 必須向用戶展示預估結果並取得明確確認後，方可調用本接口
+  * 第一階段僅支持 `orderType=1`（FOK）——無法完全成交的委托將被取消
+  * `size` 為份額數量，非 USDC 金額
+  * `200` 響應僅表示委托已受理，請調用 [獲取委托記錄](/docs/zh-TW/v5/alpha/prediction/order-list) 查詢最終成交狀態
+
+
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/sports/group-stage-detail`
+POST`/v5/alpha/prediction/sell`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-eventType| **true**|  integer| 體育賽事類型。參考 [predictionEventType](/docs/zh-TW/v5/enum#predictioneventtype-prediction-market--event-type)。第一階段：`1`（FIFA_2026）  
-groupName| false| string| 按小組名稱篩選（如 `A`、`B`……`L`，適用於 FIFA 2026）  
+tokenId| **true**|  string| 要賣出的結果代幣 ID（從 [獲取持倉列表](/docs/zh-TW/v5/alpha/prediction/position-list) 獲取）  
+size| **true**|  string| 賣出的份額數量（正數字符串）  
+orderType| **true**|  integer| 委托類型。參考 [predictionOrderType](/docs/zh-TW/v5/enum#predictionordertype-prediction-market--order-type)。第一階段：`1`（FOK）  
+slippage| **true**|  string| 最大可接受滑點（小數）。`0.05` = 5% 容忍度  
+eventId| **true**|  string| 代幣對應的賽事 ID  
+toTokenCode| false| string| 目標代幣代碼，第一階段固定為 `USDC`  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-groups| array| 小組賽數據  
-> groupName| string| 小組標識（如 `A`）  
-> standings| array| 該小組球隊積分榜，按排名升序  
->> rank| integer| 小組內當前排名  
->> teamName| string| 球隊名稱  
->> played| integer| 已參賽場數  
->> won| integer| 勝場數  
->> drawn| integer| 平場數  
->> lost| integer| 負場數  
->> goalsFor| integer| 進球數  
->> goalsAgainst| integer| 失球數  
->> goalDifference| integer| 淨勝球（進球數 − 失球數）  
->> points| integer| 總積分  
-> matches| array| 該小組的比賽列表  
->> matchId| string| 比賽 ID  
->> homeTeam| string| 主隊名稱  
->> awayTeam| string| 客隊名稱  
->> matchTime| integer| 比賽開始時間戳（UTC 毫秒）  
->> status| integer| 賽事狀態。參考 [predictionMatchStatus](/docs/zh-TW/v5/enum#predictionmatchstatus-prediction-market--match-status)  
->> homeScore| integer| 主隊得分（未開始為 `-1`）  
->> awayScore| integer| 客隊得分（未開始為 `-1`）  
->> eventId| string| 關聯的預測賽事 ID（如有開放市場）  
+orderNo| string| 委托號。請調用 [獲取委托記錄](/docs/zh-TW/v5/alpha/prediction/order-list) 查詢成交狀態  
   
 ### 請求示例
 
@@ -186,7 +138,7 @@ groups| array| 小組賽數據
 
     
     
-    POST /v5/alpha/prediction/sports/group-stage-detail HTTP/1.1  
+    POST /v5/alpha/prediction/sell HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -195,8 +147,12 @@ groups| array| 小組賽數據
     Content-Type: application/json  
       
     {  
-        "eventType": 1,  
-        "groupName": "A"  
+        "tokenId": "token_yes_123",  
+        "size": "50",  
+        "orderType": 1,  
+        "slippage": "0.05",  
+        "eventId": "event_123",  
+        "toTokenCode": "USDC"  
     }  
     
     
@@ -215,37 +171,7 @@ groups| array| 小組賽數據
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "groups": [  
-                {  
-                    "groupName": "A",  
-                    "standings": [  
-                        {  
-                            "rank": 1,  
-                            "teamName": "Argentina",  
-                            "played": 3,  
-                            "won": 3,  
-                            "drawn": 0,  
-                            "lost": 0,  
-                            "goalsFor": 7,  
-                            "goalsAgainst": 1,  
-                            "goalDifference": 6,  
-                            "points": 9  
-                        }  
-                    ],  
-                    "matches": [  
-                        {  
-                            "matchId": "match_001",  
-                            "homeTeam": "Argentina",  
-                            "awayTeam": "Brazil",  
-                            "matchTime": 1750000000000,  
-                            "status": 3,  
-                            "homeScore": 2,  
-                            "awayScore": 0,  
-                            "eventId": "event_123"  
-                        }  
-                    ]  
-                }  
-            ]  
+            "orderNo": "ord_sell_20240101_001"  
         },  
         "retExtInfo": {},  
         "time": 1704067200000  

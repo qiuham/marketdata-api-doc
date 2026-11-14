@@ -2,38 +2,38 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/asset-detail
 api_type: Trading
-updated_at: 2026-11-13 18:26:52.469294
+updated_at: 2026-11-13 19:21:17.786079
 ---
 
-# Get Asset List
+# Get Asset Detail
 
-Query user's on-chain token portfolio including holdings, market value, and PnL.
+Query detailed holding information for a specific on-chain token, including PnL and cost basis.
 
 info
 
-  * Only returns tokens with non-zero balance; zero-balance tokens are filtered out
-  * Assets are sorted by USD value descending
-  * Use `tradeFlag` to determine if a token can be sold via [Execute Redeem](/docs/v5/alpha/trade/trade-redeem)
-  * Use `tokenCode` from the response for quote and execution requests
-  * Use `chainCode` \+ `tokenAddress` to call [Get Token Details](/docs/v5/alpha/trade/biz-token-details) for more info
+  * Token is identified by `chainCode` \+ `tokenAddress` — get these from [Get Asset List](/docs/v5/alpha/trade/asset-list) or [Get Biz Token List](/docs/v5/alpha/trade/biz-token-list)
+  * Response wraps the asset in an `assetList` array with 0 or 1 element; an empty array means the user does not hold this token
+  * Use `tradeFlag` to determine if the token can be sold via [Execute Redeem](/docs/v5/alpha/trade/trade-redeem)
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/trade/asset-list`
+POST`/v5/alpha/trade/asset-detail`
 
 ### Request Parameters
 
-None
-
+Parameter| Required| Type| Comments  
+---|---|---|---  
+chainCode| **true**|  string| Blockchain code, e.g. `ETH`, `SOL`, `BSC`  
+tokenAddress| **true**|  string| Token contract address on the specified chain  
+  
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-totalAssetUsd| string| Total portfolio value in USD  
-assetList| array| Token holdings list  
-> chainCode| string| Blockchain code, e.g. `ETH`, `SOL`, `BSC`  
+assetList| array| Asset details. Contains 0 or 1 element. Empty if user does not hold this token  
+> chainCode| string| Blockchain code  
 > chainIconUrl| string| Chain icon URL  
 > tokenAddress| string| Token contract address  
 > tokenCode| string| Token code in `DEX_<id>` format. Use this in quote and execution requests  
@@ -44,7 +44,7 @@ assetList| array| Token holdings list
 > tokenAmount| string| Holding quantity  
 > tokenAmountUsd| string| Holding value in USD  
 > tradeFlag| integer| Whether tradable. `0`: Not tradable, `1`: Tradable  
-> pnl| string| Unrealized profit/loss in USD. Positive = profit. Null if no cost basis available  
+> pnl| string| Unrealized PnL in USD. Positive = profit. Null if no cost basis available  
 > pnlRatio| string| PnL ratio as decimal, e.g. `0.15` = +15%. Null if no cost basis available  
 > costPrice| string| Average cost price. Null if no cost basis available  
 > lastPrice| string| Current market price  
@@ -63,7 +63,7 @@ assetList| array| Token holdings list
 
     
     
-    POST /v5/alpha/trade/asset-list HTTP/1.1  
+    POST /v5/alpha/trade/asset-detail HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -71,7 +71,10 @@ assetList| array| Token holdings list
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {}  
+    {  
+        "chainCode": "ETH",  
+        "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933"  
+    }  
     
     
     
@@ -89,12 +92,11 @@ assetList| array| Token holdings list
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalAssetUsd": "1250.50",  
             "assetList": [  
                 {  
-                    "chainCode": "SOL",  
-                    "chainIconUrl": "https://example.com/sol.png",  
-                    "tokenAddress": "0xabc...",  
+                    "chainCode": "ETH",  
+                    "chainIconUrl": "https://example.com/eth.png",  
+                    "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",  
                     "tokenCode": "DEX_123",  
                     "tokenSymbol": "PEPE",  
                     "tokenDecimals": 18,  
@@ -118,35 +120,35 @@ assetList| array| Token holdings list
 
 ---
 
-# 查詢資產列表
+# 查詢資產詳情
 
-查詢用戶的鏈上代幣持倉，包含持倉數量、市值及盈虧信息。
+查詢指定鏈上代幣的持倉詳情，包含盈虧及成本數據。
 
 信息
 
-  * 僅返回餘額不為零的代幣，零餘額代幣不在返回列表中
-  * 資產按 USD 價值倒序排列
+  * 代幣通過 `chainCode` \+ `tokenAddress` 識別 — 可從 [查詢資產列表](/docs/zh-TW/v5/alpha/trade/asset-list) 或 [獲取業務代幣列表](/docs/zh-TW/v5/alpha/trade/biz-token-list) 獲取
+  * 響應中 `assetList` 數組包含 0 或 1 個元素；空數組表示用戶未持有該代幣
   * 使用 `tradeFlag` 判斷代幣是否可通過 [執行贖回](/docs/zh-TW/v5/alpha/trade/trade-redeem) 賣出
-  * 使用返回的 `tokenCode` 用於報價及執行接口
-  * 使用 `chainCode` \+ `tokenAddress` 調用 [獲取代幣詳情](/docs/zh-TW/v5/alpha/trade/biz-token-details) 獲取更多信息
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/trade/asset-list`
+POST`/v5/alpha/trade/asset-detail`
 
 ### 請求參數
 
-無
-
+參數| 是否必需| 類型| 說明  
+---|---|---|---  
+chainCode| **true**|  string| 區塊鏈代碼，如 `ETH`、`SOL`、`BSC`  
+tokenAddress| **true**|  string| 指定鏈上的代幣合約地址  
+  
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-totalAssetUsd| string| 持倉總市值（USD）  
-assetList| array| 代幣持倉列表  
-> chainCode| string| 區塊鏈代碼，如 `ETH`、`SOL`、`BSC`  
+assetList| array| 資產詳情，包含 0 或 1 個元素。空數組表示用戶未持有該代幣  
+> chainCode| string| 區塊鏈代碼  
 > chainIconUrl| string| 鏈圖標 URL  
 > tokenAddress| string| 代幣合約地址  
 > tokenCode| string| `DEX_<id>` 格式的代幣代碼，用於報價及執行接口  
@@ -176,7 +178,7 @@ assetList| array| 代幣持倉列表
 
     
     
-    POST /v5/alpha/trade/asset-list HTTP/1.1  
+    POST /v5/alpha/trade/asset-detail HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -184,7 +186,10 @@ assetList| array| 代幣持倉列表
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
       
-    {}  
+    {  
+        "chainCode": "ETH",  
+        "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933"  
+    }  
     
     
     
@@ -202,12 +207,11 @@ assetList| array| 代幣持倉列表
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "totalAssetUsd": "1250.50",  
             "assetList": [  
                 {  
-                    "chainCode": "SOL",  
-                    "chainIconUrl": "https://example.com/sol.png",  
-                    "tokenAddress": "0xabc...",  
+                    "chainCode": "ETH",  
+                    "chainIconUrl": "https://example.com/eth.png",  
+                    "tokenAddress": "0x6982508145454ce325ddbe47a25d4ec3d2311933",  
                     "tokenCode": "DEX_123",  
                     "tokenSymbol": "PEPE",  
                     "tokenDecimals": 18,  

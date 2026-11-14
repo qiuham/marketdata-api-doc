@@ -2,43 +2,51 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/stake
 api_type: REST
-updated_at: 2026-11-13 18:26:48.463432
+updated_at: 2026-11-13 19:21:07.675589
 ---
 
-# Get Order Book
+# Execute LP Stake
 
-Query the full order book snapshot (bid/ask depth) for prediction outcome tokens. Useful for estimating price impact before placing a large order.
+Stake tokens into a liquidity pool to provide liquidity and earn rewards.
 
 info
 
-  * Maximum 20 token IDs per request
-  * Returns all price levels with available quantity
-  * For current best price only, use [Get Token Price](/docs/v5/alpha/prediction/token-price) instead
+  * Must call [Get Pay Token List](/docs/v5/alpha/trade/pay-token-list) to verify available balance before staking
+  * Must display stake details (amount, fees, expected APY) to user and obtain explicit confirmation before calling this endpoint
+  * `200` response is only an ACK — use [Get Order List](/docs/v5/alpha/trade/order-list) to check final position status
+  * Supports new position creation (`positionId=0`) or adding liquidity to an existing position
+  * Either use `rangeLower`/`rangeUpper` OR `priceLower`/`priceUpper`, not both
+  * Position activation typically takes 10–60 seconds for on-chain confirmation
+  * **Rate Limit:** 1 req/s (per user), 2000 req/s (global)
 
 
 
 ### HTTP Request
 
-POST`/v5/alpha/prediction/order-book`
+POST`/v5/alpha/lp/stake`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-tokenIds| **true**|  array| List of outcome token IDs. Maximum 20  
+positionId| **true**|  integer| Position ID. Use `0` to create a new position, or provide an existing position ID to add liquidity  
+poolAddress| **true**|  string| Pool contract address  
+payTokenAmount| **true**|  string| Payment token amount (positive decimal as string)  
+payTokenCode| **true**|  string| Payment token code, e.g. `CEX_1` for USDT  
+rangeUpper| false| string| Range order upper limit. Use this OR `priceUpper`, not both  
+rangeLower| false| string| Range order lower limit. Use this OR `priceLower`, not both  
+priceUpper| false| string| Price order upper limit (price priority). Use this OR `rangeUpper`, not both  
+priceLower| false| string| Price order lower limit (price priority). Use this OR `rangeLower`, not both  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-tokenId| string| Outcome token ID  
-bids| array| Buy orders sorted by price descending  
-> price| string| Bid price  
-> size| string| Available quantity (shares)  
-asks| array| Sell orders sorted by price ascending  
-> price| string| Ask price  
-> size| string| Available quantity (shares)  
+positionId| integer| Position ID (new or existing)  
+orderNo| string| Order number for this stake operation  
   
+* * *
+
 ### Request Example
 
   * HTTP
@@ -48,7 +56,7 @@ asks| array| Sell orders sorted by price ascending
 
     
     
-    POST /v5/alpha/prediction/order-book HTTP/1.1  
+    POST /v5/alpha/lp/stake HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -57,7 +65,12 @@ asks| array| Sell orders sorted by price ascending
     Content-Type: application/json  
       
     {  
-        "tokenIds": ["token_yes_123"]  
+        "positionId": 0,  
+        "poolAddress": "0x1234567890abcdef",  
+        "payTokenAmount": "1000",  
+        "payTokenCode": "CEX_1",  
+        "rangeUpper": "2000",  
+        "rangeLower": "1800"  
     }  
     
     
@@ -75,58 +88,58 @@ asks| array| Sell orders sorted by price ascending
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "tokenId": "token_yes_123",  
-                "bids": [  
-                    {"price": "0.64", "size": "1000"},  
-                    {"price": "0.63", "size": "2500"}  
-                ],  
-                "asks": [  
-                    {"price": "0.66", "size": "800"},  
-                    {"price": "0.67", "size": "1500"}  
-                ]  
-            }  
-        ],  
+        "result": {  
+            "positionId": 12345,  
+            "orderNo": "LP_ORD_20240101_001"  
+        },  
         "retExtInfo": {},  
         "time": 1704067200000  
     }
 
 ---
 
-# 獲取盤口
+# 執行 LP 質押
 
-查詢預測市場結果代幣的完整盤口快照（買賣深度）。適合在下大單前預估價格衝擊。如僅需當前最優價格，請使用 [獲取代幣價格](/docs/zh-TW/v5/alpha/prediction/token-price)。
+向流動性礦池質押代幣以提供流動性並賺取收益。
 
 信息
 
-  * 每次請求最多 20 個代幣 ID
-  * 返回所有可用數量的價格檔位
+  * 質押前必須先調用 [查詢支付代幣列表](/docs/zh-TW/v5/alpha/trade/pay-token-list) 確認可用餘額
+  * 必須向用戶展示質押詳情（金額、費用、預期 APY）並獲得明確確認後，才能調用此接口
+  * `200` 響應僅為確認回執 — 請使用 [查詢訂單列表](/docs/zh-TW/v5/alpha/trade/order-list) 確認最終倉位狀態
+  * 支持新建倉位（`positionId=0`）或向已有倉位追加流動性
+  * `rangeLower`/`rangeUpper` 和 `priceLower`/`priceUpper` 二選一，不可同時使用
+  * 倉位激活通常需要 10–60 秒的鏈上確認時間
+  * **頻率限制：** 1 次/秒（用戶），2000 次/秒（全局）
 
 
 
 ### HTTP 請求
 
-POST`/v5/alpha/prediction/order-book`
+POST`/v5/alpha/lp/stake`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-tokenIds| **true**|  array| 結果代幣 ID 列表，最多 20 個  
+positionId| **true**|  integer| 倉位ID。傳 `0` 新建倉位，傳已有倉位ID則追加流動性  
+poolAddress| **true**|  string| 礦池合約地址  
+payTokenAmount| **true**|  string| 支付代幣數量（正數小數字符串）  
+payTokenCode| **true**|  string| 支付代幣代碼，如 `CEX_1` 代表 USDT  
+rangeUpper| false| string| 範圍訂單上限。與 `priceUpper` 二選一，不可同時使用  
+rangeLower| false| string| 範圍訂單下限。與 `priceLower` 二選一，不可同時使用  
+priceUpper| false| string| 價格訂單上限（價格優先）。與 `rangeUpper` 二選一，不可同時使用  
+priceLower| false| string| 價格訂單下限（價格優先）。與 `rangeLower` 二選一，不可同時使用  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-tokenId| string| 結果代幣 ID  
-bids| array| 買單，按價格降序排列  
-> price| string| 買入價格  
-> size| string| 可用數量（份額）  
-asks| array| 賣單，按價格升序排列  
-> price| string| 賣出價格  
-> size| string| 可用數量（份額）  
+positionId| integer| 倉位ID（新建或已有）  
+orderNo| string| 本次質押操作的訂單號  
   
+* * *
+
 ### 請求示例
 
   * HTTP
@@ -136,7 +149,7 @@ asks| array| 賣單，按價格升序排列
 
     
     
-    POST /v5/alpha/prediction/order-book HTTP/1.1  
+    POST /v5/alpha/lp/stake HTTP/1.1  
     Host: api.bybit.com  
     X-BAPI-SIGN: XXXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
@@ -145,7 +158,12 @@ asks| array| 賣單，按價格升序排列
     Content-Type: application/json  
       
     {  
-        "tokenIds": ["token_yes_123"]  
+        "positionId": 0,  
+        "poolAddress": "0x1234567890abcdef",  
+        "payTokenAmount": "1000",  
+        "payTokenCode": "CEX_1",  
+        "rangeUpper": "2000",  
+        "rangeLower": "1800"  
     }  
     
     
@@ -163,19 +181,10 @@ asks| array| 賣單，按價格升序排列
     {  
         "retCode": 0,  
         "retMsg": "OK",  
-        "result": [  
-            {  
-                "tokenId": "token_yes_123",  
-                "bids": [  
-                    {"price": "0.64", "size": "1000"},  
-                    {"price": "0.63", "size": "2500"}  
-                ],  
-                "asks": [  
-                    {"price": "0.66", "size": "800"},  
-                    {"price": "0.67", "size": "1500"}  
-                ]  
-            }  
-        ],  
+        "result": {  
+            "positionId": 12345,  
+            "orderNo": "LP_ORD_20240101_001"  
+        },  
         "retExtInfo": {},  
         "time": 1704067200000  
     }

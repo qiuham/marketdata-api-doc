@@ -2,50 +2,54 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/dual-asset/product-quote
 api_type: REST
-updated_at: 2026-11-13 18:27:31.921697
+updated_at: 2026-11-13 19:22:52.857310
 ---
 
-# Claim Interest
+# Get Product Quote
 
 info
 
-  * Need authentication. **Up to 5 requests** per second per UID. Requires Earn permission on the API key.
-  * Claims all available yield for the specified product. Pass `productId=-1` to claim yield across all your liquidity mining positions at once.
-  * Yield is credited to your default account. Account type cannot be specified.
-
-
+Does not need authentication. **Up to 50 requests** per second per IP.
 
 ### HTTP Request
 
-POST`/v5/earn/liquidity-mining/claim-interest`
+GET `/v5/earn/advance/product-extra-info`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-productId| **true**|  string| Product ID. Pass `-1` to claim interest from all positions at once  
+productId| **true**|  string| Product ID  
+[category](/docs/v5/enum#advanced-earn-category)| **true**|  string| Product category,`DualAssets`  
   
 ### Response Parameters
 
-None
-
-* * *
-
+Parameter| Type| Comments  
+---|---|---  
+[category](/docs/v5/enum#advanced-earn-category)| string| `DualAssets`  
+list| array| Object  
+> productId| string| Product ID  
+> currentPrice| string| Current market price  
+> buyLowPrice| array| List of available prices for Buy Low direction  
+>> selectPrice| string| Optional target price  
+>> apyE8| string| Annual Percentage Yield (e8 precision, i.e. APY × 10^8)  
+>> maxInvestmentAmount| string| Maximum investment amount at this price  
+>> expiredAt| string| The expiry time,Unix timestamp in ms  
+> sellHighPrice| array| List of available prices for Sell High direction  
+>> selectPrice| string| Optional target price  
+>> apyE8| string| Annual Percentage Yield (e8 precision)  
+>> maxInvestmentAmount| string| Maximum investment amount at this price  
+>> expiredAt| string| The expiry time,Unix timestamp in ms  
+  
 ### Request Example
+
+  * HTTP
+
+
     
     
-    POST /v5/earn/liquidity-mining/claim-interest HTTP/1.1  
+    GET /v5/earn/advance/product-extra-info?category=DualAssets&productId=36340 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-         
-        "productId": "-1"  
-    }  
     
 
 ### Response Example
@@ -54,54 +58,130 @@ None
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "category": "DualAssets",  
+            "list": [  
+                {  
+                    "productId": "36340",  
+                    "currentPrice": "1.5275",  
+                    "buyLowPrice": [  
+                        {  
+                            "selectPrice": "1.52",  
+                            "apyE8": "810810000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.51",  
+                            "apyE8": "770310000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.5",  
+                            "apyE8": "729810000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.4",  
+                            "apyE8": "33927427",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.45",  
+                            "apyE8": "47326344",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.527398",  
+                            "apyE8": "259263094",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814770000"  
+                        }  
+                    ],  
+                    "sellHighPrice": [  
+                        {  
+                            "selectPrice": "1.54",  
+                            "apyE8": "729810000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.55",  
+                            "apyE8": "49979611",  
+                            "maxInvestmentAmount": "10480",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.52",  
+                            "apyE8": "810810000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.53",  
+                            "apyE8": "770310000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        }  
+                    ]  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1773814753684  
     }
 
 ---
 
-# 領取利息
+# 查詢產品報價
 
 信息
 
-  * 需要身份驗證。每個 UID 每秒**最多 5 次請求** 。API 金鑰需要具備 Earn（理財）權限。
-  * 領取指定產品的所有可用收益。傳入 `productId=-1` 可一次性領取所有流動性挖礦持倉的收益。
-  * 收益將存入預設帳戶，無法指定帳戶類型。
-
-
+無需身份驗證。每個 IP 每秒**最多 50 次請求** 。
 
 ### HTTP 請求
 
-POST`/v5/earn/liquidity-mining/claim-interest`
+GET `/v5/earn/advance/product-extra-info`
 
 ### 請求參數
 
 參數| 必填| 類型| 說明  
 ---|---|---|---  
-productId| **true**|  string| 產品 ID。傳入 `-1` 可一次性領取所有持倉的利息  
+productId| **true**|  string| 產品 ID  
+[category](/docs/zh-TW/v5/enum#advanced-earn-category)| **true**|  string| 產品類別，`DualAssets`  
   
 ### 響應參數
 
-無
-
-* * *
-
+參數| 類型| 說明  
+---|---|---  
+[category](/docs/zh-TW/v5/enum#advanced-earn-category)| string| `DualAssets`  
+list| array| 列表  
+> productId| string| 產品 ID  
+> currentPrice| string| 當前市場價格  
+> buyLowPrice| array| 低買 (Buy Low) 方向的可用價格列表  
+>> selectPrice| string| 可選目標價格（掛鉤價）  
+>> apyE8| string| 年化收益率（e8 精度，即 APY × 10^8）  
+>> maxInvestmentAmount| string| 該價格下的最大投資額度  
+>> expiredAt| string| 過期時間，毫秒級 Unix 時間戳  
+> sellHighPrice| array| 高賣 (Sell High) 方向的可用價格列表  
+>> selectPrice| string| 可選目標價格（掛鉤價）  
+>> apyE8| string| 年化收益率（e8 精度）  
+>> maxInvestmentAmount| string| 該價格下的最大投資額度  
+>> expiredAt| string| 過期時間，毫秒級 Unix 時間戳  
+  
 ### 請求示例
+
+  * HTTP
+
+
     
     
-    POST /v5/earn/liquidity-mining/claim-interest HTTP/1.1  
+    GET /v5/earn/advance/product-extra-info?category=DualAssets&productId=36340 HTTP/1.1  
     Host: api-testnet.bybit.com  
-    X-BAPI-SIGN: XXXXX  
-    X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1741651200000  
-    X-BAPI-RECV-WINDOW: 5000  
-    Content-Type: application/json  
-      
-    {  
-         
-        "productId": "-1"  
-    }  
     
 
 ### 響應示例
@@ -110,7 +190,79 @@ productId| **true**|  string| 產品 ID。傳入 `-1` 可一次性領取所有�
     {  
         "retCode": 0,  
         "retMsg": "",  
-        "result": {},  
+        "result": {  
+            "category": "DualAssets",  
+            "list": [  
+                {  
+                    "productId": "36340",  
+                    "currentPrice": "1.5275",  
+                    "buyLowPrice": [  
+                        {  
+                            "selectPrice": "1.52",  
+                            "apyE8": "810810000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.51",  
+                            "apyE8": "770310000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.5",  
+                            "apyE8": "729810000",  
+                            "maxInvestmentAmount": "2000",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.4",  
+                            "apyE8": "33927427",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.45",  
+                            "apyE8": "47326344",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.527398",  
+                            "apyE8": "259263094",  
+                            "maxInvestmentAmount": "15982.7136",  
+                            "expiredAt": "1773814770000"  
+                        }  
+                    ],  
+                    "sellHighPrice": [  
+                        {  
+                            "selectPrice": "1.54",  
+                            "apyE8": "729810000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.55",  
+                            "apyE8": "49979611",  
+                            "maxInvestmentAmount": "10480",  
+                            "expiredAt": "1773814764000"  
+                        },  
+                        {  
+                            "selectPrice": "1.52",  
+                            "apyE8": "810810000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        },  
+                        {  
+                            "selectPrice": "1.53",  
+                            "apyE8": "770310000",  
+                            "maxInvestmentAmount": "1309.92",  
+                            "expiredAt": "1773814863140"  
+                        }  
+                    ]  
+                }  
+            ]  
+        },  
         "retExtInfo": {},  
-        "time": 1741651200000  
+        "time": 1773814753684  
     }

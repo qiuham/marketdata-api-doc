@@ -2,48 +2,39 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/account-info
 api_type: REST
-updated_at: 2026-11-13 18:26:32.526912
+updated_at: 2026-11-13 19:20:36.534498
 ---
 
-# Get Lending Coin Info
-
-Get the basic information of lending coins
-
-info
-
-All `v5/lending` APIs need **SPOT** permission.
+# Get Lending Account Info
 
 ### HTTP Request
 
-GET`/v5/lending/info`
+GET`/v5/lending/account`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-coin| false| string| Coin name. Return all currencies by default  
+coin| **true**|  string| Coin name  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-list| array| Object  
-> coin| string| Coin name  
-> maxRedeemQty| string| The maximum redeemable qty per day (measured from 0 - 24 UTC)  
-> minPurchaseQty| string| The minimum qty that can be deposited per request  
-> precision| string| Deposit quantity accuracy  
-> rate| string| Annualized interest rate. e.g. 0.0002 means 0.02%  
-> loanToPoolRatio| string| Capital utilization rate. e.g. 0.0004 means 0.04%  
-> actualApy| string| The actual annualized interest rate  
+coin| string| Coin name  
+principalInterest| string| User Redeemable interest  
+principalQty| string| Leftover quantity you can redeem for today (measured from 0 - 24 UTC), formula: min(the rest amount of principle, the amount that the user can redeem on the day)  
+principalTotal| string| Total amount redeemable by user  
+quantity| string| Current deposit quantity  
   
 ### Request Example
     
     
-    GET /v5/lending/info?coin=ETH HTTP/1.1  
+    GET /v5/lending/account?coin=ETH HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682045949295  
+    X-BAPI-TIMESTAMP: 1682049556563  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -54,63 +45,48 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
-                {  
-                    "actualApy": "0.003688421873941958",  
-                    "coin": "ETH",  
-                    "loanToPoolRatio": "0.16855491872747133044",  
-                    "maxRedeemQty": "161",  
-                    "minPurchaseQty": "0.03",  
-                    "precision": "8",  
-                    "rate": "0.003411300771389848"  
-                }  
-            ]  
+            "coin": "BTC",  
+            "principalInterest": "0",  
+            "principalQty": "1",  
+            "principalTotal": "1",  
+            "quantity": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1682045942972  
+        "time": 1682049706988  
     }
 
 ---
 
-# 查詢可存入幣種信息
-
-查詢可存入幣種的基本信息
-
-信息
-
-所有`v5/lending`的接口都需要**現貨** 權限
+# 查詢余幣寶帳戶信息
 
 ### HTTP 請求
 
-GET`/v5/lending/info`
+GET`/v5/lending/account`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-coin| false| string| 幣種名稱  
+coin| **true**|  string| 幣種名稱  
   
 ### 響應參數
 
 參數| 類型| 說明  
 ---|---|---  
-list| array| Object  
-> coin| string| 幣種名稱  
-> maxRedeemQty| string| 單用戶每天最大可贖回數量 (0 - 24 UTC)  
-> minPurchaseQty| string| 單筆最小存入數量  
-> precision| string| 精度  
-> rate| string| 年化利率. 比如: 返回0.0002 表示 0.02%  
-> loanToPoolRatio| string| 資金使用率. e.g. 0.0004 means 0.04%  
-> actualApy| string| 實際年化利率  
+coin| string| 幣種名稱  
+principalInterest| string| 可贖回收益  
+principalQty| string| 可贖回本金金額, 計算公式: min(用戶剩餘本金, 用戶當日可贖回額度)  
+principalTotal| string| 可贖回總計  
+quantity| string| 當前存入本金  
   
 ### 請求示例
     
     
-    GET /v5/lending/info?coin=ETH HTTP/1.1  
+    GET /v5/lending/account?coin=ETH HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682045949295  
+    X-BAPI-TIMESTAMP: 1682049556563  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -121,18 +97,12 @@ list| array| Object
         "retCode": 0,  
         "retMsg": "OK",  
         "result": {  
-            "list": [  
-                {  
-                    "actualApy": "0.003688421873941958",  
-                    "coin": "ETH",  
-                    "loanToPoolRatio": "0.16855491872747133044",  
-                    "maxRedeemQty": "161",  
-                    "minPurchaseQty": "0.03",  
-                    "precision": "8",  
-                    "rate": "0.003411300771389848"  
-                }  
-            ]  
+            "coin": "BTC",  
+            "principalInterest": "0",  
+            "principalQty": "1",  
+            "principalTotal": "1",  
+            "quantity": "1"  
         },  
         "retExtInfo": {},  
-        "time": 1682045942972  
+        "time": 1682049706988  
     }

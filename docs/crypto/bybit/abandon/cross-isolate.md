@@ -2,33 +2,36 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/cross-isolate
 api_type: REST
-updated_at: 2026-11-13 18:26:33.809561
+updated_at: 2026-11-13 19:20:37.320346
 ---
 
-# Enable Universal Transfer for Sub UID
+# Switch Cross/Isolated Margin
 
-info
-
-You no longer need to configure transferable sub UIDs. Now, all sub UIDs are automatically enabled for universal transfer.
-
-Transfer between sub-sub or main-sub
-
-Use this endpoint to enable a subaccount to take part in a universal transfer. It is a one-time switch which, once thrown, enables a subaccount permanently. If not set, your subaccount cannot use universal transfers.
-
-caution
-
-Can query by the master UID's api key **only**
+Select cross margin mode or isolated margin mode per symbol level
 
 ### HTTP Request
 
-POST`/v5/asset/transfer/save-transfer-sub-member`
+POST`/v5/position/switch-isolated`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
-subMemberIds| **true**|  array| This list has a **single item**. Separate multiple UIDs by comma, e.g., `"uid1,uid2,uid3"`  
+[category](/docs/v5/enum#category)| **true**|  string| Product type 
+
+  * [UTA2.0](/docs/v5/acct-mode#uta-20): not supported
+  * [UTA1.0](/docs/v5/acct-mode#uta-10): `inverse`
+  * Classic: `linear`(USDT Preps), `inverse`
+
   
+symbol| **true**|  string| Symbol name, like `BTCUSDT`, uppercase only  
+tradeMode| **true**|  integer| `0`: cross margin. `1`: isolated margin  
+buyLeverage| **true**|  string| The value must be equal to `sellLeverage` value  
+sellLeverage| **true**|  string| The value must be equal to `buyLeverage` value  
+[](/docs/api-explorer/v5/position/cross-isolate)
+
+* * *
+
 ### Response Parameters
 
 None
@@ -37,20 +40,28 @@ None
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
+    POST /v5/position/switch-isolated HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147595971  
+    X-BAPI-TIMESTAMP: 1675248447965  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 121  
       
     {  
-        "subMemberIds": ["554117,592324,592334"]  
+        "category": "linear",  
+        "symbol": "ETHUSDT",  
+        "tradeMode": 1,  
+        "buyLeverage": "10",  
+        "sellLeverage": "10"  
     }  
     
     
@@ -61,9 +72,48 @@ None
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.enable_universal_transfer_for_sub_uid(  
-        subMemberIds=["554117,592324,592334"],  
+    print(session.switch_margin_mode(  
+        category="linear",  
+        symbol="ETHUSDT",  
+        tradeMode=1,  
+        buyLeverage="10",  
+        sellLeverage="10",  
     ))  
+    
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var switchMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTC-31MAR23").tradeMode(MarginMode.CROSS_MARGIN).buyLeverage("5").sellLeverage("5").build();  
+    client.swithMarginRequest(switchMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .switchIsolatedMargin({  
+            category: 'linear',  
+            symbol: 'ETHUSDT',  
+            tradeMode: 1,  
+            buyLeverage: '10',  
+            sellLeverage: '10',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
     
 
 ### Response Example
@@ -71,40 +121,41 @@ None
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1672147593188  
+        "time": 1675248433635  
     }
 
 ---
 
-# 配置互相劃轉的子帳號
+# 切換全倉/逐倉保證金(交易對)
 
-信息
-
-無需再配置可劃轉的子帳號, 該限制已移除, 默認任意子帳號之間可以劃轉
-
-該接口用於配置開啟萬能劃轉的子帳號列表。沒有進行配置的子帳號是無法進行萬能劃轉的。
-
-提示
-
-萬能劃轉是允許您將資金直接從一個子帳號劃轉到另一個子帳號，同樣允許母子帳號間的劃轉。
-
-警告
-
-僅支持母帳號API key
+選擇全倉保證金或者是逐倉保證金，請參閱[這裡](https://www.bybit.com/zh-TW/help-center/bybitHC_Article/?language=en_US&id=000001053)了解關於全倉/逐倉保證金模式。
 
 ### HTTP 請求
 
-POST`/v5/asset/transfer/save-transfer-sub-member`
+POST`/v5/position/switch-isolated`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-subMemberIds| **true**|  array<string>| 子帳號. 支持輸入多個子帳號，用逗號隔開, 比如, "uid1,uid2,uid3"  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 
+
+  * [統一帳戶2.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B620): 不適用
+  * [統一帳戶1.0](/docs/zh-TW/v5/acct-mode#%E7%B5%B1%E4%B8%80%E5%B8%B3%E6%88%B610): `inverse`
+  * 經典帳戶: `linear`, `inverse`
+
   
+symbol| **true**|  string| 合約名稱  
+tradeMode| **true**|  integer| `0`: 全倉. `1`: 逐倉  
+buyLeverage| **true**|  string| 買側槓桿倍數. 必須與`sellLeverage`的值保持相同  
+sellLeverage| **true**|  string| 賣側槓桿倍數. 必須與`buyLeverage`的值保持相同  
+[](/docs/zh-TW/api-explorer/v5/position/cross-isolate)
+
+* * *
+
 ### 響應參數
 
 無
@@ -113,20 +164,28 @@ subMemberIds| **true**|  array<string>| 子帳號. 支持輸入多個子帳號�
 
   * HTTP
   * Python
+  * Java
+  * Node.js
 
 
     
     
-    POST /v5/asset/transfer/save-transfer-sub-member HTTP/1.1  
+    POST /v5/position/switch-isolated HTTP/1.1  
     Host: api-testnet.bybit.com  
+    X-BAPI-SIGN-TYPE: 2  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1672147595971  
+    X-BAPI-TIMESTAMP: 1675248447965  
     X-BAPI-RECV-WINDOW: 5000  
     Content-Type: application/json  
+    Content-Length: 121  
       
     {  
-        "subMemberIds": ["554117,592324,592334"]  
+        "category": "linear",  
+        "symbol": "ETHUSDT",  
+        "tradeMode": 1,  
+        "buyLeverage": "10",  
+        "sellLeverage": "10"  
     }  
     
     
@@ -137,18 +196,57 @@ subMemberIds| **true**|  array<string>| 子帳號. 支持輸入多個子帳號�
         api_key="xxxxxxxxxxxxxxxxxx",  
         api_secret="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  
     )  
-    print(session.enable_universal_transfer_for_sub_uid(  
-        subMemberIds=["554117,592324,592334"],  
+    print(session.switch_margin_mode(  
+        category="linear",  
+        symbol="ETHUSDT",  
+        tradeMode=1,  
+        buyLeverage="10",  
+        sellLeverage="10",  
     ))  
     
+    
+    
+    import com.bybit.api.client.domain.*;  
+    import com.bybit.api.client.domain.position.*;  
+    import com.bybit.api.client.domain.position.request.*;  
+    import com.bybit.api.client.service.BybitApiClientFactory;  
+    var client = BybitApiClientFactory.newInstance().newAsyncPositionRestClient();  
+    var switchMarginRequest = PositionDataRequest.builder().category(CategoryType.LINEAR).symbol("BTC-31MAR23").tradeMode(MarginMode.CROSS_MARGIN).buyLeverage("5").sellLeverage("5").build();  
+    client.swithMarginRequest(switchMarginRequest, System.out::println);  
+    
+    
+    
+    const { RestClientV5 } = require('bybit-api');  
+      
+    const client = new RestClientV5({  
+        testnet: true,  
+        key: 'xxxxxxxxxxxxxxxxxx',  
+        secret: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',  
+    });  
+      
+    client  
+        .switchIsolatedMargin({  
+            category: 'linear',  
+            symbol: 'ETHUSDT',  
+            tradeMode: 1,  
+            buyLeverage: '10',  
+            sellLeverage: '10',  
+        })  
+        .then((response) => {  
+            console.log(response);  
+        })  
+        .catch((error) => {  
+            console.error(error);  
+        });  
+    
 
-### Response Example
+### 響應示例
     
     
     {  
         "retCode": 0,  
-        "retMsg": "success",  
+        "retMsg": "OK",  
         "result": {},  
         "retExtInfo": {},  
-        "time": 1672147593188  
+        "time": 1675248433635  
     }

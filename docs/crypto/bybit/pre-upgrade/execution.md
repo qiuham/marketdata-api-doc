@@ -2,12 +2,12 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/execution
 api_type: REST
-updated_at: 2026-11-13 18:28:22.168177
+updated_at: 2026-11-13 19:24:38.203897
 ---
 
-# Get Pre-upgrade Order History
+# Get Pre-upgrade Trade History
 
-After the account is upgraded to a Unified account, you can get the orders which occurred before the upgrade.
+Get users' execution records which occurred before you upgraded the account to a Unified account, sorted by `execTime` in descending order It supports to query USDT perpetual, USDC perpetual, Inverse perpetual, Inverse futures, Spot and Option.
 
 By category="linear", you can query USDT Perps, USDC Perps data occurred during classic account  
 By category="spot", you can query Spot data occurred during classic account  
@@ -16,11 +16,7 @@ By category="inverse", you can query Inverse Contract data occurred during **cla
 
 info
 
-  * can get all status in 7 days
-  * can only get filled orders beyond 7 days
-  * USDC Perpeual & Option support the recent 6 months data. Please download older data via GUI
-
-
+USDC Perpeual & Option support the recent 6 months data. Please download older data via GUI
 
 deprecate plan
 
@@ -28,89 +24,71 @@ category=spot will be deprecated by the end of Aug, 2026.
 
 ### HTTP Request
 
-GET`/v5/pre-upgrade/order/history`
+GET`/v5/pre-upgrade/execution/list`
 
 ### Request Parameters
 
 Parameter| Required| Type| Comments  
 ---|---|---|---  
 [category](/docs/v5/enum#category)| **true**|  string| Product type `linear`, `inverse`, `option`, `spot`  
-symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only. 
-
-  * If not passed, return settleCoin=USDT by default
-  * To get USDC perp, please pass symbol
-
-  
-baseCoin| false| string| Base coin, uppercase only. Used for `option` query  
+symbol| false| string| Symbol name, like `BTCUSDT`, uppercase only  
 orderId| false| string| Order ID  
 orderLinkId| false| string| User customised order ID  
-orderFilter| false| string| `Order`: active order, `StopOrder`: conditional order  
-[orderStatus](/docs/v5/enum#orderstatus)| false| string| Order status. Not supported for `spot` category  
+baseCoin| false| string| Base coin, uppercase only. Used for `option`  
 startTime| false| integer| The start timestamp (ms) 
 
-  * `startTime` and `endTime` must be passed together or both are not passed
-  * endTime - startTime <= 7 days
-  * If both are not passed, it returns recent 7 days by default
+  * startTime and endTime are not passed, return 7 days by default
+  * Only startTime is passed, return range between startTime and startTime+7 days
+  * Only endTime is passed, return range between endTime-7 days and endTime
+  * If both are passed, the rule is endTime - startTime <= 7 days
 
   
 endTime| false| integer| The end timestamp (ms)  
-limit| false| integer| Limit for data size per page. [`1`, `50`]. Default: `20`  
+[execType](/docs/v5/enum#exectype)| false| string| Execution type  
+limit| false| integer| Limit for data size per page. [`1`, `100`]. Default: `50`  
 cursor| false| string| Cursor. Use the `nextPageCursor` token from the response to retrieve the next page of the result set  
   
 ### Response Parameters
 
 Parameter| Type| Comments  
 ---|---|---  
-[category](/docs/v5/enum#category)| string| Product type  
+category| string| Product type  
 list| array| Object  
-> orderId| string| Order ID  
-> orderLinkId| string| User customised order ID  
-> blockTradeId| string| Block trade ID  
 > symbol| string| Symbol name  
-> price| string| Order price  
-> qty| string| Order qty  
+> orderId| string| Order ID  
+> orderLinkId| string| User customized order ID  
 > side| string| Side. `Buy`,`Sell`  
-> isLeverage| string| Useless field for those orders before upgraded  
-> [positionIdx](/docs/v5/enum#positionidx)| integer| Position index. Used to identify positions in different position modes  
-> [orderStatus](/docs/v5/enum#orderstatus)| string| Order status  
-> [cancelType](/docs/v5/enum#canceltype)| string| Cancel type  
-> [rejectReason](/docs/v5/enum#rejectreason)| string| Reject reason  
-> avgPrice| string| Average filled price. If unfilled, it is `""`, and also for those orders have partilly filled but cancelled at the end  
+> orderPrice| string| Order price  
+> orderQty| string| Order qty  
 > leavesQty| string| The remaining qty not executed  
-> leavesValue| string| The estimated value not executed  
-> cumExecQty| string| Cumulative executed order qty  
-> cumExecValue| string| Cumulative executed order value  
-> cumExecFee| string| Cumulative executed trading fee  
-> [timeInForce](/docs/v5/enum#timeinforce)| string| Time in force  
 > [orderType](/docs/v5/enum#ordertype)| string| Order type. `Market`,`Limit`  
-> [stopOrderType](/docs/v5/enum#stopordertype)| string| Stop order type  
-> orderIv| string| Implied volatility  
-> triggerPrice| string| Trigger price. If `stopOrderType`=_TrailingStop_ , it is activate price. Otherwise, it is trigger price  
-> takeProfit| string| Take profit price  
-> stopLoss| string| Stop loss price  
-> [tpTriggerBy](/docs/v5/enum#triggerby)| string| The price type to trigger take profit  
-> [slTriggerBy](/docs/v5/enum#triggerby)| string| The price type to trigger stop loss  
-> triggerDirection| integer| Trigger direction. `1`: rise, `2`: fall  
-> [triggerBy](/docs/v5/enum#triggerby)| string| The price type of trigger price  
-> lastPriceOnCreated| string| Last price when place the order  
-> reduceOnly| boolean| Reduce only. `true` means reduce position size  
-> closeOnTrigger| boolean| Close on trigger. [What is a close on trigger order?](https://www.bybit.com/en/help-center/article/Close-On-Trigger-Order)  
-> placeType| string| Place type, `option` used. `iv`, `price`  
-> [smpType](/docs/v5/enum#smptype)| string| SMP execution type  
-> smpGroup| integer| Smp group ID. If the UID has no group, it is `0` by default  
-> smpOrderId| string| The counterparty's orderID which triggers this SMP execution  
-> createdTime| string| Order created timestamp (ms)  
-> updatedTime| string| Order updated timestamp (ms)  
+> [stopOrderType](/docs/v5/enum#stopordertype)| string| Stop order type. If the order is not stop order, any type is not returned  
+> execFee| string| Executed trading fee  
+> execId| string| Execution ID  
+> execPrice| string| Execution price  
+> execQty| string| Execution qty  
+> [execType](/docs/v5/enum#exectype)| string| Executed type  
+> execValue| string| Executed order value  
+> execTime| string| Executed timestamp (ms)  
+> isMaker| boolean| Is maker order. `true`: maker, `false`: taker  
+> feeRate| string| Trading fee rate  
+> tradeIv| string| Implied volatility  
+> markIv| string| Implied volatility of mark price  
+> markPrice| string| The mark price of the symbol when executing  
+> indexPrice| string| The index price of the symbol when executing  
+> underlyingPrice| string| The underlying price of the symbol when executing  
+> blockTradeId| string| Paradigm block trade ID  
+> closedSize| string| Closed position size  
 nextPageCursor| string| Refer to the `cursor` request parameter  
   
 ### Request Example
     
     
-    GET /v5/pre-upgrade/order/history?category=linear&limit=1&orderStatus=Filled HTTP/1.1  
+    GET /v5/pre-upgrade/execution/list?category=linear&limit=1&execType=Funding&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682576940304  
+    X-BAPI-TIMESTAMP: 1682580752432  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -123,63 +101,48 @@ nextPageCursor| string| Refer to the `cursor` request parameter
         "result": {  
             "list": [  
                 {  
-                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
-                    "orderLinkId": "",  
-                    "blockTradeId": "",  
                     "symbol": "BTCUSDT",  
-                    "price": "27203.40",  
-                    "qty": "0.200",  
+                    "orderId": "1682553600-BTCUSDT-592334-Sell",  
+                    "orderLinkId": "",  
                     "side": "Sell",  
-                    "isLeverage": "",  
-                    "positionIdx": 0,  
-                    "orderStatus": "Filled",  
-                    "cancelType": "UNKNOWN",  
-                    "rejectReason": "EC_NoError",  
-                    "avgPrice": "28632.126000",  
+                    "orderPrice": "0.00",  
+                    "orderQty": "0.000",  
                     "leavesQty": "0.000",  
-                    "leavesValue": "0",  
-                    "cumExecQty": "0.200",  
-                    "cumExecValue": "5726.4252",  
-                    "cumExecFee": "3.43585512",  
-                    "timeInForce": "IOC",  
-                    "orderType": "Market",  
+                    "orderType": "UNKNOWN",  
                     "stopOrderType": "UNKNOWN",  
-                    "orderIv": "",  
-                    "triggerPrice": "0.00",  
-                    "takeProfit": "0.00",  
-                    "stopLoss": "0.00",  
-                    "tpTriggerBy": "UNKNOWN",  
-                    "slTriggerBy": "UNKNOWN",  
-                    "triggerDirection": 0,  
-                    "triggerBy": "UNKNOWN",  
-                    "lastPriceOnCreated": "0.00",  
-                    "reduceOnly": true,  
-                    "closeOnTrigger": true,  
-                    "smpType": "None",  
-                    "smpGroup": 0,  
-                    "smpOrderId": "",  
-                    "createdTime": "1682487465732",  
-                    "updatedTime": "1682487465735",  
-                    "placeType": ""  
+                    "execFee": "0.6364003",  
+                    "execId": "11f1c4ed-ff20-4d73-acb7-96e43a917f25",  
+                    "execPrice": "28399.90",  
+                    "execQty": "0.011",  
+                    "execType": "Funding",  
+                    "execValue": "312.3989",  
+                    "execTime": "1682553600000",  
+                    "isMaker": false,  
+                    "feeRate": "0.00203714",  
+                    "tradeIv": "",  
+                    "markIv": "",  
+                    "markPrice": "28399.90",  
+                    "indexPrice": "",  
+                    "underlyingPrice": "",  
+                    "blockTradeId": "",  
+                    "closedSize": "0.000"  
                 }  
             ],  
-            "nextPageCursor": "page_token%3D69406%26",  
+            "nextPageCursor": "page_token%3D96184191%26",  
             "category": "linear"  
         },  
         "retExtInfo": {},  
-        "time": 1682576940540  
+        "time": 1682580752717  
     }
 
 ---
 
-# 查詢升級前訂單紀錄
+# 查詢升級前成交紀錄
 
-支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約, 現貨和期權
+支持查詢升級到統一帳戶之前發生的USDT永續, USDC永續, 反向合約, 現貨和期權, 返回結果按`execTime`降序排列
 
 信息
 
-  * 7天內, 可以查詢到全狀態的紀錄
-  * 7天外, 僅能查詢到已成交的紀錄
   * USDC永續和期權僅支持查詢最近6個月的數據, 對於更老的數據, 請前往網頁端下載
   * 通過category=linear, 查詢到在經典帳戶期間產生的USDT永續, USDC永續數據  
 
@@ -197,32 +160,28 @@ nextPageCursor| string| Refer to the `cursor` request parameter
 
 ### HTTP 請求
 
-GET`/v5/pre-upgrade/order/history`
+GET `v5/pre-upgrade/execution/list`
 
 ### 請求參數
 
 參數| 是否必需| 類型| 說明  
 ---|---|---|---  
-[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型. `linear`, `inverse`, `option`, `spot`  
-symbol| false| string| 合約名稱. 
-
-  * 對於`linear`, 如果不傳symbol, 默認返回數據是結算幣種=USDT
-  * 要查詢USDC永續, 請傳遞對應的合約名稱
-
-  
-baseCoin| false| string| 交易幣種. 期權的預留字段  
+[category](/docs/zh-TW/v5/enum#category)| **true**|  string| 產品類型 `linear`, `inverse`, `option`, `spot`  
+symbol| false| string| 合約名稱  
 orderId| false| string| 訂單ID  
 orderLinkId| false| string| 用戶自定義訂單ID  
-orderFilter| false| string| `Order`: 普通單, `StopOrder`: 條件單  
-[orderStatus](/docs/zh-TW/v5/enum#orderstatus)| false| string| 訂單狀態. 不支持現貨  
+baseCoin| false| string| 交易幣種. 僅期權使用  
 startTime| false| integer| 開始時間戳 (毫秒) 
 
   * startTime 和 endTime都不傳入, 則默認返回最近7天的數據
   * startTime 和 endTime都傳入的話, 則確保endTime - startTime <= 7天
+  * 若只傳startTime，則查詢startTime和startTime+7天的數據
+  * 若只傳endTime，則查詢endTime-7天和endTime的數據
 
   
 endTime| false| integer| 結束時間戳 (毫秒)  
-limit| false| integer| 每頁數量限制. [`1`, `50`]. 默認: `20`  
+[execType](/docs/zh-TW/v5/enum#exectype)| false| string| 執行類型  
+limit| false| integer| 每頁數量限制. [`1`, `100`]. 默認: `50`  
 cursor| false| string| 游標，用於翻頁  
   
 ### 響應參數
@@ -231,54 +190,41 @@ cursor| false| string| 游標，用於翻頁
 ---|---|---  
 [category](/docs/zh-TW/v5/enum#category)| string| 產品類型  
 list| array| Object  
-> orderId| string| 訂單Id  
-> orderLinkId| string| 用戶自定義Id  
-> blockTradeId| string| 大宗交易訂單Id  
 > symbol| string| 合約名稱  
-> price| string| 訂單價格  
-> qty| string| 訂單數量  
-> side| string| 方向. `Buy`,`Sell`  
-> isLeverage| string| 該字段對升級前的帳戶訂單無意義  
-> [positionIdx](/docs/zh-TW/v5/enum#positionidx)| integer| 倉位標識。用戶不同倉位模式  
-> [orderStatus](/docs/zh-TW/v5/enum#orderstatus)| string| 訂單狀態  
-> [cancelType](/docs/zh-TW/v5/enum#canceltype)| string| 訂單被取消類型  
-> [rejectReason](/docs/zh-TW/v5/enum#rejectreason)| string| 拒絕原因  
-> avgPrice| string| 訂單平均成交價格. 若沒有成交，則返回`""`, 以及部分成交但最終被手動取消的訂單  
-> leavesQty| string| 訂單剩餘未成交的數量  
-> leavesValue| string| 訂單剩餘未成交的價值  
-> cumExecQty| string| 訂單累計成交數量  
-> cumExecValue| string| 訂單累計成交價值  
-> cumExecFee| string| 訂單累計成交的手續費  
-> [timeInForce](/docs/zh-TW/v5/enum#timeinforce)| string| 執行策略  
-> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. `Market`,`Limit`  
-> [stopOrderType](/docs/zh-TW/v5/enum#stopordertype)| string| 條件單類型  
-> orderIv| string| 隱含波動率  
-> triggerPrice| string| 觸發價格. 若`stopOrderType`=_TrailingStop_ , 則這是激活價格. 否則, 它是觸發價格  
-> takeProfit| string| 止盈價格  
-> stopLoss| string| 止損價格  
-> [tpTriggerBy](/docs/zh-TW/v5/enum#triggerby)| string| 觸發止盈的價格類型  
-> [slTriggerBy](/docs/zh-TW/v5/enum#triggerby)| string| 觸發止損的價格類型  
-> triggerDirection| integer| 觸發方向. `1`: 上漲, `2`: 下跌  
-> [triggerBy](/docs/zh-TW/v5/enum#triggerby)| string| 觸發價格的觸發類型  
-> lastPriceOnCreated| string| 下單時的市場價格  
-> reduceOnly| boolean| 只減倉. `true`表明這是只減倉單  
-> closeOnTrigger| boolean| 觸發後平倉委託. [什麼是觸發後平倉委託?](https://www.bybit.com/zh-TW/help-center/bybitHC_Article?language=zh_TW&id=000001050)  
-> placeType| string| 下單類型, 僅期權使用. `iv`, `price`  
-> [smpType](/docs/zh-TW/v5/enum#smptype)| string| SMP執行類型  
-> smpGroup| integer| 所屬Smp組ID. 如果uid不屬於任何組, 則默認為`0`  
-> smpOrderId| string| 觸發此SMP執行的交易對手的 orderID  
-> createdTime| string| 創建訂單的時間戳 (毫秒)  
-> updatedTime| string| 訂單更新的時間戳 (毫秒)  
+> orderId| string| 訂單Id  
+> orderLinkId| string| 用戶自定義訂單id  
+> side| string| 訂單方向.買： `Buy`,賣：`Sell`  
+> orderPrice| string| 訂單價格  
+> orderQty| string| 訂單數量  
+> leavesQty| string| 剩餘委託未成交數量  
+> [orderType](/docs/zh-TW/v5/enum#ordertype)| string| 訂單類型. 市價單：`Market`,限價單：`Limit`  
+> [stopOrderType](/docs/zh-TW/v5/enum#stopordertype)| string| 条件单的订单类型。如果该订单不是条件单，则不会返回任何类型  
+> execFee| string| 交易手續費  
+> execId| string| 成交Id  
+> execPrice| string| 成交價格  
+> execQty| string| 成交數量  
+> [execType](/docs/zh-TW/v5/enum#exectype)| string| 交易類型  
+> execValue| string| 成交價值  
+> execTime| string| 成交時間（毫秒）  
+> isMaker| Bool| 是否是 Maker 訂單,`true` 為 maker 訂單，`false` 為 taker 訂單  
+> feeRate| string| 手續費率  
+> tradeIv| string| 隱含波動率，僅期權有效  
+> markIv| string| 標記價格的隱含波動率，僅期權有效  
+> markPrice| string| 成交執行時，該 symbol 當時的標記價格  
+> indexPrice| string| 成交執行時，該 symbol 當時的指數價格，目前僅對期權業務有效  
+> underlyingPrice| string| 成交執行時，該 symbol 當時的底層資產價格，僅期權有效  
+> blockTradeId| string| 大宗交易的订单 ID ，使用 paradigm 进行大宗交易时生成的 ID  
+> closedSize| string| 平倉數量  
 nextPageCursor| string| 游標，用於翻頁  
   
 ### Request Example
     
     
-    GET /v5/pre-upgrade/order/history?category=linear&limit=1&orderStatus=Filled HTTP/1.1  
+    GET /v5/pre-upgrade/execution/list?category=linear&limit=1&execType=Funding&symbol=BTCUSDT HTTP/1.1  
     Host: api-testnet.bybit.com  
     X-BAPI-SIGN: XXXXX  
     X-BAPI-API-KEY: xxxxxxxxxxxxxxxxxx  
-    X-BAPI-TIMESTAMP: 1682576940304  
+    X-BAPI-TIMESTAMP: 1682580752432  
     X-BAPI-RECV-WINDOW: 5000  
     
 
@@ -291,49 +237,36 @@ nextPageCursor| string| 游標，用於翻頁
         "result": {  
             "list": [  
                 {  
-                    "orderId": "67836246-460e-4c52-a009-af0c3e1d12bc",  
-                    "orderLinkId": "",  
-                    "blockTradeId": "",  
                     "symbol": "BTCUSDT",  
-                    "price": "27203.40",  
-                    "qty": "0.200",  
+                    "orderId": "1682553600-BTCUSDT-592334-Sell",  
+                    "orderLinkId": "",  
                     "side": "Sell",  
-                    "isLeverage": "",  
-                    "positionIdx": 0,  
-                    "orderStatus": "Filled",  
-                    "cancelType": "UNKNOWN",  
-                    "rejectReason": "EC_NoError",  
-                    "avgPrice": "28632.126000",  
+                    "orderPrice": "0.00",  
+                    "orderQty": "0.000",  
                     "leavesQty": "0.000",  
-                    "leavesValue": "0",  
-                    "cumExecQty": "0.200",  
-                    "cumExecValue": "5726.4252",  
-                    "cumExecFee": "3.43585512",  
-                    "timeInForce": "IOC",  
-                    "orderType": "Market",  
+                    "orderType": "UNKNOWN",  
                     "stopOrderType": "UNKNOWN",  
-                    "orderIv": "",  
-                    "triggerPrice": "0.00",  
-                    "takeProfit": "0.00",  
-                    "stopLoss": "0.00",  
-                    "tpTriggerBy": "UNKNOWN",  
-                    "slTriggerBy": "UNKNOWN",  
-                    "triggerDirection": 0,  
-                    "triggerBy": "UNKNOWN",  
-                    "lastPriceOnCreated": "0.00",  
-                    "reduceOnly": true,  
-                    "closeOnTrigger": true,  
-                    "smpType": "None",  
-                    "smpGroup": 0,  
-                    "smpOrderId": "",  
-                    "createdTime": "1682487465732",  
-                    "updatedTime": "1682487465735",  
-                    "placeType": ""  
+                    "execFee": "0.6364003",  
+                    "execId": "11f1c4ed-ff20-4d73-acb7-96e43a917f25",  
+                    "execPrice": "28399.90",  
+                    "execQty": "0.011",  
+                    "execType": "Funding",  
+                    "execValue": "312.3989",  
+                    "execTime": "1682553600000",  
+                    "isMaker": false,  
+                    "feeRate": "0.00203714",  
+                    "tradeIv": "",  
+                    "markIv": "",  
+                    "markPrice": "28399.90",  
+                    "indexPrice": "",  
+                    "underlyingPrice": "",  
+                    "blockTradeId": "",  
+                    "closedSize": "0.000"  
                 }  
             ],  
-            "nextPageCursor": "page_token%3D69406%26",  
+            "nextPageCursor": "page_token%3D96184191%26",  
             "category": "linear"  
         },  
         "retExtInfo": {},  
-        "time": 1682576940540  
+        "time": 1682580752717  
     }
