@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/portfolio-summary
 api_type: REST
-updated_at: 2026-11-13 19:21:11.034449
+updated_at: 2026-11-14 18:35:11.604994
 ---
 
 # Get Portfolio Summary

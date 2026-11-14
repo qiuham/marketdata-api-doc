@@ -17,14 +17,14 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-13 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-13 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-13 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-13 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-13 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-13 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-13 |
-| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 561 | 2026-11-13 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-14 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-14 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-14 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-14 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-14 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-14 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-14 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 561 | 2026-11-14 |
 
 ## 快速开始
 

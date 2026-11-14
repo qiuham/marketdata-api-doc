@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/rest-api
 api_type: REST
-updated_at: 2026-11-13 20:24:41.694557
+updated_at: 2026-11-14 18:25:02.801733
 ---
 
 # General REST API Information

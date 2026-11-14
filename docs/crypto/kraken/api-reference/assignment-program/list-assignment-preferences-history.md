@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/assignment-program/list-assignment-preferences-history'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # List assignment preferences history

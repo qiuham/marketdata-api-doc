@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/trade/cancel-orders-for-a-market'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # Cancel orders for a market

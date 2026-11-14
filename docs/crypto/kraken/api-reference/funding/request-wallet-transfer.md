@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/funding/request-wallet-transfer'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # Request Wallet Transfer

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/execution
 api_type: Trading
-updated_at: 2026-11-13 19:22:32.657197
+updated_at: 2026-11-14 18:35:51.151407
 ---
 
 # Get Event Contract Trade History

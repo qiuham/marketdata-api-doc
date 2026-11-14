@@ -2,18 +2,15 @@
 exchange: coinbase
 source_url: https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/payment-methods/get-payment-method
 api_type: REST
-updated_at: 2026-11-13 18:31:34.801586
+updated_at: 2026-11-14 18:40:27.400887
 ---
 
 # Get Payment Method
 
 **Endpoint:** `GET https://api.coinbase.com/api/v3/brokerage/payment_methods/{payment_method_id}`
 
-"quote_size": "10.00",Payment Methods
-    
-    # Get Payment Method
-    
-    Get information about a payment method for the current user.
+
+Get information about a payment method for the current user.
     
     
     curl --request GET \

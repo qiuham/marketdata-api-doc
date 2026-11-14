@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/get-trading-competitions'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # 获取交易竞赛

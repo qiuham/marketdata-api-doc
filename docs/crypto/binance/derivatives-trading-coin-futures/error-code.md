@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/error-code
 api_type: REST
-updated_at: 2026-11-13 20:27:44.833229
+updated_at: 2026-11-14 18:25:38.623185
 ---
 
 # Error Codes

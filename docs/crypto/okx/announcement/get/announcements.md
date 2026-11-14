@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#announcement-get-announcements
 anchor_id: announcement-get-announcements
 api_type: API
-updated_at: 2026-11-13 18:44:21.241043
+updated_at: 2026-11-14 18:43:22.784657
 ---
 
 # GET / Announcements

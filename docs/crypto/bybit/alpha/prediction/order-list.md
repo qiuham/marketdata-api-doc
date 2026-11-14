@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/order-list
 api_type: REST
-updated_at: 2026-11-13 19:21:10.985026
+updated_at: 2026-11-14 18:35:11.494302
 ---
 
 # Get Order List

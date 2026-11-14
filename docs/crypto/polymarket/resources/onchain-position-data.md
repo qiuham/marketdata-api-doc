@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/resources/onchain-position-data'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # Onchain Position Data

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/common-definition
 api_type: REST
-updated_at: 2026-11-13 20:31:21.986749
+updated_at: 2026-11-14 18:27:25.366975
 ---
 
 # Public API Definitions

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/algo/general-info
 api_type: REST
-updated_at: 2026-11-13 20:28:43.579544
+updated_at: 2026-11-14 18:26:42.629867
 ---
 
 # General Info

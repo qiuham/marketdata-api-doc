@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-user-invitations
 api_type: REST
-updated_at: 2026-11-13 19:24:46.949797
+updated_at: 2026-11-14 18:37:01.053318
 ---
 
 # Get Referral User Invitations

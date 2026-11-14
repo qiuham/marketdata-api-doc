@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/smp
 api_type: REST
-updated_at: 2026-11-13 19:25:07.069877
+updated_at: 2026-11-14 18:37:11.571059
 ---
 
 # Self Match Prevention

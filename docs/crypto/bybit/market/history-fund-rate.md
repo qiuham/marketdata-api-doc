@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/market/history-fund-rate
 api_type: Market Data
-updated_at: 2026-11-13 19:23:50.135750
+updated_at: 2026-11-14 18:36:29.304632
 ---
 
 # Get Funding Rate History

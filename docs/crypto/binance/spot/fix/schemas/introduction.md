@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/fix/schemas/introduction
 api_type: REST
-updated_at: 2026-11-13 20:24:39.328528
+updated_at: 2026-11-14 18:25:00.386089
 ---
 
 # FIX

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/api-reference/overview'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # Exchange API reference

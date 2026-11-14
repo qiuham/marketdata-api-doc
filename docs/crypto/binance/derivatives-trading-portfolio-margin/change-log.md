@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/change-log
 api_type: REST
-updated_at: 2026-11-13 20:28:10.084754
+updated_at: 2026-11-14 18:26:07.714697
 ---
 
 # Change Log

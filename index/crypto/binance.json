@@ -10,7 +10,7 @@
   "status": "active",
   "docs_dir": "docs/crypto/binance",
   "total": 164,
-  "updated_at": "2026-11-13 20:40:27.671962",
+  "updated_at": "2026-11-14 18:34:19.613998",
   "documents_by_type": {
     "spec": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:08.628514"
+        "updated_at": "2026-11-14 18:33:58.316038"
       },
       {
         "id": "advanced-trading-alpha-trading__rest-api",
@@ -35,7 +35,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:19.837644"
+        "updated_at": "2026-11-14 18:34:10.608667"
       },
       {
         "id": "advanced-trading-alpha-trading__ws-streams",
@@ -47,7 +47,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/ws-streams/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:23.563794"
+        "updated_at": "2026-11-14 18:34:15.036497"
       },
       {
         "id": "advanced-trading-copy-trading__rest-api",
@@ -59,7 +59,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:12.342166"
+        "updated_at": "2026-11-14 18:34:02.219404"
       },
       {
         "id": "advanced-trading-derivatives-trading-portfolio-margin-pro__rest-api",
@@ -71,7 +71,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:04.877457"
+        "updated_at": "2026-11-14 18:33:53.603654"
       },
       {
         "id": "advanced-trading-derivatives-trading-portfolio-margin__rest-api",
@@ -83,7 +83,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:00.707628"
+        "updated_at": "2026-11-14 18:33:49.192489"
       },
       {
         "id": "advanced-trading-institutional-loan__rest-api",
@@ -95,7 +95,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-institutional-loan/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:16.090911"
+        "updated_at": "2026-11-14 18:34:06.422177"
       },
       {
         "id": "core-trading-convert__rest-api",
@@ -107,7 +107,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:56.901335"
+        "updated_at": "2026-11-14 18:33:44.570252"
       },
       {
         "id": "core-trading-derivatives-trading-coin-m-futures__rest-api",
@@ -119,7 +119,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:30.272913"
+        "updated_at": "2026-11-14 18:33:15.241927"
       },
       {
         "id": "core-trading-derivatives-trading-coin-m-futures__ws-api",
@@ -131,7 +131,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:34.029448"
+        "updated_at": "2026-11-14 18:33:19.548856"
       },
       {
         "id": "core-trading-derivatives-trading-coin-m-futures__ws-streams",
@@ -143,7 +143,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:37.819923"
+        "updated_at": "2026-11-14 18:33:24.116057"
       },
       {
         "id": "core-trading-derivatives-trading-options__rest-api",
@@ -155,7 +155,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:41.819798"
+        "updated_at": "2026-11-14 18:33:27.921878"
       },
       {
         "id": "core-trading-derivatives-trading-options__ws-streams",
@@ -167,7 +167,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:45.559054"
+        "updated_at": "2026-11-14 18:33:31.583778"
       },
       {
         "id": "core-trading-derivatives-trading-usd-s-m-futures__rest-api",
@@ -179,7 +179,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:18.923996"
+        "updated_at": "2026-11-14 18:33:01.530108"
       },
       {
         "id": "core-trading-derivatives-trading-usd-s-m-futures__ws-api",
@@ -191,7 +191,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:22.690890"
+        "updated_at": "2026-11-14 18:33:06.606548"
       },
       {
         "id": "core-trading-derivatives-trading-usd-s-m-futures__ws-streams",
@@ -203,7 +203,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:26.457447"
+        "updated_at": "2026-11-14 18:33:10.373808"
       },
       {
         "id": "core-trading-margin-trading__rest-api",
@@ -215,7 +215,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:49.395824"
+        "updated_at": "2026-11-14 18:33:36.659411"
       },
       {
         "id": "core-trading-spot-trading__rest-api",
@@ -227,7 +227,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:07.076825"
+        "updated_at": "2026-11-14 18:32:49.042750"
       },
       {
         "id": "core-trading-spot-trading__ws-api",
@@ -239,7 +239,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:10.939256"
+        "updated_at": "2026-11-14 18:32:53.417905"
       },
       {
         "id": "core-trading-spot-trading__ws-streams",
@@ -251,7 +251,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:15.040156"
+        "updated_at": "2026-11-14 18:32:57.097738"
       },
       {
         "id": "core-trading-wallet__rest-api",
@@ -263,7 +263,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:39:53.164101"
+        "updated_at": "2026-11-14 18:33:40.796441"
       },
       {
         "id": "vip-and-institutional-sub-account__rest-api",
@@ -275,7 +275,7 @@
         "source_url": "https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/1.0.0/schema.yaml",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:40:27.671962"
+        "updated_at": "2026-11-14 18:34:19.613998"
       }
     ],
     "REST": [
@@ -289,7 +289,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/algo/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:43.456838"
+        "updated_at": "2026-11-14 18:26:42.224875"
       },
       {
         "id": "change-log",
@@ -301,7 +301,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/algo/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:43.484382"
+        "updated_at": "2026-11-14 18:26:42.359342"
       },
       {
         "id": "error-code",
@@ -313,7 +313,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/algo/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:43.532641"
+        "updated_at": "2026-11-14 18:26:42.502310"
       },
       {
         "id": "general-info",
@@ -325,7 +325,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/algo/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:43.579544"
+        "updated_at": "2026-11-14 18:26:42.629867"
       },
       {
         "id": "quick-start",
@@ -337,7 +337,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/algo/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:43.665916"
+        "updated_at": "2026-11-14 18:26:42.857975"
       },
       {
         "id": "change-log",
@@ -349,7 +349,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:31.416094"
+        "updated_at": "2026-11-14 18:27:34.713386"
       },
       {
         "id": "error-code",
@@ -361,7 +361,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:31.475278"
+        "updated_at": "2026-11-14 18:27:34.867185"
       },
       {
         "id": "general-info",
@@ -373,7 +373,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:31.513574"
+        "updated_at": "2026-11-14 18:27:34.936470"
       },
       {
         "id": "introduction",
@@ -385,7 +385,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:31.545436"
+        "updated_at": "2026-11-14 18:27:34.988042"
       },
       {
         "id": "quick-start",
@@ -397,7 +397,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:31.760410"
+        "updated_at": "2026-11-14 18:27:35.282738"
       },
       {
         "id": "Introduction",
@@ -409,7 +409,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/convert/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:13.961919"
+        "updated_at": "2026-11-14 18:27:14.873674"
       },
       {
         "id": "change-log",
@@ -421,7 +421,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/convert/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:13.989875"
+        "updated_at": "2026-11-14 18:27:14.931572"
       },
       {
         "id": "error-code",
@@ -433,7 +433,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/convert/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:14.038069"
+        "updated_at": "2026-11-14 18:27:15.057990"
       },
       {
         "id": "general-info",
@@ -445,7 +445,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/convert/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:14.085157"
+        "updated_at": "2026-11-14 18:27:15.202285"
       },
       {
         "id": "quick-start",
@@ -457,7 +457,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/convert/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:14.245863"
+        "updated_at": "2026-11-14 18:27:15.451564"
       },
       {
         "id": "Introduction",
@@ -469,7 +469,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/copy-trading/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:05.510334"
+        "updated_at": "2026-11-14 18:27:05.691655"
       },
       {
         "id": "change-log",
@@ -481,7 +481,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/copy-trading/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:05.538397"
+        "updated_at": "2026-11-14 18:27:05.746257"
       },
       {
         "id": "error-code",
@@ -493,7 +493,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/copy-trading/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:05.590496"
+        "updated_at": "2026-11-14 18:27:05.847038"
       },
       {
         "id": "general-info",
@@ -505,7 +505,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/copy-trading/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:05.637202"
+        "updated_at": "2026-11-14 18:27:05.952674"
       },
       {
         "id": "quick-start",
@@ -517,7 +517,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/copy-trading/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:05.857948"
+        "updated_at": "2026-11-14 18:27:06.118233"
       },
       {
         "id": "Important-CM-UM-Integration-Notice",
@@ -529,7 +529,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:44.621037"
+        "updated_at": "2026-11-14 18:25:37.900567"
       },
       {
         "id": "Introduction",
@@ -541,7 +541,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:44.653760"
+        "updated_at": "2026-11-14 18:25:37.992395"
       },
       {
         "id": "change-log",
@@ -553,7 +553,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:44.767151"
+        "updated_at": "2026-11-14 18:25:38.229192"
       },
       {
         "id": "common-definition",
@@ -565,7 +565,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:44.796723"
+        "updated_at": "2026-11-14 18:25:38.309900"
       },
       {
         "id": "error-code",
@@ -577,7 +577,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:44.833229"
+        "updated_at": "2026-11-14 18:25:38.623185"
       },
       {
         "id": "general-info",
@@ -589,7 +589,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:47.515079"
+        "updated_at": "2026-11-14 18:25:41.909413"
       },
       {
         "id": "General-Info",
@@ -601,7 +601,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:47.594689"
+        "updated_at": "2026-11-14 18:25:41.983007"
       },
       {
         "id": "quick-start",
@@ -613,7 +613,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:47.637371"
+        "updated_at": "2026-11-14 18:25:42.039106"
       },
       {
         "id": "user-data-streams",
@@ -625,7 +625,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/user-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:47.718177"
+        "updated_at": "2026-11-14 18:25:42.101837"
       },
       {
         "id": "Introduction",
@@ -637,7 +637,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:57.144127"
+        "updated_at": "2026-11-14 18:25:52.907239"
       },
       {
         "id": "change-log",
@@ -649,7 +649,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:57.255378"
+        "updated_at": "2026-11-14 18:25:53.225497"
       },
       {
         "id": "common-definition",
@@ -661,7 +661,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:57.289760"
+        "updated_at": "2026-11-14 18:25:53.366273"
       },
       {
         "id": "error-code",
@@ -673,7 +673,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:57.327456"
+        "updated_at": "2026-11-14 18:25:53.536308"
       },
       {
         "id": "stp-faq",
@@ -685,7 +685,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/faq/stp-faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:57.452177"
+        "updated_at": "2026-11-14 18:25:53.735274"
       },
       {
         "id": "general-info",
@@ -697,7 +697,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:59.793632"
+        "updated_at": "2026-11-14 18:25:57.419252"
       },
       {
         "id": "quick-start",
@@ -709,7 +709,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:59.874113"
+        "updated_at": "2026-11-14 18:25:57.470364"
       },
       {
         "id": "user-data-streams",
@@ -721,7 +721,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/user-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:00.147984"
+        "updated_at": "2026-11-14 18:25:57.541187"
       },
       {
         "id": "Introduction",
@@ -733,7 +733,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:09.927819"
+        "updated_at": "2026-11-14 18:26:07.372508"
       },
       {
         "id": "change-log",
@@ -745,7 +745,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:10.084754"
+        "updated_at": "2026-11-14 18:26:07.714697"
       },
       {
         "id": "common-definition",
@@ -757,7 +757,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:10.141068"
+        "updated_at": "2026-11-14 18:26:07.798031"
       },
       {
         "id": "error-code",
@@ -769,7 +769,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:10.218180"
+        "updated_at": "2026-11-14 18:26:07.882464"
       },
       {
         "id": "general-info",
@@ -781,7 +781,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:10.285498"
+        "updated_at": "2026-11-14 18:26:08.178371"
       },
       {
         "id": "quick-start",
@@ -793,7 +793,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:11.243553"
+        "updated_at": "2026-11-14 18:26:10.664134"
       },
       {
         "id": "user-data-streams",
@@ -805,7 +805,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/user-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:11.648237"
+        "updated_at": "2026-11-14 18:26:11.105839"
       },
       {
         "id": "Introduction",
@@ -817,7 +817,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:20.752479"
+        "updated_at": "2026-11-14 18:26:19.756041"
       },
       {
         "id": "change-log",
@@ -829,7 +829,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:21.003680"
+        "updated_at": "2026-11-14 18:26:19.990817"
       },
       {
         "id": "error-code",
@@ -841,7 +841,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:21.097813"
+        "updated_at": "2026-11-14 18:26:20.099041"
       },
       {
         "id": "general-info",
@@ -853,7 +853,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:21.156352"
+        "updated_at": "2026-11-14 18:26:20.205906"
       },
       {
         "id": "quick-start",
@@ -865,7 +865,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:21.306690"
+        "updated_at": "2026-11-14 18:26:20.419620"
       },
       {
         "id": "user-data-streams",
@@ -877,7 +877,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/user-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:22.202983"
+        "updated_at": "2026-11-14 18:26:21.207475"
       },
       {
         "id": "Introduction",
@@ -889,7 +889,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:32.518849"
+        "updated_at": "2026-11-14 18:25:22.022309"
       },
       {
         "id": "change-log",
@@ -901,7 +901,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:32.627280"
+        "updated_at": "2026-11-14 18:25:22.373036"
       },
       {
         "id": "common-definition",
@@ -913,7 +913,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:32.660112"
+        "updated_at": "2026-11-14 18:25:22.495712"
       },
       {
         "id": "error-code",
@@ -925,7 +925,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:32.705318"
+        "updated_at": "2026-11-14 18:25:22.653313"
       },
       {
         "id": "stp-faq",
@@ -937,7 +937,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:32.905482"
+        "updated_at": "2026-11-14 18:25:22.885592"
       },
       {
         "id": "general-info",
@@ -949,7 +949,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:35.102690"
+        "updated_at": "2026-11-14 18:25:26.301379"
       },
       {
         "id": "quick-start",
@@ -961,7 +961,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:35.133637"
+        "updated_at": "2026-11-14 18:25:26.364847"
       },
       {
         "id": "user-data-streams",
@@ -973,7 +973,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:35.254515"
+        "updated_at": "2026-11-14 18:25:26.463239"
       },
       {
         "id": "Introduction",
@@ -985,7 +985,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:21.919356"
+        "updated_at": "2026-11-14 18:27:25.100536"
       },
       {
         "id": "change-log",
@@ -997,7 +997,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:21.946327"
+        "updated_at": "2026-11-14 18:27:25.182977"
       },
       {
         "id": "common-definition",
@@ -1009,7 +1009,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:21.986749"
+        "updated_at": "2026-11-14 18:27:25.366975"
       },
       {
         "id": "error-code",
@@ -1021,7 +1021,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:22.015114"
+        "updated_at": "2026-11-14 18:27:25.429738"
       },
       {
         "id": "general-info",
@@ -1033,7 +1033,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:22.239639"
+        "updated_at": "2026-11-14 18:27:25.621966"
       },
       {
         "id": "quick-start",
@@ -1045,7 +1045,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:23.138767"
+        "updated_at": "2026-11-14 18:27:26.322680"
       },
       {
         "id": "Introduction",
@@ -1057,7 +1057,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:33.048389"
+        "updated_at": "2026-11-14 18:26:29.844003"
       },
       {
         "id": "best-practice",
@@ -1069,7 +1069,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/best-practice",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:33.125542"
+        "updated_at": "2026-11-14 18:26:29.997992"
       },
       {
         "id": "change-log",
@@ -1081,7 +1081,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:33.185020"
+        "updated_at": "2026-11-14 18:26:30.131349"
       },
       {
         "id": "common-definition",
@@ -1093,7 +1093,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/common-definition",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:33.225016"
+        "updated_at": "2026-11-14 18:26:30.219869"
       },
       {
         "id": "error-code",
@@ -1105,7 +1105,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:33.272247"
+        "updated_at": "2026-11-14 18:26:30.657463"
       },
       {
         "id": "general-info",
@@ -1117,7 +1117,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:35.118138"
+        "updated_at": "2026-11-14 18:26:32.215745"
       },
       {
         "id": "listen-token-data-stream",
@@ -1129,7 +1129,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/listen-token-data-stream",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:35.147623"
+        "updated_at": "2026-11-14 18:26:32.290792"
       },
       {
         "id": "risk-data-stream",
@@ -1141,7 +1141,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:35.174527"
+        "updated_at": "2026-11-14 18:26:32.567337"
       },
       {
         "id": "CHANGELOG",
@@ -1153,7 +1153,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/CHANGELOG",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:28.887696"
+        "updated_at": "2026-11-14 18:24:48.779258"
       },
       {
         "id": "PROD-TERMS-OF-USE",
@@ -1165,7 +1165,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/PROD-TERMS-OF-USE",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:28.913600"
+        "updated_at": "2026-11-14 18:24:48.859467"
       },
       {
         "id": "CHANGELOG",
@@ -1177,7 +1177,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/CHANGELOG",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:28.937689"
+        "updated_at": "2026-11-14 18:24:48.936289"
       },
       {
         "id": "DEMO-TERMS-OF-USE",
@@ -1189,7 +1189,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:28.961816"
+        "updated_at": "2026-11-14 18:24:49.059171"
       },
       {
         "id": "general-info",
@@ -1201,7 +1201,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:28.987382"
+        "updated_at": "2026-11-14 18:24:49.319902"
       },
       {
         "id": "enums",
@@ -1213,7 +1213,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/enums",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:32.484579"
+        "updated_at": "2026-11-14 18:24:51.949899"
       },
       {
         "id": "errors",
@@ -1225,7 +1225,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/errors",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:32.533842"
+        "updated_at": "2026-11-14 18:24:52.035830"
       },
       {
         "id": "api_key_types",
@@ -1237,7 +1237,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/api_key_types",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:32.564850"
+        "updated_at": "2026-11-14 18:24:52.090236"
       },
       {
         "id": "commission_faq",
@@ -1249,7 +1249,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/commission_faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:32.595806"
+        "updated_at": "2026-11-14 18:24:52.141420"
       },
       {
         "id": "opo",
@@ -1261,7 +1261,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/opo",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:34.721633"
+        "updated_at": "2026-11-14 18:24:54.334959"
       },
       {
         "id": "order_amend_keep_priority",
@@ -1273,7 +1273,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/order_amend_keep_priority",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:34.765201"
+        "updated_at": "2026-11-14 18:24:54.418673"
       },
       {
         "id": "order_count_decrement",
@@ -1285,7 +1285,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/order_count_decrement",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:34.800480"
+        "updated_at": "2026-11-14 18:24:54.472681"
       },
       {
         "id": "pegged_orders",
@@ -1297,7 +1297,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/pegged_orders",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:34.830770"
+        "updated_at": "2026-11-14 18:24:54.646584"
       },
       {
         "id": "price_range_execution_rules",
@@ -1309,7 +1309,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/price_range_execution_rules",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:37.018142"
+        "updated_at": "2026-11-14 18:24:57.144349"
       },
       {
         "id": "quoteNotionalLimit",
@@ -1321,7 +1321,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/quoteNotionalLimit",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:37.060119"
+        "updated_at": "2026-11-14 18:24:57.253234"
       },
       {
         "id": "sbe_faq",
@@ -1333,7 +1333,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/sbe_faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:37.094619"
+        "updated_at": "2026-11-14 18:24:57.343178"
       },
       {
         "id": "sor_faq",
@@ -1345,7 +1345,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/sor_faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:37.133927"
+        "updated_at": "2026-11-14 18:24:57.418836"
       },
       {
         "id": "spot_glossary",
@@ -1357,7 +1357,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/spot_glossary",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:37.167100"
+        "updated_at": "2026-11-14 18:24:57.554355"
       },
       {
         "id": "stp_faq",
@@ -1369,7 +1369,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/stp_faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:39.132027"
+        "updated_at": "2026-11-14 18:25:00.012163"
       },
       {
         "id": "trailing-stop-faq",
@@ -1381,7 +1381,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/trailing-stop-faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:39.169053"
+        "updated_at": "2026-11-14 18:25:00.125835"
       },
       {
         "id": "filters",
@@ -1393,7 +1393,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/filters",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:39.205435"
+        "updated_at": "2026-11-14 18:25:00.187324"
       },
       {
         "id": "introduction",
@@ -1405,7 +1405,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/fix/schemas/introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:39.328528"
+        "updated_at": "2026-11-14 18:25:00.386089"
       },
       {
         "id": "fix-api",
@@ -1417,7 +1417,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/fix-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:39.300219"
+        "updated_at": "2026-11-14 18:25:00.328688"
       },
       {
         "id": "rest-api",
@@ -1429,7 +1429,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:41.694557"
+        "updated_at": "2026-11-14 18:25:02.801733"
       },
       {
         "id": "introduction",
@@ -1441,7 +1441,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/sbe/schemas/introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:41.756630"
+        "updated_at": "2026-11-14 18:25:02.886287"
       },
       {
         "id": "CHANGELOG",
@@ -1453,7 +1453,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/CHANGELOG",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:41.828650"
+        "updated_at": "2026-11-14 18:25:03.093928"
       },
       {
         "id": "TESTNET-TERMS-OF-USE",
@@ -1465,7 +1465,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/TESTNET-TERMS-OF-USE",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:41.853713"
+        "updated_at": "2026-11-14 18:25:03.146925"
       },
       {
         "id": "enums",
@@ -1477,7 +1477,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/enums",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:26:24.904816"
+        "updated_at": "2026-11-14 18:25:05.397518"
       },
       {
         "id": "errors",
@@ -1489,7 +1489,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/errors",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:26:52.513928"
+        "updated_at": "2026-11-14 18:25:05.541012"
       },
       {
         "id": "filters",
@@ -1501,7 +1501,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/filters",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:20.058236"
+        "updated_at": "2026-11-14 18:25:05.649698"
       },
       {
         "id": "fix-api",
@@ -1513,7 +1513,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/fix-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:20.141078"
+        "updated_at": "2026-11-14 18:25:05.803767"
       },
       {
         "id": "general-info",
@@ -1525,7 +1525,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:20.174947"
+        "updated_at": "2026-11-14 18:25:05.990144"
       },
       {
         "id": "rest-api",
@@ -1537,7 +1537,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/rest-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:22.294513"
+        "updated_at": "2026-11-14 18:25:09.916331"
       },
       {
         "id": "user-data-stream",
@@ -1549,7 +1549,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/user-data-stream",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:22.365021"
+        "updated_at": "2026-11-14 18:25:10.236244"
       },
       {
         "id": "user-data-stream",
@@ -1561,7 +1561,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/user-data-stream",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:24.287908"
+        "updated_at": "2026-11-14 18:25:13.966332"
       },
       {
         "id": "Introduction",
@@ -1573,7 +1573,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:51.813251"
+        "updated_at": "2026-11-14 18:26:52.109418"
       },
       {
         "id": "change-log",
@@ -1585,7 +1585,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:51.861159"
+        "updated_at": "2026-11-14 18:26:52.252451"
       },
       {
         "id": "error-code",
@@ -1597,7 +1597,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:51.912186"
+        "updated_at": "2026-11-14 18:26:52.413429"
       },
       {
         "id": "general-info",
@@ -1609,7 +1609,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:51.962772"
+        "updated_at": "2026-11-14 18:26:52.639030"
       },
       {
         "id": "quick-start",
@@ -1621,7 +1621,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:52.129664"
+        "updated_at": "2026-11-14 18:26:52.698644"
       },
       {
         "id": "appendix",
@@ -1633,7 +1633,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/appendix",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:30:29.873362"
+        "updated_at": "2026-11-14 18:26:55.975026"
       },
       {
         "id": "deposit-questionnaire",
@@ -1645,7 +1645,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/deposit-questionnaire",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:30:57.677724"
+        "updated_at": "2026-11-14 18:26:56.135348"
       },
       {
         "id": "withdraw-questionnaire",
@@ -1657,7 +1657,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/withdraw-questionnaire",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:30:57.758383"
+        "updated_at": "2026-11-14 18:26:56.204782"
       }
     ],
     "WebSocket": [
@@ -1671,7 +1671,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/alpha/websocket-market-data",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:32.529950"
+        "updated_at": "2026-11-14 18:27:35.951964"
       },
       {
         "id": "websocket-api-general-info",
@@ -1683,7 +1683,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-api-general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:47.751673"
+        "updated_at": "2026-11-14 18:25:42.458130"
       },
       {
         "id": "Connect",
@@ -1695,7 +1695,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:48.974338"
+        "updated_at": "2026-11-14 18:25:44.287603"
       },
       {
         "id": "How-to-manage-a-local-order-book-correctly",
@@ -1707,7 +1707,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:48.999303"
+        "updated_at": "2026-11-14 18:25:44.429961"
       },
       {
         "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -1719,7 +1719,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:49.081115"
+        "updated_at": "2026-11-14 18:25:44.657509"
       },
       {
         "id": "Connect",
@@ -1731,7 +1731,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/Connect",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:00.188894"
+        "updated_at": "2026-11-14 18:25:57.591084"
       },
       {
         "id": "How-to-manage-a-local-order-book-correctly",
@@ -1743,7 +1743,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:00.283484"
+        "updated_at": "2026-11-14 18:25:57.652059"
       },
       {
         "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -1755,7 +1755,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:00.984804"
+        "updated_at": "2026-11-14 18:25:58.465825"
       },
       {
         "id": "websocket-api-general-info",
@@ -1767,7 +1767,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-api-general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:35.288799"
+        "updated_at": "2026-11-14 18:25:26.534742"
       },
       {
         "id": "Connect",
@@ -1779,7 +1779,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Connect",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:35.366747"
+        "updated_at": "2026-11-14 18:25:26.597807"
       },
       {
         "id": "How-to-manage-a-local-order-book-correctly",
@@ -1791,7 +1791,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:36.397277"
+        "updated_at": "2026-11-14 18:25:29.074029"
       },
       {
         "id": "Important-WebSocket-Change-Notice",
@@ -1803,7 +1803,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:36.429741"
+        "updated_at": "2026-11-14 18:25:29.155530"
       },
       {
         "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -1815,7 +1815,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:36.604703"
+        "updated_at": "2026-11-14 18:25:29.640424"
       },
       {
         "id": "web-socket-api",
@@ -1827,7 +1827,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/web-socket-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:22.906512"
+        "updated_at": "2026-11-14 18:25:10.725506"
       },
       {
         "id": "web-socket-streams",
@@ -1839,7 +1839,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/web-socket-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:22.947381"
+        "updated_at": "2026-11-14 18:25:10.899759"
       },
       {
         "id": "web-socket-api",
@@ -1851,7 +1851,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/web-socket-api",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:24.364797"
+        "updated_at": "2026-11-14 18:25:14.072582"
       },
       {
         "id": "web-socket-streams",
@@ -1863,7 +1863,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/web-socket-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:24.531271"
+        "updated_at": "2026-11-14 18:25:14.142538"
       }
     ],
     "Trading": [
@@ -1877,7 +1877,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/margin-trading/trade-data-stream",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:28:35.305541"
+        "updated_at": "2026-11-14 18:26:32.725014"
       }
     ],
     "Market Data": [
@@ -1891,7 +1891,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/market_data_only",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:32.622429"
+        "updated_at": "2026-11-14 18:24:52.191771"
       },
       {
         "id": "market_orders_faq",
@@ -1903,7 +1903,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/market_orders_faq",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:34.672769"
+        "updated_at": "2026-11-14 18:24:54.268466"
       },
       {
         "id": "sbe-market-data-streams",
@@ -1915,7 +1915,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/sbe-market-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:24:41.725583"
+        "updated_at": "2026-11-14 18:25:02.844855"
       },
       {
         "id": "sbe-market-data-streams",
@@ -1927,7 +1927,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/sbe-market-data-streams",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:27:22.328343"
+        "updated_at": "2026-11-14 18:25:10.068562"
       }
     ],
     "Account": [
@@ -1941,7 +1941,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/sub-account/Introduction",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:40.630229"
+        "updated_at": "2026-11-14 18:27:44.926843"
       },
       {
         "id": "change-log",
@@ -1953,7 +1953,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/sub-account/change-log",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:40.681711"
+        "updated_at": "2026-11-14 18:27:44.995665"
       },
       {
         "id": "error-code",
@@ -1965,7 +1965,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/sub-account/error-code",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:40.731206"
+        "updated_at": "2026-11-14 18:27:45.136147"
       },
       {
         "id": "general-info",
@@ -1977,7 +1977,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/sub-account/general-info",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:40.777491"
+        "updated_at": "2026-11-14 18:27:45.240072"
       },
       {
         "id": "quick-start",
@@ -1989,7 +1989,7 @@
         "source_url": "https://developers.binance.com/en/docs/products/sub-account/quick-start",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-11-13 20:31:40.803859"
+        "updated_at": "2026-11-14 18:27:45.345358"
       }
     ]
   },
@@ -2004,7 +2004,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/sub-account/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:40.681711"
+      "updated_at": "2026-11-14 18:27:44.995665"
     },
     {
       "id": "error-code",
@@ -2016,7 +2016,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/sub-account/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:40.731206"
+      "updated_at": "2026-11-14 18:27:45.136147"
     },
     {
       "id": "general-info",
@@ -2028,7 +2028,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/sub-account/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:40.777491"
+      "updated_at": "2026-11-14 18:27:45.240072"
     },
     {
       "id": "Introduction",
@@ -2040,7 +2040,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/sub-account/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:40.630229"
+      "updated_at": "2026-11-14 18:27:44.926843"
     },
     {
       "id": "quick-start",
@@ -2052,7 +2052,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/sub-account/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:40.803859"
+      "updated_at": "2026-11-14 18:27:45.345358"
     },
     {
       "id": "market_orders_faq",
@@ -2064,7 +2064,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/market_orders_faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:34.672769"
+      "updated_at": "2026-11-14 18:24:54.268466"
     },
     {
       "id": "market_data_only",
@@ -2076,7 +2076,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/market_data_only",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:32.622429"
+      "updated_at": "2026-11-14 18:24:52.191771"
     },
     {
       "id": "sbe-market-data-streams",
@@ -2088,7 +2088,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/sbe-market-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:41.725583"
+      "updated_at": "2026-11-14 18:25:02.844855"
     },
     {
       "id": "sbe-market-data-streams",
@@ -2100,7 +2100,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/sbe-market-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:22.328343"
+      "updated_at": "2026-11-14 18:25:10.068562"
     },
     {
       "id": "api_key_types",
@@ -2112,7 +2112,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/api_key_types",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:32.564850"
+      "updated_at": "2026-11-14 18:24:52.090236"
     },
     {
       "id": "appendix",
@@ -2124,7 +2124,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/appendix",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:30:29.873362"
+      "updated_at": "2026-11-14 18:26:55.975026"
     },
     {
       "id": "best-practice",
@@ -2136,7 +2136,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/best-practice",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:33.125542"
+      "updated_at": "2026-11-14 18:26:29.997992"
     },
     {
       "id": "CHANGELOG",
@@ -2148,7 +2148,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/CHANGELOG",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:28.937689"
+      "updated_at": "2026-11-14 18:24:48.936289"
     },
     {
       "id": "CHANGELOG",
@@ -2160,7 +2160,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/CHANGELOG",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:41.828650"
+      "updated_at": "2026-11-14 18:25:03.093928"
     },
     {
       "id": "CHANGELOG",
@@ -2172,7 +2172,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/CHANGELOG",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:28.887696"
+      "updated_at": "2026-11-14 18:24:48.779258"
     },
     {
       "id": "change-log",
@@ -2184,7 +2184,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/algo/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:43.484382"
+      "updated_at": "2026-11-14 18:26:42.359342"
     },
     {
       "id": "change-log",
@@ -2196,7 +2196,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/convert/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:13.989875"
+      "updated_at": "2026-11-14 18:27:14.931572"
     },
     {
       "id": "change-log",
@@ -2208,7 +2208,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/copy-trading/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:05.538397"
+      "updated_at": "2026-11-14 18:27:05.746257"
     },
     {
       "id": "change-log",
@@ -2220,7 +2220,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:44.767151"
+      "updated_at": "2026-11-14 18:25:38.229192"
     },
     {
       "id": "change-log",
@@ -2232,7 +2232,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:57.255378"
+      "updated_at": "2026-11-14 18:25:53.225497"
     },
     {
       "id": "change-log",
@@ -2244,7 +2244,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:10.084754"
+      "updated_at": "2026-11-14 18:26:07.714697"
     },
     {
       "id": "change-log",
@@ -2256,7 +2256,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:21.003680"
+      "updated_at": "2026-11-14 18:26:19.990817"
     },
     {
       "id": "change-log",
@@ -2268,7 +2268,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:32.627280"
+      "updated_at": "2026-11-14 18:25:22.373036"
     },
     {
       "id": "change-log",
@@ -2280,7 +2280,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:21.946327"
+      "updated_at": "2026-11-14 18:27:25.182977"
     },
     {
       "id": "change-log",
@@ -2292,7 +2292,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:33.185020"
+      "updated_at": "2026-11-14 18:26:30.131349"
     },
     {
       "id": "change-log",
@@ -2304,7 +2304,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:51.861159"
+      "updated_at": "2026-11-14 18:26:52.252451"
     },
     {
       "id": "General-Info",
@@ -2316,7 +2316,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:47.594689"
+      "updated_at": "2026-11-14 18:25:41.983007"
     },
     {
       "id": "commission_faq",
@@ -2328,7 +2328,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/commission_faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:32.595806"
+      "updated_at": "2026-11-14 18:24:52.141420"
     },
     {
       "id": "general-info",
@@ -2340,7 +2340,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:28.987382"
+      "updated_at": "2026-11-14 18:24:49.319902"
     },
     {
       "id": "deposit-questionnaire",
@@ -2352,7 +2352,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/deposit-questionnaire",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:30:57.677724"
+      "updated_at": "2026-11-14 18:26:56.135348"
     },
     {
       "id": "enums",
@@ -2364,7 +2364,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/enums",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:32.484579"
+      "updated_at": "2026-11-14 18:24:51.949899"
     },
     {
       "id": "enums",
@@ -2376,7 +2376,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/enums",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:26:24.904816"
+      "updated_at": "2026-11-14 18:25:05.397518"
     },
     {
       "id": "error-code",
@@ -2388,7 +2388,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/algo/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:43.532641"
+      "updated_at": "2026-11-14 18:26:42.502310"
     },
     {
       "id": "error-code",
@@ -2400,7 +2400,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:31.475278"
+      "updated_at": "2026-11-14 18:27:34.867185"
     },
     {
       "id": "error-code",
@@ -2412,7 +2412,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/convert/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:14.038069"
+      "updated_at": "2026-11-14 18:27:15.057990"
     },
     {
       "id": "error-code",
@@ -2424,7 +2424,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/copy-trading/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:05.590496"
+      "updated_at": "2026-11-14 18:27:05.847038"
     },
     {
       "id": "error-code",
@@ -2436,7 +2436,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:44.833229"
+      "updated_at": "2026-11-14 18:25:38.623185"
     },
     {
       "id": "error-code",
@@ -2448,7 +2448,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:57.327456"
+      "updated_at": "2026-11-14 18:25:53.536308"
     },
     {
       "id": "error-code",
@@ -2460,7 +2460,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:10.218180"
+      "updated_at": "2026-11-14 18:26:07.882464"
     },
     {
       "id": "error-code",
@@ -2472,7 +2472,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:21.097813"
+      "updated_at": "2026-11-14 18:26:20.099041"
     },
     {
       "id": "error-code",
@@ -2484,7 +2484,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:32.705318"
+      "updated_at": "2026-11-14 18:25:22.653313"
     },
     {
       "id": "error-code",
@@ -2496,7 +2496,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:22.015114"
+      "updated_at": "2026-11-14 18:27:25.429738"
     },
     {
       "id": "error-code",
@@ -2508,7 +2508,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:33.272247"
+      "updated_at": "2026-11-14 18:26:30.657463"
     },
     {
       "id": "error-code",
@@ -2520,7 +2520,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/error-code",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:51.912186"
+      "updated_at": "2026-11-14 18:26:52.413429"
     },
     {
       "id": "errors",
@@ -2532,7 +2532,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/errors",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:32.533842"
+      "updated_at": "2026-11-14 18:24:52.035830"
     },
     {
       "id": "errors",
@@ -2544,7 +2544,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/errors",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:26:52.513928"
+      "updated_at": "2026-11-14 18:25:05.541012"
     },
     {
       "id": "introduction",
@@ -2556,7 +2556,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/fix/schemas/introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:39.328528"
+      "updated_at": "2026-11-14 18:25:00.386089"
     },
     {
       "id": "fix-api",
@@ -2568,7 +2568,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/fix-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:39.300219"
+      "updated_at": "2026-11-14 18:25:00.328688"
     },
     {
       "id": "fix-api",
@@ -2580,7 +2580,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/fix-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:20.141078"
+      "updated_at": "2026-11-14 18:25:05.803767"
     },
     {
       "id": "filters",
@@ -2592,7 +2592,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/filters",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:39.205435"
+      "updated_at": "2026-11-14 18:25:00.187324"
     },
     {
       "id": "filters",
@@ -2604,7 +2604,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/filters",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:20.058236"
+      "updated_at": "2026-11-14 18:25:05.649698"
     },
     {
       "id": "general-info",
@@ -2616,7 +2616,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/algo/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:43.579544"
+      "updated_at": "2026-11-14 18:26:42.629867"
     },
     {
       "id": "general-info",
@@ -2628,7 +2628,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:31.513574"
+      "updated_at": "2026-11-14 18:27:34.936470"
     },
     {
       "id": "general-info",
@@ -2640,7 +2640,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/convert/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:14.085157"
+      "updated_at": "2026-11-14 18:27:15.202285"
     },
     {
       "id": "general-info",
@@ -2652,7 +2652,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/copy-trading/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:05.637202"
+      "updated_at": "2026-11-14 18:27:05.952674"
     },
     {
       "id": "general-info",
@@ -2664,7 +2664,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:47.515079"
+      "updated_at": "2026-11-14 18:25:41.909413"
     },
     {
       "id": "general-info",
@@ -2676,7 +2676,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:59.793632"
+      "updated_at": "2026-11-14 18:25:57.419252"
     },
     {
       "id": "general-info",
@@ -2688,7 +2688,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:10.285498"
+      "updated_at": "2026-11-14 18:26:08.178371"
     },
     {
       "id": "general-info",
@@ -2700,7 +2700,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:21.156352"
+      "updated_at": "2026-11-14 18:26:20.205906"
     },
     {
       "id": "general-info",
@@ -2712,7 +2712,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:35.102690"
+      "updated_at": "2026-11-14 18:25:26.301379"
     },
     {
       "id": "general-info",
@@ -2724,7 +2724,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:22.239639"
+      "updated_at": "2026-11-14 18:27:25.621966"
     },
     {
       "id": "general-info",
@@ -2736,7 +2736,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:35.118138"
+      "updated_at": "2026-11-14 18:26:32.215745"
     },
     {
       "id": "general-info",
@@ -2748,7 +2748,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:51.962772"
+      "updated_at": "2026-11-14 18:26:52.639030"
     },
     {
       "id": "rest-api",
@@ -2760,7 +2760,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:41.694557"
+      "updated_at": "2026-11-14 18:25:02.801733"
     },
     {
       "id": "Important-CM-UM-Integration-Notice",
@@ -2772,7 +2772,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:44.621037"
+      "updated_at": "2026-11-14 18:25:37.900567"
     },
     {
       "id": "Introduction",
@@ -2784,7 +2784,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/algo/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:43.456838"
+      "updated_at": "2026-11-14 18:26:42.224875"
     },
     {
       "id": "introduction",
@@ -2796,7 +2796,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:31.545436"
+      "updated_at": "2026-11-14 18:27:34.988042"
     },
     {
       "id": "Introduction",
@@ -2808,7 +2808,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/convert/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:13.961919"
+      "updated_at": "2026-11-14 18:27:14.873674"
     },
     {
       "id": "Introduction",
@@ -2820,7 +2820,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/copy-trading/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:05.510334"
+      "updated_at": "2026-11-14 18:27:05.691655"
     },
     {
       "id": "Introduction",
@@ -2832,7 +2832,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:44.653760"
+      "updated_at": "2026-11-14 18:25:37.992395"
     },
     {
       "id": "Introduction",
@@ -2844,7 +2844,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:57.144127"
+      "updated_at": "2026-11-14 18:25:52.907239"
     },
     {
       "id": "Introduction",
@@ -2856,7 +2856,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:09.927819"
+      "updated_at": "2026-11-14 18:26:07.372508"
     },
     {
       "id": "Introduction",
@@ -2868,7 +2868,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:20.752479"
+      "updated_at": "2026-11-14 18:26:19.756041"
     },
     {
       "id": "Introduction",
@@ -2880,7 +2880,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:32.518849"
+      "updated_at": "2026-11-14 18:25:22.022309"
     },
     {
       "id": "Introduction",
@@ -2892,7 +2892,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:21.919356"
+      "updated_at": "2026-11-14 18:27:25.100536"
     },
     {
       "id": "Introduction",
@@ -2904,7 +2904,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:33.048389"
+      "updated_at": "2026-11-14 18:26:29.844003"
     },
     {
       "id": "Introduction",
@@ -2916,7 +2916,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/Introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:51.813251"
+      "updated_at": "2026-11-14 18:26:52.109418"
     },
     {
       "id": "listen-token-data-stream",
@@ -2928,7 +2928,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/listen-token-data-stream",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:35.147623"
+      "updated_at": "2026-11-14 18:26:32.290792"
     },
     {
       "id": "opo",
@@ -2940,7 +2940,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/opo",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:34.721633"
+      "updated_at": "2026-11-14 18:24:54.334959"
     },
     {
       "id": "order_amend_keep_priority",
@@ -2952,7 +2952,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/order_amend_keep_priority",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:34.765201"
+      "updated_at": "2026-11-14 18:24:54.418673"
     },
     {
       "id": "pegged_orders",
@@ -2964,7 +2964,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/pegged_orders",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:34.830770"
+      "updated_at": "2026-11-14 18:24:54.646584"
     },
     {
       "id": "price_range_execution_rules",
@@ -2976,7 +2976,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/price_range_execution_rules",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:37.018142"
+      "updated_at": "2026-11-14 18:24:57.144349"
     },
     {
       "id": "common-definition",
@@ -2988,7 +2988,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:10.141068"
+      "updated_at": "2026-11-14 18:26:07.798031"
     },
     {
       "id": "common-definition",
@@ -3000,7 +3000,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:21.986749"
+      "updated_at": "2026-11-14 18:27:25.366975"
     },
     {
       "id": "common-definition",
@@ -3012,7 +3012,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:33.225016"
+      "updated_at": "2026-11-14 18:26:30.219869"
     },
     {
       "id": "common-definition",
@@ -3024,7 +3024,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:44.796723"
+      "updated_at": "2026-11-14 18:25:38.309900"
     },
     {
       "id": "common-definition",
@@ -3036,7 +3036,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:57.289760"
+      "updated_at": "2026-11-14 18:25:53.366273"
     },
     {
       "id": "common-definition",
@@ -3048,7 +3048,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/common-definition",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:32.660112"
+      "updated_at": "2026-11-14 18:25:22.495712"
     },
     {
       "id": "rest-api",
@@ -3060,7 +3060,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/rest-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:22.294513"
+      "updated_at": "2026-11-14 18:25:09.916331"
     },
     {
       "id": "quick-start",
@@ -3072,7 +3072,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/algo/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:43.665916"
+      "updated_at": "2026-11-14 18:26:42.857975"
     },
     {
       "id": "quick-start",
@@ -3084,7 +3084,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:31.760410"
+      "updated_at": "2026-11-14 18:27:35.282738"
     },
     {
       "id": "quick-start",
@@ -3096,7 +3096,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/convert/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:14.245863"
+      "updated_at": "2026-11-14 18:27:15.451564"
     },
     {
       "id": "quick-start",
@@ -3108,7 +3108,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/copy-trading/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:05.857948"
+      "updated_at": "2026-11-14 18:27:06.118233"
     },
     {
       "id": "quick-start",
@@ -3120,7 +3120,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:47.637371"
+      "updated_at": "2026-11-14 18:25:42.039106"
     },
     {
       "id": "quick-start",
@@ -3132,7 +3132,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:59.874113"
+      "updated_at": "2026-11-14 18:25:57.470364"
     },
     {
       "id": "quick-start",
@@ -3144,7 +3144,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:11.243553"
+      "updated_at": "2026-11-14 18:26:10.664134"
     },
     {
       "id": "quick-start",
@@ -3156,7 +3156,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:21.306690"
+      "updated_at": "2026-11-14 18:26:20.419620"
     },
     {
       "id": "quick-start",
@@ -3168,7 +3168,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:35.133637"
+      "updated_at": "2026-11-14 18:25:26.364847"
     },
     {
       "id": "quick-start",
@@ -3180,7 +3180,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/institutional-loan/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:23.138767"
+      "updated_at": "2026-11-14 18:27:26.322680"
     },
     {
       "id": "quick-start",
@@ -3192,7 +3192,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/quick-start",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:52.129664"
+      "updated_at": "2026-11-14 18:26:52.698644"
     },
     {
       "id": "risk-data-stream",
@@ -3204,7 +3204,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:35.174527"
+      "updated_at": "2026-11-14 18:26:32.567337"
     },
     {
       "id": "introduction",
@@ -3216,7 +3216,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/sbe/schemas/introduction",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:41.756630"
+      "updated_at": "2026-11-14 18:25:02.886287"
     },
     {
       "id": "spot_glossary",
@@ -3228,7 +3228,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/spot_glossary",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:37.167100"
+      "updated_at": "2026-11-14 18:24:57.554355"
     },
     {
       "id": "DEMO-TERMS-OF-USE",
@@ -3240,7 +3240,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:28.961816"
+      "updated_at": "2026-11-14 18:24:49.059171"
     },
     {
       "id": "PROD-TERMS-OF-USE",
@@ -3252,7 +3252,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/PROD-TERMS-OF-USE",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:28.913600"
+      "updated_at": "2026-11-14 18:24:48.859467"
     },
     {
       "id": "TESTNET-TERMS-OF-USE",
@@ -3264,7 +3264,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/TESTNET-TERMS-OF-USE",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:41.853713"
+      "updated_at": "2026-11-14 18:25:03.146925"
     },
     {
       "id": "stp-faq",
@@ -3276,7 +3276,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/faq/stp-faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:57.452177"
+      "updated_at": "2026-11-14 18:25:53.735274"
     },
     {
       "id": "stp-faq",
@@ -3288,7 +3288,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:32.905482"
+      "updated_at": "2026-11-14 18:25:22.885592"
     },
     {
       "id": "stp_faq",
@@ -3300,7 +3300,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/stp_faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:39.132027"
+      "updated_at": "2026-11-14 18:25:00.012163"
     },
     {
       "id": "sbe_faq",
@@ -3312,7 +3312,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/sbe_faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:37.094619"
+      "updated_at": "2026-11-14 18:24:57.343178"
     },
     {
       "id": "sor_faq",
@@ -3324,7 +3324,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/sor_faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:37.133927"
+      "updated_at": "2026-11-14 18:24:57.418836"
     },
     {
       "id": "trailing-stop-faq",
@@ -3336,7 +3336,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/trailing-stop-faq",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:39.169053"
+      "updated_at": "2026-11-14 18:25:00.125835"
     },
     {
       "id": "order_count_decrement",
@@ -3348,7 +3348,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/order_count_decrement",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:34.800480"
+      "updated_at": "2026-11-14 18:24:54.472681"
     },
     {
       "id": "general-info",
@@ -3360,7 +3360,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:20.174947"
+      "updated_at": "2026-11-14 18:25:05.990144"
     },
     {
       "id": "user-data-streams",
@@ -3372,7 +3372,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/user-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:47.718177"
+      "updated_at": "2026-11-14 18:25:42.101837"
     },
     {
       "id": "user-data-streams",
@@ -3384,7 +3384,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/user-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:00.147984"
+      "updated_at": "2026-11-14 18:25:57.541187"
     },
     {
       "id": "user-data-streams",
@@ -3396,7 +3396,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/user-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:11.648237"
+      "updated_at": "2026-11-14 18:26:11.105839"
     },
     {
       "id": "user-data-streams",
@@ -3408,7 +3408,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/user-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:22.202983"
+      "updated_at": "2026-11-14 18:26:21.207475"
     },
     {
       "id": "user-data-streams",
@@ -3420,7 +3420,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:35.254515"
+      "updated_at": "2026-11-14 18:25:26.463239"
     },
     {
       "id": "user-data-stream",
@@ -3432,7 +3432,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/user-data-stream",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:24.287908"
+      "updated_at": "2026-11-14 18:25:13.966332"
     },
     {
       "id": "user-data-stream",
@@ -3444,7 +3444,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/user-data-stream",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:22.365021"
+      "updated_at": "2026-11-14 18:25:10.236244"
     },
     {
       "id": "quoteNotionalLimit",
@@ -3456,7 +3456,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/faqs/quoteNotionalLimit",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:24:37.060119"
+      "updated_at": "2026-11-14 18:24:57.253234"
     },
     {
       "id": "withdraw-questionnaire",
@@ -3468,7 +3468,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/wallet/travel-rule/withdraw-questionnaire",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:30:57.758383"
+      "updated_at": "2026-11-14 18:26:56.204782"
     },
     {
       "id": "change-log",
@@ -3480,7 +3480,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/change-log",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:31.416094"
+      "updated_at": "2026-11-14 18:27:34.713386"
     },
     {
       "id": "trade-data-stream",
@@ -3492,7 +3492,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/margin-trading/trade-data-stream",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:35.305541"
+      "updated_at": "2026-11-14 18:26:32.725014"
     },
     {
       "id": "Connect",
@@ -3504,7 +3504,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/Connect",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:00.188894"
+      "updated_at": "2026-11-14 18:25:57.591084"
     },
     {
       "id": "web-socket-api",
@@ -3516,7 +3516,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/web-socket-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:24.364797"
+      "updated_at": "2026-11-14 18:25:14.072582"
     },
     {
       "id": "web-socket-streams",
@@ -3528,7 +3528,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/web-socket-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:24.531271"
+      "updated_at": "2026-11-14 18:25:14.142538"
     },
     {
       "id": "How-to-manage-a-local-order-book-correctly",
@@ -3540,7 +3540,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:48.999303"
+      "updated_at": "2026-11-14 18:25:44.429961"
     },
     {
       "id": "How-to-manage-a-local-order-book-correctly",
@@ -3552,7 +3552,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:00.283484"
+      "updated_at": "2026-11-14 18:25:57.652059"
     },
     {
       "id": "How-to-manage-a-local-order-book-correctly",
@@ -3564,7 +3564,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:36.397277"
+      "updated_at": "2026-11-14 18:25:29.074029"
     },
     {
       "id": "Important-WebSocket-Change-Notice",
@@ -3576,7 +3576,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:36.429741"
+      "updated_at": "2026-11-14 18:25:29.155530"
     },
     {
       "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -3588,7 +3588,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:49.081115"
+      "updated_at": "2026-11-14 18:25:44.657509"
     },
     {
       "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -3600,7 +3600,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-options/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:28:00.984804"
+      "updated_at": "2026-11-14 18:25:58.465825"
     },
     {
       "id": "Live-Subscribing-Unsubscribing-to-streams",
@@ -3612,7 +3612,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:36.604703"
+      "updated_at": "2026-11-14 18:25:29.640424"
     },
     {
       "id": "web-socket-api",
@@ -3624,7 +3624,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/web-socket-api",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:22.906512"
+      "updated_at": "2026-11-14 18:25:10.725506"
     },
     {
       "id": "websocket-api-general-info",
@@ -3636,7 +3636,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-api-general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:47.751673"
+      "updated_at": "2026-11-14 18:25:42.458130"
     },
     {
       "id": "websocket-api-general-info",
@@ -3648,7 +3648,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-api-general-info",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:35.288799"
+      "updated_at": "2026-11-14 18:25:26.534742"
     },
     {
       "id": "websocket-market-data",
@@ -3660,7 +3660,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/alpha/websocket-market-data",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:31:32.529950"
+      "updated_at": "2026-11-14 18:27:35.951964"
     },
     {
       "id": "web-socket-streams",
@@ -3672,7 +3672,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/spot/testnet/web-socket-streams",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:22.947381"
+      "updated_at": "2026-11-14 18:25:10.899759"
     },
     {
       "id": "Connect",
@@ -3684,7 +3684,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:48.974338"
+      "updated_at": "2026-11-14 18:25:44.287603"
     },
     {
       "id": "Connect",
@@ -3696,7 +3696,7 @@
       "source_url": "https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Connect",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:27:35.366747"
+      "updated_at": "2026-11-14 18:25:26.597807"
     },
     {
       "id": "advanced-trading-algo-trading__rest-api",
@@ -3708,7 +3708,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-algo-trading/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:08.628514"
+      "updated_at": "2026-11-14 18:33:58.316038"
     },
     {
       "id": "advanced-trading-alpha-trading__rest-api",
@@ -3720,7 +3720,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:19.837644"
+      "updated_at": "2026-11-14 18:34:10.608667"
     },
     {
       "id": "advanced-trading-alpha-trading__ws-streams",
@@ -3732,7 +3732,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/ws-streams/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:23.563794"
+      "updated_at": "2026-11-14 18:34:15.036497"
     },
     {
       "id": "advanced-trading-copy-trading__rest-api",
@@ -3744,7 +3744,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:12.342166"
+      "updated_at": "2026-11-14 18:34:02.219404"
     },
     {
       "id": "advanced-trading-derivatives-trading-portfolio-margin-pro__rest-api",
@@ -3756,7 +3756,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:04.877457"
+      "updated_at": "2026-11-14 18:33:53.603654"
     },
     {
       "id": "advanced-trading-derivatives-trading-portfolio-margin__rest-api",
@@ -3768,7 +3768,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:00.707628"
+      "updated_at": "2026-11-14 18:33:49.192489"
     },
     {
       "id": "advanced-trading-institutional-loan__rest-api",
@@ -3780,7 +3780,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/advanced-trading-institutional-loan/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:16.090911"
+      "updated_at": "2026-11-14 18:34:06.422177"
     },
     {
       "id": "core-trading-convert__rest-api",
@@ -3792,7 +3792,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:56.901335"
+      "updated_at": "2026-11-14 18:33:44.570252"
     },
     {
       "id": "core-trading-derivatives-trading-coin-m-futures__rest-api",
@@ -3804,7 +3804,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:30.272913"
+      "updated_at": "2026-11-14 18:33:15.241927"
     },
     {
       "id": "core-trading-derivatives-trading-coin-m-futures__ws-api",
@@ -3816,7 +3816,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:34.029448"
+      "updated_at": "2026-11-14 18:33:19.548856"
     },
     {
       "id": "core-trading-derivatives-trading-coin-m-futures__ws-streams",
@@ -3828,7 +3828,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:37.819923"
+      "updated_at": "2026-11-14 18:33:24.116057"
     },
     {
       "id": "core-trading-derivatives-trading-options__rest-api",
@@ -3840,7 +3840,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:41.819798"
+      "updated_at": "2026-11-14 18:33:27.921878"
     },
     {
       "id": "core-trading-derivatives-trading-options__ws-streams",
@@ -3852,7 +3852,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:45.559054"
+      "updated_at": "2026-11-14 18:33:31.583778"
     },
     {
       "id": "core-trading-derivatives-trading-usd-s-m-futures__rest-api",
@@ -3864,7 +3864,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:18.923996"
+      "updated_at": "2026-11-14 18:33:01.530108"
     },
     {
       "id": "core-trading-derivatives-trading-usd-s-m-futures__ws-api",
@@ -3876,7 +3876,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:22.690890"
+      "updated_at": "2026-11-14 18:33:06.606548"
     },
     {
       "id": "core-trading-derivatives-trading-usd-s-m-futures__ws-streams",
@@ -3888,7 +3888,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:26.457447"
+      "updated_at": "2026-11-14 18:33:10.373808"
     },
     {
       "id": "core-trading-margin-trading__rest-api",
@@ -3900,7 +3900,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:49.395824"
+      "updated_at": "2026-11-14 18:33:36.659411"
     },
     {
       "id": "core-trading-spot-trading__rest-api",
@@ -3912,7 +3912,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:07.076825"
+      "updated_at": "2026-11-14 18:32:49.042750"
     },
     {
       "id": "core-trading-spot-trading__ws-api",
@@ -3924,7 +3924,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:10.939256"
+      "updated_at": "2026-11-14 18:32:53.417905"
     },
     {
       "id": "core-trading-spot-trading__ws-streams",
@@ -3936,7 +3936,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-streams/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:15.040156"
+      "updated_at": "2026-11-14 18:32:57.097738"
     },
     {
       "id": "core-trading-wallet__rest-api",
@@ -3948,7 +3948,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:39:53.164101"
+      "updated_at": "2026-11-14 18:33:40.796441"
     },
     {
       "id": "vip-and-institutional-sub-account__rest-api",
@@ -3960,7 +3960,7 @@
       "source_url": "https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/1.0.0/schema.yaml",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-11-13 20:40:27.671962"
+      "updated_at": "2026-11-14 18:34:19.613998"
     }
   ]
 }

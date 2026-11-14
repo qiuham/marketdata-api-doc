@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/quotes/check-otc-eligibility'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # Check OTC Eligibility

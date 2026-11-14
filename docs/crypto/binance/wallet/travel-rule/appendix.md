@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/travel-rule/appendix
 api_type: REST
-updated_at: 2026-11-13 20:30:29.873362
+updated_at: 2026-11-14 18:26:55.975026
 ---
 
 # Appendix

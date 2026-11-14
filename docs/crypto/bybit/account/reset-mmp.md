@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/reset-mmp
 api_type: Account
-updated_at: 2026-11-13 19:20:52.096447
+updated_at: 2026-11-14 18:34:34.999929
 ---
 
 # Reset MMP

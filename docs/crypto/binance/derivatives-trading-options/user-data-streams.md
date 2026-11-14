@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/user-data-streams
 api_type: REST
-updated_at: 2026-11-13 20:28:00.147984
+updated_at: 2026-11-14 18:25:57.541187
 ---
 
 # User Data Streams

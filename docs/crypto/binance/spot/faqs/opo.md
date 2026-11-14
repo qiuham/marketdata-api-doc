@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/opo
 api_type: REST
-updated_at: 2026-11-13 20:24:34.721633
+updated_at: 2026-11-14 18:24:54.334959
 ---
 
 # One Pays the Other (OPO)

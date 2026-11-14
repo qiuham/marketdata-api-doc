@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/relayer/check-if-a-wallet-is-deployed'
-updated_at: 2026-11-13
+updated_at: 2026-11-14
 ---
 
 # 检查钱包是否已部署

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-13 20:40:04.877457
+updated_at: 2026-11-14 18:33:53.603654
 ---
 
 # advanced-trading-derivatives-trading-portfolio-margin-pro__rest-api spec

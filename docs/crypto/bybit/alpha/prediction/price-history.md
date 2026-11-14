@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/price-history
 api_type: REST
-updated_at: 2026-11-13 19:21:14.272365
+updated_at: 2026-11-14 18:35:13.009856
 ---
 
 # Get Price History

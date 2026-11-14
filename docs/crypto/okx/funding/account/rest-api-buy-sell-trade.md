@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#funding-account-rest-api-buy-sell-trade
 anchor_id: funding-account-rest-api-buy-sell-trade
 api_type: REST
-updated_at: 2026-11-13 18:44:19.518325
+updated_at: 2026-11-14 18:43:21.575430
 ---
 
 # Buy/sell trade

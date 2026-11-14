@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/settlement
 api_type: REST
-updated_at: 2026-11-13 19:21:46.952462
+updated_at: 2026-11-14 18:35:28.092491
 ---
 
 # Get USDC Session Settlement
