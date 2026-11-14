@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-05-27 20:14:38.372822
+updated_at: 2026-11-13 20:56:51.238701
 ---
 
-# Gate API v4.106.88
+# Gate API v4.106.182
 
-v4.106.88 · Stable
+v4.106.182 · Stable
 
 
 Welcome to Gate API APIv4 provides operations related to spot, margin, and contract trading, including public interfaces for querying market data and authenticated private interfaces for implementing API-based automated trading.
@@ -19,6 +19,12 @@ Welcome to Gate API APIv4 provides operations related to spot, margin, and contr
   * Live trading: `https://api.gateio.ws/api/v4`
   * TestNet trading: `https://api-testnet.gateapi.io/api/v4`
   * Futures live trading alternative (futures only): `https://fx-api.gateio.ws/api/v4`
+
+##  Download Markdown Documentation
+
+Download the complete Markdown documentation bundle. It contains the Chinese and English Gate API v4 REST documents, Alpha, CrossEx, Agent, and all WebSocket documents used by this website.
+
+  * [Download complete Markdown documentation (ZIP)](/docs/developers/downloads/gate-api-v4-markdown.zip)
 
 ##  SDK
 
@@ -97,6 +103,491 @@ Even if you submit a problem, you should not submit the API key information to c
 
 #  Changelog
 
+**v4.106.180**
+
+2026-11-04
+
+  * Add `GET /flash-swap/v1/currency-pair` with required query parameters `asset_name` and `side` (`1`: sell, `2`: buy) and optional header `X-Gate-Region`. The response `currency_pair` contains `market`, `sell_asset`, `sell_min_amount`, `sell_max_amount`, `buy_asset`, `buy_min_amount`, and `buy_max_amount`.
+
+**v4.106.179**
+
+2026-11-03
+
+  * Add `GET /stock/orders/deals` with required query parameter `order_id` and optional `page` and `page_size` to query order trade records. The response includes trade IDs, price, quantity, value, fee, liquidity role, and position fields.
+  * Add `GET /stock/users/balance-records` with optional query parameters `type`, `business`, `symbol`, `begin_time`, `end_time`, `start_id`, `sort_direction`, `include_detail`, `page`, and `page_size`. The response includes balance changes, stock quantity changes, business identifiers, and record timestamps; `detail` is returned only when `include_detail=true`.
+  * `GET /stock/users/assets` adds the string response field `loan_amount`.
+  * `POST /futures/{settle}/autoorder/v1/trail/stop_all`: Correct the response structure to include top-level `code`, `message`, and `timestamp`; the order list is in `data.orders` instead of top-level `orders`.
+  * `GET /futures/{settle}/autoorder/v1/trail/list` and `POST /futures/{settle}/autoorder/v1/trail/stop_all`: Correct the response `timestamp` unit to milliseconds.
+  * `PUT /tradfi/orders/{order_id}`: Correct the required response fields `order_id`, `symbol`, `state`, `volume`, `price`, `price_tp`, and `price_sl` to belong to the `data` object instead of the response root.
+  * `GET /margin/uni/estimate_rate` and `GET /unified/estimate_rate`: Explicitly define the response as an object mapping currency names to string interest rates.
+
+**v4.106.178**
+
+2026-11-02
+
+  * `POST /futures/{settle}/autoorder/v1/trail/update` and `POST /futures/{settle}/autoorder/v1/trail/stop`: correct responses to expose `code`, `message`, and `timestamp` at the top level and the order at `data.order`.
+  * `GET /futures/{settle}/autoorder/v1/trail/change_log`: correct responses to expose `code`, `message`, and `timestamp` at the top level and entries at `data.change_log`; change entry field `updated_at` from `integer(int64)` to a decimal string.
+
+**v4.106.177**
+
+2026-11-02
+
+  * `POST /futures/{settle}/autoorder/v1/trail/create`: make the integer request field `price_type` required; valid values are `1` (latest), `2` (index), and `3` (mark).
+  * Trail order responses, including `GET /futures/{settle}/autoorder/v1/trail/detail` and `GET /futures/{settle}/autoorder/v1/trail/list`: correct `id`, `user_id`, `user`, `suborder_id`, `created_at`, `activated_at`, `finished_at`, `create_time`, `active_time`, `finish_time`, and `updated_at` from `integer(int64)` to decimal strings.
+
+**v4.106.175**
+
+2026-11-02
+
+  * Add `GET /crossex/rule/open_capacity` (`listCrossexRuleOpenCapacity`) with required response fields `symbol`, `position_side` (`LONG`/`SHORT`), and `available_to_open_notional`. Only trading pairs and position sides below the remaining opening capacity threshold are returned; `0` means no position can currently be opened for that pair and side.
+  * `PUT /tradfi/orders/{order_id}`: correct the required response fields `order_id`, `symbol`, `state`, `volume`, `price`, `price_tp`, and `price_sl` to the `data` object.
+  * `GET /margin/uni/estimate_rate` and `GET /unified/estimate_rate`: explicitly declare the response as an object mapping currencies to string rates.
+
+**v4.106.174**
+
+2026-11-02
+
+  * Correct the response schema for **`GET /futures/{settle}/autoorder/v1/trail/list`** : expose `code`, `message`, and `timestamp` at the top level, with the order list at `data.orders` instead of top-level `orders`. `timestamp` is an int64 Unix timestamp in microseconds.
+  * Document the HTTP 205 error response of **`GET /futures/{settle}/price_orders/{order_id}`** when the order does not exist, including the `code`, `label`, and `message` fields.
+
+**v4.106.172**
+
+2026-10-30
+
+  * `GET /options/accounts`: change response field `position_notional_limit` from `integer(int64)` to `string`.
+
+**v4.106.171**
+
+2026-10-30
+
+  * Add `PUT /stock/users/margin-feature` with the required boolean request field `margin_feature` to enable or disable margin financing.
+  * `GET /stock/symbols` and `GET /stock/symbols/detail` add the response fields `margin_mode` (integer: `0`, `1`, `2`, or `3`), `long_im`, `long_mm`, `short_im`, `short_mm`, `long_borrowing_rate`, and `short_borrowing_rate` (strings). An empty borrowing-rate string indicates that no valid rate is currently available.
+  * `GET /stock/users/assets` adds the string response fields `buy_power`, `leverage`, `leave_liquidity`, `leave_liquidity_rate`, `aee`, `options_margin`, and `long_borrowing_rate`, and the boolean response field `margin_enabled`.
+  * `GET /options/my_trades`: specify the response field `order_id` as `integer(int64)` to support order IDs greater than 2147483647.
+
+**v4.106.170**
+
+2026-10-30
+
+  * `POST /earn/autoinvest/min_invest_amount`: add required integer body field `asset_type` (`1` for cryptocurrency, `2` for TradFi stocks); callers must provide it explicitly.
+
+**v4.106.169**
+
+2026-10-30
+
+  * `GET /earn/fixed-term/product` adds optional query parameters `status` (integer; pass `2` for subscribable products) and `show_status` (string; pass `"2"` for visible products).
+
+**v4.106.168**
+
+2026-10-28
+
+  * `POST /spot/orders` and `POST /spot/batch_orders` add the optional, nullable boolean request field `use_earn` to redeem Simple Earn funds when placing orders.
+  * `GET /spot/open_orders`, `POST /spot/cross_liquidate_orders`, `POST /spot/orders`, `GET /spot/orders`, `GET /spot/orders/{order_id}`, `PATCH /spot/orders/{order_id}` and `DELETE /spot/orders/{order_id}` add the optional, nullable boolean response field `Order.use_earn`.
+
+**v4.106.167**
+
+2026-10-27
+
+  * Add `POST /bot/smart-position/create` and `POST /bot/futures-combo/create` for smart-position and futures-combo strategies; specify 2–10 asset members and exactly one of period or threshold.
+  * `GET /bot/strategy/recommend` supports `spot_grid`, `margin_grid`, `infinite_grid`, `futures_grid`, `spot_martingale` and `smart_position`, and accepts `exclude_recommendation_id` when refreshing recommendations. The `limit` range is 1–10.
+  * `POST /bot/contract-martingale/create` accepts `create_params.stop_loss_price_type` (`last/index/mark`), required together with a fixed stop-loss price; callers that previously supplied only the price must add its type. `invest_amount` is the total strategy budget, not first-order margin; `max_orders` excludes the initial entry.
+  * `POST /bot/portfolio/stop` requires smart-position stop mode `market/limit/no_close`; `limit` also requires price and `expiration`. Futures-combo strategies are supported. Portfolio queries expose assets/markets, positions, configuration and stop progress; create/stop responses expose strategy identity, observed status and recovery metadata. HTTP 200 can represent business failure: `data/trace_id` may be absent and failed writes may return only partial verified facts; check the business code first.
+
+**v4.106.163**
+
+2026-10-27
+
+  * Public SDKs: expose existing LaunchPool methods: `GET /launch/project-list`, `POST /launch/create-order`, `POST /launch/redeem`, `GET /launch/user-pledge-records`, and `GET /launch/get-user-reward-records`.
+  * Public SDKs: expose existing HODLer Airdrop methods: `GET /launch/hodler-airdrop/project-list`, `POST /launch/hodler-airdrop/order`, `GET /launch/hodler-airdrop/user-order-records`, and `GET /launch/hodler-airdrop/user-airdrop-records`.
+  * Public SDKs: expose existing CandyDrop methods: `GET /launch/candydrop/activity-list`, `GET /launch/candydrop/activity-rules`, `POST /launch/candydrop/register`, `GET /launch/candydrop/task-progress`, `GET /launch/candydrop/participation-records`, and `GET /launch/candydrop/airdrop-records`. Existing paths, operationIds, request/response fields and APIv4 authentication remain unchanged.
+
+**v4.106.161**
+
+2026-10-16
+
+  * TradFi: Declare `order_id`, `position_id`, and `log_id` as 64-bit integers in the order amendment/cancellation, order-log lookup, position amendment/closing paths and their order/position responses.
+
+**v4.106.160**
+
+2026-10-16
+
+  * **Breaking change:** Change the futures price-triggered order amendment endpoint from **`PUT /futures/{settle}/price_orders/amend`** to **`PUT /futures/{settle}/price_orders/amend/{order_id}`**. Supply the order ID as a required string path parameter and continue supplying `order_id` in the JSON request body. Update callers to pass the same order ID in both locations.
+
+**v4.106.159**
+
+2026-10-16
+
+  * **Breaking change:** Remove `closed` and `gt_lp` from the `trade_status` response enum of **`GET /stock/symbols`** , **`GET /stock/symbols/detail`** , **`GET /stock/orders`** , and **`GET /stock/positions`**. The documented values are now `pre_market`, `open`, and `post_market`.
+
+**v4.106.158**
+
+2026-10-16
+
+  * OTC: **`GET /otc/order/list`** (`listOtcOrders`) changes the documented response field from **`data.list`** to **`data.lists`**.
+  * OTC: **`GET /otc/stable_coin/order/list`** (`listStableCoinOrders`) changes the documented response field from **`data.list`** to **`data.lists`**.
+
+**v4.106.157**
+
+2026-10-14
+
+  * Add stock and ETF trading for US, Hong Kong, South Korean, and Japanese markets to CrossEx. Symbols use `{market}_{STOCK_or_ETF}_{security_code}_USDT`; orders require cross-exchange account mode, `GTC`, and `qty`, do not support `quote_qty`, and have an additional per-user limit of one request per second. Order prices and security position values use the listing market currency (`USD`, `HKD`, `KRW`, or `JPY`).
+  * Add **`GET /crossex/security_positions`** (`listCrossexSecurityPositions`) to query stock and ETF positions, with optional `symbol` and `exchange_type` filters.
+  * Add the required `tag` response field to **`GET /crossex/rule/symbols`** (`Symbol`) for security descriptions and Hyperliquid DEX information. Callers parsing this response must support the new field.
+  * Add `SECURITY_DIVIDEND` and `SECURITY_CORPORATE_ACTION` to the documented account book types returned by **`GET /crossex/account_book`**.
+
+**v4.106.156**
+
+2026-10-13
+
+  * Mark `stop_profit` and `stop_loss` as nullable in `Order`, `OrderPatch`, and `BatchAmendItem`. For spot order amendments, `null` leaves the corresponding protection unchanged, while `{}` cancels it.
+
+**v4.106.154**
+
+2026-10-13
+
+  * Add **`GET /spot/rpi_order_book`** to query the spot RPI order book, with bids sorted by descending price and asks by ascending price. No API key is required.
+
+**v4.106.152**
+
+2026-10-13
+
+  * Add **`GET /futures/{settle}/rpi_order_book`** to query the futures RPI order book without API key authentication, with price aggregation, depth limits, and optional update IDs.
+
+**v4.106.150**
+
+2026-10-09
+
+  * Add **`GET /earn/dual/stock/investment_plan`** to list available stock dual investment products.
+  * Add **`GET /earn/dual/stock/project-recommend`** to get recommendations for stock dual investment products.
+  * Add **`GET /earn/dual/stock/orders`** to list stock dual investment orders.
+  * Add **`POST /earn/dual/stock/orders`** to place a stock dual investment order.
+  * Add **`GET /earn/dual/stock/balance`** to get stock dual investment asset statistics.
+  * Add **`GET /earn/dual/stock/order-refund-preview`** to preview redemption of a stock dual investment order.
+  * Add **`POST /earn/dual/stock/order-refund`** to redeem a stock dual investment order.
+  * Add **`POST /earn/dual/stock/modify-order-reinvest`** to modify reinvestment settings for a stock dual investment order.
+  * Add the `type` response field (`call`: sell high; `put`: buy low) to **`GET /earn/dual/investment_plan`** and **`GET /earn/dual/stock/investment_plan`**.
+
+**v4.106.148**
+
+2026-10-08
+
+  * Add `5` (manual suspension), `6` (strategy exception), `7` (stock halt), and `8` (stock circuit breaker halt) to the `trade_mode` response enum of **`GET /stock/symbols`** , **`GET /stock/symbols/detail`** , and **`GET /stock/orders`**.
+  * **SDK breaking change:** Define the integer `status` response enum (`0`–`8`) for **`GET /stock/orders`** and **`GET /stock/orders/history`** , and the integer `finish_as` response enum (`0`–`9`, `13`) for **`GET /stock/orders/history`**. Generated Java accessors now use `StatusEnum` and `FinishAsEnum` instead of `Integer`; update client code to use enum values and `getValue()` when the wire integer is needed. Corresponding C# properties also become nullable enum types; update integer assignments and reads accordingly. JSON values remain integers.
+
+**v4.106.147**
+
+2026-10-08
+
+  * Add `dividend` (dividend payout) to the `type` filter of **`GET /futures/{settle}/account_book`** and the `type` response enum in `FuturesAccountBook`.
+
+**v4.106.144**
+
+2026-09-17
+
+  * Make `page` and `size` optional in the JSON request body of **`POST /ann/list_article`**. Both parameters remain strings when provided.
+
+**v4.106.143**
+
+2026-09-17
+
+  * Add `jp` to the `exchange` values in Stock market, symbol, order and position responses, and to the `exchange` filters of **`GET /stock/symbols`** , **`GET /stock/symbols/detail`** and **`GET /stock/positions`**.
+  * Add the `asset_type` response field (`STOCK` or `ETF`) to **`GET /stock/symbols`** and **`GET /stock/symbols/detail`**.
+  * Add `option_position_market_value`, `option_position_pnl` and `option_today_pnl` to the response of **`GET /stock/users/assets`**.
+  * **Breaking change:** **`GET /tradfi/symbols/commissions`** and **`GET /tradfi/symbols/detail`** now require APIv4 authentication. Include the `KEY`, `Timestamp` and `SIGN` headers when calling these endpoints.
+
+**v4.106.142**
+
+2026-09-17
+
+  * Add **`POST /ann/list_article`** to query announcement articles with pagination and filters for title, category, language and time. No API key is required.
+
+**v4.106.141**
+
+2026-09-15
+
+  * Update the Stock API lead-trading header value to `x-gate-trader-copy-type: stock_copy` (previously documented as `stock` for **`POST /stock/orders`**). Lead trading excludes **`POST /stock/transactions`** and **`GET /stock/transactions`**.
+
+**v4.106.139**
+
+2026-09-15
+
+  * Add `LIGHTER` exchange support to CrossEx: futures order symbols use `LIGHTER_FUTURE_{Base}_{Counter}`; `POST /crossex/transfers` supports USDC transfers between `CROSSEX_LIGHTER` and `SPOT`; `POST /crossex/convert/quote` supports swaps between `LIGHTER_USDC` and `CROSSEX_USDT` in cross-exchange mode.
+
+**v4.106.138**
+
+2026-09-10
+
+  * Add the optional integer field `leverage` to the `TradFiOrderRequest` request body of **`POST /tradfi/orders`** (`createTradFiOrder`) to specify the order leverage.
+
+**v4.106.136**
+
+2026-09-08
+
+  * **SDK breaking change:** Define the `category` response enum for **`GET /stock/symbols`** (`queryStockSymbols`) and **`GET /stock/symbols/detail`** (`queryStockSymbolDetail`): `CS`, `ETF`, `ADRC`, `ADR`, `ETV`, `PFD`, `ETS`, `ETN`, and `FUND`. Generated Java accessors in `SymbolListItem` and `SymbolDetailItem` now use `CategoryEnum` instead of `String`; update client code to use enum values and `getValue()` when a wire string is needed.
+
+**v4.106.135**
+
+2026-09-02
+
+  * Add **`POST /otc/upload/pre_upload`** (`createOtcUploadPreUpload`) for temporary-bucket file pre-upload, returning a base64 `file_key` and an S3 POST Policy; supports `scene=general|bank|assessment|credit`, and `content_type` must be sent as base64
+  * Update **`POST /otc/bank/create`** request docs with **`documentation_file_key`** and **`file_type`** , as an alternative to multipart **`documentation_file`** upload
+
+**v4.106.133**
+
+2026-08-31
+
+  * Add unified-market quote-currency support to Spot API: **`GET /spot/currency_pairs`** (`listCurrencyPairs`) and **`GET /spot/currency_pairs/{currency_pair}`** (`getCurrencyPair`) responses now expose **`trade_quotes`** ; Spot order request/response models expose **`trade_quote`** , including **`POST /spot/orders`** (`createOrder`); **`DELETE /spot/orders`** (`cancelOrders`) accepts an optional **`trade_quote`** filter; and **`GET /spot/trades`** (`listTrades`) / **`GET /spot/my_trades`** (`listMyTrades`) responses expose the actual quote currency through **`trade_quote`**
+
+**v4.106.132**
+
+2026-08-31
+
+  * **Breaking change:** Remove the `mt5_uid` field from the response `data` objects of **`GET /tradfi/users/mt5-account`** (`queryMt5AccountInfo`), **`POST /tradfi/users`** (`createTradFiUser`), and **`GET /tradfi/users/assets`** (`queryUserAssets`); clients must no longer rely on this identifier in these responses
+
+**v4.106.131**
+
+2026-08-24
+
+  * Update **`GET /crossex/history_positions`** (`listCrossexHistoryPositions`) response items with optional **`margin_mode`** (`CROSS`/`ISOLATED`), and update **`POST /crossex/positions/margin`** (`updateCrossexPositionsMargin`) response model `CrossexIsolatedMarginResponse` with optional **`position_side`** (`NONE`/`LONG`/`SHORT`)
+
+**v4.106.130**
+
+2026-08-22
+
+  * Update **`GET /crossex/rule/symbols`** (`listCrossexRuleSymbols`) response model `Symbol` with the optional string field **`support_cross`** (`"true"`/`"false"`) to indicate whether a symbol supports cross-margin order placement
+
+**v4.106.128**
+
+2026-08-20
+
+  * Update the margin formula link in **`GET /unified/accounts`** (`listUnifiedAccounts`) to point to the current Unified Account help center article
+
+**v4.106.127**
+
+2026-08-20
+
+  * Correct the Spot POV cancellation API documentation to match the existing service contract: use **`DELETE /spot/pov_orders`** (`cancelSpotPovOrders`) for bulk cancellation and **`DELETE /spot/pov_orders/{order_id}`** (`cancelSpotPovOrder`) for single-order cancellation. The operation IDs remain unchanged; the previously documented POST `/cancel` action paths should not be used
+  * Add the optional `receive_type` field to **`POST /otc/order/create`** (`createOtcOrder`) to specify the remittance name for corporate and individual users
+
+**v4.106.126**
+
+2026-08-19
+
+  * Add `usd1` as a supported `settle` value for perpetual futures REST APIs, including futures price-triggered order APIs; DeFi Futures remains limited to `btc` and `usdt`
+
+**v4.106.125**
+
+2026-08-19
+
+  * Add **`GET /futures/{settle}/adl_risk_states`** (`listFuturesADLRiskStates`) to list the current market-level ADL risk states for all futures contracts under a settlement currency, including the calculation timestamp and the `normal`, `warning`, and `adl_risk` states
+
+**v4.106.124**
+
+2026-08-14
+
+  * Update **`GET /margin/uni/currency_pairs`** and **`GET /margin/uni/currency_pairs/{currency_pair}`** responses with **`status`** and **`delisted_time`** fields to expose whether a margin market is enabled and when it is delisted
+
+**v4.106.123**
+
+2026-08-13
+
+  * Remove Launch APIs from the public SDK, including LaunchPool, HODLer Airdrop, and CandyDrop endpoints
+
+**v4.106.122**
+
+2026-08-11
+
+  * Update **`GET /spot/currency_pairs`** (`listCurrencyPairs`) and **`GET /spot/currency_pairs/{currency_pair}`** (`getCurrencyPair`) response descriptions to clarify that **`market_order_max_stock`** and **`market_order_max_money`** set no limit when their value is `null` or `0`
+
+**v4.106.121**
+
+2026-08-11
+
+  * Document the 5 qps rate limit for the affected TradFi Spot endpoints
+  * Clarify that TradFi Spot limit orders support only the `all` trading session, while market orders support only `regular`, and update the example accordingly
+  * Clarify that **`GET /stock/fee-rate`** (`queryStockFeeRate`) and its maker/taker fee fields apply to Japanese and Korean stocks
+
+**v4.106.117**
+
+2026-08-04
+
+  * Update **`POST /p2p/merchant/books/place_biz_push_order`** (`p2pMerchantBooksPlaceBizPushOrder`) request descriptions and examples to clarify that **`payType`** contains the comma-separated payment types enabled for the ad, while **`pay_type_json`** maps each enabled type to the current user's specific payment method ID
+
+**v4.106.116**
+
+2026-08-04
+
+  * Add Spot POV (percentage-of-volume) order APIs: **`POST /spot/pov_orders`** (`createSpotPovOrder`), **`GET /spot/pov_orders`** (`listSpotPovOrders`), and **`GET /spot/pov_orders/{order_id}`** (`getSpotPovOrder`) for creating and querying strategy orders with a target participation rate, validity period, optional limit/trigger prices, and custom order ID
+  * Add **`DELETE /spot/pov_orders`** (`cancelSpotPovOrders`) and **`DELETE /spot/pov_orders/{order_id}`** (`cancelSpotPovOrder`) to cancel Spot POV orders in bulk or individually
+
+**v4.106.115**
+
+2026-08-03
+
+  * Expand the CrossEx order error documentation to explain asynchronous order acceptance, distinguish CrossEx validation failures (`state=FAIL`) from exchange rejections (`state=REJECT`), and document common exchange rejection reasons and system-maintenance errors with troubleshooting guidance
+  * Refine the CrossEx error label reference with original error messages and actionable tips grouped by business scenario
+
+**v4.106.114**
+
+2026-08-03
+
+  * Update **`GET /crossex/market/tickers`** (`listCrossexMarketTickers`) and **`GET /crossex/market/funding_info`** (`listCrossexMarketFundingInfo`) response field descriptions, including correcting **`funding_time`** to mean the next funding time
+  * Expand the CrossEx error label documentation with actionable troubleshooting guidance grouped by business scenario
+
+**v4.106.113**
+
+2026-08-03
+
+  * Add **`GET /wallet/transfers`** (`getTransfer`) to retrieve the current user's trading account transfer details by **`tx_id`** ; the response includes transfer status, currency, amount, source and destination account types, and applicable settlement currency or margin currency pair
+
+**v4.106.112**
+
+2026-08-03
+
+  * Update **`POST /crossex/position`** (`closeCrossexPosition`) to clarify that automatic closing is triggered when a position is strictly below the minimum notional amount or minimum order size
+  * Update **`GET /crossex/positions`** (`listCrossexPositions`) response field **`funding_fee`** to clarify that it is the accumulated position funding fee and explain the meaning of positive and negative values
+  * Update **`GET /crossex/account_book`** (`listCrossexAccountBook`) response field **`business_id`** to document its meaning for each **`statement_type`**
+
+**v4.106.111**
+
+2026-08-03
+
+  * Update **`POST /stock/orders`** (`createStockOrder`) request model `TradFiSpotOrderRequest` and **`GET /stock/orders/history`** (`queryStockOrderHistory`) response model `OrderHistoryList`: remove the unsupported **`gtc`** value from **`time_in_force`** , leaving **`day`** as the only supported value
+
+**v4.106.110**
+
+2026-07-28
+
+  * Add **`GET /crossex/market/tickers`** (`listCrossexMarketTickers`) to query exchange market tickers, optionally filtered by a comma-separated list of symbols
+  * Add **`GET /crossex/market/funding_info`** (`listCrossexMarketFundingInfo`) to query futures funding rates, funding intervals, and funding timestamps across exchanges
+
+**v4.106.109**
+
+2026-07-22
+
+  * Add **`POST /unified/leverage/user_setting`** (`setUserLeverage`) to set leverage for all of a user's borrowed currencies; currencies with outstanding loans cannot be changed, values above a currency's leverage limit are capped, and the response lists currencies whose updates failed together with the failure reason
+  * Update the **`left`** field description in the **`GET /futures/{settle}/liq_orders`** (`listLiquidatedOrders`) response model `FuturesLiqOrder` to clarify that it is a reserved field with no current business significance
+  * Update **`GET /crossex/fee`** (`getCrossexFee`) response with **`spot_rpi_maker_fee`** and **`future_rpi_maker_fee`** , and add **`rpi_fee_rate`** to each item in **`special_fee_list`**
+  * Update **`GET /crossex/rule/symbols`** (`listCrossexRuleSymbols`) response with **`support_rpi`** to indicate whether a symbol supports RPI orders
+  * Add **`RPI`** as a supported **`time_in_force`** value for **`POST /crossex/orders`** (`createCrossexOrder`) and document it in CrossEx order responses
+
+**v4.106.108**
+
+2026-07-16
+
+  * Add **`POST /crossex/batch_cancel_orders`** (`cancelBatchCrossexOrders`) to cancel multiple CrossEx orders by **`order_id`** or custom **`text`** ; when both are provided, `order_id` takes precedence, and each result reports whether the request was accepted plus any error label and message
+  * Update **`GET /crossex/adl_rank`** (`listCrossexAdlRank`) response description to include Kraken ADL rank value **`40`** , making the documented values `20`, `40`, `80`, and `100`
+
+**v4.106.107**
+
+2026-07-13
+
+  * Update **`POST /otc/stable_coin/order/create`** (`createStableCoinOrder`): require all request fields except **`promotion_code`** , and add the required **`timestamp`** field to the response
+  * Update **`POST /otc/quote`** (`createOtcQuote`): clarify compatible **`side`** values, add **`validity_period`** , **`refresh_limit`** , and **`refresh_limit_msg`** to the response schema, and require the response **`timestamp`**
+  * Update OTC order responses: add the **`DISBURSED`** status to **`GET /otc/order/list`** (`listOtcOrders`), remove internal/obsolete fields from order-list and bank-list schemas, add **`pay_icon`** / **`get_icon`** to **`GET /otc/stable_coin/order/list`** (`listStableCoinOrders`), and expose complete user/Gate bank transfer details in **`GET /otc/order/detail`** (`getOtcOrderDetail`)
+  * Update **`GET /otc/bank/bank_supplement_checklist`** (`getOtcBankSupplementChecklist`): simplify each checklist item to the required **`description`** field
+  * Increase the maximum payment-receipt and account-opening-proof upload size from 4 MB to 10 MB for the relevant OTC order-paid and bank-binding flows
+
+**v4.106.106**
+
+2026-07-08
+
+  * Add new **Stock API** module with 16 endpoints covering user assets, symbols, market data, orders, positions, transactions, exchanges, and fee rates; all endpoints are tagged under `Stock`
+
+**v4.106.105**
+
+2026-07-06
+
+  * Add **`GET /tradfi/symbols/commissions`** (`querySymbolCommissions`) to query CFD symbol commission rates; request supports optional **`symbols`** and **`category_code`** filters, and response uses the new **`SymbolCommissions`** model with **`category_code`** , **`symbol`** , and **`fee_per_lot`** fields
+
+**v4.106.104**
+
+2026-07-02
+
+  * Update **`GET /futures/{settle}/positions`** (`listPositions`) parameter handling: replace the shared `limit` parameter with the dedicated `positions_limit` definition in the schema no longer carries a default value, so omitting it returns the full current position list while explicit values remain capped at `1`-`100`
+
+**v4.106.103**
+
+2026-06-30
+
+  * Add P2P Merchant documentation guidance to use the Spot API **`GET /spot/accounts`** operation for spot account balances; the duplicate OpenAPI guide definition was removed in v4.106.128
+  * Update **`POST /p2p/merchant/books/ads_list`** (`p2pMerchantBooksAdsList`) response: add **`surplus_amount`** (remaining tradable crypto quantity) and **`trade_methods`** (supported payment methods list); enrich examples with **`fiat_min_amount`** / **`fiat_max_amount`** / **`limit_basis`** / **`limit_basis_text`**
+  * Update **`ContractStat`** model: change **`long_users`** and **`short_users`** field type from `string` to `integer` (`int64`)
+
+**v4.106.102**
+
+2026-06-26
+
+  * Update **`POST /p2p/merchant/books/place_biz_push_order`** (`p2pMerchantBooksPlaceBizPushOrder`) request: add **`limitBasis`** (trading limit unit — 0: by crypto quantity, 1: by fiat amount; defaults to 0 for a new ad), **`fiatMinAmount`** / **`fiatMaxAmount`** (min/max fiat amount per order, required when `limitBasis` is 1), and **`polymarket_limit`** (whether to restrict trading with Polymarket users); **`minAmount`** / **`maxAmount`** are no longer required and now denote the trade quantity priced by `currencyType`
+  * Update P2P merchant ad detail/list responses — **`POST /p2p/merchant/books/ads_detail`** (`p2pMerchantBooksAdsDetail`) and **`POST /p2p/merchant/books/ads_list`** (`p2pMerchantBooksAdsList`): add **`fiat_min_amount`** / **`fiat_max_amount`** / **`minFiatAmount`** / **`maxFiatAmount`** (min/max fiat amount per order), **`limitBasis`** / **`limitBasisText`** (trading limit unit and its label), and **`polymarket_limit`** ; clarify **`min_amount`** / **`max_amount`** as the trade quantity priced by `currency_type`
+
+**v4.106.99**
+
+2026-06-25
+
+  * Update **`ContractStat`** model: change the **`top_long_account`** (top trader long account count) and **`top_short_account`** (top trader short account count) field type from `string` to `integer` (`int64`) — affects the responses of **`GET /futures/{settle}/contract_stats`** (`listContractStats`) and **`GET /defi/futures/{settle}/contract_stats`**
+
+**v4.106.98**
+
+2026-06-25
+
+  * Update **`GET /earn/staking/order_list`** (`orderList`) response: clarify the `status` field enum values — `1` success, `3` delayed redemption in progress, `6` redemption cancellation order
+  * Update **`GET /earn/staking/award_list`** (`awardList`) response: clarify the `status` field enum value — `4` success
+  * Update **`GET /earn/staking/assets`** (`assetList`) response: clarify the `status` field enum values — `1` currency project listed, `2` currency project delisted
+
+**v4.106.97**
+
+2026-06-17
+
+  * Add **`POST /unified/delta_neutral`** (`setUnifiedDeltaNeutral`) — set the account Delta-neutral strategy mode; requires VIP level ≥ 4 and the account in cross-currency margin mode; request and response body `DeltaNeutralEnabled` with required **`enabled`** (boolean) field
+  * Add **`GET /unified/delta_neutral`** (`getUnifiedDeltaNeutral`) — query the account Delta-neutral strategy mode setting; response body `DeltaNeutralEnabled`
+  * Update **`Position`** model: add **`hedge_status`** (`partial_hedged` / `full_hedged`), **`hedged_size`** and **`unhedged_size`** fields describing the hedging status and hedged/unhedged size of positions under the Delta-neutral strategy
+  * Update **`GET /earn/staking/order_list`** (`orderList`) response: clarify the `status` field enum values — `1` success, `3` delayed redemption in progress, `6` redemption cancellation order
+  * Update **`GET /earn/staking/award_list`** (`awardList`) response: clarify the `status` field enum value — `4` success
+  * Update **`GET /earn/staking/assets`** (`assetList`) response: clarify the `status` field enum values — `1` currency project listed, `2` currency project delisted
+
+**v4.106.96**
+
+2026-06-12
+
+  * Add **`POST /p2p/merchant/account/set_merchant_work_hours`** (`p2pMerchantAccountSetMerchantWorkHours`) — set merchant working status and custom working hours; request body `SetMerchantWorkHoursRequest` with **`work_status`** (required, `0` resting / `1` working / `2` custom working hours) and conditional fields **`cycle_type`** / **`day_of_week`** / **`time_zone`** (UTC offset `-12` to `+14`) / **`start_time`** / **`end_time`** ; response returns the merchant's current working status (`0`-`3`)
+  * Update **`POST /p2p/merchant/books/place_biz_push_order`** — `trade_tips` and `auto_reply` now go through off-platform traffic diversion risk control on submission; when hit, the advertisement is not saved and **`code 70305102`** is returned with the new **`data.risk_code`** / **`data.risk_event`** fields (prompt `type` / `title` / `msg` / `action`, plus `content_risk_type` / `trade_tips` / `auto_reply` prompt messages)
+  * Update **`POST /p2p/merchant/chat/send_chat_message`** — text messages now go through off-platform traffic diversion risk control; when hit, the API still returns `code 0` and `data` contains the new **`risk_type`** (`1`: off-platform traffic diversion risk) and **`toast_msg`** fields; chat message items also carry `risk_type` / `toast_msg`
+
+**v4.106.95**
+
+2026-06-11
+
+  * Add optional **`refund_status`** (`string`) to the **`GET /wallet/deposits`** (`listDeposits`) response model `DepositRecord` — blocked deposit refund status, returned only when the deposit record has a blocked deposit refund record with a non-empty refund status; enum: `REFUNDING` (refund in progress), `REFUNDED` (refund completed), `REFUND_FAILED` (refund failed), `REJECTED` (refund rejected)
+  * OTC: Update **`GET /otc/order/detail`** (`getOtcOrderDetail`) — `OtcOrderDetail` adds optional **`reference_code`** (unique bank transfer reference code for deposit buy orders, SGB deposit scenario; mutually exclusive with `transfer_remark`)
+  * OTC: Update **`GET /otc/order/list`** (`listOtcOrders`) — `OtcOrderListItem` adds optional **`reference_code`** ; clarify `transfer_remark` is empty when `reference_code` is set
+
+**v4.106.94**
+
+2026-06-08
+
+  * Update **`GET /wallet/saved_address`** (`listSavedAddress`) — renamed to "Query saved address" (withdrawal address book); the `currency` query parameter is now optional (was required)
+  * Add optional **`verified`** (`string`) query parameter to **`GET /wallet/saved_address`** — `1` for verification-free addresses, `0` for normal addresses, empty string for no filter
+  * add **`GET /tradfi/orders/log/{log_id}`** (`queryOrderLog`) — query order details by `log_id` returned from the order placement API; response body is `OrderLog` (`definitions/tradfi/OrderLog.yaml`) with per-update fields such as `order_id`, `log_id`, `symbol`, `price_type` (`market` / `trigger`), `state`, `side`, `volume`, and `price`; add **`400`** error response
+
+**v4.106.93**
+
+2026-06-03
+
+  * Add optional **`tpsl_tp_bbo_type`** / **`tpsl_sl_bbo_type`** (`string`) to `FuturesOrder` — BBO price type for the take-profit / stop-loss legs carried with futures orders, complementing the existing `tpsl_tp_trigger_price` / `tpsl_sl_trigger_price` fields
+
+**v4.106.89**
+
+2026-05-28
+
+  * OTC: Remove deprecated **`GET /otc/get_user_def_bank`** — clients should derive the default card from the `is_default` field returned by **`GET /otc/bank_list`**
+  * OTC: Update **`GET /otc/bank_list`** description — clarifies default-card lookup via `is_default` and Inner path mapping
+  * OTC: Add **`GET /otc/bank/list`** (`getBankListInnerPath`) — synonymous Inner-aligned path of `GET /otc/bank_list`
+  * OTC: Add bank-card management endpoints — **`POST /otc/bank/create`** (`createOtcBank`), **`POST /otc/bank/delete`** (`deleteOtcBank`), **`POST /otc/bank/set_default`** (`setDefaultOtcBank`)
+  * OTC: Add **`GET /otc/bank/bank_supplement_checklist`** (`getOtcBankSupplementChecklist`) — returns the checklist of bank-card supplementary materials by user's verified type (personal/enterprise)
+  * OTC: Add **`POST /otc/bank/personal/bank_supplement`** (`submitOtcBankPersonalSupplement`) and **`POST /otc/bank/enterprise/bank_supplement`** (`submitOtcBankEnterpriseSupplement`) — `multipart/form-data` upload of personal/enterprise bank-card supplementary materials
+  * OTC: Update **`POST /otc/order/paid`** (`markOtcOrderPaid`) — payment receipt is now mandatory; `OtcMarkOrderPaidRequest` adds required field **`payment_receipt_file_key`** and optional **`client_order_id`** / **`payment_receipt`** (gateway compatibility alias)
+
 **v4.106.88**
 
 2026-05-26
@@ -120,7 +611,7 @@ Even if you submit a problem, you should not submit the API key information to c
 2026-05-19
 
   * Add optional query parameters **`page`** and **`page_size`** to **`GET /tradfi/positions/history`** (`queryPositionHistoryList`) for paginated historical positions
-  * Update tradfi : response `data` includes **`total`** and **`total_page`**
+  * Update CFD API: response `data` includes **`total`** and **`total_page`**
   * Add optional request field **`action_mode`** (`string`) — processing mode controlling which order fields are returned on placement; values **`ACK`** (async, key fields only), **`RESULT`** (no clearing/liquidation details), **`FULL`** (default, complete payload)
   * Add optional query **`action_mode`** to **`DELETE /futures/{settle}/orders`** (`cancelFuturesOrders`) and **`DELETE /futures/{settle}/orders/{order_id}`** (`cancelFuturesOrder`) so cancel responses follow the same field-profile semantics as create
 
@@ -188,7 +679,7 @@ Even if you submit a problem, you should not submit the API key information to c
 
 2026-04-27
 
-  * Documentation site: tag-split layout so each API tag page shows only that tag’s endpoints and related schemas—global sections (changelog overview, REST guide, authentication, FAQ, errors) are no longer duplicated on every tag landing page; TradFi endpoints are grouped under a **TradFi** heading in navigation
+  * Documentation site: tag-split layout so each API tag page shows only that tag's endpoints and related schemas; global sections (changelog overview, REST guide, authentication, FAQ, errors) are no longer duplicated on every tag landing page; CFD endpoints are grouped under a **CFD** heading in navigation
 
 **v4.106.71**
 
@@ -346,7 +837,7 @@ Even if you submit a problem, you should not submit the API key information to c
 
 2026-03-20
 
-  * Update TradFi API: `GET /tradfi/symbols/detail` (querySymbolDetail) now requires authentication
+  * Update CFD API: `GET /tradfi/symbols/detail` (querySymbolDetail) now requires authentication
 
 **v4.106.43**
 
@@ -375,7 +866,7 @@ Even if you submit a problem, you should not submit the API key information to c
 2026-03-13
 
   * Add `PUT /options/orders/{order_id}` endpoint (amendOptionsOrder) for options order amendment
-  * Update TradFi API: `GET /tradfi/users/mt5-account` now requires authenticated calls (anonymous access disabled)
+  * Update CFD API: `GET /tradfi/users/mt5-account` now requires authenticated calls (anonymous access disabled)
 
 **v4.106.34**
 
@@ -405,7 +896,6 @@ Even if you submit a problem, you should not submit the API key information to c
   * Update `PUT /futures/{settle}/price_orders/{order_id}` endpoint: move to new path `PUT /futures/{settle}/price_orders/amend/{order_id}`
   * Update `FuturesUpdatePriceTriggeredOrder` model: change `order_id` field type from `string` to `integer`
   * Update `BatchOrder` model: add new `finish_as` enum values: `liquidate_cancelled`, `small`, `depth_not_enough`, `trader_not_enough`, `poc`, `fok`, `price_protect_cancelled`, `unknown`
-  * Update `Order` model: revise `cancelled_reason` field `ioc` enum description to clarify it also applies to `poc/rvt/rat/rpi` orders rejected as taker
 
 **v4.106.30**
 
@@ -433,7 +923,7 @@ Even if you submit a problem, you should not submit the API key information to c
 
 2026-02-28
 
-  * Update the translation content and optimize the TradFi document description.
+  * Update the translation content and optimize the CFD document description.
 
 **v4.106.27**
 
@@ -490,7 +980,7 @@ Even if you submit a problem, you should not submit the API key information to c
   * Add `TrailOrder` and `TrailChangeLog` models for trailing orders
   * Update `SwapCoin` model: change `side` type to integer (0-pledge, 1-redeem) and remove `pid` int32 format constraint
   * Add `BatchFundingRatesRequest` and `BatchFundingRatesResponse` models for batch funding rate queries
-  * Add TradFi API endpoints: `POST /tradfi/users`, `GET /tradfi/users/assets`, `GET /tradfi/users/mt5-account`, `POST /tradfi/transactions`, `GET /tradfi/transactions` and 14 more
+  * Add CFD API endpoints: `POST /tradfi/users`, `GET /tradfi/users/assets`, `GET /tradfi/users/mt5-account`, `POST /tradfi/transactions`, `GET /tradfi/transactions` and 14 more
   * Update `FuturesAccount` model: remove `cross_settle` field
   * Update `TotalBalance` model: add new account types (`meme_box`, `options`, `payment`)
   * Update `UnifiedMarginTiers` model: fix description format
@@ -500,9 +990,9 @@ Even if you submit a problem, you should not submit the API key information to c
 2026-01-27
 
   * Update `Contract` model: add `enable_decimal` field to indicate whether the contract supports decimal string type contract size. When this field is `true`, the contract supports decimal contract size (i.e., the `size` field can use decimal string type); when it is `false`, the contract does not support decimal contract size (i.e., the `size` field can only use integer type)
-  * Add TradFi menu and sidebar in documentation
-  * Add comprehensive TradFi API endpoints for MT5-based forex and CFD trading, including user management, asset queries, order management, position management, and market data queries
-  * Support TradFi REST API references in documentation navigation
+  * Add CFD menu and sidebar in documentation
+  * Add comprehensive CFD API endpoints for MT5-based forex and CFD trading, including user management, asset queries, order management, position management, and market data queries
+  * Support CFD REST API references in documentation navigation
 
 **v4.106.18**
 
@@ -2073,6 +2563,25 @@ The Others: 200r/10s per endpoint
 | UID |  Spot order placement and cancellation.  
 Trade history and fee rates.  
   
+Stock | Public endpoints |  GET /stock/symbols: 5 qps  
+GET /stock/symbols/detail: 5 qps  
+GET /stock/market/{symbol}/orderbook: 5 qps  
+GET /stock/fee-rate: 5 qps  
+| IP |  Stock symbol, market data, and fee rate queries.  
+  
+Stock | Private endpoints |  GET /stock/users/assets: 5 qps  
+POST /stock/orders: 5 qps  
+GET /stock/orders: 5 qps  
+DELETE /stock/orders: 5 qps  
+GET /stock/orders/history: 5 qps  
+PUT /stock/orders/{order_id}: 5 qps  
+DELETE /stock/orders/{order_id}: 5 qps  
+GET /stock/positions: 5 qps  
+POST /stock/positions/close: 5 qps  
+POST /stock/transactions: 5 qps  
+GET /stock/transactions: 5 qps  
+| UID |  Stock asset, order, position, and transaction endpoints.  
+  
 Perpetual Futures | Private endpoints |  The rate limit for batch/single order placement and amend an order are total of 100r/s  
 The maximum rate limit for the order cancellation (bulk/single) is 200r/s  
 The Others: 200r/10s per endpoint  
@@ -2186,9 +2695,11 @@ The platform will implement rate limiting for trading behaviors that frequently 
 
 Fill Ratio = USDT Trading Amount / (Total Number of Order Placement, Cancellation, and Modification Requests)
 
-###  3\. Future Rate Limit Rule
+###  3\. Futures Rate Limit Rule (Coming Soon)
 
-3\. Future Rate Limit RuleContract Frequency Limitation Rules  
+> ⚠️ **Not yet available** : The futures fill-ratio rate limit rules below are not currently in effect. Existing futures rate limits remain unchanged. The effective date will be announced separately.
+
+3\. Futures Rate Limit Rule (Coming Soon)Contract Frequency Limitation Rules  
 ---  
 Tier | Ratio | Rate Limit (uid)  
 Tier 1 | [0,1) | 100r/s  

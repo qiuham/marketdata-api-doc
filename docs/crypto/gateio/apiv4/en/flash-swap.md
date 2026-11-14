@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/flash-swap
 api_type: REST
-updated_at: 2026-05-27 20:15:08.840394
+updated_at: 2026-11-13 20:57:06.908199
 ---
 
 # Flash_swap
@@ -30,8 +30,6 @@ page | query | integer(int32) | Optional | Page number
 limit | query | integer(int32) | Optional | Maximum number of items returned. Default: 1000, minimum: 1, maximum: 1000  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -141,8 +139,6 @@ page | query | integer(int32) | Optional | Page number
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [FlashSwapOrder]  
@@ -251,15 +247,13 @@ Initiate a flash swap preview in advance because order creation requires a previ
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | FlashSwapOrderRequest | Required | none  
-↳ preview_id | body | string | Required | Preview result ID  
-↳ sell_currency | body | string | Required | Name of the asset to be sold, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
-↳ sell_amount | body | string | Required | Amount to sell (based on the preview result)  
-↳ buy_currency | body | string | Required | Name of the asset to be bought, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
-↳ buy_amount | body | string | Required | Amount to buy (based on the preview result)  
+» preview_id | body | string | Required | Preview result ID  
+» sell_currency | body | string | Required | Name of the asset to be sold, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
+» sell_amount | body | string | Required | Amount to sell (based on the preview result)  
+» buy_currency | body | string | Required | Name of the asset to be bought, obtained from the interface GET /flash_swap/currency_pairs: Query the list of all trading pairs supporting flash swap  
+» buy_amount | body | string | Required | Amount to buy (based on the preview result)  
   
 ### Responses
-
-  * 201[Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2)Flash swap order created successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -381,8 +375,6 @@ order_id | path | integer | Required | Flash swap order ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | FlashSwapOrder  
@@ -487,11 +479,11 @@ _Flash swap order preview_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | FlashSwapPreviewRequest | Required | none  
-↳ sell_currency | body | string | Required | The name of the asset being sold, as obtained from the "GET /flash_swap/currency_pairs" API, which retrieves a list of supported flash swap currency pairs  
-↳ sell_amount | body | string | Optional | Amount to sell.  
+» sell_currency | body | string | Required | The name of the asset being sold, as obtained from the "GET /flash_swap/currency_pairs" API, which retrieves a list of supported flash swap currency pairs  
+» sell_amount | body | string | Optional | Amount to sell.  
 It is required to choose one parameter between `sell_amount` and `buy_amount`  
-↳ buy_currency | body | string | Required | The name of the asset being purchased, as obtained from the "GET /flash_swap/currency_pairs" API, which provides a list of supported flash swap currency pairs  
-↳ buy_amount | body | string | Optional | Amount to buy.  
+» buy_currency | body | string | Required | The name of the asset being purchased, as obtained from the "GET /flash_swap/currency_pairs" API, which provides a list of supported flash swap currency pairs  
+» buy_amount | body | string | Optional | Amount to buy.  
 It is required to choose one parameter between `sell_amount` and `buy_amount`  
   
 ####  Detailed descriptions
@@ -503,8 +495,6 @@ It is required to choose one parameter between `sell_amount` and `buy_amount`
 It is required to choose one parameter between `sell_amount` and `buy_amount`
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Flash swap order preview successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -600,6 +590,138 @@ Code samples
     }
     
 
+##  List Flash Swap currency pairs
+
+GET`/flash-swap/v1/currency-pair`
+
+GET `/flash-swap/v1/currency-pair`
+
+_List Flash Swap currency pairs_
+
+List available Flash Swap currency pairs and buy/sell amount limits for the specified currency and trading side
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+asset_name | query | string | Required | Currency name  
+side | query | integer(int32) | Required | Trading side  
+\- `1`: Sell  
+\- `2`: Buy  
+X-Gate-Region | header | string | Optional | User region  
+  
+####  Detailed descriptions
+
+**side** : Trading side  
+\- `1`: Sell  
+\- `2`: Buy
+
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+side | 1  
+side | 2  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successful response | FlashSwapV1CurrencyPairListResp  
+400 | [Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1) | Invalid parameters | FlashSwapErrorResponse  
+404 | [Not Found ](https://tools.ietf.org/html/rfc7231#section-6.5.4) | Record does not exist | FlashSwapErrorResponse  
+  
+### Response Schema
+
+Status Code **200**
+
+_FlashSwapV1CurrencyPairListResp_
+
+Name | Type | Description  
+---|---|---  
+» currency_pair | array | Available currency pairs for Flash Swap  
+»» FlashSwapV1CurrencyPair | FlashSwapV1CurrencyPair | Flash Swap V1 currency pair information  
+»»» market | string | Market identifier, e.g. `BTC_USDT` means selling BTC to buy USDT  
+»»» sell_asset | string | Currency to sell  
+»»» sell_min_amount | string | Minimum sell quantity  
+»»» sell_max_amount | string | Maximum sell quantity  
+»»» buy_asset | string | Currency to buy  
+»»» buy_min_amount | string | Minimum buy quantity  
+»»» buy_max_amount | string | Maximum buy quantity  
+  
+Status Code **400**
+
+_FlashSwapErrorResponse_
+
+Name | Type | Description  
+---|---|---  
+» code | integer | Error code  
+» message | string | Error message  
+  
+Status Code **404**
+
+_FlashSwapErrorResponse_
+
+Name | Type | Description  
+---|---|---  
+» code | integer | Error code  
+» message | string | Error message  
+  
+This operation does not require authentication 
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/flash-swap/v1/currency-pair'
+    query_param = 'asset_name=BTC&side=1'
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/flash-swap/v1/currency-pair?asset_name=BTC&side=1 \
+      -H 'Accept: application/json' \
+      -H 'X-Gate-Region: string'
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "currency_pair": [
+        {
+          "market": "BTC_USDT",
+          "sell_asset": "BTC",
+          "sell_min_amount": "0.00001",
+          "sell_max_amount": "100",
+          "buy_asset": "USDT",
+          "buy_min_amount": "10",
+          "buy_max_amount": "10000000"
+        }
+      ]
+    }
+    
+
+> 400 Response
+    
+    
+    {
+      "code": 0,
+      "message": "string"
+    }
+    
+
 #  Schemas
 
 ##  FlashSwapOrderPreview
@@ -627,6 +749,77 @@ price | string | Optional | none | Price
       "buy_currency": "string",
       "buy_amount": "string",
       "price": "string"
+    }
+    
+    
+
+##  FlashSwapPreviewRequest
+
+_Parameters of flash swap order creation_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+sell_currency | string | Required | none | The name of the asset being sold, as obtained from the "GET /flash_swap/currency_pairs" API, which retrieves a list of supported flash swap currency pairs  
+sell_amount | string | Optional | none | Amount to sell.  
+It is required to choose one parameter between `sell_amount` and `buy_amount`  
+buy_currency | string | Required | none | The name of the asset being purchased, as obtained from the "GET /flash_swap/currency_pairs" API, which provides a list of supported flash swap currency pairs  
+buy_amount | string | Optional | none | Amount to buy.  
+It is required to choose one parameter between `sell_amount` and `buy_amount`  
+      
+    
+    {
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string"
+    }
+    
+    
+
+##  FlashSwapErrorResponse
+
+_FlashSwapErrorResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer | Required | none | Error code  
+message | string | Required | none | Error message  
+      
+    
+    {
+      "code": 0,
+      "message": "string"
+    }
+    
+    
+
+##  FlashSwapV1CurrencyPairListResp
+
+_FlashSwapV1CurrencyPairListResp_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency_pair | [FlashSwapV1CurrencyPair] | Required | none | Available currency pairs for Flash Swap  
+      
+    
+    {
+      "currency_pair": [
+        {
+          "market": "string",
+          "sell_asset": "string",
+          "sell_min_amount": "string",
+          "sell_max_amount": "string",
+          "buy_asset": "string",
+          "buy_min_amount": "string",
+          "buy_max_amount": "string"
+        }
+      ]
     }
     
     
@@ -721,25 +914,29 @@ buy_amount | string | Required | none | Amount to buy (based on the preview resu
     
     
 
-##  FlashSwapPreviewRequest
+##  FlashSwapV1CurrencyPair
 
-_Parameters of flash swap order creation_
+_FlashSwapV1CurrencyPair_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-sell_currency | string | Required | none | The name of the asset being sold, as obtained from the "GET /flash_swap/currency_pairs" API, which retrieves a list of supported flash swap currency pairs  
-sell_amount | string | Optional | none | Amount to sell.  
-It is required to choose one parameter between `sell_amount` and `buy_amount`  
-buy_currency | string | Required | none | The name of the asset being purchased, as obtained from the "GET /flash_swap/currency_pairs" API, which provides a list of supported flash swap currency pairs  
-buy_amount | string | Optional | none | Amount to buy.  
-It is required to choose one parameter between `sell_amount` and `buy_amount`  
+market | string | Required | read-only | Market identifier, e.g. `BTC_USDT` means selling BTC to buy USDT  
+sell_asset | string | Required | read-only | Currency to sell  
+sell_min_amount | string | Required | read-only | Minimum sell quantity  
+sell_max_amount | string | Required | read-only | Maximum sell quantity  
+buy_asset | string | Required | read-only | Currency to buy  
+buy_min_amount | string | Required | read-only | Minimum buy quantity  
+buy_max_amount | string | Required | read-only | Maximum buy quantity  
       
     
     {
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string"
+      "market": "string",
+      "sell_asset": "string",
+      "sell_min_amount": "string",
+      "sell_max_amount": "string",
+      "buy_asset": "string",
+      "buy_min_amount": "string",
+      "buy_max_amount": "string"
     }

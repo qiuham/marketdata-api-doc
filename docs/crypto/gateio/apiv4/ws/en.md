@@ -2,15 +2,13 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/ws/en
 api_type: WebSocket
-updated_at: 2026-05-27 20:16:30.742914
+updated_at: 2026-11-13 20:57:33.060651
 ---
 
 # Spot WebSocket v4.0.0
 
 * Python 
   * Golang 
-
-v4.0.0 · Stable
 
 
 Gate provides a simple and robust Websocket API to integrate spot trade status into your business or application.
@@ -22,15 +20,38 @@ We have language bindings in `Python` and `Golang`. You can view code examples i
 Base URLs:
 
   * Real Trading: `wss://api.gateio.ws/ws/v4/`
+  * Real Trading SBE: `wss://api.gateio.ws/ws/v4/ws/spot/sbe`
   * TestNet: `wss://ws-testnet.gate.com/v4/ws/spot`
+  * TestNet SBE: `wss://ws-testnet.gate.com/v4/ws/spot/sbe`
+
+TIP
+
+SBE is recommended for faster market data and lower bandwidth cost. See the `SBE Data Push` section for usage.
 
 ###  SDK
 
 We provide WebSocket SDK to help developers with service integration.
 
-The SDK's source code are available in [gatews ](https://github.com/gateio/gatews) GitHub repository.
+The SDK's source code are available in [gatews ](https://github.com/gate/gatews) GitHub repository.
 
 ###  Changelog
+
+2026-10-14
+
+  * Added public channels `spot.rpi_order_book` and `spot.rpi_obu` to push RPI full order book snapshots
+
+2026-08-31
+
+  * `spot.order_place` (single and batch) now accepts `trade_quote`; RESULT and FULL results return the actual quote asset when provided by the downstream service.
+  * `spot.order_cancel_cp` now accepts `trade_quote` to limit cancellation to orders using that actual quote asset.
+  * Trade, user trade, and order notifications now include `stock`, `money`, and `trade_mode` for unified order books.
+  * This rollout enables quote-side unified trading (`trade_mode=1`).
+  * Order `finish_as` now supports `unified_check_failed`.
+  * SBE schema 2 adds the unified-order-book fields to the publicTrade, userTrade, and orders templates.
+
+2026-06-09
+
+  * Testnet added SBE (Simple Binary Encoding) binary market data push support. See the `SBE Data Push` section for usage.
 
 2026-03-31
 
@@ -362,7 +383,7 @@ Initiated from the sever. Server uses this method to send changed data to all cl
 
 ###  Client Request
 
-subscribe `or unsubscribe requests initiated from the client follow a common JSON format, which contains the following fields:`
+`subscribe` or `unsubscribe` requests initiated from the client follow a common JSON format, which contains the following fields:
 
 Field | Type | Required | Description  
 ---|---|---|---  
@@ -539,6 +560,131 @@ You can log into the console to retrieve Gate APIv4 key and secret.
     
     
 
+#  SBE Data Push
+
+##  Connecting with SBE
+
+  * To use SBE, append `/sbe` to the existing URL: 
+    * real trading: `wss://api.gateio.ws/ws/v4/ws/spot/sbe`
+    * testnet: `wss://ws-testnet.gate.com/v4/ws/spot/sbe`
+  * Schema `1` XML files: 
+    * `testnet`: [gate_spot_ws_latest.xml ](https://github.com/gate/gatews/blob/master/sbe/schemas/testnet/gate_spot_ws_latest.xml)
+    * real trading: [gate_spot_ws_latest.xml ](https://github.com/gate/gatews/blob/master/sbe/schemas/prod/gate_spot_ws_latest.xml)
+  * The two public XML files above currently have `schemaId=1`. Do not use them to decode messages requested with `sbe_schema_id=2`.
+  * Schema `2` will be published separately as `gate_spot_ws_v2.0.0.xml`. Until that XML file is available in the corresponding public directory, clients must continue using Schema `1` and must not request `sbe_schema_id=2`.
+  * After the Schema `2` XML file is publicly available, specify `sbe_schema_id` as a `query` parameter, e.g.: `wss://ws-testnet.gate.com/v4/ws/spot/sbe?sbe_schema_id=2`
+    * The currently supported `sbe_schema_id` values are `0`, `1`, and `2`; `sbe_schema_id` `0` is used by clients to test the incompatible-upgrade logic of the `sbe schema`
+    * If `sbe_schema_id` is not provided, schema `1` is used by default. Specify `sbe_schema_id=2` to receive the unified-order-book fields.
+    * Unified-order-book fields (`stock`, `money`, and `trade_mode`) in the publicTrade, userTrade, and orders templates require `sbe_schema_id=2`. Schemas 0 and 1 retain their original layouts.
+    * An unsupported `sbe_schema_id` falls back to the default schema `1`. Supported older schemas continue to use the layout requested by the client.
+
+##  SBE Usage Notes
+
+  * Use `JSON` for requests and the first response; use `SBE` for data push;
+  * Both `JSON` and `SBE` messages coexist on the same connection. Use the opcode to distinguish them: `opcode 1 means JSON`, `opcode 2 means SBE`.
+  * SBE decoding: 
+    * **MessageHeader** : every SBE binary frame is "MessageHeader + message body". The Header is a fixed 8 bytes (little-endian, four `uint16` fields in order: `blockLength`, `templateId`, `schemaId`, `version`). You **must read the Header first** , then select the corresponding Schema and message type by `schemaId` and `templateId` to decode the message body.
+    * **Recommended decoding flow** : 
+      1. Read the MessageHeader (fixed 8 bytes) to get `blockLength`, `templateId`, `schemaId`, `version`.
+      2. Select the decoder by `schemaId`: `0` → decode with the older string-decimal layout; `1` → decode with the fixed-point decimal layout; `2` → decode with the fixed-point layout extended with unified-order-book fields. Never decode a frame with a different schema layout.
+      3. Determine the concrete message type by `templateId` (e.g. publicTrade, orderBook, bbo), then decode the message body per that Schema's layout.
+  * When using SBE, **only the following channels can be subscribed** ; other channels do not support SBE push. More channels will be supported later. 
+    * Subscribing to a channel that does not support SBE returns a subscription-failure message
+
+Channel | templateId | Message Type | Description  
+---|---|---|---  
+`spot.tickers` | 7 | ticker | Ticker  
+`spot.trades` | 2 | publicTrade | Public trades  
+`spot.f_trades` | 2 | publicTrade | Filtered public trades  
+`spot.candlesticks` | 6 | candlestick | Candlesticks  
+`spot.order_book` | 4 | orderBook | Order book (full depth)  
+`spot.rpi_order_book` | 4 | orderBook | RPI order book (full depth)  
+`spot.order_book_update` | 5 | orderBookUpdate | Order book incremental update  
+`spot.book_ticker` | 1 | bbo | Best bid/offer (BBO)  
+`spot.obu` | 3 | obu | Order book update (OBU)  
+`spot.rpi_obu` | 3 | obu | RPI order book update (OBU)  
+`spot.usertrades` | 8 | userTrade | User trades  
+`spot.orders` | 9 | orders | Orders  
+`spot.balances` | 10 | balance | Spot balance  
+`spot.margin_balances` | 11 | marginBalance | Margin balance  
+`spot.funding_balances` | 12 | fundingBalance | Funding balance  
+`spot.cross_balances` | 13 | crossBalance | Cross margin balance  
+`spot.cross_loan` | 14 | crossLoan | Cross margin loan  
+`spot.priceorders` | 15 | priceOrder | Price-triggered orders  
+  
+>   * The `templateId` values above are authoritative as defined in the schema XML of the corresponding version.
+>   * The v2 variants of the channels above (e.g. `spot.trades_v2`, `spot.orders_v2`, `spot.usertrades_v2`) support SBE push.
+> 
+
+Unified-order-book additions in SBE schema 2:
+
+Template | Scope | SBE field | ID | JSON field | Description  
+---|---|---|---|---|---  
+publicTrade (templateId 2) | message | `tradeMode` | 12 | `trade_mode` | Trade mode  
+publicTrade (templateId 2) | message | `stock` / `money` | 203 / 204 | `stock` / `money` | Actual base / quote asset  
+userTrade (templateId 8) | `trades` group | `tradeMode` | 13 | `trade_mode` | Trade mode  
+userTrade (templateId 8) | `trades` group | `stock` / `money` | 206 / 207 | `stock` / `money` | Actual base / quote asset  
+orders (templateId 9) | `result` group | `tradeMode` | 28 | `trade_mode` | Trade mode  
+orders (templateId 9) | `result` group | `stock` / `money` | 213 / 214 | `stock` / `money` | Actual base / quote asset  
+  
+The orders template already contains `finishAs` in older schemas (`id=210` in schemas 1 and 2). `unified_check_failed` is a new string value and does not require schema 2.
+
+For `spot.usertrades_v2`, JSON continues to omit `fee`, `fee_currency`, `point_fee`, and `gt_fee`. The shared SBE userTrade template keeps its fixed fee fields for binary compatibility; they decode to zero or an empty string for this channel.
+
+Subscribe to a supported channel (`spot.order_book` as an example). The request and the first response are JSON; after a successful subscription, the channel data is pushed as SBE binary frames.
+
+Client request
+    
+    
+    {
+      "time": 1770603400,
+      "id": 123456789,
+      "channel": "spot.order_book",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "5", "100ms"]
+    }
+    
+
+Server response (JSON acknowledgement of the subscription)
+    
+    
+    {
+      "time": 1770603400,
+      "time_ms": 1770603400123,
+      "channel": "spot.order_book",
+      "event": "subscribe",
+      "error": null,
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+Subsequent order book pushes for this channel arrive as SBE binary frames (`opcode 2`); decode them with `templateId` `4` (orderBook).
+
+Subscribing to an SBE-unsupported channel returns a failure:
+    
+    
+    {
+      "time": 1770603321,
+      "time_ms": 1770603321767,
+      "conn_id": "57a8765578ea837e",
+      "trace_id": "3c75ba05569b3b292a2f36cfdd90d868",
+      "channel": "spot.system",
+      "event": "subscribe",
+      "payload": [
+        "20011"
+      ],
+      "error": {
+        "code": 2,
+        "message": "channel spot.system does not support SBE"
+      },
+      "result": {
+        "status": "fail"
+      }
+    }
+    
+
 #  System API
 
 System APIs used to retrieve service meta information. **NOT** used for subscription.
@@ -631,7 +777,13 @@ Response example
 
 When the service is about to shut down for an upgrade, it will push a system notification to connected clients. Clients should reconnect as soon as possible after receiving it.
 
-**Server push format (SystemNotifyDTO):**
+**Channel:** `spot.system`
+
+**Event:** `update`
+
+Clients can identify a service upgrade notification when `channel` is `spot.system`, `event` is `update`, and `result.type` is `upgrade`.
+
+**`result` format (SystemNotifyDTO):**
 
 Field | Type | Description  
 ---|---|---  
@@ -643,8 +795,14 @@ Field | Type | Description
     
     
     {
-      "type": "upgrade",
-      "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      "time": 1784800711,
+      "time_ms": 1784800711140,
+      "channel": "spot.system",
+      "event": "update",
+      "result": {
+        "type": "upgrade",
+        "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      }
     }
     
 
@@ -883,7 +1041,12 @@ Field | Type | Description
 »`price` | String | Trade price  
 »`range` | String | market Trade range (format: "start-end")  
 »`id_market` | Integer | One market Trade ID (Continuous Growth within a Single Market ID)  
+»`stock` | String | Actual base asset used by this trade  
+»`money` | String | Actual quote asset used by this trade  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
   
+For a unified order book, `currency_pair` remains the nominal subscribed market (for example, `BTC_USD`), while `stock` and `money` identify the actual assets used by the trade.
+
 ####  Enumerated Values
 
 Enumerated ValuesProperty | Value  
@@ -901,15 +1064,17 @@ Notification example
       "event": "update",
       "result": {
         "id": 309143071,
-        "id_market":2390902,
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
         "side": "sell",
-        "currency_pair": "GT_USDT",
+        "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
         "price": "0.4705000000",
         "range": "2390902-2390902",
-        "id_market": 5736713
+        "id_market": 5736713,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
       }
     }
     
@@ -1025,7 +1190,12 @@ Field | Type | Description
 »`price` | String | Trade price  
 »`range` | String | market Trade range (format: "start-end")  
 »`id_market` | Integer | One market Trade ID (Continuous Growth within a Single Market ID)  
+»`stock` | String | Actual base asset used by this trade  
+»`money` | String | Actual quote asset used by this trade  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
   
+For a unified order book, `currency_pair` remains the nominal subscribed market, while `stock` and `money` identify the actual assets used by the trade.
+
 ####  Enumerated Values
 
 Enumerated ValuesProperty | Value  
@@ -1043,15 +1213,17 @@ Notification example
       "event": "update",
       "result": {
         "id": 309143071,
-        "id_market":2390902,
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
         "side": "sell",
-        "currency_pair": "GT_USDT",
+        "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
         "price": "0.4705000000",
         "range": "2390902-2390902",
-        "id_market": 5736713
+        "id_market": 5736713,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
       }
     }
     
@@ -1203,7 +1375,7 @@ Notification example
 
 #  Order Book Channel
 
-Order book has three channels for subscription to satisfy different needs. They are:
+Order book channels for subscription are:
 
   * `spot.book_ticker`
 
@@ -1217,6 +1389,10 @@ Periodically notify order book changed levels which can be used to locally manag
 
 Periodically notify top bids and asks snapshot with limited levels.
 
+  * `spot.rpi_order_book`
+
+Periodically notify a limited-level snapshot of the RPI order book.
+
 Every currency pair's order book update has an internal update ID, which increments 1 on every order book update. The order book update ID corresponds to the `id` field in response of REST API `GET /api/v4/spot/order_book`.
 
 How to maintain local order book:
@@ -1228,7 +1404,7 @@ How to maintain local order book:
   5. Dump all notifications which satisfy `u < baseID+1`. If `baseID+1 < first notification U`, it means current base order book falls behind notifications. Start from step 3 to retrieve newer base order book.
   6. If any subsequent notification which satisfy `U > baseID+1` is found, it means some updates are lost. Reconstruct local order book from step 3.
 
-You can find example application implementing the methods above in the [SDK GitHub repository ](https://github.com/gateio/gatews)
+You can find example application implementing the methods above in the [SDK GitHub repository ](https://github.com/gate/gatews)
 
 ##  Best bid or ask price
 
@@ -1637,9 +1813,160 @@ Notification example
     }
     
 
+#  RPI Order Book Channel
+
+`spot.rpi_order_book`
+
+Pushes a full snapshot of the RPI order book. This is a public channel.
+
+The subscription payload and notification fields match `spot.order_book`. The two channels can show different bids and asks at the same time. This channel follows the RPI order book.
+
+**Update speed:** `100ms`, `500ms`, or `1000ms`
+
+SBE reuses the `orderBook` template (templateId=`4`). The `channel` field in the frame is `spot.rpi_order_book`.
+
+##  Client Subscription
+
+Subscription payload:
+
+Field | Type | Required | Description  
+---|---|---|---  
+`payload` | `Array[String]` | Yes | Subscription arguments: `cp`, `level`, `interval`  
+» `cp` | String | Yes | Currency pair  
+» `level` | String | Yes | Depth level  
+» `interval` | String | Yes | Notification interval  
+  
+####  Enumeration
+
+EnumerationProperty | Value  
+---|---  
+level | 5  
+level | 10  
+level | 20  
+level | 30  
+level | 50  
+level | 100  
+interval | 100ms  
+interval | 500ms  
+interval | 1000ms  
+  
+Use the same `payload` with `event` set to `unsubscribe` to cancel the subscription.
+
+Code example:
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.rpi_order_book",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT", "20", "100ms"]
+    }))
+    print(ws.recv())
+    
+
+Code example:
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.rpi_order_book",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "20", "100ms"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+##  Server Notification
+
+Result format:
+
+Field | Type | Description  
+---|---|---  
+`result` | Object | Order book levels  
+»`t` | Integer | Order book update time in milliseconds  
+»`lastUpdateId` | Integer | Order book update ID of this snapshot  
+»`s` | String | Currency pair  
+»`l` | String | Depth level. For example, `20` means a 20-level snapshot  
+»`bids` | `Array[OrderBookArray]` | Top bids in the current snapshot, sorted by price from high to low  
+»»`OrderBookArray` | `Array[String]` | [Price, Amount] pair  
+»`asks` | `Array[OrderBookArray]` | Top asks in the current snapshot, sorted by price from low to high  
+»»`OrderBookArray` | `Array[String]` | [Price, Amount] pair  
+  
+The number of bid and ask levels does not exceed the subscribed `level`.
+
+Notification example:
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "channel": "spot.rpi_order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "20",
+        "bids": [
+          ["19079.55", "0.0195"],
+          ["19079.07", "0.7341"]
+        ],
+        "asks": [
+          ["19080.24", "0.1638"],
+          ["19080.91", "0.1366"]
+        ]
+      }
+    }
+    
+
 #  Order Book V2 API
 
 **Provide a faster method for retrieving depth information**
+
+`spot.obu` and `spot.rpi_obu` both use these rules to maintain a local order book. See RPI Order Book V2 for `spot.rpi_obu`.
 
 ##  Maintain local depth
 
@@ -1921,6 +2248,236 @@ The above command returns JSON structured like this:
     }
     
 
+#  RPI Order Book V2 API
+
+`spot.rpi_obu`
+
+Pushes full snapshots and incremental updates of the RPI order book. This is a public channel.
+
+The message structure and the rules for maintaining a local order book are the same as Order Book V2. The stream name prefix is `rpi_ob.`.
+
+SBE reuses the `obu` template (templateId=`3`). The `channel` field in the frame is `spot.rpi_obu`.
+
+##  RPI order book V2 subscription
+
+###  Request
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload` is a list of stream names. Format: `rpi_ob.{symbol}.{level}`, for example `rpi_ob.BTC_USDT.400` and `rpi_ob.BTC_USDT.50`.
+
+`level` is `400` or `50`. Update frequency: 100ms for 400 levels, 20ms for 50 levels.
+
+The first notification after a successful subscription is a full snapshot (`full=true`). Later notifications are incremental. A connection can subscribe to the same stream only once.
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send('{"time" : 123456, "channel" : "spot.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The command above returns JSON structured like this:
+    
+    
+    {
+        "time": 1747054611,
+        "time_ms": 1747054611614,
+        "conn_id": "d7de96c024f2a5b2",
+        "trace_id": "e6fd9bdd617fcdb80d0762ffa33e71f6",
+        "channel": "spot.rpi_obu",
+        "event": "subscribe",
+        "payload": [
+            "rpi_ob.BTC_USDT.50"
+        ],
+        "result": {
+            "status": "success"
+        }
+    }
+    
+
+##  RPI order book V2 notification
+
+**RPI order book V2 notification**
+
+###  Notification parameters
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`update`
+
+  * params
+
+Notification parametersName | Type | Description  
+---|---|---  
+`result` | Object | Changed asks and bids since the last update  
+»`t` | Integer | Order book generation timestamp in milliseconds  
+»`full` | Boolean | `true` means a full snapshot. Incremental updates omit this field  
+»`s` | String | Stream name, for example `rpi_ob.BTC_USDT.50`  
+»`U` | Integer | First order book update ID in this notification  
+»`u` | Integer | Last order book update ID in this notification  
+»`b` | `Array[OrderBookArray]` | Bid updates since the last notification  
+»» OrderBookArray | `Array[String]` | [Price, Amount] pair. Remove the price when Amount is `0`  
+»`a` | `Array[OrderBookArray]` | Ask updates since the last notification  
+»» OrderBookArray | `Array[String]` | [Price, Amount] pair. Remove the price when Amount is `0`  
+  
+Full snapshot:
+    
+    
+    {
+        "channel": "spot.rpi_obu",
+        "result": {
+            "t": 1747054612673,
+            "full": true,
+            "s": "rpi_ob.BTC_USDT.50",
+            "u": 73777715168,
+            "b": [
+                ["104027.1", "509392"],
+                ["104027", "477932"]
+            ],
+            "a": [
+                ["104027.2", "44617"],
+                ["104027.4", "39322"]
+            ]
+        },
+        "time_ms": 1747054612848
+    }
+    
+
+Incremental update:
+    
+    
+    {
+        "channel": "spot.rpi_obu",
+        "result": {
+            "t": 1747054612695,
+            "s": "rpi_ob.BTC_USDT.50",
+            "U": 73777715169,
+            "u": 73777715212,
+            "b": [
+                ["104024.5", "10343"]
+            ],
+            "a": [
+                ["104027.2", "0"]
+            ]
+        },
+        "time_ms": 1747054612925
+    }
+    
+
+##  RPI order book V2 unsubscription
+
+###  Request
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`unsubscribe`
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  Orders Channel
 
 `spot.orders`
@@ -2023,6 +2580,8 @@ Code example：
 
 Updated order list. Note it is possible that multiple currency pairs' orders will be updated in one notification.
 
+For a unified order book, `currency_pair` remains the nominal market, while `stock` and `money` identify the actual assets used by the order.
+
 Result format:
 
 Field | Type | Description  
@@ -2040,6 +2599,9 @@ Field | Type | Description
 \- `update`: order fill update  
 \- `finish`: order closed or cancelled  
 »`currency_pair` | String | Currency pair  
+»`stock` | String | Actual base asset used by the order  
+»`money` | String | Actual quote asset used by the order  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
 »`type` | String | Order type  
 »`account` | String | Account type. spot - spot account; margin - margin account; cross_margin - cross margin account; unified - unified account  
 »`side` | String | Order side  
@@ -2079,6 +2641,7 @@ Field | Type | Description
 \- `depth_not_enough`: insufficient depth leads to order cancellation   
 \- `small`: order amount too small   
 \- `liquidate_cancelled`: cancelled by liquidate   
+\- `unified_check_failed`: unified-market validation failed, such as an unsupported actual trading asset or a suspended market/currency   
 \- `-`: unknown  
 »`amend_text` | String | The custom data that the user remarked when amending the order  
 »`slippage` | String | Slippage, the default range is 0.0001-0.05, 0.05 represents 5%, represents the maximum slippage that can be accepted by market orders, and does not represent the actual slippage  
@@ -2119,7 +2682,10 @@ Notification example
           "text": "t-testtext",
           "create_time": "1694655225",
           "update_time": "1694655225",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
           "type": "limit",
           "account": "spot",
           "side": "sell",
@@ -2131,11 +2697,11 @@ Notification example
           "filled_amount": "812.8",
           "avg_deal_price": "0",
           "fee": "0",
-          "fee_currency": "USDT",
+          "fee_currency": "USDC",
           "point_fee": "0",
           "gt_fee": "0",
           "rebated_fee": "0",
-          "rebated_fee_currency": "USDT",
+          "rebated_fee_currency": "USDC",
           "create_time_ms": "1694655225315",
           "update_time_ms": "1694655225315",
           "user": 3497082,
@@ -2255,6 +2821,8 @@ Code example：
 
 Updated order list. Note it is possible that multiple currency pairs' orders will be updated in one notification.
 
+For a unified order book, `currency_pair` remains the nominal market, while `stock` and `money` identify the actual assets used by the order.
+
 Result format:
 
 Field | Type | Description  
@@ -2272,6 +2840,9 @@ Field | Type | Description
 \- `update`: order fill update  
 \- `finish`: order closed or cancelled  
 »`currency_pair` | String | Currency pair  
+»`stock` | String | Actual base asset used by the order  
+»`money` | String | Actual quote asset used by the order  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
 »`type` | String | Order type  
 »`account` | String | Account type. spot - spot account; margin - margin account; cross_margin - cross margin account; unified - unified account  
 »`side` | String | Order side  
@@ -2307,6 +2878,7 @@ Field | Type | Description
 \- `depth_not_enough`: insufficient depth leads to order cancellation   
 \- `small`: order amount too small   
 \- `liquidate_cancelled`: cancelled by liquidate   
+\- `unified_check_failed`: unified-market validation failed, such as an unsupported actual trading asset or a suspended market/currency   
 \- `-`: unknown  
 »`amend_text` | String | The custom data that the user remarked when amending the order  
 »`slippage` | String | Slippage, the default range is 0.0001-0.05, 0.05 represents 5%, represents the maximum slippage that can be accepted by market orders, and does not represent the actual slippage  
@@ -2347,7 +2919,10 @@ Notification example
           "text": "t-testtext",
           "create_time": "1694655225",
           "update_time": "1694655225",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
           "type": "limit",
           "account": "spot",
           "side": "sell",
@@ -2358,8 +2933,8 @@ Notification example
           "filled_total": "0",
           "filled_amount": "812.8",
           "avg_deal_price": "0",
-          "fee_currency": "USDT",
-          "rebated_fee_currency": "USDT",
+          "fee_currency": "USDC",
+          "rebated_fee_currency": "USDC",
           "create_time_ms": "1694655225315",
           "update_time_ms": "1694655225315",
           "user": 3497082,
@@ -2477,6 +3052,8 @@ Code example：
 
 Updated user trades list.
 
+For a unified order book, `currency_pair` remains the nominal market, while `stock` and `money` identify the actual assets used by the trade.
+
 Result format:
 
 Field | Type | Description  
@@ -2498,6 +3075,9 @@ Field | Type | Description
 »`gt_fee` | String | GT used to deduct fee  
 »`text` | String | User defined information  
 »`id_market` | Integer | One market Trade ID (Continuous Growth within a Single Market ID)  
+»`stock` | String | Actual base asset used by this trade  
+»`money` | String | Actual quote asset used by this trade  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
   
 ####  Enumerated Values
 
@@ -2521,7 +3101,7 @@ Notification example
           "id": 5736713,
           "user_id": 1000001,
           "order_id": "30784428",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
           "create_time": 1605176741,
           "create_time_ms": "1605176741123.456",
           "side": "sell",
@@ -2532,7 +3112,10 @@ Notification example
           "point_fee": "0",
           "gt_fee": "0",
           "text": "apiv4",
-          "id_market": 5736713
+          "id_market": 5736713,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
         }
       ]
     }
@@ -2642,6 +3225,8 @@ Code example：
 
 Updated user trades list.
 
+For a unified order book, `currency_pair` remains the nominal market, while `stock` and `money` identify the actual assets used by the trade. This lite channel still omits `fee`, `fee_currency`, `point_fee`, and `gt_fee`.
+
 Result format:
 
 Field | Type | Description  
@@ -2657,9 +3242,11 @@ Field | Type | Description
 »`amount` | String | Trade Amount  
 »`role` | String | Trade Role (maker/taker)  
 »`price` | String | Trade price  
-»`fee_currency` | String | Fee currency unit  
 »`text` | String | User defined information  
 »`id_market` | Integer | One market Trade ID (Continuous Growth within a Single Market ID)  
+»`stock` | String | Actual base asset used by this trade  
+»`money` | String | Actual quote asset used by this trade  
+»`trade_mode` | Integer | Trade mode: `0` regular, `1` quote-side unified, `2` base-side unified, `3` both sides unified  
   
 ####  Enumerated Values
 
@@ -2683,7 +3270,7 @@ Notification example
           "id": 5736713,
           "user_id": 1000001,
           "order_id": "30784428",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
           "create_time": 1605176741,
           "create_time_ms": "1605176741123.456",
           "side": "sell",
@@ -2691,7 +3278,10 @@ Notification example
           "role": "taker",
           "price": "10000.00000000",
           "text": "apiv4",
-          "id_market": 5736713
+          "id_market": 5736713,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
         }
       ]
     }
@@ -4311,6 +4901,7 @@ Field | Type | Required | Description
 ---|---|---|---  
 `text` | `string` | false | User defined information. If not empty, must follow the rules below:  
 `currency_pair` | `string` | true | Currency pair  
+`trade_quote` | `string` | false | Actual quote asset used for the order. Required for unified quote-side markets; omit it or send an empty value for regular markets.  
 `type` | `object` | false | Order Type  
 `account` | `string` | false | Account types， spot - spot account, margin - margin account, unified - unified account, cross_margin - cross margin account. Portfolio margin accounts can only be set to `cross_margin`  
 `side` | `string` | true | Order side  
@@ -4324,6 +4915,8 @@ Field | Type | Required | Description
 `action_mode` | `string` | false | Processing Mode  
 `slippage` | `string` | false | Slippage, the default range is 0.0001-0.05, 0.05 represents 5%, representing the maximum slippage that a market order can accept  
   
+`trade_quote` is an opaque string at the WebSocket layer. WebSocket validates only its JSON type and does not normalize case, apply aliases, or maintain a currency allowlist. Currency existence and market support are validated by the downstream trading service using the same business rules and error semantics as REST. In a batch request, set `trade_quote` separately on each order. This release exposes only quote-side selection; `trade_base`, `tqa`, and `tba` are not public WebSocket parameters. `trade_quote` is not supported by `spot.order_amend`, `spot.order_cancel`, or `spot.order_cancel_ids`.
+
 `req_header` Custom header data:
 
 Field | Type | Required | Description  
@@ -4394,10 +4987,10 @@ Code example: Login is required before making requests
     from websocket import create_connection
     
     
-    placeParam = {"text":"t-my-custom-id","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"}
+    placeParam = {"text":"t-my-custom-id","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"}
     batchPlaceParam = [
-                        {"text":"t-my-custom-id-1","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"},
-                        {"text":"t-my-custom-id-2","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1.1"}
+                        {"text":"t-my-custom-id-1","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"},
+                        {"text":"t-my-custom-id-2","currency_pair":"ETH_USD","trade_quote":"USDG","type":"limit","account":"spot","side":"buy","amount":"1","price":"1.1"}
                       ]
     
     
@@ -4470,7 +5063,8 @@ Code example: Login is required before making requests
     	// order_place
     	orderParam := OrderParam{
     		Text:         "t-123456",
-    		CurrencyPair: "ETH_BTC",
+    		CurrencyPair: "BTC_USD",
+    		TradeQuote:   "USDC",
     		Type:         "limit",
     		Account:      "spot",
     		Side:         "buy",
@@ -4481,7 +5075,10 @@ Code example: Login is required before making requests
     		AutoBorrow:   false,
     		StpAct:       "cn",
     	}
-    	paramBytes, _ := json.Marshal(orderParam)
+    	requestParam := interface{}(orderParam)
+    	// For batch placement, marshal []OrderParam instead. Each item has its own trade_quote.
+    	// requestParam = []OrderParam{orderParam, {CurrencyPair: "ETH_USD", TradeQuote: "USDG", Type: "limit", Account: "spot", Side: "sell", Amount: "1", Price: "3000"}}
+    	paramBytes, _ := json.Marshal(requestParam)
     	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
     	order_place := ApiRequest{
     		Time:    time.Now().Unix(),
@@ -4521,6 +5118,7 @@ Code example: Login is required before making requests
     type OrderParam struct {
     	Text         string `json:"text,omitempty"`
     	CurrencyPair string `json:"currency_pair,omitempty"`
+    	TradeQuote   string `json:"trade_quote,omitempty"`
     	Type         string `json:"type,omitempty"`
     	Account      string `json:"account,omitempty"`
     	Side         string `json:"side,omitempty"`
@@ -4544,13 +5142,49 @@ Request example
         "req_id": "request-2",
         "req_param": {
           "text": "t-my-custom-id",
-          "currency_pair": "GT_USDT",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "type": "limit",
           "account": "spot",
           "side": "buy",
           "amount": "1",
-          "price": "1"
+    "price": "1"
         }
+      }
+    }
+    
+
+Batch request example
+    
+    
+    {
+      "time": 1681986203,
+      "channel": "spot.order_place",
+      "event": "api",
+      "payload": {
+        "req_id": "request-batch-2",
+        "req_param": [
+          {
+            "text": "t-my-custom-id-1",
+            "currency_pair": "BTC_USD",
+            "trade_quote": "USDC",
+            "type": "limit",
+            "account": "spot",
+            "side": "buy",
+            "amount": "1",
+            "price": "65000"
+          },
+          {
+            "text": "t-my-custom-id-2",
+            "currency_pair": "ETH_USD",
+            "trade_quote": "USDG",
+            "type": "limit",
+            "account": "spot",
+            "side": "sell",
+            "amount": "1",
+            "price": "3000"
+          }
+        ]
       }
     }
     
@@ -4651,6 +5285,8 @@ Ack Notification example for **order array**
 
 ###  Order Place Notification
 
+`trade_quote` is returned in RESULT and FULL results when the downstream service provides a non-empty value. ACK keeps its original result shape and does not return `trade_quote`. A rejected request returns an API error and no order ID; an order accepted by the engine and later rejected by unified-market validation has status `cancelled` and `finish_as=unified_check_failed`.
+
 Updated order list. Note it is possible that multiple currency pairs' orders will be updated in one notification.
 
 Result format:
@@ -4741,7 +5377,8 @@ Response Notification example for an order
           "update_time": "1548000100",
           "create_time_ms": 1548000000123,
           "update_time_ms": 1548000100123,
-          "currency_pair": "ETH_BTC",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "status": "cancelled",
           "type": "limit",
           "account": "spot",
@@ -4792,9 +5429,10 @@ Response Notification example for an order
           "create_time_ms": 1710488334073,
           "update_time_ms": 1710488334074,
           "status": "closed",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "type": "limit",
-          "account": "unified",
+          "account": "spot",
           "side": "buy",
           "amount": "0.001",
           "price": "65000",
@@ -4813,7 +5451,7 @@ Response Notification example for an order
           "gt_taker_fee": "0",
           "gt_discount": false,
           "rebated_fee": "0",
-          "rebated_fee_currency": "USDT",
+          "rebated_fee_currency": "USDC",
           "finish_as": "filled"
         }
       }
@@ -5270,7 +5908,10 @@ Field | Type | Required | Description
 `currency_pair` | `string` | true | Currency pair  
 `side` | `string` | true | All bids or asks. Both included if not specified  
 `account` | `string` | false | Specify operation account. Default to spot ,portfolio and margin account if not specified. Set to `cross_margin` to operate against margin account. Portfolio margin account must set to `cross_margin` only  
+`trade_quote` | `string` | false | Restrict cancellation to orders using this actual quote asset  
   
+`trade_quote` is an opaque string at the WebSocket layer and is validated by the downstream trading service. When non-empty, it is an actual cancellation filter. If this filtering capability is unavailable, the request fails instead of falling back to cancellation of all orders in the nominal market. Cancellation results keep their original shape and do not echo `trade_quote`.
+
 `req_header` Custom header data:
 
 Field | Type | Required | Description  
@@ -5289,7 +5930,7 @@ Code example: Login is required before making requests
     
     
     time = int(time.time())
-    cancelParam = {"side":"buy","currency_pair":"GT_USDT"}
+    cancelParam = {"side":"buy","currency_pair":"BTC_USD","trade_quote":"USDC"}
     channel = "spot.order_cancel_cp"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
@@ -5334,7 +5975,8 @@ Code example: Login is required before making requests
     	timestamp := time.Now().Unix()
     	cancelParam := map[string]interface{}{
     		"side":          "buy",
-    		"currency_pair": "GT_USDT",
+    		"currency_pair": "BTC_USD",
+    		"trade_quote":   "USDC",
     	}
     	channel := "spot.order_cancel_cp"
     
@@ -5377,8 +6019,9 @@ Code example: Login is required before making requests
       "payload": {
         "req_id": "request-7",
         "req_param": {
-          "currency_pair": "GT_USDT",
-          "side": "buy"
+          "currency_pair": "BTC_USD",
+          "side": "buy",
+          "trade_quote": "USDC"
         }
       }
     }
@@ -6221,4 +6864,4 @@ Responses example
     }
     
 
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 10/14/2026, 3:12:02 AM

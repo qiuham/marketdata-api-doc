@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/flash-swap
 api_type: REST
-updated_at: 2026-05-27 20:17:11.972342
+updated_at: 2026-11-13 20:57:52.218741
 ---
 
 # Flash_swap
@@ -594,7 +594,158 @@ WARNING
     }
     
 
+##  闪兑-币对列表
+
+GET`/flash-swap/v1/currency-pair`
+
+GET `/flash-swap/v1/currency-pair`
+
+_闪兑-币对列表_
+
+根据指定币种与交易方向，查询可闪兑的币对及买卖数量限制
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+asset_name | 请求参数 | string | 是 | 币种名称  
+side | 请求参数 | integer(int32) | 是 | 交易方向  
+\- `1`: 卖出（sell）  
+\- `2`: 买入（buy）  
+X-Gate-Region | 请求头部 | string | 否 | 用户所在区域  
+  
+####  详细描述
+
+**side** : 交易方向  
+\- `1`: 卖出（sell）  
+\- `2`: 买入（buy）
+
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+side | 1  
+side | 2  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 成功响应 | FlashSwapV1CurrencyPairListResp  
+400 | [Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1) | 参数不正确 | FlashSwapErrorResponse  
+404 | [Not Found ](https://tools.ietf.org/html/rfc7231#section-6.5.4) | 记录不存在 | FlashSwapErrorResponse  
+  
+### 返回格式
+
+状态码 **200**
+
+_FlashSwapV1CurrencyPairListResp_
+
+名称 | 类型 | 描述  
+---|---|---  
+» currency_pair | array | 可闪兑的币对列表  
+»» FlashSwapV1CurrencyPair | FlashSwapV1CurrencyPair | 闪兑 V1 币对信息  
+»»» market | string | 市场标识，如 `BTC_USDT` 表示卖出 BTC 买入 USDT  
+»»» sell_asset | string | 卖出币种  
+»»» sell_min_amount | string | 卖出最小数量  
+»»» sell_max_amount | string | 卖出最大数量  
+»»» buy_asset | string | 买入币种  
+»»» buy_min_amount | string | 买入最小数量  
+»»» buy_max_amount | string | 买入最大数量  
+  
+状态码 **400**
+
+_FlashSwapErrorResponse_
+
+名称 | 类型 | 描述  
+---|---|---  
+» code | integer | 错误码  
+» message | string | 错误信息  
+  
+状态码 **404**
+
+_FlashSwapErrorResponse_
+
+名称 | 类型 | 描述  
+---|---|---  
+» code | integer | 错误码  
+» message | string | 错误信息  
+  
+该请求不需要认证 
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/flash-swap/v1/currency-pair'
+    query_param = 'asset_name=BTC&side=1'
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/flash-swap/v1/currency-pair?asset_name=BTC&side=1 \
+      -H 'Accept: application/json' \
+      -H 'X-Gate-Region: string'
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "currency_pair": [
+        {
+          "market": "BTC_USDT",
+          "sell_asset": "BTC",
+          "sell_min_amount": "0.00001",
+          "sell_max_amount": "100",
+          "buy_asset": "USDT",
+          "buy_min_amount": "10",
+          "buy_max_amount": "10000000"
+        }
+      ]
+    }
+    
+
+> 400 返回
+    
+    
+    {
+      "code": 0,
+      "message": "string"
+    }
+    
+
 #  模型
+
+##  FlashSwapErrorResponse
+
+_FlashSwapErrorResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+code | integer | true | none | 错误码  
+message | string | true | none | 错误信息  
+      
+    
+    {
+      "code": 0,
+      "message": "string"
+    }
+    
+    
 
 ##  FlashSwapPreviewRequest
 
@@ -615,60 +766,6 @@ buy_amount | string | false | none | 买入的资产数量，
       
     
     {
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string"
-    }
-    
-    
-
-##  FlashSwapOrderPreview
-
-_闪兑订单预览_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-preview_id | string | false | none | 预览结果id  
-sell_currency | string | false | none | 卖出的资产名称，  
-根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
-sell_amount | string | false | none | 卖出的资产数量  
-buy_currency | string | false | none | 买入的资产名称，  
-根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
-buy_amount | string | false | none | 买入的资产数量  
-price | string | false | none | 价格  
-      
-    
-    {
-      "preview_id": "string",
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string",
-      "price": "string"
-    }
-    
-    
-
-##  FlashSwapOrderRequest
-
-_创建闪兑订单参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-preview_id | string | true | none | 预览结果id  
-sell_currency | string | true | none | 卖出的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
-sell_amount | string | true | none | 卖出的资产数量(根据预览结果)  
-buy_currency | string | true | none | 买入的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
-buy_amount | string | true | none | 买入的资产数量(根据预览结果)  
-      
-    
-    {
-      "preview_id": "string",
       "sell_currency": "string",
       "sell_amount": "string",
       "buy_currency": "string",
@@ -706,6 +803,31 @@ buy_max_amount | string | false | 只读 | 买入最大数量
     
     
 
+##  FlashSwapOrderRequest
+
+_创建闪兑订单参数_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+preview_id | string | true | none | 预览结果id  
+sell_currency | string | true | none | 卖出的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
+sell_amount | string | true | none | 卖出的资产数量(根据预览结果)  
+buy_currency | string | true | none | 买入的资产名称，根据接口`查询支持闪兑的所有交易对列表 GET /flash_swap/currency_pairs`获取  
+buy_amount | string | true | none | 买入的资产数量(根据预览结果)  
+      
+    
+    {
+      "preview_id": "string",
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string"
+    }
+    
+    
+
 ##  FlashSwapOrder
 
 _闪兑订单_
@@ -738,4 +860,89 @@ status | integer | false | 只读 | 闪兑订单状态
       "buy_amount": "string",
       "price": "string",
       "status": 0
+    }
+    
+    
+
+##  FlashSwapV1CurrencyPairListResp
+
+_FlashSwapV1CurrencyPairListResp_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | [FlashSwapV1CurrencyPair] | true | none | 可闪兑的币对列表  
+      
+    
+    {
+      "currency_pair": [
+        {
+          "market": "string",
+          "sell_asset": "string",
+          "sell_min_amount": "string",
+          "sell_max_amount": "string",
+          "buy_asset": "string",
+          "buy_min_amount": "string",
+          "buy_max_amount": "string"
+        }
+      ]
+    }
+    
+    
+
+##  FlashSwapOrderPreview
+
+_闪兑订单预览_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+preview_id | string | false | none | 预览结果id  
+sell_currency | string | false | none | 卖出的资产名称，  
+根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
+sell_amount | string | false | none | 卖出的资产数量  
+buy_currency | string | false | none | 买入的资产名称，  
+根据接口`查询支持闪兑的货币列表 GET /flash_swap/currencies`获取  
+buy_amount | string | false | none | 买入的资产数量  
+price | string | false | none | 价格  
+      
+    
+    {
+      "preview_id": "string",
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string",
+      "price": "string"
+    }
+    
+    
+
+##  FlashSwapV1CurrencyPair
+
+_FlashSwapV1CurrencyPair_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+market | string | true | 只读 | 市场标识，如 `BTC_USDT` 表示卖出 BTC 买入 USDT  
+sell_asset | string | true | 只读 | 卖出币种  
+sell_min_amount | string | true | 只读 | 卖出最小数量  
+sell_max_amount | string | true | 只读 | 卖出最大数量  
+buy_asset | string | true | 只读 | 买入币种  
+buy_min_amount | string | true | 只读 | 买入最小数量  
+buy_max_amount | string | true | 只读 | 买入最大数量  
+      
+    
+    {
+      "market": "string",
+      "sell_asset": "string",
+      "sell_min_amount": "string",
+      "sell_max_amount": "string",
+      "buy_asset": "string",
+      "buy_min_amount": "string",
+      "buy_max_amount": "string"
     }

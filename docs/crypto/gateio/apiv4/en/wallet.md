@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/wallet
 api_type: Account
-updated_at: 2026-05-27 20:16:21.378356
+updated_at: 2026-11-13 20:57:29.297726
 ---
 
 # Wallet
@@ -26,8 +26,6 @@ ParametersName | In | Type | Required | Description
 currency | query | string | Required | Currency name  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -94,13 +92,13 @@ Code samples
     ]
     
 
-##  Generate currency deposit address🔒 Authenticated
+##  Get a currency deposit address🔒 Authenticated
 
 GET`/wallet/deposit_address`
 
 GET `/wallet/deposit_address`
 
-_Generate currency deposit address_
+_Get a currency deposit address_
 
 ### Parameters
 
@@ -109,8 +107,6 @@ ParametersName | In | Type | Required | Description
 currency | query | string | Required | Currency name  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Address successfully generated
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -129,9 +125,9 @@ Name | Type | Description
 »» MultiChainAddressItem | object | none  
 »»» chain | string | Name of the chain  
 »»» address | string | Deposit address  
-»»» payment_id | string | Notes that some currencies required(e.g., Tag, Memo) when depositing  
+»»» payment_id | string | A memo required when depositing certain currencies, such as a Tag or Memo.  
 »»» payment_name | string | Note type, `Tag` or `Memo`  
-»»» obtain_failed | integer | The obtain failed status- 0: address successfully obtained- 1: failed to obtain address  
+»»» obtain_failed | integer | Whether address retrieval failed: 0 means success; 1 means failure and retrieval may need to be retried.  
 »»» min_confirms | integer | Minimum Confirmation Count  
   
 WARNING
@@ -209,7 +205,7 @@ GET`/wallet/withdrawals`
 
 GET `/wallet/withdrawals`
 
-Get `withdrawal records`
+_Get withdrawal records_
 
 Record query time range cannot exceed 30 days
 
@@ -239,8 +235,6 @@ SPOT: Main Zone
 PILOT: Innovation Zone
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -365,7 +359,7 @@ GET`/wallet/deposits`
 
 GET `/wallet/deposits`
 
-Get `deposit records`
+_Get deposit records_
 
 Record query time range cannot exceed 30 days
 
@@ -380,8 +374,6 @@ limit | query | integer | Optional | Maximum number of entries returned in the l
 offset | query | integer | Optional | List offset, starting from 0  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -411,6 +403,11 @@ _None_ | array | none
 \- PEND: Processing  
 \- REVIEW: Under Compliance Review  
 \- TRACK: Tracking Block Confirmations, Pending Spot Account Credit  
+» refund_status | string | Blocked deposit refund status. This field is returned only when the deposit record has a blocked deposit refund record with a non-empty refund status. Not returned when there is no refund record or the refund status is empty  
+\- REFUNDING: Refund in progress  
+\- REFUNDED: Refund completed  
+\- REFUND_FAILED: Refund failed  
+\- REJECTED: Refund rejected  
 » chain | string | Name of the chain used in withdrawals  
   
 WARNING
@@ -467,6 +464,18 @@ Code samples
     
     [
       {
+        "id": "d123456",
+        "timestamp": "1780896616",
+        "currency": "USDT",
+        "address": "0x1234567890abcdef",
+        "txid": "0xabcdef",
+        "amount": "10",
+        "memo": "",
+        "status": "BLOCKED",
+        "refund_status": "REFUNDING",
+        "chain": "ETH"
+      },
+      {
         "id": "210496",
         "timestamp": "1542000000",
         "currency": "USDT",
@@ -478,6 +487,147 @@ Code samples
         "chain": "TRX"
       }
     ]
+    
+
+##  Get trading account transfer🔒 Authenticated
+
+GET`/wallet/transfers`
+
+GET `/wallet/transfers`
+
+_Get trading account transfer_
+
+Get the current user's trading account transfer details using the tx_id returned by the transfer endpoint
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+tx_id | query | string | Required | Transfer transaction ID  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Trading account transfer retrieved successfully | AccountTransferDetail  
+  
+### Response Schema
+
+Status Code **200**
+
+_Trading account transfer details_
+
+Name | Type | Description  
+---|---|---  
+» tx_id | string | Transfer transaction ID  
+» status | string | Transfer status:  
+  
+\- `pending`: Processing  
+\- `success`: Successful  
+\- `fail`: Failed  
+» currency | string | Transfer currency  
+» amount | string | Transfer amount  
+» from_account | string | Source account type:  
+  
+\- `spot`: Spot account  
+\- `margin`: Margin account  
+\- `futures`: Perpetual futures account  
+\- `delivery`: Delivery futures account  
+\- `options`: Options account  
+\- `unknown`: Unrecognized account type  
+» to_account | string | Destination account type:  
+  
+\- `spot`: Spot account  
+\- `margin`: Margin account  
+\- `futures`: Perpetual futures account  
+\- `delivery`: Delivery futures account  
+\- `options`: Options account  
+\- `unknown`: Unrecognized account type  
+» settle | string|null | Settlement currency for futures, delivery, and options transfers; otherwise, null  
+» currency_pair | string|null | Currency pair for margin transfers; otherwise, null  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+status | pending  
+status | success  
+status | fail  
+from_account | spot  
+from_account | margin  
+from_account | futures  
+from_account | delivery  
+from_account | options  
+from_account | unknown  
+to_account | spot  
+to_account | margin  
+to_account | futures  
+to_account | delivery  
+to_account | options  
+to_account | unknown  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/wallet/transfers'
+    query_param = 'tx_id=59636381286'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/wallet/transfers"
+    query_param="tx_id=59636381286"
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url?$query_param"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "tx_id": "59636381286",
+      "status": "success",
+      "currency": "USDT",
+      "amount": "10",
+      "from_account": "spot",
+      "to_account": "futures",
+      "settle": "usdt",
+      "currency_pair": null
+    }
     
 
 ##  Transfer between trading accounts🔒 Authenticated
@@ -500,12 +650,12 @@ Balance transfers between personal trading accounts. Currently supports the foll
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | Transfer | Required | none  
-↳ currency | body | string | Required | Transfer currency name. For contract accounts, `currency` can be set to `POINT` (points) or supported settlement currencies (e.g., `BTC`, `USDT`)  
-↳ from | body | string | Required | Account to transfer from  
-↳ to | body | string | Required | Account to transfer to  
-↳ amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
-↳ currency_pair | body | string | Optional | Margin trading pair. Required when transferring to or from margin account  
-↳ settle | body | string | Optional | Contract settlement currency. Required when transferring to or from contract account  
+» currency | body | string | Required | Transfer currency name. For contract accounts, `currency` can be set to `POINT` (points) or supported settlement currencies (e.g., `BTC`, `USDT`)  
+» from | body | string | Required | Account to transfer from  
+» to | body | string | Required | Account to transfer to  
+» amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
+» currency_pair | body | string | Optional | Margin trading pair. Required when transferring to or from margin account  
+» settle | body | string | Optional | Contract settlement currency. Required when transferring to or from contract account  
   
 ####  Enumerated Values
 
@@ -523,8 +673,6 @@ Enumerated ValuesParameter | Value
 » to | options  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Transfer operation successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -617,7 +765,7 @@ GET`/wallet/sub_account_transfers`
 
 GET `/wallet/sub_account_transfers`
 
-Get `transfer records between main and sub accounts`
+_Get transfer records between main and sub accounts_
 
 Record query time range cannot exceed 30 days
 
@@ -634,8 +782,6 @@ limit | query | integer | Optional | Maximum number of records returned in a sin
 offset | query | integer | Optional | List offset, starting from 0  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -742,16 +888,14 @@ Supports transfers to/from sub-account's spot or futures accounts. Note that reg
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | SubAccountTransfer | Required | none  
-↳ sub_account | body | string | Required | Sub account user ID  
-↳ sub_account_type | body | string | Optional | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
-↳ currency | body | string | Required | Transfer currency name  
-↳ amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
-↳ direction | body | string | Required | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
-↳ client_order_id | body | string | Optional | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
+» sub_account | body | string | Required | Sub account user ID  
+» sub_account_type | body | string | Optional | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
+» currency | body | string | Required | Transfer currency name  
+» amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
+» direction | body | string | Required | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
+» client_order_id | body | string | Optional | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Transfer operation successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -853,17 +997,15 @@ Supports balance transfers between two sub-accounts under the same main account.
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | SubAccountToSubAccount | Required | none  
-↳ currency | body | string | Required | Transfer currency name  
-↳ sub_account_type | body | string | Optional | Transfer from account (deprecated, use `sub_account_from_type` and `sub_account_to_type` instead)  
-↳ sub_account_from | body | string | Required | Transfer from the user id of the sub-account  
-↳ sub_account_from_type | body | string | Required | Source sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
-↳ sub_account_to | body | string | Required | Transfer to the user id of the sub-account  
-↳ sub_account_to_type | body | string | Required | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
-↳ amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
+» currency | body | string | Required | Transfer currency name  
+» sub_account_type | body | string | Optional | Transfer from account (deprecated, use `sub_account_from_type` and `sub_account_to_type` instead)  
+» sub_account_from | body | string | Required | Transfer from the user id of the sub-account  
+» sub_account_from_type | body | string | Required | Source sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
+» sub_account_to | body | string | Required | Transfer to the user id of the sub-account  
+» sub_account_to_type | body | string | Required | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
+» amount | body | string | Required | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Transfer operation successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -969,8 +1111,6 @@ tx_id | query | string | Optional | Transfer operation number, cannot be empty a
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Main-Sub Account Transfer Status Retrieval Successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Main-Sub Account Transfer Status Retrieval Successful | TransferOrderStatus  
@@ -1044,13 +1184,13 @@ Code samples
     }
     
 
-##  Query withdrawal status🔒 Authenticated
+##  Get currency withdrawal fees and limits, optionally filtered by currency.🔒 Authenticated
 
 GET`/wallet/withdraw_status`
 
 GET `/wallet/withdraw_status`
 
-_Query withdrawal status_
+_Get currency withdrawal fees and limits, optionally filtered by currency._
 
 API operations are not supported for tokens with low liquidity or extremely low value. Please use the Web or App interface to query and process.
 
@@ -1061,8 +1201,6 @@ ParametersName | In | Type | Required | Description
 currency | query | string | Optional | Query by specified currency name  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1186,8 +1324,6 @@ limit | query | integer(int32) | Optional | Maximum number of records returned. 
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [SubAccountBalance]  
@@ -1289,8 +1425,6 @@ ParametersName | In | Type | Required | Description
 sub_uid | query | string | Optional | Sub-account user ID, you can query multiple records separated by `,`. If not specified, it will return records of all sub-accounts  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1421,8 +1555,6 @@ sub_uid | query | string | Optional | Sub-account user ID, you can query multipl
 settle | query | string | Optional | Query balance of specified settlement currency  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1642,8 +1774,6 @@ sub_uid | query | string | Optional | Sub-account user ID, you can query multipl
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [SubAccountCrossMarginBalance]  
@@ -1669,7 +1799,7 @@ _None_ | array | none
 »»» borrowed | string | Total borrowed value in USDT, i.e., the sum of all currencies' `borrowed*price*discount`  
 »»» borrowed_net | string | Total borrowed value in USDT * leverage factor  
 »»» net | string | Total net assets in USDT  
-»»» leverage | string | Position leverage  
+»»» leverage | string | Leverage multiplier  
 »»» interest | string | Total unpaid interest in USDT, i.e., the sum of all currencies' `interest*price*discount`  
 »»» risk | string | Risk rate. When it falls below 110%, liquidation will be triggered. Calculation formula: `total / (borrowed+interest)`  
 »»» total_initial_margin | string | Total initial margin  
@@ -1763,26 +1893,25 @@ Code samples
     ]
     
 
-##  Query withdrawal address whitelist🔒 Authenticated
+##  Query saved address🔒 Authenticated
 
 GET`/wallet/saved_address`
 
 GET `/wallet/saved_address`
 
-_Query withdrawal address whitelist_
+_Query saved address_
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-currency | query | string | Required | Currency  
+currency | query | string | Optional | Currency  
 chain | query | string | Optional | Chain name  
+verified | query | string | Optional | 1 means verified address, 0 means normal address, empty string means no limit  
 limit | query | string | Optional | Maximum number returned, up to 100  
 page | query | integer | Optional | page number  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1820,11 +1949,11 @@ Code samples
     headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
     
     url = '/wallet/saved_address'
-    query_param = 'currency=USDT'
+    query_param = ''
     # for `gen_sign` implementation, refer to section `Authentication` above
     sign_headers = gen_sign('GET', prefix + url, query_param)
     headers.update(sign_headers)
-    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
     print(r.json())
     
     
@@ -1836,14 +1965,14 @@ Code samples
     prefix="/api/v4"
     method="GET"
     url="/wallet/saved_address"
-    query_param="currency=USDT"
+    query_param=""
     body_param=''
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
     sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
     
-    full_url="$host$prefix$url?$query_param"
+    full_url="$host$prefix$url"
     curl -X $method $full_url \
         -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
     
@@ -1904,8 +2033,6 @@ settle | USDT
 settle | USD  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2029,8 +2156,6 @@ ParametersName | In | Type | Required | Description
 currency | query | string | Optional | Target currency type for statistical conversion. Accepts BTC, CNY, USD, and USDT. USDT is the default value  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request is valid and successfully returned
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2203,11 +2328,9 @@ GET`/wallet/small_balance`
 
 GET `/wallet/small_balance`
 
-Get `list of convertible small balance currencies`
+_Get list of convertible small balance currencies_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2309,12 +2432,10 @@ _Convert small balance currency_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | ConvertSmallBalance | Required | none  
-↳ currency | body | array | Optional | Currency to be converted  
-↳ is_all | body | boolean | Optional | Whether to convert all  
+» currency | body | array | Optional | Currency to be converted  
+» is_all | body | boolean | Optional | Whether to convert all  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2380,25 +2501,23 @@ Code samples
     }
     
 
-##  Get convertible small balance currency history🔒 Authenticated
+##  Get small-balance conversion history🔒 Authenticated
 
 GET`/wallet/small_balance_history`
 
 GET `/wallet/small_balance_history`
 
-Get `convertible small balance currency history`
+_Get small-balance conversion history_
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-currency | query | string | Optional | Currency to convert  
+currency | query | string | Optional | Filter by conversion currency.  
 page | query | integer(int32) | Optional | Page number  
 limit | query | integer(int32) | Optional | Maximum number of items returned. Default: 100, minimum: 1, maximum: 100  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2489,7 +2608,7 @@ GET`/wallet/push`
 
 GET `/wallet/push`
 
-Get `UID transfer history`
+_Get UID transfer history_
 
 ### Parameters
 
@@ -2503,8 +2622,6 @@ offset | query | integer(int32) | Optional | List offset, starting from 0
 transaction_type | query | string | Optional | Order type returned in the list: `withdraw`, `deposit`. Default is `withdraw`.  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2613,8 +2730,6 @@ _Retrieve the list of low-liquidity or low-cap tokens_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Returns a string array on success
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Returns a string array on success | [string]  
@@ -2690,6 +2805,48 @@ Code samples
 
 #  Schemas
 
+##  SubAccountMarginBalance
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+uid | string | Optional | none | User ID  
+available | array | Optional | none | Margin account balances  
+» _None_ | object | Optional | none | Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information  
+»» currency_pair | string | Optional | none | Currency pair  
+»» account_type | string | Optional | none | Account Type mmr: maintenance margin rate account;inactive: market not activated  
+»» leverage | string | Optional | none | User's current market leverage multiplier  
+»» locked | boolean | Optional | none | Whether the account is locked  
+»» risk | string | Optional | none | Deprecated  
+»» mmr | string | Optional | none | Current Maintenance Margin Rate of the account  
+»» base | object | Optional | none | Currency account information  
+»»» currency | string | Optional | none | Currency name  
+»»» available | string | Optional | none | Amount available for margin trading, available = margin + borrowed  
+»»» locked | string | Optional | none | Frozen funds, such as amounts already placed in margin market for order trading  
+»»» borrowed | string | Optional | none | Borrowed funds  
+»»» interest | string | Optional | none | Unpaid interest  
+»» quote | SubAccountMarginBalance/properties/available/items/properties/base | Optional | none | Currency account information  
+      
+    
+    {
+      "uid": "string",
+      "available": [
+        {
+          "currency_pair": "string",
+          "account_type": "string",
+          "leverage": "string",
+          "locked": true,
+          "risk": "string",
+          "mmr": "string",
+          "base": {},
+          "quote": {}
+        }
+      ]
+    }
+    
+    
+
 ##  WithdrawStatus
 
 ###  Properties
@@ -2707,9 +2864,9 @@ withdraw_amount_mini | string | Optional | none | Minimum withdrawal amount
 withdraw_day_limit_remain | string | Optional | none | Daily withdrawal amount left  
 withdraw_eachtime_limit | string | Optional | none | Maximum amount for each withdrawal  
 withdraw_fix_on_chains | object | Optional | none | Fixed withdrawal fee on multiple chains  
-↳ additionalProperties | string | Optional | none | none  
+» **additionalProperties** | string | Optional | none | none  
 withdraw_percent_on_chains | object | Optional | none | Percentage withdrawal fee on multiple chains  
-↳ additionalProperties | string | Optional | none | none  
+» **additionalProperties** | string | Optional | none | none  
       
     
     {
@@ -2735,316 +2892,6 @@ withdraw_percent_on_chains | object | Optional | none | Percentage withdrawal fe
     
     
 
-##  SavedAddress
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency  
-chain | string | Optional | none | Chain name  
-address | string | Optional | none | Address  
-name | string | Optional | none | Name  
-tag | string | Optional | none | Tag  
-verified | string | Optional | none | Whether to pass the verification 0-unverified, 1-verified  
-      
-    
-    {
-      "currency": "string",
-      "chain": "string",
-      "address": "string",
-      "name": "string",
-      "tag": "string",
-      "verified": "string"
-    }
-    
-    
-
-##  SubAccountMarginBalance
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-uid | string | Optional | none | User ID  
-available | array | Optional | none | Margin account balances  
-↳ None | object | Optional | none | Margin account information for a trading pair. `base` corresponds to base currency account information, `quote` corresponds to quote currency account information  
-↳ currency_pair | string | Optional | none | Currency pair  
-↳ account_type | string | Optional | none | Account Type mmr: maintenance margin rate account;inactive: market not activated  
-↳ leverage | string | Optional | none | User's current market leverage multiplier  
-↳ locked | boolean | Optional | none | Whether the account is locked  
-↳ risk | string | Optional | none | Deprecated  
-↳ mmr | string | Optional | none | Current Maintenance Margin Rate of the account  
-↳ base | object | Optional | none | Currency account information  
-↳ currency | string | Optional | none | Currency name  
-↳ available | string | Optional | none | Amount available for margin trading, available = margin + borrowed  
-↳ locked | string | Optional | none | Frozen funds, such as amounts already placed in margin market for order trading  
-↳ borrowed | string | Optional | none | Borrowed funds  
-↳ interest | string | Optional | none | Unpaid interest  
-↳ quote | SubAccountMarginBalance/properties/available/items/properties/base | Optional | none | Currency account information  
-      
-    
-    {
-      "uid": "string",
-      "available": [
-        {
-          "currency_pair": "string",
-          "account_type": "string",
-          "leverage": "string",
-          "locked": true,
-          "risk": "string",
-          "mmr": "string",
-          "base": {},
-          "quote": {}
-        }
-      ]
-    }
-    
-    
-
-##  SubAccountTransferRecordItem
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timest | string | Optional | read-only | Transfer timestamp  
-uid | string | Optional | read-only | Main account user ID  
-sub_account | string | Required | none | Sub account user ID  
-sub_account_type | string | Optional | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
-currency | string | Required | none | Transfer currency name  
-amount | string | Required | none | Transfer Amount  
-direction | string | Required | none | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
-source | string | Optional | read-only | Source of the transfer operation  
-client_order_id | string | Optional | none | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
-status | string | Optional | none | Sub-account transfer record status, currently only 'success'  
-      
-    
-    {
-      "timest": "string",
-      "uid": "string",
-      "sub_account": "string",
-      "sub_account_type": "spot",
-      "currency": "string",
-      "amount": "string",
-      "direction": "string",
-      "source": "string",
-      "client_order_id": "string",
-      "status": "string"
-    }
-    
-    
-
-##  SubAccountFuturesBalance
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-uid | string | Optional | none | User ID  
-available | object | Optional | none | Futures account balances  
-↳ additionalProperties | object | Optional | none | none  
-↳ total | string | Optional | none | Balance, only applicable to classic contract account.The balance is the sum of all historical fund flows, including historical transfers in and out, closing settlements, and transaction fee expenses, but does not include upl of positions.total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
-↳ unrealised_pnl | string | Optional | none | Unrealized PNL  
-↳ position_margin | string | Optional | none | Deprecated  
-↳ order_margin | string | Optional | none | initial margin of all open orders  
-↳ available | string | Optional | none | Refers to the available withdrawal or trading amount in per-position, specifically the per-position available balance under the unified account that includes the credit line (which incorporates trial funds; since trial funds cannot be withdrawn, the actual withdrawal amount needs to deduct the trial fund portion when processing withdrawals)  
-↳ point | string | Optional | none | Point card amount  
-↳ currency | string | Optional | none | Settlement currency  
-↳ in_dual_mode | boolean | Optional | none | Whether Hedge Mode is enabled  
-↳ enable_credit | boolean | Optional | none | Whether portfolio margin account mode is enabled  
-↳ position_initial_margin | string | Optional | none | Initial margin occupied by positions, applicable to unified account mode  
-↳ maintenance_margin | string | Optional | none | Maintenance margin occupied by positions, applicable to new classic account margin mode and unified account mode  
-↳ bonus | string | Optional | none | Bonus  
-↳ enable_evolved_classic | boolean | Optional | none | Deprecated  
-↳ cross_order_margin | string | Optional | none | Cross margin order margin, applicable to new classic account margin mode  
-↳ cross_initial_margin | string | Optional | none | Cross margin initial margin, applicable to new classic account margin mode  
-↳ cross_maintenance_margin | string | Optional | none | Cross margin maintenance margin, applicable to new classic account margin mode  
-↳ cross_unrealised_pnl | string | Optional | none | Cross margin unrealized P&L, applicable to new classic account margin mode  
-↳ cross_available | string | Optional | none | Cross margin available balance, applicable to new classic account margin mode  
-↳ cross_margin_balance | string | Optional | none | Cross margin balance, applicable to new classic account margin mode  
-↳ cross_mmr | string | Optional | none | Cross margin maintenance margin rate, applicable to new classic account margin mode  
-↳ cross_imr | string | Optional | none | Cross margin initial margin rate, applicable to new classic account margin mode  
-↳ isolated_position_margin | string | Optional | none | Isolated position margin, applicable to new classic account margin mode  
-↳ enable_new_dual_mode | boolean | Optional | none | Deprecated  
-↳ margin_mode | integer | Optional | none | Margin mode of the account  
-0: classic future account or Classic Spot Margin Mode of unified account;  
-1: Multi-Currency Margin Mode;  
-2: Portoforlio Margin Mode;  
-3: Single-Currency Margin Mode  
-↳ enable_tiered_mm | boolean | Optional | none | Whether to enable tiered maintenance margin calculation  
-↳ enable_dual_plus | boolean | Optional | none | Whether to Support Split Position Mode  
-↳ position_mode | string | Optional | none | Position Holding Mode single - Single Direction Position, dual - Dual Direction Position, dual_plus - Split Position  
-↳ history | object | Optional | none | Statistical data  
-↳ dnw | string | Optional | none | total amount of deposit and withdraw  
-↳ pnl | string | Optional | none | total amount of trading profit and loss  
-↳ fee | string | Optional | none | total amount of fee  
-↳ refr | string | Optional | none | total amount of referrer rebates  
-↳ fund | string | Optional | none | total amount of funding costs  
-↳ point_dnw | string | Optional | none | total amount of point deposit and withdraw  
-↳ point_fee | string | Optional | none | total amount of point fee  
-↳ point_refr | string | Optional | none | total amount of referrer rebates of point fee  
-↳ bonus_dnw | string | Optional | none | total amount of perpetual contract bonus transfer  
-↳ bonus_offset | string | Optional | none | total amount of perpetual contract bonus deduction  
-↳ cross_settle | string | Optional | none | Represents the value of profit settlement from the futures account to the spot account under Unified Account Mode. Negative values indicate settlement from futures to spot, while positive values indicate settlement from spot to futures. This value is cumulative.  
-      
-    
-    {
-      "uid": "string",
-      "available": {
-        "property1": {
-          "total": "string",
-          "unrealised_pnl": "string",
-          "position_margin": "string",
-          "order_margin": "string",
-          "available": "string",
-          "point": "string",
-          "currency": "string",
-          "in_dual_mode": true,
-          "enable_credit": true,
-          "position_initial_margin": "string",
-          "maintenance_margin": "string",
-          "bonus": "string",
-          "enable_evolved_classic": true,
-          "cross_order_margin": "string",
-          "cross_initial_margin": "string",
-          "cross_maintenance_margin": "string",
-          "cross_unrealised_pnl": "string",
-          "cross_available": "string",
-          "cross_margin_balance": "string",
-          "cross_mmr": "string",
-          "cross_imr": "string",
-          "isolated_position_margin": "string",
-          "enable_new_dual_mode": true,
-          "margin_mode": 0,
-          "enable_tiered_mm": true,
-          "enable_dual_plus": true,
-          "position_mode": "string",
-          "history": {}
-        },
-        "property2": {
-          "total": "string",
-          "unrealised_pnl": "string",
-          "position_margin": "string",
-          "order_margin": "string",
-          "available": "string",
-          "point": "string",
-          "currency": "string",
-          "in_dual_mode": true,
-          "enable_credit": true,
-          "position_initial_margin": "string",
-          "maintenance_margin": "string",
-          "bonus": "string",
-          "enable_evolved_classic": true,
-          "cross_order_margin": "string",
-          "cross_initial_margin": "string",
-          "cross_maintenance_margin": "string",
-          "cross_unrealised_pnl": "string",
-          "cross_available": "string",
-          "cross_margin_balance": "string",
-          "cross_mmr": "string",
-          "cross_imr": "string",
-          "isolated_position_margin": "string",
-          "enable_new_dual_mode": true,
-          "margin_mode": 0,
-          "enable_tiered_mm": true,
-          "enable_dual_plus": true,
-          "position_mode": "string",
-          "history": {}
-        }
-      }
-    }
-    
-    
-
-##  SubAccountTransfer
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-sub_account | string | Required | none | Sub account user ID  
-sub_account_type | string | Optional | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
-currency | string | Required | none | Transfer currency name  
-amount | string | Required | none | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
-direction | string | Required | none | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
-client_order_id | string | Optional | none | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
-      
-    
-    {
-      "sub_account": "string",
-      "sub_account_type": "spot",
-      "currency": "string",
-      "amount": "string",
-      "direction": "string",
-      "client_order_id": "string"
-    }
-    
-    
-
-##  SmallBalance
-
-_Small Balance Conversion_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency  
-available_balance | string | Optional | none | Available balance  
-estimated_as_btc | string | Optional | none | Estimated as BTC  
-convertible_to_gt | string | Optional | none | Estimated conversion to GT  
-      
-    
-    {
-      "currency": "string",
-      "available_balance": "string",
-      "estimated_as_btc": "string",
-      "convertible_to_gt": "string"
-    }
-    
-    
-
-##  UidPushOrder
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Order ID  
-push_uid | integer(int64) | Optional | none | Initiator User ID  
-receive_uid | integer(int64) | Optional | none | Recipient User ID  
-currency | string | Optional | none | Currency name  
-amount | string | Optional | none | Transfer amount  
-create_time | integer(int64) | Optional | none | Created time  
-status | string | Optional | none | Withdrawal status:  
-  
-\- CREATING: Creating  
-\- PENDING: Waiting for recipient (Please contact the recipient to accept the transfer on Gate official website)  
-\- CANCELLING: Cancelling  
-\- CANCELLED: Cancelled  
-\- REFUSING: Refusing  
-\- REFUSED: Refused  
-\- RECEIVING: Receiving  
-\- RECEIVED: Success  
-message | string | Optional | none | PENDING reason tips  
-transaction_type | string | Optional | none | Order Type  
-      
-    
-    {
-      "id": 0,
-      "push_uid": 0,
-      "receive_uid": 0,
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0,
-      "status": "string",
-      "message": "string",
-      "transaction_type": "string"
-    }
-    
-    
-
 ##  SubAccountCrossMarginBalance
 
 ###  Properties
@@ -3053,27 +2900,27 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 uid | string | Optional | none | User ID  
 available | object | Optional | none | none  
-↳ user_id | integer(int64) | Optional | none | Cross margin account user ID. 0 means this sub-account has not yet opened a cross margin account  
-↳ locked | boolean | Optional | none | Whether the account is locked  
-↳ balances | object | Optional | none | none  
-↳ CrossMarginBalance | object | Optional | none | none  
-↳ available | string | Optional | none | Available balance  
-↳ freeze | string | Optional | none | Locked balance  
-↳ borrowed | string | Optional | none | Borrowed balance  
-↳ interest | string | Optional | none | Unpaid interest  
-↳ total | string | Optional | none | Total account value in USDT, i.e., the sum of all currencies' `(available+freeze)*price*discount`  
-↳ borrowed | string | Optional | none | Total borrowed value in USDT, i.e., the sum of all currencies' `borrowed*price*discount`  
-↳ borrowed_net | string | Optional | none | Total borrowed value in USDT * leverage factor  
-↳ net | string | Optional | none | Total net assets in USDT  
-↳ leverage | string | Optional | none | Position leverage  
-↳ interest | string | Optional | none | Total unpaid interest in USDT, i.e., the sum of all currencies' `interest*price*discount`  
-↳ risk | string | Optional | none | Risk rate. When it falls below 110%, liquidation will be triggered. Calculation formula: `total / (borrowed+interest)`  
-↳ total_initial_margin | string | Optional | none | Total initial margin  
-↳ total_margin_balance | string | Optional | none | Total margin balance  
-↳ total_maintenance_margin | string | Optional | none | Total maintenance margin  
-↳ total_initial_margin_rate | string | Optional | none | Total initial margin rate  
-↳ total_maintenance_margin_rate | string | Optional | none | Total maintenance margin rate  
-↳ total_available_margin | string | Optional | none | Total available margin  
+» user_id | integer(int64) | Optional | none | Cross margin account user ID. 0 means this sub-account has not yet opened a cross margin account  
+» locked | boolean | Optional | none | Whether the account is locked  
+» balances | object | Optional | none | none  
+»» CrossMarginBalance | object | Optional | none | none  
+»»» available | string | Optional | none | Available balance  
+»»» freeze | string | Optional | none | Locked balance  
+»»» borrowed | string | Optional | none | Borrowed balance  
+»»» interest | string | Optional | none | Unpaid interest  
+»» total | string | Optional | none | Total account value in USDT, i.e., the sum of all currencies' `(available+freeze)*price*discount`  
+»» borrowed | string | Optional | none | Total borrowed value in USDT, i.e., the sum of all currencies' `borrowed*price*discount`  
+»» borrowed_net | string | Optional | none | Total borrowed value in USDT * leverage factor  
+»» net | string | Optional | none | Total net assets in USDT  
+»» leverage | string | Optional | none | Leverage multiplier  
+»» interest | string | Optional | none | Total unpaid interest in USDT, i.e., the sum of all currencies' `interest*price*discount`  
+»» risk | string | Optional | none | Risk rate. When it falls below 110%, liquidation will be triggered. Calculation formula: `total / (borrowed+interest)`  
+»» total_initial_margin | string | Optional | none | Total initial margin  
+»» total_margin_balance | string | Optional | none | Total margin balance  
+»» total_maintenance_margin | string | Optional | none | Total maintenance margin  
+»» total_initial_margin_rate | string | Optional | none | Total initial margin rate  
+»» total_maintenance_margin_rate | string | Optional | none | Total maintenance margin rate  
+»» total_available_margin | string | Optional | none | Total available margin  
       
     
     {
@@ -3099,86 +2946,6 @@ available | object | Optional | none | none
         "total_maintenance_margin_rate": "string",
         "total_available_margin": "string"
       }
-    }
-    
-    
-
-##  ConvertSmallBalance
-
-_Small Balance Conversion_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | array | Optional | none | Currency to be converted  
-is_all | boolean | Optional | none | Whether to convert all  
-      
-    
-    {
-      "currency": [
-        "string"
-      ],
-      "is_all": true
-    }
-    
-    
-
-##  DepositRecord
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | string | Optional | read-only | Record ID  
-txid | string | Optional | read-only | Hash record of the withdrawal  
-timestamp | string | Optional | read-only | Operation time  
-amount | string | Required | none | Token amount  
-currency | string | Required | none | Currency name  
-address | string | Optional | none | Withdrawal address. Required for withdrawals  
-memo | string | Optional | none | Additional remarks with regards to the withdrawal  
-status | string | Optional | read-only | Transaction Status  
-  
-\- BLOCKED: Deposit Blocked  
-\- DEP_CREDITED: Deposit Credited, Withdrawal Pending Unlock  
-\- DONE: Funds Credited to Spot Account  
-\- INVALID: Invalid Transaction  
-\- MANUAL: Manual Review Required  
-\- PEND: Processing  
-\- REVIEW: Under Compliance Review  
-\- TRACK: Tracking Block Confirmations, Pending Spot Account Credit  
-chain | string | Required | none | Name of the chain used in withdrawals  
-      
-    
-    {
-      "id": "string",
-      "txid": "string",
-      "timestamp": "string",
-      "amount": "string",
-      "currency": "string",
-      "address": "string",
-      "memo": "string",
-      "status": "string",
-      "chain": "string"
-    }
-    
-    
-
-##  TransferOrderStatus
-
-_TransferOrderStatus_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-tx_id | string | Optional | none | Order ID  
-status | string | Optional | none | Transfer status: PENDING - Processing, SUCCESS - Transfer successful, FAIL - Transfer failed, PARTIAL_SUCCESS - Partially successful (this status appears when transferring between sub-accounts)  
-      
-    
-    {
-      "tx_id": "string",
-      "status": "string"
     }
     
     
@@ -3241,142 +3008,115 @@ chain | string | Required | none | Name of the chain used in withdrawals
     
     
 
-##  SubAccountBalance
+##  UidPushOrder
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-uid | string | Optional | none | User ID  
-available | object | Optional | none | Available balances of currencies  
-↳ additionalProperties | string | Optional | none | none  
-locking | object | Optional | none | Locked amount by currency  
-↳ additionalProperties | string | Optional | none | none  
+id | integer(int64) | Optional | none | Order ID  
+push_uid | integer(int64) | Optional | none | Initiator User ID  
+receive_uid | integer(int64) | Optional | none | Recipient User ID  
+currency | string | Optional | none | Currency name  
+amount | string | Optional | none | Transfer amount  
+create_time | integer(int64) | Optional | none | Created time  
+status | string | Optional | none | Withdrawal status:  
+  
+\- CREATING: Creating  
+\- PENDING: Waiting for recipient (Please contact the recipient to accept the transfer on Gate official website)  
+\- CANCELLING: Cancelling  
+\- CANCELLED: Cancelled  
+\- REFUSING: Refusing  
+\- REFUSED: Refused  
+\- RECEIVING: Receiving  
+\- RECEIVED: Success  
+message | string | Optional | none | PENDING reason tips  
+transaction_type | string | Optional | none | Order Type  
       
     
     {
-      "uid": "string",
-      "available": {
-        "property1": "string",
-        "property2": "string"
-      },
-      "locking": {
-        "property1": "string",
-        "property2": "string"
-      }
+      "id": 0,
+      "push_uid": 0,
+      "receive_uid": 0,
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0,
+      "status": "string",
+      "message": "string",
+      "transaction_type": "string"
     }
     
     
 
-##  DepositAddress
+##  DepositRecord
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-currency | string | Required | none | Currency detail  
-address | string | Required | none | Deposit address  
-min_deposit_amount | string | Optional | none | Minimum Deposit Amount  
-multichain_addresses | array | Optional | none | none  
-↳ MultiChainAddressItem | object | Optional | none | none  
-↳ chain | string | Optional | none | Name of the chain  
-↳ address | string | Optional | none | Deposit address  
-↳ payment_id | string | Optional | none | Notes that some currencies required(e.g., Tag, Memo) when depositing  
-↳ payment_name | string | Optional | none | Note type, `Tag` or `Memo`  
-↳ obtain_failed | integer | Optional | none | The obtain failed status- 0: address successfully obtained- 1: failed to obtain address  
-↳ min_confirms | integer | Optional | none | Minimum Confirmation Count  
+id | string | Optional | read-only | Record ID  
+txid | string | Optional | read-only | Hash record of the withdrawal  
+timestamp | string | Optional | read-only | Operation time  
+amount | string | Required | none | Token amount  
+currency | string | Required | none | Currency name  
+address | string | Optional | none | Withdrawal address. Required for withdrawals  
+memo | string | Optional | none | Additional remarks with regards to the withdrawal  
+status | string | Optional | read-only | Transaction Status  
+  
+\- BLOCKED: Deposit Blocked  
+\- DEP_CREDITED: Deposit Credited, Withdrawal Pending Unlock  
+\- DONE: Funds Credited to Spot Account  
+\- INVALID: Invalid Transaction  
+\- MANUAL: Manual Review Required  
+\- PEND: Processing  
+\- REVIEW: Under Compliance Review  
+\- TRACK: Tracking Block Confirmations, Pending Spot Account Credit  
+refund_status | string | Optional | read-only | Blocked deposit refund status. This field is returned only when the deposit record has a blocked deposit refund record with a non-empty refund status. Not returned when there is no refund record or the refund status is empty  
+\- REFUNDING: Refund in progress  
+\- REFUNDED: Refund completed  
+\- REFUND_FAILED: Refund failed  
+\- REJECTED: Refund rejected  
+chain | string | Required | none | Name of the chain used in withdrawals  
+      
+    
+    {
+      "id": "string",
+      "txid": "string",
+      "timestamp": "string",
+      "amount": "string",
+      "currency": "string",
+      "address": "string",
+      "memo": "string",
+      "status": "string",
+      "refund_status": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  SubAccountToSubAccount
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Required | none | Transfer currency name  
+sub_account_type | string | Optional | none | Transfer from account (deprecated, use `sub_account_from_type` and `sub_account_to_type` instead)  
+sub_account_from | string | Required | none | Transfer from the user id of the sub-account  
+sub_account_from_type | string | Required | none | Source sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
+sub_account_to | string | Required | none | Transfer to the user id of the sub-account  
+sub_account_to_type | string | Required | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
+amount | string | Required | none | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
       
     
     {
       "currency": "string",
-      "address": "string",
-      "min_deposit_amount": "string",
-      "multichain_addresses": [
-        {
-          "chain": "string",
-          "address": "string",
-          "payment_id": "string",
-          "payment_name": "string",
-          "obtain_failed": 0,
-          "min_confirms": 0
-        }
-      ]
-    }
-    
-    
-
-##  CurrencyChain
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-chain | string | Optional | none | Chain name  
-name_cn | string | Optional | none | Chain name in Chinese  
-name_en | string | Optional | none | Chain name in English  
-contract_address | string | Optional | none | Smart contract address for the currency; if no address is available, it will be an empty string  
-is_disabled | integer(int32) | Optional | none | If it is disabled. 0 means NOT being disabled  
-is_deposit_disabled | integer(int32) | Optional | none | Is deposit disabled. 0 means not disabled  
-is_withdraw_disabled | integer(int32) | Optional | none | Is withdrawal disabled. 0 means not disabled  
-decimal | string | Optional | none | Withdrawal precision  
-is_tag | integer | Optional | none | Whether to Include Tag  
-      
-    
-    {
-      "chain": "string",
-      "name_cn": "string",
-      "name_en": "string",
-      "contract_address": "string",
-      "is_disabled": 0,
-      "is_deposit_disabled": 0,
-      "is_withdraw_disabled": 0,
-      "decimal": "string",
-      "is_tag": 0
-    }
-    
-    
-
-##  TradeFee
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-user_id | integer(int64) | Optional | none | User ID  
-taker_fee | string | Optional | none | spot taker fee rate  
-maker_fee | string | Optional | none | spot maker fee rate  
-rpi_maker_fee | string | Optional | none | spot RPI MM maker fee rate  
-gt_discount | boolean | Optional | none | Whether GT deduction discount is enabled  
-gt_taker_fee | string | Optional | none | Taker fee rate if using GT deduction. It will be 0 if GT deduction is disabled  
-gt_maker_fee | string | Optional | none | Maker fee rate with GT deduction. Returns 0 if GT deduction is disabled  
-loan_fee | string | Optional | none | Loan fee rate of margin lending  
-point_type | string | Optional | none | Point card type: 0 - Original version, 1 - New version since 202009  
-futures_taker_fee | string | Optional | none | Perpetual contract taker fee rate  
-futures_maker_fee | string | Optional | none | Perpetual contract maker fee rate  
-futures_rpi_maker_fee | string | Optional | none | contract RPI MM maker fee rate  
-delivery_taker_fee | string | Optional | none | Delivery contract taker fee rate  
-delivery_maker_fee | string | Optional | none | Delivery contract maker fee rate  
-debit_fee | integer | Optional | none | Deduction types for rates, 1 - GT deduction, 2 - Point card deduction, 3 - VIP rates  
-rpi_mm | integer | Optional | none | RPI MM Level  
-      
-    
-    {
-      "user_id": 0,
-      "taker_fee": "string",
-      "maker_fee": "string",
-      "rpi_maker_fee": "string",
-      "gt_discount": true,
-      "gt_taker_fee": "string",
-      "gt_maker_fee": "string",
-      "loan_fee": "string",
-      "point_type": "string",
-      "futures_taker_fee": "string",
-      "futures_maker_fee": "string",
-      "futures_rpi_maker_fee": "string",
-      "delivery_taker_fee": "string",
-      "delivery_maker_fee": "string",
-      "debit_fee": 0,
-      "rpi_mm": 0
+      "sub_account_type": "string",
+      "sub_account_from": "string",
+      "sub_account_from_type": "string",
+      "sub_account_to": "string",
+      "sub_account_to_type": "string",
+      "amount": "string"
     }
     
     
@@ -3429,6 +3169,151 @@ to | options
     
     
 
+##  DepositAddress
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Required | none | Currency detail  
+address | string | Required | none | Deposit address  
+min_deposit_amount | string | Optional | none | Minimum Deposit Amount  
+multichain_addresses | array | Optional | none | none  
+» MultiChainAddressItem | object | Optional | none | none  
+»» chain | string | Optional | none | Name of the chain  
+»» address | string | Optional | none | Deposit address  
+»» payment_id | string | Optional | none | A memo required when depositing certain currencies, such as a Tag or Memo.  
+»» payment_name | string | Optional | none | Note type, `Tag` or `Memo`  
+»» obtain_failed | integer | Optional | none | Whether address retrieval failed: 0 means success; 1 means failure and retrieval may need to be retried.  
+»» min_confirms | integer | Optional | none | Minimum Confirmation Count  
+      
+    
+    {
+      "currency": "string",
+      "address": "string",
+      "min_deposit_amount": "string",
+      "multichain_addresses": [
+        {
+          "chain": "string",
+          "address": "string",
+          "payment_id": "string",
+          "payment_name": "string",
+          "obtain_failed": 0,
+          "min_confirms": 0
+        }
+      ]
+    }
+    
+    
+
+##  SmallBalance
+
+_Small Balance Conversion_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | none | Currency  
+available_balance | string | Optional | none | Available balance  
+estimated_as_btc | string | Optional | none | Estimated as BTC  
+convertible_to_gt | string | Optional | none | Estimated conversion to GT  
+      
+    
+    {
+      "currency": "string",
+      "available_balance": "string",
+      "estimated_as_btc": "string",
+      "convertible_to_gt": "string"
+    }
+    
+    
+
+##  CurrencyChain
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+chain | string | Optional | none | Chain name  
+name_cn | string | Optional | none | Chain name in Chinese  
+name_en | string | Optional | none | Chain name in English  
+contract_address | string | Optional | none | Smart contract address for the currency; if no address is available, it will be an empty string  
+is_disabled | integer(int32) | Optional | none | If it is disabled. 0 means NOT being disabled  
+is_deposit_disabled | integer(int32) | Optional | none | Is deposit disabled. 0 means not disabled  
+is_withdraw_disabled | integer(int32) | Optional | none | Is withdrawal disabled. 0 means not disabled  
+decimal | string | Optional | none | Withdrawal precision  
+is_tag | integer | Optional | none | Whether to Include Tag  
+      
+    
+    {
+      "chain": "string",
+      "name_cn": "string",
+      "name_en": "string",
+      "contract_address": "string",
+      "is_disabled": 0,
+      "is_deposit_disabled": 0,
+      "is_withdraw_disabled": 0,
+      "decimal": "string",
+      "is_tag": 0
+    }
+    
+    
+
+##  ConvertSmallBalance
+
+_Small Balance Conversion_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | array | Optional | none | Currency to be converted  
+is_all | boolean | Optional | none | Whether to convert all  
+      
+    
+    {
+      "currency": [
+        "string"
+      ],
+      "is_all": true
+    }
+    
+    
+
+##  SubAccountTransferRecordItem
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timest | string | Optional | read-only | Transfer timestamp  
+uid | string | Optional | read-only | Main account user ID  
+sub_account | string | Required | none | Sub account user ID  
+sub_account_type | string | Optional | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
+currency | string | Required | none | Transfer currency name  
+amount | string | Required | none | Transfer Amount  
+direction | string | Required | none | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
+source | string | Optional | read-only | Source of the transfer operation  
+client_order_id | string | Optional | none | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
+status | string | Optional | none | Sub-account transfer record status, currently only 'success'  
+      
+    
+    {
+      "timest": "string",
+      "uid": "string",
+      "sub_account": "string",
+      "sub_account_type": "spot",
+      "currency": "string",
+      "amount": "string",
+      "direction": "string",
+      "source": "string",
+      "client_order_id": "string",
+      "status": "string"
+    }
+    
+    
+
 ##  SmallBalanceHistory
 
 _Small Balance Conversion_
@@ -3454,19 +3339,27 @@ create_time | integer(int64) | Optional | read-only | Exchange time (in seconds)
     
     
 
-##  TransactionID
-
-_TransactionID_
+##  SavedAddress
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-tx_id | integer(int64) | Optional | none | Order ID  
+currency | string | Optional | none | Currency  
+chain | string | Optional | none | Chain name  
+address | string | Optional | none | Address  
+name | string | Optional | none | Name  
+tag | string | Optional | none | Tag  
+verified | string | Optional | none | Whether to pass the verification 0-unverified, 1-verified  
       
     
     {
-      "tx_id": 0
+      "currency": "string",
+      "chain": "string",
+      "address": "string",
+      "name": "string",
+      "tag": "string",
+      "verified": "string"
     }
     
     
@@ -3480,10 +3373,10 @@ _User's total balance information_
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 total | object | Optional | none | Total balances calculated with specified currency unit  
-↳ amount | string | Optional | none | Account total balance amount  
-↳ currency | string | Optional | none | Currency  
-↳ unrealised_pnl | string | Optional | none | Unrealised_pnl, this field will only appear in futures, options, delivery, and total accounts  
-↳ borrowed | string | Optional | none | Total borrowed amount, this field will only appear in margin and cross_margin accounts  
+» amount | string | Optional | none | Account total balance amount  
+» currency | string | Optional | none | Currency  
+» unrealised_pnl | string | Optional | none | Unrealised_pnl, this field will only appear in futures, options, delivery, and total accounts  
+» borrowed | string | Optional | none | Total borrowed amount, this field will only appear in margin and cross_margin accounts  
 details | object | Optional | none | Total Balances of All Accounts  
   
 \- cross_margin: Cross Margin Account  
@@ -3498,7 +3391,7 @@ details | object | Optional | none | Total Balances of All Accounts
 \- meme_box: Alpha Account  
 \- options: Options Account  
 \- payment: Payment Account  
-↳ additionalProperties | TotalBalance/properties/total | Optional | none | Total balances calculated with specified currency unit  
+» **additionalProperties** | TotalBalance/properties/total | Optional | none | Total balances calculated with specified currency unit  
   
 ####  Enumerated Values
 
@@ -3535,27 +3428,324 @@ currency | USDT
     
     
 
-##  SubAccountToSubAccount
+##  TransferOrderStatus
+
+_TransferOrderStatus_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-currency | string | Required | none | Transfer currency name  
-sub_account_type | string | Optional | none | Transfer from account (deprecated, use `sub_account_from_type` and `sub_account_to_type` instead)  
-sub_account_from | string | Required | none | Transfer from the user id of the sub-account  
-sub_account_from_type | string | Required | none | Source sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
-sub_account_to | string | Required | none | Transfer to the user id of the sub-account  
-sub_account_to_type | string | Required | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account  
-amount | string | Required | none | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
+tx_id | string | Optional | none | Order ID  
+status | string | Optional | none | Transfer status: PENDING - Processing, SUCCESS - Transfer successful, FAIL - Transfer failed, PARTIAL_SUCCESS - Partially successful (this status appears when transferring between sub-accounts)  
       
     
     {
+      "tx_id": "string",
+      "status": "string"
+    }
+    
+    
+
+##  TransactionID
+
+_TransactionID_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tx_id | integer(int64) | Optional | none | Order ID  
+      
+    
+    {
+      "tx_id": 0
+    }
+    
+    
+
+##  TradeFee
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+user_id | integer(int64) | Optional | none | User ID  
+taker_fee | string | Optional | none | spot taker fee rate  
+maker_fee | string | Optional | none | spot maker fee rate  
+rpi_maker_fee | string | Optional | none | spot RPI MM maker fee rate  
+gt_discount | boolean | Optional | none | Whether GT deduction discount is enabled  
+gt_taker_fee | string | Optional | none | Taker fee rate if using GT deduction. It will be 0 if GT deduction is disabled  
+gt_maker_fee | string | Optional | none | Maker fee rate with GT deduction. Returns 0 if GT deduction is disabled  
+loan_fee | string | Optional | none | Loan fee rate of margin lending  
+point_type | string | Optional | none | Point card type: 0 - Original version, 1 - New version since 202009  
+futures_taker_fee | string | Optional | none | Perpetual contract taker fee rate  
+futures_maker_fee | string | Optional | none | Perpetual contract maker fee rate  
+futures_rpi_maker_fee | string | Optional | none | contract RPI MM maker fee rate  
+delivery_taker_fee | string | Optional | none | Delivery contract taker fee rate  
+delivery_maker_fee | string | Optional | none | Delivery contract maker fee rate  
+debit_fee | integer | Optional | none | Deduction types for rates, 1 - GT deduction, 2 - Point card deduction, 3 - VIP rates  
+rpi_mm | integer | Optional | none | RPI MM Level  
+      
+    
+    {
+      "user_id": 0,
+      "taker_fee": "string",
+      "maker_fee": "string",
+      "rpi_maker_fee": "string",
+      "gt_discount": true,
+      "gt_taker_fee": "string",
+      "gt_maker_fee": "string",
+      "loan_fee": "string",
+      "point_type": "string",
+      "futures_taker_fee": "string",
+      "futures_maker_fee": "string",
+      "futures_rpi_maker_fee": "string",
+      "delivery_taker_fee": "string",
+      "delivery_maker_fee": "string",
+      "debit_fee": 0,
+      "rpi_mm": 0
+    }
+    
+    
+
+##  AccountTransferDetail
+
+_Trading account transfer details_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tx_id | string | Required | read-only | Transfer transaction ID  
+status | string | Required | read-only | Transfer status:  
+  
+\- `pending`: Processing  
+\- `success`: Successful  
+\- `fail`: Failed  
+currency | string | Required | read-only | Transfer currency  
+amount | string | Required | read-only | Transfer amount  
+from_account | string | Required | read-only | Source account type:  
+  
+\- `spot`: Spot account  
+\- `margin`: Margin account  
+\- `futures`: Perpetual futures account  
+\- `delivery`: Delivery futures account  
+\- `options`: Options account  
+\- `unknown`: Unrecognized account type  
+to_account | string | Required | read-only | Destination account type:  
+  
+\- `spot`: Spot account  
+\- `margin`: Margin account  
+\- `futures`: Perpetual futures account  
+\- `delivery`: Delivery futures account  
+\- `options`: Options account  
+\- `unknown`: Unrecognized account type  
+settle | string|null | Required | read-only | Settlement currency for futures, delivery, and options transfers; otherwise, null  
+currency_pair | string|null | Required | read-only | Currency pair for margin transfers; otherwise, null  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+status | pending  
+status | success  
+status | fail  
+from_account | spot  
+from_account | margin  
+from_account | futures  
+from_account | delivery  
+from_account | options  
+from_account | unknown  
+to_account | spot  
+to_account | margin  
+to_account | futures  
+to_account | delivery  
+to_account | options  
+to_account | unknown  
+      
+    
+    {
+      "tx_id": "string",
+      "status": "pending",
       "currency": "string",
-      "sub_account_type": "string",
-      "sub_account_from": "string",
-      "sub_account_from_type": "string",
-      "sub_account_to": "string",
-      "sub_account_to_type": "string",
-      "amount": "string"
+      "amount": "string",
+      "from_account": "spot",
+      "to_account": "spot",
+      "settle": "string",
+      "currency_pair": "string"
+    }
+    
+    
+
+##  SubAccountBalance
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+uid | string | Optional | none | User ID  
+available | object | Optional | none | Available balances of currencies  
+» **additionalProperties** | string | Optional | none | none  
+locking | object | Optional | none | Locked amount by currency  
+» **additionalProperties** | string | Optional | none | none  
+      
+    
+    {
+      "uid": "string",
+      "available": {
+        "property1": "string",
+        "property2": "string"
+      },
+      "locking": {
+        "property1": "string",
+        "property2": "string"
+      }
+    }
+    
+    
+
+##  SubAccountTransfer
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+sub_account | string | Required | none | Sub account user ID  
+sub_account_type | string | Optional | none | Target sub-account trading account: spot - spot account, futures - perpetual contract account, delivery - delivery contract account, options - options account  
+currency | string | Required | none | Transfer currency name  
+amount | string | Required | none | Transfer Amount, supports up to 8 decimal places, must be greater than 0  
+direction | string | Required | none | Transfer direction: to - transfer into sub-account, from - transfer out from sub-account  
+client_order_id | string | Optional | none | Customer-defined ID to prevent duplicate transfers. Can be a combination of letters (case-sensitive), numbers, hyphens '-', and underscores '_'. Can be pure letters or pure numbers with length between 1-64 characters  
+      
+    
+    {
+      "sub_account": "string",
+      "sub_account_type": "spot",
+      "currency": "string",
+      "amount": "string",
+      "direction": "string",
+      "client_order_id": "string"
+    }
+    
+    
+
+##  SubAccountFuturesBalance
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+uid | string | Optional | none | User ID  
+available | object | Optional | none | Futures account balances  
+» **additionalProperties** | object | Optional | none | none  
+»» total | string | Optional | none | Balance, only applicable to classic contract account.The balance is the sum of all historical fund flows, including historical transfers in and out, closing settlements, and transaction fee expenses, but does not include upl of positions.total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
+»» unrealised_pnl | string | Optional | none | Unrealized PNL  
+»» position_margin | string | Optional | none | Deprecated  
+»» order_margin | string | Optional | none | initial margin of all open orders  
+»» available | string | Optional | none | Refers to the available withdrawal or trading amount in per-position, specifically the per-position available balance under the unified account that includes the credit line (which incorporates trial funds; since trial funds cannot be withdrawn, the actual withdrawal amount needs to deduct the trial fund portion when processing withdrawals)  
+»» point | string | Optional | none | Point card amount  
+»» currency | string | Optional | none | Settlement currency  
+»» in_dual_mode | boolean | Optional | none | Whether Hedge Mode is enabled  
+»» enable_credit | boolean | Optional | none | Whether portfolio margin account mode is enabled  
+»» position_initial_margin | string | Optional | none | Initial margin occupied by positions, applicable to unified account mode  
+»» maintenance_margin | string | Optional | none | Maintenance margin occupied by positions, applicable to new classic account margin mode and unified account mode  
+»» bonus | string | Optional | none | Bonus  
+»» enable_evolved_classic | boolean | Optional | none | Deprecated  
+»» cross_order_margin | string | Optional | none | Cross margin order margin, applicable to new classic account margin mode  
+»» cross_initial_margin | string | Optional | none | Cross margin initial margin, applicable to new classic account margin mode  
+»» cross_maintenance_margin | string | Optional | none | Cross margin maintenance margin, applicable to new classic account margin mode  
+»» cross_unrealised_pnl | string | Optional | none | Cross margin unrealized P&L, applicable to new classic account margin mode  
+»» cross_available | string | Optional | none | Cross margin available balance, applicable to new classic account margin mode  
+»» cross_margin_balance | string | Optional | none | Cross margin balance, applicable to new classic account margin mode  
+»» cross_mmr | string | Optional | none | Cross margin maintenance margin rate, applicable to new classic account margin mode  
+»» cross_imr | string | Optional | none | Cross margin initial margin rate, applicable to new classic account margin mode  
+»» isolated_position_margin | string | Optional | none | Isolated position margin, applicable to new classic account margin mode  
+»» enable_new_dual_mode | boolean | Optional | none | Deprecated  
+»» margin_mode | integer | Optional | none | Margin mode of the account  
+0: classic future account or Classic Spot Margin Mode of unified account;  
+1: Multi-Currency Margin Mode;  
+2: Portoforlio Margin Mode;  
+3: Single-Currency Margin Mode  
+»» enable_tiered_mm | boolean | Optional | none | Whether to enable tiered maintenance margin calculation  
+»» enable_dual_plus | boolean | Optional | none | Whether to Support Split Position Mode  
+»» position_mode | string | Optional | none | Position Holding Mode single - Single Direction Position, dual - Dual Direction Position, dual_plus - Split Position  
+»» history | object | Optional | none | Statistical data  
+»»» dnw | string | Optional | none | total amount of deposit and withdraw  
+»»» pnl | string | Optional | none | total amount of trading profit and loss  
+»»» fee | string | Optional | none | total amount of fee  
+»»» refr | string | Optional | none | total amount of referrer rebates  
+»»» fund | string | Optional | none | total amount of funding costs  
+»»» point_dnw | string | Optional | none | total amount of point deposit and withdraw  
+»»» point_fee | string | Optional | none | total amount of point fee  
+»»» point_refr | string | Optional | none | total amount of referrer rebates of point fee  
+»»» bonus_dnw | string | Optional | none | total amount of perpetual contract bonus transfer  
+»»» bonus_offset | string | Optional | none | total amount of perpetual contract bonus deduction  
+»»» cross_settle | string | Optional | none | Represents the value of profit settlement from the futures account to the spot account under Unified Account Mode. Negative values indicate settlement from futures to spot, while positive values indicate settlement from spot to futures. This value is cumulative.  
+      
+    
+    {
+      "uid": "string",
+      "available": {
+        "property1": {
+          "total": "string",
+          "unrealised_pnl": "string",
+          "position_margin": "string",
+          "order_margin": "string",
+          "available": "string",
+          "point": "string",
+          "currency": "string",
+          "in_dual_mode": true,
+          "enable_credit": true,
+          "position_initial_margin": "string",
+          "maintenance_margin": "string",
+          "bonus": "string",
+          "enable_evolved_classic": true,
+          "cross_order_margin": "string",
+          "cross_initial_margin": "string",
+          "cross_maintenance_margin": "string",
+          "cross_unrealised_pnl": "string",
+          "cross_available": "string",
+          "cross_margin_balance": "string",
+          "cross_mmr": "string",
+          "cross_imr": "string",
+          "isolated_position_margin": "string",
+          "enable_new_dual_mode": true,
+          "margin_mode": 0,
+          "enable_tiered_mm": true,
+          "enable_dual_plus": true,
+          "position_mode": "string",
+          "history": {}
+        },
+        "property2": {
+          "total": "string",
+          "unrealised_pnl": "string",
+          "position_margin": "string",
+          "order_margin": "string",
+          "available": "string",
+          "point": "string",
+          "currency": "string",
+          "in_dual_mode": true,
+          "enable_credit": true,
+          "position_initial_margin": "string",
+          "maintenance_margin": "string",
+          "bonus": "string",
+          "enable_evolved_classic": true,
+          "cross_order_margin": "string",
+          "cross_initial_margin": "string",
+          "cross_maintenance_margin": "string",
+          "cross_unrealised_pnl": "string",
+          "cross_available": "string",
+          "cross_margin_balance": "string",
+          "cross_mmr": "string",
+          "cross_imr": "string",
+          "isolated_position_margin": "string",
+          "enable_new_dual_mode": true,
+          "margin_mode": 0,
+          "enable_tiered_mm": true,
+          "enable_dual_plus": true,
+          "position_mode": "string",
+          "history": {}
+        }
+      }
     }

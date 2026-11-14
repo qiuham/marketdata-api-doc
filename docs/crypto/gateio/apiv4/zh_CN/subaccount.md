@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/subaccount
 api_type: Account
-updated_at: 2026-05-27 20:17:55.276874
+updated_at: 2026-11-13 20:58:10.561387
 ---
 
 # SubAccount
@@ -358,7 +358,7 @@ user_id | URL | integer | 是 | 子账户 UserID
 ---|---|---  
 _None_ | array |   
 » user_id | integer(int64) | 用户ID  
-» mode | integer(int32) | 模式 1 - 经典帐户 2 - 统一账户  
+» mode | integer(int32) | 账户模式：1 经典账户；2 统一账户。  
 » name | string | API Key名称  
 » perms | array |   
 »» name | string | 权限功能名称（不传值即为清空）  
@@ -374,6 +374,7 @@ _None_ | array |
 \- margin: 杠杆  
 \- unified: 统一账户  
 \- copy: 跟单  
+\- tradfi_spot: 股票  
 »» read_only | boolean | 该功能是否只读  
 » ip_whitelist | array | IP白名单列表（不传值即为清空）  
 » key | string | API Key  
@@ -488,7 +489,7 @@ _创建新的子账户 API 密钥对_
 ---|---|---|---|---  
 user_id | URL | integer(int64) | 是 | 子账户 UserID  
 body | body | SubAccountKey | 是 |   
-» mode | body | integer(int32) | 否 | 模式 1 - 经典帐户 2 - 统一账户  
+» mode | body | integer(int32) | 否 | 账户模式：1 经典账户；2 统一账户。  
 » name | body | string | 否 | API Key名称  
 » perms | body | array | 否 |   
 »» name | body | string | 否 | 权限功能名称（不传值即为清空）  
@@ -504,6 +505,7 @@ body | body | SubAccountKey | 是 |
 \- margin: 杠杆  
 \- unified: 统一账户  
 \- copy: 跟单  
+\- tradfi_spot: 股票  
 »» read_only | body | boolean | 否 | 该功能是否只读  
 » ip_whitelist | body | array | 否 | IP白名单列表（不传值即为清空）  
   
@@ -521,7 +523,8 @@ body | body | SubAccountKey | 是 |
 \- loan: 借贷  
 \- margin: 杠杆  
 \- unified: 统一账户  
-\- copy: 跟单
+\- copy: 跟单  
+\- tradfi_spot: 股票
 
 ### 返回
 
@@ -536,7 +539,7 @@ body | body | SubAccountKey | 是 |
 名称 | 类型 | 描述  
 ---|---|---  
 » user_id | integer(int64) | 用户ID  
-» mode | integer(int32) | 模式 1 - 经典帐户 2 - 统一账户  
+» mode | integer(int32) | 账户模式：1 经典账户；2 统一账户。  
 » name | string | API Key名称  
 » perms | array |   
 »» name | string | 权限功能名称（不传值即为清空）  
@@ -552,6 +555,7 @@ body | body | SubAccountKey | 是 |
 \- margin: 杠杆  
 \- unified: 统一账户  
 \- copy: 跟单  
+\- tradfi_spot: 股票  
 »» read_only | boolean | 该功能是否只读  
 » ip_whitelist | array | IP白名单列表（不传值即为清空）  
 » key | string | API Key  
@@ -714,7 +718,7 @@ key | URL | string | 是 | 子账户 APIKey
 名称 | 类型 | 描述  
 ---|---|---  
 » user_id | integer(int64) | 用户ID  
-» mode | integer(int32) | 模式 1 - 经典帐户 2 - 统一账户  
+» mode | integer(int32) | 账户模式：1 经典账户；2 统一账户。  
 » name | string | API Key名称  
 » perms | array |   
 »» name | string | 权限功能名称（不传值即为清空）  
@@ -730,6 +734,7 @@ key | URL | string | 是 | 子账户 APIKey
 \- margin: 杠杆  
 \- unified: 统一账户  
 \- copy: 跟单  
+\- tradfi_spot: 股票  
 »» read_only | boolean | 该功能是否只读  
 » ip_whitelist | array | IP白名单列表（不传值即为清空）  
 » key | string | API Key  
@@ -845,7 +850,7 @@ _修改子账户 API 密钥对_
 user_id | URL | integer | 是 | 子账户 UserID  
 key | URL | string | 是 | 子账户 APIKey  
 body | body | SubAccountKey | 是 |   
-» mode | body | integer(int32) | 否 | 模式 1 - 经典帐户 2 - 统一账户  
+» mode | body | integer(int32) | 否 | 账户模式：1 经典账户；2 统一账户。  
 » name | body | string | 否 | API Key名称  
 » perms | body | array | 否 |   
 »» name | body | string | 否 | 权限功能名称（不传值即为清空）  
@@ -861,6 +866,7 @@ body | body | SubAccountKey | 是 |
 \- margin: 杠杆  
 \- unified: 统一账户  
 \- copy: 跟单  
+\- tradfi_spot: 股票  
 »» read_only | body | boolean | 否 | 该功能是否只读  
 » ip_whitelist | body | array | 否 | IP白名单列表（不传值即为清空）  
   
@@ -878,7 +884,8 @@ body | body | SubAccountKey | 是 |
 \- loan: 借贷  
 \- margin: 杠杆  
 \- unified: 统一账户  
-\- copy: 跟单
+\- copy: 跟单  
+\- tradfi_spot: 股票
 
 ### 返回
 
@@ -1270,25 +1277,57 @@ WARNING
 
 #  模型
 
-##  SubUserMode
+##  SubAccountKey
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-user_id | integer(int64) | false | none | 用户id  
-is_unified | boolean | false | none | 是否是统一账户  
-mode | string | false | none | 统一账户模式：  
-\- `classic`: 经典账户模式  
-\- `multi_currency`: 跨币种保证金模式  
-\- `portfolio`: 组合保证金模式  
-\- `single_currency`: 单币种保证金模式  
+user_id | integer(int64) | false | 只读 | 用户ID  
+mode | integer(int32) | false | none | 账户模式：1 经典账户；2 统一账户。  
+name | string | false | none | API Key名称  
+perms | array | false | none | none  
+» name | string | false | none | 权限功能名称（不传值即为清空）  
+\- wallet: 钱包  
+\- spot: 现货/杠杆  
+\- futures: 永续合约  
+\- delivery: 交割合约  
+\- earn: 理财  
+\- custody: 托管  
+\- options: 期权  
+\- account: 账户信息  
+\- loan: 借贷  
+\- margin: 杠杆  
+\- unified: 统一账户  
+\- copy: 跟单  
+\- tradfi_spot: 股票  
+» read_only | boolean | false | none | 该功能是否只读  
+ip_whitelist | array | false | none | IP白名单列表（不传值即为清空）  
+key | string | false | 只读 | API Key  
+state | integer(int32) | false | 只读 | 状态 1 - 正常 2 - 冻结 3 - 锁定  
+created_at | integer(int64) | false | 只读 | 创建时间  
+updated_at | integer(int64) | false | 只读 | 最近更新时间  
+last_access | integer(int64) | false | 只读 | 最近使用时间  
       
     
     {
       "user_id": 0,
-      "is_unified": true,
-      "mode": "string"
+      "mode": 0,
+      "name": "string",
+      "perms": [
+        {
+          "name": "string",
+          "read_only": true
+        }
+      ],
+      "ip_whitelist": [
+        "string"
+      ],
+      "key": "string",
+      "state": 0,
+      "created_at": 0,
+      "updated_at": 0,
+      "last_access": 0
     }
     
     
@@ -1324,54 +1363,23 @@ create_time | integer(int64) | false | 只读 | 创建时间戳
     
     
 
-##  SubAccountKey
+##  SubUserMode
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-user_id | integer(int64) | false | 只读 | 用户ID  
-mode | integer(int32) | false | none | 模式 1 - 经典帐户 2 - 统一账户  
-name | string | false | none | API Key名称  
-perms | array | false | none | none  
-» name | string | false | none | 权限功能名称（不传值即为清空）  
-\- wallet: 钱包  
-\- spot: 现货/杠杆  
-\- futures: 永续合约  
-\- delivery: 交割合约  
-\- earn: 理财  
-\- custody: 托管  
-\- options: 期权  
-\- account: 账户信息  
-\- loan: 借贷  
-\- margin: 杠杆  
-\- unified: 统一账户  
-\- copy: 跟单  
-» read_only | boolean | false | none | 该功能是否只读  
-ip_whitelist | array | false | none | IP白名单列表（不传值即为清空）  
-key | string | false | 只读 | API Key  
-state | integer(int32) | false | 只读 | 状态 1 - 正常 2 - 冻结 3 - 锁定  
-created_at | integer(int64) | false | 只读 | 创建时间  
-updated_at | integer(int64) | false | 只读 | 最近更新时间  
-last_access | integer(int64) | false | 只读 | 最近使用时间  
+user_id | integer(int64) | false | none | 用户id  
+is_unified | boolean | false | none | 是否是统一账户  
+mode | string | false | none | 统一账户模式：  
+\- `classic`: 经典账户模式  
+\- `multi_currency`: 跨币种保证金模式  
+\- `portfolio`: 组合保证金模式  
+\- `single_currency`: 单币种保证金模式  
       
     
     {
       "user_id": 0,
-      "mode": 0,
-      "name": "string",
-      "perms": [
-        {
-          "name": "string",
-          "read_only": true
-        }
-      ],
-      "ip_whitelist": [
-        "string"
-      ],
-      "key": "string",
-      "state": 0,
-      "created_at": 0,
-      "updated_at": 0,
-      "last_access": 0
+      "is_unified": true,
+      "mode": "string"
     }

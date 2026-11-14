@@ -2,10 +2,17 @@
 """
 agent-browser 封装工具
 """
+import os
 import subprocess
 import json
 import time
 from typing import List, Dict, Any, Optional
+
+
+DEFAULT_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/140.0.0.0 Safari/537.36"
+)
 
 
 class BrowserManager:
@@ -17,12 +24,17 @@ class BrowserManager:
     def _run_command(self, cmd: List[str], timeout: int = 30) -> subprocess.CompletedProcess:
         """执行 agent-browser 命令"""
         full_cmd = ['agent-browser', '--session', self.session] + cmd
+        # 默认的 HeadlessChrome 标识会被 Gate 的 Akamai 防火墙拒绝（Access Denied），换成普通桌面 Chrome。
+        # 只在浏览器启动时生效；环境变量里已经设了就用设的。
+        env = dict(os.environ)
+        env.setdefault('AGENT_BROWSER_USER_AGENT', DEFAULT_USER_AGENT)
         try:
             return subprocess.run(
                 full_cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout
+                timeout=timeout,
+                env=env,
             )
         except subprocess.TimeoutExpired as e:
             return subprocess.CompletedProcess(
@@ -34,10 +46,12 @@ class BrowserManager:
 
     def open(self, url: str, wait: int = 3) -> bool:
         """打开URL"""
-        result = self._run_command(['open', url], timeout=30)
-        if result.returncode == 0:
-            time.sleep(wait)
-            return True
+        for attempt in range(3):  # 第一次打开要先启动浏览器，偶尔超时；失败再试两次
+            result = self._run_command(['open', url], timeout=45)
+            if result.returncode == 0:
+                time.sleep(wait)
+                return True
+            time.sleep(2 + attempt * 3)
         return False
 
     def eval_js(self, js_code: str, return_json: bool = True, timeout: int = 30) -> Optional[Any]:

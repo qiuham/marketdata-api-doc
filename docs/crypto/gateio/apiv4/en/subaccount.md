@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/subaccount
 api_type: Account
-updated_at: 2026-05-27 20:16:05.147431
+updated_at: 2026-11-13 20:57:25.563780
 ---
 
 # SubAccount
@@ -30,8 +30,6 @@ Enter `1` to query regular sub-accounts only. If no parameter is passed, only re
 Enter `1` to query regular sub-accounts only. If no parameter is passed, only regular sub-accounts will be queried by default.
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -129,14 +127,12 @@ _Create a new sub-account_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | SubAccount | Required | none  
-↳ remark | body | string | Optional | Remark  
-↳ login_name | body | string | Required | Sub-account login name: Only letters, numbers and underscores are supported, cannot contain other invalid characters  
-↳ password | body | string | Optional | The sub-account's password. (Default: the same as main account's password)  
-↳ email | body | string | Optional | The sub-account's email address. (Default: the same as main account's email address)  
+» remark | body | string | Optional | Remark  
+» login_name | body | string | Required | Sub-account login name: Only letters, numbers and underscores are supported, cannot contain other invalid characters  
+» password | body | string | Optional | The sub-account's password. (Default: the same as main account's password)  
+» email | body | string | Optional | The sub-account's email address. (Default: the same as main account's email address)  
   
 ### Responses
-
-  * 201[Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2)Created successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -234,7 +230,7 @@ GET`/sub_accounts/{user_id}`
 
 GET `/sub_accounts/{user_id}`
 
-Get `sub-account`
+_Get sub-account_
 
 ### Parameters
 
@@ -243,8 +239,6 @@ ParametersName | In | Type | Required | Description
 user_id | path | integer(int64) | Required | Sub-account user ID  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -342,8 +336,6 @@ user_id | path | integer | Required | Sub-account user ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [SubAccountKey]  
@@ -356,10 +348,10 @@ Name | Type | Description
 ---|---|---  
 _None_ | array | none  
 » user_id | integer(int64) | User ID  
-» mode | integer(int32) | Mode: 1 - classic 2 - portfolio account  
+» mode | integer(int32) | Account mode: 1 for a classic account; 2 for a unified account.  
 » name | string | API Key Name  
 » perms | array | none  
-»» name | string | Permission function name (no value will be cleared)  
+»» name | string | Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -372,6 +364,7 @@ _None_ | array | none
 \- margin: margin  
 \- unified: unified account  
 \- copy: copy trading  
+\- tradfi_spot: stocks  
 »» read_only | boolean | Read Only  
 » ip_whitelist | array | IP whitelist (list will be cleared if no value is passed)  
 » key | string | API Key  
@@ -486,10 +479,10 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 user_id | path | integer(int64) | Required | Sub-account user ID  
 body | body | SubAccountKey | Required | none  
-↳ mode | body | integer(int32) | Optional | Mode: 1 - classic 2 - portfolio account  
-↳ name | body | string | Optional | API Key Name  
-↳ perms | body | array | Optional | none  
-↳ name | body | string | Optional | Permission function name (no value will be cleared)  
+» mode | body | integer(int32) | Optional | Account mode: 1 for a classic account; 2 for a unified account.  
+» name | body | string | Optional | API Key Name  
+» perms | body | array | Optional | none  
+»» name | body | string | Optional | Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -502,12 +495,13 @@ body | body | SubAccountKey | Required | none
 \- margin: margin  
 \- unified: unified account  
 \- copy: copy trading  
-↳ read_only | body | boolean | Optional | Read Only  
-↳ ip_whitelist | body | array | Optional | IP whitelist (list will be cleared if no value is passed)  
+\- tradfi_spot: stocks  
+»» read_only | body | boolean | Optional | Read Only  
+» ip_whitelist | body | array | Optional | IP whitelist (list will be cleared if no value is passed)  
   
 ####  Detailed descriptions
 
-**»» name** : Permission function name (no value will be cleared)  
+**»» name** : Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -519,11 +513,10 @@ body | body | SubAccountKey | Required | none
 \- loan: lending  
 \- margin: margin  
 \- unified: unified account  
-\- copy: copy trading
+\- copy: copy trading  
+\- tradfi_spot: stocks
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Created successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -536,10 +529,10 @@ Status Code **200**
 Name | Type | Description  
 ---|---|---  
 » user_id | integer(int64) | User ID  
-» mode | integer(int32) | Mode: 1 - classic 2 - portfolio account  
+» mode | integer(int32) | Account mode: 1 for a classic account; 2 for a unified account.  
 » name | string | API Key Name  
 » perms | array | none  
-»» name | string | Permission function name (no value will be cleared)  
+»» name | string | Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -552,6 +545,7 @@ Name | Type | Description
 \- margin: margin  
 \- unified: unified account  
 \- copy: copy trading  
+\- tradfi_spot: stocks  
 »» read_only | boolean | Read Only  
 » ip_whitelist | array | IP whitelist (list will be cleared if no value is passed)  
 » key | string | API Key  
@@ -692,7 +686,7 @@ GET`/sub_accounts/{user_id}/keys/{key}`
 
 GET `/sub_accounts/{user_id}/keys/{key}`
 
-Get `specific API key pair of the sub-account`
+_Get specific API key pair of the sub-account_
 
 ### Parameters
 
@@ -702,8 +696,6 @@ user_id | path | integer | Required | Sub-account user ID
 key | path | string | Required | Sub-account API key  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -716,10 +708,10 @@ Status Code **200**
 Name | Type | Description  
 ---|---|---  
 » user_id | integer(int64) | User ID  
-» mode | integer(int32) | Mode: 1 - classic 2 - portfolio account  
+» mode | integer(int32) | Account mode: 1 for a classic account; 2 for a unified account.  
 » name | string | API Key Name  
 » perms | array | none  
-»» name | string | Permission function name (no value will be cleared)  
+»» name | string | Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -732,6 +724,7 @@ Name | Type | Description
 \- margin: margin  
 \- unified: unified account  
 \- copy: copy trading  
+\- tradfi_spot: stocks  
 »» read_only | boolean | Read Only  
 » ip_whitelist | array | IP whitelist (list will be cleared if no value is passed)  
 » key | string | API Key  
@@ -847,10 +840,10 @@ ParametersName | In | Type | Required | Description
 user_id | path | integer | Required | Sub-account user ID  
 key | path | string | Required | Sub-account API key  
 body | body | SubAccountKey | Required | none  
-↳ mode | body | integer(int32) | Optional | Mode: 1 - classic 2 - portfolio account  
-↳ name | body | string | Optional | API Key Name  
-↳ perms | body | array | Optional | none  
-↳ name | body | string | Optional | Permission function name (no value will be cleared)  
+» mode | body | integer(int32) | Optional | Account mode: 1 for a classic account; 2 for a unified account.  
+» name | body | string | Optional | API Key Name  
+» perms | body | array | Optional | none  
+»» name | body | string | Optional | Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -863,12 +856,13 @@ body | body | SubAccountKey | Required | none
 \- margin: margin  
 \- unified: unified account  
 \- copy: copy trading  
-↳ read_only | body | boolean | Optional | Read Only  
-↳ ip_whitelist | body | array | Optional | IP whitelist (list will be cleared if no value is passed)  
+\- tradfi_spot: stocks  
+»» read_only | body | boolean | Optional | Read Only  
+» ip_whitelist | body | array | Optional | IP whitelist (list will be cleared if no value is passed)  
   
 ####  Detailed descriptions
 
-**»» name** : Permission function name (no value will be cleared)  
+**»» name** : Permission function name (cleared if no value is provided)  
 \- wallet: wallet  
 \- spot: spot/margin  
 \- futures: perpetual contract  
@@ -880,11 +874,10 @@ body | body | SubAccountKey | Required | none
 \- loan: lending  
 \- margin: margin  
 \- unified: unified account  
-\- copy: copy trading
+\- copy: copy trading  
+\- tradfi_spot: stocks
 
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Updated successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -979,7 +972,7 @@ DELETE`/sub_accounts/{user_id}/keys/{key}`
 
 DELETE `/sub_accounts/{user_id}/keys/{key}`
 
-Delete `sub-account API key pair`
+_Delete sub-account API key pair_
 
 ### Parameters
 
@@ -989,8 +982,6 @@ user_id | path | integer | Required | Sub-account user ID
 key | path | string | Required | Sub-account API key  
   
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Deleted successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1059,8 +1050,6 @@ user_id | path | integer(int64) | Required | Sub-account user ID
   
 ### Responses
 
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Locked successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 204 | [No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5) | Locked successfully | None  
@@ -1128,8 +1117,6 @@ user_id | path | integer(int64) | Required | Sub-account user ID
   
 ### Responses
 
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Unlocked successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 204 | [No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5) | Unlocked successfully | None  
@@ -1187,7 +1174,7 @@ GET`/sub_accounts/unified_mode`
 
 GET `/sub_accounts/unified_mode`
 
-Get `sub-account mode`
+_Get sub-account mode_
 
 Unified account mode:
 
@@ -1197,8 +1184,6 @@ Unified account mode:
   * `single_currency`: Single-currency margin mode
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1282,56 +1267,25 @@ Code samples
 
 #  Schemas
 
-##  SubAccountKey
+##  SubUserMode
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-user_id | integer(int64) | Optional | read-only | User ID  
-mode | integer(int32) | Optional | none | Mode: 1 - classic 2 - portfolio account  
-name | string | Optional | none | API Key Name  
-perms | array | Optional | none | none  
-↳ name | string | Optional | none | Permission function name (no value will be cleared)  
-\- wallet: wallet  
-\- spot: spot/margin  
-\- futures: perpetual contract  
-\- delivery: delivery contract  
-\- earn: earn  
-\- custody: custody  
-\- options: options  
-\- account: account information  
-\- loan: lending  
-\- margin: margin  
-\- unified: unified account  
-\- copy: copy trading  
-↳ read_only | boolean | Optional | none | Read Only  
-ip_whitelist | array | Optional | none | IP whitelist (list will be cleared if no value is passed)  
-key | string | Optional | read-only | API Key  
-state | integer(int32) | Optional | read-only | Status: 1-Normal 2-Frozen 3-Locked  
-created_at | integer(int64) | Optional | read-only | Created time  
-updated_at | integer(int64) | Optional | read-only | Last Update Time  
-last_access | integer(int64) | Optional | read-only | Last Access Time  
+user_id | integer(int64) | Optional | none | User ID  
+is_unified | boolean | Optional | none | Whether it is a unified account  
+mode | string | Optional | none | Unified account mode:  
+\- `classic`: Classic account mode  
+\- `multi_currency`: Cross-currency margin mode  
+\- `portfolio`: Portfolio margin mode  
+\- `single_currency`: Single-currency margin mode  
       
     
     {
       "user_id": 0,
-      "mode": 0,
-      "name": "string",
-      "perms": [
-        {
-          "name": "string",
-          "read_only": true
-        }
-      ],
-      "ip_whitelist": [
-        "string"
-      ],
-      "key": "string",
-      "state": 0,
-      "created_at": 0,
-      "updated_at": 0,
-      "last_access": 0
+      "is_unified": true,
+      "mode": "string"
     }
     
     
@@ -1365,23 +1319,55 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  SubUserMode
+##  SubAccountKey
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-user_id | integer(int64) | Optional | none | User ID  
-is_unified | boolean | Optional | none | Whether it is a unified account  
-mode | string | Optional | none | Unified account mode:  
-\- `classic`: Classic account mode  
-\- `multi_currency`: Cross-currency margin mode  
-\- `portfolio`: Portfolio margin mode  
-\- `single_currency`: Single-currency margin mode  
+user_id | integer(int64) | Optional | read-only | User ID  
+mode | integer(int32) | Optional | none | Account mode: 1 for a classic account; 2 for a unified account.  
+name | string | Optional | none | API Key Name  
+perms | array | Optional | none | none  
+» name | string | Optional | none | Permission function name (cleared if no value is provided)  
+\- wallet: wallet  
+\- spot: spot/margin  
+\- futures: perpetual contract  
+\- delivery: delivery contract  
+\- earn: earn  
+\- custody: custody  
+\- options: options  
+\- account: account information  
+\- loan: lending  
+\- margin: margin  
+\- unified: unified account  
+\- copy: copy trading  
+\- tradfi_spot: stocks  
+» read_only | boolean | Optional | none | Read Only  
+ip_whitelist | array | Optional | none | IP whitelist (list will be cleared if no value is passed)  
+key | string | Optional | read-only | API Key  
+state | integer(int32) | Optional | read-only | Status: 1-Normal 2-Frozen 3-Locked  
+created_at | integer(int64) | Optional | read-only | Created time  
+updated_at | integer(int64) | Optional | read-only | Last Update Time  
+last_access | integer(int64) | Optional | read-only | Last Access Time  
       
     
     {
       "user_id": 0,
-      "is_unified": true,
-      "mode": "string"
+      "mode": 0,
+      "name": "string",
+      "perms": [
+        {
+          "name": "string",
+          "read_only": true
+        }
+      ],
+      "ip_whitelist": [
+        "string"
+      ],
+      "key": "string",
+      "state": 0,
+      "created_at": 0,
+      "updated_at": 0,
+      "last_access": 0
     }

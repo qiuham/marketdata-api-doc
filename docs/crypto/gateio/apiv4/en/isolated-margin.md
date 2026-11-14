@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/isolated-margin
 api_type: REST
-updated_at: 2026-05-27 20:15:21.419927
+updated_at: 2026-11-13 20:57:10.351523
 ---
 
 # Isolated-Margin
@@ -24,8 +24,6 @@ ParametersName | In | Type | Required | Description
 currency_pair | query | string | Optional | Currency pair  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -174,8 +172,6 @@ Specify the end time. If not specified, it defaults to the current time, and the
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [MarginAccountBook]  
@@ -277,8 +273,6 @@ currency | query | string | Optional | Query by specified currency name
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [FundingAccount]  
@@ -368,8 +362,6 @@ GET `/margin/auto_repay`
 _Query user auto repayment settings_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)User's current auto repayment settings
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -465,8 +457,6 @@ status | query | string | Required | Whether to enable auto repayment: `on` \- e
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)User's current auto repayment settings
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | User's current auto repayment settings | Inline  
@@ -551,7 +541,7 @@ GET`/margin/transferable`
 
 GET `/margin/transferable`
 
-Get `maximum transferable amount for isolated margin`
+_Get maximum transferable amount for isolated margin_
 
 ### Parameters
 
@@ -561,8 +551,6 @@ currency | query | string | Required | Query by specified currency name
 currency_pair | query | string | Optional | Currency pair  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -649,8 +637,6 @@ _List lending markets_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [UniCurrencyPair]  
@@ -666,7 +652,12 @@ _None_ | array | [Currency pair of the loan]
 »» currency_pair | string | Currency pair  
 »» base_min_borrow_amount | string | Minimum borrow amount of base currency  
 »» quote_min_borrow_amount | string | Minimum borrow amount of quote currency  
-»» leverage | string | Position leverage  
+»» leverage | string | Leverage multiplier  
+»» status | string | Status  
+  
+\- enabled: Enabled  
+\- disabled: Disabled  
+»» delisted_time | number(int64) | Delisting Time  
   
 This operation does not require authentication 
 
@@ -703,7 +694,9 @@ Code samples
         "currency_pair": "AE_USDT",
         "base_min_borrow_amount": "100",
         "quote_min_borrow_amount": "100",
-        "leverage": "3"
+        "leverage": "3",
+        "status": "enabled",
+        "delisted_time": 1786329745
       }
     ]
     
@@ -714,7 +707,7 @@ GET`/margin/uni/currency_pairs/{currency_pair}`
 
 GET `/margin/uni/currency_pairs/{currency_pair}`
 
-Get `lending market details`
+_Get lending market details_
 
 ### Parameters
 
@@ -723,8 +716,6 @@ ParametersName | In | Type | Required | Description
 currency_pair | path | string | Required | Currency pair  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -741,7 +732,12 @@ Name | Type | Description
 » currency_pair | string | Currency pair  
 » base_min_borrow_amount | string | Minimum borrow amount of base currency  
 » quote_min_borrow_amount | string | Minimum borrow amount of quote currency  
-» leverage | string | Position leverage  
+» leverage | string | Leverage multiplier  
+» status | string | Status  
+  
+\- enabled: Enabled  
+\- disabled: Disabled  
+» delisted_time | number(int64) | Delisting Time  
   
 This operation does not require authentication 
 
@@ -777,7 +773,9 @@ Code samples
       "currency_pair": "AE_USDT",
       "base_min_borrow_amount": "100",
       "quote_min_borrow_amount": "100",
-      "leverage": "3"
+      "leverage": "3",
+      "status": "enabled",
+      "delisted_time": 1786329745
     }
     
 
@@ -799,11 +797,9 @@ currencies | query | array[string] | Required | Array of currency names to query
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | EstimateRate  
   
 ### Response Schema
 
@@ -891,8 +887,6 @@ page | query | integer(int32) | Optional | Page number
 limit | query | integer | Optional | Maximum number of records returned in a single list  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -990,11 +984,11 @@ _Borrow or repay_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CreateUniLoan | Required | none  
-↳ currency | body | string | Required | Currency  
-↳ type | body | string | Required | Loan Type margin: margin borrowing  
-↳ amount | body | string | Required | Borrow or repayment amount  
-↳ repaid_all | body | boolean | Optional | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
-↳ currency_pair | body | string | Required | Currency pair  
+» currency | body | string | Required | Currency  
+» type | body | string | Required | Loan Type margin: margin borrowing  
+» amount | body | string | Required | Borrow or repayment amount  
+» repaid_all | body | boolean | Optional | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
+» currency_pair | body | string | Required | Currency pair  
   
 ####  Enumerated Values
 
@@ -1004,8 +998,6 @@ Enumerated ValuesParameter | Value
 » type | repay  
   
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Operation successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1097,8 +1089,6 @@ type | borrow
 type | repay  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1216,8 +1206,6 @@ Specify the end time. If not specified, it defaults to the current time, and the
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [UniLoanInterestRecord]  
@@ -1320,8 +1308,6 @@ currency_pair | query | string | Required | Currency pair
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | MaxUniBorrowable  
@@ -1414,8 +1400,6 @@ ParametersName | In | Type | Required | Description
 currency_pair | query | string | Required | Currency pair  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1510,8 +1494,6 @@ currency_pair | query | string | Required | Currency pair
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [MarginLeverageTier]  
@@ -1580,12 +1562,10 @@ _Set user market leverage multiplier_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | MarginMarketLeverage | Required | none  
-↳ currency_pair | body | string | Optional | Market  
-↳ leverage | body | string | Required | Position leverage  
+» currency_pair | body | string | Optional | Market  
+» leverage | body | string | Required | Leverage multiplier  
   
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Set successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1665,8 +1645,6 @@ ParametersName | In | Type | Required | Description
 currency_pair | query | string | Optional | Currency pair  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1779,6 +1757,27 @@ Code samples
 
 #  Schemas
 
+##  MarginTransferable
+
+_MarginTransferable_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | none | Currency detail  
+currency_pair | string | Optional | none | Currency pair  
+amount | string | Optional | none | Max transferable amount  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "amount": "string"
+    }
+    
+    
+
 ##  EstimateRate
 
 _Estimate current hourly lending rates, returned by currency_
@@ -1829,6 +1828,54 @@ type | repay
     
     
 
+##  UniLoan
+
+_Borrowing_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | read-only | Currency  
+currency_pair | string | Optional | read-only | Currency pair  
+amount | string | Optional | read-only | Amount to Repay  
+type | string | Optional | read-only | Loan type: platform borrowing - platform, margin borrowing - margin  
+create_time | integer(int64) | Optional | read-only | Created time  
+update_time | integer(int64) | Optional | read-only | Last Update Time  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "amount": "string",
+      "type": "string",
+      "create_time": 0,
+      "update_time": 0
+    }
+    
+    
+
+##  MaxUniBorrowable
+
+_MaxUniBorrowable_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Required | read-only | Currency  
+currency_pair | string | Optional | read-only | Currency pair  
+borrowable | string | Required | read-only | Maximum borrowable  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "borrowable": "string"
+    }
+    
+    
+
 ##  UniLoanRecord
 
 _Borrowing Records_
@@ -1854,31 +1901,113 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  MarginAccountBook
+##  MarginMarketLeverage
+
+_Market leverage settings_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Balance change record ID  
-time | string | Optional | none | Account change timestamp  
-time_ms | integer(int64) | Optional | none | The timestamp of the change (in milliseconds)  
-currency | string | Optional | none | Currency changed  
-currency_pair | string | Optional | none | Account trading pair  
-change | string | Optional | none | Amount changed. Positive value means transferring in, while negative out  
-balance | string | Optional | none | Balance after change  
-type | string | Optional | none | Account book type. Please refer to account book type for more detail  
+currency_pair | string | Optional | none | Market  
+leverage | string | Required | none | Leverage multiplier  
       
     
     {
-      "id": "string",
-      "time": "string",
-      "time_ms": 0,
-      "currency": "string",
       "currency_pair": "string",
-      "change": "string",
-      "balance": "string",
-      "type": "string"
+      "leverage": "string"
+    }
+    
+    
+
+##  MarginAccount
+
+_Margin account information for a trading pair.`base` corresponds to base currency account information, `quote` corresponds to quote currency account information_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | none | Currency pair  
+account_type | string | Optional | none | Account Type mmr: maintenance margin rate account;inactive: market not activated  
+leverage | string | Optional | none | User's current market leverage multiplier  
+locked | boolean | Optional | none | Whether the account is locked  
+risk | string | Optional | none | Deprecated  
+mmr | string | Optional | none | Current Maintenance Margin Rate of the account  
+base | object | Optional | none | Currency account information  
+» currency | string | Optional | none | Currency name  
+» available | string | Optional | none | Amount available for margin trading, available = margin + borrowed  
+» locked | string | Optional | none | Frozen funds, such as amounts already placed in margin market for order trading  
+» borrowed | string | Optional | none | Borrowed funds  
+» interest | string | Optional | none | Unpaid interest  
+quote | MarginAccount/properties/base | Optional | none | Currency account information  
+      
+    
+    {
+      "currency_pair": "string",
+      "account_type": "string",
+      "leverage": "string",
+      "locked": true,
+      "risk": "string",
+      "mmr": "string",
+      "base": {
+        "currency": "string",
+        "available": "string",
+        "locked": "string",
+        "borrowed": "string",
+        "interest": "string"
+      },
+      "quote": {
+        "currency": "string",
+        "available": "string",
+        "locked": "string",
+        "borrowed": "string",
+        "interest": "string"
+      }
+    }
+    
+    
+
+##  FundingAccount
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | none | Currency name  
+available | string | Optional | none | Available assets to lend, which is identical to spot account `available`  
+locked | string | Optional | none | Locked amount. i.e. amount in `open` loans  
+lent | string | Optional | none | Outstanding loan amount yet to be repaid  
+total_lent | string | Optional | none | Amount used for lending. total_lent = lent + locked  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "lent": "string",
+      "total_lent": "string"
+    }
+    
+    
+
+##  MarginLeverageTier
+
+_Market gradient information_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+upper_limit | string | Optional | none | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
+mmr | string | Optional | none | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
+leverage | string | Optional | none | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
+      
+    
+    {
+      "upper_limit": "string",
+      "mmr": "string",
+      "leverage": "string"
     }
     
     
@@ -1912,140 +2041,6 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  MarginTransferable
-
-_MarginTransferable_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency detail  
-currency_pair | string | Optional | none | Currency pair  
-amount | string | Optional | none | Max transferable amount  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "amount": "string"
-    }
-    
-    
-
-##  MarginLeverageTier
-
-_Market gradient information_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-upper_limit | string | Optional | none | Maximum borrowing limit. Determined by the leverage you set; the lower the leverage, the larger the borrowing limit.  
-mmr | string | Optional | none | Maintenance margin rate.Under tiered margin requirements(https://www.gate.com/en/help/trade/margin-trading/42357), the maintenance margin rate is a composite value.  
-leverage | string | Optional | none | the maximum permissible leverage given to the current debt level; the higher the debt level, the lower the maximum leverage.  
-      
-    
-    {
-      "upper_limit": "string",
-      "mmr": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  MaxUniBorrowable
-
-_MaxUniBorrowable_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | read-only | Currency  
-currency_pair | string | Optional | read-only | Currency pair  
-borrowable | string | Required | read-only | Maximum borrowable  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "borrowable": "string"
-    }
-    
-    
-
-##  FundingAccount
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency name  
-available | string | Optional | none | Available assets to lend, which is identical to spot account `available`  
-locked | string | Optional | none | Locked amount. i.e. amount in `open` loans  
-lent | string | Optional | none | Outstanding loan amount yet to be repaid  
-total_lent | string | Optional | none | Amount used for lending. total_lent = lent + locked  
-      
-    
-    {
-      "currency": "string",
-      "available": "string",
-      "locked": "string",
-      "lent": "string",
-      "total_lent": "string"
-    }
-    
-    
-
-##  MarginAccount
-
-_Margin account information for a trading pair.`base` corresponds to base currency account information, `quote` corresponds to quote currency account information_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-account_type | string | Optional | none | Account Type mmr: maintenance margin rate account;inactive: market not activated  
-leverage | string | Optional | none | User's current market leverage multiplier  
-locked | boolean | Optional | none | Whether the account is locked  
-risk | string | Optional | none | Deprecated  
-mmr | string | Optional | none | Current Maintenance Margin Rate of the account  
-base | object | Optional | none | Currency account information  
-↳ currency | string | Optional | none | Currency name  
-↳ available | string | Optional | none | Amount available for margin trading, available = margin + borrowed  
-↳ locked | string | Optional | none | Frozen funds, such as amounts already placed in margin market for order trading  
-↳ borrowed | string | Optional | none | Borrowed funds  
-↳ interest | string | Optional | none | Unpaid interest  
-quote | MarginAccount/properties/base | Optional | none | Currency account information  
-      
-    
-    {
-      "currency_pair": "string",
-      "account_type": "string",
-      "leverage": "string",
-      "locked": true,
-      "risk": "string",
-      "mmr": "string",
-      "base": {
-        "currency": "string",
-        "available": "string",
-        "locked": "string",
-        "borrowed": "string",
-        "interest": "string"
-      },
-      "quote": {
-        "currency": "string",
-        "available": "string",
-        "locked": "string",
-        "borrowed": "string",
-        "interest": "string"
-      }
-    }
-    
-    
-
 ##  UniCurrencyPair
 
 _Currency pair of the loan_
@@ -2057,58 +2052,48 @@ PropertiesName | Type | Required | Restrictions | Description
 currency_pair | string | Optional | read-only | Currency pair  
 base_min_borrow_amount | string | Optional | read-only | Minimum borrow amount of base currency  
 quote_min_borrow_amount | string | Optional | read-only | Minimum borrow amount of quote currency  
-leverage | string | Optional | read-only | Position leverage  
+leverage | string | Optional | read-only | Leverage multiplier  
+status | string | Optional | none | Status  
+  
+\- enabled: Enabled  
+\- disabled: Disabled  
+delisted_time | number(int64) | Optional | none | Delisting Time  
       
     
     {
       "currency_pair": "string",
       "base_min_borrow_amount": "string",
       "quote_min_borrow_amount": "string",
-      "leverage": "string"
+      "leverage": "string",
+      "status": "string",
+      "delisted_time": 0
     }
     
     
 
-##  UniLoan
-
-_Borrowing_
+##  MarginAccountBook
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-currency | string | Optional | read-only | Currency  
-currency_pair | string | Optional | read-only | Currency pair  
-amount | string | Optional | read-only | Amount to Repay  
-type | string | Optional | read-only | Loan type: platform borrowing - platform, margin borrowing - margin  
-create_time | integer(int64) | Optional | read-only | Created time  
-update_time | integer(int64) | Optional | read-only | Last Update Time  
+id | string | Optional | none | Balance change record ID  
+time | string | Optional | none | Account change timestamp  
+time_ms | integer(int64) | Optional | none | The timestamp of the change (in milliseconds)  
+currency | string | Optional | none | Currency changed  
+currency_pair | string | Optional | none | Account trading pair  
+change | string | Optional | none | Amount changed. Positive value means transferring in, while negative out  
+balance | string | Optional | none | Balance after change  
+type | string | Optional | none | Account book type. Please refer to account book type for more detail  
       
     
     {
+      "id": "string",
+      "time": "string",
+      "time_ms": 0,
       "currency": "string",
       "currency_pair": "string",
-      "amount": "string",
-      "type": "string",
-      "create_time": 0,
-      "update_time": 0
-    }
-    
-    
-
-##  MarginMarketLeverage
-
-_Market leverage settings_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Market  
-leverage | string | Required | none | Position leverage  
-      
-    
-    {
-      "currency_pair": "string",
-      "leverage": "string"
+      "change": "string",
+      "balance": "string",
+      "type": "string"
     }

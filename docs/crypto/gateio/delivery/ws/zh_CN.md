@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/delivery/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:38.773913
+updated_at: 2026-11-13 20:58:30.937926
 ---
 
 # Gate Delivery WebSocket v4.0.0
@@ -36,6 +36,10 @@ Base URLs:
   * 模拟盘交易: `wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/btc`
 
 ##  Changelog
+
+2026-06-25
+
+  * 新增 `futures.obu` 深度频道 V2（OBU），提供更快更新的深度信息推送
 
 2025-03-21
 
@@ -699,6 +703,10 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
 
 推送用户指定更新频率的订单簿变动。
 
+  * `futures.obu`
+
+订单簿增量（OBU），提供更快更新的深度信息。
+
 WARNING
 
 不建议通过 futures.order_book 接收订单簿更新。`futures.order_book_update` 可以提供更及时的更新，而且流量更少。
@@ -1154,6 +1162,286 @@ WARNING
       "channel": "futures.order_book_update",
       "event": "unsubscribe",
       "error": null,
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+#  深度频道V2
+
+**提供一种更快更新的获取深度信息的方法.**
+
+##  维护本地深度
+
+说明:
+
+  1. 全量深度推送（`full=true`）： 当频道推送的深度为全量深度时，需要将该深度数据完整替换本地深度，并将`深度ID`更新为消息中的字段 `u`。服务端可能会重复推送全量深度。 
+     1. 订阅该频道时，首次推送为全量深度。
+  2. 增量深度推送（`full=false`）： 增量消息中不会显示 `full` 字段，此时消息包含字段 `U`（深度起始ID）和 `u`（深度结束ID）。 
+     1. 如果 `U` = 本地`深度ID` \+ `1`，则表示深度连续更新： 
+        1. 将本地深度ID替换为消息中的 `u`。
+        2. 若更新中的 `a` 和 `b` 不为空，分别按价格更新对应的买、卖深度数量（`level[0]` 为价格，`level[1]` 为数量）。当数量 `level[1]`= "0" 时，需移除对应档位。
+     2. 若 `U` ≠ 本地`深度ID` \+ `1`，则深度数据不连续，需要**取消订阅该市场，并重新订阅** 以获取初始化深度。
+  3. 订阅限制： 针对同一合约的同一深度流，一个链接只允许订阅一次，重复订阅会返回错误。失败示例：
+
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482960,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.obu",
+      "event": "subscribe",
+      "payload": [
+        "ob.BTC_USDT_20230630.100"
+      ],
+      "error": {
+        "code": 2,
+        "message": "Alert sub ob.BTC_USDT_20230630.100"
+      },
+      "result": {
+        "status": "fail"
+      }
+    }
+    
+
+##  深度频道V2订阅
+
+###  请求参数
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload`是一个包含流名称的列表. 格式为: ob.{contract}.{level}; 例如 ob.BTC_USDT_20230630.100、ob.BTC_USDT_20230630.20
+
+其中`level`枚举为：100、20；更新频率: 100档为100ms；20档为20ms；
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.obu",
+            "event": "subscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "subscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482384,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.obu",
+      "event": "subscribe",
+      "payload": [
+        "ob.BTC_USDT_20230630.100"
+      ],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  深度v2订阅推送
+
+**深度频道V2的消息推送**
+
+###  推送参数
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`update`
+
+  * params
+
+推送参数名称 | 类型 | 描述  
+---|---|---  
+`result` | Object | 自上次更新以来发生变更要价和出价  
+»`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
+»`s` | String | 深度流的名称  
+»`U` | Integer | 本次更新开始的订单簿更新 ID  
+»`u` | Integer | 本次更新结束的订单簿更新 ID  
+»`b` | `Array[OrderBookArray]` | 自上次更新以来的 bids 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0应当从本地深度中移除  
+»`a` | `Array[OrderBookArray]` | 自上次更新以来的 asks 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0应当从本地深度中移除  
+  
+全量推送示例:
+    
+    
+    {
+    	"channel": "futures.obu",
+    	"result": {
+    		"t": 1743673026995,
+    		"full": true,
+    		"s": "ob.BTC_USDT_20230630.100",
+    		"u": 79072179673,
+    		"b": [
+    			["83705.9", "30166"]
+    		],
+    		"a": [
+    			["83706", "4208"]
+    		]
+    	},
+    	"time_ms": 1743673026999
+    }
+    
+
+增量推送示例:
+    
+    
+    {
+    	"channel": "futures.obu",
+    	"result": {
+    		"t": 1743673027017,
+    		"s": "ob.BTC_USDT_20230630.100",
+    		"U": 79072179674,
+    		"u": 79072179694,
+    		"b": [
+    			["83702.2", "62"],
+    			["83702.1", "0"],
+    			["83702", "0"],
+    			["83685.6", "120"],
+    			["83685", "239"]
+    		]
+    	},
+    	"time_ms": 1743673027020
+    }
+    
+
+##  深度频道V2取消订阅
+
+**取消指定交割合约的深度频道V2订阅**
+
+###  请求参数
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`unsubscribe`
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+    {
+      "time": 1743673617,
+      "time_ms": 1743673617242,
+      "id": 1,
+      "conn_id": "7b06ff199a98ab0e",
+      "trace_id": "8f86e4021a84440e502f73fde5b94918",
+      "channel": "futures.obu",
+      "event": "unsubscribe",
+      "payload": ["ob.BTC_USDT_20230630.100"],
       "result": {
         "status": "success"
       }
@@ -2820,4 +3108,4 @@ WARNING
     }
     
 
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 6/25/2026, 7:44:04 AM

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/options/ws/en
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:52.460769
+updated_at: 2026-11-13 20:58:35.661229
 ---
 
 # Gate Options WebSocket v4.0.0
@@ -1480,7 +1480,7 @@ How to maintain local order book:
   5. Dump all notifications which satisfy `u < baseID+1`. If `baseID+1 < first notification U`, it means current base order book falls behind notifications. Start from step 3 to retrieve newer base order book.
   6. If any subsequent notification which satisfy `U > baseID+1` is found, it means some updates are lost. Reconstruct local order book from step 3.
 
-You can find example application implementing the methods above in the [SDK GitHub repository ](https://github.com/gateio/gatews)
+You can find example application implementing the methods above in the [SDK GitHub repository ](https://github.com/gate/gatews)
 
 ##  Best bid or ask price
 
@@ -2588,4 +2588,4 @@ Notification example
     }
     
 
-Last Updated: 5/12/2026, 3:04:47 AM
+Last Updated: 6/10/2026, 4:02:40 AM

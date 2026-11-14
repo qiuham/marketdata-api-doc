@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/spot
 api_type: Trading
-updated_at: 2026-05-27 20:17:50.111088
+updated_at: 2026-11-13 20:58:07.209053
 ---
 
 # Spot
@@ -17,7 +17,7 @@ GET `/spot/currencies`
 
 _查询所有币种信息_
 
-一个币种对应多个链时可以通过 `chains` 字段查询多链的信息，比如链的充提状态、标识等
+一个币种对应多条链时，可通过 `chains` 查询各链信息，例如充值和提现状态、链标识等。
 
 ### 返回
 
@@ -41,7 +41,7 @@ _None_ | array |
 » trade_disabled | boolean | 是否暂停交易  
 » fixed_rate | string | 固定交易手续费率。仅限固定交易费率的币种，普通币种该字段无效  
 » chain | string | 币对应的主链  
-» chains | array | 币对应的所有链  
+» chains | array | 该币种对应的全部区块链。  
 »» SpotCurrencyChain | object |   
 »»» name | string | 链名  
 »»» addr | string | token地址  
@@ -163,7 +163,7 @@ currency | URL | any | 是 | 币种名称
 » trade_disabled | boolean | 是否暂停交易  
 » fixed_rate | string | 固定交易手续费率。仅限固定交易费率的币种，普通币种该字段无效  
 » chain | string | 币对应的主链  
-» chains | array | 币对应的所有链  
+» chains | array | 该币种对应的全部区块链。  
 »» SpotCurrencyChain | object |   
 »»» name | string | 链名  
 »»» addr | string | token地址  
@@ -275,6 +275,7 @@ _None_ | array | [现货交易对]
 »» base_name | string | 交易货币名称  
 »» quote | string | 计价货币  
 »» quote_name | string | 计价货币名称  
+»» trade_quotes | array|null | 统一市场支持的交易计价货币, null 表示该市场不支持统一计价币  
 »» fee | string | 交易费率(已废弃)  
 »» min_base_amount | string | 交易货币最低交易数量，null 表示无限制  
 »» min_quote_amount | string | 计价货币最低交易数量，null 表示无限制  
@@ -290,15 +291,15 @@ _None_ | array | [现货交易对]
 \- tradable: 买卖均可交易  
 »» sell_start | integer(int64) | 允许卖出时间，秒级 Unix 时间戳  
 »» buy_start | integer(int64) | 允许买入时间，秒级 Unix 时间戳  
-»» delisting_time | integer(int64) | 预计下架时间，秒级 Unix 时间戳  
+»» delisting_time | integer(int64) | 预计下架时间，Unix 时间戳，单位秒。  
 »» type | string | 交易对类型，normal:常规, premarket:盘前  
 »» trade_url | string | 交易链接  
 »» st_tag | boolean | 币对是否在ST风险评估中，false - 否，true - 是  
 »» up_rate | string | 报价最大涨幅百分比  
 »» down_rate | string | 报价最大跌幅百分比  
 »» slippage | string | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-»» market_order_max_stock | string | 市价单最大下单数量  
-»» market_order_max_money | string | 市价单最大下单金额  
+»» market_order_max_stock | string | 市价单最大下单数量，null 或 0 表示无限制  
+»» market_order_max_money | string | 市价单最大下单金额，null 或 0 表示无限制  
   
 ####  枚举值列表
 
@@ -345,6 +346,10 @@ trade_status | tradable
         "base_name": "Ethereum",
         "quote": "USDT",
         "quote_name": "Tether",
+        "trade_quotes": [
+          "USDC",
+          "RLUSD"
+        ],
         "fee": "0.2",
         "min_base_amount": "0.001",
         "min_quote_amount": "1.0",
@@ -356,13 +361,14 @@ trade_status | tradable
         "sell_start": 1516378650,
         "buy_start": 1516378650,
         "delisting_time": 0,
+        "type": "normal",
         "trade_url": "https://www.gate.io/trade/ETH_USDT",
         "st_tag": false,
         "up_rate": "0.05",
         "down_rate": "0.02",
         "slippage": "0.05",
-        "max_market_order_stock": "100000",
-        "max_market_order_money": "1000000"
+        "market_order_max_stock": "100000",
+        "market_order_max_money": "1000000"
       }
     ]
     
@@ -400,6 +406,7 @@ _现货交易对_
 » base_name | string | 交易货币名称  
 » quote | string | 计价货币  
 » quote_name | string | 计价货币名称  
+» trade_quotes | array|null | 统一市场支持的交易计价货币, null 表示该市场不支持统一计价币  
 » fee | string | 交易费率(已废弃)  
 » min_base_amount | string | 交易货币最低交易数量，null 表示无限制  
 » min_quote_amount | string | 计价货币最低交易数量，null 表示无限制  
@@ -415,15 +422,15 @@ _现货交易对_
 \- tradable: 买卖均可交易  
 » sell_start | integer(int64) | 允许卖出时间，秒级 Unix 时间戳  
 » buy_start | integer(int64) | 允许买入时间，秒级 Unix 时间戳  
-» delisting_time | integer(int64) | 预计下架时间，秒级 Unix 时间戳  
+» delisting_time | integer(int64) | 预计下架时间，Unix 时间戳，单位秒。  
 » type | string | 交易对类型，normal:常规, premarket:盘前  
 » trade_url | string | 交易链接  
 » st_tag | boolean | 币对是否在ST风险评估中，false - 否，true - 是  
 » up_rate | string | 报价最大涨幅百分比  
 » down_rate | string | 报价最大跌幅百分比  
 » slippage | string | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-» market_order_max_stock | string | 市价单最大下单数量  
-» market_order_max_money | string | 市价单最大下单金额  
+» market_order_max_stock | string | 市价单最大下单数量，null 或 0 表示无限制  
+» market_order_max_money | string | 市价单最大下单金额，null 或 0 表示无限制  
   
 ####  枚举值列表
 
@@ -469,6 +476,10 @@ trade_status | tradable
       "base_name": "Ethereum",
       "quote": "USDT",
       "quote_name": "Tether",
+      "trade_quotes": [
+        "USDC",
+        "RLUSD"
+      ],
       "fee": "0.2",
       "min_base_amount": "0.001",
       "min_quote_amount": "1.0",
@@ -480,13 +491,14 @@ trade_status | tradable
       "sell_start": 1516378650,
       "buy_start": 1516378650,
       "delisting_time": 0,
+      "type": "normal",
       "trade_url": "https://www.gate.io/trade/ETH_USDT",
       "st_tag": false,
       "up_rate": "0.05",
       "down_rate": "0.02",
       "slippage": "0.05",
-      "max_market_order_stock": "100000",
-      "max_market_order_money": "1000000"
+      "market_order_max_stock": "100000",
+      "market_order_max_money": "1000000"
     }
     
 
@@ -693,6 +705,102 @@ with_id | 请求参数 | boolean | 否 | 返回深度更新 ID
     }
     
 
+##  获取 RPI 市场深度信息
+
+GET`/spot/rpi_order_book`
+
+GET `/spot/rpi_order_book`
+
+_获取 RPI 市场深度信息_
+
+获取 RPI 市场深度信息，买单按照价格从高到低排序，卖单按照价格从低到高排序。
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+currency_pair | 请求参数 | string | 是 | 交易对  
+interval | 请求参数 | string | 否 | 合并深度指定的价格精度，0 为不合并，不指定则默认为 0  
+limit | 请求参数 | integer | 否 | 深度档位数量  
+with_id | 请求参数 | boolean | 否 | 返回深度更新 ID  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 成功查询 | OrderBook  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» id | integer(int64) | 深度更新ID。深度每发生一次变化，ID 就会更新一次。仅在 `with_id` 设置为 `true` 该值有效  
+» current | integer(int64) | 接口数据返回 ms 时间戳  
+» update | integer(int64) | 深度变化 ms 时间戳  
+» asks | array | 卖方深度列表  
+»» _None_ | array | 价格，数量的二元组  
+» bids | array | 买方深度列表  
+»» _None_ | array | 价格，数量的二元组  
+  
+该请求不需要认证 
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/rpi_order_book'
+    query_param = 'currency_pair=BTC_USDT'
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/spot/rpi_order_book?currency_pair=BTC_USDT \
+      -H 'Accept: application/json'
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "id": 123456,
+      "current": 1623898993123,
+      "update": 1623898993121,
+      "asks": [
+        [
+          "1.52",
+          "1.151"
+        ],
+        [
+          "1.53",
+          "1.218"
+        ]
+      ],
+      "bids": [
+        [
+          "1.17",
+          "201.863"
+        ],
+        [
+          "1.16",
+          "725.464"
+        ]
+      ]
+    }
+    
+
 ##  查询市场成交记录
 
 GET`/spot/trades`
@@ -757,7 +865,7 @@ _None_ | array |
 » side | string | 买单或者卖单  
 » role | string | 交易角色，公共接口无此字段返回  
 » amount | string | 交易数量  
-» price | string | 交易价  
+» price | string | 成交价格。  
 » order_id | string | 关联的订单 ID，公共接口无此字段返回  
 » fee | string | 成交扣除的手续费，公共接口无此字段返回  
 » fee_currency | string | 手续费计价单位，公共接口无此字段返回  
@@ -769,6 +877,7 @@ _None_ | array |
 pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
 liquidate 代表逐仓强平订单  
 » deal | string | 本次成交总额  
+» trade_quote | string | 交易的计价货币  
   
 ####  枚举值列表
 
@@ -813,6 +922,7 @@ role | maker
         "id": "1232893232",
         "create_time": "1548000000",
         "create_time_ms": "1548000000123.456",
+        "currency_pair": "BTC_USDT",
         "order_id": "4128442423",
         "side": "buy",
         "role": "maker",
@@ -824,7 +934,8 @@ role | maker
         "gt_fee": "0",
         "sequence_id": "588018",
         "text": "t-test",
-        "deal": "0.0045"
+        "deal": "0.0045",
+        "trade_quote": "USDC"
       }
     ]
     
@@ -1448,7 +1559,7 @@ _None_ | array | 包含多个订单对象，订单对象具体结构参考/spot/
 \- `closed`: 已结束的订单  
 \- `cancelled`: 订单撤销  
 »» currency_pair | string | 交易货币对  
-»» type | string | 订单类型   
+»» type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
@@ -1502,7 +1613,7 @@ _None_ | array | 包含多个订单对象，订单对象具体结构参考/spot/
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
@@ -1574,7 +1685,7 @@ WARNING
     
     url = '/spot/batch_orders'
     query_param = ''
-    body='[{"text":"t-abc123","currency_pair":"BTC_USDT","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"}}]'
+    body='[{"text":"t-abc123","currency_pair":"BTC_USDT","trade_quote":"USDC","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"},"use_earn":false}]'
     # `gen_sign` 的实现参考认证一章
     sign_headers = gen_sign('POST', prefix + url, query_param, body)
     headers.update(sign_headers)
@@ -1591,7 +1702,7 @@ WARNING
     method="POST"
     url="/spot/batch_orders"
     query_param=""
-    body_param='[{"text":"t-abc123","currency_pair":"BTC_USDT","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"}}]'
+    body_param='[{"text":"t-abc123","currency_pair":"BTC_USDT","trade_quote":"USDC","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"},"use_earn":false}]'
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
@@ -1610,6 +1721,7 @@ WARNING
       {
         "text": "t-abc123",
         "currency_pair": "BTC_USDT",
+        "trade_quote": "USDC",
         "type": "limit",
         "account": "unified",
         "side": "buy",
@@ -1625,7 +1737,8 @@ WARNING
         "stop_loss": {
           "trigger_price": "63000",
           "order_price": "63000"
-        }
+        },
+        "use_earn": false
       }
     ]
     
@@ -1734,33 +1847,35 @@ liquidate 代表逐仓强平订单
 »»» update_time | string | 订单最新修改时间  
 »»» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 »»» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-»»» status | string | 订单状态。  
+»»» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 »»» currency_pair | string | 交易货币对  
+»»» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 »»» type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 »»» account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 »»» side | string | 买单或者卖单  
-»»» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+»»» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 »»» price | string | 交易价,`type`=`limit`时必填  
-»»» time_in_force | string | Time in force 策略。  
+»»» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-»»» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+»»» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 »»» auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -1802,21 +1917,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-»»» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+»»» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »»»» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »»»» order_price | string | 止盈委托价  
-»»» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+»»» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »»»» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »»»» order_price | string | 止损委托价  
+»»» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -2017,33 +2133,35 @@ liquidate 代表逐仓强平订单
 » update_time | string | 订单最新修改时间  
 » create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 » update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-» status | string | 订单状态。  
+» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 » currency_pair | string | 交易货币对  
+» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 » type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | string | 买单或者卖单  
-» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | string | 交易价,`type`=`limit`时必填  
-» time_in_force | string | Time in force 策略。  
+» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -2085,21 +2203,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | string | 止盈委托价  
-» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | string | 止损委托价  
+» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -2208,6 +2327,7 @@ WARNING
       "update_time_ms": 1710488334074,
       "status": "closed",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -2237,7 +2357,8 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
@@ -2316,33 +2437,35 @@ liquidate 代表逐仓强平订单
 »» update_time | string | 订单最新修改时间  
 »» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 »» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-»» status | string | 订单状态。  
+»» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 »» currency_pair | string | 交易货币对  
+»» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 »» type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 »» account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 »» side | string | 买单或者卖单  
-»» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+»» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 »» price | string | 交易价,`type`=`limit`时必填  
-»» time_in_force | string | Time in force 策略。  
+»» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-»» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+»» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 »» auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -2384,21 +2507,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-»» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+»» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »»» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »»» order_price | string | 止盈委托价  
-»» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+»» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »»» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »»» order_price | string | 止损委托价  
+»» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -2496,6 +2620,7 @@ WARNING
         "update_time_ms": 1710488334074,
         "status": "closed",
         "currency_pair": "BTC_USDT",
+        "trade_quote": "USDC",
         "type": "limit",
         "account": "unified",
         "side": "buy",
@@ -2525,7 +2650,8 @@ WARNING
         "stop_loss": {
           "trigger_price": "63000",
           "order_price": "63000"
-        }
+        },
+        "use_earn": false
       }
     ]
     
@@ -2558,6 +2684,10 @@ _下单_
 
 设置 `stp_act` 来决定使用限制用户自成交的策略
 
+**统一市场**
+
+可以指定不同计价币种进行撮合的市场，通过`trade_quote`指定实际计价币种。 比如BTC_USD市场中，支持USDC、RLUSD等计价币进行互相撮合。 统一市场支持的计价币可查询`GET /spot/currency_pairs`
+
 ### 参数
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
@@ -2581,27 +2711,29 @@ apiv4 代表 `apiv4` 下单
 pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
 liquidate 代表逐仓强平订单  
 » currency_pair | body | string | 是 | 交易货币对  
+» trade_quote | body | string | 否 | 交易的计价货币，仅在统一市场可指定  
 » type | body | string | 否 | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | body | string | 否 | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | body | string | 是 | 买单或者卖单  
-» amount | body | string | 是 | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | body | string | 是 | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | body | string | 否 | 交易价,`type`=`limit`时必填  
-» time_in_force | body | string | 否 | Time in force 策略。  
+» time_in_force | body | string | 否 | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | body | string | 否 | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | body | string | 否 | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_borrow | body | boolean | 否 | 杠杆(包括逐仓全仓)交易时，如果账户余额不足，是否由系统自动借入不足部分  
 » auto_repay | body | boolean | 否 | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
@@ -2622,16 +2754,17 @@ liquidate 代表逐仓强平订单
 `RESULT`: 无清算信息  
 `FULL`: 完整模式（默认）  
 » slippage | body | string | 否 | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-» stop_profit | body | object | 否 | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | body | object|null | 否 | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | body | string | 否 | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | body | string | 否 | 止盈委托价  
-» stop_loss | body | object | 否 | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | body | object|null | 否 | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | body | string | 否 | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | body | string | 否 | 止损委托价  
+» use_earn | body | boolean|null | 否 | 下单支持余币宝赎回  
   
 ####  详细描述
 
@@ -2657,20 +2790,21 @@ liquidate 代表逐仓强平订单
 \- limit : 限价单  
 \- market : 市价单
 
-**» amount** : 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`
+**» amount** : 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。
 
-**» time_in_force** : Time in force 策略。  
+**» time_in_force** : 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`
+`type=market` 时，仅支持 `ioc` 和 `fok`。
 
 **» auto_repay** : 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
@@ -2722,7 +2856,7 @@ liquidate 代表逐仓强平订单
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | 交易成功执行。具体执行结果根据下单时的 Time in force 策略来决定 | Order  
+201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | 交易成功执行。具体执行结果根据下单时的 Time in force 策略决定。 | Order  
   
 ### 返回格式
 
@@ -2754,33 +2888,35 @@ liquidate 代表逐仓强平订单
 » update_time | string | 订单最新修改时间  
 » create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 » update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-» status | string | 订单状态。  
+» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 » currency_pair | string | 交易货币对  
+» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 » type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | string | 买单或者卖单  
-» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | string | 交易价,`type`=`limit`时必填  
-» time_in_force | string | Time in force 策略。  
+» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_borrow | boolean | 杠杆(包括逐仓全仓)交易时，如果账户余额不足，是否由系统自动借入不足部分  
 » auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
@@ -2823,7 +2959,7 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
@@ -2834,16 +2970,17 @@ liquidate 代表逐仓强平订单
 `RESULT`: 无清算信息  
 `FULL`: 完整模式（默认）  
 » slippage | string | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | string | 止盈委托价  
-» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | string | 止损委托价  
+» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -2897,7 +3034,7 @@ WARNING
     
     url = '/spot/orders'
     query_param = ''
-    body='{"text":"t-abc123","currency_pair":"BTC_USDT","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"}}'
+    body='{"text":"t-abc123","currency_pair":"BTC_USDT","trade_quote":"USDC","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"},"use_earn":false}'
     # `gen_sign` 的实现参考认证一章
     sign_headers = gen_sign('POST', prefix + url, query_param, body)
     headers.update(sign_headers)
@@ -2914,7 +3051,7 @@ WARNING
     method="POST"
     url="/spot/orders"
     query_param=""
-    body_param='{"text":"t-abc123","currency_pair":"BTC_USDT","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"}}'
+    body_param='{"text":"t-abc123","currency_pair":"BTC_USDT","trade_quote":"USDC","type":"limit","account":"unified","side":"buy","amount":"0.001","price":"65000","time_in_force":"gtc","iceberg":"0","slippage":"0.05","stop_profit":{"trigger_price":"67000","order_price":"67000"},"stop_loss":{"trigger_price":"63000","order_price":"63000"},"use_earn":false}'
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
@@ -2932,6 +3069,7 @@ WARNING
     {
       "text": "t-abc123",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -2947,7 +3085,8 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
@@ -3005,6 +3144,7 @@ WARNING
       "update_time_ms": 1710488334074,
       "status": "closed",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -3035,17 +3175,18 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
-##  批量取消一个交易对里状态为 `open` 的订单🔒 需要认证
+##  批量撤销状态为 `open` 的订单（可按交易对筛选）🔒 需要认证
 
 DELETE`/spot/orders`
 
 DELETE `/spot/orders`
 
-_批量取消一个交易对里状态为`open` 的订单_
+_批量撤销状态为`open` 的订单（可按交易对筛选）_
 
 不指定 `account` 参数时，包括现货、统一账户、逐仓杠杆在内的所有挂单都会执行撤销操作。 不指定 `currency_pair`时，会撤销所有交易对的挂单 可以单独指定某一种账户，撤销指定账户下的所有挂单
 
@@ -3059,6 +3200,7 @@ account | 请求参数 | string | 否 | 指定账户类型
   
 \- 经典账户：不指定则全部包含  
 \- 统一账户：指定`unified`  
+trade_quote | 请求参数 | string | 否 | 仅在**统一市场** 用于指定撤单的实际计价币种；未指定时，撤销符合其他条件的所有订单  
 action_mode | 请求参数 | string | 否 | 处理模式  
   
 下单时根据action_mode返回不同的字段  
@@ -3475,33 +3617,35 @@ liquidate 代表逐仓强平订单
 » update_time | string | 订单最新修改时间  
 » create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 » update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-» status | string | 订单状态。  
+» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 » currency_pair | string | 交易货币对  
+» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 » type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | string | 买单或者卖单  
-» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | string | 交易价,`type`=`limit`时必填  
-» time_in_force | string | Time in force 策略。  
+» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -3543,21 +3687,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | string | 止盈委托价  
-» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | string | 止损委托价  
+» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -3654,6 +3799,7 @@ WARNING
       "update_time_ms": 1710488334074,
       "status": "closed",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -3683,7 +3829,8 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
@@ -3727,12 +3874,12 @@ body | body | OrderPatch | 是 |
 `ACK`: 异步模式，只返回订单关键字段  
 `RESULT`: 无清算信息  
 `FULL`: 完整模式（默认）  
-» stop_profit | body | object | 否 | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | body | object|null | 否 | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | body | string | 否 | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | body | string | 否 | 止盈委托价  
-» stop_loss | body | object | 否 | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | body | object|null | 否 | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | body | string | 否 | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
@@ -3793,33 +3940,35 @@ liquidate 代表逐仓强平订单
 » update_time | string | 订单最新修改时间  
 » create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 » update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-» status | string | 订单状态。  
+» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 » currency_pair | string | 交易货币对  
+» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 » type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | string | 买单或者卖单  
-» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | string | 交易价,`type`=`limit`时必填  
-» time_in_force | string | Time in force 策略。  
+» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -3861,21 +4010,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | string | 止盈委托价  
-» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | string | 止损委托价  
+» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -3991,6 +4141,7 @@ WARNING
       "update_time_ms": 1710488334074,
       "status": "closed",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -4020,7 +4171,8 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
@@ -4100,33 +4252,35 @@ liquidate 代表逐仓强平订单
 » update_time | string | 订单最新修改时间  
 » create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
 » update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
-» status | string | 订单状态。  
+» status | string | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 » currency_pair | string | 交易货币对  
+» trade_quote | string | 交易的计价货币，仅在统一市场可指定  
 » type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 » account | string | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 » side | string | 买单或者卖单  
-» amount | string | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+» amount | string | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 » price | string | 交易价,`type`=`limit`时必填  
-» time_in_force | string | Time in force 策略。  
+» time_in_force | string | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-» iceberg | string | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+» iceberg | string | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 » auto_repay | boolean | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
 1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
@@ -4168,21 +4322,22 @@ liquidate 代表逐仓强平订单
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
 \- unknown: 未知  
-» stop_profit | object | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» stop_profit | object|null | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 »» trigger_price | string | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 »» order_price | string | 止盈委托价  
-» stop_loss | object | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» stop_loss | object|null | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 »» trigger_price | string | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 »» order_price | string | 止损委托价  
+» use_earn | boolean|null | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -4279,6 +4434,7 @@ WARNING
       "update_time_ms": 1710488334074,
       "status": "closed",
       "currency_pair": "BTC_USDT",
+      "trade_quote": "USDC",
       "type": "limit",
       "account": "unified",
       "side": "buy",
@@ -4308,7 +4464,8 @@ WARNING
       "stop_loss": {
         "trigger_price": "63000",
         "order_price": "63000"
-      }
+      },
+      "use_earn": false
     }
     
 
@@ -4364,7 +4521,7 @@ _None_ | array |
 » side | string | 买单或者卖单  
 » role | string | 交易角色，公共接口无此字段返回  
 » amount | string | 交易数量  
-» price | string | 交易价  
+» price | string | 成交价格。  
 » order_id | string | 关联的订单 ID，公共接口无此字段返回  
 » fee | string | 成交扣除的手续费，公共接口无此字段返回  
 » fee_currency | string | 手续费计价单位，公共接口无此字段返回  
@@ -4376,6 +4533,7 @@ _None_ | array |
 pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
 liquidate 代表逐仓强平订单  
 » deal | string | 本次成交总额  
+» trade_quote | string | 交易的计价货币  
   
 ####  枚举值列表
 
@@ -4443,6 +4601,7 @@ WARNING
         "id": "1232893232",
         "create_time": "1548000000",
         "create_time_ms": "1548000000123.456",
+        "currency_pair": "BTC_USDT",
         "order_id": "4128442423",
         "side": "buy",
         "role": "maker",
@@ -4454,7 +4613,8 @@ WARNING
         "gt_fee": "0",
         "sequence_id": "588018",
         "text": "t-test",
-        "deal": "0.0045"
+        "deal": "0.0045",
+        "trade_quote": "USDC"
       }
     ]
     
@@ -4526,7 +4686,7 @@ POST `/spot/countdown_cancel_all`
 
 _倒计时取消订单_
 
-现货订单心跳检测，在到达用户设置的`timeout`时间时如果没有`取消既有倒计时`或`设置新的倒计时`将会自动取消相关的`现货挂单`。 该接口可重复调用，以便设置新的倒计时或取消倒计时。 用法示例： 以30s的间隔重复此接口，每次倒计时`timeout`设置为`30(秒)`。 如果在30秒内未再次调用此接口，则您指定`market`上的所有挂单都会被自动撤销，如果未指定`market`，则撤销所有市场挂单。 如果在30秒内以将`timeout`设置为0，则倒数计时器将终止，自动撤单功能取消。
+现货订单心跳检测，在到达用户设置的`timeout`时间时如果没有`取消既有倒计时`或`设置新的倒计时`将会自动取消相关的`现货挂单`。 该接口可重复调用，以便设置新的倒计时或取消倒计时。 用法示例： 以30s的间隔重复此接口，每次倒计时`timeout`设置为`30(秒)`。 如果在30秒内未再次调用此接口，则您指定`currency_pair`上的所有挂单都会被自动撤销，如果未指定`currency_pair`，则撤销所有交易对的挂单。 如果在30秒内以将`timeout`设置为0，则倒数计时器将终止，自动撤单功能取消。
 
 ### 参数
 
@@ -4677,7 +4837,7 @@ _None_ | array | [批量订单信息]
 \- `closed`: 已结束的订单  
 \- `cancelled`: 订单撤销  
 »» currency_pair | string | 交易货币对  
-»» type | string | 订单类型   
+»» type | string | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
@@ -4731,7 +4891,7 @@ _None_ | array | [批量订单信息]
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
@@ -5876,55 +6036,752 @@ WARNING
     }
     
 
+##  查询比例成交策略订单🔒 需要认证
+
+GET`/spot/pov_orders`
+
+GET `/spot/pov_orders`
+
+_查询比例成交策略订单_
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+currency_pair | 请求参数 | string | 否 | 交易对  
+status | 请求参数 | string | 是 | 订单状态 , 默认查询open  
+  
+\- open: 进行中的订单  
+\- finished: 已结束的订单  
+side | 请求参数 | string | 否 | 指定全部买单或全部卖单，不指定则两者都包括  
+page | 请求参数 | integer(int32) | 否 | 列表页数，最大 100 页  
+limit | 请求参数 | integer | 否 | 列表返回的最大数量  
+  
+####  详细描述
+
+**status** : 订单状态 , 默认查询open  
+  
+\- open: 进行中的订单  
+\- finished: 已结束的订单
+
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [SpotPovOrder]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+_None_ | array | [现货比例成交策略订单详情]  
+» _None_ | SpotPovOrder | 现货比例成交策略订单详情  
+»» id | string | 订单 ID  
+»» currency_pair | string | 交易货币对  
+»» side | string | 买单或者卖单  
+»» amount | string | 交易数量  
+»» participation_rate | integer | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+»» ttl | string | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+»» limit_price | string | 限制价格，不设置则按市场价格  
+»» trigger_price | string | 触发价格，不设置则立即触发  
+»» status | string | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+»» terminated_as | string | 订单终止原因编码  
+»» start_time_ms | integer(int64) | 订单开始执行时间，毫秒精度  
+»» end_time_ms | integer(int64) | 订单结束执行时间，毫秒精度  
+»» expire_time_ms | integer(int64) | 订单到期时间，毫秒精度  
+»» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
+»» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
+»» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/pov_orders'
+    query_param = 'status=open'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/spot/pov_orders"
+    query_param="status=open"
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url?$query_param"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "id": "1216",
+        "currency_pair": "BTC_USDT",
+        "side": "buy",
+        "amount": "0.010000",
+        "participation_rate": 10,
+        "ttl": "1h",
+        "limit_price": "63000",
+        "trigger_price": "63000",
+        "status": "CREATED",
+        "terminated_as": "",
+        "start_time_ms": 0,
+        "end_time_ms": 0,
+        "expire_time_ms": 1784365405074,
+        "create_time_ms": 1784279005258,
+        "update_time_ms": 1784279005258
+      }
+    ]
+    
+
+##  创建现货比例成交（POV）策略订单🔒 需要认证
+
+POST`/spot/pov_orders`
+
+POST `/spot/pov_orders`
+
+_创建现货比例成交（POV）策略订单_
+
+participation_rate 为目标参与率，ttl 为有效期。响应包含订单 id，可用于 GET /spot/pov_orders/{order_id} 查询详情。
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | SpotPovOrderCreator | 是 |   
+» currency_pair | body | string | 是 | 交易货币对  
+» side | body | string | 是 | 买单或者卖单  
+» amount | body | string | 是 | 交易数量  
+» participation_rate | body | integer | 是 | 目标参与率（百分比）, 有效值 "5", "10", "20", "40"  
+» ttl | body | string | 是 | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+» limit_price | body | string | 否 | 限制价格，不设置则按市场价格  
+» trigger_price | body | string | 否 | 触发价格，不设置则立即触发  
+» text | body | string | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+####  详细描述
+
+**» text** : 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)
+
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+» side | buy  
+» side | sell  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+201 | [Created ](https://tools.ietf.org/html/rfc7231#section-6.3.2) | 成功下单 | SpotPovOrder  
+  
+### 返回格式
+
+状态码 **201**
+
+_现货比例成交策略订单详情_
+
+名称 | 类型 | 描述  
+---|---|---  
+» id | string | 订单 ID  
+» currency_pair | string | 交易货币对  
+» side | string | 买单或者卖单  
+» amount | string | 交易数量  
+» participation_rate | integer | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+» ttl | string | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+» limit_price | string | 限制价格，不设置则按市场价格  
+» trigger_price | string | 触发价格，不设置则立即触发  
+» status | string | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+» terminated_as | string | 订单终止原因编码  
+» start_time_ms | integer(int64) | 订单开始执行时间，毫秒精度  
+» end_time_ms | integer(int64) | 订单结束执行时间，毫秒精度  
+» expire_time_ms | integer(int64) | 订单到期时间，毫秒精度  
+» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
+» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
+» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/pov_orders'
+    query_param = ''
+    body='{"currency_pair":"BTC_USDT","side":"buy","amount":"1","participation_rate":5,"ttl":"1h","limit_price":"63000","trigger_price":"63000"}'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/spot/pov_orders"
+    query_param=""
+    body_param='{"currency_pair":"BTC_USDT","side":"buy","amount":"1","participation_rate":5,"ttl":"1h","limit_price":"63000","trigger_price":"63000"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    {
+      "currency_pair": "BTC_USDT",
+      "side": "buy",
+      "amount": "1",
+      "participation_rate": 5,
+      "ttl": "1h",
+      "limit_price": "63000",
+      "trigger_price": "63000"
+    }
+    
+
+> 返回示例
+
+> 201 返回
+    
+    
+    {
+      "id": "1216",
+      "currency_pair": "BTC_USDT",
+      "side": "buy",
+      "amount": "0.010000",
+      "participation_rate": 10,
+      "ttl": "1h",
+      "limit_price": "63000",
+      "trigger_price": "63000",
+      "status": "CREATED",
+      "terminated_as": "",
+      "start_time_ms": 0,
+      "end_time_ms": 0,
+      "expire_time_ms": 1784365405074,
+      "create_time_ms": 1784279005258,
+      "update_time_ms": 1784279005258
+    }
+    
+
+##  撤销比例成交策略订单🔒 需要认证
+
+DELETE`/spot/pov_orders`
+
+DELETE `/spot/pov_orders`
+
+_撤销比例成交策略订单_
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+currency_pair | 请求参数 | string | 否 | 交易对  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 批量撤销请求接收并处理，是否成功根据订单列表来决定 | [SpotPovOrder]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+_None_ | array | [现货比例成交策略订单详情]  
+» _None_ | SpotPovOrder | 现货比例成交策略订单详情  
+»» id | string | 订单 ID  
+»» currency_pair | string | 交易货币对  
+»» side | string | 买单或者卖单  
+»» amount | string | 交易数量  
+»» participation_rate | integer | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+»» ttl | string | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+»» limit_price | string | 限制价格，不设置则按市场价格  
+»» trigger_price | string | 触发价格，不设置则立即触发  
+»» status | string | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+»» terminated_as | string | 订单终止原因编码  
+»» start_time_ms | integer(int64) | 订单开始执行时间，毫秒精度  
+»» end_time_ms | integer(int64) | 订单结束执行时间，毫秒精度  
+»» expire_time_ms | integer(int64) | 订单到期时间，毫秒精度  
+»» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
+»» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
+»» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/pov_orders'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('DELETE', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('DELETE', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="DELETE"
+    url="/spot/pov_orders"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "id": "1216",
+        "currency_pair": "BTC_USDT",
+        "side": "buy",
+        "amount": "0.010000",
+        "participation_rate": 10,
+        "ttl": "1h",
+        "limit_price": "63000",
+        "trigger_price": "63000",
+        "status": "CREATED",
+        "terminated_as": "",
+        "start_time_ms": 0,
+        "end_time_ms": 0,
+        "expire_time_ms": 1784365405074,
+        "create_time_ms": 1784279005258,
+        "update_time_ms": 1784279005258
+      }
+    ]
+    
+
+##  查询比例成交策略订单详情🔒 需要认证
+
+GET`/spot/pov_orders/{order_id}`
+
+GET `/spot/pov_orders/{order_id}`
+
+_查询比例成交策略订单详情_
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+order_id | URL | string | 是 | 成功创建订单时返回的订单 ID 或者用户创建时指定的自定义 ID（即 `text` 字段）。  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 详情查询成功 | SpotPovOrder  
+  
+### 返回格式
+
+状态码 **200**
+
+_现货比例成交策略订单详情_
+
+名称 | 类型 | 描述  
+---|---|---  
+» id | string | 订单 ID  
+» currency_pair | string | 交易货币对  
+» side | string | 买单或者卖单  
+» amount | string | 交易数量  
+» participation_rate | integer | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+» ttl | string | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+» limit_price | string | 限制价格，不设置则按市场价格  
+» trigger_price | string | 触发价格，不设置则立即触发  
+» status | string | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+» terminated_as | string | 订单终止原因编码  
+» start_time_ms | integer(int64) | 订单开始执行时间，毫秒精度  
+» end_time_ms | integer(int64) | 订单结束执行时间，毫秒精度  
+» expire_time_ms | integer(int64) | 订单到期时间，毫秒精度  
+» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
+» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
+» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/pov_orders/12345'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/spot/pov_orders/12345"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "id": "1216",
+      "currency_pair": "BTC_USDT",
+      "side": "buy",
+      "amount": "0.010000",
+      "participation_rate": 10,
+      "ttl": "1h",
+      "limit_price": "63000",
+      "trigger_price": "63000",
+      "status": "CREATED",
+      "terminated_as": "",
+      "start_time_ms": 0,
+      "end_time_ms": 0,
+      "expire_time_ms": 1784365405074,
+      "create_time_ms": 1784279005258,
+      "update_time_ms": 1784279005258
+    }
+    
+
+##  撤销单个比例成交策略订单🔒 需要认证
+
+DELETE`/spot/pov_orders/{order_id}`
+
+DELETE `/spot/pov_orders/{order_id}`
+
+_撤销单个比例成交策略订单_
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+order_id | URL | string | 是 | 成功创建订单时返回的订单 ID 或者用户创建时指定的自定义 ID（即 `text` 字段）。  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 订单撤销成功 | SpotPovOrder  
+  
+### 返回格式
+
+状态码 **200**
+
+_现货比例成交策略订单详情_
+
+名称 | 类型 | 描述  
+---|---|---  
+» id | string | 订单 ID  
+» currency_pair | string | 交易货币对  
+» side | string | 买单或者卖单  
+» amount | string | 交易数量  
+» participation_rate | integer | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+» ttl | string | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+» limit_price | string | 限制价格，不设置则按市场价格  
+» trigger_price | string | 触发价格，不设置则立即触发  
+» status | string | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+» terminated_as | string | 订单终止原因编码  
+» start_time_ms | integer(int64) | 订单开始执行时间，毫秒精度  
+» end_time_ms | integer(int64) | 订单结束执行时间，毫秒精度  
+» expire_time_ms | integer(int64) | 订单到期时间，毫秒精度  
+» create_time_ms | integer(int64) | 订单创建时间，毫秒精度  
+» update_time_ms | integer(int64) | 订单最近修改时间，毫秒精度  
+» text | string | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/spot/pov_orders/12345'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('DELETE', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('DELETE', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="DELETE"
+    url="/spot/pov_orders/12345"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "id": "1216",
+      "currency_pair": "BTC_USDT",
+      "side": "buy",
+      "amount": "0.010000",
+      "participation_rate": 10,
+      "ttl": "1h",
+      "limit_price": "63000",
+      "trigger_price": "63000",
+      "status": "CREATED",
+      "terminated_as": "",
+      "start_time_ms": 0,
+      "end_time_ms": 0,
+      "expire_time_ms": 1784365405074,
+      "create_time_ms": 1784279005258,
+      "update_time_ms": 1784279005258
+    }
+    
+
 #  模型
 
-##  BatchAmendItem
+##  TriggerTime
 
-_需要修改的订单信息_
+_triggerTime_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-order_id | string | true | none | 成功创建订单时返回的订单 ID 或者用户创建时指定的自定义 ID（即 text 字段）。  
-currency_pair | string | true | none | 交易对  
-account | string | false | none | 默认现货、统一账户和逐仓杠杆账户。  
-amount | string | false | none | 交易数量，`amount`和`price`只能指定一个  
-price | string | false | none | 交易价，`amount`和`price`只能指定一个  
-amend_text | string | false | none | 用户可以备注这次修改的信息。  
+triggerTime | integer(int64) | false | none | 倒计时结束时的时间戳，毫秒  
+      
+    
+    {
+      "triggerTime": "1660039145000"
+    }
+    
+    
+
+##  LiquidateOrder
+
+_现货平仓单详情_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+currency_pair | string | true | none | 交易货币对  
+amount | string | true | none | 交易数量  
+price | string | true | none | 交易价  
 action_mode | string | false | none | 处理模式:  
+  
 下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
 `ACK`: 异步模式，只返回订单关键字段  
 `RESULT`: 无清算信息  
 `FULL`: 完整模式（默认）  
-stop_profit | object | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
-» trigger_price | string | false | none | 止盈触发价  
-`side == "buy"` 时， `trigger_price` 需大于 `price`  
-`side == "sell"` 时， `trigger_price` 需小于 `price`  
-» order_price | string | false | none | 止盈委托价  
-stop_loss | object | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
-» trigger_price | string | false | none | 止损触发价  
-`side == "buy"` 时， `trigger_price` 需小于 `price`  
-`side == "sell"` 时， `trigger_price` 需大于 `price`  
-» order_price | string | false | none | 止损委托价  
       
     
     {
-      "order_id": "string",
+      "text": "string",
       "currency_pair": "string",
-      "account": "string",
       "amount": "string",
       "price": "string",
-      "amend_text": "string",
-      "action_mode": "string",
-      "stop_profit": {
-        "trigger_price": "string",
-        "order_price": "string"
-      },
-      "stop_loss": {
-        "trigger_price": "string",
-        "order_price": "string"
-      }
+      "action_mode": "string"
     }
     
     
@@ -5964,504 +6821,6 @@ bids | array | true | none | 买方深度列表
     
     
 
-##  Currency
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | none | 币种符号  
-name | string | false | none | 币种名称  
-delisted | boolean | false | none | 是否下架  
-withdraw_disabled | boolean | false | none | 是否暂停提现（废弃）  
-withdraw_delayed | boolean | false | none | 提现是否存在延迟（废弃）  
-deposit_disabled | boolean | false | none | 是否暂停充值（废弃）  
-trade_disabled | boolean | false | none | 是否暂停交易  
-fixed_rate | string | false | none | 固定交易手续费率。仅限固定交易费率的币种，普通币种该字段无效  
-chain | string | false | none | 币对应的主链  
-chains | array | false | none | 币对应的所有链  
-» SpotCurrencyChain | object | false | none | none  
-»» name | string | false | none | 链名  
-»» addr | string | false | none | token地址  
-»» withdraw_disabled | boolean | false | none | 是否暂停提现  
-»» withdraw_delayed | boolean | false | none | 提现是否存在延迟  
-»» deposit_disabled | boolean | false | none | 是否暂停充值  
-» total_supply | string | false | none | 币种总供应量  
-» market_cap | string | false | none | 币种市值  
-» category | array | false | none | 币种分类  
-  
-\- stocks: 股票  
-\- metals: 金属  
-\- indices: 指数  
-\- forex: 外汇  
-\- commodities: 大宗商品  
-      
-    
-    {
-      "currency": "string",
-      "name": "string",
-      "delisted": true,
-      "withdraw_disabled": true,
-      "withdraw_delayed": true,
-      "deposit_disabled": true,
-      "trade_disabled": true,
-      "fixed_rate": "string",
-      "chain": "string",
-      "chains": [
-        {
-          "name": "string",
-          "addr": "string",
-          "withdraw_disabled": true,
-          "withdraw_delayed": true,
-          "deposit_disabled": true
-        }
-      ],
-      "total_supply": "string",
-      "market_cap": "string",
-      "category": [
-        "string"
-      ]
-    }
-    
-    
-
-##  OpenOrders
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | false | none | 交易对  
-total | integer | false | none | 该交易对当前页面的挂单总数  
-orders | array | false | none | none  
-» _None_ | object | false | none | 现货单详情  
-»» id | string | false | 只读 | 订单 ID  
-»» text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
-  
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-  
-除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
-101 代表 `android` 下单  
-102 代表 `IOS` 下单  
-103 代表 `IPAD` 下单  
-104 代表 `webapp` 下单  
-3 代表 `web` 下单  
-2 代表 `apiv2` 下单  
-apiv4 代表 `apiv4` 下单  
-pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
-liquidate 代表逐仓强平订单  
-»» amend_text | string | false | 只读 | 用户修改订单时备注的信息  
-»» create_time | string | false | 只读 | 订单创建时间  
-»» update_time | string | false | 只读 | 订单最新修改时间  
-»» create_time_ms | integer(int64) | false | 只读 | 订单创建时间，毫秒精度  
-»» update_time_ms | integer(int64) | false | 只读 | 订单最近修改时间，毫秒精度  
-»» status | string | false | 只读 | 订单状态。  
-  
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
-»» currency_pair | string | true | none | 交易货币对  
-»» type | string | false | none | 订单类型  
-  
-\- limit : 限价单  
-\- market : 市价单  
-»» account | string | false | none | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
-»» side | string | true | none | 买单或者卖单  
-»» amount | string | true | none | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
-»» price | string | false | none | 交易价,`type`=`limit`时必填  
-»» time_in_force | string | false | none | Time in force 策略。  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
-  
-`type`=`market`时仅支持`ioc`和`fok`  
-»» iceberg | string | false | none | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
-»» auto_borrow | boolean | false | 只写 | 杠杆(包括逐仓全仓)交易时，如果账户余额不足，是否由系统自动借入不足部分  
-»» auto_repay | boolean | false | none | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
-  
-1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
-2\. `auto_borrow` 与 `auto_repay` 支持同时开启  
-»» left | string | false | 只读 | 交易货币未成交数量  
-»» filled_amount | string | false | 只读 | 交易货币已成交数量  
-»» fill_price | string | false | 只读 | 已成交的计价币种总额，该字段废弃，建议使用相同意义的 `filled_total`  
-»» filled_total | string | false | 只读 | 已成交总金额  
-»» avg_deal_price | string | false | 只读 | 平均成交价  
-»» fee | string | false | 只读 | 成交扣除的手续费  
-»» fee_currency | string | false | 只读 | 手续费计价单位  
-»» point_fee | string | false | 只读 | 手续费抵扣使用的点卡数量  
-»» gt_fee | string | false | 只读 | 手续费抵扣使用的 GT 数量  
-»» gt_maker_fee | string | false | 只读 | 手续费maker抵扣使用的 GT 数量  
-»» gt_taker_fee | string | false | 只读 | 手续费taker抵扣使用的 GT 数量  
-»» gt_discount | boolean | false | 只读 | 是否开启GT抵扣  
-»» rebated_fee | string | false | 只读 | 返还的手续费  
-»» rebated_fee_currency | string | false | 只读 | 返还手续费计价单位  
-»» stp_id | integer | false | 只读 | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
-  
-1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
-2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
-»» stp_act | string | false | none | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
-  
-1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
-2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
-3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
-  
-\- cn: Cancel newest,取消新订单，保留老订单  
-\- co: Cancel oldest,取消⽼订单，保留新订单  
-\- cb: Cancel both,新旧订单都取消  
-»» finish_as | string | false | 只读 | 订单结束方式，包括：  
-  
-\- open: 等待处理  
-\- filled: 完全成交  
-\- cancelled: 用户撤销  
-\- liquidate_cancelled: 爆仓撤销  
-\- small: 订单数量太小  
-\- depth_not_enough: 深度不足导致撤单  
-\- trader_not_enough: 对手方不足导致撤单  
-\- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
-\- fok: 未立即完全成交，因为 tif 设置为 fok  
-\- stp: 订单发生自成交限制而被撤销  
-\- price_protect_cancelled: 价格保护导致撤单  
-\- unknown: 未知  
-»» action_mode | string | false | 只写 | 处理模式:  
-下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
-`ACK`: 异步模式，只返回订单关键字段  
-`RESULT`: 无清算信息  
-`FULL`: 完整模式（默认）  
-»» slippage | string | false | 只写 | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-»» stop_profit | object | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
-»»» trigger_price | string | false | none | 止盈触发价  
-`side == "buy"` 时， `trigger_price` 需大于 `price`  
-`side == "sell"` 时， `trigger_price` 需小于 `price`  
-»»» order_price | string | false | none | 止盈委托价  
-»» stop_loss | object | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
-»»» trigger_price | string | false | none | 止损触发价  
-`side == "buy"` 时， `trigger_price` 需小于 `price`  
-`side == "sell"` 时， `trigger_price` 需大于 `price`  
-»»» order_price | string | false | none | 止损委托价  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-status | open  
-status | closed  
-status | cancelled  
-type | limit  
-type | market  
-side | buy  
-side | sell  
-time_in_force | gtc  
-time_in_force | ioc  
-time_in_force | poc  
-time_in_force | fok  
-stp_act | cn  
-stp_act | co  
-stp_act | cb  
-stp_act | -  
-finish_as | open  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidate_cancelled  
-finish_as | depth_not_enough  
-finish_as | trader_not_enough  
-finish_as | small  
-finish_as | ioc  
-finish_as | poc  
-finish_as | fok  
-finish_as | stp  
-finish_as | price_protect_cancelled  
-finish_as | unknown  
-      
-    
-    {
-      "currency_pair": "string",
-      "total": 0,
-      "orders": [
-        {
-          "id": "string",
-          "text": "string",
-          "amend_text": "string",
-          "create_time": "string",
-          "update_time": "string",
-          "create_time_ms": 0,
-          "update_time_ms": 0,
-          "status": "open",
-          "currency_pair": "string",
-          "type": "limit",
-          "account": "spot",
-          "side": "buy",
-          "amount": "string",
-          "price": "string",
-          "time_in_force": "gtc",
-          "iceberg": "string",
-          "auto_borrow": true,
-          "auto_repay": true,
-          "left": "string",
-          "filled_amount": "string",
-          "fill_price": "string",
-          "filled_total": "string",
-          "avg_deal_price": "string",
-          "fee": "string",
-          "fee_currency": "string",
-          "point_fee": "string",
-          "gt_fee": "string",
-          "gt_maker_fee": "string",
-          "gt_taker_fee": "string",
-          "gt_discount": true,
-          "rebated_fee": "string",
-          "rebated_fee_currency": "string",
-          "stp_id": 0,
-          "stp_act": "cn",
-          "finish_as": "open",
-          "action_mode": "string",
-          "slippage": "string",
-          "stop_profit": {},
-          "stop_loss": {}
-        }
-      ]
-    }
-    
-    
-
-##  SpotFee
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | false | none | 用户 ID  
-taker_fee | string | false | none | taker 费率  
-maker_fee | string | false | none | maker 费率  
-rpi_maker_fee | string | false | none | RPI MM maker 费率  
-gt_discount | boolean | false | none | 是否开启 GT 抵扣折扣  
-gt_taker_fee | string | false | none | GT 抵扣 taker 费率，未开启 GT 抵扣则为 0  
-gt_maker_fee | string | false | none | GT 抵扣 maker 费率，未开启 GT 抵扣则为 0  
-loan_fee | string | false | none | 杠杆理财的费率  
-point_type | string | false | none | 点卡类型，0 - 初版点卡，1 - 202009 启用的新点卡  
-currency_pair | string | false | none | 交易对  
-debit_fee | integer | false | none | 费率抵扣类型 , 1 - GT抵扣 , 2 - 点卡抵扣 , 3 - VIP费率  
-rpi_mm | integer | false | none | RPI MM等级  
-      
-    
-    {
-      "user_id": 0,
-      "taker_fee": "string",
-      "maker_fee": "string",
-      "rpi_maker_fee": "string",
-      "gt_discount": true,
-      "gt_taker_fee": "string",
-      "gt_maker_fee": "string",
-      "loan_fee": "string",
-      "point_type": "string",
-      "currency_pair": "string",
-      "debit_fee": 0,
-      "rpi_mm": 0
-    }
-    
-    
-
-##  CancelBatchOrder
-
-_需要撤销的订单信息_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | true | none | 订单的交易对  
-id | string | true | none | 订单 ID 或者用户自定义 ID 。  
-如果使用自定义 ID，只能在订单创建后的 30 分钟内有效  
-account | string | false | none | 撤销的订单如果是统一账户apikey，该字段必须指定且设置为 `unified`  
-action_mode | string | false | none | 处理模式:  
-下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
-`ACK`: 异步模式，只返回订单关键字段  
-`RESULT`: 无清算信息  
-`FULL`: 完整模式（默认）  
-      
-    
-    {
-      "currency_pair": "string",
-      "id": "string",
-      "account": "string",
-      "action_mode": "string"
-    }
-    
-    
-
-##  Ticker
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | false | none | 交易对  
-last | string | false | none | 最新成交价  
-lowest_ask | string | false | none | 最新卖方最低价  
-lowest_size | string | false | none | 最新卖方最低价数量；批量查询时不存在；单个查询时存在,如果没有数据时为空  
-highest_bid | string | false | none | 最新买方最高价  
-highest_size | string | false | none | 最新买方最高价数量；批量查询时不存在；单个查询时存在,如果没有数据时为空  
-change_percentage | string | false | none | 最近24h涨跌百分比，跌用负数标识，如 -7.45  
-change_utc0 | string | false | none | utc0时区，最近24h涨跌百分比，跌用负数标识，如 -7.45  
-change_utc8 | string | false | none | utc8时区，最近24h涨跌百分比，跌用负数标识，如 -7.45  
-base_volume | string | false | none | 最近24h交易货币成交量  
-quote_volume | string | false | none | 最近24h计价货币成交量  
-high_24h | string | false | none | 24小时最高价  
-low_24h | string | false | none | 24小时最低价  
-etf_net_value | string | false | none | ETF 净值  
-etf_pre_net_value | string|null | false | none | ETF 前一再平衡点净值  
-etf_pre_timestamp | integer(int64)|null | false | none | ETF 前一再平衡时间  
-etf_leverage | string|null | false | none | ETF 当前杠杆率  
-      
-    
-    {
-      "currency_pair": "string",
-      "last": "string",
-      "lowest_ask": "string",
-      "lowest_size": "string",
-      "highest_bid": "string",
-      "highest_size": "string",
-      "change_percentage": "string",
-      "change_utc0": "string",
-      "change_utc8": "string",
-      "base_volume": "string",
-      "quote_volume": "string",
-      "high_24h": "string",
-      "low_24h": "string",
-      "etf_net_value": "string",
-      "etf_pre_net_value": "string",
-      "etf_pre_timestamp": 0,
-      "etf_leverage": "string"
-    }
-    
-    
-
-##  SpotAccountBook
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | string | false | none | 账户变更记录 ID  
-time | integer(int64) | false | none | 账户变更时间戳，毫秒单位  
-currency | string | false | none | 变更币种  
-change | string | false | none | 变更金额，正数表示转入，负数表示转出  
-balance | string | false | none | 变更后账户余额  
-type | string | false | none | 账户变更类型 , 已弃用（参考 code 账户变更编码）  
-code | string | false | none | 账户变更编码 , 详见资产流水编码  
-text | string | false | none | 附加信息  
-      
-    
-    {
-      "id": "string",
-      "time": 0,
-      "currency": "string",
-      "change": "string",
-      "balance": "string",
-      "type": "string",
-      "code": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CountdownCancelAllSpotTask
-
-_CountdownCancelAllSpotTask_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-timeout | integer(int32) | true | none | 倒计时时间，单位 秒  
-至少5秒，为0时表示取消倒计时  
-currency_pair | string | false | none | 交易货币对  
-      
-    
-    {
-      "timeout": 0,
-      "currency_pair": "string"
-    }
-    
-    
-
-##  OrderPatch
-
-_现货单详情_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | false | none | 交易对  
-account | string | false | none | 指定查询账户。  
-amount | string | false | none | 交易数量，`amount`和`price`必须指定其中一个  
-price | string | false | none | 交易价，`amount`和`price`必须指定其中一个  
-amend_text | string | false | none | 用户可以备注这次修改的信息。  
-action_mode | string | false | none | 处理模式:  
-下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
-`ACK`: 异步模式，只返回订单关键字段  
-`RESULT`: 无清算信息  
-`FULL`: 完整模式（默认）  
-stop_profit | object | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
-» trigger_price | string | false | none | 止盈触发价  
-`side == "buy"` 时， `trigger_price` 需大于 `price`  
-`side == "sell"` 时， `trigger_price` 需小于 `price`  
-» order_price | string | false | none | 止盈委托价  
-stop_loss | object | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
-» trigger_price | string | false | none | 止损触发价  
-`side == "buy"` 时， `trigger_price` 需小于 `price`  
-`side == "sell"` 时， `trigger_price` 需大于 `price`  
-» order_price | string | false | none | 止损委托价  
-      
-    
-    {
-      "currency_pair": "string",
-      "account": "string",
-      "amount": "string",
-      "price": "string",
-      "amend_text": "string",
-      "action_mode": "string",
-      "stop_profit": {
-        "trigger_price": "string",
-        "order_price": "string"
-      },
-      "stop_loss": {
-        "trigger_price": "string",
-        "order_price": "string"
-      }
-    }
-    
-    
-
-##  TriggerOrderResponse
-
-_TriggerOrderResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | none | 自动订单 ID  
-id_string | string | false | 只读 | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
-前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
-      
-    
-    {
-      "id": 0,
-      "id_string": "string"
-    }
-    
-    
-
 ##  Trade
 
 ###  属性
@@ -6475,7 +6834,7 @@ currency_pair | string | false | none | 交易货币对
 side | string | false | none | 买单或者卖单  
 role | string | false | none | 交易角色，公共接口无此字段返回  
 amount | string | false | none | 交易数量  
-price | string | false | none | 交易价  
+price | string | false | none | 成交价格。  
 order_id | string | false | none | 关联的订单 ID，公共接口无此字段返回  
 fee | string | false | none | 成交扣除的手续费，公共接口无此字段返回  
 fee_currency | string | false | none | 手续费计价单位，公共接口无此字段返回  
@@ -6487,6 +6846,7 @@ text | string | false | none | 订单的自定义信息，公共接口无此字�
 pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
 liquidate 代表逐仓强平订单  
 deal | string | false | none | 本次成交总额  
+trade_quote | string | false | none | 交易的计价货币  
   
 ####  枚举值列表
 
@@ -6515,43 +6875,157 @@ role | maker
       "amend_text": "string",
       "sequence_id": "string",
       "text": "string",
-      "deal": "string"
+      "deal": "string",
+      "trade_quote": "string"
     }
     
     
 
-##  SpotInsuranceHistory
+##  SpotPovOrder
+
+_现货比例成交策略订单详情_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | false | none | 币种  
-balance | string | false | none | 余额  
-time | integer(int64) | false | none | 创建时间，时间戳，毫秒级  
+id | string | true | 只读 | 订单 ID  
+currency_pair | string | true | 只读 | 交易货币对  
+side | string | true | 只读 | 买单或者卖单  
+amount | string | true | 只读 | 交易数量  
+participation_rate | integer | true | 只读 | 目标参与率（百分比）, 可选值 "5", "10", "20", "40"  
+ttl | string | true | 只读 | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+limit_price | string | false | 只读 | 限制价格，不设置则按市场价格  
+trigger_price | string | false | 只读 | 触发价格，不设置则立即触发  
+status | string | true | 只读 | 订单状态  
+  
+\- CREATED: 新建  
+\- CANCELING: 取消  
+\- RUNNING: 执行中  
+\- COMPLETED: 已完成  
+\- EXPIRED: 过期  
+\- TERMINATED: 终止  
+terminated_as | string | false | 只读 | 订单终止原因编码  
+start_time_ms | integer(int64) | false | 只读 | 订单开始执行时间，毫秒精度  
+end_time_ms | integer(int64) | false | 只读 | 订单结束执行时间，毫秒精度  
+expire_time_ms | integer(int64) | false | 只读 | 订单到期时间，毫秒精度  
+create_time_ms | integer(int64) | true | 只读 | 订单创建时间，毫秒精度  
+update_time_ms | integer(int64) | false | 只读 | 订单最近修改时间，毫秒精度  
+text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
       
     
     {
-      "currency": "string",
-      "balance": "string",
-      "time": 0
+      "id": "string",
+      "currency_pair": "string",
+      "side": "string",
+      "amount": "string",
+      "participation_rate": 0,
+      "ttl": "string",
+      "limit_price": "string",
+      "trigger_price": "string",
+      "status": "string",
+      "terminated_as": "string",
+      "start_time_ms": 0,
+      "end_time_ms": 0,
+      "expire_time_ms": 0,
+      "create_time_ms": 0,
+      "update_time_ms": 0,
+      "text": "string"
     }
     
     
 
-##  TriggerTime
+##  SpotPovOrderCreator
 
-_triggerTime_
+_现货比例成交策略订单创建协议_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-triggerTime | integer(int64) | false | none | 倒计时结束时的时间戳，毫秒  
+currency_pair | string | true | none | 交易货币对  
+side | string | true | none | 买单或者卖单  
+amount | string | true | none | 交易数量  
+participation_rate | integer | true | none | 目标参与率（百分比）, 有效值 "5", "10", "20", "40"  
+ttl | string | true | none | 有效期, 有效值 "1h", "6h", "12h", "1d", "2d", "3d", "4d", "5d", "6d", "7d"  
+limit_price | string | false | none | 限制价格，不设置则按市场价格  
+trigger_price | string | false | none | 触发价格，不设置则立即触发  
+text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+side | buy  
+side | sell  
       
     
     {
-      "triggerTime": "1660039145000"
+      "currency_pair": "string",
+      "side": "buy",
+      "amount": "string",
+      "participation_rate": 0,
+      "ttl": "string",
+      "limit_price": "string",
+      "trigger_price": "string",
+      "text": "string"
+    }
+    
+    
+
+##  OrderPatch
+
+_现货单详情_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | false | none | 交易对  
+account | string | false | none | 指定查询账户。  
+amount | string | false | none | 交易数量，`amount`和`price`必须指定其中一个  
+price | string | false | none | 交易价，`amount`和`price`必须指定其中一个  
+amend_text | string | false | none | 用户可以备注这次修改的信息。  
+action_mode | string | false | none | 处理模式:  
+下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
+`ACK`: 异步模式，只返回订单关键字段  
+`RESULT`: 无清算信息  
+`FULL`: 完整模式（默认）  
+stop_profit | object|null | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» trigger_price | string | false | none | 止盈触发价  
+`side == "buy"` 时， `trigger_price` 需大于 `price`  
+`side == "sell"` 时， `trigger_price` 需小于 `price`  
+» order_price | string | false | none | 止盈委托价  
+stop_loss | object|null | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» trigger_price | string | false | none | 止损触发价  
+`side == "buy"` 时， `trigger_price` 需小于 `price`  
+`side == "sell"` 时， `trigger_price` 需大于 `price`  
+» order_price | string | false | none | 止损委托价  
+      
+    
+    {
+      "currency_pair": "string",
+      "account": "string",
+      "amount": "string",
+      "price": "string",
+      "amend_text": "string",
+      "action_mode": "string",
+      "stop_profit": {
+        "trigger_price": "string",
+        "order_price": "string"
+      },
+      "stop_loss": {
+        "trigger_price": "string",
+        "order_price": "string"
+      }
     }
     
     
@@ -6729,104 +7203,6 @@ finish_as | stp
     
     
 
-##  CurrencyPair
-
-_现货交易对_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | string | false | none | 交易对  
-base | string | false | none | 交易货币  
-base_name | string | false | none | 交易货币名称  
-quote | string | false | none | 计价货币  
-quote_name | string | false | none | 计价货币名称  
-fee | string | false | none | 交易费率(已废弃)  
-min_base_amount | string | false | none | 交易货币最低交易数量，null 表示无限制  
-min_quote_amount | string | false | none | 计价货币最低交易数量，null 表示无限制  
-max_base_amount | string | false | none | 交易货币最大交易数量，null 表示无限制  
-max_quote_amount | string | false | none | 计价货币最大交易数量，null 表示无限制  
-amount_precision | integer | false | none | 数量精度  
-precision | integer | false | none | 价格精度  
-trade_status | string | false | none | 交易状态  
-  
-\- untradable: 不可交易  
-\- buyable: 可买  
-\- sellable: 可卖  
-\- tradable: 买卖均可交易  
-sell_start | integer(int64) | false | none | 允许卖出时间，秒级 Unix 时间戳  
-buy_start | integer(int64) | false | none | 允许买入时间，秒级 Unix 时间戳  
-delisting_time | integer(int64) | false | none | 预计下架时间，秒级 Unix 时间戳  
-type | string | false | none | 交易对类型，normal:常规, premarket:盘前  
-trade_url | string | false | none | 交易链接  
-st_tag | boolean | false | none | 币对是否在ST风险评估中，false - 否，true - 是  
-up_rate | string | false | none | 报价最大涨幅百分比  
-down_rate | string | false | none | 报价最大跌幅百分比  
-slippage | string | false | none | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-market_order_max_stock | string | false | none | 市价单最大下单数量  
-market_order_max_money | string | false | none | 市价单最大下单金额  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-trade_status | untradable  
-trade_status | buyable  
-trade_status | sellable  
-trade_status | tradable  
-      
-    
-    {
-      "id": "string",
-      "base": "string",
-      "base_name": "string",
-      "quote": "string",
-      "quote_name": "string",
-      "fee": "string",
-      "min_base_amount": "string",
-      "min_quote_amount": "string",
-      "max_base_amount": "string",
-      "max_quote_amount": "string",
-      "amount_precision": 0,
-      "precision": 0,
-      "trade_status": "untradable",
-      "sell_start": 0,
-      "buy_start": 0,
-      "delisting_time": 0,
-      "type": "string",
-      "trade_url": "string",
-      "st_tag": true,
-      "up_rate": "string",
-      "down_rate": "string",
-      "slippage": "string",
-      "market_order_max_stock": "string",
-      "market_order_max_money": "string"
-    }
-    
-    
-
-##  SpotAccount
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | none | 币种信息  
-available | string | false | none | 可用金额  
-locked | string | false | none | 冻结金额  
-update_id | integer(int64) | false | none | 版本号  
-      
-    
-    {
-      "currency": "string",
-      "available": "string",
-      "locked": "string",
-      "update_id": 0
-    }
-    
-    
-
 ##  SpotPriceTriggeredOrder
 
 _现货价格单详情_
@@ -6882,6 +7258,247 @@ reason | string | false | 只读 | 订单结束的附加描述信息
     
     
 
+##  SpotAccountBook
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+id | string | false | none | 账户变更记录 ID  
+time | integer(int64) | false | none | 账户变更时间戳，毫秒单位  
+currency | string | false | none | 变更币种  
+change | string | false | none | 变更金额，正数表示转入，负数表示转出  
+balance | string | false | none | 变更后账户余额  
+type | string | false | none | 账户变更类型 , 已弃用（参考 code 账户变更编码）  
+code | string | false | none | 账户变更编码 , 详见资产流水编码  
+text | string | false | none | 附加信息  
+      
+    
+    {
+      "id": "string",
+      "time": 0,
+      "currency": "string",
+      "change": "string",
+      "balance": "string",
+      "type": "string",
+      "code": "string",
+      "text": "string"
+    }
+    
+    
+
+##  OpenOrders
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | false | none | 交易对  
+total | integer | false | none | 该交易对当前页面的挂单总数  
+orders | array | false | none | none  
+» _None_ | object | false | none | 现货单详情  
+»» id | string | false | 只读 | 订单 ID  
+»» text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+  
+1\. 必须以 `t-` 开头  
+2\. 不计算 `t-` ，长度不能超过 28 字节  
+3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
+  
+除用户自定义信息以外，以下为内部保留字段，标识订单来源:  
+101 代表 `android` 下单  
+102 代表 `IOS` 下单  
+103 代表 `IPAD` 下单  
+104 代表 `webapp` 下单  
+3 代表 `web` 下单  
+2 代表 `apiv2` 下单  
+apiv4 代表 `apiv4` 下单  
+pm_liquidate、comb_margin_liquidate、scm_liquidate 这三种场景代表全仓强平订单  
+liquidate 代表逐仓强平订单  
+»» amend_text | string | false | 只读 | 用户修改订单时备注的信息  
+»» create_time | string | false | 只读 | 订单创建时间  
+»» update_time | string | false | 只读 | 订单最新修改时间  
+»» create_time_ms | integer(int64) | false | 只读 | 订单创建时间，毫秒精度  
+»» update_time_ms | integer(int64) | false | 只读 | 订单最近修改时间，毫秒精度  
+»» status | string | false | 只读 | 订单状态：  
+  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
+»» currency_pair | string | true | none | 交易货币对  
+»» trade_quote | string | false | none | 交易的计价货币，仅在统一市场可指定  
+»» type | string | false | none | 订单类型  
+  
+\- limit : 限价单  
+\- market : 市价单  
+»» account | string | false | none | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
+»» side | string | true | none | 买单或者卖单  
+»» amount | string | true | none | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
+»» price | string | false | none | 交易价,`type`=`limit`时必填  
+»» time_in_force | string | false | none | 订单有效方式：  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
+  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+»» iceberg | string | false | none | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
+»» auto_borrow | boolean | false | 只写 | 杠杆(包括逐仓全仓)交易时，如果账户余额不足，是否由系统自动借入不足部分  
+»» auto_repay | boolean | false | none | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
+  
+1\. 此字段仅针对全仓杠杆有效。逐仓杠杆不支持订单级别的自动还款设置，只能通过 `POST /margin/auto_repay` 修改用户级别的设置  
+2\. `auto_borrow` 与 `auto_repay` 支持同时开启  
+»» left | string | false | 只读 | 交易货币未成交数量  
+»» filled_amount | string | false | 只读 | 交易货币已成交数量  
+»» fill_price | string | false | 只读 | 已成交的计价币种总额，该字段废弃，建议使用相同意义的 `filled_total`  
+»» filled_total | string | false | 只读 | 已成交总金额  
+»» avg_deal_price | string | false | 只读 | 平均成交价  
+»» fee | string | false | 只读 | 成交扣除的手续费  
+»» fee_currency | string | false | 只读 | 手续费计价单位  
+»» point_fee | string | false | 只读 | 手续费抵扣使用的点卡数量  
+»» gt_fee | string | false | 只读 | 手续费抵扣使用的 GT 数量  
+»» gt_maker_fee | string | false | 只读 | 手续费maker抵扣使用的 GT 数量  
+»» gt_taker_fee | string | false | 只读 | 手续费taker抵扣使用的 GT 数量  
+»» gt_discount | boolean | false | 只读 | 是否开启GT抵扣  
+»» rebated_fee | string | false | 只读 | 返还的手续费  
+»» rebated_fee_currency | string | false | 只读 | 返还手续费计价单位  
+»» stp_id | integer | false | 只读 | 订单所属的`STP用户组`id，同一个`STP用户组`内用户之间的订单不允许发生自成交。  
+  
+1\. 如果撮合时两个订单的 `stp_id` 非 `0` 且相等，则不成交，而是根据 `taker` 的 `stp_act` 执行相应策略。  
+2\. 没有设置`STP用户组`成交的订单，`stp_id` 默认返回 `0`。  
+»» stp_act | string | false | none | Self-Trading Prevention Action,用户可以用该字段设置自定义限制自成交策略。  
+  
+1\. 用户在设置加入`STP用户组`后，可以通过传递 `stp_act` 来限制用户发生自成交的策略，没有传递 `stp_act` 默认按照 `cn` 的策略。  
+2\. 用户在没有设置加入`STP用户组`时，传递 `stp_act` 参数会报错。  
+3\. 用户没有使用 `stp_act` 发生成交的订单，`stp_act` 返回 `-`。  
+  
+\- cn: Cancel newest,取消新订单，保留老订单  
+\- co: Cancel oldest,取消⽼订单，保留新订单  
+\- cb: Cancel both,新旧订单都取消  
+»» finish_as | string | false | 只读 | 订单结束方式，包括：  
+  
+\- open: 等待处理  
+\- filled: 完全成交  
+\- cancelled: 用户撤销  
+\- liquidate_cancelled: 爆仓撤销  
+\- small: 订单数量太小  
+\- depth_not_enough: 深度不足导致撤单  
+\- trader_not_enough: 对手方不足导致撤单  
+\- ioc: 未立即成交，因为 tif 设置为 ioc  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
+\- fok: 未立即完全成交，因为 tif 设置为 fok  
+\- stp: 订单发生自成交限制而被撤销  
+\- price_protect_cancelled: 价格保护导致撤单  
+\- unknown: 未知  
+»» action_mode | string | false | 只写 | 处理模式:  
+下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
+`ACK`: 异步模式，只返回订单关键字段  
+`RESULT`: 无清算信息  
+`FULL`: 完整模式（默认）  
+»» slippage | string | false | 只写 | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
+»» stop_profit | object|null | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+»»» trigger_price | string | false | none | 止盈触发价  
+`side == "buy"` 时， `trigger_price` 需大于 `price`  
+`side == "sell"` 时， `trigger_price` 需小于 `price`  
+»»» order_price | string | false | none | 止盈委托价  
+»» stop_loss | object|null | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+»»» trigger_price | string | false | none | 止损触发价  
+`side == "buy"` 时， `trigger_price` 需小于 `price`  
+`side == "sell"` 时， `trigger_price` 需大于 `price`  
+»»» order_price | string | false | none | 止损委托价  
+»» use_earn | boolean|null | false | none | 下单支持余币宝赎回  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+status | open  
+status | closed  
+status | cancelled  
+type | limit  
+type | market  
+side | buy  
+side | sell  
+time_in_force | gtc  
+time_in_force | ioc  
+time_in_force | poc  
+time_in_force | fok  
+stp_act | cn  
+stp_act | co  
+stp_act | cb  
+stp_act | -  
+finish_as | open  
+finish_as | filled  
+finish_as | cancelled  
+finish_as | liquidate_cancelled  
+finish_as | depth_not_enough  
+finish_as | trader_not_enough  
+finish_as | small  
+finish_as | ioc  
+finish_as | poc  
+finish_as | fok  
+finish_as | stp  
+finish_as | price_protect_cancelled  
+finish_as | unknown  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "orders": [
+        {
+          "id": "string",
+          "text": "string",
+          "amend_text": "string",
+          "create_time": "string",
+          "update_time": "string",
+          "create_time_ms": 0,
+          "update_time_ms": 0,
+          "status": "open",
+          "currency_pair": "string",
+          "trade_quote": "string",
+          "type": "limit",
+          "account": "spot",
+          "side": "buy",
+          "amount": "string",
+          "price": "string",
+          "time_in_force": "gtc",
+          "iceberg": "string",
+          "auto_borrow": true,
+          "auto_repay": true,
+          "left": "string",
+          "filled_amount": "string",
+          "fill_price": "string",
+          "filled_total": "string",
+          "avg_deal_price": "string",
+          "fee": "string",
+          "fee_currency": "string",
+          "point_fee": "string",
+          "gt_fee": "string",
+          "gt_maker_fee": "string",
+          "gt_taker_fee": "string",
+          "gt_discount": true,
+          "rebated_fee": "string",
+          "rebated_fee_currency": "string",
+          "stp_id": 0,
+          "stp_act": "cn",
+          "finish_as": "open",
+          "action_mode": "string",
+          "slippage": "string",
+          "stop_profit": {},
+          "stop_loss": {},
+          "use_earn": true
+        }
+      ]
+    }
+    
+    
+
 ##  Order
 
 _现货单详情_
@@ -6912,33 +7529,35 @@ create_time | string | false | 只读 | 订单创建时间
 update_time | string | false | 只读 | 订单最新修改时间  
 create_time_ms | integer(int64) | false | 只读 | 订单创建时间，毫秒精度  
 update_time_ms | integer(int64) | false | 只读 | 订单最近修改时间，毫秒精度  
-status | string | false | 只读 | 订单状态。  
+status | string | false | 只读 | 订单状态：  
   
-\- `open`: 等待处理  
-\- `closed`: 已结束的订单  
-\- `cancelled`: 订单撤销  
+\- `open`：等待处理  
+\- `closed`：已结束  
+\- `cancelled`：已撤销  
 currency_pair | string | true | none | 交易货币对  
+trade_quote | string | false | none | 交易的计价货币，仅在统一市场可指定  
 type | string | false | none | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
 account | string | false | none | 账户类型，spot - 现货账户，margin - 杠杆账户，unified - 统一账户  
 side | string | true | none | 买单或者卖单  
-amount | string | true | none | 交易数量  
-`type`为`limit`时，指交易货币，即需要交易的货币，如`BTC_USDT`中指`BTC`。  
-`type`为`market`时，根据买卖不同指代不同  
-\- `side` : `buy` 指代计价货币，`BTC_USDT`中指`USDT`  
-\- `side` : `sell` 指代交易货币，`BTC_USDT`中指`BTC`  
+amount | string | true | none | 委托数量。  
+  
+\- `type=limit`：以交易货币计量。  
+\- `type=market`：`side=buy` 以计价货币计量，`side=sell` 以交易货币计量。  
+  
+以 `BTC_USDT` 为例，交易货币为 `BTC`，计价货币为 `USDT`。  
 price | string | false | none | 交易价,`type`=`limit`时必填  
-time_in_force | string | false | none | Time in force 策略。  
+time_in_force | string | false | none | 订单有效方式：  
   
 \- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-\- poc: PendingOrCancelled，被动委托，只挂单不吃单  
-\- fok: FillOrKill，全部成交或者全部取消  
+\- ioc: ImmediateOrCancelled，立即成交或取消，只吃单、不挂单  
+\- poc: PendingOrCancelled，被动委托，只挂单、不吃单  
+\- fok: FillOrKill，全部成交或全部取消  
   
-`type`=`market`时仅支持`ioc`和`fok`  
-iceberg | string | false | none | 冰山下单显示的数量，不指定或传 0 都默认为普通下单。目前不支持全部冰山。  
+`type=market` 时，仅支持 `ioc` 和 `fok`。  
+iceberg | string | false | none | 冰山委托的显示数量。不传或传 "0" 表示普通委托；不支持完全隐藏。  
 auto_borrow | boolean | false | 只写 | 杠杆(包括逐仓全仓)交易时，如果账户余额不足，是否由系统自动借入不足部分  
 auto_repay | boolean | false | none | 全仓杠杆下单是否开启自动还款，默认关闭。需要注意的是:  
   
@@ -6981,7 +7600,7 @@ finish_as | string | false | 只读 | 订单结束方式，包括：
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
@@ -6992,16 +7611,17 @@ action_mode | string | false | 只写 | 处理模式:
 `RESULT`: 无清算信息  
 `FULL`: 完整模式（默认）  
 slippage | string | false | 只写 | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
-stop_profit | object | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+stop_profit | object|null | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
 » trigger_price | string | false | none | 止盈触发价  
 `side == "buy"` 时， `trigger_price` 需大于 `price`  
 `side == "sell"` 时， `trigger_price` 需小于 `price`  
 » order_price | string | false | none | 止盈委托价  
-stop_loss | object | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+stop_loss | object|null | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
 » trigger_price | string | false | none | 止损触发价  
 `side == "buy"` 时， `trigger_price` 需小于 `price`  
 `side == "sell"` 时， `trigger_price` 需大于 `price`  
 » order_price | string | false | none | 止损委托价  
+use_earn | boolean|null | false | none | 下单支持余币宝赎回  
   
 ####  枚举值列表
 
@@ -7047,6 +7667,7 @@ finish_as | unknown
       "update_time_ms": 0,
       "status": "open",
       "currency_pair": "string",
+      "trade_quote": "string",
       "type": "limit",
       "account": "spot",
       "side": "buy",
@@ -7082,24 +7703,276 @@ finish_as | unknown
       "stop_loss": {
         "trigger_price": "string",
         "order_price": "string"
-      }
+      },
+      "use_earn": true
     }
     
     
 
-##  SystemTime
-
-_SystemTime_
+##  SpotPricePutOrder
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-server_time | integer(int64) | false | none | 服务器当前时间(ms)  
+type | string | false | none | 订单类型，默认为限价单  
+  
+\- limit : 限价单  
+\- market : 市价单  
+side | string | true | none | 买卖方向  
+  
+\- buy: 买  
+\- sell: 卖  
+price | string | true | none | 挂单价格  
+amount | string | true | none | 交易数量，指交易货币的交易数量，即需要交易的货币，如BTC_USDT中指BTC的数量  
+account | string | true | none | 交易账户类型，统一账户只能设置 unified  
+  
+\- normal: 现货交易  
+\- margin: 杠杆交易  
+\- unified: 统一账户  
+time_in_force | string | true | none | time_in_force  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
+auto_borrow | boolean | false | none | 是否自动借币  
+auto_repay | boolean | false | none | 是否自动还款  
+text | string | false | none | 订单的来源，包括：  
+  
+\- web: 网页  
+\- api: API 调用  
+\- app: 移动端  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+type | limit  
+type | market  
+side | buy  
+side | sell  
+account | normal  
+account | margin  
+account | unified  
+time_in_force | gtc  
+time_in_force | ioc  
       
     
     {
-      "server_time": 0
+      "type": "limit",
+      "side": "buy",
+      "price": "string",
+      "amount": "string",
+      "account": "normal",
+      "time_in_force": "gtc",
+      "auto_borrow": false,
+      "auto_repay": false,
+      "text": "string"
+    }
+    
+    
+
+##  BatchAmendItem
+
+_需要修改的订单信息_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+order_id | string | true | none | 成功创建订单时返回的订单 ID 或者用户创建时指定的自定义 ID（即 text 字段）。  
+currency_pair | string | true | none | 交易对  
+account | string | false | none | 默认现货、统一账户和逐仓杠杆账户。  
+amount | string | false | none | 交易数量，`amount`和`price`只能指定一个  
+price | string | false | none | 交易价，`amount`和`price`只能指定一个  
+amend_text | string | false | none | 用户可以备注这次修改的信息。  
+action_mode | string | false | none | 处理模式:  
+下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
+`ACK`: 异步模式，只返回订单关键字段  
+`RESULT`: 无清算信息  
+`FULL`: 完整模式（默认）  
+stop_profit | object|null | false | none | 限价单止盈，取消止盈时传{}, 传null表示不进行止盈修改  
+» trigger_price | string | false | none | 止盈触发价  
+`side == "buy"` 时， `trigger_price` 需大于 `price`  
+`side == "sell"` 时， `trigger_price` 需小于 `price`  
+» order_price | string | false | none | 止盈委托价  
+stop_loss | object|null | false | none | 限价单止损，取消止损时传{}, 传null表示不进行止损修改  
+» trigger_price | string | false | none | 止损触发价  
+`side == "buy"` 时， `trigger_price` 需小于 `price`  
+`side == "sell"` 时， `trigger_price` 需大于 `price`  
+» order_price | string | false | none | 止损委托价  
+      
+    
+    {
+      "order_id": "string",
+      "currency_pair": "string",
+      "account": "string",
+      "amount": "string",
+      "price": "string",
+      "amend_text": "string",
+      "action_mode": "string",
+      "stop_profit": {
+        "trigger_price": "string",
+        "order_price": "string"
+      },
+      "stop_loss": {
+        "trigger_price": "string",
+        "order_price": "string"
+      }
+    }
+    
+    
+
+##  TriggerOrderResponse
+
+_TriggerOrderResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+id | integer(int64) | false | none | 自动订单 ID  
+id_string | string | false | 只读 | 自动订单 ID 的字符串形式，与数值字段 `id` 表示同一笔订单，为 `id` 的十进制字符串，便于在 JavaScript 等环境中避免 int64 精度丢失。  
+前端展示订单编号或需要字符串类型唯一标识时建议使用本字段；与 `id` 一一对应。合约价格触发单相关 REST 与 `futures.orders`、`futures.autoorders` 等 WebSocket 推送中的同名字段含义一致。  
+      
+    
+    {
+      "id": 0,
+      "id_string": "string"
+    }
+    
+    
+
+##  Ticker
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | false | none | 交易对  
+last | string | false | none | 最新成交价  
+lowest_ask | string | false | none | 最新卖方最低价  
+lowest_size | string | false | none | 最新卖方最低价数量；批量查询时不存在；单个查询时存在,如果没有数据时为空  
+highest_bid | string | false | none | 最新买方最高价  
+highest_size | string | false | none | 最新买方最高价数量；批量查询时不存在；单个查询时存在,如果没有数据时为空  
+change_percentage | string | false | none | 最近24h涨跌百分比，跌用负数标识，如 -7.45  
+change_utc0 | string | false | none | utc0时区，最近24h涨跌百分比，跌用负数标识，如 -7.45  
+change_utc8 | string | false | none | utc8时区，最近24h涨跌百分比，跌用负数标识，如 -7.45  
+base_volume | string | false | none | 最近24h交易货币成交量  
+quote_volume | string | false | none | 最近24h计价货币成交量  
+high_24h | string | false | none | 24小时最高价  
+low_24h | string | false | none | 24小时最低价  
+etf_net_value | string | false | none | ETF 净值  
+etf_pre_net_value | string|null | false | none | ETF 前一再平衡点净值  
+etf_pre_timestamp | integer(int64)|null | false | none | ETF 前一再平衡时间  
+etf_leverage | string|null | false | none | ETF 当前杠杆率  
+      
+    
+    {
+      "currency_pair": "string",
+      "last": "string",
+      "lowest_ask": "string",
+      "lowest_size": "string",
+      "highest_bid": "string",
+      "highest_size": "string",
+      "change_percentage": "string",
+      "change_utc0": "string",
+      "change_utc8": "string",
+      "base_volume": "string",
+      "quote_volume": "string",
+      "high_24h": "string",
+      "low_24h": "string",
+      "etf_net_value": "string",
+      "etf_pre_net_value": "string",
+      "etf_pre_timestamp": 0,
+      "etf_leverage": "string"
+    }
+    
+    
+
+##  SpotInsuranceHistory
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | none | 币种  
+balance | string | false | none | 余额  
+time | integer(int64) | false | none | 创建时间，时间戳，毫秒级  
+      
+    
+    {
+      "currency": "string",
+      "balance": "string",
+      "time": 0
+    }
+    
+    
+
+##  CountdownCancelAllSpotTask
+
+_CountdownCancelAllSpotTask_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+timeout | integer(int32) | true | none | 倒计时时间，单位 秒  
+至少5秒，为0时表示取消倒计时  
+currency_pair | string | false | none | 交易货币对  
+      
+    
+    {
+      "timeout": 0,
+      "currency_pair": "string"
+    }
+    
+    
+
+##  SpotPriceTrigger
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+price | string | true | none | 触发价格  
+rule | string | true | none | 价格条件类型  
+\- `>=`: 表示市场价格大于等于 `price`时触发  
+\- `<=`: 表示市场价格小于等于 `price`时触发  
+expiration | integer | false | none | 最长等待触发时间，超时则取消该订单，单位是秒 s  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+rule | >=  
+rule | <=  
+      
+    
+    {
+      "price": "string",
+      "rule": ">=",
+      "expiration": 0
+    }
+    
+    
+
+##  SpotAccount
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | none | 币种信息  
+available | string | false | none | 可用金额  
+locked | string | false | none | 冻结金额  
+update_id | integer(int64) | false | none | 版本号  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "update_id": 0
     }
     
     
@@ -7133,7 +8006,7 @@ status | string | false | 只读 | 订单状态。
 \- `closed`: 已结束的订单  
 \- `cancelled`: 订单撤销  
 currency_pair | string | false | none | 交易货币对  
-type | string | false | none | 订单类型   
+type | string | false | none | 订单类型  
   
 \- limit : 限价单  
 \- market : 市价单  
@@ -7188,7 +8061,7 @@ finish_as | string | false | 只读 | 订单结束方式，包括：
 \- depth_not_enough: 深度不足导致撤单  
 \- trader_not_enough: 对手方不足导致撤单  
 \- ioc: 未立即成交，因为 tif 设置为 ioc  
-\- poc: 未满足挂单策略，因为 tif 设置为 poc/rvt/rat/rpi表示只想成为maker, 经检查会成为taker被拒绝  
+\- poc: 未满足挂单策略，因为 tif 设置为 poc 表示只想成为maker, 经检查会成为taker被拒绝  
 \- fok: 未立即完全成交，因为 tif 设置为 fok  
 \- stp: 订单发生自成交限制而被撤销  
 \- price_protect_cancelled: 价格保护导致撤单  
@@ -7294,24 +8167,178 @@ finish_as | unknown
     
     
 
-##  LiquidateOrder
+##  CurrencyPair
 
-_现货平仓单详情_
+_现货交易对_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-text | string | false | none | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
+id | string | false | none | 交易对  
+base | string | false | none | 交易货币  
+base_name | string | false | none | 交易货币名称  
+quote | string | false | none | 计价货币  
+quote_name | string | false | none | 计价货币名称  
+trade_quotes | array|null | false | none | 统一市场支持的交易计价货币, null 表示该市场不支持统一计价币  
+fee | string | false | none | 交易费率(已废弃)  
+min_base_amount | string | false | none | 交易货币最低交易数量，null 表示无限制  
+min_quote_amount | string | false | none | 计价货币最低交易数量，null 表示无限制  
+max_base_amount | string | false | none | 交易货币最大交易数量，null 表示无限制  
+max_quote_amount | string | false | none | 计价货币最大交易数量，null 表示无限制  
+amount_precision | integer | false | none | 数量精度  
+precision | integer | false | none | 价格精度  
+trade_status | string | false | none | 交易状态  
   
-1\. 必须以 `t-` 开头  
-2\. 不计算 `t-` ，长度不能超过 28 字节  
-3\. 输入内容只能包含数字、字母、下划线(_)、中划线(-) 或者点(.)  
-currency_pair | string | true | none | 交易货币对  
-amount | string | true | none | 交易数量  
-price | string | true | none | 交易价  
+\- untradable: 不可交易  
+\- buyable: 可买  
+\- sellable: 可卖  
+\- tradable: 买卖均可交易  
+sell_start | integer(int64) | false | none | 允许卖出时间，秒级 Unix 时间戳  
+buy_start | integer(int64) | false | none | 允许买入时间，秒级 Unix 时间戳  
+delisting_time | integer(int64) | false | none | 预计下架时间，Unix 时间戳，单位秒。  
+type | string | false | none | 交易对类型，normal:常规, premarket:盘前  
+trade_url | string | false | none | 交易链接  
+st_tag | boolean | false | none | 币对是否在ST风险评估中，false - 否，true - 是  
+up_rate | string | false | none | 报价最大涨幅百分比  
+down_rate | string | false | none | 报价最大跌幅百分比  
+slippage | string | false | none | 现货市价下单支持的最大滑点比率，以下单时的市场最新价格为基准计算（示例：0.03即3%）  
+market_order_max_stock | string | false | none | 市价单最大下单数量，null 或 0 表示无限制  
+market_order_max_money | string | false | none | 市价单最大下单金额，null 或 0 表示无限制  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+trade_status | untradable  
+trade_status | buyable  
+trade_status | sellable  
+trade_status | tradable  
+      
+    
+    {
+      "id": "string",
+      "base": "string",
+      "base_name": "string",
+      "quote": "string",
+      "quote_name": "string",
+      "trade_quotes": [
+        "string"
+      ],
+      "fee": "string",
+      "min_base_amount": "string",
+      "min_quote_amount": "string",
+      "max_base_amount": "string",
+      "max_quote_amount": "string",
+      "amount_precision": 0,
+      "precision": 0,
+      "trade_status": "untradable",
+      "sell_start": 0,
+      "buy_start": 0,
+      "delisting_time": 0,
+      "type": "string",
+      "trade_url": "string",
+      "st_tag": true,
+      "up_rate": "string",
+      "down_rate": "string",
+      "slippage": "string",
+      "market_order_max_stock": "string",
+      "market_order_max_money": "string"
+    }
+    
+    
+
+##  Currency
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | none | 币种符号  
+name | string | false | none | 币种名称  
+delisted | boolean | false | none | 是否下架  
+withdraw_disabled | boolean | false | none | 是否暂停提现（废弃）  
+withdraw_delayed | boolean | false | none | 提现是否存在延迟（废弃）  
+deposit_disabled | boolean | false | none | 是否暂停充值（废弃）  
+trade_disabled | boolean | false | none | 是否暂停交易  
+fixed_rate | string | false | none | 固定交易手续费率。仅限固定交易费率的币种，普通币种该字段无效  
+chain | string | false | none | 币对应的主链  
+chains | array | false | none | 该币种对应的全部区块链。  
+» SpotCurrencyChain | object | false | none | none  
+»» name | string | false | none | 链名  
+»» addr | string | false | none | token地址  
+»» withdraw_disabled | boolean | false | none | 是否暂停提现  
+»» withdraw_delayed | boolean | false | none | 提现是否存在延迟  
+»» deposit_disabled | boolean | false | none | 是否暂停充值  
+» total_supply | string | false | none | 币种总供应量  
+» market_cap | string | false | none | 币种市值  
+» category | array | false | none | 币种分类  
+  
+\- stocks: 股票  
+\- metals: 金属  
+\- indices: 指数  
+\- forex: 外汇  
+\- commodities: 大宗商品  
+      
+    
+    {
+      "currency": "string",
+      "name": "string",
+      "delisted": true,
+      "withdraw_disabled": true,
+      "withdraw_delayed": true,
+      "deposit_disabled": true,
+      "trade_disabled": true,
+      "fixed_rate": "string",
+      "chain": "string",
+      "chains": [
+        {
+          "name": "string",
+          "addr": "string",
+          "withdraw_disabled": true,
+          "withdraw_delayed": true,
+          "deposit_disabled": true
+        }
+      ],
+      "total_supply": "string",
+      "market_cap": "string",
+      "category": [
+        "string"
+      ]
+    }
+    
+    
+
+##  SystemTime
+
+_SystemTime_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+server_time | integer(int64) | false | none | 服务器当前时间(ms)  
+      
+    
+    {
+      "server_time": 0
+    }
+    
+    
+
+##  CancelBatchOrder
+
+_需要撤销的订单信息_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | true | none | 订单的交易对  
+id | string | true | none | 订单 ID 或者用户自定义 ID 。  
+如果使用自定义 ID，只能在订单创建后的 30 分钟内有效  
+account | string | false | none | 撤销的订单如果是统一账户apikey，该字段必须指定且设置为 `unified`  
 action_mode | string | false | none | 处理模式:  
-  
 下单时根据action_mode返回不同的字段, 该字段只在请求时有效，响应结果中不包含该字段  
 `ACK`: 异步模式，只返回订单关键字段  
 `RESULT`: 无清算信息  
@@ -7319,99 +8346,45 @@ action_mode | string | false | none | 处理模式:
       
     
     {
-      "text": "string",
       "currency_pair": "string",
-      "amount": "string",
-      "price": "string",
+      "id": "string",
+      "account": "string",
       "action_mode": "string"
     }
     
     
 
-##  SpotPricePutOrder
+##  SpotFee
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-type | string | false | none | 订单类型，默认为限价单  
-  
-\- limit : 限价单  
-\- market : 市价单  
-side | string | true | none | 买卖方向  
-  
-\- buy: 买  
-\- sell: 卖  
-price | string | true | none | 挂单价格  
-amount | string | true | none | 交易数量，指交易货币的交易数量，即需要交易的货币，如BTC_USDT中指BTC的数量  
-account | string | true | none | 交易账户类型，统一账户只能设置 unified  
-  
-\- normal: 现货交易  
-\- margin: 杠杆交易  
-\- unified: 统一账户  
-time_in_force | string | true | none | time_in_force  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled，立即成交或者取消，只吃单不挂单  
-auto_borrow | boolean | false | none | 是否自动借币  
-auto_repay | boolean | false | none | 是否自动还款  
-text | string | false | none | 订单的来源，包括：  
-  
-\- web: 网页  
-\- api: API 调用  
-\- app: 移动端  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | limit  
-type | market  
-side | buy  
-side | sell  
-account | normal  
-account | margin  
-account | unified  
-time_in_force | gtc  
-time_in_force | ioc  
+user_id | integer(int64) | false | none | 用户 ID  
+taker_fee | string | false | none | taker 费率  
+maker_fee | string | false | none | maker 费率  
+rpi_maker_fee | string | false | none | RPI MM maker 费率  
+gt_discount | boolean | false | none | 是否开启 GT 抵扣折扣  
+gt_taker_fee | string | false | none | GT 抵扣 taker 费率，未开启 GT 抵扣则为 0  
+gt_maker_fee | string | false | none | GT 抵扣 maker 费率，未开启 GT 抵扣则为 0  
+loan_fee | string | false | none | 杠杆理财的费率  
+point_type | string | false | none | 点卡类型，0 - 初版点卡，1 - 202009 启用的新点卡  
+currency_pair | string | false | none | 交易对  
+debit_fee | integer | false | none | 费率抵扣类型 , 1 - GT抵扣 , 2 - 点卡抵扣 , 3 - VIP费率  
+rpi_mm | integer | false | none | RPI MM等级  
       
     
     {
-      "type": "limit",
-      "side": "buy",
-      "price": "string",
-      "amount": "string",
-      "account": "normal",
-      "time_in_force": "gtc",
-      "auto_borrow": false,
-      "auto_repay": false,
-      "text": "string"
-    }
-    
-    
-
-##  SpotPriceTrigger
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-price | string | true | none | 触发价格  
-rule | string | true | none | 价格条件类型  
-\- `>=`: 表示市场价格大于等于 `price`时触发  
-\- `<=`: 表示市场价格小于等于 `price`时触发  
-expiration | integer | false | none | 最长等待触发时间，超时则取消该订单，单位是秒 s  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-rule | >=  
-rule | <=  
-      
-    
-    {
-      "price": "string",
-      "rule": ">=",
-      "expiration": 0
+      "user_id": 0,
+      "taker_fee": "string",
+      "maker_fee": "string",
+      "rpi_maker_fee": "string",
+      "gt_discount": true,
+      "gt_taker_fee": "string",
+      "gt_maker_fee": "string",
+      "loan_fee": "string",
+      "point_type": "string",
+      "currency_pair": "string",
+      "debit_fee": 0,
+      "rpi_mm": 0
     }

@@ -2,17 +2,20 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/en
 api_type: Trading
-updated_at: 2026-05-27 20:14:18.885058
+updated_at: 2026-11-13 20:56:44.235766
 ---
 
 # Gate Alpha API v1.1.1
 
+* Python 
+  * Shell 
+
 v1.1.1 · Stable
 
 
-Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
-
 APIv4 provides Alpha service APIs with default rate limit of 200 requests per 10 seconds
+
+Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
 
 ##  Access URL
 
@@ -578,7 +581,38 @@ AMOUNT_TOO_MUCH | Over maximum transaction amount
 
 Alpha Account
 
-##  Alpha Account API
+##  Alpha Account API🔒 Authenticated
+
+GET`/alpha/accounts`
+
+GET `/alpha/accounts`
+
+_Alpha Account API_
+
+Query position assets
+
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Positions queried successfully | [Inline]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» _None_ | object | Query Position Return  
+»» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+»» available | string | Available Balance  
+»» locked | string | Locked balance  
+»» token_address | string | Token address  
+»» chain | string | Blockchain name  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
 
 Code samples
     
@@ -623,12 +657,6 @@ Code samples
     
     
 
-GET `/alpha/accounts`
-
-_Alpha Account API_
-
-Query position assets
-
 > Example responses
 
 > 200 Response
@@ -645,13 +673,30 @@ Query position assets
     ]
     
 
-### Responses
+##  Alpha Account Transaction History API🔒 Authenticated
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Positions queried successfully
+GET`/alpha/account_book`
+
+GET `/alpha/account_book`
+
+_Alpha Account Transaction History API_
+
+Query asset transactions
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+from | query | integer(int64) | Required | Start timestamp for the query  
+to | query | integer(int64) | Optional | End timestamp for the query, defaults to current time if not specified  
+page | query | integer(int32) | Optional | Page number  
+limit | query | integer(int32) | Optional | Maximum 100 items per page  
+  
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Positions queried successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Transaction history retrieved successfully | [Inline]  
   
 ### Response Schema
 
@@ -659,18 +704,16 @@ Status Code **200**
 
 Name | Type | Description  
 ---|---|---  
-» _None_ | object | Query Position Return  
-»» currency | string | Currency name  
-»» available | string | Available Balance  
-»» locked | string | Locked balance  
-»» token_address | string | Token address  
-»» chain | string | Blockchain name  
+» _None_ | object | Query Asset Flow Return  
+»» id | integer(int64) | Order ID  
+»» time | integer(int64) | Operation timestamp  
+»» currency | string(string) | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+»» change | string(string) | Change amount  
+»» balance | string(string) | Balance after change  
   
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
-
-##  Alpha Account Transaction History API
 
 Code samples
     
@@ -715,21 +758,6 @@ Code samples
     
     
 
-GET `/alpha/account_book`
-
-_Alpha Account Transaction History API_
-
-Query asset transactions
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-from | query | integer(int64) | Required | Start timestamp for the query  
-to | query | integer(int64) | Optional | End timestamp for the query, defaults to current time if not specified  
-page | query | integer(int32) | Optional | Page number  
-limit | query | integer(int32) | Optional | Maximum 100 items per page  
-  
 > Example responses
 
 > 200 Response
@@ -746,32 +774,78 @@ limit | query | integer(int32) | Optional | Maximum 100 items per page
     ]
     
 
-### Responses
+##  Alpha Quote API🔒 Authenticated
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Transaction history retrieved successfully
+POST`/alpha/quote`
+
+POST `/alpha/quote`
+
+_Alpha Quote API_
+
+The quote_id returned by the price inquiry interface is valid for one minute; an order must be placed within this minute. If it times out, a new price inquiry is required. Rate-limited at 10 requests per second per user.
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | object | Required | none  
+» currency | body | string | Required | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+» side | body | string | Required | Buy or sell orders  
+\- buy  
+\- sell  
+» amount | body | string | Required | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+» gas_mode | body | string | Required | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+» slippage | body | string | Optional | Slippage tolerance (10 means 10% tolerance)  
+  
+####  Detailed descriptions
+
+**» side** : Buy or sell orders  
+\- buy  
+\- sell
+
+**» amount** : Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency
+
+**» gas_mode** : Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter
+
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Transaction history retrieved successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Quote retrieved successfully | Inline  
   
 ### Response Schema
 
 Status Code **200**
 
+_Quote Response_
+
 Name | Type | Description  
 ---|---|---  
-» _None_ | object | Query Asset Flow Return  
-»» id | integer(int64) | Order ID  
-»» time | integer(int64) | Operation timestamp  
-»» currency | string(string) | Currency name  
-»» change | string(string) | Change amount  
-»» balance | string(string) | Balance after change  
+» quote_id | string | Quote ID for order placement, valid for 1 minute  
+» min_amount | string | Minimum order size  
+» max_amount | string | Maximum order size  
+» price | string | Token Price (USDT-based)  
+» slippage | string | Slippage  
+» estimate_gas_fee_amount_usdt | string | Estimated Gas Fee (USDT-based)  
+» order_fee | string | Trading fee  
+» target_token_min_amount | string | Minimum received amount  
+» target_token_max_amount | string | Maximum received amount  
+» error_type | integer(int32) | Failure Type  
+\- `0` : Success  
+\- `1` : Exceeds maximum value  
+\- `2` : Below minimum value  
   
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
-
-##  Alpha Quote API
 
 Code samples
     
@@ -817,12 +891,6 @@ Code samples
     
     
 
-POST `/alpha/quote`
-
-_Alpha Quote API_
-
-The quote_id returned by the price inquiry interface is valid for one minute; an order must be placed within this minute. If it times out, a new price inquiry is required. Rate-limited at 10 requests per second per user.
-
 > Body parameter
     
     
@@ -834,37 +902,6 @@ The quote_id returned by the price inquiry interface is valid for one minute; an
       "slippage": "10"
     }
     
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-body | body | object | Required | none  
-↳ currency | body | string | Required | Trading symbol  
-↳ side | body | string | Required | Buy or sell orders  
-\- buy  
-\- sell  
-↳ amount | body | string | Required | Trade Quantity  
-\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
-\- `side` : `sell` refers to the base currency  
-↳ gas_mode | body | string | Required | Trading mode affects slippage selection  
-\- `speed` : Smart mode  
-\- `custom` : Custom mode, uses `slippage` parameter  
-↳ slippage | body | string | Optional | Slippage tolerance (10 means 10% tolerance)  
-  
-####  Detailed descriptions
-
-**» side** : Buy or sell orders  
-\- buy  
-\- sell
-
-**» amount** : Trade Quantity  
-\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
-\- `side` : `sell` refers to the base currency
-
-**» gas_mode** : Trading mode affects slippage selection  
-\- `speed` : Smart mode  
-\- `custom` : Custom mode, uses `slippage` parameter
 
 > Example responses
 
@@ -885,41 +922,87 @@ body | body | object | Required | none
     }
     
 
-### Responses
+##  Alpha Order API🔒 Authenticated
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Quote retrieved successfully
+POST`/alpha/orders`
+
+POST `/alpha/orders`
+
+_Alpha Order API_
+
+Order placement interface, rate-limited at 5 requests per second per user.
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | object | Required | none  
+» currency | body | string | Required | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+» side | body | string | Required | Buy or sell orders  
+\- buy  
+\- sell  
+» amount | body | string | Required | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+» gas_mode | body | string | Required | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+» slippage | body | string | Optional | Slippage percentage: "10" means 10%.  
+» quote_id | body | string | Required | Quote ID returned from quotation API  
+  
+####  Detailed descriptions
+
+**» side** : Buy or sell orders  
+\- buy  
+\- sell
+
+**» amount** : Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency
+
+**» gas_mode** : Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter
+
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Quote retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order placed successfully | Inline  
   
 ### Response Schema
 
 Status Code **200**
 
-_Quote Response_
+_Order response_
 
 Name | Type | Description  
 ---|---|---  
-» quote_id | string | Quote ID for order placement, valid for 1 minute  
-» min_amount | string | Minimum order size  
-» max_amount | string | Maximum order size  
-» price | string | Token Price (USDT-based)  
-» slippage | string | Slippage  
-» estimate_gas_fee_amount_usdt | string | Estimated Gas Fee (USDT-based)  
-» order_fee | string | Trading fee  
-» target_token_min_amount | string | Minimum received amount  
-» target_token_max_amount | string | Maximum received amount  
-» error_type | integer(int32) | Failure Type  
-\- `0` : Success  
-\- `1` : Exceeds maximum value  
-\- `2` : Below minimum value  
+» order_id | string | Order ID  
+» status | integer(int32) | Order Status  
+\- `0` : All  
+\- `1` : Processing  
+\- `2` : Successful  
+\- `3` : Failed  
+\- `4` : Cancelled  
+\- `5` : Buy order placed but transfer not completed  
+\- `6` : Order cancelled but transfer not completed  
+» side | string | Buy or sell orders  
+\- buy  
+\- sell  
+» gas_mode | string | Trading mode affects slippage selection  
+\- `speed` : Smart mode  
+\- `custom` : Custom mode, uses `slippage` parameter  
+» create_time | integer(int64) | Creation timestamp  
+» amount | string | Trade Quantity  
+\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
+\- `side` : `sell` refers to the base currency  
+» token_address | string | Token contract address  
+» chain | string | Blockchain name  
   
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
-
-##  Alpha Order API
 
 Code samples
     
@@ -965,12 +1048,6 @@ Code samples
     
     
 
-POST `/alpha/orders`
-
-_Alpha Order API_
-
-Order placement interface, rate-limited at 5 requests per second per user.
-
 > Body parameter
     
     
@@ -983,38 +1060,6 @@ Order placement interface, rate-limited at 5 requests per second per user.
       "quote_id": "12345678"
     }
     
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-body | body | object | Required | none  
-↳ currency | body | string | Required | Trading symbol  
-↳ side | body | string | Required | Buy or sell orders  
-\- buy  
-\- sell  
-↳ amount | body | string | Required | Trade Quantity  
-\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
-\- `side` : `sell` refers to the base currency  
-↳ gas_mode | body | string | Required | Trading mode affects slippage selection  
-\- `speed` : Smart mode  
-\- `custom` : Custom mode, uses `slippage` parameter  
-↳ slippage | body | string | Optional | Slippage tolerance (10 means 10% tolerance)  
-↳ quote_id | body | string | Required | Quote ID returned from quotation API  
-  
-####  Detailed descriptions
-
-**» side** : Buy or sell orders  
-\- buy  
-\- sell
-
-**» amount** : Trade Quantity  
-\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
-\- `side` : `sell` refers to the base currency
-
-**» gas_mode** : Trading mode affects slippage selection  
-\- `speed` : Smart mode  
-\- `custom` : Custom mode, uses `slippage` parameter
 
 > Example responses
 
@@ -1033,24 +1078,23 @@ body | body | object | Required | none
     }
     
 
-### Responses
+##  Alpha Order List API🔒 Authenticated
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Order placed successfully
+GET`/alpha/orders`
 
-ResponsesStatus | Meaning | Description | Schema  
----|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order placed successfully | Inline  
-  
-### Response Schema
+GET `/alpha/orders`
 
-Status Code **200**
+_Alpha Order List API_
 
-_Order response_
+### Parameters
 
-Name | Type | Description  
----|---|---  
-» order_id | string | Order ID  
-» status | integer(int32) | Order Status  
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+currency | query | string | Optional | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+side | query | string | Optional | Buy or sell orders  
+\- buy  
+\- sell  
+status | query | integer(int32) | Optional | Order Status  
 \- `0` : All  
 \- `1` : Processing  
 \- `2` : Successful  
@@ -1058,24 +1102,68 @@ Name | Type | Description
 \- `4` : Cancelled  
 \- `5` : Buy order placed but transfer not completed  
 \- `6` : Order cancelled but transfer not completed  
-» side | string | Buy or sell orders  
+from | query | integer(int64) | Optional | Start time for order query  
+to | query | integer(int64) | Optional | End time for order query, defaults to current time if not specified  
+limit | query | integer(int32) | Optional | Maximum number of items returned. Default: 100, minimum: 1, maximum: 100  
+page | query | integer(int32) | Optional | Page number  
+  
+####  Detailed descriptions
+
+**side** : Buy or sell orders  
+\- buy  
+\- sell
+
+**status** : Order Status  
+\- `0` : All  
+\- `1` : Processing  
+\- `2` : Successful  
+\- `3` : Failed  
+\- `4` : Cancelled  
+\- `5` : Buy order placed but transfer not completed  
+\- `6` : Order cancelled but transfer not completed
+
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [Inline]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+_None_ | array | [Order response]  
+» _None_ | object | Order response  
+»» order_id | string | Order ID  
+»» tx_hash | string | Transaction Hash  
+»» side | string | Buy or sell orders  
 \- buy  
 \- sell  
-» gas_mode | string | Trading mode affects slippage selection  
+»» usdt_amount | string | Amount (USDT)  
+»» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+»» currency_amount | string | Token amount  
+»» status | integer(int32) | Order Status  
+\- `0` : All  
+\- `1` : Processing  
+\- `2` : Successful  
+\- `3` : Failed  
+\- `4` : Cancelled  
+\- `5` : Buy order placed but transfer not completed  
+\- `6` : Order cancelled but transfer not completed  
+»» gas_mode | string | Trading mode affects slippage selection  
 \- `speed` : Smart mode  
 \- `custom` : Custom mode, uses `slippage` parameter  
-» create_time | integer(int64) | Creation timestamp  
-» amount | string | Trade Quantity  
-\- `side` : `buy` refers to the quote currency, i.e., `USDT`  
-\- `side` : `sell` refers to the base currency  
-» token_address | string | Token contract address  
-» chain | string | Blockchain name  
+»» chain | string | Blockchain  
+»» gas_fee | string | Gas Fee (USDT-based)  
+»» transaction_fee | string | Trading Fee (USDT-based)  
+»» failed_reason | string | Failure reason (if applicable)  
+»» create_time | integer(int64) | Creation timestamp  
   
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
-
-##  Alpha Order List API
 
 Code samples
     
@@ -1120,46 +1208,6 @@ Code samples
     
     
 
-GET `/alpha/orders`
-
-_Alpha Order List API_
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-currency | query | string | Optional | Trading symbol  
-side | query | string | Optional | Buy or sell orders  
-\- buy  
-\- sell  
-status | query | integer(int32) | Optional | Order Status  
-\- `0` : All  
-\- `1` : Processing  
-\- `2` : Successful  
-\- `3` : Failed  
-\- `4` : Cancelled  
-\- `5` : Buy order placed but transfer not completed  
-\- `6` : Order cancelled but transfer not completed  
-from | query | integer(int64) | Optional | Start time for order query  
-to | query | integer(int64) | Optional | End time for order query, defaults to current time if not specified  
-limit | query | integer(int32) | Optional | Maximum number of items returned. Default: 100, minimum: 1, maximum: 100  
-page | query | integer(int32) | Optional | Page number  
-  
-####  Detailed descriptions
-
-**side** : Buy or sell orders  
-\- buy  
-\- sell
-
-**status** : Order Status  
-\- `0` : All  
-\- `1` : Processing  
-\- `2` : Successful  
-\- `3` : Failed  
-\- `4` : Cancelled  
-\- `5` : Buy order placed but transfer not completed  
-\- `6` : Order cancelled but transfer not completed
-
 > Example responses
 
 > 200 Response
@@ -1184,31 +1232,43 @@ page | query | integer(int32) | Optional | Page number
     ]
     
 
-### Responses
+##  Alpha Single Order Query API🔒 Authenticated
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
+GET`/alpha/order`
+
+GET `/alpha/order`
+
+_Alpha Single Order Query API_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+order_id | query | string | Required | Order ID  
+  
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order queried successfully | Inline  
   
 ### Response Schema
 
 Status Code **200**
 
+_Order response_
+
 Name | Type | Description  
 ---|---|---  
-_None_ | array | [Order response]  
-» _None_ | object | Order response  
-»» order_id | string | Order ID  
-»» tx_hash | string | Transaction Hash  
-»» side | string | Buy or sell orders  
+» order_id | string | Order ID  
+» tx_hash | string | Transaction Hash  
+» side | string | Buy or sell orders  
 \- buy  
 \- sell  
-»» usdt_amount | string | Amount (USDT)  
-»» currency | string | Token  
-»» currency_amount | string | Token amount  
-»» status | integer(int32) | Order Status  
+» usdt_amount | string | Amount (USDT)  
+» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+» currency_amount | string | Token amount  
+» status | integer(int32) | Order Status  
 \- `0` : All  
 \- `1` : Processing  
 \- `2` : Successful  
@@ -1216,20 +1276,18 @@ _None_ | array | [Order response]
 \- `4` : Cancelled  
 \- `5` : Buy order placed but transfer not completed  
 \- `6` : Order cancelled but transfer not completed  
-»» gas_mode | string | Trading mode affects slippage selection  
+» gas_mode | string | Trading mode affects slippage selection  
 \- `speed` : Smart mode  
 \- `custom` : Custom mode, uses `slippage` parameter  
-»» chain | string | Blockchain  
-»» gas_fee | string | Gas Fee (USDT-based)  
-»» transaction_fee | string | Trading Fee (USDT-based)  
-»» failed_reason | string | Failure reason (if applicable)  
-»» create_time | integer(int64) | Creation timestamp  
+» chain | string | Blockchain  
+» gas_fee | string | Gas Fee (USDT-based)  
+» transaction_fee | string | Trading Fee (USDT-based)  
+» failed_reason | string | Failure reason (if applicable)  
+» create_time | integer(int64) | Creation timestamp  
   
 WARNING
 
 To perform this operation, you must be authenticated by API key and secret
-
-##  Alpha Single Order Query API
 
 Code samples
     
@@ -1274,16 +1332,6 @@ Code samples
     
     
 
-GET `/alpha/order`
-
-_Alpha Single Order Query API_
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-order_id | query | string | Required | Order ID  
-  
 > Example responses
 
 > 200 Response
@@ -1306,52 +1354,49 @@ order_id | query | string | Required | Order ID
     }
     
 
-### Responses
+##  Query currency information
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Order queried successfully
+GET`/alpha/currencies`
+
+GET `/alpha/currencies`
+
+_Query currency information_
+
+When currency is provided, query and return specified currency information; when currency is not provided, return paginated currency list
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+currency | query | string | Optional | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+limit | query | integer(int32) | Optional | Maximum number of records returned in a single list  
+page | query | integer(int32) | Optional | Page number  
+  
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order queried successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
   
 ### Response Schema
 
 Status Code **200**
 
-_Order response_
-
 Name | Type | Description  
 ---|---|---  
-» order_id | string | Order ID  
-» tx_hash | string | Transaction Hash  
-» side | string | Buy or sell orders  
-\- buy  
-\- sell  
-» usdt_amount | string | Amount (USDT)  
-» currency | string | Token  
-» currency_amount | string | Token amount  
-» status | integer(int32) | Order Status  
-\- `0` : All  
-\- `1` : Processing  
-\- `2` : Successful  
-\- `3` : Failed  
-\- `4` : Cancelled  
-\- `5` : Buy order placed but transfer not completed  
-\- `6` : Order cancelled but transfer not completed  
-» gas_mode | string | Trading mode affects slippage selection  
-\- `speed` : Smart mode  
-\- `custom` : Custom mode, uses `slippage` parameter  
-» chain | string | Blockchain  
-» gas_fee | string | Gas Fee (USDT-based)  
-» transaction_fee | string | Trading Fee (USDT-based)  
-» failed_reason | string | Failure reason (if applicable)  
-» create_time | integer(int64) | Creation timestamp  
+» AlphaCurrency | object | none  
+»» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+»» name | string | Display name or symbol, for example USDS; it cannot replace the currency field as the Alpha currency ID.  
+»» chain | string | The main chain corresponding to the coin  
+»» address | string | Contract Address  
+»» amount_precision | integer(int32) | Quantity precision  
+»» precision | integer(int32) | Price precision  
+»» status | integer(int32) | Currency Trading Status  
+\- `1` : Normal trading  
+\- `2` : Suspended trading  
+\- `3` : Delisted  
   
-WARNING
-
-To perform this operation, you must be authenticated by API key and secret
-
-##  Query currency information
+This operation does not require authentication 
 
 Code samples
     
@@ -1376,20 +1421,6 @@ Code samples
     
     
 
-GET `/alpha/currencies`
-
-_Query currency information_
-
-When currency is provided, query and return specified currency information; when currency is not provided, return paginated currency list
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-currency | query | string | Optional | Query currency information by currency symbol  
-limit | query | integer(int32) | Optional | Maximum number of records returned in a single list  
-page | query | integer(int32) | Optional | Page number  
-  
 > Example responses
 
 > 200 Response
@@ -1408,9 +1439,25 @@ page | query | integer(int32) | Optional | Page number
     ]
     
 
-### Responses
+##  Query currency ticker
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
+GET`/alpha/tickers`
+
+GET `/alpha/tickers`
+
+_Query currency ticker_
+
+When currency is provided, returns ticker information for the specified currency. When currency is not provided, returns paginated ticker list
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+currency | query | string | Optional | Alpha currency ID, for example USDS02b5a8dd2f59a098, not the display symbol USDS. First call GET /alpha/currencies without currency, match the token by name, chain and address, and use the returned currency field. Paginate with page and limit.  
+limit | query | integer(int32) | Optional | Maximum number of records returned in a single list  
+page | query | integer(int32) | Optional | Page number  
+  
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1422,21 +1469,14 @@ Status Code **200**
 
 Name | Type | Description  
 ---|---|---  
-» AlphaCurrency | object | none  
-»» currency | string | Currency symbol  
-»» name | string | Currency name  
-»» chain | string | The main chain corresponding to the coin  
-»» address | string | Contract Address  
-»» amount_precision | integer(int32) | Amount scale  
-»» precision | integer(int32) | Price scale  
-»» status | integer(int32) | Currency Trading Status  
-\- `1` : Normal trading  
-\- `2` : Suspended trading  
-\- `3` : Delisted  
+» AlphaTicker | object | none  
+»» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+»» last | string | Last trading price  
+»» change | string | 24h price change percentage (negative for decrease, e.g., -7.45)  
+»» volume | string | 24h Trading Volume (USDT)  
+»» market_cap | string | Current Token Market Cap  
   
 This operation does not require authentication 
-
-##  Query currency ticker
 
 Code samples
     
@@ -1461,20 +1501,6 @@ Code samples
     
     
 
-GET `/alpha/tickers`
-
-_Query currency ticker_
-
-When currency is provided, returns ticker information for the specified currency. When currency is not provided, returns paginated ticker list
-
-### Parameters
-
-ParametersName | In | Type | Required | Description  
----|---|---|---|---  
-currency | query | string | Optional | Query by specified currency name  
-limit | query | integer(int32) | Optional | Maximum number of records returned in a single list  
-page | query | integer(int32) | Optional | Page number  
-  
 > Example responses
 
 > 200 Response
@@ -1491,53 +1517,9 @@ page | query | integer(int32) | Optional | Page number
     ]
     
 
-### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
-ResponsesStatus | Meaning | Description | Schema  
----|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
-  
-### Response Schema
-
-Status Code **200**
-
-Name | Type | Description  
----|---|---  
-» AlphaTicker | object | none  
-»» currency | string | Currency symbol  
-»» last | string | Last trading price  
-»» change | string | 24h price change percentage (negative for decrease, e.g., -7.45)  
-»» volume | string | 24h Trading Volume (USDT)  
-»» market_cap | string | Current Token Market Cap  
-  
-This operation does not require authentication 
-
 ##  Query Token Information
 
-Code samples
-    
-    
-    # coding: utf-8
-    import requests
-    
-    host = "//"
-    prefix = "//"
-    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-    
-    url = '/alpha/tokens'
-    query_param = ''
-    r = requests.request('GET', host + prefix + url, headers=headers)
-    print(r.json())
-    
-    
-    
-    
-    curl -X GET /alpha/tokens \
-      -H 'Accept: application/json'
-    
-    
+GET`/alpha/tokens`
 
 GET `/alpha/tokens`
 
@@ -1606,6 +1588,54 @@ page | query | integer(int32) | Optional | Page number
 \- gatefun  
 \- virtuals
 
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» currency | string | Alpha currency ID, for example USDS02b5a8dd2f59a098; use it as the currency parameter in Alpha APIs, not the display symbol USDS.  
+» name | string | Display name or symbol, for example USDS; it cannot replace the currency field as the Alpha currency ID.  
+» chain | string | The main chain corresponding to the coin  
+» address | string | Contract Address  
+» amount_precision | integer(int32) | Quantity precision  
+» precision | integer(int32) | Price precision  
+» status | integer(int32) | Currency Trading Status  
+\- `1` : Normal trading  
+\- `2` : Suspended trading  
+\- `3` : Delisted  
+  
+This operation does not require authentication 
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "//"
+    prefix = "//"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/alpha/tokens'
+    query_param = ''
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET /alpha/tokens \
+      -H 'Accept: application/json'
+    
+    
+
 > Example responses
 
 > 200 Response
@@ -1623,32 +1653,5 @@ page | query | integer(int32) | Optional | Page number
       }
     ]
     
-
-### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
-ResponsesStatus | Meaning | Description | Schema  
----|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [Inline]  
-  
-### Response Schema
-
-Status Code **200**
-
-Name | Type | Description  
----|---|---  
-» currency | string | Currency symbol  
-» name | string | Currency name  
-» chain | string | The main chain corresponding to the coin  
-» address | string | Contract Address  
-» amount_precision | integer(int32) | Amount scale  
-» precision | integer(int32) | Price scale  
-» status | integer(int32) | Currency Trading Status  
-\- `1` : Normal trading  
-\- `2` : Suspended trading  
-\- `3` : Delisted  
-  
-This operation does not require authentication 
 
 Last Updated: 10/17/2025, 10:29:26 AM

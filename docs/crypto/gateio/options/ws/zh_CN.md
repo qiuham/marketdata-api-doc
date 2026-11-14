@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/options/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:56.244529
+updated_at: 2026-11-13 20:58:38.910166
 ---
 
 # Gate 期权 WebSocket v4.0.0
@@ -1476,7 +1476,7 @@ WARNING
   5. 转储所有满足`u < baseID+1`的推送。如果`baseID+1 < 第一个推送的U`，则表示当前基础订单簿落后于推送。从步骤 3 开始获取更新的基础订单簿。
   6. 如果找到任何满足 U > baseID+1 的后续推送，意味着有一些更新丢失了。从步骤 3 中重新构建本地订单簿。
 
-您可以在以下示例应用程序中找到实现上述方法的示例 [SDK GitHub repository ](https://github.com/gateio/gatews)
+您可以在以下示例应用程序中找到实现上述方法的示例 [SDK GitHub repository ](https://github.com/gate/gatews)
 
 ##  最优买卖价
 
@@ -2586,4 +2586,4 @@ WARNING
     }
     
 
-Last Updated: 5/12/2026, 3:04:47 AM
+Last Updated: 6/10/2026, 4:02:40 AM

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/account
 api_type: Account
-updated_at: 2026-05-27 20:16:46.153964
+updated_at: 2026-11-13 20:57:37.899511
 ---
 
 # Account
@@ -154,6 +154,11 @@ _AccountKeyInfo_
 \- `otc`: otc  
 \- `alpha`: alpha  
 \- `crossx`: 跨所  
+\- `tradfi_spot`: 股票  
+\- `cfd`: CFD  
+\- `cfd_copy`: CFD带单  
+\- `stock_copy`: 股票带单  
+\- `sub_accounts`: 子账号  
 »» read_only | boolean | 该功能是否只读  
 » key | object | API Key 详情  
 »» mode | integer(int32) | 模式： 1 - 经典模式 2 - 旧版统一模式  
@@ -478,10 +483,7 @@ _新建STP用户组_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | StpGroup | 是 |   
-» id | body | integer(int64) | 否 | STP用户组ID  
 » name | body | string | 是 | STP用户组名称  
-» creator_id | body | integer(int64) | 否 | 创建人账户ID  
-» create_time | body | integer(int64) | 否 | 创建时间  
   
 ### 返回
 
@@ -1028,22 +1030,124 @@ WARNING
 
 #  模型
 
+##  AccountDetail
+
+_AccountDetail_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+ip_whitelist | array | false | none | IP 白名单  
+currency_pairs | array | false | none | 交易对白名单  
+user_id | integer(int64) | false | none | 用户ID  
+tier | integer(int64) | false | none | 用户 vip 等级  
+key | object | false | none | API Key 详情  
+» mode | integer(int32) | false | none | 模式： 1 - 经典模式 2 - 旧版统一模式  
+copy_trading_role | integer(int32) | false | none | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
+      
+    
+    {
+      "ip_whitelist": [
+        "string"
+      ],
+      "currency_pairs": [
+        "string"
+      ],
+      "user_id": 0,
+      "tier": 0,
+      "key": {
+        "mode": 0
+      },
+      "copy_trading_role": 0
+    }
+    
+    
+
+##  DebitFee
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+enabled | boolean | true | none | 是否开启GT抵扣  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
 ##  StpGroup
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-id | integer(int64) | false | none | STP用户组ID  
+id | integer(int64) | false | 只读 | STP用户组ID  
 name | string | true | none | STP用户组名称  
-creator_id | integer(int64) | false | none | 创建人账户ID  
-create_time | integer(int64) | false | none | 创建时间  
+creator_id | integer(int64) | false | 只读 | 创建人账户ID  
+create_time | integer(int64) | false | 只读 | 创建时间  
       
     
     {
       "id": 0,
       "name": "string",
       "creator_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  AccountRateLimit
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+tier | string | false | 只读 | 限频等级（详细限频规则查看成交比率限频）  
+ratio | string | false | none | 成交率  
+main_ratio | string | false | 只读 | 主账户合计成交比率  
+updated_at | string | false | 只读 | 更新时间  
+      
+    
+    {
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
+    }
+    
+    
+
+##  AddSTPGroupUsersRequest
+
+###  属性
+
+_无_
+    
+    
+    [
+      0
+    ]
+    
+    
+
+##  StpGroupUser
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | false | none | 用户ID  
+stp_id | integer(int64) | false | 只读 | STP用户组ID  
+create_time | integer(int64) | false | 只读 | 创建时间  
+      
+    
+    {
+      "user_id": 0,
+      "stp_id": 0,
       "create_time": 0
     }
     
@@ -1082,6 +1186,11 @@ perms | array | false | none | none
 \- `otc`: otc  
 \- `alpha`: alpha  
 \- `crossx`: 跨所  
+\- `tradfi_spot`: 股票  
+\- `cfd`: CFD  
+\- `cfd_copy`: CFD带单  
+\- `stock_copy`: 股票带单  
+\- `sub_accounts`: 子账号  
 » read_only | boolean | false | none | 该功能是否只读  
 key | object | false | none | API Key 详情  
 » mode | integer(int32) | false | none | 模式： 1 - 经典模式 2 - 旧版统一模式  
@@ -1114,105 +1223,3 @@ last_access | string | false | 只读 | 最近使用时间
       "updated_at": "string",
       "last_access": "string"
     }
-    
-    
-
-##  AccountDetail
-
-_AccountDetail_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-ip_whitelist | array | false | none | IP 白名单  
-currency_pairs | array | false | none | 交易对白名单  
-user_id | integer(int64) | false | none | 用户ID  
-tier | integer(int64) | false | none | 用户 vip 等级  
-key | object | false | none | API Key 详情  
-» mode | integer(int32) | false | none | 模式： 1 - 经典模式 2 - 旧版统一模式  
-copy_trading_role | integer(int32) | false | none | 用户角色： 0 - 普通用户 1 - 带单者 2 - 跟单者 3 - 带单者与跟单者  
-      
-    
-    {
-      "ip_whitelist": [
-        "string"
-      ],
-      "currency_pairs": [
-        "string"
-      ],
-      "user_id": 0,
-      "tier": 0,
-      "key": {
-        "mode": 0
-      },
-      "copy_trading_role": 0
-    }
-    
-    
-
-##  AccountRateLimit
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-tier | string | false | none | 限频等级（详细限频规则查看成交比率限频）  
-ratio | string | false | none | 成交率  
-main_ratio | string | false | none | 主账户合计成交比率  
-updated_at | string | false | none | 更新时间  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  StpGroupUser
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | false | none | 用户ID  
-stp_id | integer(int64) | false | none | STP用户组ID  
-create_time | integer(int64) | false | none | 创建时间  
-      
-    
-    {
-      "user_id": 0,
-      "stp_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  DebitFee
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-enabled | boolean | true | none | 是否开启GT抵扣  
-      
-    
-    {
-      "enabled": true
-    }
-    
-    
-
-##  AddSTPGroupUsersRequest
-
-###  属性
-
-_无_
-    
-    
-    [
-      0
-    ]

@@ -1,18 +1,19 @@
 ---
 exchange: gateio
-source_url: https://www.gate.com/docs/developers/apiv4/en/tradfi
-api_type: Trading
-updated_at: 2026-05-27 20:16:10.890456
+source_url: https://www.gate.com/docs/developers/apiv4/en/cfd
+api_type: REST
+updated_at: 2026-11-13 20:56:58.334555
 ---
 
-# TradFi
+# CFD
 
-TradFi is a traditional financial trading platform providing forex and CFD trading services based on MT5. The TradFi API offers complete functionality for user management, asset queries, order management, position management, and market data queries.
+CFD is a contracts-for-difference trading business that provides MT5-based forex and CFD trading services. The CFD API provides complete user management, asset query, order management, position management, and market data query capabilities.
 
-  * REST API Base URL for Live Trading: `https://api.gateio.ws/api/v4/`
+  * REST API BaseURL for live trading: `https://api.gateio.ws/api/v4/`
   * [Help Center ](https://www.gate.com/help/tradfi/functional)
-  * [TradFi Trading ](https://www.gate.com/tradfi)
-  * Note: Before using the APIs of this service, ensure the user has activated the TradFi service. Activation can be done by calling the Activate TradFi User Interface or logging into the app to activate.
+  * [CFD Trading ](https://www.gate.com/tradfi)
+  * Before using this business API, make sure the user has enabled CFD business. You can call the create CFD user endpoint or log in to the app to enable it
+  * For lead trading via APIv4, add the request header `x-gate-trader-copy-type: cfd_copy`. This does not apply to CFD user activation or fund transfer endpoints.
 
 ##  Query MT5 account information🔒 Authenticated
 
@@ -23,9 +24,6 @@ GET `/tradfi/users/mt5-account`
 _Query MT5 account information_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -42,8 +40,7 @@ Name | Type | Description
 » message | string | Response message  
 » timestamp | integer(int64) | Server timestamp (milliseconds)  
 » data | object | Response data  
-»» mt5_uid | integer | MT5 userID  
-»» leverage | integer | Position leverage  
+»» leverage | integer | Leverage multiplier  
 »» stop_out_level | string | Liquidation margin ratio  
 »» status | integer | Account status (1=not opened, 2=pending review, 3=active)  
   
@@ -111,7 +108,6 @@ Code samples
     
     {
       "data": {
-        "mt5_uid": 0,
         "leverage": 0,
         "stop_out_level": "",
         "status": 1
@@ -140,9 +136,6 @@ GET `/tradfi/symbols/categories`
 _Query trading symbol categories_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -248,6 +241,134 @@ Code samples
     }
     
 
+##  Query symbol commission rates🔒 Authenticated
+
+GET`/tradfi/symbols/commissions`
+
+GET `/tradfi/symbols/commissions`
+
+_Query symbol commission rates_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+symbols | query | string | Optional | Comma-separated instrument symbols. Provide at least one of symbols and category_code.  
+category_code | query | string | Optional | List of category codes (multiple codes separated by commas). When provided together with symbols, filters symbols by category. At least one of symbol and category_code is required  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | SymbolCommissions  
+400 | [Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1) | Request failed | TradFiError  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» timestamp | integer(int64) | Server timestamp (milliseconds)  
+» data | object | Response data  
+»» list | array | List of symbol commission rates  
+»»» _None_ | object | Symbol commission rate  
+»»»» category_code | string | Category code  
+»»»» symbol | string | Trading symbol code  
+»»»» fee_per_lot | string | Commission rate per lot  
+  
+Status Code **400**
+
+_TradFiError_
+
+Name | Type | Description  
+---|---|---  
+» label | string | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
+» message | string | Return message, returned when request error occurs  
+» timestamp | integer(int64) | Server timestamp (milliseconds)  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/tradfi/symbols/commissions'
+    query_param = ''
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/tradfi/symbols/commissions"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "data": {
+        "list": [
+          {
+            "category_code": "forex",
+            "symbol": "AUDUSD",
+            "fee_per_lot": "6"
+          },
+          {
+            "category_code": "metal",
+            "symbol": "XAUUSD",
+            "fee_per_lot": "6"
+          }
+        ]
+      },
+      "timestamp": 1769426795464
+    }
+    
+
+> 400 Response
+    
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "无效参数",
+      "data": null,
+      "timestamp": 1769835481814
+    }
+    
+
 ##  Query trading symbol list
 
 GET`/tradfi/symbols`
@@ -257,9 +378,6 @@ GET `/tradfi/symbols`
 _Query trading symbol list_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -393,9 +511,6 @@ symbols | query | string | Required | Trading symbol code list (comma-separated,
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | ContractDetail  
@@ -418,7 +533,7 @@ Name | Type | Description
 »»»» settlement_currency | string | Settle currency  
 »»»» max_order_volume | string | Maximum Order Volume  
 »»»» min_order_volume | string | Minimum Order Volume  
-»»»» leverage | string | Position leverage  
+»»»» leverage | string | Leverage multiplier  
 »»»» price_precision | integer | Price precision (decimal places)  
 »»»» price_sl_level | string | Stop Loss Price Level  
 »»»» swap_cost_type | string | Swap Cost Type  
@@ -562,9 +677,6 @@ kline_type | 30d
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | Klines  
@@ -676,9 +788,6 @@ symbol | path | string | Required | Trading symbol code
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | TradFiTicker  
@@ -696,8 +805,8 @@ Name | Type | Description
 » message | string | Return message, returned when request error occurs  
 » timestamp | integer(int64) | Server timestamp (milliseconds)  
 » data | object | Response data  
-»» highest_price | string | Highest price  
-»» lowest_price | string | Lowest price  
+»» highest_price | string | High price  
+»» lowest_price | string | Low price  
 »» price_change | string | Price change percentage (multiplied by 100)  
 »» price_change_amount | string | Price change amount  
 »» today_open_price | string | Today's open price  
@@ -787,18 +896,15 @@ Code samples
     }
     
 
-##  Create TradFi user🔒 Authenticated
+##  Create CFD user🔒 Authenticated
 
 POST`/tradfi/users`
 
 POST `/tradfi/users`
 
-_Create TradFi user_
+_Create CFD user_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Account opened successfully
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -814,8 +920,7 @@ Name | Type | Description
 » timestamp | integer(int64) | Server timestamp (milliseconds)  
 » data | object | none  
 »» status | integer | Status (1=not opened, 2=pending review, 3=opened)  
-»» leverage | integer | leverage  
-»» mt5_uid | string | mt5uid  
+»» leverage | integer | Leverage  
   
 Status Code **400**
 
@@ -882,8 +987,7 @@ Code samples
     {
       "data": {
         "leverage": 1,
-        "status": 3,
-        "mt5_uid": "1"
+        "status": 3
       },
       "timestamp": 1769398039786
     }
@@ -912,9 +1016,6 @@ Query account assets
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | UserAssetResp  
@@ -934,7 +1035,6 @@ Name | Type | Description
 »» margin | string | Used margin  
 »» margin_free | string | Available Margin  
 »» unrealized_pnl | string | Unrealized PNL  
-»» mt5_uid | string | MT5 userID  
   
 Status Code **400**
 
@@ -1006,8 +1106,7 @@ Code samples
         "balance": "0.00",
         "margin": "0.00",
         "margin_free": "0.00",
-        "unrealized_pnl": "0.00",
-        "mt5_uid": "10122"
+        "unrealized_pnl": "0.00"
       }
     }
     
@@ -1052,9 +1151,6 @@ type | fill_negative
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | TransactionList  
@@ -1073,7 +1169,7 @@ Name | Type | Description
 »»» asset | string | Asset Type  
 »»» type | string | Trading Type  
 »»» type_desc | string | Transaction Type Description  
-»»» change | string | Change Quantity  
+»»» change | string | Change amount  
 »»» balance | string | Current Balance  
 »»» time | integer(int64) | Occurrence Time (Second-level Timestamp)  
 »» timestamp | integer(int64) | Server timestamp (milliseconds)  
@@ -1187,22 +1283,22 @@ Code samples
     }
     
 
-##  Fund Deposit and Withdrawal🔒 Authenticated
+##  Fund transfer🔒 Authenticated
 
 POST`/tradfi/transactions`
 
 POST `/tradfi/transactions`
 
-_Fund Deposit and Withdrawal_
+_Fund transfer_
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiTransactionRequest | Required | none  
-↳ asset | body | string | Required | Asset type, e.g., USDT, currently only USDT is supported  
-↳ change | body | string | Required | Change Quantity, supports up to two decimal places  
-↳ type | body | string | Required | Transaction Type (deposit - transfer in, withdraw - transfer out)  
+» asset | body | string | Required | Asset type, e.g., USDT, currently only USDT is supported  
+» change | body | string | Required | Change Quantity, supports up to two decimal places  
+» type | body | string | Required | Transaction Type (deposit - transfer in, withdraw - transfer out)  
   
 ####  Enumerated Values
 
@@ -1212,9 +1308,6 @@ Enumerated ValuesParameter | Value
 » type | withdraw  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1351,9 +1444,6 @@ _Query active order list_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | OrderList  
@@ -1369,15 +1459,15 @@ Name | Type | Description
 » data | object | Response data  
 »» list | array | Order list  
 »»» _None_ | object | Order detail  
-»»»» order_id | integer | Order ID  
+»»»» order_id | integer(int64) | Order ID  
 »»»» symbol | string | Currency pair  
-»»»» symbol_desc | string | Trading symbol description  
+»»»» symbol_desc | string | Symbol description  
 »»»» price_type | string | Trade type (market=market price, trigger=trigger price)  
 »»»» state | integer | Order status code  
 »»»» state_desc | string | Order status description  
 »»»» finished | integer | Is completed (0=shown in active order list, 1=not shown in active list)  
-»»»» side | integer | Order side (1=sell, 2=buy)  
-»»»» volume | string | Order volume  
+»»»» side | integer | Side (1=sell, 2=buy)  
+»»»» volume | string | Order quantity  
 »»»» price | string | Trigger price  
 »»»» price_tp | string | Take profit price  
 »»»» price_sl | string | Stop loss price  
@@ -1506,26 +1596,27 @@ Code samples
     }
     
 
-##  Create an order🔒 Authenticated
+##  Create order🔒 Authenticated
 
 POST`/tradfi/orders`
 
 POST `/tradfi/orders`
 
-_Create an order_
+_Create order_
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiOrderRequest | Required | none  
-↳ price | body | string | Required | Order price  
-↳ price_type | body | string | Required | Price type (trigger=trigger price, market=market price)  
-↳ side | body | integer | Required | Order side (1=sell, 2=buy)  
-↳ symbol | body | string | Required | Trading symbol code  
-↳ volume | body | string | Required | Order volume  
-↳ price_tp | body | string | Optional | Take profit price (optional)  
-↳ price_sl | body | string | Optional | Stop loss price (optional)  
+» price | body | string | Required | Order price  
+» price_type | body | string | Required | Price type (trigger=trigger price, market=market price)  
+» side | body | integer | Required | Side (1=sell, 2=buy)  
+» symbol | body | string | Required | Base trading symbol code  
+» volume | body | string | Required | Order quantity  
+» price_tp | body | string | Optional | Take profit price (optional)  
+» price_sl | body | string | Optional | Stop loss price (optional)  
+» leverage | body | integer | Optional | Leverage multiplier (must be one of the leverage multipliers allowed for the symbol in the trading symbol details response)  
   
 ####  Enumerated Values
 
@@ -1537,9 +1628,6 @@ Enumerated ValuesParameter | Value
 » side | 2  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Order placed successfully
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1554,7 +1642,7 @@ Name | Type | Description
 ---|---|---  
 » timestamp | integer(int64) | Server timestamp (milliseconds)  
 » data | object | Order result  
-»» id | string | Queue Task ID (not task ID)  
+»» id | string | Queue Task ID (not order ID)  
   
 Status Code **400**
 
@@ -1585,7 +1673,7 @@ Code samples
     
     url = '/tradfi/orders'
     query_param = ''
-    body='{"price":"0.9","price_type":"trigger","side":2,"symbol":"EURUSD","volume":"10","price_tp":"1.5","price_sl":"0.8"}'
+    body='{"price":"0.9","price_type":"trigger","side":2,"symbol":"EURUSD","volume":"10","price_tp":"1.5","price_sl":"0.8","leverage":500}'
     # for `gen_sign` implementation, refer to section `Authentication` above
     sign_headers = gen_sign('POST', prefix + url, query_param, body)
     headers.update(sign_headers)
@@ -1602,7 +1690,7 @@ Code samples
     method="POST"
     url="/tradfi/orders"
     query_param=""
-    body_param='{"price":"0.9","price_type":"trigger","side":2,"symbol":"EURUSD","volume":"10","price_tp":"1.5","price_sl":"0.8"}'
+    body_param='{"price":"0.9","price_type":"trigger","side":2,"symbol":"EURUSD","volume":"10","price_tp":"1.5","price_sl":"0.8","leverage":500}'
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
@@ -1624,7 +1712,8 @@ Code samples
       "symbol": "EURUSD",
       "volume": "10",
       "price_tp": "1.5",
-      "price_sl": "0.8"
+      "price_sl": "0.8",
+      "leverage": 500
     }
     
 
@@ -1665,18 +1754,18 @@ _Modify order_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | TradFiOrderUpdateRequest | Required | none  
-↳ price | body | string | Required | Price  
+» price | body | string | Required | Price  
 Description:  
 \- Required  
-↳ price_tp | body | string|null | Optional | Take Profit Price  
+» price_tp | body | string|null | Optional | Take Profit Price  
 Description:  
 \- If not provided or set to "0": The original take profit price will be cleared  
 \- If you do not want to clear it, pass the original take profit price returned by the interface  
-↳ price_sl | body | string|null | Optional | Stop Loss Price  
+» price_sl | body | string|null | Optional | Stop Loss Price  
 Description:  
 \- If not provided or set to "0": The original stop loss price will be cleared  
 \- If you do not want to clear it, pass the original stop loss price returned by the interface  
-order_id | path | integer | Required | Order ID  
+order_id | path | integer(int64) | Required | Order ID  
   
 ####  Detailed descriptions
 
@@ -1696,9 +1785,6 @@ Description:
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | UpdateOrder  
@@ -1714,10 +1800,10 @@ Name | Type | Description
 ---|---|---  
 » timestamp | integer(int64) | Server timestamp (milliseconds)  
 » data | object | Response data  
-»» order_id | integer | Order ID  
+»» order_id | integer(int64) | Order ID  
 »» symbol | string | Currency pair  
 »» state | string | Order status code  
-»» volume | string | Order volume  
+»» volume | string | Order quantity  
 »» price | string | Current price  
 »» price_tp | string | Current take profit price  
 »» price_sl | string | Current stop loss price  
@@ -1832,12 +1918,9 @@ _Cancel order_
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-order_id | path | integer | Required | Order ID  
+order_id | path | integer(int64) | Required | Order ID  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Deleted successfully
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1944,7 +2027,7 @@ ParametersName | In | Type | Required | Description
 begin_time | query | integer(int64) | Optional | Start time (Unix timestamp in seconds), earliest query is one month ago  
 end_time | query | integer(int64) | Optional | End time (Unix timestamp in seconds)  
 symbol | query | string | Optional | Currency pair  
-side | query | integer | Optional | Order side (1=sell, 2=buy)  
+side | query | integer | Optional | Side (1=sell, 2=buy)  
   
 ####  Enumerated Values
 
@@ -1954,9 +2037,6 @@ side | 1
 side | 2  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1973,15 +2053,15 @@ Name | Type | Description
 » data | object | Response data  
 »» list | array | Historical order list  
 »»» _None_ | object | Order detail  
-»»»» order_id | integer | Order ID  
+»»»» order_id | integer(int64) | Order ID  
 »»»» symbol | string | Currency pair  
-»»»» symbol_desc | string | Trading symbol description  
+»»»» symbol_desc | string | Symbol description  
 »»»» price_type | string | Trade type (market=market price, trigger=trigger price)  
 »»»» order_opt_type | integer | Order operation type (1=sell, 2=buy, 3=close long, 4=close short, 5=force close long, 6=force close short)  
 »»»» state | integer | Order status code  
 »»»» state_desc | string | Order status description  
-»»»» side | integer | Order side (1=sell, 2=buy)  
-»»»» volume | string | Order volume  
+»»»» side | integer | Side (1=sell, 2=buy)  
+»»»» volume | string | Order quantity  
 »»»» fill_volume | string | Trading size  
 »»»» close_pnl | string | Close Position P&L  
 »»»» price | string | Average fill price  
@@ -2106,6 +2186,141 @@ Code samples
     }
     
 
+##  Get order details by log ID🔒 Authenticated
+
+GET`/tradfi/orders/log/{log_id}`
+
+GET `/tradfi/orders/log/{log_id}`
+
+_Get order details by log ID_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+log_id | path | integer(int64) | Required | log_id returned from the order placement API  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Request success | OrderLog  
+400 | [Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1) | Request failed | TradFiError  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» timestamp | integer(int64) | Server timestamp (milliseconds)  
+» data | object | Response data  
+»» order_id | integer(int64) | Order ID  
+»» log_id | integer(int64) | logID  
+»» symbol | string | Trading pair of the order  
+»» price_type | string | Trade type (market=market price, trigger=trigger price)  
+»» state | integer | Order status code (1=placed, 2=canceled, 3=partially filled, 4=filled, 5=rejected)  
+»» side | integer | Side (1=sell, 2=buy)  
+»» volume | string | Order quantity  
+»» price | string | Average fill price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+side | 1  
+side | 2  
+  
+Status Code **400**
+
+_TradFiError_
+
+Name | Type | Description  
+---|---|---  
+» label | string | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
+» message | string | Return message, returned when request error occurs  
+» timestamp | integer(int64) | Server timestamp (milliseconds)  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/tradfi/orders/log/1223'
+    query_param = ''
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/tradfi/orders/log/1223"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "timestamp": 1715769600000,
+      "data": {
+        "order_id": 13950884,
+        "log_id": 1214290,
+        "symbol": "AUDUSD",
+        "price_type": "market",
+        "state": 4,
+        "side": 2,
+        "volume": "0.01",
+        "price": "0.72221"
+      }
+    }
+    
+
+> 400 Response
+    
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "无效参数",
+      "data": null,
+      "timestamp": 1769835481814
+    }
+    
+
 ##  Query active position list🔒 Authenticated
 
 GET`/tradfi/positions`
@@ -2115,9 +2330,6 @@ GET `/tradfi/positions`
 _Query active position list_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2136,7 +2348,7 @@ Name | Type | Description
 » data | object | Response data  
 »» list | array | Position information  
 »»» _None_ | object | Position information  
-»»»» position_id | integer | Position ID  
+»»»» position_id | integer(int64) | Position ID  
 »»»» symbol | string | Trading market code  
 »»»» symbol_desc | string | Market description  
 »»»» margin | string | Used margin  
@@ -2255,15 +2467,30 @@ _Modify position_
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-position_id | path | integer | Required | Position ID  
+position_id | path | integer(int64) | Required | Position ID  
 body | body | TradFiPositionUpdateRequest | Required | none  
-↳ price_tp | body | string|null | Optional | Take profit price  
-↳ price_sl | body | string|null | Optional | Stop loss price  
+» price_tp | body | string|null | Optional | Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface  
+» price_sl | body | string|null | Optional | Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface  
   
-### Responses
+####  Detailed descriptions
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
+**» price_tp** : Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface
+
+**» price_sl** : Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface
+
+### Responses
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2380,11 +2607,29 @@ _Close position_
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
-position_id | path | integer | Required | Position ID  
+position_id | path | integer(int64) | Required | Position ID  
 body | body | TradFiClosePositionRequest | Required | none  
-↳ close_type | body | integer | Required | Close Position Type  
-↳ close_volume | body | string|null | Optional | Close volume  
+» close_type | body | integer | Required | Close Type  
+Description:  
+\- 1: Partial Close (close_volume is required)  
+\- 2: Full Close (close_volume is not required)  
+» close_volume | body | string|null | Optional | Close Volume  
+Description:  
+\- Required when close_type = 1  
+\- Ignored when close_type = 2  
   
+####  Detailed descriptions
+
+**» close_type** : Close Type  
+Description:  
+\- 1: Partial Close (close_volume is required)  
+\- 2: Full Close (close_volume is not required)
+
+**» close_volume** : Close Volume  
+Description:  
+\- Required when close_type = 1  
+\- Ignored when close_type = 2
+
 ####  Enumerated Values
 
 Enumerated ValuesParameter | Value  
@@ -2393,9 +2638,6 @@ Enumerated ValuesParameter | Value
 » close_type | 2  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2514,7 +2756,7 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 page | query | integer(int64) | Optional | Page number; defaults to 1 if omitted.  
 page_size | query | integer(int64) | Optional | Page size; defaults to 10 if omitted. Maximum 100.  
-begin_time | query | integer(int64) | Optional | Start Time (Unix Timestamp, seconds). The earliest queryable time is one month ago  
+begin_time | query | integer(int64) | Optional | Start time as a Unix timestamp in seconds. The earliest supported start time is one month ago.  
 end_time | query | integer(int64) | Optional | End time (timestamp in seconds)  
 symbol | query | string | Optional | Trading symbol (e.g., EURUSD)  
 position_dir | query | string | Optional | Position direction (Long=long position, Short=short position)  
@@ -2527,9 +2769,6 @@ position_dir | Long
 position_dir | Short  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request success
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Request failed
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2569,7 +2808,7 @@ Name | Type | Description
 \- 2: Forced Liquidation  
 »»»» close_detail | object|null | Liquidation details (null for normal close)  
 »»»»» margin_level | string | Margin ratio (multiplied by 100)  
-»»»»» margin | string | Position margin  
+»»»»» margin | string | Margin  
 »»»»» equity | string | Net equity  
 »»»»» stop_out_level | string | Liquidation ratio (multiplied by 100)  
 »»»» realized_pnl_detail | object | Realized P&L details  
@@ -2715,6 +2954,157 @@ Code samples
 
 #  Schemas
 
+##  TransactionList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+data | object | Optional | none | none  
+» total | integer | Optional | none | Total Records  
+» total_page | integer | Optional | none | Total pages  
+» list | array | Optional | none | Record List  
+»» asset | string | Optional | none | Asset Type  
+»» type | string | Optional | none | Trading Type  
+»» type_desc | string | Optional | none | Transaction Type Description  
+»» change | string | Optional | none | Change amount  
+»» balance | string | Optional | none | Current Balance  
+»» time | integer(int64) | Optional | none | Occurrence Time (Second-level Timestamp)  
+» timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | deposit-转入  
+type | withdraw-转出  
+type | dividend-分红结息  
+type | fill_negative-填平负余额  
+      
+    
+    {
+      "data": {
+        "total": 2,
+        "total_page": 1,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 1769332996590
+    }
+    
+    
+
+##  TradFiOrderRequest
+
+_Place order request parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+price | string | Required | none | Order price  
+price_type | string | Required | none | Price type (trigger=trigger price, market=market price)  
+side | integer | Required | none | Side (1=sell, 2=buy)  
+symbol | string | Required | none | Base trading symbol code  
+volume | string | Required | none | Order quantity  
+price_tp | string | Optional | none | Take profit price (optional)  
+price_sl | string | Optional | none | Stop loss price (optional)  
+leverage | integer | Optional | none | Leverage multiplier (must be one of the leverage multipliers allowed for the symbol in the trading symbol details response)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | trigger  
+price_type | market  
+side | 1  
+side | 2  
+      
+    
+    {
+      "price": "0.9",
+      "price_type": "trigger",
+      "side": 2,
+      "symbol": "EURUSD",
+      "volume": "10",
+      "price_tp": "1.5",
+      "price_sl": "0.8",
+      "leverage": 500
+    }
+    
+    
+
+##  Klines
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Kline data list  
+»» _None_ | object | Optional | none | Single kline data  
+»»» o | string | Optional | none | Open price  
+»»» c | string | Optional | none | Close price  
+»»» h | string | Optional | none | High price  
+»»» l | string | Optional | none | Low price  
+»»» t | integer(int64) | Optional | none | Timestamp (Unix seconds)  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  CreateOrder
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Order result  
+» id | string | Optional | none | Queue Task ID (not order ID)  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "id": "117"
+      }
+    }
+    
+    
+
+##  CreateUserResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+» status | integer | Optional | none | Status (1=not opened, 2=pending review, 3=opened)  
+» leverage | integer | Optional | none | Leverage  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "status": 0,
+        "leverage": 0
+      }
+    }
+    
+    
+
 ##  OrderList
 
 ###  Properties
@@ -2723,21 +3113,21 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
 data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Order list  
-↳ None | object | Optional | none | Order detail  
-↳ order_id | integer | Optional | none | Order ID  
-↳ symbol | string | Optional | none | Currency pair  
-↳ symbol_desc | string | Optional | none | Trading symbol description  
-↳ price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
-↳ state | integer | Optional | none | Order status code  
-↳ state_desc | string | Optional | none | Order status description  
-↳ finished | integer | Optional | none | Is completed (0=shown in active order list, 1=not shown in active list)  
-↳ side | integer | Optional | none | Order side (1=sell, 2=buy)  
-↳ volume | string | Optional | none | Order volume  
-↳ price | string | Optional | none | Trigger price  
-↳ price_tp | string | Optional | none | Take profit price  
-↳ price_sl | string | Optional | none | Stop loss price  
-↳ time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
+» list | array | Optional | none | Order list  
+»» _None_ | object | Optional | none | Order detail  
+»»» order_id | integer(int64) | Optional | none | Order ID  
+»»» symbol | string | Optional | none | Currency pair  
+»»» symbol_desc | string | Optional | none | Symbol description  
+»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+»»» state | integer | Optional | none | Order status code  
+»»» state_desc | string | Optional | none | Order status description  
+»»» finished | integer | Optional | none | Is completed (0=shown in active order list, 1=not shown in active list)  
+»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
+»»» volume | string | Optional | none | Order quantity  
+»»» price | string | Optional | none | Trigger price  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
   
 ####  Enumerated Values
 
@@ -2762,7 +3152,7 @@ side | 2
     
     
 
-##  Klines
+##  Symbols
 
 ###  Properties
 
@@ -2770,13 +3160,20 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
 data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Kline data list  
-↳ None | object | Optional | none | Single kline data  
-↳ o | string | Optional | none | Open price  
-↳ c | string | Optional | none | Close price  
-↳ h | string | Optional | none | High price  
-↳ l | string | Optional | none | Low price  
-↳ t | integer(int64) | Optional | none | Timestamp (Unix seconds)  
+» list | array | Optional | none | Trading symbol list  
+»» _None_ | object | Optional | none | Trading symbol information  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» symbol_desc | string | Optional | none | Trading symbol description  
+»»» category_id | integer | Optional | none | Category ID  
+»»» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
+»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
+»»» icon_link | string | Optional | none | Symbol icon URL  
+»»» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
+»»» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
+»»» next_open_time | integer(int64) | Optional | none | Next open time (Unix timestamp in seconds, 0 means none)  
+»»» settlement_currency | string | Optional | none | Settlement currency  
+»»» settlement_currency_symbol | string | Optional | none | Settlement currency symbol  
+»»» price_precision | integer | Optional | none | Price precision (decimal places)  
       
     
     {
@@ -2790,6 +3187,179 @@ data | object | Optional | none | Response data
     
     
 
+##  TradFiClosePositionRequest
+
+_Close position request parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+close_type | integer | Required | none | Close Type  
+Description:  
+\- 1: Partial Close (close_volume is required)  
+\- 2: Full Close (close_volume is not required)  
+close_volume | string|null | Optional | none | Close Volume  
+Description:  
+\- Required when close_type = 1  
+\- Ignored when close_type = 2  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+close_type | 1  
+close_type | 2  
+      
+    
+    {
+      "close_type": 1,
+      "close_volume": "1"
+    }
+    
+    
+
+##  OrderLog
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» order_id | integer(int64) | Optional | none | Order ID  
+» log_id | integer(int64) | Optional | none | logID  
+» symbol | string | Optional | none | Trading pair of the order  
+» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+» state | integer | Optional | none | Order status code (1=placed, 2=canceled, 3=partially filled, 4=filled, 5=rejected)  
+» side | integer | Optional | none | Side (1=sell, 2=buy)  
+» volume | string | Optional | none | Order quantity  
+» price | string | Optional | none | Average fill price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+side | 1  
+side | 2  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "order_id": 2648991,
+        "log_id": 87699,
+        "symbol": "USDCAD",
+        "price_type": "market",
+        "state": 4,
+        "side": 2,
+        "volume": "0.05",
+        "price": "1.3689"
+      }
+    }
+    
+    
+
+##  Categories
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Data  
+» list | array | Optional | none | none  
+»» _None_ | object | Optional | none | Category information  
+»»» category_id | integer | Optional | none | Category ID  
+»»» is_favorite | boolean | Optional | none | Whether it is a custom category, generally no need to pay attention  
+»»» category_name | string | Optional | none | Category name  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  UpdatePosition
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  UserAssetResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» equity | string | Optional | none | Account equity  
+» margin_level | string | Optional | none | Margin level (percentage)  
+» balance | string | Optional | none | Account Balance  
+» margin | string | Optional | none | Used margin  
+» margin_free | string | Optional | none | Available Margin  
+» unrealized_pnl | string | Optional | none | Unrealized PNL  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "equity": "0.00",
+        "margin_level": "0.00",
+        "balance": "0.00",
+        "margin": "0.00",
+        "margin_free": "0.00",
+        "unrealized_pnl": "0.00"
+      }
+    }
+    
+    
+
+##  TradFiPositionUpdateRequest
+
+_Modify position take profit/stop loss parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+price_tp | string|null | Optional | none | Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface  
+price_sl | string|null | Optional | none | Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface  
+      
+    
+    {
+      "price_tp": "1",
+      "price_sl": "1"
+    }
+    
+    
+
 ##  PositionHistoryList
 
 ###  Properties
@@ -2798,38 +3368,38 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
 data | object | Optional | none | Response data  
-↳ total | integer | Optional | none | Total amount  
-↳ total_page | integer | Optional | none | Total pages  
-↳ list | array | Optional | none | Query historical position list  
-↳ None | object | Optional | none | Position close history  
-↳ position_id | integer(int64) | Required | none | Position ID  
-↳ symbol | string | Required | none | Market / Trading symbol  
-↳ realized_pnl | string | Required | none | Realized PnL  
-↳ realized_pnl_rate | string | Optional | none | Realized return rate  
-↳ volume | string | Required | none | Position size / Maximum position size  
-↳ volume_closed | string | Required | none | Close volume  
-↳ price_open | string | Required | none | Average Opening Price  
-↳ position_dir | string | Required | none | Position Direction  
+» total | integer | Optional | none | Total amount  
+» total_page | integer | Optional | none | Total pages  
+» list | array | Optional | none | Query historical position list  
+»» _None_ | object | Optional | none | Position close history  
+»»» position_id | integer(int64) | Required | none | Position ID  
+»»» symbol | string | Required | none | Market / Trading symbol  
+»»» realized_pnl | string | Required | none | Realized PnL  
+»»» realized_pnl_rate | string | Optional | none | Realized return rate  
+»»» volume | string | Required | none | Position size / Maximum position size  
+»»» volume_closed | string | Required | none | Close volume  
+»»» price_open | string | Required | none | Average Opening Price  
+»»» position_dir | string | Required | none | Position Direction  
 \- Long: Long Position  
 \- Short: Short Position  
-↳ price_tp | string | Optional | none | Take profit price  
-↳ price_sl | string | Optional | none | Stop loss price  
-↳ counterparty_price | string | Optional | none | Counterparty price  
-↳ close_price | string | Required | none | Close price  
-↳ time_create | string | Required | none | Open time (timestamp in seconds)  
-↳ time_close | string | Required | none | Close time (timestamp in seconds)  
-↳ position_status | string | Required | none | Position Status  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» counterparty_price | string | Optional | none | Counterparty price  
+»»» close_price | string | Required | none | Close price  
+»»» time_create | string | Required | none | Open time (timestamp in seconds)  
+»»» time_close | string | Required | none | Close time (timestamp in seconds)  
+»»» position_status | string | Required | none | Position Status  
 \- 1: Fully Closed  
 \- 2: Forced Liquidation  
-↳ close_detail | object|null | Optional | none | Liquidation details (null for normal close)  
-↳ margin_level | string | Optional | none | Margin ratio (multiplied by 100)  
-↳ margin | string | Optional | none | Position margin  
-↳ equity | string | Optional | none | Net equity  
-↳ stop_out_level | string | Optional | none | Liquidation ratio (multiplied by 100)  
-↳ realized_pnl_detail | object | Required | none | Realized P&L details  
-↳ closed_pnl | string | Optional | none | Close Position P&L  
-↳ swap | string | Optional | none | Swap fee  
-↳ fee | string | Optional | none | fee  
+»»» close_detail | object|null | Optional | none | Liquidation details (null for normal close)  
+»»»» margin_level | string | Optional | none | Margin ratio (multiplied by 100)  
+»»»» margin | string | Optional | none | Margin  
+»»»» equity | string | Optional | none | Net equity  
+»»»» stop_out_level | string | Optional | none | Liquidation ratio (multiplied by 100)  
+»»» realized_pnl_detail | object | Required | none | Realized P&L details  
+»»»» closed_pnl | string | Optional | none | Close Position P&L  
+»»»» swap | string | Optional | none | Swap fee  
+»»»» fee | string | Optional | none | fee  
   
 ####  Enumerated Values
 
@@ -2844,106 +3414,6 @@ position_dir | Short
       "data": {
         "total": 0,
         "total_page": 0,
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  Categories
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Data  
-↳ list | array | Optional | none | none  
-↳ None | object | Optional | none | Category information  
-↳ category_id | integer | Optional | none | Category ID  
-↳ is_favorite | boolean | Optional | none | Whether it is a custom category, generally no need to pay attention  
-↳ category_name | string | Optional | none | Category name  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  UpdateOrder
-
-_Order modification result_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ order_id | integer | Optional | none | Order ID  
-↳ symbol | string | Optional | none | Currency pair  
-↳ state | string | Optional | none | Order status code  
-↳ volume | string | Optional | none | Order volume  
-↳ price | string | Optional | none | Current price  
-↳ price_tp | string | Optional | none | Current take profit price  
-↳ price_sl | string | Optional | none | Current stop loss price  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "order_id": 2630591,
-        "symbol": "USDCHF",
-        "state": 1,
-        "volume": "1.6",
-        "price": "5.000000",
-        "price_tp": "5.200000",
-        "price_sl": "4.800000"
-      }
-    }
-    
-    
-
-##  ContractDetail
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Contract Details List  
-↳ None | object | Optional | none | Futures contract details  
-↳ symbol | string | Optional | none | Trading symbol code  
-↳ symbol_desc | string | Optional | none | Trading symbol description  
-↳ category_name | string | Optional | none | Category name  
-↳ contract_volume | string | Optional | none | Contract Volume  
-↳ settlement_currency | string | Optional | none | Settle currency  
-↳ max_order_volume | string | Optional | none | Maximum Order Volume  
-↳ min_order_volume | string | Optional | none | Minimum Order Volume  
-↳ leverage | string | Optional | none | Position leverage  
-↳ price_precision | integer | Optional | none | Price precision (decimal places)  
-↳ price_sl_level | string | Optional | none | Stop Loss Price Level  
-↳ swap_cost_type | string | Optional | none | Swap Cost Type  
-↳ buy_swap_cost_rate | string | Optional | none | Buy Swap Cost Rate  
-↳ sell_swap_cost_rate | string | Optional | none | Sell Swap Cost Rate  
-↳ swap_cost_3day | string | Optional | none | 3-Day Swap Cost  
-↳ trade_timezone | string | Optional | none | Trading Timezone  
-↳ trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
-↳ icon_link | string | Optional | none | Symbol icon URL  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
         "list": [
           {}
         ]
@@ -2980,188 +3450,6 @@ type | withdraw
     
     
 
-##  Symbols
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Trading symbol list  
-↳ None | object | Optional | none | Trading symbol information  
-↳ symbol | string | Optional | none | Trading symbol code  
-↳ symbol_desc | string | Optional | none | Trading symbol description  
-↳ category_id | integer | Optional | none | Category ID  
-↳ status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
-↳ trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
-↳ icon_link | string | Optional | none | Symbol icon URL  
-↳ close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
-↳ open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
-↳ next_open_time | integer(int64) | Optional | none | Next open time (Unix timestamp in seconds, 0 means none)  
-↳ settlement_currency | string | Optional | none | Settlement currency  
-↳ settlement_currency_symbol | string | Optional | none | Settlement currency symbol  
-↳ price_precision | integer | Optional | none | Price precision (decimal places)  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  CreateUserResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-↳ status | integer | Optional | none | Status (1=not opened, 2=pending review, 3=opened)  
-↳ leverage | integer | Optional | none | leverage  
-↳ mt5_uid | string | Optional | none | mt5uid  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "status": 0,
-        "leverage": 0,
-        "mt5_uid": "string"
-      }
-    }
-    
-    
-
-##  TradFiOrderUpdateRequest
-
-_Modify order price and take profit/stop loss parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-price | string | Required | none | Price  
-Description:  
-\- Required  
-price_tp | string|null | Optional | none | Take Profit Price  
-Description:  
-\- If not provided or set to "0": The original take profit price will be cleared  
-\- If you do not want to clear it, pass the original take profit price returned by the interface  
-price_sl | string|null | Optional | none | Stop Loss Price  
-Description:  
-\- If not provided or set to "0": The original stop loss price will be cleared  
-\- If you do not want to clear it, pass the original stop loss price returned by the interface  
-      
-    
-    {
-      "price": "2",
-      "price_tp": "1.5",
-      "price_sl": "0.8"
-    }
-    
-    
-
-##  UpdatePosition
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
-    }
-    
-    
-
-##  TransactionList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-data | object | Optional | none | none  
-↳ total | integer | Optional | none | Total Records  
-↳ total_page | integer | Optional | none | Total pages  
-↳ list | array | Optional | none | Record List  
-↳ asset | string | Optional | none | Asset Type  
-↳ type | string | Optional | none | Trading Type  
-↳ type_desc | string | Optional | none | Transaction Type Description  
-↳ change | string | Optional | none | Change Quantity  
-↳ balance | string | Optional | none | Current Balance  
-↳ time | integer(int64) | Optional | none | Occurrence Time (Second-level Timestamp)  
-↳ timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | deposit-转入  
-type | withdraw-转出  
-type | dividend-分红结息  
-type | fill_negative-填平负余额  
-      
-    
-    {
-      "data": {
-        "total": 2,
-        "total_page": 1,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 1769332996590
-    }
-    
-    
-
-##  TradFiPositionUpdateRequest
-
-_Modify position take profit/stop loss parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-price_tp | string|null | Optional | none | Take profit price  
-price_sl | string|null | Optional | none | Stop loss price  
-      
-    
-    {
-      "price_tp": "1",
-      "price_sl": "1"
-    }
-    
-    
-
-##  DeletePosition
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
-    }
-    
-    
-
 ##  Mt5Account
 
 ###  Properties
@@ -3172,10 +3460,9 @@ code | integer | Optional | none | Business Status Code; Non-zero Indicates Busi
 message | string | Optional | none | Response message  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
 data | object | Optional | none | Response data  
-↳ mt5_uid | integer | Optional | none | MT5 userID  
-↳ leverage | integer | Optional | none | Position leverage  
-↳ stop_out_level | string | Optional | none | Liquidation margin ratio  
-↳ status | integer | Optional | none | Account status (1=not opened, 2=pending review, 3=active)  
+» leverage | integer | Optional | none | Leverage multiplier  
+» stop_out_level | string | Optional | none | Liquidation margin ratio  
+» status | integer | Optional | none | Account status (1=not opened, 2=pending review, 3=active)  
       
     
     {
@@ -3183,214 +3470,9 @@ data | object | Optional | none | Response data
       "message": "ok",
       "timestamp": 0,
       "data": {
-        "mt5_uid": 0,
         "leverage": 100,
         "stop_out_level": "50%",
         "status": 1
-      }
-    }
-    
-    
-
-##  PositionList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-label | string | Optional | none | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
-message | string | Optional | none | Return message, returned when request error occurs  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Position information  
-↳ None | object | Optional | none | Position information  
-↳ position_id | integer | Optional | none | Position ID  
-↳ symbol | string | Optional | none | Trading market code  
-↳ symbol_desc | string | Optional | none | Market description  
-↳ margin | string | Optional | none | Used margin  
-↳ unrealized_pnl | string | Optional | none | Unrealized PNL  
-↳ unrealized_pnl_rate | string | Optional | none | Unrealized return rate  
-↳ volume | string | Optional | none | Position size  
-↳ price_open | string | Optional | none | Average Opening Price  
-↳ position_dir | string | Optional | none | Position direction (Long=long position, Short=short position)  
-      
-    
-    {
-      "label": "INVALID_ARGUMENT",
-      "message": "无效参数",
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  CreateTransaction
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
-    }
-    
-    
-
-##  TradFiOrderRequest
-
-_Place order request parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-price | string | Required | none | Order price  
-price_type | string | Required | none | Price type (trigger=trigger price, market=market price)  
-side | integer | Required | none | Order side (1=sell, 2=buy)  
-symbol | string | Required | none | Trading symbol code  
-volume | string | Required | none | Order volume  
-price_tp | string | Optional | none | Take profit price (optional)  
-price_sl | string | Optional | none | Stop loss price (optional)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | trigger  
-price_type | market  
-side | 1  
-side | 2  
-      
-    
-    {
-      "price": "0.9",
-      "price_type": "trigger",
-      "side": 2,
-      "symbol": "EURUSD",
-      "volume": "10",
-      "price_tp": "1.5",
-      "price_sl": "0.8"
-    }
-    
-    
-
-##  TradFiClosePositionRequest
-
-_Close position request parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-close_type | integer | Required | none | Close Position Type  
-close_volume | string|null | Optional | none | Close volume  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-close_type | 1  
-close_type | 2  
-      
-    
-    {
-      "close_type": 1,
-      "close_volume": "1"
-    }
-    
-    
-
-##  OrderHistoryList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ list | array | Optional | none | Historical order list  
-↳ None | object | Optional | none | Order detail  
-↳ order_id | integer | Optional | none | Order ID  
-↳ symbol | string | Optional | none | Currency pair  
-↳ symbol_desc | string | Optional | none | Trading symbol description  
-↳ price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
-↳ order_opt_type | integer | Optional | none | Order operation type (1=sell, 2=buy, 3=close long, 4=close short, 5=force close long, 6=force close short)  
-↳ state | integer | Optional | none | Order status code  
-↳ state_desc | string | Optional | none | Order status description  
-↳ side | integer | Optional | none | Order side (1=sell, 2=buy)  
-↳ volume | string | Optional | none | Order volume  
-↳ fill_volume | string | Optional | none | Trading size  
-↳ close_pnl | string | Optional | none | Close Position P&L  
-↳ price | string | Optional | none | Average fill price  
-↳ trigger_price | string | Optional | none | Trigger price  
-↳ price_tp | string | Optional | none | Take profit price  
-↳ price_sl | string | Optional | none | Stop loss price  
-↳ time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
-↳ time_done | integer(int64) | Optional | none | End time (Unix timestamp in seconds)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | market  
-price_type | trigger  
-order_opt_type | 1  
-order_opt_type | 2  
-order_opt_type | 3  
-order_opt_type | 4  
-order_opt_type | 5  
-order_opt_type | 6  
-side | 1  
-side | 2  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  UserAssetResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-↳ equity | string | Optional | none | Account equity  
-↳ margin_level | string | Optional | none | Margin level (percentage)  
-↳ balance | string | Optional | none | Account Balance  
-↳ margin | string | Optional | none | Used margin  
-↳ margin_free | string | Optional | none | Available Margin  
-↳ unrealized_pnl | string | Optional | none | Unrealized PNL  
-↳ mt5_uid | string | Optional | none | MT5 userID  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "equity": "0.00",
-        "margin_level": "0.00",
-        "balance": "0.00",
-        "margin": "0.00",
-        "margin_free": "0.00",
-        "unrealized_pnl": "0.00",
-        "mt5_uid": "10122"
       }
     }
     
@@ -3429,22 +3511,22 @@ label | string | Optional | none | Business status code, non-empty indicates req
 message | string | Optional | none | Return message, returned when request error occurs  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
 data | object | Optional | none | Response data  
-↳ highest_price | string | Optional | none | Highest price  
-↳ lowest_price | string | Optional | none | Lowest price  
-↳ price_change | string | Optional | none | Price change percentage (multiplied by 100)  
-↳ price_change_amount | string | Optional | none | Price change amount  
-↳ today_open_price | string | Optional | none | Today's open price  
-↳ last_today_close_price | string | Optional | none | Previous close price  
-↳ last_price | string | Optional | none | Last trading price  
-↳ bid_price | string | Optional | none | Bid price  
-↳ ask_price | string | Optional | none | Ask price  
-↳ favorite | boolean | Optional | none | Is favorited  
-↳ status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
-↳ close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
-↳ open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
-↳ next_open_time | integer(int64) | Optional | none | Next open time (0 means none)  
-↳ trade_mode | string | Optional | none | Trading mode code  
-↳ category_name | string | Optional | none | Category name  
+» highest_price | string | Optional | none | High price  
+» lowest_price | string | Optional | none | Low price  
+» price_change | string | Optional | none | Price change percentage (multiplied by 100)  
+» price_change_amount | string | Optional | none | Price change amount  
+» today_open_price | string | Optional | none | Today's open price  
+» last_today_close_price | string | Optional | none | Previous close price  
+» last_price | string | Optional | none | Last trading price  
+» bid_price | string | Optional | none | Bid price  
+» ask_price | string | Optional | none | Ask price  
+» favorite | boolean | Optional | none | Is favorited  
+» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
+» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
+» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
+» next_open_time | integer(int64) | Optional | none | Next open time (0 means none)  
+» trade_mode | string | Optional | none | Trading mode code  
+» category_name | string | Optional | none | Category name  
       
     
     {
@@ -3473,20 +3555,254 @@ data | object | Optional | none | Response data
     
     
 
-##  CreateOrder
+##  UpdateOrder
+
+_Order modification result_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Order result  
-↳ id | string | Optional | none | Queue Task ID (not task ID)  
+data | object | Optional | none | Response data  
+» order_id | integer(int64) | Required | none | Order ID  
+» symbol | string | Required | none | Currency pair  
+» state | string | Required | none | Order status code  
+» volume | string | Required | none | Order quantity  
+» price | string | Required | none | Current price  
+» price_tp | string | Required | none | Current take profit price  
+» price_sl | string | Required | none | Current stop loss price  
       
     
     {
       "timestamp": 0,
       "data": {
-        "id": "117"
+        "order_id": 2630591,
+        "symbol": "USDCHF",
+        "state": 1,
+        "volume": "1.6",
+        "price": "5.000000",
+        "price_tp": "5.200000",
+        "price_sl": "4.800000"
+      }
+    }
+    
+    
+
+##  TradFiOrderUpdateRequest
+
+_Modify order price and take profit/stop loss parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+price | string | Required | none | Price  
+Description:  
+\- Required  
+price_tp | string|null | Optional | none | Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface  
+price_sl | string|null | Optional | none | Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface  
+      
+    
+    {
+      "price": "2",
+      "price_tp": "1.5",
+      "price_sl": "0.8"
+    }
+    
+    
+
+##  ContractDetail
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Contract Details List  
+»» _None_ | object | Optional | none | Futures contract details  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» symbol_desc | string | Optional | none | Trading symbol description  
+»»» category_name | string | Optional | none | Category name  
+»»» contract_volume | string | Optional | none | Contract Volume  
+»»» settlement_currency | string | Optional | none | Settle currency  
+»»» max_order_volume | string | Optional | none | Maximum Order Volume  
+»»» min_order_volume | string | Optional | none | Minimum Order Volume  
+»»» leverage | string | Optional | none | Leverage multiplier  
+»»» price_precision | integer | Optional | none | Price precision (decimal places)  
+»»» price_sl_level | string | Optional | none | Stop Loss Price Level  
+»»» swap_cost_type | string | Optional | none | Swap Cost Type  
+»»» buy_swap_cost_rate | string | Optional | none | Buy Swap Cost Rate  
+»»» sell_swap_cost_rate | string | Optional | none | Sell Swap Cost Rate  
+»»» swap_cost_3day | string | Optional | none | 3-Day Swap Cost  
+»»» trade_timezone | string | Optional | none | Trading Timezone  
+»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
+»»» icon_link | string | Optional | none | Symbol icon URL  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  DeletePosition
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  CreateTransaction
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  PositionList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+label | string | Optional | none | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
+message | string | Optional | none | Return message, returned when request error occurs  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Position information  
+»» _None_ | object | Optional | none | Position information  
+»»» position_id | integer(int64) | Optional | none | Position ID  
+»»» symbol | string | Optional | none | Trading market code  
+»»» symbol_desc | string | Optional | none | Market description  
+»»» margin | string | Optional | none | Used margin  
+»»» unrealized_pnl | string | Optional | none | Unrealized PNL  
+»»» unrealized_pnl_rate | string | Optional | none | Unrealized return rate  
+»»» volume | string | Optional | none | Position size  
+»»» price_open | string | Optional | none | Average Opening Price  
+»»» position_dir | string | Optional | none | Position direction (Long=long position, Short=short position)  
+      
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "无效参数",
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  SymbolCommissions
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | List of symbol commission rates  
+»» _None_ | object | Optional | none | Symbol commission rate  
+»»» category_code | string | Optional | none | Category code  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» fee_per_lot | string | Optional | none | Commission rate per lot  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  OrderHistoryList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Historical order list  
+»» _None_ | object | Optional | none | Order detail  
+»»» order_id | integer(int64) | Optional | none | Order ID  
+»»» symbol | string | Optional | none | Currency pair  
+»»» symbol_desc | string | Optional | none | Symbol description  
+»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+»»» order_opt_type | integer | Optional | none | Order operation type (1=sell, 2=buy, 3=close long, 4=close short, 5=force close long, 6=force close short)  
+»»» state | integer | Optional | none | Order status code  
+»»» state_desc | string | Optional | none | Order status description  
+»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
+»»» volume | string | Optional | none | Order quantity  
+»»» fill_volume | string | Optional | none | Trading size  
+»»» close_pnl | string | Optional | none | Close Position P&L  
+»»» price | string | Optional | none | Average fill price  
+»»» trigger_price | string | Optional | none | Trigger price  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
+»»» time_done | integer(int64) | Optional | none | End time (Unix timestamp in seconds)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+order_opt_type | 1  
+order_opt_type | 2  
+order_opt_type | 3  
+order_opt_type | 4  
+order_opt_type | 5  
+order_opt_type | 6  
+side | 1  
+side | 2  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
       }
     }

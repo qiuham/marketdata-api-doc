@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/futures/ws/en
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:43.562604
+updated_at: 2026-11-13 20:58:32.283290
 ---
 
 # Gate Futures WebSocket v4.0.0
@@ -13,13 +13,13 @@ updated_at: 2026-05-27 20:18:43.562604
 v4.0.0 · Stable
 
 
-Gate provides a simple and robust Websocket API to integrate Gate BTC/USDT futures contract trade status into your business or application.
+Gate provides a simple and robust WebSocket API to integrate trading data from Gate's BTC-, USDT-, and USD1-settled futures contracts into your business or application.
 
 We have language bindings in `Python` and `Golang` , more in the future! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
 ##  Server URL
 
-We provide BTC/USDT futures contract trade server urls, you can choose one of them according to your condition.
+We provide BTC-, USDT-, and USD1-settled futures contract trade server URLs. You can choose one according to your condition.
 
 ###  BTC Contract
 
@@ -36,6 +36,13 @@ Base URLs:
   * Real Trading SBE: `wss://fx-ws.gateio.ws/v4/ws/usdt/sbe`
   * TestNet: `wss://ws-testnet.gate.com/v4/ws/futures/usdt`
 
+###  USD1 Contract
+
+Base URLs:
+
+  * Real Trading: `wss://fx-ws.gateio.ws/v4/ws/usd1`
+  * Contract example: `BTC_USD1`
+
 TIP
 
 We recommend using SBE for faster market data and lower bandwidth usage.
@@ -45,6 +52,31 @@ WARNING
 If you use old server urls(`wss://fx-ws.gateio.ws/v4/ws` or `wss://fx-ws-testnet.gateio.ws/v4/ws`), we will use BTC contract for you.
 
 ##  Changelog
+
+2026-10-22
+
+  * Clarified the purpose of `futures.adl_warning`, the meanings of its three market-level risk states, and their relationship to individual positions and actual ADL events.
+
+2026-10-16
+
+  * Added `futures.orders_v2` for live trading and TestNet, available only to UTA3.0 users of the USDT-settled futures API WebSocket. The JSON channel pushes order creation, fill, amendment, and cancellation updates with Order Management System (OMS) and Matching Engine (ME) millisecond timestamps, without clearing information.
+
+2026-10-14
+
+  * Added public channels `futures.rpi_order_book` and `futures.rpi_obu` to push RPI full order book snapshots
+
+2026-08-25
+
+  * Added the public `futures.adl_warning` channel for market-level ADL risk warnings
+
+2026-08-20
+
+  * Added channel `futures.contract_info` to push contract precision information (quanto multiplier, order price precision, mark price precision) and risk limit tier changes
+  * Channel `futures.public_liquidates` is changed to aggregated push: multiple liquidate orders of the same contract within one aggregation period are merged into an array and pushed in a batch, instead of dropping other liquidate orders within the period
+
+2026-08-19
+
+  * Added USD1-settled futures WebSocket support at `wss://fx-ws.gateio.ws/v4/ws/usd1`; use the lowercase `usd1` value for `settle`
 
 2026-04-14
 
@@ -667,9 +699,11 @@ Channel | Description
 ---|---  
 `futures.trades` | Public trades  
 `futures.order_book` | Order book (depth)  
+`futures.rpi_order_book` | RPI order book (depth)  
 `futures.order_book_update` | Order book incremental updates  
 `futures.book_ticker` | Best bid/offer (BBO)  
 `futures.obu` | Order book updates (OBU)  
+`futures.rpi_obu` | RPI order book updates (OBU)  
 `futures.candlesticks` | Candlesticks  
 `futures.tickers` | Tickers  
 `futures.usertrades` | User trades  
@@ -791,7 +825,13 @@ The above command returns JSON structured like this:
 
 When the service is about to shut down for an upgrade, it will push a system notification to connected clients. Clients should reconnect as soon as possible after receiving it.
 
-**Server push format (SystemNotifyDTO):**
+**Channel:** `futures.system`
+
+**Event:** `update`
+
+Clients can identify a service upgrade notification when `channel` is `futures.system`, `event` is `update`, and `result.type` is `upgrade`.
+
+**`result` format (SystemNotifyDTO):**
 
 Field | Type | Description  
 ---|---|---  
@@ -803,8 +843,14 @@ Field | Type | Description
     
     
     {
-      "type": "upgrade",
-      "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      "time": 1782378978,
+      "time_ms": 1782378978107,
+      "channel": "futures.system",
+      "event": "update",
+      "result": {
+        "type": "upgrade",
+        "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      }
     }
     
 
@@ -933,6 +979,11 @@ field | type | description
 `volume_24h_base` | String | Trade volume in recent 24h, in base currency  
 `low_24h` | String | Lowest trading price in recent 24h  
 `high_24h` | String | Highest trading price in recent 24h  
+`change_from` | String | Change calculation window, e.g. `24h`  
+`change_price` | String | Price change amount  
+`price_type` | String | Price type: `last`, `mark`, or `index`  
+`t` | Integer | Ticker generation timestamp in milliseconds  
+`event_type` | String | `snapshot` on first push after connect; omitted on live updates  
 
     
     
@@ -946,11 +997,13 @@ field | type | description
           "contract": "BTC_USDT",
           "last": "118.4",
           "change_percentage": "0.77",
+          "change_from": "24h",
+          "change_price": "0.91",
           "funding_rate": "-0.000114",
           "funding_rate_indicative": "0.01875",
           "mark_price": "118.35",
           "index_price": "118.36",
-          "total_size": "73648",
+          "total_size": "73648.5",
           "volume_24h": "745487577",
           "volume_24h_btc": "117",
           "volume_24h_usd": "419950",
@@ -959,7 +1012,9 @@ field | type | description
           "volume_24h_settle": "178",
           "volume_24h_base": "5526",
           "low_24h": "99.2",
-          "high_24h": "132.5"
+          "high_24h": "132.5",
+          "price_type": "last",
+          "t": 1541659086123
         }
       ]
     }
@@ -1186,7 +1241,29 @@ Positive size means taker is buyer，negative seller
       "time_ms": 1541503698123,
       "result": [
         {
-          "size": "-108",
+          "size": "-108.5",
+          "id": 27753479,
+          "create_time": 1545136464,
+          "create_time_ms": 1545136464123,
+          "price": "96.4",
+          "contract": "BTC_USDT",
+          "is_internal": true
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `size` is integer (fractional size truncated toward zero):
+    
+    
+    {
+      "channel": "futures.trades",
+      "event": "update",
+      "time": 1541503698,
+      "time_ms": 1541503698123,
+      "result": [
+        {
+          "size": -108,
           "id": 27753479,
           "create_time": 1545136464,
           "create_time_ms": 1545136464123,
@@ -1280,11 +1357,15 @@ The above command returns JSON structured like this:
 
 **The order_book channel allow you to keep track of the state of the Gate order book depth. It is provided on a price aggregated basis, with customizable precision.**
 
-There are three different order book channels for subscription:
+Order book channels for subscription are:
 
   * `futures.order_book`
 
 Legacy channel, which uses `all` to push full limited-level order book, and `update` to send every order book change event.
+
+  * `futures.rpi_order_book`
+
+Public RPI channel. It uses `all` to push a limited-level order book snapshot. Price accuracy only supports `0`.
 
   * `futures.book_ticker`
 
@@ -1441,21 +1522,21 @@ field | type | description
         "asks": [
           {
             "p": "97.1",
-            "s": "2245"
+            "s": "2245.5"
           },
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "97.0",
+            "s": "1200"
           }
         ],
         "bids": [
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "96.9",
+            "s": "3100.2"
           },
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "96.8",
+            "s": "0"
           }
         ],
         "l": "20"
@@ -1662,9 +1743,29 @@ field | type | description
         "u": 2517661076,
         "s": "BTC_USDT",
         "b": "54696.6",
-        "B": "37000",
+        "B": "37000.5",
         "a": "54696.7",
-        "A": "47061"
+        "A": "47061.2"
+      }
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `B` and `A` are integers:
+    
+    
+    {
+      "time": 1615366379,
+      "time_ms": 1615366379123,
+      "channel": "futures.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1615366379123,
+        "u": 2517661076,
+        "s": "BTC_USDT",
+        "b": "54696.6",
+        "B": 37000,
+        "a": "54696.7",
+        "A": 47061
       }
     }
     
@@ -1882,7 +1983,7 @@ field | type | description
           },
           {
             "p": "54664.5",
-            "s": "58794"
+            "s": "58794.5"
           }
         ],
         "a": [
@@ -1892,8 +1993,34 @@ field | type | description
           },
           {
             "p": "54742",
-            "s": "95"
+            "s": "95.2"
           }
+        ],
+        "l": "100"
+      }
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, level `s` is integer:
+    
+    
+    {
+      "time": 1615366381,
+      "time_ms": 1615366381123,
+      "channel": "futures.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1615366381417,
+        "s": "BTC_USDT",
+        "U": 2517661101,
+        "u": 2517661113,
+        "b": [
+          {"p": "54672.1", "s": 0},
+          {"p": "54664.5", "s": 58794}
+        ],
+        "a": [
+          {"p": "54743.6", "s": 0},
+          {"p": "54742", "s": 95}
         ],
         "l": "100"
       }
@@ -1978,9 +2105,228 @@ The above command returns JSON structured like this:
     }
     
 
+#  RPI Order Book API
+
+`futures.rpi_order_book`
+
+Pushes a full snapshot of the RPI order book. This is a public channel.
+
+The subscription payload and notification fields match `futures.order_book`. Price accuracy only supports `"0"`. Notifications use `event` `all`.
+
+SBE reuses the `orderBook` template (templateId=`4`). The `channel` field in the frame is `futures.rpi_order_book`.
+
+##  RPI order book subscription
+
+Subscribe`to the RPI order book.`
+
+Subscribe `to the RPI order book.`
+
+###  Request
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`subscribe`
+
+  * params
+
+RequestName | Type | Required | Description  
+---|---|---|---  
+`contract` | String | Optional | Contract name  
+`limit` | String | Optional | Depth level: 100, 50, 20, 10, 5  
+`interval` | String | Optional | Price accuracy. Only `"0"` is supported  
+  
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "subscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"subscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The command above returns JSON structured like this:
+    
+    
+    {
+      "time": 1545405058,
+      "time_ms": 1545405058123,
+      "channel": "futures.rpi_order_book",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  RPI order book notification
+
+**RPI full order book notification**
+
+###  Notification parameters
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`all`
+
+  * params
+
+Notification parametersName | Type | Description  
+---|---|---  
+`result` | object | Order book  
+»`t` | Integer | Order book generation timestamp in milliseconds  
+»`contract` | String | Contract name  
+»`id` | Integer | Order book ID  
+»`asks` | Array | Ask levels  
+»»`p` | String | Price  
+»»`s` | String | Size  
+»`bids` | Array | Bid levels  
+»»`p` | String | Price  
+»»`s` | String | Size  
+»`l` | String | Depth level. For example, `20` means 20 levels  
+      
+    
+    {
+      "channel": "futures.rpi_order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "result": {
+        "t": 1541500161123,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+##  RPI order book unsubscription
+
+Unsubscribe`from the RPI order book of a contract.`
+
+Unsubscribe `from the RPI order book of a contract.`
+
+###  Request
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`unsubscribe`
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"unsubscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  Order Book V2 API
 
 **Provide a faster method for retrieving depth information**
+
+`futures.obu` and `futures.rpi_obu` both use these rules to maintain a local order book. See RPI Order Book V2 for `futures.rpi_obu`.
 
 ##  Maintain local depth
 
@@ -2258,6 +2604,239 @@ The above command returns JSON structured like this:
     }
     
 
+#  RPI Order Book V2 API
+
+`futures.rpi_obu`
+
+Pushes full snapshots and incremental updates of the RPI order book. This is a public channel.
+
+The message structure and the rules for maintaining a local order book are the same as Order Book V2. The stream name prefix is `rpi_ob.`.
+
+SBE reuses the `obu` template (templateId=`3`). The `channel` field in the frame is `futures.rpi_obu`.
+
+##  RPI order book V2 subscription
+
+###  Request
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload` is a list of stream names. Format: `rpi_ob.{symbol}.{level}`, for example `rpi_ob.BTC_USDT.400` and `rpi_ob.BTC_USDT.50`.
+
+`level` is `400` or `50`. Update frequency: 100ms for 400 levels, 20ms for 50 levels.
+
+The first notification after a successful subscription is a full snapshot (`full=true`). Later notifications are incremental. A connection can subscribe to the same stream only once.
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The command above returns JSON structured like this:
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482384,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.rpi_obu",
+      "event": "subscribe",
+      "payload": [
+        "rpi_ob.BTC_USDT.400"
+      ],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  RPI order book V2 notification
+
+**RPI order book V2 notification**
+
+###  Notification parameters
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`update`
+
+  * params
+
+Notification parametersName | Type | Description  
+---|---|---  
+`result` | Object | Changed asks and bids since the last update  
+»`t` | Integer | Order book generation timestamp in milliseconds  
+»`full` | Boolean | `true` means a full snapshot. Incremental updates omit this field  
+»`s` | String | Stream name, for example `rpi_ob.BTC_USDT.400`  
+»`U` | Integer | First order book update ID in this notification  
+»`u` | Integer | Last order book update ID in this notification  
+»`b` | `Array[OrderBookArray]` | Bid updates since the last notification  
+»» OrderBookArray | `Array[String]` | [Price, Amount] pair. Remove the price when Amount is `0`  
+»`a` | `Array[OrderBookArray]` | Ask updates since the last notification  
+»» OrderBookArray | `Array[String]` | [Price, Amount] pair. Remove the price when Amount is `0`  
+  
+Full snapshot:
+    
+    
+    {
+    	"channel": "futures.rpi_obu",
+    	"result": {
+    		"t": 1743673026995,
+    		"full": true,
+    		"s": "rpi_ob.BTC_USDT.400",
+    		"u": 79072179673,
+    		"b": [
+    			["83705.9", "30166"]
+    		],
+    		"a": [
+    			["83706", "4208"]
+    		]
+    	},
+    	"time_ms": 1743673026999
+    }
+    
+
+Incremental update:
+    
+    
+    {
+    	"channel": "futures.rpi_obu",
+    	"result": {
+    		"t": 1743673027017,
+    		"s": "rpi_ob.BTC_USDT.400",
+    		"U": 79072179674,
+    		"u": 79072179694,
+    		"b": [
+    			["83702.2", "62"],
+    			["83702.1", "0"]
+    		]
+    	},
+    	"time_ms": 1743673027020
+    }
+    
+
+##  RPI order book V2 unsubscription
+
+Unsubscribe`from the RPI order book V2 stream of a contract.`
+
+Unsubscribe `from the RPI order book V2 stream of a contract.`
+
+###  Request
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`unsubscribe`
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  Candlesticks API
 
 **Provides a way to access charting candlestick info.**
@@ -2385,7 +2964,7 @@ field | type | description
       "result": [
         {
           "t": 1545129300,
-          "v": "27525555",
+          "v": "27525555.5",
           "c": "95.4",
           "h": "96.9",
           "l": "89.5",
@@ -2396,7 +2975,7 @@ field | type | description
         },
         {
           "t": 1545129300,
-          "v": "27525555",
+          "v": "27525556",
           "c": "95.4",
           "h": "96.9",
           "l": "89.5",
@@ -2404,6 +2983,30 @@ field | type | description
           "n": "1m_BTC_USDT",
           "a": "314732.87412",
           "w": true
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `v` is integer:
+    
+    
+    {
+      "time": 1542162490,
+      "time_ms": 1542162490123,
+      "channel": "futures.candlesticks",
+      "event": "update",
+      "result": [
+        {
+          "t": 1545129300,
+          "v": 27525555,
+          "c": "95.4",
+          "h": "96.9",
+          "l": "89.5",
+          "o": "94.3",
+          "n": "1m_BTC_USDT",
+          "a": "314732.87412",
+          "w": false
         }
       ]
     }
@@ -2489,7 +3092,7 @@ The above command returns JSON structured like this:
 
 #  public liquidates order API
 
-**Provide a way to receive Gate liquidate order information, and each contract can push up to one liquidate order data every 1 second**
+**Provide a way to receive Gate liquidate order information. Liquidate orders of the same contract generated within one aggregation period (1 second by default) are aggregated and pushed in a batch as an array; when the number of buffered liquidate orders of a single contract reaches the limit (20 by default), they will be pushed immediately ahead of the period**
 
 ##  public liquidate order subscription
 
@@ -2608,12 +3211,12 @@ The above command returns JSON structured like this:
 
 name | type | describe  
 ---|---|---  
-`result` | Array | Array of objects  
+`result` | Array | all liquidate orders of the same contract within one aggregation period, may contain multiple records  
 parameter | type | description  
 ---|---|---  
 `price` | Float | order price  
 `size` | string/Integer | liquidate order quantity  
-`time_ms` | Integer | time_in_milliseconds  
+`time` | Integer | liquidation time in milliseconds  
 `contract` | string | contract  
 
     
@@ -2625,10 +3228,41 @@ parameter | type | description
         "time_ms": 1541505434123,
         "result": [
             {
-            "price": 215.1,
-            "size": "-124",
-            "time_ms": 1541486601123,
-            "contract": "BTC_USDT",
+            "price": "215.1",
+            "size": "-124.5",
+            "time": 1541486601123,
+            "contract": "BTC_USDT"
+            },
+            {
+            "price": "215.2",
+            "size": "-10.5",
+            "time": 1541486601456,
+            "contract": "BTC_USDT"
+            }
+        ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
+    
+    
+    {
+        "channel": "futures.public_liquidates",
+        "event": "update",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": [
+            {
+            "price": "215.1",
+            "size": -124,
+            "time": 1541486601123,
+            "contract": "BTC_USDT"
+            },
+            {
+            "price": "215.2",
+            "size": -10,
+            "time": 1541486601456,
+            "contract": "BTC_USDT"
             }
         ]
     }
@@ -2720,6 +3354,292 @@ The above command returns the JSON structure as follows：
         "time": 1545459681,
         "time_ms": 1545459681123,
         "channel": "futures.public_liquidates",
+        "event": "unsubscribe",
+        "result": {
+        "status": "success"
+        }
+    }
+    
+
+#  Contract Info API
+
+**The contract_info channel allows you to receive updates of contract precision information (quanto multiplier, order price precision, mark price precision) and risk limit tiers**
+
+##  Contract info subscription
+
+Subscribe`to contract info push`
+
+If you want to subscribe to contract info push in all contracts, use `!all` in the subscription request list
+
+Subscribe `to contract info push`
+
+###  request parameters
+
+  * channel
+
+`futures.contract_info`
+
+  * event `subscribe`
+
+  * params
+
+name | type | required | describe  
+---|---|---|---  
+`contract` | String | Optional | contract list  
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "subscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The above command returns JSON structured like this:
+    
+    
+    {
+        "time": 1545459681,
+        "time_ms": 1545459681123,
+        "channel": "futures.contract_info",
+        "event": "subscribe",
+        "result": {
+        "status": "success"
+        }
+    }
+    
+
+##  Contract info notification
+
+After a successful subscription, if the server already has a cached snapshot of the contract, a full message with `event` set to `all` will be pushed immediately. Afterwards, when the contract precision information or risk limit tiers change, a message with `event` set to `update` will be pushed. When only precision information changes, the `update` message may not carry the `risk_limit_tiers` field.
+
+**Push contract info updates**
+
+###  Notify params
+
+  * channel
+
+`futures.contract_info`
+
+  * event
+
+`all` / `update`
+
+  * params
+
+name | type | describe  
+---|---|---  
+`result` | Object | contract info object. When event is `all` it is the current snapshot; when `update`, the latest info  
+name | type | description  
+---|---|---  
+`contract` | String | contract name  
+`quanto_multiplier` | String | quanto multiplier  
+`order_price_round` | String | order price precision  
+`mark_price_round` | String | mark price precision  
+`risk_limit_tiers` | Array | risk limit tier list, may be absent when only precision changes  
+  
+`risk_limit_tiers` fields:
+
+name | type | description  
+---|---|---  
+`tier` | Integer | tier level  
+`risk_limit` | String | risk limit  
+`initial_rate` | String | initial margin rate  
+`maintenance_rate` | String | maintenance margin rate  
+`leverage_max` | String | maximum leverage  
+`contract` | String | contract name  
+`deduction` | String | maintenance margin deduction  
+
+First push after subscription (event=all):
+    
+    
+    {
+        "channel": "futures.contract_info",
+        "event": "all",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": {
+            "contract": "BTC_USDT",
+            "quanto_multiplier": "0.0001",
+            "order_price_round": "0.1",
+            "mark_price_round": "0.01",
+            "risk_limit_tiers": [
+                {
+                    "tier": 1,
+                    "risk_limit": "1000000",
+                    "initial_rate": "0.01",
+                    "maintenance_rate": "0.005",
+                    "leverage_max": "100",
+                    "contract": "BTC_USDT",
+                    "deduction": "0"
+                }
+            ]
+        }
+    }
+    
+
+Contract info update push (event=update):
+    
+    
+    {
+        "channel": "futures.contract_info",
+        "event": "update",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": {
+            "contract": "BTC_USDT",
+            "quanto_multiplier": "0.0001",
+            "order_price_round": "0.5",
+            "mark_price_round": "0.01"
+        }
+    }
+    
+
+##  Cancel subscription
+
+Unsubscribe`contract info updates`
+
+Unsubscribe `contract info updates`
+
+###  params
+
+  * channel
+
+`futures.contract_info`
+
+  * event
+
+`unsubscribe`
+
+Code example
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The above command returns the JSON structure as follows：
+    
+    
+    {
+        "time": 1545459681,
+        "time_ms": 1545459681123,
+        "channel": "futures.contract_info",
         "event": "unsubscribe",
         "result": {
         "status": "success"
@@ -2984,6 +3904,206 @@ The above command returns JSON structured like this:
     }
     
 
+#  ADL Risk Warning API
+
+**The public`futures.adl_warning` channel provides market-level ADL risk warning updates.**
+
+This channel does not require authentication and supports JSON connections only.
+
+Market-level auto-deleveraging (ADL) risk warnings help users understand changes in the risk of ADL occurring in a contract market. The platform determines the risk state based on the insurance fund's positions in that market and the corresponding market limits. Only the resulting state is provided; the underlying thresholds and calculation formulas are not disclosed.
+
+Users receive notifications only after establishing a WebSocket connection and subscribing to the relevant channel or contracts. Users who have not subscribed or have disconnected do not receive notifications.
+
+###  Status description
+
+Status descriptionStatus | Description  
+---|---  
+`normal` | The probability of ADL occurring in this market is low. However, sudden, significant market volatility may generate a large volume of liquidation orders and trigger ADL.  
+`warning` | The probability of ADL occurring in this market is high. The insurance fund has limited remaining capacity to absorb liquidation orders, and new liquidations in this market are likely to be handled through ADL.  
+`adl_risk` | The market is in a state where the insurance fund can no longer absorb liquidation orders. Any new liquidations must therefore be handled through ADL. This status does not, by itself, indicate that ADL has already occurred.  
+  
+###  Additional notes
+
+  1. `normal`, `warning`, and `adl_risk` are market-level risk states. They do not determine whether an individual user's position will or will not be subject to ADL.
+  2. `adl_risk` does not mean that ADL has already occurred, nor does it mean that all users will be affected.
+  3. These states are provided solely to help users understand changes in market risk and do not constitute trading advice.
+  4. Users are solely responsible for the trading outcomes of any actions taken based on these states, including reducing or increasing positions, canceling orders, or adjusting trading strategies.
+  5. To query historical liquidation orders, refer to [Query Liquidation Order History ](https://www.gate.com/docs/developers/apiv4/en/futures/#query-liquidation-order-history).
+
+##  ADL risk warning subscription
+
+###  Request
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+`subscribe`
+
+  * params
+
+parameter | type | required | description  
+---|---|---|---  
+`contract` | String | Yes | Contract name. Multiple contracts can be provided, or use `!all` as the only value to subscribe to all contracts  
+
+The payload must not be empty. `!all` cannot be combined with a contract name, and every specified contract must exist for the settlement currency of the connection. Repeated contract names are ignored.
+
+If a matching contract is already in `warning` or `adl_risk`, its initial `event=all` snapshot is sent before the subscription response.
+
+Subscribe to one or more contracts:
+    
+    
+    {
+      "time": 1781234567,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"]
+    }
+    
+
+Subscribe to all contracts for the settlement currency of the connection:
+    
+    
+    {
+      "time": 1781234567,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["!all"]
+    }
+    
+
+If all matching contracts are currently `normal`, the server returns only the subscription response:
+    
+    
+    {
+      "time": 1781234567,
+      "time_ms": 1781234567123,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  ADL risk warning notification
+
+###  Notify
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+`all` for the initial risk snapshot, or `update` for subsequent notifications
+
+  * params
+
+field | type | description  
+---|---|---  
+`contract` | String | Contract name  
+`settle` | String | Settlement currency in lowercase, such as `btc`, `usdt`, or `usd1`  
+`state` | String | Market-level ADL risk state: `normal`, `warning`, or `adl_risk`. See Status description  
+`update_time` | Integer | Time when the risk state was calculated, in Unix milliseconds  
+
+`warning` and `adl_risk` states are pushed once per second while they remain active. A transition back to `normal` is pushed once and is not repeated. Contracts that are `normal` when first subscribed do not produce an initial snapshot.
+
+Initial risk snapshot after subscription:
+    
+    
+    {
+      "time": 1781234567,
+      "time_ms": 1781234567123,
+      "channel": "futures.adl_warning",
+      "event": "all",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "warning",
+        "update_time": 1781234567000
+      }
+    }
+    
+
+Risk update:
+    
+    
+    {
+      "time": 1781234568,
+      "time_ms": 1781234568123,
+      "channel": "futures.adl_warning",
+      "event": "update",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "adl_risk",
+        "update_time": 1781234567000
+      }
+    }
+    
+
+Recovery update:
+    
+    
+    {
+      "time": 1781234578,
+      "time_ms": 1781234578123,
+      "channel": "futures.adl_warning",
+      "event": "update",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "normal",
+        "update_time": 1781234577000
+      }
+    }
+    
+
+##  Cancel ADL risk warning subscription
+
+###  Request
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+`unsubscribe`
+
+  * params
+
+Use the same payload rules as subscription. Use `["!all"]` to cancel an all-contract subscription.
+
+    
+    
+    {
+      "time": 1781234579,
+      "channel": "futures.adl_warning",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"]
+    }
+    
+
+The server returns:
+    
+    
+    {
+      "time": 1781234579,
+      "time_ms": 1781234579123,
+      "channel": "futures.adl_warning",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
 #  Orders API
 
 **Provides a way to receive user closed orders.**
@@ -3131,7 +4251,7 @@ field | type | description
 ---|---|---  
 `create_time` | Integer | Creation time of order(deprecated)  
 `create_time_ms` | Integer | Creation timestamp in milliseconds of order  
-`fill_price` | Float | Fill price of the order  
+`fill_price` | String | Fill price of the order  
 `finish_as` | String | How the order was finished:  
   
 \- filled: all filled  
@@ -3154,7 +4274,7 @@ field | type | description
 \- open: waiting to be traded  
 \- finished: finished  
 `tkfr` | Float | Taker fee  
-`price` | Float | Order price. 0 for market order with tif set as ioc  
+`price` | String | Order price. 0 for market order with tif set as ioc  
 `refu` | Integer | Reference user ID  
 `refr` | Float |   
 `size` | String/Integer | Order size. Specify positive number to make a bid, and negative number to ask  
@@ -3186,6 +4306,16 @@ Only ioc and fok are supported when type=market
 `stop_profit_price` | String | Stop Profit Price  
 `stop_loss_price` | String | Stop Loss Price  
 `market_order_slip_ratio` | String | The preset maximum slippage ratio (not representing actual slippage) for this market order is 0.03 representing the maximum slippage of 3%  
+`id_string` | String | Order ID as string  
+`is_voucher` | Bool | Whether this is a voucher order  
+`role` | String | Trade role  
+`fee` | Float | Fee  
+`point_fee` | Float | Point fee  
+`bbo` | String | BBO order option  
+`pos_margin_mode` | String | Position margin mode  
+`leverage` | String | Leverage (string)  
+`stop_profit` | Object | Take-profit extension (`tp`/`op`/`type`)  
+`stop_loss` | Object | Stop-loss extension (`tp`/`op`/`type`)  
 
     
     
@@ -3199,30 +4329,82 @@ Only ioc and fok are supported when type=market
           "contract": "BTC_USDT",
           "create_time": 1628736847,
           "create_time_ms": 1628736847325,
-          "fill_price": 40000.4,
+          "fill_price": "40000.4",
           "finish_as": "filled",
           "finish_time": 1628736848,
           "finish_time_ms": 1628736848321,
           "iceberg": "0",
           "id": 4872460,
+          "id_string": "4872460",
           "is_close": false,
           "is_liq": false,
           "is_reduce_only": false,
+          "is_voucher": false,
           "left": "0",
           "mkfr": -0.00025,
-          "price": 40000.4,
+          "price": "40000.4",
           "refr": 0,
           "refu": 0,
-          "size": "1",
+          "size": "1.5",
           "status": "finished",
-          "text": "-",
+          "text": "api",
           "tif": "gtc",
           "tkfr": 0.0005,
           "user": "110xxxxx",
           "update_id": 1,
           "update_time": 1541505434123,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "role": "taker",
+          "fee": 0.0009290592,
+          "point_fee": 0,
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
           "stop_loss_price": "",
           "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `size`, `left`, and `iceberg` are integers:
+    
+    
+    {
+      "channel": "futures.orders",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "iceberg": 0,
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "left": 0,
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": 1,
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "tkfr": 0.0005,
+          "user": "110xxxxx",
+          "update_id": 1,
+          "update_time": 1541505434123,
           "market_order_slip_ratio": "0.03"
         }
       ]
@@ -3328,6 +4510,201 @@ The above command returns JSON structured like this:
       "time": 1545459681,
       "time_ms": 1545459681123,
       "channel": "futures.orders",
+      "event": "unsubscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+#  Orders V2 API
+
+**Supported environments: USDT futures live trading and TestNet.**
+
+  * Real Trading: `wss://fx-ws.gateio.ws/v4/ws/usdt`
+  * TestNet: `wss://ws-testnet.gate.com/v4/ws/futures/usdt`
+
+`futures.orders_v2` provides real-time order creation, fill, amendment, and cancellation updates from the matching stage, before clearing. It is available only for UTA3.0 users on the USDT-settled futures API WebSocket endpoint, using JSON encoding. PB and SBE subscriptions are not supported.
+
+Authentication is required. The authenticated user determines which orders are pushed. The service checks that user's UTA3.0 eligibility; a user ID supplied in `payload` cannot select another account.
+
+This channel excludes liquidation orders and clearing information. It retains `mkfr` as a fee rate and omits `fee`, `point_fee`, `role`, `refu`, `refr`, `tkfr`, and `update_time`. Use `update_time_ms` for the ME timestamp.
+
+`futures.orders` and `futures.orders_v2` can be subscribed independently on the same connection. Do not infer event ordering from which channel's message arrives first. After migrating an account to UTA3.0, subscribe again to use this channel.
+
+##  Orders V2 subscription
+
+Use `channel: "futures.orders_v2"` and `event: "subscribe"`. Generate the signature using this channel name, event, and request time as described in Authentication.
+
+Payload format:
+
+Field | Type | Required | Description  
+---|---|---|---  
+`payload` | Array[String] | Yes | Contract list, optionally preceded by the user ID. Examples: `["BTC_USDT"]`, `["20011", "BTC_USDT", "ETH_USDT"]`, or `["!all"]`.  
+  
+A contract entry may also contain comma-separated names, such as `"BTC_USDT,ETH_USDT"`. Use `!all` to subscribe to all contracts. Repeated subscriptions add contracts; duplicate contracts and overlap with `!all` do not cause duplicate pushes. The entire payload is validated before subscriptions change; an invalid contract rejects the whole request.
+
+A successful subscription returns an acknowledgement only, with no historical order snapshot. The first message after subscribing may be an update to an existing order. Events missed during a disconnected period are not replayed.
+
+Subscription errors:
+
+Code | Description  
+---|---  
+`2` | Invalid user ID or contract, non-UTA3.0 account, or unsupported PB/SBE encoding.  
+`3` | The service cannot query the account eligibility.  
+`4` | Authentication is required or has failed.  
+      
+    
+    {
+      "time": 1628736847,
+      "channel": "futures.orders_v2",
+      "event": "subscribe",
+      "payload": [
+        "BTC_USDT"
+      ],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    
+    
+    
+    {
+      "time": 1628736847,
+      "time_ms": 1628736847320,
+      "channel": "futures.orders_v2",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  Orders V2 notification
+
+All order events use `event: "update"`. `result` is an array of order objects.
+
+`size`, `left`, `iceberg`, `price`, and `fill_price` are always decimal strings, with fractional quantities preserved. This is the same with or without the `X-Gate-Size-Decimal: 1` header.
+
+`create_time_ms` comes from OMS. For an order creation event, `update_time_ms` is when the order reaches ME; for later fills, amendments, or cancellations, it is the ME update time. “Creation event” does not mean the first message on a newly subscribed connection. A later event's `update_time_ms - create_time_ms` includes the order's lifetime and does not measure that amendment's or cancellation's OMS-to-ME latency.
+
+The outer `time` and `time_ms` are WS envelope timestamps in seconds and milliseconds. `finish_time` and `finish_time_ms` follow the upstream event log timestamp. These fields must not substitute for the ME `update_time_ms`. Messages without valid positive OMS/ME millisecond timestamps are not pushed; the service does not fill them using local time.
+
+Order fields:
+
+Field | Type | Description  
+---|---|---  
+`contract` | String | Futures contract name.  
+`create_time` | Integer | OMS order creation timestamp in seconds.  
+`create_time_ms` | Integer | OMS order creation timestamp in milliseconds.  
+`fill_price` | String | Order fill price, as a decimal string.  
+`finish_as` | String | `_new` for creation and `_update` for updates while the order is open. For a finished order, the completion reason, such as `filled`, `cancelled`, `ioc`, `poc`, `fok`, or `stp`; other reasons follow `futures.orders`.  
+`finish_time` | Integer | Upstream order event log timestamp in seconds; this is not a clearing completion timestamp.  
+`finish_time_ms` | Integer | Upstream order event log timestamp in milliseconds; this is not the ME update timestamp.  
+`iceberg` | String | Displayed iceberg order size, as a decimal string. `"0"` for a regular order.  
+`id` | Integer | Order ID. Use `id_string` if your client cannot preserve large integers.  
+`id_string` | String | Order ID as a string.  
+`is_close` | Boolean | Whether the order closes a position.  
+`is_liq` | Boolean | Always `false` on this channel; liquidation orders are excluded.  
+`is_reduce_only` | Boolean | Whether the order is reduce-only.  
+`is_voucher` | Boolean | Whether this is a voucher order.  
+`left` | String | Remaining order size, as a decimal string.  
+`mkfr` | Float | Maker fee rate; this is not a settled fee amount.  
+`price` | String | Order price, as a decimal string. `"0"` for a market order.  
+`size` | String | Order size, as a decimal string; positive for buy and negative for sell.  
+`status` | String | Order status: `open` (waiting to trade) or `finished`.  
+`text` | String | User-defined order information.  
+`tif` | String | Time in force: `gtc` (good till cancelled), `ioc` (immediate or cancel), `poc` (post only), or `fok` (fill or kill).  
+`user` | String | User ID.  
+`update_id` | Integer | Order update ID.  
+`update_time_ms` | Integer | ME timestamp in milliseconds. For creation, when the order reaches ME; for a fill, amendment, or cancellation, when ME updates the order.  
+`biz_info` | String | Business information attached to the order update.  
+`stp_act` | String | Self-trade prevention action: `cn` (cancel newest), `co` (cancel oldest), `cb` (cancel both), or `-` if unset.  
+`stp_id` | String | Self-trade prevention group ID; `"0"` if unset.  
+`amend_text` | String | User-defined information attached to an amendment.  
+`bbo` | String | BBO order option; `-` if unset.  
+`pos_margin_mode` | String | Position margin mode: `cross` or `isolated`.  
+`leverage` | String | Leverage, or an empty string if not supplied.  
+`stop_loss_price` | String | Stop-loss price, or an empty string if unset.  
+`stop_profit_price` | String | Take-profit price, or an empty string if unset.  
+`market_order_slip_ratio` | String | Preset maximum slippage ratio for a market order. `"0.03"` means 3%; this is not actual slippage.  
+      
+    
+    {
+      "channel": "futures.orders_v2",
+      "event": "update",
+      "time": 1628736848,
+      "time_ms": 1628736848325,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "iceberg": "0",
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "is_voucher": false,
+          "left": "0",
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": "1.5",
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "user": "20011",
+          "update_id": 1,
+          "update_time_ms": 1628736848320,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
+          "stop_loss_price": "",
+          "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+##  Orders V2 cancellation of subscription
+
+Use `event: "unsubscribe"` with the same payload rules. `payload: ["!all"]` clears all subscriptions to `futures.orders_v2` on this connection. Removing subscriptions does not require a new UTA3.0 eligibility query.
+
+A contract currently subscribed on this connection can still be unsubscribed after delisting; if a request includes an unknown contract that is not subscribed on this connection, the entire request is rejected and existing subscriptions are kept.
+    
+    
+    {
+      "time": 1628736849,
+      "channel": "futures.orders_v2",
+      "event": "unsubscribe",
+      "payload": [
+        "!all"
+      ],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    
+    
+    
+    {
+      "time": 1628736849,
+      "time_ms": 1628736849123,
+      "channel": "futures.orders_v2",
       "event": "unsubscribe",
       "result": {
         "status": "success"
@@ -3509,6 +4886,9 @@ Besides user-defined information, the following are internal reserved fields ind
 \- clear: Contract delisting and clearance  
 `fee` | Float | Fee deducted  
 `point_fee` | Float | Points used to deduct fee  
+`amend_text` | String | Amend note  
+`biz_info` | String | Business info  
+`close_size` | String | Close size  
 
     
     
@@ -3525,6 +4905,35 @@ Besides user-defined information, the following are internal reserved fields ind
           "contract": "BTC_USDT",
           "order_id": "4872460",
           "size": "1",
+          "price": "40000.4",
+          "role": "maker",
+          "text": "api",
+          "fee": 0.0009290592,
+          "point_fee": 0,
+          "amend_text": "amend",
+          "biz_info": "-",
+          "close_size": "0"
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
+    
+    
+    {
+      "time": 1543205083,
+      "time_ms": 1543205083123,
+      "channel": "futures.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": "3335259",
+          "create_time": 1628736848,
+          "create_time_ms": 1628736848321,
+          "contract": "BTC_USDT",
+          "order_id": "4872460",
+          "size": 1,
           "price": "40000.4",
           "role": "maker",
           "text": "api",
@@ -3794,7 +5203,8 @@ field | type | description
 `order_id` | Integer | Order id  
 `order_price` | Float | Commission price  
 `left` | String/Integer | Order unfilled quantity  
-`size` | String/Integer | Position original size  
+`order_size` | String/Integer | Original order size  
+`size` | String/Integer | Liquidation size  
 `time` | Integer | Time  
 `time_ms` | Integer | Time in milliseconds  
 `user` | String | User id  
@@ -3818,7 +5228,38 @@ field | type | description
           "mark_price": 213,
           "order_id": 4093362,
           "order_price": 215.1,
-          "size": "-124",
+          "order_size": "-124",
+          "size": "-124.5",
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "contract": "BTC_USDT",
+          "user": "1040xxxx"
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `left`, `order_size`, and `size` are integers:
+    
+    
+    {
+      "channel": "futures.liquidates",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "left": 0,
+          "leverage": 0.0,
+          "liq_price": 213,
+          "margin": 0.007816722941,
+          "mark_price": 213,
+          "order_id": 4093362,
+          "order_price": 215.1,
+          "order_size": -124,
+          "size": -124,
           "time": 1541486601,
           "time_ms": 1541486601123,
           "contract": "BTC_USDT",
@@ -4086,6 +5527,8 @@ field | type | description
 `time_ms` | Integer | Time in milliseconds  
 `user` | String | User id  
 `contract` | String | Futures contract name  
+`pos_margin_mode` | String | Position margin mode  
+`leverage` | String | Leverage  
 
     
     
@@ -4100,6 +5543,31 @@ field | type | description
           "fill_price": 215.1,
           "position_size": "10",
           "trade_size": "10",
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "contract": "BTC_USDT",
+          "user": "1040",
+          "pos_margin_mode": "cross",
+          "leverage": "10"
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `position_size` and `trade_size` are integers:
+    
+    
+    {
+      "channel": "futures.auto_deleverages",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "position_size": 10,
+          "trade_size": 10,
           "time": 1541486601,
           "time_ms": 1541486601123,
           "contract": "BTC_USDT",
@@ -5199,6 +6667,8 @@ field | type | description
 `time_ms` | Integer | Update unix timestamp in milliseconds  
 `user` | String | User id  
 `update_id` | Integer | Message sequence number  
+`pos_margin_mode` | String | Position margin mode  
+`lever` | String | Leverage info (replacing legacy fields)  
 
     
     
@@ -5228,7 +6698,33 @@ field | type | description
           "time": 1628736848,
           "time_ms": 1628736848321,
           "user": "110xxxxx",
-          "update_id": 170919
+          "update_id": 170919,
+          "pos_margin_mode": "cross",
+          "lever": "10"
+        }
+      ]
+    }
+    
+
+Without `X-Gate-Size-Decimal: 1` header, `size` is integer:
+    
+    
+    {
+      "time": 1588212926,
+      "time_ms": 1588212926123,
+      "channel": "futures.positions",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "size": 3,
+          "user": "110xxxxx",
+          "update_id": 170919,
+          "time": 1628736848,
+          "time_ms": 1628736848321,
+          "mode": "single",
+          "leverage": 0,
+          "leverage_max": 100
         }
       ]
     }
@@ -5807,7 +7303,20 @@ field | type | description
             "order_price": ""
           },
           "order_type": "close-long-order",
-          "me_order_id": "213867453823"
+          "id_string": "9256",
+          "me_order_id": "213867453823",
+          "finish_time": 0,
+          "finish_as": "",
+          "parent_id": 0,
+          "stop_profit_price": "",
+          "stop_loss_price": "",
+          "batch_id": "",
+          "pos_margin_mode": "cross",
+          "position_mode": "single",
+          "leverage": "10",
+          "mmr_trigger": {
+            "rate": ""
+          }
         }
       ]
     }
@@ -8458,4 +9967,4 @@ Order status notification example
     }
     
 
-Last Updated: 5/26/2026, 2:23:23 AM
+Last Updated: 10/22/2026, 7:54:06 AM

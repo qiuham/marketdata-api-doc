@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni
 api_type: Earn
-updated_at: 2026-05-27 20:17:08.222853
+updated_at: 2026-11-13 20:57:50.864508
 ---
 
 # EarnUni
@@ -368,7 +368,7 @@ _修改用户理财信息_
 ---|---|---|---|---  
 body | body | PatchUniLend | 是 |   
 » currency | body | string | 否 | 币种名称  
-» min_rate | body | string | 否 | 最小利率  
+» min_rate | body | string | 否 | 最低小时利率。  
   
 ### 返回
 
@@ -1033,75 +1033,20 @@ WARNING
 
 #  模型
 
-##  UniLendInterest
+##  PatchUniLend
 
-_UniLendInterest_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种  
-interest | string | false | 只读 | 利息收益  
-      
-    
-    {
-      "currency": "string",
-      "interest": "string"
-    }
-    
-    
-
-##  CreateUniLend
-
-_创建理财或赎回_
+_PatchUniLend_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | true | none | 币种名称  
-amount | string | true | none | 投入理财池数量  
-type | string | true | none | 操作类型 ; lend - 借出 ， redeem - 赎回  
-min_rate | string | false | none | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | lend  
-type | redeem  
+currency | string | false | none | 币种名称  
+min_rate | string | false | none | 最低小时利率。  
       
     
     {
       "currency": "string",
-      "amount": "string",
-      "type": "lend",
-      "min_rate": "string"
-    }
-    
-    
-
-##  UniCurrency
-
-_借贷币种_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-min_lend_amount | string | false | 只读 | 最小借出数量,单位该币种  
-max_lend_amount | string | false | 只读 | 累计最大借出数量，单位USDT  
-max_rate | string | false | 只读 | 最大利率（小时）  
-min_rate | string | false | 只读 | 最小利率（小时）  
-      
-    
-    {
-      "currency": "string",
-      "min_lend_amount": "string",
-      "max_lend_amount": "string",
-      "max_rate": "string",
       "min_rate": "string"
     }
     
@@ -1142,31 +1087,46 @@ update_time | integer(int64) | false | 只读 | 理财最新修改时间
     
     
 
-##  UniLendRecord
+##  UniLendInterest
 
-_理财记录_
+_UniLendInterest_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种  
+interest | string | false | 只读 | 利息收益  
+      
+    
+    {
+      "currency": "string",
+      "interest": "string"
+    }
+    
+    
+
+##  UniCurrency
+
+_借贷币种_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
 currency | string | false | 只读 | 币种名称  
-amount | string | false | 只读 | 本次借出或赎回数量  
-last_wallet_amount | string | false | 只读 | 该记录之前待理财数量  
-last_lent_amount | string | false | 只读 | 该记录之前已借出数量  
-last_frozen_amount | string | false | 只读 | 该记录之前已冻结待待赎回数量  
-type | string | false | 只读 | 记录类型 lend - 借出 , redeem - 赎回  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
+min_lend_amount | string | false | 只读 | 最小借出数量,单位该币种  
+max_lend_amount | string | false | 只读 | 累计最大借出数量，单位USDT  
+max_rate | string | false | 只读 | 最大利率（小时）  
+min_rate | string | false | 只读 | 最小利率（小时）  
       
     
     {
       "currency": "string",
-      "amount": "string",
-      "last_wallet_amount": "string",
-      "last_lent_amount": "string",
-      "last_frozen_amount": "string",
-      "type": "string",
-      "create_time": 0
+      "min_lend_amount": "string",
+      "max_lend_amount": "string",
+      "max_rate": "string",
+      "min_rate": "string"
     }
     
     
@@ -1198,6 +1158,36 @@ create_time | integer(int64) | false | 只读 | 创建时间戳
     
     
 
+##  CreateUniLend
+
+_创建理财或赎回_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | true | none | 币种名称  
+amount | string | true | none | 投入理财池数量  
+type | string | true | none | 操作类型 ; lend - 借出 ， redeem - 赎回  
+min_rate | string | false | none | 最小利率，如设置过高可能导致借出失败则该无法获得利息，借出时必填  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+type | lend  
+type | redeem  
+      
+    
+    {
+      "currency": "string",
+      "amount": "string",
+      "type": "lend",
+      "min_rate": "string"
+    }
+    
+    
+
 ##  UniCurrencyInterest
 
 _UniCurrencyInterest_
@@ -1217,19 +1207,29 @@ interest_status | string | false | 只读 | 利息状态; interest_dividend - �
     
     
 
-##  PatchUniLend
+##  UniLendRecord
 
-_PatchUniLend_
+_理财记录_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | false | none | 币种名称  
-min_rate | string | false | none | 最小利率  
+currency | string | false | 只读 | 币种名称  
+amount | string | false | 只读 | 本次借出或赎回数量  
+last_wallet_amount | string | false | 只读 | 该记录之前待理财数量  
+last_lent_amount | string | false | 只读 | 该记录之前已借出数量  
+last_frozen_amount | string | false | 只读 | 该记录之前已冻结待待赎回数量  
+type | string | false | 只读 | 记录类型 lend - 借出 , redeem - 赎回  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
       
     
     {
       "currency": "string",
-      "min_rate": "string"
+      "amount": "string",
+      "last_wallet_amount": "string",
+      "last_lent_amount": "string",
+      "last_frozen_amount": "string",
+      "type": "string",
+      "create_time": 0
     }

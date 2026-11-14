@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/alpha/zh_CN
 api_type: Trading
-updated_at: 2026-05-27 20:14:23.586358
+updated_at: 2026-11-13 20:56:44.597229
 ---
 
 # Gate Alpha API v1.1.1
@@ -616,7 +616,7 @@ _Alpha 账户接口_
 名称 | 类型 | 描述  
 ---|---|---  
 » _None_ | object | 查询持仓返回  
-»» currency | string | 币种名称  
+»» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
 »» available | string | 可用余额  
 »» locked | string | 锁定余额  
 »» token_address | string | token 地址  
@@ -719,7 +719,7 @@ limit | 请求参数 | integer(int32) | 否 | 列表数量最大每页100
 » _None_ | object | 查询资产流水返回  
 »» id | integer(int64) | 订单id  
 »» time | integer(int64) | 操作时间戳  
-»» currency | string(string) | 币种名称  
+»» currency | string(string) | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
 »» change | string(string) | 变更金额  
 »» balance | string(string) | 变更后余额  
   
@@ -801,7 +801,7 @@ _Alpha 询价接口_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | object | 是 |   
-» currency | body | string | 是 | 交易符号  
+» currency | body | string | 是 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 » side | body | string | 是 | 买单或者卖单  
 \- buy  
 \- sell  
@@ -949,7 +949,7 @@ _Alpha 下单接口_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 body | body | object | 是 |   
-» currency | body | string | 是 | 交易符号  
+» currency | body | string | 是 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 » side | body | string | 是 | 买单或者卖单  
 \- buy  
 \- sell  
@@ -959,7 +959,7 @@ body | body | object | 是 |
 » gas_mode | body | string | 是 | 交易模式 影响滑点选择  
 \- `speed` : 智能模式  
 \- `custom` : 自定义, 会使用 `slippage`  
-» slippage | body | string | 否 | 滑点 10是浮动10%  
+» slippage | body | string | 否 | 滑点百分比，"10" 表示 10%。  
 » quote_id | body | string | 是 | 询价返回的quote_id  
   
 ####  详细描述
@@ -1102,7 +1102,7 @@ _Alpha 查询订单列表接口_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-currency | 请求参数 | string | 否 | 交易符号  
+currency | 请求参数 | string | 否 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 side | 请求参数 | string | 否 | 买单或者卖单  
 \- buy  
 \- sell  
@@ -1156,7 +1156,7 @@ _None_ | array | [下单返回]
 \- buy  
 \- sell  
 »» usdt_amount | string | 钱数  
-»» currency | string | 币  
+»» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
 »» currency_amount | string | 币的数量  
 »» status | integer(int32) | 订单状态  
 \- `0` : 全部  
@@ -1280,7 +1280,7 @@ _下单返回_
 \- buy  
 \- sell  
 » usdt_amount | string | 钱数  
-» currency | string | 币  
+» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
 » currency_amount | string | 币的数量  
 » status | integer(int32) | 订单状态  
 \- `0` : 全部  
@@ -1382,7 +1382,7 @@ _查询币种信息_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-currency | 请求参数 | string | 否 | 根据币种符号查询币种信息  
+currency | 请求参数 | string | 否 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 limit | 请求参数 | integer(int32) | 否 | 列表返回的最大数量  
 page | 请求参数 | integer(int32) | 否 | 列表页数  
   
@@ -1399,8 +1399,8 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 名称 | 类型 | 描述  
 ---|---|---  
 » AlphaCurrency | object |   
-»» currency | string | 币种符号  
-»» name | string | 币种名称  
+»» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+»» name | string | 币种展示名称或符号，例如 USDS；不能代替 currency 字段作为 Alpha 币种 ID。  
 »» chain | string | 币对应的主链  
 »» address | string | 合约地址  
 »» amount_precision | integer(int32) | 数量精度  
@@ -1467,7 +1467,7 @@ _查询币种ticker_
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-currency | 请求参数 | string | 否 | 指定币种名称查询  
+currency | 请求参数 | string | 否 | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098，不是展示符号 USDS。先不传 currency 调用 GET /alpha/currencies，按 name、chain 和 address 确认币种，使用返回的 currency 字段；列表可通过 page 和 limit 分页。  
 limit | 请求参数 | integer(int32) | 否 | 列表返回的最大数量  
 page | 请求参数 | integer(int32) | 否 | 列表页数  
   
@@ -1484,7 +1484,7 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 名称 | 类型 | 描述  
 ---|---|---  
 » AlphaTicker | object |   
-»» currency | string | 币种符号  
+»» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
 »» last | string | 最新成交价  
 »» change | string | 最近24h涨跌百分比，跌用负数标识，如 -7.45  
 »» volume | string | 最近24h成交额(USDT)  
@@ -1616,8 +1616,8 @@ page | 请求参数 | integer(int32) | 否 | 列表页数
 
 名称 | 类型 | 描述  
 ---|---|---  
-» currency | string | 币种符号  
-» name | string | 币种名称  
+» currency | string | Alpha 币种 ID，例如 USDS02b5a8dd2f59a098；用于 Alpha 接口的 currency 参数，不是展示符号 USDS。  
+» name | string | 币种展示名称或符号，例如 USDS；不能代替 currency 字段作为 Alpha 币种 ID。  
 » chain | string | 币对应的主链  
 » address | string | 合约地址  
 » amount_precision | integer(int32) | 数量精度  

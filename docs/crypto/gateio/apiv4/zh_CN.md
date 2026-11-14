@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN
 api_type: REST
-updated_at: 2026-05-27 20:16:42.508670
+updated_at: 2026-11-13 20:57:36.657828
 ---
 
-# Gate API v4.106.88
+# Gate API v4.106.182
 
-v4.106.88 · Stable
+v4.106.182 · Stable
 
 
 欢迎使用 Gate API APIv4 接口提供了现货、杠杆、合约交易相关的操作，包括公共接口查询市场行情，以及需要认证的私有接口， 实现基于 API 的自动交易。
@@ -19,6 +19,12 @@ v4.106.88 · Stable
   * 实盘交易: `https://api.gateio.ws/api/v4`
   * 模拟交易：`https://api-testnet.gateapi.io/api/v4`
   * 合约实盘交易备选入口（只适用合约 API）：`https://fx-api.gateio.ws/api/v4`
+
+##  下载 Markdown 文档
+
+下载本站使用的完整 Markdown 文档压缩包，其中包含 Gate API v4 REST 中英文文档、Alpha、CrossEx、Agent 及全部 WebSocket 文档。
+
+  * [下载完整 Markdown 文档（ZIP）](/docs/developers/downloads/gate-api-v4-markdown.zip)
 
 ##  SDK
 
@@ -99,6 +105,487 @@ DANGER
 
 #  Changelog
 
+**v4.106.180**
+
+2026-11-04
+
+  * 新增 `GET /flash-swap/v1/currency-pair`，必填查询参数为 `asset_name` 和 `side`（`1`：卖出，`2`：买入），可选请求头为 `X-Gate-Region`。响应 `currency_pair` 包含 `market`、`sell_asset`、`sell_min_amount`、`sell_max_amount`、`buy_asset`、`buy_min_amount`、`buy_max_amount`。
+
+**v4.106.179**
+
+2026-11-03
+
+  * 新增 `GET /stock/orders/deals`，通过必填查询参数 `order_id` 和可选参数 `page`、`page_size` 查询订单成交流水。响应包含成交标识、价格、数量、金额、手续费、成交角色及持仓字段。
+  * 新增 `GET /stock/users/balance-records`，支持可选查询参数 `type`、`business`、`symbol`、`begin_time`、`end_time`、`start_id`、`sort_direction`、`include_detail`、`page` 和 `page_size`。响应包含资金变动、股票数量变动、业务标识和流水时间；仅在 `include_detail=true` 时返回 `detail`。
+  * `GET /stock/users/assets` 新增字符串响应字段 `loan_amount`。
+  * `POST /futures/{settle}/autoorder/v1/trail/stop_all`：修正响应结构，顶层包含 `code`、`message`、`timestamp`，订单列表由顶层 `orders` 更正为 `data.orders`。
+  * `GET /futures/{settle}/autoorder/v1/trail/list` 和 `POST /futures/{settle}/autoorder/v1/trail/stop_all`：将响应字段 `timestamp` 的单位更正为毫秒。
+  * `PUT /tradfi/orders/{order_id}`：将响应必填字段 `order_id`、`symbol`、`state`、`volume`、`price`、`price_tp`、`price_sl` 的声明从响应顶层更正到 `data` 对象。
+  * `GET /margin/uni/estimate_rate` 和 `GET /unified/estimate_rate`：明确响应类型为币种名称到字符串利率的对象映射。
+
+**v4.106.178**
+
+2026-11-02
+
+  * `POST /futures/{settle}/autoorder/v1/trail/update` 和 `POST /futures/{settle}/autoorder/v1/trail/stop`：修正响应结构，顶层包含 `code`、`message`、`timestamp`，委托信息位于 `data.order`。
+  * `GET /futures/{settle}/autoorder/v1/trail/change_log`：修正响应结构，顶层包含 `code`、`message`、`timestamp`，记录位于 `data.change_log`；记录字段 `updated_at` 由 `integer(int64)` 更正为十进制字符串。
+
+**v4.106.177**
+
+2026-11-02
+
+  * `POST /futures/{settle}/autoorder/v1/trail/create`：整数请求参数 `price_type` 改为必填，可选值为 `1`（最新价格）、`2`（指数价格）、`3`（标记价格）。
+  * Trail 委托响应（包括 `GET /futures/{settle}/autoorder/v1/trail/detail` 和 `GET /futures/{settle}/autoorder/v1/trail/list`）：将 `id`、`user_id`、`user`、`suborder_id`、`created_at`、`activated_at`、`finished_at`、`create_time`、`active_time`、`finish_time`、`updated_at` 从 `integer(int64)` 更正为十进制字符串。
+
+**v4.106.175**
+
+2026-11-02
+
+  * 新增 `GET /crossex/rule/open_capacity`（`listCrossexRuleOpenCapacity`），响应包含必填字段 `symbol`、`position_side`（`LONG`/`SHORT`）和 `available_to_open_notional`。仅返回剩余可开仓价值低于阈值的交易对及仓位方向；`0` 表示该交易对在对应方向当前不能开仓。
+  * `PUT /tradfi/orders/{order_id}`：修正响应必填字段 `order_id`、`symbol`、`state`、`volume`、`price`、`price_tp`、`price_sl` 的声明层级，归属 `data` 对象。
+  * `GET /margin/uni/estimate_rate` 和 `GET /unified/estimate_rate`：响应明确声明为币种到字符串利率的对象映射。
+
+**v4.106.174**
+
+2026-11-02
+
+  * 修正 **`GET /futures/{settle}/autoorder/v1/trail/list`** 的响应结构定义：顶层包含 `code`、`message` 和 `timestamp`，订单列表由顶层 `orders` 更正为 `data.orders`；`timestamp` 为 int64 类型的微秒级 Unix 时间戳。
+  * 补充 **`GET /futures/{settle}/price_orders/{order_id}`** 在订单不存在时的 HTTP 205 错误响应定义，包含 `code`、`label` 和 `message` 字段。
+
+**v4.106.172**
+
+2026-10-30
+
+  * `GET /options/accounts`：响应字段 `position_notional_limit` 的类型由 `integer(int64)` 调整为 `string`。
+
+**v4.106.171**
+
+2026-10-30
+
+  * 新增 `PUT /stock/users/margin-feature` 接口，通过必填布尔请求字段 `margin_feature` 开启或关闭融资功能。
+  * `GET /stock/symbols` 和 `GET /stock/symbols/detail` 新增响应字段 `margin_mode`（整数：`0`、`1`、`2` 或 `3`），以及字符串字段 `long_im`、`long_mm`、`short_im`、`short_mm`、`long_borrowing_rate` 和 `short_borrowing_rate`。借贷利率为空字符串表示暂无有效利率。
+  * `GET /stock/users/assets` 新增字符串响应字段 `buy_power`、`leverage`、`leave_liquidity`、`leave_liquidity_rate`、`aee`、`options_margin` 和 `long_borrowing_rate`，以及布尔响应字段 `margin_enabled`。
+  * `GET /options/my_trades`：响应字段 `order_id` 明确为 `integer(int64)`，支持大于 2147483647 的订单 ID。
+
+**v4.106.170**
+
+2026-10-30
+
+  * `POST /earn/autoinvest/min_invest_amount`：新增必填整数请求体字段 `asset_type`，`1` 表示加密货币，`2` 表示 TradFi 股票，调用时须显式传入。
+
+**v4.106.169**
+
+2026-10-30
+
+  * `GET /earn/fixed-term/product` 新增可选查询参数 `status`（整数，传 `2` 查询可申购产品）和 `show_status`（字符串，传 `"2"` 查询可展示产品）。
+
+**v4.106.168**
+
+2026-10-28
+
+  * `POST /spot/orders` 和 `POST /spot/batch_orders` 新增可选、允许 null 的布尔请求字段 `use_earn`，支持下单时赎回余币宝资金。
+  * `GET /spot/open_orders`、`POST /spot/cross_liquidate_orders`、`POST /spot/orders`、`GET /spot/orders`、`GET /spot/orders/{order_id}`、`PATCH /spot/orders/{order_id}` 和 `DELETE /spot/orders/{order_id}` 的订单响应新增可选、允许 null 的布尔字段 `Order.use_earn`。
+
+**v4.106.167**
+
+2026-10-27
+
+  * 新增 `POST /bot/smart-position/create` 和 `POST /bot/futures-combo/create`，支持创建智能调仓和合约拼盘策略；资产成员为 2–10 个，period 与 threshold 必须二选一。
+  * `GET /bot/strategy/recommend` 支持 `spot_grid`、`margin_grid`、`infinite_grid`、`futures_grid`、`spot_martingale`、`smart_position` 六类策略，刷新推荐时可传入 `exclude_recommendation_id`，`limit` 范围限定为 1–10。
+  * `POST /bot/contract-martingale/create` 新增 `create_params.stop_loss_price_type`（`last/index/mark`），使用固定止损价时需同时提供，原来只传固定止损价的调用需补齐类型。`invest_amount` 表示策略总预算，而非首单保证金；`max_orders` 不含首单。
+  * `POST /bot/portfolio/stop` 智能调仓必须指定 `market/limit/no_close` 停止模式；`limit` 需提供价格和 `expiration`。停止接口同时支持合约拼盘类型。组合查询返回资产/市场、仓位、配置及停止进度；创建和停止响应返回策略标识、观测状态及恢复信息。HTTP 200 也可能是业务失败，`data/trace_id` 可缺省，写入失败可仅返回部分已核实事实；调用方需先检查业务码。
+
+**v4.106.163**
+
+2026-10-27
+
+  * 公共 SDK 开放已有 LaunchPool 方法：`GET /launch/project-list`、`POST /launch/create-order`、`POST /launch/redeem`、`GET /launch/user-pledge-records`、`GET /launch/get-user-reward-records`。
+  * 公共 SDK 开放已有 HODLer Airdrop 方法：`GET /launch/hodler-airdrop/project-list`、`POST /launch/hodler-airdrop/order`、`GET /launch/hodler-airdrop/user-order-records`、`GET /launch/hodler-airdrop/user-airdrop-records`。
+  * 公共 SDK 开放已有 CandyDrop 方法：`GET /launch/candydrop/activity-list`、`GET /launch/candydrop/activity-rules`、`POST /launch/candydrop/register`、`GET /launch/candydrop/task-progress`、`GET /launch/candydrop/participation-records`、`GET /launch/candydrop/airdrop-records`。已有路径、operationId、请求/响应字段和 APIv4 鉴权方式保持不变。
+
+**v4.106.161**
+
+2026-10-16
+
+  * TradFi：订单修改/撤销、订单日志查询、仓位修改/平仓的路径参数，以及相关订单/仓位响应中的 `order_id`、`position_id`、`log_id` 明确为 64 位整数。
+
+**v4.106.160**
+
+2026-10-16
+
+  * **不兼容变更：**合约条件单改单接口由 **`PUT /futures/{settle}/price_orders/amend`** 改为 **`PUT /futures/{settle}/price_orders/amend/{order_id}`** 。新增必填的字符串路径参数 `order_id`，JSON 请求体中的 `order_id` 仍需提供。调用方需在路径和请求体中传入相同的订单 ID。
+
+**v4.106.159**
+
+2026-10-16
+
+  * **不兼容变更：** **`GET /stock/symbols`** 、**`GET /stock/symbols/detail`** 、**`GET /stock/orders`** 和 **`GET /stock/positions`** 响应的 `trade_status` 枚举删除 `closed`、`gt_lp`，文档中的可取值为 `pre_market`、`open`、`post_market`。
+
+**v4.106.158**
+
+2026-10-16
+
+  * OTC：**`GET /otc/order/list`** （`listOtcOrders`）文档响应字段由 **`data.list`** 更正为 **`data.lists`** 。
+  * OTC：**`GET /otc/stable_coin/order/list`** （`listStableCoinOrders`）文档响应字段由 **`data.list`** 更正为 **`data.lists`** 。
+
+**v4.106.157**
+
+2026-10-14
+
+  * CrossEx 新增美股、港股、韩股和日股的股票及 ETF 交易能力，交易对格式为 `{市场}_{STOCK或ETF}_{证券代码}_USDT`；下单仅支持跨所账户模式、`GTC` 和 `qty`，不支持 `quote_qty`，并额外限制为单用户每秒一次请求。委托价格和证券持仓价值使用上市市场原生计价币种（`USD`、`HKD`、`KRW` 或 `JPY`）。
+  * 新增 **`GET /crossex/security_positions`** （`listCrossexSecurityPositions`）证券仓位查询接口，支持可选的 `symbol` 和 `exchange_type` 筛选参数。
+  * **`GET /crossex/rule/symbols`** （`Symbol`）响应新增必填 `tag` 字段，用于证券描述和 Hyperliquid DEX 信息。解析该响应的调用方需支持新增字段。
+  * **`GET /crossex/account_book`** 返回的资金流水类型说明新增 `SECURITY_DIVIDEND` 和 `SECURITY_CORPORATE_ACTION`。
+
+**v4.106.156**
+
+2026-10-13
+
+  * 将 `Order`、`OrderPatch`、`BatchAmendItem` 的 `stop_profit`、`stop_loss` 明确标记为可传 `null`。现货改单时，`null` 表示保持对应止盈止损不变，`{}` 表示取消对应保护。
+
+**v4.106.154**
+
+2026-10-13
+
+  * 新增 **`GET /spot/rpi_order_book`** 接口，查询现货 RPI 市场深度，买单按照价格从高到低排序，卖单按照价格从低到高排序。无需 API Key。
+
+**v4.106.152**
+
+2026-10-13
+
+  * 新增 **`GET /futures/{settle}/rpi_order_book`** 接口，无需 API Key 认证即可查询合约 RPI 深度，支持价格合并、深度档位限制及可选的深度更新 ID。
+
+**v4.106.150**
+
+2026-10-09
+
+  * 新增 **`GET /earn/dual/stock/investment_plan`** 接口，查询双币股票可申购产品。
+  * 新增 **`GET /earn/dual/stock/project-recommend`** 接口，获取双币股票产品推荐。
+  * 新增 **`GET /earn/dual/stock/orders`** 接口，查询双币股票订单列表。
+  * 新增 **`POST /earn/dual/stock/orders`** 接口，双币股票下单。
+  * 新增 **`GET /earn/dual/stock/balance`** 接口，查询双币股票资产统计。
+  * 新增 **`GET /earn/dual/stock/order-refund-preview`** 接口，预览双币股票订单赎回。
+  * 新增 **`POST /earn/dual/stock/order-refund`** 接口，赎回双币股票订单。
+  * 新增 **`POST /earn/dual/stock/modify-order-reinvest`** 接口，修改双币股票订单复投设置。
+  * **`GET /earn/dual/investment_plan`** 和 **`GET /earn/dual/stock/investment_plan`** 响应新增 `type` 字段（`call`：高卖；`put`：低买）。
+
+**v4.106.148**
+
+2026-10-08
+
+  * **`GET /stock/symbols`** 、**`GET /stock/symbols/detail`** 和 **`GET /stock/orders`** 的响应字段 `trade_mode` 枚举新增 `5`（人工暂停）、`6`（策略异常）、`7`（股票停牌）和 `8`（股票熔断）。
+  * **SDK 不兼容变更：**为 **`GET /stock/orders`** 和 **`GET /stock/orders/history`** 的响应字段 `status` 定义整数枚举（`0`–`8`），为 **`GET /stock/orders/history`** 的响应字段 `finish_as` 定义整数枚举（`0`–`9`、`13`）。生成的 Java 访问方法现在使用 `StatusEnum` 和 `FinishAsEnum`，不再使用 `Integer`；客户端需改用枚举值，需要原始整数时调用 `getValue()`。对应 C# 属性也改为可空枚举类型，需同步调整整数赋值和读取。JSON 值仍为整数。
+
+**v4.106.147**
+
+2026-10-08
+
+  * **`GET /futures/{settle}/account_book`** 的 `type` 筛选条件及响应模型 `FuturesAccountBook` 的 `type` 枚举新增 `dividend`（分红派息）。
+
+**v4.106.144**
+
+2026-09-17
+
+  * **`POST /ann/list_article`** 的 JSON 请求体参数 `page` 和 `size` 改为可选，传入时仍使用字符串。
+
+**v4.106.143**
+
+2026-09-17
+
+  * 股票市场、交易对、订单及仓位响应的 `exchange` 取值新增 `jp`；**`GET /stock/symbols`** 、**`GET /stock/symbols/detail`** 和 **`GET /stock/positions`** 的 `exchange` 筛选参数同步支持 `jp`。
+  * **`GET /stock/symbols`** 和 **`GET /stock/symbols/detail`** 响应新增 `asset_type` 字段，取值为 `STOCK` 或 `ETF`。
+  * **`GET /stock/users/assets`** 响应新增 `option_position_market_value`、`option_position_pnl` 和 `option_today_pnl` 字段。
+  * **不兼容变更：** **`GET /tradfi/symbols/commissions`** 和 **`GET /tradfi/symbols/detail`** 现在需要 APIv4 认证。调用时请携带 `KEY`、`Timestamp` 和 `SIGN` 请求头。
+
+**v4.106.142**
+
+2026-09-17
+
+  * 新增 **`POST /ann/list_article`** ，支持按标题、分类、语言和时间等条件分页查询公告文章，无需 API Key。
+
+**v4.106.141**
+
+2026-09-15
+
+  * 股票 API 带单请求头取值更新为 `x-gate-trader-copy-type: stock_copy`（此前 **`POST /stock/orders`** 文档为 `stock`）；带单交易不包含资金转入转出 **`POST /stock/transactions`** 和资金流水 **`GET /stock/transactions`** 。
+
+**v4.106.139**
+
+2026-09-15
+
+  * CrossEx 新增 `LIGHTER` 交易所支持：合约订单标识使用 `LIGHTER_FUTURE_{Base}_{Counter}`；`POST /crossex/transfers` 支持 `CROSSEX_LIGHTER` 与 `SPOT` 之间的 USDC 划转；`POST /crossex/convert/quote` 支持跨所模式下 `LIGHTER_USDC` 与 `CROSSEX_USDT` 互兑。
+
+**v4.106.138**
+
+2026-09-10
+
+  * **`POST /tradfi/orders`** （`createTradFiOrder`）的请求体 `TradFiOrderRequest` 新增可选整数字段 `leverage`，用于指定订单杠杆倍数。
+
+**v4.106.136**
+
+2026-09-08
+
+  * **SDK 破坏性变更：** 明确 **`GET /stock/symbols`** （`queryStockSymbols`）和 **`GET /stock/symbols/detail`** （`queryStockSymbolDetail`）响应字段 `category` 的枚举值：`CS`、`ETF`、`ADRC`、`ADR`、`ETV`、`PFD`、`ETS`、`ETN`、`FUND`。 生成的 Java 模型 `SymbolListItem` 和 `SymbolDetailItem` 的访问方法改用 `CategoryEnum`，不再使用 `String`；调用方需适配枚举值，需要协议字符串时使用 `getValue()`。
+
+**v4.106.135**
+
+2026-09-02
+
+  * 新增 **`POST /otc/upload/pre_upload`** （`createOtcUploadPreUpload`）—— 文件预上传至临时桶，返回 base64 `file_key` 与 S3 POST Policy；支持 `scene=general|bank|assessment|credit`，`content_type` 须 base64 传输
+  * **`POST /otc/bank/create`** 请求更新 —— 新增 **`documentation_file_key`** 、**`file_type`** ，与 **`documentation_file`** multipart 直传二选一
+
+**v4.106.133**
+
+2026-08-31
+
+  * Spot API 新增统一市场计价币支持：**`GET /spot/currency_pairs`** （`listCurrencyPairs`）与 **`GET /spot/currency_pairs/{currency_pair}`** （`getCurrencyPair`）响应新增 **`trade_quotes`** ；现货订单请求/响应模型新增 **`trade_quote`** ，包括 **`POST /spot/orders`** （`createOrder`）；**`DELETE /spot/orders`** （`cancelOrders`）新增可选 **`trade_quote`** 筛选参数；**`GET /spot/trades`** （`listTrades`）与 **`GET /spot/my_trades`** （`listMyTrades`）响应通过 **`trade_quote`** 返回实际计价币种
+
+**v4.106.132**
+
+2026-08-31
+
+  * **破坏性变更：** 从 **`GET /tradfi/users/mt5-account`** （`queryMt5AccountInfo`）、**`POST /tradfi/users`** （`createTradFiUser`）和 **`GET /tradfi/users/assets`** （`queryUserAssets`）的响应 `data` 对象中删除 `mt5_uid` 字段；调用方不得再依赖这些响应中的该标识
+
+**v4.106.131**
+
+2026-08-24
+
+  * **`GET /crossex/history_positions`** （`listCrossexHistoryPositions`）响应项新增可选字段 **`margin_mode`** （`CROSS`/`ISOLATED`）；**`POST /crossex/positions/margin`** （`updateCrossexPositionsMargin`）响应模型 `CrossexIsolatedMarginResponse` 新增可选字段 **`position_side`** （`NONE`/`LONG`/`SHORT`）
+
+**v4.106.130**
+
+2026-08-22
+
+  * **`GET /crossex/rule/symbols`** （`listCrossexRuleSymbols`）响应模型 `Symbol` 新增可选字符串字段 **`support_cross`** （`"true"`/`"false"`），用于标识交易对是否支持全仓下单
+
+**v4.106.128**
+
+2026-08-20
+
+  * 更新 **`GET /unified/accounts`** （`listUnifiedAccounts`）中的保证金公式链接，使其指向当前统一账户帮助中心文章
+
+**v4.106.127**
+
+2026-08-20
+
+  * 修正现货 POV 撤单接口文档，使其与现有服务端契约一致：批量撤单使用 **`DELETE /spot/pov_orders`** （`cancelSpotPovOrders`），单笔撤单使用 **`DELETE /spot/pov_orders/{order_id}`** （`cancelSpotPovOrder`）。operationId 保持不变；不应使用此前文档中记录的 POST `/cancel` 动作路径
+  * **`POST /otc/order/create`** （`createOtcOrder`）新增可选字段 `receive_type`，用于指定企业用户或个人用户的汇款名义
+
+**v4.106.126**
+
+2026-08-19
+
+  * 永续合约 REST API 的 `settle` 参数新增支持 `usd1`，包含永续合约价格触发订单接口；DeFi Futures 仍仅支持 `btc` 和 `usdt`
+
+**v4.106.125**
+
+2026-08-19
+
+  * 新增 **`GET /futures/{settle}/adl_risk_states`** （`listFuturesADLRiskStates`），用于查询指定结算币种下所有合约市场当前的 ADL 风险状态，并返回状态计算时间及 `normal`、`warning`、`adl_risk` 三种状态
+
+**v4.106.124**
+
+2026-08-14
+
+  * **`GET /margin/uni/currency_pairs`** 和 **`GET /margin/uni/currency_pairs/{currency_pair}`** 响应新增 **`status`** 和 **`delisted_time`** 字段，用于说明杠杆市场是否启用及其下架时间
+
+**v4.106.123**
+
+2026-08-13
+
+  * 公开 SDK 下线 Launch 相关接口，包括 LaunchPool、HODLer Airdrop、CandyDrop
+
+**v4.106.122**
+
+2026-08-11
+
+  * 更新 **`GET /spot/currency_pairs`** （`listCurrencyPairs`）和 **`GET /spot/currency_pairs/{currency_pair}`** （`getCurrencyPair`）响应字段说明：明确 **`market_order_max_stock`** 和 **`market_order_max_money`** 的值为 `null` 或 `0` 时表示无限制
+
+**v4.106.121**
+
+2026-08-11
+
+  * 补充受影响 TradFi Spot 接口的 5 qps 限流说明
+  * 明确 TradFi Spot 限价单仅支持 `all` 交易时段，市价单仅支持 `regular`，并同步更新示例
+  * 明确 **`GET /stock/fee-rate`** （`queryStockFeeRate`）及其 Maker/Taker 手续费率字段仅适用于日股和韩股
+
+**v4.106.117**
+
+2026-08-04
+
+  * 更新 **`POST /p2p/merchant/books/place_biz_push_order`** （`p2pMerchantBooksPlaceBizPushOrder`）请求字段说明与示例：明确 **`payType`** 为广告启用的、以逗号分隔的支付方式类型，**`pay_type_json`** 则将每个已启用类型映射到当前用户对应的具体支付方式 ID
+
+**v4.106.116**
+
+2026-08-04
+
+  * 新增现货 POV（按成交量比例执行）策略订单接口：**`POST /spot/pov_orders`** （`createSpotPovOrder`）、**`GET /spot/pov_orders`** （`listSpotPovOrders`）和 **`GET /spot/pov_orders/{order_id}`** （`getSpotPovOrder`），支持按目标参与率、有效期、可选限价/触发价和自定义订单 ID 创建及查询策略订单
+  * 新增 **`DELETE /spot/pov_orders`** （`cancelSpotPovOrders`）和 **`DELETE /spot/pov_orders/{order_id}`** （`cancelSpotPovOrder`），支持批量或单笔撤销现货 POV 策略订单
+
+**v4.106.115**
+
+2026-08-03
+
+  * 扩充 CrossEx 下单异常文档，说明异步受理流程，区分 CrossEx 校验失败（`state=FAIL`）与交易所拒单（`state=REJECT`），并补充常见交易所拒单原因、系统维护类错误及排查建议
+  * 完善 CrossEx 错误标签列表，按业务场景补充原始错误信息和可操作的排查 Tips
+
+**v4.106.114**
+
+2026-08-03
+
+  * 更新 **`GET /crossex/market/tickers`** （`listCrossexMarketTickers`）与 **`GET /crossex/market/funding_info`** （`listCrossexMarketFundingInfo`）响应字段说明，并修正 **`funding_time`** 含义为下次资金费率时间
+  * 扩充 CrossEx 错误标签文档，按业务场景补充可操作的排查说明
+
+**v4.106.113**
+
+2026-08-03
+
+  * 新增 **`GET /wallet/transfers`** （`getTransfer`）接口，支持通过 **`tx_id`** 查询当前用户的交易账户划转订单详情；响应包含划转状态、币种、数量、转出与转入账户类型，以及适用的结算币种或杠杆交易对
+
+**v4.106.112**
+
+2026-08-03
+
+  * 更新 **`POST /crossex/position`** （`closeCrossexPosition`）说明，明确仓位严格小于最小名义金额或最小下单数量时才触发自动平仓
+  * 更新 **`GET /crossex/positions`** （`listCrossexPositions`）响应字段 **`funding_fee`** 说明，明确该字段为累计仓位资金费，并说明正负值含义
+  * 更新 **`GET /crossex/account_book`** （`listCrossexAccountBook`）响应字段 **`business_id`** 说明，补充不同 **`statement_type`** 下的业务含义
+
+**v4.106.111**
+
+2026-08-03
+
+  * 更新 **`POST /stock/orders`** （`createStockOrder`）请求模型 `TradFiSpotOrderRequest` 与 **`GET /stock/orders/history`** （`queryStockOrderHistory`）响应模型 `OrderHistoryList`：从 **`time_in_force`** 中移除不支持的 **`gtc`** 取值，仅保留 **`day`**
+
+**v4.106.110**
+
+2026-07-28
+
+  * 新增 **`GET /crossex/market/tickers`** （`listCrossexMarketTickers`）接口，用于查询交易所市场行情，支持按逗号分隔的币对列表筛选
+  * 新增 **`GET /crossex/market/funding_info`** （`listCrossexMarketFundingInfo`）接口，用于查询各交易所合约资金费率、资金费率周期及资金费率时间
+
+**v4.106.109**
+
+2026-07-22
+
+  * 新增 **`POST /unified/leverage/user_setting`** （`setUserLeverage`）接口，用于设置用户所有借贷币种的杠杆倍数；存在借贷的币种不可修改，超出币种杠杆阈值时按阈值设置，响应返回设置失败的币种及原因
+  * 更新 **`GET /futures/{settle}/liq_orders`** （`listLiquidatedOrders`）响应模型 `FuturesLiqOrder` 的 **`left`** 字段说明，明确该字段为保留字段，当前无业务含义
+  * **`GET /crossex/fee`** （`getCrossexFee`）响应新增 **`spot_rpi_maker_fee`** 、**`future_rpi_maker_fee`** ，并在 **`special_fee_list`** 项中新增 **`rpi_fee_rate`**
+  * **`GET /crossex/rule/symbols`** （`listCrossexRuleSymbols`）响应新增 **`support_rpi`** ，用于标识交易对是否支持 RPI 下单
+  * **`POST /crossex/orders`** （`createCrossexOrder`）的 **`time_in_force`** 新增 **`RPI`** 取值，并同步更新 CrossEx 订单响应说明
+
+**v4.106.108**
+
+2026-07-16
+
+  * 新增 **`POST /crossex/batch_cancel_orders`** （`cancelBatchCrossexOrders`）接口，支持通过 **`order_id`** 或自定义 **`text`** 批量撤销 CrossEx 订单；两者同时传入时优先使用 `order_id`，每条处理结果返回是否受理以及失败时的错误标识和错误信息
+  * **`GET /crossex/adl_rank`** （`listCrossexAdlRank`）响应说明更新：Kraken ADL 排名档位补充 **`40`** ，完整取值为 `20`、`40`、`80`、`100`
+
+**v4.106.107**
+
+2026-07-13
+
+  * **`POST /otc/stable_coin/order/create`** （`createStableCoinOrder`）更新：除 **`promotion_code`** 外，请求体字段均改为必填，响应新增必填 **`timestamp`** 字段
+  * **`POST /otc/quote`** （`createOtcQuote`）更新：明确 **`side`** 的兼容取值，响应 schema 新增 **`validity_period`** 、**`refresh_limit`** 、**`refresh_limit_msg`** ，并将响应 **`timestamp`** 设为必填
+  * OTC 订单响应更新：**`GET /otc/order/list`** （`listOtcOrders`）新增 **`DISBURSED`** 状态并移除订单列表及银行卡列表中的内部/废弃字段；**`GET /otc/stable_coin/order/list`** （`listStableCoinOrders`）新增 **`pay_icon`** / **`get_icon`** ；**`GET /otc/order/detail`** （`getOtcOrderDetail`）补充完整的用户及 Gate 银行转账信息
+  * **`GET /otc/bank/bank_supplement_checklist`** （`getOtcBankSupplementChecklist`）更新：补件清单项简化为必填 **`description`** 字段
+  * OTC 订单已付款及银行卡绑定相关流程中，付款回执与开户证明文件的单文件大小上限由 4 MB 提升至 10 MB
+
+**v4.106.106**
+
+2026-07-08
+
+  * 新增 **股票 API** 模块，共 16 个接口，涵盖用户资产、交易对查询、市场数据、订单管理、持仓管理、资金流水、交易所支持和费率查询；标签为 `Stock`
+
+**v4.106.105**
+
+2026-07-06
+
+  * 新增 **`GET /tradfi/symbols/commissions`** （`querySymbolCommissions`）接口，用于查询 CFD 交易品种手续费率；请求支持可选的 **`symbols`** 和 **`category_code`** 过滤参数，响应使用新增的 **`SymbolCommissions`** 模型，包含 **`category_code`** 、**`symbol`** 、**`fee_per_lot`** 字段
+
+**v4.106.104**
+
+2026-07-02
+
+  * **`GET /futures/{settle}/positions`** （`listPositions`）参数处理更新：将通用 `limit` 参数替换为 专用的 `positions_limit` 定义；该 schema 不再包含默认值，因此不传时返回当前全部仓位，显式传值仍限制在 `1`-`100`
+
+**v4.106.103**
+
+2026-06-30
+
+  * P2P Merchant 文档增加前往 Spot API **`GET /spot/accounts`** 查询现货账户余额的引导说明；重复的 OpenAPI 引导定义已于 v4.106.128 移除
+  * **`POST /p2p/merchant/books/ads_list`** （`p2pMerchantBooksAdsList`）响应更新：新增 **`surplus_amount`** （剩余可交易加密币数量）、**`trade_methods`** （支持的支付方式列表）；示例补充 **`fiat_min_amount`** / **`fiat_max_amount`** / **`limit_basis`** / **`limit_basis_text`**
+  * **`ContractStat`** 模型更新 —— 将 **`long_users`** （多头持仓用户数量）、**`short_users`** （空头持仓用户数量）字段类型由 `string` 修正为 `integer`（`int64`）
+
+**v4.106.102**
+
+2026-06-26
+
+  * **`POST /p2p/merchant/books/place_biz_push_order`** （`p2pMerchantBooksPlaceBizPushOrder`，发布广告）请求更新：新增 **`limitBasis`** （交易限额计数单位——0：按加密币数量，1：按法币金额；发布新广告未传时默认 0）、**`fiatMinAmount`** / **`fiatMaxAmount`** （单笔最小/最大交易金额，`limitBasis` 为 1 时必填）、**`polymarket_limit`** （是否限制与 Polymarket 用户交易）；**`minAmount`** / **`maxAmount`** 取消必填，语义改为按 `currencyType` 计价的交易数量
+  * P2P 商户广告详情/列表响应更新 —— **`POST /p2p/merchant/books/ads_detail`** （`p2pMerchantBooksAdsDetail`）与 **`POST /p2p/merchant/books/ads_list`** （`p2pMerchantBooksAdsList`）：新增 **`fiat_min_amount`** / **`fiat_max_amount`** / **`minFiatAmount`** / **`maxFiatAmount`** （单笔最小/最大法币交易金额）、**`limitBasis`** / **`limitBasisText`** （交易限额计数单位及其文案）、**`polymarket_limit`** ；**`min_amount`** / **`max_amount`** 描述修正为按 `currency_type` 计价的交易数量
+
+**v4.106.99**
+
+2026-06-25
+
+  * **`ContractStat`** 模型更新 —— 将 **`top_long_account`** （大户做多账户数）、**`top_short_account`** （大户做空账户数）字段类型由 `string` 修正为 `integer`（`int64`）；影响 **`GET /futures/{settle}/contract_stats`** （`listContractStats`）与 **`GET /defi/futures/{settle}/contract_stats`** 接口的响应
+
+**v4.106.98**
+
+2026-06-25
+
+  * **`GET /earn/staking/order_list`** （`orderList`）响应 —— 补充 `status` 字段枚举说明：`1` 成功、`3` 延迟赎回中、`6` 赎回撤销订单
+  * **`GET /earn/staking/award_list`** （`awardList`）响应 —— 补充 `status` 字段枚举说明：`4` 成功
+  * **`GET /earn/staking/assets`** （`assetList`）响应 —— 补充 `status` 字段枚举说明：`1` 币种项目上架、`2` 币种项目已下架
+
+**v4.106.97**
+
+2026-06-17
+
+  * 新增 **`POST /unified/delta_neutral`** （`setUnifiedDeltaNeutral`）—— 设置账户 Delta 中性策略模式；条件：VIP 等级 ≥ 4 且账户处于跨币种保证金模式；请求体与响应体为 `DeltaNeutralEnabled`，含必填 **`enabled`** （布尔）字段
+  * 新增 **`GET /unified/delta_neutral`** （`getUnifiedDeltaNeutral`）—— 查询账户 Delta 中性策略模式设置；响应体为 `DeltaNeutralEnabled`
+  * **`Position`** 模型更新 —— 新增 **`hedge_status`** （`partial_hedged` 部分对冲 / `full_hedged` 完全对冲）、**`hedged_size`** 、**`unhedged_size`** 字段，用于描述 Delta 中性策略下仓位的对冲状态及已对冲/未对冲数量
+
+**v4.106.96**
+
+2026-06-12
+
+  * 新增 **`POST /p2p/merchant/account/set_merchant_work_hours`** （`p2pMerchantAccountSetMerchantWorkHours`）—— 设置商家工作状态和自定义工作时间；请求体 `SetMerchantWorkHoursRequest` 含必填 **`work_status`** （`0` 休息中 / `1` 工作中 / `2` 使用自定义工作时间）及条件必填字段 **`cycle_type`** 、**`day_of_week`** 、**`time_zone`** （UTC 偏移 `-12` 至 `+14`）、**`start_time`** 、**`end_time`** ；响应返回商家当前工作状态（`0`-`3`）
+  * **`POST /p2p/merchant/books/place_biz_push_order`** 更新 —— 提交时对 `trade_tips`、`auto_reply` 进行站外引流风控；命中时广告不保存并返回 **`code 70305102`** ，响应新增 **`data.risk_code`** 、**`data.risk_event`** 字段（提示 `type` / `title` / `msg` / `action`，以及 `content_risk_type`、`trade_tips`、`auto_reply` 提示文案）
+  * **`POST /p2p/merchant/chat/send_chat_message`** 更新 —— 文本消息进行站外引流风控；命中时接口仍返回 `code 0`，`data` 新增 **`risk_type`** （`1`：站外引流风险）与 **`toast_msg`** 字段；聊天消息记录同步携带 `risk_type` / `toast_msg`
+
+**v4.106.95**
+
+2026-06-11
+
+  * **`GET /wallet/deposits`** （`listDeposits`）响应模型 `DepositRecord` 新增可选字段 **`refund_status`** （string，拦截充值退款状态）—— 仅当充值记录存在拦截充值退款记录且退款状态非空时返回，无退款记录或退款状态为空时不返回；枚举值：`REFUNDING`（退款中）、`REFUNDED`（退款完成）、`REFUND_FAILED`（退款失败）、`REJECTED`（退款被拒绝）
+  * OTC：**`GET /otc/order/detail`** （`getOtcOrderDetail`）—— `OtcOrderDetail` 新增可选字段 **`reference_code`** （入金买单银行转账唯一参考码，SGB 入金场景，与 `transfer_remark` 互斥）
+  * OTC：**`GET /otc/order/list`** （`listOtcOrders`）—— `OtcOrderListItem` 新增可选字段 **`reference_code`** ；说明入金买单有参考码时 `transfer_remark` 为空字符串
+
+**v4.106.94**
+
+2026-06-08
+
+  * **`GET /wallet/saved_address`** （`listSavedAddress`）更新 —— 接口含义调整为「查询提币地址簿地址」，`currency`（币种）查询参数由必填改为可选
+  * **`GET /wallet/saved_address`** 新增可选查询参数 **`verified`** （string）—— `1` 表示免验证地址，`0` 表示普通地址，空字符串表示不限制
+  * 新增 **`GET /tradfi/orders/log/{log_id}`** （`queryOrderLog`）—— 根据下单接口返回的 **`log_id`** 查询订单详情；响应体为 `OrderLog`（`definitions/tradfi/OrderLog.yaml`），包含 `order_id`、`log_id`、`symbol`、`price_type`（`market` / `trigger`）、`state`、`side`、`volume`、`price` 等字段；补充 **`400`** 错误响应
+
+**v4.106.93**
+
+2026-06-03
+
+  * `FuturesOrder`（合约订单详情）新增可选字段 **`tpsl_tp_bbo_type`** 、**`tpsl_sl_bbo_type`** （string，止盈 / 止损 BBO 类型），与已有的 `tpsl_tp_trigger_price`、`tpsl_sl_trigger_price` 止盈止损触发价字段配合使用
+
+**v4.106.89**
+
+2026-05-28
+
+  * OTC：移除已废弃接口 **`GET /otc/get_user_def_bank`** ，默认银行卡改为从 **`GET /otc/bank_list`** 返回项的 `is_default` 字段读取
+  * OTC：新增 **`GET /otc/bank/list`** （`getBankListInnerPath`），与 `GET /otc/bank_list` 语义一致，对应 Inner 路径
+  * OTC：新增银行卡管理接口 **`POST /otc/bank/create`** （`createOtcBank`）、**`POST /otc/bank/delete`** （`deleteOtcBank`）、**`POST /otc/bank/set_default`** （`setDefaultOtcBank`）
+  * OTC：新增 **`GET /otc/bank/bank_supplement_checklist`** （`getOtcBankSupplementChecklist`），按用户已通过的专业认证类型（个人/企业）返回银行卡待补充资料清单
+  * OTC：新增 **`POST /otc/bank/personal/bank_supplement`** （`submitOtcBankPersonalSupplement`）与 **`POST /otc/bank/enterprise/bank_supplement`** （`submitOtcBankEnterpriseSupplement`），以 `multipart/form-data` 形式上传个人/企业银行卡补充材料
+  * OTC：**`POST /otc/order/paid`** （`markOtcOrderPaid`）更新——付款回执由可选改为必填；`OtcMarkOrderPaidRequest` 新增必填字段 **`payment_receipt_file_key`** ，新增可选字段 **`client_order_id`** 、**`payment_receipt`** （网关兼容别名）
+
 **v4.106.88**
 
 2026-05-26
@@ -121,8 +608,8 @@ DANGER
 
 2026-05-19
 
-  * TradFi API新增可选查询参数 **`page`** 、**`page_size`** ，支持历史仓位分页查询
-  * TradFi API响应 `data` 增加 **`total`** （总数）、**`total_page`** （总页数）
+  * CFD API 新增可选查询参数 **`page`** 、**`page_size`** ，支持历史仓位分页查询
+  * CFD API 响应 `data` 增加 **`total`** （总数）、**`total_page`** （总页数）
   * 合约下单请求体新增可选字段 **`action_mode`** （string，处理模式），用于控制下单响应返回的字段粒度；取值 **`ACK`** （异步，仅关键字段）、**`RESULT`** （无清算信息）、**`FULL`** （完整模式，默认）
   * 合约API在 **`DELETE /futures/{settle}/orders`** （`cancelFuturesOrders`）与 **`DELETE /futures/{settle}/orders/{order_id}`** （`cancelFuturesOrder`）上增加可选查询参数 **`action_mode`** ，使撤销接口的响应字段与下单时的 `action_mode` 语义对齐
 
@@ -191,7 +678,7 @@ DANGER
 
 2026-04-27
 
-  * 文档站点：按 Tag 拆分展示，各 Tag 页面仅聚合该分组下的路径与关联 schema；全站通用的 changelog 概览、REST 必读、认证、FAQ、错误码等章节不再在每个 Tag 着陆页全文重复挂载；同时为 **TradFi** 相关内容增加侧边栏分组标题
+  * 文档站点：按 Tag 拆分展示，各 Tag 页面仅聚合该分组下的路径与关联 schema；全站通用的 changelog 概览、REST 必读、认证、FAQ、错误码等章节不再在每个 Tag 着陆页全文重复挂载；同时为 **CFD** 相关内容增加侧边栏分组标题
 
 **v4.106.71**
 
@@ -342,7 +829,7 @@ DANGER
 
 2026-03-20
 
-  * 更新 TradFi API：`GET /tradfi/symbols/detail`（`querySymbolDetail`）改为需认证的私有接口（不再支持匿名读取）
+  * 更新 CFD API：`GET /tradfi/symbols/detail`（`querySymbolDetail`）改为需认证的私有接口（不再支持匿名读取）
 
 **v4.106.43**
 
@@ -371,7 +858,7 @@ DANGER
 2026-03-13
 
   * 新增 `PUT /options/orders/{order_id}` 期权改单接口（amendOptionsOrder）
-  * 更新 TradFi API：`GET /tradfi/users/mt5-account` 改为需认证的私有接口（不再支持匿名读取）
+  * 更新 CFD API：`GET /tradfi/users/mt5-account` 改为需认证的私有接口（不再支持匿名读取）
 
 **v4.106.34**
 
@@ -401,7 +888,6 @@ DANGER
   * `PUT /futures/{settle}/price_orders/{order_id}` 接口路径变更为 `PUT /futures/{settle}/price_orders/amend/{order_id}`
   * `FuturesUpdatePriceTriggeredOrder` 模型：`order_id` 字段类型从 `string` 变更为 `integer`
   * `BatchOrder` 模型：`finish_as` 字段新增枚举值：`liquidate_cancelled`（爆仓撤销）、`small`（数量太小）、`depth_not_enough`（深度不足）、`trader_not_enough`（对手方不足）、`poc`（未满足挂单策略）、`fok`（未完全成交）、`price_protect_cancelled`（价格保护撤单）、`unknown`（未知）
-  * `Order` 模型：更新 `cancelled_reason` 字段中 `ioc` 枚举值的描述，明确该状态也适用于 poc/rvt/rat/rpi 类型订单被判定为 taker 而拒绝的场景
 
 **v4.106.30**
 
@@ -429,7 +915,7 @@ DANGER
 
 2026-02-28
 
-  * 更新翻译内容，优化TradFi文档描述
+  * 更新翻译内容，优化 CFD 文档描述
 
 **v4.106.27**
 
@@ -2072,6 +2558,25 @@ host + `/api/v4/withdrawals/*` | 提现 | 数字货币提现
 | UID |  现货下单、撤单  
 成交历史、费率查询等  
   
+股票 | 公共接口 |  GET /stock/symbols: 5 qps  
+GET /stock/symbols/detail: 5 qps  
+GET /stock/market/{symbol}/orderbook: 5 qps  
+GET /stock/fee-rate: 5 qps  
+| IP |  股票交易对、行情和费率查询  
+  
+股票 | 私有接口 |  GET /stock/users/assets: 5 qps  
+POST /stock/orders: 5 qps  
+GET /stock/orders: 5 qps  
+DELETE /stock/orders: 5 qps  
+GET /stock/orders/history: 5 qps  
+PUT /stock/orders/{order_id}: 5 qps  
+DELETE /stock/orders/{order_id}: 5 qps  
+GET /stock/positions: 5 qps  
+POST /stock/positions/close: 5 qps  
+POST /stock/transactions: 5 qps  
+GET /stock/transactions: 5 qps  
+| UID |  股票资产、订单、仓位和资金流水接口  
+  
 永续合约 | 私有接口 |  合约批量/单个下单/修改单个订单接口一共 100r/s  
 合约批量/单个撤单接口一共 200r/s  
 永续合约其他单个接口 200r/10s  
@@ -2185,9 +2690,11 @@ ETH-USDT  | 0.4
 
 成交率 = USDT成交金额 / （下单&撤单&修改订单请求数之和）
 
-###  3\. 合约下单频率限制规则
+###  3\. 合约下单频率限制规则（暂未上线）
 
-3\. 合约下单频率限制规则合约限频规则  
+> ⚠️ **暂未上线** ：以下合约成交比例限频规则当前尚未生效。现行合约限频规则保持不变，正式生效时间以后续公告为准。
+
+3\. 合约下单频率限制规则（暂未上线）合约限频规则  
 ---  
 Tier | ratio | rate limit (uid)  
 Tier 1 | [0,1) | 100r/s  

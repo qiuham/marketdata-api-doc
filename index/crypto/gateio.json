@@ -9,8 +9,8 @@
   "product": "api",
   "status": "active",
   "docs_dir": "docs/crypto/gateio",
-  "total": 66,
-  "updated_at": "2026-05-27 20:19:18.388031",
+  "total": 72,
+  "updated_at": "2026-11-13 20:58:49.206289",
   "documents_by_type": {
     "REST": [
       {
@@ -23,7 +23,7 @@
         "source_url": "https://www.gate.com/docs/developers/agent/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:08.728247"
+        "updated_at": "2026-11-13 20:56:40.922960"
       },
       {
         "id": "zh_CN",
@@ -35,7 +35,19 @@
         "source_url": "https://www.gate.com/docs/developers/agent/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:14.035738"
+        "updated_at": "2026-11-13 20:56:40.858000"
+      },
+      {
+        "id": "announcement",
+        "title": "Announcement",
+        "path": "docs/crypto/gateio/apiv4/en/announcement.md",
+        "filename": "announcement.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/en/announcement",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:56:54.650779"
       },
       {
         "id": "bot",
@@ -47,7 +59,19 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/bot",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:47.724156"
+        "updated_at": "2026-11-13 20:56:55.702149"
+      },
+      {
+        "id": "cfd",
+        "title": "CFD",
+        "path": "docs/crypto/gateio/apiv4/en/cfd.md",
+        "filename": "cfd.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/en/cfd",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:56:58.334555"
       },
       {
         "id": "flash-swap",
@@ -59,7 +83,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/flash-swap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:08.840394"
+        "updated_at": "2026-11-13 20:57:06.908199"
       },
       {
         "id": "isolated-margin",
@@ -71,7 +95,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/isolated-margin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:21.419927"
+        "updated_at": "2026-11-13 20:57:10.351523"
       },
       {
         "id": "multi-collateral-loan",
@@ -83,7 +107,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/multi-collateral-loan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:26.566254"
+        "updated_at": "2026-11-13 20:57:13.586855"
       },
       {
         "id": "otc",
@@ -95,7 +119,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/otc",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:37.983629"
+        "updated_at": "2026-11-13 20:57:17.059125"
       },
       {
         "id": "p2p",
@@ -107,11 +131,23 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/p2p",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:43.657497"
+        "updated_at": "2026-11-13 20:57:18.215041"
+      },
+      {
+        "id": "stock",
+        "title": "Stock",
+        "path": "docs/crypto/gateio/apiv4/en/stock.md",
+        "filename": "stock.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/en/stock",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:57:23.936279"
       },
       {
         "id": "en",
-        "title": "Gate API v4.106.88",
+        "title": "Gate API v4.106.182",
         "path": "docs/crypto/gateio/apiv4/en.md",
         "filename": "en.md",
         "api_type": "REST",
@@ -119,7 +155,19 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:38.372822"
+        "updated_at": "2026-11-13 20:56:51.238701"
+      },
+      {
+        "id": "announcement",
+        "title": "Announcement",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/announcement.md",
+        "filename": "announcement.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/announcement",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:57:39.969550"
       },
       {
         "id": "bot",
@@ -131,7 +179,19 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/bot",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:50.343082"
+        "updated_at": "2026-11-13 20:57:41.462777"
+      },
+      {
+        "id": "cfd",
+        "title": "CFD",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/cfd.md",
+        "filename": "cfd.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/cfd",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:57:43.914165"
       },
       {
         "id": "flash-swap",
@@ -143,7 +203,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/flash-swap",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:11.972342"
+        "updated_at": "2026-11-13 20:57:52.218741"
       },
       {
         "id": "isolated-margin",
@@ -155,7 +215,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/isolated-margin",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:22.377273"
+        "updated_at": "2026-11-13 20:57:55.766774"
       },
       {
         "id": "multi-collateral-loan",
@@ -167,7 +227,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/multi-collateral-loan",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:26.649207"
+        "updated_at": "2026-11-13 20:57:58.836236"
       },
       {
         "id": "otc",
@@ -179,7 +239,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/otc",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:35.690639"
+        "updated_at": "2026-11-13 20:58:02.567784"
       },
       {
         "id": "p2p",
@@ -191,11 +251,23 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/p2p",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:40.245322"
+        "updated_at": "2026-11-13 20:58:03.176473"
+      },
+      {
+        "id": "stock",
+        "title": "股票",
+        "path": "docs/crypto/gateio/apiv4/zh_CN/stock.md",
+        "filename": "stock.md",
+        "api_type": "REST",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/stock",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:58:09.801857"
       },
       {
         "id": "zh_CN",
-        "title": "Gate API v4.106.88",
+        "title": "Gate API v4.106.182",
         "path": "docs/crypto/gateio/apiv4/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "REST",
@@ -203,7 +275,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:42.508670"
+        "updated_at": "2026-11-13 20:57:36.657828"
       }
     ],
     "Trading": [
@@ -217,7 +289,7 @@
         "source_url": "https://www.gate.com/docs/developers/alpha/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:18.885058"
+        "updated_at": "2026-11-13 20:56:44.235766"
       },
       {
         "id": "zh_CN",
@@ -229,7 +301,7 @@
         "source_url": "https://www.gate.com/docs/developers/alpha/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:23.586358"
+        "updated_at": "2026-11-13 20:56:44.597229"
       },
       {
         "id": "crossex",
@@ -241,7 +313,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/crossex",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:52.117195"
+        "updated_at": "2026-11-13 20:56:59.507707"
       },
       {
         "id": "delivery",
@@ -253,7 +325,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/delivery",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:56.257900"
+        "updated_at": "2026-11-13 20:57:02.133726"
       },
       {
         "id": "futures",
@@ -265,7 +337,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/futures",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:15.283860"
+        "updated_at": "2026-11-13 20:57:10.120935"
       },
       {
         "id": "options",
@@ -277,7 +349,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/options",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:32.390877"
+        "updated_at": "2026-11-13 20:57:14.299311"
       },
       {
         "id": "spot",
@@ -289,19 +361,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/spot",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:00.541862"
-      },
-      {
-        "id": "tradfi",
-        "title": "TradFi",
-        "path": "docs/crypto/gateio/apiv4/en/tradfi.md",
-        "filename": "tradfi.md",
-        "api_type": "Trading",
-        "source_type": "",
-        "source_url": "https://www.gate.com/docs/developers/apiv4/en/tradfi",
-        "doc_category": "",
-        "version": "",
-        "updated_at": "2026-05-27 20:16:10.890456"
+        "updated_at": "2026-11-13 20:57:22.187747"
       },
       {
         "id": "crossex",
@@ -313,7 +373,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/crossex",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:54.918928"
+        "updated_at": "2026-11-13 20:57:45.185867"
       },
       {
         "id": "delivery",
@@ -325,7 +385,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/delivery",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:59.321523"
+        "updated_at": "2026-11-13 20:57:47.583608"
       },
       {
         "id": "futures",
@@ -337,7 +397,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/futures",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:17.483071"
+        "updated_at": "2026-11-13 20:57:55.407658"
       },
       {
         "id": "options",
@@ -349,7 +409,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/options",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:31.621652"
+        "updated_at": "2026-11-13 20:57:59.492161"
       },
       {
         "id": "spot",
@@ -361,23 +421,11 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/spot",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:50.111088"
-      },
-      {
-        "id": "tradfi",
-        "title": "TradFi",
-        "path": "docs/crypto/gateio/apiv4/zh_CN/tradfi.md",
-        "filename": "tradfi.md",
-        "api_type": "Trading",
-        "source_type": "",
-        "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/tradfi",
-        "doc_category": "",
-        "version": "",
-        "updated_at": "2026-05-27 20:18:00.045957"
+        "updated_at": "2026-11-13 20:58:07.209053"
       },
       {
         "id": "en",
-        "title": "Gate CrossEx API v1.0.1",
+        "title": "Gate CrossEx API v1.0.8",
         "path": "docs/crypto/gateio/crossex/en.md",
         "filename": "en.md",
         "api_type": "Trading",
@@ -385,11 +433,11 @@
         "source_url": "https://www.gate.com/docs/developers/crossex/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:18.483886"
+        "updated_at": "2026-11-13 20:58:21.531688"
       },
       {
         "id": "zh_CN",
-        "title": "Gate CrossEx API v1.0.1",
+        "title": "Gate CrossEx API v1.0.8",
         "path": "docs/crypto/gateio/crossex/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "Trading",
@@ -397,7 +445,7 @@
         "source_url": "https://www.gate.com/docs/developers/crossex/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:30.795119"
+        "updated_at": "2026-11-13 20:58:27.530220"
       }
     ],
     "WebSocket": [
@@ -411,7 +459,7 @@
         "source_url": "https://www.gate.com/docs/developers/announcements/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:28.983989"
+        "updated_at": "2026-11-13 20:56:47.441229"
       },
       {
         "id": "zh_CN",
@@ -423,7 +471,7 @@
         "source_url": "https://www.gate.com/docs/developers/announcements/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:32.970295"
+        "updated_at": "2026-11-13 20:56:48.054336"
       },
       {
         "id": "en",
@@ -435,7 +483,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:30.742914"
+        "updated_at": "2026-11-13 20:57:33.060651"
       },
       {
         "id": "zh_CN",
@@ -447,7 +495,31 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:37.183506"
+        "updated_at": "2026-11-13 20:57:34.618276"
+      },
+      {
+        "id": "en",
+        "title": "Gate TradFi WebSocket v1.0.0",
+        "path": "docs/crypto/gateio/cfd/ws/en.md",
+        "filename": "en.md",
+        "api_type": "WebSocket",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/cfd/ws/en",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:58:17.816929"
+      },
+      {
+        "id": "zh_CN",
+        "title": "Gate TradFi WebSocket v1.0.0",
+        "path": "docs/crypto/gateio/cfd/ws/zh_CN.md",
+        "filename": "zh_CN.md",
+        "api_type": "WebSocket",
+        "source_type": "",
+        "source_url": "https://www.gate.com/docs/developers/cfd/ws/zh_CN",
+        "doc_category": "",
+        "version": "",
+        "updated_at": "2026-11-13 20:58:20.367625"
       },
       {
         "id": "en",
@@ -459,7 +531,7 @@
         "source_url": "https://www.gate.com/docs/developers/crossex/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:22.354879"
+        "updated_at": "2026-11-13 20:58:23.870772"
       },
       {
         "id": "zh_CN",
@@ -471,7 +543,7 @@
         "source_url": "https://www.gate.com/docs/developers/crossex/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:26.563547"
+        "updated_at": "2026-11-13 20:58:25.000150"
       },
       {
         "id": "en",
@@ -483,7 +555,7 @@
         "source_url": "https://www.gate.com/docs/developers/delivery/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:34.587839"
+        "updated_at": "2026-11-13 20:58:28.402662"
       },
       {
         "id": "zh_CN",
@@ -495,7 +567,7 @@
         "source_url": "https://www.gate.com/docs/developers/delivery/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:38.773913"
+        "updated_at": "2026-11-13 20:58:30.937926"
       },
       {
         "id": "en",
@@ -507,7 +579,7 @@
         "source_url": "https://www.gate.com/docs/developers/futures/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:43.562604"
+        "updated_at": "2026-11-13 20:58:32.283290"
       },
       {
         "id": "zh_CN",
@@ -519,7 +591,7 @@
         "source_url": "https://www.gate.com/docs/developers/futures/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:48.435524"
+        "updated_at": "2026-11-13 20:58:35.168930"
       },
       {
         "id": "en",
@@ -531,7 +603,7 @@
         "source_url": "https://www.gate.com/docs/developers/options/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:52.460769"
+        "updated_at": "2026-11-13 20:58:35.661229"
       },
       {
         "id": "zh_CN",
@@ -543,31 +615,31 @@
         "source_url": "https://www.gate.com/docs/developers/options/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:56.244529"
+        "updated_at": "2026-11-13 20:58:38.910166"
       },
       {
         "id": "en",
-        "title": "Gate TradFi WebSocket v1.0.0",
-        "path": "docs/crypto/gateio/tradfi/ws/en.md",
+        "title": "Gate Stock WebSocket v1.0.0",
+        "path": "docs/crypto/gateio/stock/ws/en.md",
         "filename": "en.md",
         "api_type": "WebSocket",
         "source_type": "",
-        "source_url": "https://www.gate.com/docs/developers/tradfi/ws/en",
+        "source_url": "https://www.gate.com/docs/developers/stock/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:59.823526"
+        "updated_at": "2026-11-13 20:58:38.961198"
       },
       {
         "id": "zh_CN",
-        "title": "Gate TradFi WebSocket v1.0.0",
-        "path": "docs/crypto/gateio/tradfi/ws/zh_CN.md",
+        "title": "Gate Stock WebSocket v1.0.0",
+        "path": "docs/crypto/gateio/stock/ws/zh_CN.md",
         "filename": "zh_CN.md",
         "api_type": "WebSocket",
         "source_type": "",
-        "source_url": "https://www.gate.com/docs/developers/tradfi/ws/zh_CN",
+        "source_url": "https://www.gate.com/docs/developers/stock/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:19:03.443651"
+        "updated_at": "2026-11-13 20:58:42.263232"
       },
       {
         "id": "en",
@@ -579,7 +651,7 @@
         "source_url": "https://www.gate.com/docs/developers/unified/ws/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:19:07.176855"
+        "updated_at": "2026-11-13 20:58:42.273159"
       },
       {
         "id": "zh_CN",
@@ -591,7 +663,7 @@
         "source_url": "https://www.gate.com/docs/developers/unified/ws/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:19:11.002065"
+        "updated_at": "2026-11-13 20:58:45.675277"
       },
       {
         "id": "en",
@@ -603,7 +675,7 @@
         "source_url": "https://www.gate.com/docs/developers/websocket/en",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:19:14.644160"
+        "updated_at": "2026-11-13 20:58:45.711807"
       },
       {
         "id": "zh_CN",
@@ -615,7 +687,7 @@
         "source_url": "https://www.gate.com/docs/developers/websocket/zh_CN",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:19:18.388031"
+        "updated_at": "2026-11-13 20:58:49.206289"
       }
     ],
     "Account": [
@@ -629,7 +701,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:14:42.926225"
+        "updated_at": "2026-11-13 20:56:51.497762"
       },
       {
         "id": "subaccount",
@@ -641,7 +713,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/subaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:05.147431"
+        "updated_at": "2026-11-13 20:57:25.563780"
       },
       {
         "id": "unified",
@@ -653,7 +725,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/unified",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:16.622605"
+        "updated_at": "2026-11-13 20:57:27.557038"
       },
       {
         "id": "wallet",
@@ -665,7 +737,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/wallet",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:21.378356"
+        "updated_at": "2026-11-13 20:57:29.297726"
       },
       {
         "id": "withdrawal",
@@ -677,7 +749,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/withdrawal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:25.470738"
+        "updated_at": "2026-11-13 20:57:30.738076"
       },
       {
         "id": "account",
@@ -689,7 +761,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/account",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:16:46.153964"
+        "updated_at": "2026-11-13 20:57:37.899511"
       },
       {
         "id": "subaccount",
@@ -701,7 +773,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/subaccount",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:55.276874"
+        "updated_at": "2026-11-13 20:58:10.561387"
       },
       {
         "id": "unified",
@@ -713,7 +785,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/unified",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:04.003996"
+        "updated_at": "2026-11-13 20:58:13.603487"
       },
       {
         "id": "wallet",
@@ -725,7 +797,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/wallet",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:09.322255"
+        "updated_at": "2026-11-13 20:58:14.063669"
       },
       {
         "id": "withdrawal",
@@ -737,7 +809,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/withdrawal",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:18:13.971930"
+        "updated_at": "2026-11-13 20:58:17.083690"
       }
     ],
     "Earn": [
@@ -751,7 +823,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/earn",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:01.006292"
+        "updated_at": "2026-11-13 20:57:03.494435"
       },
       {
         "id": "earnuni",
@@ -763,7 +835,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/earnuni",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:04.719827"
+        "updated_at": "2026-11-13 20:57:05.481129"
       },
       {
         "id": "rebate",
@@ -775,7 +847,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/en/rebate",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:15:47.788350"
+        "updated_at": "2026-11-13 20:57:20.398234"
       },
       {
         "id": "earn",
@@ -787,7 +859,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/earn",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:04.566663"
+        "updated_at": "2026-11-13 20:57:48.851755"
       },
       {
         "id": "earnuni",
@@ -799,7 +871,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:08.222853"
+        "updated_at": "2026-11-13 20:57:50.864508"
       },
       {
         "id": "rebate",
@@ -811,7 +883,7 @@
         "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/rebate",
         "doc_category": "",
         "version": "",
-        "updated_at": "2026-05-27 20:17:44.573613"
+        "updated_at": "2026-11-13 20:58:06.121539"
       }
     ]
   },
@@ -826,7 +898,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:42.926225"
+      "updated_at": "2026-11-13 20:56:51.497762"
     },
     {
       "id": "account",
@@ -838,7 +910,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/account",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:46.153964"
+      "updated_at": "2026-11-13 20:57:37.899511"
     },
     {
       "id": "subaccount",
@@ -850,7 +922,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/subaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:05.147431"
+      "updated_at": "2026-11-13 20:57:25.563780"
     },
     {
       "id": "subaccount",
@@ -862,7 +934,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/subaccount",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:55.276874"
+      "updated_at": "2026-11-13 20:58:10.561387"
     },
     {
       "id": "unified",
@@ -874,7 +946,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/unified",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:16.622605"
+      "updated_at": "2026-11-13 20:57:27.557038"
     },
     {
       "id": "unified",
@@ -886,7 +958,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/unified",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:04.003996"
+      "updated_at": "2026-11-13 20:58:13.603487"
     },
     {
       "id": "wallet",
@@ -898,7 +970,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/wallet",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:21.378356"
+      "updated_at": "2026-11-13 20:57:29.297726"
     },
     {
       "id": "wallet",
@@ -910,7 +982,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/wallet",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:09.322255"
+      "updated_at": "2026-11-13 20:58:14.063669"
     },
     {
       "id": "withdrawal",
@@ -922,7 +994,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/withdrawal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:25.470738"
+      "updated_at": "2026-11-13 20:57:30.738076"
     },
     {
       "id": "withdrawal",
@@ -934,7 +1006,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/withdrawal",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:13.971930"
+      "updated_at": "2026-11-13 20:58:17.083690"
     },
     {
       "id": "earn",
@@ -946,7 +1018,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/earn",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:01.006292"
+      "updated_at": "2026-11-13 20:57:03.494435"
     },
     {
       "id": "earn",
@@ -958,7 +1030,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/earn",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:04.566663"
+      "updated_at": "2026-11-13 20:57:48.851755"
     },
     {
       "id": "earnuni",
@@ -970,7 +1042,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/earnuni",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:04.719827"
+      "updated_at": "2026-11-13 20:57:05.481129"
     },
     {
       "id": "earnuni",
@@ -982,7 +1054,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:08.222853"
+      "updated_at": "2026-11-13 20:57:50.864508"
     },
     {
       "id": "rebate",
@@ -994,7 +1066,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/rebate",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:47.788350"
+      "updated_at": "2026-11-13 20:57:20.398234"
     },
     {
       "id": "rebate",
@@ -1006,7 +1078,31 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/rebate",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:44.573613"
+      "updated_at": "2026-11-13 20:58:06.121539"
+    },
+    {
+      "id": "announcement",
+      "title": "Announcement",
+      "path": "docs/crypto/gateio/apiv4/en/announcement.md",
+      "filename": "announcement.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/en/announcement",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:56:54.650779"
+    },
+    {
+      "id": "announcement",
+      "title": "Announcement",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/announcement.md",
+      "filename": "announcement.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/announcement",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:57:39.969550"
     },
     {
       "id": "bot",
@@ -1018,7 +1114,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/bot",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:47.724156"
+      "updated_at": "2026-11-13 20:56:55.702149"
     },
     {
       "id": "bot",
@@ -1030,7 +1126,31 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/bot",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:50.343082"
+      "updated_at": "2026-11-13 20:57:41.462777"
+    },
+    {
+      "id": "cfd",
+      "title": "CFD",
+      "path": "docs/crypto/gateio/apiv4/en/cfd.md",
+      "filename": "cfd.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/en/cfd",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:56:58.334555"
+    },
+    {
+      "id": "cfd",
+      "title": "CFD",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/cfd.md",
+      "filename": "cfd.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/cfd",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:57:43.914165"
     },
     {
       "id": "flash-swap",
@@ -1042,7 +1162,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/flash-swap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:08.840394"
+      "updated_at": "2026-11-13 20:57:06.908199"
     },
     {
       "id": "flash-swap",
@@ -1054,11 +1174,11 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/flash-swap",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:11.972342"
+      "updated_at": "2026-11-13 20:57:52.218741"
     },
     {
       "id": "en",
-      "title": "Gate API v4.106.88",
+      "title": "Gate API v4.106.182",
       "path": "docs/crypto/gateio/apiv4/en.md",
       "filename": "en.md",
       "api_type": "REST",
@@ -1066,11 +1186,11 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:38.372822"
+      "updated_at": "2026-11-13 20:56:51.238701"
     },
     {
       "id": "zh_CN",
-      "title": "Gate API v4.106.88",
+      "title": "Gate API v4.106.182",
       "path": "docs/crypto/gateio/apiv4/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "REST",
@@ -1078,7 +1198,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:42.508670"
+      "updated_at": "2026-11-13 20:57:36.657828"
     },
     {
       "id": "en",
@@ -1090,7 +1210,7 @@
       "source_url": "https://www.gate.com/docs/developers/agent/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:08.728247"
+      "updated_at": "2026-11-13 20:56:40.922960"
     },
     {
       "id": "zh_CN",
@@ -1102,7 +1222,7 @@
       "source_url": "https://www.gate.com/docs/developers/agent/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:14.035738"
+      "updated_at": "2026-11-13 20:56:40.858000"
     },
     {
       "id": "isolated-margin",
@@ -1114,7 +1234,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/isolated-margin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:21.419927"
+      "updated_at": "2026-11-13 20:57:10.351523"
     },
     {
       "id": "isolated-margin",
@@ -1126,7 +1246,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/isolated-margin",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:22.377273"
+      "updated_at": "2026-11-13 20:57:55.766774"
     },
     {
       "id": "multi-collateral-loan",
@@ -1138,7 +1258,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/multi-collateral-loan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:26.566254"
+      "updated_at": "2026-11-13 20:57:13.586855"
     },
     {
       "id": "multi-collateral-loan",
@@ -1150,7 +1270,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/multi-collateral-loan",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:26.649207"
+      "updated_at": "2026-11-13 20:57:58.836236"
     },
     {
       "id": "otc",
@@ -1162,7 +1282,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/otc",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:37.983629"
+      "updated_at": "2026-11-13 20:57:17.059125"
     },
     {
       "id": "otc",
@@ -1174,7 +1294,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/otc",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:35.690639"
+      "updated_at": "2026-11-13 20:58:02.567784"
     },
     {
       "id": "p2p",
@@ -1186,7 +1306,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/p2p",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:43.657497"
+      "updated_at": "2026-11-13 20:57:18.215041"
     },
     {
       "id": "p2p",
@@ -1198,7 +1318,31 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/p2p",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:40.245322"
+      "updated_at": "2026-11-13 20:58:03.176473"
+    },
+    {
+      "id": "stock",
+      "title": "Stock",
+      "path": "docs/crypto/gateio/apiv4/en/stock.md",
+      "filename": "stock.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/en/stock",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:57:23.936279"
+    },
+    {
+      "id": "stock",
+      "title": "股票",
+      "path": "docs/crypto/gateio/apiv4/zh_CN/stock.md",
+      "filename": "stock.md",
+      "api_type": "REST",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/stock",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:58:09.801857"
     },
     {
       "id": "crossex",
@@ -1210,7 +1354,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/crossex",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:52.117195"
+      "updated_at": "2026-11-13 20:56:59.507707"
     },
     {
       "id": "crossex",
@@ -1222,7 +1366,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/crossex",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:54.918928"
+      "updated_at": "2026-11-13 20:57:45.185867"
     },
     {
       "id": "delivery",
@@ -1234,7 +1378,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/delivery",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:56.257900"
+      "updated_at": "2026-11-13 20:57:02.133726"
     },
     {
       "id": "delivery",
@@ -1246,7 +1390,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/delivery",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:59.321523"
+      "updated_at": "2026-11-13 20:57:47.583608"
     },
     {
       "id": "futures",
@@ -1258,7 +1402,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/futures",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:15.283860"
+      "updated_at": "2026-11-13 20:57:10.120935"
     },
     {
       "id": "futures",
@@ -1270,7 +1414,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/futures",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:17.483071"
+      "updated_at": "2026-11-13 20:57:55.407658"
     },
     {
       "id": "en",
@@ -1282,7 +1426,7 @@
       "source_url": "https://www.gate.com/docs/developers/alpha/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:18.885058"
+      "updated_at": "2026-11-13 20:56:44.235766"
     },
     {
       "id": "zh_CN",
@@ -1294,11 +1438,11 @@
       "source_url": "https://www.gate.com/docs/developers/alpha/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:23.586358"
+      "updated_at": "2026-11-13 20:56:44.597229"
     },
     {
       "id": "en",
-      "title": "Gate CrossEx API v1.0.1",
+      "title": "Gate CrossEx API v1.0.8",
       "path": "docs/crypto/gateio/crossex/en.md",
       "filename": "en.md",
       "api_type": "Trading",
@@ -1306,11 +1450,11 @@
       "source_url": "https://www.gate.com/docs/developers/crossex/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:18.483886"
+      "updated_at": "2026-11-13 20:58:21.531688"
     },
     {
       "id": "zh_CN",
-      "title": "Gate CrossEx API v1.0.1",
+      "title": "Gate CrossEx API v1.0.8",
       "path": "docs/crypto/gateio/crossex/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "Trading",
@@ -1318,7 +1462,7 @@
       "source_url": "https://www.gate.com/docs/developers/crossex/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:30.795119"
+      "updated_at": "2026-11-13 20:58:27.530220"
     },
     {
       "id": "options",
@@ -1330,7 +1474,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/options",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:15:32.390877"
+      "updated_at": "2026-11-13 20:57:14.299311"
     },
     {
       "id": "options",
@@ -1342,7 +1486,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/options",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:31.621652"
+      "updated_at": "2026-11-13 20:57:59.492161"
     },
     {
       "id": "spot",
@@ -1354,7 +1498,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/en/spot",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:00.541862"
+      "updated_at": "2026-11-13 20:57:22.187747"
     },
     {
       "id": "spot",
@@ -1366,31 +1510,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/spot",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:17:50.111088"
-    },
-    {
-      "id": "tradfi",
-      "title": "TradFi",
-      "path": "docs/crypto/gateio/apiv4/en/tradfi.md",
-      "filename": "tradfi.md",
-      "api_type": "Trading",
-      "source_type": "",
-      "source_url": "https://www.gate.com/docs/developers/apiv4/en/tradfi",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 20:16:10.890456"
-    },
-    {
-      "id": "tradfi",
-      "title": "TradFi",
-      "path": "docs/crypto/gateio/apiv4/zh_CN/tradfi.md",
-      "filename": "tradfi.md",
-      "api_type": "Trading",
-      "source_type": "",
-      "source_url": "https://www.gate.com/docs/developers/apiv4/zh_CN/tradfi",
-      "doc_category": "",
-      "version": "",
-      "updated_at": "2026-05-27 20:18:00.045957"
+      "updated_at": "2026-11-13 20:58:07.209053"
     },
     {
       "id": "en",
@@ -1402,7 +1522,7 @@
       "source_url": "https://www.gate.com/docs/developers/crossex/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:22.354879"
+      "updated_at": "2026-11-13 20:58:23.870772"
     },
     {
       "id": "zh_CN",
@@ -1414,7 +1534,7 @@
       "source_url": "https://www.gate.com/docs/developers/crossex/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:26.563547"
+      "updated_at": "2026-11-13 20:58:25.000150"
     },
     {
       "id": "en",
@@ -1426,7 +1546,7 @@
       "source_url": "https://www.gate.com/docs/developers/announcements/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:28.983989"
+      "updated_at": "2026-11-13 20:56:47.441229"
     },
     {
       "id": "zh_CN",
@@ -1438,7 +1558,7 @@
       "source_url": "https://www.gate.com/docs/developers/announcements/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:14:32.970295"
+      "updated_at": "2026-11-13 20:56:48.054336"
     },
     {
       "id": "en",
@@ -1450,7 +1570,7 @@
       "source_url": "https://www.gate.com/docs/developers/delivery/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:34.587839"
+      "updated_at": "2026-11-13 20:58:28.402662"
     },
     {
       "id": "zh_CN",
@@ -1462,7 +1582,7 @@
       "source_url": "https://www.gate.com/docs/developers/delivery/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:38.773913"
+      "updated_at": "2026-11-13 20:58:30.937926"
     },
     {
       "id": "en",
@@ -1474,7 +1594,7 @@
       "source_url": "https://www.gate.com/docs/developers/futures/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:43.562604"
+      "updated_at": "2026-11-13 20:58:32.283290"
     },
     {
       "id": "zh_CN",
@@ -1486,7 +1606,7 @@
       "source_url": "https://www.gate.com/docs/developers/futures/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:48.435524"
+      "updated_at": "2026-11-13 20:58:35.168930"
     },
     {
       "id": "en",
@@ -1498,31 +1618,55 @@
       "source_url": "https://www.gate.com/docs/developers/options/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:52.460769"
+      "updated_at": "2026-11-13 20:58:35.661229"
+    },
+    {
+      "id": "en",
+      "title": "Gate Stock WebSocket v1.0.0",
+      "path": "docs/crypto/gateio/stock/ws/en.md",
+      "filename": "en.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/stock/ws/en",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:58:38.961198"
+    },
+    {
+      "id": "zh_CN",
+      "title": "Gate Stock WebSocket v1.0.0",
+      "path": "docs/crypto/gateio/stock/ws/zh_CN.md",
+      "filename": "zh_CN.md",
+      "api_type": "WebSocket",
+      "source_type": "",
+      "source_url": "https://www.gate.com/docs/developers/stock/ws/zh_CN",
+      "doc_category": "",
+      "version": "",
+      "updated_at": "2026-11-13 20:58:42.263232"
     },
     {
       "id": "en",
       "title": "Gate TradFi WebSocket v1.0.0",
-      "path": "docs/crypto/gateio/tradfi/ws/en.md",
+      "path": "docs/crypto/gateio/cfd/ws/en.md",
       "filename": "en.md",
       "api_type": "WebSocket",
       "source_type": "",
-      "source_url": "https://www.gate.com/docs/developers/tradfi/ws/en",
+      "source_url": "https://www.gate.com/docs/developers/cfd/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:59.823526"
+      "updated_at": "2026-11-13 20:58:17.816929"
     },
     {
       "id": "zh_CN",
       "title": "Gate TradFi WebSocket v1.0.0",
-      "path": "docs/crypto/gateio/tradfi/ws/zh_CN.md",
+      "path": "docs/crypto/gateio/cfd/ws/zh_CN.md",
       "filename": "zh_CN.md",
       "api_type": "WebSocket",
       "source_type": "",
-      "source_url": "https://www.gate.com/docs/developers/tradfi/ws/zh_CN",
+      "source_url": "https://www.gate.com/docs/developers/cfd/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:19:03.443651"
+      "updated_at": "2026-11-13 20:58:20.367625"
     },
     {
       "id": "en",
@@ -1534,7 +1678,7 @@
       "source_url": "https://www.gate.com/docs/developers/unified/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:19:07.176855"
+      "updated_at": "2026-11-13 20:58:42.273159"
     },
     {
       "id": "zh_CN",
@@ -1546,7 +1690,7 @@
       "source_url": "https://www.gate.com/docs/developers/options/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:18:56.244529"
+      "updated_at": "2026-11-13 20:58:38.910166"
     },
     {
       "id": "zh_CN",
@@ -1558,7 +1702,7 @@
       "source_url": "https://www.gate.com/docs/developers/unified/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:19:11.002065"
+      "updated_at": "2026-11-13 20:58:45.675277"
     },
     {
       "id": "en",
@@ -1570,7 +1714,7 @@
       "source_url": "https://www.gate.com/docs/developers/websocket/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:19:14.644160"
+      "updated_at": "2026-11-13 20:58:45.711807"
     },
     {
       "id": "en",
@@ -1582,7 +1726,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/ws/en",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:30.742914"
+      "updated_at": "2026-11-13 20:57:33.060651"
     },
     {
       "id": "zh_CN",
@@ -1594,7 +1738,7 @@
       "source_url": "https://www.gate.com/docs/developers/apiv4/ws/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:16:37.183506"
+      "updated_at": "2026-11-13 20:57:34.618276"
     },
     {
       "id": "zh_CN",
@@ -1606,7 +1750,7 @@
       "source_url": "https://www.gate.com/docs/developers/websocket/zh_CN",
       "doc_category": "",
       "version": "",
-      "updated_at": "2026-05-27 20:19:18.388031"
+      "updated_at": "2026-11-13 20:58:49.206289"
     }
   ]
 }

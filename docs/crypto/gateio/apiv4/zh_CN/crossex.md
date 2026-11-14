@@ -2,13 +2,14 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/crossex
 api_type: Trading
-updated_at: 2026-05-27 20:16:54.918928
+updated_at: 2026-11-13 20:57:45.185867
 ---
 
 # CrossEx
 
-CrossEx是一个跨交易所交易平台,允许用户通过统一账户在多个交易所(币安、欧易、Gate、Bybit、Kraken)进行交易。CrossEx API提供完整的账户管理、资产划转、下单和仓位管理功能,支持跨交易所操作。
+CrossEx是一个跨交易所交易平台,允许用户通过统一账户在多个交易所(Binance、OKX、Gate、Bybit、Kraken、Hyperliquid、Deribit、Lighter)进行交易，并接入美股、港股、韩股和日股。CrossEx API提供完整的账户管理、资产划转、下单和仓位管理功能,支持跨交易所操作。
 
+  * 股票及ETF仅支持跨所账户模式；股票市场使用US、HK、KR、JP作为exchange_type，使用STOCK、ETF作为business_type
   * REST API BaseURL 实盘交易: `https://api.gateio.ws/api/v4`
   * [帮助中心 ](https://www.gate.com/help/crossex/functional)
   * [跨所交易 ](https://www.gate.com/crossex)
@@ -21,7 +22,7 @@ GET `/crossex/rule/symbols`
 
 _查询币对信息_
 
-查询交易对信息
+查询交易对信息。 股票及ETF的交易对格式为 `{市场}_{业务类型}_{证券代码}_USDT`，例如 `US_STOCK_AAPL_USDT`、`HK_STOCK_00700_USDT`、`US_ETF_SPY_USDT`。
 
 ### 参数
 
@@ -29,13 +30,13 @@ _查询币对信息_
 ---|---|---|---|---  
 symbols | 请求参数 | string | 否 | 币对列表，多个以逗号分隔  
 示例值:  
-BINANCE_FUTURE_ADA_USDT,OKX_FUTURE_ADA_USDT  
+BINANCE_FUTURE_ADA_USDT,OKX_FUTURE_ADA_USDT,US_STOCK_AAPL_USDT  
   
 ####  详细描述
 
 **symbols** : 币对列表，多个以逗号分隔  
 示例值:  
-BINANCE_FUTURE_ADA_USDT,OKX_FUTURE_ADA_USDT
+BINANCE_FUTURE_ADA_USDT,OKX_FUTURE_ADA_USDT,US_STOCK_AAPL_USDT
 
 ### 返回
 
@@ -50,9 +51,10 @@ BINANCE_FUTURE_ADA_USDT,OKX_FUTURE_ADA_USDT
 名称 | 类型 | 描述  
 ---|---|---  
 _None_ | array |   
-» symbol | string | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter  
-» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
+» symbol | string | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter。  
+股票及ETF使用市场作为ExchangeType（US/HK/KR/JP），业务类型为STOCK或ETF，例如US_STOCK_AAPL_USDT、HK_STOCK_00700_USDT、US_ETF_SPY_USDT。  
+» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / STOCK 股票 / ETF 交易所交易基金）  
 » state | string | 状态（live 在线 / suspend 暂停）  
 » min_size | string | 最小下单数量  
 » min_notional | string | 最小下单价值  
@@ -61,9 +63,12 @@ _None_ | array |
 » max_num_orders | string | 最大挂单数量  
 » max_market_size | string | 市价单最大下单数量  
 » max_limit_size | string | 限价单最大下单数量  
-» contract_size | string | 合约乘数  
+» contract_size | string | 合约乘数（已废弃，统一是量）  
 » liquidation_fee | string | 清算费率  
 » delist_time | string | 毫秒时间戳，0 表示正常未下架  
+» support_rpi | string | 是否支持rpi下单(true支持,false不支持)  
+» support_cross | string | 是否支持全仓下单(true支持,false不支持)  
+» tag | string | 标签信息。Hyperliquid返回DEX信息；股票及ETF返回证券描述；其他业务返回空字符串  
   
 该请求不需要认证 
 
@@ -110,7 +115,10 @@ _None_ | array |
         "max_limit_size": "2000000",
         "contract_size": "1",
         "liquidation_fee": "0.012500",
-        "delist_time": "0"
+        "support_rpi": "false",
+        "support_cross": "true",
+        "delist_time": "0",
+        "tag": ""
       },
       {
         "symbol": "OKX_FUTURE_ADA_USDT",
@@ -126,7 +134,106 @@ _None_ | array |
         "max_limit_size": "10000000000",
         "contract_size": "100",
         "liquidation_fee": "0",
-        "delist_time": "1762163297615"
+        "delist_time": "1762163297615",
+        "support_rpi": "false",
+        "support_cross": "true",
+        "tag": ""
+      },
+      {
+        "symbol": "US_STOCK_AAPL_USDT",
+        "exchange_type": "US",
+        "business_type": "STOCK",
+        "state": "live",
+        "min_size": "0.01",
+        "min_notional": "0",
+        "lot_size": "0.01",
+        "tick_size": "0.01",
+        "max_num_orders": "0",
+        "max_market_size": "0",
+        "max_limit_size": "0",
+        "contract_size": "0",
+        "liquidation_fee": "0",
+        "delist_time": "0",
+        "support_rpi": "false",
+        "support_cross": "true",
+        "tag": "Apple Inc."
+      }
+    ]
+    
+
+##  查询平台剩余可开仓价值
+
+GET`/crossex/rule/open_capacity`
+
+GET `/crossex/rule/open_capacity`
+
+_查询平台剩余可开仓价值_
+
+查询各合约交易对在 LONG、SHORT 方向当前剩余的最大开仓名义价值。 结果仅包含剩余可开仓价值低于阈值的交易对和仓位方向；未出现在结果中表示其剩余可开仓价值不低于该阈值。 `available_to_open_notional` 为 `0` 时，表示该交易对在对应仓位方向当前不能开仓。平仓方向不受该规则影响
+
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | [Inline]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» CrossexOpenCapacity | object |   
+»» symbol | string | 合约交易对  
+»» position_side | string | 仓位方向（LONG 多仓 / SHORT 空仓）  
+»» available_to_open_notional | number(decimal) | 对应仓位方向当前剩余的最大开仓名义价值；0 表示当前不能开仓  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+position_side | LONG  
+position_side | SHORT  
+该请求不需要认证 
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/rule/open_capacity'
+    query_param = ''
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/crossex/rule/open_capacity \
+      -H 'Accept: application/json'
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "symbol": "GATE_FUTURE_HIVE_USDT",
+        "position_side": "LONG",
+        "available_to_open_notional": 390.625
+      },
+      {
+        "symbol": "GATE_FUTURE_HIVE_USDT",
+        "position_side": "SHORT",
+        "available_to_open_notional": 390.625
       }
     ]
     
@@ -241,6 +348,8 @@ GET `/crossex/transfers/coin`
 
 _查询划转币种支持_
 
+`est_fee`: 预估手续费, 当你的资金划转涉及链上提现时, 该手续费由交易所收取, 此值为参考值, 实际情况以交易所为准
+
 ### 参数
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
@@ -261,7 +370,7 @@ coin | 请求参数 | string | 否 | 指定币种名称查询
 ---|---|---  
 » CrossexTransferCoin | object |   
 »» coin | string | 币种  
-»» min_trans_amount | number | 最小划转数量(需要加上预估手续费)  
+»» min_trans_amount | number | 最小划转数量(已经包含预估手续费)  
 »» est_fee | number | 预估手续费  
 »» precision | integer | 精度  
 »» is_disabled | integer | 是否禁用，0 表示未禁用  
@@ -343,8 +452,8 @@ limit | 请求参数 | integer | 否 | 列表返回的最大数量，最大1000
 » CrossexTransferRecord | object |   
 »» id | string | 订单 ID  
 »» text | string | 客户自定义Id  
-»» from_account_type | string | 操作的from账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT）  
-»» to_account_type | string | 操作的to账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT）  
+»» from_account_type | string | 操作的from账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT）  
+»» to_account_type | string | 操作的to账户（CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT）  
 »» coin | string | 币种  
 »» amount | string | 转账数量，发起请求转账的数量  
 »» actual_receive | string | 真实到帐金额（当 status = SUCCESS 时有值，其余状态时为空）  
@@ -451,7 +560,11 @@ _资金划转_
   * 在跨所模式下，划转USDT，`from` & `to`任意一侧必须为`SPOT`， 相应地另一侧应该是`CROSSEX` 如果填写的是`CROSSEX_${exchange_type}`(如`CROSSEX_GATE`)，会默认为你设置为`CROSSEX`
   * 在分所模式下，划转USDT，`from` & `to`任意一侧必须为`CROSSEX_${exchange_type}`，相应地另一侧应该是`SPOT`或者`CROSSEX_${exchange_type}` 如果填写的是`CROSSEX`，会默认为你设置为`CROSSEX_GATE`
   * 划转非USDT币种时，从CrossEx 进行转入或者转出，`from` & `to` 任意一侧都不可以是`CROSSEX`，必须指定为`CROSSEX_${exchange_type}`
-  * 划转非USDT币种时，可以进行`CROSSEX_{exchange_type}` 的划转，如from = `CROSSEX_BINANCE` , to = `CROSSEX_GATE`
+  * 划转非USDT币种时，可以进行`CROSSEX_{exchange_type}` 之间的划转，如from = `CROSSEX_BINANCE` , to = `CROSSEX_GATE`
+  * 划转任意一侧为 `CROSSEX_KRAKEN`时, 暂时只支持USDT
+  * 划转任意一侧为 `CROSSEX_DERIBIT`时, 暂时只支持USDC
+  * 划转任意一侧为 `CROSSEX_HYPERLIQUID`时, 另一侧只能为`SPOT`, coin只支持USDC
+  * 划转任意一侧为 `CROSSEX_LIGHTER`时, 另一侧只能为`SPOT`, coin只支持USDC
 
 ### 参数
 
@@ -460,8 +573,8 @@ _资金划转_
 body | body | CrossexTransferRequest | 否 |   
 » coin | body | string | 是 | 币种  
 » amount | body | string | 是 | 转账数量  
-» from | body | string | 是 | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT  
-» to | body | string | 是 | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT  
+» from | body | string | 是 | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+» to | body | string | 是 | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
 » text | body | string | 否 | 用户自定义id  
   
 ### 返回
@@ -559,7 +672,7 @@ POST `/crossex/orders`
 
 _下单_
 
-限频：每10秒100次请求，单个用户的最大挂单数为1,000个
+限频：每10秒100次请求，单个用户的最大挂单数为1,000个。 股票及ETF额外单用户1次/1s，仅支持跨所账户模式和GTC；股票及ETF必须使用qty下单，不支持quote_qty下单。 股票及ETF的委托价格使用上市市场原生计价币种：美股为USD、港股为HKD、韩股为KRW、日股为JPY。
 
 ### 参数
 
@@ -573,18 +686,26 @@ body | body | CrossexOrderRequest | 否 |
 如果您想在OKX交易所上为ADA/USDT交易对下U本位永续合约订单，您可以使用这样的唯一标识符：`OKX_FUTURE_ADA_USDT`;  
 如果您想在GATE交易所上为ADA/USDT交易对下现货杠杆订单，您可以使用这样的唯一标识符：`GATE_MARGIN_ADA_USDT`;  
 如果您想在BYBIT交易所上为ADA/USDT交易对下现货订单，您可以使用这样的唯一标识符：`BYBIT_SPOT_ADA_USDT`;  
-如果您想在KRAKEN交易所上为ADA/USDT交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
-目前支持三种订单：现货订单、U本位永续合约订单和现货杠杆订单, BYBIT暂不支持现货杠杆订单, KRAKEN暂不支持现货与杠杆订单  
+如果您想在KRAKEN交易所上为ADA/USD交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
+如果您想在HYPERLIQUID交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`HYPERLIQUID_FUTURE_ADA_USDC`;  
+如果您想在DERIBIT交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`DERIBIT_FUTURE_ADA_USDC`;  
+如果您想在LIGHTER交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`LIGHTER_FUTURE_ADA_USDC`;  
+如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
+如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
+如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
 » side | body | string | 是 | BUY, SELL  
 » type | body | string | 否 | 订单类型（默认`LIMIT`，支持类型列举：`LIMIT`、`MARKET`）  
-» time_in_force | body | string | 否 | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`  
+» time_in_force | body | string | 否 | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
 `POC`: PendingOrCancelled or PostOnly  
-» qty | body | string | 否 | 订单数量（强制性，除非现货市价买入）  
-» price | body | string | 否 | 限价订单价格（限价订单必须）  
-» quote_qty | body | string | 否 | 订单报价数量，现货和杠杆市价买单必传  
+`RPI`: RPI  
+股票及ETF仅支持`GTC`  
+» qty | body | string | 否 | 订单数量（强制性，除非现货和杠杆市价买入；股票及ETF必须传qty）  
+» price | body | string | 否 | 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+» quote_qty | body | string | 否 | 订单报价数量，现货和杠杆市价买单必传；股票及ETF不支持quote_qty下单  
 » reduce_only | body | string | 否 | 只减仓：`true`或者`false`  
 » position_side | body | string | 否 | 仓位方向：`NONE`, `LONG`, `SHORT`  
 不传默认单向持仓`NONE`  
@@ -597,14 +718,22 @@ body | body | CrossexOrderRequest | 否 |
 如果您想在OKX交易所上为ADA/USDT交易对下U本位永续合约订单，您可以使用这样的唯一标识符：`OKX_FUTURE_ADA_USDT`;  
 如果您想在GATE交易所上为ADA/USDT交易对下现货杠杆订单，您可以使用这样的唯一标识符：`GATE_MARGIN_ADA_USDT`;  
 如果您想在BYBIT交易所上为ADA/USDT交易对下现货订单，您可以使用这样的唯一标识符：`BYBIT_SPOT_ADA_USDT`;  
-如果您想在KRAKEN交易所上为ADA/USDT交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
-目前支持三种订单：现货订单、U本位永续合约订单和现货杠杆订单, BYBIT暂不支持现货杠杆订单, KRAKEN暂不支持现货与杠杆订单
+如果您想在KRAKEN交易所上为ADA/USD交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
+如果您想在HYPERLIQUID交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`HYPERLIQUID_FUTURE_ADA_USDC`;  
+如果您想在DERIBIT交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`DERIBIT_FUTURE_ADA_USDC`;  
+如果您想在LIGHTER交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`LIGHTER_FUTURE_ADA_USDC`;  
+如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
+如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
+如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式
 
-**» time_in_force** : 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`  
+**» time_in_force** : 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly
+`POC`: PendingOrCancelled or PostOnly  
+`RPI`: RPI  
+股票及ETF仅支持`GTC`
 
 **» position_side** : 仓位方向：`NONE`, `LONG`, `SHORT`  
 不传默认单向持仓`NONE`
@@ -621,6 +750,7 @@ body | body | CrossexOrderRequest | 否 |
 » time_in_force | IOC  
 » time_in_force | FOK  
 » time_in_force | POC  
+» time_in_force | RPI  
 » reduce_only | true  
 » reduce_only | false  
 » position_side | LONG  
@@ -714,6 +844,126 @@ WARNING
     }
     
 
+##  批量撤单🔒 需要认证
+
+POST`/crossex/batch_cancel_orders`
+
+POST `/crossex/batch_cancel_orders`
+
+_批量撤单_
+
+批量撤销指定订单，order_id 或 text 必传其一；同时传入时优先使用 order_id。限频：每10秒100次请求
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | array[CrossexBatchCancelOrderRequest] | 是 |   
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 批量撤单请求处理结果 | [CrossexBatchCancelOrderResponse]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+_None_ | array | [批量撤单请求处理结果]  
+» CrossexBatchCancelOrderResponse | CrossexBatchCancelOrderResponse | 批量撤单请求处理结果  
+»» order_id | string | 订单 ID  
+»» text | string | 用户创建订单时指定的自定义 ID  
+»» accepted | string | 是否受理成功，字符串 true 或 false  
+»» label | string | 受理失败时的错误标识，成功时为空  
+»» message | string | 受理失败时的错误信息，成功时为空  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/batch_cancel_orders'
+    query_param = ''
+    body='[{"order_id":"123456"},{"text":"crossex-test-1"}]'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/crossex/batch_cancel_orders"
+    query_param=""
+    body_param='[{"order_id":"123456"},{"text":"crossex-test-1"}]'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    [
+      {
+        "order_id": "123456"
+      },
+      {
+        "text": "crossex-test-1"
+      }
+    ]
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "order_id": "123456",
+        "text": "",
+        "accepted": "true",
+        "label": "",
+        "message": ""
+      },
+      {
+        "order_id": "",
+        "text": "crossex-test-1",
+        "accepted": "false",
+        "label": "TRADE_ORDER_NOT_FOUND_ERROR",
+        "message": "The order was not found"
+      }
+    ]
+    
+
 ##  查询订单详情🔒 需要认证
 
 GET`/crossex/orders/{order_id}`
@@ -754,41 +1004,36 @@ _CrossexOrder_
 » order_id | string | 订单 ID  
 » text | string | 客户自定义订单 ID  
 » state | string | 订单状态：  
-  
 NEW：订单已通过校验，等待发送到交易所  
-  
 OPEN：订单已挂在交易所订单簿上  
-  
 PARTIALLY_FILLED：订单已部分成交  
-  
 FILLED：订单已完全成交  
-  
 FAIL：CrossEx 内部校验未通过，请查看 reason 字段了解失败原因  
-  
 REJECT：订单被交易所拒绝，请查看 reason 字段了解失败原因  
+CANCELLED: 订单被取消  
 » symbol | string | 交易对唯一标识，示例：  
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 » side | string | 方向（BUY 买入 / SELL 卖出）  
 » type | string | 订单类型（LIMIT 限价 / MARKET 市价）  
 » attribute | string | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
+» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 » qty | string | 基础货币下单数量  
 » quote_qty | string | 报价币种下单数量  
-» price | string | 订单价格  
-» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC）  
+» price | string | 订单价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC / RPI）  
 » executed_qty | string | 已成交基础货币数量  
-» executed_amount | string | 已成交报价币种金额  
-» executed_avg_price | string | 已成交均价  
+» executed_amount | string | 已成交报价币种金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+» executed_avg_price | string | 已成交均价。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 » fee_coin | string | 手续费币种  
 » fee | string | 手续费金额  
 » reduce_only | string | 是否仅减仓订单（"true" 或 "false"）  
 » leverage | string | 订单杠杆倍数  
 » reason | string | 失败原因描述  
 » last_executed_qty | string | 最新一次成交数量  
-» last_executed_price | string | 最新一次成交价格  
-» last_executed_amount | string | 最新一次成交金额  
-» position_side | string | 仓位方向（NONE 无仓位 / LONG 多仓 / SHORT 空仓）  
+» last_executed_price | string | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+» last_executed_amount | string | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+» position_side | string | 仓位方向（NONE 单向持仓 / LONG 多仓 / SHORT 空仓）  
 » create_time | string | 创建时间  
 » update_time | string | 更新时间  
   
@@ -976,7 +1221,7 @@ WARNING
     
     {
       "order_id": "123",
-      "text": "crossx-test-1"
+      "text": "crossex-test-1"
     }
     
 
@@ -1079,7 +1324,7 @@ POST `/crossex/convert/quote`
 
 _闪兑询价_
 
-限频：每天100次请求
+限频：每天100次请求 针对HYPERLIQUID, 支持`HYPERLIQUID_USDC` & `CROSSEX_USDT` 互兑, 暂不支持分所模式的HYPERLIQUID闪兑 针对LIGHTER, 支持`LIGHTER_USDC` & `CROSSEX_USDT` 互兑, 暂不支持分所模式的LIGHTER闪兑 针对KRAKEN, 仅支持`KRAKEN_USD`兑换为`CROSSEX_USDT`, 暂不支持分所模式的KRAKEN闪兑
 
 ### 参数
 
@@ -1087,10 +1332,28 @@ _闪兑询价_
 ---|---|---|---|---  
 body | body | CrossexConvertQuoteRequest | 否 |   
 » exchange_type | body | string | 是 | 交易所类型  
+目前仅支持 BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, LIGHTER  
 » from_coin | body | string | 是 | 卖出的资产  
-» to_coin | body | string | 是 | 买入的资产名称（OKX, GATE 只允许买入BTC, ETH, USDT, BN 只允许买入USDT）  
+» to_coin | body | string | 是 | 买入的资产名称  
+OKX, GATE 只允许兑换成BTC, ETH, USDT  
+BYBIT, BINANCE 只允许兑换成USDT  
+HYPERLIQUID 只允许兑换成USDT, USDC  
+KRAKEN 只允许兑换成USDT  
+LIGHTER 只允许USDT与USDC互兑  
 » from_amount | body | string | 是 | 卖出的资产数量  
   
+####  详细描述
+
+**» exchange_type** : 交易所类型  
+目前仅支持 BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, LIGHTER
+
+**» to_coin** : 买入的资产名称  
+OKX, GATE 只允许兑换成BTC, ETH, USDT  
+BYBIT, BINANCE 只允许兑换成USDT  
+HYPERLIQUID 只允许兑换成USDT, USDC  
+KRAKEN 只允许兑换成USDT  
+LIGHTER 只允许USDT与USDC互兑
+
 ### 返回
 
 返回状态码 | 含义 | 描述 | 格式  
@@ -1111,7 +1374,7 @@ _CrossexConvertQuoteResponse_
 » to_coin | string | 买入的资产  
 » from_amount | string | 卖出的资产数量  
 » to_amount | string | 买入的资产数量  
-» price | string | 价格  
+» price | string | 报价价格  
   
 WARNING
 
@@ -1297,13 +1560,13 @@ GET `/crossex/accounts`
 
 _查询账户资产_
 
-限频：每10秒200次请求 100% <= initial_margin_rate < 110%，禁止划出保证金币种。 initial_margin_rate < 100%，系统自动撤单，只能平仓不能开仓 maintenance_margin_rate <= 100%，系统强制平仓
+限频：每10秒200次请求 100% <= initial_margin_rate < 110%,禁止划出保证金币种 initial_margin_rate < 100%，系统自动撤单，只能平仓不能开仓 maintenance_margin_rate <= 100%，系统强制平仓
 
 ### 参数
 
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
-exchange_type | 请求参数 | string | 否 | 交易所。当跨所模式下不用传，当分所模式下必传(BINANCE/OKX/GATE/BYBIT/KRAKEN)  
+exchange_type | 请求参数 | string | 否 | 交易所。当跨所模式下不用传，当分所模式下必传(BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER)  
   
 ### 返回
 
@@ -1339,13 +1602,13 @@ _CrossexAccount_
 »»» exchange_type | string | 交易所  
 »»» balance | string | 余额  
 »»» upnl | string | 未结盈亏  
-»»» equity | string | 权益（只有USDT才有值，其他资产为0）  
-»»» futures_initial_margin | string | 合约初始保证金（只有USDT才有值，其他资产为0）  
-»»» futures_maintenance_margin | string | 合约维持保证金（只有USDT才有值，其他资产为0）  
-»»» borrowing_initial_margin | string | 杠杆交易初始保证金（只有USDT才有值，其他资产为0）  
-»»» borrowing_maintenance_margin | string | 杠杆交易维持保证金（只有USDT才有值，其他资产为0）  
+»»» equity | string | 币种的保证金净资产权益  
+»»» futures_initial_margin | string | 币种的合约初始保证金, 合约结算币种（USDT/USDC/USD）会有此值  
+»»» futures_maintenance_margin | string | 币种的合约维持保证金, 合约结算币种（USDT/USDC/USD）会有此值  
+»»» borrowing_initial_margin | string | 币种的杠杆交易初始保证金, 杠杆/合约结算币种（USDT/USDC/USD）会有此值  
+»»» borrowing_maintenance_margin | string | 币种的杠杆交易维持保证金, 杠杆/合约结算币种（USDT/USDC/USD）会有此值  
 »»» available_balance | string | 可用余额  
-»»» liability | string | 负债（仅分所模式下才有意义。跨所模式下始终为0）  
+»»» liability | string | 币种负债, 仅（USDT/USDC/USD）会有值  
   
 WARNING
 
@@ -1449,7 +1712,7 @@ _更改账户合约仓位模式或账户模式_
 body | body | CrossexAccountUpdateRequest | 否 |   
 » position_mode | body | string | 否 | 合约仓位模式（SINGLE/DUAL）  
 » account_mode | body | string | 否 | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-» exchange_type | body | string | 否 | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+» exchange_type | body | string | 否 | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
   
 ### 返回
 
@@ -1467,7 +1730,7 @@ _CrossexAccountUpdateResponse_
 ---|---|---  
 » position_mode | string | 请求修改的合约仓位模式（SINGLE/DUAL）  
 » account_mode | string | 请求修改的账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-» exchange_type | string | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+» exchange_type | string | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
   
 WARNING
 
@@ -1488,7 +1751,7 @@ WARNING
     
     url = '/crossex/accounts'
     query_param = ''
-    body='{"position_mode":"string","account_mode":"string","exchange_type":"string"}'
+    body='{"position_mode":"SINGLE"}'
     # `gen_sign` 的实现参考认证一章
     sign_headers = gen_sign('PUT', prefix + url, query_param, body)
     headers.update(sign_headers)
@@ -1505,7 +1768,7 @@ WARNING
     method="PUT"
     url="/crossex/accounts"
     query_param=""
-    body_param='{"position_mode":"string","account_mode":"string","exchange_type":"string"}'
+    body_param='{"position_mode":"SINGLE"}'
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
@@ -1521,9 +1784,7 @@ WARNING
     
     
     {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
+      "position_mode": "SINGLE"
     }
     
 
@@ -1533,9 +1794,7 @@ WARNING
     
     
     {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
+      "position_mode": "SINGLE"
     }
     
 
@@ -1728,8 +1987,8 @@ WARNING
     
     
     {
-      "symbol": "string",
-      "leverage": "string"
+      "symbol": "OKX_FUTURE_ADA_USDT",
+      "leverage": "1"
     }
     
 
@@ -1941,8 +2200,8 @@ _完全平仓_
 
   * 当前账户中不存在该symbol的任何挂单。
   * 在满足前置条件的情况下，当系统检测到仓位在满足以下任一限制时：
-  * 小于或等于最小名义金额（minNotional）
-  * 小于或等于最小下单数量（minSize）
+  * 小于最小名义金额（minNotional）
+  * 小于最小下单数量（minSize）
 
 满足条件后，系统将自动生成一笔平仓委托，并对该仓位进行立即的完全平仓处理。 该接口用于避免因订单规模过小而触发无法在交易所下单的问题，确保小额仓位在达到阈值时能够顺利被平掉。
 
@@ -2050,6 +2309,322 @@ WARNING
     {
       "order_id": "123456",
       "text": "123456"
+    }
+    
+
+##  查询合约仓位保证金模式🔒 需要认证
+
+GET`/crossex/positions/margin_mode`
+
+GET `/crossex/positions/margin_mode`
+
+_查询合约仓位保证金模式_
+
+限频：每10秒200次请求
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+symbol | 请求参数 | string | 是 | 合约交易币对  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | CrossexMarginModeResponse  
+  
+### 返回格式
+
+状态码 **200**
+
+_CrossexMarginModeResponse_
+
+名称 | 类型 | 描述  
+---|---|---  
+» symbol | string | 合约交易币对  
+» margin_mode | string | 保证金模式（CROSS/ISOLATED）  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/positions/margin_mode'
+    query_param = 'symbol=HYPERLIQUID_FUTURE_CXMT_USDC'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/crossex/positions/margin_mode"
+    query_param="symbol=HYPERLIQUID_FUTURE_CXMT_USDC"
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url?$query_param"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+      "margin_mode": "ISOLATED"
+    }
+    
+
+##  修改合约仓位保证金模式🔒 需要认证
+
+POST`/crossex/positions/margin_mode`
+
+POST `/crossex/positions/margin_mode`
+
+_修改合约仓位保证金模式_
+
+限频：每10秒100次请求。仅支持Hyperliquid合约交易币对，存在挂单或仓位时不允许修改
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | CrossexMarginModeRequest | 否 |   
+» symbol | body | string | 是 | Hyperliquid合约交易币对  
+» margin_mode | body | string | 是 | 保证金模式（CROSS/ISOLATED）  
+  
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+» margin_mode | CROSS  
+» margin_mode | ISOLATED  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+202 | [Accepted ](https://tools.ietf.org/html/rfc7231#section-6.3.3) | none | CrossexMarginModeResponse  
+  
+### 返回格式
+
+状态码 **202**
+
+_CrossexMarginModeResponse_
+
+名称 | 类型 | 描述  
+---|---|---  
+» symbol | string | 合约交易币对  
+» margin_mode | string | 保证金模式（CROSS/ISOLATED）  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/positions/margin_mode'
+    query_param = ''
+    body='{"symbol":"HYPERLIQUID_FUTURE_CXMT_USDC","margin_mode":"ISOLATED"}'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/crossex/positions/margin_mode"
+    query_param=""
+    body_param='{"symbol":"HYPERLIQUID_FUTURE_CXMT_USDC","margin_mode":"ISOLATED"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    {
+      "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+      "margin_mode": "ISOLATED"
+    }
+    
+
+> 返回示例
+
+> 202 返回
+    
+    
+    {
+      "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+      "margin_mode": "ISOLATED"
+    }
+    
+
+##  增加或减少逐仓保证金🔒 需要认证
+
+POST`/crossex/positions/margin`
+
+POST `/crossex/positions/margin`
+
+_增加或减少逐仓保证金_
+
+限频：每10秒100次请求。仅支持Hyperliquid逐仓合约仓位，正数为增加保证金，负数为减少保证金
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | CrossexIsolatedMarginRequest | 否 |   
+» symbol | body | string | 是 | Hyperliquid合约交易币对  
+» margin | body | string | 是 | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
+» position_side | body | string | 否 | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+  
+####  枚举值列表
+
+枚举值列表参数 | 值  
+---|---  
+» position_side | NONE  
+» position_side | LONG  
+» position_side | SHORT  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+202 | [Accepted ](https://tools.ietf.org/html/rfc7231#section-6.3.3) | none | CrossexIsolatedMarginResponse  
+  
+### 返回格式
+
+状态码 **202**
+
+_CrossexIsolatedMarginResponse_
+
+名称 | 类型 | 描述  
+---|---|---  
+» symbol | string | 合约交易币对  
+» margin | string | 本次增加或减少的逐仓保证金  
+» position_side | string | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/positions/margin'
+    query_param = ''
+    body='{"symbol":"HYPERLIQUID_FUTURE_CXMT_USDC","margin":"-30","position_side":"NONE"}'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/crossex/positions/margin"
+    query_param=""
+    body_param='{"symbol":"HYPERLIQUID_FUTURE_CXMT_USDC","margin":"-30","position_side":"NONE"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    {
+      "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+      "margin": "-30",
+      "position_side": "NONE"
+    }
+    
+
+> 返回示例
+
+> 202 返回
+    
+    
+    {
+      "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+      "margin": "-30",
+      "position_side": "NONE"
     }
     
 
@@ -2190,13 +2765,16 @@ CrossexFee | array |
 » exchange_type | string | 交易所  
 » spot_maker_fee | string | 现货Maker费率  
 » spot_taker_fee | string | 现货Taker费率  
+» spot_rpi_maker_fee | string | 现货RPI订单Maker费率  
 » future_maker_fee | string | 合约Maker费率  
 » future_taker_fee | string | 合约Taker费率  
+» future_rpi_maker_fee | string | 合约RPI订单Maker费率  
 » special_fee_list | array |   
 »» CrossexSpecialFee | object |   
 »»» symbol | string | 交易对  
 »»» taker_fee_rate | string | Taker费率  
 »»» maker_fee_rate | string | Maker费率  
+»»» rpi_fee_rate | string | RPI订单Maker费率  
   
 WARNING
 
@@ -2255,16 +2833,20 @@ WARNING
         "exchange_type": "BINANCE",
         "spot_maker_fee": "0.0001",
         "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
         "future_maker_fee": "0.00006",
         "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": "",
         "special_fee_list": []
       },
       {
         "exchange_type": "OKX",
         "spot_maker_fee": "0.0001",
         "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
         "future_maker_fee": "0.00006",
         "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": "",
         "special_fee_list": [
           {
             "symbol": "OKX_SPOT_FLOW_USDT",
@@ -2277,16 +2859,20 @@ WARNING
         "exchange_type": "GATE",
         "spot_maker_fee": "0.0001",
         "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
         "future_maker_fee": "0.00006",
         "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": "",
         "special_fee_list": []
       },
       {
         "exchange_type": "BYBIT",
         "spot_maker_fee": "0.0001",
         "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
         "future_maker_fee": "0.00006",
         "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": "",
         "special_fee_list": [
           {
             "symbol": "BYBIT_FUTURE_BLAST_USDT",
@@ -2299,8 +2885,37 @@ WARNING
         "exchange_type": "KRAKEN",
         "spot_maker_fee": "0.0001",
         "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
         "future_maker_fee": "0.00006",
-        "future_taker_fee": "0.00022"
+        "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": ""
+      },
+      {
+        "exchange_type": "HYPERLIQUID",
+        "spot_maker_fee": "0.0001",
+        "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
+        "future_maker_fee": "0.00006",
+        "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": ""
+      },
+      {
+        "exchange_type": "DERIBIT",
+        "spot_maker_fee": "0.0001",
+        "spot_taker_fee": "0.00025",
+        "spot_rpi_maker_fee": "",
+        "future_maker_fee": "0.00006",
+        "future_taker_fee": "0.00022",
+        "future_rpi_maker_fee": ""
+      },
+      {
+        "exchange_type": "LIGHTER",
+        "spot_maker_fee": "0.0005",
+        "spot_taker_fee": "0.0005",
+        "spot_rpi_maker_fee": "",
+        "future_maker_fee": "0.00005",
+        "future_taker_fee": "0.00005",
+        "future_rpi_maker_fee": ""
       }
     ]
     
@@ -2340,18 +2955,21 @@ exchange_type | 请求参数 | string | 否 | 交易所
 »» symbol | string | 交易对  
 »» position_side | string | 仓位方向  
 »» initial_margin | string | 初始保证金  
+»» isolated_margin | string | 逐仓保证金。全仓时为0，仅逐仓有效  
+»» margin_mode | string | 保证金模式（CROSS/ISOLATED）  
 »» maintenance_margin | string | 维持保证金  
 »» position_qty | string | 仓位数量  
 »» position_value | string | 仓位价值  
 »» upnl | string | 未结盈亏  
 »» upnl_rate | string | 未结盈亏比  
 »» entry_price | string | 仓位入场均价  
+»» liq_price | string | 强平价格。全仓时为0，仅逐仓有效；逐仓时为0代表不强平  
 »» mark_price | string | 标记价格  
 »» leverage | string | 仓位杠杆  
 »» max_leverage | string | 最大杠杆  
 »» risk_limit | string | 风险限额  
 »» fee | string | 仓位手续费  
-»» funding_fee | string | 仓位资金费  
+»» funding_fee | string | 累计仓位资金费。正数代表有收益，负数代表有亏损  
 »» funding_time | string | 仓位资金费收取时间（0代表还未收取过）  
 »» create_time | string | 仓位创建时间  
 »» update_time | string | 仓位更新时间  
@@ -2416,12 +3034,15 @@ WARNING
         "symbol": "OKX_FUTURE_ADA_USDT",
         "position_side": "LONG",
         "initial_margin": "5.79934625",
+        "isolated_margin": "0",
+        "margin_mode": "CROSS",
         "maintenance_margin": "0.06229625",
         "position_qty": "10",
         "position_value": "5.795",
         "upnl": "0.369",
         "upnl_rate": "0.068005897530409141",
         "entry_price": "0.5426",
+        "liq_price": "0",
         "mark_price": "0.5795",
         "leverage": "1",
         "max_leverage": "18",
@@ -2432,6 +3053,111 @@ WARNING
         "create_time": "1750682334273",
         "update_time": "1750730699867",
         "closed_pnl": "12"
+      }
+    ]
+    
+
+##  查询证券仓位🔒 需要认证
+
+GET`/crossex/security_positions`
+
+GET `/crossex/security_positions`
+
+_查询证券仓位_
+
+查询股票及ETF仓位。限频：每10秒200次请求。 价格、持仓价值和未结盈亏使用上市市场原生计价币种：美股为USD、港股为HKD、韩股为KRW、日股为JPY。
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+symbol | 请求参数 | string | 否 | 股票或ETF交易对  
+exchange_type | 请求参数 | string | 否 | 股票市场（US/HK/KR/JP）  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» CrossexSecurityPosition | object |   
+»» user_id | string | 用户ID  
+»» symbol | string | 股票或ETF交易对  
+»» price | string | 最新价格，单位为上市市场原生计价币种  
+»» entry_price | string | 持仓成本价，单位为上市市场原生计价币种  
+»» diluted_cost_price | string | 摊薄成本价，单位为上市市场原生计价币种  
+»» upnl | string | 未结盈亏，单位为上市市场原生计价币种  
+»» position_qty | string | 持仓数量  
+»» position_value | string | 持仓价值，单位为上市市场原生计价币种  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/security_positions'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/crossex/security_positions"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "user_id": "59138103",
+        "symbol": "HK_STOCK_00700_USDT",
+        "price": "424.8",
+        "entry_price": "428",
+        "diluted_cost_price": "428",
+        "upnl": "-0.032",
+        "position_qty": "0.01",
+        "position_value": "4.248"
       }
     ]
     
@@ -2587,19 +3313,26 @@ symbol | 请求参数 | string | 是 | 币对
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline  
   
 ### 返回格式
 
 状态码 **200**
 
+_CrossexAdlRank_
+
 名称 | 类型 | 描述  
 ---|---|---  
-» CrossexAdlRank | object |   
-»» user_id | string | 用户id  
-»» symbol | string | 交易对  
-»» crossex_adl_rank | string | crossex减仓灯排名（1-5，数字越大排名越前）  
-»» exchange_adl_rank | string | 交易所原始信息（BINANCE：0-4，数字越大越靠前，OKX：0-5，数字越大越靠前，GATE：1-5，数字越小越靠前，BYBIT：0-5，数字越大越靠前）  
+» user_id | string | 用户id  
+» symbol | string | 交易对  
+» crossex_adl_rank | string | Crossex ADL 减仓优先级，取值为 1-5  
+优先级从高到低：5、4、3、2、1  
+» exchange_adl_rank | string | 交易所原始 ADL 排名。各交易所优先级从高到低如下：  
+\- BINANCE：4、3、2、1、0  
+\- OKX：5、4、3、2、1、0  
+\- GATE：1、2、3、4、5  
+\- Kraken：20、40、60、80、100  
+\- BYBIT：5、4、3、2、1、0  
   
 WARNING
 
@@ -2699,41 +3432,36 @@ _None_ | array |
 »» order_id | string | 订单 ID  
 »» text | string | 客户自定义订单 ID  
 »» state | string | 订单状态：  
-  
 NEW：订单已通过校验，等待发送到交易所  
-  
 OPEN：订单已挂在交易所订单簿上  
-  
 PARTIALLY_FILLED：订单已部分成交  
-  
 FILLED：订单已完全成交  
-  
 FAIL：CrossEx 内部校验未通过，请查看 reason 字段了解失败原因  
-  
 REJECT：订单被交易所拒绝，请查看 reason 字段了解失败原因  
+CANCELLED: 订单被取消  
 »» symbol | string | 交易对唯一标识，示例：  
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 »» side | string | 方向（BUY 买入 / SELL 卖出）  
 »» type | string | 订单类型（LIMIT 限价 / MARKET 市价）  
 »» attribute | string | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-»» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-»» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
+»» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+»» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 »» qty | string | 基础货币下单数量  
 »» quote_qty | string | 报价币种下单数量  
-»» price | string | 订单价格  
-»» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC）  
+»» price | string | 订单价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC / RPI）  
 »» executed_qty | string | 已成交基础货币数量  
-»» executed_amount | string | 已成交报价币种金额  
-»» executed_avg_price | string | 已成交均价  
+»» executed_amount | string | 已成交报价币种金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» executed_avg_price | string | 已成交均价。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 »» fee_coin | string | 手续费币种  
 »» fee | string | 手续费金额  
 »» reduce_only | string | 是否仅减仓订单（"true" 或 "false"）  
 »» leverage | string | 订单杠杆倍数  
 »» reason | string | 失败原因描述  
 »» last_executed_qty | string | 最新一次成交数量  
-»» last_executed_price | string | 最新一次成交价格  
-»» last_executed_amount | string | 最新一次成交金额  
-»» position_side | string | 仓位方向（NONE 无仓位 / LONG 多仓 / SHORT 空仓）  
+»» last_executed_price | string | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» last_executed_amount | string | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» position_side | string | 仓位方向（NONE 单向持仓 / LONG 多仓 / SHORT 空仓）  
 »» create_time | string | 创建时间  
 »» update_time | string | 更新时间  
   
@@ -2862,41 +3590,36 @@ _None_ | array |
 »» order_id | string | 订单 ID  
 »» text | string | 客户自定义订单 ID  
 »» state | string | 订单状态：  
-  
 NEW：订单已通过校验，等待发送到交易所  
-  
 OPEN：订单已挂在交易所订单簿上  
-  
 PARTIALLY_FILLED：订单已部分成交  
-  
 FILLED：订单已完全成交  
-  
 FAIL：CrossEx 内部校验未通过，请查看 reason 字段了解失败原因  
-  
 REJECT：订单被交易所拒绝，请查看 reason 字段了解失败原因  
+CANCELLED: 订单被取消  
 »» symbol | string | 交易对唯一标识，示例：  
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 »» side | string | 方向（BUY 买入 / SELL 卖出）  
 »» type | string | 订单类型（LIMIT 限价 / MARKET 市价）  
 »» attribute | string | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-»» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-»» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
+»» exchange_type | string | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+»» business_type | string | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 »» qty | string | 基础货币下单数量  
 »» quote_qty | string | 报价币种下单数量  
-»» price | string | 订单价格  
-»» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC）  
+»» price | string | 订单价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» time_in_force | string | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC / RPI）  
 »» executed_qty | string | 已成交基础货币数量  
-»» executed_amount | string | 已成交报价币种金额  
-»» executed_avg_price | string | 已成交均价  
+»» executed_amount | string | 已成交报价币种金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» executed_avg_price | string | 已成交均价。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 »» fee_coin | string | 手续费币种  
 »» fee | string | 手续费金额  
 »» reduce_only | string | 是否仅减仓订单（"true" 或 "false"）  
 »» leverage | string | 订单杠杆倍数  
 »» reason | string | 失败原因描述  
 »» last_executed_qty | string | 最新一次成交数量  
-»» last_executed_price | string | 最新一次成交价格  
-»» last_executed_amount | string | 最新一次成交金额  
-»» position_side | string | 仓位方向（NONE 无仓位 / LONG 多仓 / SHORT 空仓）  
+»» last_executed_price | string | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» last_executed_amount | string | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+»» position_side | string | 仓位方向（NONE 单向持仓 / LONG 多仓 / SHORT 空仓）  
 »» create_time | string | 创建时间  
 »» update_time | string | 更新时间  
   
@@ -3036,6 +3759,7 @@ to | 请求参数 | integer | 否 | 终止毫秒时间戳
 »» position_side | string | 平仓前仓位方向  
 »» position_mode | string | 平仓时的仓位模式  
 »» leverage | string | 平仓时的杠杆  
+»» margin_mode | string | 保证金模式（CROSS/ISOLATED）  
 »» business_type | string | 业务类型  
 »» create_time | string | 创建时间  
 »» update_time | string | 更新时间  
@@ -3112,7 +3836,8 @@ WARNING
         "position_mode": "DUAL",
         "leverage": "1",
         "create_time": "1750941400632",
-        "update_time": "1750941402661"
+        "update_time": "1750941402661",
+        "margin_mode": "CROSS"
       }
     ]
     
@@ -3164,7 +3889,7 @@ to | 请求参数 | integer | 否 | 终止毫秒时间戳
 »» liq_fee | string | 强平费  
 »» position_side | string | 平仓前仓位方向  
 »» leverage | string | 平仓时的杠杆  
-»» interest | string | 已扣总利息  
+»» interest | string | 仓位累计利息  
 »» business_type | string | 仓位业务类型  
 »» create_time | string | 创建时间  
 »» update_time | string | 更新时间  
@@ -3260,11 +3985,11 @@ _查询杠杆扣息历史_
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 symbol | 请求参数 | string | 否 | 交易对  
-from | 请求参数 | integer | 否 |   
-to | 请求参数 | integer | 否 |   
-page | 请求参数 | integer | 否 |   
-limit | 请求参数 | integer | 否 |   
-exchange_type | 请求参数 | string | 否 |   
+from | 请求参数 | integer | 否 | 起始毫秒时间戳  
+to | 请求参数 | integer | 否 | 终止毫秒时间戳  
+page | 请求参数 | integer | 否 | 列表页数  
+limit | 请求参数 | integer | 否 | 列表返回的最大数量，最大1000  
+exchange_type | 请求参数 | string | 否 | 交易所  
   
 ### 返回
 
@@ -3279,7 +4004,7 @@ exchange_type | 请求参数 | string | 否 |
 名称 | 类型 | 描述  
 ---|---|---  
 » CrossexMarginInterestRecord | object |   
-»» userId | string | 用户Id  
+»» user_id | string | 用户Id  
 »» symbol | string | 币对  
 »» interest_id | string | 扣息Id  
 »» liability_id | string | 负债源Id,可以是挂单Id 或者仓位Id  
@@ -3287,7 +4012,11 @@ exchange_type | 请求参数 | string | 否 |
 »» liability_coin | string | 负债币种  
 »» interest | string | 利息  
 »» interest_rate | string | 利率  
-»» interest_type | string | 扣息类型（`PERIODIC_POSITION` 整点仓位收息，`PERIODIC_OPEN_ORDER` 整点挂单收息，`IMMEDIATE_OPEN_ORDER` 开单收息，`PERIODIC_ISOLATED` 整点负债收息）  
+»» interest_type | string | 扣息类型  
+`PERIODIC_POSITION`: 整点仓位收息  
+`PERIODIC_OPEN_ORDER`: 整点挂单收息  
+`IMMEDIATE_OPEN_ORDER`: 开单收息  
+`PERIODIC_ISOLATED`: 整点负债收息  
 »» create_time | string | 创建时间  
 »» exchange_type | string | 交易所  
   
@@ -3368,7 +4097,7 @@ WARNING
         "interest_rate": "0.00000366",
         "interest_type": "IMMEDIATE_OPEN_ORDER",
         "create_time": "1766451003780",
-        "exchange_type": ""
+        "exchange_type": "OKX"
       }
     ]
     
@@ -3415,7 +4144,7 @@ to | 请求参数 | integer | 否 | 终止毫秒时间戳
 »» business_type | string | 业务类型  
 »» side | string | 买卖方向  
 »» qty | string | 成交数量  
-»» price | string | 成交价格  
+»» price | string | 成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 »» fee | string | 手续费  
 »» fee_coin | string | 手续费币种  
 »» fee_rate | string | 手续费率  
@@ -3494,7 +4223,7 @@ WARNING
         "fee_rate": "0.0005",
         "match_role": "MAKER",
         "rpnl": "-0.001",
-        "position_mode": "BOTH",
+        "position_mode": "DUAL",
         "position_side": "LONG",
         "create_time": "1750941402661"
       }
@@ -3518,7 +4247,7 @@ _查询账户资产变更历史_
 page | 请求参数 | integer | 否 | 列表页数  
 limit | 请求参数 | integer | 否 | 列表返回的最大数量，最大1000  
 coin | 请求参数 | string | 否 | 指定币种名称查询  
-statement_type | 请求参数 | string | 否 | 账单流水类型  
+statement_type | 请求参数 | string | 否 | 账单流水类型。过滤同返回数据  
 from | 请求参数 | integer | 否 | 起始毫秒时间戳  
 to | 请求参数 | integer | 否 | 终止毫秒时间戳  
   
@@ -3537,11 +4266,31 @@ to | 请求参数 | integer | 否 | 终止毫秒时间戳
 » CrossexAccountBookRecord | object |   
 »» id | string | 账户变更记录ID  
 »» user_id | string | 用户ID  
-»» business_id | string | 业务ID  
+»» business_id | string | 业务ID。不同的 `statement_type` 时会有不同的含义。  
+TRANSACTION: 对应订单 ID  
+TRADING_FEE: 对应订单 ID  
+LIQUIDATION_FEE: 对应强平订单 ID  
+FUNDING_FEE: 对应仓位 ID 和资金费结算时间  
+其他类型的为系统处理 ID，不作任何含义  
 »» statement_type | string | 账单流水类型  
+`TRANSACTION` 成交  
+`TRADING_FEE` 手续费  
+`FUNDING_FEE` 合约资金费  
+`LIQUIDATION_FEE` 强平费  
+`TRANSFER_IN` 资金转入  
+`TRANSFER_OUT` 资金转出  
+`BANKRUPT_COMPENSATION` 穿仓补贴  
+`AUTO_REPAY` 杠杆仓位自动还负债  
+`INTEREST_ISOLATED` 利息流水  
+`ACCOUNT_MODE_CHANGE` 账户模式切换资金变动流水  
+`KRAKEN_CONVERSION` KRAKEN_USD负余额用其他保证金币种兑换  
+`SECURITY_DIVIDEND` 股票或ETF分红派息  
+`SECURITY_CORPORATE_ACTION` 股票或ETF拆合股  
+`OTHER` 其他  
 »» exchange_type | string | 交易所  
 »» coin | string | 币种  
-»» change | string | 变更金额（正数表示转入，负数表示转出）  
+»» symbol | string | 币对  
+»» change | string | 变更金额（正数表示增加，负数表示减少）  
 »» balance | string | 变更后账户余额  
 »» create_time | string | 创建时间  
   
@@ -3602,9 +4351,10 @@ WARNING
         "id": "121",
         "user_id": "12345678",
         "business_id": "20818182821",
-        "statement_type": "TRADING_FEE",
+        "statement_type": "FUNDING_FEE",
         "exchange_type": "BINANCE",
         "coin": "USDT",
+        "symbol": "BINANCE_FUTURE_BTC_USDT",
         "change": "-0.002",
         "balance": "81",
         "create_time": "1750941402661"
@@ -3627,7 +4377,7 @@ Rate Limit: 200 requests per 10 seconds
 参数名称 | 位置 | 类型 | 必选 | 描述  
 ---|---|---|---|---  
 coin | 请求参数 | string | 否 | 指定币种名称查询  
-exchange_type | 请求参数 | string | 否 | OKX/GATE/BINANCE/BYBIT/KRAKEN  
+exchange_type | 请求参数 | string | 否 | OKX/GATE/BINANCE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER  
   
 ### 返回
 
@@ -3729,204 +4479,297 @@ WARNING
     ]
     
 
+##  获取交易所ticker🔒 需要认证
+
+GET`/crossex/market/tickers`
+
+GET `/crossex/market/tickers`
+
+_获取交易所ticker_
+
+限频：每1秒1次请求
+
+  * 无法直接传杠杆币对作为参数, 例如`GATE_MARGIN_BTC_USDT`是无效参数
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+symbols | 请求参数 | string | 否 | 币对列表，多个以逗号分隔  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» symbol | string | 币对  
+» last_price | string | 最新价  
+» open_24h | string | 24小时开盘价  
+» low_24h | string | 24小时最低价  
+» high_24h | string | 24小时最高价  
+» volume_24h_base | string | 最近24小时成交量，以基础货币为单位  
+» volume_24h_quote | string | 最近24小时成交量，以计价货币为单位  
+» mark_price | string | 标记价格  
+» index_price | string | 指数价格  
+» open_interest | string | 总持仓量  
+» open_interest_quote | string | 总持仓量(计价币种)  
+» timestamp | string | 更新时间戳  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/market/tickers'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/crossex/market/tickers"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "symbol": "GATE_FUTURE_BTC_USDT",
+        "last_price": "64052.4",
+        "open_24h": "65144.7",
+        "low_24h": "64375",
+        "high_24h": "65734.8",
+        "volume_24h_base": "31705",
+        "volume_24h_quote": "2063128626",
+        "mark_price": "65148.9",
+        "index_price": "65174.38",
+        "open_interest": "65568.2144",
+        "open_interest_quote": "4271697043.12416",
+        "timestamp": "1785168000000"
+      },
+      {
+        "symbol": "GATE_SPOT_BTC_USDT",
+        "last_price": "65179.4",
+        "open_24h": "",
+        "low_24h": "65744",
+        "high_24h": "64410.9",
+        "volume_24h_base": "3480.769758",
+        "volume_24h_quote": "226794942.82361",
+        "mark_price": "",
+        "index_price": "",
+        "open_interest": "",
+        "open_interest_quote": "",
+        "timestamp": "1785168000000"
+      }
+    ]
+    
+
+##  获取交易所合约资金费率信息🔒 需要认证
+
+GET`/crossex/market/funding_info`
+
+GET `/crossex/market/funding_info`
+
+_获取交易所合约资金费率信息_
+
+限频：每1秒1次请求
+
+  * 针对`Deribit`, `funding_rate`是按8小时周期计算的当前实时利率
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+symbols | 请求参数 | string | 否 | 币对列表，多个以逗号分隔  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» symbol | string | 币种  
+» funding_rate | string | 资金费率  
+» funding_interval | string | 资金费间隔时间(单位为秒)  
+» funding_time | string | 下次资金费率时间(毫秒时间戳)  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/crossex/market/funding_info'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/crossex/market/funding_info"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "symbol": "BINANCE_FUTURE_BTC_USDT",
+        "funding_rate": "0.00006537",
+        "funding_time": "1785168000000",
+        "funding_interval": "28800"
+      },
+      {
+        "symbol": "OKX_FUTURE_BTC_USDT",
+        "funding_rate": "0.0000543885374247",
+        "funding_time": "1785168000000",
+        "funding_interval": "28800"
+      },
+      {
+        "symbol": "KRAKEN_FUTURE_BTC_USD",
+        "funding_rate": "0.000011898754310345",
+        "funding_time": "1785139200000",
+        "funding_interval": "3600"
+      },
+      {
+        "symbol": "GATE_FUTURE_BTC_USDT",
+        "funding_rate": "0.0001",
+        "funding_time": "1785168000000",
+        "funding_interval": "28800"
+      },
+      {
+        "symbol": "BYBIT_FUTURE_BTC_USDT",
+        "funding_rate": "0.00008708",
+        "funding_time": "1785168000000",
+        "funding_interval": "28800"
+      }
+    ]
+    
+
 #  模型
 
-##  CrossexOrderActionResponse
+##  CrossexMarginModeRequest
 
-_CrossexOrderActionResponse_
+_修改合约仓位保证金模式请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | Hyperliquid合约交易币对  
+margin_mode | string | true | none | 保证金模式（CROSS/ISOLATED）  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+margin_mode | CROSS  
+margin_mode | ISOLATED  
+      
+    
+    {
+      "symbol": "string",
+      "margin_mode": "CROSS"
+    }
+    
+    
+
+##  CrossexConvertOrderResponse
+
+_CrossexConvertOrderResponse_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
 order_id | string | true | none | 订单号  
-text | string | true | none | 用户自定义订单号  
+text | string | true | none | 订单号(无法自定义)  
       
     
     {
       "order_id": "string",
       "text": "string"
-    }
-    
-    
-
-##  CrossexTransferRequest
-
-_资金划转请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-coin | string | true | none | 币种  
-amount | string | true | none | 转账数量  
-from | string | true | none | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT  
-to | string | true | none | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX, SPOT  
-text | string | false | none | 用户自定义id  
-      
-    
-    {
-      "coin": "string",
-      "amount": "string",
-      "from": "string",
-      "to": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexAccountUpdateRequest
-
-_更改账户请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-position_mode | string | false | none | 合约仓位模式（SINGLE/DUAL）  
-account_mode | string | false | none | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | false | none | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
-      
-    
-    {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
-    }
-    
-    
-
-##  CrossexTransferResponse
-
-_CrossexTransferResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-tx_id | string | true | none | 操作单号  
-text | string | true | none | 用户自定义订单号  
-      
-    
-    {
-      "tx_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexClosePositionRequest
-
-_完全平仓请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-symbol | string | true | none | 交易币对  
-1\. 支持杠杆交易币对, 如 BINANCE_MARGIN_SOL_USDT  
-2\. 支持合约交易币对, 如 OKX_FUTURE_ETH_USDT  
-position_side | string | false | none | 仓位方向  
-1\. 针对杠杆仓位, 必须传递此参数  
-2\. 针对合约仓位, 需要根据你的合约持仓方式选择性传递  
-      
-    
-    {
-      "symbol": "string",
-      "position_side": "string"
-    }
-    
-    
-
-##  CrossexConvertQuoteResponse
-
-_CrossexConvertQuoteResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-quote_id | string | true | none | 报价id  
-valid_ms | string | true | none | 有效时间（毫秒时间戳）  
-from_coin | string | true | none | 卖出的资产  
-to_coin | string | true | none | 买入的资产  
-from_amount | string | true | none | 卖出的资产数量  
-to_amount | string | true | none | 买入的资产数量  
-price | string | true | none | 价格  
-      
-    
-    {
-      "quote_id": "string",
-      "valid_ms": "string",
-      "from_coin": "string",
-      "to_coin": "string",
-      "from_amount": "string",
-      "to_amount": "string",
-      "price": "string"
-    }
-    
-    
-
-##  Symbol
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-symbol | string | true | none | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter  
-exchange_type | string | true | none | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-business_type | string | true | none | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
-state | string | true | none | 状态（live 在线 / suspend 暂停）  
-min_size | string | true | none | 最小下单数量  
-min_notional | string | true | none | 最小下单价值  
-lot_size | string | true | none | 数量步长  
-tick_size | string | true | none | 价格步长  
-max_num_orders | string | true | none | 最大挂单数量  
-max_market_size | string | true | none | 市价单最大下单数量  
-max_limit_size | string | true | none | 限价单最大下单数量  
-contract_size | string | true | none | 合约乘数  
-liquidation_fee | string | true | none | 清算费率  
-delist_time | string | true | none | 毫秒时间戳，0 表示正常未下架  
-      
-    
-    {
-      "symbol": "string",
-      "exchange_type": "string",
-      "business_type": "string",
-      "state": "string",
-      "min_size": "string",
-      "min_notional": "string",
-      "lot_size": "string",
-      "tick_size": "string",
-      "max_num_orders": "string",
-      "max_market_size": "string",
-      "max_limit_size": "string",
-      "contract_size": "string",
-      "liquidation_fee": "string",
-      "delist_time": "string"
-    }
-    
-    
-
-##  CrossexConvertQuoteRequest
-
-_闪兑询价请求体_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-exchange_type | string | true | none | 交易所类型  
-from_coin | string | true | none | 卖出的资产  
-to_coin | string | true | none | 买入的资产名称（OKX, GATE 只允许买入BTC, ETH, USDT, BN 只允许买入USDT）  
-from_amount | string | true | none | 卖出的资产数量  
-      
-    
-    {
-      "exchange_type": "string",
-      "from_coin": "string",
-      "to_coin": "string",
-      "from_amount": "string"
     }
     
     
@@ -3950,21 +4793,132 @@ leverage | string | true | none | 请求修改的杠杆倍数
     
     
 
-##  CrossexOrderUpdateRequest
+##  CrossexMarginModeResponse
 
-_改单请求体_
+_CrossexMarginModeResponse_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-qty | string | false | none | 修改数量  
-price | string | false | none | 修改价格  
+symbol | string | true | none | 合约交易币对  
+margin_mode | string | true | none | 保证金模式（CROSS/ISOLATED）  
       
     
     {
-      "qty": "string",
-      "price": "string"
+      "symbol": "string",
+      "margin_mode": "string"
+    }
+    
+    
+
+##  CrossexLeverageRequest
+
+_更改杠杆请求体（合约/杠杆通用）_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | 交易对  
+leverage | string | true | none | 杠杆  
+      
+    
+    {
+      "symbol": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  CrossexTransferResponse
+
+_CrossexTransferResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+tx_id | string | true | none | 操作单号  
+text | string | true | none | 用户自定义订单号  
+      
+    
+    {
+      "tx_id": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexOrderActionResponse
+
+_CrossexOrderActionResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+order_id | string | true | none | 订单号  
+text | string | true | none | 用户自定义订单号  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexIsolatedMarginRequest
+
+_增加或减少逐仓保证金请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | Hyperliquid合约交易币对  
+margin | string | true | none | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
+position_side | string | false | none | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+position_side | NONE  
+position_side | LONG  
+position_side | SHORT  
+      
+    
+    {
+      "symbol": "string",
+      "margin": "string",
+      "position_side": "NONE"
+    }
+    
+    
+
+##  CrossexBatchCancelOrderResponse
+
+_CrossexBatchCancelOrderResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+order_id | string | true | none | 订单 ID  
+text | string | true | none | 用户创建订单时指定的自定义 ID  
+accepted | string | true | none | 是否受理成功，字符串 true 或 false  
+label | string | true | none | 受理失败时的错误标识，成功时为空  
+message | string | true | none | 受理失败时的错误信息，成功时为空  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string",
+      "accepted": "string",
+      "label": "string",
+      "message": "string"
     }
     
     
@@ -3997,13 +4951,13 @@ assets | array | true | none | 资产列表，按交易所与币种维度返回�
 »» exchange_type | string | false | none | 交易所  
 »» balance | string | false | none | 余额  
 »» upnl | string | false | none | 未结盈亏  
-»» equity | string | false | none | 权益（只有USDT才有值，其他资产为0）  
-»» futures_initial_margin | string | false | none | 合约初始保证金（只有USDT才有值，其他资产为0）  
-»» futures_maintenance_margin | string | false | none | 合约维持保证金（只有USDT才有值，其他资产为0）  
-»» borrowing_initial_margin | string | true | none | 杠杆交易初始保证金（只有USDT才有值，其他资产为0）  
-»» borrowing_maintenance_margin | string | true | none | 杠杆交易维持保证金（只有USDT才有值，其他资产为0）  
+»» equity | string | false | none | 币种的保证金净资产权益  
+»» futures_initial_margin | string | false | none | 币种的合约初始保证金, 合约结算币种（USDT/USDC/USD）会有此值  
+»» futures_maintenance_margin | string | false | none | 币种的合约维持保证金, 合约结算币种（USDT/USDC/USD）会有此值  
+»» borrowing_initial_margin | string | true | none | 币种的杠杆交易初始保证金, 杠杆/合约结算币种（USDT/USDC/USD）会有此值  
+»» borrowing_maintenance_margin | string | true | none | 币种的杠杆交易维持保证金, 杠杆/合约结算币种（USDT/USDC/USD）会有此值  
 »» available_balance | string | false | none | 可用余额  
-»» liability | string | false | none | 负债（仅分所模式下才有意义。跨所模式下始终为0）  
+»» liability | string | false | none | 币种负债, 仅（USDT/USDC/USD）会有值  
       
     
     {
@@ -4040,40 +4994,51 @@ assets | array | true | none | 资产列表，按交易所与币种维度返回�
     
     
 
-##  CrossexConvertOrderResponse
+##  CrossexBatchCancelOrderRequest
 
-_CrossexConvertOrderResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-order_id | string | true | none | 订单号  
-text | string | true | none | 订单号(无法自定义)  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexLeverageRequest
-
-_更改杠杆请求体（合约/杠杆通用）_
+_CrossexBatchCancelOrderRequest_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-symbol | string | true | none | 交易对  
-leverage | string | true | none | 杠杆  
+order_id | string | false | none | 订单 ID，与 text 必传其一  
+text | string | false | none | 用户创建订单时指定的自定义 ID，与 order_id 必传其一  
+  
+_anyOf_
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+_None_ | object | false | none | none  
+  
+_or_
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+_None_ | object | false | none | none  
+      
+    
+    {}
+    
+    
+
+##  CrossexAccountUpdateRequest
+
+_更改账户请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+position_mode | string | false | none | 合约仓位模式（SINGLE/DUAL）  
+account_mode | string | false | none | 账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
+exchange_type | string | false | none | 交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
       
     
     {
-      "symbol": "string",
-      "leverage": "string"
+      "position_mode": "string",
+      "account_mode": "string",
+      "exchange_type": "string"
     }
     
     
@@ -4093,18 +5058,26 @@ symbol | string | true | none | 唯一标识 Exchange_Business_Base_Counter
 如果您想在OKX交易所上为ADA/USDT交易对下U本位永续合约订单，您可以使用这样的唯一标识符：`OKX_FUTURE_ADA_USDT`;  
 如果您想在GATE交易所上为ADA/USDT交易对下现货杠杆订单，您可以使用这样的唯一标识符：`GATE_MARGIN_ADA_USDT`;  
 如果您想在BYBIT交易所上为ADA/USDT交易对下现货订单，您可以使用这样的唯一标识符：`BYBIT_SPOT_ADA_USDT`;  
-如果您想在KRAKEN交易所上为ADA/USDT交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
-目前支持三种订单：现货订单、U本位永续合约订单和现货杠杆订单, BYBIT暂不支持现货杠杆订单, KRAKEN暂不支持现货与杠杆订单  
+如果您想在KRAKEN交易所上为ADA/USD交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;  
+如果您想在HYPERLIQUID交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`HYPERLIQUID_FUTURE_ADA_USDC`;  
+如果您想在DERIBIT交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`DERIBIT_FUTURE_ADA_USDC`;  
+如果您想在LIGHTER交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`LIGHTER_FUTURE_ADA_USDC`;  
+如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;  
+如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;  
+如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;  
+目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。BYBIT/DERIBIT暂不支持现货杠杆订单，KRAKEN、HYPERLIQUID、LIGHTER暂不支持现货与杠杆订单；股票及ETF仅支持跨所账户模式  
 side | string | true | none | BUY, SELL  
 type | string | false | none | 订单类型（默认`LIMIT`，支持类型列举：`LIMIT`、`MARKET`）  
-time_in_force | string | false | none | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`  
+time_in_force | string | false | none | 默认GTC，支持类型枚举，`GTC`，`IOC`，`FOK`，`POC`, `RPI`  
 `GTC`: GoodTillCancelled  
 `IOC`: ImmediateOrCancelled  
 `FOK`: FillOrKill  
 `POC`: PendingOrCancelled or PostOnly  
-qty | string | false | none | 订单数量（强制性，除非现货市价买入）  
-price | string | false | none | 限价订单价格（限价订单必须）  
-quote_qty | string | false | none | 订单报价数量，现货和杠杆市价买单必传  
+`RPI`: RPI  
+股票及ETF仅支持`GTC`  
+qty | string | false | none | 订单数量（强制性，除非现货和杠杆市价买入；股票及ETF必须传qty）  
+price | string | false | none | 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+quote_qty | string | false | none | 订单报价数量，现货和杠杆市价买单必传；股票及ETF不支持quote_qty下单  
 reduce_only | string | false | none | 只减仓：`true`或者`false`  
 position_side | string | false | none | 仓位方向：`NONE`, `LONG`, `SHORT`  
 不传默认单向持仓`NONE`  
@@ -4121,6 +5094,7 @@ time_in_force | GTC
 time_in_force | IOC  
 time_in_force | FOK  
 time_in_force | POC  
+time_in_force | RPI  
 reduce_only | true  
 reduce_only | false  
 position_side | LONG  
@@ -4160,6 +5134,100 @@ quote_id | string | true | none | 询价ID
     
     
 
+##  CrossexConvertQuoteRequest
+
+_闪兑询价请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+exchange_type | string | true | none | 交易所类型  
+目前仅支持 BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, LIGHTER  
+from_coin | string | true | none | 卖出的资产  
+to_coin | string | true | none | 买入的资产名称  
+OKX, GATE 只允许兑换成BTC, ETH, USDT  
+BYBIT, BINANCE 只允许兑换成USDT  
+HYPERLIQUID 只允许兑换成USDT, USDC  
+KRAKEN 只允许兑换成USDT  
+LIGHTER 只允许USDT与USDC互兑  
+from_amount | string | true | none | 卖出的资产数量  
+      
+    
+    {
+      "exchange_type": "string",
+      "from_coin": "string",
+      "to_coin": "string",
+      "from_amount": "string"
+    }
+    
+    
+
+##  CrossexOrderUpdateRequest
+
+_改单请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+qty | string | false | none | 修改数量  
+price | string | false | none | 修改价格  
+      
+    
+    {
+      "qty": "string",
+      "price": "string"
+    }
+    
+    
+
+##  CrossexAccountUpdateResponse
+
+_CrossexAccountUpdateResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+position_mode | string | false | none | 请求修改的合约仓位模式（SINGLE/DUAL）  
+account_mode | string | false | none | 请求修改的账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
+exchange_type | string | false | none | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+      
+    
+    {
+      "position_mode": "string",
+      "account_mode": "string",
+      "exchange_type": "string"
+    }
+    
+    
+
+##  CrossexTransferRequest
+
+_资金划转请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+coin | string | true | none | 币种  
+amount | string | true | none | 转账数量  
+from | string | true | none | 转出账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+to | string | true | none | 转入账户: CROSSEX_BINANCE, CROSSEX_OKX, CROSSEX_GATE, CROSSEX_BYBIT, CROSSEX_KRAKEN, CROSSEX_HYPERLIQUID, CROSSEX_DERIBIT, CROSSEX_LIGHTER, CROSSEX, SPOT  
+text | string | false | none | 用户自定义id  
+      
+    
+    {
+      "coin": "string",
+      "amount": "string",
+      "from": "string",
+      "to": "string",
+      "text": "string"
+    }
+    
+    
+
 ##  CrossexOrder
 
 _CrossexOrder_
@@ -4172,41 +5240,36 @@ user_id | string | true | none | 用户 ID
 order_id | string | true | none | 订单 ID  
 text | string | true | none | 客户自定义订单 ID  
 state | string | true | none | 订单状态：  
-  
 NEW：订单已通过校验，等待发送到交易所  
-  
 OPEN：订单已挂在交易所订单簿上  
-  
 PARTIALLY_FILLED：订单已部分成交  
-  
 FILLED：订单已完全成交  
-  
 FAIL：CrossEx 内部校验未通过，请查看 reason 字段了解失败原因  
-  
 REJECT：订单被交易所拒绝，请查看 reason 字段了解失败原因  
+CANCELLED: 订单被取消  
 symbol | string | true | none | 交易对唯一标识，示例：  
 BINANCE_SPOT_BTC_USDT、BINANCE_FUTURE_BTC_USDT  
 side | string | true | none | 方向（BUY 买入 / SELL 卖出）  
 type | string | true | none | 订单类型（LIMIT 限价 / MARKET 市价）  
 attribute | string | true | none | 订单属性（COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算）  
-exchange_type | string | true | none | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN）  
-business_type | string | true | none | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆）  
+exchange_type | string | true | none | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+business_type | string | true | none | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / CONVERT 闪兑 / STOCK 股票 / ETF 交易所交易基金）  
 qty | string | true | none | 基础货币下单数量  
 quote_qty | string | true | none | 报价币种下单数量  
-price | string | true | none | 订单价格  
-time_in_force | string | true | none | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC）  
+price | string | true | none | 订单价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+time_in_force | string | true | none | 时效策略（默认 GTC，枚举值：GTC / IOC / FOK / POC / RPI）  
 executed_qty | string | true | none | 已成交基础货币数量  
-executed_amount | string | true | none | 已成交报价币种金额  
-executed_avg_price | string | true | none | 已成交均价  
+executed_amount | string | true | none | 已成交报价币种金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+executed_avg_price | string | true | none | 已成交均价。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
 fee_coin | string | true | none | 手续费币种  
 fee | string | true | none | 手续费金额  
 reduce_only | string | true | none | 是否仅减仓订单（"true" 或 "false"）  
 leverage | string | true | none | 订单杠杆倍数  
 reason | string | true | none | 失败原因描述  
 last_executed_qty | string | true | none | 最新一次成交数量  
-last_executed_price | string | true | none | 最新一次成交价格  
-last_executed_amount | string | true | none | 最新一次成交金额  
-position_side | string | true | none | 仓位方向（NONE 无仓位 / LONG 多仓 / SHORT 空仓）  
+last_executed_price | string | true | none | 最新一次成交价格。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+last_executed_amount | string | true | none | 最新一次成交金额。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）  
+position_side | string | true | none | 仓位方向（NONE 单向持仓 / LONG 多仓 / SHORT 空仓）  
 create_time | string | true | none | 创建时间  
 update_time | string | true | none | 更新时间  
       
@@ -4244,21 +5307,121 @@ update_time | string | true | none | 更新时间
     
     
 
-##  CrossexAccountUpdateResponse
+##  CrossexConvertQuoteResponse
 
-_CrossexAccountUpdateResponse_
+_CrossexConvertQuoteResponse_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-position_mode | string | false | none | 请求修改的合约仓位模式（SINGLE/DUAL）  
-account_mode | string | false | none | 请求修改的账户模式（CROSS_EXCHANGE/ISOLATED_EXCHANGE，默认：CROSS_EXCHANGE）  
-exchange_type | string | false | none | 请求修改的交易所（BINANCE/OKX/GATE/BYBIT/KRAKEN/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所）  
+quote_id | string | true | none | 报价id  
+valid_ms | string | true | none | 有效时间（毫秒时间戳）  
+from_coin | string | true | none | 卖出的资产  
+to_coin | string | true | none | 买入的资产  
+from_amount | string | true | none | 卖出的资产数量  
+to_amount | string | true | none | 买入的资产数量  
+price | string | true | none | 报价价格  
       
     
     {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
+      "quote_id": "string",
+      "valid_ms": "string",
+      "from_coin": "string",
+      "to_coin": "string",
+      "from_amount": "string",
+      "to_amount": "string",
+      "price": "string"
+    }
+    
+    
+
+##  CrossexIsolatedMarginResponse
+
+_CrossexIsolatedMarginResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | 合约交易币对  
+margin | string | true | none | 本次增加或减少的逐仓保证金  
+position_side | string | false | none | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+      
+    
+    {
+      "symbol": "string",
+      "margin": "string",
+      "position_side": "string"
+    }
+    
+    
+
+##  Symbol
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | 交易对唯一标识，格式为 ExchangeType_BusinessType_Base_Counter。  
+股票及ETF使用市场作为ExchangeType（US/HK/KR/JP），业务类型为STOCK或ETF，例如US_STOCK_AAPL_USDT、HK_STOCK_00700_USDT、US_ETF_SPY_USDT。  
+exchange_type | string | true | none | 交易所类型（BINANCE / OKX / GATE / BYBIT / KRAKEN / HYPERLIQUID / DERIBIT / LIGHTER）；股票及ETF返回上市市场（US / HK / KR / JP）  
+business_type | string | true | none | 业务类型（SPOT 现货 / FUTURE 合约 / MARGIN 杠杆 / STOCK 股票 / ETF 交易所交易基金）  
+state | string | true | none | 状态（live 在线 / suspend 暂停）  
+min_size | string | true | none | 最小下单数量  
+min_notional | string | true | none | 最小下单价值  
+lot_size | string | true | none | 数量步长  
+tick_size | string | true | none | 价格步长  
+max_num_orders | string | true | none | 最大挂单数量  
+max_market_size | string | true | none | 市价单最大下单数量  
+max_limit_size | string | true | none | 限价单最大下单数量  
+contract_size | string | true | none | 合约乘数（已废弃，统一是量）  
+liquidation_fee | string | true | none | 清算费率  
+delist_time | string | true | none | 毫秒时间戳，0 表示正常未下架  
+support_rpi | string | false | none | 是否支持rpi下单(true支持,false不支持)  
+support_cross | string | false | none | 是否支持全仓下单(true支持,false不支持)  
+tag | string | true | none | 标签信息。Hyperliquid返回DEX信息；股票及ETF返回证券描述；其他业务返回空字符串  
+      
+    
+    {
+      "symbol": "string",
+      "exchange_type": "string",
+      "business_type": "string",
+      "state": "string",
+      "min_size": "string",
+      "min_notional": "string",
+      "lot_size": "string",
+      "tick_size": "string",
+      "max_num_orders": "string",
+      "max_market_size": "string",
+      "max_limit_size": "string",
+      "contract_size": "string",
+      "liquidation_fee": "string",
+      "delist_time": "string",
+      "support_rpi": "string",
+      "support_cross": "string",
+      "tag": "string"
+    }
+    
+    
+
+##  CrossexClosePositionRequest
+
+_完全平仓请求体_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+symbol | string | true | none | 交易币对  
+1\. 支持杠杆交易币对, 如 BINANCE_MARGIN_SOL_USDT  
+2\. 支持合约交易币对, 如 OKX_FUTURE_ETH_USDT  
+position_side | string | false | none | 仓位方向  
+1\. 针对杠杆仓位, 必须传递此参数  
+2\. 针对合约仓位, 需要根据你的合约持仓方式选择性传递  
+      
+    
+    {
+      "symbol": "string",
+      "position_side": "string"
     }

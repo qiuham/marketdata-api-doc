@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/account
 api_type: Account
-updated_at: 2026-05-27 20:14:42.926225
+updated_at: 2026-11-13 20:56:51.497762
 ---
 
 # Account
@@ -18,8 +18,6 @@ GET `/account/detail`
 _Retrieve user account information_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -119,8 +117,6 @@ _Query All Main Account Key Information_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | AccountKeyInfo  
@@ -140,7 +136,8 @@ Name | Type | Description
 » user_id | integer(int64) | User ID  
 » ip_whitelist | array | IP Whitelist  
 » perms | array | none  
-»» name | string | Permission function name (no value will be cleared)  
+»» name | string | Permission function name (cleared if no value is provided)  
+  
 \- `wallet`: wallet  
 \- `spot`: spot/margin  
 \- `futures`: perpetual contract  
@@ -152,10 +149,16 @@ Name | Type | Description
 \- `loan`: lending  
 \- `margin`: margin  
 \- `unified`: unified account  
-\- `copy`: copy trading- `pilot`: pilot  
+\- `copy`: copy trading  
+\- `pilot`: pilot  
 \- `otc`: otc  
 \- `alpha`: alpha  
 \- `crossx`: cross-exchange  
+\- `tradfi_spot`: stocks  
+\- `cfd`: CFD  
+\- `cfd_copy`: CFD lead trading  
+\- `stock_copy`: stock lead trading  
+\- `sub_accounts`: sub-accounts  
 »» read_only | boolean | Read Only  
 » key | object | API Key details  
 »» mode | integer(int32) | Mode: 1 - Classic mode, 2 - Legacy unified mode  
@@ -275,13 +278,11 @@ GET`/account/rate_limit`
 
 GET `/account/rate_limit`
 
-Get `user transaction rate limit information`
+_Get user transaction rate limit information_
 
 This interface is not yet open for use
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -389,8 +390,6 @@ name | query | string | Optional | Fuzzy search by name
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [StpGroup]  
@@ -484,14 +483,9 @@ Only the main account is allowed to create a new STP user group
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | StpGroup | Required | none  
-↳ id | body | integer(int64) | Optional | STP Group ID  
-↳ name | body | string | Required | STP Group name  
-↳ creator_id | body | integer(int64) | Optional | Creator ID  
-↳ create_time | body | integer(int64) | Optional | Created time  
+» name | body | string | Required | STP Group name  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)User added successfully, returning current users in the STP group
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -595,8 +589,6 @@ stp_id | path | integer(int64) | Required | STP Group ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | [StpGroupUser]  
@@ -693,8 +685,6 @@ body | body | AddSTPGroupUsersRequest | Required | User ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)User added successfully, returning current users in the STP group
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | User added successfully, returning current users in the STP group | [StpGroupUser]  
@@ -788,7 +778,7 @@ DELETE`/account/stp_groups/{stp_id}/users`
 
 DELETE `/account/stp_groups/{stp_id}/users`
 
-Delete `users from the STP user group`
+_Delete users from the STP user group_
 
   * Only the main account that created this STP group is allowed to delete users from the STP user group
   * Deletion is limited to accounts under the current main account; cross-account deletion is not permitted
@@ -801,8 +791,6 @@ stp_id | path | integer(int64) | Required | STP Group ID
 user_id | query | integer(int64) | Required | STP user IDs, multiple IDs can be separated by commas  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Users deleted successfully, returns current users in the STP group
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -892,8 +880,6 @@ Query the GT fee deduction configuration for the current account
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Success | DebitFee  
@@ -978,11 +964,9 @@ Enable or disable GT fee deduction for the current account
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | DebitFee | Required | none  
-↳ enabled | body | boolean | Required | Whether GT fee deduction is enabled  
+» enabled | body | boolean | Required | Whether GT fee deduction is enabled  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Success
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1046,6 +1030,89 @@ Code samples
 
 #  Schemas
 
+##  AddSTPGroupUsersRequest
+
+###  Properties
+
+_None_
+    
+    
+    [
+      0
+    ]
+    
+    
+
+##  AccountRateLimit
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tier | string | Optional | read-only | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
+ratio | string | Optional | none | Fill rate  
+main_ratio | string | Optional | read-only | Total fill ratio of main account  
+updated_at | string | Optional | read-only | Update time  
+      
+    
+    {
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
+    }
+    
+    
+
+##  AccountDetail
+
+_AccountDetail_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+ip_whitelist | array | Optional | none | IP Whitelist  
+currency_pairs | array | Optional | none | Trading pair whitelist  
+user_id | integer(int64) | Optional | none | User ID  
+tier | integer(int64) | Optional | none | User VIP level  
+key | object | Optional | none | API Key details  
+» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
+copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+      
+    
+    {
+      "ip_whitelist": [
+        "string"
+      ],
+      "currency_pairs": [
+        "string"
+      ],
+      "user_id": 0,
+      "tier": 0,
+      "key": {
+        "mode": 0
+      },
+      "copy_trading_role": 0
+    }
+    
+    
+
+##  DebitFee
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+enabled | boolean | Required | none | Whether GT fee deduction is enabled  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
 ##  AccountKeyInfo
 
 _AccountKeyInfo_
@@ -1061,7 +1128,8 @@ currency_pairs | array | Optional | none | Trading Pair Whitelist, Maximum 30 Pa
 user_id | integer(int64) | Optional | none | User ID  
 ip_whitelist | array | Optional | none | IP Whitelist  
 perms | array | Optional | none | none  
-↳ name | string | Optional | none | Permission function name (no value will be cleared)  
+» name | string | Optional | none | Permission function name (cleared if no value is provided)  
+  
 \- `wallet`: wallet  
 \- `spot`: spot/margin  
 \- `futures`: perpetual contract  
@@ -1073,13 +1141,19 @@ perms | array | Optional | none | none
 \- `loan`: lending  
 \- `margin`: margin  
 \- `unified`: unified account  
-\- `copy`: copy trading- `pilot`: pilot  
+\- `copy`: copy trading  
+\- `pilot`: pilot  
 \- `otc`: otc  
 \- `alpha`: alpha  
 \- `crossx`: cross-exchange  
-↳ read_only | boolean | Optional | none | Read Only  
+\- `tradfi_spot`: stocks  
+\- `cfd`: CFD  
+\- `cfd_copy`: CFD lead trading  
+\- `stock_copy`: stock lead trading  
+\- `sub_accounts`: sub-accounts  
+» read_only | boolean | Optional | none | Read Only  
 key | object | Optional | none | API Key details  
-↳ mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
+» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
 created_at | string | Optional | read-only | Created time  
 updated_at | string | Optional | read-only | Last Update Time  
 last_access | string | Optional | read-only | Last Access Time  
@@ -1119,8 +1193,8 @@ last_access | string | Optional | read-only | Last Access Time
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 user_id | integer(int64) | Optional | none | User ID  
-stp_id | integer(int64) | Optional | none | STP Group ID  
-create_time | integer(int64) | Optional | none | Created time  
+stp_id | integer(int64) | Optional | read-only | STP Group ID  
+create_time | integer(int64) | Optional | read-only | Created time  
       
     
     {
@@ -1131,99 +1205,16 @@ create_time | integer(int64) | Optional | none | Created time
     
     
 
-##  AddSTPGroupUsersRequest
-
-###  Properties
-
-_None_
-    
-    
-    [
-      0
-    ]
-    
-    
-
-##  AccountDetail
-
-_AccountDetail_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-ip_whitelist | array | Optional | none | IP Whitelist  
-currency_pairs | array | Optional | none | Trading pair whitelist  
-user_id | integer(int64) | Optional | none | User ID  
-tier | integer(int64) | Optional | none | User VIP level  
-key | object | Optional | none | API Key details  
-↳ mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
-      
-    
-    {
-      "ip_whitelist": [
-        "string"
-      ],
-      "currency_pairs": [
-        "string"
-      ],
-      "user_id": 0,
-      "tier": 0,
-      "key": {
-        "mode": 0
-      },
-      "copy_trading_role": 0
-    }
-    
-    
-
-##  AccountRateLimit
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-tier | string | Optional | none | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
-ratio | string | Optional | none | Fill rate  
-main_ratio | string | Optional | none | Total fill ratio of main account  
-updated_at | string | Optional | none | Update time  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  DebitFee
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-enabled | boolean | Required | none | Whether GT fee deduction is enabled  
-      
-    
-    {
-      "enabled": true
-    }
-    
-    
-
 ##  StpGroup
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | integer(int64) | Optional | none | STP Group ID  
+id | integer(int64) | Optional | read-only | STP Group ID  
 name | string | Required | none | STP Group name  
-creator_id | integer(int64) | Optional | none | Creator ID  
-create_time | integer(int64) | Optional | none | Created time  
+creator_id | integer(int64) | Optional | read-only | Creator ID  
+create_time | integer(int64) | Optional | read-only | Created time  
       
     
     {

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/announcements/ws/en
 api_type: WebSocket
-updated_at: 2026-05-27 20:14:28.983989
+updated_at: 2026-11-13 20:56:47.441229
 ---
 
 # Gate Announcement WebSocket v1.0.0
@@ -20,6 +20,34 @@ Gate provides a simple announcement push websocket api. When a specified type of
   * `wss://api.gateio.ws/ws/v4/ann`
 
 #  Changelog
+
+**v0.5.4**
+
+2026-10-29
+
+  * add `announcement.summary_dividenddistribution` for stock dividend distribution announcements
+  * include `dividenddistribution` in `announcement.summary_all`
+  * keep existing type-specific channel protocols unchanged; clients that validate `result.type` must accept the new type
+
+**v0.5.2**
+
+2026-08-27
+
+  * add `announcement.summary_all` for subscribing to all announcement types
+  * add `announcement.summary_ipos` for subscribing to IPOs announcements
+
+**v0.5.1**
+
+2026-07-31
+
+  * improve real-time announcement delivery reliability after idle periods
+  * ensure the initial subscription update uses the latest saved announcement
+
+**v0.5.0**
+
+2026-07-28
+
+  * support stock split / reverse split announcements
 
 **v0.2.0**
 
@@ -60,7 +88,7 @@ Request FieldsField | Type | Description
 time | Integer | Request timestamp  
 channel | String | Announcement channel name  
 event | String | Event type，`subscribe` or `unsubscribe`  
-payload | Object | Language of announcement，`cn` or `en` or both  
+payload | `Array<String>` | Announcement languages: `cn`, `en`, or both  
   
 ###  Channel Type
 
@@ -73,6 +101,201 @@ payload | Object | Language of announcement，`cn` or `en` or both
   * `announcement.summary_rename`: subscribe rename announcement
   * `announcement.summary_precision`: subscribe precision announcement
   * `announcement.summary_engine_upgrade`: subscribe engine upgrade announcement
+  * `announcement.summary_stock_split`: subscribe stock split / reverse split announcement
+  * `announcement.summary_ipos`: subscribe IPOs announcement
+  * `announcement.summary_dividenddistribution`: subscribe stock dividend distribution announcement
+  * `announcement.summary_all`: subscribe all current and future announcement types
+
+###  Subscribe to IPO announcements
+
+Use `announcement.summary_ipos` to receive IPOs announcements, including subscription openings, allocation or unlock updates, pre-market openings, and rule changes. The payload accepts `cn`, `en`, or both.
+
+This channel follows the existing type-specific announcement channel behavior: for each subscribed language, the server asynchronously sends the currently cached latest IPOs announcement and continues pushing new IPOs announcements as `update` events. Clients should process each `update` independently and must not rely on the arrival order of the cached announcement and an announcement published at the same time. Its response fields are identical to the other type-specific channels, so no client migration is required.
+
+  * Subscribe request
+
+    
+    
+    {
+      "time": 1787191200,
+      "channel": "announcement.summary_ipos",
+      "event": "subscribe",
+      "payload": ["en"]
+    }
+    
+
+  * Subscription success
+
+    
+    
+    {
+      "time": 1787191200,
+      "time_ms": 1787191200123,
+      "channel": "announcement.summary_ipos",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+  * Latest snapshot and subsequent update
+
+    
+    
+    {
+      "time": 1787191201,
+      "time_ms": 1787191201123,
+      "channel": "announcement.summary_ipos",
+      "event": "update",
+      "result": {
+        "lang": "en",
+        "origin_url": "https://www.gate.com/article/123456",
+        "title": "Gate Pre-IPOs announcement",
+        "brief": "Pre-IPOs announcement summary",
+        "published_at": 1787191200
+      }
+    }
+    
+
+###  Subscribe to stock dividend distribution announcements
+
+Use the public channel `announcement.summary_dividenddistribution` without authentication to receive announcements classified as `dividenddistribution` by the announcement center. This includes dividends for stocks and ETFs, dividend settlement for stock perpetual contracts, and advance notices or rule announcements in that category. The server uses the announcement category and does not filter by title keywords or stock symbol.
+
+The payload accepts `["cn"]`, `["en"]`, or `["cn", "en"]`. Each subscribed language receives announcements in that language. The channel uses the shared response fields below and does not return `result.type`.
+
+This channel follows the existing type-specific channel behavior: for each subscribed language, the server asynchronously sends the currently cached latest announcement of this type, if available, and continues pushing new announcements as `update` events. No empty snapshot is sent when the cache has no announcement, and the subscription does not retrieve the full history. Clients should process each `update` independently and must not rely on the arrival order of the cached announcement and an announcement published at the same time, or assume exactly-once delivery.
+
+To stop new updates for selected languages, send an `unsubscribe` request with those languages in the payload. Other subscribed languages and channels remain active. A cached update task already started by the subscription may still finish after an unsubscribe.
+
+  * Subscribe request (both languages)
+
+    
+    
+    {
+      "time": 1792627200,
+      "channel": "announcement.summary_dividenddistribution",
+      "event": "subscribe",
+      "payload": ["cn", "en"]
+    }
+    
+
+  * Subscription success
+
+    
+    
+    {
+      "time": 1792627200,
+      "time_ms": 1792627200123,
+      "channel": "announcement.summary_dividenddistribution",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+  * Latest cached announcement or subsequent update (one message per language)
+
+    
+    
+    {
+      "time": 1792627201,
+      "time_ms": 1792627201123,
+      "channel": "announcement.summary_dividenddistribution",
+      "event": "update",
+      "result": {
+        "lang": "en",
+        "origin_url": "https://www.gate.io/article/123456",
+        "title": "Stock dividend distribution announcement",
+        "brief": "Stock dividend distribution announcement summary",
+        "published_at": 1792627200
+      }
+    }
+    
+
+  * Unsubscribe from English updates
+
+    
+    
+    {
+      "time": 1792627300,
+      "channel": "announcement.summary_dividenddistribution",
+      "event": "unsubscribe",
+      "payload": ["en"]
+    }
+    
+
+###  Subscribe to all announcement types
+
+Use `announcement.summary_all` when one connection needs every announcement type. The payload accepts `cn`, `en`, or both. The special payload `!all` is not supported by this channel.
+
+After the subscription success response, the server sends the latest announcement across all types for each subscribed language as an `update` event. New announcements are then pushed on the same channel. The aggregate response includes `result.type`, whose current values are `listing`, `delisting`, `fee`, `etf`, `deposit_withdrawal`, `rename`, `precision`, `engine_upgrade`, `stock_split`, `ipos`, and `dividenddistribution`. Newly added announcement types are included automatically.
+
+Stock dividend distribution announcements use `result.type="dividenddistribution"` on this channel. The same announcement can also be received on `announcement.summary_dividenddistribution` when both channels are subscribed; process each channel independently. Existing stock split, IPOs, and other type-specific channels retain their request and response formats and behavior. No protocol migration is required; clients that validate `result.type` against an allowlist must accept `dividenddistribution` and allow for future types.
+
+If one announcement belongs to multiple types, the server sends one update for each type. Update ordering across different types is not guaranteed. Existing type-specific channels and their response fields are unchanged.
+
+To stop updates for selected languages, send an `unsubscribe` request with those languages in the payload. Other languages subscribed on the same connection remain active.
+
+  * Subscribe request
+
+    
+    
+    {
+      "time": 1787104800,
+      "channel": "announcement.summary_all",
+      "event": "subscribe",
+      "payload": ["en"]
+    }
+    
+
+  * Subscription success
+
+    
+    
+    {
+      "time": 1787104800,
+      "time_ms": 1787104800123,
+      "channel": "announcement.summary_all",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+  * Latest snapshot and subsequent update
+
+    
+    
+    {
+      "time": 1787104801,
+      "time_ms": 1787104801123,
+      "channel": "announcement.summary_all",
+      "event": "update",
+      "result": {
+        "lang": "en",
+        "origin_url": "https://www.gate.io/article/123456",
+        "title": "Example announcement",
+        "brief": "Example announcement summary",
+        "published_at": 1787104700,
+        "type": "listing"
+      }
+    }
+    
+
+  * Unsubscribe from English updates
+
+    
+    
+    {
+      "time": 1787104900,
+      "channel": "announcement.summary_all",
+      "event": "unsubscribe",
+      "payload": ["en"]
+    }
+    
 
 ##  Response Fields
 
@@ -88,6 +311,7 @@ origin_url | string | Announcement origin url
 title | string | Announcement title  
 brief | string | Announcement brief  
 published_at | Integer | Announcement published timestamp  
+type | string | Announcement type; only returned by `announcement.summary_all`  
       
     
     import time
@@ -195,4 +419,4 @@ published_at | Integer | Announcement published timestamp
     }
     
 
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 10/29/2026, 6:34:11 AM

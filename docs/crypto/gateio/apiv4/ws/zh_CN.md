@@ -2,15 +2,13 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:16:37.183506
+updated_at: 2026-11-13 20:57:34.618276
 ---
 
 # Spot WebSocket v4.0.0
 
 * Python 
   * Golang 
-
-v4.0.0 · Stable
 
 
 Gate 提供了一个简单而健壮的 Websocket API 来集成现货交易状态信息为您的业务或应用提供支持。
@@ -24,15 +22,38 @@ Gate 提供了一个简单而健壮的 Websocket API 来集成现货交易状态
 Websocket 链接地址：
 
   * 线上交易: `wss://api.gateio.ws/ws/v4/`
+  * 线上交易 SBE: `wss://api.gateio.ws/ws/v4/ws/spot/sbe`
   * 模拟盘交易: `wss://ws-testnet.gate.com/v4/ws/spot`
+  * 模拟盘 SBE: `wss://ws-testnet.gate.com/v4/ws/spot/sbe`
+
+TIP
+
+建议使用 SBE 以获取更快的行情和更小的带宽成本，具体使用查看 `SBE 数据推送` 章节。
 
 ###  SDK
 
 我们提供了 WebSocket SDK 来帮助开发者进行业务复用。
 
-SDK 的源代码 在 [gatews ](https://github.com/gateio/gatews) GitHub 仓库。
+SDK 的源代码 在 [gatews ](https://github.com/gate/gatews) GitHub 仓库。
 
 ###  变更历史
+
+2026-10-14
+
+  * 新增公开频道 `spot.rpi_order_book`，`spot.rpi_obu` 推送 RPI 深度全量快照
+
+2026-08-31
+
+  * `spot.order_place` 单笔和批量下单新增 `trade_quote`；RESULT 和 FULL 结果在下游返回实际计价资产时输出该字段。
+  * `spot.order_cancel_cp` 新增 `trade_quote`，用于仅撤销使用指定实际计价资产的订单。
+  * 成交、用户成交和订单推送新增统一订单簿字段 `stock`、`money` 和 `trade_mode`。
+  * 本期仅启用计价侧统一交易（`trade_mode=1`）；。
+  * 订单 `finish_as` 新增 `unified_check_failed`。
+  * SBE Schema 2 在 publicTrade、userTrade 和 orders 模板中新增统一订单簿字段。
+
+2026-06-09
+
+  * 模拟盘新增 SBE（Simple Binary Encoding）二进制行情推送支持，具体使用查看 `SBE 数据推送` 章节。
 
 2026-03-31
 
@@ -548,6 +569,131 @@ WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即: `Hex
     
     
 
+#  SBE 数据推送
+
+##  对接SBE
+
+  * 使用地址，在现有的地址后添加 `/sbe`： 
+    * 线上交易: `wss://api.gateio.ws/ws/v4/ws/spot/sbe`
+    * testnet: `wss://ws-testnet.gate.com/v4/ws/spot/sbe`
+  * Schema `1` XML 文件： 
+    * `testnet`: [gate_spot_ws_latest.xml ](https://github.com/gate/gatews/blob/master/sbe/schemas/testnet/gate_spot_ws_latest.xml)
+    * 线上交易: [gate_spot_ws_latest.xml ](https://github.com/gate/gatews/blob/master/sbe/schemas/prod/gate_spot_ws_latest.xml)
+  * 上述两个公开 XML 文件当前均为 `schemaId=1`，不能用于解码请求 `sbe_schema_id=2` 后收到的消息。
+  * Schema `2` 将以独立文件 `gate_spot_ws_v2.0.0.xml` 对外发布。在对应公开目录提供该 XML 文件之前，客户端必须继续使用 Schema `1`，不得请求 `sbe_schema_id=2`。
+  * Schema `2` XML 文件公开后，可通过 `query` 参数指定 `sbe_schema_id`，例如：`wss://ws-testnet.gate.com/v4/ws/spot/sbe?sbe_schema_id=2`
+    * 目前支持的 `sbe_schema_id` 为 `0`、`1` 和 `2`；`sbe_schema_id` 为 `0` 用于客户端测试 `sbe schema` 不兼容升级的逻辑
+    * 不传入 `sbe_schema_id` 时默认使用 Schema `1`；需要接收统一订单簿字段时必须显式指定 `sbe_schema_id=2`
+    * publicTrade、userTrade 和 orders 模板中的统一订单簿字段（`stock`、`money` 和 `trade_mode`）需要使用 `sbe_schema_id=2`。Schema 0 和 1 保持原有布局。
+    * 不支持的 `sbe_schema_id` 会回退到默认 Schema `1`；仍受支持的旧版本继续使用客户端指定的布局
+
+##  SBE使用说明
+
+  * 使用 `JSON` 进行请求和首次响应；使用 `SBE` 作为数据推送；
+  * 同一条连接上同时存在 `JSON` 和 `SBE` 的消息，请使用 opcode 来区分数据：`opcode 为 1 代表 JSON`，`opcode 为 2 代表 SBE`。
+  * SBE 的解码： 
+    * **MessageHeader** ：每条 SBE 二进制帧均为「MessageHeader + 消息体」。Header 为固定 8 字节（小端序，`uint16` 依次为 `blockLength`、`templateId`、`schemaId`、`version`），解码时**必须先读 Header** ，再根据 `schemaId` 和 `templateId` 选择对应 Schema 与消息类型解码消息体。
+    * **解码流程建议** ： 
+      1. 读取 MessageHeader（固定 8 字节），得到 `blockLength`、`templateId`、`schemaId`、`version`。
+      2. 根据 `schemaId` 选择解码器：`0` → 使用字符串 decimal 的旧布局；`1` → 使用定点 decimal 布局；`2` → 使用增加统一订单簿字段的定点布局。不能用其他 schema 的布局解码当前帧。
+      3. 根据 `templateId` 确定具体消息类型（如 publicTrade、orderBook、bbo 等），再按该 Schema 的布局解码消息体。
+  * 使用 SBE 时，**仅可订阅以下频道** ，其余频道不支持 SBE 推送。后续将扩展到其余频道。 
+    * 订阅不支持 SBE 的频道时，将返回订阅失败的消息
+
+通道名 | templateId | 消息类型 | 说明  
+---|---|---|---  
+`spot.tickers` | 7 | ticker | 行情  
+`spot.trades` | 2 | publicTrade | 公共成交  
+`spot.f_trades` | 2 | publicTrade | 过滤公共成交  
+`spot.candlesticks` | 6 | candlestick | K 线  
+`spot.order_book` | 4 | orderBook | 订单簿（全量深度）  
+`spot.rpi_order_book` | 4 | orderBook | RPI 订单簿（全量深度）  
+`spot.order_book_update` | 5 | orderBookUpdate | 订单簿增量更新  
+`spot.book_ticker` | 1 | bbo | 最优买卖价（BBO）  
+`spot.obu` | 3 | obu | 订单簿增量（OBU）  
+`spot.rpi_obu` | 3 | obu | RPI 订单簿增量（OBU）  
+`spot.usertrades` | 8 | userTrade | 用户成交  
+`spot.orders` | 9 | orders | 订单  
+`spot.balances` | 10 | balance | 现货余额  
+`spot.margin_balances` | 11 | marginBalance | 杠杆余额  
+`spot.funding_balances` | 12 | fundingBalance | 理财余额  
+`spot.cross_balances` | 13 | crossBalance | 全仓杠杆余额  
+`spot.cross_loan` | 14 | crossLoan | 全仓借贷  
+`spot.priceorders` | 15 | priceOrder | 价格条件单  
+  
+>   * 上表 `templateId` 以对应版本的 schema XML 为准。
+>   * 上述频道的 v2 版本（如 `spot.trades_v2`、`spot.orders_v2`、`spot.usertrades_v2`）复用相同的消息模板，同样支持 SBE 推送。
+> 
+
+SBE Schema 2 的统一订单簿新增字段：
+
+模板 | 作用域 | SBE 字段 | ID | JSON 字段 | 说明  
+---|---|---|---|---|---  
+publicTrade (templateId 2) | 消息 | `tradeMode` | 12 | `trade_mode` | 交易模式  
+publicTrade (templateId 2) | 消息 | `stock` / `money` | 203 / 204 | `stock` / `money` | 实际基础/计价资产  
+userTrade (templateId 8) | `trades` 分组 | `tradeMode` | 13 | `trade_mode` | 交易模式  
+userTrade (templateId 8) | `trades` 分组 | `stock` / `money` | 206 / 207 | `stock` / `money` | 实际基础/计价资产  
+orders (templateId 9) | `result` 分组 | `tradeMode` | 28 | `trade_mode` | 交易模式  
+orders (templateId 9) | `result` 分组 | `stock` / `money` | 213 / 214 | `stock` / `money` | 实际基础/计价资产  
+  
+orders 模板在旧 Schema 中已经包含 `finishAs`（Schema 1 和 2 中均为 `id=210`）。`unified_check_failed` 只是新增字符串取值，不要求使用 Schema 2。
+
+`spot.usertrades_v2` 的 JSON 推送仍不包含 `fee`、`fee_currency`、`point_fee` 和 `gt_fee`。为保持二进制兼容，共用的 SBE userTrade 模板会保留固定手续费字段；该频道中这些字段解码为 0 或空字符串。
+
+订阅受支持的频道（以 `spot.order_book` 为例）。请求与首次响应均为 JSON，订阅成功后该频道数据以 SBE 二进制帧推送。
+
+客户端请求
+    
+    
+    {
+      "time": 1770603400,
+      "id": 123456789,
+      "channel": "spot.order_book",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "5", "100ms"]
+    }
+    
+
+服务端响应（订阅的 JSON 确认）
+    
+    
+    {
+      "time": 1770603400,
+      "time_ms": 1770603400123,
+      "channel": "spot.order_book",
+      "event": "subscribe",
+      "error": null,
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+订阅成功后，该频道的订单簿数据将以 SBE 二进制帧（`opcode 2`）推送，使用 `templateId` `4`（orderBook）解码。
+
+订阅不支持 SBE 的频道时将返回订阅失败：
+    
+    
+    {
+      "time": 1770603321,
+      "time_ms": 1770603321767,
+      "conn_id": "57a8765578ea837e",
+      "trace_id": "3c75ba05569b3b292a2f36cfdd90d868",
+      "channel": "spot.system",
+      "event": "subscribe",
+      "payload": [
+        "20011"
+      ],
+      "error": {
+        "code": 2,
+        "message": "channel spot.system does not support SBE"
+      },
+      "result": {
+        "status": "fail"
+      }
+    }
+    
+
 #  System API
 
 系统 API 用于检索服务元信息，**不** 用于订阅。
@@ -640,7 +786,13 @@ TIP
 
 服务在即将关闭进行升级时，会向当前连接主动推送一条系统通知，客户端收到后应尽快重连。
 
-**服务端推送格式（SystemNotifyDTO）：**
+**频道（Channel）：** `spot.system`
+
+**事件（Event）：** `update`
+
+当 `channel` 为 `spot.system`、`event` 为 `update` 且 `result.type` 为 `upgrade` 时，客户端可将该消息识别为服务升级通知。
+
+**`result` 格式（SystemNotifyDTO）：**
 
 字段 | 类型 | 说明  
 ---|---|---  
@@ -652,8 +804,14 @@ TIP
     
     
     {
-      "type": "upgrade",
-      "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      "time": 1784800711,
+      "time_ms": 1784800711140,
+      "channel": "spot.system",
+      "event": "update",
+      "result": {
+        "type": "upgrade",
+        "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      }
     }
     
 
@@ -894,7 +1052,12 @@ TIP
 » `price` | String | 交易价  
 » `range` | String | 成交范围(格式: "开始 ID-结束 ID")  
 » `id_market` | Integer | 按市场成交ID  
+» `stock` | String | 该笔成交实际使用的基础资产  
+» `money` | String | 该笔成交实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
   
+在统一订单簿中，`currency_pair` 仍为订阅的名义市场（例如 `BTC_USD`），`stock` 和 `money` 表示该笔成交实际使用的资产。
+
 ####  字段数据枚举
 
 字段数据枚举Property | Value  
@@ -914,11 +1077,14 @@ side | sell
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
         "side": "sell",
-        "currency_pair": "GT_USDT",
+        "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
         "price": "0.4705000000",
         "range": "2390902-2390902",
-        "id_market": 917144
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
       }
     }
     
@@ -1031,7 +1197,12 @@ TIP
 » `price` | String | 交易价  
 » `range` | String | 成交范围(格式: "开始 ID-结束 ID")  
 » `id_market` | Integer | 按市场成交ID  
+» `stock` | String | 该笔成交实际使用的基础资产  
+» `money` | String | 该笔成交实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
   
+在统一订单簿中，`currency_pair` 仍为订阅的名义市场，`stock` 和 `money` 表示该笔成交实际使用的资产。
+
 ####  字段数据枚举
 
 字段数据枚举Property | Value  
@@ -1051,11 +1222,14 @@ side | sell
         "create_time": 1606292218,
         "create_time_ms": "1606292218213.4578",
         "side": "sell",
-        "currency_pair": "GT_USDT",
+        "currency_pair": "BTC_USD",
         "amount": "16.4700000000",
         "price": "0.4705000000",
         "range": "2390902-2390902",
-        "id_market": 917144
+        "id_market": 917144,
+        "stock": "BTC",
+        "money": "USDC",
+        "trade_mode": 1
       }
     }
     
@@ -1212,7 +1386,7 @@ TIP
 
 #  订单簿/深度频道
 
-深度有 3 个订阅频道，分别满足不同的需求。它们是:
+深度有以下订阅频道，分别满足不同的需求。它们是:
 
   * `spot.book_ticker`
 
@@ -1225,6 +1399,10 @@ TIP
   * `spot.order_book`
 
 基于订阅的 level，定时推送深度全量更新
+
+  * `spot.rpi_order_book`
+
+基于订阅的 level，定时推送 RPI 深度全量更新
 
 每个货币对的深度更新都有一个内部更新 ID，该 ID 在每个订单成交后递增 1。深度更新 ID 对应于 REST API 的 `GET /api/v4/spot/order_book` 响应中的`ID` 字段。
 
@@ -1244,7 +1422,7 @@ TIP
 
   6. 如其后有发现任何满足 `U > baseID+1`的通知，那意味着一些更新通知丢失。需要从第三步开始重构本地深度。
 
-[SDK GitHub repository ](https://github.com/gateio/gatews) 中可以找到实现上述方法的示例的应用程序
+[SDK GitHub repository ](https://github.com/gate/gatews) 中可以找到实现上述方法的示例的应用程序
 
 ##  最优买卖价
 
@@ -1657,9 +1835,160 @@ TIP
     }
     
 
+#  RPI 深度全量更新频道
+
+`spot.rpi_order_book`
+
+推送 RPI 订单簿的全量快照。本频道是公开频道。
+
+订阅参数和推送字段与 `spot.order_book` 相同。同一时刻两条频道的买卖盘可以不同，本频道对齐 RPI 盘口。
+
+**更新速度:** `100ms`、`500ms` 或 `1000ms`
+
+SBE 复用 `orderBook` 模板（templateId=`4`），帧里的 `channel` 为 `spot.rpi_order_book`。
+
+##  客户端订阅
+
+订阅参数格式:
+
+字段 | 类型 | 必选 | 描述  
+---|---|---|---  
+`payload` | `Array[String]` | 是 | 订阅参数，从左到右分别是 `cp`, `level`, `interval`  
+» `cp` | String | 是 | 货币对  
+» `level` | String | 是 | 深度层级  
+» `interval` | String | 是 | 通知更新速度  
+  
+####  字段枚举值
+
+字段枚举值Property | Value  
+---|---  
+level | 5  
+level | 10  
+level | 20  
+level | 30  
+level | 50  
+level | 100  
+interval | 100ms  
+interval | 500ms  
+interval | 1000ms  
+  
+取消订阅使用相同的 `payload`，`event` 改为 `unsubscribe`。
+
+代码示例：
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "spot.rpi_order_book",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["BTC_USDT", "20", "100ms"]
+    }))
+    print(ws.recv())
+    
+
+代码示例：
+    
+    
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
+    	"log"
+    	"time"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	subscribe := map[string]interface{}{
+    		"time":    time.Now().Unix(),
+    		"channel": "spot.rpi_order_book",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT", "20", "100ms"},
+    	}
+    
+    	msg, err := json.Marshal(subscribe)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    	fmt.Println(string(message))
+    }
+    
+    
+
+##  服务端推送
+
+通知结果格式：
+
+字段 | 类型 | 描述  
+---|---|---  
+`result` | Object | 深度信息  
+» `t` | Integer | 深度更新毫秒时间戳  
+» `lastUpdateId` | Integer | 深度副本当前的深度 ID  
+» `s` | String | 货币对  
+» `l` | String | 深度层级（例如 20 即代表 20 层的深度更新）  
+» `bids` | `Array[OrderBookArray]` | 在当前快照的顶层 bids（买单）数据，按价格从高到低排序  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对  
+» `asks` | `Array[OrderBookArray]` | 在当前快照的顶层 asks（卖单）数据，按价格从低到高排序  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对  
+  
+买卖档数不超过订阅的 `level`。
+
+通知示例：
+    
+    
+    {
+      "time": 1606295412,
+      "time_ms": 1606295412213,
+      "channel": "spot.rpi_order_book",
+      "event": "update",
+      "result": {
+        "t": 1606295412123,
+        "lastUpdateId": 48791820,
+        "s": "BTC_USDT",
+        "l": "20",
+        "bids": [
+          ["19079.55", "0.0195"],
+          ["19079.07", "0.7341"]
+        ],
+        "asks": [
+          ["19080.24", "0.1638"],
+          ["19080.91", "0.1366"]
+        ]
+      }
+    }
+    
+
 #  深度频道V2
 
 **提供一种更快更新的获取深度信息的方法.**
+
+`spot.obu` 与 `spot.rpi_obu` 都使用这一套本地深度维护方式。`spot.rpi_obu` 见下方 RPI 深度频道V2。
 
 ##  维护本地深度
 
@@ -1939,6 +2268,236 @@ TIP
     }
     
 
+#  RPI 深度频道V2
+
+`spot.rpi_obu`
+
+推送 RPI 订单簿的全量和增量。本频道是公开频道。
+
+消息结构、本地深度维护方式与 深度频道V2 相同。流名称前缀为 `rpi_ob.`。
+
+SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `spot.rpi_obu`。
+
+##  RPI 深度频道V2订阅
+
+###  请求参数
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload` 是一个包含流名称的列表. 格式为: `rpi_ob.{symbol}.{level}`；例如 `rpi_ob.BTC_USDT.400`、`rpi_ob.BTC_USDT.50`
+
+其中 `level` 枚举为：400、50；更新频率: 400 档为 100ms；50 档为 20ms。
+
+订阅成功后，首条推送为全量（`full=true`），之后为增量。同一现货的同一深度流，一个链接只允许订阅一次。
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send('{"time" : 123456, "channel" : "spot.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+    {
+        "time": 1747054611,
+        "time_ms": 1747054611614,
+        "conn_id": "d7de96c024f2a5b2",
+        "trace_id": "e6fd9bdd617fcdb80d0762ffa33e71f6",
+        "channel": "spot.rpi_obu",
+        "event": "subscribe",
+        "payload": [
+            "rpi_ob.BTC_USDT.50"
+        ],
+        "result": {
+            "status": "success"
+        }
+    }
+    
+
+##  RPI 深度v2订阅推送
+
+**RPI 深度频道V2的消息推送**
+
+###  推送参数
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`update`
+
+  * params
+
+推送参数名称 | 类型 | 描述  
+---|---|---  
+`result` | Object | 自上次更新以来发生变更的卖单和买单  
+»`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
+»`s` | String | 深度流的名称，例如 `rpi_ob.BTC_USDT.50`  
+»`U` | Integer | 本次更新开始的订单簿更新 ID  
+»`u` | Integer | 本次更新结束的订单簿更新 ID  
+»`b` | `Array[OrderBookArray]` | 自上次更新以来的 bids 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0 应当从本地深度中移除  
+»`a` | `Array[OrderBookArray]` | 自上次更新以来的 asks 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0 应当从本地深度中移除  
+  
+全量推送示例:
+    
+    
+    {
+        "channel": "spot.rpi_obu",
+        "result": {
+            "t": 1747054612673,
+            "full": true,
+            "s": "rpi_ob.BTC_USDT.50",
+            "u": 73777715168,
+            "b": [
+                ["104027.1", "509392"],
+                ["104027", "477932"]
+            ],
+            "a": [
+                ["104027.2", "44617"],
+                ["104027.4", "39322"]
+            ]
+        },
+        "time_ms": 1747054612848
+    }
+    
+
+增量推送示例:
+    
+    
+    {
+        "channel": "spot.rpi_obu",
+        "result": {
+            "t": 1747054612695,
+            "s": "rpi_ob.BTC_USDT.50",
+            "U": 73777715169,
+            "u": 73777715212,
+            "b": [
+                ["104024.5", "10343"]
+            ],
+            "a": [
+                ["104027.2", "0"]
+            ]
+        },
+        "time_ms": 1747054612925
+    }
+    
+
+##  RPI 深度频道V2取消订阅
+
+###  请求参数
+
+  * channel
+
+`spot.rpi_obu`
+
+  * event
+
+`unsubscribe`
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://api.gateio.ws/ws/v4/")
+    ws.send(
+      '{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://api.gateio.ws/ws/v4/"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "spot.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.50"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  订单频道
 
 `spot.orders`
@@ -2041,6 +2600,8 @@ WARNING
 
 更新的订单列表。请注意，可能会在一条通知中更新多个货币对的订单。
 
+在统一订单簿中，`currency_pair` 仍为名义市场，`stock` 和 `money` 表示订单实际使用的资产。
+
 通知结果格式：
 
 字段 | 类型 | 描述  
@@ -2058,6 +2619,9 @@ WARNING
 \- `update`: 订单成交更新  
 \- `finish`: 订单关闭或者取消  
 » `currency_pair` | String | 交易货币对  
+» `stock` | String | 订单实际使用的基础资产  
+» `money` | String | 订单实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
 » `type` | String | 订单类型  
 » `account` | String | 账户类型. spot - 现货账户; margin - 杠杆账户; cross_margin - 全仓杠杆账户; unified - 统一账户  
 » `side` | String | 买单或者卖单  
@@ -2095,7 +2659,8 @@ WARNING
 \- `trader_not_enough`：对手方不足导致撤单  
 \- `depth_not_enough`：深度不足导致撤单  
 \- `small`：订单数量太小  
-\- `liquidate_cancelled`：爆仓取消   
+\- `liquidate_cancelled`：爆仓取消  
+\- `unified_check_failed`：统一市场校验失败，例如实际交易资产不受支持，或市场/币种处于暂停状态   
 \- `-`：未知  
 »`amend_text` | String | 用户在修改订单时添加的自定义数据。  
 »`slippage` | String | 滑点，默认范围为0.0001-0.05，0.05代表5%，代表市价单能接受的最大滑点，不代表实际生效的滑点  
@@ -2136,7 +2701,10 @@ time_in_force | poc | 被动委托，只挂单不吃单
           "text": "t-testtext",
           "create_time": "1694655225",
           "update_time": "1694655225",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
           "type": "limit",
           "account": "spot",
           "side": "sell",
@@ -2148,11 +2716,11 @@ time_in_force | poc | 被动委托，只挂单不吃单
           "filled_amount": "812.8",
           "avg_deal_price": "0",
           "fee": "0",
-          "fee_currency": "USDT",
+          "fee_currency": "USDC",
           "point_fee": "0",
           "gt_fee": "0",
           "rebated_fee": "0",
-          "rebated_fee_currency": "USDT",
+          "rebated_fee_currency": "USDC",
           "create_time_ms": "1694655225315",
           "update_time_ms": "1694655225315",
           "user": 3497082,
@@ -2272,6 +2840,8 @@ WARNING
 
 更新的订单列表。请注意，可能会在一条通知中更新多个货币对的订单。
 
+在统一订单簿中，`currency_pair` 仍为名义市场，`stock` 和 `money` 表示订单实际使用的资产。
+
 通知结果格式：
 
 字段 | 类型 | 描述  
@@ -2289,6 +2859,9 @@ WARNING
 \- `update`: 订单成交更新  
 \- `finish`: 订单关闭或者取消  
 » `currency_pair` | String | 交易货币对  
+» `stock` | String | 订单实际使用的基础资产  
+» `money` | String | 订单实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
 » `type` | String | 订单类型  
 » `account` | String | 账户类型. spot - 现货账户; margin - 杠杆账户; cross_margin - 全仓杠杆账户; unified - 统一账户  
 » `side` | String | 买单或者卖单  
@@ -2322,7 +2895,8 @@ WARNING
 \- `trader_not_enough`：对手方不足导致撤单  
 \- `depth_not_enough`：深度不足导致撤单  
 \- `small`：订单数量太小  
-\- `liquidate_cancelled`：爆仓取消   
+\- `liquidate_cancelled`：爆仓取消  
+\- `unified_check_failed`：统一市场校验失败，例如实际交易资产不受支持，或市场/币种处于暂停状态   
 \- `-`：未知  
 »`amend_text` | String | 用户在修改订单时添加的自定义数据。  
 »`slippage` | String | 滑点，默认范围为0.0001-0.05，0.05代表5%，代表市价单能接受的最大滑点，不代表实际生效的滑点  
@@ -2363,7 +2937,10 @@ time_in_force | poc | 被动委托，只挂单不吃单
           "text": "t-poc1736238443494",
           "create_time": "1736238443",
           "update_time": "1736238443",
-          "currency_pair": "OM_USDT",
+          "currency_pair": "BTC_USD",
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1,
           "type": "limit",
           "account": "spot",
           "side": "buy",
@@ -2374,9 +2951,9 @@ time_in_force | poc | 被动委托，只挂单不吃单
           "filled_total": "3.053466",
           "filled_amount": "812.8",
           "avg_deal_price": "3.9147",
-          "fee_currency": "OM",
+          "fee_currency": "USDC",
           "gt_discount": true,
-          "rebated_fee_currency": "OM",
+          "rebated_fee_currency": "USDC",
           "create_time_ms": "1736238443503",
           "update_time_ms": "1736238443506",
           "user": 3128780,
@@ -2494,6 +3071,8 @@ WARNING
 
 更新的用户交易列表。
 
+在统一订单簿中，`currency_pair` 仍为名义市场，`stock` 和 `money` 表示该笔成交实际使用的资产。
+
 通知结果格式：
 
 字段 | 类型 | 描述  
@@ -2515,6 +3094,9 @@ WARNING
 » `gt_fee` | String | 手续费抵扣使用的 GT 数量  
 » `text` | String | 用户自定义信息  
 » `id_market` | Integer | 按市场成交ID  
+» `stock` | String | 该笔成交实际使用的基础资产  
+» `money` | String | 该笔成交实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
   
 ####  字段枚举值
 
@@ -2537,7 +3119,7 @@ role | taker
           "id": 5736713,
           "user_id": 1000001,
           "order_id": "30784428",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
           "create_time": 1605176741,
           "create_time_ms": "1605176741123.456",
           "side": "sell",
@@ -2548,7 +3130,10 @@ role | taker
           "point_fee": "0",
           "gt_fee": "0",
           "text": "apiv4",
-          "id_market": 917144
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
         }
       ]
     }
@@ -2658,6 +3243,8 @@ WARNING
 
 更新的用户交易列表。
 
+在统一订单簿中，`currency_pair` 仍为名义市场，`stock` 和 `money` 表示该笔成交实际使用的资产。该轻量频道仍不包含 `fee`、`fee_currency`、`point_fee` 和 `gt_fee`。
+
 通知结果格式：
 
 字段 | 类型 | 描述  
@@ -2676,6 +3263,9 @@ WARNING
 » `text` | String | 用户自定义信息  
 » `biz_info` | String | 交易价  
 » `id_market` | Integer | 按市场成交ID  
+» `stock` | String | 该笔成交实际使用的基础资产  
+» `money` | String | 该笔成交实际使用的计价资产  
+» `trade_mode` | Integer | 交易模式：`0` 普通市场、`1` 计价侧统一、`2` 基础侧统一、`3` 两侧统一  
   
 ####  字段枚举值
 
@@ -2699,7 +3289,7 @@ role | taker
           "id": 12855056637,
           "user_id": 3128780,
           "order_id": "769683030088",
-          "currency_pair": "PENGU_USDT",
+          "currency_pair": "BTC_USD",
           "create_time": 1736237480,
           "create_time_ms": "1736237480369.211",
           "side": "sell",
@@ -2709,7 +3299,10 @@ role | taker
           "text": "t-poc1736237480359",
           "amend_text": "-",
           "biz_info": "-",
-          "id_market": 917144
+          "id_market": 917144,
+          "stock": "BTC",
+          "money": "USDC",
+          "trade_mode": 1
         }
       ]
     }
@@ -3896,7 +4489,8 @@ WebSocket API 允许通过 WebSocket 连接下单、取消、修改和查询订�
           "req_header": null,
           "req_param": {
             "text": "t-my-custom-id",
-            "currency_pair": "GT_USDT",
+            "currency_pair": "BTC_USD",
+            "trade_quote": "USDC",
             "type": "limit",
             "account": "spot",
             "side": "buy",
@@ -4326,6 +4920,7 @@ Payload 格式:
 ---|---|---|---  
 `text` | `string` | 否 | 订单自定义信息，用户可以用该字段设置自定义 ID，用户自定义字段必须满足以下条件：  
 `currency_pair` | `string` | 是 | 交易货币对  
+`trade_quote` | `string` | 否 | 订单实际使用的计价资产。统一市场要求时必填；普通市场不传或传空值。  
 `type` | `object` | 否 | 订单类型  
 `account` | `string` | 否 | 账户类型，spot - 现货账户，margin - 杠杆账户，cross_margin - 全仓杠杆账户，unified - 统一账户  
 `side` | `string` | 是 | 买单或者卖单  
@@ -4339,6 +4934,8 @@ Payload 格式:
 `action_mode` | `string` | 否 | 处理模式  
 `slippage` | `string` | 否 | 滑点，默认范围为0.0001-0.05，0.05代表5%，代表市价单能接受的最大滑点  
   
+`trade_quote` 在 WebSocket 层按原值透传。WebSocket 只校验 JSON 类型是否为字符串，不转换大小写、不做别名转换、不维护币种白名单。币种是否存在及市场是否支持，由下游交易服务按与 REST 相同的业务规则和错误语义校验。批量下单时，每个订单需分别设置 `trade_quote`。本期只对外提供计价侧选择，`trade_base`、`tqa` 和 `tba` 不是公开 WebSocket 参数。`spot.order_amend`、`spot.order_cancel` 和 `spot.order_cancel_ids` 不支持 `trade_quote`。
+
 `req_header` 自定义 header 数据:
 
 字段 | 类型 | 必选 | 描述  
@@ -4409,10 +5006,10 @@ Payload 格式:
     from websocket import create_connection
     
     
-    placeParam = {"text":"t-my-custom-id","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"}
+    placeParam = {"text":"t-my-custom-id","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"}
     batchPlaceParam = [
-                        {"text":"t-my-custom-id-1","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"},
-                        {"text":"t-my-custom-id-2","currency_pair":"GT_USDT","type":"limit","account":"spot","side":"buy","amount":"1","price":"1.1"}
+                        {"text":"t-my-custom-id-1","currency_pair":"BTC_USD","trade_quote":"USDC","type":"limit","account":"spot","side":"buy","amount":"1","price":"1"},
+                        {"text":"t-my-custom-id-2","currency_pair":"ETH_USD","trade_quote":"USDG","type":"limit","account":"spot","side":"buy","amount":"1","price":"1.1"}
                       ]
     
     
@@ -4485,7 +5082,8 @@ Payload 格式:
     	// order_place
     	orderParam := OrderParam{
     		Text:         "t-123456",
-    		CurrencyPair: "ETH_BTC",
+    		CurrencyPair: "BTC_USD",
+    		TradeQuote:   "USDC",
     		Type:         "limit",
     		Account:      "spot",
     		Side:         "buy",
@@ -4496,7 +5094,10 @@ Payload 格式:
     		AutoBorrow:   false,
     		StpAct:       "cn",
     	}
-    	paramBytes, _ := json.Marshal(orderParam)
+    	requestParam := interface{}(orderParam)
+    	// 批量下单时改为序列化 []OrderParam；每个订单分别携带自己的 trade_quote。
+    	// requestParam = []OrderParam{orderParam, {CurrencyPair: "ETH_USD", TradeQuote: "USDG", Type: "limit", Account: "spot", Side: "sell", Amount: "1", Price: "3000"}}
+    	paramBytes, _ := json.Marshal(requestParam)
     	requestId := fmt.Sprintf("%d-%d", time.Now().UnixMilli(), 1)
     	order_place := ApiRequest{
     		Time:    time.Now().Unix(),
@@ -4536,6 +5137,7 @@ Payload 格式:
     type OrderParam struct {
     	Text         string `json:"text,omitempty"`
     	CurrencyPair string `json:"currency_pair,omitempty"`
+    	TradeQuote   string `json:"trade_quote,omitempty"`
     	Type         string `json:"type,omitempty"`
     	Account      string `json:"account,omitempty"`
     	Side         string `json:"side,omitempty"`
@@ -4561,7 +5163,8 @@ Payload 格式:
         "req_id": "request-2",
         "req_param": {
           "text": "t-my-custom-id",
-          "currency_pair": "GT_USDT",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "type": "limit",
           "account": "spot",
           "side": "buy",
@@ -4584,7 +5187,8 @@ Payload 格式:
         "req_param": [
           {
             "text": "t-my-custom-id-1",
-            "currency_pair": "GT_USDT",
+            "currency_pair": "BTC_USD",
+            "trade_quote": "USDC",
             "type": "limit",
             "account": "spot",
             "side": "buy",
@@ -4593,7 +5197,8 @@ Payload 格式:
           },
           {
             "text": "t-my-custom-id-2",
-            "currency_pair": "GT_USDT",
+            "currency_pair": "ETH_USD",
+            "trade_quote": "USDG",
             "type": "limit",
             "account": "spot",
             "side": "buy",
@@ -4701,6 +5306,8 @@ Payload 格式:
 
 ###  下单推送
 
+下游返回非空值时，`trade_quote` 会出现在 RESULT 和 FULL 结果中；ACK 保持原有结果结构且不返回 `trade_quote`。请求直接校验失败时返回 API 错误且不产生订单 ID；订单被引擎接收后又因统一市场校验失败时，订单状态为 `cancelled`，且 `finish_as=unified_check_failed`。
+
 已更新的订单列表。请注意，可能会在一条通知中更新多个货币对的订单
 
 推送格式:
@@ -4790,7 +5397,8 @@ Payload 格式:
           "update_time": "1548000100",
           "create_time_ms": 1548000000123,
           "update_time_ms": 1548000100123,
-          "currency_pair": "ETH_BTC",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "status": "cancelled",
           "type": "limit",
           "account": "spot",
@@ -4841,9 +5449,10 @@ Payload 格式:
           "create_time_ms": 1710488334073,
           "update_time_ms": 1710488334074,
           "status": "closed",
-          "currency_pair": "BTC_USDT",
+          "currency_pair": "BTC_USD",
+          "trade_quote": "USDC",
           "type": "limit",
-          "account": "unified",
+          "account": "spot",
           "side": "buy",
           "amount": "0.001",
           "price": "65000",
@@ -4862,7 +5471,7 @@ Payload 格式:
           "gt_taker_fee": "0",
           "gt_discount": false,
           "rebated_fee": "0",
-          "rebated_fee_currency": "USDT",
+          "rebated_fee_currency": "USDC",
           "finish_as": "filled"
         }
       }
@@ -5318,7 +5927,10 @@ Payload 格式:
 `currency_pair` | `string` | 是 | 交易货币对  
 `side` | `string` | 是 | 指定全部买单或全部卖单，不指定则两者都包括  
 `account` | `string` | 否 | 指定查询账户。不指定默认现货，保证金和逐仓杠杆账户。指定 cross_margin 则查询全仓杠杆账户。  
+`trade_quote` | `string` | 否 | 仅撤销实际计价资产为该值的订单  
   
+`trade_quote` 在 WebSocket 层按原值透传，由下游交易服务校验。它非空时是实际撤单过滤条件；如果下游不支持该过滤能力，请求将失败，不会退化为撤销名义市场下的全部订单。撤单结果保持原有结构，不回显 `trade_quote`。
+
 `req_header` 自定义 header 数据:
 
 字段 | 类型 | 必选 | 描述  
@@ -5337,7 +5949,7 @@ Payload 格式:
     
     
     time = int(time.time())
-    cancelParam = {"side":"buy","currency_pair":"GT_USDT"}
+    cancelParam = {"side":"buy","currency_pair":"BTC_USD","trade_quote":"USDC"}
     channel = "spot.order_cancel_cp"
     
     ws = create_connection("wss://api.gateio.ws/ws/v4/")
@@ -5382,7 +5994,8 @@ Payload 格式:
     	timestamp := time.Now().Unix()
     	cancelParam := map[string]interface{}{
     		"side":          "buy",
-    		"currency_pair": "GT_USDT",
+    		"currency_pair": "BTC_USD",
+    		"trade_quote":   "USDC",
     	}
     	channel := "spot.order_cancel_cp"
     
@@ -5425,8 +6038,9 @@ Payload 格式:
       "payload": {
         "req_id": "request-7",
         "req_param": {
-          "currency_pair": "GT_USDT",
-          "side": "buy"
+          "currency_pair": "BTC_USD",
+          "side": "buy",
+          "trade_quote": "USDC"
         }
       }
     }
@@ -6267,4 +6881,4 @@ Payload 格式:
     }
     
 
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 10/14/2026, 3:12:02 AM

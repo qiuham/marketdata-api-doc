@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/rebate
 api_type: Earn
-updated_at: 2026-05-27 20:15:47.788350
+updated_at: 2026-11-13 20:57:20.398234
 ---
 
 # Rebate
@@ -32,11 +32,9 @@ offset | query | integer | Optional | List offset, starting from 0
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | AgencyTransactionHistory  
   
 ### Response Schema
 
@@ -152,11 +150,9 @@ offset | query | integer | Optional | List offset, starting from 0
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | AgencyCommissionHistory  
   
 ### Response Schema
 
@@ -264,8 +260,6 @@ limit | query | integer | Optional | Maximum number of records returned in a sin
 offset | query | integer | Optional | List offset, starting from 0  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -383,8 +377,6 @@ offset | query | integer | Optional | List offset, starting from 0
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | PartnerCommissionHistory  
@@ -491,8 +483,6 @@ limit | query | integer | Optional | Maximum number of records returned in a sin
 offset | query | integer | Optional | List offset, starting from 0  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -607,11 +597,9 @@ to | query | integer(int64) | Optional | End timestamp for the query, defaults t
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | BrokerCommission  
   
 ### Response Schema
 
@@ -737,36 +725,35 @@ to | query | integer(int64) | Optional | End timestamp for the query, defaults t
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | List retrieved successfully | BrokerTransactionHistory  
   
 ### Response Schema
 
 Status Code **200**
 
+_BrokerTransactionHistory_
+
 Name | Type | Description  
 ---|---|---  
-» BrokerTransactionHistory | BrokerTransactionHistory | none  
-»» total | integer(int64) | Total  
-»» list | array | List of transaction history  
-»»» BrokerTransaction | object | none  
-»»»» transaction_time | integer(int64) | Transaction Time. (unix timestamp)  
-»»»» user_id | integer(int64) | User ID  
-»»»» group_name | string | Group name  
-»»»» fee | string | Fee amount (USDT)  
-»»»» currency_pair | string | Currency pair  
-»»»» amount | string | Transaction amount  
-»»»» fee_asset | string | Fee currency  
-»»»» source | string | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-»»»» sub_broker_info | object | Sub-broker information  
-»»»»» user_id | integer(int64) | Sub-broker user ID  
-»»»»» original_commission_rate | string | Sub-broker original commission rate  
-»»»»» relative_commission_rate | string | Sub-broker relative commission rate  
-»»»»» commission_rate | string | Sub-broker actual commission rate  
-»»»» alpha_contract_addr | string | Alpha contract address  
+» total | integer(int64) | Total  
+» list | array | List of transaction history  
+»» BrokerTransaction | object | none  
+»»» transaction_time | integer(int64) | Transaction Time. (unix timestamp)  
+»»» user_id | integer(int64) | User ID  
+»»» group_name | string | Group name  
+»»» fee | string | Fee amount (USDT)  
+»»» currency_pair | string | Currency pair  
+»»» amount | string | Transaction amount  
+»»» fee_asset | string | Fee currency  
+»»» source | string | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+»»» sub_broker_info | object | Sub-broker information  
+»»»» user_id | integer(int64) | Sub-broker user ID  
+»»»» original_commission_rate | string | Sub-broker original commission rate  
+»»»» relative_commission_rate | string | Sub-broker relative commission rate  
+»»»» commission_rate | string | Sub-broker actual commission rate  
+»»» alpha_contract_addr | string | Alpha contract address  
   
 WARNING
 
@@ -854,20 +841,19 @@ _User obtains rebate information_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | RebateUserInfo  
   
 ### Response Schema
 
 Status Code **200**
 
+_Retrieve user rebate information_
+
 Name | Type | Description  
 ---|---|---  
-» _None_ | RebateUserInfo | Retrieve user rebate information  
-»» invite_uid | integer(int64) | My inviter's UID  
+» invite_uid | integer(int64) | My inviter's UID  
   
 WARNING
 
@@ -943,8 +929,6 @@ ParametersName | In | Type | Required | Description
 user_id_list | query | string | Required | Query user ID list, separated by commas. If more than 100, only 100 will be returned  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)List retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1045,13 +1029,11 @@ GET`/rebate/partner/applications/recent`
 
 GET `/rebate/partner/applications/recent`
 
-Get `recent partner application records`
+_Get recent partner application records_
 
-Get `the current user's recent partner application records. This endpoint returns application records within the last 30 days, including application status, review information, application materials, and other details.`
+Get the current user's recent partner application records. This endpoint returns application records within the last 30 days, including application status, review information, application materials, and other details.
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successful response
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1168,8 +1150,6 @@ _Check partner application eligibility_
 Check whether the current user is eligible to apply as a partner. This endpoint checks multiple conditions: account status (banned or not), whether it is a sub-account, whether already a partner, KYC verification status, whether under another agent's referral chain, whether on the blacklist, and other business rule restrictions
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successful response
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1326,11 +1306,6 @@ business_type | 7
 business_type | 8  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-  * 400[Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1)Invalid request parameters
-  * 401[Unauthorized ](https://tools.ietf.org/html/rfc7235#section-3.1)Unauthorized access
-  * 403[Forbidden ](https://tools.ietf.org/html/rfc7231#section-6.5.3)Access denied
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1513,19 +1488,49 @@ Code samples
 
 #  Schemas
 
-##  RebateUserInfo
-
-_Retrieve user rebate information_
+##  BrokerCommission
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-invite_uid | integer(int64) | Optional | none | My inviter's UID  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | List of commission history  
+» BrokerCommissionItem | object | Optional | none | none  
+»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» amount | string | Optional | none | The amount of commission rebates  
+»» fee | string | Optional | none | Fee  
+»» fee_asset | string | Optional | none | Fee currency  
+»» rebate_fee | string | Optional | none | The income from rebates, converted to USDT  
+»» source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+»» currency_pair | string | Optional | none | Currency pair  
+»» sub_broker_info | object | Optional | none | Sub-broker information  
+»»» user_id | integer(int64) | Optional | none | Sub-broker user ID  
+»»» original_commission_rate | string | Optional | none | Sub-broker original commission rate  
+»»» relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
+»»» commission_rate | string | Optional | none | Sub-broker actual commission rate  
+»» alpha_contract_addr | string | Optional | none | Alpha contract address  
       
     
     {
-      "invite_uid": 0
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "amount": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "rebate_fee": "string",
+          "source": "string",
+          "currency_pair": "string",
+          "sub_broker_info": {},
+          "alpha_contract_addr": "string"
+        }
+      ]
     }
     
     
@@ -1539,28 +1544,28 @@ _allOf_
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 _None_ | object | Optional | none | none  
-↳ code | integer | Required | none | Error Code, 0 Indicates Success  
-↳ message | string | Required | none | Error message description  
-↳ data | object | Required | none | Response data  
-↳ timestamp | integer(int64) | Required | none | Unix timestamp  
+» code | integer | Required | none | Error Code, 0 Indicates Success  
+» message | string | Required | none | Error message description  
+» data | object | Required | none | Response data  
+» timestamp | integer(int64) | Required | none | Unix timestamp  
   
 _and_
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 _None_ | object | Optional | none | none  
-↳ data | object | Optional | none | none  
-↳ rebate_amount | string | Required | none | Rebate amount as a string for precision.  
+» data | object | Optional | none | none  
+»» rebate_amount | string | Required | none | Rebate amount as a string for precision.  
 Up to 6 decimal places; trailing zeros removed.  
-↳ trade_volume | string | Required | none | Trading volume as a string for precision.  
+»» trade_volume | string | Required | none | Trading volume as a string for precision.  
 Up to 6 decimal places; trailing zeros removed.  
-↳ net_fee | string | Required | none | Net fee as a string for precision.  
+»» net_fee | string | Required | none | Net fee as a string for precision.  
 Up to 6 decimal places; trailing zeros removed.  
-↳ customer_count | integer | Required | none | Customer count (invited users)  
-↳ trading_user_count | string|null | Required | none | Transaction participant count (string format, consistent with online JSON serialization) only returns a specific value when business_type=0(all), and returns nullfor other business types.  
-↳ time_range_desc | string | Required | none | Time range description  
-↳ business_type | integer | Required | none | Business Type  
-↳ business_type_desc | string | Required | none | Business type description; allowed values: All, Spot, Futures, Alpha, Web3, Perps (DEX), Exchange All, Web3 All, TradFi  
+»» customer_count | integer | Required | none | Customer count (invited users)  
+»» trading_user_count | string|null | Required | none | Transaction participant count (string format, consistent with online JSON serialization) only returns a specific value when business_type=0(all), and returns nullfor other business types.  
+»» time_range_desc | string | Required | none | Time range description  
+»» business_type | integer | Required | none | Business Type  
+»» business_type_desc | string | Required | none | Business type description; allowed values: All, Spot, Futures, Alpha, Web3, Perps (DEX), Exchange All, Web3 All, TradFi  
   
 ####  Enumerated Values
 
@@ -1595,187 +1600,6 @@ business_type | 8
     
     
 
-##  PartnerTransactionHistory
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of transaction history  
-↳ PartnerTransaction | object | Optional | none | none  
-↳ transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ fee | string | Optional | none | Fee  
-↳ fee_asset | string | Optional | none | Fee currency  
-↳ currency_pair | string | Optional | none | Currency pair  
-↳ amount | string | Optional | none | Transaction amount  
-↳ amount_asset | string | Optional | none | Transaction amount currency  
-↳ source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  AgencyTransactionHistory
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of transaction history  
-↳ AgencyTransaction | object | Optional | none | none  
-↳ transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ fee | string | Optional | none | Fee  
-↳ fee_asset | string | Optional | none | Fee currency  
-↳ currency_pair | string | Optional | none | Currency pair  
-↳ amount | string | Optional | none | Transaction amount  
-↳ amount_asset | string | Optional | none | Transaction amount currency  
-↳ source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
-      
-    
-    {
-      "currency_pair": "string",
-      "total": 0,
-      "list": [
-        {
-          "transaction_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "currency_pair": "string",
-          "amount": "string",
-          "amount_asset": "string",
-          "source": "string"
-        }
-      ]
-    }
-    
-    
-
-##  PartnerSubList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | Subordinate list  
-↳ PartnerSub | object | Optional | none | none  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ user_join_time | integer(int64) | Optional | none | Time when user joined the system, Unix timestamp in seconds  
-↳ type | integer(int64) | Optional | none | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "user_id": 0,
-          "user_join_time": 0,
-          "type": 0
-        }
-      ]
-    }
-    
-    
-
-##  UserSubRelation
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-list | array | Optional | none | Subordinate relationship list  
-↳ UserSub | object | Optional | none | none  
-↳ uid | integer(int64) | Optional | none | User ID  
-↳ belong | string | Optional | none | User's system affiliation (partner/referral). Empty means not belonging to any system  
-↳ type | integer(int64) | Optional | none | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
-↳ ref_uid | integer(int64) | Optional | none | Inviter user ID  
-      
-    
-    {
-      "list": [
-        {
-          "uid": 0,
-          "belong": "string",
-          "type": 0,
-          "ref_uid": 0
-        }
-      ]
-    }
-    
-    
-
-##  BrokerCommission
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-↳ BrokerCommissionItem | object | Optional | none | none  
-↳ commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ amount | string | Optional | none | The amount of commission rebates  
-↳ fee | string | Optional | none | Fee  
-↳ fee_asset | string | Optional | none | Fee currency  
-↳ rebate_fee | string | Optional | none | The income from rebates, converted to USDT  
-↳ source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-↳ currency_pair | string | Optional | none | Currency pair  
-↳ sub_broker_info | object | Optional | none | Sub-broker information  
-↳ user_id | integer(int64) | Optional | none | Sub-broker user ID  
-↳ original_commission_rate | string | Optional | none | Sub-broker original commission rate  
-↳ relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
-↳ commission_rate | string | Optional | none | Sub-broker actual commission rate  
-↳ alpha_contract_addr | string | Optional | none | Alpha contract address  
-      
-    
-    {
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "amount": "string",
-          "fee": "string",
-          "fee_asset": "string",
-          "rebate_fee": "string",
-          "source": "string",
-          "currency_pair": "string",
-          "sub_broker_info": {},
-          "alpha_contract_addr": "string"
-        }
-      ]
-    }
-    
-    
-
 ##  PartnerApplicationResponse
 
 ###  Properties
@@ -1791,41 +1615,41 @@ _and_
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 _None_ | object | Optional | none | none  
-↳ data | object | Optional | none | none  
-↳ id | integer | Optional | none | Application record ID  
-↳ uid | integer | Optional | none | User ID  
-↳ language | string | Optional | none | Language code  
-↳ country_id | integer | Optional | none | Country ID  
-↳ firstname | string | Optional | none | First name  
-↳ lastname | string | Optional | none | Last name  
-↳ email | string(email) | Optional | none | Email address  
-↳ join_uid | integer | Optional | none | Joined user ID  
-↳ join_country_id | integer | Optional | none | Joined country ID  
-↳ identity_comment | string | Optional | none | Identity description  
-↳ promotion_channels | string | Optional | none | Promotion channels, separated by  
-↳ contact_details | string | Optional | none | Contact details (JSON string)  
-↳ know_details | string | Optional | none | Learn more  
-↳ question_lang | string | Optional | none | Question language  
-↳ create_timest | string(date-time) | Optional | none | Created time  
-↳ update_timest | string(date-time) | Optional | none | Update time  
-↳ apply_type | integer | Optional | none | Application type  
-↳ audit_status | integer | Optional | none | Review status (0 - pending, 1 - approved, 2 - rejected)  
-↳ edit_counts | integer | Optional | none | Edit count  
-↳ proof_images | string | Optional | none | Proof image path  
-↳ proof_videos | string | Optional | none | Proof video path  
-↳ proof_url | string(uri) | Optional | none | Proof link  
-↳ audit_reason | integer | Optional | none | Review reason code  
-↳ channel_type | integer | Optional | none | Channel type  
-↳ region | string | Optional | none | Region  
-↳ phone | string | Optional | none | Phone number  
-↳ telegram | string | Optional | none | Telegram account  
-↳ other_contact | object | Optional | none | Other contact information  
-↳ type | integer | Optional | none | Contact type  
-↳ value | string | Optional | none | Contact value  
-↳ proof_images_url_list | array | Optional | none | List of proof image URLs  
-↳ proof_videos_url_list | array | Optional | none | List of proof video URLs  
-↳ apply_msg | string | Optional | none | Application message  
-↳ jump_url | string | Optional | none | Redirect URL  
+» data | object | Optional | none | none  
+»» id | integer | Optional | none | Application record ID  
+»» uid | integer | Optional | none | User ID  
+»» language | string | Optional | none | Language code  
+»» country_id | integer | Optional | none | Country ID  
+»» firstname | string | Optional | none | First name  
+»» lastname | string | Optional | none | Last name  
+»» email | string(email) | Optional | none | Email address  
+»» join_uid | integer | Optional | none | Joined user ID  
+»» join_country_id | integer | Optional | none | Joined country ID  
+»» identity_comment | string | Optional | none | Identity description  
+»» promotion_channels | string | Optional | none | Promotion channels, separated by  
+»» contact_details | string | Optional | none | Contact details (JSON string)  
+»» know_details | string | Optional | none | Learn more  
+»» question_lang | string | Optional | none | Question language  
+»» create_timest | string(date-time) | Optional | none | Created time  
+»» update_timest | string(date-time) | Optional | none | Update time  
+»» apply_type | integer | Optional | none | Application type  
+»» audit_status | integer | Optional | none | Review status (0 - pending, 1 - approved, 2 - rejected)  
+»» edit_counts | integer | Optional | none | Edit count  
+»» proof_images | string | Optional | none | Proof image path  
+»» proof_videos | string | Optional | none | Proof video path  
+»» proof_url | string(uri) | Optional | none | Proof link  
+»» audit_reason | integer | Optional | none | Review reason code  
+»» channel_type | integer | Optional | none | Channel type  
+»» region | string | Optional | none | Region  
+»» phone | string | Optional | none | Phone number  
+»» telegram | string | Optional | none | Telegram account  
+»» other_contact | object | Optional | none | Other contact information  
+»»» type | integer | Optional | none | Contact type  
+»»» value | string | Optional | none | Contact value  
+»» proof_images_url_list | array | Optional | none | List of proof image URLs  
+»» proof_videos_url_list | array | Optional | none | List of proof video URLs  
+»» apply_msg | string | Optional | none | Application message  
+»» jump_url | string | Optional | none | Redirect URL  
       
     
     {
@@ -1875,70 +1699,40 @@ _None_ | object | Optional | none | none
     
     
 
-##  AgencyCommissionHistory
+##  ErrorResponse
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-currency_pair | string | Optional | none | Currency pair  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-↳ AgencyCommission | object | Optional | none | none  
-↳ commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ commission_amount | string | Optional | none | Commission amount  
-↳ commission_asset | string | Optional | none | Commission Asset  
-↳ source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+code | integer | Required | none | Error code  
+message | string | Required | none | Error message  
+data | object | Required | none | Empty object  
+timestamp | integer(int64) | Required | none | Unix timestamp  
       
     
     {
-      "currency_pair": "string",
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "commission_amount": "string",
-          "commission_asset": "string",
-          "source": "string"
-        }
-      ]
+      "code": 401,
+      "message": "Unauthorized",
+      "data": {},
+      "timestamp": 1773637797
     }
     
     
 
-##  PartnerCommissionHistory
+##  RebateUserInfo
+
+_Retrieve user rebate information_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-total | integer(int64) | Optional | none | Total  
-list | array | Optional | none | List of commission history  
-↳ PartnerCommission | object | Optional | none | none  
-↳ commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ commission_amount | string | Optional | none | Commission amount  
-↳ commission_asset | string | Optional | none | Commission Asset  
-↳ source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+invite_uid | integer(int64) | Optional | none | My inviter's UID  
       
     
     {
-      "total": 0,
-      "list": [
-        {
-          "commission_time": 0,
-          "user_id": 0,
-          "group_name": "string",
-          "commission_amount": "string",
-          "commission_asset": "string",
-          "source": "string"
-        }
-      ]
+      "invite_uid": 0
     }
     
     
@@ -1953,21 +1747,21 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 total | integer(int64) | Optional | none | Total  
 list | array | Optional | none | List of transaction history  
-↳ BrokerTransaction | object | Optional | none | none  
-↳ transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
-↳ user_id | integer(int64) | Optional | none | User ID  
-↳ group_name | string | Optional | none | Group name  
-↳ fee | string | Optional | none | Fee amount (USDT)  
-↳ currency_pair | string | Optional | none | Currency pair  
-↳ amount | string | Optional | none | Transaction amount  
-↳ fee_asset | string | Optional | none | Fee currency  
-↳ source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
-↳ sub_broker_info | object | Optional | none | Sub-broker information  
-↳ user_id | integer(int64) | Optional | none | Sub-broker user ID  
-↳ original_commission_rate | string | Optional | none | Sub-broker original commission rate  
-↳ relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
-↳ commission_rate | string | Optional | none | Sub-broker actual commission rate  
-↳ alpha_contract_addr | string | Optional | none | Alpha contract address  
+» BrokerTransaction | object | Optional | none | none  
+»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» fee | string | Optional | none | Fee amount (USDT)  
+»» currency_pair | string | Optional | none | Currency pair  
+»» amount | string | Optional | none | Transaction amount  
+»» fee_asset | string | Optional | none | Fee currency  
+»» source | string | Optional | none | Commission transaction type: Spot, Futures, Options, Alpha、TradFi  
+»» sub_broker_info | object | Optional | none | Sub-broker information  
+»»» user_id | integer(int64) | Optional | none | Sub-broker user ID  
+»»» original_commission_rate | string | Optional | none | Sub-broker original commission rate  
+»»» relative_commission_rate | string | Optional | none | Sub-broker relative commission rate  
+»»» commission_rate | string | Optional | none | Sub-broker actual commission rate  
+»» alpha_contract_addr | string | Optional | none | Alpha contract address  
       
     
     {
@@ -1990,6 +1784,45 @@ list | array | Optional | none | List of transaction history
     
     
 
+##  PartnerTransactionHistory
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | List of transaction history  
+» PartnerTransaction | object | Optional | none | none  
+»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» fee | string | Optional | none | Fee  
+»» fee_asset | string | Optional | none | Fee currency  
+»» currency_pair | string | Optional | none | Currency pair  
+»» amount | string | Optional | none | Transaction amount  
+»» amount_asset | string | Optional | none | Transaction amount currency  
+»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
 ##  EligibilityResponse
 
 ###  Properties
@@ -2005,10 +1838,10 @@ _and_
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 _None_ | object | Optional | none | none  
-↳ data | object | Optional | none | none  
-↳ eligible | boolean | Required | none | Whether eligible for application  
-↳ block_reasons | array | Required | none | List of ineligibility reason descriptions  
-↳ block_reason_codes | array | Required | none | List of ineligibility reason codes  
+» data | object | Optional | none | none  
+»» eligible | boolean | Required | none | Whether eligible for application  
+»» block_reasons | array | Required | none | List of ineligibility reason descriptions  
+»» block_reason_codes | array | Required | none | List of ineligibility reason codes  
       
     
     {
@@ -2028,21 +1861,163 @@ _None_ | object | Optional | none | none
     
     
 
-##  ErrorResponse
+##  PartnerCommissionHistory
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-code | integer | Required | none | Error code  
-message | string | Required | none | Error message  
-data | object | Required | none | Empty object  
-timestamp | integer(int64) | Required | none | Unix timestamp  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | List of commission history  
+» PartnerCommission | object | Optional | none | none  
+»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» commission_amount | string | Optional | none | Commission amount  
+»» commission_asset | string | Optional | none | Commission Asset  
+»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
       
     
     {
-      "code": 401,
-      "message": "Unauthorized",
-      "data": {},
-      "timestamp": 1773637797
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "commission_amount": "string",
+          "commission_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  PartnerSubList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | Subordinate list  
+» PartnerSub | object | Optional | none | none  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» user_join_time | integer(int64) | Optional | none | Time when user joined the system, Unix timestamp in seconds  
+»» type | integer(int64) | Optional | none | Type (1-Sub-agent 2-Indirect direct customer 3-Direct direct customer)  
+      
+    
+    {
+      "total": 0,
+      "list": [
+        {
+          "user_id": 0,
+          "user_join_time": 0,
+          "type": 0
+        }
+      ]
+    }
+    
+    
+
+##  AgencyCommissionHistory
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | none | Currency pair  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | List of commission history  
+» AgencyCommission | object | Optional | none | none  
+»» commission_time | integer(int64) | Optional | none | Commission time (Unix timestamp in seconds)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» commission_amount | string | Optional | none | Commission amount  
+»» commission_asset | string | Optional | none | Commission Asset  
+»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "list": [
+        {
+          "commission_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "commission_amount": "string",
+          "commission_asset": "string",
+          "source": "string"
+        }
+      ]
+    }
+    
+    
+
+##  UserSubRelation
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+list | array | Optional | none | Subordinate relationship list  
+» UserSub | object | Optional | none | none  
+»» uid | integer(int64) | Optional | none | User ID  
+»» belong | string | Optional | none | User's system affiliation (partner/referral). Empty means not belonging to any system  
+»» type | integer(int64) | Optional | none | Type (0-Not in system 1-Direct subordinate agent 2-Indirect subordinate agent 3-Direct direct customer 4-Indirect direct customer 5-Regular user)  
+»» ref_uid | integer(int64) | Optional | none | Inviter user ID  
+      
+    
+    {
+      "list": [
+        {
+          "uid": 0,
+          "belong": "string",
+          "type": 0,
+          "ref_uid": 0
+        }
+      ]
+    }
+    
+    
+
+##  AgencyTransactionHistory
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | none | Currency pair  
+total | integer(int64) | Optional | none | Total  
+list | array | Optional | none | List of transaction history  
+» AgencyTransaction | object | Optional | none | none  
+»» transaction_time | integer(int64) | Optional | none | Transaction Time. (unix timestamp)  
+»» user_id | integer(int64) | Optional | none | User ID  
+»» group_name | string | Optional | none | Group name  
+»» fee | string | Optional | none | Fee  
+»» fee_asset | string | Optional | none | Fee currency  
+»» currency_pair | string | Optional | none | Currency pair  
+»» amount | string | Optional | none | Transaction amount  
+»» amount_asset | string | Optional | none | Transaction amount currency  
+»» source | string | Optional | none | Commission source: SPOT - Spot commission, FUTURES - Futures commission  
+      
+    
+    {
+      "currency_pair": "string",
+      "total": 0,
+      "list": [
+        {
+          "transaction_time": 0,
+          "user_id": 0,
+          "group_name": "string",
+          "fee": "string",
+          "fee_asset": "string",
+          "currency_pair": "string",
+          "amount": "string",
+          "amount_asset": "string",
+          "source": "string"
+        }
+      ]
     }

@@ -20,7 +20,7 @@
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-13 |
 | crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-13 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-13 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-13 |
 | crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-13 |
 | crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-13 |
 | crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-13 |
@@ -81,7 +81,7 @@ marketdata-api-doc/
 │       ├── binance/                                # 164 Markdown docs
 │       ├── bybit/                                  # 546 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
-│       ├── gateio/                                 # 66 Markdown docs
+│       ├── gateio/                                 # 72 Markdown docs
 │       ├── hyperliquid/                            # 36 Markdown docs
 │       ├── kraken/                                 # 447 Markdown docs
 │       ├── okx/                                    # 519 Markdown docs

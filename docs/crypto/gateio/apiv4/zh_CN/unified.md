@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/unified
 api_type: Account
-updated_at: 2026-05-27 20:18:04.003996
+updated_at: 2026-11-13 20:58:13.603487
 ---
 
 # Unified
@@ -19,7 +19,7 @@ _获取统一账户信息_
 
 账户内的各币种资产将会根据其流动性，定义相应的调整系数，再统一折算为USD，来统一计算账户的资产及持仓价值
 
-具体公式可查询保证金公式
+具体公式可查询[保证金公式 ](https://www.gate.com/zh/help/unified-account/risk_control_mechanism/33018)
 
 ### 参数
 
@@ -47,7 +47,7 @@ sub_uid | 请求参数 | string | 否 | 子账号用户 ID
 \- single_currency: 单币种保证金模式  
 » user_id | integer(int64) | 用户 ID  
 » refresh_time | integer(int64) | 最近一次刷新时间  
-» locked | boolean | 账户是否被锁定,在跨币种保证金/组合保证金模式下有效，其他如单币种保证金模式下是false  
+» locked | boolean | 账户是否被锁定：在跨币种保证金模式和组合保证金模式下有效；其他模式（如单币种保证金模式）下为 false。  
 » balances | object |   
 »» UnifiedBalance | object |   
 »»» available | string | 全仓可用余额，已扣除合约逐仓占用及冻结（合约逐仓占用，即合约逐仓余额），在单币种/跨币种/组合保证金模式下有效。  
@@ -374,13 +374,15 @@ WARNING
     }
     
 
-##  批量查询统一账户最多可转出；每一个币种都是最大值, 用户提币之后, 所有币种可转金额都会变更🔒 需要认证
+##  批量查询统一账户最大可转出金额🔒 需要认证
 
 GET`/unified/transferables`
 
 GET `/unified/transferables`
 
-_批量查询统一账户最多可转出；每一个币种都是最大值, 用户提币之后, 所有币种可转金额都会变更_
+_批量查询统一账户最大可转出金额_
+
+每个币种返回其最大可转出金额；用户提币后，所有币种的可转金额都会变更。
 
 ### 参数
 
@@ -1359,7 +1361,7 @@ currencies | 请求参数 | array[string] | 是 | 指定币种名称查询数组
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | EstimateRate  
   
 ### 返回格式
 
@@ -1430,13 +1432,13 @@ WARNING
     }
     
 
-##  查询统一账户梯度式
+##  查询统一账户币种保证金折扣梯度
 
 GET`/unified/currency_discount_tiers`
 
 GET `/unified/currency_discount_tiers`
 
-_查询统一账户梯度式_
+_查询统一账户币种保证金折扣梯度_
 
 ### 返回
 
@@ -1718,7 +1720,7 @@ body | body | UnifiedPortfolioInput | 是 |
 » spot_balances | body | array | 否 | 现货  
 »» _None_ | body | object | 否 | 现货  
 »»» currency | body | string | 是 | 币种名称  
-»»» equity | body | string | 是 | 币种权益，权益 = 余额 - 已借，表示您在现货部位的净delta敞口，可以为负数。  
+»»» equity | body | string | 是 | 币种权益 = 余额 - 已借，表示现货净 Delta 敞口，可为负数。  
 »» spot_orders | body | array | 否 | 现货订单  
 »»» _None_ | body | object | 否 | 现货订单  
 »»»» currency_pairs | body | string | 是 | 市场  
@@ -1958,6 +1960,112 @@ _组合保证金计算器输出_
         }
       ]
     }
+    
+
+##  设置用户所有借贷币种杠杆倍数🔒 需要认证
+
+POST`/unified/leverage/user_setting`
+
+POST `/unified/leverage/user_setting`
+
+_设置用户所有借贷币种杠杆倍数_
+
+使用时需要注意以下几点：
+
+  * 存在借贷的币种不能进行修改
+  * 超过杠杆阈值的币种按阈值设置
+  * 设置失败不会进行回滚，而是只影响失败的币种，比如USDT存在借贷，则仅仅USDT杠杆倍数不会被修改
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | object | 是 |   
+» leverage | body | string | 否 | 杠杆倍数（超出币种杠杆倍数阈值按阈值设置）  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 设置成功 | [Inline]  
+  
+### 返回格式
+
+状态码 **200**
+
+名称 | 类型 | 描述  
+---|---|---  
+» LeverageFailedCurrencies | object | 设置杠杆倍数失败的币种列表  
+»» currency | string | 设置失败的币种  
+»» reason | string | 杠杆倍数设置失败原因  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/unified/leverage/user_setting'
+    query_param = ''
+    body='{"leverage":"10"}'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/unified/leverage/user_setting"
+    query_param=""
+    body_param='{"leverage":"10"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    {
+      "leverage": "10"
+    }
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    [
+      {
+        "currency": "string",
+        "reason": "string"
+      }
+    ]
     
 
 ##  用户最大、最小可设置币种杠杆倍数🔒 需要认证
@@ -2702,12 +2810,12 @@ _QuickRepaymentResp_
 名称 | 类型 | 描述  
 ---|---|---  
 » order_id | string | 订单ID  
-» repaid_infos | array | 还款币种信息  
+» repaid_infos | array | 还款币种信息：currency 是币种名称，repaid 是已还款数量，left 是剩余负债数量。  
 »» RepaidInfo | object | 还款信息  
 »»» currency | string | 币种名称  
 »»» repaid | string | 已还款数量  
 »»» left | string | 剩余负债数量  
-»» used_infos | array | 用于还款币种信息  
+»» used_infos | array | 用于还款的币种信息：currency 是币种名称，used 是已兑换数量。  
 »»» UsedInfo | object | 还款信息  
 »»»» currency | string | 币种名称  
 »»»» used | string | 已兑换数量  
@@ -2851,7 +2959,441 @@ WARNING
     }
     
 
+##  查询账户Delta中性策略模式设置🔒 需要认证
+
+GET`/unified/delta_neutral`
+
+GET `/unified/delta_neutral`
+
+_查询账户Delta中性策略模式设置_
+
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | DeltaNeutralEnabled  
+401 | [Unauthorized ](https://tools.ietf.org/html/rfc7235#section-3.1) | 认证失败 | GateErrorResponse  
+403 | [Forbidden ](https://tools.ietf.org/html/rfc7231#section-6.5.3) | 拒绝访问（如 VIP 等级不足或账户非跨币种保证金模式） | GateErrorResponse  
+  
+### 返回格式
+
+状态码 **200**
+
+_DeltaNeutralEnabled_
+
+名称 | 类型 | 描述  
+---|---|---  
+» enabled | boolean | 是否开启账户Delta中性策略模式  
+  
+状态码 **401**
+
+_非 2xx 状态码时的异常描述信息_
+
+名称 | 类型 | 描述  
+---|---|---  
+» label | string | 错误标识符  
+» message | string | 详细错误描述  
+  
+状态码 **403**
+
+_非 2xx 状态码时的异常描述信息_
+
+名称 | 类型 | 描述  
+---|---|---  
+» label | string | 错误标识符  
+» message | string | 详细错误描述  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/unified/delta_neutral'
+    query_param = ''
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/unified/delta_neutral"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "enabled": true
+    }
+    
+
+> 401 返回
+    
+    
+    {
+      "label": "INVALID_KEY",
+      "message": "Invalid API key"
+    }
+    
+
+> 403 返回
+    
+    
+    {
+      "label": "FORBIDDEN",
+      "message": "delta neutral strategy is only available for accounts with VIP level >= 4 in cross-currency margin mode"
+    }
+    
+
+##  设置账户Delta中性策略模式🔒 需要认证
+
+POST`/unified/delta_neutral`
+
+POST `/unified/delta_neutral`
+
+_设置账户Delta中性策略模式_
+
+设置账户 Delta 中性策略模式的开启或关闭。
+
+开启条件：VIP 等级 >= 4 且账户处于跨币种保证金模式，条件不满足时返回 403。 设置成功后返回设置后的开启状态。
+
+### 参数
+
+参数名称 | 位置 | 类型 | 必选 | 描述  
+---|---|---|---|---  
+body | body | DeltaNeutralEnabled | 是 |   
+» enabled | body | boolean | 是 | 是否开启账户Delta中性策略模式  
+  
+### 返回
+
+返回状态码 | 含义 | 描述 | 格式  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 设置成功 | DeltaNeutralEnabled  
+400 | [Bad Request ](https://tools.ietf.org/html/rfc7231#section-6.5.1) | 请求参数错误 | GateErrorResponse  
+401 | [Unauthorized ](https://tools.ietf.org/html/rfc7235#section-3.1) | 认证失败 | GateErrorResponse  
+403 | [Forbidden ](https://tools.ietf.org/html/rfc7231#section-6.5.3) | 拒绝访问（如 VIP 等级不足或账户非跨币种保证金模式） | GateErrorResponse  
+  
+### 返回格式
+
+状态码 **200**
+
+_DeltaNeutralEnabled_
+
+名称 | 类型 | 描述  
+---|---|---  
+» enabled | boolean | 是否开启账户Delta中性策略模式  
+  
+状态码 **400**
+
+_非 2xx 状态码时的异常描述信息_
+
+名称 | 类型 | 描述  
+---|---|---  
+» label | string | 错误标识符  
+» message | string | 详细错误描述  
+  
+状态码 **401**
+
+_非 2xx 状态码时的异常描述信息_
+
+名称 | 类型 | 描述  
+---|---|---  
+» label | string | 错误标识符  
+» message | string | 详细错误描述  
+  
+状态码 **403**
+
+_非 2xx 状态码时的异常描述信息_
+
+名称 | 类型 | 描述  
+---|---|---  
+» label | string | 错误标识符  
+» message | string | 详细错误描述  
+  
+WARNING
+
+该请求需要 API key 和 secret 认证
+
+示例代码
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/unified/delta_neutral'
+    query_param = ''
+    body='{"enabled":true}'
+    # `gen_sign` 的实现参考认证一章
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/unified/delta_neutral"
+    query_param=""
+    body_param='{"enabled":true}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> 请求体示例
+    
+    
+    {
+      "enabled": true
+    }
+    
+
+> 返回示例
+
+> 200 返回
+    
+    
+    {
+      "enabled": true
+    }
+    
+
+> 400 返回
+    
+    
+    {
+      "label": "INVALID_PARAM",
+      "message": "invalid request body"
+    }
+    
+
+> 401 返回
+    
+    
+    {
+      "label": "INVALID_KEY",
+      "message": "Invalid API key"
+    }
+    
+
+> 403 返回
+    
+    
+    {
+      "label": "FORBIDDEN",
+      "message": "delta neutral strategy is only available for accounts with VIP level >= 4 in cross-currency margin mode"
+    }
+    
+
 #  模型
+
+##  UnifiedRiskUnits
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | false | none | 用户 ID  
+spot_hedge | boolean | false | none | 现货对冲状态, true - 启用，false - 未启用  
+risk_units | array | false | none | 风险单元  
+» RiskUnits | object | false | none | none  
+»» symbol | string | false | none | 风险单元标志  
+»» spot_in_use | string | false | none | 现货对冲占用数量  
+»» maintain_margin | string | false | none | 风险单元的维持保证金  
+»» initial_margin | string | false | none | 风险单元的起始保证金  
+»» delta | string | false | none | 风险单元的 总 delta  
+»» gamma | string | false | none | 风险单元的 总 gamma  
+»» theta | string | false | none | 风险单元的 总 theta  
+»» vega | string | false | none | 风险单元的 总 vega  
+      
+    
+    {
+      "user_id": 0,
+      "spot_hedge": true,
+      "risk_units": [
+        {
+          "symbol": "BTC_USDT",
+          "spot_in_use": "string",
+          "maintain_margin": "string",
+          "initial_margin": "string",
+          "delta": "string",
+          "gamma": "string",
+          "theta": "string",
+          "vega": "string"
+        }
+      ]
+    }
+    
+    
+
+##  UnifiedCollateralRes
+
+_统一账户抵押模式设置返回_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+is_success | boolean | false | none | 是否设置成功  
+      
+    
+    {
+      "is_success": true
+    }
+    
+    
+
+##  UnifiedLeverageSetting
+
+_借贷币种杠杆倍数_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | true | none | 币种名称  
+leverage | string | true | none | 倍数  
+      
+    
+    {
+      "currency": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  UniLoanInterestRecord
+
+_扣息记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种名称  
+currency_pair | string | false | 只读 | 交易对  
+actual_rate | string | false | 只读 | 实际利率  
+interest | string | false | 只读 | 利息  
+status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
+type | string | false | 只读 | 借贷类型，margin表示为杠杆借币  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "status": 0,
+      "type": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  QuickRepaymentRequest
+
+_QuickRepaymentInfo_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+debt_currencies | array | true | none | 负债币种列表  
+available_currencies | array | true | none | 用于还款的币种列表  
+      
+    
+    {
+      "debt_currencies": [
+        "string"
+      ],
+      "available_currencies": [
+        "string"
+      ]
+    }
+    
+    
+
+##  UnifiedCollateralReq
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+collateral_type | integer | false | none | 用户设置抵押物模式 0(all)-全部币种作为抵押物,1(custom)-自定义币种作为抵押物,collateral_type为0(all)时，enable_list与disable_list参数无效  
+enable_list | array | false | none | 币种列表，collateral_type=1(custom)表示追加的逻辑  
+disable_list | array | false | none | 取消列表，表示取消的逻辑  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+collateral_type | 0  
+collateral_type | 1  
+      
+    
+    {
+      "collateral_type": 0,
+      "enable_list": [
+        "string"
+      ],
+      "disable_list": [
+        "string"
+      ]
+    }
+    
+    
 
 ##  UnifiedAccount
 
@@ -2866,7 +3408,7 @@ mode | string | false | none | 统一账户模式：
 \- single_currency: 单币种保证金模式  
 user_id | integer(int64) | false | none | 用户 ID  
 refresh_time | integer(int64) | false | none | 最近一次刷新时间  
-locked | boolean | false | none | 账户是否被锁定,在跨币种保证金/组合保证金模式下有效，其他如单币种保证金模式下是false  
+locked | boolean | false | none | 账户是否被锁定：在跨币种保证金模式和组合保证金模式下有效；其他模式（如单币种保证金模式）下为 false。  
 balances | object | false | none | none  
 » UnifiedBalance | object | false | none | none  
 »» available | string | false | none | 全仓可用余额，已扣除合约逐仓占用及冻结（合约逐仓占用，即合约逐仓余额），在单币种/跨币种/组合保证金模式下有效。  
@@ -2983,65 +3525,6 @@ balances | object | false | none | none
     
     
 
-##  UnifiedLoan
-
-_借入或还款_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | true | none | 币种  
-type | string | true | none | 类型 , borrow - 借入 , repay - 还款  
-amount | string | true | none | 借入或还款数量  
-repaid_all | boolean | false | none | 全部还款，仅还款操作使用，为 `true` 时覆盖 `amount` ，直接全部还款  
-text | string | false | none | 用户自定义 ID  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-type | borrow  
-type | repay  
-      
-    
-    {
-      "currency": "string",
-      "type": "borrow",
-      "amount": "string",
-      "repaid_all": true,
-      "text": "string"
-    }
-    
-    
-
-##  UniLoan
-
-_借贷_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种  
-currency_pair | string | false | 只读 | 交易对  
-amount | string | false | 只读 | 待归还数量  
-type | string | false | 只读 | 借贷类型，平台借币 - platform，杠杆借币 - margin  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-update_time | integer(int64) | false | 只读 | 最近更新时间戳  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "amount": "string",
-      "type": "string",
-      "create_time": 0,
-      "update_time": 0
-    }
-    
-    
-
 ##  UnifiedBorrowable
 
 _UnifiedBorrowable_
@@ -3061,149 +3544,62 @@ amount | string | false | none | 最多可借入的额度
     
     
 
-##  UnifiedLeverageSetting
+##  UnifiedDiscount
 
-_借贷币种杠杆倍数_
+_统一账户梯度discount_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | true | none | 币种名称  
-leverage | string | true | none | 倍数  
+currency | string | false | none | 币种名称  
+discount_tiers | array | false | none | 阶梯式discount  
+» tier | string | false | none | 档位  
+» discount | string | false | none | 保证金折扣系数  
+» lower_limit | string | false | none | 下限  
+» upper_limit | string | false | none | 上限, +表示正无穷  
+» leverage | string | false | none | 杠杆倍数  
       
     
     {
       "currency": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  UnifiedLeverageConfig
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-current_leverage | string | false | none | 当前杠杆倍数  
-min_leverage | string | false | none | 最小可调杠杆倍数  
-max_leverage | string | false | none | 最大可调杠杆倍数  
-debit | string | false | none | 当前负债  
-available_margin | string | false | none | 可用保证金  
-borrowable | string | false | none | 当前选择杠杆可借  
-except_leverage_borrowable | string | false | none | 保证金最大可借、余币宝最大可借，两者取较小的值  
-      
-    
-    {
-      "current_leverage": "string",
-      "min_leverage": "string",
-      "max_leverage": "string",
-      "debit": "string",
-      "available_margin": "string",
-      "borrowable": "string",
-      "except_leverage_borrowable": "string"
-    }
-    
-    
-
-##  EstimateRate
-
-_预估当前小时的借贷利率，按币种进行返回_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-**additionalProperties** | string | false | none | none  
-      
-    
-    {
-      "property1": "string",
-      "property2": "string"
-    }
-    
-    
-
-##  QuickRepaymentRequest
-
-_QuickRepaymentInfo_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-debt_currencies | array | true | none | 负债币种列表  
-available_currencies | array | true | none | 用于还款的币种列表  
-      
-    
-    {
-      "debt_currencies": [
-        "string"
-      ],
-      "available_currencies": [
-        "string"
-      ]
-    }
-    
-    
-
-##  QuickEstimatedRepayment
-
-_QuickEstimatedRepayment_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-debt_currencies | array | false | none | 负债币种列表  
-» UnifiedDebtCurrencies | object | false | none | none  
-»» currency | string | false | none | 币种名称  
-»» debt_amount | string | false | none | 负债数量  
-»» estimated_usd | string | false | none | 预估USD价值  
-»» borrowed | string | false | none | 已借数量  
-»» neg_balance | string | false | none | 负余额  
-» available_currencies | array | false | none | 可用于还款币种列表  
-»» UnifiedAvailableCurrencies | object | false | none | none  
-»»» currency | string | false | none | 币种名称  
-»»» available | string | false | none | 可用余额  
-»»» estimated_usd | string | false | none | 预估USD价值  
-      
-    
-    {
-      "debt_currencies": [
+      "discount_tiers": [
         {
-          "currency": "string",
-          "debt_amount": "string",
-          "estimated_usd": "string",
-          "borrowed": "string",
-          "neg_balance": "string"
-        }
-      ],
-      "available_currencies": [
-        {
-          "currency": "string",
-          "available": "string",
-          "estimated_usd": "string"
+          "tier": "string",
+          "discount": "string",
+          "lower_limit": "string",
+          "upper_limit": "string",
+          "leverage": "string"
         }
       ]
     }
     
     
 
-##  UnifiedCollateralRes
-
-_统一账户抵押模式设置返回_
+##  UnifiedHistoryLoanRate
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-is_success | boolean | false | none | 是否设置成功  
+currency | string | false | none | 币种名称  
+tier | string | false | none | 需要获取的上浮费率的vip等级  
+tier_up_rate | string | false | none | vip等级对应的上浮费率  
+rates | array | false | none | 历史利率信息，每个整点小时一个数据，数组大小根据接口请求参数提供的page和limit参数确定，按照时间从近到远排序  
+» time | integer(int64) | false | none | 该利率对应的整点小时时间戳，单位为毫秒  
+» rate | string | false | none | 该整点小时的历史利率  
       
     
     {
-      "is_success": true
+      "currency": "string",
+      "tier": "string",
+      "tier_up_rate": "string",
+      "rates": [
+        {
+          "time": 0,
+          "rate": "string"
+        }
+      ]
     }
     
     
@@ -3219,7 +3615,7 @@ _组合保证金计算器输入_
 spot_balances | array | false | none | 现货  
 » _None_ | object | false | none | 现货  
 »» currency | string | true | none | 币种名称  
-»» equity | string | true | none | 币种权益，权益 = 余额 - 已借，表示您在现货部位的净delta敞口，可以为负数。  
+»» equity | string | true | none | 币种权益 = 余额 - 已借，表示现货净 Delta 敞口，可为负数。  
 » spot_orders | array | false | none | 现货订单  
 »» _None_ | object | false | none | 现货订单  
 »»» currency_pairs | string | true | none | 市场  
@@ -3295,124 +3691,29 @@ spot_balances | array | false | none | 现货
     
     
 
-##  UnifiedHistoryLoanRate
+##  UnifiedLeverageConfig
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | false | none | 币种名称  
-tier | string | false | none | 需要获取的上浮费率的vip等级  
-tier_up_rate | string | false | none | vip等级对应的上浮费率  
-rates | array | false | none | 历史利率信息，每个整点小时一个数据，数组大小根据接口请求参数提供的page和limit参数确定，按照时间从近到远排序  
-» time | integer(int64) | false | none | 该利率对应的整点小时时间戳，单位为毫秒  
-» rate | string | false | none | 该整点小时的历史利率  
+current_leverage | string | false | none | 当前杠杆倍数  
+min_leverage | string | false | none | 最小可调杠杆倍数  
+max_leverage | string | false | none | 最大可调杠杆倍数  
+debit | string | false | none | 当前负债  
+available_margin | string | false | none | 可用保证金  
+borrowable | string | false | none | 当前选择杠杆可借  
+except_leverage_borrowable | string | false | none | 保证金最大可借、余币宝最大可借，两者取较小的值  
       
     
     {
-      "currency": "string",
-      "tier": "string",
-      "tier_up_rate": "string",
-      "rates": [
-        {
-          "time": 0,
-          "rate": "string"
-        }
-      ]
-    }
-    
-    
-
-##  UnifiedModeSet
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-mode | string | true | none | 统一账户模式：   
-\- `classic`: 经典账户模式   
-\- `multi_currency`: 跨币种保证金模式   
-\- `portfolio`: 组合保证金模式  
-\- `single_currency`: 单币种保证金模式  
-settings | object | false | none | none  
-» usdt_futures | boolean | false | none | USDT合约开关。跨币种保证金模式下只能打开不能关闭  
-» spot_hedge | boolean | false | none | 现货对冲开关。  
-» use_funding | boolean | false | none | 余币宝开关，当mode为跨币种保证金模式时,是否将余币宝理财资金作为保证金  
-» options | boolean | false | none | 期权开关。跨币种保证金模式下只能打开不能关闭  
-      
-    
-    {
-      "mode": "string",
-      "settings": {
-        "usdt_futures": true,
-        "spot_hedge": true,
-        "use_funding": true,
-        "options": true
-      }
-    }
-    
-    
-
-##  UnifiedMarginTiers
-
-_统一账户借贷保证金梯度_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | none | 币种名称  
-margin_tiers | array | false | none | 阶梯式保证金  
-» MarginTiers | object | false | none | none  
-»» tier | string | false | none | 档位  
-»» margin_rate | string | false | none | 保证金系数  
-»» lower_limit | string | false | none | 下限  
-»» upper_limit | string | false | none | 上限, ``表示大于(最后一个档位)  
-»» leverage | string | false | none | 杠杆倍数  
-      
-    
-    {
-      "currency": "string",
-      "margin_tiers": [
-        {
-          "tier": "string",
-          "margin_rate": "string",
-          "lower_limit": "string",
-          "upper_limit": "string",
-          "leverage": "string"
-        }
-      ]
-    }
-    
-    
-
-##  UnifiedLoanRecord
-
-_借贷记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | 只读 | id  
-type | string | false | 只读 | 类型 , borrow - 借入 , repay - 还款  
-repayment_type | string | false | 只读 | 还款类型 , none - 无还款类型, manual_repay - 手动还款 , auto_repay - 自动还款, cancel_auto_repay - 撤单后自动还款, different_currencies_repayment - 异币种还款  
-borrow_type | string | false | none | 借款类型, 查询借款记录时返回，manual_borrow - 手动还款 , auto_borrow - 自动还款  
-currency_pair | string | false | 只读 | 交易对  
-currency | string | false | 只读 | 币种  
-amount | string | false | 只读 | 借入或还款数量  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "id": 0,
-      "type": "string",
-      "repayment_type": "string",
-      "borrow_type": "string",
-      "currency_pair": "string",
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0
+      "current_leverage": "string",
+      "min_leverage": "string",
+      "max_leverage": "string",
+      "debit": "string",
+      "available_margin": "string",
+      "borrowable": "string",
+      "except_leverage_borrowable": "string"
     }
     
     
@@ -3477,32 +3778,132 @@ risk_unit | array | false | none | 风险单元
     
     
 
-##  UnifiedCollateralReq
+##  UnifiedMarginTiers
+
+_统一账户借贷保证金梯度_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-collateral_type | integer | false | none | 用户设置抵押物模式 0(all)-全部币种作为抵押物,1(custom)-自定义币种作为抵押物,collateral_type为0(all)时，enable_list与disable_list参数无效  
-enable_list | array | false | none | 币种列表，collateral_type=1(custom)表示追加的逻辑  
-disable_list | array | false | none | 取消列表，表示取消的逻辑  
+currency | string | false | none | 币种名称  
+margin_tiers | array | false | none | 阶梯式保证金  
+» MarginTiers | object | false | none | none  
+»» tier | string | false | none | 档位  
+»» margin_rate | string | false | none | 保证金系数  
+»» lower_limit | string | false | none | 下限  
+»» upper_limit | string | false | none | 上限, ``表示大于(最后一个档位)  
+»» leverage | string | false | none | 杠杆倍数  
+      
+    
+    {
+      "currency": "string",
+      "margin_tiers": [
+        {
+          "tier": "string",
+          "margin_rate": "string",
+          "lower_limit": "string",
+          "upper_limit": "string",
+          "leverage": "string"
+        }
+      ]
+    }
+    
+    
+
+##  UnifiedLoanResult
+
+_统一账户借还款响应结果_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+tran_id | integer(int64) | false | none | 交易id  
+      
+    
+    {
+      "tran_id": 0
+    }
+    
+    
+
+##  EstimateRate
+
+_预估当前小时的借贷利率，按币种进行返回_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+**additionalProperties** | string | false | none | none  
+      
+    
+    {
+      "property1": "string",
+      "property2": "string"
+    }
+    
+    
+
+##  UnifiedLoan
+
+_借入或还款_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | true | none | 币种  
+type | string | true | none | 类型 , borrow - 借入 , repay - 还款  
+amount | string | true | none | 借入或还款数量  
+repaid_all | boolean | false | none | 全部还款，仅还款操作使用，为 `true` 时覆盖 `amount` ，直接全部还款  
+text | string | false | none | 用户自定义 ID  
   
 ####  枚举值列表
 
 枚举值列表属性 | 值  
 ---|---  
-collateral_type | 0  
-collateral_type | 1  
+type | borrow  
+type | repay  
       
     
     {
-      "collateral_type": 0,
-      "enable_list": [
-        "string"
-      ],
-      "disable_list": [
-        "string"
-      ]
+      "currency": "string",
+      "type": "borrow",
+      "amount": "string",
+      "repaid_all": true,
+      "text": "string"
+    }
+    
+    
+
+##  UnifiedModeSet
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+mode | string | true | none | 统一账户模式：   
+\- `classic`: 经典账户模式   
+\- `multi_currency`: 跨币种保证金模式   
+\- `portfolio`: 组合保证金模式  
+\- `single_currency`: 单币种保证金模式  
+settings | object | false | none | none  
+» usdt_futures | boolean | false | none | USDT合约开关。跨币种保证金模式下只能打开不能关闭  
+» spot_hedge | boolean | false | none | 现货对冲开关。  
+» use_funding | boolean | false | none | 余币宝开关，当mode为跨币种保证金模式时,是否将余币宝理财资金作为保证金  
+» options | boolean | false | none | 期权开关。跨币种保证金模式下只能打开不能关闭  
+      
+    
+    {
+      "mode": "string",
+      "settings": {
+        "usdt_futures": true,
+        "spot_hedge": true,
+        "use_funding": true,
+        "options": true
+      }
     }
     
     
@@ -3516,12 +3917,12 @@ _QuickRepaymentResp_
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
 order_id | string | true | none | 订单ID  
-repaid_infos | array | true | none | 还款币种信息  
+repaid_infos | array | true | none | 还款币种信息：currency 是币种名称，repaid 是已还款数量，left 是剩余负债数量。  
 » RepaidInfo | object | false | none | 还款信息  
 »» currency | string | true | none | 币种名称  
 »» repaid | string | true | none | 已还款数量  
 »» left | string | true | none | 剩余负债数量  
-» used_infos | array | true | none | 用于还款币种信息  
+» used_infos | array | true | none | 用于还款的币种信息：currency 是币种名称，used 是已兑换数量。  
 »» UsedInfo | object | false | none | 还款信息  
 »»» currency | string | true | none | 币种名称  
 »»» used | string | true | none | 已兑换数量  
@@ -3546,19 +3947,72 @@ repaid_infos | array | true | none | 还款币种信息
     
     
 
-##  UnifiedLoanResult
+##  UniLoan
 
-_统一账户借还款响应结果_
+_借贷_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-tran_id | integer(int64) | false | none | 交易id  
+currency | string | false | 只读 | 币种  
+currency_pair | string | false | 只读 | 交易对  
+amount | string | false | 只读 | 待归还数量  
+type | string | false | 只读 | 借贷类型，平台借币 - platform，杠杆借币 - margin  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+update_time | integer(int64) | false | 只读 | 最近更新时间戳  
       
     
     {
-      "tran_id": 0
+      "currency": "string",
+      "currency_pair": "string",
+      "amount": "string",
+      "type": "string",
+      "create_time": 0,
+      "update_time": 0
+    }
+    
+    
+
+##  QuickEstimatedRepayment
+
+_QuickEstimatedRepayment_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+debt_currencies | array | false | none | 负债币种列表  
+» UnifiedDebtCurrencies | object | false | none | none  
+»» currency | string | false | none | 币种名称  
+»» debt_amount | string | false | none | 负债数量  
+»» estimated_usd | string | false | none | 预估USD价值  
+»» borrowed | string | false | none | 已借数量  
+»» neg_balance | string | false | none | 负余额  
+» available_currencies | array | false | none | 可用于还款币种列表  
+»» UnifiedAvailableCurrencies | object | false | none | none  
+»»» currency | string | false | none | 币种名称  
+»»» available | string | false | none | 可用余额  
+»»» estimated_usd | string | false | none | 预估USD价值  
+      
+    
+    {
+      "debt_currencies": [
+        {
+          "currency": "string",
+          "debt_amount": "string",
+          "estimated_usd": "string",
+          "borrowed": "string",
+          "neg_balance": "string"
+        }
+      ],
+      "available_currencies": [
+        {
+          "currency": "string",
+          "available": "string",
+          "estimated_usd": "string"
+        }
+      ]
     }
     
     
@@ -3578,106 +4032,6 @@ message | string | false | none | 详细错误描述
     {
       "label": "string",
       "message": "string"
-    }
-    
-    
-
-##  UniLoanInterestRecord
-
-_扣息记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-currency_pair | string | false | 只读 | 交易对  
-actual_rate | string | false | 只读 | 实际利率  
-interest | string | false | 只读 | 利息  
-status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
-type | string | false | 只读 | 借贷类型，margin表示为杠杆借币  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "status": 0,
-      "type": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  UnifiedRiskUnits
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | false | none | 用户 ID  
-spot_hedge | boolean | false | none | 现货对冲状态, true - 启用，false - 未启用  
-risk_units | array | false | none | 风险单元  
-» RiskUnits | object | false | none | none  
-»» symbol | string | false | none | 风险单元标志  
-»» spot_in_use | string | false | none | 现货对冲占用数量  
-»» maintain_margin | string | false | none | 风险单元的维持保证金  
-»» initial_margin | string | false | none | 风险单元的起始保证金  
-»» delta | string | false | none | 风险单元的 总 delta  
-»» gamma | string | false | none | 风险单元的 总 gamma  
-»» theta | string | false | none | 风险单元的 总 theta  
-»» vega | string | false | none | 风险单元的 总 vega  
-      
-    
-    {
-      "user_id": 0,
-      "spot_hedge": true,
-      "risk_units": [
-        {
-          "symbol": "BTC_USDT",
-          "spot_in_use": "string",
-          "maintain_margin": "string",
-          "initial_margin": "string",
-          "delta": "string",
-          "gamma": "string",
-          "theta": "string",
-          "vega": "string"
-        }
-      ]
-    }
-    
-    
-
-##  UnifiedDiscount
-
-_统一账户梯度discount_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | none | 币种名称  
-discount_tiers | array | false | none | 阶梯式discount  
-» tier | string | false | none | 档位  
-» discount | string | false | none | 保证金折扣系数  
-» lower_limit | string | false | none | 下限  
-» upper_limit | string | false | none | 上限, +表示正无穷  
-» leverage | string | false | none | 杠杆倍数  
-      
-    
-    {
-      "currency": "string",
-      "discount_tiers": [
-        {
-          "tier": "string",
-          "discount": "string",
-          "lower_limit": "string",
-          "upper_limit": "string",
-          "leverage": "string"
-        }
-      ]
     }
     
     
@@ -3705,6 +4059,54 @@ loan_status | string | false | none | 是否借贷状态
       "user_max_borrow_amount": "string",
       "total_max_borrow_amount": "string",
       "loan_status": "string"
+    }
+    
+    
+
+##  DeltaNeutralEnabled
+
+_DeltaNeutralEnabled_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+enabled | boolean | true | none | 是否开启账户Delta中性策略模式  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
+##  UnifiedLoanRecord
+
+_借贷记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+id | integer(int64) | false | 只读 | id  
+type | string | false | 只读 | 类型 , borrow - 借入 , repay - 还款  
+repayment_type | string | false | 只读 | 还款类型 , none - 无还款类型, manual_repay - 手动还款 , auto_repay - 自动还款, cancel_auto_repay - 撤单后自动还款, different_currencies_repayment - 异币种还款  
+borrow_type | string | false | none | 借款类型, 查询借款记录时返回，manual_borrow - 手动还款 , auto_borrow - 自动还款  
+currency_pair | string | false | 只读 | 交易对  
+currency | string | false | 只读 | 币种  
+amount | string | false | 只读 | 借入或还款数量  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "id": 0,
+      "type": "string",
+      "repayment_type": "string",
+      "borrow_type": "string",
+      "currency_pair": "string",
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0
     }
     
     

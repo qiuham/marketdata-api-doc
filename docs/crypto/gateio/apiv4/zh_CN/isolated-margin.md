@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/isolated-margin
 api_type: REST
-updated_at: 2026-05-27 20:17:22.377273
+updated_at: 2026-11-13 20:57:55.766774
 ---
 
 # Isolated-Margin
@@ -653,6 +653,11 @@ _None_ | array | [借贷交易对]
 »» base_min_borrow_amount | string | 交易货币最小借入数量  
 »» quote_min_borrow_amount | string | 计价货币最小借入数量  
 »» leverage | string | 杠杆倍数  
+»» status | string | 状态  
+  
+\- enabled: 启用  
+\- disabled: 禁用  
+»» delisted_time | number(int64) | 下架时间  
   
 该请求不需要认证 
 
@@ -689,7 +694,9 @@ _None_ | array | [借贷交易对]
         "currency_pair": "AE_USDT",
         "base_min_borrow_amount": "100",
         "quote_min_borrow_amount": "100",
-        "leverage": "3"
+        "leverage": "3",
+        "status": "enabled",
+        "delisted_time": 1786329745
       }
     ]
     
@@ -726,6 +733,11 @@ _借贷交易对_
 » base_min_borrow_amount | string | 交易货币最小借入数量  
 » quote_min_borrow_amount | string | 计价货币最小借入数量  
 » leverage | string | 杠杆倍数  
+» status | string | 状态  
+  
+\- enabled: 启用  
+\- disabled: 禁用  
+» delisted_time | number(int64) | 下架时间  
   
 该请求不需要认证 
 
@@ -761,7 +773,9 @@ _借贷交易对_
       "currency_pair": "AE_USDT",
       "base_min_borrow_amount": "100",
       "quote_min_borrow_amount": "100",
-      "leverage": "3"
+      "leverage": "3",
+      "status": "enabled",
+      "delisted_time": 1786329745
     }
     
 
@@ -785,7 +799,7 @@ currencies | 请求参数 | array[string] | 是 | 指定币种名称查询数组
 
 返回状态码 | 含义 | 描述 | 格式  
 ---|---|---|---  
-200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | Inline  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | 查询成功 | EstimateRate  
   
 ### 返回格式
 
@@ -1743,87 +1757,6 @@ WARNING
 
 #  模型
 
-##  UniLoanRecord
-
-_借贷记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-type | string | false | 只读 | 类型 , borrow - 借入 , repay - 还款  
-currency_pair | string | false | 只读 | 交易对  
-currency | string | false | 只读 | 币种  
-amount | string | false | 只读 | 借入或还款数量  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "type": "string",
-      "currency_pair": "string",
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  MarginAccountBook
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | string | false | none | 账户变更记录 ID  
-time | string | false | none | 账户变更时间戳  
-time_ms | integer(int64) | false | none | 账户变更时间戳，毫秒单位  
-currency | string | false | none | 变更币种  
-currency_pair | string | false | none | 账户交易对  
-change | string | false | none | 变更金额，正数表示转入，负数表示转出  
-balance | string | false | none | 变更后账户余额  
-type | string | false | none | 账户变更类型 , 详见资产流水类型  
-      
-    
-    {
-      "id": "string",
-      "time": "string",
-      "time_ms": 0,
-      "currency": "string",
-      "currency_pair": "string",
-      "change": "string",
-      "balance": "string",
-      "type": "string"
-    }
-    
-    
-
-##  UniLoan
-
-_借贷_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种  
-currency_pair | string | false | 只读 | 交易对  
-amount | string | false | 只读 | 待归还数量  
-type | string | false | 只读 | 借贷类型，平台借币 - platform，杠杆借币 - margin  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-update_time | integer(int64) | false | 只读 | 最近更新时间戳  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "amount": "string",
-      "type": "string",
-      "create_time": 0,
-      "update_time": 0
-    }
-    
-    
-
 ##  MarginMarketLeverage
 
 _市场杠杆设置_
@@ -1898,96 +1831,31 @@ type | repay
     
     
 
-##  UniLoanInterestRecord
-
-_扣息记录_
+##  MarginAccountBook
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-currency_pair | string | false | 只读 | 交易对  
-actual_rate | string | false | 只读 | 实际利率  
-interest | string | false | 只读 | 利息  
-status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
-type | string | false | 只读 | 借贷类型，margin表示为杠杆借币  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
+id | string | false | none | 账户变更记录 ID  
+time | string | false | none | 账户变更时间戳  
+time_ms | integer(int64) | false | none | 账户变更时间戳，毫秒单位  
+currency | string | false | none | 变更币种  
+currency_pair | string | false | none | 账户交易对  
+change | string | false | none | 变更金额，正数表示转入，负数表示转出  
+balance | string | false | none | 变更后账户余额  
+type | string | false | none | 账户变更类型 , 详见资产流水类型  
       
     
     {
+      "id": "string",
+      "time": "string",
+      "time_ms": 0,
       "currency": "string",
       "currency_pair": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "status": 0,
-      "type": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  UniCurrencyPair
-
-_借贷交易对_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | false | 只读 | 交易对  
-base_min_borrow_amount | string | false | 只读 | 交易货币最小借入数量  
-quote_min_borrow_amount | string | false | 只读 | 计价货币最小借入数量  
-leverage | string | false | 只读 | 杠杆倍数  
-      
-    
-    {
-      "currency_pair": "string",
-      "base_min_borrow_amount": "string",
-      "quote_min_borrow_amount": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  MaxUniBorrowable
-
-_MaxUniBorrowable_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | true | 只读 | 币种  
-currency_pair | string | false | 只读 | 交易对  
-borrowable | string | true | 只读 | 最大可借  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "borrowable": "string"
-    }
-    
-    
-
-##  MarginLeverageTier
-
-_市场梯度信息_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-upper_limit | string | false | none | 最大借币限额。由用户设置的杠杆倍数决定，杠杆倍数越低，借币限额越大  
-mmr | string | false | none | 维持保证金率。在梯度保证金要求规则(https://www.gate.com/zh/help/trade/margin-trading/42357)下，维持保证金率为一个综合值  
-leverage | string | false | none | 当下可开的最大杠杆倍数。由用户当前的负债规模决定，负债规模越大，可开的最大杠杆倍数越低  
-      
-    
-    {
-      "upper_limit": "string",
-      "mmr": "string",
-      "leverage": "string"
+      "change": "string",
+      "balance": "string",
+      "type": "string"
     }
     
     
@@ -2040,6 +1908,132 @@ quote | MarginAccount/properties/base | false | none | 货币账户信息
     
     
 
+##  UniLoanInterestRecord
+
+_扣息记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种名称  
+currency_pair | string | false | 只读 | 交易对  
+actual_rate | string | false | 只读 | 实际利率  
+interest | string | false | 只读 | 利息  
+status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
+type | string | false | 只读 | 借贷类型，margin表示为杠杆借币  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "status": 0,
+      "type": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  MaxUniBorrowable
+
+_MaxUniBorrowable_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | true | 只读 | 币种  
+currency_pair | string | false | 只读 | 交易对  
+borrowable | string | true | 只读 | 最大可借  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "borrowable": "string"
+    }
+    
+    
+
+##  UniCurrencyPair
+
+_借贷交易对_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | false | 只读 | 交易对  
+base_min_borrow_amount | string | false | 只读 | 交易货币最小借入数量  
+quote_min_borrow_amount | string | false | 只读 | 计价货币最小借入数量  
+leverage | string | false | 只读 | 杠杆倍数  
+status | string | false | none | 状态  
+  
+\- enabled: 启用  
+\- disabled: 禁用  
+delisted_time | number(int64) | false | none | 下架时间  
+      
+    
+    {
+      "currency_pair": "string",
+      "base_min_borrow_amount": "string",
+      "quote_min_borrow_amount": "string",
+      "leverage": "string",
+      "status": "string",
+      "delisted_time": 0
+    }
+    
+    
+
+##  MarginLeverageTier
+
+_市场梯度信息_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+upper_limit | string | false | none | 最大借币限额。由用户设置的杠杆倍数决定，杠杆倍数越低，借币限额越大  
+mmr | string | false | none | 维持保证金率。在梯度保证金要求规则(https://www.gate.com/zh/help/trade/margin-trading/42357)下，维持保证金率为一个综合值  
+leverage | string | false | none | 当下可开的最大杠杆倍数。由用户当前的负债规模决定，负债规模越大，可开的最大杠杆倍数越低  
+      
+    
+    {
+      "upper_limit": "string",
+      "mmr": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  UniLoanRecord
+
+_借贷记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+type | string | false | 只读 | 类型 , borrow - 借入 , repay - 还款  
+currency_pair | string | false | 只读 | 交易对  
+currency | string | false | 只读 | 币种  
+amount | string | false | 只读 | 借入或还款数量  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "type": "string",
+      "currency_pair": "string",
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0
+    }
+    
+    
+
 ##  MarginTransferable
 
 _MarginTransferable_
@@ -2075,4 +2069,31 @@ _预估当前小时的借贷利率，按币种进行返回_
     {
       "property1": "string",
       "property2": "string"
+    }
+    
+    
+
+##  UniLoan
+
+_借贷_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种  
+currency_pair | string | false | 只读 | 交易对  
+amount | string | false | 只读 | 待归还数量  
+type | string | false | 只读 | 借贷类型，平台借币 - platform，杠杆借币 - margin  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+update_time | integer(int64) | false | 只读 | 最近更新时间戳  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "amount": "string",
+      "type": "string",
+      "create_time": 0,
+      "update_time": 0
     }

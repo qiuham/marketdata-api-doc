@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/withdrawal
 api_type: Account
-updated_at: 2026-05-27 20:18:13.971930
+updated_at: 2026-11-13 20:58:17.083690
 ---
 
 # Withdrawal
@@ -388,72 +388,6 @@ WARNING
 
 #  模型
 
-##  WithdrawalsDel
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | string | false | 只读 | 交易记录 ID  
-txid | string | false | 只读 | 区块转账哈希记录  
-timestamp | string | false | 只读 | 操作时间  
-amount | string | true | none | 币的数量  
-currency | string | true | none | 币种名称  
-address | string | false | none | 提现地址。提现操作必填  
-memo | string | false | none | 转账memo等备注信息  
-block_number | string | false | 只读 | 区块编号  
-status | string | false | 只读 | 交易状态  
-  
-\- BCODE: 充值码操作  
-\- CANCEL: 已取消  
-\- CANCELPEND: 取消提现中  
-\- DMOVE: 待人工审核  
-\- DONE: 完成 (block_number > 0 时表示已完成上链)  
-\- EXTPEND: 已经发送等待确认  
-\- FAIL: 链上失败等待确认  
-\- FVERIFY: 人脸审核处理中  
-\- LOCKED: 钱包侧锁单  
-\- MANUAL: 待人工审核  
-\- REJECT: 拒绝  
-\- REQUEST: 请求中  
-\- REVIEW: 审核中  
-chain | string | true | none | 提现的链名称  
-      
-    
-    {
-      "id": "string",
-      "txid": "string",
-      "timestamp": "string",
-      "amount": "string",
-      "currency": "string",
-      "address": "string",
-      "memo": "string",
-      "block_number": "string",
-      "status": "string",
-      "chain": "string"
-    }
-    
-    
-
-##  UidPushWithdrawal
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-receive_uid | integer(int64) | true | none | 接收方uid  
-currency | string | true | none | 币种名称  
-amount | string | true | none | 转账数量  
-      
-    
-    {
-      "receive_uid": 0,
-      "currency": "string",
-      "amount": "string"
-    }
-    
-    
-
 ##  LedgerRecord
 
 ###  属性
@@ -503,6 +437,72 @@ chain | string | true | none | 提现的链名称
       "memo": "string",
       "withdraw_id": "string",
       "asset_class": "string",
+      "status": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  UidPushWithdrawal
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+receive_uid | integer(int64) | true | none | 接收方uid  
+currency | string | true | none | 币种名称  
+amount | string | true | none | 转账数量  
+      
+    
+    {
+      "receive_uid": 0,
+      "currency": "string",
+      "amount": "string"
+    }
+    
+    
+
+##  WithdrawalsDel
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+id | string | false | 只读 | 交易记录 ID  
+txid | string | false | 只读 | 区块转账哈希记录  
+timestamp | string | false | 只读 | 操作时间  
+amount | string | true | none | 币的数量  
+currency | string | true | none | 币种名称  
+address | string | false | none | 提现地址。提现操作必填  
+memo | string | false | none | 转账memo等备注信息  
+block_number | string | false | 只读 | 区块编号  
+status | string | false | 只读 | 交易状态  
+  
+\- BCODE: 充值码操作  
+\- CANCEL: 已取消  
+\- CANCELPEND: 取消提现中  
+\- DMOVE: 待人工审核  
+\- DONE: 完成 (block_number > 0 时表示已完成上链)  
+\- EXTPEND: 已经发送等待确认  
+\- FAIL: 链上失败等待确认  
+\- FVERIFY: 人脸审核处理中  
+\- LOCKED: 钱包侧锁单  
+\- MANUAL: 待人工审核  
+\- REJECT: 拒绝  
+\- REQUEST: 请求中  
+\- REVIEW: 审核中  
+chain | string | true | none | 提现的链名称  
+      
+    
+    {
+      "id": "string",
+      "txid": "string",
+      "timestamp": "string",
+      "amount": "string",
+      "currency": "string",
+      "address": "string",
+      "memo": "string",
+      "block_number": "string",
       "status": "string",
       "chain": "string"
     }

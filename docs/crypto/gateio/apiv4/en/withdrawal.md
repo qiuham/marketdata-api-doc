@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/withdrawal
 api_type: Account
-updated_at: 2026-05-27 20:16:25.470738
+updated_at: 2026-11-13 20:57:30.738076
 ---
 
 # Withdrawal
@@ -24,18 +24,18 @@ If the recipient's on-chain address is also Gate, no transaction fee will be cha
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | LedgerRecord | Required | none  
-↳ withdraw_order_id | body | string | Optional | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
-↳ amount | body | string | Required | Token amount  
-↳ currency | body | string | Required | Currency name  
-↳ address | body | string | Optional | Withdrawal address. Required for withdrawals  
-↳ memo | body | string | Optional | Additional remarks with regards to the withdrawal  
-↳ withdraw_id | body | string | Optional | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
-↳ asset_class | body | string | Optional | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
+» withdraw_order_id | body | string | Optional | User-defined order number for withdrawal. Default is empty. When not empty, the specified user-defined order number record will be queried  
+» amount | body | string | Required | Token amount  
+» currency | body | string | Required | Currency name  
+» address | body | string | Optional | Withdrawal address. Required for withdrawals  
+» memo | body | string | Optional | Additional remarks with regards to the withdrawal  
+» withdraw_id | body | string | Optional | Withdrawal record ID starts with 'w', such as: w1879219868. When withdraw_id is not empty, only this specific withdrawal record will be queried, and time-based querying will be disabled  
+» asset_class | body | string | Optional | Withdrawal record currency type, empty by default. Supports users to query withdrawal records in main area and innovation area on demand.  
 Valid values: SPOT, PILOT  
   
 SPOT: Main area  
 PILOT: Innovation area  
-↳ chain | body | string | Required | Name of the chain used in withdrawals  
+» chain | body | string | Required | Name of the chain used in withdrawals  
   
 ####  Detailed descriptions
 
@@ -46,8 +46,6 @@ SPOT: Main area
 PILOT: Innovation area
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Withdrawal request accepted. Check withdrawal record status for processing result
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -185,13 +183,11 @@ Transfers between main spot accounts. Both parties cannot be sub-accounts
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | UidPushWithdrawal | Required | none  
-↳ receive_uid | body | integer(int64) | Required | Recipient UID  
-↳ currency | body | string | Required | Currency name  
-↳ amount | body | string | Required | Transfer amount  
+» receive_uid | body | integer(int64) | Required | Recipient UID  
+» currency | body | string | Required | Currency name  
+» amount | body | string | Required | Transfer amount  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Request accepted. Check withdrawal record status for processing result
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -288,8 +284,6 @@ ParametersName | In | Type | Required | Description
 withdrawal_id | path | string | Required | none  
   
 ### Responses
-
-  * 202[Accepted ](https://tools.ietf.org/html/rfc7231#section-6.3.3)Cancellation request accepted. Check record status for cancellation result
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -394,68 +388,17 @@ Code samples
 
 #  Schemas
 
-##  WithdrawalsDel
+##  UidPushWithdrawalResp
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | string | Optional | read-only | Record ID  
-txid | string | Optional | read-only | Hash record of the withdrawal  
-timestamp | string | Optional | read-only | Operation time  
-amount | string | Required | none | Token amount  
-currency | string | Required | none | Currency name  
-address | string | Optional | none | Withdrawal address. Required for withdrawals  
-memo | string | Optional | none | Additional remarks with regards to the withdrawal  
-block_number | string | Optional | read-only | Block Number  
-status | string | Optional | read-only | Transaction Status  
-  
-\- BCODE: Deposit Code Operation  
-\- CANCEL: Cancelled  
-\- CANCELPEND: Withdrawal Cancellation Pending  
-\- DMOVE: Pending Manual Review  
-\- DONE: Completed (Only considered truly on-chain when block_number > 0)  
-\- EXTPEND: Sent and Waiting for Confirmation  
-\- FAIL: On-Chain Failure Pending Confirmation  
-\- FVERIFY: Facial Verification in Progress  
-\- LOCKED: Wallet-Side Order Locked  
-\- MANUAL: Pending Manual Review  
-\- REJECT: Rejected  
-\- REQUEST: Request in Progress  
-\- REVIEW: Under Review  
-chain | string | Required | none | Name of the chain used in withdrawals  
+id | string | Optional | none | Order ID  
       
     
     {
-      "id": "string",
-      "txid": "string",
-      "timestamp": "string",
-      "amount": "string",
-      "currency": "string",
-      "address": "string",
-      "memo": "string",
-      "block_number": "string",
-      "status": "string",
-      "chain": "string"
-    }
-    
-    
-
-##  UidPushWithdrawal
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-receive_uid | integer(int64) | Required | none | Recipient UID  
-currency | string | Required | none | Currency name  
-amount | string | Required | none | Transfer amount  
-      
-    
-    {
-      "receive_uid": 0,
-      "currency": "string",
-      "amount": "string"
+      "id": "string"
     }
     
     
@@ -515,15 +458,66 @@ chain | string | Required | none | Name of the chain used in withdrawals
     
     
 
-##  UidPushWithdrawalResp
+##  UidPushWithdrawal
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Order ID  
+receive_uid | integer(int64) | Required | none | Recipient UID  
+currency | string | Required | none | Currency name  
+amount | string | Required | none | Transfer amount  
       
     
     {
-      "id": "string"
+      "receive_uid": 0,
+      "currency": "string",
+      "amount": "string"
+    }
+    
+    
+
+##  WithdrawalsDel
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | string | Optional | read-only | Record ID  
+txid | string | Optional | read-only | Hash record of the withdrawal  
+timestamp | string | Optional | read-only | Operation time  
+amount | string | Required | none | Token amount  
+currency | string | Required | none | Currency name  
+address | string | Optional | none | Withdrawal address. Required for withdrawals  
+memo | string | Optional | none | Additional remarks with regards to the withdrawal  
+block_number | string | Optional | read-only | Block Number  
+status | string | Optional | read-only | Transaction Status  
+  
+\- BCODE: Deposit Code Operation  
+\- CANCEL: Cancelled  
+\- CANCELPEND: Withdrawal Cancellation Pending  
+\- DMOVE: Pending Manual Review  
+\- DONE: Completed (Only considered truly on-chain when block_number > 0)  
+\- EXTPEND: Sent and Waiting for Confirmation  
+\- FAIL: On-Chain Failure Pending Confirmation  
+\- FVERIFY: Facial Verification in Progress  
+\- LOCKED: Wallet-Side Order Locked  
+\- MANUAL: Pending Manual Review  
+\- REJECT: Rejected  
+\- REQUEST: Request in Progress  
+\- REVIEW: Under Review  
+chain | string | Required | none | Name of the chain used in withdrawals  
+      
+    
+    {
+      "id": "string",
+      "txid": "string",
+      "timestamp": "string",
+      "amount": "string",
+      "currency": "string",
+      "address": "string",
+      "memo": "string",
+      "block_number": "string",
+      "status": "string",
+      "chain": "string"
     }

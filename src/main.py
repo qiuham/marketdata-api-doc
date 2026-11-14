@@ -37,9 +37,10 @@ def cmd_crawl(args: argparse.Namespace) -> int:
             adapter = get_adapter(product)
             written = adapter.crawl(PROJECT_ROOT, limit=args.limit)
         except Exception as exc:  # noqa: BLE001 - one broken source must not stop the others
-            # Keep this product's existing docs; report it and move on to the next product.
+            # Keep this product's existing docs (undo anything half-written); report it and move on.
             failed.append(product_id)
             traceback.print_exc()
+            _restore_product(product)
             print(f"::error title=Crawl failed: {product_id}::{type(exc).__name__}: {exc}")
             continue
         problems = check_docs_dir(PROJECT_ROOT / product.get("output", {}).get("docs_dir", ""))

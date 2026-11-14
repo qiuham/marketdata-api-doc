@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/earn
 api_type: Earn
-updated_at: 2026-05-27 20:15:01.006292
+updated_at: 2026-11-13 20:57:03.494435
 ---
 
 # Earn
@@ -41,8 +41,6 @@ page_size | query | integer | Optional | Items per page
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [DualGetPlans]  
@@ -56,6 +54,7 @@ Name | Type | Description
 _None_ | array | none  
 » id | integer(int32) | Product ID  
 » instrument_name | string | Product Name  
+» type | string | `call`: sell high; `put`: buy low  
 » invest_currency | string | Investment Token  
 » exercise_currency | string | Strike Token  
 » exercise_price | number(double) | Strike price  
@@ -153,8 +152,6 @@ limit | query | integer | Optional | Maximum number of records returned in a sin
 `ALL` — all
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -277,9 +274,9 @@ _Place Dual Investment order_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | PlaceDualInvestmentOrderParams | Required | none  
-↳ plan_id | body | string | Required | Product ID  
-↳ amount | body | string | Required | Subscription amount  
-↳ text | body | string | Optional | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
+» plan_id | body | string | Required | Product ID  
+» amount | body | string | Required | Subscription amount  
+» text | body | string | Optional | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
   
 1\. Must start with `t-`  
 2\. Excluding `t-`, length cannot exceed 28 bytes  
@@ -294,8 +291,6 @@ body | body | PlaceDualInvestmentOrderParams | Required | none
 3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Order placed successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -423,8 +418,6 @@ _Dual-Currency Earning Assets_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | DualGetBalance  
@@ -516,8 +509,6 @@ order_id | query | string | Required | Order ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | DualOrderRefundPreview  
@@ -535,7 +526,7 @@ Name | Type | Description
 » invest_currency | string | Investment Token  
 » name | string | Order name identifier  
 » order_id | integer(int64) | Order ID  
-» req_id | string | Request ID used for actual redemption  
+» req_id | string | Request ID used for redemption, returned by GET /earn/dual/order-refund-preview. The request to POST /earn/dual/order-refund requires order_id and req_id.  
 » refund_service_charge | integer(int64) | Refund fee  
 » settle_price | string | Settlement price  
 » settlement_amount | string | Settlement amount  
@@ -630,12 +621,10 @@ _Dual-currency order early redemption_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | DualOrderRefundParams | Required | none  
-↳ order_id | body | string | Required | Order ID  
-↳ req_id | body | string | Required | Request ID returned by order-refund-preview  
+» order_id | body | string | Required | Order ID  
+» req_id | body | string | Required | Request ID returned by order-refund-preview  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Redemption successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -711,13 +700,11 @@ _Modify dual-currency order reinvest_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | DualModifyOrderReinvestParams | Required | none  
-↳ order_id | body | integer(int64) | Optional | Order ID  
-↳ status | body | integer(int32) | Optional | `0` — off; `1` — on  
-↳ effective_time_duration | body | integer(int64) | Optional | Effective duration in seconds; default 1 day (86400)  
+» order_id | body | integer(int64) | Optional | Order ID  
+» status | body | integer(int32) | Optional | `0` — off; `1` — on  
+» effective_time_duration | body | integer(int64) | Optional | Effective duration in seconds; default 1 day (86400)  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Updated successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -815,8 +802,6 @@ history_pids | query | string | Optional | Comma-separated project IDs to exclud
 `dt_up` — maturity time ascending
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -916,6 +901,911 @@ Code samples
     ]
     
 
+##  List stock dual investment products
+
+GET`/earn/dual/stock/investment_plan`
+
+GET `/earn/dual/stock/investment_plan`
+
+_List stock dual investment products_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+plan_id | query | string | Optional | Product/plan ID. If provided, only the matching product is returned  
+coin | query | string | Optional | Underlying currency  
+type | query | string | Optional | Type enum: `put` — buy low; `call` — sell high  
+quote_currency | query | string | Optional | Settlement currency. Default: USDT  
+sort | query | string | Optional | Sort field enum:  
+`apy` — highest APY first  
+`short-period` — shortest tenor first  
+`multiple` — highest premium first  
+page | query | integer | Optional | page number  
+page_size | query | integer | Optional | Items per page，Maximum 100  
+  
+####  Detailed descriptions
+
+**sort** : Sort field enum:  
+`apy` — highest APY first  
+`short-period` — shortest tenor first  
+`multiple` — highest premium first
+
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+type | call  
+type | put  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [DualGetPlans]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+_None_ | array | none  
+» id | integer(int32) | Product ID  
+» instrument_name | string | Product Name  
+» type | string | `call`: sell high; `put`: buy low  
+» invest_currency | string | Investment Token  
+» exercise_currency | string | Strike Token  
+» exercise_price | number(double) | Strike price  
+» delivery_time | integer(int32) | Settlement time  
+» apy_display | string | Annual Yield  
+» min_amount | string | Minimum investment amount  
+» start_time | integer(int32) | Start Time  
+» end_time | integer(int32) | End time  
+» status | string | Status:  
+  
+`NOTSTARTED` \- Not started  
+`ONGOING` \- In progress  
+`ENDED` \- Ended  
+  
+This operation does not require authentication 
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/investment_plan'
+    query_param = ''
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/earn/dual/stock/investment_plan \
+      -H 'Accept: application/json'
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    [
+      {
+        "id": 272,
+        "instrument_name": "DOGE-17NOV23-0.067-P",
+        "type": "put",
+        "invest_currency": "USDT",
+        "exercise_currency": "DOGE",
+        "exercise_price": 0.067,
+        "delivery_time": 1700208000,
+        "start_time": 1697685172,
+        "end_time": 1697685172,
+        "status": "ONGOING",
+        "apy_display": "0.0114000000",
+        "min_amount": "1"
+      }
+    ]
+    
+
+##  Get recommendations for stock dual investment products
+
+GET`/earn/dual/stock/project-recommend`
+
+GET `/earn/dual/stock/project-recommend`
+
+_Get recommendations for stock dual investment products_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+coin | query | string | Optional | Underlying currency  
+type | query | string | Optional | `call`: sell high; `put`: buy low  
+mode | query | string | Optional | Recommendation mode. Default: normal  
+normal: Regular users  
+senior: Experienced users  
+history_pids | query | string | Optional | Previously recommended project IDs, separated by commas  
+  
+####  Detailed descriptions
+
+**mode** : Recommendation mode. Default: normal  
+normal: Regular users  
+senior: Experienced users
+
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+type | call  
+type | put  
+mode | normal  
+mode | senior  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [DualProjectRecommend]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+_None_ | array | none  
+» id | integer(int64) | Product ID  
+» category | integer(int32) | Strategy category  
+» type | string | `call`: sell high; `put`: buy low  
+» invest_currency | string | Investment Token  
+» exercise_currency | string | Strike Token  
+» apy_display | string | Annual Yield  
+» exercise_price | string | Strike price  
+» delivery_timest | integer(int64) | Settlement time  
+» min_amount | string | Minimum investment amount  
+» max_amount | string | Maximum investment amount  
+» min_copies | integer(int64) | Minimum Units  
+» max_copies | integer(int64) | Maximum Units  
+» invest_days | integer(int64) | Lock-up days  
+» invest_hours | string | Lock-up hours  
+  
+This operation does not require authentication 
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/project-recommend'
+    query_param = ''
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    curl -X GET https://api.gateio.ws/api/v4/earn/dual/stock/project-recommend \
+      -H 'Accept: application/json'
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    [
+      {
+        "id": 110669,
+        "category": 1,
+        "type": "call",
+        "invest_currency": "BTC",
+        "exercise_currency": "USDT",
+        "apy_display": "2.60",
+        "exercise_price": "71303.44279",
+        "delivery_timest": 1775289600,
+        "min_amount": "1",
+        "max_amount": "100000",
+        "min_copies": 1,
+        "max_copies": 100000,
+        "invest_days": 2,
+        "invest_hours": "70.43458031"
+      }
+    ]
+    
+
+##  List stock dual investment orders🔒 Authenticated
+
+GET`/earn/dual/stock/orders`
+
+GET `/earn/dual/stock/orders`
+
+_List stock dual investment orders_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+coin | query | string | Optional | Investment Token  
+status | query | string | Optional | Filter by order status. Default: ALL  
+HOLD: Current holdings  
+REPAY: Historical holdings  
+PROCESSING: Holding in progress  
+SETTLEMENT_PROCESSING: Settlement in progress  
+ALL: All orders  
+type | query | string | Optional | Type enum: `put` — buy low; `call` — sell high  
+from | query | integer(int64) | Optional | Start of the time range, in Unix seconds  
+to | query | integer(int64) | Optional | End of the time range, in Unix seconds  
+page | query | integer(int32) | Optional | Page number  
+page_size | query | integer | Optional | Number of records per page, up to 100. Defaults to 100 when omitted  
+limit | query | integer | Optional | Maximum number of records returned in a single list  
+  
+####  Detailed descriptions
+
+**status** : Filter by order status. Default: ALL  
+HOLD: Current holdings  
+REPAY: Historical holdings  
+PROCESSING: Holding in progress  
+SETTLEMENT_PROCESSING: Settlement in progress  
+ALL: All orders
+
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+type | call  
+type | put  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [DualGetOrders]  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+_None_ | array | none  
+» id | integer(int32) | Order ID  
+» plan_id | integer(int32) | Product ID  
+» invest_amount | string | Investment Quantity  
+» settlement_amount | string | Settlement Quantity  
+» create_time | integer(int32) | Created time  
+» complete_time | integer(int32) | Completed Time  
+» status | string | Status:  
+  
+`INIT`-Created  
+`SETTLEMENT_SUCCESS`-Settlement Success  
+`SETTLEMENT_PROCESSING`-Settlement Processing  
+`CANCELED`-Canceled  
+`FAILED`-Failed  
+» invest_currency | string | Investment Token  
+» exercise_currency | string | Strike Token  
+» exercise_price | string | Strike price  
+» settlement_price | string | Settlement price  
+» settlement_currency | string | Settlement currency  
+» apy_display | string | Annual Yield  
+» apy_settlement | string | Settlement Annual Yield  
+» delivery_time | integer(int32) | Settlement time  
+» text | string | Custom order information  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/orders'
+    query_param = ''
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/earn/dual/stock/orders"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    [
+      {
+        "id": 373,
+        "plan_id": 176,
+        "invest_amount": "0.0000000000",
+        "settlement_amount": "0.0000000000",
+        "create_time": 1697685172,
+        "complete_time": 1697685172,
+        "status": "CANCELED",
+        "invest_currency": "USDT",
+        "exercise_currency": "BTC",
+        "settlement_currency": "",
+        "exercise_price": "24500.0000000000",
+        "settlement_price": "0.0000000000",
+        "delivery_time": 1697685172,
+        "apy_display": "0.6800000000",
+        "apy_settlement": "0.0000000000",
+        "text": "t-custom-text"
+      }
+    ]
+    
+
+##  Place a stock dual investment order🔒 Authenticated
+
+POST`/earn/dual/stock/orders`
+
+POST `/earn/dual/stock/orders`
+
+_Place a stock dual investment order_
+
+For buy-low (put) products, optionally pass `hit_spot`, `hit_stock`, and `hit_simple` (`1` selects the corresponding funding account) to collect funds from the spot, stock, or Simple Earn accounts before subscribing.
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | PlaceDualStockInvestmentOrderParams | Required | none  
+» plan_id | body | string | Required | Product ID  
+» amount | body | string | Required | Subscription amount  
+» text | body | string | Optional | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
+  
+1\. Must start with `t-`  
+2\. Excluding `t-`, length cannot exceed 28 bytes  
+3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)  
+» hit_spot | body | integer | Optional | Whether to use the spot account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+» hit_stock | body | integer | Optional | Whether to use the stock account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+» hit_simple | body | integer | Optional | Whether to use the Simple Earn account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+  
+####  Detailed descriptions
+
+**» text** : Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
+  
+1\. Must start with `t-`  
+2\. Excluding `t-`, length cannot exceed 28 bytes  
+3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)
+
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+» hit_spot | 0  
+» hit_spot | 1  
+» hit_stock | 0  
+» hit_stock | 1  
+» hit_simple | 0  
+» hit_simple | 1  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Order placed successfully | PlaceDualInvestmentOrder  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» id | integer(int32) | Order ID  
+» plan_id | integer(int32) | Product ID  
+» invest_amount | string | Investment Quantity  
+» settlement_amount | string | Settlement Quantity  
+» create_time | integer(int32) | Created time  
+» complete_time | integer(int32) | Completed Time  
+» status | string | Status:  
+  
+`INIT`-Created  
+`SETTLEMENT_SUCCESS`-Settlement Success  
+`SETTLEMENT_PROCESSING`-Settlement Processing  
+`CANCELED`-Canceled  
+`FAILED`-Failed  
+» invest_currency | string | Investment Token  
+» exercise_currency | string | Strike Token  
+» exercise_price | string | Strike price  
+» settlement_price | string | Settlement price  
+» settlement_currency | string | Settlement currency  
+» apy_display | string | Annual Yield  
+» apy_settlement | string | Settlement Annual Yield  
+» delivery_time | integer(int32) | Settlement time  
+» text | string | Custom order information  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/orders'
+    query_param = ''
+    body='{"plan_id":"176","amount":"1","text":"t-custom-text","hit_spot":1,"hit_stock":0,"hit_simple":0}'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/earn/dual/stock/orders"
+    query_param=""
+    body_param='{"plan_id":"176","amount":"1","text":"t-custom-text","hit_spot":1,"hit_stock":0,"hit_simple":0}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Body parameter
+    
+    
+    {
+      "plan_id": "176",
+      "amount": "1",
+      "text": "t-custom-text",
+      "hit_spot": 1,
+      "hit_stock": 0,
+      "hit_simple": 0
+    }
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "id": 373,
+      "plan_id": 176,
+      "invest_amount": "0.0000000000",
+      "settlement_amount": "0.0000000000",
+      "create_time": 1697685172,
+      "complete_time": 1697685172,
+      "status": "CANCELED",
+      "invest_currency": "USDT",
+      "exercise_currency": "BTC",
+      "settlement_currency": "",
+      "exercise_price": "24500.0000000000",
+      "settlement_price": "0.0000000000",
+      "delivery_time": 1697685172,
+      "apy_display": "0.6800000000",
+      "apy_settlement": "0.0000000000",
+      "text": "t-custom-text"
+    }
+    
+
+##  Get stock dual investment asset statistics🔒 Authenticated
+
+GET`/earn/dual/stock/balance`
+
+GET `/earn/dual/stock/balance`
+
+_Get stock dual investment asset statistics_
+
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | DualGetBalance  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» user_asset_usdt | string | User Assets in USDT Equivalent  
+» user_asset_btc | string | User Assets in BTC Equivalent  
+» user_total_interest_usdt | string | Total User Interest in USDT Equivalent  
+» user_total_interest_btc | string | Total User Interest in BTC Equivalent  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/balance'
+    query_param = ''
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/earn/dual/stock/balance"
+    query_param=""
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "user_asset_usdt": "30.13",
+      "user_asset_btc": "0.00032798",
+      "user_total_interest_usdt": "581.19003892",
+      "user_total_interest_btc": "0.00632655"
+    }
+    
+
+##  Preview stock dual investment redemption🔒 Authenticated
+
+GET`/earn/dual/stock/order-refund-preview`
+
+GET `/earn/dual/stock/order-refund-preview`
+
+_Preview stock dual investment redemption_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+order_id | query | string | Required | Order ID  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | DualOrderRefundPreview  
+  
+### Response Schema
+
+Status Code **200**
+
+Name | Type | Description  
+---|---|---  
+» create_timest | integer(int64) | Order creation timestamp  
+» delivery_timest | integer(int64) | Order delivery timestamp  
+» exercise_price | string | Strike price  
+» invest_amount | string | Investment amount  
+» invest_currency | string | Investment Token  
+» name | string | Order name identifier  
+» order_id | integer(int64) | Order ID  
+» req_id | string | Request ID used for redemption, returned by GET /earn/dual/order-refund-preview. The request to POST /earn/dual/order-refund requires order_id and req_id.  
+» refund_service_charge | integer(int64) | Refund fee  
+» settle_price | string | Settlement price  
+» settlement_amount | string | Settlement amount  
+» settlement_currency | string | Settlement currency  
+» settlement_interest | string | Settlement interest  
+» settlement_principle | string | Settlement principal  
+» type | string | `call`: sell high; `put`: buy low  
+» money_back_timest | integer(int64) | Redemption time  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/order-refund-preview'
+    query_param = 'order_id=9497'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('GET', prefix + url, query_param)
+    headers.update(sign_headers)
+    r = requests.request('GET', host + prefix + url + "?" + query_param, headers=headers)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="GET"
+    url="/earn/dual/stock/order-refund-preview"
+    query_param="order_id=9497"
+    body_param=''
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url?$query_param"
+    curl -X $method $full_url \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "create_timest": 1775027285,
+      "delivery_timest": 1775289600,
+      "exercise_price": "71303.44279",
+      "invest_amount": "1",
+      "invest_currency": "BTC",
+      "name": "BTC_USDT-20260404-71303.44279-C",
+      "order_id": 9497,
+      "req_id": "tIvdY7nh",
+      "refund_service_charge": 0,
+      "settle_price": "68781.0063",
+      "settlement_amount": "0.99486528",
+      "settlement_currency": "BTC",
+      "settlement_interest": "0",
+      "settlement_principle": "0.99486528",
+      "type": "call",
+      "money_back_timest": 1775027958
+    }
+    
+
+##  Redeem a stock dual investment order🔒 Authenticated
+
+POST`/earn/dual/stock/order-refund`
+
+POST `/earn/dual/stock/order-refund`
+
+_Redeem a stock dual investment order_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | DualOrderRefundParams | Required | none  
+» order_id | body | string | Required | Order ID  
+» req_id | body | string | Required | Request ID returned by order-refund-preview  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Redemption successful | None  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/order-refund'
+    query_param = ''
+    body='{"order_id":"9487","req_id":"OepRSEfv"}'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/earn/dual/stock/order-refund"
+    query_param=""
+    body_param='{"order_id":"9487","req_id":"OepRSEfv"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Body parameter
+    
+    
+    {
+      "order_id": "9487",
+      "req_id": "OepRSEfv"
+    }
+    
+
+##  Reinvest a stock dual investment order🔒 Authenticated
+
+POST`/earn/dual/stock/modify-order-reinvest`
+
+POST `/earn/dual/stock/modify-order-reinvest`
+
+_Reinvest a stock dual investment order_
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | DualModifyOrderReinvestParams | Required | none  
+» order_id | body | integer(int64) | Optional | Order ID  
+» status | body | integer(int32) | Optional | `0` — off; `1` — on  
+» effective_time_duration | body | integer(int64) | Optional | Effective duration in seconds; default 1 day (86400)  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Updated successfully | None  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/earn/dual/stock/modify-order-reinvest'
+    query_param = ''
+    body='{"order_id":9497,"status":1,"effective_time_duration":86400}'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/earn/dual/stock/modify-order-reinvest"
+    query_param=""
+    body_param='{"order_id":9497,"status":1,"effective_time_duration":86400}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Body parameter
+    
+    
+    {
+      "order_id": 9497,
+      "status": 1,
+      "effective_time_duration": 86400
+    }
+    
+
 ##  Staking coins🔒 Authenticated
 
 GET`/earn/staking/coins`
@@ -931,8 +1821,6 @@ ParametersName | In | Type | Required | Description
 cointype | query | string | Optional | Currency type: swap - voucher; lock - locked position; debt - US Treasury bond.  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1083,14 +1971,12 @@ _On-chain token swap for earned coins_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | SwapCoin | Required | none  
-↳ coin | body | string | Required | Currency  
-↳ side | body | integer | Required | 0 - Stake 1 - Redeem  
-↳ amount | body | string | Required | Size  
-↳ pid | body | integer | Optional | DeFi-type Mining Protocol Identifier  
+» coin | body | string | Required | Currency  
+» side | body | integer | Required | 0 - Stake 1 - Redeem  
+» amount | body | string | Required | Size  
+» pid | body | integer | Optional | DeFi-type Mining Protocol Identifier  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Swap successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1111,7 +1997,7 @@ Name | Type | Description
 » amount | string | Amount  
 » exchange_rate | string | Exchange ratio  
 » exchange_amount | string | Redemption Amount  
-» updateStamp | integer | UpdateTimestamp  
+» updateStamp | integer | Update timestamp  
 » createStamp | integer | Transaction timestamp  
 » status | integer | status 1-success  
 » protocol_type | integer | DEFI Protocol Type  
@@ -1213,8 +2099,6 @@ page | query | integer(int32) | Optional | Page number
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | OrderListStruct  
@@ -1234,7 +2118,7 @@ Name | Type | Description
 »» coin | string | Staked and redeemed currencies  
 »» amount | string | Amount  
 »» type | integer | Type 0-Staking 1-Redemption  
-»» status | integer | Status  
+»» status | integer | Status. 1 - success, 3 - delayed redemption in progress, 6 - redemption cancellation order  
 »» redeem_stamp | integer | Redemption credit time  
 »» createStamp | integer | Order time  
 »» exchange_amount | string | Exchange rate  
@@ -1342,8 +2226,6 @@ page | query | integer(int32) | Optional | Page number
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | AwardListStruct  
@@ -1365,7 +2247,7 @@ Name | Type | Description
 »» reward_coin | string | Reward currency  
 »» interest | string | Interest amount  
 »» fee | string | fee  
-»» status | integer | Status  
+»» status | integer | Status. 4 - success  
 »» bonus_date | string | Date  
 »» should_bonus_stamp | integer | Scheduled distribution timestamp  
   
@@ -1469,8 +2351,6 @@ coin | query | string | Optional | Currency name
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [Inline]  
@@ -1489,7 +2369,7 @@ Name | Type | Description
 » freeze_amount | string | Locked amount, used in trading  
 » move_income | string | none  
 » type | integer | Type 0-voucher 1-locked position 2-US Treasury bond  
-» status | integer | Status  
+» status | integer | Status. 1 - currency project listed, 2 - currency project delisted  
 » income_total | string | Total earnings by currency  
 » yesterday_income_multi | array | Yesterday's earnings  
 » reward_coins | array | Currency-specific reward earnings  
@@ -1623,23 +2503,21 @@ _Create auto invest plan_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AutoInvestPlanCreate | Required | none  
-↳ plan_name | body | string | Optional | Plan name。Length: 0-50 characters  
-↳ plan_des | body | string | Optional | Plan description  
-↳ plan_money | body | string | Required | Pricing currency，SupportUSDT，BTC  
-↳ plan_amount | body | string | Required | Per PeriodAuto InvestAmount，Must > 0，and not exceedThePricing currencyConfigurationSingleMaximumAmount  
-↳ plan_period_type | body | string | Required | Enum: daily, weekly, biweekly, monthly, hourly, 4-hourly  
-↳ plan_period_day | body | integer(int64) | Required | Cycle day. For monthly: day of month (1-30); For weekly/biweekly: day of week (1-7, 1=Monday); For daily/hourly/4-hourly: ignored  
-↳ plan_period_hour | body | integer(int64) | Required | Execution hourAuto Invest 0-23  
-↳ items | body | array | Required | Investment portfolio, asset cannot be repeated; Sum of all items' ratios must be 100  
-↳ asset | body | string | Required | Investment currency, e.g., BTC; Must be enabled and market exists; Cannot be repeated within the same plan  
-↳ ratio | body | string | Required | The proportion of this currency in the portfolio，The sum of all items' ratios must be 100  
-↳ fund_source | body | string | Optional | Fund source: spot or earn, default: spot  
-↳ fund_flow | body | string | Optional | Fund flow direction: auto_invest or earn, default: auto_invest  
-↳ type | body | integer(int64) | Optional | 0 Normal creation, 1 QuickInvestment  
+» plan_name | body | string | Optional | Plan name。Length: 0-50 characters  
+» plan_des | body | string | Optional | Plan description  
+» plan_money | body | string | Required | Pricing currency，SupportUSDT，BTC  
+» plan_amount | body | string | Required | Per PeriodAuto InvestAmount，Must > 0，and not exceedThePricing currencyConfigurationSingleMaximumAmount  
+» plan_period_type | body | string | Required | Enum: daily, weekly, biweekly, monthly, hourly, 4-hourly  
+» plan_period_day | body | integer(int64) | Required | Cycle day. For monthly: day of month (1-30); For weekly/biweekly: day of week (1-7, 1=Monday); For daily/hourly/4-hourly: ignored  
+» plan_period_hour | body | integer(int64) | Required | Execution hourAuto Invest 0-23  
+» items | body | array | Required | Investment portfolio, asset cannot be repeated; Sum of all items' ratios must be 100  
+»» asset | body | string | Required | Investment currency, e.g., BTC; Must be enabled and market exists; Cannot be repeated within the same plan  
+»» ratio | body | string | Required | The proportion of this currency in the portfolio，The sum of all items' ratios must be 100  
+» fund_source | body | string | Optional | Fund source: spot or earn, default: spot  
+» fund_flow | body | string | Optional | Fund flow direction: auto_invest or earn, default: auto_invest  
+» type | body | integer(int64) | Optional | 0 Normal creation, 1 QuickInvestment  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Created successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1773,13 +2651,11 @@ _UpdateAuto invest plan_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AutoInvestPlanUpdate | Required | none  
-↳ plan_id | body | integer(int64) | Required | Plan ID  
-↳ fund_source | body | string | Optional | Fund source Spotspot or Flexible Savingsearn，Default spot  
-↳ fund_flow | body | string | Optional | Fund Flow Direction Spotauto_invest or Flexible Savingsearn，Default auto_invest  
+» plan_id | body | integer(int64) | Required | Plan ID  
+» fund_source | body | string | Optional | Fund source Spotspot or Flexible Savingsearn，Default spot  
+» fund_flow | body | string | Optional | Fund Flow Direction Spotauto_invest or Flexible Savingsearn，Default auto_invest  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Updated successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1856,11 +2732,9 @@ _StopAuto invest plan_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AutoInvestPlanStop | Required | none  
-↳ plan_id | body | integer(int64) | Required | Plan ID  
+» plan_id | body | integer(int64) | Required | Plan ID  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Stopped successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -1935,12 +2809,10 @@ _Add position immediately_
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AutoInvestPlanAddPosition | Required | none  
-↳ plan_id | body | integer(int64) | Required | Plan ID  
-↳ amount | body | string | Required | Amount  
+» plan_id | body | integer(int64) | Required | Plan ID  
+» amount | body | string | Required | Amount  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Add PositionSuccess
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2018,8 +2890,6 @@ ParametersName | In | Type | Required | Description
 plan_money | query | string | Optional | Pricing currency，Optional: USDT or BTC，Default: USDT  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2112,21 +2982,27 @@ POST`/earn/autoinvest/min_invest_amount`
 
 POST `/earn/autoinvest/min_invest_amount`
 
-Get `minimum investment amount`
+_Get minimum investment amount_
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | AutoInvestMinInvestAmount | Required | none  
-↳ money | body | string | Required | Currency, optional: USDT or BTC  
-↳ items | body | array | Required | none  
-↳ asset | body | string | Required | Currency  
-↳ ratio | body | string | Required | Ratio，e.g.100  
+» money | body | string | Required | Currency, optional: USDT or BTC  
+» asset_type | body | integer(int32) | Required | Asset type: 1 for cryptocurrency, 2 for TradFi stocks; must be provided explicitly  
+» items | body | array | Required | none  
+»» asset | body | string | Required | Currency  
+»» ratio | body | string | Required | Ratio，e.g.100  
+  
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+» asset_type | 1  
+» asset_type | 2  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -2161,7 +3037,7 @@ Code samples
     
     url = '/earn/autoinvest/min_invest_amount'
     query_param = ''
-    body='{"money":"USDT","items":[{"asset":"BTC","ratio":"33"},{"asset":"ETH","ratio":"33"},{"asset":"SOL","ratio":"34"}]}'
+    body='{"money":"USDT","asset_type":1,"items":[{"asset":"BTC","ratio":"33"},{"asset":"ETH","ratio":"33"},{"asset":"SOL","ratio":"34"}]}'
     # for `gen_sign` implementation, refer to section `Authentication` above
     sign_headers = gen_sign('POST', prefix + url, query_param, body)
     headers.update(sign_headers)
@@ -2178,7 +3054,7 @@ Code samples
     method="POST"
     url="/earn/autoinvest/min_invest_amount"
     query_param=""
-    body_param='{"money":"USDT","items":[{"asset":"BTC","ratio":"33"},{"asset":"ETH","ratio":"33"},{"asset":"SOL","ratio":"34"}]}'
+    body_param='{"money":"USDT","asset_type":1,"items":[{"asset":"BTC","ratio":"33"},{"asset":"ETH","ratio":"33"},{"asset":"SOL","ratio":"34"}]}'
     timestamp=$(date +%s)
     body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
     sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
@@ -2195,6 +3071,7 @@ Code samples
     
     {
       "money": "USDT",
+      "asset_type": 1,
       "items": [
         {
           "asset": "BTC",
@@ -2240,8 +3117,6 @@ page_size | query | integer(int64) | Optional | Items per page，Maximum 100
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | AutoInvestPlanRecordsResp  
@@ -2261,7 +3136,7 @@ Name | Type | Description
 » list | array | none  
 »» _None_ | object | Plan execution record item  
 »»» id | integer(int64) | Record ID  
-»»» type | string | type  
+»»» type | string | Type  
 »»» money | string | SourceCurrency  
 »»» user_id | integer(int64) | User ID  
 »»» plan_id | integer(int64) | Plan ID  
@@ -2372,8 +3247,6 @@ record_id | query | integer(int64) | Required | Record ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [AutoInvestOrderItem]  
@@ -2387,7 +3260,7 @@ Name | Type | Description
 _None_ | array | [Auto invest order item]  
 » _None_ | AutoInvestOrderItem | Auto invest order item  
 »» id | integer(int64) | Order ID  
-»» type | string | type  
+»» type | string | Type  
 »» amount | string | Size  
 »» plan_id | integer(int64) | Plan ID  
 »» side | integer(int64) | direction  
@@ -2505,8 +3378,6 @@ _List investment currency configuration_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | [AutoInvestConfigItem]  
@@ -2602,8 +3473,6 @@ plan_id | query | integer(int64) | Required | Plan ID
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | AutoInvestPlanDetail  
@@ -2627,7 +3496,7 @@ Name | Type | Description
 » period_type | string | Cycle type（e.g., monthly）  
 » period_day | integer(int64) | Cycle day  
 » period_hour | integer(int64) | CycleHours  
-» portfolio | array | InvestmentPortfolio  
+» portfolio | array | Portfolio  
 »» _None_ | AutoInvestPlanDetail/properties/portfolio/items | Auto invest plan portfolio item  
 »»» asset | string | Currency  
 »»» ratio | string | Ratio  
@@ -2763,8 +3632,6 @@ page_size | query | integer(int64) | Optional | Items per page，Maximum 100
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Successfully retrieved
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Successfully retrieved | AutoInvestPlanListInfoResp  
@@ -2794,7 +3661,7 @@ Name | Type | Description
 »»» period_type | string | Cycle type（e.g., monthly）  
 »»» period_day | integer(int64) | Cycle day  
 »»» period_hour | integer(int64) | CycleHours  
-»»» portfolio | array | InvestmentPortfolio  
+»»» portfolio | array | Portfolio  
 »»»» _None_ | AutoInvestPlanDetail/properties/portfolio/items | Auto invest plan portfolio item  
 »»»»» asset | string | Currency  
 »»»»» ratio | string | Ratio  
@@ -2926,7 +3793,7 @@ GET`/earn/fixed-term/product`
 
 GET `/earn/fixed-term/product`
 
-Get `product list`
+_Get product list_
 
 Query fixed-term earn product list. Supports filtering by currency, product type, status, etc. Returns product interest rate, lock-up period, quota, and reward campaign information
 
@@ -2936,12 +3803,12 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 asset | query | string | Optional | Currency  
 type | query | integer | Optional | Product type: 1 for regular, 2 for VIP  
+status | query | integer | Optional | Product status filter. Pass 2 for products available for subscription.  
+show_status | query | string | Optional | Visibility status filter. Pass "2" for visible products.  
 page | query | integer | Required | Page number  
 limit | query | integer | Required | Page size  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Product list retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -3054,7 +3921,7 @@ GET`/earn/fixed-term/product/{asset}/list`
 
 GET `/earn/fixed-term/product/{asset}/list`
 
-Get `product list by single currency`
+_Get product list by single currency_
 
 Sort by product term in ascending order
 
@@ -3066,8 +3933,6 @@ asset | path | string | Required | Currency name, e.g., USDT, BTC
 type | query | string | Optional | Product type: "" or 1 for regular product list, 2 for VIP product list, 0 for all products  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Single currency product list retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -3195,8 +4060,6 @@ sub_business | query | integer | Optional | Sub-business
 business_filter | query | string | Optional | Business filter conditions, JSON array format, e.g., [{"business":1, "sub_business": 0}]. business: 1 for regular, 2 for VIP  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Subscription order list retrieved successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -3497,24 +4360,22 @@ POST `/earn/fixed-term/user/lend`
 
 _Subscription_
 
-Subscribe `to a fixed-term earn product by specifying the product ID and subscription amount. Optionally enable auto-renewal and apply an interest rate boost coupon`
+Subscribe to a fixed-term earn product by specifying the product ID and subscription amount. Optionally enable auto-renewal and apply an interest rate boost coupon
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | FixedTermLendRequest | Optional | none  
-↳ product_id | body | integer | Required | Product ID  
-↳ amount | body | string | Required | Subscription amount  
-↳ year_rate | body | string | Optional | Annual interest rate  
-↳ reinvest_status | body | integer | Optional | Auto-renewal status: 0 for disabled, 1 for enabled  
-↳ redeem_account_type | body | integer | Optional | Redemption payout account type: 1 for spot account  
-↳ financial_rate_id | body | integer | Optional | Interest rate boost coupon ID, 0 means not used  
-↳ sub_business | body | integer | Optional | Sub-business type  
+» product_id | body | integer | Required | Product ID  
+» amount | body | string | Required | Subscription amount  
+» year_rate | body | string | Optional | Annual interest rate  
+» reinvest_status | body | integer | Optional | Auto-renewal status: 0 for disabled, 1 for enabled  
+» redeem_account_type | body | integer | Optional | Redemption payout account type: 1 for spot account  
+» financial_rate_id | body | integer | Optional | Interest rate boost coupon ID, 0 means not used  
+» sub_business | body | integer | Optional | Sub-business type  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Subscription successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -3624,11 +4485,9 @@ Early redemption of a fixed-term earn order, order ID is required
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | EarnFixedTermPreRedeemRequest | Optional | none  
-↳ order_id | body | string | Required | Order ID  
+» order_id | body | string | Required | Order ID  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Redemption successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -3741,8 +4600,6 @@ business_filter | query | string | Optional | Business filter conditions, JSON a
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)History records retrieved successfully
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | History records retrieved successfully | ListEarnFixedTermHistoryResponse  
@@ -3844,112 +4701,30 @@ Code samples
 
 #  Schemas
 
-##  PlaceDualInvestmentOrder
+##  ListEarnFixedTermProductsResponse
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | integer(int32) | Optional | none | Order ID  
-plan_id | integer(int32) | Optional | none | Product ID  
-invest_amount | string | Optional | none | Investment Quantity  
-settlement_amount | string | Optional | none | Settlement Quantity  
-create_time | integer(int32) | Optional | none | Created time  
-complete_time | integer(int32) | Optional | none | Completed Time  
-status | string | Optional | none | Status:  
-  
-`INIT`-Created  
-`SETTLEMENT_SUCCESS`-Settlement Success  
-`SETTLEMENT_PROCESSING`-Settlement Processing  
-`CANCELED`-Canceled  
-`FAILED`-Failed  
-invest_currency | string | Optional | none | Investment Token  
-exercise_currency | string | Optional | none | Strike Token  
-exercise_price | string | Optional | none | Strike price  
-settlement_price | string | Optional | none | Settlement price  
-settlement_currency | string | Optional | none | Settlement currency  
-apy_display | string | Optional | none | Annual Yield  
-apy_settlement | string | Optional | none | Settlement Annual Yield  
-delivery_time | integer(int32) | Optional | none | Settlement time  
-text | string | Optional | none | Custom order information  
+code | integer | Required | none | Return code, 0 means success  
+message | string | Required | none | Response message  
+data | object | Required | none | Product list data  
+» list | [FixedTermProduct] | Required | none | Product list  
+» total | integer | Required | none | Total Records  
+timestamp | integer | Required | none | Response timestamp (in seconds)  
       
     
     {
-      "id": 0,
-      "plan_id": 0,
-      "invest_amount": "string",
-      "settlement_amount": "string",
-      "create_time": 0,
-      "complete_time": 0,
-      "status": "string",
-      "invest_currency": "string",
-      "exercise_currency": "string",
-      "exercise_price": "string",
-      "settlement_price": "string",
-      "settlement_currency": "string",
-      "apy_display": "string",
-      "apy_settlement": "string",
-      "delivery_time": 0,
-      "text": "string"
-    }
-    
-    
-
-##  AutoInvestPlanRecordsResp
-
-_PlanExecutionRecordPaginatedResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-page | integer(int64) | Required | none | page number  
-page_size | integer(int64) | Required | none | Items per page  
-total_page | integer(int64) | Required | none | TotalPage number  
-total | integer(int64) | Required | none | Total entries  
-list | array | Required | none | none  
-↳ None | object | Optional | none | Plan execution record item  
-↳ id | integer(int64) | Required | none | Record ID  
-↳ type | string | Required | none | type  
-↳ money | string | Required | none | SourceCurrency  
-↳ user_id | integer(int64) | Required | none | User ID  
-↳ plan_id | integer(int64) | Required | none | Plan ID  
-↳ plan_version | integer(int64) | Required | none | PlanVersion  
-↳ amount | string | Required | none | Investment amount  
-↳ create_time | integer(int64) | Required | none | Investment time  
-↳ update_time | integer(int64) | Required | none | Update time  
-↳ status | string | Required | none | Status  
-↳ status_type | integer(int64) | Required | none | Status enum  
-↳ side | integer(int64) | Required | none | 2 = Buy, Other = Sell  
-↳ status_message | string | Required | none | Status description  
-↳ detail | string | Optional | none | Details  
-↳ asset | string | Optional | none | Currency  
-      
-    
-    {
-      "page": 0,
-      "page_size": 0,
-      "total_page": 0,
-      "total": 0,
-      "list": [
-        {
-          "id": 0,
-          "type": "string",
-          "money": "string",
-          "user_id": 0,
-          "plan_id": 0,
-          "plan_version": 0,
-          "amount": "string",
-          "create_time": 0,
-          "update_time": 0,
-          "status": "string",
-          "status_type": 0,
-          "side": 0,
-          "status_message": "string",
-          "detail": "string",
-          "asset": "string"
-        }
-      ]
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "timestamp": 0
     }
     
     
@@ -3968,17 +4743,17 @@ extra_income | string | Required | none | Additional rewards converted to USDT a
 freeze_amount | string | Required | none | Locked amount, used in trading  
 move_income | string | Required | none | none  
 type | integer | Required | none | Type 0-voucher 1-locked position 2-US Treasury bond  
-status | integer | Required | none | Status  
+status | integer | Required | none | Status. 1 - currency project listed, 2 - currency project delisted  
 income_total | string | Required | none | Total earnings by currency  
 yesterday_income_multi | array | Required | none | Yesterday's earnings  
 reward_coins | array | Required | none | Currency-specific reward earnings  
-↳ reward_coin | string | Required | none | Reward currency  
-↳ interest_delay_days | integer | Required | none | Interest accrual day  
-↳ reward_delay_days | integer | Required | none | Dividend day -1 indicates dividends are distributed upon redemption  
+» reward_coin | string | Required | none | Reward currency  
+» interest_delay_days | integer | Required | none | Interest accrual day  
+» reward_delay_days | integer | Required | none | Dividend day -1 indicates dividends are distributed upon redemption  
 defi_income | object | Required | none | DEIF earnings  
-↳ total | array | Required | none | none  
-↳ coin | string | Required | none | none  
-↳ amount | string | Required | none | none  
+» total | array | Required | none | none  
+»» coin | string | Required | none | none  
+»» amount | string | Required | none | none  
       
     
     [
@@ -4007,31 +4782,74 @@ defi_income | object | Required | none | DEIF earnings
     
     
 
-##  FixedTermLendRequest
-
-_Subscription request_
+##  ListEarnFixedTermLendsResponse
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-product_id | integer | Required | none | Product ID  
-amount | string | Required | none | Subscription amount  
-year_rate | string | Optional | none | Annual interest rate  
-reinvest_status | integer | Optional | none | Auto-renewal status: 0 for disabled, 1 for enabled  
-redeem_account_type | integer | Optional | none | Redemption payout account type: 1 for spot account  
-financial_rate_id | integer | Optional | none | Interest rate boost coupon ID, 0 means not used  
-sub_business | integer | Optional | none | Sub-business type  
+code | integer | Required | none | Return code, 0 means success  
+message | string | Required | none | Response message  
+data | object | Required | none | Subscription order list data  
+» list | [FixedTermLendOrder] | Required | none | Subscription order list  
+» total | integer | Required | none | Total Records  
+timestamp | integer | Required | none | Response timestamp (in seconds)  
       
     
     {
-      "product_id": 0,
-      "amount": "string",
-      "year_rate": "string",
-      "reinvest_status": 0,
-      "redeem_account_type": 0,
-      "financial_rate_id": 0,
-      "sub_business": 0
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  AutoInvestPlanCreate
+
+_Create auto invest planRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+plan_name | string | Optional | none | Plan name。Length: 0-50 characters  
+plan_des | string | Optional | none | Plan description  
+plan_money | string | Required | none | Pricing currency，SupportUSDT，BTC  
+plan_amount | string | Required | none | Per PeriodAuto InvestAmount，Must > 0，and not exceedThePricing currencyConfigurationSingleMaximumAmount  
+plan_period_type | string | Required | none | Enum: daily, weekly, biweekly, monthly, hourly, 4-hourly  
+plan_period_day | integer(int64) | Required | none | Cycle day. For monthly: day of month (1-30); For weekly/biweekly: day of week (1-7, 1=Monday); For daily/hourly/4-hourly: ignored  
+plan_period_hour | integer(int64) | Required | none | Execution hourAuto Invest 0-23  
+items | array | Required | none | Investment portfolio, asset cannot be repeated; Sum of all items' ratios must be 100  
+» asset | string | Required | none | Investment currency, e.g., BTC; Must be enabled and market exists; Cannot be repeated within the same plan  
+» ratio | string | Required | none | The proportion of this currency in the portfolio，The sum of all items' ratios must be 100  
+fund_source | string | Optional | none | Fund source: spot or earn, default: spot  
+fund_flow | string | Optional | none | Fund flow direction: auto_invest or earn, default: auto_invest  
+type | integer(int64) | Optional | none | 0 Normal creation, 1 QuickInvestment  
+      
+    
+    {
+      "plan_name": "string",
+      "plan_des": "string",
+      "plan_money": "string",
+      "plan_amount": "string",
+      "plan_period_type": "string",
+      "plan_period_day": 0,
+      "plan_period_hour": 0,
+      "items": [
+        {
+          "asset": "string",
+          "ratio": "string"
+        }
+      ],
+      "fund_source": "string",
+      "fund_flow": "string",
+      "type": 0
     }
     
     
@@ -4047,15 +4865,15 @@ pageSize | integer | Required | none | Items per page
 pageCount | integer | Required | none | Total pages  
 totalCount | integer | Required | none | Total entries  
 list | array | Required | none | none  
-↳ pid | integer | Required | none | Product ID  
-↳ mortgage_coin | string | Required | none | Collateral currency  
-↳ amount | string | Required | none | Amount  
-↳ reward_coin | string | Required | none | Reward currency  
-↳ interest | string | Required | none | Interest amount  
-↳ fee | string | Required | none | fee  
-↳ status | integer | Required | none | Status  
-↳ bonus_date | string | Required | none | Date  
-↳ should_bonus_stamp | integer | Required | none | Scheduled distribution timestamp  
+» pid | integer | Required | none | Product ID  
+» mortgage_coin | string | Required | none | Collateral currency  
+» amount | string | Required | none | Amount  
+» reward_coin | string | Required | none | Reward currency  
+» interest | string | Required | none | Interest amount  
+» fee | string | Required | none | fee  
+» status | integer | Required | none | Status. 4 - success  
+» bonus_date | string | Required | none | Date  
+» should_bonus_stamp | integer | Required | none | Scheduled distribution timestamp  
       
     
     {
@@ -4076,6 +4894,32 @@ list | array | Required | none | none
           "should_bonus_stamp": 0
         }
       ]
+    }
+    
+    
+
+##  ListEarnFixedTermProductsByAssetResponse
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer | Required | none | Return code, 0 means success  
+message | string | Required | none | Response message  
+data | object | Required | none | Product list data  
+» list | [FixedTermProductSimple] | Required | none | Product list  
+timestamp | integer | Required | none | Response timestamp (in seconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
     }
     
     
@@ -4117,6 +4961,199 @@ invest_hours | string | Optional | none | Lock-up hours
       "max_copies": 0,
       "invest_days": 0,
       "invest_hours": "string"
+    }
+    
+    
+
+##  FixedTermProductSimple
+
+_Fixed-term earn product (compact)_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer | Optional | none | Product ID  
+asset | string | Optional | none | Currency  
+lock_up_period | integer | Optional | none | Lock-up period (in days)  
+year_rate | string | Optional | none | Annual interest rate  
+type | integer | Optional | none | Product type: 1 for regular, 2 for VIP  
+pre_redeem | integer | Optional | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
+reinvest | integer | Optional | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
+simple_earn | integer | Optional | none | Whether fixed-to-flexible conversion is supported: 0 for not supported, 1 for supported  
+min_vip | integer | Optional | none | Minimum VIP level requirement, 0 means no restriction  
+max_vip | integer | Optional | none | Maximum VIP level requirement, 0 means no restriction  
+sale_status | integer | Optional | none | Sale status: 1 for on sale, 2 for sold out  
+      
+    
+    {
+      "id": 0,
+      "asset": "string",
+      "lock_up_period": 0,
+      "year_rate": "string",
+      "type": 0,
+      "pre_redeem": 0,
+      "reinvest": 0,
+      "simple_earn": 0,
+      "min_vip": 0,
+      "max_vip": 0,
+      "sale_status": 0
+    }
+    
+    
+
+##  EarnFixedTermPreRedeemRequest
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | string | Required | none | Order ID  
+      
+    
+    {
+      "order_id": "5862476630"
+    }
+    
+    
+
+##  DualOrderRefundParams
+
+_Dual-currency order early redemption request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | string | Required | none | Order ID  
+req_id | string | Required | none | Request ID returned by order-refund-preview  
+      
+    
+    {
+      "order_id": "string",
+      "req_id": "string"
+    }
+    
+    
+
+##  AutoInvestPlanStop
+
+_StopAuto invest planRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+plan_id | integer(int64) | Required | none | Plan ID  
+      
+    
+    {
+      "plan_id": 0
+    }
+    
+    
+
+##  SwapCoin
+
+_Blockchain Mining_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+coin | string | Required | none | Currency  
+side | integer | Required | none | 0 - Stake 1 - Redeem  
+amount | string | Required | none | Size  
+pid | integer | Optional | none | DeFi-type Mining Protocol Identifier  
+      
+    
+    {
+      "coin": "string",
+      "side": 0,
+      "amount": "string",
+      "pid": 0
+    }
+    
+    
+
+##  AutoInvestPlanUpdate
+
+_Request to update an auto-invest plan. The current model contains plan_id, fund_source, and fund_flow._
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+plan_id | integer(int64) | Required | none | Plan ID  
+fund_source | string | Optional | none | Fund source Spotspot or Flexible Savingsearn，Default spot  
+fund_flow | string | Optional | none | Fund Flow Direction Spotauto_invest or Flexible Savingsearn，Default auto_invest  
+      
+    
+    {
+      "plan_id": 0,
+      "fund_source": "string",
+      "fund_flow": "string"
+    }
+    
+    
+
+##  AutoInvestPlanListInfoResp
+
+_Auto invest planListPaginatedResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+page | integer(int64) | Required | none | page number  
+page_size | integer(int64) | Required | none | Items per page  
+page_count | integer(int64) | Required | none | Total pages  
+total_count | integer(int64) | Required | none | Total entries  
+list | array | Required | none | PlanList  
+» _None_ | object | Optional | none | Auto invest planDetails  
+»» id | integer(int64) | Required | none | Plan ID  
+»» version | integer(int64) | Optional | none | PlanVersion  
+»» name | string | Required | none | Plan name  
+»» create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
+»» update_time | integer(int64) | Required | none | Update time (Unix timestamp)  
+»» user_id | integer(int64) | Required | none | User ID  
+»» money | string | Required | none | Quote Currency  
+»» amount | string | Required | none | Per PeriodInvestment amount  
+»» period_type | string | Required | none | Cycle type（e.g., monthly）  
+»» period_day | integer(int64) | Required | none | Cycle day  
+»» period_hour | integer(int64) | Required | none | CycleHours  
+»» portfolio | [AutoInvestPlanDetail/properties/portfolio/items] | Required | none | Portfolio  
+»» next_time | integer(int64) | Required | none | Next execution time (Unix timestamp)  
+»» period | integer(int64) | Required | none | Executed periods  
+»» fund_source | string | Required | none | Fund source（spot/earn）  
+»» fund_flow | string | Required | none | Fund flow direction (auto_invest/earn)  
+      
+    
+    {
+      "page": 0,
+      "page_size": 0,
+      "page_count": 0,
+      "total_count": 0,
+      "list": [
+        {
+          "id": 0,
+          "version": 0,
+          "name": "string",
+          "create_time": 0,
+          "update_time": 0,
+          "user_id": 0,
+          "money": "string",
+          "amount": "string",
+          "period_type": "string",
+          "period_day": 0,
+          "period_hour": 0,
+          "portfolio": [],
+          "next_time": 0,
+          "period": 0,
+          "fund_source": "string",
+          "fund_flow": "string"
+        }
+      ]
     }
     
     
@@ -4172,6 +5209,60 @@ text | string | Optional | none | Custom order information
     
     
 
+##  FixedTermLendRequest
+
+_Subscription request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+product_id | integer | Required | none | Product ID  
+amount | string | Required | none | Subscription amount  
+year_rate | string | Optional | none | Annual interest rate  
+reinvest_status | integer | Optional | none | Auto-renewal status: 0 for disabled, 1 for enabled  
+redeem_account_type | integer | Optional | none | Redemption payout account type: 1 for spot account  
+financial_rate_id | integer | Optional | none | Interest rate boost coupon ID, 0 means not used  
+sub_business | integer | Optional | none | Sub-business type  
+      
+    
+    {
+      "product_id": 0,
+      "amount": "string",
+      "year_rate": "string",
+      "reinvest_status": 0,
+      "redeem_account_type": 0,
+      "financial_rate_id": 0,
+      "sub_business": 0
+    }
+    
+    
+
+##  PlaceDualInvestmentOrderParams
+
+_Dual Investment Order_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+plan_id | string | Required | none | Product ID  
+amount | string | Required | none | Subscription amount  
+text | string | Optional | none | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
+  
+1\. Must start with `t-`  
+2\. Excluding `t-`, length cannot exceed 28 bytes  
+3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)  
+      
+    
+    {
+      "plan_id": "string",
+      "amount": "string",
+      "text": "string"
+    }
+    
+    
+
 ##  AutoInvestPlanAddPosition
 
 _Add position immediatelyRequest_
@@ -4187,490 +5278,6 @@ amount | string | Required | none | Amount
     {
       "plan_id": 0,
       "amount": "string"
-    }
-    
-    
-
-##  CreateEarnFixedTermLendResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Optional | none | Return code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | Subscription result  
-↳ order_id | integer(int64) | Optional | none | Subscription order ID  
-timestamp | integer | Optional | none | Response timestamp (in seconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "order_id": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FindCoinStruct
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-pid | integer | Required | none | Product ID  
-productType | integer | Required | none | Project type 0-voucher 1-locked position 2-US Treasury bond  
-isDefi | integer | Required | none | Is DEFI protocol 0-no 1-yes  
-currency | string | Required | none | Staked currencies (multiple entries separated by commas)  
-estimateApr | string | Required | none | Estimated yield rate  
-minStakeAmount | string | Required | none | Minimum staked amount  
-maxStakeAmount | string | Required | none | Maximum staked amount  
-protocolName | string | Required | none | Protocol name  
-redeemPeriod | string | Required | none | Redemption period (days)  
-exchangeRate | string | Required | none | Exchange rate  
-exchangeRateReserve | string | Required | none | Reverse exchange rate  
-extraInterest | array | Optional | none | Additional rewards  
-↳ start_time | string | Required | none | Start timestamp  
-↳ end_time | string | Required | none | End Timestamp  
-↳ reward_coin | string | Required | none | Additional reward currency  
-↳ segment_interest | array | Required | none | Tiered reward information  
-↳ money_min | string | Required | none | Tiered lower value  
-↳ money_max | string | Required | none | Tiered upper value  
-↳ money_rate | string | Required | none | Tiered interest rate  
-↳ currencyRewards | array | Required | none | Reward currency information  
-↳ apr | string | Required | none | Base interest rate  
-↳ reward_coin | string | Required | none | Reward currency  
-↳ reward_delay_days | string | Required | none | Dividend day -1 indicates dividends are distributed upon redemption  
-↳ interest_delay_days | string | Required | none | Interest accrual day  
-      
-    
-    [
-      {
-        "pid": 0,
-        "productType": 0,
-        "isDefi": 0,
-        "currency": "string",
-        "estimateApr": "string",
-        "minStakeAmount": "string",
-        "maxStakeAmount": "string",
-        "protocolName": "string",
-        "redeemPeriod": "string",
-        "exchangeRate": "string",
-        "exchangeRateReserve": "string",
-        "extraInterest": [
-          {}
-        ],
-        "currencyRewards": [
-          {}
-        ]
-      }
-    ]
-    
-    
-
-##  AutoInvestPlanListInfoResp
-
-_Auto invest planListPaginatedResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-page | integer(int64) | Required | none | page number  
-page_size | integer(int64) | Required | none | Items per page  
-page_count | integer(int64) | Required | none | Total pages  
-total_count | integer(int64) | Required | none | Total entries  
-list | array | Required | none | PlanList  
-↳ None | object | Optional | none | Auto invest planDetails  
-↳ id | integer(int64) | Required | none | Plan ID  
-↳ version | integer(int64) | Optional | none | PlanVersion  
-↳ name | string | Required | none | Plan name  
-↳ create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
-↳ update_time | integer(int64) | Required | none | Update time (Unix timestamp)  
-↳ user_id | integer(int64) | Required | none | User ID  
-↳ money | string | Required | none | Quote Currency  
-↳ amount | string | Required | none | Per PeriodInvestment amount  
-↳ period_type | string | Required | none | Cycle type（e.g., monthly）  
-↳ period_day | integer(int64) | Required | none | Cycle day  
-↳ period_hour | integer(int64) | Required | none | CycleHours  
-↳ portfolio | [AutoInvestPlanDetail/properties/portfolio/items] | Required | none | InvestmentPortfolio  
-↳ next_time | integer(int64) | Required | none | Next execution time (Unix timestamp)  
-↳ period | integer(int64) | Required | none | Executed periods  
-↳ fund_source | string | Required | none | Fund source（spot/earn）  
-↳ fund_flow | string | Required | none | Fund flow direction (auto_invest/earn)  
-      
-    
-    {
-      "page": 0,
-      "page_size": 0,
-      "page_count": 0,
-      "total_count": 0,
-      "list": [
-        {
-          "id": 0,
-          "version": 0,
-          "name": "string",
-          "create_time": 0,
-          "update_time": 0,
-          "user_id": 0,
-          "money": "string",
-          "amount": "string",
-          "period_type": "string",
-          "period_day": 0,
-          "period_hour": 0,
-          "portfolio": [],
-          "next_time": 0,
-          "period": 0,
-          "fund_source": "string",
-          "fund_flow": "string"
-        }
-      ]
-    }
-    
-    
-
-##  EarnFixedTermPreRedeemRequest
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Required | none | Order ID  
-      
-    
-    {
-      "order_id": "5862476630"
-    }
-    
-    
-
-##  SwapCoin
-
-_Blockchain Mining_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-coin | string | Required | none | Currency  
-side | integer | Required | none | 0 - Stake 1 - Redeem  
-amount | string | Required | none | Size  
-pid | integer | Optional | none | DeFi-type Mining Protocol Identifier  
-      
-    
-    {
-      "coin": "string",
-      "side": 0,
-      "amount": "string",
-      "pid": 0
-    }
-    
-    
-
-##  DualGetBalance
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-user_asset_usdt | string | Optional | none | User Assets in USDT Equivalent  
-user_asset_btc | string | Optional | none | User Assets in BTC Equivalent  
-user_total_interest_usdt | string | Optional | none | Total User Interest in USDT Equivalent  
-user_total_interest_btc | string | Optional | none | Total User Interest in BTC Equivalent  
-      
-    
-    {
-      "user_asset_usdt": "string",
-      "user_asset_btc": "string",
-      "user_total_interest_usdt": "string",
-      "user_total_interest_btc": "string"
-    }
-    
-    
-
-##  ListEarnFixedTermHistoryResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Optional | none | Return code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | none  
-↳ list | [FixedTermHistoryRecord] | Optional | none | [Fixed-term earn history records]  
-↳ total | integer | Optional | none | Total Records  
-timestamp | integer | Optional | none | Response timestamp (in seconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  DualModifyOrderReinvestParams
-
-_Dual-currency order reinvest modification request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order ID  
-status | integer(int32) | Optional | none | `0` — off; `1` — on  
-effective_time_duration | integer(int64) | Optional | none | Effective duration in seconds; default 1 day (86400)  
-      
-    
-    {
-      "order_id": 0,
-      "status": 0,
-      "effective_time_duration": 0
-    }
-    
-    
-
-##  ListEarnFixedTermProductsByAssetResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | Return code, 0 means success  
-message | string | Required | none | Response message  
-data | object | Required | none | Product list data  
-↳ list | [FixedTermProductSimple] | Required | none | Product list  
-timestamp | integer | Required | none | Response timestamp (in seconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  ListEarnFixedTermLendsResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | Return code, 0 means success  
-message | string | Required | none | Response message  
-data | object | Required | none | Subscription order list data  
-↳ list | [FixedTermLendOrder] | Required | none | Subscription order list  
-↳ total | integer | Required | none | Total Records  
-timestamp | integer | Required | none | Response timestamp (in seconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  DualOrderRefundPreview
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-create_timest | integer(int64) | Optional | none | Order creation timestamp  
-delivery_timest | integer(int64) | Optional | none | Order delivery timestamp  
-exercise_price | string | Optional | none | Strike price  
-invest_amount | string | Optional | none | Investment amount  
-invest_currency | string | Optional | none | Investment Token  
-name | string | Optional | none | Order name identifier  
-order_id | integer(int64) | Optional | none | Order ID  
-req_id | string | Optional | none | Request ID used for actual redemption  
-refund_service_charge | integer(int64) | Optional | none | Refund fee  
-settle_price | string | Optional | none | Settlement price  
-settlement_amount | string | Optional | none | Settlement amount  
-settlement_currency | string | Optional | none | Settlement currency  
-settlement_interest | string | Optional | none | Settlement interest  
-settlement_principle | string | Optional | none | Settlement principal  
-type | string | Optional | none | `call`: sell high; `put`: buy low  
-money_back_timest | integer(int64) | Optional | none | Redemption time  
-      
-    
-    {
-      "create_timest": 0,
-      "delivery_timest": 0,
-      "exercise_price": "string",
-      "invest_amount": "string",
-      "invest_currency": "string",
-      "name": "string",
-      "order_id": 0,
-      "req_id": "string",
-      "refund_service_charge": 0,
-      "settle_price": "string",
-      "settlement_amount": "string",
-      "settlement_currency": "string",
-      "settlement_interest": "string",
-      "settlement_principle": "string",
-      "type": "string",
-      "money_back_timest": 0
-    }
-    
-    
-
-##  FixedTermHistoryRecord
-
-_Fixed-term earn history records_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer | Required | none | Record ID  
-order_id | integer(int64) | Optional | none | Order ID  
-user_id | integer(int64) | Required | none | User ID  
-asset | string | Required | none | Currency  
-uniq_time | string | Optional | none | Unique time identifier (date)  
-bonus_id | integer | Optional | none | Reward campaign ID  
-product_id | integer | Required | none | Product ID  
-bonus_asset | string | Optional | none | Reward currency  
-total_principal | string | Optional | none | Total principal  
-amount | string | Optional | none | Amount  
-asset_price | string | Optional | none | Currency price  
-status | integer | Required | none | Status  
-detail | string | Optional | none | Detail description  
-create_time | string | Required | none | Created time  
-create_at | integer | Required | none | Creation timestamp (in seconds)  
-lock_up_period | integer | Optional | none | Term  
-      
-    
-    {
-      "id": 0,
-      "order_id": 0,
-      "user_id": 0,
-      "asset": "string",
-      "uniq_time": "string",
-      "bonus_id": 0,
-      "product_id": 0,
-      "bonus_asset": "string",
-      "total_principal": "string",
-      "amount": "string",
-      "asset_price": "string",
-      "status": 0,
-      "detail": "string",
-      "create_time": "string",
-      "create_at": 0,
-      "lock_up_period": 0
-    }
-    
-    
-
-##  AutoInvestMinInvestAmountResp
-
-_AvailableInvestmentMinimumAmountResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-min_amount | string | Required | none | MinimumAmount  
-      
-    
-    {
-      "min_amount": "string"
-    }
-    
-    
-
-##  AutoInvestPlanCreate
-
-_Create auto invest planRequest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-plan_name | string | Optional | none | Plan name。Length: 0-50 characters  
-plan_des | string | Optional | none | Plan description  
-plan_money | string | Required | none | Pricing currency，SupportUSDT，BTC  
-plan_amount | string | Required | none | Per PeriodAuto InvestAmount，Must > 0，and not exceedThePricing currencyConfigurationSingleMaximumAmount  
-plan_period_type | string | Required | none | Enum: daily, weekly, biweekly, monthly, hourly, 4-hourly  
-plan_period_day | integer(int64) | Required | none | Cycle day. For monthly: day of month (1-30); For weekly/biweekly: day of week (1-7, 1=Monday); For daily/hourly/4-hourly: ignored  
-plan_period_hour | integer(int64) | Required | none | Execution hourAuto Invest 0-23  
-items | array | Required | none | Investment portfolio, asset cannot be repeated; Sum of all items' ratios must be 100  
-↳ asset | string | Required | none | Investment currency, e.g., BTC; Must be enabled and market exists; Cannot be repeated within the same plan  
-↳ ratio | string | Required | none | The proportion of this currency in the portfolio，The sum of all items' ratios must be 100  
-fund_source | string | Optional | none | Fund source: spot or earn, default: spot  
-fund_flow | string | Optional | none | Fund flow direction: auto_invest or earn, default: auto_invest  
-type | integer(int64) | Optional | none | 0 Normal creation, 1 QuickInvestment  
-      
-    
-    {
-      "plan_name": "string",
-      "plan_des": "string",
-      "plan_money": "string",
-      "plan_amount": "string",
-      "plan_period_type": "string",
-      "plan_period_day": 0,
-      "plan_period_hour": 0,
-      "items": [
-        {
-          "asset": "string",
-          "ratio": "string"
-        }
-      ],
-      "fund_source": "string",
-      "fund_flow": "string",
-      "type": 0
-    }
-    
-    
-
-##  ListEarnFixedTermProductsResponse
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Required | none | Return code, 0 means success  
-message | string | Required | none | Response message  
-data | object | Required | none | Product list data  
-↳ list | [FixedTermProduct] | Required | none | Product list  
-↳ total | integer | Required | none | Total Records  
-timestamp | integer | Required | none | Response timestamp (in seconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "timestamp": 0
     }
     
     
@@ -4827,6 +5434,452 @@ icon | string | Optional | none | Currency icon URL
     
     
 
+##  PlaceDualInvestmentOrder
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int32) | Optional | none | Order ID  
+plan_id | integer(int32) | Optional | none | Product ID  
+invest_amount | string | Optional | none | Investment Quantity  
+settlement_amount | string | Optional | none | Settlement Quantity  
+create_time | integer(int32) | Optional | none | Created time  
+complete_time | integer(int32) | Optional | none | Completed Time  
+status | string | Optional | none | Status:  
+  
+`INIT`-Created  
+`SETTLEMENT_SUCCESS`-Settlement Success  
+`SETTLEMENT_PROCESSING`-Settlement Processing  
+`CANCELED`-Canceled  
+`FAILED`-Failed  
+invest_currency | string | Optional | none | Investment Token  
+exercise_currency | string | Optional | none | Strike Token  
+exercise_price | string | Optional | none | Strike price  
+settlement_price | string | Optional | none | Settlement price  
+settlement_currency | string | Optional | none | Settlement currency  
+apy_display | string | Optional | none | Annual Yield  
+apy_settlement | string | Optional | none | Settlement Annual Yield  
+delivery_time | integer(int32) | Optional | none | Settlement time  
+text | string | Optional | none | Custom order information  
+      
+    
+    {
+      "id": 0,
+      "plan_id": 0,
+      "invest_amount": "string",
+      "settlement_amount": "string",
+      "create_time": 0,
+      "complete_time": 0,
+      "status": "string",
+      "invest_currency": "string",
+      "exercise_currency": "string",
+      "exercise_price": "string",
+      "settlement_price": "string",
+      "settlement_currency": "string",
+      "apy_display": "string",
+      "apy_settlement": "string",
+      "delivery_time": 0,
+      "text": "string"
+    }
+    
+    
+
+##  AutoInvestCoinsItem
+
+_Currency item supporting auto invest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+key | string | Required | none | Currency code  
+value | string | Required | none | Currency name  
+asset_icon_url | string | Required | none | Currency icon URL  
+sort | integer(int64) | Optional | none | Sort  
+      
+    
+    {
+      "key": "string",
+      "value": "string",
+      "asset_icon_url": "string",
+      "sort": 0
+    }
+    
+    
+
+##  AutoInvestMinInvestAmountResp
+
+_AvailableInvestmentMinimumAmountResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+min_amount | string | Required | none | MinimumAmount  
+      
+    
+    {
+      "min_amount": "string"
+    }
+    
+    
+
+##  FixedTermCouponInfo
+
+_Interest rate boost coupon information_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer | Required | none | Interest rate boost coupon record ID  
+business | integer | Required | none | Business Type  
+user_id | integer(int64) | Required | none | User ID  
+asset | string | Required | none | Currency  
+order_id | integer(int64) | Required | none | Associated order ID  
+financial_rate_id | integer | Required | none | Interest rate boost coupon ID  
+buy_limit_low | string | Required | none | Minimum subscription amount for interest rate boost coupon  
+buy_limit_high | string | Required | none | Maximum subscription amount for interest rate boost coupon  
+rate_day | integer | Required | none | Interest rate boost days  
+rate_ratio | string | Required | none | Interest rate boost percentage  
+coupon_days | integer | Required | none | Actual interest rate boost days  
+coupon_principal | string | Required | none | Principal for interest rate boost calculation  
+coupon_year_rate | string | Required | none | Interest rate boost APR  
+coupon_interest | string | Required | none | Interest generated from rate boost  
+status | integer | Required | none | Status: 1 for active, 2 for settled  
+finish_time | string | Required | none | Settlement time  
+create_time | string | Required | none | Created time  
+      
+    
+    {
+      "id": 0,
+      "business": 0,
+      "user_id": 0,
+      "asset": "string",
+      "order_id": 0,
+      "financial_rate_id": 0,
+      "buy_limit_low": "string",
+      "buy_limit_high": "string",
+      "rate_day": 0,
+      "rate_ratio": "string",
+      "coupon_days": 0,
+      "coupon_principal": "string",
+      "coupon_year_rate": "string",
+      "coupon_interest": "string",
+      "status": 0,
+      "finish_time": "string",
+      "create_time": "string"
+    }
+    
+    
+
+##  AutoInvestOrderItem
+
+_Auto invest order item_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Required | none | Order ID  
+type | string | Required | none | Type  
+amount | string | Required | none | Size  
+plan_id | integer(int64) | Required | none | Plan ID  
+side | integer(int64) | Required | none | direction  
+asset | string | Required | none | Currency  
+record_id | integer(int64) | Required | none | Record ID  
+total_money | string | Required | none | TotalAmount  
+market | string | Required | none | Currency pair  
+price | string | Required | none | Price  
+create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
+total | string | Required | none | Total  
+fund_flow | string | Required | none | Fund Flow Direction  
+error_code | integer(int64) | Required | none | Error code  
+error_msg | string | Required | none | Error message  
+status | integer(int64) | Required | none | Status  
+      
+    
+    {
+      "id": 0,
+      "type": "string",
+      "amount": "string",
+      "plan_id": 0,
+      "side": 0,
+      "asset": "string",
+      "record_id": 0,
+      "total_money": "string",
+      "market": "string",
+      "price": "string",
+      "create_time": 0,
+      "total": "string",
+      "fund_flow": "string",
+      "error_code": 0,
+      "error_msg": "string",
+      "status": 0
+    }
+    
+    
+
+##  AutoInvestPlanRecordsResp
+
+_PlanExecutionRecordPaginatedResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+page | integer(int64) | Required | none | page number  
+page_size | integer(int64) | Required | none | Items per page  
+total_page | integer(int64) | Required | none | TotalPage number  
+total | integer(int64) | Required | none | Total entries  
+list | array | Required | none | none  
+» _None_ | object | Optional | none | Plan execution record item  
+»» id | integer(int64) | Required | none | Record ID  
+»» type | string | Required | none | Type  
+»» money | string | Required | none | SourceCurrency  
+»» user_id | integer(int64) | Required | none | User ID  
+»» plan_id | integer(int64) | Required | none | Plan ID  
+»» plan_version | integer(int64) | Required | none | PlanVersion  
+»» amount | string | Required | none | Investment amount  
+»» create_time | integer(int64) | Required | none | Investment time  
+»» update_time | integer(int64) | Required | none | Update time  
+»» status | string | Required | none | Status  
+»» status_type | integer(int64) | Required | none | Status enum  
+»» side | integer(int64) | Required | none | 2 = Buy, Other = Sell  
+»» status_message | string | Required | none | Status description  
+»» detail | string | Optional | none | Details  
+»» asset | string | Optional | none | Currency  
+      
+    
+    {
+      "page": 0,
+      "page_size": 0,
+      "total_page": 0,
+      "total": 0,
+      "list": [
+        {
+          "id": 0,
+          "type": "string",
+          "money": "string",
+          "user_id": 0,
+          "plan_id": 0,
+          "plan_version": 0,
+          "amount": "string",
+          "create_time": 0,
+          "update_time": 0,
+          "status": "string",
+          "status_type": 0,
+          "side": 0,
+          "status_message": "string",
+          "detail": "string",
+          "asset": "string"
+        }
+      ]
+    }
+    
+    
+
+##  AutoInvestPlanDetail
+
+_Auto invest planDetails_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Required | none | Plan ID  
+version | integer(int64) | Optional | none | PlanVersion  
+name | string | Required | none | Plan name  
+create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
+update_time | integer(int64) | Required | none | Update time (Unix timestamp)  
+user_id | integer(int64) | Required | none | User ID  
+money | string | Required | none | Quote Currency  
+amount | string | Required | none | Per PeriodInvestment amount  
+period_type | string | Required | none | Cycle type（e.g., monthly）  
+period_day | integer(int64) | Required | none | Cycle day  
+period_hour | integer(int64) | Required | none | CycleHours  
+portfolio | array | Required | none | Portfolio  
+» _None_ | object | Optional | none | Auto invest plan portfolio item  
+»» asset | string | Required | none | Currency  
+»» ratio | string | Required | none | Ratio  
+»» cum_invest | string | Required | none | Accumulated investment  
+»» cum_hold | string | Required | none | AccumulatedPosition  
+»» cum_redeem | string | Required | none | Accumulated redemption  
+»» avg_price | string | Required | none | Average Cost Price  
+»» redeem_status | integer(int64) | Required | none | Redemption status  
+»» lend_amount | string | Required | none | LendingQuantity  
+» next_time | integer(int64) | Required | none | Next execution time (Unix timestamp)  
+» period | integer(int64) | Required | none | Executed periods  
+» fund_source | string | Required | none | Fund source（spot/earn）  
+» fund_flow | string | Required | none | Fund flow direction (auto_invest/earn)  
+      
+    
+    {
+      "id": 0,
+      "version": 0,
+      "name": "string",
+      "create_time": 0,
+      "update_time": 0,
+      "user_id": 0,
+      "money": "string",
+      "amount": "string",
+      "period_type": "string",
+      "period_day": 0,
+      "period_hour": 0,
+      "portfolio": [
+        {
+          "asset": "string",
+          "ratio": "string",
+          "cum_invest": "string",
+          "cum_hold": "string",
+          "cum_redeem": "string",
+          "avg_price": "string",
+          "redeem_status": 0,
+          "lend_amount": "string"
+        }
+      ],
+      "next_time": 0,
+      "period": 0,
+      "fund_source": "string",
+      "fund_flow": "string"
+    }
+    
+    
+
+##  AutoInvestMinInvestAmount
+
+_QueryAvailableInvestmentMinimumAmountRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+money | string | Required | none | Currency, optional: USDT or BTC  
+asset_type | integer(int32) | Required | none | Asset type: 1 for cryptocurrency, 2 for TradFi stocks; must be provided explicitly  
+items | array | Required | none | none  
+» asset | string | Required | none | Currency  
+» ratio | string | Required | none | Ratio，e.g.100  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+asset_type | 1  
+asset_type | 2  
+      
+    
+    {
+      "money": "string",
+      "asset_type": 1,
+      "items": [
+        {
+          "asset": "string",
+          "ratio": "string"
+        }
+      ]
+    }
+    
+    
+
+##  DualModifyOrderReinvestParams
+
+_Dual-currency order reinvest modification request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | integer(int64) | Optional | none | Order ID  
+status | integer(int32) | Optional | none | `0` — off; `1` — on  
+effective_time_duration | integer(int64) | Optional | none | Effective duration in seconds; default 1 day (86400)  
+      
+    
+    {
+      "order_id": 0,
+      "status": 0,
+      "effective_time_duration": 0
+    }
+    
+    
+
+##  FixedTermProduct
+
+_Fixed-term earn product_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer | Optional | none | Product ID  
+name | string | Optional | none | Product name  
+asset | string | Optional | none | Currency  
+lock_up_period | integer | Optional | none | Lock-up period (in days)  
+min_lend_amount | string | Optional | none | Minimum earn amount  
+user_max_lend_amount | string | Optional | none | User maximum earn limit  
+total_lend_amount | string | Optional | none | Platform earn limit  
+year_rate | string | Optional | none | Annual interest rate  
+type | integer | Optional | none | Product type: 1 for regular, 2 for VIP  
+pre_redeem | integer | Optional | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
+reinvest | integer | Optional | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
+redeem_account | integer | Optional | none | Whether fixed-to-flexible conversion is supported: 0 for not supported, 1 for supported  
+min_vip | integer | Optional | none | Minimum VIP level requirement, 0-16, 0 means no restriction  
+max_vip | integer | Optional | none | Maximum VIP level requirement (0-16), 0 means no restriction  
+status | integer | Optional | none | Product status: 1 for unlisted, 2 for listed, 3 for delisted  
+create_time | string | Optional | none | Created time  
+user_max_lend_volume | string | Optional | none | User maximum earn amount  
+user_total_amount | string | Optional | none | Total amount the user has invested in earn products  
+sale_status | integer | Optional | none | Sale status: 1 for on sale, 2 for sold out  
+      
+    
+    {
+      "id": 0,
+      "name": "string",
+      "asset": "string",
+      "lock_up_period": 0,
+      "min_lend_amount": "string",
+      "user_max_lend_amount": "string",
+      "total_lend_amount": "string",
+      "year_rate": "string",
+      "type": 0,
+      "pre_redeem": 0,
+      "reinvest": 0,
+      "redeem_account": 0,
+      "min_vip": 0,
+      "max_vip": 0,
+      "status": 0,
+      "create_time": "string",
+      "user_max_lend_volume": "string",
+      "user_total_amount": "string",
+      "sale_status": 0
+    }
+    
+    
+
+##  CreateEarnFixedTermLendResponse
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer | Optional | none | Return code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | Subscription result  
+» order_id | integer(int64) | Optional | none | Subscription order ID  
+timestamp | integer | Optional | none | Response timestamp (in seconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "order_id": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
 ##  DualGetPlans
 
 ###  Properties
@@ -4835,6 +5888,7 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 id | integer(int32) | Optional | none | Product ID  
 instrument_name | string | Optional | none | Product Name  
+type | string | Optional | none | `call`: sell high; `put`: buy low  
 invest_currency | string | Optional | none | Investment Token  
 exercise_currency | string | Optional | none | Strike Token  
 exercise_price | number(double) | Optional | none | Strike price  
@@ -4853,6 +5907,7 @@ status | string | Optional | none | Status:
     {
       "id": 0,
       "instrument_name": "string",
+      "type": "string",
       "invest_currency": "string",
       "exercise_currency": "string",
       "exercise_price": 0,
@@ -4866,49 +5921,201 @@ status | string | Optional | none | Status:
     
     
 
-##  AutoInvestPlanUpdate
+##  AutoInvestConfigItem
 
-_Update auto invest plan request_
+_Investment currency configuration item_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-plan_id | integer(int64) | Required | none | Plan ID  
-fund_source | string | Optional | none | Fund source Spotspot or Flexible Savingsearn，Default spot  
-fund_flow | string | Optional | none | Fund Flow Direction Spotauto_invest or Flexible Savingsearn，Default auto_invest  
+coin | string | Required | none | Currency  
+max_limit | string | Required | none | InvestmentLimit  
       
     
     {
-      "plan_id": 0,
-      "fund_source": "string",
-      "fund_flow": "string"
+      "coin": "string",
+      "max_limit": "string"
     }
     
     
 
-##  AutoInvestMinInvestAmount
-
-_QueryAvailableInvestmentMinimumAmountRequest_
+##  DualGetBalance
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-money | string | Required | none | Currency, optional: USDT or BTC  
-items | array | Required | none | none  
-↳ asset | string | Required | none | Currency  
-↳ ratio | string | Required | none | Ratio，e.g.100  
+user_asset_usdt | string | Optional | none | User Assets in USDT Equivalent  
+user_asset_btc | string | Optional | none | User Assets in BTC Equivalent  
+user_total_interest_usdt | string | Optional | none | Total User Interest in USDT Equivalent  
+user_total_interest_btc | string | Optional | none | Total User Interest in BTC Equivalent  
       
     
     {
-      "money": "string",
-      "items": [
+      "user_asset_usdt": "string",
+      "user_asset_btc": "string",
+      "user_total_interest_usdt": "string",
+      "user_total_interest_btc": "string"
+    }
+    
+    
+
+##  ListEarnFixedTermHistoryResponse
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer | Optional | none | Return code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | none  
+» list | [FixedTermHistoryRecord] | Optional | none | [Fixed-term earn history records]  
+» total | integer | Optional | none | Total Records  
+timestamp | integer | Optional | none | Response timestamp (in seconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  OrderListStruct
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+page | integer | Required | none | Page  
+pageSize | integer | Required | none | Items per page  
+pageCount | integer | Required | none | Total pages  
+totalCount | integer | Required | none | Total entries  
+list | array | Required | none | none  
+» pid | integer | Required | none | Product ID  
+» coin | string | Required | none | Staked and redeemed currencies  
+» amount | string | Required | none | Amount  
+» type | integer | Required | none | Type 0-Staking 1-Redemption  
+» status | integer | Required | none | Status. 1 - success, 3 - delayed redemption in progress, 6 - redemption cancellation order  
+» redeem_stamp | integer | Required | none | Redemption credit time  
+» createStamp | integer | Required | none | Order time  
+» exchange_amount | string | Required | none | Exchange rate  
+» fee | string | Required | none | fee  
+      
+    
+    {
+      "page": 0,
+      "pageSize": 0,
+      "pageCount": 0,
+      "totalCount": 0,
+      "list": [
         {
-          "asset": "string",
-          "ratio": "string"
+          "pid": 0,
+          "coin": "string",
+          "amount": "string",
+          "type": 0,
+          "status": 0,
+          "redeem_stamp": 0,
+          "createStamp": 0,
+          "exchange_amount": "string",
+          "fee": "string"
         }
       ]
+    }
+    
+    
+
+##  DualOrderRefundPreview
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+create_timest | integer(int64) | Optional | none | Order creation timestamp  
+delivery_timest | integer(int64) | Optional | none | Order delivery timestamp  
+exercise_price | string | Optional | none | Strike price  
+invest_amount | string | Optional | none | Investment amount  
+invest_currency | string | Optional | none | Investment Token  
+name | string | Optional | none | Order name identifier  
+order_id | integer(int64) | Optional | none | Order ID  
+req_id | string | Optional | none | Request ID used for redemption, returned by GET /earn/dual/order-refund-preview. The request to POST /earn/dual/order-refund requires order_id and req_id.  
+refund_service_charge | integer(int64) | Optional | none | Refund fee  
+settle_price | string | Optional | none | Settlement price  
+settlement_amount | string | Optional | none | Settlement amount  
+settlement_currency | string | Optional | none | Settlement currency  
+settlement_interest | string | Optional | none | Settlement interest  
+settlement_principle | string | Optional | none | Settlement principal  
+type | string | Optional | none | `call`: sell high; `put`: buy low  
+money_back_timest | integer(int64) | Optional | none | Redemption time  
+      
+    
+    {
+      "create_timest": 0,
+      "delivery_timest": 0,
+      "exercise_price": "string",
+      "invest_amount": "string",
+      "invest_currency": "string",
+      "name": "string",
+      "order_id": 0,
+      "req_id": "string",
+      "refund_service_charge": 0,
+      "settle_price": "string",
+      "settlement_amount": "string",
+      "settlement_currency": "string",
+      "settlement_interest": "string",
+      "settlement_principle": "string",
+      "type": "string",
+      "money_back_timest": 0
+    }
+    
+    
+
+##  PlaceDualStockInvestmentOrderParams
+
+_Stock dual investment order request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+plan_id | string | Required | none | Product ID  
+amount | string | Required | none | Subscription amount  
+text | string | Optional | none | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
+  
+1\. Must start with `t-`  
+2\. Excluding `t-`, length cannot exceed 28 bytes  
+3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)  
+hit_spot | integer | Optional | none | Whether to use the spot account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+hit_stock | integer | Optional | none | Whether to use the stock account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+hit_simple | integer | Optional | none | Whether to use the Simple Earn account to fund a buy-low (put) subscription. `1` selects the account; omitted or other values leave it unselected.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+hit_spot | 0  
+hit_spot | 1  
+hit_stock | 0  
+hit_stock | 1  
+hit_simple | 0  
+hit_simple | 1  
+      
+    
+    {
+      "plan_id": "string",
+      "amount": "string",
+      "text": "string",
+      "hit_spot": 1,
+      "hit_stock": 0,
+      "hit_simple": 0
     }
     
     
@@ -4928,7 +6135,7 @@ subtype | string | Optional | none | SubType
 amount | string | Optional | none | Amount  
 exchange_rate | string | Optional | none | Exchange ratio  
 exchange_amount | string | Optional | none | Redemption Amount  
-updateStamp | integer | Optional | none | UpdateTimestamp  
+updateStamp | integer | Optional | none | Update timestamp  
 createStamp | integer | Optional | none | Transaction timestamp  
 status | integer | Optional | none | status 1-success  
 protocol_type | integer | Optional | none | DEFI Protocol Type  
@@ -4977,300 +6184,130 @@ timestamp | integer | Optional | none | Response timestamp (in seconds)
     
     
 
-##  OrderListStruct
+##  FindCoinStruct
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-page | integer | Required | none | Page  
-pageSize | integer | Required | none | Items per page  
-pageCount | integer | Required | none | Total pages  
-totalCount | integer | Required | none | Total entries  
-list | array | Required | none | none  
-↳ pid | integer | Required | none | Product ID  
-↳ coin | string | Required | none | Staked and redeemed currencies  
-↳ amount | string | Required | none | Amount  
-↳ type | integer | Required | none | Type 0-Staking 1-Redemption  
-↳ status | integer | Required | none | Status  
-↳ redeem_stamp | integer | Required | none | Redemption credit time  
-↳ createStamp | integer | Required | none | Order time  
-↳ exchange_amount | string | Required | none | Exchange rate  
-↳ fee | string | Required | none | fee  
+pid | integer | Required | none | Product ID  
+productType | integer | Required | none | Project type 0-voucher 1-locked position 2-US Treasury bond  
+isDefi | integer | Required | none | Is DEFI protocol 0-no 1-yes  
+currency | string | Required | none | Staked currencies (multiple entries separated by commas)  
+estimateApr | string | Required | none | Estimated yield rate  
+minStakeAmount | string | Required | none | Minimum staked amount  
+maxStakeAmount | string | Required | none | Maximum staked amount  
+protocolName | string | Required | none | Protocol name  
+redeemPeriod | string | Required | none | Redemption period (days)  
+exchangeRate | string | Required | none | Exchange rate  
+exchangeRateReserve | string | Required | none | Reverse exchange rate  
+extraInterest | array | Optional | none | Additional rewards  
+» start_time | string | Required | none | Start timestamp  
+» end_time | string | Required | none | End Timestamp  
+» reward_coin | string | Required | none | Additional reward currency  
+» segment_interest | array | Required | none | Tiered reward information  
+»» money_min | string | Required | none | Tiered lower value  
+»» money_max | string | Required | none | Tiered upper value  
+»» money_rate | string | Required | none | Tiered interest rate  
+» currencyRewards | array | Required | none | Reward currency information  
+»» apr | string | Required | none | Base interest rate  
+»» reward_coin | string | Required | none | Reward currency  
+»» reward_delay_days | string | Required | none | Dividend day -1 indicates dividends are distributed upon redemption  
+»» interest_delay_days | string | Required | none | Interest accrual day  
       
     
-    {
-      "page": 0,
-      "pageSize": 0,
-      "pageCount": 0,
-      "totalCount": 0,
-      "list": [
-        {
-          "pid": 0,
-          "coin": "string",
-          "amount": "string",
-          "type": 0,
-          "status": 0,
-          "redeem_stamp": 0,
-          "createStamp": 0,
-          "exchange_amount": "string",
-          "fee": "string"
-        }
-      ]
-    }
+    [
+      {
+        "pid": 0,
+        "productType": 0,
+        "isDefi": 0,
+        "currency": "string",
+        "estimateApr": "string",
+        "minStakeAmount": "string",
+        "maxStakeAmount": "string",
+        "protocolName": "string",
+        "redeemPeriod": "string",
+        "exchangeRate": "string",
+        "exchangeRateReserve": "string",
+        "extraInterest": [
+          {}
+        ],
+        "currencyRewards": [
+          {}
+        ]
+      }
+    ]
     
     
 
-##  DualOrderRefundParams
+##  FixedTermHistoryRecord
 
-_Dual-currency order early redemption request_
+_Fixed-term earn history records_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-order_id | string | Required | none | Order ID  
-req_id | string | Required | none | Request ID returned by order-refund-preview  
-      
-    
-    {
-      "order_id": "string",
-      "req_id": "string"
-    }
-    
-    
-
-##  PlaceDualInvestmentOrderParams
-
-_Dual Investment Order_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-plan_id | string | Required | none | Product ID  
-amount | string | Required | none | Subscription amount  
-text | string | Optional | none | Order custom information. Users can set custom ID with this field. Custom fields must meet the following conditions:  
-  
-1\. Must start with `t-`  
-2\. Excluding `t-`, length cannot exceed 28 bytes  
-3\. Can only contain numbers, letters, underscore(_), hyphen(-) or dot(.)  
-      
-    
-    {
-      "plan_id": "string",
-      "amount": "string",
-      "text": "string"
-    }
-    
-    
-
-##  AutoInvestPlanDetail
-
-_Auto invest planDetails_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Required | none | Plan ID  
-version | integer(int64) | Optional | none | PlanVersion  
-name | string | Required | none | Plan name  
-create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
-update_time | integer(int64) | Required | none | Update time (Unix timestamp)  
+id | integer | Required | none | Record ID  
+order_id | integer(int64) | Optional | none | Order ID  
 user_id | integer(int64) | Required | none | User ID  
-money | string | Required | none | Quote Currency  
-amount | string | Required | none | Per PeriodInvestment amount  
-period_type | string | Required | none | Cycle type（e.g., monthly）  
-period_day | integer(int64) | Required | none | Cycle day  
-period_hour | integer(int64) | Required | none | CycleHours  
-portfolio | array | Required | none | InvestmentPortfolio  
-↳ None | object | Optional | none | Auto invest plan portfolio item  
-↳ asset | string | Required | none | Currency  
-↳ ratio | string | Required | none | Ratio  
-↳ cum_invest | string | Required | none | Accumulated investment  
-↳ cum_hold | string | Required | none | AccumulatedPosition  
-↳ cum_redeem | string | Required | none | Accumulated redemption  
-↳ avg_price | string | Required | none | Average Cost Price  
-↳ redeem_status | integer(int64) | Required | none | Redemption status  
-↳ lend_amount | string | Required | none | LendingQuantity  
-↳ next_time | integer(int64) | Required | none | Next execution time (Unix timestamp)  
-↳ period | integer(int64) | Required | none | Executed periods  
-↳ fund_source | string | Required | none | Fund source（spot/earn）  
-↳ fund_flow | string | Required | none | Fund flow direction (auto_invest/earn)  
+asset | string | Required | none | Currency  
+uniq_time | string | Optional | none | Unique time identifier (date)  
+bonus_id | integer | Optional | none | Reward campaign ID  
+product_id | integer | Required | none | Product ID  
+bonus_asset | string | Optional | none | Reward currency  
+total_principal | string | Optional | none | Total principal  
+amount | string | Optional | none | Amount  
+asset_price | string | Optional | none | Currency price  
+status | integer | Required | none | Status  
+detail | string | Optional | none | Detail description  
+create_time | string | Required | none | Created time  
+create_at | integer | Required | none | Creation timestamp (in seconds)  
+lock_up_period | integer | Optional | none | Term  
       
     
     {
       "id": 0,
-      "version": 0,
-      "name": "string",
-      "create_time": 0,
-      "update_time": 0,
+      "order_id": 0,
       "user_id": 0,
-      "money": "string",
-      "amount": "string",
-      "period_type": "string",
-      "period_day": 0,
-      "period_hour": 0,
-      "portfolio": [
-        {
-          "asset": "string",
-          "ratio": "string",
-          "cum_invest": "string",
-          "cum_hold": "string",
-          "cum_redeem": "string",
-          "avg_price": "string",
-          "redeem_status": 0,
-          "lend_amount": "string"
-        }
-      ],
-      "next_time": 0,
-      "period": 0,
-      "fund_source": "string",
-      "fund_flow": "string"
-    }
-    
-    
-
-##  AutoInvestCoinsItem
-
-_Currency item supporting auto invest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-key | string | Required | none | Currency code  
-value | string | Required | none | Currency name  
-asset_icon_url | string | Required | none | Currency icon URL  
-sort | integer(int64) | Optional | none | Sort  
-      
-    
-    {
-      "key": "string",
-      "value": "string",
-      "asset_icon_url": "string",
-      "sort": 0
-    }
-    
-    
-
-##  FixedTermProductSimple
-
-_Fixed-term earn product (compact)_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer | Optional | none | Product ID  
-asset | string | Optional | none | Currency  
-lock_up_period | integer | Optional | none | Lock-up period (in days)  
-year_rate | string | Optional | none | Annual interest rate  
-type | integer | Optional | none | Product type: 1 for regular, 2 for VIP  
-pre_redeem | integer | Optional | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
-reinvest | integer | Optional | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
-simple_earn | integer | Optional | none | Whether fixed-to-flexible conversion is supported: 0 for not supported, 1 for supported  
-min_vip | integer | Optional | none | Minimum VIP level requirement, 0 means no restriction  
-max_vip | integer | Optional | none | Maximum VIP level requirement, 0 means no restriction  
-sale_status | integer | Optional | none | Sale status: 1 for on sale, 2 for sold out  
-      
-    
-    {
-      "id": 0,
       "asset": "string",
-      "lock_up_period": 0,
-      "year_rate": "string",
-      "type": 0,
+      "uniq_time": "string",
+      "bonus_id": 0,
+      "product_id": 0,
+      "bonus_asset": "string",
+      "total_principal": "string",
+      "amount": "string",
+      "asset_price": "string",
+      "status": 0,
+      "detail": "string",
+      "create_time": "string",
+      "create_at": 0,
+      "lock_up_period": 0
+    }
+    
+    
+
+##  FixedTermProductInfo
+
+_Product configuration_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+pre_redeem | integer | Required | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
+reinvest | integer | Required | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
+redeem_account | integer | Required | none | Redemption payout account type  
+min_vip | integer | Required | none | Minimum VIP level requirement, 0 means no restriction  
+max_vip | integer | Required | none | Maximum VIP level requirement, 0 means no restriction  
+      
+    
+    {
       "pre_redeem": 0,
       "reinvest": 0,
-      "simple_earn": 0,
+      "redeem_account": 0,
       "min_vip": 0,
-      "max_vip": 0,
-      "sale_status": 0
-    }
-    
-    
-
-##  AutoInvestConfigItem
-
-_Investment currency configuration item_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-coin | string | Required | none | Currency  
-max_limit | string | Required | none | InvestmentLimit  
-      
-    
-    {
-      "coin": "string",
-      "max_limit": "string"
-    }
-    
-    
-
-##  AutoInvestOrderItem
-
-_Auto invest order item_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Required | none | Order ID  
-type | string | Required | none | type  
-amount | string | Required | none | Size  
-plan_id | integer(int64) | Required | none | Plan ID  
-side | integer(int64) | Required | none | direction  
-asset | string | Required | none | Currency  
-record_id | integer(int64) | Required | none | Record ID  
-total_money | string | Required | none | TotalAmount  
-market | string | Required | none | Currency pair  
-price | string | Required | none | Price  
-create_time | integer(int64) | Required | none | Creation time (Unix timestamp)  
-total | string | Required | none | Total  
-fund_flow | string | Required | none | Fund Flow Direction  
-error_code | integer(int64) | Required | none | Error code  
-error_msg | string | Required | none | Error message  
-status | integer(int64) | Required | none | Status  
-      
-    
-    {
-      "id": 0,
-      "type": "string",
-      "amount": "string",
-      "plan_id": 0,
-      "side": 0,
-      "asset": "string",
-      "record_id": 0,
-      "total_money": "string",
-      "market": "string",
-      "price": "string",
-      "create_time": 0,
-      "total": "string",
-      "fund_flow": "string",
-      "error_code": 0,
-      "error_msg": "string",
-      "status": 0
-    }
-    
-    
-
-##  AutoInvestPlanStop
-
-_StopAuto invest planRequest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-plan_id | integer(int64) | Required | none | Plan ID  
-      
-    
-    {
-      "plan_id": 0
+      "max_vip": 0
     }
     
     
@@ -5334,31 +6371,6 @@ product_year_rate | string | Optional | none | Product base annual interest rate
     
     
 
-##  FixedTermProductInfo
-
-_Product configuration_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-pre_redeem | integer | Required | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
-reinvest | integer | Required | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
-redeem_account | integer | Required | none | Redemption payout account type  
-min_vip | integer | Required | none | Minimum VIP level requirement, 0 means no restriction  
-max_vip | integer | Required | none | Maximum VIP level requirement, 0 means no restriction  
-      
-    
-    {
-      "pre_redeem": 0,
-      "reinvest": 0,
-      "redeem_account": 0,
-      "min_vip": 0,
-      "max_vip": 0
-    }
-    
-    
-
 ##  LadderApr
 
 ###  Properties
@@ -5374,106 +6386,4 @@ right | string | Required | none | Range upper limit
       "apr": "string",
       "left": "string",
       "right": "string"
-    }
-    
-    
-
-##  FixedTermCouponInfo
-
-_Interest rate boost coupon information_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer | Required | none | Interest rate boost coupon record ID  
-business | integer | Required | none | Business Type  
-user_id | integer(int64) | Required | none | User ID  
-asset | string | Required | none | Currency  
-order_id | integer(int64) | Required | none | Associated order ID  
-financial_rate_id | integer | Required | none | Interest rate boost coupon ID  
-buy_limit_low | string | Required | none | Minimum subscription amount for interest rate boost coupon  
-buy_limit_high | string | Required | none | Maximum subscription amount for interest rate boost coupon  
-rate_day | integer | Required | none | Interest rate boost days  
-rate_ratio | string | Required | none | Interest rate boost percentage  
-coupon_days | integer | Required | none | Actual interest rate boost days  
-coupon_principal | string | Required | none | Principal for interest rate boost calculation  
-coupon_year_rate | string | Required | none | Interest rate boost APR  
-coupon_interest | string | Required | none | Interest generated from rate boost  
-status | integer | Required | none | Status: 1 for active, 2 for settled  
-finish_time | string | Required | none | Settlement time  
-create_time | string | Required | none | Created time  
-      
-    
-    {
-      "id": 0,
-      "business": 0,
-      "user_id": 0,
-      "asset": "string",
-      "order_id": 0,
-      "financial_rate_id": 0,
-      "buy_limit_low": "string",
-      "buy_limit_high": "string",
-      "rate_day": 0,
-      "rate_ratio": "string",
-      "coupon_days": 0,
-      "coupon_principal": "string",
-      "coupon_year_rate": "string",
-      "coupon_interest": "string",
-      "status": 0,
-      "finish_time": "string",
-      "create_time": "string"
-    }
-    
-    
-
-##  FixedTermProduct
-
-_Fixed-term earn product_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer | Optional | none | Product ID  
-name | string | Optional | none | Product name  
-asset | string | Optional | none | Currency  
-lock_up_period | integer | Optional | none | Lock-up period (in days)  
-min_lend_amount | string | Optional | none | Minimum earn amount  
-user_max_lend_amount | string | Optional | none | User maximum earn limit  
-total_lend_amount | string | Optional | none | Platform earn limit  
-year_rate | string | Optional | none | Annual interest rate  
-type | integer | Optional | none | Product type: 1 for regular, 2 for VIP  
-pre_redeem | integer | Optional | none | Whether early redemption is supported: 0 for not supported, 1 for supported  
-reinvest | integer | Optional | none | Whether auto-renewal is supported: 0 for not supported, 1 for supported  
-redeem_account | integer | Optional | none | Whether fixed-to-flexible conversion is supported: 0 for not supported, 1 for supported  
-min_vip | integer | Optional | none | Minimum VIP level requirement, 0-16, 0 means no restriction  
-max_vip | integer | Optional | none | Maximum VIP level requirement (0-16), 0 means no restriction  
-status | integer | Optional | none | Product status: 1 for unlisted, 2 for listed, 3 for delisted  
-create_time | string | Optional | none | Created time  
-user_max_lend_volume | string | Optional | none | User maximum earn amount  
-user_total_amount | string | Optional | none | Total amount the user has invested in earn products  
-sale_status | integer | Optional | none | Sale status: 1 for on sale, 2 for sold out  
-      
-    
-    {
-      "id": 0,
-      "name": "string",
-      "asset": "string",
-      "lock_up_period": 0,
-      "min_lend_amount": "string",
-      "user_max_lend_amount": "string",
-      "total_lend_amount": "string",
-      "year_rate": "string",
-      "type": 0,
-      "pre_redeem": 0,
-      "reinvest": 0,
-      "redeem_account": 0,
-      "min_vip": 0,
-      "max_vip": 0,
-      "status": 0,
-      "create_time": "string",
-      "user_max_lend_volume": "string",
-      "user_total_amount": "string",
-      "sale_status": 0
     }

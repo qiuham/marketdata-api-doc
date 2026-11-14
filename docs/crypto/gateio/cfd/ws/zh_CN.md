@@ -1,11 +1,14 @@
 ---
 exchange: gateio
-source_url: https://www.gate.com/docs/developers/tradfi/ws/zh_CN
+source_url: https://www.gate.com/docs/developers/cfd/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:19:03.443651
+updated_at: 2026-11-13 20:58:20.367625
 ---
 
 # Gate TradFi WebSocket v1.0.0
+
+* Python 
+  * Golang 
 
 v1.0.0 · Stable
 
@@ -172,6 +175,23 @@ Gate 提供一个简单的tradfi行情推送接口，当行情变更时，会第
 WARNING
 
 注意: 您使用的 GateAPIv4 密钥对必须至少启用选项读取权限， 如果启用了密钥的白名单，则您的出站 IP 地址必须在密钥的 IP 白名单中。
+
+如果频道是私有的，例如，客户端请求需要携带身份验证信息。例如： `tradfi.orders` 推送用户订单更新的频道。
+
+身份验证通过请求正文中的`auth`字段发送，格式如下:
+
+名称 | 类型 | 描述  
+---|---|---  
+`method` | String | 验证方式: `api_key`  
+`KEY` | String | apiKey 的值  
+`SIGN` | String | 签名结果  
+  
+WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即`HexEncode(HMAC_SHA512(secret, signature_string))`, 但有以下区别:
+
+  1. 签名字符串拼接方式： `channel=<channel>&event=<event>&time=<time>`, 其中 `<channel>`, `<event>`, `<time>` 是对应的请求信息
+  2. 身份验证信息在请求正文中的 `auth`字段中发送。
+
+您可以登录 Gate 控制台获取 Gate APIv4 的 api_key 和 secret。
     
     
     # example WebSocket signature calculation implementation in Python
@@ -198,23 +218,6 @@ WARNING
     request['auth'] = gen_sign(request['channel'], request['event'], request['time'])
     print(json.dumps(request))
     
-
-如果频道是私有的，例如，客户端请求需要携带身份验证信息。例如： `tradfi.orders` 推送用户订单更新的频道。
-
-身份验证通过请求正文中的`auth`字段发送，格式如下:
-
-鉴权名称 | 类型 | 描述  
----|---|---  
-`method` | String | 验证方式: `api_key`  
-`KEY` | String | apiKey 的值  
-`SIGN` | String | 签名结果  
-  
-WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即`HexEncode(HMAC_SHA512(secret, signature_string))`, 但有以下区别:
-
-  1. 签名字符串拼接方式： `channel=<channel>&event=<event>&time=<time>`, 其中 `<channel>`, `<event>`, `<time>` 是对应的请求信息
-  2. 身份验证信息在请求正文中的 `auth`字段中发送。
-
-您可以登录 Gate 控制台获取 Gate APIv4 的 api_key 和 secret。
 
 ##  Websocket连接管理
 
@@ -265,6 +268,19 @@ Ping/Pong 检查服务器/客户端连接.
 
 ##  客户端订阅
 
+格式:
+
+名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+`payload` | `object` | 是 | 请求参数  
+»»`markets` | `array` | 是 | 市场列表  
+  
+您可以多次订阅/取消订阅。除非明确取消订阅，否则之前订阅的symbol不会被覆盖。
+
+TIP
+
+不需要认证
+
 例子：
     
     
@@ -286,21 +302,22 @@ Ping/Pong 检查服务器/客户端连接.
     print(ws.recv())
     
 
-格式:
-
-客户端订阅名称 | 类型 | 必选 | 描述  
----|---|---|---  
-`payload` | `object` | 是 | 请求参数  
-»»`markets` | `array` | 是 | 市场列表  
-  
-您可以多次订阅/取消订阅。除非明确取消订阅，否则之前订阅的symbol不会被覆盖。
-
-TIP
-
-不需要认证
-
 ##  服务端推送
 
+Result format:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | array | Ticker array  
+»» `timestamp` | string | 行情产生的时间戳（Unix 时间，单位：秒）  
+»»`symbol` | string | 交易品种代码  
+»» `open_price` | string | 开盘价  
+»» `last_price` | string | 最新价  
+»» `price_change_amount` | string | 价格变动值（最新价 − 开盘价）  
+»» `price_change_rate` | string | 价格涨跌幅（单位：百分比）  
+»» `high` | string | 当日最高价  
+»» `low` | string | 当日最低价  
+  
 推送示例
     
     
@@ -323,20 +340,6 @@ TIP
     }
     
 
-Result format:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | array | Ticker array  
-»» `timestamp` | string | 行情产生的时间戳（Unix 时间，单位：秒）  
-»»`symbol` | string | 交易品种代码  
-»» `open_price` | string | 开盘价  
-»» `last_price` | string | 最新价  
-»» `price_change_amount` | string | 价格变动值（最新价 − 开盘价）  
-»» `price_change_rate` | string | 价格涨跌幅（单位：百分比）  
-»» `high` | string | 当日最高价  
-»» `low` | string | 当日最低价  
-  
 #  tradfi K 线频道
 
 `tradfi.candlesticks`
@@ -348,27 +351,10 @@ Result format:
 **更新频率** : `250ms`
 
 ##  客户端订阅
-    
-    
-    import time
-    import json
-    
-    # pip install websocket_client
-    from websocket import create_connection
-    
-    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/tradfi")
-    ws.send(json.dumps({
-        "time": int(time.time()),
-        "channel": "tradfi.candlesticks",
-        "event": "subscribe",  # "unsubscribe" for unsubscription
-        "payload": ["1d", "XAUUSD"]
-    }))
-    print(ws.recv())
-    
 
 数据格式:
 
-客户端订阅名称 | 类型 | 必选 | 描述  
+名称 | 类型 | 必选 | 描述  
 ---|---|---|---  
 `payload` | `Array[String]` | 是 | 订阅参数。从左到右，`interval`, `symbol`  
 » `interval` | String | 是 | K 线数据点间隔  
@@ -393,9 +379,41 @@ interval | 1M
 TIP
 
 不需要认证
+    
+    
+    import time
+    import json
+    
+    # pip install websocket_client
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/tradfi")
+    ws.send(json.dumps({
+        "time": int(time.time()),
+        "channel": "tradfi.candlesticks",
+        "event": "subscribe",  # "unsubscribe" for unsubscription
+        "payload": ["1d", "XAUUSD"]
+    }))
+    print(ws.recv())
+    
 
 ##  服务端推送
 
+数据结构:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | Array | K 线数据数组  
+`t` | Integer | 以秒为单位的 Unix 时间戳  
+`o` | String | 开盘价  
+`c` | String | 收盘价  
+`h` | String | 最高价  
+`l` | String | 最低价  
+`v` | Integer | 总成交量  
+`a` | String | 数量  
+`n` | String | 订阅的名称，格式为 `<interval>_<symbol>`  
+`w` | bool | windows_close, 是否关闭窗口  
+  
 推送示例
     
     
@@ -419,21 +437,6 @@ TIP
     }
     
 
-数据结构:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | Array | K 线数据数组  
-`t` | Integer | 以秒为单位的 Unix 时间戳  
-`o` | String | 开盘价  
-`c` | String | 收盘价  
-`h` | String | 最高价  
-`l` | String | 最低价  
-`v` | Integer | 总成交量  
-`a` | String | 数量  
-`n` | String | 订阅的名称，格式为 `<interval>_<symbol>`  
-`w` | bool | windows_close, 是否关闭窗口  
-  
 #  最优买卖价
 
 `tradfi.order_book`
@@ -443,6 +446,18 @@ TIP
 **更新频率** : `250ms`
 
 ##  客户端订阅
+
+数据结构:
+
+名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+`payload` | `array` | 是 | 市场列表  
+  
+您可以多次订阅/取消订阅。之前订阅的合约除非明确取消订阅，否则不会被覆盖。
+
+TIP
+
+不需要认证
 
 代码示例
     
@@ -463,20 +478,18 @@ TIP
     print(ws.recv())
     
 
-数据结构:
-
-客户端订阅名称 | 类型 | 必选 | 描述  
----|---|---|---  
-`payload` | `array` | 是 | 市场列表  
-  
-您可以多次订阅/取消订阅。之前订阅的合约除非明确取消订阅，否则不会被覆盖。
-
-TIP
-
-不需要认证
-
 ##  服务端推送
 
+推送参数:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | Array | 结果  
+»`time` | Integer | 行情产生的时间戳（Unix 时间，单位：秒）  
+»`symbol` | String | 交易品种代码  
+»`bid` | String | 最佳买入价格  
+»`ask` | String | 最佳的卖出价格  
+  
 推送示例
     
     
@@ -495,16 +508,6 @@ TIP
     }
     
 
-推送参数:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | Array | 结果  
-»`time` | Integer | 行情产生的时间戳（Unix 时间，单位：秒）  
-»`symbol` | String | 交易品种代码  
-»`bid` | String | 最佳买入价格  
-»`ask` | String | 最佳的卖出价格  
-  
 #  订单频道
 
 `tradfi.orders`
@@ -516,6 +519,12 @@ TIP
 **更新频率** : `real-time`
 
 ##  客户端订阅
+
+订阅成功后会推送全部symbol的订单
+
+WARNING
+
+需要认证
 
 代码示例
     
@@ -539,14 +548,28 @@ TIP
     print(ws.recv())
     
 
-订阅成功后会推送全部symbol的订单
-
-WARNING
-
-需要认证
-
 ##  服务端推送
 
+推送参数:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | `Array[Object]` | 更新的订单列表  
+» order_id | string | 订单唯一 ID  
+» gate_uid | int64 | Gate 用户唯一标识  
+» symbol | string | 交易品种（如 XAUUSD）  
+» side | int | 交易方向（1 = 卖出，2 = 买入）  
+» volume | string | 下单数量  
+» fill_volume | string | 已成交数量  
+» price | string | 委托价格  
+» price_tp | string | 止盈价格（0 表示未设置）  
+» price_sl | string | 止损价格（0 表示未设置）  
+» finished | string | 订单是否完成（0 = 未完成，1 = 已完成）  
+» finished_as | string | 订单完成方式（如成交、撤单，`-` 表示未完成）  
+» time_setup | int64 | 订单创建时间（Unix 时间，秒）  
+» timestamp | int64 | 订单状态更新时间戳（Unix 时间，毫秒）  
+» order_opt_type | int | 订单操作类型 1: 卖 2:买 3:平多 4:平空 5:强制平仓多 6:强制平仓空  
+  
 推送示例
     
     
@@ -575,26 +598,6 @@ WARNING
     }
     
 
-推送参数:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | `Array[Object]` | 更新的订单列表  
-» order_id | string | 订单唯一 ID  
-» gate_uid | int64 | Gate 用户唯一标识  
-» symbol | string | 交易品种（如 XAUUSD）  
-» side | int | 交易方向（1 = 卖出，2 = 买入）  
-» volume | string | 下单数量  
-» fill_volume | string | 已成交数量  
-» price | string | 委托价格  
-» price_tp | string | 止盈价格（0 表示未设置）  
-» price_sl | string | 止损价格（0 表示未设置）  
-» finished | string | 订单是否完成（0 = 未完成，1 = 已完成）  
-» finished_as | string | 订单完成方式（如成交、撤单，`-` 表示未完成）  
-» time_setup | int64 | 订单创建时间（Unix 时间，秒）  
-» timestamp | int64 | 订单状态更新时间戳（Unix 时间，毫秒）  
-» order_opt_type | int | 订单操作类型 1: 卖 2:买 3:平多 4:平空 5:强制平仓多 6:强制平仓空  
-  
 #  用户仓位频道
 
 `tradfi.position`
@@ -606,6 +609,12 @@ WARNING
 **更新频率** : `real-time`
 
 ##  客户端订阅
+
+订阅成功后会推送全部symbol的仓位更新
+
+WARNING
+
+需要认证
 
 代码示例
     
@@ -629,14 +638,23 @@ WARNING
     print(ws.recv())
     
 
-订阅成功后会推送全部symbol的仓位更新
-
-WARNING
-
-需要认证
-
 ##  服务端推送
 
+推送参数:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | `Array[Object]` | 更新的仓位列表  
+»`position_id` | int64 | 持仓唯一 ID  
+»`gate_uid` | int64 | Gate 用户唯一标识  
+»`side` | int | 持仓方向（1 = 空仓 / 卖出，2 = 多仓 / 买入）  
+»`symbol` | string | 交易品种（如 NZDSEK）  
+»`volume` | string | 持仓数量  
+»`price_open` | string | 开仓价格  
+»`price_tp` | string | 止盈价格（0 表示未设置）  
+»`price_sl` | string | 止损价格（0 表示未设置）  
+»`time_create` | number | 持仓创建时间（Unix 时间，毫秒）  
+  
 推送示例
     
     
@@ -660,21 +678,6 @@ WARNING
     }
     
 
-推送参数:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | `Array[Object]` | 更新的仓位列表  
-»`position_id` | int64 | 持仓唯一 ID  
-»`gate_uid` | int64 | Gate 用户唯一标识  
-»`side` | int | 持仓方向（1 = 空仓 / 卖出，2 = 多仓 / 买入）  
-»`symbol` | string | 交易品种（如 NZDSEK）  
-»`volume` | string | 持仓数量  
-»`price_open` | string | 开仓价格  
-»`price_tp` | string | 止盈价格（0 表示未设置）  
-»`price_sl` | string | 止损价格（0 表示未设置）  
-»`time_create` | number | 持仓创建时间（Unix 时间，毫秒）  
-  
 #  用户余额频道
 
 `tradfi.balance`
@@ -686,6 +689,12 @@ WARNING
 **更新频率** : `real-time`
 
 ##  客户端订阅
+
+订阅成功后会推送全部余额变更
+
+WARNING
+
+需要认证
 
 代码示例
     
@@ -709,14 +718,19 @@ WARNING
     print(ws.recv())
     
 
-订阅成功后会推送全部余额变更
-
-WARNING
-
-需要认证
-
 ##  服务端推送
 
+推送参数:
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | `Array[Object]` | 更新的余额信息列表  
+deal_id | string | 资金变动记录唯一 ID  
+gate_uid | int64 | Gate 用户唯一标识  
+change | string | 余额变动金额（正数表示增加，负数表示减少）  
+comment | string | 资金变动备注说明  
+timestamp | int64 | 余额变动时间戳（Unix 时间，毫秒）  
+  
 推送示例
     
     
@@ -736,15 +750,4 @@ WARNING
     }
     
 
-推送参数:
-
-服务端推送名称 | 类型 | 描述  
----|---|---  
-`result` | `Array[Object]` | 更新的余额信息列表  
-deal_id | string | 资金变动记录唯一 ID  
-gate_uid | int64 | Gate 用户唯一标识  
-change | string | 余额变动金额（正数表示增加，负数表示减少）  
-comment | string | 资金变动备注说明  
-timestamp | int64 | 余额变动时间戳（Unix 时间，毫秒）  
-  
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 7/13/2026, 12:08:42 PM

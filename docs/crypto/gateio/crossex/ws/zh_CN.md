@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/crossex/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:26.563547
+updated_at: 2026-11-13 20:58:25.000150
 ---
 
 # CrossEx WebSocket v1.0.0
@@ -25,6 +25,40 @@ CrossEx 提供简单而强大的 Websocket API，将交易状态集成到您的�
 
 ##  变更日志
 
+**Oct 12 2026**
+
+  1. CrossEx新增美股、港股、韩股和日股股票及ETF行情、订单和证券仓位推送
+  2. 新增证券仓位订阅频道（security_position）
+
+**Sep 15 2026**
+
+  1. CrossEx新增支持LIGHTER交易所
+
+**Aug 27 2026**
+
+  1. 响应返回label错误码，和Rest请求一致
+
+**Aug 11 2026**
+
+  1. CrossEx新增Hyperliquid逐仓保证金功能，支持修改保证金模式及增加、减少逐仓保证金
+  2. CrossEx闪兑支持Hyperliquid USDC币种，同时支持还款负债
+
+**Jul 15 2026**
+
+  1. 新增批量撤单 API 频道（batch_cancel_orders）
+
+**Jul 9 2026**
+
+  1. 新增ADL排名订阅频道（adl_rank），提供交易所底层rank和CrossEx自身rank
+
+**Jul 2 2026**
+
+  1. CrossEx新增支持DERIBIT交易所
+
+**Jun 9 2026**
+
+  1. CrossEx新增支持HYPERLIQUID交易所
+
 **May 19 2026**
 
   1. CrossEx新增支持KRAKEN交易所
@@ -44,7 +78,7 @@ CrossEx 提供简单而强大的 Websocket API，将交易状态集成到您的�
 **Feb 27 2026**
 
   1. 新增公有行情推送，包括最新成交价，指数价格，标记价格
-  2. 新增增量订单薄深度和全量订单薄深度订阅
+  2. 新增增量订单簿深度和全量订单簿深度订阅
 
 **Jan 21 2026**
 
@@ -178,6 +212,7 @@ WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即`HexEn
 ---|---|---|---|---  
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件 login  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» method | body | string | 是 | 验证方式  
 »» api_key | body | string | 是 | api key  
@@ -189,6 +224,7 @@ WebSocket 认证使用与 Gate APIv4 API 相同的签名计算方法，即`HexEn
 ---|---|---|---|---|---  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» conn_id | string | true | none |  | 连接ID  
 » result | object | true | none |  | 登陆结果  
@@ -201,13 +237,14 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "login",
-       "payload": {
-          "method": "api_key",
-          "api_key": "0d5245a5d8be8ac0e96ed8aaa47386cf",
-          "sign": "568e694ebf998fc0e9a26ab26c8cb962d8649fd61fbfc61f068251ae8169f00066b3205bb2491c1625e111f18c4bf1e6bcf8d3fd519eaea8b7335edea960eee2"
-       }
+      "time": 1754272114,
+      "event": "login",
+      "request_id": "request-1",
+      "payload": {
+        "method": "api_key",
+        "api_key": "0d5245a5d8be8ac0e96ed8aaa47386cf",
+        "sign": "568e694ebf998fc0e9a26ab26c8cb962d8649fd61fbfc61f068251ae8169f00066b3205bb2491c1625e111f18c4bf1e6bcf8d3fd519eaea8b7335edea960eee2"
+      }
     }
     
 
@@ -215,16 +252,17 @@ api
     
     
     {
-       "event": "login",
-       "payload": {
-          "conn_id": "644ff57f-add4-407a-97aa-b654c4ede839"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168928
+      "event": "login",
+      "request_id": "request-1",
+      "payload": {
+        "conn_id": "644ff57f-add4-407a-97aa-b654c4ede839"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168928
     }
     
 
@@ -271,14 +309,14 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "last_price",
-       "payload": [
-          "BINANCE_SPOT_BTC_USDT",
-          "OKX_FUTURE_BTC_USDT",
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "last_price",
+      "payload": [
+        "BINANCE_SPOT_BTC_USDT",
+        "OKX_FUTURE_BTC_USDT",
+        "GATE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -298,40 +336,14 @@ WARNING
     
     
     {
-       "time": 1771988975,
-       "channel": "last_price",
-       "event": "update",
-       "result": {
-          "s": "BINANCE_SPOT_BTC_USDT",
-          "lp": "65873.49000000"
-       },
-       "time_ms": 1771988975033
-    }
-    
-    
-    
-    {
-       "time": 1771988975,
-       "channel": "last_price",
-       "event": "update",
-       "result": {
-          "s": "OKX_FUTURE_BTC_USDT",
-          "lp": "65843.3"
-       },
-       "time_ms": 1771988975120
-    }
-    
-    
-    
-    {
-       "time": 1771988978,
-       "channel": "last_price",
-       "event": "update",
-       "result": {
-          "s": "GATE_FUTURE_ETH_USDT",
-          "lp": "1918.01"
-       },
-       "time_ms": 1771988978067
+      "time": 1771988975,
+      "channel": "last_price",
+      "event": "update",
+      "result": {
+        "s": "BINANCE_SPOT_BTC_USDT",
+        "lp": "65873.49000000"
+      },
+      "time_ms": 1771988975033
     }
     
 
@@ -378,14 +390,14 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "index_price",
-       "payload": [
-          "BINANCE_MARGIN_BTC_USDT",
-          "OKX_MARGIN_BTC_USDT",
-          "GATE_MARGIN_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "index_price",
+      "payload": [
+        "BINANCE_MARGIN_BTC_USDT",
+        "OKX_MARGIN_BTC_USDT",
+        "GATE_MARGIN_ETH_USDT"
+      ]
     }
     
 
@@ -405,40 +417,14 @@ WARNING
     
     
     {
-       "time": 1771990104,
-       "channel": "index_price",
-       "event": "update",
-       "result": {
-          "s": "BINANCE_MARGIN_BTC_USDT",
-          "ip": "65590.40739130"
-       },
-       "time_ms": 1771990104116
-    }
-    
-    
-    
-    {
-       "time": 1771990103,
-       "channel": "index_price",
-       "event": "update",
-       "result": {
-          "s": "OKX_MARGIN_BTC_USDT",
-          "ip": "65591.5"
-       },
-       "time_ms": 1771990103520
-    }
-    
-    
-    
-    {
-       "time": 1771990106,
-       "channel": "index_price",
-       "event": "update",
-       "result": {
-          "s": "GATE_MARGIN_BTC_USDT",
-          "ip": "65589.9"
-       },
-       "time_ms": 1771990106074
+      "time": 1771990104,
+      "channel": "index_price",
+      "event": "update",
+      "result": {
+        "s": "BINANCE_MARGIN_BTC_USDT",
+        "ip": "65590.40739130"
+      },
+      "time_ms": 1771990104116
     }
     
 
@@ -485,14 +471,14 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "mark_price",
-       "payload": [
-          "BINANCE_FUTURE_BTC_USDT",
-          "OKX_FUTURE_BTC_USDT",
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "mark_price",
+      "payload": [
+        "BINANCE_FUTURE_BTC_USDT",
+        "OKX_FUTURE_BTC_USDT",
+        "GATE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -512,54 +498,35 @@ WARNING
     
     
     {
-       "time": 1771990349,
-       "channel": "mark_price",
-       "event": "update",
-       "result": {
-          "s": "BINANCE_FUTURE_BTC_USDT",
-          "mp": "65566.30000000"
-       },
-       "time_ms": 1771990349113
-    }
-    
-    
-    
-    {
-       "time": 1771990348,
-       "channel": "mark_price",
-       "event": "update",
-       "result": {
-          "s": "OKX_FUTURE_BTC_USDT",
-          "mp": "65562.8"
-       },
-       "time_ms": 1771990348142
-    }
-    
-    
-    
-    {
-       "time": 1771990349,
-       "channel": "mark_price",
-       "event": "update",
-       "result": {
-          "s": "GATE_FUTURE_ETH_USDT",
-          "mp": "1908.90"
-       },
-       "time_ms": 1771990349066
+      "time": 1771990349,
+      "channel": "mark_price",
+      "event": "update",
+      "result": {
+        "s": "BINANCE_FUTURE_BTC_USDT",
+        "mp": "65566.30000000"
+      },
+      "time_ms": 1771990349113
     }
     
 
-#  全量有限档订单薄订阅
+#  全量有限档订单簿订阅
 
 `order_book_x`
 
-  * BINANCE：[5, 10, 20]
-  * OKX：[1，5]
-  * GATE： 
-    * SPOT: [5，10，20，30，50，100]
-    * FUTURE：[1，5，10，20，50，100]
+其中 `x` 表示订单簿快照档位，不同交易所支持的档位如下：
 
-指数频道提供各大交易所的现货/合约的订单薄深度全量有限档推送
+  * BINANCE：[5, 10, 20]
+  * OKX：[1, 5]
+  * GATE： 
+    * SPOT：[5, 10, 20, 30, 50, 100]
+    * FUTURE：[1, 5, 10, 20, 50, 100]
+  * BYBIT：[1]
+  * KRAKEN：不支持 `order_book_x` 快照档位，请使用 `order_book_update`
+  * HYPERLIQUID：[1, 5, 10, 20, 30, 50, 100, 400]
+  * DERIBIT：[1, 5, 10, 20]
+  * LIGHTER：[1, 5, 10, 20, 30, 50, 100, 400]
+
+全量有限档订单簿频道提供各大交易所的现货/合约订单簿深度全量有限档推送，并支持股票及ETF。股票及ETF盘口价格使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
 
 **推送类型** : `continuous`
 
@@ -598,14 +565,12 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "order_book_5",
-       "payload": [
-          "BINANCE_SPOT_BTC_USDT",
-          "OKX_FUTURE_BTC_USDT",
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "order_book_5",
+      "payload": [
+        "BINANCE_SPOT_BTC_USDT"
+      ]
     }
     
 
@@ -627,180 +592,66 @@ WARNING
     
     
     {
-       "time": 1771990690,
-       "channel": "order_book_5",
-       "event": "update",
-       "result": {
-          "ts": 1771990690844,
-          "s": "BINANCE_SPOT_BTC_USDT",
-          "a": [
-             [
-                "65485.33000000",
-                "2.25708000"
-             ],
-             [
-                "65485.34000000",
-                "0.00025000"
-             ],
-             [
-                "65485.38000000",
-                "0.15432000"
-             ],
-             [
-                "65485.39000000",
-                "0.50423000"
-             ],
-             [
-                "65486.26000000",
-                "0.00208000"
-             ]
+      "time": 1771990690,
+      "channel": "order_book_5",
+      "event": "update",
+      "result": {
+        "ts": 1771990690844,
+        "s": "BINANCE_SPOT_BTC_USDT",
+        "a": [
+          [
+            "65485.33000000",
+            "2.25708000"
           ],
-          "b": [
-             [
-                "65485.32000000",
-                "0.04107000"
-             ],
-             [
-                "65485.31000000",
-                "0.00097000"
-             ],
-             [
-                "65485.20000000",
-                "0.00008000"
-             ],
-             [
-                "65485.10000000",
-                "0.00018000"
-             ],
-             [
-                "65484.99000000",
-                "0.00045000"
-             ]
-          ]
-       },
-       "time_ms": 1771990690844
-    }
-    
-    
-    
-    {
-       "time": 1771990690,
-       "channel": "order_book_5",
-       "event": "update",
-       "result": {
-          "ts": 1771990690900,
-          "s": "OKX_FUTURE_BTC_USDT",
-          "a": [
-             [
-                "65457.1",
-                "997.61"
-             ],
-             [
-                "65457.2",
-                "0.01"
-             ],
-             [
-                "65458",
-                "0.01"
-             ],
-             [
-                "65458.1",
-                "106.34"
-             ],
-             [
-                "65458.4",
-                "0.01"
-             ]
+          [
+            "65485.34000000",
+            "0.00025000"
           ],
-          "b": [
-             [
-                "65457",
-                "121.04"
-             ],
-             [
-                "65456.9",
-                "0.03"
-             ],
-             [
-                "65456.8",
-                "0.01"
-             ],
-             [
-                "65456",
-                "0.01"
-             ],
-             [
-                "65455.9",
-                "0.01"
-             ]
-          ]
-       },
-       "time_ms": 1771990690905
-    }
-    
-    
-    
-    {
-       "time": 1771990690,
-       "channel": "order_book_5",
-       "event": "update",
-       "result": {
-          "ts": 1771990690848,
-          "s": "GATE_FUTURE_ETH_USDT",
-          "a": [
-             [
-                "1906.86",
-                "3638"
-             ],
-             [
-                "1907.01",
-                "99"
-             ],
-             [
-                "1907.05",
-                "194"
-             ],
-             [
-                "1907.1",
-                "1686"
-             ],
-             [
-                "1907.11",
-                "5098"
-             ]
+          [
+            "65485.38000000",
+            "0.15432000"
           ],
-          "b": [
-             [
-                "1906.85",
-                "7139"
-             ],
-             [
-                "1906.8",
-                "1"
-             ],
-             [
-                "1906.79",
-                "3382"
-             ],
-             [
-                "1906.7",
-                "43"
-             ],
-             [
-                "1906.65",
-                "74"
-             ]
+          [
+            "65485.39000000",
+            "0.50423000"
+          ],
+          [
+            "65486.26000000",
+            "0.00208000"
           ]
-       },
-       "time_ms": 1771990690887
+        ],
+        "b": [
+          [
+            "65485.32000000",
+            "0.04107000"
+          ],
+          [
+            "65485.31000000",
+            "0.00097000"
+          ],
+          [
+            "65485.20000000",
+            "0.00008000"
+          ],
+          [
+            "65485.10000000",
+            "0.00018000"
+          ],
+          [
+            "65484.99000000",
+            "0.00045000"
+          ]
+        ]
+      },
+      "time_ms": 1771990690844
     }
     
 
-#  增量订单薄订阅
+#  增量订单簿订阅
 
 `order_book_update`
 
-指数频道提供各大交易所的现货/合约的订单薄深度全量有限档推送
+增量订单簿频道提供各大交易所的现货/合约的订单簿深度增量推送
 
 **推送类型** : `continuous`
 
@@ -839,14 +690,12 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "order_book_update",
-       "payload": [
-          "BINANCE_FUTURE_BTC_USDT",
-          "OKX_FUTURE_BTC_USDT",
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "order_book_update",
+      "payload": [
+        "BINANCE_FUTURE_BTC_USDT"
+      ]
     }
     
 
@@ -862,8 +711,8 @@ WARNING
 »» snapshot | boolean | true | none | 是否是快照(是可全量覆盖，否则增量更新) | Snapshot  
 »» ts | long | true | none | 毫秒时间戳 | Timestamp  
 »» s | string | true | none | 交易对 | Symbol  
-»» U | string | true | none | 开始序列号 | StartIndex  
-»» u | string | true | none | 结束序列号 | EndIndex  
+»» U | integer | true | none | 开始序列号 | StartIndex  
+»» u | integer | true | none | 结束序列号 | EndIndex  
 »» a | array | true | none | 卖盘深度 | [Price,Qty]  
 »» b | array | true | none | 买盘深度 | [Price,Qty]  
   
@@ -871,281 +720,37 @@ WARNING
     
     
     {
-       "time": 1771991193,
-       "channel": "order_book_update",
-       "event": "update",
-       "result": {
-          "snapshot": false,
-          "ts": 1771991193314,
-          "s": "BINANCE_FUTURE_BTC_USDT",
-          "U": 88686516370,
-          "u": 88686516769,
-          "a": [
-             [
-                "65475.36000000",
-                "0.00000000"
-             ],
-             [
-                "65475.37000000",
-                "0.00000000"
-             ]
+      "time": 1771991193,
+      "channel": "order_book_update",
+      "event": "update",
+      "result": {
+        "snapshot": false,
+        "ts": 1771991193314,
+        "s": "BINANCE_FUTURE_BTC_USDT",
+        "U": 88686516370,
+        "u": 88686516769,
+        "a": [
+          [
+            "65475.36000000",
+            "0.00000000"
           ],
-          "b": [
-             [
-                "65479.75000000",
-                "0.96961000"
-             ],
-             [
-                "65478.71000000",
-                "0.03395000"
-             ]
+          [
+            "65475.37000000",
+            "0.00000000"
           ]
-       },
-       "time_ms": 1771991193344
-    }
-    
-    
-    
-    {
-       "time": 1771991192,
-       "channel": "order_book_update",
-       "event": "update",
-       "result": {
-          "snapshot": false,
-          "ts": 1771991192200,
-          "s": "OKX_FUTURE_BTC_USDT",
-          "U": 298872114996,
-          "u": 298872115067,
-          "a": [
-             [
-                "65458.8",
-                "692.41"
-             ],
-             [
-                "65463.4",
-                "0.3"
-             ],
-             [
-                "65464.9",
-                "28.64"
-             ],
-             [
-                "65465",
-                "0"
-             ],
-             [
-                "65466.4",
-                "0"
-             ],
-             [
-                "65466.9",
-                "29.57"
-             ],
-             [
-                "65468",
-                "4.98"
-             ],
-             [
-                "65471.5",
-                "0.37"
-             ],
-             [
-                "65479.2",
-                "0.29"
-             ],
-             [
-                "65483.8",
-                "0.05"
-             ],
-             [
-                "65492.6",
-                "0.02"
-             ],
-             [
-                "65503.8",
-                "0.02"
-             ],
-             [
-                "65510.1",
-                "0"
-             ]
+        ],
+        "b": [
+          [
+            "65479.75000000",
+            "0.96961000"
           ],
-          "b": [
-             [
-                "65458.7",
-                "174.61"
-             ],
-             [
-                "65449.5",
-                "2.3"
-             ],
-             [
-                "65448.6",
-                "99.61"
-             ],
-             [
-                "65444.9",
-                "0.33"
-             ],
-             [
-                "65432.6",
-                "29.59"
-             ],
-             [
-                "65432.3",
-                "15.6"
-             ],
-             [
-                "65431.4",
-                "0"
-             ],
-             [
-                "65431.3",
-                "2.62"
-             ],
-             [
-                "65429.9",
-                "91.78"
-             ],
-             [
-                "65427.3",
-                "1.34"
-             ],
-             [
-                "65426.7",
-                "0.01"
-             ],
-             [
-                "65417.8",
-                "0"
-             ],
-             [
-                "65417.1",
-                "14.87"
-             ],
-             [
-                "65411.8",
-                "0.01"
-             ],
-             [
-                "65403",
-                "0"
-             ],
-             [
-                "65402.9",
-                "0.04"
-             ],
-             [
-                "65402.4",
-                "23.4"
-             ],
-             [
-                "65402.2",
-                "2"
-             ],
-             [
-                "65398.8",
-                "0"
-             ],
-             [
-                "65398.7",
-                "28.46"
-             ],
-             [
-                "65398.5",
-                "36.71"
-             ]
+          [
+            "65478.71000000",
+            "0.03395000"
           ]
-       },
-       "time_ms": 1771991192205
-    }
-    
-    
-    
-    {
-       "time": 1771991192,
-       "channel": "order_book_update",
-       "event": "update",
-       "result": {
-          "snapshot": false,
-          "ts": 1771991192182,
-          "s": "GATE_FUTURE_ETH_USDT",
-          "U": 89944768993,
-          "u": 89944768950,
-          "a": [
-             [
-                "1907.56",
-                "10757"
-             ],
-             [
-                "1907.61",
-                "2"
-             ],
-             [
-                "1907.66",
-                "74"
-             ],
-             [
-                "1907.91",
-                "522"
-             ],
-             [
-                "1908",
-                "194"
-             ],
-             [
-                "1911.35",
-                "5174"
-             ],
-             [
-                "1911.36",
-                "2"
-             ],
-             [
-                "1915.34",
-                "1"
-             ],
-             [
-                "1915.35",
-                "18"
-             ],
-             [
-                "1907.78",
-                "0"
-             ],
-             [
-                "1907.93",
-                "0"
-             ],
-             [
-                "1907.97",
-                "0"
-             ],
-             [
-                "1911.37",
-                "0"
-             ]
-          ],
-          "b": [
-             [
-                "1906.95",
-                "393"
-             ],
-             [
-                "1906.6",
-                "160"
-             ],
-             [
-                "1898.01",
-                "12"
-             ],
-             [
-                "1906.67",
-                "0"
-             ]
-          ]
-       },
-       "time_ms": 1771991192213
+        ]
+      },
+      "time_ms": 1771991193344
     }
     
 
@@ -1153,7 +758,7 @@ WARNING
 
 `ticker`
 
-ticker频道提供各大交易所的现货/合约的ticker推送
+ticker频道提供各大交易所的现货/合约的ticker推送，并支持股票及ETF。股票及ETF价格使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
 
 **推送类型** : `continuous`
 
@@ -1340,7 +945,7 @@ WARNING
 
   * kline_1m,kline_5m,kline_15m,kline_30m,kline_1h,kline_4h,kline_1d;
 
-kline频道提供各大交易所的现货/合约的k线推送
+kline频道提供各大交易所的现货/合约的k线推送，并支持股票及ETF。股票及ETF的K线价格使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
 
 **推送类型** : `continuous`
 
@@ -1381,7 +986,10 @@ WARNING
     {
       "channel": "kline_1m",
       "event": "subscribe",
-      "payload": ["BYBIT_FUTURE_BTC_USDT", "BINANCE_FUTURE_ETH_USDT"]
+      "payload": [
+        "BYBIT_FUTURE_BTC_USDT",
+        "BINANCE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -1588,7 +1196,7 @@ WARNING
 
 `order`
 
-订单频道提供了一种接收用户订单更新的方式。
+订单频道提供了一种接收用户订单更新的方式，包括股票及ETF订单。股票及ETF的 `exchange_type` 为 `US/HK/KR/JP`，`business_type` 为 `STOCK/ETF`，价格和成交额使用上市市场原生计价币种。
 
 **推送类型** : `continuous`
 
@@ -1603,6 +1211,7 @@ WARNING
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | 订阅/取消币对 !all 代表全部  
   
 ###  详细说明
@@ -1627,12 +1236,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "order",
-       "payload": [
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "order",
+      "request_id": "request-1",
+      "payload": [
+        "GATE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -1659,13 +1269,13 @@ REJECT：The order was rejected by the exchange. Please check the order reason
 BINANCE_SPOT_BTC_USDT, BINANCE_FUTURE_BTC_USDT  
 »» side | string | true | none | 方向 | Side(BUY,SELL)  
 »» type | string | true | none | 类型 | Type(LIMIT, MARKET)  
-»» attribute | string | true | none | 属性 | Attribute(COMMON, LIQ, REDUCE, REPLACE)  
-»» exchange_type | string | true | none | 交易所 | Exchange type(BINANCE,OKX,GATE,BYBIT,KRAKEN)  
+»» attribute | string | true | none | 属性 | Attribute(COMMON 普通单 / LIQ 强平接管单 / REDUCE 强平减仓单 / ADL 自动减仓 / SETTLEMENT 下架清算)  
+»» exchange_type | string | true | none | 交易所 | Exchange type(BINANCE,OKX,GATE,BYBIT,KRAKEN,HYPERLIQUID,DERIBIT,LIGHTER)  
 »» business_type | string | true | none | 业务类型 | Business type(SPOT,FUTURE)  
 »» qty | string | true | none | 基础货币数量 | Order base quantity  
 »» quote_qty | string | true | none | 报价币种数量 | Order quote quantity  
 »» price | string | true | none | 价格 | Order price  
-»» time_in_force | string | true | none | Time in force 策略 | Timeinforce (default GTC, enums:GTC,IOC,FOK,POC)  
+»» time_in_force | string | true | none | Time in force 策略 | Timeinforce (default GTC, enums:GTC,IOC,FOK,POC,RPI)  
 »» executed_qty | string | true | none | 已成交数量 | Executed quantity  
 »» executed_amount | string | true | none | 已成交金额 | Executed quote quantity  
 »» executed_avg_price | string | true | none | 已成交均价 | Average transaction price  
@@ -1689,44 +1299,44 @@ BINANCE_SPOT_BTC_USDT, BINANCE_FUTURE_BTC_USDT
     
     
     {
-       "channel": "order",
-       "event": "update",
-       "payload": {
-          "attribute": "COMMON",
-          "business_type": "FUTURE",
-          "create_time": "1756434169096",
-          "exchange_type": "OKX",
-          "executed_amount": "0",
-          "executed_avg_price": "0",
-          "executed_qty": "0",
-          "fee": "0",
-          "fee_coin": "",
-          "last_executed_amount": "0",
-          "last_executed_price": "0",
-          "last_executed_qty": "0",
-          "leverage": "3",
-          "order_id": "2072652940337152",
-          "position_side": "NONE",
-          "price": "0.8499",
-          "qty": "10",
-          "quote_qty": "0",
-          "reason": "{\"label\":\"TRADE_INSUFFICIENT_AVAILABLE_MARGIN_ERROR\",\"message\":\"Insufficient availableMargin\"}",
-          "reduce_only": "false",
-          "side": "BUY",
-          "state": "FAIL",
-          "symbol": "OKX_FUTURE_ADA_USDT",
-          "text": "2072652940337152",
-          "time_in_force": "GTC",
-          "type": "MARKET",
-          "update_time": "1756434169098",
-          "user_id": "2124485957"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168968
+      "channel": "order",
+      "event": "subscribe",
+      "payload": {
+        "attribute": "COMMON",
+        "business_type": "FUTURE",
+        "create_time": "1756434169096",
+        "exchange_type": "OKX",
+        "executed_amount": "0",
+        "executed_avg_price": "0",
+        "executed_qty": "0",
+        "fee": "0",
+        "fee_coin": "",
+        "last_executed_amount": "0",
+        "last_executed_price": "0",
+        "last_executed_qty": "0",
+        "leverage": "3",
+        "order_id": "2072652940337152",
+        "position_side": "NONE",
+        "price": "0.8499",
+        "qty": "10",
+        "quote_qty": "0",
+        "reason": "{\"label\":\"TRADE_INSUFFICIENT_AVAILABLE_MARGIN_ERROR\",\"message\":\"Insufficient availableMargin\"}",
+        "reduce_only": "false",
+        "side": "BUY",
+        "state": "FAIL",
+        "symbol": "OKX_FUTURE_ADA_USDT",
+        "text": "2072652940337152",
+        "time_in_force": "GTC",
+        "type": "MARKET",
+        "update_time": "1756434169098",
+        "user_id": "2124485957"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168968
     }
     
 
@@ -1749,6 +1359,7 @@ BINANCE_SPOT_BTC_USDT, BINANCE_FUTURE_BTC_USDT
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | 订阅/取消币种集合 !all 代表全部  
   
 ###  详细说明
@@ -1773,12 +1384,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "asset",
-       "payload": [
-          "USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "asset",
+      "request_id": "request-1",
+      "payload": [
+        "USDT"
+      ]
     }
     
 
@@ -1794,6 +1406,7 @@ WARNING
 »» user_id | string | false | none | 用户id | none  
 »» coin | string | false | none | 币种 | none  
 »» exchange_type | string | false | none | 交易所 | none  
+»» price | string | false | none | 币种价格 | none  
 »» balance | string | false | none | 余额 | none  
 »» upnl | string | false | none | 未结盈亏 | none  
 »» equity | string | false | none | 权益 | none  
@@ -1802,8 +1415,10 @@ WARNING
 »» borrowing_initial_margin | string | false | none | 币种的借款起始保证金 | none  
 »» borrowing_maintenance_margin | string | false | none | 币种的借款维持保证金 | none  
 »» available_balance | string | false | none | 可用余额 | none  
+»» liability | string | false | none | 负债 |   
 » result | object | true | none | 更新时间 |   
 »» code | string | true | none | 返回码 |   
+»» message | string | true | none | 响应信息 |   
 » time | integer | true | none | 时间戳（秒） |   
 » time_ms | integer | true | none | 时间戳（毫秒） |   
   
@@ -1811,28 +1426,29 @@ WARNING
     
     
     {
-       "channel": "asset",
-       "event": "update",
-       "payload": {
-          "available_balance": "9940.013209",
-          "balance": "9967.013209",
-          "coin": "USDT",
-          "equity": "9967.013209",
-          "exchange_type": "CROSSEX",
-          "futures_initial_margin": "1.236",
-          "futures_maintenance_margin": "0",
-          "borrowing_initial_margin": "0",
-          "borrowing_maintenance_margin": "0",
-          "price": "1",
-          "upnl": "0",
-          "user_id": "2124492766"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756465636,
-       "time_ms": 1756465636463
+      "channel": "asset",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "2124492766",
+        "coin": "USDT",
+        "exchange_type": "CROSSEX",
+        "price": "1",
+        "balance": "9967.013209",
+        "upnl": "0",
+        "equity": "9967.013209",
+        "futures_initial_margin": "1.236",
+        "futures_maintenance_margin": "0",
+        "borrowing_initial_margin": "0",
+        "borrowing_maintenance_margin": "0",
+        "available_balance": "9940.013209",
+        "liability": "0"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756465636,
+      "time_ms": 1756465636463
     }
     
 
@@ -1855,6 +1471,7 @@ WARNING
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | 订阅/取消币种集合 !all 代表全部  
   
 ###  详细说明
@@ -1879,12 +1496,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "usertrades",
-       "payload": [
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "usertrades",
+      "request_id": "request-1",
+      "payload": [
+        "GATE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -1924,34 +1542,34 @@ WARNING
     
     
     {
-       "channel": "usertrades",
-       "event": "update",
-       "payload": {
-          "user_id": "2124492766",
-          "transaction_id": "2072784922594048",
-          "order_id": "2072784922592768",
-          "text": "2072784922592768",
-          "symbol": "GATE_SPOT_ADA_USDT",
-          "exchange_type": "GATE",
-          "business_type": "SPOT",
-          "side": "BUY",
-          "qty": "13.36",
-          "price": "0.8228",
-          "fee": "0.004008000000000000",
-          "fee_coin": "ADA",
-          "fee_rate": "0.0003",
-          "match_role": "TAKER",
-          "rpnl": "0",
-          "position_mode": "SINGLE",
-          "position_side": "",
-          "create_time": "1756465636528"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168984
+      "channel": "usertrades",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "2124492766",
+        "transaction_id": "2072784922594048",
+        "order_id": "2072784922592768",
+        "text": "2072784922592768",
+        "symbol": "GATE_SPOT_ADA_USDT",
+        "exchange_type": "GATE",
+        "business_type": "SPOT",
+        "side": "BUY",
+        "qty": "13.36",
+        "price": "0.8228",
+        "fee": "0.004008000000000000",
+        "fee_coin": "ADA",
+        "fee_rate": "0.0003",
+        "match_role": "TAKER",
+        "rpnl": "0",
+        "position_mode": "SINGLE",
+        "position_side": "",
+        "create_time": "1756465636528"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168984
     }
     
 
@@ -1974,6 +1592,7 @@ WARNING
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | !all 代表全部  
   
 ###  详细说明
@@ -1998,12 +1617,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "position",
-       "payload": [
-          "GATE_FUTURE_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "position",
+      "request_id": "request-1",
+      "payload": [
+        "GATE_FUTURE_ETH_USDT"
+      ]
     }
     
 
@@ -2021,12 +1641,15 @@ WARNING
 »» symbol | string | false | none | 交易对 | none  
 »» position_side | string | false | none | 仓位方向 | none  
 »» initial_margin | string | false | none | 初始保证金 | none  
+»» isolated_margin | string | false | none | 逐仓保证金。全仓时为0，仅逐仓有效 | none  
+»» margin_mode | string | false | none | 保证金模式（CROSS/ISOLATED） | none  
 »» maintenance_margin | string | false | none | 维持保证金 | none  
 »» position_qty | string | false | none | 仓位数量 | none  
 »» position_value | string | false | none | 仓位价值 | none  
 »» upnl | string | false | none | 未结盈亏 | none  
 »» upnl_rate | string | false | none | 未结盈亏比 | none  
 »» entry_price | string | false | none | 仓位入场均价 | none  
+»» liq_price | string | false | none | 强平价格。全仓时为0，仅逐仓有效；逐仓时为0代表不强平 | none  
 »» mark_price | string | false | none | 标记价格 | none  
 »» leverage | string | false | none | 仓位杠杆 | none  
 »» max_leverage | string | false | none | 最大杠杆 | none  
@@ -2046,37 +1669,129 @@ WARNING
     
     
     {
-       "channel": "position",
-       "event": "update",
-       "payload": {
-          "create_time": "1756434169096",
-          "entry_price": "0",
-          "fee": "0",
-          "funding_fee": "0",
-          "funding_time": "0",
-          "initial_margin": "0",
-          "leverage": "3",
-          "maintenance_margin": "0",
-          "mark_price": "0.8499",
-          "max_leverage": "20",
-          "position_id": "20087051449819136",
-          "position_qty": "0",
-          "position_side": "NONE",
-          "position_value": "0",
-          "risk_limit": "1",
-          "symbol": "OKX_FUTURE_ADA_USDT",
-          "update_time": "1756434169098",
-          "upnl": "0",
-          "upnl_rate": "0",
-          "user_id": "2124485957",
-          "closed_pnl": "12"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168984
+      "channel": "position",
+      "event": "subscribe",
+      "payload": {
+        "create_time": "1756434169096",
+        "entry_price": "0",
+        "fee": "0",
+        "funding_fee": "0",
+        "funding_time": "0",
+        "initial_margin": "0",
+        "isolated_margin": "0",
+        "margin_mode": "CROSS",
+        "leverage": "3",
+        "maintenance_margin": "0",
+        "liq_price": "0",
+        "mark_price": "0.8499",
+        "max_leverage": "20",
+        "position_id": "20087051449819136",
+        "position_qty": "0",
+        "position_side": "NONE",
+        "position_value": "0",
+        "risk_limit": "1",
+        "symbol": "OKX_FUTURE_ADA_USDT",
+        "update_time": "1756434169098",
+        "upnl": "0",
+        "upnl_rate": "0",
+        "user_id": "2124485957",
+        "closed_pnl": "12"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168984
+    }
+    
+
+#  证券仓位订阅/取消订阅
+
+`security_position`
+
+证券仓位频道用于接收股票及ETF仓位更新。价格、持仓价值和未结盈亏使用上市市场原生计价币种（USD/HKD/KRW/JPY）。
+
+**推送类型** : `continuous`
+
+**更新频率** : `real-time`
+
+##  客户端订阅
+
+##  请求参数
+
+请求参数名称 | 位置 | 类型 | 必选 | 说明  
+---|---|---|---|---  
+» time | body | integer | 是 | 时间戳（秒）  
+» event | body | string | 是 | subscribe、unsubscribe  
+» channel | body | string | 是 | security_position  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助识别响应  
+» payload | body | [string] | 是 | 股票或ETF交易对列表，`!all` 表示全部  
+  
+您可以多次订阅或取消订阅。除非明确取消订阅，否则之前订阅的交易对不会被覆盖。
+
+WARNING
+
+需要认证
+
+请求示例
+    
+    
+    {
+      "time": 1791777600,
+      "event": "subscribe",
+      "channel": "security_position",
+      "request_id": "request-1",
+      "payload": [
+        "HK_STOCK_00700_USDT"
+      ]
+    }
+    
+
+##  服务端推送
+
+推送参数:
+
+名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+» channel | string | true | 频道名  
+» event | string | true | 事件  
+» payload | object | true | 证券仓位数据  
+»» user_id | string | false | 用户ID  
+»» symbol | string | false | 股票或ETF交易对  
+»» price | string | false | 最新价格，单位为上市市场原生计价币种  
+»» entry_price | string | false | 持仓成本价，单位为上市市场原生计价币种  
+»» diluted_cost_price | string | false | 摊薄成本价，单位为上市市场原生计价币种  
+»» upnl | string | false | 未结盈亏，单位为上市市场原生计价币种  
+»» position_qty | string | false | 持仓数量  
+»» position_value | string | false | 持仓价值，单位为上市市场原生计价币种  
+» result | object | true | 订阅响应  
+»» code | string | true | 返回码  
+» time | integer | true | 时间戳（秒）  
+» time_ms | integer | true | 时间戳（毫秒）  
+  
+推送示例
+    
+    
+    {
+      "channel": "security_position",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "59138103",
+        "symbol": "HK_STOCK_00700_USDT",
+        "price": "424.8",
+        "entry_price": "428",
+        "diluted_cost_price": "428",
+        "upnl": "-0.032",
+        "position_qty": "0.01",
+        "position_value": "4.248"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1791777600,
+      "time_ms": 1791777600000
     }
     
 
@@ -2099,6 +1814,7 @@ WARNING
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | !all 代表全部  
   
 ###  详细说明
@@ -2123,12 +1839,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "margin_position",
-       "payload": [
-          "GATE_MARGIN_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "margin_position",
+      "request_id": "request-1",
+      "payload": [
+        "GATE_MARGIN_ETH_USDT"
+      ]
     }
     
 
@@ -2171,37 +1888,37 @@ WARNING
     
     
     {
-       "channel": "margin_position",
-       "event": "update",
-       "payload": {
-          "user_id": "20251115",
-          "position_id": "20116122196200192",
-          "symbol": "OKX_MARGIN_DOGE_USDT",
-          "position_side": "LONG",
-          "initial_margin": "3.339831063595188875",
-          "maintenance_margin": "0.20743774877",
-          "asset_qty": "61.72130605",
-          "asset_coin": "DOGE",
-          "position_value": "9.9969999409185",
-          "liability": "10.00003424116",
-          "liability_coin": "USDT",
-          "interest": "0.0000343",
-          "max_position_qty": "61.72130605",
-          "entry_price": "0.162018605585874506",
-          "index_price": "0.16197",
-          "upnl": "-0.0030343002415",
-          "upnl_rate": "-0.000909",
-          "leverage": "3",
-          "max_leverage": "8",
-          "create_time": "1763365175843",
-          "update_time": "1763365689548"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168984
+      "channel": "margin_position",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "20251115",
+        "position_id": "20116122196200192",
+        "symbol": "OKX_MARGIN_DOGE_USDT",
+        "position_side": "LONG",
+        "initial_margin": "3.339831063595188875",
+        "maintenance_margin": "0.20743774877",
+        "asset_qty": "61.72130605",
+        "asset_coin": "DOGE",
+        "position_value": "9.9969999409185",
+        "liability": "10.00003424116",
+        "liability_coin": "USDT",
+        "interest": "0.0000343",
+        "max_position_qty": "61.72130605",
+        "entry_price": "0.162018605585874506",
+        "index_price": "0.16197",
+        "upnl": "-0.0030343002415",
+        "upnl_rate": "-0.000909",
+        "leverage": "3",
+        "max_leverage": "8",
+        "create_time": "1763365175843",
+        "update_time": "1763365689548"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168984
     }
     
 
@@ -2224,6 +1941,7 @@ WARNING
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | [string] | 是 | !all 代表全部  
   
 ###  详细说明
@@ -2248,12 +1966,13 @@ WARNING
     
     
     {
-       "time": 1754272114,
-       "event": "subscribe",
-       "channel": "margin_interest",
-       "payload": [
-          "GATE_MARGIN_ETH_USDT"
-       ]
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "margin_interest",
+      "request_id": "request-1",
+      "payload": [
+        "GATE_MARGIN_ETH_USDT"
+      ]
     }
     
 
@@ -2289,26 +2008,119 @@ WARNING
     
     
     {
-       "channel": "margin_interest",
-       "event": "update",
-       "payload": {
-          "user_id": "20251115",
-          "symbol": "OKX_MARGIN_DOGE_USDT",
-          "interest_id": "2101724189861376",
-          "liability_id": "2101724189861120",
-          "liability": "10",
-          "liability_coin": "USDT",
-          "interest": "0.0000343",
-          "interest_rate": "0.00000343",
-          "interest_type": "IMMEDIATE_OPEN_ORDER",
-          "create_time": "1763365295219"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168984
+      "channel": "margin_interest",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "20251115",
+        "symbol": "OKX_MARGIN_DOGE_USDT",
+        "interest_id": "2101724189861376",
+        "liability_id": "2101724189861120",
+        "liability": "10",
+        "liability_coin": "USDT",
+        "interest": "0.0000343",
+        "interest_rate": "0.00000343",
+        "interest_type": "IMMEDIATE_OPEN_ORDER",
+        "create_time": "1763365295219"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168984
+    }
+    
+
+#  ADL排名订阅/取消订阅
+
+`adl_rank`
+
+ADL排名频道提供了一种接收用户ADL排名更新的方式。
+
+**推送类型** : `continuous`
+
+**更新频率** : `real-time`
+
+##  客户端订阅
+
+##  请求参数
+
+请求参数名称 | 位置 | 类型 | 必选 | 说明  
+---|---|---|---|---  
+» time | body | integer | 是 | 时间戳（秒）  
+» event | body | string | 是 | 事件  
+» channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | body | [string] | 是 | !all 代表全部  
+  
+###  详细说明
+
+**» event** : subscribe、unsubscribe
+
+**» channel** : adl_rank
+
+格式:
+
+详细说明名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+`payload` | `Array[String]` | 是 | 交易对列表，`!all` 表示订阅所有交易对  
+  
+您可以多次订阅/取消订阅。除非明确取消订阅，否则之前订阅的交易对不会被覆盖。
+
+WARNING
+
+需要认证
+
+请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "subscribe",
+      "channel": "adl_rank",
+      "request_id": "request-1",
+      "payload": [
+        "BINANCE_FUTURE_ADA_USDT"
+      ]
+    }
+    
+
+##  服务端推送
+
+推送参数:
+
+名称 | 类型 | 必选 | 约束 | 释义 | 说明  
+---|---|---|---|---|---  
+» channel | string | true | none | 频道名 | none  
+» event | string | true | none | 事件 | none  
+» payload | object | true | none | 数据集 | none  
+»» user_id | string | false | none | 用户id | none  
+»» symbol | string | false | none | 交易对 | none  
+»» crossex_adl_rank | string | false | none | CrossEx ADL排名 | 1-5，数字越大排名越前  
+»» exchange_adl_rank | string | false | none | 交易所原始ADL排名 | Binance：0-4，数字越大越靠前；OKX：0-5，数字越大越靠前；Gate：1-5，数字越小越靠前；Kraken：20,40,80,100，数字越小越靠前  
+» result | object | true | none | 更新时间 |   
+»» code | string | true | none | 返回码 |   
+» time | integer | true | none | 时间戳（秒） |   
+» time_ms | integer | true | none | 时间戳（毫秒） |   
+  
+推送示例
+    
+    
+    {
+      "channel": "adl_rank",
+      "event": "subscribe",
+      "payload": {
+        "user_id": "20251115",
+        "symbol": "BINANCE_FUTURE_ADA_USDT",
+        "crossex_adl_rank": "1",
+        "exchange_adl_rank": "1"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168984
     }
     
 
@@ -2318,7 +2130,9 @@ WARNING
 
 提供了一种通过 WebSocket 下单的方式。
 
-限频: 每10秒100次请求（同REST下单共享限频）
+限频: 每10秒100次请求（同REST下单共享限频）。股票及ETF额外按用户共享每秒1次下单限频。
+
+股票及ETF仅支持跨所账户模式和GTC，必须使用 `qty` 下单，不支持 `quote_qty`；委托价格使用上市市场原生计价币种。
 
 ##  请求参数
 
@@ -2327,6 +2141,7 @@ WARNING
 » time | body | integer | 是 | none  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» header | body | object | 否 | 请求头信息  
 »»» X-Gate-Channel-Id | body | string | 否 | broker返佣渠道id  
@@ -2355,18 +2170,24 @@ WARNING
   * 如果您想在OKX交易所上为ADA/USDT交易对下U本位永续合约订单，您可以使用这样的唯一标识符：`OKX_FUTURE_ADA_USDT`;
   * 如果您想在GATE交易所上为ADA/USDT交易对下现货杠杆订单，您可以使用这样的唯一标识符：`GATE_MARGIN_ADA_USDT`;
   * 如果您想在BYBIT交易所上为ADA/USDT交易对下现货订单，您可以使用这样的唯一标识符：`BYBIT_SPOT_ADA_USDT`;
-  * 如果您想在KRAKEN交易所上为ADA/USDT交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;
-  * 目前支持三种订单：现货订单、U本位永续合约订单和现货杠杆订单, BYBIT暂不支持现货杠杆订单, KRAKEN暂不支持现货与杠杆订单
+  * 如果您想在KRAKEN交易所上为ADA/USD交易对下合约订单，您可以使用这样的唯一标识符：`KRAKEN_FUTURE_ADA_USD`;
+  * 如果您想在HYPERLIQUID交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`HYPERLIQUID_FUTURE_ADA_USDC`;
+  * 如果您想在DERIBIT交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`DERIBIT_FUTURE_ADA_USDC`;
+  * 如果您想在LIGHTER交易所上为ADA/USDC交易对下合约订单，您可以使用这样的唯一标识符：`LIGHTER_FUTURE_ADA_USDC`;
+  * 如果您想交易美股AAPL，可以使用这样的唯一标识符：`US_STOCK_AAPL_USDT`;
+  * 如果您想交易港股00700，可以使用这样的唯一标识符：`HK_STOCK_00700_USDT`;
+  * 如果您想交易美股ETF SPY，可以使用这样的唯一标识符：`US_ETF_SPY_USDT`;
+  * 目前支持现货订单、U本位永续合约订单、现货杠杆订单、股票订单和ETF订单。股票及ETF仅支持跨所账户模式
 
 **»» side** : 买 BUY 卖 SELL
 
-**»» qty** : 交易币种数量 订单数量（强制性，除非现货市场买入）
+**»» qty** : 交易币种数量 订单数量（强制性，除非现货市场买入；股票及ETF必须传qty）
 
-**»» price** : 价格 限价订单价格（限价订单必须）
+**»» price** : 价格 限价订单价格（限价订单必须）。股票及ETF使用上市市场原生计价币种（USD/HKD/KRW/JPY）
 
-**»» time_in_force** : 执行方式 默认GTC，支持类型枚举：GTC，IOC，FOK，POC
+**»» time_in_force** : 执行方式 默认GTC，支持类型枚举：GTC，IOC，FOK，POC，RPI。股票及ETF仅支持GTC
 
-**»» quote_qty** : 报价币种数量 订单报价数量，仅用于现货市场买入订单
+**»» quote_qty** : 报价币种数量 订单报价数量，仅用于现货市场买入订单；股票及ETF不支持
 
 **»» reduce_only** : 只减仓 true、false
 
@@ -2380,6 +2201,7 @@ WARNING
 place_order  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | 下单请求参数  
 »» order_id | string | true | none |  | 订单号  
 »» text | string | true | none |  | 客户端ID  
@@ -2393,20 +2215,21 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "place_order",
-       "payload": {
-         "header":{
-           "X-Gate-Channel-Id":"broker-api"
-          },
-          "text": "test1",
-          "symbol": "GATE_FUTURE_ETH_USDT",
-          "side": "BUY",
-          "qty": "0.01",
-          "price": "2800",
-          "type": "LIMIT"
-       }
+      "time": 1754272114,
+      "event": "api",
+      "channel": "place_order",
+      "request_id": "request-1",
+      "payload": {
+        "header": {
+          "X-Gate-Channel-Id": "broker-api"
+        },
+        "text": "test1",
+        "symbol": "GATE_FUTURE_ETH_USDT",
+        "side": "BUY",
+        "qty": "0.01",
+        "price": "2800",
+        "type": "LIMIT"
+      }
     }
     
 
@@ -2414,18 +2237,19 @@ api
     
     
     {
-       "channel": "place_order",
-       "event": "api",
-       "payload": {
-          "order_id": "2072652940337152",
-          "text": "2072652940337152"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "place_order",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "order_id": "2072652940337152",
+        "text": "2072652940337152"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2446,7 +2270,8 @@ api
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 通道名  
-» payload | body | string | 是 | 订单号  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | body | string | 是 | 订单号(支持订单id或text)  
   
 ###  详细说明
 
@@ -2462,6 +2287,7 @@ api
 cancel_order  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » result | object | true | none |  | 取消订单结果  
 »» code | string | true | none |  | 响应码  
 »» message | string | true | none |  | 响应信息  
@@ -2472,10 +2298,11 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "cancel_order",
-       "payload": "2065058175870464"
+      "time": 1754272114,
+      "event": "api",
+      "channel": "cancel_order",
+      "request_id": "request-1",
+      "payload": "2065058175870464"
     }
     
 
@@ -2483,14 +2310,115 @@ api
     
     
     {
-       "channel": "cancel_order",
-       "event": "api",
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "cancel_order",
+      "event": "api",
+      "request_id": "request-1",
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
+    }
+    
+
+#  批量取消订单
+
+`batch_cancel_orders`
+
+提供了一种通过 WebSocket 批量取消订单的方式。每个订单可使用订单 ID 或用户自定义 ID 撤销；两者同时传入时优先使用订单 ID。
+
+限频: 每10秒100次请求（同 REST 撤单共享限频）
+
+##  客户端请求
+
+##  请求参数
+
+请求参数名称 | 位置 | 类型 | 必选 | 说明  
+---|---|---|---|---  
+» time | body | integer | 是 | 时间戳（秒）  
+» event | body | string | 是 | 事件  
+» channel | body | string | 是 | 通道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | body | array | 是 | 待撤销的订单列表  
+»» order_id | body | string | 否 | 订单 ID，与 text 必传其一  
+»» text | body | string | 否 | 用户创建订单时指定的自定义 ID，与 order_id 必传其一  
+  
+###  详细说明
+
+**» event** : api
+
+**» channel** : batch_cancel_orders
+
+##  返回结果
+
+返回结果名称 | 类型 | 必选 | 约束 | 释义 | 说明  
+---|---|---|---|---|---  
+» channel | string | true | none |  | 通道名  
+batch_cancel_orders  
+» event | string | true | none |  | 事件  
+api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | array | true | none |  | 批量撤单请求处理结果  
+»» order_id | string | true | none |  | 订单 ID  
+»» text | string | true | none |  | 用户创建订单时指定的自定义 ID  
+»» accepted | string | true | none |  | 是否受理成功，字符串 true 或 false  
+»» label | string | true | none |  | 受理失败时的错误标识，成功时为空  
+»» message | string | true | none |  | 受理失败时的错误信息，成功时为空  
+» result | object | true | none |  | 接口调用结果  
+»» code | string | true | none |  | 响应码  
+»» message | string | true | none |  | 响应信息  
+» time | integer | true | none |  | 时间戳（秒）  
+» time_ms | integer | true | none |  | 时间戳（毫秒）  
+  
+请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "api",
+      "channel": "batch_cancel_orders",
+      "request_id": "request-1",
+      "payload": [
+        {
+          "order_id": "2065058175870464"
+        },
+        {
+          "text": "crossex-test-1"
+        }
+      ]
+    }
+    
+
+返回示例
+    
+    
+    {
+      "channel": "batch_cancel_orders",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": [
+        {
+          "order_id": "2065058175870464",
+          "text": "crossex-test-1",
+          "accepted": "true",
+          "label": "",
+          "message": ""
+        },
+        {
+          "order_id": "999999",
+          "text": "",
+          "accepted": "false",
+          "label": "TRADE_ORDER_NOT_FOUND_ERROR",
+          "message": "The order was not found"
+        }
+      ],
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2511,8 +2439,9 @@ api
 » time | body | integer | 是 |  | 时间戳（秒）  
 » event | body | string | 是 |  | 事件  
 » channel | body | string | 是 |  | 通道名  
+» request_id | body | string | 否 |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 |  | none  
-»» order_id | body | string | 是 | 订单ID | none  
+»» order_id | body | string | 是 | 订单ID | 支持订单id或text  
 »» qty | body | string | 是 | 数量 | none  
 »» price | body | string | 是 |  | none  
 »» symbol | body | string | 否 |  | none  
@@ -2531,6 +2460,7 @@ api
 update_order  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» order_id | string | true | none |  | 订单ID  
 »» text | string | true | none |  | 客户端ID  
@@ -2544,15 +2474,16 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "update_order",
-       "payload": {
-          "order_id": "2065057827622656",
-          "qty": "0.01",
-          "symbol": "GATE_SPOT_BTC_USDT",
-          "price": "2801"
-       }
+      "time": 1754272114,
+      "event": "api",
+      "channel": "update_order",
+      "request_id": "request-1",
+      "payload": {
+        "order_id": "2065057827622656",
+        "qty": "0.01",
+        "symbol": "GATE_SPOT_BTC_USDT",
+        "price": "2801"
+      }
     }
     
 
@@ -2560,18 +2491,19 @@ api
     
     
     {
-       "channel": "update_order",
-       "event": "api",
-       "payload": {
-          "order_id": "2072652940337152",
-          "text": "2072652940337152"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "update_order",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "order_id": "2072652940337152",
+        "text": "2072652940337152"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2592,6 +2524,7 @@ api
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» symbol | body | string | 是 | 币对  
 »» leverage | body | string | 是 | 倍数  
@@ -2610,6 +2543,7 @@ api
 set_leverage  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» symbol | string | true | none |  | 币对  
 »» leverage | string | true | none |  | 倍数  
@@ -2623,13 +2557,14 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "set_leverage",
-       "payload": {
-          "symbol": "GATE_FUTURE_ETH_USDT",
-          "leverage": "5"
-       }
+      "time": 1754272114,
+      "event": "api",
+      "channel": "set_leverage",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "GATE_FUTURE_ETH_USDT",
+        "leverage": "5"
+      }
     }
     
 
@@ -2637,18 +2572,19 @@ api
     
     
     {
-       "channel": "set_leverage",
-       "event": "api",
-       "payload": {
-          "symbol": "GATE_FUTURE_ETH_USDT",
-          "leverage": "10"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "set_leverage",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "GATE_FUTURE_ETH_USDT",
+        "leverage": "10"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2669,6 +2605,7 @@ api
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» symbol | body | string | 是 | 币对  
 »» leverage | body | string | 是 | 倍数  
@@ -2687,6 +2624,7 @@ api
 set_leverage  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» symbol | string | true | none |  | 币对  
 »» leverage | string | true | none |  | 倍数  
@@ -2700,13 +2638,14 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "set_margin_leverage",
-       "payload": {
-          "symbol": "OKX_MARGIN_ADA_USDT",
-          "leverage": "5"
-       }
+      "time": 1754272114,
+      "event": "api",
+      "channel": "set_margin_leverage",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "OKX_MARGIN_ADA_USDT",
+        "leverage": "5"
+      }
     }
     
 
@@ -2714,18 +2653,19 @@ api
     
     
     {
-       "channel": "set_margin_leverage",
-       "event": "api",
-       "payload": {
-          "symbol": "OKX_MARGIN_ADA_USDT",
-          "leverage": "10"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "set_margin_leverage",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "OKX_MARGIN_ADA_USDT",
+        "leverage": "5"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2746,6 +2686,7 @@ api
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» position_mode | body | string | 否 | 仓位模式  
 »» account_mode | body | string | 否 | 账户模式  
@@ -2761,22 +2702,7 @@ api
 
 **»» account_mode** : CROSS_EXCHANGE/ISOLATED_EXCHANGE
 
-**»» exchange_type** : BINANCE/OKX/GATE/BYBIT/KRAKEN/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所
-
-> 请求参数
-    
-    
-    {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "update_accounts",
-       "payload": {
-          "account_mode":"ISOLATED_EXCHANGE",
-          "position_mode": "DUAL",
-          "exchange_type": "BINANCE"
-       }
-    }
-    
+**»» exchange_type** : BINANCE/OKX/GATE/BYBIT/KRAKEN/HYPERLIQUID/DERIBIT/LIGHTER/CROSSEX，当账户模式为ISOLATED_EXCHANGE时，修改合约仓位模式必须指定交易所
 
 ##  返回结果
 
@@ -2786,6 +2712,7 @@ api
 update_accounts  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» position_mode | string | false | none |  | 仓位模式  
 »» account_mode | string | false | none |  | 账户模式  
@@ -2796,23 +2723,40 @@ api
 » time | integer | true | none |  | 时间戳（秒）  
 » time_ms | integer | true | none |  | 时间戳（毫秒）  
   
+请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "api",
+      "channel": "update_accounts",
+      "request_id": "request-1",
+      "payload": {
+        "account_mode": "ISOLATED_EXCHANGE",
+        "position_mode": "DUAL",
+        "exchange_type": "BINANCE"
+      }
+    }
+    
+
 返回示例
     
     
     {
-       "channel": "update_accounts",
-       "event": "api",
-       "payload": {
-          "account_mode":"ISOLATED_EXCHANGE",
-          "position_mode": "DUAL",
-          "exchange_type": "BINANCE"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "update_accounts",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "account_mode": "ISOLATED_EXCHANGE",
+        "position_mode": "DUAL",
+        "exchange_type": "BINANCE"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
@@ -2833,6 +2777,7 @@ api
 » time | body | integer | 是 | 时间戳（秒）  
 » event | body | string | 是 | 事件  
 » channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | body | object | 是 | none  
 »» symbol | body | string | 是 | 币对  
 »» position_side | body | string | 否 | 仓位方向  
@@ -2851,6 +2796,7 @@ api
 close_position  
 » event | string | true | none |  | 事件  
 api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
 » payload | object | true | none |  | none  
 »» order_id | string | true | none |  | 订单号  
 »» text | string | true | none |  | 客户端ID  
@@ -2859,13 +2805,14 @@ api
     
     
     {
-       "time": 1754272114,
-       "event": "api",
-       "channel": "close_position",
-       "payload": {
-          "symbol": "GATE_MARGIN_ETH_USDT",
-          "position_side": "LONG"
-       }
+      "time": 1754272114,
+      "event": "api",
+      "channel": "close_position",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "GATE_MARGIN_ETH_USDT",
+        "position_side": "LONG"
+      }
     }
     
 
@@ -2873,24 +2820,213 @@ api
     
     
     {
-       "channel": "close_position",
-       "event": "api",
-       "payload": {
-          "order_id": "2072652940337152",
-          "text": "2072652940337152"
-       },
-       "result": {
-          "code": "100000",
-          "message": "success"
-       },
-       "time": 1756434168,
-       "time_ms": 1756434168948
+      "channel": "close_position",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "order_id": "2072652940337152",
+        "text": "2072652940337152"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
+    }
+    
+
+#  修改合约仓位保证金模式
+
+`set_margin_mode`
+
+提供了一种通过 WebSocket 修改合约仓位保证金模式的方式。
+
+仅支持Hyperliquid合约交易币对，存在挂单或仓位时不允许修改。
+
+限频: 每10秒100次请求（同REST接口共享限频）
+
+##  客户端请求
+
+##  请求参数
+
+请求参数名称 | 位置 | 类型 | 必选 | 说明  
+---|---|---|---|---  
+» time | body | integer | 是 | 时间戳（秒）  
+» event | body | string | 是 | 事件  
+» channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | body | object | 是 | none  
+»» symbol | body | string | 是 | Hyperliquid合约交易币对  
+»» margin_mode | body | string | 是 | 保证金模式（CROSS/ISOLATED）  
+  
+##  详细说明
+
+**» event** : api
+
+**» channel** : set_margin_mode
+
+##  返回结果
+
+返回结果名称 | 类型 | 必选 | 约束 | 释义 | 说明  
+---|---|---|---|---|---  
+» channel | string | true | none |  | 频道名  
+set_margin_mode  
+» event | string | true | none |  | 事件  
+api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | object | true | none |  | none  
+»» symbol | string | true | none |  | 合约交易币对  
+»» margin_mode | string | true | none |  | 保证金模式（CROSS/ISOLATED）  
+» result | object | true | none |  | 修改结果  
+»» code | string | true | none |  | 响应码  
+»» message | string | true | none |  | 响应信息  
+» time | integer | true | none |  | 时间戳（秒）  
+» time_ms | integer | true | none |  | 时间戳（毫秒）  
+  
+请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "api",
+      "channel": "set_margin_mode",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+        "margin_mode": "ISOLATED"
+      }
+    }
+    
+
+返回示例
+    
+    
+    {
+      "channel": "set_margin_mode",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+        "margin_mode": "ISOLATED"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
+    }
+    
+
+#  增加或减少逐仓保证金
+
+`update_isolated_margin`
+
+提供了一种通过 WebSocket 增加或减少逐仓保证金的方式。
+
+仅支持Hyperliquid逐仓合约仓位，正数为增加保证金，负数为减少保证金。
+
+限频: 每10秒100次请求（同REST接口共享限频）
+
+##  客户端请求
+
+##  请求参数
+
+请求参数名称 | 位置 | 类型 | 必选 | 说明  
+---|---|---|---|---  
+» time | body | integer | 是 | 时间戳（秒）  
+» event | body | string | 是 | 事件  
+» channel | body | string | 是 | 频道名  
+» request_id | body | string | 否 | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | body | object | 是 | none  
+»» symbol | body | string | 是 | Hyperliquid合约交易币对  
+»» margin | body | string | 是 | 保证金调整金额，正数为增加，负数为减少，超过两位小数时向下截断  
+»» position_side | body | string | 否 | 仓位方向（NONE/LONG/SHORT），单向持仓不传时默认为NONE  
+  
+##  详细说明
+
+**» event** : api
+
+**» channel** : update_isolated_margin
+
+##  返回结果
+
+返回结果名称 | 类型 | 必选 | 约束 | 释义 | 说明  
+---|---|---|---|---|---  
+» channel | string | true | none |  | 频道名  
+update_isolated_margin  
+» event | string | true | none |  | 事件  
+api  
+» request_id | string | false | none |  | 请求 id，服务器会发回，帮助你识别服务器响应的是哪个请求  
+» payload | object | true | none |  | none  
+»» symbol | string | true | none |  | 合约交易币对  
+»» margin | string | true | none |  | 本次增加或减少的逐仓保证金  
+»» position_size | string | true | none |  | 仓位方向  
+» result | object | true | none |  | 修改结果  
+»» code | string | true | none |  | 响应码  
+»» message | string | true | none |  | 响应信息  
+» time | integer | true | none |  | 时间戳（秒）  
+» time_ms | integer | true | none |  | 时间戳（毫秒）  
+  
+单向持仓减少逐仓保证金请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "api",
+      "channel": "update_isolated_margin",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+        "margin": "-30",
+        "position_side": "NONE"
+      }
+    }
+    
+
+双向持仓增加多仓逐仓保证金请求示例
+    
+    
+    {
+      "time": 1754272114,
+      "event": "api",
+      "channel": "update_isolated_margin",
+      "request_id": "request-2",
+      "payload": {
+        "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+        "margin": "30",
+        "position_side": "LONG"
+      }
+    }
+    
+
+返回示例
+    
+    
+    {
+      "channel": "update_isolated_margin",
+      "event": "api",
+      "request_id": "request-1",
+      "payload": {
+        "symbol": "HYPERLIQUID_FUTURE_CXMT_USDC",
+        "margin": "-30",
+        "position_side": "NONE"
+      },
+      "result": {
+        "code": "100000",
+        "message": "success"
+      },
+      "time": 1756434168,
+      "time_ms": 1756434168948
     }
     
 
 #  返回码
 
-返回码 | 说明  
+##  `code` 说明
+
+code 说明返回码 | 说明  
 ---|---  
 100000 | 成功  
 100001 | 参数丢失或无效  
@@ -2901,4 +3037,25 @@ api
 100006 | 登陆失败  
 100007 | 网络错误，请稍后再试  
   
-Last Updated: 5/19/2026, 6:17:16 AM
+##  `label` 说明
+
+当请求无效时，响应的 `result` 中会返回 `label`。`label` 的含义与 REST API 文档一致，详情请参阅 REST API 文档。
+
+包含 `label` 的响应示例
+    
+    
+    {
+      "time": 1787560434,
+      "channel": "not_exist",
+      "event": "api",
+      "result": {
+        "code": "100001",
+        "label": "COMMON_PARAM_BIND_ERROR",
+        "message": "Invalid Parameter, please check api doc"
+      },
+      "time_ms": 1787560400000,
+      "request_id": "xxx"
+    }
+    
+
+Last Updated: 10/12/2026, 12:27:31 PM

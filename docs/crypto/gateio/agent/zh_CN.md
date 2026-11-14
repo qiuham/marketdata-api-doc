@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/agent/zh_CN
 api_type: REST
-updated_at: 2026-05-27 20:14:14.035738
+updated_at: 2026-11-13 20:56:40.858000
 ---
 
 # Gate for AI 开发者指南
@@ -22,7 +22,7 @@ Gate for AI 是面向 AI Agent 的加密货币原生基础设施，通过标准�
 
 Gate for AI 提供多种接入方式：
 
-接入方式接入方式 | 说明 | 鉴权  
+接入方式 | 说明 | 鉴权  
 ---|---|---  
 MCP（Remote） | 云端托管（api.gatemcp.ai），无需自行部署，在 MCP 兼容客户端中添加 Server URL 即可连接 | OAuth  
 MCP（Local） | 本地运行 MCP Server，连接至本地 AI 客户端 | API Key  
@@ -118,7 +118,7 @@ ChatGPT | Settings → MCP → Add Server → 输入 `https://api.gatemcp.ai/mcp
 **Base URL** : `https://api.gatemcp.ai`  
 **传输协议** : Streamable HTTP + SSE
 
-MCP 端点端点 | 工具数 | 认证方式 | 说明  
+端点 | 工具数 | 认证方式 | 说明  
 ---|---|---|---  
 `/mcp` | 58 | 无需认证 | 全品类行情数据（现货/合约/期权/交割/理财/Alpha）  
 `/mcp/exchange` | 400+ | OAuth2 | CEX 全功能交易（现货/合约/期权/闪兑/跟单/子账户等）  

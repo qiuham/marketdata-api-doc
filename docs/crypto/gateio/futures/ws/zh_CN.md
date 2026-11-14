@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/futures/ws/zh_CN
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:48.435524
+updated_at: 2026-11-13 20:58:35.168930
 ---
 
 # Gate Futures WebSocket v4.0.0
@@ -13,13 +13,13 @@ updated_at: 2026-05-27 20:18:48.435524
 v4.0.0 · Stable
 
 
-Gate 提供简单而强大的 Websocket API，将 Gate BTCUSDT 永续合约交易状态集成到您的业务或应用程序中。
+Gate 提供简单而强大的 WebSocket API，将 Gate BTC、USDT 和 USD1 结算的永续合约交易状态集成到您的业务或应用程序中。
 
 我们在 `Python` 和 `Golang` 中有语言绑定，将来还会有更多！您可以在右侧的深色区域中查看代码示例，并且可以通过右上角的选项卡切换示例的编程语言
 
 ##  服务地址
 
-我们提供 BTC/USDT 结算永续合约交易服务器地址，您可以根据自己的情况选择其中之一
+我们提供 BTC、USDT 和 USD1 结算永续合约交易服务器地址，您可以根据自己的情况选择其中之一。
 
 ###  BTC Contract
 
@@ -36,6 +36,13 @@ Gate 提供简单而强大的 Websocket API，将 Gate BTCUSDT 永续合约交�
   * 线上SBE: `wss://fx-ws.gateio.ws/v4/ws/usdt/sbe`
   * 模拟盘交易: `wss://ws-testnet.gate.com/v4/ws/futures/usdt`
 
+###  USD1 Contract
+
+地址列表:
+
+  * 线上交易: `wss://fx-ws.gateio.ws/v4/ws/usd1`
+  * 合约示例: `BTC_USD1`
+
 TIP
 
 建议使用SBE以获取更快的行情和更小的带宽成本
@@ -45,6 +52,31 @@ WARNING
 如果你使用老的服务地址(`wss://fx-ws.gateio.ws/v4/ws` 或 `wss://fx-ws-testnet.gateio.ws/v4/ws`), 将默认是 BTC 结算的 websocket 服务.
 
 ##  变更日志
+
+2026-10-22
+
+  * 补充 `futures.adl_warning` 的功能说明、三种市场级风险状态的含义，以及其与单个用户仓位和实际 ADL 事件的关系。
+
+2026-10-16
+
+  * 新增订单频道 `futures.orders_v2`，支持实盘和模拟盘，仅限 USDT 结算合约 API WebSocket 的 UTA3.0 用户。该 JSON 频道推送订单创建、成交、改单和撤单事件，包含订单管理系统（OMS）和撮合引擎（ME）的毫秒时间戳，不含清算信息。
+
+2026-10-14
+
+  * 新增公开频道 `futures.rpi_order_book`，`futures.rpi_obu` 推送 RPI 深度全量快照
+
+2026-08-25
+
+  * 新增市场级 ADL 风险预警公共频道 `futures.adl_warning`
+
+2026-08-20
+
+  * 新增频道 `futures.contract_info`，推送合约精度信息（张乘数、下单价格精度、标记价格精度）与风险限额档位变更
+  * 频道 `futures.public_liquidates` 调整为聚合推送：同一合约在一个聚合周期内的多笔强平订单将合并为数组批量推送，不再丢弃周期内的其他强平订单
+
+2026-08-19
+
+  * 新增 USD1 结算永续合约 WebSocket 支持，线上地址为 `wss://fx-ws.gateio.ws/v4/ws/usd1`，`settle` 值使用小写 `usd1`
 
 2026-04-14
 
@@ -690,9 +722,11 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
 ---|---  
 `futures.trades` | 公共成交  
 `futures.order_book` | 订单簿（深度）  
+`futures.rpi_order_book` | RPI 订单簿（深度）  
 `futures.order_book_update` | 订单簿增量更新  
 `futures.book_ticker` | 最优买卖（BBO）  
 `futures.obu` | 订单簿增量（OBU）  
+`futures.rpi_obu` | RPI 订单簿增量（OBU）  
 `futures.candlesticks` | K 线  
 `futures.tickers` | 行情  
 `futures.usertrades` | 用户成交  
@@ -814,7 +848,13 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
 
 服务在即将关闭进行升级时，会向当前连接主动推送一条系统通知，客户端收到后应尽快重连。
 
-**服务端推送格式（SystemNotifyDTO）：**
+**频道（Channel）：** `futures.system`
+
+**事件（Event）：** `update`
+
+当 `channel` 为 `futures.system`、`event` 为 `update` 且 `result.type` 为 `upgrade` 时，客户端可将该消息识别为服务升级通知。
+
+**`result` 格式（SystemNotifyDTO）：**
 
 字段 | 类型 | 说明  
 ---|---|---  
@@ -826,8 +866,14 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
     
     
     {
-      "type": "upgrade",
-      "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      "time": 1782378978,
+      "time_ms": 1782378978107,
+      "channel": "futures.system",
+      "event": "update",
+      "result": {
+        "type": "upgrade",
+        "msg": "The connection will soon be closed for a service upgrade. Please reconnect."
+      }
     }
     
 
@@ -954,6 +1000,11 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
 `volume_24h_base` | String | 近 24 小时交易量，以基础货币计  
 `low_24h` | String | 近 24 小时最低交易价  
 `high_24h` | String | 近 24 小时最高交易价  
+`change_from` | String | 涨跌幅计算周期，如 `24h`  
+`change_price` | String | 涨跌额  
+`price_type` | String | 价格类型：`last`（最新价）、`mark`（标记价）、`index`（指数价）  
+`t` | Integer | 行情生成时间戳（毫秒）  
+`event_type` | String | 连接后首次推送为 `snapshot`，实时推送通常不返回该字段  
       
     
     {
@@ -966,11 +1017,13 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
           "contract": "BTC_USDT",
           "last": "118.4",
           "change_percentage": "0.77",
+          "change_from": "24h",
+          "change_price": "0.91",
           "funding_rate": "-0.000114",
           "funding_rate_indicative": "0.01875",
           "mark_price": "118.35",
           "index_price": "118.36",
-          "total_size": "73648",
+          "total_size": "73648.5",
           "volume_24h": "745487577",
           "volume_24h_btc": "117",
           "volume_24h_usd": "419950",
@@ -979,7 +1032,9 @@ WebSocket 认证使用与 HTTP API 相同的签名计算方法，但具有 以�
           "volume_24h_settle": "178",
           "volume_24h_base": "5526",
           "low_24h": "99.2",
-          "high_24h": "132.5"
+          "high_24h": "132.5",
+          "price_type": "last",
+          "t": 1541659086123
         }
       ]
     }
@@ -1202,7 +1257,29 @@ size 正数表示买家，负数表示卖家
       "time_ms": 1541503698123,
       "result": [
         {
-          "size": "-108",
+          "size": "-108.5",
+          "id": 27753479,
+          "create_time": 1545136464,
+          "create_time_ms": 1545136464123,
+          "price": "96.4",
+          "contract": "BTC_USDT",
+          "is_internal": true
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`size` 为整型（小数张数向下取整）：
+    
+    
+    {
+      "channel": "futures.trades",
+      "event": "update",
+      "time": 1541503698,
+      "time_ms": 1541503698123,
+      "result": [
+        {
+          "size": -108,
           "id": 27753479,
           "create_time": 1545136464,
           "create_time_ms": 1545136464123,
@@ -1294,11 +1371,15 @@ size 正数表示买家，负数表示卖家
 
 **`order_book` 频道允许您跟踪 Gate 订单簿深度的状态。它以价格聚合的方式提供，可自定义精度。**
 
-共有三种不同的订单簿渠道可供订阅:
+共有以下订单簿渠道可供订阅:
 
   * `futures.order_book`
 
 全量频道，定期使用`all`推送完整的有限级别订单簿.
+
+  * `futures.rpi_order_book`
+
+RPI 全量频道，定期使用`all`推送有限级别订单簿。价格合并精度只支持 `0`.
 
   * `futures.book_ticker`
 
@@ -1452,21 +1533,21 @@ WARNING
         "asks": [
           {
             "p": "97.1",
-            "s": "2245"
+            "s": "2245.5"
           },
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "97.0",
+            "s": "1200"
           }
         ],
         "bids": [
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "96.9",
+            "s": "3100.2"
           },
           {
-            "p": "97.1",
-            "s": "2245"
+            "p": "96.8",
+            "s": "0"
           }
         ],
         "l": "20"
@@ -1668,9 +1749,29 @@ WARNING
         "u": 2517661076,
         "s": "BTC_USDT",
         "b": "54696.6",
-        "B": "37000",
+        "B": "37000.5",
         "a": "54696.7",
-        "A": "47061"
+        "A": "47061.2"
+      }
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`B`、`A` 为整型：
+    
+    
+    {
+      "time": 1615366379,
+      "time_ms": 1615366379123,
+      "channel": "futures.book_ticker",
+      "event": "update",
+      "result": {
+        "t": 1615366379123,
+        "u": 2517661076,
+        "s": "BTC_USDT",
+        "b": "54696.6",
+        "B": 37000,
+        "a": "54696.7",
+        "A": 47061
       }
     }
     
@@ -1883,7 +1984,7 @@ WARNING
           },
           {
             "p": "54664.5",
-            "s": "58794"
+            "s": "58794.5"
           }
         ],
         "a": [
@@ -1893,7 +1994,45 @@ WARNING
           },
           {
             "p": "54742",
-            "s": "95"
+            "s": "95.2"
+          }
+        ],
+        "l": "100"
+      }
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，档位 `s` 为整型：
+    
+    
+    {
+      "time": 1615366381,
+      "time_ms": 1615366381123,
+      "channel": "futures.order_book_update",
+      "event": "update",
+      "result": {
+        "t": 1615366381417,
+        "s": "BTC_USDT",
+        "U": 2517661101,
+        "u": 2517661113,
+        "b": [
+          {
+            "p": "54672.1",
+            "s": 0
+          },
+          {
+            "p": "54664.5",
+            "s": 58794
+          }
+        ],
+        "a": [
+          {
+            "p": "54743.6",
+            "s": 0
+          },
+          {
+            "p": "54742",
+            "s": 95
           }
         ],
         "l": "100"
@@ -1977,9 +2116,224 @@ WARNING
     }
     
 
+#  RPI 深度全量更新频道
+
+`futures.rpi_order_book`
+
+推送 RPI 订单簿的全量快照。本频道是公开频道。
+
+订阅参数和推送字段与 `futures.order_book` 相同。价格合并精度只支持 `"0"`。推送 `event` 为 `all`。
+
+SBE 复用 `orderBook` 模板（templateId=`4`），帧里的 `channel` 为 `futures.rpi_order_book`。
+
+##  RPI 深度全量订阅
+
+**订阅 RPI 深度.**
+
+###  请求参数
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`subscribe`
+
+  * params
+
+请求参数名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+`contract` | String | 是 | 合约名称  
+`limit` | String | 是 | 深度层级: 100, 50, 20, 10, 5  
+`interval` | String | 是 | 价格合并精度，只支持 `"0"`  
+  
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "subscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"subscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下:
+    
+    
+    {
+      "time": 1545405058,
+      "time_ms": 1545405058123,
+      "channel": "futures.rpi_order_book",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  RPI 全量深度推送
+
+**RPI 全量深度更新推送**
+
+###  推送参数
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`all`
+
+  * params
+
+推送参数名称 | 类型 | 描述  
+---|---|---  
+`result` | object | 深度信息  
+»`t` | Integer | 深度生成时间戳（以毫秒为单位）  
+»`contract` | String | 合约名称  
+»`id` | Integer | 深度 ID  
+»`asks` | Array | 深度卖方的档位列表  
+»»`p` | String | 档位价格  
+»»`s` | String | 档位的数量  
+»`bids` | Array | 深度买方的档位列表  
+»»`p` | String | 档位价格  
+»»`s` | String | 档位的数量  
+»`l` | String | 深度层级（例如 20 即代表 20 层的深度更新）  
+      
+    
+    {
+      "channel": "futures.rpi_order_book",
+      "event": "all",
+      "time": 1541500161,
+      "time_ms": 1541500161123,
+      "result": {
+        "t": 1541500161123,
+        "contract": "BTC_USDT",
+        "id": 93973511,
+        "asks": [
+          {
+            "p": "97.1",
+            "s": "2245.5"
+          }
+        ],
+        "bids": [
+          {
+            "p": "96.9",
+            "s": "3100.2"
+          }
+        ],
+        "l": "20"
+      }
+    }
+    
+
+##  RPI 全量深度取消订阅
+
+**取消订阅指定市场的 RPI 深度**
+
+###  请求参数
+
+  * channel
+
+`futures.rpi_order_book`
+
+  * event
+
+`unsubscribe`
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_order_book","event": "unsubscribe", "payload" : ["BTC_USDT", "20", "0"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time":123456,"channel":"futures.rpi_order_book","event":"unsubscribe","payload":["BTC_USDT","20","0"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  深度频道V2
 
 **提供一种更快更新的获取深度信息的方法.**
+
+`futures.obu` 与 `futures.rpi_obu` 都使用这一套本地深度维护方式。`futures.rpi_obu` 见下方 RPI 深度频道V2。
 
 ##  维护本地深度
 
@@ -2255,6 +2609,237 @@ WARNING
     }
     
 
+#  RPI 深度频道V2
+
+`futures.rpi_obu`
+
+推送 RPI 订单簿的全量和增量。本频道是公开频道。
+
+消息结构、本地深度维护方式与 深度频道V2 相同。流名称前缀为 `rpi_ob.`。
+
+SBE 复用 `obu` 模板（templateId=`3`），帧里的 `channel` 为 `futures.rpi_obu`。
+
+##  RPI 深度频道V2订阅
+
+###  请求参数
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload` 是一个包含流名称的列表. 格式为: `rpi_ob.{symbol}.{level}`；例如 `rpi_ob.BTC_USDT.400`、`rpi_ob.BTC_USDT.50`
+
+其中 `level` 枚举为：400、50；更新频率: 400 档为 100ms；50 档为 20ms。
+
+订阅成功后，首条推送为全量（`full=true`），之后为增量。同一合约的同一深度流，一个链接只允许订阅一次。
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.rpi_obu",
+            "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "subscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482384,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.rpi_obu",
+      "event": "subscribe",
+      "payload": [
+        "rpi_ob.BTC_USDT.400"
+      ],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  RPI 深度v2订阅推送
+
+**RPI 深度频道V2的消息推送**
+
+###  推送参数
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`update`
+
+  * params
+
+推送参数名称 | 类型 | 描述  
+---|---|---  
+`result` | Object | 自上次更新以来发生变更的卖单和买单  
+»`t` | Integer | 订单簿生成时间戳（以毫秒为单位）  
+»`full` | Boolean | `true` 代表全量的深度；`false` 代表增量的深度，为 `false` 时，不传输该字段  
+»`s` | String | 深度流的名称，例如 `rpi_ob.BTC_USDT.400`  
+»`U` | Integer | 本次更新开始的订单簿更新 ID  
+»`u` | Integer | 本次更新结束的订单簿更新 ID  
+»`b` | `Array[OrderBookArray]` | 自上次更新以来的 bids 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0 应当从本地深度中移除  
+»`a` | `Array[OrderBookArray]` | 自上次更新以来的 asks 更新  
+»» OrderBookArray | `Array[String]` | [Price, Amount] 数组对, Amount=0 应当从本地深度中移除  
+  
+全量推送示例:
+    
+    
+    {
+    	"channel": "futures.rpi_obu",
+    	"result": {
+    		"t": 1743673026995,
+    		"full": true,
+    		"s": "rpi_ob.BTC_USDT.400",
+    		"u": 79072179673,
+    		"b": [
+    			["83705.9", "30166"]
+    		],
+    		"a": [
+    			["83706", "4208"]
+    		]
+    	},
+    	"time_ms": 1743673026999
+    }
+    
+
+增量推送示例:
+    
+    
+    {
+    	"channel": "futures.rpi_obu",
+    	"result": {
+    		"t": 1743673027017,
+    		"s": "rpi_ob.BTC_USDT.400",
+    		"U": 79072179674,
+    		"u": 79072179694,
+    		"b": [
+    			["83702.2", "62"],
+    			["83702.1", "0"]
+    		]
+    	},
+    	"time_ms": 1743673027020
+    }
+    
+
+##  RPI 深度频道V2取消订阅
+
+**取消指定合约的 RPI 深度频道V2订阅**
+
+###  请求参数
+
+  * channel
+
+`futures.rpi_obu`
+
+  * event
+
+`unsubscribe`
+
+代码示例
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}')
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.rpi_obu", "event": "unsubscribe", "payload" : ["rpi_ob.BTC_USDT.400"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
 #  K 线频道
 
 **提供一种访问 K 线信息的方法.**
@@ -2381,7 +2966,7 @@ WARNING
       "result": [
         {
           "t": 1545129300,
-          "v": "27525555",
+          "v": "27525555.5",
           "c": "95.4",
           "h": "96.9",
           "l": "89.5",
@@ -2392,7 +2977,7 @@ WARNING
         },
         {
           "t": 1545129300,
-          "v": "27525555",
+          "v": "27525556",
           "c": "95.4",
           "h": "96.9",
           "l": "89.5",
@@ -2400,6 +2985,30 @@ WARNING
           "n": "1m_BTC_USDT",
           "a": "314732.87412",
           "w": true
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`v` 为整型：
+    
+    
+    {
+      "time": 1542162490,
+      "time_ms": 1542162490123,
+      "channel": "futures.candlesticks",
+      "event": "update",
+      "result": [
+        {
+          "t": 1545129300,
+          "v": 27525555,
+          "c": "95.4",
+          "h": "96.9",
+          "l": "89.5",
+          "o": "94.3",
+          "n": "1m_BTC_USDT",
+          "a": "314732.87412",
+          "w": false
         }
       ]
     }
@@ -2483,7 +3092,7 @@ WARNING
 
 #  公共强平订单频道
 
-**提供一种接收Gate强平订单信息的方式,每个合约每1秒最多推一条强平订单数据**
+**提供一种接收Gate强平订单信息的方式。同一合约在一个聚合周期（默认1秒）内产生的强平订单将聚合为数组批量推送；当单个合约缓存的强平订单数量达到上限（默认20笔）时，将立即提前推送**
 
 ##  公共强平订单订阅
 
@@ -2604,12 +3213,12 @@ WARNING
 
 名称 | 类型 | 描述  
 ---|---|---  
-`result` | Array | Array of objects  
+`result` | Array | 同一合约在聚合周期内的全部强平订单列表，可能包含多笔记录  
 名称 | 类型 | 描述  
 ---|---|---  
 `price` | Float | 订单价格  
 `size` | String/Integer | 强平订单数量  
-`time_ms` | Integer | 时间（以毫秒为单位）  
+`time` | Integer | 强平时间（以毫秒为单位）  
 `contract` | String | 合约名称  
 
     
@@ -2621,10 +3230,41 @@ WARNING
         "time_ms": 1541505434123,
         "result": [
             {
-            "price": 215.1,
-            "size": "-124",
-            "time_ms": 1541486601123,
-            "contract": "BTC_USDT",
+            "price": "215.1",
+            "size": "-124.5",
+            "time": 1541486601123,
+            "contract": "BTC_USDT"
+            },
+            {
+            "price": "215.2",
+            "size": "-10.5",
+            "time": 1541486601456,
+            "contract": "BTC_USDT"
+            }
+        ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`size` 为整型：
+    
+    
+    {
+        "channel": "futures.public_liquidates",
+        "event": "update",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": [
+            {
+            "price": "215.1",
+            "size": -124,
+            "time": 1541486601123,
+            "contract": "BTC_USDT"
+            },
+            {
+            "price": "215.2",
+            "size": -10,
+            "time": 1541486601456,
+            "contract": "BTC_USDT"
             }
         ]
     }
@@ -2716,6 +3356,290 @@ WARNING
         "time": 1545459681,
         "time_ms": 1545459681123,
          "channel": "futures.public_liquidates",
+         "event": "unsubscribe",
+         "result": {
+            "status": "success"
+         }
+    }
+    
+
+#  合约信息频道
+
+**contract_info 通道允许您接收合约精度信息（张乘数、下单价格精度、标记价格精度）与风险限额档位的变更推送**
+
+##  合约信息订阅
+
+如果您想订阅所有合约的信息推送，请在订阅请求列表中使用 `!all`
+
+**订阅合约信息推送**
+
+###  请求参数
+
+  * channel
+
+`futures.contract_info`
+
+  * event
+
+`subscribe`
+
+  * params
+
+名称 | 类型 | 必选 | 描述  
+---|---|---|---  
+`contract` | String | 是 | 合约名称列表  
+
+代码示例
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "subscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "subscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+    {
+        "time": 1545459681,
+        "time_ms": 1545459681123,
+        "channel": "futures.contract_info",
+        "event": "subscribe",
+        "result": {
+            "status": "success"
+        }
+    }
+    
+
+##  合约信息推送
+
+订阅成功后，若服务端已有该合约的缓存快照，将立即推送一条 `event` 为 `all` 的全量消息；此后当合约精度信息或风险限额档位发生变更时，将推送 `event` 为 `update` 的消息。仅精度信息变更时，`update` 消息可能不携带 `risk_limit_tiers` 字段。
+
+**推送合约信息更新**
+
+###  推送参数
+
+  * channel
+
+`futures.contract_info`
+
+  * event
+
+`all` / `update`
+
+  * params
+
+名称 | 类型 | 描述  
+---|---|---  
+`result` | Object | 合约信息对象，event 为 all 时表示当前快照，update 时表示变更后的最新信息  
+名称 | 类型 | 描述  
+---|---|---  
+`contract` | String | 合约名称  
+`quanto_multiplier` | String | 张乘数  
+`order_price_round` | String | 下单价格精度  
+`mark_price_round` | String | 标记价格精度  
+`risk_limit_tiers` | Array | 风险限额档位列表，仅精度信息变更时可能不携带  
+  
+`risk_limit_tiers` 字段说明：
+
+名称 | 类型 | 描述  
+---|---|---  
+`tier` | Integer | 档位  
+`risk_limit` | String | 风险限额  
+`initial_rate` | String | 初始保证金率  
+`maintenance_rate` | String | 维持保证金率  
+`leverage_max` | String | 最大杠杆倍数  
+`contract` | String | 合约名称  
+`deduction` | String | 维持保证金速算额  
+
+订阅成功后的首次推送（event=all）：
+    
+    
+    {
+        "channel": "futures.contract_info",
+        "event": "all",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": {
+            "contract": "BTC_USDT",
+            "quanto_multiplier": "0.0001",
+            "order_price_round": "0.1",
+            "mark_price_round": "0.01",
+            "risk_limit_tiers": [
+                {
+                    "tier": 1,
+                    "risk_limit": "1000000",
+                    "initial_rate": "0.01",
+                    "maintenance_rate": "0.005",
+                    "leverage_max": "100",
+                    "contract": "BTC_USDT",
+                    "deduction": "0"
+                }
+            ]
+        }
+    }
+    
+
+合约信息变更推送（event=update）：
+    
+    
+    {
+        "channel": "futures.contract_info",
+        "event": "update",
+        "time": 1541505434,
+        "time_ms": 1541505434123,
+        "result": {
+            "contract": "BTC_USDT",
+            "quanto_multiplier": "0.0001",
+            "order_price_round": "0.5",
+            "mark_price_round": "0.01"
+        }
+    }
+    
+
+##  取消订阅
+
+**取消订阅合约信息更新**
+
+###  请求参数
+
+  * channel
+
+`futures.contract_info`
+
+  * event
+
+`unsubscribe`
+
+代码示例
+    
+    
+    import json
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws.gateio.ws/v4/ws/usdt")
+    req = {
+        "time": 123456,
+        "channel": "futures.contract_info",
+        "event": "unsubscribe",
+        "payload": ["BTC_USDT"],
+    }
+    ws.send(json.dumps(req))
+    print(ws.recv())
+    
+
+代码示例
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"encoding/json"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws.gateio.ws/v4/ws/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	req := map[string]interface{}{
+    		"time":    123456,
+    		"channel": "futures.contract_info",
+    		"event":   "unsubscribe",
+    		"payload": []string{"BTC_USDT"},
+    	}
+    
+    	msg, err := json.Marshal(req)
+    	if err != nil {
+    		log.Fatal("json marshal error:", err)
+    	}
+    
+    	err = conn.WriteMessage(websocket.TextMessage, msg)
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+上面的命令返回 JSON 结构如下：
+    
+    
+     {
+        "time": 1545459681,
+        "time_ms": 1545459681123,
+         "channel": "futures.contract_info",
          "event": "unsubscribe",
          "result": {
             "status": "success"
@@ -2849,7 +3773,7 @@ WARNING
 `open_interest` | string/Integer | 总持仓量（张）  
 `open_interest_usd` | Float | 总持仓量（计价币种）  
 `top_lsr_account` | Float | 大户多空账户比  
-`top_lsr_size` | Float | 大户多空持仓比  
+`top_lsr_size` | String/Float | 大户多空持仓比  
 
     
     
@@ -2970,6 +3894,206 @@ WARNING
       "time_ms": 1545404900123,
       "channel": "futures.contract_stats",
       "event": "unsubscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+#  ADL 风险预警频道
+
+**公共频道`futures.adl_warning` 用于推送市场级 ADL 风险预警。**
+
+该频道无需鉴权，仅支持 JSON 连接。
+
+市场级自动减仓（ADL）风险预警用于帮助用户了解某个合约市场发生 ADL 的风险变化。平台根据保险基金在该市场的持仓情况及对应市场限额判断风险状态，对外仅提供状态结果，不公开底层具体阈值和计算公式。
+
+用户需主动建立 WebSocket 连接并订阅对应频道或合约后才会收到推送；未订阅或断开连接后不会收到推送。
+
+###  状态说明
+
+状态说明状态 | 对外含义  
+---|---  
+`normal` | 市场发生 ADL 的概率较小，但突发的大幅市场波动可能产生大量强平单并触发 ADL。  
+`warning` | 市场发生 ADL 的概率较大，表示保险基金承接强平单的剩余能力有限，该市场接下来新产生的强平单很可能通过 ADL 执行。  
+`adl_risk` | 保险基金已无法再承接该市场的强平单，新产生的强平单只能通过 ADL 执行。该状态本身不代表 ADL 已经发生。  
+  
+###  补充说明
+
+  1. `normal`、`warning`、`adl_risk` 是市场级风险状态，不代表单个用户仓位一定会或不会被 ADL。
+  2. `adl_risk` 不等同于 ADL 已经发生，也不代表所有用户都会受到 ADL 影响。
+  3. 该状态仅用于帮助用户了解市场风险变化，不构成交易建议。
+  4. 用户基于该状态进行减仓、加仓、撤单、调整策略等操作，应自行承担对应交易结果。
+  5. 如需查询历史强平单记录，请参考[查询强平委托历史 ](https://www.gate.com/docs/developers/apiv4/zh_CN/futures/#%E6%9F%A5%E8%AF%A2%E5%BC%BA%E5%B9%B3%E5%A7%94%E6%89%98%E5%8E%86%E5%8F%B2)。
+
+##  ADL 风险预警订阅
+
+###  请求参数
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+`subscribe`
+
+  * params
+
+参数 | 类型 | 是否必需 | 描述  
+---|---|---|---  
+`contract` | String | 是 | 合约名称。支持传入多个合约；仅传入 `!all` 时订阅当前结算币种下的全部合约  
+
+`payload` 不能为空。`!all` 不能与具体合约名称混用，指定的合约必须属于当前连接的结算币种。重复的合约名称会被忽略。
+
+如果订阅命中的合约已经处于 `warning` 或 `adl_risk`，对应的 `event=all` 首次快照会先于订阅响应发送。
+
+订阅一个或多个合约：
+    
+    
+    {
+      "time": 1781234567,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"]
+    }
+    
+
+订阅当前连接结算币种下的全部合约：
+    
+    
+    {
+      "time": 1781234567,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["!all"]
+    }
+    
+
+订阅命中的合约当前全部为 `normal` 时，服务端只返回订阅响应：
+    
+    
+    {
+      "time": 1781234567,
+      "time_ms": 1781234567123,
+      "channel": "futures.adl_warning",
+      "event": "subscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  ADL 风险预警推送
+
+###  推送参数
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+首次风险快照为 `all`，后续推送为 `update`
+
+  * params
+
+字段 | 类型 | 描述  
+---|---|---  
+`contract` | String | 合约名称  
+`settle` | String | 小写结算币种，例如 `btc`、`usdt` 或 `usd1`  
+`state` | String | 市场级 ADL 风险状态：`normal`、`warning` 或 `adl_risk`，详见状态说明  
+`update_time` | Integer | 风险状态的计算时间，Unix 毫秒  
+
+`warning` 和 `adl_risk` 状态持续期间每秒推送一次。恢复为 `normal` 时只推送一次，不会重复推送。首次订阅时处于 `normal` 的合约不会发送首次快照。
+
+订阅后的首次风险快照：
+    
+    
+    {
+      "time": 1781234567,
+      "time_ms": 1781234567123,
+      "channel": "futures.adl_warning",
+      "event": "all",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "warning",
+        "update_time": 1781234567000
+      }
+    }
+    
+
+风险状态推送：
+    
+    
+    {
+      "time": 1781234568,
+      "time_ms": 1781234568123,
+      "channel": "futures.adl_warning",
+      "event": "update",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "adl_risk",
+        "update_time": 1781234567000
+      }
+    }
+    
+
+恢复状态推送：
+    
+    
+    {
+      "time": 1781234578,
+      "time_ms": 1781234578123,
+      "channel": "futures.adl_warning",
+      "event": "update",
+      "result": {
+        "contract": "BTC_USDT",
+        "settle": "usdt",
+        "state": "normal",
+        "update_time": 1781234577000
+      }
+    }
+    
+
+##  取消 ADL 风险预警订阅
+
+###  请求参数
+
+  * channel
+
+`futures.adl_warning`
+
+  * event
+
+`unsubscribe`
+
+  * params
+
+与订阅使用相同的 `payload` 规则。使用 `["!all"]` 取消全部合约订阅。
+
+    
+    
+    {
+      "time": 1781234579,
+      "channel": "futures.adl_warning",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"]
+    }
+    
+
+服务端返回：
+    
+    
+    {
+      "time": 1781234579,
+      "time_ms": 1781234579123,
+      "channel": "futures.adl_warning",
+      "event": "unsubscribe",
+      "payload": ["BTC_USDT", "ETH_USDT"],
       "result": {
         "status": "success"
       }
@@ -3121,7 +4245,7 @@ WARNING
 ---|---|---  
 `create_time` | Integer | 订单创建时间（已弃用）  
 `create_time_ms` | Integer | 订单创建时间戳（以毫秒为单位）  
-`fill_price` | Float | 订单成交价格  
+`fill_price` | String | 订单成交价格  
 `finish_as` | String | 订单结束方式，包括：  
   
 \- open: 等待处理  
@@ -3146,7 +4270,7 @@ WARNING
 \- open: 等待交易  
 \- finished: 完成  
 `tkfr` | Float | taker 费用  
-`price` | Float | 订单价格。 0 表示市价订单，tif 设置为 ioc  
+`price` | String | 订单价格。 0 表示市价订单，tif 设置为 ioc  
 `refu` | Integer | 推荐用户 ID  
 `refr` | Float |   
 `size` | String/Integer | 订单大小。指定正数进行出价，指定负数进行询问  
@@ -3178,6 +4302,16 @@ type=market 时仅支持 ioc 和 fok
 `stop_profit_price` | String | 止盈价格  
 `stop_loss_price` | String | 止损价格  
 `market_order_slip_ratio` | String | 该笔市价单的预设的最大滑点比率（不代表实际的滑点），0.03代表3%的最大滑点  
+`id_string` | String | 订单 ID 字符串形式  
+`is_voucher` | Bool | 是否体验金订单  
+`role` | String | 成交角色  
+`fee` | Float | 手续费  
+`point_fee` | Float | 点卡手续费  
+`bbo` | String | BBO 下单选项  
+`pos_margin_mode` | String | 仓位保证金模式  
+`leverage` | String | 杠杆（字符串）  
+`stop_profit` | Object | 止盈扩展信息，含 `tp`/`op`/`type`  
+`stop_loss` | Object | 止损扩展信息，含 `tp`/`op`/`type`  
       
     
     {
@@ -3190,30 +4324,82 @@ type=market 时仅支持 ioc 和 fok
           "contract": "BTC_USDT",
           "create_time": 1628736847,
           "create_time_ms": 1628736847325,
-          "fill_price": 40000.4,
+          "fill_price": "40000.4",
           "finish_as": "filled",
           "finish_time": 1628736848,
           "finish_time_ms": 1628736848321,
           "iceberg": "0",
           "id": 4872460,
+          "id_string": "4872460",
           "is_close": false,
           "is_liq": false,
           "is_reduce_only": false,
+          "is_voucher": false,
           "left": "0",
           "mkfr": -0.00025,
-          "price": 40000.4,
+          "price": "40000.4",
           "refr": 0,
           "refu": 0,
-          "size": "1",
+          "size": "1.5",
           "status": "finished",
-          "text": "-",
+          "text": "api",
           "tif": "gtc",
           "tkfr": 0.0005,
           "user": "110xxxxx",
           "update_id": 1,
           "update_time": 1541505434123,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "role": "taker",
+          "fee": 0.0009290592,
+          "point_fee": 0,
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
           "stop_loss_price": "",
           "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`size`、`left`、`iceberg` 为整型：
+    
+    
+    {
+      "channel": "futures.orders",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "iceberg": 0,
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "left": 0,
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": 1,
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "tkfr": 0.0005,
+          "user": "110xxxxx",
+          "update_id": 1,
+          "update_time": 1541505434123,
           "market_order_slip_ratio": "0.03"
         }
       ]
@@ -3317,6 +4503,201 @@ type=market 时仅支持 ioc 和 fok
       "time": 1545459681,
       "time_ms": 1545459681123,
       "channel": "futures.orders",
+      "event": "unsubscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+#  订单频道 V2
+
+**支持环境：USDT 合约实盘和模拟盘。**
+
+  * 实盘：`wss://fx-ws.gateio.ws/v4/ws/usdt`
+  * 模拟盘：`wss://ws-testnet.gate.com/v4/ws/futures/usdt`
+
+`futures.orders_v2` 实时推送撮合阶段、清算前的订单创建、成交、改单和撤销事件。仅支持 USDT 结算合约 API WebSocket 的 UTA3.0 用户，采用 JSON 编码；不支持 PB 和 SBE 订阅。
+
+本频道需要认证，以已认证用户决定推送的订单，并检查该用户的 UTA3.0 资格。`payload` 中提供的用户 ID 不能用于切换到其他账户。
+
+本频道不推送清算订单及清算信息。保留费率字段 `mkfr`，省略 `fee`、`point_fee`、`role`、`refu`、`refr`、`tkfr` 和 `update_time`；ME 时间使用 `update_time_ms`。
+
+同一连接可以独立订阅 `futures.orders` 和 `futures.orders_v2`。不能根据两个频道的消息到达先后推断事件顺序。账户迁移至 UTA3.0 后，重新订阅即可使用本频道。
+
+##  订单 V2 订阅
+
+请求使用 `channel: "futures.orders_v2"`、`event: "subscribe"`；根据认证章节，使用本频道名称、事件和请求时间生成签名。
+
+订阅参数：
+
+字段 | 类型 | 必选 | 描述  
+---|---|---|---  
+`payload` | Array[String] | 是 | 合约列表，可在首项携带用户 ID。例如 `["BTC_USDT"]`、`["20011", "BTC_USDT", "ETH_USDT"]` 或 `["!all"]`。  
+  
+列表中的单项也可以包含以逗号分隔的合约，例如 `"BTC_USDT,ETH_USDT"`。`!all` 表示订阅全部合约。多次订阅会累加合约；重复合约或与 `!all` 重叠的订阅不会重复推送。整批参数校验通过后才修改订阅，非法合约会使整个请求失败。
+
+订阅成功只返回确认消息，不发送历史订单快照。订阅后的第一条消息可能是已有订单的更新。断线期间错过的事件不会补发。
+
+订阅错误：
+
+错误码 | 说明  
+---|---  
+`2` | 非法用户 ID、非法合约、非 UTA3.0 账户或不支持的 PB/SBE 编码。  
+`3` | 服务无法查询账户资格。  
+`4` | 未认证或认证失败。  
+      
+    
+    {
+      "time": 1628736847,
+      "channel": "futures.orders_v2",
+      "event": "subscribe",
+      "payload": [
+        "BTC_USDT"
+      ],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    
+    
+    
+    {
+      "time": 1628736847,
+      "time_ms": 1628736847320,
+      "channel": "futures.orders_v2",
+      "event": "subscribe",
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  订单 V2 推送
+
+全部订单事件均使用 `event: "update"`，`result` 为订单对象数组。
+
+`size`、`left`、`iceberg`、`price`、`fill_price` 始终为十进制字符串，保留小数数量；是否设置 `X-Gate-Size-Decimal: 1` 不影响本频道的这些字段类型。
+
+`create_time_ms` 来自 OMS。订单创建事件的 `update_time_ms` 为订单到达 ME 的时间，后续成交、改单和撤销事件则为 ME 更新订单的时间。“创建事件”不等于新订阅连接收到的第一条消息。后续事件的 `update_time_ms - create_time_ms` 包含订单存续时间，不能用来表示本次改单或撤销的 OMS→ME 延迟。
+
+外层 `time` 和 `time_ms` 分别为 WS 消息封装的秒和毫秒时间戳；`finish_time` 和 `finish_time_ms` 沿用上游事件日志时间。这些时间不能替代 ME 的 `update_time_ms`。缺少有效正整数 OMS/ME 毫秒时间的消息不会推送，服务不会用本地时间补齐。
+
+订单字段：
+
+字段 | 类型 | 描述  
+---|---|---  
+`contract` | String | 合约名称。  
+`create_time` | Integer | OMS 订单创建时间，单位为秒。  
+`create_time_ms` | Integer | OMS 订单创建时间，单位为毫秒。  
+`fill_price` | String | 订单成交价格，以十进制字符串表示。  
+`finish_as` | String | 创建事件为 `_new`，未结束订单的更新事件为 `_update`。结束事件返回原因，例如 `filled`（完全成交）、`cancelled`（撤销）、`ioc`、`poc`、`fok` 或 `stp`；其他原因与 `futures.orders` 一致。  
+`finish_time` | Integer | 上游订单事件日志时间，单位为秒，不表示清算完成时间。  
+`finish_time_ms` | Integer | 上游订单事件日志时间，单位为毫秒，不表示 ME 更新时间。  
+`iceberg` | String | 冰山订单显示数量，以十进制字符串表示；普通订单为 `"0"`。  
+`id` | Integer | 订单 ID；客户端无法精确保留大整数时请使用 `id_string`。  
+`id_string` | String | 字符串形式的订单 ID。  
+`is_close` | Boolean | 是否为平仓订单。  
+`is_liq` | Boolean | 本频道始终为 `false`，不推送清算订单。  
+`is_reduce_only` | Boolean | 是否为只减仓订单。  
+`is_voucher` | Boolean | 是否为体验金订单。  
+`left` | String | 订单剩余数量，以十进制字符串表示。  
+`mkfr` | Float | Maker 费率，不表示清算后的手续费金额。  
+`price` | String | 订单价格，以十进制字符串表示；市价订单为 `"0"`。  
+`size` | String | 订单数量，以十进制字符串表示；正数为买入，负数为卖出。  
+`status` | String | 订单状态：`open`（等待交易）或 `finished`（已结束）。  
+`text` | String | 用户定义的订单信息。  
+`tif` | String | 订单有效期：`gtc`（成交前持续有效）、`ioc`（立即成交，否则取消）、`poc`（只挂单）或 `fok`（立即全部成交，否则取消）。  
+`user` | String | 用户 ID。  
+`update_id` | Integer | 订单更新 ID。  
+`update_time_ms` | Integer | ME 毫秒时间戳。创建事件为订单到达 ME 的时间；成交、改单或撤销事件为 ME 更新订单的时间。  
+`biz_info` | String | 本次订单更新附带的业务信息。  
+`stp_act` | String | 自成交防护策略：`cn`（取消最新订单）、`co`（取消最旧订单）、`cb`（全部取消）；未设置为 `-`。  
+`stp_id` | String | 自成交防护组 ID；未设置为 `"0"`。  
+`amend_text` | String | 用户改单时附带的自定义信息。  
+`bbo` | String | BBO 下单选项；未设置为 `-`。  
+`pos_margin_mode` | String | 仓位保证金模式：`cross`（全仓）或 `isolated`（逐仓）。  
+`leverage` | String | 杠杆倍数；上游未提供时为空字符串。  
+`stop_loss_price` | String | 止损价格；未设置时为空字符串。  
+`stop_profit_price` | String | 止盈价格；未设置时为空字符串。  
+`market_order_slip_ratio` | String | 市价单预设最大滑点比例；`"0.03"` 表示 3%，不代表实际滑点。  
+      
+    
+    {
+      "channel": "futures.orders_v2",
+      "event": "update",
+      "time": 1628736848,
+      "time_ms": 1628736848325,
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "create_time": 1628736847,
+          "create_time_ms": 1628736847325,
+          "fill_price": "40000.4",
+          "finish_as": "filled",
+          "finish_time": 1628736848,
+          "finish_time_ms": 1628736848321,
+          "iceberg": "0",
+          "id": 4872460,
+          "id_string": "4872460",
+          "is_close": false,
+          "is_liq": false,
+          "is_reduce_only": false,
+          "is_voucher": false,
+          "left": "0",
+          "mkfr": -0.00025,
+          "price": "40000.4",
+          "size": "1.5",
+          "status": "finished",
+          "text": "api",
+          "tif": "gtc",
+          "user": "20011",
+          "update_id": 1,
+          "update_time_ms": 1628736848320,
+          "biz_info": "-",
+          "stp_act": "-",
+          "stp_id": "0",
+          "amend_text": "-",
+          "bbo": "-",
+          "pos_margin_mode": "cross",
+          "leverage": "10",
+          "stop_loss_price": "",
+          "stop_profit_price": "",
+          "market_order_slip_ratio": "0.03"
+        }
+      ]
+    }
+    
+
+##  订单 V2 取消订阅
+
+使用 `event: "unsubscribe"`，参数规则与订阅一致。`payload: ["!all"]` 清空当前连接对 `futures.orders_v2` 的全部订阅。取消订阅不重新查询 UTA3.0 资格。
+
+当前连接已订阅的合约即使下架，也仍可取消订阅；若请求中包含当前连接未订阅的未知合约，则整批请求失败，原有订阅保持不变。
+    
+    
+    {
+      "time": 1628736849,
+      "channel": "futures.orders_v2",
+      "event": "unsubscribe",
+      "payload": [
+        "!all"
+      ],
+      "auth": {
+        "method": "api_key",
+        "KEY": "xxxx",
+        "SIGN": "xxxx"
+      }
+    }
+    
+    
+    
+    {
+      "time": 1628736849,
+      "time_ms": 1628736849123,
+      "channel": "futures.orders_v2",
       "event": "unsubscribe",
       "result": {
         "status": "success"
@@ -3496,6 +4877,9 @@ WARNING
 \- clear: 合约下架清退  
 `fee` | Float | 手续费  
 `point_fee` | Float | 点卡手续费  
+`amend_text` | String | 改单备注  
+`biz_info` | String | 业务备注信息  
+`close_size` | String | 平仓数量  
       
     
     {
@@ -3515,7 +4899,39 @@ WARNING
           "role": "maker",
           "text": "api",
           "fee": 0.0009290592,
-          "point_fee": 0
+          "point_fee": 0,
+          "amend_text": "amend",
+          "biz_info": "-",
+          "close_size": "0"
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`size` 为整型：
+    
+    
+    {
+      "time": 1543205083,
+      "time_ms": 1543205083123,
+      "channel": "futures.usertrades",
+      "event": "update",
+      "result": [
+        {
+          "id": "3335259",
+          "create_time": 1628736848,
+          "create_time_ms": 1628736848321,
+          "contract": "BTC_USDT",
+          "order_id": "4872460",
+          "size": 1,
+          "price": "40000.4",
+          "role": "maker",
+          "text": "api",
+          "fee": 0.0009290592,
+          "point_fee": 0,
+          "amend_text": "amend",
+          "biz_info": "-",
+          "close_size": "0"
         }
       ]
     }
@@ -3776,7 +5192,8 @@ WARNING
 `order_id` | Integer | 订单 ID  
 `order_price` | Float | 订单价格  
 `left` | String/Integer | 订单未完成数量  
-`size` | Integer | 原始订单数量  
+`order_size` | String/Integer | 原始订单数量  
+`size` | String/Integer | 强平数量  
 `time` | Integer | 时间  
 `time_ms` | Integer | 时间（以毫秒为单位）  
 `user` | String | 用户 ID  
@@ -3792,14 +5209,15 @@ WARNING
         {
           "entry_price": 209,
           "fill_price": 215.1,
-          "left": 0,
+          "left": "0",
           "leverage": 0.0,
           "liq_price": 213,
           "margin": 0.007816722941,
           "mark_price": 213,
           "order_id": 4093362,
           "order_price": 215.1,
-          "size": "-124",
+          "order_size": "-124",
+          "size": "-124.5",
           "time": 1541486601,
           "time_ms": 1541486601123,
           "contract": "BTC_USDT",
@@ -4057,8 +5475,10 @@ WARNING
 ---|---|---  
 `entry_price` | Float | 入场价格  
 `fill_price` | Float | 执行价格  
-`position_size` | Integer | 持仓规模  
-`trade_size` | Integer | 交易数量  
+`position_size` | String/Integer | 持仓规模  
+`trade_size` | String/Integer | 交易数量  
+`pos_margin_mode` | String | 仓位保证金模式  
+`leverage` | String | 杠杆  
 `time` | Integer | 时间  
 `time_ms` | Integer | 时间（以毫秒为单位）  
 `user` | String | 用户 ID  
@@ -4079,7 +5499,34 @@ WARNING
           "time": 1541486601,
           "time_ms": 1541486601123,
           "contract": "BTC_USDT",
-          "user": "1040"
+          "user": "1040",
+          "pos_margin_mode": "cross",
+          "leverage": "10"
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`position_size`、`trade_size` 为整型：
+    
+    
+    {
+      "channel": "futures.auto_deleverages",
+      "event": "update",
+      "time": 1541505434,
+      "time_ms": 1541505434123,
+      "result": [
+        {
+          "entry_price": 209,
+          "fill_price": 215.1,
+          "position_size": 10,
+          "trade_size": 10,
+          "time": 1541486601,
+          "time_ms": 1541486601123,
+          "contract": "BTC_USDT",
+          "user": "1040",
+          "pos_margin_mode": "cross",
+          "leverage": "10"
         }
       ]
     }
@@ -5158,6 +6605,8 @@ WARNING
 `time_ms` | Integer | 更新 unix 时间戳（以毫秒为单位）  
 `user` | String | 用户 ID  
 `update_id` | Integer | 消息序列号，每次推送 order 之后会自增 1  
+`pos_margin_mode` | String | 仓位保证金模式（逐仓/全仓等）  
+`lever` | String | 杠杆信息（逐步替代 `leverage` 等字段）  
       
     
     {
@@ -5186,7 +6635,46 @@ WARNING
           "time": 1628736848,
           "time_ms": 1628736848321,
           "user": "110xxxxx",
-          "update_id": 170919
+          "update_id": 170919,
+          "pos_margin_mode": "cross",
+          "lever": "10"
+        }
+      ]
+    }
+    
+
+未携带 `X-Gate-Size-Decimal: 1` 请求头时，`size` 为整型：
+    
+    
+    {
+      "time": 1588212926,
+      "time_ms": 1588212926123,
+      "channel": "futures.positions",
+      "event": "update",
+      "result": [
+        {
+          "contract": "BTC_USDT",
+          "cross_leverage_limit": 0,
+          "entry_price": 40000.36666661111,
+          "history_pnl": -0.000108569505,
+          "history_point": 0,
+          "last_close_pnl": -0.000050123368,
+          "leverage": 0,
+          "leverage_max": 100,
+          "liq_price": 0.1,
+          "maintenance_rate": 0.005,
+          "margin": 49.999890611186,
+          "mode": "single",
+          "realised_pnl": -1.25e-8,
+          "realised_point": 0,
+          "risk_limit": 100,
+          "size": 3,
+          "time": 1628736848,
+          "time_ms": 1628736848321,
+          "user": "110xxxxx",
+          "update_id": 170919,
+          "pos_margin_mode": "cross",
+          "lever": "10"
         }
       ]
     }
@@ -5714,7 +7202,18 @@ WARNING
 `is_stop_order` | boolean | 是否停止  
 `stop_trigger` | Object |   
 `order_type` | String | 止盈/止损类型，详情参见 http api  
-`me_order_id` | Number | 订单止盈/止损对应订单 ID.  
+`me_order_id` | String | 订单止盈/止损对应订单 ID  
+`id_string` | String | 自动订单 ID 字符串形式  
+`finish_time` | Number | 结束时间  
+`finish_as` | String | 结束方式  
+`parent_id` | Number | 父订单 ID  
+`stop_profit_price` | String | 止盈价  
+`stop_loss_price` | String | 止损价  
+`batch_id` | String | 批次 ID  
+`pos_margin_mode` | String | 仓位保证金模式  
+`position_mode` | String | 持仓模式  
+`leverage` | String | 杠杆  
+`mmr_trigger` | Object | MMR 触发配置  
       
     
     {
@@ -5756,7 +7255,20 @@ WARNING
             "order_price": ""
           },
           "order_type": "close-long-order",
-          "me_order_id": "213867453823"
+          "id_string": "9256",
+          "me_order_id": "213867453823",
+          "finish_time": 0,
+          "finish_as": "",
+          "parent_id": 0,
+          "stop_profit_price": "",
+          "stop_loss_price": "",
+          "batch_id": "",
+          "pos_margin_mode": "cross",
+          "position_mode": "single",
+          "leverage": "10",
+          "mmr_trigger": {
+            "rate": ""
+          }
         }
       ]
     }
@@ -8429,4 +9941,4 @@ req_param` API 订单模型的 JSON 字节数据:
     }
     
 
-Last Updated: 5/26/2026, 2:23:23 AM
+Last Updated: 10/22/2026, 7:54:06 AM

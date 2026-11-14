@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/earnuni
 api_type: Earn
-updated_at: 2026-05-27 20:15:04.719827
+updated_at: 2026-11-13 20:57:05.481129
 ---
 
 # EarnUni
@@ -18,8 +18,6 @@ GET `/earn/uni/currencies`
 _Query lending currency list_
 
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -96,8 +94,6 @@ currency | path | string | Required | Currency
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | UniCurrency  
@@ -172,8 +168,6 @@ page | query | integer(int32) | Optional | Page number
 limit | query | integer(int32) | Optional | Maximum number of items returned. Default: 100, minimum: 1, maximum: 100  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -274,17 +268,17 @@ POST `/earn/uni/lends`
 
 _Create lending or redemption_
 
-Lending: When lending, a minimum lending rate must be set. After successful lending is determined on an hourly basis, earnings will be calculated based on the determined rate. Earnings for each hour will be settled at the top of the hour. If lending fails due to an excessively high interest rate, no interest will be earned for that hour. If funds are redeemed before the hourly for that hour. Priority: Under the same interest rate, wealth management products created or modified earlier will be prioritized for lending. Redemption: For funds that failed to be lent, redemption will be credited immediately. For funds successfully lent, they are entitled to the earnings for that hour, and redemption will be credited in the next hourly interval. Note: The two minutes before and after the hourly mark are the settlement period, during which lending and redemption are prohibited.
+Set a minimum lending rate when lending. Once lending is determined to be successful at the top of the hour, earnings are calculated at the determined rate and settled at each hourly mark. If lending fails because the rate is too high, or funds are redeemed before the hourly assessment, no interest is earned for that hour. At the same rate, subscriptions created or amended earlier have lending priority. Redemption of funds that failed to be lent can be credited immediately. Successfully lent funds earn that hour’s return and are credited at the next hourly mark after redemption. The two minutes before and after each hourly mark are the settlement period, during which lending subscriptions and redemptions are prohibited.
 
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | CreateUniLend | Required | none  
-↳ currency | body | string | Required | Currency name  
-↳ amount | body | string | Required | Amount to deposit into lending pool  
-↳ type | body | string | Required | Operation type: lend - Lend, redeem - Redeem  
-↳ min_rate | body | string | Optional | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
+» currency | body | string | Required | Currency name  
+» amount | body | string | Required | Amount to deposit into lending pool  
+» type | body | string | Required | Operation type: lend - Lend, redeem - Redeem  
+» min_rate | body | string | Optional | Minimum interest rate. If set too high, lending may fail and no interest will be earned. Required for lending operations.  
   
 ####  Enumerated Values
 
@@ -294,8 +288,6 @@ Enumerated ValuesParameter | Value
 » type | redeem  
   
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Operation successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -375,12 +367,10 @@ Currently only supports amending minimum interest rate (hourly)
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | PatchUniLend | Required | none  
-↳ currency | body | string | Optional | Currency name  
-↳ min_rate | body | string | Optional | Minimum interest rate  
+» currency | body | string | Optional | Currency name  
+» min_rate | body | string | Optional | Minimum hourly interest rate.  
   
 ### Responses
-
-  * 204[No Content ](https://tools.ietf.org/html/rfc7231#section-6.3.5)Updated successfully
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -485,8 +475,6 @@ type | redeem
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [UniLendRecord]  
@@ -587,8 +575,6 @@ ParametersName | In | Type | Required | Description
 currency | path | string | Required | Currency  
   
 ### Responses
-
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
 
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
@@ -697,8 +683,6 @@ Specify the end time. If not specified, it defaults to the current time, and the
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | [UniInterestRecord]  
@@ -798,8 +782,6 @@ currency | path | string | Required | Currency
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)Query successful
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | Query successful | UniCurrencyInterest  
@@ -891,8 +873,6 @@ asset | query | string | Required | Currency name
   
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)none
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
@@ -977,8 +957,6 @@ _Currency estimated annualized interest rate_
 
 ### Responses
 
-  * 200[OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1)none
-
 ResponsesStatus | Meaning | Description | Schema  
 ---|---|---|---  
 200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | [Inline]  
@@ -1055,37 +1033,29 @@ Code samples
 
 #  Schemas
 
-##  UniLend
+##  UniInterestRecord
 
-_Loan record_
+_Interest Record_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
+status | integer | Optional | read-only | Status: 0 - fail, 1 - success  
 currency | string | Optional | read-only | Currency  
-current_amount | string | Optional | read-only | Current amount  
-amount | string | Optional | read-only | Total Lending Amount  
-lent_amount | string | Optional | read-only | Lent Amount  
-frozen_amount | string | Optional | read-only | Pending Redemption Amount  
-min_rate | string | Optional | read-only | Minimum interest rate  
+actual_rate | string | Optional | read-only | Actual Rate  
+interest | string | Optional | read-only | Interest  
 interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-reinvest_left_amount | string | Optional | read-only | Non-reinvested Amount  
-create_time | integer(int64) | Optional | read-only | Lending Order Creation Time  
-update_time | integer(int64) | Optional | read-only | Lending Order Last Update Time  
+create_time | integer(int64) | Optional | read-only | Created time  
       
     
     {
+      "status": 0,
       "currency": "string",
-      "current_amount": "string",
-      "amount": "string",
-      "lent_amount": "string",
-      "frozen_amount": "string",
-      "min_rate": "string",
+      "actual_rate": "string",
+      "interest": "string",
       "interest_status": "string",
-      "reinvest_left_amount": "string",
-      "create_time": 0,
-      "update_time": 0
+      "create_time": 0
     }
     
     
@@ -1119,29 +1089,21 @@ create_time | integer(int64) | Optional | read-only | Created time
     
     
 
-##  UniInterestRecord
+##  UniCurrencyInterest
 
-_Interest Record_
+_UniCurrencyInterest_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-status | integer | Optional | read-only | Status: 0 - fail, 1 - success  
 currency | string | Optional | read-only | Currency  
-actual_rate | string | Optional | read-only | Actual Rate  
-interest | string | Optional | read-only | Interest  
 interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
-create_time | integer(int64) | Optional | read-only | Created time  
       
     
     {
-      "status": 0,
       "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
-      "create_time": 0
+      "interest_status": "string"
     }
     
     
@@ -1161,50 +1123,6 @@ interest | string | Optional | read-only | Interest income
     {
       "currency": "string",
       "interest": "string"
-    }
-    
-    
-
-##  PatchUniLend
-
-_PatchUniLend_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency name  
-min_rate | string | Optional | none | Minimum interest rate  
-      
-    
-    {
-      "currency": "string",
-      "min_rate": "string"
-    }
-    
-    
-
-##  UniCurrency
-
-_Currency detail_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | read-only | Currency name  
-min_lend_amount | string | Optional | read-only | The minimum lending amount, in the unit of the currency  
-max_lend_amount | string | Optional | read-only | The total maximum lending amount, in USDT  
-max_rate | string | Optional | read-only | Maximum rate (Hourly)  
-min_rate | string | Optional | read-only | Minimum rate (Hourly)  
-      
-    
-    {
-      "currency": "string",
-      "min_lend_amount": "string",
-      "max_lend_amount": "string",
-      "max_rate": "string",
-      "min_rate": "string"
     }
     
     
@@ -1239,19 +1157,79 @@ type | redeem
     
     
 
-##  UniCurrencyInterest
+##  UniCurrency
 
-_UniCurrencyInterest_
+_Currency detail_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | read-only | Currency name  
+min_lend_amount | string | Optional | read-only | The minimum lending amount, in the unit of the currency  
+max_lend_amount | string | Optional | read-only | The total maximum lending amount, in USDT  
+max_rate | string | Optional | read-only | Maximum rate (Hourly)  
+min_rate | string | Optional | read-only | Minimum rate (Hourly)  
+      
+    
+    {
+      "currency": "string",
+      "min_lend_amount": "string",
+      "max_lend_amount": "string",
+      "max_rate": "string",
+      "min_rate": "string"
+    }
+    
+    
+
+##  PatchUniLend
+
+_PatchUniLend_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | none | Currency name  
+min_rate | string | Optional | none | Minimum hourly interest rate.  
+      
+    
+    {
+      "currency": "string",
+      "min_rate": "string"
+    }
+    
+    
+
+##  UniLend
+
+_Loan record_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
 currency | string | Optional | read-only | Currency  
+current_amount | string | Optional | read-only | Current amount  
+amount | string | Optional | read-only | Total Lending Amount  
+lent_amount | string | Optional | read-only | Lent Amount  
+frozen_amount | string | Optional | read-only | Pending Redemption Amount  
+min_rate | string | Optional | read-only | Minimum interest rate  
 interest_status | string | Optional | read-only | Interest status: interest_dividend - Normal dividend, interest_reinvest - Interest reinvestment  
+reinvest_left_amount | string | Optional | read-only | Non-reinvested Amount  
+create_time | integer(int64) | Optional | read-only | Lending Order Creation Time  
+update_time | integer(int64) | Optional | read-only | Lending Order Last Update Time  
       
     
     {
       "currency": "string",
-      "interest_status": "string"
+      "current_amount": "string",
+      "amount": "string",
+      "lent_amount": "string",
+      "frozen_amount": "string",
+      "min_rate": "string",
+      "interest_status": "string",
+      "reinvest_left_amount": "string",
+      "create_time": 0,
+      "update_time": 0
     }

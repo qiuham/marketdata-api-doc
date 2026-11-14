@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/delivery/ws/en
 api_type: WebSocket
-updated_at: 2026-05-27 20:18:34.587839
+updated_at: 2026-11-13 20:58:28.402662
 ---
 
 # Gate Delivery WebSocket v4.0.0
@@ -38,6 +38,10 @@ Base URLs:
   * TestNet Trading: `wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/btc`
 
 ##  Changelog
+
+2026-06-25
+
+  * Added `futures.obu` order book V2 (OBU) channel for faster depth updates
 
 2025-03-21
 
@@ -709,6 +713,10 @@ Push best bid and ask in real-time.
 
 Push order book change with user-specified update frequency.
 
+  * `futures.obu`
+
+Order book updates (OBU), a faster method for retrieving depth information.
+
 WARNING
 
 Receiving order book update through `futures.order_book` is not recommended to use. `futures.order_book_update` can provide more timely update with less traffic
@@ -1178,6 +1186,288 @@ The above command returns JSON structured like this:
       "channel": "futures.order_book_update",
       "event": "unsubscribe",
       "error": null,
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+#  Order Book V2 API
+
+**Provide a faster method for retrieving depth information**
+
+##  Maintain local depth
+
+Note:
+
+  1. Full Depth Snapshot Push (`full=true`):When the channel pushes full depth data, the local depth should be completely replaced with the received data. Additionally, the `depth ID` should be updated to the value of the `u` field in the message. Note that the server may send full depth snapshots multiple times. 
+     1. The first message pushed after subscribing to this channel is a full depth snapshot.
+  2. Incremental Depth Push (`full=false`):Incremental messages do not include the full field. Instead, each message contains the fields `U` (starting depth ID) and `u` (ending depth ID). 
+     1. If `U` equals the local `depth ID` \+ `1`, it indicates a continuous depth update: 
+        1. Replace the local depth ID with the value of `u` from the message.
+        2. If `a` (asks) and `b` (bids) in the update are not empty, update the corresponding bid and ask depth levels based on price.(Each `level[0]` represents the price, and `level[1]` represents the quantity.)If `level[1]` is `"0"`, the corresponding price level should be removed from the order book.
+     2. If `U` ≠ local `depth ID` \+ `1`, the depth data is not continuous. In this case, you must unsubscribe from the market and resubscribe to retrieve the initial depth snapshot.
+  3. Subscription Limitations:For the same contract's depth stream, a single connection is allowed to subscribe only once. Duplicate subscription attempts will result in an error. Example of a failed attempt:
+
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482960,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.obu",
+      "event": "subscribe",
+      "payload": [
+        "ob.BTC_USDT_20230630.100"
+      ],
+      "error": {
+        "code": 2,
+        "message": "Alert sub ob.BTC_USDT_20230630.100"
+      },
+      "result": {
+        "status": "fail"
+      }
+    }
+    
+
+##  Order book V2 subscription
+
+###  Request
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`subscribe`
+
+  * params
+
+`payload`It is a list containing stream names. The format is: ob.{contract}.{level}; for example, ob.BTC_USDT_20230630.100, ob.BTC_USDT_20230630.20
+
+The `level` enum values are: 100, 20; Update frequency: 100-level updates every 100 ms; 20-level updates every 20 ms.
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt")
+    ws.send('{"time" : 123456, "channel" : "futures.obu",
+            "event": "subscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "subscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The above command returns JSON structured like this:
+    
+    
+    {
+      "time": 1747391482,
+      "time_ms": 1747391482384,
+      "id": 1,
+      "conn_id": "d9db9373dc5e081e",
+      "trace_id": "ee001938590e183db957bd5ba71651c0",
+      "channel": "futures.obu",
+      "event": "subscribe",
+      "payload": [
+        "ob.BTC_USDT_20230630.100"
+      ],
+      "result": {
+        "status": "success"
+      }
+    }
+    
+
+##  Order book V2 update notification
+
+**Notify delivery contract order book v2 update**
+
+###  Notify
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`update`
+
+  * params
+
+Notifyfield | type | description  
+---|---|---  
+`result` | Object | Ask and bid price changes since the previous update  
+»`t` | Integer | Order book generation timestamp (in milliseconds)  
+»`full` | Boolean | `true` indicates a full depth snapshot; `false` indicates incremental depth updates. When the value is `false`, this field is omitted from the message  
+»`s` | String | Name of the depth stream  
+»`U` | Integer | Starting order book update ID of this update  
+»`u` | Integer | Ending order book update ID of this update  
+»`b` | `Array[OrderBookArray]` | Bids updates since the last update  
+»» OrderBookArray | `Array[String]` | An array pair [Price, Amount]; if Amount = 0, the corresponding entry should be removed from the local depth.  
+»`a` | `Array[OrderBookArray]` | Asks updates since the last update  
+»» OrderBookArray | `Array[String]` | An array pair [Price, Amount]; if Amount = 0, the corresponding entry should be removed from the local depth.  
+  
+Example of full depth push:
+    
+    
+    {
+    	"channel": "futures.obu",
+    	"result": {
+    		"t": 1743673026995,
+    		"full": true,
+    		"s": "ob.BTC_USDT_20230630.100",
+    		"u": 79072179673,
+    		"b": [
+    			["83705.9", "30166"]
+    		],
+    		"a": [
+    			["83706", "4208"]
+    		]
+    	},
+    	"time_ms": 1743673026999
+    }
+    
+
+Example of incremental push:
+    
+    
+    {
+    	"channel": "futures.obu",
+    	"result": {
+    		"t": 1743673027017,
+    		"s": "ob.BTC_USDT_20230630.100",
+    		"U": 79072179674,
+    		"u": 79072179694,
+    		"b": [
+    			["83702.2", "62"],
+    			["83702.1", "0"],
+    			["83702", "0"],
+    			["83685.6", "120"],
+    			["83685", "239"]
+    		]
+    	},
+    	"time_ms": 1743673027020
+    }
+    
+
+##  Order book V2 update unsubscription
+
+Unsubscribe`specified delivery contract order book v2`
+
+Unsubscribe `specified delivery contract order book v2`
+
+###  Request
+
+  * channel
+
+`futures.obu`
+
+  * event
+
+`unsubscribe`
+
+Code example
+    
+    
+    from websocket import create_connection
+    
+    ws = create_connection("wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt")
+    ws.send(
+      '{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}')
+    print(ws.recv())
+    
+
+Code example
+    
+    
+    package main
+    
+    import (
+    	"fmt"
+    	"log"
+    	"net/http"
+    
+    	"github.com/gorilla/websocket"
+    )
+    
+    func main() {
+    	url := "wss://fx-ws-testnet.gateio.ws/v4/ws/delivery/usdt"
+    	conn, _, err := websocket.DefaultDialer.Dial(url, http.Header{"X-Gate-Size-Decimal": []string{"1"}})
+    	if err != nil {
+    		log.Fatal("dial error:", err)
+    	}
+    	defer conn.Close()
+    
+    	msg := `{"time" : 123456, "channel" : "futures.obu", "event": "unsubscribe", "payload" : ["ob.BTC_USDT_20230630.100"]}`
+    
+    	err = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+    	if err != nil {
+    		log.Fatal("write message error:", err)
+    	}
+    
+    	_, message, err := conn.ReadMessage()
+    	if err != nil {
+    		log.Fatal("read message error:", err)
+    	}
+    
+    	fmt.Println(string(message))
+    }
+    
+    
+
+The above command returns JSON structured like this:
+    
+    
+    {
+      "time": 1743673617,
+      "time_ms": 1743673617242,
+      "id": 1,
+      "conn_id": "7b06ff199a98ab0e",
+      "trace_id": "8f86e4021a84440e502f73fde5b94918",
+      "channel": "futures.obu",
+      "event": "unsubscribe",
+      "payload": ["ob.BTC_USDT_20230630.100"],
       "result": {
         "status": "success"
       }
@@ -2900,4 +3190,4 @@ The above command returns JSON structured like this:
     }
     
 
-Last Updated: 4/27/2026, 10:15:14 AM
+Last Updated: 6/25/2026, 7:44:04 AM
