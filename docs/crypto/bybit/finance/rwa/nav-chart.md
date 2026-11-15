@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/rwa/nav-chart
 api_type: REST
-updated_at: 2026-11-14 18:36:22.725748
+updated_at: 2026-11-15 18:36:45.813456
 ---
 
 # Get NAV Chart

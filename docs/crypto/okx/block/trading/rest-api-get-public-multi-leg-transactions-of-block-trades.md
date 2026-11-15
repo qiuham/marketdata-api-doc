@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#block-trading-rest-api-get-public-multi-leg-transactions-of-block-trades
 anchor_id: block-trading-rest-api-get-public-multi-leg-transactions-of-block-trades
 api_type: REST
-updated_at: 2026-11-14 18:43:19.192925
+updated_at: 2026-11-15 18:44:57.496452
 ---
 
 # Get public multi-leg transactions of block trades

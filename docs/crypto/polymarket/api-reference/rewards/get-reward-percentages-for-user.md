@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/rewards/get-reward-percentages-for-user'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # Get reward percentages for user

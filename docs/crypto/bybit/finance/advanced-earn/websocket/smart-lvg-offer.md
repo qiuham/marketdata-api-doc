@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/websocket/smart-lvg-offer
 api_type: WebSocket
-updated_at: 2026-11-14 18:36:06.489980
+updated_at: 2026-11-15 18:36:28.668065
 ---
 
 # Smart Leverage Offers

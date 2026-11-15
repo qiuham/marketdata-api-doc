@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/stp_faq
 api_type: REST
-updated_at: 2026-11-14 18:25:00.012163
+updated_at: 2026-11-15 18:25:24.225299
 ---
 
 # Self Trade Prevention (STP) FAQ

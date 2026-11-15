@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-14 18:33:24.116057
+updated_at: 2026-11-15 18:34:03.675970
 ---
 
 # core-trading-derivatives-trading-coin-m-futures__ws-streams spec

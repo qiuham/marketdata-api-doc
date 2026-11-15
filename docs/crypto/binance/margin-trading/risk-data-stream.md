@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream
 api_type: REST
-updated_at: 2026-11-14 18:26:32.567337
+updated_at: 2026-11-15 18:27:21.080448
 ---
 
 # Risk Data Stream
@@ -39,7 +39,7 @@ Margin call trigger the event
 
 > **Schema:** [`marginLevelStatusChange`](/en/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#marginlevelstatuschange)
 
-Loading schema...
+`{ "e": "MARGIN_LEVEL_STATUS_CHANGE", // Event Type "E": 1701949763462, // Event Time "l": "1.1", // Margin level "s": "MARGIN_CALL" // Margin call status }`
 
 * * *
 
@@ -63,7 +63,7 @@ Liability update during the following:
 
 > **Schema:** [`userLiabilityChange`](/en/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#userliabilitychange)
 
-Loading schema...
+`{ "e": "USER_LIABILITY_CHANGE", // Event Type "E": 1701949801133, // Event Time "a": "BTC", // Asset "t": "BORROW", // Liability Update Type "p": "0.00000100", // Principle Quantity "i": "0.00000000" // Interest Quantity }`
 
 Was this page helpful?
 
@@ -107,7 +107,7 @@ Last modified on November 12, 2026
 
 > **Schema:** [`marginLevelStatusChange`](/zh-CN/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#marginlevelstatuschange)
 
-`{ "e": "MARGIN_LEVEL_STATUS_CHANGE", // Event Type "E": 1701949763462, // Event Time "l": "1.1", // Margin level "s": "MARGIN_CALL" // Margin call status }`
+Loading schema...
 
 * * *
 
@@ -131,7 +131,7 @@ Last modified on November 12, 2026
 
 > **Schema:** [`userLiabilityChange`](/zh-CN/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#userliabilitychange)
 
-`{ "e": "USER_LIABILITY_CHANGE", // Event Type "E": 1701949801133, // Event Time "a": "BTC", // Asset "t": "BORROW", // Liability Update Type "p": "0.00000100", // Principle Quantity "i": "0.00000000" // Interest Quantity }`
+Loading schema...
 
 此页面是否有帮助？
 

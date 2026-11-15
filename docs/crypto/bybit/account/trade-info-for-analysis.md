@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/trade-info-for-analysis
 api_type: Account
-updated_at: 2026-11-14 18:34:37.993703
+updated_at: 2026-11-15 18:35:20.906329
 ---
 
 # Get Trade Info For Analysis

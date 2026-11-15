@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/rebates/get-current-rebated-fees-for-a-maker'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # Get current rebated fees for a maker

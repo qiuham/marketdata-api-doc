@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/collateral-info
 api_type: Account
-updated_at: 2026-11-14 18:34:32.073038
+updated_at: 2026-11-15 18:35:13.946672
 ---
 
 # Get Collateral Info

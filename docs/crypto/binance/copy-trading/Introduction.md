@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/Introduction
 api_type: REST
-updated_at: 2026-11-14 18:27:05.691655
+updated_at: 2026-11-15 18:27:56.922738
 ---
 
 # Introduction

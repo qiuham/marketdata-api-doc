@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/market-data/get-midpoint-prices-request-body'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # 获取中间价（请求体）

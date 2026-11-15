@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq
 api_type: REST
-updated_at: 2026-11-14 18:25:22.885592
+updated_at: 2026-11-15 18:25:57.879179
 ---
 
 # Self Trade Prevention (STP) FAQ

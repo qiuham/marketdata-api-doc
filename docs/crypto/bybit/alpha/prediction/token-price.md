@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/prediction/token-price
 api_type: REST
-updated_at: 2026-11-14 18:35:14.535211
+updated_at: 2026-11-15 18:35:30.954731
 ---
 
 # Get Token Price

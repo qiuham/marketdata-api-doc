@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-ticker-public
 anchor_id: spread-trading-rest-api-get-ticker-public
 api_type: REST
-updated_at: 2026-11-14 18:43:19.687202
+updated_at: 2026-11-15 18:44:58.268688
 ---
 
 # Get ticker (Public)

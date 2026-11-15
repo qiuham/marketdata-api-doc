@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/websockets/book-checksum-v2'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # Book checksum (WebSocket v2)

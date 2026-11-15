@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/filters
 api_type: REST
-updated_at: 2026-11-14 18:25:00.187324
+updated_at: 2026-11-15 18:25:24.450503
 ---
 
 # Filters

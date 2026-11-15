@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/trading-stop
 api_type: Position
-updated_at: 2026-11-14 18:36:56.173697
+updated_at: 2026-11-15 18:37:23.997799
 ---
 
 # Set Trading Stop

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams
 api_type: REST
-updated_at: 2026-11-14 18:25:26.463239
+updated_at: 2026-11-15 18:26:03.281685
 ---
 
 # User Data Streams
@@ -388,7 +388,7 @@ When the `listenKey` used for the user data stream turns expired, this event wil
 
 > **Schema:** [`listenKeyExpired`](/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/~schemas#listenkeyexpired)
 
-`{ "e": "listenKeyExpired", // Event Type "E": 1736996475556, // Event Time "listenKey": "WsCMN0a4KHUPTQuX6IUnqEZfB1inxmv1qR4kbf1LuEjur5VdbzqvyxqG9TSjVVxv" }`
+Loading schema...
 
 Was this page helpful?
 
@@ -644,7 +644,7 @@ Last modified on November 12, 2026
 
 > **Schema:** [`conditionalOrderTriggerReject`](/zh-CN/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/~schemas#conditionalordertriggerreject)
 
-Loading schema...
+`{ "e": "CONDITIONAL_ORDER_TRIGGER_REJECT", // Event Type "E": 1685517224945, // Event Time "T": 1685517224955, // Message send time "or": { "s": "ETHUSDT", // Symbol "i": 155618472834, // Order Id "r": "Due to the order could not be filled immediately, the FOK order has been rejected. The order will not be recorded in the order history" // Reject Reason } }`
 
 * * *
 
@@ -748,7 +748,7 @@ Loading schema...
 
 > **Schema:** [`algoUpdate`](/zh-CN/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/~schemas#algoupdate)
 
-Loading schema...
+`{ "e": "ALGO_UPDATE", // Event Type "T": 1750515742297, // Transaction Time "E": 1750515742303, // Event Time "o": { "caid": "Q5xaq5EGKgXXa0fD7fs0Ip", // Client Algo Id "aid": 2148719, // Algo Id "at": "CONDITIONAL", // Algo Type "o": "TAKE_PROFIT", // Order Type "s": "BNBUSDT", // Symbol "S": "SELL", // Side "ps": "BOTH", // Position Side "f": "GTC", // Time in force "q": "0.01", // Quantity "X": "CANCELED", // Algo Status "ai": "", // Order Id "ap": "0.00000", // Avg fill price in matching engine, only display when order is triggered and placed in matching engine "aq": "0.00000", // Executed quantity in matching engine, only display when order is triggered and placed in matching engine "act": "0", // Actual order type in matching engine, only display when order is triggered and placed in matching engine "tp": "750", // Trigger Price "p": "750", // Order Price "V": "EXPIRE_MAKER", // STP mode "wt": "CONTRACT_PRICE", // Working type "pm": "NONE", // Price match mode "cp": false, // If Close-All "pP": false, // If price protection is turned on "R": false, // Is this reduce only "tt": 0, // Trigger time "gtd": 0, // Good till time for GTD time in force "rm": "Reduce Only reject", // Algo order failed reason "ia": false, // Is activated or not, only meaningful for trailing order "spt": "ChaseRatio", // Sub price type, only meaningful for CHASE order "spv": "0.01", // Sub price value, only meaningful for CHASE order "splv": "0.01" // Sub price limit value, only meaningful for CHASE order } }`
 
 * * *
 
@@ -774,7 +774,7 @@ Loading schema...
 
 > **Schema:** [`listenKeyExpired`](/zh-CN/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/~schemas#listenkeyexpired)
 
-Loading schema...
+`{ "e": "listenKeyExpired", // Event Type "E": 1736996475556, // Event Time "listenKey": "WsCMN0a4KHUPTQuX6IUnqEZfB1inxmv1qR4kbf1LuEjur5VdbzqvyxqG9TSjVVxv" }`
 
 此页面是否有帮助？
 

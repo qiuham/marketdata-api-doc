@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-activate-feature
 anchor_id: trading-account-rest-api-activate-feature
 api_type: REST
-updated_at: 2026-11-14 18:43:15.276478
+updated_at: 2026-11-15 18:44:50.969774
 ---
 
 # Activate feature

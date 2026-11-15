@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/pegged_orders
 api_type: REST
-updated_at: 2026-11-14 18:24:54.646584
+updated_at: 2026-11-15 18:25:16.242371
 ---
 
 # Pegged orders

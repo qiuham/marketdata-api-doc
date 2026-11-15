@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # Info endpoint

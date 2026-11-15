@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/affiliate/affiliate-info
 api_type: REST
-updated_at: 2026-11-14 18:34:39.579910
+updated_at: 2026-11-15 18:35:22.667868
 ---
 
 # Get Affiliate User Info

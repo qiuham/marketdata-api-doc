@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/ws-streams/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-14 18:33:31.583778
+updated_at: 2026-11-15 18:34:12.550068
 ---
 
 # core-trading-derivatives-trading-options__ws-streams spec

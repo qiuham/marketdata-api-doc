@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/quick-start
 api_type: REST
-updated_at: 2026-11-14 18:27:26.322680
+updated_at: 2026-11-15 18:28:20.470164
 ---
 
 # Quick Start

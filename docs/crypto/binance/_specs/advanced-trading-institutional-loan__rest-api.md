@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-institutional-loan/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-14 18:34:06.422177
+updated_at: 2026-11-15 18:34:47.270422
 ---
 
 # advanced-trading-institutional-loan__rest-api spec

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/stock
 api_type: REST
-updated_at: 2026-11-14 18:42:12.208368
+updated_at: 2026-11-15 18:43:54.367137
 ---
 
 # 股票

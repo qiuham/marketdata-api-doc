@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/paylink/get-the-generated-paylink-code'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # Get the generated paylink code

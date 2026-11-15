@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/markets/get-batch-prices-history'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # 批量获取历史价格

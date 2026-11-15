@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-options/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-14 18:33:27.921878
+updated_at: 2026-11-15 18:34:07.891458
 ---
 
 # core-trading-derivatives-trading-options__rest-api spec

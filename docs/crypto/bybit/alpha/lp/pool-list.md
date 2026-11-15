@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/pool-list
 api_type: REST
-updated_at: 2026-11-14 18:34:41.270533
+updated_at: 2026-11-15 18:35:24.459343
 ---
 
 # Get LP Pool List

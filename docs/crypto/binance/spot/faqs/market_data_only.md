@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/market_data_only
 api_type: Market Data
-updated_at: 2026-11-14 18:24:52.191771
+updated_at: 2026-11-15 18:25:11.997034
 ---
 
 # Market Data Only URLs

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-wallet/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-14 18:33:40.796441
+updated_at: 2026-11-15 18:34:22.162086
 ---
 
 # core-trading-wallet__rest-api spec

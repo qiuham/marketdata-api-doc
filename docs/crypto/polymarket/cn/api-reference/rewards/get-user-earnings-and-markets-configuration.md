@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rewards/get-user-earnings-and-markets-configuration'
-updated_at: 2026-11-14
+updated_at: 2026-11-15
 ---
 
 # 获取用户收益和市场配置

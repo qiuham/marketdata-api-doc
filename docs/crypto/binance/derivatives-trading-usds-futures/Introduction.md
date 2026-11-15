@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/Introduction
 api_type: REST
-updated_at: 2026-11-14 18:25:22.022309
+updated_at: 2026-11-15 18:25:56.751274
 ---
 
 # Introduction

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/convert/quick-start
 api_type: REST
-updated_at: 2026-11-14 18:27:15.451564
+updated_at: 2026-11-15 18:28:09.275711
 ---
 
 # Quick Start

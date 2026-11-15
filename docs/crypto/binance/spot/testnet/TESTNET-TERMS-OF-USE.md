@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/TESTNET-TERMS-OF-USE
 api_type: REST
-updated_at: 2026-11-14 18:25:03.146925
+updated_at: 2026-11-15 18:25:29.860909
 ---
 
 # SPOT Testnet Terms of Use
