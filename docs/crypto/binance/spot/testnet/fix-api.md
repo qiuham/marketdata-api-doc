@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/fix-api
 api_type: REST
-updated_at: 2026-11-15 18:25:33.824123
+updated_at: 2026-11-16 18:28:43.645683
 ---
 
 # FIX API
@@ -1491,7 +1491,7 @@ See the [SBE FAQ](/en/docs/products/spot/faqs/sbe_faq) for more information on g
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Filters](/en/docs/products/spot/testnet/filters)[REST API](/en/docs/products/spot/testnet/rest-api)
 
@@ -2983,6 +2983,6 @@ See the [SBE FAQ](/zh-CN/docs/products/spot/faqs/sbe_faq) for more information o
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Filters](/zh-CN/docs/products/spot/testnet/filters)[REST API](/zh-CN/docs/products/spot/testnet/rest-api)

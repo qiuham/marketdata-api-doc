@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/market-data/realtime-data'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 实时数据
@@ -1101,6 +1101,13 @@ updated_at: 2026-11-15
 > 现有 RTDS
 > 集成请参阅[迁移指南](https://docs.polymarket.com/cn/migrate/rtds-to-polybolt.md)。
 
+> [!WARNING]
+>
+> 每个参考价格订阅都必须指定数据提供方，
+> 且由 Chainlink 提供的订阅需要你自己的 Chainlink API 密钥。 密钥的发送方式见
+> [PolyBolt
+> 概览](https://docs.polymarket.com/cn/api-reference/live-data/overview.md#发送你的-chainlink-api-密钥)。
+
 使用小写符号。加密货币和 TWAP 的完整符号列表见 [PolyBolt 概览](https://docs.polymarket.com/cn/api-reference/live-data/overview.md#支持的符号)，股票类资产符号见下方对应部分。
 
 ### 历史快照
@@ -1113,11 +1120,17 @@ updated_at: 2026-11-15
 
 > [tab] TypeScript
 >
-> 使用 `@polymarket/client` 0.11.0 或更高版本中已认证的 `SecureClient` 调用 `client.subscribe`。如需创建客户端，请参阅[钱包集成](https://docs.polymarket.com/cn/getting-started/typescript.md#钱包集成)。
+> 使用 `@polymarket/client` 0.11.0 或更高版本中已认证的 `SecureClient` 调用 `client.subscribe`，并通过 `provider` 指定数据提供方。如需创建客户端，请参阅[钱包集成](https://docs.polymarket.com/cn/getting-started/typescript.md#钱包集成)。
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.crypto", symbols: ["btcusd", "ethusd"] },
+>   {
+>     topic: "prices.crypto",
+>     symbols: ["btcusd", "ethusd"],
+>     provider: PriceProvider.Pyth,
+>   },
 > ]);
 >
 > try {
@@ -1219,7 +1232,7 @@ updated_at: 2026-11-15
 > from polymarket.streams import CryptoPriceSpec
 >
 > async with await client.subscribe(
->     CryptoPriceSpec(symbols=["btcusd", "ethusd"])
+>     CryptoPriceSpec(symbols=["btcusd", "ethusd"], provider="pyth")
 > ) as stream:
 >     async for event in stream:
 >         # event: CryptoPriceEvent
@@ -1340,7 +1353,8 @@ updated_at: 2026-11-15
 >     {
 >       "channel": "price.crypto",
 >       "filter": {
->         "symbol": "btcusd"
+>         "symbol": "btcusd",
+>         "provider": "pyth"
 >       }
 >     }
 >   ]
@@ -1353,11 +1367,11 @@ updated_at: 2026-11-15
 
 > [tab] TypeScript
 >
-> 使用已认证的 `SecureClient` 调用 `client.subscribe`，订阅 `prices.equity` 主题和所需的交易符号。
+> 使用已认证的 `SecureClient` 调用 `client.subscribe`，订阅 `prices.equity` 主题、所需的交易符号和数据提供方。从 `@polymarket/client` 导入 `PriceProvider`。
 >
 > ```ts theme={null}
 > const stream = await client.subscribe([
->   { topic: "prices.equity", symbol: "aapl" },
+>   { topic: "prices.equity", symbol: "aapl", provider: PriceProvider.Pyth },
 > ]);
 >
 > try {
@@ -1460,7 +1474,7 @@ updated_at: 2026-11-15
 > from polymarket.streams import EquityPriceSpec
 >
 > async with await client.subscribe(
->     EquityPriceSpec(symbol="aapl")
+>     EquityPriceSpec(symbol="aapl", provider="pyth")
 > ) as stream:
 >     async for event in stream:
 >         # event: EquityPriceEvent
@@ -1543,7 +1557,8 @@ updated_at: 2026-11-15
 >     {
 >       "channel": "price.equity",
 >       "filter": {
->         "symbol": "aapl"
+>         "symbol": "aapl",
+>         "provider": "pyth"
 >       }
 >     }
 >   ]
@@ -1567,15 +1582,20 @@ updated_at: 2026-11-15
 
 ### TWAP 价格
 
-时间加权平均价格（TWAP）表示资产在一段回看窗口内的价格。通过 Polymarket 接收 Chainlink 计算的加密货币 TWAP，回看窗口固定为 60 秒。
+时间加权平均价格（TWAP）表示资产在一段回看窗口内的价格。通过 Polymarket 接收 Chainlink 计算的加密货币 TWAP，回看窗口固定为 60 秒。TWAP 价格仅由 Chainlink 提供，因此请指定 `chainlink`；还需要你的 Chainlink API 密钥。
 
 > [tab] TypeScript
 >
-> 使用已认证的 `SecureClient` 调用 `client.subscribe`，订阅 `prices.crypto.twap` 主题和所需的交易符号。
+> 使用已认证的 `SecureClient` 调用 `client.subscribe`，订阅 `prices.crypto.twap` 主题、所需的交易符号和 Chainlink 数据提供方。从 `@polymarket/client` 导入 `PriceProvider`。
 >
 > ```ts theme={null}
 > const stream = await client.subscribe([
->   { topic: "prices.crypto.twap", symbols: ["btcusd"] },
+>   {
+>     topic: "prices.crypto.twap",
+>     symbols: ["btcusd"],
+>     provider: PriceProvider.Chainlink,
+>     providerApiKey: "<chainlink api key>",
+>   },
 > ]);
 >
 > try {
@@ -1681,7 +1701,7 @@ updated_at: 2026-11-15
 > from polymarket.streams import CryptoTwapPriceSpec
 >
 > async with await client.subscribe(
->     CryptoTwapPriceSpec(symbols=["btcusd"])
+>     CryptoTwapPriceSpec(symbols=["btcusd"], provider="chainlink", provider_api_key="<chainlink api key>")
 > ) as stream:
 >     async for event in stream:
 >         # event: CryptoTwapPriceEvent
@@ -1765,7 +1785,8 @@ updated_at: 2026-11-15
 >       "channel": "price.crypto.twap",
 >       "filter": {
 >         "symbol": "btcusd",
->         "window_seconds": 60
+>         "window_seconds": 60,
+>         "provider": "chainlink"
 >       }
 >     }
 >   ]

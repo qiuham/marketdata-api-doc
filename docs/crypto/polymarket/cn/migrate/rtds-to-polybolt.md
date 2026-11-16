@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/migrate/rtds-to-polybolt'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 从 RTDS 迁移到 PolyBolt
@@ -18,6 +18,13 @@ updated_at: 2026-11-15
 > 通过 TypeScript、Python SDK 或 WebSocket API 将价格订阅从 RTDS 迁移到 PolyBolt。
 
 把参考价格订阅迁移到 PolyBolt，同时保留应用中按事件处理价格的流程。参考价格需要认证。
+
+> [!WARNING]
+>
+> 每个 PolyBolt
+> 价格订阅都必须指定数据提供方， 且由 Chainlink 提供的订阅需要你自己的 Chainlink
+> API 密钥。见[发送你的 Chainlink API
+> 密钥](https://docs.polymarket.com/cn/api-reference/live-data/overview.md#发送你的-chainlink-api-密钥)。
 
 ## 迁移 API 集成
 
@@ -42,18 +49,18 @@ updated_at: 2026-11-15
 
 | RTDS 主题 | RTDS 过滤条件 | PolyBolt 频道 | PolyBolt 过滤条件 | 说明 |
 | - | - | - | - | - |
-| `crypto_prices`（Binance） | `btcusdt` | `price.crypto` | `{"symbol":"btcusd"}` | 数据源默认改为 Chainlink，计价货币从 USDT 改为 USD。 |
-| `crypto_prices_chainlink` | `{"symbol":"btc/usd"}` | `price.crypto` | `{"symbol":"btcusd"}` | 数据源仍为 Chainlink，即 `price.crypto` 的默认数据源。使用 `btcusd` 代替 `btc/usd`。 |
-| `crypto_prices_twap_sixty` | `{"symbol":"btc/usd"}` | `price.crypto.twap` | `{"symbol":"btcusd","window_seconds":60}` | 60 秒 Chainlink TWAP |
+| `crypto_prices`（Binance） | `btcusdt` | `price.crypto` | `{"symbol":"btcusd","provider":"binance"}` | 使用规范符号 `btcusd` 请求 Binance。 |
+| `crypto_prices_chainlink` | `{"symbol":"btc/usd"}` | `price.crypto` | `{"symbol":"btcusd","provider":"chainlink"}` | 数据源仍为 Chainlink。使用 `btcusd` 代替 `btc/usd`。 |
+| `crypto_prices_twap_sixty` | `{"symbol":"btc/usd"}` | `price.crypto.twap` | `{"symbol":"btcusd","window_seconds":60,"provider":"chainlink"}` | 60 秒 Chainlink TWAP |
 | `crypto_prices_twap_thirty` | `{"symbol":"btc/usd"}` | 无 | 无 | PolyBolt 不提供 30 秒窗口 |
-| `equity_prices` | `{"symbol":"AAPL"}` | `price.equity` | `{"symbol":"aapl"}` | 目录相同，改为小写：股票、ETF、外汇、贵金属及大宗商品 `wti`、`cc`、`ngd` |
+| `equity_prices` | `{"symbol":"AAPL"}` | `price.equity` | `{"symbol":"aapl","provider":"pyth"}` | 目录相同，改为小写：股票、ETF、外汇、贵金属及大宗商品 `cll`、`hn`、`cc3m` |
 
 > [!WARNING]
 >
 > 加密货币现货和 TWAP 订阅现在使用以 `usd` 结尾的小写符号，不再使用 `usdt`。请将
 > `btcusdt` 或 `btc/usd` 改为 `btcusd`，并对所有订阅的加密货币符号使用相同格式。
 
-实时价格负载包含 `symbol`、`value`、`full_accuracy_value`、`timestamp` 和标识价格提供商的 `source`。对于 Chainlink 支持的符号，`price.crypto` 和 `price.equity` 默认使用 Chainlink；可在过滤条件中添加 `provider` 来指定价格提供商。股票类更新还可能包含 `received_at` 和 `is_carried_forward`。TWAP 使用 `window_seconds`。请优先使用精确小数 `full_accuracy_value`，而非浮点 `value`。旧版 TWAP 帧使用 `window_s` 和 E18 定点价格，不要对 PolyBolt 的小数字符串再进行 E18 换算。
+实时价格负载包含 `symbol`、`value`、`full_accuracy_value`、`timestamp` 和标识价格提供商的 `source`。在每个过滤条件中通过 `provider` 指定价格提供商（[指定价格数据提供方](https://docs.polymarket.com/cn/api-reference/live-data/overview.md#指定价格数据提供方)）。股票类更新还可能包含 `received_at` 和 `is_carried_forward`。TWAP 使用 `window_seconds`。请优先使用精确小数 `full_accuracy_value`，而非浮点 `value`。旧版 TWAP 帧使用 `window_s` 和 E18 定点价格，不要对 PolyBolt 的小数字符串再进行 E18 换算。
 
 ### 迁移前后
 
@@ -68,7 +75,7 @@ updated_at: 2026-11-15
 
 ```json PolyBolt theme={null}
 { "op": "auth", "auth": { "apiKey": "<api key>", "secret": "<api secret>", "passphrase": "<api passphrase>" } }
-{ "op": "subscribe", "subscriptions": [ { "channel": "price.crypto", "filter": { "symbol": "btcusd" } } ] }
+{ "op": "subscribe", "subscriptions": [ { "channel": "price.crypto", "filter": { "symbol": "btcusd", "provider": "binance" } } ] }
 ```
 
 ### 客户端清单
@@ -138,11 +145,18 @@ updated_at: 2026-11-15
 >
 > **2. 订阅价格**
 >
-> 将主题从 `prices.crypto.chainlink.twap` 改为 `prices.crypto.twap`，并显式提供 `symbols` 列表。将 `btc/usd` 改为 `btcusd`，并从订阅输入中移除 `windowSeconds`。新主题固定使用 60 秒窗口。
+> 将主题从 `prices.crypto.chainlink.twap` 改为 `prices.crypto.twap`，显式提供 `symbols` 列表，并设置 `provider: PriceProvider.Chainlink`。将 `btc/usd` 改为 `btcusd`，并从订阅输入中移除 `windowSeconds`。新主题固定使用 60 秒窗口。
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.crypto.twap", symbols: ["btcusd"] },
+>   {
+>     topic: "prices.crypto.twap",
+>     symbols: ["btcusd"],
+>     provider: PriceProvider.Chainlink,
+>     providerApiKey: "<chainlink api key>",
+>   },
 > ]);
 >
 > try {
@@ -280,13 +294,13 @@ updated_at: 2026-11-15
 >
 > **2. 订阅价格**
 >
-> 使用 `CryptoTwapPriceSpec` 指定 BTC/USD。异步上下文管理器会在退出时关闭订阅。
+> 使用 `CryptoTwapPriceSpec` 和 `provider="chainlink"` 指定 BTC/USD。异步上下文管理器会在退出时关闭订阅。
 >
 > ```python theme={null}
 > from polymarket.streams import CryptoTwapPriceSpec
 >
 > async with await client.subscribe(
->     CryptoTwapPriceSpec(symbols=["btcusd"])
+>     CryptoTwapPriceSpec(symbols=["btcusd"], provider="chainlink", provider_api_key="<chainlink api key>")
 > ) as stream:
 >     async for event in stream:
 >         # event: CryptoTwapPriceEvent
@@ -363,7 +377,7 @@ updated_at: 2026-11-15
 >
 > 使用上方创建的已认证 `client`。将符号后缀从 `usdt` 改为 `usd`，例如将 `btcusdt` 改为 `btcusd`。移除斜杠分隔符，例如将 `btc/usd` 改为 `btcusd`。新主题要求显式提供小写 USD 符号。
 >
-> `prices.crypto` 主题默认使用 Chainlink 价格，因此从旧版 Chainlink 现货主题迁移会保留数据源。从 Binance 迁移则会同时改变数据源和计价货币，计价货币从 USDT 改为 USD。切换前，请确认新价格源满足你的定价需求。
+> 设置 `provider: PriceProvider.Binance` 以请求 Binance 价格，或设置 `PriceProvider.Chainlink` 以保留旧版 Chainlink 现货主题的数据源。必须提供 `provider`。通过 `event.payload.source` 确认实际提供的数据源。
 >
 > > [accordion] 迁移前：RTDS
 > >
@@ -390,8 +404,14 @@ updated_at: 2026-11-15
 > 替换为以下订阅：
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.crypto", symbols: ["btcusd"] },
+>   {
+>     topic: "prices.crypto",
+>     symbols: ["btcusd"],
+>     provider: PriceProvider.Binance,
+>   },
 > ]);
 > try {
 >   for await (const event of stream) {
@@ -495,7 +515,7 @@ updated_at: 2026-11-15
 > > ]
 > > ```
 >
-> 将 `CryptoPricesSpec` 替换为 `CryptoPriceSpec`，并明确选择 USD 价格。Binance 的 `btcusdt` 以 USDT 计价；`btcusd` 以 USD 计价且默认使用 Chainlink，因此从旧版 Chainlink 现货主题迁移会保留数据源，从 Binance 迁移则会改变数据源。请确认新价格源满足你的定价需求。
+> 将 `CryptoPricesSpec` 替换为 `CryptoPriceSpec`。设置 `provider="binance"` 以请求 Binance 价格，或设置 `provider="chainlink"` 以保留旧版 Chainlink 现货主题的数据源。必须提供 `provider`。通过 `event.payload.source` 确认实际提供的数据源。
 >
 > 用以下订阅替换旧版调用：
 >
@@ -503,7 +523,7 @@ updated_at: 2026-11-15
 > from polymarket.streams import CryptoPriceSpec
 >
 > async with await client.subscribe(
->     CryptoPriceSpec(symbols=["btcusd"])
+>     CryptoPriceSpec(symbols=["btcusd"], provider="binance")
 > ) as stream:
 >     async for event in stream:
 >         # event: CryptoPriceEvent
@@ -601,8 +621,15 @@ updated_at: 2026-11-15
 > 替换为以下订阅：
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.equity", symbol: "aapl", types: ["update"] },
+>   {
+>     topic: "prices.equity",
+>     symbol: "aapl",
+>     types: ["update"],
+>     provider: PriceProvider.Pyth,
+>   },
 > ]);
 > try {
 >   for await (const event of stream) {
@@ -704,7 +731,7 @@ updated_at: 2026-11-15
 > > spec = EquityPricesSpec(symbol="AAPL", types=["update"])
 > > ```
 >
-> 将 `EquityPricesSpec` 替换为 `EquityPriceSpec`，保留 `symbol` 和 `types`。符号会去除首尾空格并转换为小写。`types=["update"]` 只接收实时更新。省略 `types` 可同时接收历史快照。
+> 将 `EquityPricesSpec` 替换为 `EquityPriceSpec`，保留 `symbol` 和 `types`，并设置 `provider="pyth"` 以保留 Pyth 数据源。符号会去除首尾空格并转换为小写。`types=["update"]` 只接收实时更新。省略 `types` 可同时接收历史快照。
 >
 > 用以下订阅替换旧版调用：
 >
@@ -712,7 +739,7 @@ updated_at: 2026-11-15
 > from polymarket.streams import EquityPriceSpec
 >
 > async with await client.subscribe(
->     EquityPriceSpec(symbol="aapl", types=["update"])
+>     EquityPriceSpec(symbol="aapl", types=["update"], provider="pyth")
 > ) as stream:
 >     async for event in stream:
 >         # event: EquityPriceEvent

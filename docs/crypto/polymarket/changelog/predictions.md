@@ -10,12 +10,22 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/changelog/predictions'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Predictions Changelog
 
 > Important changes to Polymarket prediction markets, including the CLOB, APIs, web application, and mobile applications.
+
+**Nov 16, 2026**
+
+PolyBolt: Chainlink API keys and required providers
+
+* From November 30, 2026 at 00:00 UTC, price subscriptions require an explicit provider. Subscriptions served by Chainlink, including TWAP, also require your Chainlink API key. See [PolyBolt authentication](https://docs.polymarket.com/api-reference/live-data/overview.md#send-your-chainlink-api-key).
+
+> [!NOTE]
+>
+> Request a Chainlink API Key using [this form](https://institutional.polymarket.com/request-chainlink-api-key).
 
 **Nov 12, 2026**
 

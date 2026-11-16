@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/listen-token-data-stream
 api_type: REST
-updated_at: 2026-11-15 18:27:20.976320
+updated_at: 2026-11-16 18:30:14.842352
 ---
 
 # Listen Token User Data Stream
@@ -109,7 +109,7 @@ This event is sent when the subscription expires because it was not extended bef
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [(deprecated) Trade Data Stream](/en/docs/products/margin-trading/trade-data-stream)[Public API Definitions](/en/docs/products/margin-trading/common-definition)
 
@@ -219,6 +219,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [（已弃用）交易数据流](/zh-CN/docs/products/margin-trading/trade-data-stream)[公开 API 参数](/zh-CN/docs/products/margin-trading/common-definition)

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/manage-orders'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 管理订单
@@ -49,6 +49,7 @@ updated_at: 2026-11-15
 >   outcome: string;
 >   orderType: string;
 >   status: string;
+>   /** @deprecated Use sizeMatched or account trade records to track fills. */
 >   associateTrades: string[];
 >   createdAt: IsoDateTimeString;
 >   expiresAt?: IsoDateTimeString;
@@ -74,6 +75,11 @@ updated_at: 2026-11-15
 >   "expiresAt": "2026-06-01T13:00:00.000Z"
 > }
 > ```
+>
+> `associateTrades` 已弃用；响应省略该字段时，SDK 返回空数组。
+> 使用 `sizeMatched` 跟踪累计成交量，或调用 `listAccountTrades()`，按
+> `takerOrderId` 或 `makerOrders[].orderId` 关联订单的单笔成交。
+> 空数组不表示订单没有成交。
 >
 > 响应包含到期时间时会提供 `expiresAt`；否则省略该字段。
 
@@ -103,7 +109,7 @@ updated_at: 2026-11-15
 >     outcome: str
 >     order_type: str
 >     status: str
->     associate_trades: tuple[str, ...]
+>     associate_trades: tuple[str, ...]  # Deprecated; use size_matched or account trades.
 >     created_at: datetime
 >     expires_at: datetime | None
 > ```
@@ -127,6 +133,11 @@ updated_at: 2026-11-15
 >   "expires_at": "2026-06-01T13:00:00Z"
 > }
 > ```
+>
+> `associate_trades` 已弃用；响应省略该字段时，SDK 返回空元组。
+> 使用 `size_matched` 跟踪累计成交量，或调用 `list_account_trades()`，按
+> `taker_order_id` 或 `maker_orders[].order_id` 关联订单的单笔成交。
+> 空元组不表示订单没有成交。
 >
 > 返回到期时间时，`expires_at` 包含规范化后的值；否则可以为 `None`。
 
@@ -169,6 +180,7 @@ updated_at: 2026-11-15
 >   outcome: string;
 >   order_type: string;
 >   status: string;
+>   /** @deprecated May be omitted. Use size_matched or trade records. */
 >   associate_trades?: string[];
 >   created_at: number;
 >   expiration: string;
@@ -189,11 +201,14 @@ updated_at: 2026-11-15
 >   "outcome": "Yes",
 >   "order_type": "GTC",
 >   "status": "LIVE",
->   "associate_trades": [],
 >   "created_at": 1748779200,
 >   "expiration": "0"
 > }
 > ```
+>
+> `associate_trades` 已弃用，响应可能省略该字段。使用 `size_matched`
+> 跟踪累计成交量，或读取 `GET /data/trades`，按 `taker_order_id` 或
+> `maker_orders[].order_id` 关联单笔成交。字段缺失或为空不表示订单没有成交。
 >
 > `expiration` 为 `"0"` 表示该订单是 GTC 订单，不会按计时器到期。
 
@@ -224,9 +239,14 @@ updated_at: 2026-11-15
 >     : market.outcomes.yes.tokenId;
 > ```
 >
+> 按 `assetId` 或已弃用的 `tokenId` 筛选时，必须同时提供非空的
+> `market`。仅按结果代币标识符筛选会在发送请求前抛出 `UserInputError`。
+> 不传筛选条件或仅传 `market` 仍然受支持。
+>
 > ```ts Asset theme={null}
 > const pages = client.listOpenOrders({
 >   assetId: yesAssetId,
+>   market: market.conditionId!,
 > });
 > ```
 >
@@ -258,6 +278,7 @@ updated_at: 2026-11-15
 >   outcome: string;
 >   orderType: string;
 >   status: string;
+>   /** @deprecated Use sizeMatched or account trade records to track fills. */
 >   associateTrades: string[];
 >   createdAt: IsoDateTimeString;
 >   expiresAt?: IsoDateTimeString;
@@ -311,9 +332,14 @@ updated_at: 2026-11-15
 > )
 > ```
 >
+> 按 `asset_id` 或已弃用的 `token_id` 筛选时，必须同时提供非空的
+> `market`。仅按结果代币标识符筛选会在分页器获取页面时抛出
+> `UserInputError`。不传筛选条件或仅传 `market` 仍然受支持。
+>
 > ```python Asset theme={null}
 > pages = client.list_open_orders(
 >     asset_id=yes_asset_id,
+>     market=market.condition_id,
 > )
 > ```
 >
@@ -345,7 +371,7 @@ updated_at: 2026-11-15
 >     outcome: str
 >     order_type: str
 >     status: str
->     associate_trades: tuple[str, ...]
+>     associate_trades: tuple[str, ...]  # Deprecated; use size_matched or account trades.
 >     created_at: datetime
 >     expires_at: datetime | None
 > ```
@@ -381,8 +407,12 @@ updated_at: 2026-11-15
 >
 > 通过经过身份验证的 CLOB 请求列出未成交订单，并可按 `id`、`market` 或 `asset_id` 筛选。完整签名流程请参阅 [API 身份验证](https://docs.polymarket.com/cn/getting-started/api.md#身份验证)。
 >
+> 按 `asset_id` 筛选时，同时传入该市场的条件 ID `market`。
+> 从 2026 年 12 月 14 日起，仅传 `asset_id` 的请求会返回 HTTP `400`
+> （`asset_id requires market`）。不带筛选条件或仅按市场筛选仍然受支持。
+>
 > ```bash theme={null}
-> curl "https://clob.polymarket.com/data/orders?asset_id=$ASSET_ID" \
+> curl "https://clob.polymarket.com/data/orders?asset_id=$ASSET_ID&market=$CONDITION_ID" \
 >   -H "POLY_ADDRESS: <signer_address>" \
 >   -H "POLY_API_KEY: <clob_api_key>" \
 >   -H "POLY_PASSPHRASE: <clob_api_passphrase>" \
@@ -416,6 +446,7 @@ updated_at: 2026-11-15
 >   outcome: string;
 >   order_type: string;
 >   status: string;
+>   /** @deprecated May be omitted. Use size_matched or trade records. */
 >   associate_trades?: string[];
 >   created_at: number;
 >   expiration: string;
@@ -437,7 +468,6 @@ updated_at: 2026-11-15
 >     "outcome": "Yes",
 >     "order_type": "GTC",
 >     "status": "LIVE",
->     "associate_trades": [],
 >     "created_at": 1748779200,
 >     "expiration": "0"
 >   }

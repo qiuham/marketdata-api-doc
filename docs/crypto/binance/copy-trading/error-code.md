@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/error-code
 api_type: REST
-updated_at: 2026-11-15 18:27:57.290488
+updated_at: 2026-11-16 18:30:47.357786
 ---
 
 # Error Codes
@@ -1541,7 +1541,7 @@ This code is sent when both the cancellation of the order failed and the new ord
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Quick Start](/en/docs/products/copy-trading/quick-start)[Introduction](/en/docs/products/institutional-loan/Introduction)
 
@@ -3083,6 +3083,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [快速开始](/zh-CN/docs/products/copy-trading/quick-start)[概述](/zh-CN/docs/products/institutional-loan/Introduction)

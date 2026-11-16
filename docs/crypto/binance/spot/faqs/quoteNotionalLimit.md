@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/quoteNotionalLimit
 api_type: REST
-updated_at: 2026-11-15 18:25:19.287310
+updated_at: 2026-11-16 18:28:31.173683
 ---
 
 # Using quoteNotionalLimit
@@ -289,7 +289,7 @@ Orders with a notional limit are checked against the same filters as orders with
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Price Range Execution Rule](/en/docs/products/spot/faqs/price_range_execution_rules)[General Info](/en/docs/products/spot/testnet/general-info)
 
@@ -579,6 +579,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [价格区间执行规则](/zh-CN/docs/products/spot/faqs/price_range_execution_rules)[General Info](/zh-CN/docs/products/spot/testnet/general-info)

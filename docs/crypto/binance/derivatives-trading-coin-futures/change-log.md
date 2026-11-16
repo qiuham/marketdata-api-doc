@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/change-log
 api_type: REST
-updated_at: 2026-11-15 18:26:15.421504
+updated_at: 2026-11-16 18:29:16.753801
 ---
 
 # Change Log
@@ -4438,7 +4438,7 @@ USDⓈ-M Futures
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Quick Start](/en/docs/products/derivatives-trading-coin-futures/quick-start)[Important Notice — COIN-M / USDⓈ-M Architecture Integration](/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice)
 
@@ -8777,6 +8777,6 @@ U本位合约
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [快速开始](/zh-CN/docs/products/derivatives-trading-coin-futures/quick-start)[币本位/U本位整合迁移公告](/zh-CN/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice)

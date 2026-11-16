@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/general-info
 api_type: REST
-updated_at: 2026-11-15 18:28:19.533007
+updated_at: 2026-11-16 18:31:06.557766
 ---
 
 # General Info
@@ -756,7 +756,7 @@ A sample Bash script containing similar steps is available in the right side.
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Public API Definitions](/en/docs/products/institutional-loan/common-definition)[Quick Start](/en/docs/products/institutional-loan/quick-start)
 
@@ -1501,6 +1501,6 @@ Key| Value
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [公开 API 参数](/zh-CN/docs/products/institutional-loan/common-definition)[快速开始](/zh-CN/docs/products/institutional-loan/quick-start)

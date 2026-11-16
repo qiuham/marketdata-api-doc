@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics
 anchor_id: trading-statistics
 api_type: API
-updated_at: 2026-11-15 18:45:00.099104
+updated_at: 2026-11-16 18:51:22.437371
 ---
 
 # Trading Statistics

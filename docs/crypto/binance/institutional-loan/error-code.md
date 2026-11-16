@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/error-code
 api_type: REST
-updated_at: 2026-11-15 18:28:19.149660
+updated_at: 2026-11-16 18:31:06.285739
 ---
 
 # Error Codes
@@ -207,7 +207,7 @@ The codes below are specific to Institutional Loan. Placeholders such as `{0}` a
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Quick Start](/en/docs/products/institutional-loan/quick-start)[Introduction](/en/docs/products/alpha/introduction)
 
@@ -415,6 +415,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [快速开始](/zh-CN/docs/products/institutional-loan/quick-start)[概述](/zh-CN/docs/products/alpha/introduction)

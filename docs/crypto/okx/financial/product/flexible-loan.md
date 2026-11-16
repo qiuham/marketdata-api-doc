@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-flexible-loan
 anchor_id: financial-product-flexible-loan
 api_type: API
-updated_at: 2026-11-15 18:45:02.538365
+updated_at: 2026-11-16 18:51:24.586658
 ---
 
 # Flexible loan

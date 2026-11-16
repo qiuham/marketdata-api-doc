@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Introduction
 api_type: REST
-updated_at: 2026-11-15 18:26:14.729032
+updated_at: 2026-11-16 18:29:16.427047
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Derivative Trading API provide REST and WebSocket APIs to suit your derivative t
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Self Trade Prevention (STP) FAQ](/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq)[Quick Start](/en/docs/products/derivatives-trading-coin-futures/quick-start)
 
@@ -23,6 +23,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [自我交易预防常见问题](/zh-CN/docs/products/derivatives-trading-usds-futures/faq/stp-faq)[快速开始](/zh-CN/docs/products/derivatives-trading-coin-futures/quick-start)

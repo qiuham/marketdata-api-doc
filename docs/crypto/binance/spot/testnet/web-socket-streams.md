@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/web-socket-streams
 api_type: WebSocket
-updated_at: 2026-11-15 18:25:43.255772
+updated_at: 2026-11-16 18:28:48.873125
 ---
 
 # WebSocket Streams for Binance SPOT Testnet
@@ -703,7 +703,7 @@ Since depth snapshots retrieved from the API have a limit on the number of price
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket API](/en/docs/products/spot/testnet/web-socket-api)[Introduction](/en/docs/products/derivatives-trading-usds-futures/Introduction)
 
@@ -1407,6 +1407,6 @@ Since depth snapshots retrieved from the API have a limit on the number of price
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket API](/zh-CN/docs/products/spot/testnet/web-socket-api)[概述](/zh-CN/docs/products/derivatives-trading-usds-futures/Introduction)

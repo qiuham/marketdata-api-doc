@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/common-definition
 api_type: REST
-updated_at: 2026-11-15 18:26:49.269099
+updated_at: 2026-11-16 18:29:48.674149
 ---
 
 # Public API Definitions
@@ -341,7 +341,7 @@ The `MAX_NUM_ALGO_ORDERS` filter defines the maximum number of all kinds of algo
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Error Codes](/en/docs/products/derivatives-trading-portfolio-margin/error-code)[Introduction](/en/docs/products/derivatives-trading-portfolio-margin-pro/Introduction)
 
@@ -642,6 +642,6 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [错误代码](/zh-CN/docs/products/derivatives-trading-portfolio-margin/error-code)[概述](/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/Introduction)

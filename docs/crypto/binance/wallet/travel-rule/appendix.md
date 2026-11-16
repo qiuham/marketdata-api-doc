@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/travel-rule/appendix
 api_type: REST
-updated_at: 2026-11-15 18:27:46.525828
+updated_at: 2026-11-16 18:30:37.626165
 ---
 
 # Appendix
@@ -427,7 +427,7 @@ Code| Description
   
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Error Codes](/en/docs/products/wallet/error-code)[Deposit Questionnaire Contents (for existing local entities)](/en/docs/products/wallet/travel-rule/deposit-questionnaire)
 
@@ -855,6 +855,6 @@ Zimbabwe| zw
   
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [错误代码](/zh-CN/docs/products/wallet/error-code)[充值问卷内容(针对需要旅行规则的本地站)](/zh-CN/docs/products/wallet/travel-rule/deposit-questionnaire)

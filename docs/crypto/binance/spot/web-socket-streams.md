@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/web-socket-streams
 api_type: WebSocket
-updated_at: 2026-11-15 18:25:46.728878
+updated_at: 2026-11-16 18:28:51.932869
 ---
 
 # General WebSocket Streams information
@@ -253,7 +253,7 @@ Since depth snapshots retrieved from the API have a limit on the number of price
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket API](/en/docs/products/spot/web-socket-api)[FIX API](/en/docs/products/spot/fix-api)
 
@@ -519,6 +519,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket API](/zh-CN/docs/products/spot/web-socket-api)[FIX API](/zh-CN/docs/products/spot/fix-api)

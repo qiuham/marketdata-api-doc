@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/convert/Introduction
 api_type: REST
-updated_at: 2026-11-15 18:28:08.514332
+updated_at: 2026-11-16 18:30:57.044581
 ---
 
 # Introduction
@@ -13,7 +13,7 @@ The Binance Convert API allows users to automate their trading on Binance Conver
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Withdraw Questionnaire Contents (for existing local entities)](/en/docs/products/wallet/travel-rule/withdraw-questionnaire)[Change Log](/en/docs/products/convert/change-log)
 
@@ -27,6 +27,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [提币问卷内容(针对需要旅行规则的本地站)](/zh-CN/docs/products/wallet/travel-rule/withdraw-questionnaire)[更新日志](/zh-CN/docs/products/convert/change-log)

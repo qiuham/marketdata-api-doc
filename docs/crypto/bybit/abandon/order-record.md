@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/order-record
 api_type: REST
-updated_at: 2026-11-15 18:35:10.329783
+updated_at: 2026-11-16 18:38:47.173208
 ---
 
 # Get Order Records

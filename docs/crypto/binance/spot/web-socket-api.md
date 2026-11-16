@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/web-socket-api
 api_type: WebSocket
-updated_at: 2026-11-15 18:25:46.393808
+updated_at: 2026-11-16 18:28:51.792310
 ---
 
 # General WebSocket API Information
@@ -1295,7 +1295,7 @@ This means that the API will look for the latest data in that order: first in th
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [REST API](/en/docs/products/spot/rest-api)[WebSocket Streams](/en/docs/products/spot/web-socket-streams)
 
@@ -2584,6 +2584,6 @@ WebSocket连接只能通过一个API密钥进行身份验证。默认情况下�
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [REST API](/zh-CN/docs/products/spot/rest-api)[WebSocket 流信息](/zh-CN/docs/products/spot/web-socket-streams)

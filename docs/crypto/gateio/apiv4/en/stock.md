@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/stock
 api_type: REST
-updated_at: 2026-11-15 18:43:10.409224
+updated_at: 2026-11-16 18:49:22.304478
 ---
 
 # Stock

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/close-position
 api_type: Position
-updated_at: 2026-11-15 18:37:20.609339
+updated_at: 2026-11-16 18:42:25.457951
 ---
 
 # Get Closed Options Positions

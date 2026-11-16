@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/changelog'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Release notes
@@ -19,17 +19,9 @@ updated_at: 2026-11-15
 
 ## 2026
 
-### 12 November 2026 — Unified WS for Futures - Derivatives WS v1
+### 17 November 2026 — Derivatives
 
-* **DEPRECATED** the [Derivatives WebSocket](https://docs.kraken.com/exchange/api-reference/futures-websocket.md) (`wss://futures.kraken.com/ws/v1`). Existing integrations continue to work until 1 March 2027, when the Derivatives WebSocket will no longer be available
-* New integrations should use the [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket), which streams Spot and Derivatives over a single connection. Set `asset_class` to `derivatives` on each subscription or order message to select Derivatives markets. Docs available here [https://docs.kraken.com/exchange/api-reference/unified-ws/ticker](https://docs.kraken.com/exchange/api-reference/unified-ws/ticker.md).
-* The Unified WebSocket also supports order entry (`add_order`, `amend_order`, `cancel_order`, `cancel_all`, `cancel_after`) and authenticates with a token from [`GetWebSocketsToken`](https://docs.kraken.com/api-reference/trading/get-websockets-token), requested with a Kraken API key rather than a Derivatives API key
-* See the [Derivatives WebSocket guide](https://docs.kraken.com/exchange/guides/futures/websockets.md#deprecation-and-unified-websocket) for a comparison and a subscribe example
-* To make the move easier, Kraken's [SDKs](https://github.com/krakenfx/kraken-api-sdk) now support Futures on the Unified WebSocket. The [Rust SDK](https://docs.kraken.com/home/sdks/rust.md) covers Derivatives market data, private streams (executions, positions, margin and balances) and order entry, and handles authentication, token refresh, reconnects and order-book checksums for you ([https://docs.kraken.com/home/sdks/index](https://docs.kraken.com/home/sdks/index.md))
-
-### 12 November 2026 — Derivatives
-
-* From 12 November 2026, `POST /transfer` can move funds between any Futures wallet and your Kraken Spot wallet. Pass `spot` as `fromAccount` or `toAccount`. The transfer settles before the response is sent, so there is nothing to poll
+* From 17 November 2026 (moved from 12 November), `POST /transfer` can move funds between any Futures wallet and your Kraken Spot wallet. Pass `spot` as `fromAccount` or `toAccount`. The transfer settles before the response is sent, so there is nothing to poll
 * A transfer to or from Spot requires an API key with the withdrawal permission, costs 100 rate-limit units (10 for transfers between Futures wallets) and is only available to accounts linked to a Kraken account. It can fail with `insufficientFunds`, `invalidAmount`, `invalidUnit`, `invalidCurrency` or `transferFailed`
 * A transfer between Futures wallets now returns the specific reason it was refused (`invalidAmount`, `invalidCurrency`, `cashAccountTypeNotFound`, `cashAccountTypeAccessForbidden`, `accountNotFound`, `cancelOnly` or `transferFailed`) instead of always `insufficientFunds`
 * Added `GET /transfer/assets`, which lists the assets your account can transfer, the minimum and maximum amount for a transfer to or from Spot (`minSpotTransferAmount`, `maxSpotTransferAmount`) and whether MTF accounts can move the asset to Spot (`allowMtfSpotTransfers`). It costs 2 rate-limit units. See [Rate limits](https://docs.kraken.com/exchange/guides/futures/ratelimits.md)
@@ -38,6 +30,14 @@ updated_at: 2026-11-15
 * `POST /withdrawal` and `GET /transfers` will be removed on 30 November 2026. Move your integrations to `POST /transfer` before then
 * A request refused by the [Maker Protection](https://docs.kraken.com/exchange/guides/futures/maker-protection.md#how-many-orders-you-can-have-held-at-once) concurrent-hold cap (500 requests held at once) now returns its own error: `makerProtectionOrderLimitExceeded` (REST v3), `MAKER_PROTECTION_ORDER_LIMIT_EXCEEDED` (REST v4, market data / SBE) and `EGeneral:Other:MAKER_PROTECTION_ORDER_LIMIT_EXCEEDED` (FIX). It was previously reported as `tooManyOrders` / `TOO_MANY_ORDERS` / `ORDER_LIMIT_EXCEEDED`, which now mean only that you have hit your open-order limit
 * `POST /cancelallorders` now returns a `CANCEL` event in `orderEvents` for each trigger order it cancels (`type`, `uid`, `orderTrigger`). `status` stays `noOrdersToCancel` when only trigger orders were cancelled, so read `orderEvents` rather than `status` to see whether anything was cancelled
+
+### 12 November 2026 — Unified WS for Futures - Derivatives WS v1
+
+* **DEPRECATED** the [Derivatives WebSocket](https://docs.kraken.com/exchange/api-reference/futures-websocket.md) (`wss://futures.kraken.com/ws/v1`). Existing integrations continue to work until 1 March 2027, when the Derivatives WebSocket will no longer be available
+* New integrations should use the [Unified WebSocket](https://docs.kraken.com/exchange/api-reference/unified-websocket), which streams Spot and Derivatives over a single connection. Set `asset_class` to `derivatives` on each subscription or order message to select Derivatives markets. Docs available here [https://docs.kraken.com/exchange/api-reference/unified-ws/ticker](https://docs.kraken.com/exchange/api-reference/unified-ws/ticker.md).
+* The Unified WebSocket also supports order entry (`add_order`, `amend_order`, `cancel_order`, `cancel_all`, `cancel_after`) and authenticates with a token from [`GetWebSocketsToken`](https://docs.kraken.com/api-reference/trading/get-websockets-token), requested with a Kraken API key rather than a Derivatives API key
+* See the [Derivatives WebSocket guide](https://docs.kraken.com/exchange/guides/futures/websockets.md#deprecation-and-unified-websocket) for a comparison and a subscribe example
+* To make the move easier, Kraken's [SDKs](https://github.com/krakenfx/kraken-api-sdk) now support Futures on the Unified WebSocket. The [Rust SDK](https://docs.kraken.com/home/sdks/rust.md) covers Derivatives market data, private streams (executions, positions, margin and balances) and order entry, and handles authentication, token refresh, reconnects and order-book checksums for you ([https://docs.kraken.com/home/sdks/index](https://docs.kraken.com/home/sdks/index.md))
 
 ### 27 October 2026 — Spot REST v1
 

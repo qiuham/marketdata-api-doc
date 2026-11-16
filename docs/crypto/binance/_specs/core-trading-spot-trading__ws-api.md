@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/ws-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-15 18:33:30.802536
+updated_at: 2026-11-16 18:37:14.321448
 ---
 
 # core-trading-spot-trading__ws-api spec

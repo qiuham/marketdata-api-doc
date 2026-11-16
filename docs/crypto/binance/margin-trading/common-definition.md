@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/common-definition
 api_type: REST
-updated_at: 2026-11-15 18:27:16.336060
+updated_at: 2026-11-16 18:30:11.682797
 ---
 
 # Public API Definitions
@@ -577,7 +577,7 @@ The `EXCHANGE_MAX_NUM_ICEBERG_ORDERS` filter defines the maximum number of icebe
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Listen Token User Data Stream](/en/docs/products/margin-trading/listen-token-data-stream)[Error Codes](/en/docs/products/margin-trading/error-code)
 
@@ -1162,6 +1162,6 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Listen Token 用户数据流](/zh-CN/docs/products/margin-trading/listen-token-data-stream)[错误代码](/zh-CN/docs/products/margin-trading/error-code)

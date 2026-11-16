@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/error-code
 api_type: REST
-updated_at: 2026-11-15 18:26:49.563303
+updated_at: 2026-11-16 18:29:48.775673
 ---
 
 # Error Codes
@@ -1210,7 +1210,7 @@ Codes are universal,but messages can vary.
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [User Data Streams](/en/docs/products/derivatives-trading-portfolio-margin/user-data-streams)[Public API Definitions](/en/docs/products/derivatives-trading-portfolio-margin/common-definition)
 
@@ -2577,6 +2577,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [账户信息流](/zh-CN/docs/products/derivatives-trading-portfolio-margin/user-data-streams)[公开API参数](/zh-CN/docs/products/derivatives-trading-portfolio-margin/common-definition)

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/clob-sdk-to-unified-sdk'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Migrate from Legacy SDKs to Unified SDKs
@@ -807,7 +807,9 @@ unified SDK.
 > ### List Open Orders
 >
 > `SecureClient` provides `listOpenOrders`, which returns a paginator. Filters and
-> response fields use camelCase.
+> response fields use camelCase. When filtering by `assetId` or the deprecated
+> `tokenId` alias, also supply a nonblank `market` (the market condition ID).
+> Otherwise, the call throws `UserInputError` before sending a request.
 >
 > ```ts Before theme={null}
 > const orders = await client.getOpenOrders({
@@ -1723,7 +1725,10 @@ unified SDK.
 > ### List Open Orders
 >
 > `AsyncSecureClient` provides `list_open_orders`, which returns an async
-> paginator.
+> paginator. When filtering by `asset_id` or the deprecated `token_id` alias,
+> also supply a nonblank `market` (the market condition ID). Otherwise, the
+> paginator raises `UserInputError` when it fetches a page. The synchronous
+> `SecureClient` has the same requirement.
 >
 > ```python Before theme={null}
 > from py_clob_client_v2 import OpenOrderParams

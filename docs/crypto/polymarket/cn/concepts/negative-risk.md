@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/concepts/negative-risk'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 负风险市场

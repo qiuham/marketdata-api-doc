@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/transfer/cancel-a-pay-transfer-or-an-unclaimed-paylink'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Cancel a pay transfer or an unclaimed paylink

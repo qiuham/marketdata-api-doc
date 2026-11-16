@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/guides/futures/maker-protection'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Maker Protection
@@ -168,7 +168,7 @@ You may have at most **500 requests held at once**. A request past that cap is r
 | Market data / SBE | `MAKER_PROTECTION_ORDER_LIMIT_EXCEEDED` |
 | FIX | `EGeneral:Other:MAKER_PROTECTION_ORDER_LIMIT_EXCEEDED` |
 
-Before 12 November 2026 this refusal was reported as `tooManyOrders` / `TOO_MANY_ORDERS` / `ORDER_LIMIT_EXCEEDED`. Those values now mean only that you have hit your open-order limit.
+Before 17 November 2026 this refusal was reported as `tooManyOrders` / `TOO_MANY_ORDERS` / `ORDER_LIMIT_EXCEEDED`. Those values now mean only that you have hit your open-order limit.
 
 Three properties to design around:
 

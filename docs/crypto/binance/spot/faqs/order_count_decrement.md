@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/order_count_decrement
 api_type: REST
-updated_at: 2026-11-15 18:25:15.908200
+updated_at: 2026-11-16 18:28:28.254392
 ---
 
 # Spot Unfilled Order Count Rules
@@ -178,7 +178,7 @@ Time| Action| Unfilled order count
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Order Amend Keep Priority](/en/docs/products/spot/faqs/order_amend_keep_priority)[Pegged orders](/en/docs/products/spot/faqs/pegged_orders)
 
@@ -349,6 +349,6 @@ UTC。
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [保留优先级的修改订单请求（Order Amend Keep Priority）](/zh-CN/docs/products/spot/faqs/order_amend_keep_priority)[挂钩订单（Pegged orders）](/zh-CN/docs/products/spot/faqs/pegged_orders)

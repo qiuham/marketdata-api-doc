@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/wss/user'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # User Channel
@@ -325,7 +325,11 @@ operations:
                 required: true
               - name: associate_trades
                 type: array
-                description: Trade IDs this order has been matched in
+                description: >-
+                  Optional legacy trade IDs. Use size_matched for cumulative
+                  fills or match trade events by taker_order_id or
+                  maker_orders[].order_id. Absence, null, or an empty array does
+                  not mean the order has no fills.
                 required: false
                 properties:
                   - name: item
@@ -430,7 +434,11 @@ operations:
                 type: string
                 x-parser-schema-id: <anonymous-schema-23>
               nullable: true
-              description: Trade IDs this order has been matched in
+              description: >-
+                Optional legacy trade IDs. Use size_matched for cumulative fills
+                or match trade events by taker_order_id or
+                maker_orders[].order_id. Absence, null, or an empty array does
+                not mean the order has no fills.
               x-parser-schema-id: <anonymous-schema-22>
             outcome:
               type: string

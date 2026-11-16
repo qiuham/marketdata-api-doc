@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/quick-start
 api_type: REST
-updated_at: 2026-11-15 18:26:20.321809
+updated_at: 2026-11-16 18:29:20.121306
 ---
 
 # Quick Start
@@ -60,7 +60,7 @@ This is a lightweight library that works as a connector to Binance public API, w
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Introduction](/en/docs/products/derivatives-trading-coin-futures/Introduction)[Change Log](/en/docs/products/derivatives-trading-coin-futures/change-log)
 
@@ -112,6 +112,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [概述](/zh-CN/docs/products/derivatives-trading-coin-futures/Introduction)[更新日志](/zh-CN/docs/products/derivatives-trading-coin-futures/change-log)

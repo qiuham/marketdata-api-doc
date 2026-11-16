@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/institutional/api-reference/prime-websocket/authentication'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Authentication

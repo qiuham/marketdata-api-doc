@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/errors
 api_type: REST
-updated_at: 2026-11-15 18:25:11.706477
+updated_at: 2026-11-16 18:28:25.433442
 ---
 
 # Error codes for Binance
@@ -773,7 +773,7 @@ Error message| Description
   
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Enums](/en/docs/products/spot/enums)[REST API](/en/docs/products/spot/rest-api)
 
@@ -1550,6 +1550,6 @@ Order amend (pending OPO order) is not supported.| OPO 订单中的待处理订�
   
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [枚举](/zh-CN/docs/products/spot/enums)[REST API](/zh-CN/docs/products/spot/rest-api)

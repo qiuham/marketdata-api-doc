@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/wss/polybolt'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 实时数据频道
@@ -119,9 +119,9 @@ operations:
                                     - pyth
                                     - binance
                                   description: >-
-                                    Optional provider pin (spec 08b; binance
-                                    added by spec 09). While the server's
-                                    provider selector is DISABLED
+                                    Provider pin (spec 08b; binance added by
+                                    spec 09). While the server's provider
+                                    selector is DISABLED
                                     (PRICE_PROVIDER_SELECTOR_ENABLED=false, the
                                     default), this field is accepted and IGNORED
                                     like any unknown key: the lane's owner is
@@ -140,7 +140,15 @@ operations:
                                     config names binance can serve it -
                                     everywhere else (price.equity included) a
                                     binance pin always falls back to the owner.
-                                    Ignored on price.polymarket.
+                                    Ignored on price.polymarket. Required
+                                    wherever the deployment enforces the
+                                    provider pin (spec 13: staging and
+                                    production from 2026-11-30 00:00 UTC), on
+                                    every connection: a subscription without it
+                                    answers provider_required (status 4011).
+                                    Chainlink requires its own API key from
+                                    every subscriber, so the server no longer
+                                    picks a provider for the client.
                                   x-parser-schema-id: <anonymous-schema-8>
                               x-parser-schema-id: SymbolFilter
                             - type: object
@@ -166,9 +174,9 @@ operations:
                                     - pyth
                                     - binance
                                   description: >-
-                                    Optional provider pin (spec 08b; binance
-                                    added by spec 09). While the server's
-                                    provider selector is DISABLED
+                                    Provider pin (spec 08b; binance added by
+                                    spec 09). While the server's provider
+                                    selector is DISABLED
                                     (PRICE_PROVIDER_SELECTOR_ENABLED=false, the
                                     default), this field is accepted and IGNORED
                                     like any unknown key: the lane's owner is
@@ -184,7 +192,15 @@ operations:
                                     price.crypto-only on the SERVING side, and
                                     the TWAP channels are Chainlink-produced, so
                                     a binance pin here always falls back to the
-                                    owner. Ignored on price.polymarket.
+                                    owner. Ignored on price.polymarket. Required
+                                    wherever the deployment enforces the
+                                    provider pin (spec 13: staging and
+                                    production from 2026-11-30 00:00 UTC), on
+                                    every connection: a subscription without it
+                                    answers provider_required (status 4011).
+                                    Chainlink requires its own API key from
+                                    every subscriber, so the server no longer
+                                    picks a provider for the client.
                                   x-parser-schema-id: <anonymous-schema-11>
                               x-parser-schema-id: TwapFilter
                             - type: object
@@ -422,16 +438,19 @@ operations:
                   answer bad_op). Not a credential: a frame with only the key
                   answers bad_op. Recorded when the auth is accepted with CLOB
                   API credentials or a verified Access Token (never a visitor
-                  token), and asked for by Chainlink-served price subscriptions
-                  on that connection (price.crypto and price.equity symbols
-                  Chainlink serves, both TWAP channels). Without it, such a
-                  subscription answers the non-closing chainlink_key_required
-                  once the deployment enforces the key; until then it is
-                  admitted. A key outside this shape, or of another JSON type,
-                  is ignored and the credential is still handled. Send it on the
-                  first auth frame: the key cannot be added or changed on an
-                  authenticated connection, except on a verified Access Token
-                  renewal. The web app ticket lane is never asked.
+                  token, nor an Access Token whose client_id is polymarket-web),
+                  and asked for by Chainlink-served price subscriptions on that
+                  connection (price.crypto and price.equity symbols Chainlink
+                  serves, both TWAP channels). Without it, such a subscription
+                  answers the non-closing chainlink_key_required once the
+                  deployment enforces the key; until then it is admitted. A key
+                  outside this shape, or of another JSON type, is ignored and
+                  the credential is still handled. Send it on the first auth
+                  frame: the key cannot be added or changed on an authenticated
+                  connection, except on a verified Access Token renewal. The
+                  Polymarket web app is never asked: neither its ticket and
+                  visitor tokens nor its logged-in Access Tokens (client_id
+                  polymarket-web).
                 required: false
               - name: rid
                 type: string
@@ -536,8 +555,9 @@ operations:
                 accepted as chainlinkApiKey; both spellings in one frame answer
                 bad_op). Not a credential: a frame with only the key answers
                 bad_op. Recorded when the auth is accepted with CLOB API
-                credentials or a verified Access Token (never a visitor token),
-                and asked for by Chainlink-served price subscriptions on that
+                credentials or a verified Access Token (never a visitor token,
+                nor an Access Token whose client_id is polymarket-web), and
+                asked for by Chainlink-served price subscriptions on that
                 connection (price.crypto and price.equity symbols Chainlink
                 serves, both TWAP channels). Without it, such a subscription
                 answers the non-closing chainlink_key_required once the
@@ -545,8 +565,10 @@ operations:
                 outside this shape, or of another JSON type, is ignored and the
                 credential is still handled. Send it on the first auth frame:
                 the key cannot be added or changed on an authenticated
-                connection, except on a verified Access Token renewal. The web
-                app ticket lane is never asked.
+                connection, except on a verified Access Token renewal. The
+                Polymarket web app is never asked: neither its ticket and
+                visitor tokens nor its logged-in Access Tokens (client_id
+                polymarket-web).
               x-parser-schema-id: <anonymous-schema-40>
             rid:
               type: string
@@ -679,7 +701,7 @@ operations:
           properties:
             op:
               const: challenge
-              x-parser-schema-id: <anonymous-schema-256>
+              x-parser-schema-id: <anonymous-schema-257>
             nonce:
               type: string
               pattern: ^[A-Za-z0-9_-]{1,255}$
@@ -689,10 +711,10 @@ operations:
                 /api/ws-ticket; the ticket then verifies only on this socket,
                 whatever IP either request came from. Not a secret, never
                 rotated for the life of the connection.
-              x-parser-schema-id: <anonymous-schema-257>
+              x-parser-schema-id: <anonymous-schema-258>
             rid:
               type: string
-              x-parser-schema-id: <anonymous-schema-258>
+              x-parser-schema-id: <anonymous-schema-259>
           x-parser-schema-id: ChallengeAck
         title: Challenge
         description: >-
@@ -952,7 +974,11 @@ operations:
                   subscription on a connection authenticated with CLOB API
                   credentials or a verified Access Token whose auth carried no
                   chainlink_api_key (only where the deployment enforces the key;
-                  the connection stays open).
+                  the connection stays open; status 4010); provider_required
+                  price.crypto, price.equity or TWAP subscription whose filter
+                  named no provider (only where the deployment enforces the
+                  provider pin, on every connection; the connection stays open;
+                  status 4011).
                 enumValues:
                   - bad_op
                   - bad_channel
@@ -965,12 +991,25 @@ operations:
                   - auth_invalid
                   - auth_attempts
                   - chainlink_key_required
+                  - provider_required
                 required: true
               - name: channel
                 type: string
                 required: false
               - name: rid
                 type: string
+                required: false
+              - name: status
+                type: integer
+                description: >-
+                  A numeric status next to code, on the two price-licensing
+                  refusals only: 4010 chainlink_key_required, 4011
+                  provider_required. It shares the 4xxx range with the close
+                  codes but closes nothing: the refused item never registers and
+                  the connection stays open. Absent on every other error.
+                enumValues:
+                  - 4010
+                  - 4011
                 required: false
         headers: []
         jsonPayloadSchema:
@@ -996,6 +1035,7 @@ operations:
                 - auth_invalid
                 - auth_attempts
                 - chainlink_key_required
+                - provider_required
               description: >-
                 bad_op malformed frame; bad_channel unknown channel; bad_filter
                 missing or invalid filter; sub_limit 65th subscription (followed
@@ -1008,7 +1048,11 @@ operations:
                 Chainlink-served price subscription on a connection
                 authenticated with CLOB API credentials or a verified Access
                 Token whose auth carried no chainlink_api_key (only where the
-                deployment enforces the key; the connection stays open).
+                deployment enforces the key; the connection stays open; status
+                4010); provider_required price.crypto, price.equity or TWAP
+                subscription whose filter named no provider (only where the
+                deployment enforces the provider pin, on every connection; the
+                connection stays open; status 4011).
               x-parser-schema-id: <anonymous-schema-54>
             channel:
               type: string
@@ -1016,6 +1060,18 @@ operations:
             rid:
               type: string
               x-parser-schema-id: <anonymous-schema-56>
+            status:
+              type: integer
+              enum:
+                - 4010
+                - 4011
+              description: >-
+                A numeric status next to code, on the two price-licensing
+                refusals only: 4010 chainlink_key_required, 4011
+                provider_required. It shares the 4xxx range with the close codes
+                but closes nothing: the refused item never registers and the
+                connection stays open. Absent on every other error.
+              x-parser-schema-id: <anonymous-schema-57>
           x-parser-schema-id: ErrorAck
         title: Error
         example: |-
@@ -1116,34 +1172,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-57>
+              x-parser-schema-id: <anonymous-schema-58>
             channel:
               type: string
               const: price.polymarket
-              x-parser-schema-id: <anonymous-schema-58>
+              x-parser-schema-id: <anonymous-schema-59>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-59>
+              x-parser-schema-id: <anonymous-schema-60>
             ts:
               type: integer
               description: Producer event time, Unix milliseconds.
-              x-parser-schema-id: <anonymous-schema-60>
+              x-parser-schema-id: <anonymous-schema-61>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-61>
+              x-parser-schema-id: <anonymous-schema-62>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-62>
+              x-parser-schema-id: <anonymous-schema-63>
             payload:
               oneOf:
                 - type: object
@@ -1158,32 +1214,32 @@ operations:
                     market:
                       type: string
                       description: Condition id, 0x-prefixed.
-                      x-parser-schema-id: <anonymous-schema-63>
+                      x-parser-schema-id: <anonymous-schema-64>
                     asset_id:
                       type: string
                       description: Outcome token id, decimal string.
-                      x-parser-schema-id: <anonymous-schema-64>
+                      x-parser-schema-id: <anonymous-schema-65>
                     best_bid:
                       type: string
                       description: Decimal string price.
-                      x-parser-schema-id: <anonymous-schema-65>
+                      x-parser-schema-id: <anonymous-schema-66>
                     best_ask:
                       type: string
                       description: Decimal string price.
-                      x-parser-schema-id: <anonymous-schema-66>
+                      x-parser-schema-id: <anonymous-schema-67>
                     hash:
                       type: string
                       description: Order book hash at this change.
-                      x-parser-schema-id: <anonymous-schema-67>
+                      x-parser-schema-id: <anonymous-schema-68>
                     timestamp:
                       type: integer
                       description: Order book time, Unix milliseconds.
-                      x-parser-schema-id: <anonymous-schema-68>
+                      x-parser-schema-id: <anonymous-schema-69>
                   x-parser-schema-id: BestBidAsk
                 - type: array
                   maxItems: 0
                   description: Empty snapshot for a cold token.
-                  x-parser-schema-id: <anonymous-schema-69>
+                  x-parser-schema-id: <anonymous-schema-70>
               x-parser-schema-id: PricePolymarketPayload
           description: >-
             Snapshot payload is a BestBidAsk object or an empty array; live
@@ -1345,34 +1401,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-70>
+              x-parser-schema-id: <anonymous-schema-71>
             channel:
               type: string
               const: price.crypto
-              x-parser-schema-id: <anonymous-schema-71>
+              x-parser-schema-id: <anonymous-schema-72>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-72>
+              x-parser-schema-id: <anonymous-schema-73>
             ts:
               type: integer
               description: Producer event time, Unix milliseconds.
-              x-parser-schema-id: <anonymous-schema-73>
+              x-parser-schema-id: <anonymous-schema-74>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-74>
+              x-parser-schema-id: <anonymous-schema-75>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-75>
+              x-parser-schema-id: <anonymous-schema-76>
             payload:
               oneOf:
                 - type: object
@@ -1386,19 +1442,19 @@ operations:
                     symbol:
                       type: string
                       description: Lowercase symbol, for example btcusd.
-                      x-parser-schema-id: <anonymous-schema-76>
+                      x-parser-schema-id: <anonymous-schema-77>
                     value:
                       type: number
                       description: Price as a float. Prefer full_accuracy_value.
-                      x-parser-schema-id: <anonymous-schema-77>
+                      x-parser-schema-id: <anonymous-schema-78>
                     full_accuracy_value:
                       type: string
                       description: Exact decimal price as published by the source.
-                      x-parser-schema-id: <anonymous-schema-78>
+                      x-parser-schema-id: <anonymous-schema-79>
                     timestamp:
                       type: integer
                       description: Source event time, Unix milliseconds.
-                      x-parser-schema-id: <anonymous-schema-79>
+                      x-parser-schema-id: <anonymous-schema-80>
                     source:
                       type: string
                       enum:
@@ -1415,7 +1471,7 @@ operations:
                         symbol (no conversion leg): bps-scale delta against
                         pyth/chainlink normally, percent-scale in a USDT depeg -
                         exactly when comparisons are most likely.
-                      x-parser-schema-id: <anonymous-schema-80>
+                      x-parser-schema-id: <anonymous-schema-81>
                   x-parser-schema-id: CryptoPoint
                 - type: object
                   required:
@@ -1425,7 +1481,7 @@ operations:
                   properties:
                     symbol:
                       type: string
-                      x-parser-schema-id: <anonymous-schema-82>
+                      x-parser-schema-id: <anonymous-schema-83>
                     source:
                       type: string
                       enum:
@@ -1442,7 +1498,7 @@ operations:
                         is the Binance USDT-quoted close relayed verbatim under
                         the usd-named symbol: bps-scale delta against
                         pyth/chainlink normally, percent-scale in a USDT depeg.
-                      x-parser-schema-id: <anonymous-schema-83>
+                      x-parser-schema-id: <anonymous-schema-84>
                     data:
                       type: array
                       items: &ref_6
@@ -1455,15 +1511,15 @@ operations:
                           value:
                             type: number
                             description: Price as a float. Prefer full_accuracy_value.
-                            x-parser-schema-id: <anonymous-schema-85>
+                            x-parser-schema-id: <anonymous-schema-86>
                           full_accuracy_value:
                             type: string
                             description: Exact decimal price as published by the source.
-                            x-parser-schema-id: <anonymous-schema-86>
+                            x-parser-schema-id: <anonymous-schema-87>
                           timestamp:
                             type: integer
                             description: Source event time, Unix milliseconds.
-                            x-parser-schema-id: <anonymous-schema-87>
+                            x-parser-schema-id: <anonymous-schema-88>
                         description: >-
                           One historical point of a snapshot batch. Batch points
                           carry NO symbol and NO source: both live once at batch
@@ -1475,8 +1531,8 @@ operations:
                         The array holds the previous two minutes of points by
                         event time and is empty for a symbol with no recent
                         data.
-                      x-parser-schema-id: <anonymous-schema-84>
-                  x-parser-schema-id: <anonymous-schema-81>
+                      x-parser-schema-id: <anonymous-schema-85>
+                  x-parser-schema-id: <anonymous-schema-82>
               x-parser-schema-id: PriceCryptoPayload
           description: Snapshot payload is a symbol batch; live payload is a single point.
           x-parser-schema-id: PriceCryptoEnvelope
@@ -1687,34 +1743,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-88>
+              x-parser-schema-id: <anonymous-schema-89>
             channel:
               type: string
               const: price.equity
-              x-parser-schema-id: <anonymous-schema-89>
+              x-parser-schema-id: <anonymous-schema-90>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-90>
+              x-parser-schema-id: <anonymous-schema-91>
             ts:
               type: integer
               description: Producer event time, Unix milliseconds.
-              x-parser-schema-id: <anonymous-schema-91>
+              x-parser-schema-id: <anonymous-schema-92>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-92>
+              x-parser-schema-id: <anonymous-schema-93>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-93>
+              x-parser-schema-id: <anonymous-schema-94>
             payload:
               oneOf:
                 - type: object
@@ -1728,19 +1784,19 @@ operations:
                     symbol:
                       type: string
                       description: Lowercase symbol, for example btcusd or aapl.
-                      x-parser-schema-id: <anonymous-schema-94>
+                      x-parser-schema-id: <anonymous-schema-95>
                     value:
                       type: number
                       description: Price as a float. Prefer full_accuracy_value.
-                      x-parser-schema-id: <anonymous-schema-95>
+                      x-parser-schema-id: <anonymous-schema-96>
                     full_accuracy_value:
                       type: string
                       description: Exact decimal price as published by the source.
-                      x-parser-schema-id: <anonymous-schema-96>
+                      x-parser-schema-id: <anonymous-schema-97>
                     timestamp:
                       type: integer
                       description: Source event time, Unix milliseconds.
-                      x-parser-schema-id: <anonymous-schema-97>
+                      x-parser-schema-id: <anonymous-schema-98>
                     source:
                       type: string
                       enum:
@@ -1753,13 +1809,13 @@ operations:
                         fleet, so mid-roll a symbol's consecutive frames can
                         legitimately carry different sources until the roll
                         completes.
-                      x-parser-schema-id: <anonymous-schema-98>
+                      x-parser-schema-id: <anonymous-schema-99>
                     received_at:
                       type: integer
                       description: >-
                         Ingest receive time, Unix milliseconds. Live frames
                         only.
-                      x-parser-schema-id: <anonymous-schema-99>
+                      x-parser-schema-id: <anonymous-schema-100>
                     is_carried_forward:
                       type: boolean
                       description: >-
@@ -1768,7 +1824,7 @@ operations:
                         its last measurement (for example a closed session), or
                         the frame is a status change repeating the last price.
                         Live frames only.
-                      x-parser-schema-id: <anonymous-schema-100>
+                      x-parser-schema-id: <anonymous-schema-101>
                     market_status:
                       type: string
                       enum:
@@ -1789,7 +1845,7 @@ operations:
                         price (its timestamp unchanged), is_carried_forward true
                         and the new market_status: it is not a duplicate, so
                         never dedup on timestamp alone.
-                      x-parser-schema-id: <anonymous-schema-101>
+                      x-parser-schema-id: <anonymous-schema-102>
                   x-parser-schema-id: EquityPoint
                 - type: object
                   required:
@@ -1799,7 +1855,7 @@ operations:
                   properties:
                     symbol:
                       type: string
-                      x-parser-schema-id: <anonymous-schema-103>
+                      x-parser-schema-id: <anonymous-schema-104>
                     source:
                       type: string
                       enum:
@@ -1813,7 +1869,7 @@ operations:
                         reconnect during an ownership flip, the batch can carry
                         a different source than the previous connection's
                         frames.
-                      x-parser-schema-id: <anonymous-schema-104>
+                      x-parser-schema-id: <anonymous-schema-105>
                     market_status:
                       type: string
                       enum:
@@ -1827,7 +1883,7 @@ operations:
                         point when that point is older than the two-minute
                         window (the price the market stopped at), and the
                         envelope ts is then that point's time.
-                      x-parser-schema-id: <anonymous-schema-105>
+                      x-parser-schema-id: <anonymous-schema-106>
                     data:
                       type: array
                       items: *ref_6
@@ -1837,8 +1893,8 @@ operations:
                         data, except while market_status is closed or unknown:
                         then it also holds the series' last point when that
                         point is older than the window.
-                      x-parser-schema-id: <anonymous-schema-106>
-                  x-parser-schema-id: <anonymous-schema-102>
+                      x-parser-schema-id: <anonymous-schema-107>
+                  x-parser-schema-id: <anonymous-schema-103>
               x-parser-schema-id: PriceEquityPayload
           description: Snapshot payload is a symbol batch; live payload is a single point.
           x-parser-schema-id: PriceEquityEnvelope
@@ -1990,34 +2046,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-107>
+              x-parser-schema-id: <anonymous-schema-108>
             channel:
               type: string
               const: price.crypto.twap
-              x-parser-schema-id: <anonymous-schema-108>
+              x-parser-schema-id: <anonymous-schema-109>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-109>
+              x-parser-schema-id: <anonymous-schema-110>
             ts:
               type: integer
               description: Producer event time, Unix milliseconds.
-              x-parser-schema-id: <anonymous-schema-110>
+              x-parser-schema-id: <anonymous-schema-111>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-111>
+              x-parser-schema-id: <anonymous-schema-112>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-112>
+              x-parser-schema-id: <anonymous-schema-113>
             payload:
               oneOf:
                 - type: object
@@ -2032,26 +2088,26 @@ operations:
                     symbol:
                       type: string
                       description: Lowercase symbol, for example btcusd.
-                      x-parser-schema-id: <anonymous-schema-113>
+                      x-parser-schema-id: <anonymous-schema-114>
                     value:
                       type: number
                       description: Price as a float. Prefer full_accuracy_value.
-                      x-parser-schema-id: <anonymous-schema-114>
+                      x-parser-schema-id: <anonymous-schema-115>
                     full_accuracy_value:
                       type: string
                       description: Exact decimal price as published by the source.
-                      x-parser-schema-id: <anonymous-schema-115>
+                      x-parser-schema-id: <anonymous-schema-116>
                     timestamp:
                       type: integer
                       description: Source event time, Unix milliseconds.
-                      x-parser-schema-id: <anonymous-schema-116>
+                      x-parser-schema-id: <anonymous-schema-117>
                     window_seconds:
                       type: integer
                       const: 60
                       description: >-
                         Averaging window of the TWAP series. Only 60 exists
                         today.
-                      x-parser-schema-id: <anonymous-schema-117>
+                      x-parser-schema-id: <anonymous-schema-118>
                     source:
                       type: string
                       enum:
@@ -2060,7 +2116,7 @@ operations:
                         The producing vendor. price.crypto.twap is a
                         single-provider lane, so the value is the topic
                         constant.
-                      x-parser-schema-id: <anonymous-schema-118>
+                      x-parser-schema-id: <anonymous-schema-119>
                   x-parser-schema-id: TwapPoint
                 - type: object
                   required:
@@ -2071,7 +2127,7 @@ operations:
                   properties:
                     symbol:
                       type: string
-                      x-parser-schema-id: <anonymous-schema-120>
+                      x-parser-schema-id: <anonymous-schema-121>
                     data:
                       type: array
                       items: *ref_6
@@ -2079,11 +2135,11 @@ operations:
                         The array holds the previous two minutes of points by
                         event time and is empty for a symbol with no recent
                         data.
-                      x-parser-schema-id: <anonymous-schema-121>
+                      x-parser-schema-id: <anonymous-schema-122>
                     window_seconds:
                       type: integer
                       const: 60
-                      x-parser-schema-id: <anonymous-schema-122>
+                      x-parser-schema-id: <anonymous-schema-123>
                     source:
                       type: string
                       enum:
@@ -2092,8 +2148,8 @@ operations:
                         The producing vendor, once per batch (points are
                         source-free). Topic constant on this single-provider
                         lane.
-                      x-parser-schema-id: <anonymous-schema-123>
-                  x-parser-schema-id: <anonymous-schema-119>
+                      x-parser-schema-id: <anonymous-schema-124>
+                  x-parser-schema-id: <anonymous-schema-120>
               x-parser-schema-id: PriceCryptoTwapPayload
           description: >-
             Snapshot payload is a symbol batch carrying window_seconds; live
@@ -2283,34 +2339,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-124>
+              x-parser-schema-id: <anonymous-schema-125>
             channel:
               type: string
               const: price.equity.twap
-              x-parser-schema-id: <anonymous-schema-125>
+              x-parser-schema-id: <anonymous-schema-126>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-126>
+              x-parser-schema-id: <anonymous-schema-127>
             ts:
               type: integer
               description: Producer event time, Unix milliseconds.
-              x-parser-schema-id: <anonymous-schema-127>
+              x-parser-schema-id: <anonymous-schema-128>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-128>
+              x-parser-schema-id: <anonymous-schema-129>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-129>
+              x-parser-schema-id: <anonymous-schema-130>
             payload:
               oneOf:
                 - type: object
@@ -2325,26 +2381,26 @@ operations:
                     symbol:
                       type: string
                       description: Lowercase symbol, for example eurusd.
-                      x-parser-schema-id: <anonymous-schema-130>
+                      x-parser-schema-id: <anonymous-schema-131>
                     value:
                       type: number
                       description: Price as a float. Prefer full_accuracy_value.
-                      x-parser-schema-id: <anonymous-schema-131>
+                      x-parser-schema-id: <anonymous-schema-132>
                     full_accuracy_value:
                       type: string
                       description: Exact decimal price as published by the source.
-                      x-parser-schema-id: <anonymous-schema-132>
+                      x-parser-schema-id: <anonymous-schema-133>
                     timestamp:
                       type: integer
                       description: Source event time, Unix milliseconds.
-                      x-parser-schema-id: <anonymous-schema-133>
+                      x-parser-schema-id: <anonymous-schema-134>
                     window_seconds:
                       type: integer
                       const: 60
                       description: >-
                         Averaging window of the TWAP series. Only 60 exists
                         today.
-                      x-parser-schema-id: <anonymous-schema-134>
+                      x-parser-schema-id: <anonymous-schema-135>
                     source:
                       type: string
                       enum:
@@ -2357,7 +2413,7 @@ operations:
                         the emitted value is chainlink. Kept as its own schema
                         because this enum is the full vendor set while TwapPoint
                         pins its topic constant.
-                      x-parser-schema-id: <anonymous-schema-135>
+                      x-parser-schema-id: <anonymous-schema-136>
                     market_status:
                       type: string
                       enum:
@@ -2371,7 +2427,7 @@ operations:
                         it changes only with a new price (a TWAP has one clock).
                         The Chainlink FX TWAPs are continuous-hours products and
                         read open.
-                      x-parser-schema-id: <anonymous-schema-136>
+                      x-parser-schema-id: <anonymous-schema-137>
                   x-parser-schema-id: EquityTwapPoint
                 - type: object
                   required:
@@ -2382,7 +2438,7 @@ operations:
                   properties:
                     symbol:
                       type: string
-                      x-parser-schema-id: <anonymous-schema-138>
+                      x-parser-schema-id: <anonymous-schema-139>
                     source:
                       type: string
                       enum:
@@ -2393,7 +2449,7 @@ operations:
                         Vendor that produced every point in this batch, once at
                         batch level. The channel is Chainlink-only today, so the
                         value is chainlink.
-                      x-parser-schema-id: <anonymous-schema-139>
+                      x-parser-schema-id: <anonymous-schema-140>
                     market_status:
                       type: string
                       enum:
@@ -2407,7 +2463,7 @@ operations:
                         point when that point is older than the two-minute
                         window (the price the market stopped at), and the
                         envelope ts is then that point's time.
-                      x-parser-schema-id: <anonymous-schema-140>
+                      x-parser-schema-id: <anonymous-schema-141>
                     data:
                       type: array
                       items: *ref_6
@@ -2417,12 +2473,12 @@ operations:
                         data, except while market_status is closed or unknown:
                         then it also holds the series' last point when that
                         point is older than the window.
-                      x-parser-schema-id: <anonymous-schema-141>
+                      x-parser-schema-id: <anonymous-schema-142>
                     window_seconds:
                       type: integer
                       const: 60
-                      x-parser-schema-id: <anonymous-schema-142>
-                  x-parser-schema-id: <anonymous-schema-137>
+                      x-parser-schema-id: <anonymous-schema-143>
+                  x-parser-schema-id: <anonymous-schema-138>
               x-parser-schema-id: PriceEquityTwapPayload
           description: >-
             Snapshot payload is a symbol batch carrying window_seconds; live
@@ -3079,34 +3135,34 @@ operations:
               type: integer
               const: 1
               description: Envelope version.
-              x-parser-schema-id: <anonymous-schema-143>
+              x-parser-schema-id: <anonymous-schema-144>
             channel:
               type: string
               const: esports.series
-              x-parser-schema-id: <anonymous-schema-144>
+              x-parser-schema-id: <anonymous-schema-145>
             seq:
               type: integer
               description: >-
                 Dense per-connection, per-channel sequence, assigned at
                 delivery. Resets on every reconnect. Snapshot frames consume a
                 seq.
-              x-parser-schema-id: <anonymous-schema-145>
+              x-parser-schema-id: <anonymous-schema-146>
             ts:
               type: integer
               description: The document's observed_at_ms; now for a null snapshot.
-              x-parser-schema-id: <anonymous-schema-146>
+              x-parser-schema-id: <anonymous-schema-147>
             snapshot:
               type: boolean
               description: >-
                 Present and true on the one snapshot frame sent after each new
                 subscription. Absent on live frames.
-              x-parser-schema-id: <anonymous-schema-147>
+              x-parser-schema-id: <anonymous-schema-148>
             dropped:
               type: integer
               description: >-
                 Number of frames dropped on this channel since the last
                 delivered frame (slow-consumer signal). Absent when zero.
-              x-parser-schema-id: <anonymous-schema-148>
+              x-parser-schema-id: <anonymous-schema-149>
             payload:
               oneOf:
                 - type: object
@@ -3134,7 +3190,7 @@ operations:
                     event_id:
                       type: string
                       description: Gamma event id.
-                      x-parser-schema-id: <anonymous-schema-149>
+                      x-parser-schema-id: <anonymous-schema-150>
                     title:
                       type: string
                       enum:
@@ -3144,37 +3200,37 @@ operations:
                         - valorant
                         - r6siege
                         - mlbb
-                      x-parser-schema-id: <anonymous-schema-150>
+                      x-parser-schema-id: <anonymous-schema-151>
                     source:
                       type: string
                       description: Data provider.
                       enum:
                         - grid
                         - pandascore
-                      x-parser-schema-id: <anonymous-schema-151>
+                      x-parser-schema-id: <anonymous-schema-152>
                     provider_series_id:
                       type: string
                       description: Support and tracing only; never key on it.
-                      x-parser-schema-id: <anonymous-schema-152>
+                      x-parser-schema-id: <anonymous-schema-153>
                     schema_version:
                       type: integer
-                      x-parser-schema-id: <anonymous-schema-153>
+                      x-parser-schema-id: <anonymous-schema-154>
                     binding_revision:
                       type: integer
                       description: >-
                         Rises when the event is rebound to another provider
                         series.
-                      x-parser-schema-id: <anonymous-schema-154>
+                      x-parser-schema-id: <anonymous-schema-155>
                     revision:
                       type: integer
                       description: Rises with every published change; never goes back.
-                      x-parser-schema-id: <anonymous-schema-155>
+                      x-parser-schema-id: <anonymous-schema-156>
                     source_updated_at_ms:
                       type: integer
                       description: >-
                         When the provider last changed the state. Absent when
                         not reported.
-                      x-parser-schema-id: <anonymous-schema-156>
+                      x-parser-schema-id: <anonymous-schema-157>
                     observed_at_ms:
                       type: integer
                       description: >-
@@ -3188,10 +3244,10 @@ operations:
                         the delay after an outage; judge freshness by
                         observed_at. Freshness is now - observed_at_ms (not
                         applicable once phase is finished); clocks anchor here.
-                      x-parser-schema-id: <anonymous-schema-157>
+                      x-parser-schema-id: <anonymous-schema-158>
                     published_at_ms:
                       type: integer
-                      x-parser-schema-id: <anonymous-schema-158>
+                      x-parser-schema-id: <anonymous-schema-159>
                     phase:
                       type: string
                       enum:
@@ -3200,16 +3256,16 @@ operations:
                         - paused
                         - finished
                         - unspecified
-                      x-parser-schema-id: <anonymous-schema-159>
+                      x-parser-schema-id: <anonymous-schema-160>
                     valid:
                       type: boolean
                       description: >-
                         False while the provider reports the state invalid;
                         absent when not reported.
-                      x-parser-schema-id: <anonymous-schema-160>
+                      x-parser-schema-id: <anonymous-schema-161>
                     invalidation_reason:
                       type: string
-                      x-parser-schema-id: <anonymous-schema-161>
+                      x-parser-schema-id: <anonymous-schema-162>
                     feed_status:
                       type: string
                       description: >-
@@ -3220,7 +3276,7 @@ operations:
                         - delayed
                         - recovering
                         - unspecified
-                      x-parser-schema-id: <anonymous-schema-162>
+                      x-parser-schema-id: <anonymous-schema-163>
                     capabilities:
                       type: array
                       items:
@@ -3237,38 +3293,38 @@ operations:
                           - rounds
                           - economy
                           - plays
-                        x-parser-schema-id: <anonymous-schema-164>
+                        x-parser-schema-id: <anonymous-schema-165>
                       description: >-
                         The optional groups this document fills; an absent field
                         or empty group means unknown, never zero.
-                      x-parser-schema-id: <anonymous-schema-163>
+                      x-parser-schema-id: <anonymous-schema-164>
                     format:
                       type: string
                       description: e.g. best-of-3.
-                      x-parser-schema-id: <anonymous-schema-165>
+                      x-parser-schema-id: <anonymous-schema-166>
                     best_of:
                       type: integer
-                      x-parser-schema-id: <anonymous-schema-166>
+                      x-parser-schema-id: <anonymous-schema-167>
                     current_game:
                       type: integer
                       description: >-
                         Game in play, or next between games; the last game once
                         finished; absent until the series starts.
-                      x-parser-schema-id: <anonymous-schema-167>
+                      x-parser-schema-id: <anonymous-schema-168>
                     legacy_score:
                       type: string
                       description: >-
                         Legacy card score string, home first, e.g.
                         21-6,10-11,missing|1-0|Bo3. Empty while either side is
                         unresolved, the doc is invalid, or best-of is unknown.
-                      x-parser-schema-id: <anonymous-schema-168>
+                      x-parser-schema-id: <anonymous-schema-169>
                     period:
                       type: string
                       description: >-
                         Legacy period string: NS until a game starts, then
                         <current_game>/<best_of>, e.g. 2/3. Empty if best-of is
                         unknown. Gate on phase.
-                      x-parser-schema-id: <anonymous-schema-169>
+                      x-parser-schema-id: <anonymous-schema-170>
                     teams:
                       type: array
                       items:
@@ -3284,10 +3340,10 @@ operations:
                             description: >-
                               Provider team id; games[].teams[].team_id refers
                               to it.
-                            x-parser-schema-id: <anonymous-schema-171>
+                            x-parser-schema-id: <anonymous-schema-172>
                           name:
                             type: string
-                            x-parser-schema-id: <anonymous-schema-172>
+                            x-parser-schema-id: <anonymous-schema-173>
                           polymarket_side:
                             type: string
                             description: Side of the Polymarket event this team is on.
@@ -3295,17 +3351,17 @@ operations:
                               - home
                               - away
                               - unspecified
-                            x-parser-schema-id: <anonymous-schema-173>
+                            x-parser-schema-id: <anonymous-schema-174>
                           games_won:
                             type: integer
                             description: Games (LoL) or maps (CS2) won.
-                            x-parser-schema-id: <anonymous-schema-174>
+                            x-parser-schema-id: <anonymous-schema-175>
                           won:
                             type: boolean
                             description: Present once the series has a winner.
-                            x-parser-schema-id: <anonymous-schema-175>
+                            x-parser-schema-id: <anonymous-schema-176>
                         x-parser-schema-id: EsportsSeriesTeam
-                      x-parser-schema-id: <anonymous-schema-170>
+                      x-parser-schema-id: <anonymous-schema-171>
                     games:
                       type: array
                       items:
@@ -3326,28 +3382,28 @@ operations:
                           number:
                             type: integer
                             description: Game number in the series.
-                            x-parser-schema-id: <anonymous-schema-177>
+                            x-parser-schema-id: <anonymous-schema-178>
                           map:
                             type: string
                             description: >-
                               Map name; for single-map titles the provider's
                               (LoL: Summoner's Rift) or empty.
-                            x-parser-schema-id: <anonymous-schema-178>
+                            x-parser-schema-id: <anonymous-schema-179>
                           started:
                             type: boolean
-                            x-parser-schema-id: <anonymous-schema-179>
+                            x-parser-schema-id: <anonymous-schema-180>
                           finished:
                             type: boolean
-                            x-parser-schema-id: <anonymous-schema-180>
+                            x-parser-schema-id: <anonymous-schema-181>
                           paused:
                             type: boolean
-                            x-parser-schema-id: <anonymous-schema-181>
+                            x-parser-schema-id: <anonymous-schema-182>
                           winner_team_id:
                             type: string
                             description: >-
                               The provider's explicit winner; empty until there
                               is one.
-                            x-parser-schema-id: <anonymous-schema-182>
+                            x-parser-schema-id: <anonymous-schema-183>
                           clock: &ref_7
                             type: object
                             required:
@@ -3361,16 +3417,16 @@ operations:
                                   Seconds on the clock at observed_at_ms.
                                   Advance from observed_at_ms only while ticking
                                   and the document is fresh.
-                                x-parser-schema-id: <anonymous-schema-183>
+                                x-parser-schema-id: <anonymous-schema-184>
                               ticking:
                                 type: boolean
-                                x-parser-schema-id: <anonymous-schema-184>
+                                x-parser-schema-id: <anonymous-schema-185>
                               counts_down:
                                 type: boolean
                                 description: >-
                                   True for a countdown (CS2 round, respawn);
                                   false for elapsed game time.
-                                x-parser-schema-id: <anonymous-schema-185>
+                                x-parser-schema-id: <anonymous-schema-186>
                             x-parser-schema-id: EsportsClock
                           teams:
                             type: array
@@ -3385,28 +3441,28 @@ operations:
                               properties:
                                 team_id:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-187>
+                                  x-parser-schema-id: <anonymous-schema-188>
                                 side:
                                   type: string
                                   description: >-
                                     blue/red (LoL),
                                     terrorists/counter-terrorists (CS2), ...
-                                  x-parser-schema-id: <anonymous-schema-188>
+                                  x-parser-schema-id: <anonymous-schema-189>
                                 kills:
                                   type: integer
                                   description: Kills; the per-game score in LoL.
-                                  x-parser-schema-id: <anonymous-schema-189>
+                                  x-parser-schema-id: <anonymous-schema-190>
                                 deaths:
                                   type: integer
-                                  x-parser-schema-id: <anonymous-schema-190>
+                                  x-parser-schema-id: <anonymous-schema-191>
                                 gold:
                                   type: integer
                                   description: Total gold earned (LoL).
-                                  x-parser-schema-id: <anonymous-schema-191>
+                                  x-parser-schema-id: <anonymous-schema-192>
                                 gold_lead:
                                   type: integer
                                   description: This team's gold minus the opponent's.
-                                  x-parser-schema-id: <anonymous-schema-192>
+                                  x-parser-schema-id: <anonymous-schema-193>
                                 objectives:
                                   type: array
                                   items:
@@ -3421,34 +3477,34 @@ operations:
                                         description: >-
                                           lower_snake: tower, inhibitor, dragon,
                                           baron, herald, void_grub, ...
-                                        x-parser-schema-id: <anonymous-schema-194>
+                                        x-parser-schema-id: <anonymous-schema-195>
                                       variant:
                                         type: string
                                         description: >-
                                           Dragon element where it matters; empty
                                           otherwise.
-                                        x-parser-schema-id: <anonymous-schema-195>
+                                        x-parser-schema-id: <anonymous-schema-196>
                                       count:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-196>
+                                        x-parser-schema-id: <anonymous-schema-197>
                                       first:
                                         type: boolean
                                         description: >-
                                           True when this team took the kind first
                                           in the game.
-                                        x-parser-schema-id: <anonymous-schema-197>
+                                        x-parser-schema-id: <anonymous-schema-198>
                                     x-parser-schema-id: EsportsObjective
-                                  x-parser-schema-id: <anonymous-schema-193>
+                                  x-parser-schema-id: <anonymous-schema-194>
                                 baron_power_play:
                                   type: integer
-                                  x-parser-schema-id: <anonymous-schema-198>
+                                  x-parser-schema-id: <anonymous-schema-199>
                                 rounds_won:
                                   type: integer
                                   description: Rounds won; the per-map score in CS2.
-                                  x-parser-schema-id: <anonymous-schema-199>
+                                  x-parser-schema-id: <anonymous-schema-200>
                                 money:
                                   type: integer
-                                  x-parser-schema-id: <anonymous-schema-200>
+                                  x-parser-schema-id: <anonymous-schema-201>
                                 players:
                                   type: array
                                   items:
@@ -3461,32 +3517,32 @@ operations:
                                     properties:
                                       id:
                                         type: string
-                                        x-parser-schema-id: <anonymous-schema-202>
+                                        x-parser-schema-id: <anonymous-schema-203>
                                       name:
                                         type: string
-                                        x-parser-schema-id: <anonymous-schema-203>
+                                        x-parser-schema-id: <anonymous-schema-204>
                                       character:
                                         type: string
                                         description: >-
                                           Champion, hero or agent; absent before
                                           it is picked.
-                                        x-parser-schema-id: <anonymous-schema-204>
+                                        x-parser-schema-id: <anonymous-schema-205>
                                       kills:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-205>
+                                        x-parser-schema-id: <anonymous-schema-206>
                                       deaths:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-206>
+                                        x-parser-schema-id: <anonymous-schema-207>
                                       assists:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-207>
+                                        x-parser-schema-id: <anonymous-schema-208>
                                       alive:
                                         type: boolean
-                                        x-parser-schema-id: <anonymous-schema-208>
+                                        x-parser-schema-id: <anonymous-schema-209>
                                       gold:
                                         type: integer
                                         description: Total gold earned (LoL).
-                                        x-parser-schema-id: <anonymous-schema-209>
+                                        x-parser-schema-id: <anonymous-schema-210>
                                       respawn: *ref_7
                                       buffs:
                                         type: array
@@ -3497,54 +3553,54 @@ operations:
                                           properties:
                                             kind:
                                               type: string
-                                              x-parser-schema-id: <anonymous-schema-211>
+                                              x-parser-schema-id: <anonymous-schema-212>
                                             clock: *ref_7
                                           x-parser-schema-id: EsportsBuff
-                                        x-parser-schema-id: <anonymous-schema-210>
+                                        x-parser-schema-id: <anonymous-schema-211>
                                       health:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-212>
+                                        x-parser-schema-id: <anonymous-schema-213>
                                       armor:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-213>
+                                        x-parser-schema-id: <anonymous-schema-214>
                                       money:
                                         type: integer
-                                        x-parser-schema-id: <anonymous-schema-214>
+                                        x-parser-schema-id: <anonymous-schema-215>
                                       loadout:
                                         type: array
                                         items:
                                           type: string
-                                          x-parser-schema-id: <anonymous-schema-216>
-                                        x-parser-schema-id: <anonymous-schema-215>
+                                          x-parser-schema-id: <anonymous-schema-217>
+                                        x-parser-schema-id: <anonymous-schema-216>
                                       character_id:
                                         type: string
                                         description: >-
                                           The provider's id for the character (LoL
                                           champion id), for portraits; absent
                                           before it is picked.
-                                        x-parser-schema-id: <anonymous-schema-217>
+                                        x-parser-schema-id: <anonymous-schema-218>
                                     description: >-
                                       Title-specific fields are absent for other
                                       titles.
                                     x-parser-schema-id: EsportsPlayer
-                                  x-parser-schema-id: <anonymous-schema-201>
+                                  x-parser-schema-id: <anonymous-schema-202>
                                 drakes:
                                   type: array
                                   items:
                                     type: string
-                                    x-parser-schema-id: <anonymous-schema-219>
+                                    x-parser-schema-id: <anonymous-schema-220>
                                   description: >-
                                     Elemental dragons in take order (objective
                                     variants); elder excluded.
-                                  x-parser-schema-id: <anonymous-schema-218>
+                                  x-parser-schema-id: <anonymous-schema-219>
                                 first_kill:
                                   type: boolean
                                   description: >-
                                     True when this team scored the game's first
                                     kill.
-                                  x-parser-schema-id: <anonymous-schema-220>
+                                  x-parser-schema-id: <anonymous-schema-221>
                               x-parser-schema-id: EsportsGameTeam
-                            x-parser-schema-id: <anonymous-schema-186>
+                            x-parser-schema-id: <anonymous-schema-187>
                           draft:
                             type: array
                             items:
@@ -3558,21 +3614,21 @@ operations:
                               properties:
                                 sequence:
                                   type: integer
-                                  x-parser-schema-id: <anonymous-schema-222>
+                                  x-parser-schema-id: <anonymous-schema-223>
                                 action:
                                   type: string
                                   description: pick or ban.
-                                  x-parser-schema-id: <anonymous-schema-223>
+                                  x-parser-schema-id: <anonymous-schema-224>
                                 team_id:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-224>
+                                  x-parser-schema-id: <anonymous-schema-225>
                                 draftable_type:
                                   type: string
                                   description: character or map.
-                                  x-parser-schema-id: <anonymous-schema-225>
+                                  x-parser-schema-id: <anonymous-schema-226>
                                 draftable:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-226>
+                                  x-parser-schema-id: <anonymous-schema-227>
                                 draftable_id:
                                   type: string
                                   description: >-
@@ -3580,9 +3636,9 @@ operations:
                                     agent or map, for portraits (the same id
                                     space as player character_id); absent when
                                     unknown.
-                                  x-parser-schema-id: <anonymous-schema-227>
+                                  x-parser-schema-id: <anonymous-schema-228>
                               x-parser-schema-id: EsportsDraftAction
-                            x-parser-schema-id: <anonymous-schema-221>
+                            x-parser-schema-id: <anonymous-schema-222>
                           structures:
                             type: array
                             items:
@@ -3595,20 +3651,20 @@ operations:
                               properties:
                                 id:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-229>
+                                  x-parser-schema-id: <anonymous-schema-230>
                                 kind:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-230>
+                                  x-parser-schema-id: <anonymous-schema-231>
                                 owner_team_id:
                                   type: string
                                   description: The defender, not the destroyer.
-                                  x-parser-schema-id: <anonymous-schema-231>
+                                  x-parser-schema-id: <anonymous-schema-232>
                                 destroyed:
                                   type: boolean
-                                  x-parser-schema-id: <anonymous-schema-232>
+                                  x-parser-schema-id: <anonymous-schema-233>
                                 respawn: *ref_7
                               x-parser-schema-id: EsportsStructure
-                            x-parser-schema-id: <anonymous-schema-228>
+                            x-parser-schema-id: <anonymous-schema-229>
                           timers:
                             type: array
                             items:
@@ -3619,13 +3675,13 @@ operations:
                               properties:
                                 kind:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-234>
+                                  x-parser-schema-id: <anonymous-schema-235>
                                 variant:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-235>
+                                  x-parser-schema-id: <anonymous-schema-236>
                                 clock: *ref_7
                               x-parser-schema-id: EsportsTimer
-                            x-parser-schema-id: <anonymous-schema-233>
+                            x-parser-schema-id: <anonymous-schema-234>
                           rounds:
                             type: array
                             items:
@@ -3639,22 +3695,22 @@ operations:
                               properties:
                                 number:
                                   type: integer
-                                  x-parser-schema-id: <anonymous-schema-237>
+                                  x-parser-schema-id: <anonymous-schema-238>
                                 started:
                                   type: boolean
-                                  x-parser-schema-id: <anonymous-schema-238>
+                                  x-parser-schema-id: <anonymous-schema-239>
                                 finished:
                                   type: boolean
-                                  x-parser-schema-id: <anonymous-schema-239>
+                                  x-parser-schema-id: <anonymous-schema-240>
                                 winner_team_id:
                                   type: string
                                   description: Empty while the round runs.
-                                  x-parser-schema-id: <anonymous-schema-240>
+                                  x-parser-schema-id: <anonymous-schema-241>
                                 win_type:
                                   type: string
-                                  x-parser-schema-id: <anonymous-schema-241>
+                                  x-parser-schema-id: <anonymous-schema-242>
                               x-parser-schema-id: EsportsRound
-                            x-parser-schema-id: <anonymous-schema-236>
+                            x-parser-schema-id: <anonymous-schema-237>
                         description: >-
                           Exactly one game carries players, draft, structures,
                           timers and rounds: current_game once the provider
@@ -3662,7 +3718,7 @@ operations:
                           after the finish), else game 1. Every other game is a
                           summary.
                         x-parser-schema-id: EsportsGame
-                      x-parser-schema-id: <anonymous-schema-176>
+                      x-parser-schema-id: <anonymous-schema-177>
                     recent_plays:
                       type: array
                       items:
@@ -3682,63 +3738,63 @@ operations:
                             description: >-
                               Stable provider event id: render a play once per
                               id.
-                            x-parser-schema-id: <anonymous-schema-243>
+                            x-parser-schema-id: <anonymous-schema-244>
                           game:
                             type: integer
-                            x-parser-schema-id: <anonymous-schema-244>
+                            x-parser-schema-id: <anonymous-schema-245>
                           round:
                             type: integer
-                            x-parser-schema-id: <anonymous-schema-245>
+                            x-parser-schema-id: <anonymous-schema-246>
                           clock_seconds:
                             type: integer
-                            x-parser-schema-id: <anonymous-schema-246>
+                            x-parser-schema-id: <anonymous-schema-247>
                           type:
                             type: string
                             description: >-
                               Provider actor-action-target type, e.g.
                               player-killed-player.
-                            x-parser-schema-id: <anonymous-schema-247>
+                            x-parser-schema-id: <anonymous-schema-248>
                           kind:
                             type: string
                             description: >-
                               Normalized kind: kill, multikill, tower, dragon,
                               baron, victory, round_end, ...
-                            x-parser-schema-id: <anonymous-schema-248>
+                            x-parser-schema-id: <anonymous-schema-249>
                           variant:
                             type: string
                             description: >-
                               Dragon element, or a round_end's win type; empty
                               otherwise.
-                            x-parser-schema-id: <anonymous-schema-249>
+                            x-parser-schema-id: <anonymous-schema-250>
                           team_id:
                             type: string
-                            x-parser-schema-id: <anonymous-schema-250>
+                            x-parser-schema-id: <anonymous-schema-251>
                           player_name:
                             type: string
-                            x-parser-schema-id: <anonymous-schema-251>
+                            x-parser-schema-id: <anonymous-schema-252>
                           target:
                             type: string
-                            x-parser-schema-id: <anonymous-schema-252>
+                            x-parser-schema-id: <anonymous-schema-253>
                           occurred_at_ms:
                             type: integer
                             description: Unix milliseconds.
-                            x-parser-schema-id: <anonymous-schema-253>
+                            x-parser-schema-id: <anonymous-schema-254>
                           multikill:
                             type: integer
                             description: >-
                               Kills in a multikill play: 2 double, 3 triple, 4
                               quadra, 5 penta. Present only when kind is
                               multikill.
-                            x-parser-schema-id: <anonymous-schema-254>
+                            x-parser-schema-id: <anonymous-schema-255>
                         x-parser-schema-id: EsportsPlay
                       description: Last 20 plays across the series, newest last.
-                      x-parser-schema-id: <anonymous-schema-242>
+                      x-parser-schema-id: <anonymous-schema-243>
                   x-parser-schema-id: EsportsSeriesDoc
                 - type: 'null'
                   description: >-
                     Snapshot only: no live document for this event (unbound or
                     not live).
-                  x-parser-schema-id: <anonymous-schema-255>
+                  x-parser-schema-id: <anonymous-schema-256>
               x-parser-schema-id: EsportsSeriesPayload
           description: Every frame carries the full document; replace, never merge.
           x-parser-schema-id: EsportsSeriesEnvelope
@@ -3877,10 +3933,10 @@ operations:
           properties:
             op:
               const: challenge
-              x-parser-schema-id: <anonymous-schema-259>
+              x-parser-schema-id: <anonymous-schema-260>
             rid:
               type: string
-              x-parser-schema-id: <anonymous-schema-260>
+              x-parser-schema-id: <anonymous-schema-261>
           x-parser-schema-id: ChallengeRequest
         title: challenge (request)
         description: Ask for this connection's challenge nonce

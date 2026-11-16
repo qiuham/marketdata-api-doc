@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-mmp
 api_type: Account
-updated_at: 2026-11-15 18:35:19.052108
+updated_at: 2026-11-16 18:39:04.060021
 ---
 
 # Set MMP

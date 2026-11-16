@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/market_data_only
 api_type: Market Data
-updated_at: 2026-11-15 18:25:11.997034
+updated_at: 2026-11-16 18:28:25.612566
 ---
 
 # Market Data Only URLs
@@ -51,7 +51,7 @@ Sample request:
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Commission Rates](/en/docs/products/spot/faqs/commission_faq)[MARKET orders](/en/docs/products/spot/faqs/market_orders_faq)
 
@@ -101,6 +101,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [佣金率](/zh-CN/docs/products/spot/faqs/commission_faq)[市价单](/zh-CN/docs/products/spot/faqs/market_orders_faq)

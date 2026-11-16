@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/asyncapi-user.json'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # asyncapi-user.json
@@ -452,7 +452,7 @@ Source: https://docs.polymarket.com/asyncapi-user.json
             "type": "array",
             "items": { "type": "string" },
             "nullable": true,
-            "description": "Trade IDs this order has been matched in"
+            "description": "Optional legacy trade IDs. Use size_matched for cumulative fills or match trade events by taker_order_id or maker_orders[].order_id. Absence, null, or an empty array does not mean the order has no fills."
           },
           "outcome": { "type": "string", "description": "e.g. 'YES', 'NO'" },
           "type": {

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/Introduction
 api_type: REST
-updated_at: 2026-11-15 18:27:03.659964
+updated_at: 2026-11-16 18:30:00.183396
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Derivative Trading API provide REST and WebSocket APIs to suit your derivative t
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Public API Definitions](/en/docs/products/derivatives-trading-portfolio-margin/common-definition)[Quick Start](/en/docs/products/derivatives-trading-portfolio-margin-pro/quick-start)
 
@@ -23,6 +23,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [公开API参数](/zh-CN/docs/products/derivatives-trading-portfolio-margin/common-definition)[快速开始](/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/quick-start)

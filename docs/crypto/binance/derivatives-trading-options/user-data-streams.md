@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/user-data-streams
 api_type: REST
-updated_at: 2026-11-15 18:26:38.026142
+updated_at: 2026-11-16 18:29:37.821148
 ---
 
 # User Data Streams
@@ -239,7 +239,7 @@ When the `listenKey` used for the user data stream turns expired, this event wil
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [General Info](/en/docs/products/derivatives-trading-options/general-info)[Public Endpoints Info](/en/docs/products/derivatives-trading-options/common-definition)
 
@@ -492,6 +492,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [基本信息](/zh-CN/docs/products/derivatives-trading-options/general-info)[公开API参数](/zh-CN/docs/products/derivatives-trading-options/common-definition)

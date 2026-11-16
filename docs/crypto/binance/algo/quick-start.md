@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/algo/quick-start
 api_type: REST
-updated_at: 2026-11-15 18:27:32.795853
+updated_at: 2026-11-16 18:30:25.279955
 ---
 
 # Quick Start
@@ -80,7 +80,7 @@ A YAML file with OpenAPI specification on the RESTful API is available to be use
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [General Info](/en/docs/products/algo/general-info)[Error Codes](/en/docs/products/algo/error-code)
 
@@ -136,6 +136,6 @@ Postman 集合现已推出。推荐给寻求快速和轻松地开始使用 API �
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [基本信息](/zh-CN/docs/products/algo/general-info)[错误代码](/zh-CN/docs/products/algo/error-code)

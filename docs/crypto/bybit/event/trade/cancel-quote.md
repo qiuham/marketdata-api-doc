@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/cancel-quote
 api_type: Trading
-updated_at: 2026-11-15 18:36:11.423081
+updated_at: 2026-11-16 18:40:54.985060
 ---
 
 # Cancel Quote

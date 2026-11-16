@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/trading/realtime-order-updates'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Real-Time Order Updates
@@ -174,6 +174,11 @@ provide condition IDs to follow selected markets.
 > > }
 > > ```
 >
+> Use `sizeMatched` on order updates for cumulative filled quantity. For
+> individual fills, match trade updates by `takerOrderId` or
+> `makerOrders[].orderId`. `associateTrades` may be absent or empty; neither
+> means the order has no fills.
+>
 > To receive updates only for selected markets, pass their condition IDs in
 > `markets`:
 >
@@ -326,6 +331,11 @@ provide condition IDs to follow selected markets.
 > > }
 > > ```
 >
+> Use `size_matched` on order updates for cumulative filled quantity. For
+> individual fills, match trade updates by `taker_order_id` or
+> `maker_orders[].order_id`. `associate_trades` may be absent or empty; neither
+> means the order has no fills.
+>
 > To receive updates only for selected markets, pass their condition IDs to
 > `UserSpec`:
 >
@@ -448,6 +458,11 @@ provide condition IDs to follow selected markets.
 > >   "timestamp": "1782753357257"
 > > }
 > > ```
+>
+> Use `size_matched` on order events for cumulative filled quantity. For
+> individual fills, match trade events by `taker_order_id` or
+> `maker_orders[].order_id`. `associate_trades` may be absent, `null`, or empty;
+> none of these means the order has no fills.
 >
 > To receive updates only for selected markets, include their condition IDs
 > in the initial subscription frame:

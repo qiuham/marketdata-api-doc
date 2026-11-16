@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect
 api_type: WebSocket
-updated_at: 2026-11-15 18:26:22.677250
+updated_at: 2026-11-16 18:29:23.166335
 ---
 
 # Websocket Market Streams
@@ -37,7 +37,7 @@ updated_at: 2026-11-15 18:26:22.677250
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Error Codes](/en/docs/products/derivatives-trading-coin-futures/error-code)[Live Subscribing/Unsubscribing to streams](/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)
 
@@ -73,6 +73,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [错误代码](/zh-CN/docs/products/derivatives-trading-coin-futures/error-code)[实时订阅/取消数据流](/zh-CN/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)

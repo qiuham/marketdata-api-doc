@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#spread-trading-rest-api-get-candlesticks
 anchor_id: spread-trading-rest-api-get-candlesticks
 api_type: REST
-updated_at: 2026-11-15 18:44:58.290282
+updated_at: 2026-11-16 18:51:20.842384
 ---
 
 # Get candlesticks

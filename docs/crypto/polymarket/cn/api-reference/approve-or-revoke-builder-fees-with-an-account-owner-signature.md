@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/approve-or-revoke-builder-fees-with-an-account-owner-signature'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 授权构建者费用

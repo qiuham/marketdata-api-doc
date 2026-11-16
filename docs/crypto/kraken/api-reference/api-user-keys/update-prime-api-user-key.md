@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/api-user-keys/update-prime-api-user-key'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Update Prime API User Key

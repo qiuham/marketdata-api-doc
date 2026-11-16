@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/tradfi-integration
 api_type: REST
-updated_at: 2026-11-15 18:37:58.512291
+updated_at: 2026-11-16 18:43:14.569432
 ---
 
 # TradFi Integration

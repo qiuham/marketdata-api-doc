@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/algo/change-log
 api_type: REST
-updated_at: 2026-11-15 18:27:32.068453
+updated_at: 2026-11-16 18:30:24.554193
 ---
 
 # Change Log
@@ -83,7 +83,7 @@ FAQ: [Volume Participation(VP) Introduction](https://www.binance.com/en/support/
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Introduction](/en/docs/products/algo/Introduction)[General Info](/en/docs/products/algo/general-info)
 
@@ -167,6 +167,6 @@ FAQ: [成交量份额参与算法(VP) 介绍](https://www.binance.com/cn/support
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [概述](/zh-CN/docs/products/algo/Introduction)[基本信息](/zh-CN/docs/products/algo/general-info)

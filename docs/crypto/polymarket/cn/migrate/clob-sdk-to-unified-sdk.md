@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/migrate/clob-sdk-to-unified-sdk'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 从旧版 SDK 迁移到统一 SDK
@@ -761,7 +761,7 @@ updated_at: 2026-11-15
 > ### 列出未成交订单
 >
 > `SecureClient` 提供 `listOpenOrders`，返回一个分页器。过滤条件和
-> 响应字段使用 camelCase（小驼峰命名法）。
+> 响应字段使用 camelCase（小驼峰命名法）。按 `assetId` 或已弃用的 `tokenId` 筛选时，必须同时提供非空的 `market`（市场条件 ID）；否则会在发送请求前抛出 `UserInputError`。
 >
 > ```ts Before theme={null}
 > const orders = await client.getOpenOrders({
@@ -1641,7 +1641,7 @@ updated_at: 2026-11-15
 >
 > ### 列出未成交订单
 >
-> `AsyncSecureClient` 提供 `list_open_orders`，返回一个异步分页器。
+> `AsyncSecureClient` 提供 `list_open_orders`，返回一个异步分页器。按 `asset_id` 或已弃用的 `token_id` 筛选时，必须同时提供非空的 `market`（市场条件 ID）；否则会在分页器获取页面时抛出 `UserInputError`。同步 `SecureClient` 的要求相同。
 >
 > ```python Before theme={null}
 > from py_clob_client_v2 import OpenOrderParams

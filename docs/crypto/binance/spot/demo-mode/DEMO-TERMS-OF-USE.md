@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE
 api_type: REST
-updated_at: 2026-11-15 18:25:06.357147
+updated_at: 2026-11-16 18:28:21.885094
 ---
 
 # SPOT Demo Mode Terms of Use
@@ -11,7 +11,7 @@ Binance products and services are subject to the [Product Terms of Use](https://
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Changelog](/en/docs/products/spot/demo-mode/CHANGELOG)[API Key Types](/en/docs/products/spot/faqs/api_key_types)
 
@@ -23,6 +23,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [更新日志](/zh-CN/docs/products/spot/demo-mode/CHANGELOG)[API Key 类型](/zh-CN/docs/products/spot/faqs/api_key_types)

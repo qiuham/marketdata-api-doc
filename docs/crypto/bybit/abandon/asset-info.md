@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/asset-info
 api_type: REST
-updated_at: 2026-11-15 18:35:06.853423
+updated_at: 2026-11-16 18:38:41.787645
 ---
 
 # Get Asset Info

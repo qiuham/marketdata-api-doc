@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/api_key_types
 api_type: REST
-updated_at: 2026-11-15 18:25:11.811931
+updated_at: 2026-11-16 18:28:25.496134
 ---
 
 # API Key Types
@@ -101,7 +101,7 @@ Sample RSA signature (2048 bits):
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Terms of Use](/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE)[Commission Rates](/en/docs/products/spot/faqs/commission_faq)
 
@@ -203,6 +203,6 @@ RSA (2048 bits) 签名例子::
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [模拟交易使用条款](/zh-CN/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE)[佣金率](/zh-CN/docs/products/spot/faqs/commission_faq)

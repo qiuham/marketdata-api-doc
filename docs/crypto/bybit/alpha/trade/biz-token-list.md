@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/biz-token-list
 api_type: Trading
-updated_at: 2026-11-15 18:35:32.618308
+updated_at: 2026-11-16 18:39:50.333765
 ---
 
 # Get Biz Token List

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/order_amend_keep_priority
 api_type: REST
-updated_at: 2026-11-15 18:25:15.790007
+updated_at: 2026-11-16 18:28:27.981118
 ---
 
 # Order Amend Keep Priority
@@ -125,7 +125,7 @@ This information is available in Exchange Information. Symbols that allow Order 
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [One Pays the Other (OPO)](/en/docs/products/spot/faqs/opo)[Spot Unfilled Order Count Rules](/en/docs/products/spot/faqs/order_count_decrement)
 
@@ -251,6 +251,6 @@ WebSocket API| `order.amendments`
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [一个订单支付另一个订单（One Pays the Other，简称 OPO）](/zh-CN/docs/products/spot/faqs/opo)[现货未成交订单计数规则](/zh-CN/docs/products/spot/faqs/order_count_decrement)

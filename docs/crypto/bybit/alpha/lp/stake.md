@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/lp/stake
 api_type: REST
-updated_at: 2026-11-15 18:35:25.897932
+updated_at: 2026-11-16 18:39:41.500427
 ---
 
 # Execute LP Stake

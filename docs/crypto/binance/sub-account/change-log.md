@@ -2,10 +2,19 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/change-log
 api_type: Account
-updated_at: 2026-11-15 18:28:41.893826
+updated_at: 2026-11-16 18:31:26.280732
 ---
 
 # Change Log
+
+## 2026-11-16
+
+  * Update endpoint for Sub-Account Move Position:
+    * `POST /sapi/v1/sub-account/futures/move-position`: Move Position now charges a trading fee (effective 2026-11-13). The fee rate is based on the master account's VIP level: the source account is the taker and the destination account is the maker. The `clientOrderId` prefix of generated orders changed from `otc-` to `otcCHGFE`.
+
+
+
+* * *
 
 ## 2026-10-27
 
@@ -511,13 +520,22 @@ The query time period must be less then 30 days; If `startTime` and `endTime` no
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Introduction](/en/docs/products/sub-account/Introduction)[General Info](/en/docs/products/sub-account/general-info)
 
 ---
 
 # 更新日志
+
+## 2026-11-16
+
+  * 更新子账户移仓接口：
+    * `POST /sapi/v1/sub-account/futures/move-position`：移仓现会收取交易手续费（2026-11-13 起生效）。手续费率基于母账户的 VIP 等级：转出账户为 taker，转入账户为 maker。移仓生成订单的 `clientOrderId` 前缀由 `otc-` 变更为 `otcCHGFE`。
+
+
+
+* * *
 
 ## 2026-10-27
 
@@ -1002,6 +1020,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [概述](/zh-CN/docs/products/sub-account/Introduction)[基本信息](/zh-CN/docs/products/sub-account/general-info)

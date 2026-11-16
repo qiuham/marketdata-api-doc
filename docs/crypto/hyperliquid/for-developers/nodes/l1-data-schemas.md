@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/nodes/l1-data-schemas'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # L1 data schemas

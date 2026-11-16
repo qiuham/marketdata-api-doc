@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/rtds-to-polybolt'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Migrate from RTDS to PolyBolt
@@ -18,6 +18,13 @@ updated_at: 2026-11-15
 > Migrate price subscriptions from RTDS to PolyBolt
 
 Move reference-price subscriptions to PolyBolt while keeping your event-driven price workflow. Reference prices require authentication.
+
+> [!WARNING]
+>
+> Every PolyBolt price subscription must
+> name its provider, and subscriptions served by Chainlink require your
+> Chainlink API key. See [Send Your Chainlink API
+> Key](https://docs.polymarket.com/api-reference/live-data/overview.md#send-your-chainlink-api-key).
 
 ## Migrate an API Integration
 
@@ -43,10 +50,10 @@ Update the connection, authentication, and subscription frames. See the [Live Da
 | RTDS topic | RTDS filter | PolyBolt channel | PolyBolt filter | Notes |
 | - | - | - | - | - |
 | `crypto_prices` (Binance) | `btcusdt` | `price.crypto` | `{ "symbol": "btcusd", "provider": "binance" }` | Request Binance with the canonical `btcusd` symbol. |
-| `crypto_prices_chainlink` | `{"symbol":"btc/usd"}` | `price.crypto` | `{"symbol":"btcusd"}` | Source stays Chainlink, the `price.crypto` default. Use `btcusd` instead of `btc/usd`. |
-| `crypto_prices_twap_sixty` | `{"symbol":"btc/usd"}` | `price.crypto.twap` | `{"symbol":"btcusd","window_seconds":60}` | 60-second Chainlink TWAP |
+| `crypto_prices_chainlink` | `{"symbol":"btc/usd"}` | `price.crypto` | `{"symbol":"btcusd","provider":"chainlink"}` | Source stays Chainlink. Use `btcusd` instead of `btc/usd`. |
+| `crypto_prices_twap_sixty` | `{"symbol":"btc/usd"}` | `price.crypto.twap` | `{"symbol":"btcusd","window_seconds":60,"provider":"chainlink"}` | 60-second Chainlink TWAP |
 | `crypto_prices_twap_thirty` | `{"symbol":"btc/usd"}` | None | None | No PolyBolt replacement for the 30-second window |
-| `equity_prices` | `{"symbol":"AAPL"}` | `price.equity` | `{"symbol":"aapl"}` | Same catalog, lowercase: stocks, ETFs, forex, metals and the commodities `cll`, `hn`, `cc3m` |
+| `equity_prices` | `{"symbol":"AAPL"}` | `price.equity` | `{"symbol":"aapl","provider":"pyth"}` | Same catalog, lowercase: stocks, ETFs, forex, metals and the commodities `cll`, `hn`, `cc3m` |
 
 > [!WARNING]
 >
@@ -55,9 +62,8 @@ Update the connection, authentication, and subscription frames. See the [Live Da
 > format to every crypto symbol you subscribe to.
 
 Live price payloads contain `symbol`, `value`, `full_accuracy_value`,
-`timestamp`, and `source`, the vendor that produced the price. `price.crypto`
-and `price.equity` default to Chainlink wherever Chainlink serves the symbol;
-add `provider` to the filter to pin a specific vendor
+`timestamp`, and `source`, the vendor that produced the price. Name the vendor
+with `provider` in every filter
 ([Pin a Price Provider](https://docs.polymarket.com/api-reference/live-data/overview.md#pin-a-price-provider)).
 Equity updates may also include `received_at` and `is_carried_forward`, and
 equity payloads carry `market_status` (`open`, `closed` or `unknown`), which
@@ -151,11 +157,18 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 >
 > **2. Subscribe to Prices**
 >
-> Change the topic from `prices.crypto.chainlink.twap` to `prices.crypto.twap` and provide an explicit `symbols` list. Change `btc/usd` to `btcusd` and remove `windowSeconds` from the subscription input. The new topic always uses a 60-second window.
+> Change the topic from `prices.crypto.chainlink.twap` to `prices.crypto.twap`, provide an explicit `symbols` list and set `provider: PriceProvider.Chainlink`. Change `btc/usd` to `btcusd` and remove `windowSeconds` from the subscription input. The new topic always uses a 60-second window.
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.crypto.twap", symbols: ["btcusd"] },
+>   {
+>     topic: "prices.crypto.twap",
+>     symbols: ["btcusd"],
+>     provider: PriceProvider.Chainlink,
+>     providerApiKey: "<chainlink api key>",
+>   },
 > ]);
 >
 > try {
@@ -293,13 +306,13 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 >
 > **2. Subscribe to Prices**
 >
-> Subscribe to BTC/USD with `CryptoTwapPriceSpec`. The async context manager closes the subscription when the block exits.
+> Subscribe to BTC/USD with `CryptoTwapPriceSpec` and `provider="chainlink"`. The async context manager closes the subscription when the block exits.
 >
 > ```python theme={null}
 > from polymarket.streams import CryptoTwapPriceSpec
 >
 > async with await client.subscribe(
->     CryptoTwapPriceSpec(symbols=["btcusd"])
+>     CryptoTwapPriceSpec(symbols=["btcusd"], provider="chainlink", provider_api_key="<chainlink api key>")
 > ) as stream:
 >     async for event in stream:
 >         # event: CryptoTwapPriceEvent
@@ -376,7 +389,7 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 >
 > Use the authenticated `client` created above. Change the symbol suffix from `usdt` to `usd`, for example `btcusdt` to `btcusd`. Remove any slash separators, for example `btc/usd` to `btcusd`. The new topic requires explicit lowercase USD symbols.
 >
-> Set `provider: PriceProvider.Binance` to request Binance prices. Omit `provider` to use the default. Check `event.payload.source` for the provider actually served.
+> Set `provider: PriceProvider.Binance` to request Binance prices. `provider` is required. Check `event.payload.source` for the provider actually served.
 >
 > > [accordion] Before: RTDS
 > >
@@ -514,7 +527,7 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 > > ]
 > > ```
 >
-> Replace `CryptoPricesSpec` with `CryptoPriceSpec`. Set `provider="binance"` to request Binance prices. Omit `provider` to use the default. Check `event.payload.source` for the provider actually served.
+> Replace `CryptoPricesSpec` with `CryptoPriceSpec`. Set `provider="binance"` to request Binance prices. `provider` is required. Check `event.payload.source` for the provider actually served.
 >
 > Replace the legacy call with this subscription:
 >
@@ -620,8 +633,15 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 > Replace the legacy subscription with:
 >
 > ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
 > const stream = await client.subscribe([
->   { topic: "prices.equity", symbol: "aapl", types: ["update"] },
+>   {
+>     topic: "prices.equity",
+>     symbol: "aapl",
+>     types: ["update"],
+>     provider: PriceProvider.Pyth,
+>   },
 > ]);
 > try {
 >   for await (const event of stream) {
@@ -729,7 +749,7 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 > > spec = EquityPricesSpec(symbol="AAPL", types=["update"])
 > > ```
 >
-> Replace `EquityPricesSpec` with `EquityPriceSpec`, preserving `symbol` and `types`. Symbols are trimmed and lowercased. `types=["update"]` keeps live updates only. Omit `types` to receive history snapshots too.
+> Replace `EquityPricesSpec` with `EquityPriceSpec`, preserving `symbol` and `types`, and set `provider="pyth"` to keep the Pyth source. Symbols are trimmed and lowercased. `types=["update"]` keeps live updates only. Omit `types` to receive history snapshots too.
 >
 > Replace the legacy call with this subscription:
 >
@@ -737,7 +757,7 @@ Keep using RTDS for the `activity` topic. It has no PolyBolt channel.
 > from polymarket.streams import EquityPriceSpec
 >
 > async with await client.subscribe(
->     EquityPriceSpec(symbol="aapl", types=["update"])
+>     EquityPriceSpec(symbol="aapl", types=["update"], provider="pyth")
 > ) as stream:
 >     async for event in stream:
 >         # event: EquityPriceEvent

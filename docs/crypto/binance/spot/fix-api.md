@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/fix-api
 api_type: REST
-updated_at: 2026-11-15 18:25:24.694232
+updated_at: 2026-11-16 18:28:35.413440
 ---
 
 # FIX API
@@ -1496,7 +1496,7 @@ See the [SBE FAQ](/en/docs/products/spot/faqs/sbe_faq) for more information on g
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket Streams](/en/docs/products/spot/web-socket-streams)[SBE Market Data Streams](/en/docs/products/spot/sbe-market-data-streams)
 
@@ -3007,6 +3007,6 @@ FIX 和 FIX SBE 分享连接限制。
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [WebSocket 流信息](/zh-CN/docs/products/spot/web-socket-streams)[SBE 市场数据流](/zh-CN/docs/products/spot/sbe-market-data-streams)

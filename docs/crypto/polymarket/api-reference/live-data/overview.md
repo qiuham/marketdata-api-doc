@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/live-data/overview'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # PolyBolt WebSocket
@@ -21,6 +21,13 @@ PolyBolt streams crypto, equity and TWAP reference prices over a single
 connection. Subscriptions require CLOB API credentials.
 
 For existing RTDS integrations, see [Migrate from RTDS to PolyBolt](https://docs.polymarket.com/migrate/rtds-to-polybolt.md).
+
+> [!WARNING]
+>
+> Price subscriptions must name a provider.
+> Subscriptions served by Chainlink also require your Chainlink API key. See
+> [Send Your Chainlink API Key](#send-your-chainlink-api-key) and [Pin a Price
+> Provider](#pin-a-price-provider).
 
 ## Connect
 
@@ -36,12 +43,13 @@ Choose a channel, authenticate, then send a subscription request.
 
 | Channel | Data | Filter | Access |
 | - | - | - | - |
-| `price.crypto` | Crypto reference prices | `{"symbol": "btcusd"}` | CLOB API credentials |
-| `price.equity` | Stock, ETF, forex, metal and commodity reference prices | `{"symbol": "aapl"}` | CLOB API credentials |
-| `price.crypto.twap` | 60-second time-weighted average prices (TWAP) from Chainlink | `{"symbol": "btcusd", "window_seconds": 60}` | CLOB API credentials |
-| `price.equity.twap` | 60-second forex TWAP prices from Chainlink (`eurusd` and `usdjpy`) | `{"symbol": "eurusd", "window_seconds": 60}` | CLOB API credentials |
+| `price.crypto` | Crypto reference prices | `{"symbol": "btcusd", "provider": "chainlink"}` | CLOB API credentials |
+| `price.equity` | Stock, ETF, forex, metal and commodity reference prices | `{"symbol": "aapl", "provider": "pyth"}` | CLOB API credentials |
+| `price.crypto.twap` | 60-second time-weighted average prices (TWAP) from Chainlink | `{"symbol": "btcusd", "window_seconds": 60, "provider": "chainlink"}` | CLOB API credentials |
+| `price.equity.twap` | 60-second forex TWAP prices from Chainlink (`eurusd` and `usdjpy`) | `{"symbol": "eurusd", "window_seconds": 60, "provider": "chainlink"}` | CLOB API credentials |
 
-Use lowercase symbols.
+Use lowercase symbols, and name the provider in every filter (see
+[Pin a Price Provider](#pin-a-price-provider)).
 
 ## Authenticate for Gated Channels
 
@@ -70,6 +78,77 @@ Wait for the server to confirm authentication:
 }
 ```
 
+### Send Your Chainlink API Key
+
+Subscriptions served by Chainlink, including TWAP, require your Chainlink API key in addition to CLOB API credentials.
+
+> [!NOTE]
+>
+> Request a Chainlink API Key using [this form](https://institutional.polymarket.com/request-chainlink-api-key).
+
+> [tab] TypeScript
+>
+> Use an authenticated [SecureClient](https://docs.polymarket.com/trading/wallets-auth.md) and pass your key as `providerApiKey` with the Chainlink provider.
+>
+> ```ts theme={null}
+> import { PriceProvider } from "@polymarket/client";
+>
+> const stream = await client.subscribe([
+>   {
+>     topic: "prices.crypto.twap",
+>     symbols: ["btcusd"],
+>     provider: PriceProvider.Chainlink,
+>     providerApiKey: "<chainlink api key>",
+>   },
+> ]);
+>
+> try {
+>   for await (const event of stream) {
+>     // event: CryptoTwapPriceEvent
+>   }
+> } finally {
+>   await stream.close();
+> }
+> ```
+
+> [tab] Python
+>
+> Use an authenticated [AsyncSecureClient](https://docs.polymarket.com/trading/wallets-auth.md) and pass your key as `provider_api_key` with the Chainlink provider.
+>
+> ```python theme={null}
+> from polymarket.streams import CryptoTwapPriceSpec
+>
+> async with await client.subscribe(
+>     CryptoTwapPriceSpec(
+>         symbols=["btcusd"],
+>         provider="chainlink",
+>         provider_api_key="<chainlink api key>",
+>     )
+> ) as stream:
+>     async for event in stream:
+>         # event: CryptoTwapPriceEvent
+>         pass
+> ```
+
+> [tab] API
+>
+> Send `chainlink_api_key` in the first `auth` frame alongside your CLOB API credentials. To change the key, open a new connection.
+>
+> ```json theme={null}
+> {
+>   "op": "auth",
+>   "rid": "a1",
+>   "auth": {
+>     "apiKey": "<api key>",
+>     "secret": "<api secret>",
+>     "passphrase": "<api passphrase>"
+>   },
+>   "chainlink_api_key": "<chainlink api key>"
+> }
+> ```
+
+Subscriptions served by other providers do not need an API key for now. If a requested provider falls back to Chainlink, the key is still required.
+
 The server reports authentication problems with an error acknowledgement, for example:
 
 ```json theme={null}
@@ -88,18 +167,23 @@ These errors leave the connection open:
 | `auth_required` | The subscription was sent before authentication. | Authenticate, then resend the subscription. |
 | `auth_invalid` | The credentials were rejected. | Correct the credentials before retrying. |
 | `auth_unavailable` | Authentication is temporarily unavailable. | Wait, then retry authentication. |
+| `chainlink_key_required` | A subscription served by Chainlink was sent on a connection authenticated without a Chainlink API key. | Open a new connection, authenticate with `chainlink_api_key`, then resend the subscription. |
+
+`chainlink_key_required` also carries a numeric `status` of `4010`. It is not a
+close code: the connection stays open.
 
 ## Subscribe
 
 Send the channels and filters you want to follow. This request subscribes to the
-BTC reference price on the authenticated connection:
+BTC reference price from Chainlink on a connection authenticated with your
+Chainlink API key:
 
 ```json theme={null}
 {
   "op": "subscribe",
   "rid": "s1",
   "subscriptions": [
-    { "channel": "price.crypto", "filter": { "symbol": "btcusd" } }
+    { "channel": "price.crypto", "filter": { "symbol": "btcusd", "provider": "chainlink" } }
   ]
 }
 ```
@@ -109,9 +193,7 @@ A batch counts as one request against the rate limit.
 ### Pin a Price Provider
 
 Crypto and equity prices can come from more than one vendor. Every payload
-names its producer in `source`, and on `price.crypto`, `price.equity` and
-`price.equity.twap` you can optionally pin one by adding `provider` to the
-filter:
+names its producer in `source`. Choose one by adding `provider` to the filter:
 
 ```json theme={null}
 {
@@ -123,16 +205,31 @@ filter:
 }
 ```
 
-`provider` accepts `chainlink` or `pyth`. The `subscribed` acknowledgement
-names the provider actually served. A pin the server cannot serve for that
-symbol falls back to the symbol's default provider, and the acknowledgement
-names the fallback, so always read the acknowledgement rather than assuming
-the pin held. Omit `provider` to follow the default, which is Chainlink
-wherever Chainlink serves the symbol. The field is ignored on channels with a
-single provider.
+`provider` accepts `chainlink`, `pyth` or `binance`. Binance serves
+`price.crypto` only, with USDT spot closes under the canonical USD symbol. The
+`subscribed` acknowledgement names the provider actually served. A pin the
+server cannot serve for that symbol falls back to the symbol's default
+provider, and the acknowledgement names the fallback, so always read the
+acknowledgement rather than assuming the pin held. The TWAP channels are
+served by Chainlink only, so pin `chainlink` there.
 
-Values other than `chainlink` or `pyth` are rejected with a `bad_filter`
-error.
+Values other than `chainlink`, `pyth` or `binance` are rejected with a
+`bad_filter` error.
+
+`provider` is required on
+`price.crypto`, `price.equity`, `price.crypto.twap` and `price.equity.twap`.
+A subscription without `provider`
+answers this error, and the connection stays open:
+
+```json theme={null}
+{
+  "op": "error",
+  "code": "provider_required",
+  "status": 4011,
+  "channel": "price.crypto",
+  "rid": "s2"
+}
+```
 
 ### Read the Market Status
 
@@ -235,7 +332,8 @@ result of a request.
 {
   "op": "subscribed",
   "channel": "price.crypto",
-  "rid": "s1"
+  "rid": "s1",
+  "provider": "chainlink"
 }
 ```
 
@@ -244,10 +342,13 @@ Acknowledgements echo `rid` when the request includes it.
 | `op` | Meaning |
 | - | - |
 | `authed` | Authentication succeeded. You can subscribe to gated channels. |
-| `subscribed` | The subscription was accepted. `channel` identifies the channel. |
+| `subscribed` | The subscription was accepted. `channel` identifies the channel; on price channels, `provider` names the vendor served. |
 | `unsubscribed` | The unsubscribe request was accepted. `channel` identifies the channel. |
 | `pong` | The server received your application-level `ping` request. |
 | `error` | The request failed. `code` identifies the reason. Policy violations can also close the connection. |
+
+`chainlink_key_required` and `provider_required` errors also carry a numeric
+`status`, `4010` and `4011`. Neither closes the connection.
 
 Each new subscription receives an acknowledgement and one snapshot. Seed local state from the snapshot, then apply the latest price. Snapshots contain the preceding two minutes of prices, with an empty `data` array when no recent data is available. Repeating an existing channel and filter returns another acknowledgement without a new snapshot.
 
@@ -272,7 +373,7 @@ Send the same channel and filter with `op: "unsubscribe"` to stop a subscription
 {
   "op": "unsubscribe",
   "subscriptions": [
-    { "channel": "price.crypto", "filter": { "symbol": "btcusd" } }
+    { "channel": "price.crypto", "filter": { "symbol": "btcusd", "provider": "chainlink" } }
   ]
 }
 ```
@@ -292,10 +393,10 @@ accept a single `channel` and `filter` or a `subscriptions` array.
 
 For the TWAP channels, use `window_seconds: 60`. Other windows do not provide data.
 
-Every `price.crypto` symbol defaults to Chainlink. `btcusd`, `ethusd`,
-`solusd`, `xrpusd`, `dogeusd` and `bnbusd` can also be pinned to `pyth`;
-`hypeusd` and `zecusd` have no second provider. `price.crypto.twap` is
-Chainlink only.
+Every `price.crypto` symbol is served by Chainlink, its default provider, and
+by Binance. `btcusd`, `ethusd`, `solusd`, `xrpusd`, `dogeusd` and `bnbusd` are
+also served by Pyth; on `hypeusd` and `zecusd` a `pyth` pin falls back to
+Chainlink. `price.crypto.twap` is Chainlink only.
 
 ### Equity Prices
 
@@ -310,12 +411,14 @@ Chainlink only.
 
 `dxy` is the US Dollar Index.
 
-Equity symbols default to Chainlink wherever Chainlink serves them:
+Each equity symbol has a default provider, which serves any pin the symbol
+does not support, including every `binance` pin:
 
 | Symbols | Default | Pinnable |
 | - | - | - |
 | `xauusd`, `xagusd`, `nvda`, `googl`, `tsla`, `spcx`, `mu` | `chainlink` | `pyth` |
 | `intc`, `mstr`, `crcl`, `wti`, `brent`, `natgas` | `chainlink` | none |
+| `eurusd`, `usdjpy` | `pyth` | `chainlink` |
 | Every other equity symbol | `pyth` | none |
 
 Commodities serve under `cll` (WTI crude oil futures) and `hn` (Henry Hub
@@ -360,7 +463,7 @@ wait and add jitter. Browser clients see handshake failures as `1006` and should
 use exponential backoff with full jitter.
 
 After reconnecting, authenticate again for gated channels and resend your
-subscriptions, including any `provider` pins. Initialize from the new
+subscriptions with their `provider` pins. Initialize from the new
 snapshots and re-read `source`: a crypto or equity symbol can legitimately
 arrive from a different vendor than before the reconnect. Sequence numbers
 start over.

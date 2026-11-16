@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/trading/manage-orders'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Manage Orders
@@ -61,6 +61,7 @@ orders.
 >   outcome: string;
 >   orderType: string;
 >   status: string;
+>   /** @deprecated Use sizeMatched or account trade records to track fills. */
 >   associateTrades: string[];
 >   createdAt: IsoDateTimeString;
 >   expiresAt?: IsoDateTimeString;
@@ -90,6 +91,11 @@ orders.
 > The unified SDK uses `assetId` for an outcome's trading identifier: a token
 > ID for a CTF market or a position ID for a Polymarket Protocol V2 market.
 > Use the identifier exposed for that outcome.
+>
+> `associateTrades` is deprecated and defaults to an empty array when omitted
+> from the response. Use `sizeMatched` for cumulative filled quantity, or
+> `listAccountTrades()` for individual fills matched by `takerOrderId` or
+> `makerOrders[].orderId`. An empty array does not mean the order has no fills.
 >
 > `expiresAt` is present when the response includes an expiration. Otherwise,
 > the field is omitted.
@@ -122,7 +128,7 @@ orders.
 >     outcome: str
 >     order_type: str
 >     status: str
->     associate_trades: tuple[str, ...]
+>     associate_trades: tuple[str, ...]  # Deprecated; use size_matched or account trades.
 >     created_at: datetime
 >     expires_at: datetime | None
 > ```
@@ -150,6 +156,11 @@ orders.
 > The unified SDK uses `asset_id` for an outcome's trading identifier: a token
 > ID for a CTF market or a position ID for a Polymarket Protocol V2 market.
 > Use the identifier exposed for that outcome.
+>
+> `associate_trades` is deprecated and defaults to an empty tuple when omitted
+> from the response. Use `size_matched` for cumulative filled quantity, or
+> `list_account_trades()` for individual fills matched by `taker_order_id` or
+> `maker_orders[].order_id`. An empty tuple does not mean the order has no fills.
 >
 > `expires_at` contains the normalized expiration when one is returned and
 > can otherwise be `None`.
@@ -196,6 +207,7 @@ orders.
 >   outcome: string;
 >   order_type: string;
 >   status: string;
+>   /** @deprecated May be omitted. Use size_matched or trade records. */
 >   associate_trades?: string[];
 >   created_at: number;
 >   expiration: string;
@@ -216,11 +228,15 @@ orders.
 >   "outcome": "Yes",
 >   "order_type": "GTC",
 >   "status": "LIVE",
->   "associate_trades": [],
 >   "created_at": 1748779200,
 >   "expiration": "0"
 > }
 > ```
+>
+> `associate_trades` is deprecated and may be omitted. Use `size_matched` for
+> cumulative filled quantity, or `GET /data/trades` for individual fills matched
+> by `taker_order_id` or `maker_orders[].order_id`. An absent or empty field does
+> not mean the order has no fills.
 >
 > An `expiration` of `"0"` means the order is GTC and never expires on a
 > timer.
@@ -260,9 +276,14 @@ matched order.
 > }
 > ```
 >
+> When filtering by `assetId` or the deprecated `tokenId` alias, also supply
+> a nonblank `market`. Asset-only queries throw `UserInputError` before sending
+> a request. Unfiltered and market-only queries remain supported.
+>
 > ```ts Asset theme={null}
 > const pages = client.listOpenOrders({
 >   assetId: yesAssetId,
+>   market: market.conditionId!,
 > });
 > ```
 >
@@ -294,6 +315,7 @@ matched order.
 >   outcome: string;
 >   orderType: string;
 >   status: string;
+>   /** @deprecated Use sizeMatched or account trade records to track fills. */
 >   associateTrades: string[];
 >   createdAt: IsoDateTimeString;
 >   expiresAt?: IsoDateTimeString;
@@ -351,9 +373,14 @@ matched order.
 >     raise ValueError("Market outcome ID not found.")
 > ```
 >
+> When filtering by `asset_id` or the deprecated `token_id` alias, also supply
+> a nonblank `market`. Asset-only queries raise `UserInputError` when the
+> paginator fetches a page. Unfiltered and market-only queries remain supported.
+>
 > ```python Asset theme={null}
 > pages = client.list_open_orders(
 >     asset_id=yes_asset_id,
+>     market=market.condition_id,
 > )
 > ```
 >
@@ -385,7 +412,7 @@ matched order.
 >     outcome: str
 >     order_type: str
 >     status: str
->     associate_trades: tuple[str, ...]
+>     associate_trades: tuple[str, ...]  # Deprecated; use size_matched or account trades.
 >     created_at: datetime
 >     expires_at: datetime | None
 > ```
@@ -424,8 +451,12 @@ matched order.
 > Authentication](https://docs.polymarket.com/getting-started/api.md#authentication) for the complete
 > signing flow.
 >
+> When filtering by `asset_id`, include the market's condition ID in `market`.
+> From December 14, 2026, asset-only requests return HTTP `400`
+> (`asset_id requires market`). Unfiltered and market-only queries remain supported.
+>
 > ```bash theme={null}
-> curl "https://clob.polymarket.com/data/orders?asset_id=$ASSET_ID" \
+> curl "https://clob.polymarket.com/data/orders?asset_id=$ASSET_ID&market=$CONDITION_ID" \
 >   -H "POLY_ADDRESS: <signer_address>" \
 >   -H "POLY_API_KEY: <clob_api_key>" \
 >   -H "POLY_PASSPHRASE: <clob_api_passphrase>" \
@@ -460,6 +491,7 @@ matched order.
 >   outcome: string;
 >   order_type: string;
 >   status: string;
+>   /** @deprecated May be omitted. Use size_matched or trade records. */
 >   associate_trades?: string[];
 >   created_at: number;
 >   expiration: string;
@@ -481,7 +513,6 @@ matched order.
 >     "outcome": "Yes",
 >     "order_type": "GTC",
 >     "status": "LIVE",
->     "associate_trades": [],
 >     "created_at": 1748779200,
 >     "expiration": "0"
 >   }

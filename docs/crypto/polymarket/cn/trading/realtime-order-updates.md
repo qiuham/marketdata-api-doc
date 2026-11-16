@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/realtime-order-updates'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # 实时订单更新
@@ -172,6 +172,10 @@ updated_at: 2026-11-15
 > > }
 > > ```
 >
+> 使用订单更新中的 `sizeMatched` 跟踪累计成交量。对于单笔成交，按
+> `takerOrderId` 或 `makerOrders[].orderId` 将交易更新关联到订单。
+> `associateTrades` 可能缺失或为空，不能据此判断订单是否成交。
+>
 > 如需仅接收选定市场的更新，请在 `markets` 中传入其条件 ID：
 >
 > ```ts theme={null}
@@ -322,6 +326,10 @@ updated_at: 2026-11-15
 > > }
 > > ```
 >
+> 使用订单更新中的 `size_matched` 跟踪累计成交量。对于单笔成交，按
+> `taker_order_id` 或 `maker_orders[].order_id` 将交易更新关联到订单。
+> `associate_trades` 可能缺失或为空，不能据此判断订单是否成交。
+>
 > 如需仅接收选定市场的更新，请将其条件 ID 传给 `UserSpec`：
 >
 > ```python theme={null}
@@ -439,6 +447,10 @@ updated_at: 2026-11-15
 > >   "timestamp": "1782753357257"
 > > }
 > > ```
+>
+> 使用订单事件中的 `size_matched` 跟踪累计成交量。对于单笔成交，按
+> `taker_order_id` 或 `maker_orders[].order_id` 将交易事件关联到订单。
+> `associate_trades` 可能缺失、为 `null` 或为空，不能据此判断订单是否成交。
 >
 > 如需仅接收选定市场的更新，请在初始订阅帧中包含其条件 ID：
 >

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/earning
 api_type: REST
-updated_at: 2026-11-15 18:35:08.743928
+updated_at: 2026-11-16 18:38:44.864726
 ---
 
 # Get Broker Earning

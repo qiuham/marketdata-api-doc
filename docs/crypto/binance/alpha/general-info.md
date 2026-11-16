@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/general-info
 api_type: REST
-updated_at: 2026-11-15 18:28:31.484560
+updated_at: 2026-11-16 18:31:16.256583
 ---
 
 # General Info
@@ -15,7 +15,7 @@ To use the endpoints that require a symbol parameter (e.g., for trading volume, 
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [change log](/en/docs/products/alpha/change-log)[WebSocket Market Data API](/en/docs/products/alpha/websocket-market-data)
 
@@ -31,6 +31,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [修改日志](/zh-CN/docs/products/alpha/change-log)[WebSocket 行情接口](/zh-CN/docs/products/alpha/websocket-market-data)

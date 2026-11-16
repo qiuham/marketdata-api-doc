@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/withdrawal
 api_type: Account
-updated_at: 2026-11-15 18:44:00.602448
+updated_at: 2026-11-16 18:50:09.518369
 ---
 
 # Withdrawal

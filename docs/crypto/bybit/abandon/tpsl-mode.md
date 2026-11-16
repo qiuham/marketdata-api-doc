@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/tpsl-mode
 api_type: REST
-updated_at: 2026-11-15 18:35:12.209083
+updated_at: 2026-11-16 18:38:49.650753
 ---
 
 # Set TP/SL Mode

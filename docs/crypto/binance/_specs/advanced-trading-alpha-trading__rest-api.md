@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-15 18:34:51.312895
+updated_at: 2026-11-16 18:38:26.453945
 ---
 
 # advanced-trading-alpha-trading__rest-api spec

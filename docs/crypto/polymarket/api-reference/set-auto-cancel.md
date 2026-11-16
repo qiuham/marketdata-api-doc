@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/set-auto-cancel'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Set Auto-Cancel

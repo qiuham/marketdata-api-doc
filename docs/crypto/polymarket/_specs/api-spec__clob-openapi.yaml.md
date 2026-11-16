@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-spec/clob-openapi.yaml'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # clob-openapi.yaml
@@ -775,6 +775,9 @@ paths:
       summary: Get user orders
       description: |
         Retrieves live orders for the authenticated user. Returns paginated results.
+        When filtering by asset_id, also include the market condition ID in market.
+        From December 14, 2026, asset-only requests return HTTP 400 (asset_id requires market).
+        Unfiltered and market-only queries remain supported.
         Filtering by id returns that order regardless of status, including canceled or fully matched orders.
         Builder-authenticated clients can also use this endpoint to retrieve orders attributed to their builder account.
       x-mint:
@@ -803,14 +806,14 @@ paths:
           example: '0xabcdef1234567890abcdef1234567890abcdef12'
         - name: market
           in: query
-          description: Market (condition ID) to filter orders
+          description: Market condition ID to filter orders. Required when asset_id is supplied.
           required: false
           schema:
             type: string
           example: '0x0000000000000000000000000000000000000000000000000000000000000001'
         - name: asset_id
           in: query
-          description: Asset ID (token ID) to filter orders
+          description: Outcome identifier (CTF token ID or Polymarket V2 position ID) to filter orders. Also supply market.
           required: false
           schema:
             type: string
@@ -850,7 +853,6 @@ paths:
                         outcome: 'YES'
                         expiration: '1735689600'
                         order_type: GTC
-                        associate_trades: []
                         created_at: 1700000000
                       - id: '0xfedcba0987654321fedcba0987654321fedcba09'
                         status: LIVE
@@ -865,11 +867,9 @@ paths:
                         outcome: 'NO'
                         expiration: '1735689600'
                         order_type: GTC
-                        associate_trades:
-                          - trade-123
                         created_at: 1700000001
         '400':
-          description: Bad request - Invalid parameters
+          description: Bad request - Invalid parameters. From December 14, 2026, this includes asset_id without market.
           content:
             application/json:
               schema:
@@ -936,7 +936,6 @@ paths:
                 outcome: 'YES'
                 expiration: '1735689600'
                 order_type: GTC
-                associate_trades: []
                 created_at: 1700000000
         '400':
           description: Bad request - Invalid order ID
@@ -5471,7 +5470,8 @@ components:
           example: GTC
         associate_trades:
           type: array
-          description: Array of associated trade IDs
+          deprecated: true
+          description: Deprecated and may be omitted. Use size_matched for cumulative filled quantity, or GET /data/trades and match taker_order_id or maker_orders[].order_id to the order ID for individual fills. Absence or an empty array does not mean the order has no fills.
           items:
             type: string
           example:

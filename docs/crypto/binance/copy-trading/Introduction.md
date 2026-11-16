@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/Introduction
 api_type: REST
-updated_at: 2026-11-15 18:27:56.922738
+updated_at: 2026-11-16 18:30:47.058930
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Binance Copy Trading is an automated trading system. You can become a lead trade
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Error Codes](/en/docs/products/algo/error-code)[Change Log](/en/docs/products/copy-trading/change-log)
 
@@ -23,6 +23,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [错误代码](/zh-CN/docs/products/algo/error-code)[更新日志](/zh-CN/docs/products/copy-trading/change-log)

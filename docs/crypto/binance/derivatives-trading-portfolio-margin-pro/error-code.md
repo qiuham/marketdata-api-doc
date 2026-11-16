@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/error-code
 api_type: REST
-updated_at: 2026-11-15 18:27:04.426093
+updated_at: 2026-11-16 18:30:00.713835
 ---
 
 # Error Codes
@@ -1540,7 +1540,7 @@ This code is sent when both the cancellation of the order failed and the new ord
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [User Data Streams](/en/docs/products/derivatives-trading-portfolio-margin-pro/user-data-streams)[Introduction](/en/docs/products/algo/Introduction)
 
@@ -3081,6 +3081,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [统一账户专业版账户信息推送](/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/user-data-streams)[概述](/zh-CN/docs/products/algo/Introduction)

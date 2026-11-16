@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/change-log
 api_type: REST
-updated_at: 2026-11-15 18:26:33.709033
+updated_at: 2026-11-16 18:29:33.288013
 ---
 
 # Change Log
@@ -4438,7 +4438,7 @@ USDⓈ-M Futures
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Quick Start](/en/docs/products/derivatives-trading-options/quick-start)[General Info](/en/docs/products/derivatives-trading-options/general-info)
 
@@ -8777,6 +8777,6 @@ U本位合约
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [快速开始](/zh-CN/docs/products/derivatives-trading-options/quick-start)[基本信息](/zh-CN/docs/products/derivatives-trading-options/general-info)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/CHANGELOG
 api_type: REST
-updated_at: 2026-11-15 18:25:06.259312
+updated_at: 2026-11-16 18:28:21.804395
 ---
 
 # CHANGELOG for Binance SPOT Demo Mode
@@ -109,7 +109,7 @@ For more information on how to use Demo Mode via API, please refer to the [Gener
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [General Info](/en/docs/products/spot/demo-mode/general-info)[Terms of Use](/en/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE)
 
@@ -223,6 +223,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [基本信息](/zh-CN/docs/products/spot/demo-mode/general-info)[模拟交易使用条款](/zh-CN/docs/products/spot/demo-mode/DEMO-TERMS-OF-USE)

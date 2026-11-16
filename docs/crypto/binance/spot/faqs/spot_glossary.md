@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/spot_glossary
 api_type: REST
-updated_at: 2026-11-15 18:25:19.895365
+updated_at: 2026-11-16 18:28:31.637912
 ---
 
 # SPOT API Glossary
@@ -841,7 +841,7 @@ Working order
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Smart Order Routing (SOR)](/en/docs/products/spot/faqs/sor_faq)[Self Trade Prevention (STP)](/en/docs/products/spot/faqs/stp_faq)
 
@@ -1683,6 +1683,6 @@ Working order
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [智能订单路由 (SOR)](/zh-CN/docs/products/spot/faqs/sor_faq)[自我交易预防 (Self Trade Prevention - STP)](/zh-CN/docs/products/spot/faqs/stp_faq)

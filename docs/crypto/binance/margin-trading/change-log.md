@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/change-log
 api_type: REST
-updated_at: 2026-11-15 18:27:15.846743
+updated_at: 2026-11-16 18:30:11.365238
 ---
 
 # Change Log
@@ -778,7 +778,7 @@ ISOLATED MARGIN
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [General Info](/en/docs/products/margin-trading/general-info)[Risk Data Stream](/en/docs/products/margin-trading/risk-data-stream)
 
@@ -1588,6 +1588,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [基本信息](/zh-CN/docs/products/margin-trading/general-info)[风险数据流](/zh-CN/docs/products/margin-trading/risk-data-stream)

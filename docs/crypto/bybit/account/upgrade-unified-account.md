@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/upgrade-unified-account
 api_type: Account
-updated_at: 2026-11-15 18:35:21.155362
+updated_at: 2026-11-16 18:39:34.824608
 ---
 
 # Upgrade to Unified Account Pro

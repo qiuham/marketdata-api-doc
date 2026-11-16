@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/Introduction
 api_type: REST
-updated_at: 2026-11-15 18:26:33.289209
+updated_at: 2026-11-16 18:29:32.823661
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Derivative Trading API provide REST and WebSocket APIs to suit your derivative t
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [Classic Portfolio Margin Endpoints](/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info)[Quick Start](/en/docs/products/derivatives-trading-options/quick-start)
 
@@ -23,6 +23,6 @@ Last modified on November 12, 2026
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [经典统一账户基本信息](/zh-CN/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info)[快速开始](/zh-CN/docs/products/derivatives-trading-options/quick-start)

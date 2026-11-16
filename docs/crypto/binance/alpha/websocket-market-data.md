@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/websocket-market-data
 api_type: WebSocket
-updated_at: 2026-11-15 18:28:32.746936
+updated_at: 2026-11-16 18:31:17.647438
 ---
 
 # WebSocket Market Data API
@@ -484,7 +484,7 @@ Note — Differences from Spot/Futures depth streams:
 
 Was this page helpful?
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [General Info](/en/docs/products/alpha/general-info)[Quick Start](/en/docs/products/alpha/quick-start)
 
@@ -969,6 +969,6 @@ Note — 与 Spot / 合约 depth 流的差异：
 
 此页面是否有帮助？
 
-Last modified on November 12, 2026
+Last modified on November 16, 2026
 
 [通用信息](/zh-CN/docs/products/alpha/general-info)[快速开始](/zh-CN/docs/products/alpha/quick-start)

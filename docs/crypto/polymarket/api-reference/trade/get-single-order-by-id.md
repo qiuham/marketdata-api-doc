@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/trade/get-single-order-by-id'
-updated_at: 2026-11-15
+updated_at: 2026-11-16
 ---
 
 # Get single order by ID
@@ -94,7 +94,6 @@ paths:
                 outcome: 'YES'
                 expiration: '1735689600'
                 order_type: GTC
-                associate_trades: []
                 created_at: 1700000000
         '400':
           description: Bad request - Invalid order ID
@@ -227,7 +226,12 @@ components:
           example: GTC
         associate_trades:
           type: array
-          description: Array of associated trade IDs
+          deprecated: true
+          description: >-
+            Deprecated and may be omitted. Use size_matched for cumulative
+            filled quantity, or GET /data/trades and match taker_order_id or
+            maker_orders[].order_id to the order ID for individual fills.
+            Absence or an empty array does not mean the order has no fills.
           items:
             type: string
           example:

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-redeem
 api_type: Trading
-updated_at: 2026-11-15 18:35:34.411204
+updated_at: 2026-11-16 18:39:52.772814
 ---
 
 # Execute Redeem
