@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/error-code
 api_type: REST
-updated_at: 2026-11-16 18:31:16.129218
+updated_at: 2026-11-17 18:30:52.632315
 ---
 
 # Error Codes
@@ -1541,7 +1541,7 @@ This code is sent when both the cancellation of the order failed and the new ord
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Quick Start](/en/docs/products/alpha/quick-start)[Introduction](/en/docs/products/stocks/introduction)
 
@@ -3083,6 +3083,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [快速开始](/zh-CN/docs/products/alpha/quick-start)[概览](/zh-CN/docs/products/stocks/introduction)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/stp_faq
 api_type: REST
-updated_at: 2026-11-16 18:28:34.880723
+updated_at: 2026-11-17 18:27:57.356479
 ---
 
 # Self Trade Prevention (STP) FAQ
@@ -968,7 +968,7 @@ Taker's Balances
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [SPOT API Glossary](/en/docs/products/spot/faqs/spot_glossary)[Trailing Stop Orders](/en/docs/products/spot/faqs/trailing-stop-faq)
 
@@ -1938,6 +1938,6 @@ Taker 余额
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [现货交易API术语表](/zh-CN/docs/products/spot/faqs/spot_glossary)[追踪止盈止损(Trailing Stop)订单](/zh-CN/docs/products/spot/faqs/trailing-stop-faq)

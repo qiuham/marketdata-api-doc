@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/pegged_orders
 api_type: REST
-updated_at: 2026-11-16 18:28:28.341853
+updated_at: 2026-11-17 18:27:50.469478
 ---
 
 # Pegged orders
@@ -131,7 +131,7 @@ Contingent pegged orders as well as pegged pending orders of OTO order lists are
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Spot Unfilled Order Count Rules](/en/docs/products/spot/faqs/order_count_decrement)[Simple Binary Encoding (SBE)](/en/docs/products/spot/faqs/sbe_faq)
 
@@ -263,6 +263,6 @@ OTOCO 订单列表也可以使用挂钩订单, 使用方法与 OTO 和 OCO 订�
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [现货未成交订单计数规则](/zh-CN/docs/products/spot/faqs/order_count_decrement)[简单二进制编码（SBE）](/zh-CN/docs/products/spot/faqs/sbe_faq)

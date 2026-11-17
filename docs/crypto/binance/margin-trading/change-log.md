@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/change-log
 api_type: REST
-updated_at: 2026-11-16 18:30:11.365238
+updated_at: 2026-11-17 18:29:39.631167
 ---
 
 # Change Log
@@ -26,11 +26,13 @@ Effective at **2026-10-14 (UTC)**
   * New endpoint for querying margin account's open OTO / OTOCO order lists:
 
     * `GET /sapi/v1/margin/oto/openOrderList`
+    * Note: This endpoint is only available to migrated accounts. Otherwise, the request will fail with `{"code":-3118,"msg":"The endpoint is not supported for this account."}`.
   * For the following endpoints, the `contingencyType` field will be extended to include `OCO`, `OTO`, `OTOCO`, `OPO`, `OPOCO`:
 
     * `GET /sapi/v1/margin/orderList`
     * `GET /sapi/v1/margin/allOrderList`
     * `GET /sapi/v1/margin/openOrderList`
+      * Note: After migration, this endpoint only returns legs that are already working. Pending legs are not returned.
     * `DELETE /sapi/v1/margin/orderList`
   * For the following endpoint, the `contingencyType` field will be extended to include `OTO`, `OTOCO`:
 
@@ -778,7 +780,7 @@ ISOLATED MARGIN
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [General Info](/en/docs/products/margin-trading/general-info)[Risk Data Stream](/en/docs/products/margin-trading/risk-data-stream)
 
@@ -805,11 +807,13 @@ Last modified on November 16, 2026
   * 新增查询杠杆账户 OTO / OTOCO 未完成订单列表的接口：
 
     * `GET /sapi/v1/margin/oto/openOrderList`
+    * 备注：仅已完成迁移的账户可使用该接口，否则请求将报错 `{"code":-3118,"msg":"The endpoint is not supported for this account."}`。
   * 以下接口的 `contingencyType` 字段将扩展支持 `OCO`、`OTO`、`OTOCO`、`OPO`、`OPOCO`：
 
     * `GET /sapi/v1/margin/orderList`
     * `GET /sapi/v1/margin/allOrderList`
     * `GET /sapi/v1/margin/openOrderList`
+      * 备注：迁移之后，该接口仅返回已处于生效（working）状态的订单腿，不返回待处理（pending）的订单腿。
     * `DELETE /sapi/v1/margin/orderList`
   * 以下接口的 `contingencyType` 字段将扩展支持 `OTO`、`OTOCO`：
 
@@ -1588,6 +1592,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [基本信息](/zh-CN/docs/products/margin-trading/general-info)[风险数据流](/zh-CN/docs/products/margin-trading/risk-data-stream)

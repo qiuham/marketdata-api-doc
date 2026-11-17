@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/alpha/trade/trade-quote
 api_type: Trading
-updated_at: 2026-11-16 18:39:52.718256
+updated_at: 2026-11-17 18:37:17.767372
 ---
 
 # Get Trade Quote

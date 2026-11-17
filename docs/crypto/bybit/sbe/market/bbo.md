@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/bbo
 api_type: Market Data
-updated_at: 2026-11-16 18:42:46.729641
+updated_at: 2026-11-17 18:39:27.550400
 ---
 
 # SBE BBO Integration
@@ -219,7 +219,7 @@ When the market is so bad that there is no liquidity, **no message is pushed**.
       
     # Change symbol/topic as you wish  
     TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
       
       
     class SBEBestOBRpiParser:  
@@ -675,7 +675,7 @@ askRpiSize| RPI 訂單的最佳賣量 RPI order best ask size| 20
       
     # Change symbol/topic as you wish  
     TOPIC = "ob.rpi.1.sbe.BTCUSDT"  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
       
       
     class SBEBestOBRpiParser:  

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/rest-api
 api_type: REST
-updated_at: 2026-11-16 18:28:39.281639
+updated_at: 2026-11-17 18:28:02.181827
 ---
 
 # General REST API Information
@@ -748,7 +748,7 @@ Here is a sample Python script performing all the steps above:
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Errors](/en/docs/products/spot/errors)[WebSocket API](/en/docs/products/spot/web-socket-api)
 
@@ -1488,6 +1488,6 @@ Key| Value
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [错误代码](/zh-CN/docs/products/spot/errors)[WebSocket API](/zh-CN/docs/products/spot/web-socket-api)

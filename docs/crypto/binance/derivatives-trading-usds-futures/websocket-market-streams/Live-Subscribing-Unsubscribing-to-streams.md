@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams
 api_type: WebSocket
-updated_at: 2026-11-16 18:29:07.502622
+updated_at: 2026-11-17 18:28:33.363533
 ---
 
 # Live Subscribing/Unsubscribing to streams
@@ -144,7 +144,7 @@ Error Message| Description
   
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [How to manage a local order book correctly](/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[Important WebSocket Change Notice — Base URL Split & Migration](/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice)
 
@@ -290,6 +290,6 @@ Last modified on November 16, 2026
   
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [如何正确在本地维护一个 orderbook 副本](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[WebSocket Base URL 迁移公告](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice)

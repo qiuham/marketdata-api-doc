@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-statistics-rest-api-get-options-open-interest-and-volume
 anchor_id: trading-statistics-rest-api-get-options-open-interest-and-volume
 api_type: REST
-updated_at: 2026-11-16 18:51:22.602834
+updated_at: 2026-11-17 18:47:00.888276
 ---
 
 # Get options open interest and volume

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/common-definition
 api_type: REST
-updated_at: 2026-11-16 18:29:33.441972
+updated_at: 2026-11-17 18:29:01.286617
 ---
 
 # Public Endpoints Info
@@ -210,7 +210,7 @@ In order to pass the `lot size`, the following must be true for `quantity`:
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [User Data Streams](/en/docs/products/derivatives-trading-options/user-data-streams)[Error Codes](/en/docs/products/derivatives-trading-options/error-code)
 
@@ -421,6 +421,6 @@ lots是拍卖术语，这个过滤器对订单中的`quantity`也就是数量参
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [账户信息流](/zh-CN/docs/products/derivatives-trading-options/user-data-streams)[错误代码](/zh-CN/docs/products/derivatives-trading-options/error-code)

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/exchange/changelog'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Release notes
@@ -19,9 +19,9 @@ updated_at: 2026-11-16
 
 ## 2026
 
-### 17 November 2026 — Derivatives
+### 19 November 2026 — Derivatives
 
-* From 17 November 2026 (moved from 12 November), `POST /transfer` can move funds between any Futures wallet and your Kraken Spot wallet. Pass `spot` as `fromAccount` or `toAccount`. The transfer settles before the response is sent, so there is nothing to poll
+* From 19 November 2026 (moved from 17 November), `POST /transfer` can move funds between any Futures wallet and your Kraken Spot wallet. Pass `spot` as `fromAccount` or `toAccount`. The transfer settles before the response is sent, so there is nothing to poll
 * A transfer to or from Spot requires an API key with the withdrawal permission, costs 100 rate-limit units (10 for transfers between Futures wallets) and is only available to accounts linked to a Kraken account. It can fail with `insufficientFunds`, `invalidAmount`, `invalidUnit`, `invalidCurrency` or `transferFailed`
 * A transfer between Futures wallets now returns the specific reason it was refused (`invalidAmount`, `invalidCurrency`, `cashAccountTypeNotFound`, `cashAccountTypeAccessForbidden`, `accountNotFound`, `cancelOnly` or `transferFailed`) instead of always `insufficientFunds`
 * Added `GET /transfer/assets`, which lists the assets your account can transfer, the minimum and maximum amount for a transfer to or from Spot (`minSpotTransferAmount`, `maxSpotTransferAmount`) and whether MTF accounts can move the asset to Spot (`allowMtfSpotTransfers`). It costs 2 rate-limit units. See [Rate limits](https://docs.kraken.com/exchange/guides/futures/ratelimits.md)

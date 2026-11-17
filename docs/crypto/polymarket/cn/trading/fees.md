@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/trading/fees'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # 费用
 
 > 了解 Polymarket 的交易费用
+
+> [!NOTE]
+>
+> **即将调整 — 2026 年 11 月 20 日 23:59 UTC。** Polymarket DeFi 将调整 Taker
+> 费用和返利，并将 Maker
+> 返利从每日返利池改为按成交量分级计算。生效前仍适用下方的现行规则。
+> 查看[完整费用与返利调整说明（英文）](https://docs.polymarket.com/programs/fee-and-rebate-changes-november-2026.md)。
 
 Polymarket 对某些市场收取少量 Taker 费用。费用由协议设定并在撮合时应用——你无需在订单中包含费用信息。这些费用用于资助 [Maker 返利计划](https://docs.polymarket.com/cn/programs/maker-rebates.md)，每天向做市商重新分配费用，以鼓励更深的流动性和更小的价差。Taker 也可以通过分级的 [Taker 返利计划](https://docs.polymarket.com/cn/programs/taker-rebates.md)获得部分费用返还。
 

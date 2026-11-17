@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/Introduction
 api_type: REST
-updated_at: 2026-11-16 18:29:00.715583
+updated_at: 2026-11-17 18:28:25.119277
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Derivative Trading API provide REST and WebSocket APIs to suit your derivative t
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket Streams](/en/docs/products/spot/testnet/web-socket-streams)[Quick Start](/en/docs/products/derivatives-trading-usds-futures/quick-start)
 
@@ -23,6 +23,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket Streams](/zh-CN/docs/products/spot/testnet/web-socket-streams)[快速开始](/zh-CN/docs/products/derivatives-trading-usds-futures/quick-start)

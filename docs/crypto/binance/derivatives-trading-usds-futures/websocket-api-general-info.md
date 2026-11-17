@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-api-general-info
 api_type: WebSocket
-updated_at: 2026-11-16 18:29:05.488977
+updated_at: 2026-11-17 18:28:30.746599
 ---
 
 # WebSocket API General Info
@@ -431,7 +431,7 @@ A sample code in Python to show how to sign the payload with an Ed25519 key is a
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [General Info](/en/docs/products/derivatives-trading-usds-futures/general-info)[User Data Streams](/en/docs/products/derivatives-trading-usds-futures/user-data-streams)
 
@@ -840,6 +840,6 @@ timestamp| 1668481559918
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [基本信息](/zh-CN/docs/products/derivatives-trading-usds-futures/general-info)[账户信息流](/zh-CN/docs/products/derivatives-trading-usds-futures/user-data-streams)

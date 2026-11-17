@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-sbe-market-data
 anchor_id: order-book-trading-sbe-market-data
 api_type: API
-updated_at: 2026-11-16 18:51:19.407042
+updated_at: 2026-11-17 18:46:57.286920
 ---
 
 # SBE Market Data

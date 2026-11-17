@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/sbe-basic-info
 api_type: REST
-updated_at: 2026-11-16 18:42:50.422506
+updated_at: 2026-11-17 18:39:28.467101
 ---
 
 # SBE Basic Information
@@ -52,6 +52,8 @@ Compared with JSON WebSocket feeds, SBE provides:
 
 
 ## Market Data Limit
+
+You can query your connection limits and current usage via [Get Institution Connection Limit](/docs/v5/institution/connection-limit).
 
 ### SBE Connection
 
@@ -539,6 +541,8 @@ Bybit 採用符合 FIX/SBE 1.0 規範的 **Simple Binary Encoding (SBE)** :
 
 
 ## 行情連接限制
+
+您可以透過[查詢機構連線限制](/docs/zh-TW/v5/institution/connection-limit)接口查詢連線上限及目前使用量。
 
 ### SBE 連接數限制
 

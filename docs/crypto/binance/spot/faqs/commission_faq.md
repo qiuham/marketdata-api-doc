@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/commission_faq
 api_type: REST
-updated_at: 2026-11-16 18:28:25.557370
+updated_at: 2026-11-17 18:27:46.770185
 ---
 
 # Commission Rates
@@ -223,7 +223,7 @@ If you do not have enough BNB to pay the discounted commission, the full commiss
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [API Key Types](/en/docs/products/spot/faqs/api_key_types)[Market Data Only URLs](/en/docs/products/spot/faqs/market_data_only)
 
@@ -447,6 +447,6 @@ type| MARKET
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [API Key 类型](/zh-CN/docs/products/spot/faqs/api_key_types)[仅提供市场数据的URL](/zh-CN/docs/products/spot/faqs/market_data_only)

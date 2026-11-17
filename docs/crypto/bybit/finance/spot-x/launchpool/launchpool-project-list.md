@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/launchpool/launchpool-project-list
 api_type: REST
-updated_at: 2026-11-16 18:41:43.663229
+updated_at: 2026-11-17 18:38:33.742559
 ---
 
 # Get Launchpool Project List

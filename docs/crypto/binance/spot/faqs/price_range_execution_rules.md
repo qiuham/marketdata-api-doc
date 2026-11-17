@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/price_range_execution_rules
 api_type: REST
-updated_at: 2026-11-16 18:28:30.952957
+updated_at: 2026-11-17 18:27:53.107896
 ---
 
 # Price Range Execution Rule
@@ -188,7 +188,7 @@ Example: The reference price for symbol XXXUSD1 could be calculated as the 5 min
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Trailing Stop Orders](/en/docs/products/spot/faqs/trailing-stop-faq)[quoteNotionalLimit](/en/docs/products/spot/faqs/quoteNotionalLimit)
 
@@ -377,6 +377,6 @@ FIX接口| `ExpiryReason <25056>`
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [追踪止盈止损(Trailing Stop)订单](/zh-CN/docs/products/spot/faqs/trailing-stop-faq)[quoteNotionalLimit](/zh-CN/docs/products/spot/faqs/quoteNotionalLimit)

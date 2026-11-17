@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/Introduction
 api_type: Account
-updated_at: 2026-11-16 18:31:26.116448
+updated_at: 2026-11-17 18:31:04.983149
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Subaccount endpoints below allow you to interact with Binance subaccount. For mo
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Introduction](/en/docs/products/fpsl/introduction)[Change Log](/en/docs/products/sub-account/change-log)
 
@@ -23,6 +23,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [概览](/zh-CN/docs/products/fpsl/introduction)[更新日志](/zh-CN/docs/products/sub-account/change-log)

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/create-order
 api_type: Trading
-updated_at: 2026-11-16 18:42:16.193473
+updated_at: 2026-11-17 18:39:00.264802
 ---
 
 # Place Order

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/general-info
 api_type: REST
-updated_at: 2026-11-16 18:29:37.429133
+updated_at: 2026-11-17 18:29:05.182499
 ---
 
 # General Info
@@ -274,7 +274,7 @@ Note that the signature is different in example 3. There is no & between "GTC" a
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Change Log](/en/docs/products/derivatives-trading-options/change-log)[User Data Streams](/en/docs/products/derivatives-trading-options/user-data-streams)
 
@@ -532,6 +532,6 @@ symbol=BTC-210129-40000-C
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [更新日志](/zh-CN/docs/products/derivatives-trading-options/change-log)[账户信息流](/zh-CN/docs/products/derivatives-trading-options/user-data-streams)

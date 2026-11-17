@@ -17,14 +17,14 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-16 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-16 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-16 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-16 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-16 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-16 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-16 |
-| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 561 | 2026-11-16 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 164 | 2026-11-17 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 547 | 2026-11-17 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-17 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-17 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-17 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 447 | 2026-11-17 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-17 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 562 | 2026-11-17 |
 
 ## 快速开始
 
@@ -79,13 +79,13 @@ marketdata-api-doc/
 ├── docs/                 # Markdown 文档
 │   └── crypto/
 │       ├── binance/                                # 164 Markdown docs
-│       ├── bybit/                                  # 546 Markdown docs
+│       ├── bybit/                                  # 547 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── gateio/                                 # 72 Markdown docs
 │       ├── hyperliquid/                            # 36 Markdown docs
 │       ├── kraken/                                 # 447 Markdown docs
 │       ├── okx/                                    # 519 Markdown docs
-│       └── polymarket/                             # 561 Markdown docs
+│       └── polymarket/                             # 562 Markdown docs
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
 │   ├── crypto/binance.json

@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/programs/taker-rebates'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Taker Rebate Program
@@ -19,7 +19,10 @@ updated_at: 2026-11-16
 
 > [!NOTE]
 >
-> The Taker Rebate Program goes live on **Thursday, May 28, 2026**.
+> **Upcoming changes — November 20, 2026 at 23:59 UTC.** Polymarket DeFi taker
+> fees and rebates will change. Maker rebates will move from daily pools to
+> volume tiers. The current rules below apply until then. [See all fee and
+> rebate changes](https://docs.polymarket.com/programs/fee-and-rebate-changes-november-2026.md).
 
 Polymarket Tiers reward you for trading as a **taker**. The more taker volume you do, the higher your tier, the bigger the rebate you earn back on every trade you make from that point on. Every **taker** trade earns **Weighted Volume (wV)**. Your tier is based on your Weighted Volume over the last 30 days, and rebates are paid every day in pUSD.
 

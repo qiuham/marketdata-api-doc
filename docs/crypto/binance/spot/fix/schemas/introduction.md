@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/fix/schemas/introduction
 api_type: REST
-updated_at: 2026-11-16 18:28:35.576031
+updated_at: 2026-11-17 18:27:57.944431
 ---
 
 # FIX
@@ -14,7 +14,7 @@ updated_at: 2026-11-16 18:28:35.576031
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [SBE Schemas](/en/docs/products/spot/sbe/schemas/introduction)[User Data Stream](/en/docs/products/spot/user-data-stream)
 
@@ -29,6 +29,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [SBE Schemas](/zh-CN/docs/products/spot/sbe/schemas/introduction)[WebSocket 账户接口](/zh-CN/docs/products/spot/user-data-stream)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin-pro/user-data-streams
 api_type: REST
-updated_at: 2026-11-16 18:30:01.953844
+updated_at: 2026-11-17 18:29:29.790379
 ---
 
 # User Data Streams
@@ -61,7 +61,7 @@ Loading schema...
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [General Info](/en/docs/products/derivatives-trading-portfolio-margin-pro/general-info)[Error Codes](/en/docs/products/derivatives-trading-portfolio-margin-pro/error-code)
 
@@ -123,6 +123,6 @@ Loading schema...
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [基本信息](/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/general-info)[错误代码](/zh-CN/docs/products/derivatives-trading-portfolio-margin-pro/error-code)

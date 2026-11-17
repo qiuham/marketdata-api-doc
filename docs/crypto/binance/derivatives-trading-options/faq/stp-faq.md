@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-options/faq/stp-faq
 api_type: REST
-updated_at: 2026-11-16 18:29:33.824186
+updated_at: 2026-11-17 18:29:01.671305
 ---
 
 # Self Trade Prevention (STP) FAQ
@@ -344,7 +344,7 @@ Taker Order
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [How to manage a local order book correctly](/en/docs/products/derivatives-trading-options/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[Introduction](/en/docs/products/margin-trading/Introduction)
 
@@ -689,6 +689,6 @@ Taker 订单
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [如何正确在本地维护一个 orderbook 副本](/zh-CN/docs/products/derivatives-trading-options/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[概述](/zh-CN/docs/products/margin-trading/Introduction)

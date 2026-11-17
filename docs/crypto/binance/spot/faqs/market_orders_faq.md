@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/market_orders_faq
 api_type: Market Data
-updated_at: 2026-11-16 18:28:27.823447
+updated_at: 2026-11-17 18:27:49.899499
 ---
 
 # MARKET orders
@@ -235,7 +235,7 @@ Please refer to the sample payload below.
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Market Data Only URLs](/en/docs/products/spot/faqs/market_data_only)[One Pays the Other (OPO)](/en/docs/products/spot/faqs/opo)
 
@@ -471,6 +471,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [仅提供市场数据的URL](/zh-CN/docs/products/spot/faqs/market_data_only)[一个订单支付另一个订单（One Pays the Other，简称 OPO）](/zh-CN/docs/products/spot/faqs/opo)

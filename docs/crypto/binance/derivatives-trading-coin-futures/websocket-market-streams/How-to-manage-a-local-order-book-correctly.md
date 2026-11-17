@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly
 api_type: WebSocket
-updated_at: 2026-11-16 18:29:23.234860
+updated_at: 2026-11-17 18:28:51.573519
 ---
 
 # How to manage a local order book correctly
@@ -28,7 +28,7 @@ updated_at: 2026-11-16 18:29:23.234860
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Live Subscribing/Unsubscribing to streams](/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)[Classic Portfolio Margin Endpoints](/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info)
 
@@ -56,6 +56,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [实时订阅/取消数据流](/zh-CN/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)[经典统一账户基本信息](/zh-CN/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info)

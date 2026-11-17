@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/trading/fees'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Fees
 
 > Understanding trading fees on Polymarket
+
+> [!NOTE]
+>
+> **Upcoming changes — November 20, 2026 at 23:59 UTC.** Polymarket DeFi taker
+> fees and rebates will change. Maker rebates will move from daily pools to
+> volume tiers. The current rules below apply until then. [See all fee and
+> rebate changes](https://docs.polymarket.com/programs/fee-and-rebate-changes-november-2026.md).
 
 Polymarket charges a small taker fee on certain markets. Fees are set by the protocol and applied at match time — you don't include fee information in your orders. These fees fund the [Maker Rebates Program](https://docs.polymarket.com/programs/maker-rebates.md), which redistributes fees daily to market makers to incentivize deeper liquidity and tighter spreads. Takers can also earn a portion of fees back through the tiered [Taker Rebate Program](https://docs.polymarket.com/programs/taker-rebates.md).
 

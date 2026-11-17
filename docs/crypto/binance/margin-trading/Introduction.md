@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/Introduction
 api_type: REST
-updated_at: 2026-11-16 18:30:11.079922
+updated_at: 2026-11-17 18:29:39.385952
 ---
 
 # Introduction
@@ -11,7 +11,7 @@ Binance Margin Trading provides a sophisticated approach to digital asset tradin
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Self Trade Prevention (STP) FAQ](/en/docs/products/derivatives-trading-options/faq/stp-faq)[General Info](/en/docs/products/margin-trading/general-info)
 
@@ -23,6 +23,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [自我交易预防常见问题](/zh-CN/docs/products/derivatives-trading-options/faq/stp-faq)[基本信息](/zh-CN/docs/products/margin-trading/general-info)

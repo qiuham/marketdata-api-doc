@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#trading-account-rest-api-get-interest-rate
 anchor_id: trading-account-rest-api-get-interest-rate
 api_type: REST
-updated_at: 2026-11-16 18:51:13.941981
+updated_at: 2026-11-17 18:46:51.466823
 ---
 
 # Get interest rate

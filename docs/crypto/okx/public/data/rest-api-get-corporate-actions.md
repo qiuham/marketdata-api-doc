@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-corporate-actions
 anchor_id: public-data-rest-api-get-corporate-actions
 api_type: REST
-updated_at: 2026-11-16 18:51:21.645221
+updated_at: 2026-11-17 18:46:59.819551
 ---
 
 # Get corporate actions

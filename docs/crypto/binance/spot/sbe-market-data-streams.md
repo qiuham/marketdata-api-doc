@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/sbe-market-data-streams
 api_type: Market Data
-updated_at: 2026-11-16 18:28:39.405103
+updated_at: 2026-11-17 18:28:02.470333
 ---
 
 # SBE Market Data Streams
@@ -120,7 +120,7 @@ Snapshots of the top 20 levels of the order book, pushed at regular intervals.
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX API](/en/docs/products/spot/fix-api)[SBE Schemas](/en/docs/products/spot/sbe/schemas/introduction)
 
@@ -239,6 +239,6 @@ SBE 最优挂单信息使用 **自动剔除（auto-culling）** ：当系统负�
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX API](/zh-CN/docs/products/spot/fix-api)[SBE Schemas](/zh-CN/docs/products/spot/sbe/schemas/introduction)

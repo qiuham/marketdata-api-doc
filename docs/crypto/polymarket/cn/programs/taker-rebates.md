@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/programs/taker-rebates'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Taker 返利计划
@@ -19,7 +19,10 @@ updated_at: 2026-11-16
 
 > [!NOTE]
 >
-> Taker 返利计划将于 **2026 年 5 月 29 日（星期四）** 上线。
+> **即将调整 — 2026 年 11 月 20 日 23:59 UTC。** Polymarket DeFi 将调整 Taker
+> 费用和返利，并将 Maker
+> 返利从每日返利池改为按成交量分级计算。生效前仍适用下方的现行规则。
+> 查看[完整费用与返利调整说明（英文）](https://docs.polymarket.com/programs/fee-and-rebate-changes-november-2026.md)。
 
 Polymarket 等级（Tiers）奖励你作为 **Taker** 进行交易。你的 Taker 成交量越大，等级越高，达到该等级之后你每笔交易获得的返利就越多。每笔 **Taker** 交易都会赚取**加权成交量（Weighted Volume，wV）**。你的等级基于过去 30 天的加权成交量，返利每天以 pUSD 支付。
 

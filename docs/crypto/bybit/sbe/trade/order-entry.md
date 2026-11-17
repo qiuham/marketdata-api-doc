@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/trade/order-entry
 api_type: Trading
-updated_at: 2026-11-16 18:42:50.571544
+updated_at: 2026-11-17 18:39:30.515785
 ---
 
 # SBE Order Entry Integration
@@ -19,7 +19,7 @@ updated_at: 2026-11-16 18:42:50.571544
 
 ## Testnet
 
-Testnet URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
+Testnet URL: `wss://stream-testnet.bybit.com/v5/trade-sbe`
 
 ## SBE XML Template
 
@@ -432,7 +432,7 @@ ID| Field| Type| Size (bytes)| Description
         format="%(asctime)s %(levelname)s %(message)s",  
     )  
       
-    WS_URL = "wss://stream-testnet.bybits.org/v5/trade-sbe"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/trade-sbe"  
     API_KEY = "your_api_key"  
     API_SECRET = "your_api_secret"  
     RECV_WINDOW = 5000  
@@ -824,7 +824,7 @@ ID| Field| Type| Size (bytes)| Description
 
 ## 測試網
 
-測試網URL: `wss://stream-testnet.bybits.org/v5/trade-sbe`
+測試網URL: `wss://stream-testnet.bybit.com/v5/trade-sbe`
 
 ## SBE XML 模板 (交易)
 
@@ -1237,7 +1237,7 @@ ID| Field| Type| Size (bytes)| Description
         format="%(asctime)s %(levelname)s %(message)s",  
     )  
       
-    WS_URL = "wss://stream-testnet.bybits.org/v5/trade-sbe"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/trade-sbe"  
     API_KEY = "your_api_key"  
     API_SECRET = "your_api_secret"  
     RECV_WINDOW = 5000  

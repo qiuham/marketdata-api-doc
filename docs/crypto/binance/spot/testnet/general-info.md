@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/general-info
 api_type: REST
-updated_at: 2026-11-16 18:28:43.733418
+updated_at: 2026-11-17 18:28:07.936367
 ---
 
 # Testnet General Info
@@ -302,7 +302,7 @@ Here is an example in Python that posts a new order signed with Ed25519 key. You
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [quoteNotionalLimit](/en/docs/products/spot/faqs/quoteNotionalLimit)[Changelog](/en/docs/products/spot/testnet/CHANGELOG)
 
@@ -605,6 +605,6 @@ Here is an example in Python that posts a new order signed with Ed25519 key. You
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [quoteNotionalLimit](/zh-CN/docs/products/spot/faqs/quoteNotionalLimit)[Changelog](/zh-CN/docs/products/spot/testnet/CHANGELOG)

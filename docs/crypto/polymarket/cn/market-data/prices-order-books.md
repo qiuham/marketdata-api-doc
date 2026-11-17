@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/market-data/prices-order-books'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # 价格与订单簿

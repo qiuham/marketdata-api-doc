@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/trailing-stop-faq
 api_type: REST
-updated_at: 2026-11-16 18:28:35.084166
+updated_at: 2026-11-17 18:27:57.474392
 ---
 
 # Spot Trailing Stop order FAQ
@@ -199,7 +199,7 @@ Placing a trailing stop `TAKE_PROFIT_LIMIT SELL` order, with a price of 41,500.0
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Self Trade Prevention (STP)](/en/docs/products/spot/faqs/stp_faq)[Price Range Execution Rule](/en/docs/products/spot/faqs/price_range_execution_rules)
 
@@ -395,6 +395,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [自我交易预防 (Self Trade Prevention - STP)](/zh-CN/docs/products/spot/faqs/stp_faq)[价格区间执行规则](/zh-CN/docs/products/spot/faqs/price_range_execution_rules)

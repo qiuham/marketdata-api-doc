@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/connection/mmws
 api_type: REST
-updated_at: 2026-11-16 18:41:45.688729
+updated_at: 2026-11-17 18:38:35.516534
 ---
 
 # MMWS Integration

@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/tick-and-lot-size'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Tick and lot size
@@ -37,4 +37,4 @@ If `szDecimals = 1` , `0.01234` is valid but `0.012345` is not (more than `6 - s
 
 ### Signing
 
-Note that if implementing signing, trailing zeroes should be removed. See [Signing](/hyperliquid-docs/for-developers/api/signing.md) for more details.
+Note that if implementing signing, trailing zeroes should be removed. See [Signing](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/signing.md) for more details.

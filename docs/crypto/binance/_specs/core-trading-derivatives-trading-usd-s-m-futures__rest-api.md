@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:37:22.058892
+updated_at: 2026-11-17 18:35:14.395539
 ---
 
 # core-trading-derivatives-trading-usd-s-m-futures__rest-api spec

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-convert/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:38:02.295424
+updated_at: 2026-11-17 18:36:02.021060
 ---
 
 # core-trading-convert__rest-api spec

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/common-definition
 api_type: REST
-updated_at: 2026-11-16 18:29:16.901129
+updated_at: 2026-11-17 18:28:43.084333
 ---
 
 # Public Endpoints Info
@@ -330,7 +330,7 @@ In order to pass the `percent price`, the following must be true for `price`:
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [User Data Streams](/en/docs/products/derivatives-trading-coin-futures/user-data-streams)[Error Codes](/en/docs/products/derivatives-trading-coin-futures/error-code)
 
@@ -635,6 +635,6 @@ lots是拍卖术语,这个过滤器对订单中的`quantity`也就是数量参�
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [账户信息流](/zh-CN/docs/products/derivatives-trading-coin-futures/user-data-streams)[错误代码](/zh-CN/docs/products/derivatives-trading-coin-futures/error-code)

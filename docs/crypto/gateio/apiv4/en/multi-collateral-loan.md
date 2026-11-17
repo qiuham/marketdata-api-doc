@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/multi-collateral-loan
 api_type: REST
-updated_at: 2026-11-16 18:49:12.901856
+updated_at: 2026-11-17 18:44:58.754365
 ---
 
 # Multi-collateral-loan

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/vip-and-institutional-sub-account/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:38:33.963057
+updated_at: 2026-11-17 18:36:40.554341
 ---
 
 # vip-and-institutional-sub-account__rest-api spec

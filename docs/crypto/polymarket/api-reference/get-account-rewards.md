@@ -10,16 +10,13 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/get-account-rewards'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Get Account Rewards
 
 > Get per-instrument daily liquidity reward shares for the authenticated account.
 Reward periods run from 12:00 UTC to 12:00 UTC and are labeled by their UTC end date.
-OI rewards pay 6% APR on the account's full daily average gross OI across all
-instruments when the combined daily average gross OI of its rewards entity is
-at least $5M. Accounts without an entity mapping qualify independently.
 The first reward period starts at 2026-07-06 12:00 UTC. If no date range is provided,
 the latest computed reward period is returned.
 
@@ -52,14 +49,6 @@ paths:
 
         Reward periods run from 12:00 UTC to 12:00 UTC and are labeled by their
         UTC end date.
-
-        OI rewards pay 6% APR on the account's full daily average gross OI
-        across all
-
-        instruments when the combined daily average gross OI of its rewards
-        entity is
-
-        at least $5M. Accounts without an entity mapping qualify independently.
 
         The first reward period starts at 2026-07-06 12:00 UTC. If no date range
         is provided,
@@ -153,8 +142,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AccountRewardInstrument'
-        oi_rewards:
-          $ref: '#/components/schemas/AccountRewardOi'
     more:
       type: boolean
       description: More data available
@@ -231,16 +218,6 @@ components:
           $ref: '#/components/schemas/reward_pool'
         reward_amount:
           $ref: '#/components/schemas/reward_amount'
-    AccountRewardOi:
-      type: object
-      required:
-        - account_oi
-        - reward_amount
-      properties:
-        account_oi:
-          $ref: '#/components/schemas/account_oi'
-        reward_amount:
-          $ref: '#/components/schemas/reward_amount'
     error:
       type: string
       description: >-
@@ -273,12 +250,6 @@ components:
       type: string
       description: Reward amount attributed to this reward row
       example: '127.50344'
-    account_oi:
-      type: string
-      description: >-
-        Daily average gross open-interest notional for this account across all
-        instruments
-      example: '3200000'
   responses:
     Error400Response:
       description: |

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/sor_faq
 api_type: REST
-updated_at: 2026-11-16 18:28:31.488612
+updated_at: 2026-11-17 18:27:53.618111
 ---
 
 # Smart Order Routing (SOR)
@@ -424,7 +424,7 @@ Trades can be queried using `GET /api/v3/myTrades` (Rest API) or `myTrades` (Web
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Simple Binary Encoding (SBE)](/en/docs/products/spot/faqs/sbe_faq)[SPOT API Glossary](/en/docs/products/spot/faqs/spot_glossary)
 
@@ -843,6 +843,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [简单二进制编码（SBE）](/zh-CN/docs/products/spot/faqs/sbe_faq)[现货交易API术语表](/zh-CN/docs/products/spot/faqs/spot_glossary)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/errors
 api_type: REST
-updated_at: 2026-11-16 18:28:43.170239
+updated_at: 2026-11-17 18:28:07.156867
 ---
 
 # Error codes for Binance SPOT Testnet
@@ -772,7 +772,7 @@ Error message| Description
   
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Changelog](/en/docs/products/spot/testnet/CHANGELOG)[Enums](/en/docs/products/spot/testnet/enums)
 
@@ -1545,6 +1545,6 @@ Error message| Description
   
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Changelog](/zh-CN/docs/products/spot/testnet/CHANGELOG)[Enums](/zh-CN/docs/products/spot/testnet/enums)

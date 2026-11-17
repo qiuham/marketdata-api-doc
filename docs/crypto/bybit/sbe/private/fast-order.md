@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/private/fast-order
 api_type: REST
-updated_at: 2026-11-16 18:42:50.193330
+updated_at: 2026-11-17 18:39:28.111065
 ---
 
 # Fast Order Response SBE
@@ -29,7 +29,7 @@ Options| ✅| ✅
 
 Environment| URL  
 ---|---  
-Testnet| `wss://stream-testnet.bybits.org/v5/private-sbe`  
+Testnet| `wss://stream-testnet.bybit.com/v5/private-sbe`  
 Mainnet| `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe`  
   
   * SBE messages are sent as **binary frames** (`opcode = 2`).
@@ -361,7 +361,6 @@ Code| Name
     // ---------- Config ----------  
       
     const (  
-        MMWSURLTestnetBybits = "wss://stream-testnet.bybits.org/v5/private-sbe"  
         MMWSURLTestnetBybit  = "wss://stream-testnet.bybit.com/v5/private-sbe"  
         MMWSURLMainnet       = "wss://stream.bybit.com/v5/private-sbe"  
     )  
@@ -741,7 +740,7 @@ Code| Name
     // ---------- Entry ----------  
       
     func main() {  
-        url := flag.String("url", MMWSURLTestnetBybits, "WebSocket URL")  
+        url := flag.String("url", MMWSURLTestnetBybit, "WebSocket URL")  
         flag.Parse()  
       
         if APIKey == "YOUR_API_KEY" || APISecret == "YOUR_API_SECRET" {  
@@ -767,7 +766,7 @@ Code| Name
     from typing import Tuple, Dict, Any  
     import websockets  
       
-    MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+    MMWS_URL_TESTNET = "wss://stream-testnet.bybit.com/v5/private-sbe"  
     # MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private-sbe"  
       
     # TODO: fill in your real keys  
@@ -985,7 +984,7 @@ Fast Order SBE 頻道透過 Market Maker WebSocket（MMWS）為高頻交易（HF
 
 環境| URL  
 ---|---  
-測試網| `wss://stream-testnet.bybits.org/v5/private-sbe`  
+測試網| `wss://stream-testnet.bybit.com/v5/private-sbe`  
 主網| `wss://<your-dedicated-MMWS-host>.bybit-aws.com/v5/private-sbe`  
   
   * SBE 訊息以**二進位幀** （`opcode = 2`）發送。
@@ -1317,7 +1316,6 @@ _撮合時間戳並不代表交易的端到端處理完成時間。如需獲取�
     // ---------- Config ----------  
       
     const (  
-        MMWSURLTestnetBybits = "wss://stream-testnet.bybits.org/v5/private-sbe"  
         MMWSURLTestnetBybit  = "wss://stream-testnet.bybit.com/v5/private-sbe"  
         MMWSURLMainnet       = "wss://stream.bybit.com/v5/private-sbe"  
     )  
@@ -1697,7 +1695,7 @@ _撮合時間戳並不代表交易的端到端處理完成時間。如需獲取�
     // ---------- Entry ----------  
       
     func main() {  
-        url := flag.String("url", MMWSURLTestnetBybits, "WebSocket URL")  
+        url := flag.String("url", MMWSURLTestnetBybit, "WebSocket URL")  
         flag.Parse()  
       
         if APIKey == "YOUR_API_KEY" || APISecret == "YOUR_API_SECRET" {  
@@ -1723,7 +1721,7 @@ _撮合時間戳並不代表交易的端到端處理完成時間。如需獲取�
     from typing import Tuple, Dict, Any  
     import websockets  
       
-    MMWS_URL_TESTNET = "wss://stream-testnet.bybits.org/v5/private-sbe"  
+    MMWS_URL_TESTNET = "wss://stream-testnet.bybit.com/v5/private-sbe"  
     # MMWS_URL_MAINNET = "wss://stream.bybit.com/v5/private-sbe"  
       
     # TODO: 填入您的真實密鑰  

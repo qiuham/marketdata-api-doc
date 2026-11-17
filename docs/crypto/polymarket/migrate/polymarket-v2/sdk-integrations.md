@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/migrate/polymarket-v2/sdk-integrations'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Polymarket Protocol V2 SDK Migration

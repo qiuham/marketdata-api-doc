@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/withdraw/withdraw-address
 api_type: REST
-updated_at: 2026-11-16 18:40:15.883684
+updated_at: 2026-11-17 18:37:35.560976
 ---
 
 # Get Withdrawal Address List

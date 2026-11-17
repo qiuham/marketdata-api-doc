@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/batch-set-collateral
 api_type: Account
-updated_at: 2026-11-16 18:38:49.803091
+updated_at: 2026-11-17 18:36:53.447325
 ---
 
 # Batch Set Collateral Coin

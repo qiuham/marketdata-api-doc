@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-alpha-trading/api/ws-streams/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:38:30.168758
+updated_at: 2026-11-17 18:36:36.067278
 ---
 
 # advanced-trading-alpha-trading__ws-streams spec

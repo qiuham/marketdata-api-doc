@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/error-code
 api_type: REST
-updated_at: 2026-11-16 18:29:17.263903
+updated_at: 2026-11-17 18:28:43.333698
 ---
 
 # Error Codes
@@ -995,7 +995,7 @@ Codes are universal,but messages can vary.
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Public Endpoints Info](/en/docs/products/derivatives-trading-coin-futures/common-definition)[Connect](/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect)
 
@@ -2117,6 +2117,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [公开API参数](/zh-CN/docs/products/derivatives-trading-coin-futures/common-definition)[市场数据连接](/zh-CN/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect)

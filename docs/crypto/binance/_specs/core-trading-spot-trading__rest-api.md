@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-spot-trading/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:37:10.156558
+updated_at: 2026-11-17 18:35:00.433622
 ---
 
 # core-trading-spot-trading__rest-api spec

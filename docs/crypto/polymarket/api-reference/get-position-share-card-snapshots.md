@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/get-position-share-card-snapshots'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Get Position Share Card Snapshots

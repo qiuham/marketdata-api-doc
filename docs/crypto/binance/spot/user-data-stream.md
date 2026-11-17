@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/user-data-stream
 api_type: REST
-updated_at: 2026-11-16 18:28:51.182922
+updated_at: 2026-11-17 18:28:15.949502
 ---
 
 # User Data Streams for Binance
@@ -147,7 +147,7 @@ Check the [Enums page](/en/docs/products/spot/enums) for more relevant enum defi
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX Schemas](/en/docs/products/spot/fix/schemas/introduction)[Terms of Use](/en/docs/products/spot/PROD-TERMS-OF-USE)
 
@@ -174,7 +174,7 @@ Last modified on November 16, 2026
 
 > **Schema:** [`outboundAccountPosition`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#outboundaccountposition)
 
-Loading schema...
+`{ "e": "outboundAccountPosition", // Event type "E": 1564034571105, // Event Time "u": 1564034571073, // Time of last account update "B": [ // Balances Array { "a": "ETH", // Asset "f": "10000.000000", // Free "l": "0.000000" // Locked } ] }`
 
 ### 余额更新
 
@@ -189,7 +189,7 @@ Loading schema...
 
 > **Schema:** [`balanceUpdate`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#balanceupdate)
 
-Loading schema...
+`{ "e": "balanceUpdate", // Event Type "E": 1573200697110, // Event Time "a": "BTC", // Asset "d": "100.00000000", // Balance Delta "T": 1573200697068 // Clear Time }`
 
 ### 订单更新
 
@@ -199,7 +199,7 @@ Loading schema...
 
 > **Schema:** [`executionReport`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#executionreport)
 
-Loading schema...
+`{ "e": "executionReport", // Event type "E": 1499405658658, // Event time "s": "ETHBTC", // Symbol "c": "mUvoqJxFIILMdfAW5iGSOW", // Client order ID "S": "BUY", // Side "o": "LIMIT", // Order type "f": "GTC", // Time in force "q": "1.00000000", // Order quantity "p": "0.10264410", // Order price "P": "0.00000000", // Stop price "F": "0.00000000", // Iceberg quantity "g": -1, // OrderListId "C": "", // Original client order ID; This is the ID of the order being canceled "x": "NEW", // Current execution type "X": "NEW", // Current order status "r": "NONE", // Order reject reason; Please see Order Reject Reason for more information. "i": 4293153, // Order ID "l": "0.00000000", // Last executed quantity "z": "0.00000000", // Cumulative filled quantity "L": "0.00000000", // Last executed price "n": "0", // Commission amount "N": null, // Commission asset "T": 1499405658657, // Transaction time "t": -1, // Trade ID "v": 3, // Prevented Match Id; This is only visible if the order expired due to STP "I": 8641984, // Execution Id "w": true, // Is the order on the book? "m": false, // Is this trade the maker side? "M": false, // Ignore "O": 1499405658657, // Order creation time "Z": "0.00000000", // Cumulative quote asset transacted quantity "Y": "0.00000000", // Last quote asset transacted quantity (i.e. lastPrice * lastQty) "Q": "0.00000000", // Quote Order Quantity "W": 1499405658657, // Working Time; This is only visible if the order has been placed on the book. "V": "NONE", // SelfTradePreventionMode "d": 4, // Trailing Delta "D": 1668680518494, // Trailing Time "j": 1, // Strategy Id "J": 1000000, // Strategy Type "A": "3.000000", // Prevented Quantity "B": "3.000000", // Last Prevented Quantity "u": 1, // Trade Group Id "U": 37, // Counter Order Id "Cs": "BTCUSDT", // Counter Symbol "pl": "2.123456", // Prevented Execution Quantity "pL": "0.10000001", // Prevented Execution Price "pY": "0.21234562", // Prevented Execution Quote Qty "Qq": "90.00000000", // Quote Notional Limit. Appears only if the order was placed with a quote notional limit. "eV": "DECREMENT", // Effective Self Trade Prevention Mode. Appears on prevented-match reports when the applied STP mode differs from the order's `selfTradePreventionMode`. Values: `EXPIRE_MAKER`, `EXPIRE_BOTH`, `DECREMENT`. "b": "ONE_PARTY_TRADE_REPORT", // Match Type "a": 1234, // Allocation ID "k": "SOR", // Working Floor "uS": true, // UsedSor "gP": "PRIMARY_PEG", // Pegged Price Type "gOT": "PRICE_LEVEL", // Pegged Offset Type "gOV": 5, // Pegged Offset Value "gp": "1.00000000", // Pegged Price "eR": "INSUFFICIENT_LIQUIDITY" // Expiry Reason. Appears when the order has expired. }`
 
 **备注:** 通过将`Z`除以`z`可以找到平均价格。
 
@@ -253,7 +253,7 @@ Loading schema...
 
 > **Schema:** [`listStatus`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#liststatus)
 
-Loading schema...
+`{ "e": "listStatus", // Event Type "E": 1564035303637, // Event Time "s": "ETHBTC", // Symbol "g": 2, // OrderListId "c": "OCO", // Contingency Type "l": "EXEC_STARTED", // List Status Type "L": "EXECUTING", // List Order Status "r": "NONE", // List Reject Reason "C": "F4QN4G8DlFATFlIUQ0cjdD", // List Client Order ID "T": 1564035303625, // Transaction Time "O": [ // An array of objects { "s": "ETHBTC", // Symbol "i": 17, // OrderId "c": "AJYsMjErWJesZvqlJCTUgL" // ClientOrderId } ] }`
 
 **可能的执行类型:**
 
@@ -279,7 +279,7 @@ Loading schema...
 
 > **Schema:** [`eventStreamTerminated`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#eventstreamterminated)
 
-Loading schema...
+`{ "e": "eventStreamTerminated", // Event Type "E": 1728973001334 // Event Time }`
 
 ## 外部锁定更新
 
@@ -289,10 +289,10 @@ Loading schema...
 
 > **Schema:** [`externalLockUpdate`](/zh-CN/docs/catalog/core-trading-spot-trading/api/ws-streams/~schemas#externallockupdate)
 
-Loading schema...
+`{ "e": "externalLockUpdate", // Event Type "E": 1581557507324, // Event Time "a": "NEO", // Asset "d": "10.00000000", // Delta "T": 1581557507268 // Transaction Time }`
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX Schemas](/zh-CN/docs/products/spot/fix/schemas/introduction)[使用条款](/zh-CN/docs/products/spot/PROD-TERMS-OF-USE)

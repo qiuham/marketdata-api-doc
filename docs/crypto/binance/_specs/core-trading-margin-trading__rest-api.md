@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-margin-trading/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:37:54.129066
+updated_at: 2026-11-17 18:35:53.029321
 ---
 
 # core-trading-margin-trading__rest-api spec

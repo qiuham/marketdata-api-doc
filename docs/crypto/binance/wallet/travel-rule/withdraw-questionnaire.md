@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/travel-rule/withdraw-questionnaire
 api_type: REST
-updated_at: 2026-11-16 18:30:38.171667
+updated_at: 2026-11-17 18:30:09.376477
 ---
 
 # Withdraw Questionnaire Contents (for existing local entities)
@@ -289,7 +289,7 @@ corporateTaxId| `bnfType` = 1 (Corporate) and `bnfCorpCountry` ≠ `br`| 5–50 
   
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Deposit Questionnaire Contents (for existing local entities)](/en/docs/products/wallet/travel-rule/deposit-questionnaire)[Introduction](/en/docs/products/convert/Introduction)
 
@@ -577,6 +577,6 @@ corporateTaxId| `bnfType` = 1（公司）且 `bnfCorpCountry` ≠ `br`| 5–50 �
   
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [充值问卷内容(针对需要旅行规则的本地站)](/zh-CN/docs/products/wallet/travel-rule/deposit-questionnaire)[概述](/zh-CN/docs/products/convert/Introduction)

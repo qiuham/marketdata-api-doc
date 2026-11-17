@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/CHANGELOG
 api_type: REST
-updated_at: 2026-11-16 18:28:21.640474
+updated_at: 2026-11-17 18:27:42.503398
 ---
 
 # CHANGELOG for Binance's API
@@ -3351,7 +3351,7 @@ USER DATA STREAM
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Introduction](/en/docs/introduction)[Filters](/en/docs/products/spot/filters)
 
@@ -6416,6 +6416,6 @@ USER DATA STREAM
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [介绍](/zh-CN/docs/introduction)[过滤器](/zh-CN/docs/products/spot/filters)

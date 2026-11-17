@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice
 api_type: REST
-updated_at: 2026-11-16 18:29:16.287330
+updated_at: 2026-11-17 18:28:42.447704
 ---
 
 # Important Notice — COIN-M / USDⓈ-M Architecture Integration
@@ -286,7 +286,7 @@ Both `fstream` and `dstream` may subscribe to the streams below.
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Change Log](/en/docs/products/derivatives-trading-coin-futures/change-log)[General Info](/en/docs/products/derivatives-trading-coin-futures/general-info)
 
@@ -573,6 +573,6 @@ COIN-M 现在提供与 UM 同样的 algo-order 接口集合:
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [更新日志](/zh-CN/docs/products/derivatives-trading-coin-futures/change-log)[基本信息](/zh-CN/docs/products/derivatives-trading-coin-futures/general-info)

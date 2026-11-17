@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/market/instrument-info
 api_type: Market Data
-updated_at: 2026-11-16 18:40:54.836678
+updated_at: 2026-11-17 18:37:56.030750
 ---
 
 # Get Instrument Info

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/public-trade
 api_type: Market Data
-updated_at: 2026-11-16 18:42:49.992466
+updated_at: 2026-11-17 18:39:27.851019
 ---
 
 # SBE Public Trade Integration
@@ -107,7 +107,7 @@ execId (100)| varString8| Trade ID
     import websocket  
     from typing import Tuple  
       
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
     SYMBOL = "BTCUSDT"  
     TOPIC = f"publicTrade.sbe.{SYMBOL}"  
       
@@ -299,7 +299,7 @@ execId (100)| varString8| Trade ID
     )  
       
     const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            WSURL  = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
             Symbol = "BTCUSDT"  
             Topic  = "publicTrade.sbe." + Symbol  
     )  
@@ -591,7 +591,7 @@ execId(100)| varString8| 成交 ID
     import websocket  
     from typing import Tuple  
       
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
     SYMBOL = "BTCUSDT"  
     TOPIC = f"publicTrade.sbe.{SYMBOL}"  
       
@@ -783,7 +783,7 @@ execId(100)| varString8| 成交 ID
     )  
       
     const (  
-            WSURL  = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+            WSURL  = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
             Symbol = "BTCUSDT"  
             Topic  = "publicTrade.sbe." + Symbol  
     )  

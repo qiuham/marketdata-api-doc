@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq
 api_type: REST
-updated_at: 2026-11-16 18:29:01.589271
+updated_at: 2026-11-17 18:28:26.219081
 ---
 
 # Self Trade Prevention (STP) FAQ
@@ -562,7 +562,7 @@ Taker Order
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Important WebSocket Change Notice — Base URL Split & Migration](/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice)[Introduction](/en/docs/products/derivatives-trading-coin-futures/Introduction)
 
@@ -1127,6 +1127,6 @@ Taker 订单
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket Base URL 迁移公告](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice)[概述](/zh-CN/docs/products/derivatives-trading-coin-futures/Introduction)

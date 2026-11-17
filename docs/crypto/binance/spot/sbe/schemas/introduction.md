@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/sbe/schemas/introduction
 api_type: REST
-updated_at: 2026-11-16 18:28:39.541088
+updated_at: 2026-11-17 18:28:02.579099
 ---
 
 # SBE
@@ -32,7 +32,7 @@ updated_at: 2026-11-16 18:28:39.541088
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [SBE Market Data Streams](/en/docs/products/spot/sbe-market-data-streams)[FIX Schemas](/en/docs/products/spot/fix/schemas/introduction)
 
@@ -65,6 +65,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [SBE 市场数据流](/zh-CN/docs/products/spot/sbe-market-data-streams)[FIX Schemas](/zh-CN/docs/products/spot/fix/schemas/introduction)

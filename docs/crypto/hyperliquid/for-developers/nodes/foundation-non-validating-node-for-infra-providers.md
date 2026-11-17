@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/nodes/foundation-non-validating-node-for-infra-providers'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Foundation non-validating node for infra providers
@@ -28,7 +28,7 @@ Builders should be able to connect to any of the infrastructure providers' peeri
 * Dwellir - <https://www.dwellir.com/docs/hyperliquid/peering>
 * Hydromancer - <https://docs.hydromancer.xyz/peering>
 * Hypedexer - <https://docs.hypedexer.com/peering/overview>
-* Hyperdash - <https://docs.hyperdash.com/data/direct-sentry-peering>&#x20;
+* Hyperdash - <https://docs.hyperdash.com/data/hyperliquid-peering#hyperliquid-peering>
 * HyperTracker - <https://docs.coinmarketman.com/endpoints/rate-limits-and-pricing>
 * Luganodes - <https://docs.luganodes.com/tools-and-services/hyperliquid/hyperliquid-node-peering>
 * Proof Group - <https://www.purroofgroup.com/docs/peering>

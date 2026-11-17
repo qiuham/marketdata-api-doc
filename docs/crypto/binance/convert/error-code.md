@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/convert/error-code
 api_type: REST
-updated_at: 2026-11-16 18:30:57.209980
+updated_at: 2026-11-17 18:30:29.745397
 ---
 
 # Error Codes
@@ -1541,7 +1541,7 @@ This code is sent when both the cancellation of the order failed and the new ord
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Quick Start](/en/docs/products/convert/quick-start)[Introduction](/en/docs/products/derivatives-trading-portfolio-margin/Introduction)
 
@@ -3083,6 +3083,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [快速开始](/zh-CN/docs/products/convert/quick-start)[概述](/zh-CN/docs/products/derivatives-trading-portfolio-margin/Introduction)

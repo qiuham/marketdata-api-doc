@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream
 api_type: REST
-updated_at: 2026-11-16 18:30:15.177716
+updated_at: 2026-11-17 18:29:45.153592
 ---
 
 # Risk Data Stream
@@ -39,7 +39,7 @@ Margin call trigger the event
 
 > **Schema:** [`marginLevelStatusChange`](/en/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#marginlevelstatuschange)
 
-Loading schema...
+`{ "e": "MARGIN_LEVEL_STATUS_CHANGE", // Event Type "E": 1701949763462, // Event Time "l": "1.1", // Margin level "s": "MARGIN_CALL" // Margin call status }`
 
 * * *
 
@@ -63,11 +63,11 @@ Liability update during the following:
 
 > **Schema:** [`userLiabilityChange`](/en/docs/catalog/core-trading-margin-trading/api/ws-streams/~schemas#userliabilitychange)
 
-Loading schema...
+`{ "e": "USER_LIABILITY_CHANGE", // Event Type "E": 1701949801133, // Event Time "a": "BTC", // Asset "t": "BORROW", // Liability Update Type "p": "0.00000100", // Principle Quantity "i": "0.00000000" // Interest Quantity }`
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Change Log](/en/docs/products/margin-trading/change-log)[(deprecated) Trade Data Stream](/en/docs/products/margin-trading/trade-data-stream)
 
@@ -135,6 +135,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [更新日志](/zh-CN/docs/products/margin-trading/change-log)[（已弃用）交易数据流](/zh-CN/docs/products/margin-trading/trade-data-stream)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-portfolio-margin/user-data-streams
 api_type: REST
-updated_at: 2026-11-16 18:29:51.186414
+updated_at: 2026-11-17 18:29:18.290784
 ---
 
 # User Data Streams
@@ -327,7 +327,19 @@ Loading schema...
 
 ### Description
 
-Cross margin order margin stream
+  * The system pushes an `openOrderLoss` event when the account-level spot open order loss meets the push criteria.
+  * The value represents the aggregate loss of all relevant spot open orders in the account, expressed in USD.
+
+
+
+### Push Criteria
+
+The system checks the account-level open order loss every 5 seconds:
+
+  * A new value is pushed if the absolute value of the current open order loss changes by more than 5% compared with the absolute value of the last pushed value.
+  * No update is pushed if the change does not exceed 5%.
+
+
 
 ### Event Name
 
@@ -420,7 +432,7 @@ Loading schema...
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [General Info](/en/docs/products/derivatives-trading-portfolio-margin/general-info)[Error Codes](/en/docs/products/derivatives-trading-portfolio-margin/error-code)
 
@@ -748,7 +760,19 @@ Loading schema...
 
 ### 事件描述
 
-杠杆账户全仓挂单占用事件
+  * 当账户级现货挂单损失满足推送条件时，系统推送 `openOrderLoss` 事件。
+  * 推送值为账户所有相关现货挂单损失的汇总值，以 USD 表示。
+
+
+
+### 推送条件
+
+系统每 5 秒检查一次账户级挂单损失：
+
+  * 如果当前挂单损失的绝对值，相较于上一次推送值的绝对值变化超过 5%，则推送新的值。
+  * 如果变化未超过 5%，则不推送。
+
+
 
 ### 事件类型
 
@@ -841,6 +865,6 @@ Loading schema...
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [基本信息](/zh-CN/docs/products/derivatives-trading-portfolio-margin/general-info)[错误代码](/zh-CN/docs/products/derivatives-trading-portfolio-margin/error-code)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Connect
 api_type: WebSocket
-updated_at: 2026-11-16 18:29:05.573753
+updated_at: 2026-11-17 18:28:30.801995
 ---
 
 # Websocket Market Streams
@@ -38,7 +38,7 @@ updated_at: 2026-11-16 18:29:05.573753
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Error Codes](/en/docs/products/derivatives-trading-usds-futures/error-code)[How to manage a local order book correctly](/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)
 
@@ -76,6 +76,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [错误代码](/zh-CN/docs/products/derivatives-trading-usds-futures/error-code)[如何正确在本地维护一个 orderbook 副本](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)

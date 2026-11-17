@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/demo-mode/general-info
 api_type: REST
-updated_at: 2026-11-16 18:28:22.144902
+updated_at: 2026-11-17 18:27:43.208646
 ---
 
 # Demo Mode for SPOT Trading
@@ -188,7 +188,7 @@ Realistic market data is not equal to "real" market data. Do not assume trading 
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Terms of Use](/en/docs/products/spot/PROD-TERMS-OF-USE)[Changelog](/en/docs/products/spot/demo-mode/CHANGELOG)
 
@@ -377,6 +377,6 @@ IP 限制、未成交订单数量、交易所过滤器通常与正式交易所�
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [使用条款](/zh-CN/docs/products/spot/PROD-TERMS-OF-USE)[更新日志](/zh-CN/docs/products/spot/demo-mode/CHANGELOG)

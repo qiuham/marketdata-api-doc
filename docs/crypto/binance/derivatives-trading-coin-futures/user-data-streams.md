@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/user-data-streams
 api_type: REST
-updated_at: 2026-11-16 18:29:20.274110
+updated_at: 2026-11-17 18:28:48.559109
 ---
 
 # User Data Streams
@@ -58,7 +58,7 @@ updated_at: 2026-11-16 18:29:20.274110
 
 > **Schema:** [`marginCall`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#margincall)
 
-Loading schema...
+`{ "e": "MARGIN_CALL", // Event Type "E": 1587727187525, // Event Time "i": "SfsR", // Account Alias "cw": "3.16812045", // Cross Wallet Balance. Only pushed with crossed position margin call "p": [ // Position(s) of Margin Call { "s": "BTCUSD_200925", // Symbol "ps": "LONG", // Position Side "pa": "132", // Position Amount "mt": "CROSSED", // Margin Type "iw": "0", // Isolated Wallet (if isolated position) "mp": "9187.17127000", // Mark Price "up": "-1.166074", // Unrealized PnL "mm": "1.614445" // Maintenance Margin Required } ] }`
 
 * * *
 
@@ -101,7 +101,7 @@ Event type is `ACCOUNT_UPDATE`.
 
 > **Schema:** [`accountUpdate`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#accountupdate)
 
-Loading schema...
+`{ "e": "ACCOUNT_UPDATE", // Event Type "E": 1564745798939, // Event Time "T": 1564745798938, // Transaction "i": "SfsR", // Account Alias "a": { // Update Data "m": "ORDER", // Event reason type "B": [ // Balances { "a": "BTC", // Asset "wb": "122624.12345678", // Wallet Balance "cw": "100.12345678", // Cross Wallet Balance "bc": "50.12345678" // Balance Change except PnL and Commission } ], "P": [ { "s": "BTCUSD_200925", // Symbol "pa": "0", // Position Amount "ep": "0.0", // Entry Price "bep": "0.0", // Break-Even Price "cr": "200", // (Pre-fee) Accumulated Realized "up": "0", // Unrealized PnL "mt": "isolated", // Margin Type "iw": "0.00000000", // Isolated Wallet (if isolated position) "ps": "BOTH" // Position Side } ], "S": "BTCUSD_200925" // Symbol associated with FUNDING_FEE event } }`
 
 * * *
 
@@ -201,7 +201,7 @@ When new order created, modified, order status changed will push such event. Eve
 
 > **Schema:** [`orderTradeUpdate`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#ordertradeupdate)
 
-Loading schema...
+`{ "e": "ORDER_TRADE_UPDATE", // Event Type "E": 1591274595442, // Event Time "T": 1591274595442, // Transaction Time "i": "SfsR", // Account Alias "o": { "s": "BTCUSD_200925", // Symbol "c": "TEST", // Client Order Id "S": "SELL", // Side "o": "TRAILING_STOP_MARKET", // Order Type "f": "GTC", // Time in Force "q": "2", // Original Quantity "p": "0", // Original Price "ap": "0", // Average Price "sp": "9103.1", // Stop Price. Please ignore with TRAILING_STOP_MARKET order "x": "NEW", // Execution Type "X": "NEW", // Order Status "i": 8888888, // Order Id "M": "44444", // modifyId, only pushed for AMENDMENT (order modification) events when a modifyId was provided in the request "l": "0", // Order Last Filled Quantity "z": "0", // Order Filled Accumulated Quantity "L": "0", // Last Filled Price "ma": "BTC", // Margin Asset "N": "BTC", // Commission Asset "n": "0", // Commission "T": 1591274595442, // Order Trade Time "t": 0, // Trade Id "rp": "0", // Realized Profit of the trade "b": "0", // Bid quantity of base asset "a": "0", // Ask quantity of base asset "m": false, // Is this trade the maker side? "R": false, // Is this reduce only "wt": "CONTRACT_PRICE", // Stop Price Working Type "ot": "TRAILING_STOP_MARKET", // Original Order Type "ps": "LONG", // Position Side "cp": false, // If Close-All, pushed with conditional order "AP": "9476.8", // Activation Price, only pushed with TRAILING_STOP_MARKET order "cr": "5.0", // Callback Rate, only pushed with TRAILING_STOP_MARKET order "pP": false, // If conditional order trigger is protected "V": "EXPIRE_TAKER", // STP mode "pm": "OPPONENT", // Price match mode "er": "0" // Expiry Reason } }`
 
 * * *
 
@@ -221,7 +221,7 @@ When the leverage of a trade pair changes, the payload will contain the object `
 
 > **Schema:** [`accountConfigUpdate`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#accountconfigupdate)
 
-Loading schema...
+`{ "e": "ACCOUNT_CONFIG_UPDATE", // Event Type "E": 1611646737479, // Event Time "T": 1611646737476, // Transaction Time "ac": { "s": "BTCUSD_PERP", // Symbol "l": 25 // Leverage } }`
 
 * * *
 
@@ -268,7 +268,7 @@ Loading schema...
 
 > **Schema:** [`strategyUpdate`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#strategyupdate)
 
-Loading schema...
+`{ "e": "STRATEGY_UPDATE", // Event Type "T": 1669261797627, // Transaction Time "E": 1669261797628, // Event Time "su": { "si": 176054594, // Strategy ID "st": "GRID", // Strategy Type "ss": "NEW", // Strategy Status "s": "BTCUSDT", // Symbol "ut": 1669261797627, // Update Time "c": 8007 // opCode } }`
 
 * * *
 
@@ -295,7 +295,7 @@ Loading schema...
 
 > **Schema:** [`gridUpdate`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#gridupdate)
 
-Loading schema...
+`{ "e": "GRID_UPDATE", // Event Type "T": 1669262908216, // Transaction Time "E": 1669262908218, // Event Time "gu": { "si": 176057039, // Strategy ID "st": "GRID", // Strategy Type "ss": "WORKING", // Strategy Status "s": "BTCUSDT", // Symbol "r": "-0.00300716", // Realized PNL "up": "16720", // Unmatched Average Price "uq": "-0.001", // Unmatched Qty "uf": "-0.00300716", // Unmatched Fee "mp": "0.0", // Matched PNL "ut": 1669262908197 // Update Time } }`
 
 * * *
 
@@ -321,11 +321,11 @@ When the `listenKey` used for the user data stream turns expired, this event wil
 
 > **Schema:** [`listenKeyExpired`](/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#listenkeyexpired)
 
-Loading schema...
+`{ "e": "listenKeyExpired", // Event Type "E": 1576653824250, // Event Time "listenKey": "WsCMN0a4KHUPTQuX6IUnqEZfB1inxmv1qR4kbf1LuEjur5VdbzqvyxqG9TSjVVxv" }`
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket API General Info](/en/docs/products/derivatives-trading-coin-futures/websocket-api-general-info)[Public Endpoints Info](/en/docs/products/derivatives-trading-coin-futures/common-definition)
 
@@ -638,10 +638,10 @@ Last modified on November 16, 2026
 
 > **Schema:** [`listenKeyExpired`](/zh-CN/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-streams/~schemas#listenkeyexpired)
 
-`{ "e": "listenKeyExpired", // Event Type "E": 1576653824250, // Event Time "listenKey": "WsCMN0a4KHUPTQuX6IUnqEZfB1inxmv1qR4kbf1LuEjur5VdbzqvyxqG9TSjVVxv" }`
+Loading schema...
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket API基本信息](/zh-CN/docs/products/derivatives-trading-coin-futures/websocket-api-general-info)[公开API参数](/zh-CN/docs/products/derivatives-trading-coin-futures/common-definition)

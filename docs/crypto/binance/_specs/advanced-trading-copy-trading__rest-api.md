@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-copy-trading/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:38:18.635788
+updated_at: 2026-11-17 18:36:22.420358
 ---
 
 # advanced-trading-copy-trading__rest-api spec

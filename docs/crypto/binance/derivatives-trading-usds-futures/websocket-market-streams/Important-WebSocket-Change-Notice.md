@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice
 api_type: WebSocket
-updated_at: 2026-11-16 18:29:07.365108
+updated_at: 2026-11-17 18:28:33.278541
 ---
 
 # Important WebSocket Change Notice — Base URL Split & Migration
@@ -101,7 +101,7 @@ Due to sustained heavy traffic, we have upgraded the WebSocket URL structure by 
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Live Subscribing/Unsubscribing to streams](/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)[Self Trade Prevention (STP) FAQ](/en/docs/products/derivatives-trading-usds-futures/faq/stp-faq)
 
@@ -203,6 +203,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [实时订阅/取消数据流](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Live-Subscribing-Unsubscribing-to-streams)[自我交易预防常见问题](/zh-CN/docs/products/derivatives-trading-usds-futures/faq/stp-faq)

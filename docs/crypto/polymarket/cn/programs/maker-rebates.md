@@ -10,12 +10,19 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/programs/maker-rebates'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Maker 返利计划
 
 > 通过在 Polymarket 提供流动性赚取每日 pUSD 返利
+
+> [!NOTE]
+>
+> **即将调整 — 2026 年 11 月 20 日 23:59 UTC。** Polymarket DeFi 将调整 Taker
+> 费用和返利，并将 Maker
+> 返利从每日返利池改为按成交量分级计算。生效前仍适用下方的现行规则。
+> 查看[完整费用与返利调整说明（英文）](https://docs.polymarket.com/programs/fee-and-rebate-changes-november-2026.md)。
 
 Polymarket 在多个市场类别收取 taker 费用。费用由协议在撮合时确定,并用于资助 **Maker 返利**计划,向流动性提供者支付每日 pUSD 返利。
 

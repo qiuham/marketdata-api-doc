@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/redeem
 api_type: REST
-updated_at: 2026-11-16 18:38:47.232068
+updated_at: 2026-11-17 18:36:51.730448
 ---
 
 # Redeem Funds

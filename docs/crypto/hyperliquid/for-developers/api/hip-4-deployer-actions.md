@@ -10,7 +10,7 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/hip-4-deployer-actions'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # HIP-4 deployer actions

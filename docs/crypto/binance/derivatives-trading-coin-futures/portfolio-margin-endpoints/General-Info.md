@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info
 api_type: REST
-updated_at: 2026-11-16 18:29:20.013336
+updated_at: 2026-11-17 18:28:47.630273
 ---
 
 # Classic Portfolio Margin Endpoints
@@ -15,7 +15,7 @@ Only Classic Portfolio Margin Account is accessible to these endpoints. To enrol
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [How to manage a local order book correctly](/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[Introduction](/en/docs/products/derivatives-trading-options/Introduction)
 
@@ -31,6 +31,6 @@ FAQ: [币安合约经典统一账户总览](https://www.binance.com/cn/support/f
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [如何正确在本地维护一个orderbook副本](/zh-CN/docs/products/derivatives-trading-coin-futures/websocket-market-streams/How-to-manage-a-local-order-book-correctly)[概述](/zh-CN/docs/products/derivatives-trading-options/Introduction)

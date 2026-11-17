@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/tags/list-tags'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # 获取标签列表

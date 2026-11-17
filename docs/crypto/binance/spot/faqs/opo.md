@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/opo
 api_type: REST
-updated_at: 2026-11-16 18:28:27.893344
+updated_at: 2026-11-17 18:27:50.002473
 ---
 
 # One Pays the Other (OPO)
@@ -45,7 +45,7 @@ OPOCO| `otoAllowed`, `opoAllowed`, and `ocoAllowed`
   
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [MARKET orders](/en/docs/products/spot/faqs/market_orders_faq)[Order Amend Keep Priority](/en/docs/products/spot/faqs/order_amend_keep_priority)
 
@@ -91,6 +91,6 @@ OPOCO| `otoAllowed`、`opoAllowed` 和 `ocoAllowed`
   
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [市价单](/zh-CN/docs/products/spot/faqs/market_orders_faq)[保留优先级的修改订单请求（Order Amend Keep Priority）](/zh-CN/docs/products/spot/faqs/order_amend_keep_priority)

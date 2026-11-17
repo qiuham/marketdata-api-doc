@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/enums
 api_type: REST
-updated_at: 2026-11-16 18:28:42.956942
+updated_at: 2026-11-17 18:28:06.927574
 ---
 
 # ENUM Definitions
@@ -214,7 +214,7 @@ Expiry Reason (`eR`)| Explanation
   
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Errors](/en/docs/products/spot/testnet/errors)[Filters](/en/docs/products/spot/testnet/filters)
 
@@ -429,6 +429,6 @@ Expiry Reason (`eR`)| Explanation
   
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Errors](/zh-CN/docs/products/spot/testnet/errors)[Filters](/zh-CN/docs/products/spot/testnet/filters)

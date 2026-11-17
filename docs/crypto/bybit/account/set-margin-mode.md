@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/set-margin-mode
 api_type: Account
-updated_at: 2026-11-16 18:39:03.989925
+updated_at: 2026-11-17 18:37:00.605568
 ---
 
 # Set Margin Mode

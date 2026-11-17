@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/1.0.0/schema.yaml
 api_type: spec
-updated_at: 2026-11-16 18:38:10.873971
+updated_at: 2026-11-17 18:36:13.386853
 ---
 
 # advanced-trading-derivatives-trading-portfolio-margin-pro__rest-api spec
@@ -2228,6 +2228,88 @@ paths:
                             type: string
                             example: "0.0000"
                             description: account equity quick addition number
+                            x-description-cn: 账户权益计算速算数
+  /sapi/v2/portfolio/retail/collateralRate:
+    get:
+      summary: Get Portfolio Margin Tiered Collateral Rates (MARKET_DATA)
+      x-summary-cn: 获取统一账户阶梯质押率 (MARKET_DATA)
+      description: Query the tiered collateral rate configurations for Portfolio Margin assets.
+      x-description-cn: 查询统一账户各资产的完整阶梯质押率配置。统一账户和统一账户专业版的质押率参数独立配置。本接口返回 Portfolio Margin 账户适用的配置。
+      tags:
+        - market-data
+      operationId: getPortfolioMarginTieredCollateralRates
+      externalDocs:
+        url: >-
+          https://developers.binance.com/en/docs/catalog/advanced-trading-derivatives-trading-portfolio-margin-pro/api/rest-api/market-data#get-portfolio-margin-tiered-collateral-rates
+      x-connectors-examples:
+        ts: >-
+          https://raw.githubusercontent.com/binance/binance-connector-js/master/clients/derivatives-trading-portfolio-margin-pro/examples/rest-api/MarketDataApi/getPortfolioMarginTieredCollateralRates.ts
+        rust: >-
+          https://raw.githubusercontent.com/binance/binance-connector-rust/main/examples/derivatives_trading_portfolio_margin_pro/rest_api/market_data_api/get_portfolio_margin_tiered_collateral_rates.rs
+        python: >-
+          https://raw.githubusercontent.com/binance/binance-connector-python/master/clients/derivatives_trading_portfolio_margin_pro/examples/rest_api/MarketData/get_portfolio_margin_tiered_collateral_rates.py
+        java: >-
+          https://raw.githubusercontent.com/binance/binance-connector-java/master/examples/derivatives-trading-portfolio-margin-pro/src/main/java/com/binance/connector/client/derivatives_trading_portfolio_margin_pro/rest/marketdata/GetPortfolioMarginTieredCollateralRatesExample.java
+        go: >-
+          https://raw.githubusercontent.com/binance/binance-connector-go/main/clients/derivativestradingportfoliomarginpro/examples/restapi/MarketDataAPI/GetPortfolioMarginTieredCollateralRates/GetPortfolioMarginTieredCollateralRates.go
+        php: >-
+          https://raw.githubusercontent.com/binance/binance-connector-php/master/examples/derivatives-trading-portfolio-margin-pro/marketdata/GetPortfolioMarginTieredCollateralRatesExample.php
+      x-ip-weight: 50
+      x-security-type: MARKET_DATA
+      parameters:
+        - name: X-MBX-APIKEY
+          in: header
+          required: true
+          description: >-
+            An API Key is required to access this endpoint and must be included in the request headers. To create an API
+            Key, refer to:
+            [https://www.binance.com/en/support/faq/detail/360002502072](https://www.binance.com/en/support/faq/detail/360002502072).
+          x-description-cn: >-
+            访问此接口需要 API Key，并且必须在请求头中携带。关于如何创建 API
+            Key，请参考：[https://www.binance.com/cn/support/faq/detail/360002502072](https://www.binance.com/cn/support/faq/detail/360002502072)。
+          schema:
+            type: string
+            example: API_KEY
+      responses:
+        "200":
+          description: Portfolio Margin Tiered Collateral Rates
+          x-description-cn: 统一账户阶梯质押率
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    asset:
+                      type: string
+                      example: BNB
+                      description: asset.
+                      x-description-cn: 资产
+                    collateralInfo:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          tierFloor:
+                            type: string
+                            example: "0.0000"
+                            description: tier Floor.
+                            x-description-cn: 阶梯下限
+                          tierCap:
+                            type: string
+                            example: "1000.0000"
+                            description: tier Cap.
+                            x-description-cn: 阶梯上限
+                          collateralRate:
+                            type: string
+                            example: "1.0000"
+                            description: collateral Rate.
+                            x-description-cn: 质押率
+                          cum:
+                            type: string
+                            example: "0.0000"
+                            description: account equity quick addition number.
                             x-description-cn: 账户权益计算速算数
   /sapi/v1/portfolio/asset-index-price:
     get:

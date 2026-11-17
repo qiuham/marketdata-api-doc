@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-spec/perps-openapi.json'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # perps-openapi.json
@@ -2967,7 +2967,7 @@ Source: https://docs.polymarket.com/api-spec/perps-openapi.json
         "x-mint": {
           "content": "<Badge color=\"gray\" size=\"md\">Request Weight: **2**</Badge>"
         },
-        "description": "Get per-instrument daily liquidity reward shares for the authenticated account.\nReward periods run from 12:00 UTC to 12:00 UTC and are labeled by their UTC end date.\nOI rewards pay 6% APR on the account's full daily average gross OI across all\ninstruments when the combined daily average gross OI of its rewards entity is\nat least $5M. Accounts without an entity mapping qualify independently.\nThe first reward period starts at 2026-07-06 12:00 UTC. If no date range is provided,\nthe latest computed reward period is returned.\n",
+        "description": "Get per-instrument daily liquidity reward shares for the authenticated account.\nReward periods run from 12:00 UTC to 12:00 UTC and are labeled by their UTC end date.\nThe first reward period starts at 2026-07-06 12:00 UTC. If no date range is provided,\nthe latest computed reward period is returned.\n",
         "parameters": [
           {
             "name": "date",
@@ -8250,23 +8250,6 @@ Source: https://docs.polymarket.com/api-spec/perps-openapi.json
           }
         }
       },
-      "account_oi": {
-        "type": "string",
-        "description": "Daily average gross open-interest notional for this account across all instruments",
-        "example": "3200000"
-      },
-      "AccountRewardOi": {
-        "type": "object",
-        "required": ["account_oi", "reward_amount"],
-        "properties": {
-          "account_oi": {
-            "$ref": "#/components/schemas/account_oi"
-          },
-          "reward_amount": {
-            "$ref": "#/components/schemas/reward_amount"
-          }
-        }
-      },
       "AccountReward": {
         "type": "object",
         "required": ["date", "maker_share_7d", "reward_distributed", "breakdown"],
@@ -8285,9 +8268,6 @@ Source: https://docs.polymarket.com/api-spec/perps-openapi.json
             "items": {
               "$ref": "#/components/schemas/AccountRewardInstrument"
             }
-          },
-          "oi_rewards": {
-            "$ref": "#/components/schemas/AccountRewardOi"
           }
         }
       },

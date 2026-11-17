@@ -2,10 +2,26 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/change-log
 api_type: REST
-updated_at: 2026-11-16 18:29:16.753801
+updated_at: 2026-11-17 18:28:42.957883
 ---
 
 # Change Log
+
+## 2026-11-17
+
+**Effective Date: 2026-11-23**
+
+Portfolio Margin
+
+  * Added `GET /sapi/v2/portfolio/retail/collateralRate` (Get Portfolio Margin Tiered Collateral Rates) to query the tiered collateral rate configurations for Portfolio Margin assets. The `GET /sapi/v1/portfolio/collateralRate` API will be deprecated in the future.
+  * **Breaking change** : Updated the `openOrderLoss` event:
+    * The event now reports the aggregated account-level open order loss in USD, rather than open order loss by asset.
+    * The payload structure is changed: the per-asset array `O: [{a, o}]` is replaced by a single string field `o` (aggregated account-level open order loss in USD). Clients that parse `O` must be updated.
+    * The system checks the account-level open order loss every 5 seconds. A new value is pushed when its absolute value changes by more than 5% compared with the absolute value of the last pushed value.
+
+
+
+* * *
 
 ## 2026-10-23
 
@@ -1542,7 +1558,7 @@ REST API & Websocket API
     Code
     
     {
-        "listenKey": "3HBntNTepshgEdjIwSUIBgB9keLyOCg5qv3n6bYAtktG8ejcaW5HXz9Vx1JgIieg"
+        "listenKey": "<listenKey>"
     }
 
 * * *
@@ -4438,13 +4454,29 @@ USDⓈ-M Futures
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Quick Start](/en/docs/products/derivatives-trading-coin-futures/quick-start)[Important Notice — COIN-M / USDⓈ-M Architecture Integration](/en/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice)
 
 ---
 
 # 更新日志
+
+## 2026-11-17
+
+**生效时间: 2026-11-23**
+
+统一账户
+
+  * 新增 `GET /sapi/v2/portfolio/retail/collateralRate`（获取统一账户阶梯质押率）接口，用于查询统一账户资产的阶梯质押率配置。`GET /sapi/v1/portfolio/collateralRate` 接口未来将被弃用。
+  * **不兼容变更** ：更新 `openOrderLoss` 事件推送：
+    * 推送内容由币种维度的挂单损失，调整为账户级汇总挂单损失，单位为 USD。
+    * payload 结构变更：原按币种返回的数组 `O: [{a, o}]` 调整为单个字符串字段 `o`（账户级汇总挂单损失，单位为 USD）。解析 `O` 字段的客户端需要同步调整。
+    * 系统每 5 秒检查一次账户级挂单损失。当其绝对值相较于上一次推送值的绝对值变化超过 5% 时，会推送新的值。
+
+
+
+* * *
 
 ## 2026-10-23
 
@@ -5977,7 +6009,7 @@ REST API & Websocket API
     Code
     
     {
-        "listenKey": "3HBntNTepshgEdjIwSUIBgB9keLyOCg5qv3n6bYAtktG8ejcaW5HXz9Vx1JgIieg"
+        "listenKey": "<listenKey>"
     }
 
 * * *
@@ -8777,6 +8809,6 @@ U本位合约
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [快速开始](/zh-CN/docs/products/derivatives-trading-coin-futures/quick-start)[币本位/U本位整合迁移公告](/zh-CN/docs/products/derivatives-trading-coin-futures/Important-CM-UM-Integration-Notice)

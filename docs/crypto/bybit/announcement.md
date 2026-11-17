@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/announcement
 api_type: REST
-updated_at: 2026-11-16 18:39:52.906115
+updated_at: 2026-11-17 18:37:17.883094
 ---
 
 # Get Announcement

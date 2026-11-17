@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/tags/get-related-tags-relationships-by-tag-id'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # 按标签 ID 获取相关标签关系

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/best-practice
 api_type: REST
-updated_at: 2026-11-16 18:30:11.244383
+updated_at: 2026-11-17 18:29:39.497002
 ---
 
 # Best Practice
@@ -478,7 +478,7 @@ Binance provides endpoints to review other account activities:
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Error Codes](/en/docs/products/margin-trading/error-code)[Introduction](/en/docs/products/wallet/Introduction)
 
@@ -956,6 +956,6 @@ timestamp| LONG| YES|
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [错误代码](/zh-CN/docs/products/margin-trading/error-code)[概述](/zh-CN/docs/products/wallet/Introduction)

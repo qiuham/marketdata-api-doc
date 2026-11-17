@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/rest-api
 api_type: REST
-updated_at: 2026-11-16 18:28:47.525525
+updated_at: 2026-11-17 18:28:11.509238
 ---
 
 # Public Rest API for Binance SPOT Testnet
@@ -4552,7 +4552,7 @@ timestamp| LONG| YES|
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX API](/en/docs/products/spot/testnet/fix-api)[SBE Market Data Streams](/en/docs/products/spot/testnet/sbe-market-data-streams)
 
@@ -9105,6 +9105,6 @@ timestamp| LONG| YES|
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [FIX API](/zh-CN/docs/products/spot/testnet/fix-api)[SBE Market Data Streams](/zh-CN/docs/products/spot/testnet/sbe-market-data-streams)

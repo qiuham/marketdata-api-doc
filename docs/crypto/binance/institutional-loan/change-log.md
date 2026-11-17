@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/change-log
 api_type: REST
-updated_at: 2026-11-16 18:31:05.902764
+updated_at: 2026-11-17 18:30:40.958366
 ---
 
 # Change Log
@@ -103,7 +103,7 @@ The endpoint below is available :
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Introduction](/en/docs/products/institutional-loan/Introduction)[Public API Definitions](/en/docs/products/institutional-loan/common-definition)
 
@@ -204,6 +204,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [概述](/zh-CN/docs/products/institutional-loan/Introduction)[公开 API 参数](/zh-CN/docs/products/institutional-loan/common-definition)

@@ -10,7 +10,7 @@ provider_name: Kraken
 product: api
 product_id: kraken
 source_url: 'https://docs.kraken.com/api-reference/settlement/settle-prime-settlement-batch-asset'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Settle Prime Settlement Batch Asset

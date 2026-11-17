@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/user-data-stream
 api_type: REST
-updated_at: 2026-11-16 18:28:47.749444
+updated_at: 2026-11-17 18:28:11.842239
 ---
 
 # User Data Streams for Binance Spot TESTNET
@@ -230,7 +230,7 @@ Check the [Enums Documentation](/en/docs/products/spot/testnet/enums) for more r
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Terms of Use](/en/docs/products/spot/testnet/TESTNET-TERMS-OF-USE)[WebSocket API](/en/docs/products/spot/testnet/web-socket-api)
 
@@ -461,6 +461,6 @@ Check the [Enums Documentation](/zh-CN/docs/products/spot/testnet/enums) for mor
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Terms of Use](/zh-CN/docs/products/spot/testnet/TESTNET-TERMS-OF-USE)[WebSocket API](/zh-CN/docs/products/spot/testnet/web-socket-api)

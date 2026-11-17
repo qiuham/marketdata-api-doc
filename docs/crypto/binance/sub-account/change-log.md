@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/sub-account/change-log
 api_type: Account
-updated_at: 2026-11-16 18:31:26.280732
+updated_at: 2026-11-17 18:31:05.109750
 ---
 
 # Change Log
@@ -520,7 +520,7 @@ The query time period must be less then 30 days; If `startTime` and `endTime` no
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Introduction](/en/docs/products/sub-account/Introduction)[General Info](/en/docs/products/sub-account/general-info)
 
@@ -1020,6 +1020,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [概述](/zh-CN/docs/products/sub-account/Introduction)[基本信息](/zh-CN/docs/products/sub-account/general-info)

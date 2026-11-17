@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/user-data-streams
 api_type: REST
-updated_at: 2026-11-16 18:29:05.382432
+updated_at: 2026-11-17 18:28:30.670374
 ---
 
 # User Data Streams
@@ -388,11 +388,11 @@ When the `listenKey` used for the user data stream turns expired, this event wil
 
 > **Schema:** [`listenKeyExpired`](/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/ws-streams/~schemas#listenkeyexpired)
 
-`{ "e": "listenKeyExpired", // Event Type "E": 1736996475556, // Event Time "listenKey": "WsCMN0a4KHUPTQuX6IUnqEZfB1inxmv1qR4kbf1LuEjur5VdbzqvyxqG9TSjVVxv" }`
+Loading schema...
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket API General Info](/en/docs/products/derivatives-trading-usds-futures/websocket-api-general-info)[Public Endpoints Info](/en/docs/products/derivatives-trading-usds-futures/common-definition)
 
@@ -778,6 +778,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [WebSocket API基本信息](/zh-CN/docs/products/derivatives-trading-usds-futures/websocket-api-general-info)[公开API参数](/zh-CN/docs/products/derivatives-trading-usds-futures/common-definition)

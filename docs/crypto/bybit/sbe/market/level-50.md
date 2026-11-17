@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/sbe/market/level-50
 api_type: Market Data
-updated_at: 2026-11-16 18:42:49.872078
+updated_at: 2026-11-17 18:39:27.700081
 ---
 
 # SBE Level 50 Integration
@@ -188,7 +188,7 @@ u| Type| Notes
     TOPIC = "ob.50.sbe.BTCUSDT"  
       
     # Adjust URL for spot / contract environment as needed:  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
       
     # -------------------------------------------------------------------  
     # SBE Parser for OBL50Event (template_id = 20001)  
@@ -808,7 +808,7 @@ u| Type| Notes
     TOPIC = "ob.50.sbe.BTCUSDT"  
       
     # Adjust URL for spot / contract environment as needed:  
-    WS_URL = "wss://stream-testnet.bybits.org/v5/public-sbe/spot"  
+    WS_URL = "wss://stream-testnet.bybit.com/v5/public-sbe/spot"  
       
     # -------------------------------------------------------------------  
     # SBE Parser for OBL50Event (template_id = 20001)  

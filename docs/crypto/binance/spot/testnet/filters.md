@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/testnet/filters
 api_type: REST
-updated_at: 2026-11-16 18:28:43.343481
+updated_at: 2026-11-17 18:28:07.292991
 ---
 
 # Filters
@@ -463,7 +463,7 @@ The `MAX_ASSET` filter defines the maximum quantity of an asset that an account 
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Enums](/en/docs/products/spot/testnet/enums)[FIX API](/en/docs/products/spot/testnet/fix-api)
 
@@ -927,6 +927,6 @@ The `MAX_ASSET` filter defines the maximum quantity of an asset that an account 
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Enums](/zh-CN/docs/products/spot/testnet/enums)[FIX API](/zh-CN/docs/products/spot/testnet/fix-api)

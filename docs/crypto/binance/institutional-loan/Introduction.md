@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/institutional-loan/Introduction
 api_type: REST
-updated_at: 2026-11-16 18:31:05.799440
+updated_at: 2026-11-17 18:30:40.819210
 ---
 
 # Introduction
@@ -23,7 +23,7 @@ For more details or to apply, please contact your VIP representative or refer to
 
 Was this page helpful?
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [Error Codes](/en/docs/products/copy-trading/error-code)[Change Log](/en/docs/products/institutional-loan/change-log)
 
@@ -46,6 +46,6 @@ Last modified on November 16, 2026
 
 此页面是否有帮助？
 
-Last modified on November 16, 2026
+Last modified on November 17, 2026
 
 [错误代码](/zh-CN/docs/products/copy-trading/error-code)[更新日志](/zh-CN/docs/products/institutional-loan/change-log)

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/api-broker/connection
 api_type: REST
-updated_at: 2026-11-16 18:40:27.064451
+updated_at: 2026-11-17 18:37:43.243598
 ---
 
 # Broker Connection
@@ -17,7 +17,7 @@ The service uses dedicated routing and optimized infrastructure to improve conne
   * Improved execution consistency for order placement, amendments, and cancellations.
   * Better private WebSocket push delivery.
   * Improved access to low-latency market data during high-traffic periods.
-  * Support for SBE order entry and SBE market data workflows.
+  * Support for SBE market data workflows.
 
 
 
@@ -27,10 +27,8 @@ Broker Dedicated Connection supports Spot, Linear Futures, Inverse Futures, and 
 
 Version| Path  
 ---|---  
-V5| `/v5/private/*`  
-V5| `/v5/private-sbe/*`  
+V5| `/v5/private`  
 V5| `/v5/trade`  
-V5| `/v5/trade-sbe`  
 V5| `/v5/public/*`  
 V5| `/v5/public-sbe/*`  
   
@@ -101,7 +99,7 @@ Broker Dedicated Connection 是面向已批准經紀商與符合條件的高交�
   * 提升下單、改單與撤單的執行一致性。
   * 改善私有 WebSocket 推送交付。
   * 在高流量期間改善低延遲行情資料接入。
-  * 支援 SBE 下單與 SBE 行情資料流程。
+  * 支援 SBE 行情資料流程。
 
 
 
@@ -111,10 +109,8 @@ Broker Dedicated Connection 支援現貨、USDT/USDC 合約、幣本位合約與
 
 版本| 路徑  
 ---|---  
-V5| `/v5/private/*`  
-V5| `/v5/private-sbe/*`  
+V5| `/v5/private`  
 V5| `/v5/trade`  
-V5| `/v5/trade-sbe`（6月主網）  
 V5| `/v5/public/*`  
 V5| `/v5/public-sbe/*`  
   

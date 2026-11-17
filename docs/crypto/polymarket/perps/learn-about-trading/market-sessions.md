@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/perps/learn-about-trading/market-sessions'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Market Sessions

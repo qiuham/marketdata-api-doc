@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/comments/get-comments-by-comment-id'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Get comments by comment id

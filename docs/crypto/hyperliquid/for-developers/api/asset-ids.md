@@ -10,12 +10,12 @@ provider_name: Hyperliquid
 product: api
 product_id: hyperliquid
 source_url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/asset-ids'
-updated_at: 2026-11-16
+updated_at: 2026-11-17
 ---
 
 # Asset IDs
 
-Asset IDs are the integer representation for sending orders and cancels via actions. See [here](/hyperliquid-docs/for-developers/api/exchange-endpoint.md) for more details.
+Asset IDs are the integer representation for sending orders and cancels via actions. See [here](https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint.md) for more details.
 
 ### Perps
 
