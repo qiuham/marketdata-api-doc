@@ -1,0 +1,207 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/market-data/public-get_funding_chart_data
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:38.873107
+---
+
+# public/get_funding_chart_data
+
+> Retrieves funding rate chart data points for a PERPETUAL instrument within a given time period. The data is formatted for use in charting applications and includes funding rate values at regular intervals.
+
+Use the `length` parameter to specify the time period for which to retrieve chart data. This method is useful for visualizing funding rate trends over time.
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_funding_chart_data)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /public/get_funding_chart_data
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /public/get_funding_chart_data:
+    get:
+      tags:
+        - Market Data
+        - Public
+      description: >+
+        Retrieves funding rate chart data points for a PERPETUAL instrument
+        within a given time period. The data is formatted for use in charting
+        applications and includes funding rate values at regular intervals.
+
+
+        Use the `length` parameter to specify the time period for which to
+        retrieve chart data. This method is useful for visualizing funding rate
+        trends over time.
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_funding_chart_data)
+
+      parameters:
+        - name: instrument_name
+          required: true
+          in: query
+          schema:
+            $ref: '#/components/schemas/instrument_name'
+          description: Instrument name
+        - name: length
+          in: query
+          schema:
+            type: string
+            enum:
+              - 8h
+              - 24h
+              - 1m
+          required: true
+          description: >-
+            Specifies time period. `8h` - 8 hours, `24h` - 24 hours, `1m` - 1
+            month
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 6015
+                  method: public/get_funding_chart_data
+                  params:
+                    instrument_name: BTC-PERPETUAL
+                    length: 8h
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetFundingChartDataResponse'
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/public/get_funding_chart_data \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 6015,
+              "method": "public/get_funding_chart_data",
+              "params": {
+                "instrument_name": "BTC-PERPETUAL",
+                "length": "8h"
+              }
+            }'
+components:
+  schemas:
+    instrument_name:
+      example: BTC-PERPETUAL
+      type: string
+      description: Unique instrument identifier
+    PublicGetFundingChartDataResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: object
+          properties:
+            current_interest:
+              type: number
+              example: 0.005000670552845
+              description: Current interest
+            interest_8h:
+              type: number
+              example: 0.0040080896931
+              description: Current interest 8h
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  timestamp:
+                    $ref: '#/components/schemas/timestamp'
+                  index_price:
+                    $ref: '#/components/schemas/index_price'
+                  interest_8h:
+                    type: number
+                    example: 0.004999511380756577
+                    description: Historical interest 8h value
+                required:
+                  - timestamp
+                  - index_price
+                  - interest_8h
+          required:
+            - current_interest
+            - data
+            - interest_8h
+      required:
+        - result
+        - jsonrpc
+      type: object
+    timestamp:
+      example: 1536569522277
+      type: integer
+      description: The timestamp (milliseconds since the Unix epoch)
+    index_price:
+      example: 8247.27
+      type: number
+      description: Current index price
+
+````
+
+## Related topics
+
+- [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)
+- [public/get_index_chart_data](https://docs.deribit.com/api-reference/market-data/public-get_index_chart_data.md)
+- [public/get_tradingview_chart_data](https://docs.deribit.com/api-reference/market-data/public-get_tradingview_chart_data.md)
+- [public/get_funding_rate_history](https://docs.deribit.com/api-reference/market-data/public-get_funding_rate_history.md)
+- [public/get_funding_rate_value](https://docs.deribit.com/api-reference/market-data/public-get_funding_rate_value.md)

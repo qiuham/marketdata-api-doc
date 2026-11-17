@@ -1,0 +1,318 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/articles/block-rfq-api-walkthrough
+api_type: Guide
+updated_at: 2026-11-16 20:31:58.285841
+---
+
+# Deribit Block RFQ API Walkthrough
+
+> Step-by-step Block RFQ API walkthrough for requesting quotes on large trades from Deribit market makers and executing multi-leg strategies.
+
+This walkthrough provides a comprehensive guide to using the Deribit Block RFQ API.
+
+## Overview
+
+Block RFQ enables institutional traders to:
+
+* Request quotes for large trades
+* Receive competitive quotes from multiple market makers
+* Execute trades at negotiated prices
+* Manage allocations across multiple accounts
+
+The Block RFQ system operates with two primary roles:
+
+* **Taker**: The user who creates the RFQ and requests quotes
+* **Maker**: The market maker who provides quotes in response to RFQs
+
+## Prerequisites
+
+Before using the Block RFQ API, ensure you have:
+
+1. **API Access**: An API key with appropriate scopes:
+   * `block_rfq:read` - Read-only access to Block RFQ information, quotes, and available makers
+   * `block_rfq:read_write` - Full access to create and quote Block RFQs
+
+2. **Account Setup**: Your account must be configured for Block RFQ trading
+
+## Block RFQ Workflow
+
+### 1. Creating a Block RFQ (Taker)
+
+The taker creates a Block RFQ using the [`private/create_block_rfq`](https://docs.deribit.com/api-reference/block-rfq/private-create_block_rfq) method. This method allows you to:
+
+* Specify the instruments and quantities for each leg of the trade
+* Set optional hedge legs
+* Target specific makers or make it available to all makers
+* Add a label for identification
+* Configure pre-allocation across multiple accounts
+
+**Example Request:**
+
+```json theme={null}
+{
+  "method": "private/create_block_rfq",
+  "params": {
+    "legs": [
+      {
+        "instrument_name": "BTC-PERPETUAL",
+        "amount": 100,
+        "side": "buy"
+      }
+    ],
+    "makers": ["maker1", "maker2"],
+    "label": "My Block RFQ"
+  }
+}
+```
+
+**Key Parameters:**
+
+* `legs`: Array of trade legs, each specifying instrument, amount, and side
+* `makers`: Optional list of specific maker aliases to target (omit for all makers)
+* `label`: Optional user-defined label (max 64 characters)
+* `trade_allocations`: Optional pre-allocation across accounts
+* `hedge`: Optional hedge leg configuration
+* `disclosed`: Whether the RFQ is non-anonymous (taker and maker aliases visible)
+
+### 2. Receiving RFQ Notifications (Maker)
+
+Makers receive notifications about new Block RFQs through WebSocket subscriptions:
+
+* `block_rfq.maker.{currency}` - Notifications when new Block RFQs are created
+* `block_rfq.maker.quotes.{currency}` - Notifications about the state of your quotes
+
+**Example Subscription:**
+
+```json theme={null}
+{
+  "method": "public/subscribe",
+  "params": {
+    "channels": ["block_rfq.maker.BTC"]
+  }
+}
+```
+
+### 3. Adding Quotes (Maker)
+
+Makers respond to Block RFQs by adding quotes using [`private/add_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-add_block_rfq_quote):
+
+```json theme={null}
+{
+  "method": "private/add_block_rfq_quote",
+  "params": {
+    "block_rfq_id": 123,
+    "amount": 100,
+    "direction": "sell",
+    "legs": [
+      {
+        "instrument_name": "BTC-15NOV24",
+        "price": 69600,
+        "ratio": 1,
+        "direction": "sell"
+      }
+    ]
+  }
+}
+```
+
+Unlike combo instruments (which are quoted with a single aggregated `price` covering the whole strategy), a Block RFQ quote carries a **price per leg** inside the `legs` array. Each leg is an independently priced instrument, and the leg `direction` must match the direction of the corresponding leg in the Block RFQ. The top-level `price` parameter is only used as the aggregated price for quoting future spreads. For all other structures, populate the per-leg `price` fields instead. To derive per-leg prices from an aggregated strategy price, use [`private/get_leg_prices`](https://docs.deribit.com/api-reference/combo-books/private-get_leg_prices).
+
+Makers can:
+
+* Add multiple quotes per RFQ
+* Edit existing quotes using [`private/edit_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-edit_block_rfq_quote)
+* Cancel individual quotes using [`private/cancel_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq_quote)
+* Cancel all quotes using [`private/cancel_all_block_rfq_quotes`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_all_block_rfq_quotes)
+
+### 4. Viewing RFQ State (Taker)
+
+Takers can monitor their Block RFQs using:
+
+* [`private/get_block_rfqs`](https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfqs) - List all Block RFQs (as taker or maker)
+* [`private/get_block_rfq_quotes`](https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfq_quotes) - View all quotes for a specific Block RFQ
+
+**Note:** After Block RFQ creation, there's a 5-second grace period during which the taker cannot see quotes or trade the Block RFQ.
+
+### 5. Accepting Quotes (Taker)
+
+Once the taker has reviewed the quotes, they can accept a Block RFQ using [`private/accept_block_rfq`](https://docs.deribit.com/api-reference/block-rfq/private-accept_block_rfq):
+
+```json theme={null}
+{
+  "method": "private/accept_block_rfq",
+  "params": {
+    "block_rfq_id": 123
+  }
+}
+```
+
+#### Retrieving the executed trades
+
+The `trades` array returned by [`private/get_block_rfqs`](https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfqs) for a filled RFQ does not include trade IDs. To get the individual per-leg trades, including `trade_id`, `order_id`, `fee`, and `block_trade_id`, call [`private/get_block_trades`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trades) with the `block_rfq_id`:
+
+```json theme={null}
+{
+  "method": "private/get_block_trades",
+  "params": {
+    "block_rfq_id": 123
+  }
+}
+```
+
+Each result entry is one Block RFQ trade. Its `id` is the `block_trade_id`, and its `trades` array lists one trade per leg. If you already have the `block_trade_id`, call [`private/get_block_trade`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trade) with `id` instead. Both methods require the `block_trade:read` scope.
+
+### 6. Canceling Block RFQs and Quotes
+
+* **Taker**: Use [`private/cancel_block_rfq`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq) to cancel their own RFQ
+* **Maker**: Can cancel their own quotes using [`private/cancel_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq_quote) or [`private/cancel_all_block_rfq_quotes`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_all_block_rfq_quotes). Quotes are also automatically canceled when the RFQ is filled, expired, or canceled by the taker
+
+### 7. Stopping Block RFQ activity
+
+The API does not provide a dedicated method to switch Block RFQ trading off. To stop Block RFQ activity through the API:
+
+1. Cancel any open activity. As a taker, call [`private/cancel_block_rfq`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq) for each open RFQ. As a maker, call [`private/cancel_all_block_rfq_quotes`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_all_block_rfq_quotes).
+2. Remove Block RFQ permissions from your API keys. A key's scopes set the maximum permissions a token can receive, so a key without `block_rfq:read_write` cannot create, accept, or quote Block RFQs. See [Access Scope](https://docs.deribit.com/articles/access-scope.md).
+3. If a key should no longer be used at all, disable it with [`private/disable_api_key`](https://docs.deribit.com/api-reference/account-management/private-disable_api_key).
+
+## Block RFQ States
+
+Block RFQs can be in one of the following states:
+
+* `open` - The RFQ is active and accepting quotes
+* `filled` - The RFQ has been accepted and executed
+* `cancelled` - The RFQ was canceled by the taker
+* `expired` - The RFQ expired without being filled
+
+## Identifiers
+
+A Block RFQ involves three distinct identifiers. They are not interchangeable. Use each for the purpose it was designed for.
+
+| Field | Represents | Lifetime | Where it appears |
+| - | - | - | - |
+| `block_rfq_id` | The RFQ **request** (the negotiation) | Exists from the moment the taker creates the RFQ, throughout quoting, viewing, editing, cancelling, and acceptance | RFQ creation, quote add/edit/cancel, quote lookups, taker/maker RFQ subscriptions |
+| `block_trade_id` | The **executed Block RFQ trade** produced when the RFQ is filled | Only exists after the RFQ transitions to `filled` | Trade notifications, trade history endpoints, per-leg trades on `user.trades.{instrument_name}.{interval}` |
+| `block_rfq_quote_id` | A single maker quote against an RFQ | Exists from `add_block_rfq_quote` until the quote is cancelled, replaced, or filled | Quote endpoints and, on the **maker side only**, the resulting trade notification |
+
+When a quote is accepted, the multi-leg RFQ generates a **separate trade notification for each leg** on that leg's `user.trades.{instrument_name}.{interval}` channel. Each of those trades carries the same `block_rfq_id` and `block_trade_id`, letting you group all legs of the same execution.
+
+## Taker Rating
+
+Deribit tracks how reliably takers fill the RFQs they create. This **taker rating** is exposed on the `taker_rating` field of a Block RFQ and is visible to makers when they decide whether to quote.
+
+### How the rating is calculated
+
+The rating is based on a weighted **fill ratio** over a rolling 3-month window:
+
+```
+ratio = (unfilled_weight + filled_weight) / filled_weight
+```
+
+Weights are based on the **notional size** of each RFQ. A large RFQ counts more than a small one. An expired or cancelled RFQ only counts toward the ratio if quotes were received on both sides and the first quote arrived within 2 minutes of creation (i.e. the market was genuinely active).
+
+| `taker_rating` | Ratio condition | Example (filled / expired+cancelled) | Ratio | Fill rate |
+| - | - | - | - | - |
+| `"1-2"` | ratio ≤ 2 | 8 filled, 2 unfilled → (2+8)/8 | 1.25 | ≥ 50% |
+| `"2-5"` | 2 \< ratio ≤ 5 | 5 filled, 15 unfilled → (15+5)/5 | 4.0 | 20–50% |
+| `"5-20"` | 5 \< ratio ≤ 20 | 2 filled, 18 unfilled → (18+2)/2 | 10.0 | 5–20% |
+| `"20+"` | ratio > 20, or 0 fills | 1 filled, 25 unfilled → (25+1)/1 | 26.0 | \< 5% |
+| `null` | Fewer than 6 qualifying RFQs | n/a | n/a | Insufficient data |
+
+### What this means in practice
+
+* A `null` rating means the taker is new or infrequent. Makers have no historical signal.
+* A low ratio (e.g. `"1-2"`) indicates the taker consistently follows through on quoted RFQs.
+* A high ratio (e.g. `"20+"`) indicates the taker frequently lets RFQs expire or cancels after receiving quotes, which may discourage makers from quoting.
+
+Takers can improve their rating by cancelling RFQs promptly when they are no longer needed (before quotes arrive), rather than letting them expire.
+
+## Pre-Allocation
+
+Block RFQ supports pre-allocation, allowing takers to split the total amount between different (sub)accounts. Each allocation must specify:
+
+* `user_id` (for direct allocation) or `client_info` (for broker allocation)
+* `amount` - The allocated amount
+
+**Example:**
+
+```json theme={null}
+{
+  "trade_allocations": [
+    {
+      "user_id": 12345,
+      "amount": 50
+    },
+    {
+      "user_id": 67890,
+      "amount": 50
+    }
+  ]
+}
+```
+
+> [!NOTE]
+>
+> The `fee` field appears only in responses after the trade is executed, not in the request.
+
+## Market Maker Protection (MMP)
+
+Block RFQ supports Market Maker Protection (MMP) to protect makers from having too many quotes filled when quoting multiple Block RFQs simultaneously. MMP can be configured separately for Block RFQ quoting and operates independently from normal order/quote MMP triggers.
+
+See [Market Maker Protection](https://docs.deribit.com/articles/market-maker-protection.md) for more details on configuring MMP for Block RFQ.
+
+## Subscriptions
+
+Block RFQ provides several WebSocket subscription channels:
+
+### For Makers
+
+* `block_rfq.maker.{currency}` - New Block RFQ notifications
+* `block_rfq.maker.quotes.{currency}` - Quote state notifications
+
+### For Takers
+
+* `block_rfq.taker.{currency}` - Block RFQ state notifications (includes trades if filled)
+
+### Public
+
+* `block_rfq.trades.{currency}` - Recent Block RFQ trade notifications
+
+## Rate Limits
+
+The following Block RFQ methods have specific rate limits:
+
+* [`private/add_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-add_block_rfq_quote)
+* [`private/edit_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-edit_block_rfq_quote)
+* [`private/cancel_block_rfq_quote`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq_quote)
+* [`private/cancel_all_block_rfq_quotes`](https://docs.deribit.com/api-reference/block-rfq/private-cancel_all_block_rfq_quotes)
+
+See [Rate Limits](https://docs.deribit.com/articles/rate-limits.md) for detailed information.
+
+## Error Handling
+
+Common Block RFQ errors include:
+
+* `too_many_quotes_per_block_rfq` - Number of quotes for single Block RFQ exceeded
+* `too_many_quotes_per_block_rfq_side` - Number of quotes per single Block RFQ side exceeded
+* `too_many_open_block_rfqs` - Number of open Block RFQs by taker exceeds configured max amount
+* `account_quote_limit_crossed` - Block RFQ quote limits set for the account were crossed
+* `inverse_future_cross_trading` - Placed Block RFQ quote would cross trade inverse futures with Block RFQ quote limits
+
+See [Error Codes](https://docs.deribit.com/articles/errors.md) for a complete list of error codes.
+
+## Best Practices
+
+1. **Monitor Subscriptions**: Subscribe to relevant Block RFQ channels to receive real-time updates
+2. **Quote Management**: Regularly review and update your quotes to remain competitive
+3. **Error Handling**: Implement proper error handling for rate limits and validation errors
+4. **Pre-Allocation**: Use pre-allocation to efficiently distribute large trades across accounts
+5. **MMP Configuration**: Configure MMP appropriately to protect against excessive quote fills
+
+
+## Related topics
+
+- [private/cancel_block_rfq](https://docs.deribit.com/api-reference/block-rfq/private-cancel_block_rfq.md)
+- [private/create_block_rfq](https://docs.deribit.com/api-reference/block-rfq/private-create_block_rfq.md)
+- [block_rfq.trades.(currency) ](https://docs.deribit.com/subscriptions/block-rfq/block_rfqtradescurrency.md)
+- [block_rfq.taker.(currency) ](https://docs.deribit.com/subscriptions/block-rfq/block_rfqtakercurrency.md)
+- [private/get_block_rfq_makers](https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfq_makers.md)

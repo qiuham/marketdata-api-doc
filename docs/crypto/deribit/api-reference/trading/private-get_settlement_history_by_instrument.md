@@ -1,0 +1,333 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_instrument
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:50.905709
+---
+
+# private/get_settlement_history_by_instrument
+
+> Retrieves settlement, delivery, and bankruptcy events for a specific instrument that have affected your account.
+
+**Settlement vs. delivery:** Settlement is a daily event (at 08:00 UTC) for futures and perpetual positions that converts unrealized profit and loss into realized profit and loss. Option positions do not settle. Delivery is a one-time event that occurs when a futures or options contract expires — any remaining open position is closed at the delivery price. Delivery does not apply to perpetual or spot instruments. Both events take place at 08:00 UTC, which is why they are sometimes conflated.
+
+Results can be filtered by settlement type and timestamp. Use pagination parameters (`count` and `continuation`) to retrieve large settlement histories. This method is useful for tracking settlement events for a specific instrument.
+
+**Scope:** `trade:read`
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fprivate%2Fget_settlement_history_by_instrument)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /private/get_settlement_history_by_instrument
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /private/get_settlement_history_by_instrument:
+    get:
+      tags:
+        - Trading
+        - Private
+      description: >+
+        Retrieves settlement, delivery, and bankruptcy events for a specific
+        instrument that have affected your account.
+
+
+        **Settlement vs. delivery:** Settlement is a daily event (at 08:00 UTC)
+        for futures and perpetual positions that converts unrealized profit and
+        loss into realized profit and loss. Option positions do not settle.
+        Delivery is a one-time event that occurs when a futures or options
+        contract expires — any remaining open position is closed at the delivery
+        price. Delivery does not apply to perpetual or spot instruments. Both
+        events take place at 08:00 UTC, which is why they are sometimes
+        conflated.
+
+
+        Results can be filtered by settlement type and timestamp. Use pagination
+        parameters (`count` and `continuation`) to retrieve large settlement
+        histories. This method is useful for tracking settlement events for a
+        specific instrument.
+
+
+        **Scope:** `trade:read`
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fprivate%2Fget_settlement_history_by_instrument)
+
+      parameters:
+        - name: instrument_name
+          required: true
+          in: query
+          schema:
+            $ref: '#/components/schemas/instrument_name'
+          description: Instrument name
+        - in: query
+          name: type
+          required: false
+          schema:
+            $ref: '#/components/schemas/settlement_type'
+          description: Settlement type
+        - name: count
+          required: false
+          in: query
+          schema:
+            type: integer
+            maximum: 1000
+            minimum: 1
+          description: Number of requested items, default - `20`, maximum - `1000`
+        - name: continuation
+          in: query
+          required: false
+          schema:
+            type: string
+            example: xY7T6cutS3t2B9YtaDkE6TS379oKnkzTvmEDUnEUP2Msa9xKWNNaT
+          description: Continuation token for pagination
+        - in: query
+          name: search_start_timestamp
+          required: false
+          schema:
+            $ref: '#/components/schemas/timestamp'
+          description: >-
+            The latest timestamp to return result from (milliseconds since the
+            UNIX epoch)
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 2192
+                  method: private/get_settlement_history_by_instrument
+                  params:
+                    instrument_name: ETH-22FEB19
+                    type: settlement
+                    count: 1
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateSettlementResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 2192
+                    result:
+                      settlements:
+                        - type: settlement
+                          timestamp: 1550475692526
+                          session_profit_loss: 0.038358299
+                          profit_loss: -0.001783937
+                          position: -66
+                          mark_price: 121.67
+                          instrument_name: ETH-22FEB19
+                          index_price: 119.8
+                      continuation: xY7T6cusbMBNpH9SNmKb94jXSBxUPojJEdCPL4YociHBUgAhWQvEP
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/get_settlement_history_by_instrument \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 2192,
+              "method": "private/get_settlement_history_by_instrument",
+              "params": {
+                "instrument_name": "ETH-22FEB19",
+                "type": "settlement",
+                "count": 1
+              }
+            }'
+components:
+  schemas:
+    instrument_name:
+      example: BTC-PERPETUAL
+      type: string
+      description: Unique instrument identifier
+    settlement_type:
+      enum:
+        - settlement
+        - delivery
+        - bankruptcy
+      type: string
+      description: >-
+        The type of settlement event. `settlement`: daily settlement of futures
+        and perpetual positions at 08:00 UTC, converting unrealized profit and
+        loss into realized profit and loss (option positions do not settle).
+        `delivery`: one-time expiration of a futures or options contract at
+        08:00 UTC, closing any remaining open position at the delivery price
+        (does not apply to perpetual or spot instruments). `bankruptcy`.
+    timestamp:
+      example: 1536569522277
+      type: integer
+      description: The timestamp (milliseconds since the Unix epoch)
+    PrivateSettlementResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          properties:
+            continuation:
+              $ref: '#/components/schemas/continuation'
+            settlements:
+              type: array
+              items:
+                $ref: '#/components/schemas/settlement'
+          required:
+            - continuation
+            - settlements
+          type: object
+      required:
+        - result
+        - jsonrpc
+      type: object
+    continuation:
+      example: xY7T6cutS3t2B9YtaDkE6TS379oKnkzTvmEDUnEUP2Msa9xKWNNaT
+      type: string
+      description: Continuation token for pagination.
+    settlement:
+      properties:
+        funding:
+          example: -0.000002511
+          type: number
+          description: funding (in base currency ; settlement for perpetual product only)
+        funded:
+          example: 0
+          type: number
+          description: funded amount (bankruptcy only)
+        index_price:
+          example: 11008.37
+          type: number
+          description: >-
+            underlying index price at time of event (in quote currency;
+            settlement and delivery only)
+        instrument_name:
+          example: BTC-30MAR18
+          type: string
+          description: instrument name (settlement and delivery only)
+        mark_price:
+          example: 11000
+          type: number
+          description: >-
+            mark price for at the settlement time (in quote currency; settlement
+            and delivery only)
+        position:
+          example: 1000
+          type: number
+          description: position size (in quote currency; settlement and delivery only)
+        profit_loss:
+          example: 0
+          type: number
+          description: >-
+            Platform-wide aggregate realized profit and loss for this settlement
+            event, in base currency. This is the sum of the realized P&L of
+            every position holder at the settlement or delivery price — it is
+            **not** a per-account value. Present for `settlement` and `delivery`
+            types only.
+        session_bankruptcy:
+          example: 0.001160788
+          type: number
+          description: value of session bankruptcy (in base currency; bankruptcy only)
+        session_profit_loss:
+          example: 0.001160788
+          type: number
+          description: >-
+            Platform-wide aggregate total session profit and loss for this
+            settlement event, in base currency. This is the sum of each position
+            holder's session P&L (combining realized and unrealized components)
+            across all users who held positions in the instrument — it is
+            **not** a per-account value.
+        session_tax:
+          example: -0.001160788
+          type: number
+          description: total amount of paid taxes/fees (in base currency; bankruptcy only)
+        session_tax_rate:
+          example: 0.000103333
+          type: number
+          description: rate of paid taxes/fees (in base currency; bankruptcy only)
+        socialized:
+          example: -0.001160788
+          type: number
+          description: >-
+            the amount of the socialized losses (in base currency; bankruptcy
+            only)
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+        type:
+          $ref: '#/components/schemas/settlement_type'
+      required:
+        - type
+        - timestamp
+        - session_profit_loss
+        - position
+        - instrument_name
+        - index_price
+        - funding
+      type: object
+
+````
+
+## Related topics
+
+- [private/get_settlement_history_by_currency](https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_currency.md)
+- [private/get_order_history_by_instrument](https://docs.deribit.com/api-reference/trading/private-get_order_history_by_instrument.md)
+- [private/get_trigger_order_history](https://docs.deribit.com/api-reference/trading/private-get_trigger_order_history.md)
+- [private/get_order_history_by_currency](https://docs.deribit.com/api-reference/trading/private-get_order_history_by_currency.md)
+- [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)

@@ -1,0 +1,279 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/combo-books/private-create_combo
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:36.031768
+---
+
+# private/create_combo
+
+> Verifies and creates a combo book or returns an existing combo matching the given trades. Combos allow trading on multiple instruments (futures and options) simultaneously as a single strategy.
+
+If a combo matching the provided trades already exists, this method returns the existing combo. Otherwise, it creates a new combo book with the specified leg structure.
+
+**Scope:** `trade:read_write`
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fprivate%2Fcreate_combo)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /private/create_combo
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /private/create_combo:
+    get:
+      tags:
+        - Combo Books
+        - Matching Engine
+        - Private
+      description: >+
+        Verifies and creates a combo book or returns an existing combo matching
+        the given trades. Combos allow trading on multiple instruments (futures
+        and options) simultaneously as a single strategy.
+
+
+        If a combo matching the provided trades already exists, this method
+        returns the existing combo. Otherwise, it creates a new combo book with
+        the specified leg structure.
+
+
+        **Scope:** `trade:read_write`
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fprivate%2Fcreate_combo)
+
+      parameters:
+        - in: query
+          name: trades
+          required: true
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                instrument_name:
+                  $ref: '#/components/schemas/instrument_name'
+                amount:
+                  $ref: '#/components/schemas/amount'
+                direction:
+                  $ref: '#/components/schemas/direction'
+          description: List of trades used to create a combo
+          style: form
+          explode: true
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 6
+                  method: private/create_combo
+                  params:
+                    trades:
+                      - instrument_name: BTC-29APR22-37500-C
+                        amount: '1'
+                        direction: buy
+                      - instrument_name: BTC-29APR22-37500-P
+                        amount: '1'
+                        direction: sell
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrivateCreateComboResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 6
+                    result:
+                      state_timestamp: 1650960943922
+                      state: active
+                      legs:
+                        - instrument_name: BTC-29APR22-37500-C
+                          amount: 1
+                        - instrument_name: BTC-29APR22-37500-P
+                          amount: -1
+                      id: BTC-REV-29APR22-37500
+                      instrument_id: 52
+                      creation_timestamp: 1650960943000
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/create_combo \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 6,
+              "method": "private/create_combo",
+              "params": {
+                "trades": [
+                  {
+                    "instrument_name": "BTC-29APR22-37500-C",
+                    "amount": "1",
+                    "direction": "buy"
+                  },
+                  {
+                    "instrument_name": "BTC-29APR22-37500-P",
+                    "amount": "1",
+                    "direction": "sell"
+                  }
+                ]
+              }
+            }'
+components:
+  schemas:
+    instrument_name:
+      example: BTC-PERPETUAL
+      type: string
+      description: Unique instrument identifier
+    amount:
+      type: number
+      description: >-
+        It represents the requested order size. For perpetual and inverse
+        futures the amount is in USD units. For options and linear futures it is
+        the underlying base currency coin.
+    direction:
+      enum:
+        - buy
+        - sell
+      type: string
+      description: 'Direction: `buy`, or `sell`'
+    PrivateCreateComboResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          $ref: '#/components/schemas/combo'
+      required:
+        - result
+        - jsonrpc
+      type: object
+    combo:
+      properties:
+        id:
+          $ref: '#/components/schemas/combo_id'
+        instrument_id:
+          $ref: '#/components/schemas/instrument_id'
+        state:
+          $ref: '#/components/schemas/combo_state'
+        state_timestamp:
+          $ref: '#/components/schemas/timestamp'
+          description: >-
+            Time the combo book last changed state (milliseconds since the UNIX
+            epoch).
+        creation_timestamp:
+          $ref: '#/components/schemas/timestamp'
+          description: >-
+            Time the combo instrument was created (milliseconds since the UNIX
+            epoch).
+        legs:
+          type: array
+          items:
+            $ref: '#/components/schemas/combo_leg'
+      type: object
+      description: >-
+        Combo book metadata from `public/get_combos`,
+        `public/get_combo_details`, and `private/create_combo`. Not the full
+        instrument object returned by `public/get_instrument`.
+    combo_id:
+      example: BTC-FS-31DEC21-PERP
+      type: string
+      description: Unique combo identifier
+    instrument_id:
+      type: integer
+      description: Instrument ID
+    combo_state:
+      enum:
+        - active
+        - inactive
+      type: string
+      description: >-
+        Combo book state: `"active"` or `"inactive"`. Distinct from the
+        instrument order-book `state` (`open`, `locked`, and so on).
+    timestamp:
+      example: 1536569522277
+      type: integer
+      description: The timestamp (milliseconds since the Unix epoch)
+    combo_leg:
+      properties:
+        instrument_name:
+          $ref: '#/components/schemas/instrument_name'
+        amount:
+          $ref: '#/components/schemas/combo_leg_amount'
+      type: object
+    combo_leg_amount:
+      example: -1
+      type: integer
+      description: >-
+        Size multiplier of a leg. A negative value indicates that the trades on
+        given leg are in opposite direction to the combo trades they originate
+        from
+
+````
+
+## Related topics
+
+- [Security Definition Request(c) (Production FIX API)](https://docs.deribit.com/fix-api/production/security-definition-request.md)
+- [public/get_combos](https://docs.deribit.com/api-reference/combo-books/public-get_combos.md)
+- [public/get_combo_details](https://docs.deribit.com/api-reference/combo-books/public-get_combo_details.md)
+- [private/create_block_rfq](https://docs.deribit.com/api-reference/block-rfq/private-create_block_rfq.md)
+- [private/create_subaccount](https://docs.deribit.com/api-reference/account-management/private-create_subaccount.md)

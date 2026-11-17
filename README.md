@@ -24,6 +24,7 @@
 | crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-11 |
 | crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-11 |
 | crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 518 | 2026-11-11 |
+| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-16 |
 
 ## 快速开始
 
@@ -63,6 +64,7 @@ marketdata-api-doc/
 │   │   ├── binance.yaml
 │   │   ├── bybit.yaml
 │   │   ├── coinbase.yaml
+│   │   ├── deribit.yaml
 │   │   ├── gateio.yaml
 │   │   ├── hyperliquid.yaml
 │   │   ├── kraken.yaml
@@ -72,6 +74,7 @@ marketdata-api-doc/
 │           ├── binance.yaml
 │           ├── bybit.yaml
 │           ├── coinbase.yaml
+│           ├── deribit.yaml
 │           ├── gateio.yaml
 │           ├── hyperliquid.yaml
 │           ├── kraken.yaml
@@ -81,6 +84,7 @@ marketdata-api-doc/
 │       ├── binance/                                # 825 Markdown docs
 │       ├── bybit/                                  # 546 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
+│       ├── deribit/                                # 342 Markdown docs
 │       ├── gateio/                                 # 66 Markdown docs
 │       ├── hyperliquid/                            # 37 Markdown docs
 │       ├── kraken/                                 # 243 Markdown docs
@@ -90,6 +94,7 @@ marketdata-api-doc/
 │   ├── crypto/binance.json
 │   ├── crypto/bybit.json
 │   ├── crypto/coinbase.json
+│   ├── crypto/deribit.json
 │   ├── crypto/gateio.json
 │   ├── crypto/hyperliquid.json
 │   ├── crypto/kraken.json
@@ -126,4 +131,5 @@ updated_at: 2026-11-11 14:17:18.632567
 ## 已接入范围
 
 - `crypto/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
+- `crypto/deribit`：新接入 Deribit，从文档站每页的原始 Markdown 直接取。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

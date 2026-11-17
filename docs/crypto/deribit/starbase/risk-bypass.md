@@ -1,0 +1,53 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/starbase/risk-bypass
+api_type: Starbase
+updated_at: 2026-11-16 20:32:21.188297
+---
+
+# Risk Bypass
+
+> How privileged Starbase sessions can bypass pre-trade risk checks for certain low-latency workflows. Covers configuration, scope, and eligibility requirements.
+
+Starbase allows MMP orders and quotes to bypass the risk engine. Starbase can be assured that any single execution in the matching engine cannot lead to more than twice the Max Quote Quantity to be traded. A hold on initial margin is imposed on each Portfolio based on the Max Quote Quantity of each MMP Group. Together, this means that the total immediate risk exposure of a portfolio is bounded by MMP and sufficient margin is already taken to cover this risk exposure. When processing orders and quotes, Starbase does not need to risk-check these in-flight and as such these orders and quotes go straight from the gateway to the matching engine, bypassing the risk module.
+
+> [!WARNING]
+>
+> **MMP configuration requirement**: For the risk bypass to work, the **Quantity Limit must be smaller than or equal to the Max Quote Quantity** in the MMP configuration. If the Quantity Limit exceeds the Max Quote Quantity, MMP-tagged orders and quotes do not bypass the risk engine. Check your settings with [`private/get_mmp_config`](https://docs.deribit.com/api-reference/trading/private-get_mmp_config) and adjust them with [`private/set_mmp_config`](https://docs.deribit.com/api-reference/trading/private-set_mmp_config).
+
+To explain further, please see the following sequence of events:
+
+1. Alice has a Max Quote Quantity of 10 BTC and a Quantity Limit of 10 BTC (Quantity Limit ≤ Max Quote Quantity, so the risk bypass applies)
+2. A margin hold is placed in Alice's account based on the Max Quote Quantity
+3. Alice enters double-sided quotes for each BTC\_USD option order book or \~1600 orders
+4. Bob sends an order that fills Alice for 9 BTC
+5. Bob sends a second order that fills Alice for 10 BTC
+6. Alice's MMP is triggered and atomically cancels all her orders
+7. Starbase prevents Alice from re-entering the market for 1 second
+8. Deribit's margin engine recalculates IM based on Alice's fills and communicates this to Starbase
+9. After 1 second, Alice is free to re-enter the market
+
+## Recommended: MMP risk bypass for order entry
+
+Utilizing the MMP risk bypass is the **lowest-latency method for market access** in Starbase. MMP-enabled flow goes straight from the gateway to the matching engine, so no order-entry path that passes through the risk module can be faster.
+
+This works for both orders and mass quotes:
+
+* **Orders**: set the `MMP` flag (field 10, bit 4) on [`NewOrderRequest`](https://docs.deribit.com/starbase/placing-new-order#neworderrequest-100) to tag the order for the default MMP group
+* **Mass quotes**: MMP is always enforced for quotes via their MMP group, so mass quoting uses the bypass by default
+
+The bypass applies to any MMP-tagged order, whether the order makes or takes. It is not restricted to resting, liquidity-providing flow. An MMP-tagged order that aggresses skips the risk module exactly like a quote does. This is independent of the [speed bump](https://docs.deribit.com/starbase/speed-bumps.md): on speed-bumped instruments, an aggressing order is still made pending for the speed bump duration, regardless of MMP tagging.
+
+Most clients integrating with Starbase should prefer this path for all order entry and quoting:
+
+* **Lowest latency**: the risk engine is not on the critical path for MMP-enabled flow
+* **Reduced system load**: bypassing the risk module reduces strain on Starbase's risk engine and Deribit's margin engine
+
+
+## Related topics
+
+- [Production Readiness Checklist](https://docs.deribit.com/starbase/production-readiness-checklist.md)
+- [Placing a New Order](https://docs.deribit.com/starbase/placing-new-order.md)
+- [Starbase Market Maker Protection (MMP)](https://docs.deribit.com/starbase/mmp.md)
+- [Order Management](https://docs.deribit.com/articles/order-management-best-practices.md)
+- [Starbase Connectivity Quickstart](https://docs.deribit.com/starbase/quickstart.md)

@@ -1,0 +1,540 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/subscriptions/block-rfq/block_rfqmakerquotescurrency
+api_type: WebSocket
+updated_at: 2026-11-16 20:32:08.197014
+---
+
+# block_rfq.maker.quotes.(currency)
+
+> Get notifications about the state of your Block RFQ quotes. Subscribe to this channel to receive real-time updates when your quotes are added, edited, cancelled, or when quotes are accepted by takers.
+
+**📖 Related Article:** [Deribit Block RFQ API walkthrough](https://docs.deribit.com/articles/block-rfq-api-walkthrough)
+
+
+## AsyncAPI
+
+````yaml specifications/deribit_asyncapi.json block_rfq.maker.quotes.(currency)
+id: block_rfq.maker.quotes.(currency)
+title: 'block_rfq.maker.quotes.(currency) '
+description: >
+  Get notifications about the state of your Block RFQ quotes. Subscribe to this
+  channel to receive real-time updates when your quotes are added, edited,
+  cancelled, or when quotes are accepted by takers.
+
+
+  **📖 Related Article:** [Deribit Block RFQ API
+  walkthrough](https://docs.deribit.com/articles/block-rfq-api-walkthrough)
+servers:
+  - id: production
+    protocol: wss
+    host: deribit.com/ws/api/v2
+    bindings: []
+    variables: []
+  - id: testnet
+    protocol: wss
+    host: test.deribit.com/ws/api/v2
+    bindings: []
+    variables: []
+address: block_rfq.maker.quotes.(currency)
+parameters:
+  - id: currency
+    jsonSchema:
+      type: string
+      description: >
+        The currency symbol or `"any"` for all.
+
+
+        **📖 Related Article:** [Using the currency
+        Parameter](https://docs.deribit.com/articles/currency-parameter)
+      enum:
+        - BTC
+        - ETH
+        - USDC
+        - USDT
+        - EURR
+        - any
+    description: >
+      The currency symbol or `"any"` for all.
+
+
+      **📖 Related Article:** [Using the currency
+      Parameter](https://docs.deribit.com/articles/currency-parameter)
+    type: string
+    required: true
+    deprecated: false
+bindings: []
+operations:
+  - &ref_2
+    id: send_subscribe_block_rfq_maker_quotes_currency
+    title: Send subscribe request for block_rfq
+    description: Client sends subscription request for block_rfq updates
+    type: send
+    messages:
+      - &ref_4
+        id: subscription_message
+        contentType: application/json
+        payload:
+          - name: Subscription Notification Data
+            description: Server sends subscription notification data
+            type: object
+            properties:
+              - name: data
+                type: array
+                required: true
+                properties:
+                  - name: creation_timestamp
+                    type: integer
+                    description: >-
+                      The timestamp when quote was created (milliseconds since
+                      the Unix epoch)
+                    required: false
+                  - name: last_update_timestamp
+                    type: integer
+                    description: >-
+                      Timestamp of the last update of the quote (milliseconds
+                      since the UNIX epoch)
+                    required: false
+                  - name: block_rfq_id
+                    type: integer
+                    description: ID of the Block RFQ
+                    required: false
+                  - name: block_rfq_quote_id
+                    type: integer
+                    description: ID of the Block RFQ quote
+                    required: false
+                  - name: quote_state
+                    type: string
+                    description: State of the quote
+                    required: false
+                  - name: execution_instruction
+                    type: string
+                    description: >-
+                      Execution instruction of the quote. Default -
+                      `any_part_of`
+
+
+                      - `"all_or_none (AON)"` - The quote can only be filled
+                      entirely or not at all, ensuring that its amount matches
+                      the amount specified in the Block RFQ. Additionally,
+                      'all_or_none' quotes have priority over 'any_part_of'
+                      quotes at the same price level.
+
+                      - `"any_part_of (APO)"` - The quote can be filled either
+                      partially or fully, with the filled amount potentially
+                      being less than the Block RFQ amount.
+                    enumValues:
+                      - any_part_of
+                      - all_or_none
+                    required: false
+                  - name: price
+                    type: number
+                    description: Price of a quote
+                    required: false
+                  - name: amount
+                    type: number
+                    description: >-
+                      This value multiplied by the ratio of a leg gives trade
+                      size on that leg.
+                    required: false
+                  - name: direction
+                    type: string
+                    description: Direction of trade from the maker perspective
+                    enumValues:
+                      - buy
+                      - sell
+                    required: false
+                  - name: filled_amount
+                    type: number
+                    description: >-
+                      Filled amount of the quote. For perpetual and futures the
+                      filled_amount is in USD units, for options - in units or
+                      corresponding cryptocurrency contracts, e.g., BTC or ETH.
+                    required: false
+                  - name: legs
+                    type: array
+                    required: false
+                    properties:
+                      - name: ratio
+                        type: integer
+                        description: Ratio of amount between legs
+                        required: false
+                      - name: instrument_name
+                        type: string
+                        description: Unique instrument identifier
+                        required: false
+                      - name: direction
+                        type: string
+                        description: 'Direction: `buy`, or `sell`'
+                        enumValues:
+                          - buy
+                          - sell
+                        required: false
+                      - name: price
+                        type: number
+                        description: Price for a leg
+                        required: false
+                  - name: hedge
+                    type: object
+                    required: false
+                    properties:
+                      - name: amount
+                        type: integer
+                        description: >-
+                          It represents the requested hedge leg size. For
+                          perpetual and inverse futures the amount is in USD
+                          units. For options and linear futures it is the
+                          underlying base currency coin.
+                        required: false
+                      - name: instrument_name
+                        type: string
+                        description: Unique instrument identifier
+                        required: false
+                      - name: direction
+                        type: string
+                        description: 'Direction: `buy`, or `sell`'
+                        enumValues:
+                          - buy
+                          - sell
+                        required: false
+                      - name: price
+                        type: number
+                        description: Price for a hedge leg
+                        required: false
+                  - name: replaced
+                    type: boolean
+                    description: '`true` if the quote was edited, otherwise `false`.'
+                    required: false
+                  - name: label
+                    type: string
+                    description: User defined label for the quote (maximum 64 characters)
+                    required: false
+                  - name: app_name
+                    type: string
+                    description: >-
+                      The name of the application that placed the quote on
+                      behalf of the user (optional).
+                    required: false
+                  - name: quote_state_reason
+                    type: string
+                    description: Reason of quote cancellation
+                    required: false
+        headers: []
+        jsonPayloadSchema:
+          type: object
+          description: Response containing notification data
+          properties:
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  creation_timestamp:
+                    description: >-
+                      The timestamp when quote was created (milliseconds since
+                      the Unix epoch)
+                    type: integer
+                    example: 1536569522277
+                    x-parser-schema-id: <anonymous-schema-1692>
+                  last_update_timestamp:
+                    type: integer
+                    example: 1536569522277
+                    description: >-
+                      Timestamp of the last update of the quote (milliseconds
+                      since the UNIX epoch)
+                    x-parser-schema-id: <anonymous-schema-1693>
+                  block_rfq_id:
+                    type: integer
+                    description: ID of the Block RFQ
+                    x-parser-schema-id: <anonymous-schema-1694>
+                  block_rfq_quote_id:
+                    type: integer
+                    description: ID of the Block RFQ quote
+                    x-parser-schema-id: <anonymous-schema-1695>
+                  quote_state:
+                    description: State of the quote
+                    type: string
+                    x-parser-schema-id: <anonymous-schema-1696>
+                  execution_instruction:
+                    type: string
+                    description: >-
+                      Execution instruction of the quote. Default -
+                      `any_part_of`
+
+
+                      - `"all_or_none (AON)"` - The quote can only be filled
+                      entirely or not at all, ensuring that its amount matches
+                      the amount specified in the Block RFQ. Additionally,
+                      'all_or_none' quotes have priority over 'any_part_of'
+                      quotes at the same price level.
+
+                      - `"any_part_of (APO)"` - The quote can be filled either
+                      partially or fully, with the filled amount potentially
+                      being less than the Block RFQ amount.
+                    enum:
+                      - any_part_of
+                      - all_or_none
+                    x-parser-schema-id: <anonymous-schema-1697>
+                  price:
+                    description: Price of a quote
+                    type: number
+                    x-parser-schema-id: <anonymous-schema-1698>
+                  amount:
+                    description: >-
+                      This value multiplied by the ratio of a leg gives trade
+                      size on that leg.
+                    type: number
+                    x-parser-schema-id: <anonymous-schema-1699>
+                  direction:
+                    type: string
+                    description: Direction of trade from the maker perspective
+                    enum:
+                      - buy
+                      - sell
+                    x-parser-schema-id: <anonymous-schema-1700>
+                  filled_amount:
+                    type: number
+                    description: >-
+                      Filled amount of the quote. For perpetual and futures the
+                      filled_amount is in USD units, for options - in units or
+                      corresponding cryptocurrency contracts, e.g., BTC or ETH.
+                    x-parser-schema-id: <anonymous-schema-1701>
+                  legs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ratio:
+                          description: Ratio of amount between legs
+                          type: integer
+                          x-parser-schema-id: <anonymous-schema-1704>
+                        instrument_name:
+                          type: string
+                          description: Unique instrument identifier
+                          example: BTC-PERPETUAL
+                          x-parser-schema-id: <anonymous-schema-1705>
+                        direction:
+                          type: string
+                          description: 'Direction: `buy`, or `sell`'
+                          enum:
+                            - buy
+                            - sell
+                          x-parser-schema-id: <anonymous-schema-1706>
+                        price:
+                          description: Price for a leg
+                          type: number
+                          x-parser-schema-id: <anonymous-schema-1707>
+                      x-parser-schema-id: <anonymous-schema-1703>
+                    x-parser-schema-id: <anonymous-schema-1702>
+                  hedge:
+                    type: object
+                    properties:
+                      amount:
+                        description: >-
+                          It represents the requested hedge leg size. For
+                          perpetual and inverse futures the amount is in USD
+                          units. For options and linear futures it is the
+                          underlying base currency coin.
+                        type: integer
+                        x-parser-schema-id: <anonymous-schema-1709>
+                      instrument_name:
+                        type: string
+                        description: Unique instrument identifier
+                        example: BTC-PERPETUAL
+                        x-parser-schema-id: <anonymous-schema-1710>
+                      direction:
+                        type: string
+                        description: 'Direction: `buy`, or `sell`'
+                        enum:
+                          - buy
+                          - sell
+                        x-parser-schema-id: <anonymous-schema-1711>
+                      price:
+                        description: Price for a hedge leg
+                        type: number
+                        x-parser-schema-id: <anonymous-schema-1712>
+                    x-parser-schema-id: <anonymous-schema-1708>
+                  replaced:
+                    type: boolean
+                    description: '`true` if the quote was edited, otherwise `false`.'
+                    x-parser-schema-id: <anonymous-schema-1713>
+                  label:
+                    type: string
+                    description: User defined label for the quote (maximum 64 characters)
+                    x-parser-schema-id: <anonymous-schema-1714>
+                  app_name:
+                    description: >-
+                      The name of the application that placed the quote on
+                      behalf of the user (optional).
+                    type: string
+                    example: Example Application
+                    x-parser-schema-id: <anonymous-schema-1715>
+                  quote_state_reason:
+                    description: Reason of quote cancellation
+                    type: string
+                    x-parser-schema-id: <anonymous-schema-1716>
+                x-parser-schema-id: <anonymous-schema-1691>
+              x-parser-schema-id: <anonymous-schema-1690>
+          required:
+            - data
+          additionalProperties: false
+          x-parser-schema-id: <anonymous-schema-1689>
+        title: Subscription Notification Data
+        description: Server sends subscription notification data
+        example: |-
+          {
+            "data": [
+              {
+                "label": "example_quote",
+                "price": 10,
+                "direction": "buy",
+                "legs": [
+                  {
+                    "price": 10,
+                    "direction": "buy",
+                    "instrument_name": "BTC-16NOV24-82000-C",
+                    "ratio": 1
+                  }
+                ],
+                "amount": 25,
+                "block_rfq_id": 724,
+                "replaced": false,
+                "filled_amount": 0,
+                "last_update_timestamp": 1731665928291,
+                "creation_timestamp": 1731665928291,
+                "block_rfq_quote_id": 1301,
+                "quote_state": "open"
+              }
+            ]
+          }
+        bindings: []
+        extensions:
+          - id: x-parser-unique-object-id
+            value: subscription_message
+    bindings: []
+    extensions: &ref_0
+      - id: x-parser-unique-object-id
+        value: block_rfq.maker.quotes.(currency)
+  - &ref_1
+    id: receive_block_rfq_maker_quotes_currency_updates
+    title: Receive block_rfq updates
+    description: Client receives block_rfq update notifications
+    type: receive
+    messages:
+      - &ref_3
+        id: subscribe_request
+        contentType: application/json
+        payload:
+          - name: Subscription Request
+            description: >-
+              Client sends subscription request to subscribe to notification
+              channel. Please refer to [Notification
+              page](https://docs.deribit.com/articles/notifications) for more
+              information.
+            type: object
+            properties:
+              - name: jsonrpc
+                type: string
+                description: '2.0'
+                required: true
+              - name: id
+                type: integer
+                required: true
+              - name: method
+                type: string
+                enumValues:
+                  - public/subscribe
+                  - private/subscribe
+                required: true
+              - name: params
+                type: object
+                required: true
+                properties:
+                  - name: channels
+                    type: array
+                    required: true
+                    properties:
+                      - name: item
+                        type: string
+                        required: false
+        headers: []
+        jsonPayloadSchema:
+          type: object
+          properties:
+            jsonrpc:
+              type: string
+              const: '2.0'
+              x-parser-schema-id: <anonymous-schema-1683>
+            id:
+              type: integer
+              x-parser-schema-id: <anonymous-schema-1684>
+            method:
+              type: string
+              enum:
+                - public/subscribe
+                - private/subscribe
+              x-parser-schema-id: <anonymous-schema-1685>
+            params:
+              type: object
+              properties:
+                channels:
+                  type: array
+                  items:
+                    type: string
+                    x-parser-schema-id: <anonymous-schema-1688>
+                  x-parser-schema-id: <anonymous-schema-1687>
+              required:
+                - channels
+              x-parser-schema-id: <anonymous-schema-1686>
+          required:
+            - jsonrpc
+            - id
+            - method
+            - params
+          additionalProperties: false
+          x-parser-schema-id: <anonymous-schema-1682>
+        title: Subscription Request
+        description: >-
+          Client sends subscription request to subscribe to notification
+          channel. Please refer to [Notification
+          page](https://docs.deribit.com/articles/notifications) for more
+          information.
+        example: |-
+          {
+            "jsonrpc": "2.0",
+            "method": "private/subscribe",
+            "id": 42,
+            "params": {
+              "channels": [
+                "block_rfq.maker.quotes.BTC"
+              ]
+            }
+          }
+        bindings: []
+        extensions:
+          - id: x-parser-unique-object-id
+            value: subscribe_request
+    bindings: []
+    extensions: *ref_0
+sendOperations:
+  - *ref_1
+receiveOperations:
+  - *ref_2
+sendMessages:
+  - *ref_3
+receiveMessages:
+  - *ref_4
+extensions:
+  - id: x-parser-unique-object-id
+    value: block_rfq.maker.quotes.(currency)
+securitySchemes: []
+
+````
+
+## Related topics
+
+- [Deribit Block RFQ API Walkthrough](https://docs.deribit.com/articles/block-rfq-api-walkthrough.md)
+- [block_rfq.maker.(currency) ](https://docs.deribit.com/subscriptions/block-rfq/block_rfqmakercurrency.md)
+- [block_rfq.taker.(currency) ](https://docs.deribit.com/subscriptions/block-rfq/block_rfqtakercurrency.md)
+- [private/get_block_rfq_quotes](https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfq_quotes.md)
+- [private/add_block_rfq_quote](https://docs.deribit.com/api-reference/block-rfq/private-add_block_rfq_quote.md)

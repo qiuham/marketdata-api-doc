@@ -1,0 +1,167 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/account-management/private-set_announcement_as_read
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:29.201247
+---
+
+# private/set_announcement_as_read
+
+> Marks a specific announcement as read. Once marked as read, the announcement will no longer appear in the `get_new_announcements` response, though it will still be available through `get_announcements`.
+
+This helps track which announcements have been viewed and reduces notification clutter.
+
+**Scope:** `account:read_write`
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fprivate%2Fset_announcement_as_read)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /private/set_announcement_as_read
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /private/set_announcement_as_read:
+    get:
+      tags:
+        - Account Management
+        - Private
+      description: >+
+        Marks a specific announcement as read. Once marked as read, the
+        announcement will no longer appear in the `get_new_announcements`
+        response, though it will still be available through `get_announcements`.
+
+
+        This helps track which announcements have been viewed and reduces
+        notification clutter.
+
+
+        **Scope:** `account:read_write`
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fprivate%2Fset_announcement_as_read)
+
+      parameters:
+        - in: query
+          name: announcement_id
+          required: true
+          schema:
+            type: number
+            example: 1550058362418
+          description: the ID of the announcement
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 5147
+                  method: private/set_announcement_as_read
+                  params:
+                    announcement_id: 1550058362418
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 5147
+                    result: ok
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/private/set_announcement_as_read \
+              --header 'Authorization: Bearer <ACCESS_TOKEN>' \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 5147,
+              "method": "private/set_announcement_as_read",
+              "params": {
+                "announcement_id": 1550058362418
+              }
+            }'
+components:
+  schemas:
+    OkResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: string
+          enum:
+            - ok
+          description: Result of method execution. `ok` in case of success
+      required:
+        - result
+        - jsonrpc
+      type: object
+
+````
+
+## Related topics
+
+- [private/get_new_announcements](https://docs.deribit.com/api-reference/account-management/private-get_new_announcements.md)
+- [private/set_clearance_originator](https://docs.deribit.com/api-reference/wallet/private-set_clearance_originator.md)
+- [private/set_member](https://docs.deribit.com/api-reference/account-management/private-set_member.md)
+- [private/set_mmp_config](https://docs.deribit.com/api-reference/trading/private-set_mmp_config.md)
+- [private/set_email_language](https://docs.deribit.com/api-reference/account-management/private-set_email_language.md)

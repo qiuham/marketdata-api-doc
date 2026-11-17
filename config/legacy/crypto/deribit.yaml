@@ -1,0 +1,16 @@
+name: deribit
+
+crawler:
+  # Deribit 文档站是 Mintlify 多页站点，每页都有原始 Markdown（页面地址加 .md）。
+  # 从 llms 索引出发，递归跟随范围内的 /_llms/ 子索引，收集全部页面。
+  # 只取 Production（正式版），不取 Upcoming（预发布版，内容几乎重复）。
+  index_urls:
+    - "https://docs.deribit.com/_llms/production.txt"
+  index_scope_prefix: "https://docs.deribit.com/_llms/production"
+
+  base_prefix: "https://docs.deribit.com/"
+  max_discovery_pages: 1000
+
+output:
+  base_dir: "docs"
+  dir_name: "deribit"

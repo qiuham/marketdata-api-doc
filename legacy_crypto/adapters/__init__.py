@@ -15,5 +15,6 @@ from . import okx
 from . import kraken
 from . import coinbase
 from . import gateio
+from . import deribit
 
 __all__ = ['get_adapter', 'register_adapter', 'ExchangeAdapter', 'DocumentPage']

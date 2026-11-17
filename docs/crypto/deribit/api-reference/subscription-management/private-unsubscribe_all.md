@@ -1,0 +1,141 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/subscription-management/private-unsubscribe_all
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:44.556577
+---
+
+# private/unsubscribe_all
+
+> Unsubscribe from all the channels subscribed so far. This method takes no parameters.
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fprivate%2Funsubscribe_all)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /private/unsubscribe_all
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /private/unsubscribe_all:
+    get:
+      tags:
+        - Subscription Management
+        - WebSocket Only
+        - Private
+      description: >+
+        Unsubscribe from all the channels subscribed so far. This method takes
+        no parameters.
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fprivate%2Funsubscribe_all)
+
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 154
+                  method: private/unsubscribe_all
+                  params: {}
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 154
+                    result: ok
+          description: Success response
+      x-codeSamples:
+        - lang: json
+          label: WebSocket
+          source: |-
+            {
+              "jsonrpc": "2.0",
+              "id": 154,
+              "method": "private/unsubscribe_all",
+              "params": {}
+            }
+components:
+  schemas:
+    OkResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: string
+          enum:
+            - ok
+          description: Result of method execution. `ok` in case of success
+      required:
+        - result
+        - jsonrpc
+      type: object
+
+````
+
+## Related topics
+
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
+- [private/unsubscribe](https://docs.deribit.com/api-reference/subscription-management/private-unsubscribe.md)
+- [private/cancel_all](https://docs.deribit.com/api-reference/trading/private-cancel_all.md)
+- [public/unsubscribe_all](https://docs.deribit.com/api-reference/subscription-management/public-unsubscribe_all.md)
+- [private/cancel_all_by_currency](https://docs.deribit.com/api-reference/trading/private-cancel_all_by_currency.md)

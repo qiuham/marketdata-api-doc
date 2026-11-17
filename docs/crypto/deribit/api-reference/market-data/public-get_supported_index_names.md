@@ -1,0 +1,184 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/market-data/public-get_supported_index_names
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:42.021209
+---
+
+# public/get_supported_index_names
+
+> Retrieves the identifiers (names) of all supported price indexes, optionally filtered by index type. Price indexes are reference prices used for mark price calculations, settlement, and other market operations.
+
+Use the `type` parameter to filter indexes by type (e.g., spot, futures, etc.). This method helps discover available indexes for use with other API methods.
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_supported_index_names)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /public/get_supported_index_names
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /public/get_supported_index_names:
+    get:
+      tags:
+        - Market Data
+        - Public
+      description: >+
+        Retrieves the identifiers (names) of all supported price indexes,
+        optionally filtered by index type. Price indexes are reference prices
+        used for mark price calculations, settlement, and other market
+        operations.
+
+
+        Use the `type` parameter to filter indexes by type (e.g., spot, futures,
+        etc.). This method helps discover available indexes for use with other
+        API methods.
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_supported_index_names)
+
+      parameters:
+        - name: type
+          required: false
+          in: query
+          schema:
+            type: string
+            enum:
+              - all
+              - spot
+              - derivative
+          description: Type of a cryptocurrency price index
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 2981
+                  method: public/get_supported_index_names
+                  params:
+                    type: all
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetIndexPriceNamesResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 25718
+                    result:
+                      - btc_eth
+                      - btc_usdc
+                      - eth_usdc
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/public/get_supported_index_names \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 2981,
+              "method": "public/get_supported_index_names",
+              "params": {
+                "type": "all"
+              }
+            }'
+components:
+  schemas:
+    PublicGetIndexPriceNamesResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Index name
+              future_combo_creation_enabled:
+                type: boolean
+                description: >-
+                  Whether future combo creation is enabled for this index (only
+                  present when `extended`=`true`)
+              option_combo_creation_enabled:
+                type: boolean
+                description: >-
+                  Whether option combo creation is enabled for this index (only
+                  present when `extended`=`true`)
+            required:
+              - name
+      required:
+        - result
+        - jsonrpc
+      type: object
+
+````
+
+## Related topics
+
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
+- [public/get_index_price](https://docs.deribit.com/api-reference/market-data/public-get_index_price.md)
+- [public/get_index_price_names](https://docs.deribit.com/api-reference/market-data/public-get_index_price_names.md)
+- [public/get_index_chart_data](https://docs.deribit.com/api-reference/market-data/public-get_index_chart_data.md)
+- [public/get_volatility_index_data](https://docs.deribit.com/api-reference/market-data/public-get_volatility_index_data.md)

@@ -1,0 +1,202 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/market-data/public-get_historical_volatility
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:39.455095
+---
+
+# public/get_historical_volatility
+
+> Provides historical volatility data for a given cryptocurrency. Historical volatility measures the degree of price variation over a past period and is useful for risk assessment and option pricing.
+
+The response includes volatility statistics calculated from historical price movements. This data can be used for portfolio risk analysis and understanding market conditions.
+
+**📖 Related Article:** [Options Data Collection Best Practices](https://docs.deribit.com/articles/options-data-collection-best-practices)
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_historical_volatility)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /public/get_historical_volatility
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /public/get_historical_volatility:
+    get:
+      tags:
+        - Market Data
+        - Public
+      description: >+
+        Provides historical volatility data for a given cryptocurrency.
+        Historical volatility measures the degree of price variation over a past
+        period and is useful for risk assessment and option pricing.
+
+
+        The response includes volatility statistics calculated from historical
+        price movements. This data can be used for portfolio risk analysis and
+        understanding market conditions.
+
+
+        **📖 Related Article:** [Options Data Collection Best
+        Practices](https://docs.deribit.com/articles/options-data-collection-best-practices)
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_historical_volatility)
+
+      parameters:
+        - name: currency
+          required: true
+          in: query
+          schema:
+            $ref: '#/components/schemas/currency'
+          description: >
+            The currency symbol.
+
+
+            **📖 Related Article:** [Using the currency
+            Parameter](https://docs.deribit.com/articles/currency-parameter)
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 8387
+                  method: public/get_historical_volatility
+                  params:
+                    currency: BTC
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetHistoricalVolatilityResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 8387
+                    result:
+                      - - 1549720800000
+                        - 14.747743607344217
+                      - - 1549720800000
+                        - 14.747743607344217
+                      - - 1549724400000
+                        - 14.74257778551467
+                      - - 1549728000000
+                        - 14.73502799931767
+                      - - 1549731600000
+                        - 14.73502799931767
+                      - - 1549735200000
+                        - 14.73502799931767
+                      - - 1550228400000
+                        - 46.371891307340015
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/public/get_historical_volatility \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 8387,
+              "method": "public/get_historical_volatility",
+              "params": {
+                "currency": "BTC"
+              }
+            }'
+components:
+  schemas:
+    currency:
+      enum:
+        - BTC
+        - ETH
+        - USDC
+        - USDT
+        - EURR
+      type: string
+      description: Currency, i.e `"BTC"`, `"ETH"`, `"USDC"`
+    PublicGetHistoricalVolatilityResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: integer
+              value:
+                type: number
+            required:
+              - timestamp
+              - value
+      required:
+        - result
+        - jsonrpc
+      type: object
+
+````
+
+## Related topics
+
+- [Options Data Collection](https://docs.deribit.com/articles/options-data-collection-best-practices.md)
+- [public/get_volatility_index_data](https://docs.deribit.com/api-reference/market-data/public-get_volatility_index_data.md)
+- [public/get_mark_price_history](https://docs.deribit.com/api-reference/market-data/public-get_mark_price_history.md)
+- [Market Data Collection](https://docs.deribit.com/articles/market-data-collection-best-practices.md)
+- [public/get_delivery_prices](https://docs.deribit.com/api-reference/market-data/public-get_delivery_prices.md)

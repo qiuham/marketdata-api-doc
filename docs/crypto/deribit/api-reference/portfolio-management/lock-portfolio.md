@@ -1,0 +1,147 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/portfolio-management/lock-portfolio
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:19.170455
+---
+
+# Lock Portfolio
+
+> Locks the authenticated portfolio. All currently open `DIRECT_ACCESS` orders and quotes for this portfolio are cancelled immediately. New `DIRECT_ACCESS` orders and quotes are rejected until the portfolio is unlocked.
+
+REST-submitted orders are not affected by the lock state.
+
+
+## OpenAPI
+
+````yaml /specifications/starbase_rest_openapi.json get /api/v2/private/lock_portfolio
+openapi: 3.0.3
+info:
+  title: Starbase REST API
+  version: '2.0'
+  description: Portfolio-scoped REST API for the Starbase direct-access trading platform.
+servers:
+  - url: http://195.138.37.5:4410
+    description: Production (Gateway A, rest-order)
+  - url: http://195.138.37.6:4410
+    description: Production (Gateway B, rest-order)
+  - url: http://195.138.37.137:4410
+    description: Test (Gateway A, rest-order)
+  - url: http://195.138.37.138:4410
+    description: Test (Gateway B, rest-order)
+security: []
+tags:
+  - name: Portfolio Management
+    description: Endpoints that operate on the authenticated portfolio.
+  - name: Trading
+    description: Authenticated trading endpoints scoped to the caller's portfolio.
+  - name: Market Data
+    description: >-
+      Unauthenticated Starbase reference and market data endpoints. No API
+      credentials are required, but the Starbase REST gateway is reachable only
+      through private Starbase connectivity.
+paths:
+  /api/v2/private/lock_portfolio:
+    get:
+      tags:
+        - Portfolio Management
+      summary: Lock Portfolio
+      description: >-
+        Locks the authenticated portfolio. All currently open `DIRECT_ACCESS`
+        orders and quotes for this portfolio are cancelled immediately. New
+        `DIRECT_ACCESS` orders and quotes are rejected until the portfolio is
+        unlocked.
+
+
+        REST-submitted orders are not affected by the lock state.
+      operationId: lock_portfolio
+      responses:
+        '200':
+          description: Portfolio locked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
+              example:
+                jsonrpc: '2.0'
+                id: 1
+                result: ok
+        '429':
+          description: >-
+            Per-portfolio rate limit for this endpoint exceeded. Default is 1
+            request per minute (`portfolio-rate-limit.lock_portfolio`). The
+            response includes `Retry-After` (seconds until the next one-minute
+            window).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcError'
+      security:
+        - BearerAuth: []
+components:
+  schemas:
+    OkResponse:
+      type: object
+      required:
+        - jsonrpc
+        - result
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: string
+          enum:
+            - ok
+          description: Result of method execution. `ok` in case of success
+    JsonRpcError:
+      type: object
+      required:
+        - jsonrpc
+        - error
+      description: JSON-RPC 2.0 error envelope returned for failed requests.
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+        id:
+          type: integer
+          nullable: true
+          description: The id that was sent in the request, if any.
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: integer
+              description: Numeric JSON-RPC error code.
+            message:
+              type: string
+              description: Human-readable error description.
+            data:
+              description: Optional additional error details.
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        API key passed as a Bearer token. The authenticated session determines
+        the portfolio that operations are applied to.
+
+````
+
+## Related topics
+
+- [Portfolio Management](https://docs.deribit.com/starbase/portfolio-management.md)
+- [Starbase API Rate Limits](https://docs.deribit.com/starbase/api-rate-limits.md)
+- [Creating a Starbase API Key](https://docs.deribit.com/starbase/creating-api-key.md)
+- [Notifications](https://docs.deribit.com/articles/notifications.md)
+- [Order Management](https://docs.deribit.com/articles/order-management-best-practices.md)

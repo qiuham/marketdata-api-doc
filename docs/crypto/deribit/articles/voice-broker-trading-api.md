@@ -1,0 +1,271 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/articles/voice-broker-trading-api
+api_type: Guide
+updated_at: 2026-11-16 20:31:57.341748
+---
+
+# Voice Broker Trading API
+
+> How voice brokers submit Deribit Block Trades for clients and how clients approve, reject, and monitor those trades via API endpoints and events.
+
+Voice Broker Trading enables a licensed broker to execute Deribit Block Trades on behalf of two client counterparties in a single API call. No signature exchange between clients is required. Trades are Block Trades and appear with `broker_name` and `broker_code` fields in each client's trade history.
+
+> [!NOTE]
+>
+> Broker accounts must be enabled by Deribit staff. Authentication is required for all private methods. See the [Authentication Guide](https://docs.deribit.com/articles/authentication.md).
+
+## Key Concepts
+
+* **Broker Code**: a unique string identifying a broker client (counterparty group). Multiple users from the same client group can link using the same code. Trades carry this code, allowing clients to filter their history by broker.
+* **Client / Client Link**: the broker identifies each side of a trade by `client_id` (counterparty group) and `client_link_id` (specific linked user).
+* **Trade Confirmations**: each client link has a `confirmations_required` flag. When `true` (the default), the trade is held **pending** until the client approves it via API. The window is **10 minutes**; expiry or rejection cancels the trade.
+
+## Broker: List Clients
+
+[**`private/get_broker_clients`**](https://docs.deribit.com/api-reference/block-trade/private-get_broker_clients) (scope: `block_trade:read`)
+
+Returns all clients registered under the broker account. Use this endpoint to look up the `client_id` and `client_link_id` values required by other broker methods such as `private/execute_broker_trade`.
+
+Each client record contains:
+
+* **`client_id`**: numeric identifier grouping one or more linked users under a single client name.
+* **`links`**: array of individual user connections within that client. Each entry includes a `client_link_id` that uniquely identifies a single linked user.
+
+**Link states:**
+
+* `connected`: user has accepted the broker invitation and is ready to trade.
+* `pending`: invitation not yet accepted.
+* `rejected`: link is inactive.
+
+Call this endpoint without parameters to retrieve all clients, locate the client by name, then read `client_id` from the top-level object and `client_link_id` from the relevant entry in `links`.
+
+| Parameter | Description |
+| - | - |
+| `client_id` | Optional. Filter to return only this client's record. |
+| `include_subaccounts` | Optional. Set `true` to include clients managed by broker sub-accounts. |
+
+## Broker: Execute a Trade
+
+**`private/execute_broker_trade`** (scope: `block_trade:read_write`)
+
+Submits both sides in one call. `direction` is always from the **maker's perspective**.
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "method": "private/execute_broker_trade",
+  "id": 1,
+  "params": {
+    "maker": { "client_id": 2, "client_link_id": 3 },
+    "taker": { "client_id": 1, "client_link_id": 1 },
+    "trades": [
+      {
+        "instrument_name": "BTC-PERPETUAL",
+        "direction": "buy",
+        "price": 102000.0,
+        "amount": 100000
+      }
+    ]
+  }
+}
+```
+
+| Parameter | Required | Description |
+| - | - | - |
+| `maker` / `taker` | No | Client info for each side. Omit to leave that side unregistered. |
+| `maker.client_id`, `taker.client_id` | Yes (if side provided) | Broker's client ID. |
+| `maker.client_link_id`, `taker.client_link_id` | Yes (if side provided) | Specific linked user within that client. |
+| `trades[]` | Yes | Up to 20 legs. Each requires `instrument_name`, `direction`, `price`, `amount`. |
+
+**If no confirmations are required**, the response is a completed Block Trade with `id`, `timestamp`, `trades[]`, and `maker`/`taker` objects containing `client_id`, `client_link_id`, `client_name`, `client_link_name`, `confirmations_required`, and an obscured `user_id` (e.g. `***123`).
+
+**If confirmations are required**, the response is a pending trade request:
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "timestamp": 1747239767111,
+    "nonce": "3WqPoAsmde9aXCSEBVUmi2XxGkgA",
+    "request_state": "pending",
+    "expires_at": 1747240367111,
+    "trades": [
+      {
+        "instrument_name": "BTC-PERPETUAL",
+        "direction": "buy",
+        "price": 102000.0,
+        "amount": 100000
+      }
+    ],
+    "maker": {
+      "client_id": 2,
+      "client_link_id": 3,
+      "client_name": "Acme Capital",
+      "client_link_name": "Acme Capital 1",
+      "user_id": "***123",
+      "confirmations_required": true,
+      "state": { "value": "initial", "timestamp": 1747239767111 }
+    },
+    "taker": {
+      "client_id": 1,
+      "client_link_id": 1,
+      "client_name": "Beta Fund",
+      "client_link_name": "Beta Fund 1",
+      "user_id": "***456",
+      "confirmations_required": true,
+      "state": { "value": "initial", "timestamp": 1747239767111 }
+    }
+  }
+}
+```
+
+Side `state.value`: `initial` → `approved` / `rejected`. The trade executes once all required approvals are received.
+
+## Broker: Cancel a Pending Trade
+
+**`private/cancel_broker_trade_request`** (scope: `block_trade:read_write`)
+
+Cancels a pending trade using the `nonce` and `timestamp` from the execute response.
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "method": "private/cancel_broker_trade_request",
+  "id": 2,
+  "params": {
+    "timestamp": 1747239767111,
+    "nonce": "3WqPoAsmde9aXCSEBVUmi2XxGkgA"
+  }
+}
+```
+
+## Broker: Monitor Pending Requests
+
+[**`private/get_broker_trade_requests`**](https://docs.deribit.com/api-reference/block-trade/private-get_broker_trade_requests) (scope: `block_trade:read`)
+
+Returns an array of all pending (and recently settled) broker trade requests with current per-side states. Takes no parameters.
+
+**WebSocket:** subscribe to `broker.trade_requests.{currency}` for real-time updates on every state change.
+
+## Broker: Trade History
+
+[**`private/get_broker_trades`**](https://docs.deribit.com/api-reference/block-trade/private-get_broker_trades) (scope: `block_trade:read`)
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "method": "private/get_broker_trades",
+  "id": 3,
+  "params": {
+    "currency": "BTC",
+    "count": 10
+  }
+}
+```
+
+| Parameter | Description |
+| - | - |
+| `currency` | Filter by currency. Omit for all. |
+| `count` | Results per page (default 10, max 50). |
+| `start_id` / `end_id` | Paginate by block trade ID. |
+| `start_timestamp` / `end_timestamp` | Paginate by time (ms). Cannot combine with ID pagination. |
+| `continuation` | Opaque token returned when using timestamp pagination. |
+
+Response: `{ "history": [...], "next_start_id": 41 }`. Pass `next_start_id` as `start_id` for the next page (`null` = no more results). Each entry includes `id`, `timestamp`, `trades[]`, and `maker`/`taker` with client info and obscured `user_id`.
+
+## Client: Approve or Reject a Pending Trade
+
+When `confirmations_required = true`, the client is notified and must act within **10 minutes**.
+
+**Subscribe** to [`block_trade_confirmations`](https://docs.deribit.com/subscriptions/block-trade/block_trade_confirmations) for real-time notifications. The notification data includes `timestamp`, `nonce`, `role` (`maker` or `taker`), `broker_name`, `broker_code`, `trades[]`, and `state`.
+
+**Poll** pending trades with [`private/get_block_trade_requests`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trade_requests). Pass `broker_code` to filter broker-only requests.
+
+### Approve
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "method": "private/approve_block_trade",
+  "id": 4,
+  "params": {
+    "timestamp": 1747239767111,
+    "nonce": "3WqPoAsmde9aXCSEBVUmi2XxGkgA",
+    "role": "maker"
+  }
+}
+```
+
+### Reject
+
+```json theme={null}
+{
+  "jsonrpc": "2.0",
+  "method": "private/reject_block_trade",
+  "id": 5,
+  "params": {
+    "timestamp": 1747239767111,
+    "nonce": "3WqPoAsmde9aXCSEBVUmi2XxGkgA",
+    "role": "maker"
+  }
+}
+```
+
+If `confirmations_shared = true` on the client link, any sub-account in the same client group may approve or reject, not just the originally linked user.
+
+## Client: Trade History
+
+Broker trades appear in regular Block Trade history. Filter by broker using the `broker_code` parameter on [`private/get_block_trades`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trades). Each broker trade includes `broker_name` and `broker_code` fields.
+
+## Notes
+
+* **Obscured user IDs**: brokers see only the last 3 digits of a client's user ID (e.g. `***123`).
+* **Self-trading**: the same Deribit user cannot be both maker and taker.
+* **KYC**: both clients must be verified for block trading.
+* **Account locks / settlement proximity**: trades fail if a client account is locked for the traded currency, or if the instrument is too close to expiry.
+
+## Common Errors
+
+| Error | Cause |
+| - | - |
+| `user_not_a_broker` | Account is not enabled as a voice broker. |
+| `not_connected` | Client link is not in `connected` state. |
+| `not_verified` | Client's KYC level is insufficient for block trading. |
+| `not_a_client` | `client_id` does not exist or doesn't belong to this broker. |
+| `same_client_id` / `self_trade` | Maker and taker are the same client or user. |
+| `min_block_trade_limit` | Amount is below the minimum Block Trade size. |
+| `too_close_to_settlement` | Instrument expires too soon. |
+| `account_locked` | Client account is locked for the traded currency. |
+
+## Related Methods
+
+**Broker**
+
+* [`private/get_broker_clients`](https://docs.deribit.com/api-reference/block-trade/private-get_broker_clients): List registered clients and their link IDs
+* `private/execute_broker_trade`: Submit a Block Trade on behalf of two clients
+* `private/cancel_broker_trade_request`: Cancel a pending trade request
+* [`private/get_broker_trade_requests`](https://docs.deribit.com/api-reference/block-trade/private-get_broker_trade_requests): List pending and recently settled trade requests
+* [`private/get_broker_trades`](https://docs.deribit.com/api-reference/block-trade/private-get_broker_trades): Broker's completed trade history
+
+**Client**
+
+* [`private/get_block_trade_requests`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trade_requests): List pending Block Trade requests (filter by `broker_code` for broker trades)
+* [`private/approve_block_trade`](https://docs.deribit.com/api-reference/block-trade/private-approve_block_trade): Approve a pending trade
+* [`private/reject_block_trade`](https://docs.deribit.com/api-reference/block-trade/private-reject_block_trade): Reject a pending trade
+* [`private/get_block_trades`](https://docs.deribit.com/api-reference/block-trade/private-get_block_trades): Client's Block Trade history (filter by `broker_code`)
+
+**WebSocket**
+
+* [`block_trade_confirmations`](https://docs.deribit.com/subscriptions/block-trade/block_trade_confirmations): Real-time notifications for trade confirmation requests
+* `broker.trade_requests.{currency}`: Real-time updates for broker trade request state changes
+
+
+## Related topics
+
+- [Block Trading](https://docs.deribit.com/articles/block-trading-api.md)
+- [private/get_broker_clients](https://docs.deribit.com/api-reference/block-trade/private-get_broker_clients.md)
+- [Deribit Block RFQ API Walkthrough](https://docs.deribit.com/articles/block-rfq-api-walkthrough.md)
+- [private/get_block_trade_requests](https://docs.deribit.com/api-reference/block-trade/private-get_block_trade_requests.md)
+- [private/get_block_trade](https://docs.deribit.com/api-reference/block-trade/private-get_block_trade.md)

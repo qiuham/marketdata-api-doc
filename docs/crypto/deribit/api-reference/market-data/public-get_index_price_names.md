@@ -1,0 +1,189 @@
+---
+exchange: deribit
+source_url: https://docs.deribit.com/api-reference/market-data/public-get_index_price_names
+api_type: JSON-RPC
+updated_at: 2026-11-16 20:32:39.799857
+---
+
+# public/get_index_price_names
+
+> Retrieves the identifiers (names) of all supported price indexes. Price indexes are reference prices used for mark price calculations, settlement, and other market operations.
+
+When the `extended` parameter is set to `true`, the response includes additional information such as whether future combo creation and option combo creation are enabled for each index.
+
+[Try in API console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_index_price_names)
+
+
+## OpenAPI
+
+````yaml /specifications/deribit_openapi.json get /public/get_index_price_names
+openapi: 3.0.0
+info:
+  title: Deribit API
+  version: 2.1.1
+servers:
+  - url: https://test.deribit.com/api/v2
+security: []
+tags:
+  - name: WebSocket Only
+    description: Can only be used over websockets.
+  - name: Public
+    description: Public methods can be used without authentication.
+  - name: Private
+    description: >-
+      <p>Private methods require authentication. All requests must include a
+      valid OAuth2 token.</p>
+
+      <p>A token can be requested using the <a
+      href="#public-auth">/public/auth</a> method.</p>
+
+      <p>When using the websockets protocol, the token must be included as a
+      parameter <code>access_token</code> in the message. When using REST (HTTP
+      GET), the token may also be passed in the <code>Authorization</code>
+      header.</p>
+  - name: Authentication
+  - name: Session Management
+  - name: Subscription Management
+    description: >-
+      Subscription works as [notifications](#notifications), so users will
+      automatically (after subscribing) receive messages from the server.
+      Overview for each channel response format is described in
+      [subscriptions](#subscriptions) section.
+  - name: Account Management
+  - name: Trading
+  - name: Market Data
+  - name: Wallet
+  - name: Chat
+  - name: lsp
+    description: >-
+      Methods and notifications for the Liquidity Support Program (LSP), the
+      mechanism that assigns risk from liquidated positions to designated LSP
+      participant subaccounts before falling back to auto-deleveraging (ADL).
+paths:
+  /public/get_index_price_names:
+    get:
+      tags:
+        - Market Data
+        - Public
+      description: >+
+        Retrieves the identifiers (names) of all supported price indexes. Price
+        indexes are reference prices used for mark price calculations,
+        settlement, and other market operations.
+
+
+        When the `extended` parameter is set to `true`, the response includes
+        additional information such as whether future combo creation and option
+        combo creation are enabled for each index.
+
+
+        [Try in API
+        console](https://test.deribit.com/api_console?method=%2Fpublic%2Fget_index_price_names)
+
+      parameters:
+        - name: extended
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: true
+          description: >-
+            When set to `true`, returns additional information including
+            `future_combo_creation_enabled` and `option_combo_creation_enabled`
+            for each index
+      requestBody:
+        content:
+          application/json:
+            examples:
+              request:
+                summary: JSON-RPC Request Example
+                value:
+                  jsonrpc: '2.0'
+                  id: 1
+                  method: public/get_index_price_names
+                  params:
+                    extended: true
+        description: JSON-RPC request body
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicGetIndexPriceNamesResponse'
+              examples:
+                response:
+                  summary: Response example
+                  value:
+                    jsonrpc: '2.0'
+                    id: 7617
+                    result:
+                      - name: btc_usd
+                        future_combo_creation_enabled: true
+                        option_combo_creation_enabled: true
+                      - name: bnb_usd
+                      - name: buidl_usd
+                      - name: usdc_usdt
+                        future_combo_creation_enabled: true
+                        option_combo_creation_enabled: true
+          description: Success response
+      x-codeSamples:
+        - lang: bash
+          label: cURL
+          source: |-
+            curl --request POST \
+              --url https://test.deribit.com/api/v2/public/get_index_price_names \
+              --header 'Content-Type: application/json' \
+              --data '{
+              "jsonrpc": "2.0",
+              "id": 1,
+              "method": "public/get_index_price_names",
+              "params": {
+                "extended": true
+              }
+            }'
+components:
+  schemas:
+    PublicGetIndexPriceNamesResponse:
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+            - '2.0'
+          description: The JSON-RPC version (2.0)
+        id:
+          type: integer
+          description: The id that was sent in the request
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Index name
+              future_combo_creation_enabled:
+                type: boolean
+                description: >-
+                  Whether future combo creation is enabled for this index (only
+                  present when `extended`=`true`)
+              option_combo_creation_enabled:
+                type: boolean
+                description: >-
+                  Whether option combo creation is enabled for this index (only
+                  present when `extended`=`true`)
+            required:
+              - name
+      required:
+        - result
+        - jsonrpc
+      type: object
+
+````
+
+## Related topics
+
+- [JSON-RPC API Changelog](https://docs.deribit.com/changelogs/jsonrpc.md)
+- [public/get_index_price](https://docs.deribit.com/api-reference/market-data/public-get_index_price.md)
+- [public/get_supported_index_names](https://docs.deribit.com/api-reference/market-data/public-get_supported_index_names.md)
+- [public/get_delivery_prices](https://docs.deribit.com/api-reference/market-data/public-get_delivery_prices.md)
+- [public/get_index_chart_data](https://docs.deribit.com/api-reference/market-data/public-get_index_chart_data.md)

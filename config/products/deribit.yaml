@@ -1,0 +1,23 @@
+id: deribit
+display_name: Deribit
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: deribit
+  display_name: Deribit
+product: api
+status: active
+priority: 170
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: deribit
+  concurrency: 5
+output:
+  docs_dir: docs/crypto/deribit
+  index_file: index/crypto/deribit.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''
