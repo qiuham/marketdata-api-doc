@@ -8,6 +8,7 @@ import traceback
 from pathlib import Path
 
 from src.utils.config import load_product_configs, safe_id
+from src.utils.doc_checks import check_docs
 from src.utils.indexer import DocumentIndexer
 from src.utils.readme_updater import ReadmeUpdater
 from src.adapters import get_adapter
@@ -96,9 +97,10 @@ def cmd_readme(_: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_validate(_: argparse.Namespace) -> int:
+def cmd_validate(args: argparse.Namespace) -> int:
     products = load_product_configs(PROJECT_ROOT)
     errors: list[str] = []
+    mismatched = 0
     for product in products:
         output = product.get("output", {})
         docs_dir = PROJECT_ROOT / output.get("docs_dir", "")
@@ -107,11 +109,22 @@ def cmd_validate(_: argparse.Namespace) -> int:
             errors.append(f"Missing docs_dir for {product.get('id')}: {docs_dir.relative_to(PROJECT_ROOT)}")
         if not index_file.exists():
             errors.append(f"Missing index_file for {product.get('id')}: {index_file.relative_to(PROJECT_ROOT)}")
+        if docs_dir.exists():
+            # Body must belong to source_url: catches pages saved from the wrong tab or a stale page.
+            issues = check_docs(docs_dir)
+            mismatched += len(issues)
+            if issues:
+                print(f"WARN: {product.get('id')}: {len(issues)} 页正文和 source_url 对不上")
+            for issue in issues:
+                print(f"  {issue.path.relative_to(PROJECT_ROOT)} | {issue.reason} | 标题: {issue.title} | {issue.source_url}")
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print(f"OK: {len(products)} products configured and indexed")
+    if mismatched and args.strict:
+        print(f"ERROR: {mismatched} 页正文和 source_url 对不上（--strict）", file=sys.stderr)
+        return 1
+    print(f"OK: {len(products)} products configured and indexed; {mismatched} 页正文和 source_url 对不上")
     return 0
 
 
@@ -137,6 +150,7 @@ def build_parser() -> argparse.ArgumentParser:
     readme_parser.set_defaults(func=cmd_readme)
 
     validate_parser = sub.add_parser("validate", help="Validate configs, docs dirs, and indexes")
+    validate_parser.add_argument("--strict", action="store_true", help="Fail when a page body does not match its source_url")
     validate_parser.set_defaults(func=cmd_validate)
     return parser
 

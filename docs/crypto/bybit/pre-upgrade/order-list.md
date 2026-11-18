@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/pre-upgrade/order-list
 api_type: REST
-updated_at: 2026-11-11 18:29:37.856641
+updated_at: 2026-11-18 01:20:46.878049
 ---
 
 # Get Pre-upgrade Order History

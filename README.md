@@ -18,7 +18,7 @@
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 546 | 2026-11-11 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-18 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
 | crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-11 |
@@ -41,8 +41,10 @@ PYTHONPATH=. python src/main.py index --all
 # 刷新 README 自动内容
 PYTHONPATH=. python src/main.py readme
 
-# 校验配置、文档目录和索引
+# 校验配置、文档目录和索引；并列出正文和 source_url 对不上的页（标题和 URL 无共同词，或正文和别的页相同）
 PYTHONPATH=. python src/main.py validate
+# 有对不上的页就返回失败
+PYTHONPATH=. python src/main.py validate --strict
 ```
 
 ## 项目结构
@@ -82,7 +84,7 @@ marketdata-api-doc/
 ├── docs/                 # Markdown 文档
 │   └── crypto/
 │       ├── binance/                                # 825 Markdown docs
-│       ├── bybit/                                  # 546 Markdown docs
+│       ├── bybit/                                  # 528 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── deribit/                                # 342 Markdown docs
 │       ├── gateio/                                 # 66 Markdown docs
@@ -107,6 +109,7 @@ marketdata-api-doc/
 │   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
 │   │   ├── __init__.py
 │   │   ├── config.py
+│   │   ├── doc_checks.py
 │   │   ├── indexer.py
 │   │   ├── markdown.py
 │   │   ├── path_generator.py

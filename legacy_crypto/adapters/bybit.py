@@ -8,7 +8,7 @@ import re
 from typing import List, Dict, Any
 from loguru import logger as log
 from .base import ExchangeAdapter, DocumentPage, register_adapter
-from ..utils.browser import BrowserManager
+from ..utils.browser import BrowserManager, same_page
 from ..utils.markdown import MarkdownProcessor
 
 
@@ -404,16 +404,21 @@ class BybitAdapter(ExchangeAdapter):
             for i, url in enumerate(batch_urls):
                 idx = batch_start + i + 1
                 try:
-                    browser.tab_switch(i)
+                    if not browser.tab_switch(i):
+                        raise RuntimeError(f"切换到第 {i} 个标签失败")
 
-                    # 等待页面加载完成
-                    if not browser.wait_for_element('article', timeout=30):
-                        log.warning(f"[{idx}/{total}] 页面加载超时，尝试继续")
+                    # 确认标签里是这一页，不是上一批的旧页（旧页也有 article，不能只等元素）
+                    actual = browser.ensure_page(url, 'article', timeout=10)
+                    if not same_page(actual, url):
+                        log.warning(f"[{idx}/{total}] 页面跳转: {url} -> {actual}")
 
                     filepath = url_to_filepath(url, product_prefix)
                     output_path = safe_output_path(output_dir, filepath)
                     os.makedirs(os.path.dirname(output_path), exist_ok=True)
                     page = self.extract_content(url, skip_open=True)
+                    if not same_page(actual, url):
+                        page.metadata['source_url'] = actual
+                        page.metadata['requested_url'] = url
                     self.save_page(page, output_path)
 
                     log.success(f"[{idx}/{total}] {page.title}")
