@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/unified-fix-v2/reject-business
-api_type: FIX
-updated_at: 2026-11-18 01:45:11.098442
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix-v2/reject-business'
+updated_at: 2026-11-18
 ---
 
 # Business Message Reject

@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/funding-beta/list-funding-claimed-addresses-v2
-api_type: REST
-updated_at: 2026-11-18 01:44:21.368528
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/funding-beta/list-funding-claimed-addresses-v2'
+updated_at: 2026-11-18
 ---
 
 # List Funding Claimed Addresses (v2)

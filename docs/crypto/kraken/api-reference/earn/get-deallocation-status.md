@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/earn/get-deallocation-status
-api_type: REST
-updated_at: 2026-11-18 01:44:18.343679
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/earn/get-deallocation-status'
+updated_at: 2026-11-18
 ---
 
 # Get Deallocation Status
@@ -25,6 +33,7 @@ Following specific errors within `Earnings` class can be returned by this
 method:
 - Insufficient funds: `EEarnings:Insufficient funds:Insufficient funds to complete the (de)allocation request`
 - Minimum allocation: `EEarnings:Below min:(De)allocation operation amount less than minimum`
+
 
 
 ## OpenAPI

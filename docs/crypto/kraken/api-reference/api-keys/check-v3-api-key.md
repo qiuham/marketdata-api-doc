@@ -1,13 +1,22 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/api-keys/check-v3-api-key
-api_type: REST
-updated_at: 2026-11-18 01:44:08.996571
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/api-keys/check-v3-api-key'
+updated_at: 2026-11-18
 ---
 
 # Check v3 API key
 
 > Verify API key access and return the authenticated key's details.
+
 
 
 ## OpenAPI

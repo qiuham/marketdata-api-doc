@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-history/get-account-log
-api_type: REST
-updated_at: 2026-11-18 01:44:04.429642
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-history/get-account-log'
+updated_at: 2026-11-18
 ---
 
 # Get account log
@@ -12,6 +20,8 @@ updated_at: 2026-11-18 01:44:04.429642
 To request entries by time range, use the `since` and `before` parameters.
 To request entries by ID range, use the `from` and `to` parameters.
 Any combination of `since`, `before`, `from` and `to` can be used to restrict the requested range of entries.
+
+
 
 
 ## OpenAPI

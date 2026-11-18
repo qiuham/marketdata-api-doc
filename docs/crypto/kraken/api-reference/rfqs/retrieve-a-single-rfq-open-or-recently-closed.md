@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/rfqs/retrieve-a-single-rfq-open-or-recently-closed
-api_type: REST
-updated_at: 2026-11-18 01:44:39.899016
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/rfqs/retrieve-a-single-rfq-open-or-recently-closed'
+updated_at: 2026-11-18
 ---
 
 # Retrieve a single RFQ (open or recently closed)
@@ -14,6 +22,7 @@ field on the response distinguishes the lifecycle state (`open`, `expired`, `can
 
 Closed RFQs are kept in memory only and are not persisted; entries may be evicted by the
 cache eviction policy or wiped on service restart.
+
 
 
 ## OpenAPI

@@ -1,13 +1,22 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading-settings/update-self-trade-strategy
-api_type: REST
-updated_at: 2026-11-18 01:44:43.513929
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading-settings/update-self-trade-strategy'
+updated_at: 2026-11-18
 ---
 
 # Update self trade strategy
 
 > Updates account-wide self-trade matching behavior to given strategy.
+
 
 
 ## OpenAPI

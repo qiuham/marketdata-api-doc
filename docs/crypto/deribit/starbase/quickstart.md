@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/quickstart
 api_type: Starbase
-updated_at: 2026-11-16 20:32:15.522545
+updated_at: 2026-11-18 05:08:29.538896
 ---
 
 # Starbase Connectivity Quickstart

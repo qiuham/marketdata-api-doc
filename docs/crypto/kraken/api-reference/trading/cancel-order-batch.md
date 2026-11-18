@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading/cancel-order-batch
-api_type: REST
-updated_at: 2026-11-18 01:44:45.153302
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading/cancel-order-batch'
+updated_at: 2026-11-18
 ---
 
 # Cancel Order Batch
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:45.153302
 > Cancel multiple open orders  by `txid`, `userref` or `cl_ord_id`(maximum 50 total unique IDs/references)
 
 **API Key Permissions Required:** `Orders and trades - Create & modify orders` or `Orders and trades - Cancel & close orders`
+
+
 
 
 ## OpenAPI

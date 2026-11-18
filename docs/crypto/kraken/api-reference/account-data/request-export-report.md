@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/request-export-report
-api_type: REST
-updated_at: 2026-11-18 01:44:03.676636
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/request-export-report'
+updated_at: 2026-11-18
 ---
 
 # Request Export Report
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:03.676636
 > Request export of trades or ledgers.
 
 **API Key Permissions Required:** `Data - Export data`
+
+
 
 
 ## OpenAPI

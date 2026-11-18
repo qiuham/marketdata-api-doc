@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/guides/futures/assignment-program
-api_type: Guide
-updated_at: 2026-11-18 01:45:29.379489
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/guides/futures/assignment-program'
+updated_at: 2026-11-18
 ---
 
 # Assignment Program

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/errors
 api_type: Guide
-updated_at: 2026-11-16 20:32:22.465548
+updated_at: 2026-11-18 05:08:39.591401
 ---
 
 # Error Codes

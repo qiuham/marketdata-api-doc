@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/guides/general/l3-data
-api_type: Guide
-updated_at: 2026-11-18 01:45:32.141454
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/guides/general/l3-data'
+updated_at: 2026-11-18
 ---
 
 # Spot Level 3 Market Data

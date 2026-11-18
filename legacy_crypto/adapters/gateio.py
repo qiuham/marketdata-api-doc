@@ -18,6 +18,10 @@ from ..utils.browser import BrowserManager
 from ..utils.markdown import MarkdownProcessor
 
 
+class PageNotFound(Exception):
+    """网站上没有这一页（404）"""
+
+
 @register_adapter('gateio')
 class GateioAdapter(ExchangeAdapter):
     """Gate.io 文档适配器（浏览器渲染，侧边栏全量发现）"""
@@ -50,8 +54,19 @@ class GateioAdapter(ExchangeAdapter):
         if len(discovered) >= max_pages:
             log.warning(f"达到最大页面发现数量: {max_pages}")
 
+        # 中英文页一一对应，但侧边栏不一定都链到（例如 announcements/ws/en 只有中文侧边栏链到中文版）。
+        # 找到一种语言就补上另一种；补出来的网站上可能没有，爬的时候遇到 404 就跳过。
+        self.mirror_only = set()
+        for url in list(discovered):
+            for a, b in (('/en', '/zh_CN'), ('/zh_CN', '/en')):
+                if url.endswith(a) or f'{a}/' in url:
+                    twin = url[:-len(a)] + b if url.endswith(a) else url.replace(f'{a}/', f'{b}/', 1)
+                    if twin not in discovered:
+                        discovered.add(twin)
+                        self.mirror_only.add(twin)
+
         pages = sorted(url for url in discovered if self._in_scope(url))[:max_pages]
-        log.success(f"Gate.io 共发现 {len(pages)} 个页面")
+        log.success(f"Gate.io 共发现 {len(pages)} 个页面（其中按另一语言补的 {len(self.mirror_only)} 个）")
         return pages
 
     def extract_content(self, url: str, skip_open: bool = False) -> DocumentPage:
@@ -144,6 +159,8 @@ class GateioAdapter(ExchangeAdapter):
 
         output_dir = self.get_output_path()
         os.makedirs(output_dir, exist_ok=True)
+        self.written = set()  # 这次写到的文件
+        self.skipped = set()  # 按另一语言补出来、网站上没有的页
 
         success_count = 0
         if concurrency <= 1:
@@ -164,6 +181,9 @@ class GateioAdapter(ExchangeAdapter):
                     with counter_lock:
                         worker_id = next(counter)
                     adapter = GateioAdapter(self.config)
+                    adapter.written = self.written  # 共用同一个集合（set.add 线程安全）
+                    adapter.skipped = self.skipped
+                    adapter.mirror_only = self.mirror_only
                     adapter.browser = BrowserManager(f"{self.name}-crawler-w{worker_id}")
                     local.adapter = adapter
                 return local.adapter
@@ -179,6 +199,17 @@ class GateioAdapter(ExchangeAdapter):
                         success_count += 1
 
         log.success(f"完成! 成功: {success_count}/{len(urls)}")
+        if success_count < len(urls) * 0.9:
+            # 一页没抓到也报“成功”的话，旧文件会被当成新结果。抛出去由主程序把这一家退回上一次提交。
+            raise RuntimeError(f"Gate.io 只成功 {success_count}/{len(urls)} 页")
+        if not limit:
+            # 网站删掉或改名的页不能一直留在库里；网站上还在、只是这次没抓成功的页保留旧文件
+            expected = {os.path.abspath(safe_output_path(output_dir, url_to_filepath(u, self.base_prefix)))
+                        for u in urls if u not in self.skipped}
+            for path in Path(output_dir).rglob('*.md'):
+                if os.path.abspath(path) not in expected:
+                    path.unlink()
+                    log.info(f"删除旧页: {path}")
 
         project_root = Path(__file__).parent.parent.parent
         indexer = DocumentIndexer(output_dir)
@@ -192,16 +223,28 @@ class GateioAdapter(ExchangeAdapter):
     def _crawl_one(self, index: int, total: int, url: str, output_dir: str) -> bool:
         from ..utils.path_generator import safe_output_path, url_to_filepath
 
-        try:
-            page = self.extract_content(url)
-            filepath = url_to_filepath(url, self.base_prefix)
-            output_path = safe_output_path(output_dir, filepath)
-            self.save_page(page, output_path)
-            log.success(f"[{index}/{total}] {page.title}")
-            return True
-        except Exception as exc:
-            log.error(f"[{index}/{total}] {url} - {exc}")
-            return False
+        last_exc = None
+        for attempt in range(3):  # Akamai 偶尔给一次拒绝页，隔几秒再试
+            try:
+                page = self.extract_content(url)
+                filepath = url_to_filepath(url, self.base_prefix)
+                output_path = safe_output_path(output_dir, filepath)
+                self.save_page(page, output_path)
+                self.written.add(os.path.abspath(output_path))
+                log.success(f"[{index}/{total}] {page.title}")
+                return True
+            except PageNotFound:
+                if url in getattr(self, 'mirror_only', set()):
+                    self.skipped.add(url)
+                    log.info(f"[{index}/{total}] 另一语言没有这一页，跳过: {url}")
+                    return True
+                last_exc = RuntimeError("404 Not Found")
+                break
+            except Exception as exc:
+                last_exc = exc
+                time.sleep(5 * (attempt + 1))
+        log.error(f"[{index}/{total}] {url} - {last_exc}")
+        return False
 
     def _collect_page_links(self, click_top_nav: bool = False) -> List[str]:
         """收集当前页面侧边栏链接；必要时点击顶部产品菜单展开 REST/WS 入口。"""
@@ -247,7 +290,15 @@ class GateioAdapter(ExchangeAdapter):
         ''') or []
 
     def _is_bad_current_page(self) -> bool:
+        title = (self.browser.eval_js("document.title") or "").lower()
+        if 'access denied' in title:
+            return True
+        if title.startswith('404'):
+            raise PageNotFound()
         text = self.browser.eval_js("document.body ? document.body.innerText : ''") or ""
+        if len(text) >= 2000:
+            # 真正的拒绝页只有两百多字；长的接口文档正文里本来就可能出现 "access denied"（错误码说明）
+            return False
         low = text.lower()
         bad_markers = [
             'access denied',

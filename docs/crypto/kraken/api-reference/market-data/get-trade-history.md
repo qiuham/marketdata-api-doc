@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/market-data/get-trade-history
-api_type: REST
-updated_at: 2026-11-18 01:44:30.673449
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/market-data/get-trade-history'
+updated_at: 2026-11-18
 ---
 
 # Get trade history
@@ -11,6 +19,7 @@ updated_at: 2026-11-18 01:44:30.673449
 to past 7 days or recent trading engine restart (whichever is sooner).
 
 If no `lastTime` specified, it will return 100 most recent trades.
+
 
 
 ## OpenAPI

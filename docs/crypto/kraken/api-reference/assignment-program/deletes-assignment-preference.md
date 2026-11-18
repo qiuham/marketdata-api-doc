@@ -1,13 +1,22 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/assignment-program/deletes-assignment-preference
-api_type: REST
-updated_at: 2026-11-18 01:44:11.457441
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/assignment-program/deletes-assignment-preference'
+updated_at: 2026-11-18
 ---
 
 # Deletes assignment preference
 
 > This endpoint deletes an assignment program preference
+
 
 
 ## OpenAPI

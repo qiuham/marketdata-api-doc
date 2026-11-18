@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/settlement/list-prime-settlement-batches
-api_type: REST
-updated_at: 2026-11-18 01:44:40.812940
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/settlement/list-prime-settlement-batches'
+updated_at: 2026-11-18
 ---
 
 # List Prime Settlement Batches
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:40.812940
 > Retrieves a list of Prime settlement batches, optionally filtered by status and time range. Results are sorted by creation time, most recent first.
 
 **API Key Permissions Required:** `Orders and trades - Query open orders & trades` and `Orders and trades - Query closed orders & trades`. Both permissions are required; a key with only one of them is rejected with `EGeneral:Permission denied`.
+
+
 
 
 ## OpenAPI

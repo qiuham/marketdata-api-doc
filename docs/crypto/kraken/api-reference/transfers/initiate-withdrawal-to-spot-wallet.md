@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/transfers/initiate-withdrawal-to-spot-wallet
-api_type: REST
-updated_at: 2026-11-18 01:44:46.481221
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/transfers/initiate-withdrawal-to-spot-wallet'
+updated_at: 2026-11-18
 ---
 
 # Initiate withdrawal to Spot wallet
@@ -19,6 +27,7 @@ A withdrawal the trading engine rejects returns an error response with `insuffic
 Once the venue settles withdrawals as immediate balance transfers, the funds have reached
 the Spot wallet when the response is sent and there is no transfer to poll: `uid` is then
 the nil UUID `00000000-0000-0000-0000-000000000000`.
+
 
 
 ## OpenAPI

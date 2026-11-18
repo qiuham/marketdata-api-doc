@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading/get-websockets-token
-api_type: WebSocket
-updated_at: 2026-11-18 01:44:45.483987
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading/get-websockets-token'
+updated_at: 2026-11-18
 ---
 
 # Get Websockets Token
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:45.483987
 > An authentication token must be requested via this REST API endpoint in order to connect to and authenticate with our [Websockets API](../guides/spot-ws-auth). The token should be used within 15 minutes of creation, but it does not expire once a successful Websockets connection and private subscription has been made and is maintained.
 
 **API Key Permissions Required:** `WebSocket interface - On`
+
+
 
 
 ## OpenAPI

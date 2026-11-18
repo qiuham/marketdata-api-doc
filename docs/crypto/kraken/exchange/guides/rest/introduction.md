@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/guides/rest/introduction
-api_type: Guide
-updated_at: 2026-11-18 01:45:34.234686
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/guides/rest/introduction'
+updated_at: 2026-11-18
 ---
 
 # Spot REST Introduction

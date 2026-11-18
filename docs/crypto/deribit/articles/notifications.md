@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/notifications
 api_type: Guide
-updated_at: 2026-11-16 20:31:59.573324
+updated_at: 2026-11-18 05:08:02.993401
 ---
 
 # Notifications

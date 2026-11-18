@@ -1,14 +1,23 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/rfqs/accept-an-offer-on-an-open-rfq
-api_type: REST
-updated_at: 2026-11-18 01:44:37.959718
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/rfqs/accept-an-offer-on-an-open-rfq'
+updated_at: 2026-11-18
 ---
 
 # Accept an offer on an open RFQ
 
 > Accept an offer on a specific open RFQ created by the authenticated account.
 Exactly one of `bidAccepted` or `askAccepted` must be provided.
+
 
 
 ## OpenAPI

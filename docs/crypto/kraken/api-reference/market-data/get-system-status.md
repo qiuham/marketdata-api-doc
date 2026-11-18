@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/market-data/get-system-status
-api_type: REST
-updated_at: 2026-11-18 01:44:29.585520
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/market-data/get-system-status'
+updated_at: 2026-11-18
 ---
 
 # Get System Status
@@ -18,6 +26,8 @@ The `upcoming_maintenance` and `emergency` fields are additive — clients that 
 The top-level `status` field remains driven by the trading engine and is
 independent of both arrays: an advisory describes *why* a state is happening
 or coming — it does not dictate engine state.
+
+
 
 
 ## OpenAPI

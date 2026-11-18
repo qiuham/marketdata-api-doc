@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/guides/general/colocation
-api_type: Guide
-updated_at: 2026-11-18 01:45:31.430930
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/guides/general/colocation'
+updated_at: 2026-11-18
 ---
 
 # Colocation and connectivity

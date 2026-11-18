@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/sequence-reset
 api_type: FIX
-updated_at: 2026-11-16 20:32:09.840761
+updated_at: 2026-11-18 05:08:20.067546
 ---
 
 # Sequence Reset(4) (Production FIX API)

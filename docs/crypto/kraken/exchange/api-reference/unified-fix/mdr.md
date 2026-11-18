@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/unified-fix/mdr
-api_type: FIX
-updated_at: 2026-11-18 01:45:13.711154
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/unified-fix/mdr'
+updated_at: 2026-11-18
 ---
 
 # Market Data Request

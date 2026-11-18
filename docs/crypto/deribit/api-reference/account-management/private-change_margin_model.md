@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-change_margin_model
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:23.876220
+updated_at: 2026-11-18 05:08:40.915278
 ---
 
 # private/change_margin_model

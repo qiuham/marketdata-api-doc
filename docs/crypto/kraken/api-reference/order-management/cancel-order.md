@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/order-management/cancel-order
-api_type: REST
-updated_at: 2026-11-18 01:44:34.276392
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/order-management/cancel-order'
+updated_at: 2026-11-18
 ---
 
 # Cancel order
@@ -13,6 +21,7 @@ A cancel of an order held for the market's maker protection window is answered w
 hold releases: the order first takes the liquidity it committed to, and the cancel then
 removes whatever would have rested (`cancelled`), or finds nothing left of the order
 (`notFound`).
+
 
 
 ## OpenAPI

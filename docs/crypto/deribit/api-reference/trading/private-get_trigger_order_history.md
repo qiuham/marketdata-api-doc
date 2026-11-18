@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_trigger_order_history
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:50.826630
+updated_at: 2026-11-18 05:09:21.977233
 ---
 
 # private/get_trigger_order_history

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/user/rm-master-apikey
 api_type: REST
-updated_at: 2026-11-18 01:22:41.986933
+updated_at: 2026-11-17 18:39:53.441767
 ---
 
 # Delete Master API Key

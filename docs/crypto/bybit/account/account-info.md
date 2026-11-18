@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/account-info
 api_type: Account
-updated_at: 2026-11-18 01:13:10.951581
+updated_at: 2026-11-17 18:36:53.376143
 ---
 
 # Get Account Info

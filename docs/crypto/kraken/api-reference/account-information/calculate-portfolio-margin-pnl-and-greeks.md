@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-information/calculate-portfolio-margin-pnl-and-greeks
-api_type: REST
-updated_at: 2026-11-18 01:44:05.583650
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-information/calculate-portfolio-margin-pnl-and-greeks'
+updated_at: 2026-11-18
 ---
 
 # Calculate portfolio margin, pnl and greeks
@@ -11,6 +19,7 @@ updated_at: 2026-11-18 01:44:05.583650
 margin requirements, pnl and option greeks.
 
 Note: This is currently available exclusively in the Kraken pre-prod environments.
+
 
 
 ## OpenAPI

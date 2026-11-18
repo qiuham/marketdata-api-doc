@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/algo-trading/query-strategies
-api_type: REST
-updated_at: 2026-11-18 01:44:08.345631
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/algo-trading/query-strategies'
+updated_at: 2026-11-18
 ---
 
 # Query Strategies
@@ -12,6 +20,8 @@ updated_at: 2026-11-18 01:44:08.345631
 The strategies are returned in `result.strategies`, keyed by `strategy_id`, using the same strategy object as `GetOpenStrategies`. Ids that are not found, or that belong to another account, are left out. No error is returned for them. If none match, the result is `{"strategies":{}}`.
 
 **API Key Permissions Required:** Both `Orders and trades - Query open orders & trades` and `Orders and trades - Query closed orders & trades`, because the endpoint can return open and closed strategies. Results are limited to the key's own account.
+
+
 
 
 ## OpenAPI

@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/earn/list-earn-allocations
-api_type: REST
-updated_at: 2026-11-18 01:44:19.511511
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/earn/list-earn-allocations'
+updated_at: 2026-11-18
 ---
 
 # List Earn Allocations
@@ -42,6 +50,7 @@ unbonding, not when they go from exit queue to unbonding.
 
 (Un)bonding time estimate can be inaccurate right after having (de)allocated the
 funds. Wait 1-2 minutes after (de)allocating to get an accurate result.
+
 
 
 ## OpenAPI

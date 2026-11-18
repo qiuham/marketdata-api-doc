@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/referral/referral-campaign-rewards
 api_type: REST
-updated_at: 2026-11-18 01:21:00.439054
+updated_at: 2026-11-17 18:39:17.340476
 ---
 
 # Get Referral Campaign Rewards

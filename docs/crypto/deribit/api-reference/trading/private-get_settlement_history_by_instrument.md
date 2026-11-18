@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_settlement_history_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:50.905709
+updated_at: 2026-11-18 05:09:20.957513
 ---
 
 # private/get_settlement_history_by_instrument

@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/get-trade-volume
-api_type: REST
-updated_at: 2026-11-18 01:44:02.881742
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/get-trade-volume'
+updated_at: 2026-11-18
 ---
 
 # Get Trade Volume
@@ -13,6 +21,8 @@ Note: If an asset pair is on a maker/taker fee schedule, the taker side is given
 `pair` accepts either a comma-delimited list of pair names or a list of `{ asset, aclass }` objects (the latter is required for non-forex classes such as `derivatives` or `equity_pair`). Set `fee_schedule` to `true` to additionally receive the full fee schedule per trading pair in the `schedules` field.
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
+
 
 
 ## OpenAPI

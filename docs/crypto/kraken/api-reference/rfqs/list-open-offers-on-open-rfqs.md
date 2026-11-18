@@ -1,13 +1,22 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/rfqs/list-open-offers-on-open-rfqs
-api_type: REST
-updated_at: 2026-11-18 01:44:39.368939
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/rfqs/list-open-offers-on-open-rfqs'
+updated_at: 2026-11-18
 ---
 
 # List open offers on open RFQs
 
 > Retrieve all open offers for the account on currently open RFQs
+
 
 
 ## OpenAPI

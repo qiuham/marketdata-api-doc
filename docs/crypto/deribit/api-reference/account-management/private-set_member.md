@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-set_member
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:29.670004
+updated_at: 2026-11-18 05:08:49.861128
 ---
 
 # private/set_member

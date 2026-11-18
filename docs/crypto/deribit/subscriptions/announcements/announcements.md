@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/announcements/announcements
 api_type: WebSocket
-updated_at: 2026-11-16 20:32:00.028482
+updated_at: 2026-11-18 05:08:04.217640
 ---
 
 # announcements

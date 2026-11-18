@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/binary-api-reference
 api_type: Starbase
-updated_at: 2026-11-16 20:32:16.371829
+updated_at: 2026-11-18 05:08:31.045689
 ---
 
 # Binary API Reference
@@ -106,7 +106,7 @@ Each message within a packet starts with the following 16-byte header:
 | 2 | messageTypeId | uint16 | 2 | Message type ID |
 | 3 | version | uint16 | 2 | Message version number |
 | 4 | flags | uint16 | 2 | Bitset of flags: 0=startOfTransaction 1=endOfTransaction |
-| 5 | transactTime | int64 | 8 | Timestamp of event in matching engine. Nanoseconds since epoch |
+| 5 | transactTime | int64 | 8 | Timestamp of event in matching engine. Nanoseconds since epoch. On `Buy Put` (20) and `Sell Put` (21), the time the order went on the book. Not an indicator of queue priority; use `sortOrderId` |
 
 ### Key Concepts
 
@@ -115,6 +115,8 @@ Each message within a packet starts with the following 16-byte header:
 For example, a `NewOrderRequest` message has `messageTypeId = 100`. When the gateway receives a message with `messageTypeId = 100` in the header, it knows to parse the message body as a `NewOrderRequest` containing fields such as `clientOrderId`, `correlationId`, `limitPrice`, `amount`, etc.
 
 **Message Types**: Each message type has a unique `messageTypeId` that identifies its purpose (e.g., `NewOrderRequest` (100), `NewOrderResponse` (200), `OrderFilled` (300)).
+
+**Sort Order ID**: `Buy Put` (20) and `Sell Put` (21) market data messages carry a `sortOrderId` (`int64`) that gives the order's priority within its price level. A smaller value has priority over a larger one. The `sortOrderId` published in market data is assigned when the order goes on the book, after any applicable pre-trade risk check or speed bump. This applies to all orders that rest on the book, whether or not they pass through a speed bump, so a newly resting order always joins the back of its level. Values are strictly increasing but not consecutive (consecutive resting orders typically differ by `2`), and an order's `sortOrderId` never changes once it appears in market data. Sort each price level by `sortOrderId`, not by message sequence or `transactTime`. See [Queue priority](https://docs.deribit.com/starbase/order-book-maintenance.md#queue-priority).
 
 **Sequence Numbers**: Every TCP message header includes:
 

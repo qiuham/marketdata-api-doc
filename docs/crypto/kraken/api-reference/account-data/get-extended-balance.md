@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/get-extended-balance
-api_type: REST
-updated_at: 2026-11-18 01:44:01.389709
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/get-extended-balance'
+updated_at: 2026-11-18
 ---
 
 # Get Extended Balance
@@ -19,6 +27,8 @@ Note that held amounts only include spot non margin orders.
 * `.T`: tokenized assets.
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
+
 
 
 ## OpenAPI

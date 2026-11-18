@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/quotes/check-otc-eligibility
-api_type: REST
-updated_at: 2026-11-18 01:44:35.902737
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/quotes/check-otc-eligibility'
+updated_at: 2026-11-18
 ---
 
 # Check OTC Eligibility
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:35.902737
 > Retrieves the client permissions for the OTC Portal.
 
 **API Key Permissions Required:** `Funds permissions - Query` and `Funds permissions - Deposit`
+
+
 
 
 ## OpenAPI

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/broker/api-broker/connection
 api_type: REST
-updated_at: 2026-11-18 01:15:58.776307
+updated_at: 2026-11-17 18:37:43.243598
 ---
 
 # Broker Connection

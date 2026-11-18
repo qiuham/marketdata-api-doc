@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/multi-collateral/set-leverage-settings
-api_type: REST
-updated_at: 2026-11-18 01:44:32.761238
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/multi-collateral/set-leverage-settings'
+updated_at: 2026-11-18
 ---
 
 # Set leverage settings
@@ -18,6 +26,7 @@ Calling this endpoint can result in the following error codes:
 - 88: Contract not a multi-collateral futures contract
 - 41: Would cause liquidation
 - 393: Cross max leverage setting disabled
+
 
 
 ## OpenAPI

@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/query-orders-info
-api_type: REST
-updated_at: 2026-11-18 01:44:03.483311
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/query-orders-info'
+updated_at: 2026-11-18
 ---
 
 # Query Orders Info
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:03.483311
 > Retrieve information about specific orders.
 
 **API Key Permissions Required:** `Orders and trades - Query open orders & trades` or `Orders and trades - Query closed orders & trades`, depending on status of order
+
+
 
 
 ## OpenAPI

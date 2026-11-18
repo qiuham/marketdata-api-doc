@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/market-data/get-ohlc-data
-api_type: REST
-updated_at: 2026-11-18 01:44:28.400780
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/market-data/get-ohlc-data'
+updated_at: 2026-11-18
 ---
 
 # Get OHLC Data
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:28.400780
 > Retrieve OHLC market data.
 The last entry in the OHLC array is for the current, not-yet-committed timeframe, and will always be present, regardless of the value of `since`.
 Returns up to 720 of the most recent entries (older data cannot be retrieved, regardless of the value of `since`).
+
+
 
 
 ## OpenAPI

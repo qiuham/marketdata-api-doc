@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/market-data/get-grouped-order-book
-api_type: REST
-updated_at: 2026-11-18 01:44:27.757503
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/market-data/get-grouped-order-book'
+updated_at: 2026-11-18
 ---
 
 # Get Grouped Order Book
@@ -11,6 +19,8 @@ updated_at: 2026-11-18 01:44:27.757503
 It provides a summary of liquidity deep into the book, useful for user interface display.
 
 Bids and asks between grouped price levels are accumulated to the nearest passive level (asks rounded up, bids down).
+
+
 
 
 ## OpenAPI

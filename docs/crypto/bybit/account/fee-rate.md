@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/fee-rate
 api_type: Account
-updated_at: 2026-11-18 01:13:16.761934
+updated_at: 2026-11-17 18:36:55.297705
 ---
 
 # Get Fee Rate

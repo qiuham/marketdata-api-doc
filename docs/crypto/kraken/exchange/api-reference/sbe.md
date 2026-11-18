@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/sbe
-api_type: SBE
-updated_at: 2026-11-18 01:44:53.043956
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/sbe'
+updated_at: 2026-11-18
 ---
 
 # SBE

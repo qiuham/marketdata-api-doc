@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/quotes/get-otc-pairs
-api_type: REST
-updated_at: 2026-11-18 01:44:36.917044
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/quotes/get-otc-pairs'
+updated_at: 2026-11-18
 ---
 
 # Get OTC Pairs
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:36.917044
 > Retrieves the list of OTC trading pairs.
 
 **API Key Permissions Required:** `Funds permissions - Query` and `Funds permissions - Deposit`
+
+
 
 
 ## OpenAPI

@@ -57,9 +57,6 @@ class ProductAdapter(ABC):
         raise NotImplementedError
 
     def crawl(self, project_root: str | Path, limit: int | None = None) -> list[Path]:
-        project_root = Path(project_root).resolve()
-        output_dir = self.output_dir(project_root)
-
         # Fetch everything before touching the output directory: if the source is down or
         # changed shape, discover()/extract() raise here and the existing docs stay as they are.
         sources = self.discover()
@@ -70,7 +67,12 @@ class ProductAdapter(ABC):
             # An empty result almost always means the source changed (redesign, blocked page), not
             # that every document was removed. Treat it as a failure so the old docs are not wiped.
             raise RuntimeError(f"{self.product_id}: found 0 documents; keeping the existing docs")
+        return self.write_pages(project_root, pages)
 
+    def write_pages(self, project_root: str | Path, pages: list[DocumentPage]) -> list[Path]:
+        """Write already-fetched pages. Call only after every fetch succeeded."""
+        project_root = Path(project_root).resolve()
+        output_dir = self.output_dir(project_root)
         if self.config.get("output", {}).get("clean_before_crawl", False):
             self._clean_output_dir(project_root, output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)

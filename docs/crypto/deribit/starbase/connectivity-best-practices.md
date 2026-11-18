@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/connectivity-best-practices
 api_type: Starbase
-updated_at: 2026-11-16 20:32:16.312617
+updated_at: 2026-11-18 05:08:33.189985
 ---
 
 # Infrastructure, Connectivity & Best Practices
@@ -268,6 +268,7 @@ Trades placed through Starbase also appear on the standard WebSocket/FIX feeds, 
 * Subscribe to **both A and B** multicast feeds. They have similar latency profiles
 * Subscribe to both **Snapshot** and **Incremental** channels
 * Implement full order book reconstruction from L3 data
+* Sort each price level by `sortOrderId`, not by message sequence or `transactTime`. Values are strictly increasing but not consecutive. See [Queue priority](https://docs.deribit.com/starbase/order-book-maintenance.md#queue-priority)
 
 ### Protocol Selection
 

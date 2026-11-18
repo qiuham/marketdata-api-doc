@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/deribit-quickstart
 api_type: Guide
-updated_at: 2026-11-16 20:31:53.978511
+updated_at: 2026-11-18 05:07:53.610743
 ---
 
 # Quickstart Guide

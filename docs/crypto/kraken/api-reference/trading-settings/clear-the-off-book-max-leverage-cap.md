@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading-settings/clear-the-off-book-max-leverage-cap
-api_type: REST
-updated_at: 2026-11-18 01:44:42.453103
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading-settings/clear-the-off-book-max-leverage-cap'
+updated_at: 2026-11-18
 ---
 
 # Clear the off-book max leverage cap
@@ -14,6 +22,7 @@ Clearing the cap is the opposite of setting it to `0`: clearing lifts the constr
 entirely, while `0` blocks all exposure-increasing off-book fills.
 
 Only master accounts may call this endpoint.
+
 
 
 ## OpenAPI

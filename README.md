@@ -18,13 +18,14 @@
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
 | crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 909 | 2026-11-18 |
-| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-18 |
-| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
-| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
-| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-11 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 382 | 2026-11-18 |
-| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 518 | 2026-11-11 |
-| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-16 |
+| crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 526 | 2026-11-17 |
+| crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-17 |
+| crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 72 | 2026-11-17 |
+| crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 36 | 2026-11-17 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 457 | 2026-11-18 |
+| crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 519 | 2026-11-17 |
+| crypto | Polymarket | [Polymarket](./docs/crypto/polymarket/) | ✅ | 562 | 2026-11-17 |
+| crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-18 |
 
 ## 快速开始
 
@@ -41,10 +42,8 @@ PYTHONPATH=. python src/main.py index --all
 # 刷新 README 自动内容
 PYTHONPATH=. python src/main.py readme
 
-# 校验配置、文档目录和索引；并列出正文和 source_url 对不上的页（标题和 URL 无共同词，或正文和别的页相同）
+# 校验配置、文档目录和索引
 PYTHONPATH=. python src/main.py validate
-# 有对不上的页就返回失败
-PYTHONPATH=. python src/main.py validate --strict
 ```
 
 ## 项目结构
@@ -70,7 +69,8 @@ marketdata-api-doc/
 │   │   ├── gateio.yaml
 │   │   ├── hyperliquid.yaml
 │   │   ├── kraken.yaml
-│   │   └── okx.yaml
+│   │   ├── okx.yaml
+│   │   └── polymarket.yaml
 │   └── legacy/           # 兼容旧项目的源站配置
 │       └── crypto/
 │           ├── binance.yaml
@@ -78,19 +78,18 @@ marketdata-api-doc/
 │           ├── coinbase.yaml
 │           ├── deribit.yaml
 │           ├── gateio.yaml
-│           ├── hyperliquid.yaml
-│           ├── kraken.yaml
 │           └── okx.yaml
 ├── docs/                 # Markdown 文档
 │   └── crypto/
 │       ├── binance/                                # 909 Markdown docs
-│       ├── bybit/                                  # 528 Markdown docs
+│       ├── bybit/                                  # 526 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── deribit/                                # 342 Markdown docs
-│       ├── gateio/                                 # 66 Markdown docs
-│       ├── hyperliquid/                            # 37 Markdown docs
-│       ├── kraken/                                 # 382 Markdown docs
-│       └── okx/                                    # 518 Markdown docs
+│       ├── gateio/                                 # 72 Markdown docs
+│       ├── hyperliquid/                            # 36 Markdown docs
+│       ├── kraken/                                 # 457 Markdown docs
+│       ├── okx/                                    # 519 Markdown docs
+│       └── polymarket/                             # 562 Markdown docs
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
 │   ├── crypto/binance.json
@@ -100,19 +99,21 @@ marketdata-api-doc/
 │   ├── crypto/gateio.json
 │   ├── crypto/hyperliquid.json
 │   ├── crypto/kraken.json
-│   └── crypto/okx.json
+│   ├── crypto/okx.json
+│   └── crypto/polymarket.json
 ├── src/
 │   ├── adapters/         # 采集/导入适配器
 │   │   ├── __init__.py
 │   │   ├── base.py
-│   │   └── crypto_legacy.py
+│   │   ├── crypto_legacy.py
+│   │   └── llms_txt.py
 │   ├── utils/            # 浏览器、Markdown、索引、路径、README 工具
 │   │   ├── __init__.py
 │   │   ├── config.py
-│   │   ├── doc_checks.py
 │   │   ├── indexer.py
 │   │   ├── markdown.py
 │   │   ├── path_generator.py
+│   │   ├── quality.py
 │   │   └── readme_updater.py
 │   └── main.py
 ├── requirements.txt
@@ -131,8 +132,31 @@ api_type: API
 updated_at: 2026-11-11 14:17:18.632567
 ```
 
+## 采集方式
+
+| 方式 | 用在哪 | 说明 |
+|---|---|---|
+| `llms_txt` | Hyperliquid、Kraken、Polymarket | 文档站每页加 `.md` 就是原文（GitBook、Mintlify）。页面列表取自 `llms.txt`，`llms.txt` 不全时取 `sitemap.xml`（Kraken）。直接 HTTP 下载，不开浏览器；可以顺带收 OpenAPI / AsyncAPI 规格（存在 `_specs/`） |
+| `crypto_legacy`（HTTP） | Binance、Deribit | 也是取每页的 `.md` 原文，但有各家自己的处理：Binance 从 `/en/docs/llms.txt` 列出全部文档页，英文、中文合成一篇双语文档；`/en/docs/catalog` 下每个 API 的 OpenAPI `schema.yaml` 要在浏览器里取（有 AWS WAF 验证），转成 Markdown 放在 `catalog/`。Deribit 从 `/_llms/production.txt` 出发递归读子索引，只收正式版 |
+| `crypto_legacy`（浏览器） | Bybit、Coinbase、Gate.io、OKX | 用 `agent-browser` 打开网页取正文。多标签页并发时，存盘前核对当前标签页的网址，对不上就重开，还不对就跳过这一页 |
+
+新加一家：文档站有 `llms.txt` 的，写一份 `config/products/<id>.yaml`（`adapter: llms_txt`）就够了，例子见 `config/products/polymarket.yaml`。
+
+## 质量检查
+
+爬完每一家都查一遍（`src/utils/quality.py`），出现下面任何一种就判这一家抓坏了，把它的目录退回上一次提交，其他家照常提交：
+
+- 有 `# Untitled` 页（页面没打开）；
+- 空页超过 5%；
+- 正文相同、但 `source_url` 不同的页超过 2%（多标签页读错了标签）。同一篇文章挂在几个网址下、标题都相同而且和网址对得上的，不算。
+
+另外还查标题和 `source_url` 对不上的页：页面的一级标题和网址最后一段没有一个词相同（只查有英文字母的标题）。有的网站标题本来就和网址用词不同，所以这一项只在 validate 里逐页列出，不退回爬取结果。
+
+`python src/main.py validate` 做同样的检查，并逐页列出有问题的页：默认只警告（抓不了的旧数据不挡别家提交），加 `--strict` 判失败；`-p binance -p bybit` 只查这几家。
+
+标题和网址用词不同、但人工核对过是对的页，写进这一家配置的 `validate.ignore_title_mismatch`，例子见 `config/products/binance.yaml`。
+
 ## 已接入范围
 
-- `crypto/*`：已迁移 Binance、Bybit、Coinbase、Gate.io、Hyperliquid、Kraken、OKX。
-- `crypto/deribit`：新接入 Deribit，从文档站每页的原始 Markdown 直接取。
+- `crypto/*`：Binance、Bybit、Coinbase、Deribit、Gate.io、Hyperliquid、Kraken、OKX、Polymarket。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

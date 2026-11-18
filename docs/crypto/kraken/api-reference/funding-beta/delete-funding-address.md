@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/funding-beta/delete-funding-address
-api_type: REST
-updated_at: 2026-11-18 01:44:21.188865
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/funding-beta/delete-funding-address'
+updated_at: 2026-11-18
 ---
 
 # Delete Funding Address
@@ -10,6 +18,7 @@ updated_at: 2026-11-18 01:44:21.188865
 > Delete a saved withdrawal address.
 
 **API Key Permissions Required:** `Funds permissions - Add withdrawal addresses`
+
 
 
 ## OpenAPI

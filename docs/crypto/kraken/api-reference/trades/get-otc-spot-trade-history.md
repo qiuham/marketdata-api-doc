@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trades/get-otc-spot-trade-history
-api_type: REST
-updated_at: 2026-11-18 01:44:42.116793
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trades/get-otc-spot-trade-history'
+updated_at: 2026-11-18
 ---
 
 # Get OTC Spot Trade History
@@ -15,6 +23,8 @@ Request `start_date` and `end_date` values use Unix epoch seconds.
 Response `order_date` values use Unix epoch milliseconds.
 
 **API Key Permissions Required:** `Orders and trades - Query open orders & trades`
+
+
 
 
 ## OpenAPI

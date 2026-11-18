@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/get-export-report-status
-api_type: REST
-updated_at: 2026-11-18 01:44:01.514701
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/get-export-report-status'
+updated_at: 2026-11-18
 ---
 
 # Get Export Report Status
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:01.514701
 > Get status of requested data exports.
 
 **API Key Permissions Required:** `Data - Export data`
+
+
 
 
 ## OpenAPI

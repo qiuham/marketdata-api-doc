@@ -1,14 +1,23 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/order-management/cancel-all-orders
-api_type: REST
-updated_at: 2026-11-18 01:44:32.830692
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/order-management/cancel-all-orders'
+updated_at: 2026-11-18
 ---
 
 # Cancel all orders
 
 > This endpoint allows cancelling orders which are associated with a future's contract or a
 margin account. If no arguments are specified all open orders will be cancelled.
+
 
 
 ## OpenAPI

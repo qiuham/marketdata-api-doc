@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-cancel_quotes
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:47.182890
+updated_at: 2026-11-18 05:09:16.357289
 ---
 
 # private/cancel_quotes

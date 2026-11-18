@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/algo-trading/get-closed-strategies
-api_type: REST
-updated_at: 2026-11-18 01:44:08.343430
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/algo-trading/get-closed-strategies'
+updated_at: 2026-11-18
 ---
 
 # Get Closed Strategies
@@ -12,6 +20,8 @@ updated_at: 2026-11-18 01:44:08.343430
 This endpoint uses cursor-based pagination. Each page holds up to `limit` strategies (default and maximum `100`). While more results are available, the response includes `next_cursor`. Send it as `cursor` to fetch the next page. `next_cursor` is absent on the last page. Offset paging (`ofs`) and a total `count` are not supported. The cursor stores a sort position, not the filters, so repeat the original filters (`asset_class`, `strategy_type`, `status`, `start`, `end` and `query_time_mode`) on every page.
 
 **API Key Permissions Required:** `Orders and trades - Query closed orders & trades`. Results are limited to the key's own account.
+
+
 
 
 ## OpenAPI

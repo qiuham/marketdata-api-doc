@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/api-user-keys/list-prime-api-user-keys
-api_type: REST
-updated_at: 2026-11-18 01:44:09.909809
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/api-user-keys/list-prime-api-user-keys'
+updated_at: 2026-11-18
 ---
 
 # List Prime API User Keys
@@ -11,6 +19,8 @@ updated_at: 2026-11-18 01:44:09.909809
 
 **API Key Permissions Required:** None, unless the API key belongs to an organization. Organization API keys
 need `Prime Ops`; an organization key without it is rejected with `EGeneral:Permission denied:prime ops`.
+
+
 
 
 ## OpenAPI

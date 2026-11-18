@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/algo-trading/add-strategy
-api_type: REST
-updated_at: 2026-11-18 01:44:07.203932
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/algo-trading/add-strategy'
+updated_at: 2026-11-18
 ---
 
 # Add Strategy
@@ -22,6 +30,8 @@ A TWAP executes the total `volume` evenly between `starttm` and `expiretm`, as `
 Set `validate` to `true` to validate the request without creating or submitting the strategy to the execution engine. The response returns an empty `strategy_id`. This does not run the creation-time balance check or guarantee that a subsequent creation request will succeed.
 
 **API Key Permissions Required:** `Orders and trades - Create & modify orders`
+
+
 
 
 ## OpenAPI

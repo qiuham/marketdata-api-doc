@@ -2,18 +2,31 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/order-book-maintenance
 api_type: Starbase
-updated_at: 2026-11-16 20:32:17.673724
+updated_at: 2026-11-18 05:08:32.857614
 ---
 
 # Maintaining the order book
 
 > Maintain order books using the Starbase Binary API including Buy Put, Sell Put, Buy Amount Reduced, Sell Amount Reduced, and Order Delete messages.
 
-Position in the price-time priority queue is explicitly stated and can be tracked using the `sortOrderId`. Snapshots are disseminated starting with the first-to-execute order, in sequence of execution priority. Priority should *never* be inferred from message sequence and should be taken from `sortOrderId` as speed bumped orders and certain risk-checked orders will be assigned priority some time before they are disseminated.
+Position in the price-time priority queue is explicitly stated and can be tracked using the `sortOrderId`. Snapshots are disseminated starting with the first-to-execute order, in sequence of execution priority. Always sort each price level by `sortOrderId`. Priority should *never* be inferred from message sequence or from `transactTime`. See [Queue priority](#queue-priority).
 
 > [!NOTE]
 >
 > Every matching engine event that changes the book (including an order that is added and then cancelled within the same instant) generates messages on this feed (e.g. a `Buy Put`/`Sell Put` followed by an `Order Delete`). Starbase publishes market-by-order (L3) data only; there is no separate Level 2 (aggregated price-level) feed.
+
+## Queue priority
+
+Each price level is a FIFO queue ordered by `sortOrderId`. A smaller `sortOrderId` has priority over a larger one, and a taker fills the resting orders at a price level in ascending `sortOrderId` order.
+
+* **Assigned when the order rests.** The `sortOrderId` published in market data is assigned when the order goes on the book, after any applicable pre-trade risk check or speed bump. This applies to all orders that rest on the book, whether or not they pass through a speed bump. A newly resting order always joins the back of its price level, behind every order already resting there
+* **Strictly increasing, not consecutive.** `sortOrderId` values increase in the order orders rest on the book, but they are not consecutive. Consecutive resting orders typically differ by `2` (e.g. `101`, `103`). Do not use `sortOrderId` gaps to detect missed messages; use the packet `sequenceNum` (see [Detecting and recovering from gaps](#detecting-and-recovering-from-gaps))
+* **Never changes once visible.** Market data publishes resting orders only, so it only carries the `sortOrderId` assigned on rest. An order's `sortOrderId` never changes after it appears in market data
+* **`transactTime` is not priority.** On a `Buy Put` or `Sell Put`, `transactTime` in the message header is the time the order went on the book. Do not use it to work out queue position
+
+> [!NOTE]
+>
+> **Previous behavior.** `sortOrderId` was assigned when the matching engine accepted the order, before the pre-trade risk check. An order still waiting on its risk check could rest after a later order that skipped the check (for example an MMP order), yet take a place ahead of it. A `Buy Put` or `Sell Put` could therefore insert an order in the middle of a price level instead of at the back. With the new behavior, the order in which `Buy Put` and `Sell Put` messages arrive for a price level, `sortOrderId` order and fill order agree.
 
 ## Heartbeat messages
 
@@ -31,7 +44,7 @@ This message is sent when a new buy order is placed, an existing buy order is pa
 | 2 | instrumentId | int64 | 8 | Numeric instrument ID |
 | 3 | quantity | QuantityMantissa | 8 | It represents the requested order's visible quantity |
 | 4 | price | Price9 | 8 | The price of the order or quote |
-| 5 | sortOrderId | int64 | 8 | Used to indicate order priority within a price level. A smaller number has priority over a larger number. |
+| 5 | sortOrderId | int64 | 8 | Order priority within a price level. A smaller number has priority over a larger number. Assigned when the order rests on the book; strictly increasing but not consecutive. See [Queue priority](#queue-priority). |
 
 ### Sell Put (21)
 
@@ -43,7 +56,7 @@ This message is sent when a new sell order is placed, an existing sell order is 
 | 2 | instrumentId | int64 | 8 | Numeric instrument ID |
 | 3 | quantity | QuantityMantissa | 8 | It represents the requested order's visible quantity |
 | 4 | price | Price9 | 8 | The price of the order or quote |
-| 5 | sortOrderId | int64 | 8 | Used to indicate order priority within a price level. A smaller number has priority over a larger number. |
+| 5 | sortOrderId | int64 | 8 | Order priority within a price level. A smaller number has priority over a larger number. Assigned when the order rests on the book; strictly increasing but not consecutive. See [Queue priority](#queue-priority). |
 
 ### Buy Amount Reduced (22)
 

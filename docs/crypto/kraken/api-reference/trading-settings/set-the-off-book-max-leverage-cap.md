@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading-settings/set-the-off-book-max-leverage-cap
-api_type: REST
-updated_at: 2026-11-18 01:44:43.327614
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading-settings/set-the-off-book-max-leverage-cap'
+updated_at: 2026-11-18
 ---
 
 # Set the off-book max leverage cap
@@ -31,6 +39,7 @@ codes:
 
 
   rfqAssignmentMaxLeverageDisabled: the off-book max leverage feature is not enabled
+
 
 
 ## OpenAPI

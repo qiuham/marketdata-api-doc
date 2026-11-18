@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/get-api-key-info
-api_type: REST
-updated_at: 2026-11-18 01:44:00.688658
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/get-api-key-info'
+updated_at: 2026-11-18
 ---
 
 # Get API Key Info
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:00.688658
 > Retrieve information about the API key that is used to make the request, including its name, permissions, restrictions, and usage timestamps.
 
 **API Key Permissions Required:** `None`
+
+
 
 
 ## OpenAPI

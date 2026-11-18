@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/trading/cancel-order
-api_type: REST
-updated_at: 2026-11-18 01:44:44.770504
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/trading/cancel-order'
+updated_at: 2026-11-18
 ---
 
 # Cancel Order
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:44.770504
 > Cancel a particular open order (or set of open orders) by `txid`, `userref` or `cl_ord_id`
 
 **API Key Permissions Required:** `Orders and trades - Create & modify orders` or `Orders and trades - Cancel & close orders`
+
+
 
 
 ## OpenAPI

@@ -1,13 +1,23 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-history/get-trigger-events
-api_type: REST
-updated_at: 2026-11-18 01:44:05.277398
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-history/get-trigger-events'
+updated_at: 2026-11-18
 ---
 
 # Get trigger events
 
 > Lists trigger events for authenticated account.
+
+
 
 
 ## OpenAPI

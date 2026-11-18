@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/block-rfq/private-get_block_rfq_user_info
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:33.235533
+updated_at: 2026-11-18 05:08:54.631382
 ---
 
 # private/get_block_rfq_user_info

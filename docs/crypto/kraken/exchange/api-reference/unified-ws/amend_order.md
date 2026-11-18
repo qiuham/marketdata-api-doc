@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/unified-ws/amend_order
-api_type: WebSocket
-updated_at: 2026-11-18 01:45:19.108034
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/amend_order'
+updated_at: 2026-11-18
 ---
 
 # Amend Order

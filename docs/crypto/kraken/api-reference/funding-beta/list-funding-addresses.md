@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/funding-beta/list-funding-addresses
-api_type: REST
-updated_at: 2026-11-18 01:44:22.124965
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/funding-beta/list-funding-addresses'
+updated_at: 2026-11-18
 ---
 
 # List Funding Addresses
@@ -10,6 +18,7 @@ updated_at: 2026-11-18 01:44:22.124965
 > Retrieve saved withdrawal addresses for your account. Results are paginated; use the `cursor` parameter to iterate through the list of addresses (page size equal to the value of `limit`).
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
 
 
 ## OpenAPI

@@ -9,15 +9,20 @@ provider:
 product: api
 status: active
 priority: 140
-adapter: crypto_legacy
+# GitBook 每页加 .md 就是原文，用 llms.txt 列页，不开浏览器（浏览器方式取到的页全是空的）
+adapter: llms_txt
 source:
-  type: legacy_crypto
-  legacy_exchange: hyperliquid
-  concurrency: 3
+  type: llms_txt
+  llms_txt: https://hyperliquid.gitbook.io/hyperliquid-docs/llms.txt
+  base_url: https://hyperliquid.gitbook.io/hyperliquid-docs/
+  include_prefixes:
+    - for-developers/
+  concurrency: 4
 output:
   docs_dir: docs/crypto/hyperliquid
   index_file: index/crypto/hyperliquid.json
+  clean_before_crawl: true
 metadata_defaults:
   api_type: reference
-  source_type: legacy_crypto
+  source_type: llms_txt
   version: ''

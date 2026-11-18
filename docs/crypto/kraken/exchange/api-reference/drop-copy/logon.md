@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/drop-copy/logon
-api_type: FIX
-updated_at: 2026-11-18 01:44:48.577288
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/drop-copy/logon'
+updated_at: 2026-11-18
 ---
 
 # Logon

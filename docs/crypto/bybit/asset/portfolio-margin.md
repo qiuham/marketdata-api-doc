@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/portfolio-margin
 api_type: REST
-updated_at: 2026-11-18 01:15:10.839523
+updated_at: 2026-11-17 18:37:30.397256
 ---
 
 # Get Portfolio Margin Info

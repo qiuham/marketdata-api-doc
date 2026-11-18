@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/voice-broker-trading-api
 api_type: Guide
-updated_at: 2026-11-16 20:31:57.341748
+updated_at: 2026-11-18 05:07:59.286535
 ---
 
 # Voice Broker Trading API

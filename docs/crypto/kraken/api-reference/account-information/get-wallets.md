@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-information/get-wallets
-api_type: REST
-updated_at: 2026-11-18 01:44:07.638993
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-information/get-wallets'
+updated_at: 2026-11-18
 ---
 
 # Get wallets
@@ -11,6 +19,7 @@ updated_at: 2026-11-18 01:44:07.638993
 cash accounts or margin accounts. This includes digital asset balances, instrument balances,
 margin requirements, margin trigger estimates and auxiliary information such as available
 funds, PnL of open positions and portfolio value.
+
 
 
 ## OpenAPI

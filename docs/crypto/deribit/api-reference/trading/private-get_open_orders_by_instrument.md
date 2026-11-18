@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_open_orders_by_instrument
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:49.166914
+updated_at: 2026-11-18 05:09:18.689088
 ---
 
 # private/get_open_orders_by_instrument

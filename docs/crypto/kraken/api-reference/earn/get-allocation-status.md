@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/earn/get-allocation-status
-api_type: REST
-updated_at: 2026-11-18 01:44:17.964247
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/earn/get-allocation-status'
+updated_at: 2026-11-18
 ---
 
 # Get Allocation Status
@@ -27,6 +35,7 @@ method:
 - User cap exceeded: `EEarnings:Above max:The allocation exceeds user limit for the strategy`
 - Total cap exceeded: `EEarnings:Above max:The allocation exceeds the total strategy limit`
 - Minimum allocation: `EEarnings:Below min:(De)allocation operation amount less than minimum`
+
 
 
 ## OpenAPI

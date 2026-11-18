@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_user_trades_by_currency
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:51.003685
+updated_at: 2026-11-18 05:09:21.280218
 ---
 
 # private/get_user_trades_by_currency

@@ -2,12 +2,30 @@
 exchange: deribit
 source_url: https://docs.deribit.com/changelogs/starbase
 api_type: Changelog
-updated_at: 2026-11-16 20:31:59.569820
+updated_at: 2026-11-18 05:08:07.502253
 ---
 
 # Starbase API Changelog
 
 > Release notes for the Deribit Starbase binary and REST APIs covering new messages, protocol changes, performance updates, and compatibility notes.
+
+**Starbase Update 18.11.2026**
+
+## API Changes
+
+### Market Data
+
+**`sortOrderId` assigned when an order rests.** The `sortOrderId` on `Buy Put` (20) and `Sell Put` (21) is now assigned when the order goes on the book, after any applicable pre-trade risk check or speed bump, instead of when the matching engine accepts it. This applies to all resting orders. A newly resting order always joins the back of its price level, so the order of `Buy Put`/`Sell Put` messages at a price level, `sortOrderId` order and fill order now agree.
+
+Previously, an order waiting on its pre-trade risk check could rest after a later order that skipped the check (for example an MMP order), yet take a place ahead of it in the queue.
+
+* `sortOrderId` values are still strictly increasing, but no longer consecutive. Consecutive resting orders typically differ by `2` (e.g. `101`, `103`). Do not use `sortOrderId` gaps to detect missed messages; use the packet `sequenceNum`
+* An order's `sortOrderId` never changes once it appears in market data
+* `transactTime` in the message header of a `Buy Put` or `Sell Put` is the time the order went on the book. It is not an indicator of queue priority
+
+Always sort each price level by `sortOrderId`, not by message sequence or `transactTime`. The market data SBE schema is unchanged.
+
+See [Queue priority](https://docs.deribit.com/starbase/order-book-maintenance.md#queue-priority) and [Best Practices Summary](https://docs.deribit.com/starbase/connectivity-best-practices.md#best-practices-summary).
 
 **Starbase Update 12.11.2026**
 

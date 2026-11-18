@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/session-management/public-disable_heartbeat
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:43.686990
+updated_at: 2026-11-18 05:09:12.199198
 ---
 
 # public/disable_heartbeat

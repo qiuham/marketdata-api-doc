@@ -1,14 +1,24 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/transparency/post-trade-data
-api_type: REST
-updated_at: 2026-11-18 01:44:46.811018
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/transparency/post-trade-data'
+updated_at: 2026-11-18
 ---
 
 # Post-Trade Data
 
 > Returns a list of trades on the spot exchange. 
 If no filter parameters are specified, the last 1000 trades for all pairs are received.
+
+
 
 
 ## OpenAPI

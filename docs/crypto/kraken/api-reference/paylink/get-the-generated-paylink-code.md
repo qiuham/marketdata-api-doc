@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/paylink/get-the-generated-paylink-code
-api_type: REST
-updated_at: 2026-11-18 01:44:35.455085
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/paylink/get-the-generated-paylink-code'
+updated_at: 2026-11-18
 ---
 
 # Get the generated paylink code
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:35.455085
 > If the code has not been generated yet, this method will return an error indicating this.
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
+
 
 
 ## OpenAPI

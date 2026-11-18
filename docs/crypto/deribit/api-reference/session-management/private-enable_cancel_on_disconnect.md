@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/session-management/private-enable_cancel_on_disconnect
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:43.297437
+updated_at: 2026-11-18 05:09:10.254598
 ---
 
 # private/enable_cancel_on_disconnect

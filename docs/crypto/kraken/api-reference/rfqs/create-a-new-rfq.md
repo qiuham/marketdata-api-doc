@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/rfqs/create-a-new-rfq
-api_type: REST
-updated_at: 2026-11-18 01:44:38.778994
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/rfqs/create-a-new-rfq'
+updated_at: 2026-11-18
 ---
 
 # Create a new RFQ
@@ -13,6 +21,7 @@ The `json` query or form parameter is a JSON-encoded object with:
 - `legs` (required): array of `{ "tradeable", "size" }` (max 100). Duplicate tradeables
   are rejected.
 - `expiry` (optional): RFC 3339 datetime. The server applies a default duration if omitted.
+
 
 
 ## OpenAPI

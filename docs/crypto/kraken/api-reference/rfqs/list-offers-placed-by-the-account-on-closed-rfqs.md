@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/rfqs/list-offers-placed-by-the-account-on-closed-rfqs
-api_type: REST
-updated_at: 2026-11-18 01:44:39.323517
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/rfqs/list-offers-placed-by-the-account-on-closed-rfqs'
+updated_at: 2026-11-18
 ---
 
 # List offers placed by the account on closed RFQs
@@ -13,6 +21,7 @@ on each offer indicates how the parent RFQ closed (`expired`, `cancelled`,
 
 Closed RFQs are tracked in an in-memory cache only and are not persisted; offers may be
 evicted by the cache eviction policy or wiped on service restart.
+
 
 
 ## OpenAPI

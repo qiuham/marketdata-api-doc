@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/portfolio-management
 api_type: Starbase
-updated_at: 2026-11-16 20:32:20.991187
+updated_at: 2026-11-18 05:08:36.905073
 ---
 
 # Portfolio Management

@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/event/trade/settlement
 api_type: Trading
-updated_at: 2026-11-18 01:16:50.360039
+updated_at: 2026-11-17 18:37:57.912672
 ---
 
 # Get Event Contract Settlement Records

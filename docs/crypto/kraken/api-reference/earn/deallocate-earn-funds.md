@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/earn/deallocate-earn-funds
-api_type: REST
-updated_at: 2026-11-18 01:44:18.044840
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/earn/deallocate-earn-funds'
+updated_at: 2026-11-18
 ---
 
 # Deallocate Earn Funds
@@ -30,6 +38,7 @@ method:
   allowed
 - Allocation in progress: `EEarnings:Busy:Another (de)allocation for the same strategy is in progress`
 - Strategy not found: `EGeneral:Invalid arguments:Invalid strategy ID`
+
 
 
 ## OpenAPI

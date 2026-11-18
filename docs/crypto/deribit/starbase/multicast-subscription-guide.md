@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/multicast-subscription-guide
 api_type: Starbase
-updated_at: 2026-11-16 20:32:21.958203
+updated_at: 2026-11-18 05:08:39.618767
 ---
 
 # Multicast Subscription Guide

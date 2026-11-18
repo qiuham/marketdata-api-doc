@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-information/get-portfolio-margin-parameters
-api_type: REST
-updated_at: 2026-11-18 01:44:05.946848
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-information/get-portfolio-margin-parameters'
+updated_at: 2026-11-18
 ---
 
 # Get portfolio margin parameters
@@ -12,6 +20,7 @@ updated_at: 2026-11-18 01:44:05.946848
 Also includes user specific limits related to options trading.
 
 Note: This is currently available exclusively in the Kraken pre-prod environments.
+
 
 
 ## OpenAPI

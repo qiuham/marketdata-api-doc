@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 import traceback
 from pathlib import Path
 
 from src.utils.config import load_product_configs, safe_id
-from src.utils.doc_checks import check_docs
 from src.utils.indexer import DocumentIndexer
+from src.utils.quality import check_docs_dir, check_pages
 from src.utils.readme_updater import ReadmeUpdater
 from src.adapters import get_adapter
 
@@ -36,10 +37,20 @@ def cmd_crawl(args: argparse.Namespace) -> int:
             adapter = get_adapter(product)
             written = adapter.crawl(PROJECT_ROOT, limit=args.limit)
         except Exception as exc:  # noqa: BLE001 - one broken source must not stop the others
-            # Keep this product's existing docs; report it and move on to the next product.
+            # Keep this product's existing docs (undo anything half-written); report it and move on.
             failed.append(product_id)
             traceback.print_exc()
+            _restore_product(product)
             print(f"::error title=Crawl failed: {product_id}::{type(exc).__name__}: {exc}")
+            continue
+        problems = check_docs_dir(PROJECT_ROOT / product.get("output", {}).get("docs_dir", ""),
+                                  _ignore_title_urls(product))
+        if problems:
+            # A crawl that produced empty or cross-wired pages must not replace good docs.
+            _restore_product(product)
+            failed.append(product_id)
+            for problem in problems:
+                print(f"::error title=Bad crawl: {product_id}::{problem}")
             continue
         data = indexer.generate_product_index(product)
         total_written += len(written)
@@ -51,6 +62,18 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         print(f"Failed products (existing docs kept): {', '.join(failed)}")
     # Fail the run only when nothing could be crawled, so the other products still get committed.
     return 1 if failed and len(failed) == len(products) else 0
+
+
+def _restore_product(product: dict) -> None:
+    """Put a product's docs and index back to the last commit (drop this run's output)."""
+    output = product.get("output", {})
+    paths = [p for p in (output.get("docs_dir"), output.get("index_file")) if p]
+    tracked = subprocess.run(["git", "ls-files", "--", *paths], cwd=PROJECT_ROOT,
+                             capture_output=True, text=True, check=True).stdout.strip()
+    if tracked:
+        subprocess.run(["git", "checkout", "HEAD", "--", *paths], cwd=PROJECT_ROOT, check=True)
+    subprocess.run(["git", "clean", "-fdq", "--", *paths], cwd=PROJECT_ROOT, check=True)
+    print(f"Restored {product.get('id')} docs to the last commit")
 
 
 def cmd_list(_: argparse.Namespace) -> int:
@@ -97,10 +120,16 @@ def cmd_readme(_: argparse.Namespace) -> int:
     return 0
 
 
+def _ignore_title_urls(product: dict) -> set[str]:
+    """Pages whose title and URL use different words but were checked by hand (product config)."""
+    return set((product.get("validate") or {}).get("ignore_title_mismatch") or [])
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
-    products = load_product_configs(PROJECT_ROOT)
+    products = [_find_product(p) for p in args.product] if args.product else load_product_configs(PROJECT_ROOT)
     errors: list[str] = []
-    mismatched = 0
+    warnings: list[str] = []
+    bad_pages = 0
     for product in products:
         output = product.get("output", {})
         docs_dir = PROJECT_ROOT / output.get("docs_dir", "")
@@ -109,23 +138,25 @@ def cmd_validate(args: argparse.Namespace) -> int:
             errors.append(f"Missing docs_dir for {product.get('id')}: {docs_dir.relative_to(PROJECT_ROOT)}")
         if not index_file.exists():
             errors.append(f"Missing index_file for {product.get('id')}: {index_file.relative_to(PROJECT_ROOT)}")
-        if docs_dir.exists():
-            # Body must belong to source_url: catches pages saved from the wrong tab or a stale page.
-            ignore = set(product.get("validate", {}).get("ignore_title_mismatch", []) or [])
-            issues = check_docs(docs_dir, ignore)
-            mismatched += len(issues)
-            if issues:
-                print(f"WARN: {product.get('id')}: {len(issues)} 页正文和 source_url 对不上")
-            for issue in issues:
-                print(f"  {issue.path.relative_to(PROJECT_ROOT)} | {issue.reason} | 标题: {issue.title} | {issue.source_url}")
+        if not docs_dir.exists():
+            continue
+        ignore = _ignore_title_urls(product)
+        # Bad crawls are already blocked at crawl time; old bad docs only warn unless --strict,
+        # so one source that cannot be re-crawled does not block every other product's update.
+        (errors if args.strict else warnings).extend(check_docs_dir(docs_dir, ignore))
+        # Every page whose body does not fit its source_url, even below the crawl-gate tolerance.
+        issues = check_pages(docs_dir, ignore)
+        bad_pages += len(issues)
+        print(f"{product.get('id')}: {len(issues)} 页有问题")
+        for issue in issues:
+            print(f"  {issue.path.relative_to(PROJECT_ROOT)} | {issue.kind} {issue.detail}| 标题: {issue.title} | {issue.source_url}")
+    for warning in warnings:
+        print(f"WARNING: {warning}", file=sys.stderr)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    if mismatched and args.strict:
-        print(f"ERROR: {mismatched} 页正文和 source_url 对不上（--strict）", file=sys.stderr)
-        return 1
-    print(f"OK: {len(products)} products configured and indexed; {mismatched} 页正文和 source_url 对不上")
+    print(f"OK: {len(products)} products configured and indexed; {bad_pages} 页有问题")
     return 0
 
 
@@ -151,7 +182,8 @@ def build_parser() -> argparse.ArgumentParser:
     readme_parser.set_defaults(func=cmd_readme)
 
     validate_parser = sub.add_parser("validate", help="Validate configs, docs dirs, and indexes")
-    validate_parser.add_argument("--strict", action="store_true", help="Fail when a page body does not match its source_url")
+    validate_parser.add_argument("-p", "--product", action="append", help="Only this product (repeatable)")
+    validate_parser.add_argument("--strict", action="store_true", help="Treat doc quality problems as errors")
     validate_parser.set_defaults(func=cmd_validate)
     return parser
 

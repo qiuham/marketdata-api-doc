@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/request/cancel-a-payment-request
-api_type: REST
-updated_at: 2026-11-18 01:44:38.213346
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/request/cancel-a-payment-request'
+updated_at: 2026-11-18
 ---
 
 # Cancel a payment request
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:38.213346
 > Cancel a payment request
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
+
 
 
 ## OpenAPI

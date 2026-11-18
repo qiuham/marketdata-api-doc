@@ -1,13 +1,22 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/instrument-details/get-trading-instruments
-api_type: REST
-updated_at: 2026-11-18 01:44:28.676597
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/instrument-details/get-trading-instruments'
+updated_at: 2026-11-18
 ---
 
 # Get trading instruments
 
 > Returns specifications for all currently accessible markets and indices.
+
 
 
 ## OpenAPI

@@ -1,13 +1,23 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-history/account-log-csv
-api_type: REST
-updated_at: 2026-11-18 01:44:04.168184
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-history/account-log-csv'
+updated_at: 2026-11-18
 ---
 
 # Account log (CSV)
 
 > Lists recent account log entries in CSV format.
+
+
 
 
 ## OpenAPI

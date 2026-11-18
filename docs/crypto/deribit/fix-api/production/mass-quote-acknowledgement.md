@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/fix-api/production/mass-quote-acknowledgement
 api_type: FIX
-updated_at: 2026-11-16 20:32:14.164673
+updated_at: 2026-11-18 05:08:27.160571
 ---
 
 # Mass Quote Acknowledgement(b) (Production FIX API)

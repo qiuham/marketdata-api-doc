@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/balance/delay-amount
 api_type: REST
-updated_at: 2026-11-18 01:14:38.603554
+updated_at: 2026-11-17 18:37:19.591531
 ---
 
 # Get Withdrawable Amount

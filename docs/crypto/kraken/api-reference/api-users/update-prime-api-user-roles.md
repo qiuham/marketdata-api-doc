@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/api-users/update-prime-api-user-roles
-api_type: REST
-updated_at: 2026-11-18 01:44:11.121747
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/api-users/update-prime-api-user-roles'
+updated_at: 2026-11-18
 ---
 
 # Update Prime API User Roles
@@ -12,6 +20,8 @@ updated_at: 2026-11-18 01:44:11.121747
 **API Key Permissions Required:** `Orders and trades - Create & modify orders`. API keys that belong to an
 organization also need `Prime Ops`; an organization key without it is rejected with
 `EGeneral:Permission denied:prime ops`.
+
+
 
 
 ## OpenAPI

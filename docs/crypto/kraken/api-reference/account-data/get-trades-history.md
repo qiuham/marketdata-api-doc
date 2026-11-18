@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/account-data/get-trades-history
-api_type: REST
-updated_at: 2026-11-18 01:44:02.678708
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/account-data/get-trades-history'
+updated_at: 2026-11-18
 ---
 
 # Get Trades History
@@ -11,6 +19,8 @@ updated_at: 2026-11-18 01:44:02.678708
 * Unless otherwise stated, costs, fees, prices, and volumes are specified with the precision for the asset pair (`pair_decimals` and `lot_decimals`), not the individual assets' precision (`decimals`).
 
 **API Key Permissions Required:** `Orders and trades - Query closed orders & trades`
+
+
 
 
 ## OpenAPI

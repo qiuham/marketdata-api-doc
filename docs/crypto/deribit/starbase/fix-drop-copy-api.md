@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/fix-drop-copy-api
 api_type: Starbase
-updated_at: 2026-11-16 20:32:19.670582
+updated_at: 2026-11-18 05:08:35.880760
 ---
 
 # Starbase FIX Drop Copy API

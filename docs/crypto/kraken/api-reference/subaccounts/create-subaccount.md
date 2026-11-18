@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/subaccounts/create-subaccount
-api_type: REST
-updated_at: 2026-11-18 01:44:41.304131
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/subaccounts/create-subaccount'
+updated_at: 2026-11-18
 ---
 
 # Create Subaccount
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:41.304131
 > Create a trading subaccount. **Note:** `CreateSubaccount` must be called using an API key from the master account.
 
 **API Key Permissions Required:** `Funds permissions - Withdraw`
+
+
 
 
 ## OpenAPI

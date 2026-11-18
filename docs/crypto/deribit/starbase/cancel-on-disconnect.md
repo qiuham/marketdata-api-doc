@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/cancel-on-disconnect
 api_type: Starbase
-updated_at: 2026-11-16 20:32:21.310166
+updated_at: 2026-11-18 05:08:38.130571
 ---
 
 # Cancel on Disconnect

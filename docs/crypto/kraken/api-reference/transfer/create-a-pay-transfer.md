@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/transfer/create-a-pay-transfer
-api_type: REST
-updated_at: 2026-11-18 01:44:46.160395
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/transfer/create-a-pay-transfer'
+updated_at: 2026-11-18
 ---
 
 # Create a pay transfer
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:46.160395
 > This method is asynchronous, your callback will be sent the `external_id` and the `status` when it reaches a final state.
 
 **API Key Permissions Required:** `Funds permissions - Query` and `Funds permissions - Withdraw`
+
+
 
 
 ## OpenAPI

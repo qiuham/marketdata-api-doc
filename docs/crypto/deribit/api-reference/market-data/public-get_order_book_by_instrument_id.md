@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_order_book_by_instrument_id
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:41.842121
+updated_at: 2026-11-18 05:09:09.507055
 ---
 
 # public/get_order_book_by_instrument_id

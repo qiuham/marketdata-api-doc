@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_margins
 api_type: JSON-RPC
-updated_at: 2026-11-16 20:32:48.195691
+updated_at: 2026-11-18 05:09:18.830352
 ---
 
 # private/get_margins

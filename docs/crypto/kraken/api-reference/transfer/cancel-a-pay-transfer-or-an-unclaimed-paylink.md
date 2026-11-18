@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/transfer/cancel-a-pay-transfer-or-an-unclaimed-paylink
-api_type: REST
-updated_at: 2026-11-18 01:44:45.827892
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/transfer/cancel-a-pay-transfer-or-an-unclaimed-paylink'
+updated_at: 2026-11-18
 ---
 
 # Cancel a pay transfer or an unclaimed paylink
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:45.827892
 > Cancel a pay transfer or an **unclaimed** paylink
 
 **API Key Permissions Required:** `Funds permissions - Query`
+
+
 
 
 ## OpenAPI

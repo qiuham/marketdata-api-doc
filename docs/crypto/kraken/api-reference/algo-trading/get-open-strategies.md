@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/algo-trading/get-open-strategies
-api_type: REST
-updated_at: 2026-11-18 01:44:08.126733
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/algo-trading/get-open-strategies'
+updated_at: 2026-11-18
 ---
 
 # Get Open Strategies
@@ -12,6 +20,8 @@ updated_at: 2026-11-18 01:44:08.126733
 When the request acts on a selected sub-account, only that sub-account's strategies are returned.
 
 **API Key Permissions Required:** `Orders and trades - Query open orders & trades`. Results are limited to the key's own account.
+
+
 
 
 ## OpenAPI

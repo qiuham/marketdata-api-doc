@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/earn/allocate-earn-funds
-api_type: REST
-updated_at: 2026-11-18 01:44:19.358541
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/earn/allocate-earn-funds'
+updated_at: 2026-11-18
 ---
 
 # Allocate Earn Funds
@@ -31,6 +39,7 @@ method:
 - Service temporarily unavailable: `EEarnings:Busy`. Try again in a few minutes.
 - User tier verification: `EEarnings:Permission denied:The user's tier is not high enough`
 - Strategy not found: `EGeneral:Invalid arguments:Invalid strategy ID`
+
 
 
 ## OpenAPI

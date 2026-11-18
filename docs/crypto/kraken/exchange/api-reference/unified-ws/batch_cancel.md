@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/unified-ws/batch_cancel
-api_type: WebSocket
-updated_at: 2026-11-18 01:45:20.069480
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/unified-ws/batch_cancel'
+updated_at: 2026-11-18
 ---
 
 # Batch Cancel

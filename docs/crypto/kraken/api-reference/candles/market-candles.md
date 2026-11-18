@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/candles/market-candles
-api_type: REST
-updated_at: 2026-11-18 01:44:17.131008
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/candles/market-candles'
+updated_at: 2026-11-18
 ---
 
 # Market Candles
@@ -13,6 +21,7 @@ List of available tick types can be fetched from the [tick types](#operation/tic
 endpoint. List of available markets can be fetched from the [markets](#operation/symbols)
 endpoint. List of available resolutions can be fetched from the
 [resolutions](#operation/resolutions) endpoint.
+
 
 
 ## OpenAPI

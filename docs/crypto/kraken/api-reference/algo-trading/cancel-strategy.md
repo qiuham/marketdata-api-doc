@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/algo-trading/cancel-strategy
-api_type: REST
-updated_at: 2026-11-18 01:44:07.862738
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/algo-trading/cancel-strategy'
+updated_at: 2026-11-18
 ---
 
 # Cancel Strategy
@@ -10,6 +18,8 @@ updated_at: 2026-11-18 01:44:07.862738
 > Cancel a `pending` or `open` strategy by `strategy_id`. Cancellation stops further child-order scheduling. An already-submitted child order may still fill while cancellation completes, and those fills are kept. The strategy normally finishes as `cancelled` with `reason: userRequested`; if the in-flight order completes the requested volume, it can finish as `closed`. Poll `QueryStrategies` for the terminal status and final execution totals. Terminal strategies are returned by `GetClosedStrategies`.
 
 **API Key Permissions Required:** `Orders and trades - Cancel & close orders`
+
+
 
 
 ## OpenAPI

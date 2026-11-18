@@ -1,8 +1,16 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/exchange/api-reference/drop-copy/sequence-reset
-api_type: FIX
-updated_at: 2026-11-18 01:44:49.568204
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/exchange/api-reference/drop-copy/sequence-reset'
+updated_at: 2026-11-18
 ---
 
 # Sequence Reset

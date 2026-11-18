@@ -1,14 +1,24 @@
 ---
-exchange: kraken
-source_url: https://docs.kraken.com/api-reference/transparency/pre-trade-data
-api_type: REST
-updated_at: 2026-11-18 01:44:47.250027
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider: kraken
+provider_name: Kraken
+product: api
+product_id: kraken
+source_url: 'https://docs.kraken.com/api-reference/transparency/pre-trade-data'
+updated_at: 2026-11-18
 ---
 
 # Pre-Trade Data
 
 > Returns the price levels in the order book with aggregated order quantities at each price level. 
 The top 10 levels are returned for each trading pair.
+
+
 
 
 ## OpenAPI
