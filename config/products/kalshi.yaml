@@ -1,0 +1,35 @@
+id: kalshi
+display_name: Kalshi
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider:
+  id: kalshi
+  display_name: Kalshi
+product: api
+status: active
+priority: 200
+# Mintlify 文档站（美国 CFTC 受监管的预测市场，放 crypto 下是照 Polymarket）：
+# llms.txt 列全部页（和 sitemap.xml 对过，一样），每页 .md 是原文；
+# OpenAPI（预测市场、永续）、AsyncAPI（WebSocket）规格一起收
+adapter: llms_txt
+source:
+  type: llms_txt
+  llms_txt: https://docs.kalshi.com/llms.txt
+  base_url: https://docs.kalshi.com/
+  include_specs: true
+  concurrency: 4
+output:
+  docs_dir: docs/crypto/kalshi
+  index_file: index/crypto/kalshi.json
+  clean_before_crawl: true
+metadata_defaults:
+  api_type: reference
+  source_type: llms_txt
+  version: ''
+validate:
+  # 标题和 URL 用词不同、但已核对是对的页（2026-11-18 核对，llms.txt 和官网就是这些标题）：
+  ignore_title_mismatch:
+    - https://docs.kalshi.com/getting_started/terms   # 术语表，官网标题 Kalshi Glossary
+    - https://docs.kalshi.com/margin                  # 永续合约（perps）API 总览，官网标题 Perps API
+    - https://docs.kalshi.com/welcome/index           # 首页，官网标题 Introduction

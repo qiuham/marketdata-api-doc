@@ -28,6 +28,7 @@
 | crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-18 |
 | crypto | Bitget | [Bitget](./docs/crypto/bitget/) | ✅ | 219 | 2026-11-18 |
 | crypto | Bitfinex | [Bitfinex](./docs/crypto/bitfinex/) | ✅ | 141 | 2026-11-18 |
+| crypto | Kalshi | [Kalshi](./docs/crypto/kalshi/) | ✅ | 298 | 2026-11-18 |
 
 ## 快速开始
 
@@ -72,6 +73,7 @@ marketdata-api-doc/
 │   │   ├── deribit.yaml
 │   │   ├── gateio.yaml
 │   │   ├── hyperliquid.yaml
+│   │   ├── kalshi.yaml
 │   │   ├── kraken.yaml
 │   │   ├── okx.yaml
 │   │   └── polymarket.yaml
@@ -94,6 +96,7 @@ marketdata-api-doc/
 │       ├── deribit/                                # 342 Markdown docs
 │       ├── gateio/                                 # 72 Markdown docs
 │       ├── hyperliquid/                            # 36 Markdown docs
+│       ├── kalshi/                                 # 298 Markdown docs
 │       ├── kraken/                                 # 457 Markdown docs
 │       ├── okx/                                    # 519 Markdown docs
 │       └── polymarket/                             # 562 Markdown docs
@@ -107,6 +110,7 @@ marketdata-api-doc/
 │   ├── crypto/deribit.json
 │   ├── crypto/gateio.json
 │   ├── crypto/hyperliquid.json
+│   ├── crypto/kalshi.json
 │   ├── crypto/kraken.json
 │   ├── crypto/okx.json
 │   └── crypto/polymarket.json
@@ -145,7 +149,7 @@ updated_at: 2026-11-11 14:17:18.632567
 
 | 方式 | 用在哪 | 说明 |
 |---|---|---|
-| `llms_txt` | Hyperliquid、Kraken、Polymarket、Bitfinex | 文档站每页加 `.md` 就是原文（GitBook、Mintlify、ReadMe）。页面列表取自 `llms.txt`，`llms.txt` 不全时取 `sitemap.xml`（Kraken），或者再从指定页面的侧边栏补全（Bitfinex，配置 `sidebar_pages`）。直接 HTTP 下载，不开浏览器；可以顺带收 OpenAPI / AsyncAPI 规格（存在 `_specs/`） |
+| `llms_txt` | Hyperliquid、Kraken、Polymarket、Bitfinex、Kalshi | 文档站每页加 `.md` 就是原文（GitBook、Mintlify、ReadMe）。页面列表取自 `llms.txt`，`llms.txt` 不全时取 `sitemap.xml`（Kraken），或者再从指定页面的侧边栏补全（Bitfinex，配置 `sidebar_pages`）。直接 HTTP 下载，不开浏览器；可以顺带收 OpenAPI / AsyncAPI 规格（存在 `_specs/`） |
 | `crypto_legacy`（HTTP） | Binance、Deribit | 也是取每页的 `.md` 原文，但有各家自己的处理：Binance 从 `/en/docs/llms.txt` 列出全部文档页，英文、中文合成一篇双语文档；`/en/docs/catalog` 下每个 API 的 OpenAPI `schema.yaml` 要在浏览器里取（有 AWS WAF 验证），转成 Markdown 放在 `catalog/`。Deribit 从 `/_llms/production.txt` 出发递归读子索引，只收正式版 |
 | `crypto_legacy`（HTTP，Zudoku） | Bitget | 站点没有 `llms.txt`、`sitemap.xml`，侧边栏在浏览器里才生成。任一文档页的 HTML 引用 `entry.client-*.js`，里面有全部路由：`/docs/uta/...`（统一账户）、`/docs/classic/...`（经典账户）每页加 `.md` 是原文，英文、中文（`/zh-CN/docs/...`）合成一篇；`/docs/catalog/<名字>` 每个一份 OpenAPI 规格，编在 JS 模块里，按字面量读出来（不执行 JS）转成 Markdown，放在 `catalog/` |
 | `crypto_legacy`（浏览器） | Bybit、Coinbase、Gate.io、OKX | 用 `agent-browser` 打开网页取正文。多标签页并发时，存盘前核对当前标签页的网址，对不上就重开，还不对就跳过这一页 |
@@ -168,5 +172,5 @@ updated_at: 2026-11-11 14:17:18.632567
 
 ## 已接入范围
 
-- `crypto/*`：Binance、Bitget、Bybit、Coinbase、Deribit、Gate.io、Hyperliquid、Kraken、OKX、Polymarket。
+- `crypto/*`：Binance、Bitfinex、Bitget、Bybit、Coinbase、Deribit、Gate.io、Hyperliquid、Kalshi、Kraken、OKX、Polymarket。
 - 后续可以按同一结构扩展到 `cn/futures`、`us/stock`、行情数据供应商和内部网关。

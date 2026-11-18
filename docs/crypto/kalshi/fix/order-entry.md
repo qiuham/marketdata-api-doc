@@ -1,0 +1,385 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/fix/order-entry'
+updated_at: 2026-11-18
+---
+
+# Order Entry
+
+> Submit, modify, and cancel orders through FIX messages
+
+## New Order Single (35=D)
+
+Used to submit a new order to the Exchange.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 11 | ClOrdID | String | Y | Client order ID for idempotency. UUID preferred, max 64 chars. Must not match any open order. |
+| 18 | ExecInst | Char | N | `6`=Post Only, `E`=Reduce Only (IOC only; not supported with QuoteId) |
+| 38 | OrderQty | Decimal | Y | Quantity of contracts. Fractional quantities supported. |
+| 40 | OrdType | Char | Y | `2`=Limit |
+| 44 | Price | Decimal | Y | Limit price per contract. Whole cents (1–99) by default, or dollars with up to four decimal places when `UseDollars=Y`. See [Subpenny Pricing](https://docs.kalshi.com/fix/subpenny-pricing.md). |
+| 50 | SenderSubID | String | N | Header field identifying the operator for this order; printable ASCII, max 16 characters. |
+| 54 | Side | Char | Y | `1`=Buy (Yes), `2`=Sell (No) |
+| 55 | Symbol | String | Y | Market ticker (e.g. `EURUSD-23JUN2618-B1.087`) |
+| 100 | ExDestination | Integer | N | Exchange index. Omit or use `-1` to auto-route by `Symbol<55>`. With `UseCapReservation` (21032) or [`AutoTransfer` (21035)](https://docs.kalshi.com/fix/authentication#optional-fields) enabled, other values are rejected. Ignored for margin sessions. |
+| 59 | TimeInForce | Char | N | `0`=Day (expires 11:59:59.999pm ET), `1`=GTC, `3`=IOC, `4`=FOK, `6`=GTD. Past GTD dates are treated as IOC. **If omitted, the order is good-till-canceled:** it rests until it fills or you cancel it. This differs from FIX's Day default; send `59=0` if you want the order to expire at the end of the day. |
+| 126 | ExpireTime | UTCTimestamp | C | Required when TimeInForce=GTD. |
+| 117 | QuoteId | UUID | N | Quote to accept when using NewOrderSingle for an RFQ quote acceptance. Reduce-only (`18=E`) is not supported and is rejected. |
+| 448 | PartyID | String | N | FCM only. Full customer-account identifier in `<fcm_user_id>_<suffix>` format. See [FCM customer-account identifiers](#fcm-customer-account-identifiers). |
+| 452 | PartyRole | Integer | N | FCM only. `24`=Customer Account. Required when using PartyID. |
+| 453 | NoPartyIDs | Integer | N | FCM only. Number of parties (only 1 supported). |
+| 79 | AllocAccount | Integer | N | Subaccount number (0–63). Alternative to NoPartyIDs. |
+| 526 | SecondaryClOrdID | UUID | N | [Order group](https://docs.kalshi.com/fix/order-groups.md) identifier. |
+| 2964 | SelfTradePreventionType | Integer | N | `1`=Taker At Cross (default), `2`=Maker |
+| 21006 | CancelOrderOnPause | Boolean | N | Cancel order if trading is paused. |
+| 21009 | MaxExecutionCost | Decimal | N | Max execution cost in dollars. Order canceled if unable to fill within cost. |
+| 21023 | RfqId | UUID | N | Server-assigned RFQ ID when using NewOrderSingle to accept an RFQ quote. If provided, the quote must belong to this RFQ. |
+
+### FCM customer-account identifiers
+
+For FCM customer accounts (`PartyRole<452>=24`), send the full subtrader identifier in `PartyID<448>`: `<fcm_user_id>_<suffix>`. The prefix is the FCM's 36-character UUID, followed by an underscore (`_`) delimiter and a suffix of 1–16 case-sensitive ASCII alphanumeric characters (`A-Z`, `a-z`, `0-9`). The full identifier is at most 53 characters, including the delimiter.
+
+For example: `550e8400-e29b-41d4-a716-446655440000_customer1`.
+
+Order Cancel and Order Cancel/Replace requests must use the same full identifier as the original order. Execution Reports return the full customer-account identifier unchanged in the `PartyRole=24` entry, including the UUID prefix, underscore, and suffix. A `PartyRole=12` entry instead contains the operator identifier captured from `SenderSubID<50>`.
+
+> [!NOTE]
+>
+> `SenderSubID<50>` is captured on an ordinary NewOrderSingle and, per action, on OrderCancelRequest and OrderCancelReplaceRequest; it is ignored on RFQ quote acceptance. The operator on a NewOrderSingle sticks to the order: fills and other lifecycle reports emit it as the PartyRole=12 party. Cancel and Cancel/Replace acknowledgements instead emit the operator sent on that request — the operator who performed the action — falling back to the order's creating operator when the request carried none. Do not send tag 50 on Logon: Kalshi rejects that Logon.
+
+```fix Example New Order theme={null}
+8=FIXT.1.1|9=200|35=D|34=5|52=20230809-12:34:56.789|49=your-api-key|56=KalshiNR|
+11=550e8400-e29b-41d4-a716-446655440000|38=10|40=2|54=1|55=HIGHNY-23DEC31|44=75|
+59=1|10=123|
+```
+
+## Order Cancel/Replace Request (35=G)
+
+Used to modify an existing order without canceling it.
+
+### Supported Modifications
+
+* **OrderQty**: Increases or decreases the quantity of your order, note that increasing the quantity for the same point means forfeiting your queue position
+
+* **Price**: Changes the limit price of your order
+
+* **Expiry**: Use Day (`59=0`) without `126` to expire at 11:59:59.999pm ET, set a future deadline with `TimeInForce=GTD` (`59=6`) and `ExpireTime` (`126`), or remove expiry with `TimeInForce=GTC` (`59=1`) and no `126`. Expired deadlines, including the Unix epoch, are rejected.
+
+**Kalshi conventions for replace:** Omitting both `59` and `126` preserves the
+order's current expiry. This is a Kalshi-specific convention, rather than FIX's
+Day default for omitted `59`. To resend expiry explicitly, send `59=6` with the
+unchanged `126` for GTD, `59=0` without `126` for Day, or `59=1` without `126`
+for GTC. Send the current total `OrderQty` and price for an expiry-only amendment. Kalshi guarantees that an
+expiry-only amendment preserves FIFO queue position when price and quantity
+are unchanged.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 11 | ClOrdID | String | Y | Unique modification request ID. UUID preferred, max 64 chars. |
+| 37 | OrderID | String | N | Exchange-assigned order identifier. Required on `UseCapReservation` (21032) sessions. |
+| 38 | OrderQty | Decimal | Y | New total quantity. If equal to filled qty, order is canceled. If less, rejected. |
+| 40 | OrdType | Char | Y | `2`=Limit |
+| 41 | OrigClOrdID | String | Y | ClOrdID of the order to modify. |
+| 44 | Price | Decimal | N | New limit price. Required if changing price. Whole cents (1–99) by default, or dollars with up to four decimal places when `UseDollars=Y`. See [Subpenny Pricing](https://docs.kalshi.com/fix/subpenny-pricing.md). |
+| 50 | SenderSubID | String | N | Header field identifying the operator performing this modification; printable ASCII, max 16 characters. |
+| 54 | Side | Char | Y | Must match original order. |
+| 55 | Symbol | String | Y | Must match original order. |
+| 100 | ExDestination | Integer | N | Exchange index. Omit or use `-1` to auto-route by `Symbol<55>`. With `UseCapReservation` (21032) or [`AutoTransfer` (21035)](https://docs.kalshi.com/fix/authentication#optional-fields) enabled, other values are rejected. Ignored for margin sessions. |
+| 59 | TimeInForce | Char | N | `0`=Day sets expiry to 11:59:59.999pm ET and forbids ExpireTime; `1`=GTC clears expiry and forbids ExpireTime; `6`=GTD requires a future ExpireTime. Omit both tags to preserve expiry (Kalshi convention). Other values are not supported on replace. |
+| 126 | ExpireTime | UTCTimestamp | C | Future expiration timestamp. Requires TimeInForce=GTD (`59=6`); cannot be sent alone or with Day/GTC. Expired timestamps, including the Unix epoch, are rejected. |
+| 448 | PartyID | String | N | FCM only. Full [customer-account identifier](#fcm-customer-account-identifiers); must match the original order. |
+| 452 | PartyRole | Integer | N | FCM only. `24`=Customer Account. Must match original order. Required when using PartyID. |
+| 453 | NoPartyIDs | Integer | N | FCM only. Must match original order (only 1 supported). |
+| 79 | AllocAccount | Integer | N | Subaccount number (0–63). Must match original order. |
+
+## Order Cancel Request (35=F)
+
+Cancel all remaining quantity of an existing order.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 11 | ClOrdID | String | Y | Unique cancel request ID. UUID preferred, max 64 chars. |
+| 37 | OrderID | String | N | Exchange-assigned order identifier. |
+| 41 | OrigClOrdID | String | Y | ClOrdID of the order to cancel. |
+| 50 | SenderSubID | String | N | Header field identifying the operator performing this cancel; printable ASCII, max 16 characters. |
+| 54 | Side | Char | Y | Must match original order. |
+| 55 | Symbol | String | Y | Must match the original order. Required for auto-routing. |
+| 100 | ExDestination | Integer | N | Exchange index. On event-contract sessions, omit or use `-1` to auto-route by `Symbol<55>`, which is required for auto-routing. This field should not be included for margin. It will be ignored. |
+| 448 | PartyID | String | N | FCM only. Full [customer-account identifier](#fcm-customer-account-identifiers); must match the original order. |
+| 452 | PartyRole | Integer | N | FCM only. `24`=Customer Account. Must match original order. Required when using PartyID. |
+| 453 | NoPartyIDs | Integer | N | FCM only. Must match original order (only 1 supported). |
+| 79 | AllocAccount | Integer | N | Subaccount number (0–63). Must match original order. |
+
+## Execution Report (35=8)
+
+Sent by the exchange to reflect order state changes.
+
+Replaced reports confirm the resulting validity with `TimeInForce=GTD` (`59=6`)
+and the accepted `ExpireTime` (`126`), or `TimeInForce=GTC` (`59=1`) without `126`
+when there is no expiry. Kalshi stores Day orders as explicit deadlines, so their
+Replaced reports also use GTD with the end-of-day ET deadline; they do not echo
+the original Day value.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 6 | AvgPx | Decimal | Y | Average price of all fills on this order. Cents by default, or dollars when `UseDollars=Y`. See [Subpenny Pricing](https://docs.kalshi.com/fix/subpenny-pricing.md). |
+| 11 | ClOrdID | String | Y | ClOrdID from the last message that changed the order. |
+| 14 | CumQty | Decimal | Y | Total quantity filled so far. |
+| 17 | ExecID | String | Y | Unique report ID, sequenced within an exchange index. Format: `clock;event` for exchange index `0` (e.g. `4;7`) and `clock;event;exchange_index` for other indexes (e.g. `4;7;1`). `"-1;-1"` for PENDING reports. |
+| 30 | LastMkt | String | C | Exchange index that produced the report. |
+| 31 | LastPx | Decimal | C | YES fill price, regardless of Side(54). To display the NO fill price, subtract LastPx from 1 in dollar mode (`UseDollars=Y`), or from 100 in cents mode. Whole cents by default, or dollars with four decimal places when `UseDollars=Y`. Present only for ExecType=Trade. See [Subpenny Pricing](https://docs.kalshi.com/fix/subpenny-pricing.md). |
+| 32 | LastQty | Decimal | C | Fill quantity. Present only for ExecType=Trade. |
+| 37 | OrderID | String | Y | Exchange-assigned order identifier. |
+| 38 | OrderQty | Decimal | Y | Total order quantity. OrderQty = CumQty + LeavesQty. |
+| 39 | OrdStatus | Char | Y | Current order status. See Order Status below. |
+| 41 | OrigClOrdID | String | C | Previous ClOrdID. Present for Replaced/Canceled orders. |
+| 44 | Price | Decimal | C | Order limit price per contract. Whole cents by default, or dollars with four decimal places when `UseDollars=Y`. See [Subpenny Pricing](https://docs.kalshi.com/fix/subpenny-pricing.md). |
+| 54 | Side | Char | Y | `1`=Buy (Yes), `2`=Sell (No) |
+| 55 | Symbol | String | Y | Market ticker. |
+| 58 | Text | String | N | Human-readable result description. See Text Field Values below. |
+| 59 | TimeInForce | Char | C | Present for Replaced reports: `6`=GTD when expiry exists (including Day deadlines), otherwise `1`=GTC. |
+| 60 | TransactTime | UTCTimestamp | C | Timestamp of the triggering event. |
+| 103 | OrdRejReason | Integer | C | Rejection reason. Present when ExecType=Rejected. See below. |
+| 126 | ExpireTime | UTCTimestamp | C | Expiration timestamp. 11:59pm ET for Day orders. |
+| 150 | ExecType | Char | Y | Report reason. See Execution Types below. |
+| 151 | LeavesQty | Decimal | Y | Remaining quantity open for execution. |
+| 448 | PartyID | String | N | For `PartyRole=24`, the full customer-account identifier is returned unchanged, including the UUID prefix, underscore, and suffix. For `PartyRole=12`, the operator identifier captured from SenderSubID (50). |
+| 452 | PartyRole | Integer | N | `24`=Customer Account, `12`=Executing Trader. Present when PartyID is present. |
+| 453 | NoPartyIDs | Integer | N | Number of parties. Up to 2 when both customer account and operator are present. |
+| 79 | AllocAccount | Integer | C | Subaccount number (0–63). Present if order was placed for a subaccount. |
+| 715 | ClearingBusinessDate | LocalMktDate | C | Clearing date (`YYYYMMDD`), using the Eastern calendar date of TransactTime. Present only for ExecType=Trade. |
+
+### Order Status (39)
+
+* **New\<0>**: Active order, no fills
+* **Partially Filled\<1>**: Some quantity filled
+* **Filled\<2>**: Completely filled
+* **Canceled\<4>**: Canceled (may have partial fills)
+* **Replaced\<5>**: Order modified via Cancel/Replace
+* **Pending Cancel\<6>**: Cancel pending
+* **Rejected\<8>**: Order rejected
+* **Pending New\<A>**: Order pending acceptance
+* **Expired\<C>**: Time in force expired
+* **Pending Replace\<E>**: Modification pending
+
+> [!NOTE]
+>
+> By default, expiry-style system cancellations are reported as **Canceled\<4>**.\
+> If Logon tag **21012 (UseExpiredOrdStatus)=Y**, expiry-style system cancellations (CloseCancel and OrderExpiryCancel) are reported as **Expired\<C>**.
+
+### Order Rejection Reasons (103)
+
+* **Unknown symbol\<1>**
+* **Exchange closed\<2>**
+* **Order exceeds limit\<3>**
+* **Too late to enter\<4>**
+* **Duplicate order\<6>**
+* **Stale order\<8>**
+* **Unsupported order characteristic\<11>**
+* **Incorrect quantity\<13>**
+* **Unknown account\<15>**
+* **Other\<99>**
+
+### Execution Types (150)
+
+* **New\<0>**: Order accepted
+* **Trade\<F>**: Order filled (partial or complete)
+* **Canceled\<4>**: Order canceled
+* **Replaced\<5>**: Order modified
+* **Rejected\<8>**: Order rejected
+* **Expired\<C>**: Order expired
+* **Pending New\<A>**: Order pending acceptance
+* **Pending Cancel\<6>**: Cancel pending
+* **Pending Replace\<E>**: Modification pending
+
+### Text Field Values (58)
+
+Common values for the Text field in Execution Reports:
+
+* **EXCHANGE\_UNAVAILABLE** - the gateway could not confirm whether the order was applied (exchange unreachable, request timed out, or interrupted after the order may have been accepted). Reconcile the order's state, or retry with the same ClOrdID. Maps to OrdRejReason "Other"
+* **INTERNAL\_ERROR** - a reject from a healthy exchange that could not be mapped to a specific reason. The order was not applied, so it is safe to fix and resubmit. Maps to OrdRejReason "Other"
+* **MARKET\_ALREADY\_CLOSED** - maps to OrdRejReason "Too late to enter"
+* **MARKET\_ALREADY\_SETTLED** - maps to OrdRejReason "Too late to enter"
+* **MARKET\_INACTIVE** - maps to OrdRejReason "Too late to enter"
+* **MARKET\_NOT\_FOUND** - maps to OrdRejReason "Unknown symbol"
+* **SELF\_CROSS\_ATTEMPT** - maps to ExecutionType "Canceled"
+* **SELF\_CROSS\_ATTEMPT\_PARTIALLY\_FILLED** - maps to ExecutionType "Canceled"
+* **ORDER\_ALREADY\_EXISTS** - maps to OrdRejReason "Duplicate order"
+* **EXCEEDED\_ORDER\_GROUP\_RISK\_LIMIT** - maps to OrdRejReason "Order exceeds limit"
+* **INSUFFICIENT\_BALANCE** - maps to OrdRejReason "Order exceeds limit"
+* **EXCHANGE\_PAUSED** - maps to OrdRejReason "Exchange closed"
+* **TRADING\_PAUSED** - maps to OrdRejReason "Exchange closed"
+* **INVALID\_ORDER** - maps to OrdRejReason "Unsupported order characteristic"
+* **ORDER\_GROUP\_NOT\_FOUND** - maps to OrdRejReason "Unsupported order characteristic"
+* **EXCEEDED\_PER\_MARKET\_RISK\_LIMIT** - maps to OrdRejReason "Order exceeds limit"
+* **EXCEEDED\_SELL\_POSITION\_FLOOR** - maps to OrdRejReason "Order exceeds limit"
+* **EVENT\_CONTRACT\_DAILY\_CAP\_EXCEEDED** - the customer account's remaining event contract daily cap cannot cover this order. `UseCapReservation` (21032) sessions only. Maps to OrdRejReason "Order exceeds limit"
+* **EVENT\_CONTRACT\_DAILY\_CAP\_NOT\_FOUND** - the customer account has no daily cap configured, so the cap lane cannot accept orders for it. `UseCapReservation` (21032) sessions only. Maps to OrdRejReason "Unknown account"
+* **ORDER\_AMEND\_IN\_PROGRESS** - a previous amend for this order has not settled yet. `UseCapReservation` (21032) sessions only. Maps to CxlRejReason "Broker"
+* **ORDER\_ATTRIBUTES\_MISMATCH** - Symbol or Side does not match the resting order. `UseCapReservation` (21032) sessions only. Maps to CxlRejReason "Unknown order"
+* **CUSTOMER\_ACCOUNT\_NOT\_FOUND** - maps to OrdRejReason "Unknown account"
+* **PERMISSION\_DENIED\_FOR\_CUSTOMER\_ACCOUNT** - maps to OrdRejReason "Unknown account"
+* **FOK\_INSUFFICIENT\_VOLUME** - maps to ExecutionType "Canceled"
+* **POST\_ONLY\_CROSS** - maps to ExecutionType "Canceled"
+* **ORDER\_GROUP\_CANCEL** - maps to ExecutionType "Canceled"
+* **TAKER\_CANCEL\_FOR\_SELF\_TRADE\_PREVENTION** - maps to ExecutionType "Canceled"
+* **MAKER\_CANCEL\_FOR\_SELF\_TRADE\_PREVENTION** - maps to ExecutionType "Canceled"
+* **IMMEDIATE\_OR\_CANCELLED** - maps to ExecutionType "Canceled"
+* **REDUCE\_ONLY** - reduce-only order canceled because there was no position to reduce. Maps to ExecutionType "Canceled"
+* **EXPIRED** - maps to OrdRejReason "Stale order" (RFQ quote had expired when the order arrived)
+* **EXPIRED\_TIMESTAMP** - maps to OrdRejReason "Stale order"
+* **TOO\_MANY\_OPEN\_ORDERS** - maps to OrdRejReason "Order exceeds limit"
+* **AVAILABLE\_BALANCE\_TOO\_LOW** - maps to OrdRejReason "Order exceeds limit"
+* **EXCEEDED\_CANCEL\_GROUP\_LIMIT** - maps to OrdRejReason "Order exceeds limit"
+* **INVALID\_PRICE** - the price is off the market's tick grid or outside its valid range. Maps to OrdRejReason "Unsupported order characteristic"
+* **INVALID\_ORDER\_SIZE** - maps to OrdRejReason "Incorrect quantity"
+* **INVALID\_NOTIONAL\_VALUE** - maps to OrdRejReason "Incorrect quantity"
+* **INVALID\_CUSTOMER\_ACCOUNT\_ID** - maps to OrdRejReason "Unsupported order characteristic"
+* **CUSTOMER\_ACCOUNT\_ID\_TOO\_LONG** - the suffix of a new FCM customer-account identifier is longer than 16 characters. Maps to OrdRejReason "Unsupported order characteristic"
+* **INSUFFICIENT\_SHARD\_BALANCE** - the account has never been funded on the market's [exchange index](https://docs.kalshi.com/getting_started/exchange_sharding.md). Fund that index, then resubmit. Maps to OrdRejReason "Unknown account"
+* **TRADING\_BLOCKED** - the account is not permitted to place this order. Maps to OrdRejReason "Other"
+* **LOCATION\_BLOCKED** - the account is not permitted to place this order. Maps to OrdRejReason "Other"
+* **CATEGORY\_BLOCKED** - the account is not permitted to place this order. Maps to OrdRejReason "Other"
+* **exchange index out of range** - the order could not be routed to the exchange index in `ExDestination<100>`. Maps to OrdRejReason "Other"
+* **Service busy, please retry** - the gateway could not queue the request, so it was not applied. Resend it. Maps to OrdRejReason "Other" (CxlRejReason "Other" on cancel and replace)
+* **TAG \<n>** - a field failed one of the gateway's order-level checks before the order reached the exchange. See [Field validation rejects](#field-validation-rejects)
+
+### Field validation rejects
+
+Some field checks on NewOrderSingle, OrderCancelRequest, and OrderCancelReplaceRequest are answered with the normal order response instead of a session-level Reject (35=3). `Text<58>` is then `TAG <n>`, where `<n>` is the number of the offending tag:
+
+| Request | Response |
+| - | - |
+| NewOrderSingle (35=D) | ExecutionReport (35=8), `ExecType=Rejected`, `OrdRejReason<103>=11` |
+| OrderCancelRequest (35=F), OrderCancelReplaceRequest (35=G) | OrderCancelReject (35=9), `CxlRejReason<102>=99` |
+
+For example, on NewOrderSingle `58=TAG 44` means `Price<44>` is outside the valid range or has more precision than the session's price format allows, `58=TAG 59` means an unsupported `TimeInForce` and `58=TAG 18` an unsupported `ExecInst` combination. Correct the field and resubmit.
+
+This covers only some checks. Other unacceptable values are still answered with a session-level Reject (35=3) naming the tag in `RefTagID<371>`, and no order response follows: for example a malformed `ClOrdID<11>` or `OrigClOrdID<41>`, an `AllocAccount<79>` outside 0-63, or a `Price<44>` on OrderCancelReplaceRequest that does not fit the price format. Handle both responses for every order message.
+
+### OrderCancelReject (35=9)
+
+Exchange-side amend and cancel failures are returned as OrderCancelReject (35=9), not ExecutionReport.
+
+| Text (58) | CxlRejReason (102) |
+| - | - |
+| `INVALID_AMEND_QTY_FOR_ORDER` | Broker |
+| `CANNOT_UPDATE_FILLED_ORDER` | Broker |
+| `SELF_CROSS_ATTEMPT` | Invalid price increment |
+| `ORDER_AMEND_IN_PROGRESS` | Broker |
+| `ORDER_ATTRIBUTES_MISMATCH` | Unknown order |
+| `EVENT_CONTRACT_DAILY_CAP_EXCEEDED` | Broker |
+| `MARKET_ALREADY_CLOSED`, `MARKET_ALREADY_SETTLED`, `MARKET_INACTIVE` | Too late to cancel |
+| `NOT_FOUND` | Unknown order |
+| `ORDER_ID_CLIENT_ORDER_ID_MISMATCH`, `ORDER_SIDE_MISMATCH`, `ORDER_TICKER_MISMATCH` | Unknown order |
+| `ORDER_ALREADY_EXISTS` (the request's `ClOrdID` is already in use) | Duplicate ClOrdID |
+| `AMEND_ORDER_NO_OP` (the replace changes nothing) | Other |
+| `MARKET_NOT_FOUND` | Other |
+| `EXCHANGE_PAUSED`, `TRADING_PAUSED` | Other |
+| `INVALID_PRICE`, `INVALID_ORDER_SIZE`, `INVALID_NOTIONAL_VALUE` | Other |
+| `AVAILABLE_BALANCE_TOO_LOW` | Other |
+| `POST_ONLY_CROSS` | Other |
+| `TRADING_BLOCKED`, `CATEGORY_BLOCKED` | Other |
+| `TAG <n>` ([field validation](#field-validation-rejects)) | Other |
+| `Service busy, please retry` (not applied; resend) | Other |
+
+### Position and Fee Information
+
+When ExecType=Trade:
+
+| Tag | Name | Description |
+| - | - | - |
+| 704 | LongQty | Net Yes position after trade as a decimal quantity |
+| 705 | ShortQty | Net No position after trade as a decimal quantity |
+| 136 | NoMiscFees | Number of fees |
+| 137 | MiscFeeAmt | Total fees in dollars |
+| 138 | MiscFeeCurr | Currency (USD) |
+| 139 | MiscFeeType | Exchange Fees\<4> |
+| 891 | MiscFeeBasis | Fee unit (always ABSOLUTE\<0>) |
+| 880 | TrdMatchID | Unique trade identifier |
+| 1057 | AggressorIndicator | Taker/Maker flag |
+
+### Collateral Changes
+
+| Tag | Name | Description |
+| - | - | - |
+| 1703 | NoCollateralAmountChanges | Number of collateral changes |
+| 1704 | CollateralAmountChange | Delta in dollars |
+| 1705 | CollateralAmountType | BALANCE or PAYOUT |
+
+### Collateral Return Breakdown
+
+When Logon tag `21027` (`SplitCollateralReturn`) is set to `Y`, Execution Reports with `ExecType=Trade` include:
+
+| Tag | Name | Type | Description |
+| - | - | - | - |
+| 21030 | SingleMarketCollateralReturn | Decimal | Collateral freed from reducing/closing a position in a single market. In dollars. Only present when non-zero. |
+| 21031 | RangedMarketCollateralReturn | Decimal | Collateral freed from MECNET/DIRECNET netting across a market group. In dollars. Only present when non-zero. |
+
+Both values are informational subsets of the `BALANCE` collateral change — they describe components within the total balance delta, not additional amounts.
+
+### Party Information
+
+ExecutionReports independently include the customer account when applicable and at most one operator entry (Executing Trader\<12>). Which operator appears depends on the report type: fills and other order-lifecycle reports (expiration, IOC cancellation, and similar) carry the operator captured at order creation, while Cancel and Cancel/Replace acknowledgements carry the operator sent on the acting request, falling back to the creation operator when that request carried none. When both a customer-account entry and an operator entry are present, the customer-account entry comes first.
+
+| Tag | Name | Description |
+| - | - | - |
+| 453 | NoPartyIDs | Number of parties: one or two |
+| 448 | PartyID | Customer-account or operator identifier |
+| 452 | PartyRole | Customer Account\<24> or Executing Trader\<12> |
+| 79 | AllocAccount | Subaccount number (0-63) |
+
+### Rejection Reasons (102)
+
+* **Too late to cancel\<0>**: Market is closed, inactive, or settled
+* **Unknown order\<1>**: Order not found, or order ID/side/ticker mismatch
+* **Broker\<2>**: Invalid amend quantity, or order already fully filled
+* **Duplicate ClOrdID\<6>**: The request's ClOrdID is already in use
+* **Invalid price increment\<18>**: Replace would self-cross
+* **Other\<99>**: See Text field
+
+## Mass Cancel Request (35=q)
+
+Cancel resting orders in bulk. Only available on KalshiNR (NewOrderMode) sessions. `530=6` cancels every resting order placed over FIX with the session's API key, across all exchange indexes. `530=1` cancels every resting order the account has in the market named by `Symbol<55>`, YES and NO, however it was placed, or only one subaccount's when the request names it; it is billed like an order cancel (35=F).
+
+With an API key restricted to one subaccount, `530=1` cancels only that subaccount's orders. `AllocAccount<79>` is optional; if sent, it must be that subaccount, otherwise the request is rejected.
+
+| Tag | Name | Description |
+| - | - | - |
+| 11 | ClOrdID | Unique request ID |
+| 530 | MassCancelRequestType | Cancel for session\<6> or Cancel orders for a security\<1> |
+| 55 | Symbol | Market ticker. Required when `530=1`. |
+| 100 | ExDestination | Exchange index for `530=1`. Omit or use `-1` to auto-route by `Symbol<55>`. Ignored for margin sessions. |
+| 448 | PartyID | FCM only. Full [customer-account identifier](#fcm-customer-account-identifiers). With `530=1`, cancels only that customer account's orders in the market. |
+| 452 | PartyRole | FCM only. `24`=Customer Account. Required when using PartyID. |
+| 453 | NoPartyIDs | FCM only. Number of parties (only 1 supported). |
+| 79 | AllocAccount | Subaccount number (0–63). With `530=1`, cancels only that subaccount's orders in the market; omit to cancel across all subaccounts. Not used with `530=6`. |
+
+## Mass Cancel Report (35=r)
+
+Response to mass cancel request.
+
+| Tag | Name | Description |
+| - | - | - |
+| 11 | ClOrdID | Request ID |
+| 37 | OrderID | Operation ID |
+| 55 | Symbol | Market ticker, echoed when `530=1` |
+| 531 | MassCancelResponse | Cancel orders for a security\<1>, Cancel for session\<6>, or Rejected\<0> |
+| 532 | MassCancelRejectReason | If rejected: Invalid or unknown security\<1> or Other\<99> |
+
+> [!NOTE]
+>
+> The report acknowledges the request. Individual ExecutionReports will follow for each canceled order.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

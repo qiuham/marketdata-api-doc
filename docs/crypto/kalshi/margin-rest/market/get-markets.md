@@ -1,0 +1,414 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/market/get-markets'
+updated_at: 2026-11-18
+---
+
+# Get Markets
+
+> Endpoint for listing available margin markets.
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml get /margin/markets
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/markets:
+    get:
+      tags:
+        - market
+      summary: Get Markets
+      description: Endpoint for listing available margin markets.
+      operationId: GetMarginMarkets
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            $ref: '#/components/schemas/MarginMarketStatus'
+          x-go-type-skip-optional-pointer: true
+          description: Filter by market status (e.g. active, inactive, closed)
+      responses:
+        '200':
+          description: Markets retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginMarketsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    MarginMarketStatus:
+      type: string
+      enum:
+        - inactive
+        - active
+        - closed
+      description: The status of a margin market
+    GetMarginMarketsResponse:
+      type: object
+      required:
+        - markets
+      properties:
+        markets:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarginMarket'
+    MarginMarket:
+      type: object
+      required:
+        - ticker
+        - status
+        - title
+        - contract_size
+        - underlying_multiplier
+        - tick_size
+        - fractional_trading_enabled
+        - minimum_quantity
+        - schedule
+        - exchange_index
+        - market_version
+        - funding_deadband
+        - funding_cap
+        - funding_limit_unit
+        - funding_invalid_premium_handling
+        - halt_sources
+      properties:
+        market_id:
+          type: string
+          description: >-
+            Stable market UUID. Remains unchanged when the market ticker is
+            renamed.
+        ticker:
+          type: string
+        title:
+          type: string
+        market_version:
+          type: integer
+          format: int32
+          description: >-
+            The market's current version. It starts at 1 and increases when
+            trading resumes after a corporate action, such as a stock split.
+            Pass it as market_version when creating an order to have the order
+            rejected if the version has changed since you read it.
+        exchange_index:
+          type: integer
+          deprecated: true
+          description: >-
+            Deprecated: has no effect on order groups or rate limits. This field
+            will be removed.
+        contract_size:
+          type: string
+          description: Fixed-point number with 6 decimal places
+        underlying_multiplier:
+          type: string
+          description: Underlying units per contract-size unit.
+        tick_size:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Minimum price increment in dollars.
+        status:
+          $ref: '#/components/schemas/MarginMarketStatus'
+        fractional_trading_enabled:
+          type: boolean
+          description: >-
+            Whether fractional trading is enabled for this market. When false,
+            order counts must be whole numbers of contracts.
+        minimum_quantity:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: Minimum order quantity in contracts.
+          example: '1.00'
+        leverage_estimate:
+          type: number
+          format: double
+          description: >
+            Leverage estimate (1 / margin_rate) evaluated at a small
+            retail-sized notional position. Actual leverage may be lower for
+            larger positions as the liquidation margin rate grows with size.
+            Null when margin config or price data is unavailable.
+        leverage_estimates:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: >
+            Leverage estimates (1 / margin_rate) keyed by notional position size
+            in dollars ("1000", "10000", "100000", "1000000"). Leverage
+            decreases at larger notionals as the liquidation margin rate grows
+            with size. Null when margin config or price data is unavailable.
+        long_leverage_estimates:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: >
+            Leverage estimates for a long position, keyed by the same notional
+            position sizes as leverage_estimates. 
+        short_leverage_estimates:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: >
+            Leverage estimates for a short position, keyed by the same notional
+            position sizes as long_leverage_estimates.
+        price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Last trade price in dollars.
+        volume:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: One sided total trade volume.
+        volume_notional_value_dollars:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Total notional value of one sided trade volume in dollars.
+        open_interest:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: One sided open interest.
+        open_interest_notional_value_dollars:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Total notional value of one sided open interest in dollars.
+        volume_24h:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: One sided trade volume in the last 24 hours.
+        volume_24h_notional_value_dollars:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Total notional value of one sided trade volume in the last 24 hours
+            in dollars.
+        bid:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Best bid price in dollars.
+        bid_size_fp:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: >-
+            Total number of contracts resting at the best bid price, as a
+            fixed-point count string. Zero when there is no bid. Omitted when
+            market stats are unavailable.
+        ask:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Best ask price in dollars.
+        ask_size_fp:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: >-
+            Total number of contracts resting at the best ask price, as a
+            fixed-point count string. Zero when there is no ask. Omitted when
+            market stats are unavailable.
+        settlement_mark_price:
+          $ref: '#/components/schemas/TickerPrice'
+          description: Mark price used for settlement and funding.
+        liquidation_mark_price:
+          $ref: '#/components/schemas/TickerPrice'
+          description: Mark price used for liquidation.
+        reference_price:
+          $ref: '#/components/schemas/TickerPrice'
+          description: Underlying reference price, scaled per contract.
+        asset_class:
+          type: string
+          description: >
+            Asset class grouping for this market. New asset classes may be added
+            over time. Omitted when the market has no assigned class.
+        product_metadata:
+          type: object
+          additionalProperties: true
+          x-omitempty: true
+          x-go-type-skip-optional-pointer: true
+          description: Public metadata for this market.
+          example:
+            important_info:
+              markdown: >-
+                **Important information:** Review this market's trading
+                schedule.
+        schedule:
+          $ref: '#/components/schemas/MarginMarketSchedule'
+        funding_deadband:
+          type: number
+          format: double
+          minimum: 0
+          description: >-
+            Funding deadband configured at market creation, expressed in
+            funding_limit_unit.
+        funding_cap:
+          type: number
+          format: double
+          minimum: 0
+          description: >-
+            Funding cap configured at market creation, expressed in
+            funding_limit_unit.
+        funding_limit_unit:
+          type: string
+          enum:
+            - percentage
+            - dollar
+          x-go-type-skip-optional-pointer: true
+          description: Unit for the funding limits configured at market creation.
+        halt_sources:
+          type: array
+          items:
+            type: string
+          x-go-type-skip-optional-pointer: true
+          description: >-
+            Why the market is halted. A market that has never opened carries
+            "initial_setup"; one halted for a corporate action carries
+            "corporate_action". Empty means the market is not halted or its
+            reason has not been observed, so do not read it as proof the market
+            is live.
+        funding_invalid_premium_handling:
+          type: string
+          enum:
+            - dampen
+            - exclude
+          x-enum-varnames:
+            - MarginMarketFundingInvalidPremiumHandlingDampen
+            - MarginMarketFundingInvalidPremiumHandlingExclude
+          x-go-type-skip-optional-pointer: true
+          description: >-
+            How funding averages a bar with no premium (no orderbook sample or
+            no index price anywhere in the bar, or a trading halt during it),
+            configured at market creation. dampen counts the bar as a premium of
+            0; exclude leaves it out of the average.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+    TickerPrice:
+      type: object
+      required:
+        - price
+        - ts_ms
+      properties:
+        price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Price in dollars.
+        ts_ms:
+          type: integer
+          format: int64
+          description: Source timestamp in epoch milliseconds.
+    MarginMarketSchedule:
+      type: object
+      nullable: true
+      description: Current market trading schedule. Null for markets that trade 24/7.
+      required:
+        - is_open
+        - next_close_ts
+        - next_open_ts
+      properties:
+        is_open:
+          type: boolean
+          description: Whether the market is currently open for trading.
+        next_close_ts:
+          type: integer
+          format: int64
+          nullable: true
+          description: >-
+            Unix timestamp in seconds for the next scheduled close. Null while
+            closed.
+        next_open_ts:
+          type: integer
+          format: int64
+          nullable: true
+          description: >-
+            Unix timestamp in seconds for the next scheduled open. Null while
+            open.
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimitError:
+      description: >-
+        Rate limit exceeded. The default cost is 10 tokens per request. Use GET
+        /trade-api/v2/account/endpoint_costs to list non-default endpoint costs.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

@@ -1,0 +1,297 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/orders/amend-order'
+updated_at: 2026-11-18
+---
+
+# Amend Order
+
+> Endpoint for amending the price, max number of fillable contracts, and/or expiration time of an existing margin order.
+
+> [!NOTE]
+>
+> Amending only expiry or decreasing size preserves queue position. Increasing size or changing price forfeits queue position and places the order at the back of the queue.
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml post /margin/orders/{order_id}/amend
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/orders/{order_id}/amend:
+    post:
+      tags:
+        - orders
+      summary: Amend Order
+      description: >-
+        Endpoint for amending the price, max number of fillable contracts,
+        and/or expiration time of an existing margin order.
+      operationId: AmendMarginOrder
+      parameters:
+        - $ref: '#/components/parameters/OrderIdPath'
+        - $ref: '#/components/parameters/SubaccountQueryDefaultPrimary'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmendMarginOrderRequest'
+      responses:
+        '200':
+          description: Order amended successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmendMarginOrderResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+components:
+  parameters:
+    OrderIdPath:
+      name: order_id
+      in: path
+      required: true
+      description: Order ID
+      schema:
+        type: string
+    SubaccountQueryDefaultPrimary:
+      name: subaccount
+      in: query
+      required: false
+      description: >-
+        Subaccount number (0 for primary, 1-63 for subaccounts). Defaults to 0.
+        Subaccount-restricted API keys default to their locked subaccount and
+        must omit this parameter or pass their locked subaccount.
+      schema:
+        type: integer
+        minimum: 0
+  schemas:
+    AmendMarginOrderRequest:
+      type: object
+      required:
+        - side
+        - price
+        - count
+      properties:
+        ticker:
+          type: string
+          description: >-
+            Market ticker. Supply ticker or market_id; ticker takes precedence
+            when both are provided.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_without=MarketId
+        market_id:
+          type: string
+          description: Stable exchange market UUID. May be supplied instead of ticker.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,uuid
+        side:
+          $ref: '#/components/schemas/BookSide'
+          description: Side of the order
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=bid ask
+        price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Updated price for the order in fixed-point dollars.
+          x-go-type-skip-optional-pointer: true
+        count:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: String representation of the updated quantity for the order.
+          x-go-type-skip-optional-pointer: true
+        client_order_id:
+          type: string
+          description: The original client-specified order ID to be amended
+          x-go-type-skip-optional-pointer: true
+        updated_client_order_id:
+          type: string
+          description: The new client-specified order ID after amendment
+          x-go-type-skip-optional-pointer: true
+        expiration_time:
+          type: integer
+          format: int64
+          minimum: 0
+          description: >-
+            New Unix expiration timestamp in seconds. Omit to preserve the
+            current expiry, or use 0 to remove it (good-till-canceled). A
+            nonzero expiry must be in the future. Send the current price and
+            total quantity for an expiry-only amendment; this preserves queue
+            position.
+    AmendMarginOrderResponse:
+      type: object
+      required:
+        - order_id
+      properties:
+        order_id:
+          type: string
+        client_order_id:
+          type: string
+        remaining_count:
+          $ref: '#/components/schemas/FixedPointCount'
+          nullable: true
+          x-omitempty: false
+          description: >-
+            Number of contracts remaining after the amend. Only present when the
+            amend caused a fill or changed the resting size.
+        fill_count:
+          $ref: '#/components/schemas/FixedPointCount'
+          nullable: true
+          x-omitempty: false
+          description: >-
+            Number of contracts filled as a result of the amend crossing the
+            book. Only present when fills occurred or remaining size changed.
+        average_fill_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          nullable: true
+          x-omitempty: false
+          description: >-
+            Volume-weighted average fill price for fills resulting from the
+            amend. Only present when fills occurred.
+        average_fee_paid:
+          $ref: '#/components/schemas/FixedPointDollars'
+          nullable: true
+          x-omitempty: false
+          description: >-
+            Volume-weighted average fee paid per contract for fills resulting
+            from the amend. Only present when fills occurred.
+    BookSide:
+      type: string
+      enum:
+        - bid
+        - ask
+      description: The side of an order or trade (bid or ask)
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

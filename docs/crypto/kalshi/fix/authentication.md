@@ -1,0 +1,183 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/fix/authentication'
+updated_at: 2026-11-18
+---
+
+# Authentication & Sessions
+
+> API key creation, logon, session lifecycle, and message retransmission
+
+## API Key Setup
+
+FIX API keys use the same key pair as the [REST API](https://docs.kalshi.com/getting_started/api_keys.md): Ed25519 (recommended) or 2048-bit RSA. Generate a key pair and register the public key in your [account profile](https://kalshi.com/account/profile), or generate one there. The API Key ID (UUID) is your `SenderCompID`.
+
+```bash theme={null}
+# Ed25519
+openssl genpkey -algorithm ed25519 -out kalshi-fix.key
+openssl pkey -in kalshi-fix.key -pubout -out kalshi-fix.pub
+
+# RSA
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out kalshi-fix.key
+openssl rsa -in kalshi-fix.key -pubout -out kalshi-fix.pub
+```
+
+## Logon (35=A)
+
+The initiator sends a Logon message. The acceptor responds with either a Logon (success) or Logout (failure).
+
+> [!WARNING]
+>
+> Do not send `SenderSubID<50>` on Logon. Kalshi rejects it with a Logout; send operator identity per message instead — on NewOrderSingle, OrderCancelRequest, or OrderCancelReplaceRequest.
+
+### Required Fields
+
+| Tag | Name | Description | Value |
+| - | - | - | - |
+| 98 | EncryptMethod | Method of encryption | None\<0> |
+| 96 | RawData | Client logon message signature | Base64 encoded signature |
+| 108 | HeartbeatInt | Heartbeat interval (seconds). Values below 3 are rejected with `Invalid HeartBtInt`. | N >= 3 |
+| 1137 | DefaultApplVerID | Default application version | FIX50SP2\<9> |
+
+### Optional Fields
+
+| Tag | Name | Description | Default |
+| - | - | - | - |
+| 141 | ResetSeqNumFlag | Reset sequence numbers on logon. **Must be Y for non-retransmission sessions.** | N |
+| 8013 | CancelOrdersOnDisconnect | On any disconnection (including graceful logout), cancel the resting orders placed over FIX with this API key. Orders placed through REST or with another API key are not canceled. See the warning under Logout below. | N |
+| 20126 | ListenerSession | Listen-only session. **KalshiNR/RT only, requires SkipPendingExecReports=Y.** | N |
+| 20127 | ReceiveSettlementReports | Receive settlement reports. **KalshiNR, KalshiRT, and KalshiPT only. Defaults to Y on KalshiPT.** | N (Y on KalshiPT) |
+| 20200 | MessageRetentionPeriod | How long session messages will be stored for retransmission, max of 72 hours. **KalshiRT and KalshiPT only.** | 24 |
+| 21005 | UseDollars | Enable dollar-based price format for prices, including subpenny precision | N |
+| 21011 | SkipPendingExecReports | Skip PENDING\_\{NEW\|REPLACE\|CANCEL} execution reports | N |
+| 21012 | UseExpiredOrdStatus | Emit Expired\<C> (150/39) for expiry-style system cancellations (CloseCancel and OrderExpiryCancel) instead of Canceled\<4> | N |
+| 21007 | EnableIocCancelReport | Partially filled IOC orders produce a cancel report | N |
+| 21008 | PreserveOriginalOrderQty | OrderQty tag 38 always reflects original order quantity across all states | N |
+| 21026 | AlwaysEmitNewBeforeTrade | Emit a standalone New\<0> execution report before any Trade\<F> report when both occur in the same matching cycle | N |
+| 21027 | SplitCollateralReturn | Include per-trade collateral return breakdown (tags 21030/21031) on Execution Reports | N |
+| 21032 | UseCapReservation | Reserve event contract daily cap headroom on order entry and replace. **FCM members only, event-contract sessions only.** Replace requires `OrderID<37>`, only after that order's `ExecType=New<0>` report, one amend per order in flight. RFQ quote acceptances are not cap-reserved. | N |
+| 21035 | AutoTransfer | Set `Y` on each Logon to automatically move shared FCM collateral between exchange shards for new orders and replacements. **FCM event-contract order-entry sessions (`KalshiNR`/`KalshiRT`) only, excluding listeners.** Omit `ExDestination<100>` or use `-1`. Disable automatic rebalancing while this option is enabled. | N |
+| 21036 | BestQuoteOnly | Set `Y` on each Logon to receive only the best Yes and best No quotes of each RFQ the session creates, instead of every quote. See [Best Quote Only](https://docs.kalshi.com/fix/rfq-messages.md#best-quote-only). **KalshiRT event-contract sessions only, excluding listeners.** | N |
+
+### Signature Generation
+
+The RawData field must contain a base64-encoded signature of the pre-hash string: Ed25519 for Ed25519 keys, RSA-PSS with SHA-256 for RSA keys.
+
+```
+PreHashString = SendingTime + SOH + MsgType + SOH + MsgSeqNum + SOH + SenderCompID + SOH + TargetCompID
+```
+
+> [!WARNING]
+>
+> **SendingTime in Signature**
+>
+> The SendingTime in the PreHashString must match **exactly** the value in field 52 of the Logon message. Format: `YYYYMMDD-HH:MM:SS.mmm`.
+>
+> SendingTime must be within 30 seconds of the server's current time, or the message will be rejected with `SessionRejectReason<373>=10`.
+
+```python Python (Ed25519) theme={null}
+from base64 import b64encode
+from cryptography.hazmat.primitives import serialization
+
+private_key = serialization.load_pem_private_key(open('kalshi-fix.key', 'rb').read(), password=None)
+sending_time, msg_type, msg_seq_num = "20230809-05:28:18.035", "A", "1"
+sender_comp_id = "your-fix-api-key-uuid"
+target_comp_id = "KalshiNR"  # Must match TargetCompID in tag 56
+
+msg_string = chr(1).join([sending_time, msg_type, msg_seq_num, sender_comp_id, target_comp_id])
+raw_data_value = b64encode(private_key.sign(msg_string.encode('utf-8'))).decode('utf-8')
+```
+
+```python Python (RSA) theme={null}
+from base64 import b64encode
+from Cryptodome.Signature import pss
+from Cryptodome.Hash import SHA256
+from Cryptodome.PublicKey import RSA
+
+private_key = RSA.import_key(open('kalshi-fix.key').read().encode('utf-8'))
+
+sending_time = "20230809-05:28:18.035"
+msg_type = "A"
+msg_seq_num = "1"
+sender_comp_id = "your-fix-api-key-uuid"
+target_comp_id = "KalshiNR"  # Must match TargetCompID in tag 56
+
+msg_string = chr(1).join([
+    sending_time, msg_type, msg_seq_num,
+    sender_comp_id, target_comp_id
+])
+
+msg_hash = SHA256.new(msg_string.encode('utf-8'))
+signature = pss.new(private_key).sign(msg_hash)
+raw_data_value = b64encode(signature).decode('utf-8')
+```
+
+## Reconnecting
+
+Use one active FIX connection per API key. If Logon is rejected, inspect Text (`58`) in the Logout (`35=5`) response:
+
+* `already exists`: check for another connection using the same key before retrying.
+* `rate limit exceeded` or `FIX logon service busy; retry with backoff`: retry with exponential backoff and jitter.
+* `Service shutting down`: the gateway is restarting. Reconnect with backoff.
+* Authentication, permission, or invalid-field errors: correct the issue before retrying. Permission errors include:
+
+| Text (58) | Meaning |
+| - | - |
+| `API key does not have read scope` | Every FIX session needs an API key with the read scope. |
+| `API key does not have write scope` | Order entry, RFQ, drop copy and post-trade sessions also need a key that can trade. Listener sessions and `KalshiMD` need only the read scope. |
+| `API usage level is not allowed for FIX` | The account is below the Premier tier on this exchange. Event-contract and Perps FIX each check their own tier. |
+| `FIX retransmission mode not allowed.` | The account is not enabled for `KalshiRT` or `KalshiPT`. Contact [institutional@kalshi.com](mailto:institutional@kalshi.com). |
+| `User is not allowed to use FIX` | The account cannot use FIX. Contact support. |
+| `Invalid HeartBtInt` | `HeartbeatInt<108>` is below 3. |
+
+Avoid overlapping reconnect attempts. Generate a fresh SendingTime and signature for each attempt, and follow the sequence-number and retransmission rules below.
+
+## Heartbeat & Sequence Numbers
+
+| Behavior | Detail |
+| - | - |
+| Heartbeat interval | Set by `HeartbeatInt<108>` on Logon. Always send it; 30 seconds is a typical value. |
+| Idle timeout | The server ends the session and disconnects when it has received no inbound FIX message of any kind (Heartbeat, TestRequest, other session messages, or application messages) for twice the `HeartbeatInt` |
+| Sequence number lower than expected | Connection terminated |
+| Sequence number higher than expected | Recoverable with ResendRequest (KalshiRT, KalshiPT only) |
+
+## Message Retransmission
+
+Message retransmission (ResendRequest, SequenceReset) is only supported on **KalshiRT** and **KalshiPT**.
+
+> [!WARNING]
+>
+> For all other sessions, `ResetSeqNumFlag<141>` in the Logon message must always be `Y` or the Logon will be rejected.
+
+The [drop copy session](https://docs.kalshi.com/fix/drop-copy.md) provides an alternative way to query for missed execution reports. For a real-time streaming feed, see [Listener Sessions](https://docs.kalshi.com/fix/listener-sessions.md).
+
+### ResendRequest (35=2)
+
+**KalshiRT and KalshiPT only.** Lookback window limited to 24 hours (or up to 72 hours if `MessageRetentionPeriod` was set on Logon).
+
+| Tag | Name | Description |
+| - | - | - |
+| 7 | BeginSeqNo | Lower bound (inclusive) |
+| 16 | EndSeqNo | Upper bound (inclusive) |
+
+## Logout (35=5)
+
+Either side may initiate a Logout. The counterparty responds with a Logout, and the transport connection is terminated. If `CancelOrdersOnDisconnect=Y` was set on Logon, the resting orders placed over FIX with this session's API key are canceled.
+
+> [!WARNING]
+>
+> **CancelOrdersOnDisconnect is not an account-wide kill switch.** It cancels only the resting orders that were placed over FIX with this session's API key. Orders placed through the REST API, or over FIX with a different API key, keep resting. Cancel those separately.
+>
+> A connection that goes silent without closing is only detected by the idle timeout, after twice your `HeartbeatInt` with no inbound message. Cancellation starts after that detection and takes further time to complete; there is no guaranteed upper bound on when the orders are canceled. A shorter `HeartbeatInt` (minimum 3 seconds) shortens detection only. Confirm cancellation from the execution reports or by querying your orders, and do not rely on cancel-on-disconnect as your only protection.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

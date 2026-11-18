@@ -1,0 +1,286 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/portfolio/get-positions'
+updated_at: 2026-11-18
+---
+
+# Get Positions
+
+> Endpoint for retrieving the authenticated user's margin positions.
+Resource-bound MCP OAuth tokens may read the owner's data with read::mcp_portfolio.
+Registered partners may also use a user OAuth access token with the explicitly granted read::compliance_partner scope.
+
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml get /margin/positions
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/positions:
+    get:
+      tags:
+        - portfolio
+      summary: Get Positions
+      description: >
+        Endpoint for retrieving the authenticated user's margin positions.
+
+        Resource-bound MCP OAuth tokens may read the owner's data with
+        read::mcp_portfolio.
+
+        Registered partners may also use a user OAuth access token with the
+        explicitly granted read::compliance_partner scope.
+      operationId: GetMarginPositions
+      parameters:
+        - name: subaccount
+          in: query
+          required: false
+          description: >-
+            Subaccount number (0 for primary, 1-63 for subaccounts). If omitted,
+            returns positions for all subaccounts. Subaccount-restricted API
+            keys must omit this or pass their locked subaccount, and read only
+            that subaccount's positions.
+          schema:
+            type: integer
+        - name: ticker
+          in: query
+          required: false
+          description: Filter positions by market ticker
+          schema:
+            type: string
+          x-go-type-skip-optional-pointer: true
+      responses:
+        '200':
+          description: Positions retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginPositionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+        - kalshiOauthAccessToken: []
+components:
+  schemas:
+    GetMarginPositionsResponse:
+      type: object
+      required:
+        - positions
+      properties:
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarginPosition'
+    MarginPosition:
+      type: object
+      required:
+        - subaccount
+        - subaccount_type
+        - market_ticker
+        - position
+        - entry_price
+        - unrealized_pnl
+        - fees
+        - is_portfolio
+      properties:
+        subaccount:
+          type: integer
+          description: >-
+            The subaccount number that holds this position (0 for primary, 1-63
+            for subaccounts)
+        subaccount_type:
+          $ref: '#/components/schemas/SubaccountType'
+        market_ticker:
+          type: string
+          description: Market ticker symbol
+        position:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: >-
+            Position size as a fixed-point count string (positive = long,
+            negative = short)
+        entry_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Weighted average entry price of the open position
+        unrealized_pnl:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Mark-to-market unrealized PnL for the open position
+        margin_used:
+          $ref: '#/components/schemas/FixedPointDollars'
+          nullable: true
+          description: >-
+            Maintenance-margin-based capital usage for the open position. Null
+            when the position shares its asset class with other portfolio-margin
+            positions in the subaccount, since margin is then computed jointly
+            for the group and cannot be attributed to a single market.
+        fees:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Total fees accumulated over the lifetime of the current open
+            position, resets when position is fully closed
+        roe:
+          type: number
+          format: double
+          nullable: true
+          description: >-
+            Return on equity as a percentage (unrealized_pnl / margin_used *
+            100). Null when margin_used is zero or not attributable to this
+            market.
+        is_portfolio:
+          type: boolean
+          description: >-
+            True when this position is hedged within a portfolio, so margin_used
+            and roe cannot be attributed to it individually and are not
+            reported.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+    SubaccountType:
+      type: string
+      enum:
+        - cross
+        - isolated
+        - auto_rebalance
+        - managed_isolated
+      x-enum-varnames:
+        - SubaccountTypeCross
+        - SubaccountTypeIsolated
+        - SubaccountTypeAutoRebalance
+        - SubaccountTypeManagedIsolated
+      description: >-
+        How the subaccount is margined. `cross` for the primary account and
+        numbered subaccounts, `isolated` for a market's isolated subaccount,
+        `auto_rebalance` for an auto-rebalanced isolated position, which shares
+        its market's isolated subaccount number, and `managed_isolated` for a
+        managed isolated position, whose subaccount number is the same as the
+        market's isolated subaccount number.
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+    kalshiOauthAccessToken:
+      type: http
+      scheme: bearer
+      description: >-
+        User OAuth access token with read::compliance_partner, issued to an
+        explicitly authorized partner. Accepted only on margin fills and margin
+        positions in this lane; generic read and partner client-credentials
+        tokens do not grant access.
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

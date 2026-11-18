@@ -1,0 +1,285 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/risk/get-risk'
+updated_at: 2026-11-18
+---
+
+# Get Risk
+
+> Endpoint for retrieving leverage and liquidation price data for the authenticated direct margin user. Returns account-level leverage plus per-position leverage and liquidation prices, grouped by subaccount and market.
+Resource-bound MCP OAuth tokens may read the owner's risk data with read::mcp_portfolio.
+
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml get /margin/risk
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/risk:
+    get:
+      tags:
+        - risk
+      summary: Get Risk
+      description: >
+        Endpoint for retrieving leverage and liquidation price data for the
+        authenticated direct margin user. Returns account-level leverage plus
+        per-position leverage and liquidation prices, grouped by subaccount and
+        market.
+
+        Resource-bound MCP OAuth tokens may read the owner's risk data with
+        read::mcp_portfolio.
+      operationId: GetMarginRisk
+      responses:
+        '200':
+          description: Margin risk data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginRiskResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+        - kalshiOauthAccessToken: []
+components:
+  schemas:
+    GetMarginRiskResponse:
+      type: object
+      required:
+        - total_position_notional
+        - total_maintenance_margin
+        - positions
+      properties:
+        account_leverage:
+          type: number
+          format: double
+          description: >-
+            Account-level leverage (total_position_notional /
+            total_maintenance_margin). Null when total maintenance margin is
+            zero.
+          nullable: true
+        total_position_notional:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Sum of absolute position notional values across all positions in
+            fixed-point dollars
+        total_maintenance_margin:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Sum of maintenance margin requirements across all positions in
+            fixed-point dollars
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarginRiskPosition'
+          description: Per-position risk breakdown grouped by subaccount and market
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+    MarginRiskPosition:
+      type: object
+      required:
+        - subaccount
+        - subaccount_type
+        - market_ticker
+        - position
+        - mark_price
+        - position_notional
+        - is_portfolio
+      properties:
+        subaccount:
+          type: integer
+          description: The subaccount number (0 for primary, 1-63 for subaccounts)
+        subaccount_type:
+          $ref: '#/components/schemas/SubaccountType'
+        market_ticker:
+          type: string
+          description: Market ticker symbol
+        position:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: Signed position quantity as a fixed-point count string
+        mark_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Current mark price for the market in fixed-point dollars
+        position_notional:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Absolute notional value of the position (|qty| * mark_price) in
+            fixed-point dollars
+        maintenance_margin_required:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Maintenance margin requirement for this position in fixed-point
+            dollars. Null if margin config is missing.
+          nullable: true
+        position_leverage:
+          type: number
+          format: double
+          description: >-
+            Position leverage ratio (position_notional /
+            maintenance_margin_required). Null when maintenance margin is zero
+            or config is missing.
+          nullable: true
+        estimated_liquidation_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Estimated portfolio-aware liquidation price for this position within
+            the subaccount. Null when no valid liquidation price exists.
+          nullable: true
+        is_portfolio:
+          type: boolean
+          description: >-
+            True when this position is hedged within a portfolio, so
+            maintenance_margin_required, position_leverage, and
+            estimated_liquidation_price cannot be attributed to it individually
+            and are not reported.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+    SubaccountType:
+      type: string
+      enum:
+        - cross
+        - isolated
+        - auto_rebalance
+        - managed_isolated
+      x-enum-varnames:
+        - SubaccountTypeCross
+        - SubaccountTypeIsolated
+        - SubaccountTypeAutoRebalance
+        - SubaccountTypeManagedIsolated
+      description: >-
+        How the subaccount is margined. `cross` for the primary account and
+        numbered subaccounts, `isolated` for a market's isolated subaccount,
+        `auto_rebalance` for an auto-rebalanced isolated position, which shares
+        its market's isolated subaccount number, and `managed_isolated` for a
+        managed isolated position, whose subaccount number is the same as the
+        market's isolated subaccount number.
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ForbiddenError:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+    kalshiOauthAccessToken:
+      type: http
+      scheme: bearer
+      description: >-
+        User OAuth access token with read::compliance_partner, issued to an
+        explicitly authorized partner. Accepted only on margin fills and margin
+        positions in this lane; generic read and partner client-credentials
+        tokens do not grant access.
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

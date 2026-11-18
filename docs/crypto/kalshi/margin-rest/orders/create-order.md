@@ -1,0 +1,326 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/orders/create-order'
+updated_at: 2026-11-18
+---
+
+# Create Order
+
+> Endpoint for submitting orders in a market. Rejections return an error `code` that names the cause; see Order rejections in the Perps API overview (https://docs.kalshi.com/margin#order-rejections) for the codes and HTTP statuses.
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml post /margin/orders
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/orders:
+    post:
+      tags:
+        - orders
+      summary: Create Order
+      description: >-
+        Endpoint for submitting orders in a market. Rejections return an error
+        `code` that names the cause; see Order rejections in the Perps API
+        overview (https://docs.kalshi.com/margin#order-rejections) for the codes
+        and HTTP statuses.
+      operationId: CreateMarginOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMarginOrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateMarginOrderResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+components:
+  schemas:
+    CreateMarginOrderRequest:
+      type: object
+      required:
+        - client_order_id
+        - side
+        - count
+        - price
+        - time_in_force
+        - self_trade_prevention_type
+      properties:
+        ticker:
+          type: string
+          description: >-
+            Market ticker. Supply ticker or market_id; ticker takes precedence
+            when both are provided.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: required_without=MarketId
+        market_id:
+          type: string
+          description: Stable exchange market UUID. May be supplied instead of ticker.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: omitempty,uuid
+        client_order_id:
+          type: string
+          x-go-type-skip-optional-pointer: true
+        side:
+          $ref: '#/components/schemas/BookSide'
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=bid ask
+        count:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: String representation of the order quantity in contracts.
+        price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Price for the order in fixed-point dollars.
+          x-go-type-skip-optional-pointer: true
+        expiration_time:
+          type: integer
+          format: int64
+        time_in_force:
+          type: string
+          enum:
+            - fill_or_kill
+            - good_till_canceled
+            - immediate_or_cancel
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=fill_or_kill good_till_canceled immediate_or_cancel
+          x-go-type-skip-optional-pointer: true
+        post_only:
+          type: boolean
+        self_trade_prevention_type:
+          allOf:
+            - $ref: '#/components/schemas/SelfTradePreventionType'
+          x-oapi-codegen-extra-tags:
+            validate: required,oneof=taker_at_cross maker
+          x-go-type-skip-optional-pointer: true
+        cancel_order_on_pause:
+          type: boolean
+          description: >-
+            If this flag is set to true, the order will be canceled if the order
+            is open and trading on the exchange is paused for any reason.
+        reduce_only:
+          type: boolean
+          description: >-
+            Specifies whether the order place count should be capped by the
+            member's current position. Orders with reduce_only set to true will
+            be rejected unless time_in_force is immediate_or_cancel or
+            fill_or_kill.
+        subaccount:
+          type: integer
+          minimum: 0
+          description: >-
+            The subaccount number to use for this margin order. 0 is the primary
+            subaccount. Subaccount-restricted API keys must omit this field or
+            pass their locked subaccount.
+        order_group_id:
+          type: string
+          description: The order group this order is part of
+          x-go-type-skip-optional-pointer: true
+        market_version:
+          type: integer
+          format: int32
+          default: 0
+          description: >-
+            The market_version you expect the market to be at. If it is set and
+            the market's current market_version differs, the order is rejected
+            with HTTP 409 and error code market_version_mismatch. 0 skips the
+            check.
+          x-go-type-skip-optional-pointer: true
+    CreateMarginOrderResponse:
+      type: object
+      required:
+        - order_id
+        - fill_count
+        - remaining_count
+      properties:
+        order_id:
+          type: string
+        client_order_id:
+          type: string
+        fill_count:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: Number of contracts filled immediately upon placement.
+        remaining_count:
+          $ref: '#/components/schemas/FixedPointCount'
+          description: >-
+            Number of contracts remaining after placement. For IOC orders, this
+            reflects the final state after unfilled contracts are canceled.
+        average_fill_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Volume-weighted average fill price. Only present when fill_count >
+            0.
+        average_fee_paid:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: >-
+            Volume-weighted average fee paid per contract for fills resulting
+            from this request. Only present when fill_count > 0.
+    BookSide:
+      type: string
+      enum:
+        - bid
+        - ask
+      description: The side of an order or trade (bid or ask)
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+    SelfTradePreventionType:
+      type: string
+      enum:
+        - taker_at_cross
+        - maker
+      description: >
+        The self-trade prevention type for orders. `taker_at_cross` cancels the
+        taker order when it would trade against another order from the same
+        user; execution stops and any partial fills already matched are
+        executed. `maker` cancels the resting maker order and continues
+        matching.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ConflictError:
+      description: Conflict - resource already exists or cannot be modified
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimitError:
+      description: >-
+        Rate limit exceeded. The default cost is 10 tokens per request. Use GET
+        /trade-api/v2/account/endpoint_costs to list non-default endpoint costs.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

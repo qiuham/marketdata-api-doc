@@ -1,0 +1,187 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/exit-triggers/cancel-isolated-exit-trigger'
+updated_at: 2026-11-18
+---
+
+# Cancel Isolated Exit Trigger
+
+> Endpoint for cancelling exit triggers on the isolated margin position for a market. Succeeds even when nothing is live. The position itself is unaffected.
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml delete /margin/isolated/positions/{ticker}/exit_trigger
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/isolated/positions/{ticker}/exit_trigger:
+    delete:
+      tags:
+        - exit-triggers
+      summary: Cancel Isolated Exit Trigger
+      description: >-
+        Endpoint for cancelling exit triggers on the isolated margin position
+        for a market. Succeeds even when nothing is live. The position itself is
+        unaffected.
+      operationId: DeleteIsolatedMarginExitTrigger
+      parameters:
+        - $ref: '#/components/parameters/ExitTriggerTickerPath'
+        - $ref: '#/components/parameters/ExitTriggerKindQuery'
+      responses:
+        '204':
+          description: Exit trigger canceled
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '429':
+          $ref: '#/components/responses/RateLimitError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+components:
+  parameters:
+    ExitTriggerTickerPath:
+      name: ticker
+      in: path
+      required: true
+      description: Ticker of the market whose position the trigger protects.
+      schema:
+        type: string
+    ExitTriggerKindQuery:
+      name: kind
+      in: query
+      required: false
+      description: Restricts the request to one trigger family. Omitted covers every kind.
+      schema:
+        $ref: '#/components/schemas/ExitTriggerKind'
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ForbiddenError:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    RateLimitError:
+      description: >-
+        Rate limit exceeded. The default cost is 10 tokens per request. Use GET
+        /trade-api/v2/account/endpoint_costs to list non-default endpoint costs.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ExitTriggerKind:
+      type: string
+      description: >-
+        Trigger family. `bracket` is a stop-loss / take-profit pair; `trailing`
+        is a trailing stop whose stop level ratchets with the liquidation mark.
+      enum:
+        - bracket
+        - trailing
+      x-enum-varnames:
+        - Bracket
+        - Trailing
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

@@ -1,0 +1,201 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/portfolio/transfer-between-subaccounts'
+updated_at: 2026-11-18
+---
+
+# Transfer Between Subaccounts
+
+> Transfers funds between the authenticated user's margin subaccounts. Use 0 for the primary account, or 1-63 for numbered subaccounts. Transfers are refused with HTTP 403 and error code `permission_denied` (details: `margin withdrawals are temporarily disabled during settlement and funding`) from shortly before each scheduled settlement or funding run until that run has been processed, and while a cash corporate action is being processed. The details text is the same in each case. Retry with a backoff until the transfer is accepted.
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml post /portfolio/margin/subaccounts/transfer
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /portfolio/margin/subaccounts/transfer:
+    post:
+      tags:
+        - portfolio
+      summary: Transfer Between Subaccounts
+      description: >-
+        Transfers funds between the authenticated user's margin subaccounts. Use
+        0 for the primary account, or 1-63 for numbered subaccounts. Transfers
+        are refused with HTTP 403 and error code `permission_denied` (details:
+        `margin withdrawals are temporarily disabled during settlement and
+        funding`) from shortly before each scheduled settlement or funding run
+        until that run has been processed, and while a cash corporate action is
+        being processed. The details text is the same in each case. Retry with a
+        backoff until the transfer is accepted.
+      operationId: ApplyMarginSubaccountTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplySubaccountTransferRequest'
+      responses:
+        '200':
+          description: Transfer completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplySubaccountTransferResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+components:
+  schemas:
+    ApplySubaccountTransferRequest:
+      type: object
+      required:
+        - client_transfer_id
+        - from_subaccount
+        - to_subaccount
+        - amount_cents
+      properties:
+        client_transfer_id:
+          type: string
+          format: uuid
+          description: Unique client-provided transfer ID for idempotency.
+          x-oapi-codegen-extra-tags:
+            validate: required
+        from_subaccount:
+          type: integer
+          description: >-
+            Source subaccount number (0 for primary, 1-63 for numbered
+            subaccounts).
+        to_subaccount:
+          type: integer
+          description: >-
+            Destination subaccount number (0 for primary, 1-63 for numbered
+            subaccounts).
+        amount_cents:
+          type: integer
+          format: int64
+          description: Amount to transfer in cents.
+        exchange_index:
+          allOf:
+            - $ref: '#/components/schemas/ExchangeIndex'
+          description: >-
+            Deprecated: ignored for Perps subaccount transfers. This field will
+            be removed.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            validate: gte=0
+    ApplySubaccountTransferResponse:
+      type: object
+      description: Empty response indicating successful transfer.
+    ExchangeIndex:
+      type: integer
+      description: >-
+        Identifier for a Predictions exchange shard. Deprecated on Perps, which
+        runs on one matching engine. Defaults to 0 if unspecified.
+      example: 0
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

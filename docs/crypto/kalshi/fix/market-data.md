@@ -1,0 +1,193 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/fix/market-data'
+updated_at: 2026-11-18
+---
+
+# Market Data
+
+> Request order book snapshots and incremental updates through FIX
+
+Market data is available on the dedicated **KalshiMD** session. It supports order book snapshots, incremental updates, and per-market trading-status changes via [Security Status](#security-status). Subscriptions are identified by `Symbol<55>`.
+
+`KalshiMD` does not support message retransmission. Use `ResetSeqNumFlag<141>=Y` on Logon.
+
+## Message Flow
+
+```mermaid theme={null}
+sequenceDiagram
+    participant Client as FIX Client
+    participant KalshiMD
+
+    Client->>KalshiMD: Logon (35=A, 141=Y)
+    KalshiMD->>Client: Logon (35=A)
+    Client->>KalshiMD: Snapshot + updates request (35=V, 263=1)
+    KalshiMD->>Client: Snapshot (35=W, if book requested) or Reject (35=Y)
+    KalshiMD->>Client: Incremental updates (35=X)
+    Client->>KalshiMD: Cancel by Symbol (35=V, 263=2)
+```
+
+## Market Data Request (35=V)
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 263 | SubscriptionRequestType | Char | Y | `0`=Snapshot, `1`=Snapshot plus updates, `2`=Disable previous snapshot plus update request |
+| 267 | NoMDEntryTypes | NumInGroup | N | Number of `269=MDEntryType` entries in the repeating group that follows. Omit the group for both book and trades. Ignored for `263=2`. |
+| 269 | MDEntryType | Char | C | Repeating group field. `0`=Bid, `1`=Offer, `2`=Trade. |
+| 146 | NoRelatedSym | Integer | C | Number of `55=Symbol` entries in the repeating group that follows. Required for `263=0` and `263=1`. For `263=2`, the listed symbols are unsubscribed; omit to cancel all of the session's subscriptions. |
+| 55 | Symbol | String | C | Repeating group field. The market tickers to subscribe to or cancel. |
+
+Snapshot and snapshot-plus-updates requests can contain up to 1,000 unique symbols. A session can hold up to 100,000 active market data subscriptions.
+
+Trades-only subscriptions send no book snapshots. Trades-only snapshot requests (`263=0` with only `269=2`) are rejected.
+
+```fix Example snapshot request theme={null}
+8=FIXT.1.1|35=V|49=your-api-key|56=KalshiMD|263=0|146=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+```fix Example snapshot-plus-updates subscription theme={null}
+8=FIXT.1.1|35=V|49=your-api-key|56=KalshiMD|263=1|146=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+```fix Example cancel a symbol theme={null}
+8=FIXT.1.1|35=V|49=your-api-key|56=KalshiMD|263=2|146=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+```fix Example trades-only subscription theme={null}
+8=FIXT.1.1|35=V|49=your-api-key|56=KalshiMD|263=1|267=1|269=2|146=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+Use `267=1|269=0` for bids only, `267=1|269=1` for offers only, or `267=2|269=0|269=1` for both book sides without trades.
+
+```fix Example cancel all subscriptions theme={null}
+8=FIXT.1.1|35=V|49=your-api-key|56=KalshiMD|263=2|
+```
+
+## Market Data Snapshot Full Refresh (35=W)
+
+Sent in response to a snapshot request and immediately after a subscription that includes either book side is accepted. Only requested book sides are included. Trades-only subscriptions do not receive this message. Correlate by `Symbol<55>`.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 55 | Symbol | String | Y | Market ticker. |
+| 268 | NoMDEntries | Integer | Y | Number of book levels. |
+| 269 | MDEntryType | Char | Y | Repeating group field. `0`=Bid, `1`=Offer |
+| 270 | MDEntryPx | Price | Y | Book level price in dollars. |
+| 271 | MDEntrySize | Quantity | Y | Book level size in contracts. |
+| 272 | MDEntryDate | UTC Date | Y | Repeating group field. UTC snapshot capture date in `YYYYMMDD` format. |
+| 273 | MDEntryTime | UTC Time | Y | Repeating group field. UTC snapshot capture time in `HH:MM:SS.sss` format. |
+| 21046 | MDExecID | String | N | ID of the newest book change this snapshot includes, in the `ExecID<17>` format. Can be omitted. See [MDExecID](#mdexecid). |
+
+```fix Example snapshot response theme={null}
+8=FIXT.1.1|35=W|49=KalshiMD|56=your-api-key|55=KXNBAGAME-26MAY25NYKCLE-NYK|268=2|269=0|270=0.3500|271=10.00|272=20260817|273=16:00:00.123|269=1|270=0.6500|271=5.00|272=20260817|273=16:00:00.123|
+```
+
+## Market Data Incremental Refresh (35=X)
+
+Sent after a subscribed market's aggregated book levels change or a trade occurs, filtered by the requested `MDEntryType<269>` values. Correlate by `Symbol<55>` on each entry.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 268 | NoMDEntries | Integer | Y | Number of market data entries. |
+| 279 | MDUpdateAction | Char | Y | Repeating group field. `0`=New, `1`=Change, `2`=Delete. |
+| 55 | Symbol | String | Y | Repeating group field. Market ticker. |
+| 269 | MDEntryType | Char | Y | Repeating group field. `0`=Bid, `1`=Offer, `2`=Trade |
+| 270 | MDEntryPx | Price | Y | Price in dollars. |
+| 271 | MDEntrySize | Quantity | Y | Size in contracts. |
+| 272 | MDEntryDate | UTC Date | Y | Repeating group field. UTC source-event date in `YYYYMMDD` format. |
+| 273 | MDEntryTime | UTC Time | Y | Repeating group field. UTC source-event time in `HH:MM:SS.sss` format. |
+| 2446 | AggressorSide | Char | C | Trade entries only. `1`=Buy, `2`=Sell. |
+| 828 | TrdType | Int | C | Trade entries only. `1`=Block trade. Absent on regular order book trades. |
+| 1003 | TradeID | String | C | Trade entries only. The trade UUID. |
+| 11 | ClOrdID | String | C | Book entries only. Present when your order caused the level change and the order has a client-specified ID. |
+| 79 | AllocAccount | Integer | C | Book entries only. Subaccount number of your order. `0` identifies a primary or non-numeric account. |
+| 21046 | MDExecID | String | N | ID of the update, in the `ExecID<17>` format. Every entry in the message shares it. See [MDExecID](#mdexecid). |
+
+```fix Example incremental update theme={null}
+8=FIXT.1.1|35=X|49=KalshiMD|56=your-api-key|268=1|279=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|269=0|270=0.3500|271=15.00|272=20260817|273=16:00:00.456|11=my-order-123|79=3|
+```
+
+```fix Example trade update theme={null}
+8=FIXT.1.1|35=X|49=KalshiMD|56=your-api-key|268=1|279=0|55=KXNBAGAME-26MAY25NYKCLE-NYK|269=2|270=0.6500|271=3.00|272=20260817|273=16:00:00.789|2446=1|1003=02cfae92-12f4-4bc6-b613-4806e3604514|
+```
+
+## MDExecID
+
+Snapshots (35=W) and incremental updates (35=X) include `MDExecID<21046>`, a custom tag. If your FIX engine validates incoming messages against a data dictionary, load the updated [FIX dictionary](https://assets.kalshi.com/fix/kalshi-fix-dictionary.xml), or the engine may reject these messages.
+
+* `MDExecID` has the same format as `ExecID<17>` on execution reports: `clock;event` on exchange index `0` and `clock;event;exchange_index` on other indexes. `clock` is the exchange clock that the WebSocket sends as `clock` on `orderbook_delta`
+* Every session sends the same `MDExecID` for the same update, so it can match a market's updates across redundant sessions
+* A 35=W includes every book change up to and including its `MDExecID`
+* While you are subscribed to a market, the `MDExecID` on its 35=X messages never goes down outside exchange maintenance, comparing `clock` and then `event`, but it skips values. IDs are not comparable across markets, or from before a maintenance period to after it
+* `clock` can exceed 32 bits. The FIX dictionary types `MDExecID` as a String
+
+```fix Example incremental update with MDExecID theme={null}
+8=FIXT.1.1|35=X|49=KalshiMD|56=your-api-key|268=1|279=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|269=0|270=0.3500|271=15.00|272=20260817|273=16:00:00.456|21046=41865230117;3;2|
+```
+
+## Market Data Request Reject (35=Y)
+
+Sent when a market data request cannot be accepted. Unknown market tickers are not currently rejected; the server sends an empty snapshot if it has no order book for the requested symbol.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 281 | MDReqRejReason | Char | N | Reject reason. |
+| 58 | Text | String | N | Human-readable rejection detail. |
+
+### Common Reject Reasons (281)
+
+* `2`=Insufficient bandwidth, including request or session symbol limits
+* `4`=Unsupported `SubscriptionRequestType`
+
+## Security Status
+
+`KalshiMD` also streams per-market trading-status changes as `SecurityStatus<35=f>`. Subscribe by `Symbol<55>` with `SecurityStatusRequest<35=e>`. Updates are changes-only; no initial status is sent on subscribe.
+
+### Security Status Request (35=e)
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 263 | SubscriptionRequestType | Char | Y | `1`=Subscribe, `2`=Unsubscribe. |
+| 55 | Symbol | String | Y | The single market ticker to subscribe to or unsubscribe. |
+
+```fix Example subscribe theme={null}
+8=FIXT.1.1|35=e|49=your-api-key|56=KalshiMD|263=1|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+```fix Example unsubscribe theme={null}
+8=FIXT.1.1|35=e|49=your-api-key|56=KalshiMD|263=2|55=KXNBAGAME-26MAY25NYKCLE-NYK|
+```
+
+### Security Status (35=f)
+
+Streamed when a subscribed market changes trading state. Correlate by `Symbol<55>`.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 55 | Symbol | String | Y | Market ticker. |
+| 326 | SecurityTradingStatus | Int | Y | See [Trading Status Lifecycle](#trading-status-lifecycle-326). |
+
+```fix Example trading halt theme={null}
+8=FIXT.1.1|35=f|49=KalshiMD|56=your-api-key|55=KXNBAGAME-26MAY25NYKCLE-NYK|326=2|
+```
+
+### Trading Status Lifecycle (326)
+
+* `3`=Resume: the market was activated and is open for trading
+* `2`=Trading halt: the market was deactivated
+* `100`=Kalshi determined: the market was determined; trading has ended and the result is known
+* `101`=Kalshi settled: the market settled. The subscription for that symbol is then dropped.
+
+Scheduled (time-based) opens and closes are not emitted as discrete events and are not reported here.
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

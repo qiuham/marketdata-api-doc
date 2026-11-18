@@ -1,0 +1,480 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/fix/rfq-messages'
+updated_at: 2026-11-18
+---
+
+# RFQ
+
+> Request for Quote functionality for RFQ creators and market makers
+
+## Overview
+
+RFQ functionality involves two types of participants connecting via different FIX sessions:
+
+**RFQ Creators** - Users who want to trade via RFQ (connect via **RT mode**):
+
+1. Create RFQ via QuoteRequest (35=R)
+2. Receive quotes from market makers via Quote (35=S)
+3. Accept a quote via AcceptQuote (35=UA)
+4. Receive trade execution via ExecutionReport (35=8)
+
+**Market Makers** - Users who provide quotes (connect via **RfqMode**):
+
+1. Receive QuoteRequest from exchange
+2. Respond with Quote (35=S)
+3. Receive acceptance notification
+4. Confirm execution via QuoteConfirm (35=U7)
+
+> [!NOTE]
+>
+> RFQ Creators use the KalshiRT endpoint (same as order entry), which provides message persistence and retransmission support. Market Makers use the KalshiRFQ endpoint to receive RFQ broadcasts and submit quotes.
+
+## Message Flow
+
+### Full RFQ Flow (Creator via FIX)
+
+```mermaid theme={null}
+sequenceDiagram
+    participant Creator as RFQ Creator
+    participant Exchange
+    participant MarketMaker as Market Maker
+
+    Creator->>Exchange: QuoteRequest (35=R)
+    Exchange->>Creator: QuoteRequestAck (35=b)
+    Exchange->>MarketMaker: QuoteRequest (35=R)
+    MarketMaker->>Exchange: Quote (35=S)
+    Exchange->>MarketMaker: QuoteStatusReport (35=AI)<br/>Status=PENDING
+    Exchange->>Creator: Quote (35=S)
+    Creator->>Exchange: AcceptQuote (35=UA)
+    Exchange->>Creator: AcceptQuoteStatus (35=UC)
+    Exchange->>MarketMaker: QuoteStatusReport (35=AI)<br/>Status=ACCEPTED
+    MarketMaker->>Exchange: QuoteConfirm (35=U7)
+    Exchange->>MarketMaker: QuoteConfirmStatus (35=U8)
+    Exchange->>Creator: ExecutionReport (35=8)
+```
+
+## QuoteRequest (35=R)
+
+This message is used bidirectionally:
+
+* **Creator → Exchange**: Create a new RFQ
+* **Exchange → Market Makers**: Notify of new RFQ
+
+### Creator → Exchange (Create RFQ)
+
+**Message body**
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 131 | QuoteReqId | UUID | Y | Client-assigned RFQ identifier |
+| 146 | NoRelatedSym | Integer | Y | Number of entries in the repeating group below. Must be 1 |
+| 79 | AllocAccount | Integer | N | Subaccount number (0-63) for direct members. Alternative to NoPartyIDs. Omit or set to 0 for the primary account |
+| 20180 | MultivariateCollectionTicker | String | C | Collection ticker for parlay/MVE markets. Use instead of Symbol |
+| 20181 | NoMultivariateSelectedLegs | Integer | C | Number of MVE legs (repeating group). Required with 20180 |
+| 20182 | MultivariateSelectedEventTicker | String | Y | Event ticker for the leg |
+| 20183 | MultivariateSelectedMarketTicker | String | Y | Market ticker for the leg |
+| 20184 | MultivariateSelectedSide | String | Y | Side for the leg ("yes" or "no") |
+
+**Inside the `146=NoRelatedSym` group**
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 55 | Symbol | String | C | Market ticker. Group delimiter — send it immediately after `146`. Required unless MVE legs are specified |
+| 38 | OrderQty | Decimal | C | Number of contracts as a fixed-point decimal. Supports `0.01`-contract increments (for example `5`, `5.00`, or `5.25`). Required unless CashOrderQty is specified. Acts as the delimiter on MVE requests, which omit `55` |
+| 152 | CashOrderQty | Decimal | C | Target cost in dollars. Required unless OrderQty is specified. Acts as the delimiter on MVE requests that size by cost |
+| 21033 | TargetCostExcludesFees | Char | N | Y/N - Size quotes against CashOrderQty as principal only (contracts = cash / price), with your taker fees charged on top of the cash amount. Default (N) reserves fees inside the cash amount. Only `Y` enables the mode. `21033=Y` without CashOrderQty is rejected |
+| 21034 | ObscureCreatorId | Char | N | Y/N - Replace the requester public communications ID with the shared placeholder for other users. Default N. See [Creator identity and privacy](https://docs.kalshi.com/getting_started/rfqs.md#creator-identity-and-privacy). |
+| 21015 | RestRemainder | Char | N | Y/N - Rest the quote remainder after execution (default: N) |
+| 21016 | ReplaceExisting | Char | N | Y/N - Close older RFQs while retaining the submitting subtrader's newest existing RFQ, keeping at most two open RFQs including this one (default: N) |
+| 453 | NoPartyIDs | Integer | N | Nested repeating group. Number of parties (only 1 supported) |
+| 448 | PartyId | String | N | FCM SubtraderId for the customer on whose behalf the RFQ is submitted |
+| 452 | PartyRole | Integer | N | 24 (CustomerAccount) - required when using PartyId |
+
+> [!NOTE]
+>
+> The delimiter is the first tag of a group entry: send `146`, then `55` for a symbol RFQ
+> or `38`/`152` for an MVE RFQ (which omits `55`). Note that `21015`, `21016`, and `21033`
+> are dropped without a reject if they land outside the group — a misplaced `21016` surfaces
+> later as `RFQ already exists` on the next request rather than as an error on this one, and
+> a misplaced `21033` silently produces default fee-inclusive sizing.
+>
+> The published [FIX dictionary](https://assets.kalshi.com/fix/kalshi-fix-dictionary.xml)
+> lists `55` first, since a dictionary can only declare one delimiter per group. MVE
+> requests legitimately omit `55`, so a strict dictionary-driven validator may flag them —
+> relax the delimiter for the MVE case rather than adding an empty `55`.
+
+> [!NOTE]
+>
+> **MVE/Parlay Support**: Instead of specifying a Symbol, you can submit MVE legs directly. The server will automatically resolve or create the parlay market and return the resolved market ticker in the QuoteRequestAck.
+
+> [!NOTE]
+>
+> **CashOrderQty sizing**: By default the cash amount caps principal *plus* Kalshi
+> fees — quote sizes (BidSize/OfferSize) are the maximum contracts whose total
+> cost including your taker fee fits inside the cash amount, so your debit can
+> never exceed it. With `21033=Y` the cash amount is principal only: sizes are
+> `cash / price` and your taker fee is charged on top of the cash amount.
+> OrderQty-sized RFQs are never reduced for fees under either mode.
+
+### Exchange → Market Maker (RFQ Notification)
+
+The exchange builds this message with the same structure market makers must parse:
+`55`, `38`, `152`, `60` and the nested `453=NoPartyIDs` group are members of the
+`146=NoRelatedSym` group, and the MVE tags sit in the message body.
+
+**Message body**
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 131 | QuoteReqId | UUID | Y | Server-assigned RFQ identifier |
+| 146 | NoRelatedSym | Integer | Y | Number of entries in the repeating group below (always 1) |
+| 20180 | MultivariateCollectionTicker | String | N | Collection ticker for multivariate markets |
+| 20181 | NoMultivariateSelectedLegs | Integer | N | Number of MVE legs (repeating group) |
+| 20182 | MultivariateSelectedEventTicker | String | N | Event ticker for the leg |
+| 20183 | MultivariateSelectedMarketTicker | String | N | Market ticker for the leg |
+| 20184 | MultivariateSelectedSide | String | N | Side for the leg ("yes" or "no") |
+
+**Inside the `146=NoRelatedSym` group**
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 55 | Symbol | String | Y | Market ticker. Group delimiter |
+| 38 | OrderQty | Decimal | Y | Number of contracts as a fixed-point decimal |
+| 152 | CashOrderQty | Decimal | N | Target cost in dollars (if specified by creator) |
+| 60 | TransactTime | UTCTimestamp | Y | Original RFQ creation time in UTC, matching WebSocket `rfq_created.msg.created_ts` at millisecond precision |
+| 453 | NoPartyIDs | Integer | N | Nested repeating group. Number of parties (always 1) |
+| 448 | PartyId | String | N | Requester public communications ID. This value is pseudonymous and is not the requester's SubtraderId. `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` for other users when ObscureCreatorId is enabled |
+
+The obscured `PartyID` is the SHA-256 hash of empty input (`SHA256("")`).
+It is the same placeholder for every obscured requester across REST, WebSocket,
+and FIX. The requester still sees their normal public communications
+ID in their own notifications. The `NoPartyIDs` group remains present.
+See [Creator identity and privacy](https://docs.kalshi.com/getting_started/rfqs.md#creator-identity-and-privacy)
+for the visibility rules before and after execution.
+
+A child RFQ of an RFQ batch arrives as an ordinary QuoteRequest, with no tag
+naming its batch, and can be quoted like any RFQ. See
+[RFQ batch children](https://docs.kalshi.com/getting_started/rfqs.md#rfq-batch-children) for how such a
+quote differs.
+
+## QuoteRequestAck (35=b)
+
+Exchange response to an inbound QuoteRequest from an RFQ creator.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 131 | QuoteReqId | UUID | Y | Client-assigned RFQ ID (echoed back) |
+| 303 | QuoteRequestType | Integer | Y | 1 (MANUAL) |
+| 21023 | RfqId | UUID | C | Server-assigned RFQ ID. Present when an RFQ ID is returned by the server |
+| 55 | Symbol | String | C | Resolved market ticker. Present when MVE legs were submitted |
+| 100 | ExDestination | Integer | Y | Exchange index for the RFQ market |
+
+> [!NOTE]
+>
+> The server-assigned RFQ ID is returned in tag 21023. Store it if you want to reconcile later Quote or QuoteStatusReport messages to the created RFQ. RFQCancel accepts either your original client-assigned QuoteReqId (tag 131) or the server-assigned RfqId (tag 21023).
+
+> [!NOTE]
+>
+> When creating an RFQ with MVE legs instead of a Symbol, the resolved market ticker is returned in tag 55. This is the market that was created or looked up based on your leg selection.
+
+## Quote (35=S)
+
+This message is used bidirectionally:
+
+* **Market Maker → Exchange**: Submit a quote for an RFQ
+* **Exchange → Creator**: Notify creator of a new quote
+
+If a new Quote is created when an existing quote for the same market already exists for the user, the exchange will cancel the existing quote.
+
+### Market Maker → Exchange (Submit Quote)
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | UUID | Y | Client-assigned quote identifier |
+| 131 | QuoteReqId | UUID | Y | Server-assigned RFQ ID (from QuoteRequest) |
+| 55 | Symbol | String | Y | Market ticker |
+| 132 | BidPx | Integer | C | Yes price in cents (1-99) |
+| 133 | OfferPx | Integer | C | No price in cents (1-99) |
+| 18 | ExecInst | Char | N | `6`=Post Only |
+| 79 | AllocAccount | Integer | N | Subaccount number (0-63). If provided, the quote will be created for the specified subaccount. |
+| 21015 | RestRemainder | Char | N | Y/N - Allow partial fills (default: N) |
+
+### Exchange → Creator (Quote Notification)
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | UUID | Y | Quote identifier (use this to accept) |
+| 131 | QuoteReqId | UUID | Y | Server-assigned RFQ ID |
+| 55 | Symbol | String | Y | Market ticker |
+| 132 | BidPx | Decimal | C | Yes price in dollars (e.g. 0.4500). Not present when zero |
+| 133 | OfferPx | Decimal | C | No price in dollars (e.g. 0.5500). Not present when zero |
+| 38 | OrderQty | Decimal | N | Number of contracts as a fixed-point decimal |
+| 134 | BidSize | Decimal | N | Quantity offered on the Yes side |
+| 135 | OfferSize | Decimal | N | Quantity offered on the No side |
+| 60 | TransactTime | UTCTimestamp | Y | Quote creation time in UTC, matching WebSocket `quote_created.msg.created_ts` at millisecond precision |
+| 453 | NoPartyIDs | Integer | N | Number of parties (always 1) |
+| 448 | PartyId | String | N | Quoter public communications ID. This value is pseudonymous and is not the quoter's SubtraderId |
+| 452 | PartyRole | Integer | N | 35 (Liquidity Provider) |
+
+> [!WARNING]
+>
+> Either BidPx or OfferPx can be zero, but not both. Zero indicates no quote for that side.
+
+### Best Quote Only
+
+A session that logs on with `BestQuoteOnly<21036>=Y` receives only the best quotes of each RFQ it creates while the flag is set: the best Yes bid and the best No bid. The RFQ keeps this mode until it closes. Each best arrives as the same Quote (35=S) described above, with no new fields.
+
+* **Ranking:** each side is ranked on its own price. The highest price is best, then the earliest quote at that price: the quote an AcceptQuote on that side fills.
+* **What a Quote carries:** only the sides its quote is best on: `BidPx<132>` and `BidSize<134>` for Yes, `OfferPx<133>` and `OfferSize<135>` for No. A quote that is best on both sides carries both. A side it does not carry is left out, not sent as 0, even when the quote has a price there.
+* **When a Quote is sent:** each time a different quote becomes best on a side: a better quote arrives, the best is cancelled or stops quoting that side (the next best is sent, even at a worse price), or the best maker replaces its quote (a new `QuoteId<117>`, even at the same price). Changes below the best send nothing.
+* **Keeping track:** for each `QuoteReqId<131>`, keep one best per side: its `QuoteId<117>`, price and size. A Quote replaces the best on each side it carries and leaves the other side alone. Apply Quotes in MsgSeqNum order: `TransactTime<60>` is the quote's creation time and can go backwards.
+* **Which quote to accept:** the Yes best with `Side<54>=2`, the No best with `Side<54>=1`. They can be different quotes.
+* **Nothing left:** once no open quote has a price on a side, its last best is sent again with size 0: nothing is left to accept there. A quote that was the last best on both sides is sent once, with both sizes 0.
+* **Accept and close:** nothing extra is sent; AcceptQuoteStatus (35=UC) and the usual close messages end the RFQ. A Quote can arrive just after the close; ignore it.
+* **Missed updates:** Quotes sent while the session is disconnected are kept for ResendRequest, like other KalshiRT messages. The current bests are not re-sent at Logon: if an update is lost another way, for example during a Kalshi restart or when sequence numbers are reset, that side is corrected only by its next best change.
+
+For example, two makers quote one RFQ:
+
+| What happens | Quote you receive | Your best Yes | Your best No |
+| - | - | - | - |
+| A quotes Yes 0.40, No 0.55 | A: Yes 0.40, No 0.55 | A, 0.40 | A, 0.55 |
+| B quotes Yes 0.42, No 0.50 | B: Yes 0.42 | B, 0.42 | A, 0.55 |
+| B cancels | A: Yes 0.40, No 0.55 | A, 0.40 | A, 0.55 |
+| A cancels | A: Yes 0.40, No 0.55, both with size 0 | none | none |
+
+B's No price is never sent, because A's 0.55 is better. After B's Quote, accept B with `Side<54>=2` to sell Yes, or A with `Side<54>=1` to buy Yes. When B cancels, A leads both sides again, so it is sent with both.
+
+## QuoteStatusReport (35=AI)
+
+A QuoteStatusReport is sent by the exchange:
+
+1. In response to a Quote. Status will be PENDING if processed, or REJECTED if rejected
+2. When an accept fills your quote. Status will be ACCEPTED. Your quote can fill when the requester named another maker's quote: one at the same price, if yours was there first, or, with PreferBetterQuote, one at a worse price than yours
+3. In response to a QuoteCancel. Status will be CANCELLED
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Quote identifier (empty if rejected) |
+| 131 | QuoteReqId | String | Y | Request reference |
+| 79 | AllocAccount | Integer | C | Subaccount number (0-63). Present if the quote was created for a subaccount |
+| 297 | QuoteStatus | Integer | Y | Current status |
+| 38 | OrderQty | Decimal | C | Original RFQ contract size if specified. |
+| 132 | BidPx | Integer | C | Yes price in cents. Only integer part considered. Not present if REJECTED |
+| 133 | OfferPx | Integer | C | No price in cents. Only integer part considered. Not present if REJECTED |
+| 134 | BidSize | Decimal | C | Yes contract size offered by the quote. |
+| 135 | OfferSize | Decimal | C | No contract size offered by the quote. |
+| 54 | AcceptedSide | Char | C | Side accepted (1=Yes, 2=No). Only present if ACCEPTED |
+| 60 | TransactTime | UTCTimestamp | C | Quote creation time in UTC, matching WebSocket `quote_created.msg.created_ts` at millisecond precision. Only present if PENDING |
+| 58 | Text | String | C | Rejection reason. Only present if REJECTED |
+
+### Quote Status Values (297)
+
+* **ACCEPTED\<0>**: Requester accepted the quote
+* **REJECTED\<5>**: Exchange rejected the quote
+* **PENDING\<10>**: Quote processed, awaiting action
+* **CANCELLED\<17>**: Quote cancelled
+
+## QuoteCancel (35=Z)
+
+Market maker cancels an active quote.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Quote to cancel |
+| 21023 | RfqId | UUID | N | Server-assigned RFQ ID. If provided, the quote must belong to this RFQ. If omitted, the RFQ is resolved from QuoteId. |
+
+> [!NOTE]
+>
+> Exchange responds with QuoteStatusReport (Status=CANCELLED).
+
+## QuoteCancelStatus (35=U9)
+
+Response to QuoteCancel from exchange.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Quote identifier |
+| 298 | QuoteCancelStatus | Integer | Y | CANCELED(0) or REJECTED(1) |
+| 58 | RejectReason | String | C | Present if QuoteCancelStatus is REJECTED |
+
+## QuoteConfirm (35=U7)
+
+Market maker confirms willingness to execute after quote acceptance.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Accepted quote ID |
+| 21023 | RfqId | UUID | N | Server-assigned RFQ ID. If provided, the quote must belong to this RFQ. If omitted, the RFQ is resolved from QuoteId. |
+
+> [!WARNING]
+>
+> Quote must be confirmed within the confirmation window or it will be voided: 30 seconds, or 3 seconds on High Volatility Markets. See [Timing](https://docs.kalshi.com/getting_started/rfqs.md#timing).
+
+## QuoteConfirmStatus (35=U8)
+
+Exchange response to quote confirmation.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Quote identifier |
+| 21010 | QuoteConfirmStatus | Integer | Y | ACCEPTED(0) or REJECTED(1) |
+| 58 | RejectReason | String | C | Present if QuoteConfirmStatus is REJECTED |
+
+## AcceptQuote (35=UA)
+
+RFQ creator accepts a quote from a market maker.
+
+The exchange fills the earliest open quote at the named quote's price on the accepted side, which can be another maker's quote. AcceptedQuoteId (21024) on the AcceptQuoteStatus identifies it. See [RFQs](https://docs.kalshi.com/getting_started/rfqs.md#flow) for how that quote is chosen.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | UUID | Y | Quote to accept |
+| 21023 | RfqId | UUID | N | Server-assigned RFQ ID. If provided, the quote must belong to this RFQ. If omitted, the RFQ is resolved from QuoteId. |
+| 54 | Side | Char | Y | FIX side (1=BUY, 2=SELL). For AcceptQuote, BUY accepts the maker's NO quote and SELL accepts the maker's YES quote. |
+| 38 | OrderQty | Decimal | N | Contracts to accept as a fixed-point decimal. Supports `0.01`-contract increments |
+| 11 | ClOrdID | String | N | Client order ID. Send it with RfqId (21023) to make a resend safe: a resend with the same ClOrdID and RfqId returns the original AcceptedQuoteId. Without RfqId, a resend whose named quote did not execute is rejected as expired |
+| 453 | NoPartyIDs | Integer | N | Number of parties (only 1 supported) |
+| 448 | PartyId | String | N | FCM SubtraderId for the customer on whose behalf the accept is submitted |
+| 452 | PartyRole | Integer | N | 24 (CustomerAccount). Required when using PartyId |
+| 21022 | PreferBetterQuote | Char | N | Y/N. N: the earliest open quote at the named quote's price fills, so you get the price and size you accepted. Y: the best-priced open quote fills instead, at its own price and size. Default: N |
+
+## AcceptQuoteStatus (35=UC)
+
+Exchange response to AcceptQuote.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 117 | QuoteId | String | Y | Quote identifier |
+| 21025 | AcceptQuoteStatus | Integer | Y | ACCEPTED(0) or REJECTED(1) |
+| 21024 | AcceptedQuoteId | UUID | C | Present when the accept succeeds. The quote that executes, which can differ from the requested QuoteId whether or not PreferBetterQuote is set, so reconcile fills to this id |
+| 11 | ClOrdID | String | C | Echoed back when provided on the AcceptQuote request |
+| 58 | Text | String | C | Rejection reason if REJECTED |
+
+If an accepted quote does not execute, you receive an ExecutionReport (35=8) on the accept's ClOrdID (11) with OrdStatus Rejected (39=8), Text (58) `RFQ_EXECUTION_FAILED`, and OrderID (37) set to that ClOrdID. If your taker order had already been placed, its own reports carried the exchange's order ID in 37, so the two differ.
+
+## RFQCancel (35=UE)
+
+RFQ creator cancels/deletes an active RFQ.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 131 | QuoteReqId | UUID | C | Client-assigned RFQ ID from the original QuoteRequest. Required unless RfqId is provided |
+| 21023 | RfqId | UUID | C | Server-assigned RFQ ID from QuoteRequestAck. Required unless QuoteReqId is provided |
+| 453 | NoPartyIDs | Integer | N | Number of parties (only 1 supported) |
+| 448 | PartyId | String | N | FCM SubtraderId for the customer on whose behalf the RFQ is canceled |
+| 452 | PartyRole | Integer | N | 24 (CustomerAccount). Required when using PartyId |
+
+## RFQCancelStatus (35=UB)
+
+Exchange response to RFQCancel, or unsolicited with EXPIRED(2) when the exchange closes the RFQ itself.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 131 | QuoteReqId | String | Y | RFQ identifier (echoes back the ID from RFQCancel request) |
+| 21013 | RFQCancelStatus | Integer | Y | CANCELED(0), REJECTED(1) or EXPIRED(2) |
+| 21023 | RfqId | UUID | C | Server-assigned RFQ ID. Always present on EXPIRED(2) |
+| 58 | Text | String | C | Rejection reason if REJECTED |
+
+## QuoteRequestReject (35=AG)
+
+Exchange notifies that an RFQ creation request was rejected or that a quote request was cancelled.
+
+| Tag | Name | Type | Required | Description |
+| - | - | - | - | - |
+| 58 | Text | String | Y | Reason the RFQ creation was rejected or the quote request was cancelled |
+| 131 | QuoteReqId | String | Y | Request identifier |
+| 658 | QuoteRequestRejectReason | Integer | Y | UNKNOWN\_SYMBOL(1), QUOTE\_REQUEST\_EXCEEDS\_LIMIT(3), INSUFFICIENT\_CREDIT(11), or OTHER(99). Invalid-combination rejects use OTHER(99) |
+| 20187 | MVEValidationReasonCode | String | C | Stable combo-validation reason code on invalid-combination rejects: `conflicting_leg_outcomes`, `duplicated_legs`, or `invalid_market_combination` (mirrors the REST error `code`) |
+| 20185 | NoMVEOffendingLegs | Integer | C | Number of offending MVE legs (repeating group). Present on invalid-combination rejects when the tickers are known |
+| 20186 | MVEOffendingMarketTicker | String | C | Market ticker of an offending leg. One entry per `NoMVEOffendingLegs` |
+
+> [!NOTE]
+>
+> Market makers do not send QuoteRequestReject when ignoring a request.
+
+## Example Workflow
+
+### RFQ Creator Flow
+
+```fix Create RFQ (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=R|131=client-req-123|146=1|55=HIGHNY-23DEC31|38=100|
+```
+
+```fix Create RFQ with MVE Legs (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=R|131=client-req-456|146=1|38=100|20180=PARLAY-COLLECTION|20181=2|20182=EVENT1|20183=MKT1|20184=yes|20182=EVENT2|20183=MKT2|20184=no|
+```
+
+```fix Replace an Existing RFQ (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=R|131=client-req-124|146=1|55=HIGHNY-23DEC31|38=100|21016=Y|
+```
+
+```fix Replace on Behalf of an FCM Subtrader (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=R|131=client-req-457|146=1|38=100|21016=Y|453=1|448=subtrader-uuid|452=24|20180=PARLAY-COLLECTION|20181=2|20182=EVENT1|20183=MKT1|20184=yes|20182=EVENT2|20183=MKT2|20184=no|
+```
+
+```fix QuoteRequestAck (Exchange → Creator) theme={null}
+8=FIXT.1.1|35=b|131=client-req-123|303=1|21023=server-rfq-456|100=0|
+```
+
+```fix QuoteRequestAck with Resolved Ticker (Exchange → Creator) theme={null}
+8=FIXT.1.1|35=b|131=client-req-456|303=1|21023=server-rfq-789|55=PARLAY-MKT-ABC|100=1|
+```
+
+```fix Quote Notification (Exchange → Creator) theme={null}
+8=FIXT.1.1|35=S|117=quote-789|131=server-rfq-456|55=HIGHNY-23DEC31|132=0.7500|133=0.2500|38=100|60=20260924-14:30:05.123|453=1|448=quoter-public-id|452=35|
+```
+
+```fix Accept Quote (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=UA|117=quote-789|21023=server-rfq-456|54=1|38=100|11=client-accept-123|
+```
+
+```fix AcceptQuoteStatus (Exchange → Creator) theme={null}
+8=FIXT.1.1|35=UC|117=quote-789|21025=0|21024=quote-789|11=client-accept-123|
+```
+
+```fix Cancel RFQ (Creator → Exchange) theme={null}
+8=FIXT.1.1|35=UE|131=client-req-123|
+```
+
+```fix RFQCancelStatus (Exchange → Creator) theme={null}
+8=FIXT.1.1|35=UB|131=client-req-123|21013=0|
+```
+
+### Market Maker Flow
+
+```fix QuoteRequest (Exchange → MM) theme={null}
+8=FIXT.1.1|35=R|131=server-rfq-456|146=1|55=HIGHNY-23DEC31|38=100|453=1|448=anon-456|
+```
+
+```fix Quote Response (MM → Exchange) theme={null}
+8=FIXT.1.1|35=S|117=quote-789|131=server-rfq-456|55=HIGHNY-23DEC31|132=75|133=25|
+```
+
+```fix Quote Status Pending (Exchange → MM) theme={null}
+8=FIXT.1.1|35=AI|117=quote-789|131=server-rfq-456|297=10|38=100|132=75|133=25|60=20260924-14:30:05.123|
+```
+
+```fix Quote Accepted (Exchange → MM) theme={null}
+8=FIXT.1.1|35=AI|117=quote-789|131=server-rfq-456|297=0|54=1|38=100|
+```
+
+```fix Quote Confirmation (MM → Exchange) theme={null}
+8=FIXT.1.1|35=U7|117=quote-789|21023=server-rfq-456|
+```
+
+```fix QuoteConfirmStatus (Exchange → MM) theme={null}
+8=FIXT.1.1|35=U8|117=quote-789|21010=0|
+```
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

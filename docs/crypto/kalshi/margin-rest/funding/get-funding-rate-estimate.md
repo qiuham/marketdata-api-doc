@@ -1,0 +1,182 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/funding/get-funding-rate-estimate'
+updated_at: 2026-11-18
+---
+
+# Get Funding Rate Estimate
+
+> Returns the estimated funding rate for the current, in-progress funding period. The value is a time-weighted average of the premium index computed over `[last_funding_time, now)`, so it continues to move as new data accumulates through the window and is only finalized at `next_funding_time`.
+
+Funding measures the premium over clock-aligned bars of one second or longer, depending on the market. The returned `premium_index` is the premium of the final bar evaluated by this estimate, captured from the same calculation inputs. Its observation timestamp can lag the computation time when input feeds are delayed. It is omitted when that bar has no available premium. The estimate remains provisional until funding is finalized.
+
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml get /margin/funding_rates/estimate
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/funding_rates/estimate:
+    get:
+      tags:
+        - funding
+      summary: Get Funding Rate Estimate
+      description: >
+        Returns the estimated funding rate for the current, in-progress funding
+        period. The value is a time-weighted average of the premium index
+        computed over `[last_funding_time, now)`, so it continues to move as new
+        data accumulates through the window and is only finalized at
+        `next_funding_time`.
+
+
+        Funding measures the premium over clock-aligned bars of one second or
+        longer, depending on the market. The returned `premium_index` is the
+        premium of the final bar evaluated by this estimate, captured from the
+        same calculation inputs. Its observation timestamp can lag the
+        computation time when input feeds are delayed. It is omitted when that
+        bar has no available premium. The estimate remains provisional until
+        funding is finalized.
+      operationId: GetMarginFundingRateEstimate
+      parameters:
+        - name: ticker
+          in: query
+          required: true
+          description: Market ticker
+          schema:
+            type: string
+            x-go-type-skip-optional-pointer: true
+            x-oapi-codegen-extra-tags:
+              validate: required
+      responses:
+        '200':
+          description: Funding rate estimate retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginFundingRateEstimateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    GetMarginFundingRateEstimateResponse:
+      type: object
+      required:
+        - next_funding_time
+      properties:
+        market_ticker:
+          type: string
+          description: Ticker of the margin market
+        computed_time:
+          type: string
+          format: date-time
+          description: Timestamp when this estimate was computed
+        funding_rate:
+          type: number
+          format: double
+          description: Estimated funding rate for the in-progress period
+        mark_price:
+          $ref: '#/components/schemas/FixedPointDollars'
+          description: Mark price at the time the estimate was computed
+        next_funding_time:
+          type: string
+          format: date-time
+          description: Timestamp of the next scheduled funding event
+        premium_index:
+          type: string
+          description: >-
+            Premium index of the final bar evaluated by this funding estimate,
+            as a signed decimal fraction before time weighting. Captured with
+            the estimate from the same calculation inputs. Omitted when that bar
+            has no available premium.
+        premium_index_ts:
+          type: string
+          format: date-time
+          description: >-
+            Timestamp of the last second of the final bar evaluated by the
+            funding estimate. Can precede computed_time when input feeds are
+            delayed.
+    FixedPointDollars:
+      type: string
+      description: >-
+        Fixed-point US dollar string. Most request fields accept 2-4 decimal
+        places (e.g., "0.56", "0.5600"); responses emit up to 6. Valid quote
+        intervals for a given market are constrained by that market's price
+        level structure.
+      example: '0.5600'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

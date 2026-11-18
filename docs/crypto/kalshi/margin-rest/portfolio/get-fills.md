@@ -1,0 +1,298 @@
+---
+api_type: reference
+source_type: llms_txt
+version: ''
+scope: crypto
+asset_class: prediction_market
+domain: exchanges
+provider: kalshi
+provider_name: Kalshi
+product: api
+product_id: kalshi
+source_url: 'https://docs.kalshi.com/margin-rest/portfolio/get-fills'
+updated_at: 2026-11-18
+---
+
+# Get Fills
+
+> Endpoint for retrieving the authenticated user's margin fills.
+Resource-bound MCP OAuth tokens may read the owner's data with read::mcp_portfolio.
+Registered partners may also use a user OAuth access token with the explicitly granted read::compliance_partner scope.
+
+
+
+
+## OpenAPI
+
+````yaml /perps_openapi.yaml get /margin/fills
+openapi: 3.0.0
+info:
+  title: Kalshi Trade API Manual Endpoints
+  version: 0.0.1
+  description: >-
+    Manually defined OpenAPI spec for endpoints being migrated to spec-first
+    approach
+servers:
+  - url: https://external-api.kalshi.com/trade-api/v2
+    description: Production perps REST API server
+  - url: https://external-api.demo.kalshi.co/trade-api/v2
+    description: Demo perps REST API server
+security: []
+tags:
+  - name: account
+    description: Account information endpoints
+  - name: fcm
+    description: FCM member specific endpoints
+  - name: exchange
+    description: Exchange status and information endpoints
+  - name: market
+    description: Market data endpoints
+  - name: orders
+    description: Order management endpoints
+  - name: order-groups
+    description: Order group management endpoints
+  - name: portfolio
+    description: Portfolio and balance information endpoints
+  - name: risk
+    description: Margin risk metrics, parameters, and limits
+  - name: funding
+    description: Funding rates and payment history
+  - name: fees
+    description: Margin fee schedule
+  - name: exit-triggers
+    description: Stop-loss, take-profit, and trailing-stop triggers on margin positions
+paths:
+  /margin/fills:
+    get:
+      tags:
+        - portfolio
+      summary: Get Fills
+      description: >
+        Endpoint for retrieving the authenticated user's margin fills.
+
+        Resource-bound MCP OAuth tokens may read the owner's data with
+        read::mcp_portfolio.
+
+        Registered partners may also use a user OAuth access token with the
+        explicitly granted read::compliance_partner scope.
+      operationId: GetMarginFills
+      parameters:
+        - name: subaccount
+          in: query
+          required: false
+          description: >-
+            Subaccount number (0 for primary, 1-63 for subaccounts). If omitted,
+            returns fills across all subaccounts for the authenticated user.
+            Subaccount-restricted API keys must omit this or pass their locked
+            subaccount, and read only that subaccount's fills.
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: false
+          description: Number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          x-go-type-skip-optional-pointer: true
+        - name: cursor
+          in: query
+          required: false
+          description: Pagination cursor from a previous response
+          schema:
+            type: string
+          x-go-type-skip-optional-pointer: true
+        - name: min_ts
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: Filter fills after this Unix timestamp
+        - name: max_ts
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+          description: Filter fills before this Unix timestamp
+      responses:
+        '200':
+          description: Fills retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMarginFillsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - kalshiAccessKey: []
+          kalshiAccessSignature: []
+          kalshiAccessTimestamp: []
+        - kalshiOauthAccessToken: []
+components:
+  schemas:
+    GetMarginFillsResponse:
+      type: object
+      required:
+        - fills
+        - cursor
+      properties:
+        fills:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarginFill'
+        cursor:
+          type: string
+    MarginFill:
+      type: object
+      required:
+        - fill_id
+        - order_id
+        - is_taker
+        - side
+        - count
+        - created_time
+        - ticker
+        - price
+        - entry_price
+        - fees
+        - realized_pnl
+      properties:
+        fill_id:
+          type: string
+          description: Unique identifier for the fill
+        order_id:
+          type: string
+          description: The order ID that generated this fill
+        is_taker:
+          type: boolean
+          description: Whether the user was the taker in this fill
+        side:
+          $ref: '#/components/schemas/BookSide'
+        count:
+          $ref: '#/components/schemas/FixedPointCount'
+        created_time:
+          type: string
+          format: date-time
+          description: When the fill was executed
+        ticker:
+          type: string
+          description: Market ticker symbol
+        price:
+          type: string
+          description: Fill price in fixed-point dollars
+        entry_price:
+          type: string
+          description: >-
+            Position entry price used to compute incremental realized PnL for
+            this fill
+        fees:
+          type: string
+          description: Fees paid on filled contracts, in dollars
+        realized_pnl:
+          type: string
+          description: >-
+            Incremental realized PnL contributed by this fill, in fixed-point
+            dollars
+        order_source:
+          $ref: '#/components/schemas/OrderSource'
+          description: >-
+            Whether the order behind this fill was placed by the user or by the
+            system. `system` covers liquidation, TP/SL and auto-rebalance orders
+            alike; to tell them apart, fetch the order by `order_id` and read
+            its `order_reason`.
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: string
+          description: Additional details about the error, if available
+    BookSide:
+      type: string
+      enum:
+        - bid
+        - ask
+      description: The side of an order or trade (bid or ask)
+    FixedPointCount:
+      type: string
+      description: >-
+        Fixed-point contract count string (2 decimals, e.g., "10.00"; referred
+        to as "fp" in field names). Requests accept 0-2 decimal places (e.g.,
+        "10", "10.0", "10.00"); responses always emit 2 decimals. A market whose
+        `fractional_trading_enabled` is false trades whole contracts only.
+        There, an order for a fractional count (e.g., "2.50") is rejected with
+        HTTP 400 and error code `invalid_order_size`, and an amend or decrease
+        that would leave a fractional count is rejected with HTTP 400 and error
+        code `invalid_amend_quantity_for_order`.
+      example: '10.00'
+    OrderSource:
+      type: string
+      enum:
+        - user
+        - system
+      description: >-
+        The source of the order. 'user' indicates a user-placed order, 'system'
+        indicates a system-generated order.
+  responses:
+    BadRequestError:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnauthorizedError:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    kalshiAccessKey:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-KEY
+      description: Your API key ID
+    kalshiAccessSignature:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-SIGNATURE
+      description: >-
+        Base64 signature of the pre-sign text (timestamp + method + path) made
+        with the API key's algorithm - RSA-PSS with SHA-256 for RSA keys,
+        Ed25519 for Ed25519 keys
+    kalshiAccessTimestamp:
+      type: apiKey
+      in: header
+      name: KALSHI-ACCESS-TIMESTAMP
+      description: Request timestamp in milliseconds
+    kalshiOauthAccessToken:
+      type: http
+      scheme: bearer
+      description: >-
+        User OAuth access token with read::compliance_partner, issued to an
+        explicitly authorized partner. Accepted only on margin fills and margin
+        positions in this lane; generic read and partner client-credentials
+        tokens do not grant access.
+
+````
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

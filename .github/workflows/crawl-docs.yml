@@ -16,6 +16,7 @@ name: Crawl Docs
           - deribit
           - gateio
           - hyperliquid
+          - kalshi
           - kraken
           - okx
           - polymarket
