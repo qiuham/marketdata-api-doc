@@ -16,6 +16,10 @@ Config (`source` in config/products/<id>.yaml):
       include_prefixes: ["for-developers/"]        # optional; paths relative to base_url
       exclude_prefixes: []                         # optional
       include_specs: true                          # optional; also keep .json/.yaml specs
+      sidebar_pages: [https://docs.example.com/docs/intro]  # optional; when llms.txt leaves pages
+                                                   # out, also take every same-site link in these
+                                                   # pages' HTML (the sidebar) and fetch "<link>.md";
+                                                   # needs include_prefixes
       concurrency: 4
       max_failure_ratio: 0.02                      # more failures than this -> keep old docs
 """
@@ -35,8 +39,11 @@ USER_AGENT = "marketdata-api-doc-crawler/1.0"
 SPEC_SUFFIXES = (".json", ".yaml", ".yml")
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 LOC = re.compile(r"<loc>\s*([^<\s]+)\s*</loc>")
+HREF = re.compile(r'href="([^"#?]+)')
 # GitBook / Mintlify insert a quoted note pointing back at llms.txt near the top; it is not part of the page.
 QUOTE_BLOCK = re.compile(r"(?:^>[^\n]*\n?)+", re.M)
+# ReadMe puts its own YAML block (updatedAt, agentTools) at the top of each .md; drop it.
+LEADING_FRONTMATTER = re.compile(r"\A---\n.*?\n---\n", re.S)
 
 
 def strip_index_note(body: str) -> str:
@@ -83,6 +90,7 @@ class LlmsTxtAdapter(ProductAdapter):
         self.include = list(source.get("include_prefixes") or [])
         self.exclude = list(source.get("exclude_prefixes") or [])
         self.include_specs = bool(source.get("include_specs", False))
+        self.sidebar_pages = list(source.get("sidebar_pages") or [])
         self.concurrency = max(1, int(source.get("concurrency", 4)))
         self.max_failure_ratio = float(source.get("max_failure_ratio", 0.02))
 
@@ -118,6 +126,18 @@ class LlmsTxtAdapter(ProductAdapter):
             raise RuntimeError(f"{self.product_id}: sitemap listed no pages: {self.sitemap_url}")
         return list(pages)
 
+    def _discover_sidebar(self, pages: dict[str, None]) -> None:
+        """Add pages linked from the HTML of sidebar_pages (llms.txt may skip parent pages)."""
+        for page in self.sidebar_pages:
+            for raw in HREF.findall(fetch(page)):
+                url = normalize(raw, page)
+                rel = self._relative(url)
+                # only real pages under an include prefix; skip assets and bare section roots
+                if not rel or "." in rel.rsplit("/", 1)[-1] or "/" not in rel.strip("/"):
+                    continue
+                if self.include and self._wanted(rel):
+                    pages.setdefault(url.rstrip("/") + ".md", None)
+
     def discover(self) -> list[str]:
         if self.sitemap_url:
             return self._discover_sitemap()
@@ -146,6 +166,7 @@ class LlmsTxtAdapter(ProductAdapter):
                 if rel is None or (not is_spec and not self._wanted(rel)):
                     continue
                 pages[url] = None
+        self._discover_sidebar(pages)
         if not pages:
             raise RuntimeError(f"{self.product_id}: llms.txt listed no pages: {self.index_url}")
         return list(pages)
@@ -174,7 +195,7 @@ class LlmsTxtAdapter(ProductAdapter):
             body = f"Source: {source}\n\n```{lang}\n{text.rstrip()}\n```"
             return DocumentPage(title=title, content=body, metadata=metadata,
                                 relative_path=self._relative_path(source), source_url=source)
-        body = strip_index_note(text.lstrip("﻿"))
+        body = strip_index_note(LEADING_FRONTMATTER.sub("", text.lstrip("﻿"), count=1))
         match = re.search(r"^#\s+(.+?)\s*$", body, re.M)
         title = match.group(1) if match else path.rsplit("/", 1)[-1].removesuffix(".md")
         if len(body) < 40:

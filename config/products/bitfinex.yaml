@@ -1,0 +1,37 @@
+id: bitfinex
+display_name: Bitfinex
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: bitfinex
+  display_name: Bitfinex
+product: api
+status: active
+priority: 190
+# ReadMe 文档站：每页 .md 是原文。llms.txt 漏了带子页的父页（例如 ws-general、
+# rest-public-book、ws-websocket-checksum），所以再从一篇指南页、一篇接口页的侧边栏补全；没有 sitemap
+adapter: llms_txt
+source:
+  type: llms_txt
+  llms_txt: https://docs.bitfinex.com/llms.txt
+  base_url: https://docs.bitfinex.com/
+  include_prefixes: ["docs/", "reference/", "recipes/"]
+  sidebar_pages:
+    - https://docs.bitfinex.com/docs/introduction
+    - https://docs.bitfinex.com/reference/rest-public-ticker
+  concurrency: 3
+output:
+  docs_dir: docs/crypto/bitfinex
+  index_file: index/crypto/bitfinex.json
+  clean_before_crawl: true
+metadata_defaults:
+  api_type: reference
+  source_type: llms_txt
+  version: ''
+validate:
+  # 标题和 URL 用词不同、但已核对是对的页（validate 不再报）：
+  # 2026-11-18 核对，llms.txt 和官网侧边栏就是这两个标题
+  ignore_title_mismatch:
+    - https://docs.bitfinex.com/reference/rest-auth-audit-hist   # 账户变更记录接口，官网标题 Changelog
+    - https://docs.bitfinex.com/reference/rest-public-rankings   # 排行榜接口，官网标题 Leaderboards
