@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/general-info
 api_type: Guide
-updated_at: 2026-11-18 02:00:03.113170
+updated_at: 2026-11-18 18:29:32.433702
 ---
 
 # General Info

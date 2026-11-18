@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-coin-m-futures/api/ws-api
 api_type: WebSocket API
-updated_at: 2026-11-18 02:46:46.956473
+updated_at: 2026-11-18 18:48:19.717751
 ---
 
 # Futures (COIN-M) WebSocket API

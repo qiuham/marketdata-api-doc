@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/getting-started/sdks-apis'
-updated_at: 2026-11-17
+updated_at: 2026-11-18
 ---
 
 # SDK 与 API

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/DeprecatedCanvas
 api_type: Guide
-updated_at: 2026-11-18 02:32:46.232900
+updated_at: 2026-11-18 18:42:38.318787
 ---
 
 # DeprecatedCanvas

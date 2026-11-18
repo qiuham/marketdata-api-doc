@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/stock-plus
 api_type: REST
-updated_at: 2026-11-18 08:38:28.367734
+updated_at: 2026-11-18 19:01:33.596471
 ---
 
 # Stock+

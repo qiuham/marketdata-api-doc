@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/supporting/public-status
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:13.631164
+updated_at: 2026-11-18 18:59:18.852929
 ---
 
 # public/status

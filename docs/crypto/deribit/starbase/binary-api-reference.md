@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/starbase/binary-api-reference
 api_type: Starbase
-updated_at: 2026-11-18 05:08:31.045689
+updated_at: 2026-11-18 18:59:10.310328
 ---
 
 # Binary API Reference

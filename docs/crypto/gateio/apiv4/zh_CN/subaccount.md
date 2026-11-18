@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/subaccount
 api_type: Account
-updated_at: 2026-11-17 18:45:55.890324
+updated_at: 2026-11-18 18:56:41.352420
 ---
 
 # SubAccount
@@ -1277,6 +1277,60 @@ WARNING
 
 #  模型
 
+##  SubAccount
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+remark | string | false | none | 备注  
+login_name | string | true | none | 子账户登录名：仅支持字母、数字、下划线，不可包含其他非法字符。  
+password | string | false | none | 子账户密码  
+不传默认跟随主账户  
+email | string | false | none | 子账户邮箱  
+不传默认跟随主账户  
+state | integer(int32) | false | 只读 | 子账户状态 1正常,2冻结  
+type | integer(int32) | false | 只读 | 子账号类型 1-普通子账号 3-全仓杠杆子账户  
+user_id | integer(int64) | false | 只读 | 子账户 user_id  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "remark": "string",
+      "login_name": "string",
+      "password": "string",
+      "email": "string",
+      "state": 0,
+      "type": 0,
+      "user_id": 0,
+      "create_time": 0
+    }
+    
+    
+
+##  SubUserMode
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+user_id | integer(int64) | false | none | 用户id  
+is_unified | boolean | false | none | 是否是统一账户  
+mode | string | false | none | 统一账户模式：  
+\- `classic`: 经典账户模式  
+\- `multi_currency`: 跨币种保证金模式  
+\- `portfolio`: 组合保证金模式  
+\- `single_currency`: 单币种保证金模式  
+      
+    
+    {
+      "user_id": 0,
+      "is_unified": true,
+      "mode": "string"
+    }
+    
+    
+
 ##  SubAccountKey
 
 ###  属性
@@ -1328,58 +1382,4 @@ last_access | integer(int64) | false | 只读 | 最近使用时间
       "created_at": 0,
       "updated_at": 0,
       "last_access": 0
-    }
-    
-    
-
-##  SubAccount
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-remark | string | false | none | 备注  
-login_name | string | true | none | 子账户登录名：仅支持字母、数字、下划线，不可包含其他非法字符。  
-password | string | false | none | 子账户密码  
-不传默认跟随主账户  
-email | string | false | none | 子账户邮箱  
-不传默认跟随主账户  
-state | integer(int32) | false | 只读 | 子账户状态 1正常,2冻结  
-type | integer(int32) | false | 只读 | 子账号类型 1-普通子账号 3-全仓杠杆子账户  
-user_id | integer(int64) | false | 只读 | 子账户 user_id  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "remark": "string",
-      "login_name": "string",
-      "password": "string",
-      "email": "string",
-      "state": 0,
-      "type": 0,
-      "user_id": 0,
-      "create_time": 0
-    }
-    
-    
-
-##  SubUserMode
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-user_id | integer(int64) | false | none | 用户id  
-is_unified | boolean | false | none | 是否是统一账户  
-mode | string | false | none | 统一账户模式：  
-\- `classic`: 经典账户模式  
-\- `multi_currency`: 跨币种保证金模式  
-\- `portfolio`: 组合保证金模式  
-\- `single_currency`: 单币种保证金模式  
-      
-    
-    {
-      "user_id": 0,
-      "is_unified": true,
-      "mode": "string"
     }

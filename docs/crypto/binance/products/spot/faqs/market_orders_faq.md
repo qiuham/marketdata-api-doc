@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/market_orders_faq
 api_type: Guide
-updated_at: 2026-11-18 02:15:02.473216
+updated_at: 2026-11-18 18:35:35.672944
 ---
 
 # MARKET orders

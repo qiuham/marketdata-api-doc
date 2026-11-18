@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-query-receiver
 api_type: Guide
-updated_at: 2026-11-18 02:08:58.330034
+updated_at: 2026-11-18 18:33:07.233307
 ---
 
 # Query Receiver

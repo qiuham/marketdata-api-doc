@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showTabBarRedDot
 api_type: Guide
-updated_at: 2026-11-18 02:39:49.629956
+updated_at: 2026-11-18 18:45:25.726467
 ---
 
 # bn.showTabBarRedDot

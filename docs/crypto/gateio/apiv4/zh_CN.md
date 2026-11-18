@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN
 api_type: REST
-updated_at: 2026-11-17 18:45:24.125485
+updated_at: 2026-11-18 18:56:10.914012
 ---
 
-# Gate API v4.106.182
+# Gate API v4.106.184
 
-v4.106.182 · Stable
+v4.106.184 · Stable
 
 
 欢迎使用 Gate API APIv4 接口提供了现货、杠杆、合约交易相关的操作，包括公共接口查询市场行情，以及需要认证的私有接口， 实现基于 API 的自动交易。
@@ -104,6 +104,13 @@ DANGER
 即使是提交问题，也切勿将API key信息提交给客服及他人，否则会有严重的资产风险。如果已经不小心泄漏，请将已有API删除并重新生成。
 
 #  Changelog
+
+**v4.106.184**
+
+2026-11-18
+
+  * 新增 `POST /p2p/merchant/chat/pre_upload_chat_file`，请求必填字段为 `content_type`，仅支持 `image/jpeg`、`image/jpg`、`image/png`、`image/webp` 和 `video/mp4`。响应包含 `data.url`、签名表单字段 `data.fields` 和 `data.file_key`，用于直传成功后发送文件消息。
+  * 废弃 `POST /p2p/merchant/chat/upload_chat_file`，改用 `POST /p2p/merchant/chat/pre_upload_chat_file`。
 
 **v4.106.180**
 
@@ -1121,9 +1128,9 @@ DANGER
 
 **v4.106.0**
 
-  * 为解决支持小数下单问题，将所有 Futures 相关接口中的 size、数量相关字段从 `integer` 类型统一改为 `string` 类型。受影响的模型包括：`FuturesOrder`（`size`、`iceberg`、`left`）、`BatchFuturesOrder`（`size`、`iceberg`、`left`）、`Position`（`size`、`trade_long_size`、`trade_short_size`）、`PositionTimerange`（`size`）、`MyFuturesTrade`（`size`、`close_size`）、`MyFuturesTradeTimeRange`（`size`、`close_size`）、`FuturesTrade`（`size`）、`FuturesOrderBook`（`asks` 和 `bids` 中的 `size`）、`FuturesCandlestick`（`v`）、`FuturesLiquidate`（`size`、`order_size`）、`FuturesLiqOrder`（`position_size`、`size`、`order_size`）、`FuturesAutoDeleverage`（`size`、`entry_size`）、`FuturesCollusionOrder`（`size`、`left`）、`FuturesBatchAmendOrderRequest`（`size`）、`Contract`（`order_size_min`、`order_size_max`、`trade_size`、`position_size`）、`ContractStat`（`long_liq_size`、`short_liq_size`、`open_interest`）
+  * 为支持小数张数，Futures 相关字段在 OpenAPI 和 SDK 模型中使用 `string` 类型。REST 请求携带 `X-Gate-Size-Decimal: 1` 时，响应以 JSON 字符串返回这些字段。直接发送 HTTP 请求时，将请求头设为 `0` 或省略该头，响应返回截去小数部分的整数。受影响的模型包括：`FuturesOrder`（`size`、`iceberg`、`left`）、`BatchFuturesOrder`（`size`、`iceberg`、`left`）、`Position`（`size`、`trade_long_size`、`trade_short_size`）、`PositionTimerange`（`size`）、`MyFuturesTrade`（`size`、`close_size`）、`MyFuturesTradeTimeRange`（`size`、`close_size`）、`FuturesTrade`（`size`）、`FuturesOrderBook`（`asks` 和 `bids` 中的 `size`）、`FuturesCandlestick`（`v`）、`FuturesLiquidate`（`size`、`order_size`）、`FuturesLiqOrder`（`position_size`、`size`、`order_size`）、`FuturesAutoDeleverage`（`size`、`entry_size`）、`FuturesCollusionOrder`（`size`、`left`）、`FuturesBatchAmendOrderRequest`（`size`）、`Contract`（`order_size_min`、`order_size_max`、`trade_size`、`position_size`）、`ContractStat`（`long_liq_size`、`short_liq_size`、`open_interest`）
   * `Position` 模型中新增 `pid` 字段，用于分仓仓位 ID
-  * 所有语言 SDK（Go、C#、Java、Python、PHP、TypeScript）统一添加 `X-Gate-Size-Decimal: 1` 默认请求头，确保服务端正确处理 size 字段
+  * Go、C#、Java、Python、PHP 和 TypeScript SDK 默认发送 `X-Gate-Size-Decimal: 1` 请求头。
   * 新建 12 个独立的 Delivery Schema 文件，用于分离 Delivery 和 Futures 对象：`DeliveryAccount`、`DeliveryAccountBook`、`DeliveryOrder`、`DeliveryOrderBook`、`DeliveryPosition`、`DeliveryPositionClose`、`DeliveryTrade`、`DeliveryMyTrade`、`DeliveryLiquidate`、`DeliveryInsuranceRecord`、`DeliveryLimitRiskTiers`、`DeliveryCloseAllPositionsResponse`
 
 **v4.105.32**

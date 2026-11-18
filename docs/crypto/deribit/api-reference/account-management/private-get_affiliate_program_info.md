@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_affiliate_program_info
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:44.702126
+updated_at: 2026-11-18 18:59:13.350905
 ---
 
 # private/get_affiliate_program_info

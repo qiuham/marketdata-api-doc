@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/futures
 api_type: Trading
-updated_at: 2026-11-17 18:44:57.098580
+updated_at: 2026-11-18 18:55:47.315321
 ---
 
 # Futures
@@ -17,6 +17,10 @@ GET `/futures/{settle}/contracts`
 
 _Query all futures contracts_
 
+Send `X-Gate-Size-Decimal: 1` to read the actual order size limits for contracts that support fractional sizes. Check `enable_decimal` for each contract.
+
+For example, `ETH_USDT` returns its `order_size_min` as the string `"0.1"` with `X-Gate-Size-Decimal: 1`. Omitting the header or setting it to `0` returns the integer `0` after discarding the fractional part. The actual minimum order size remains `0.1` contracts.
+
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
@@ -24,6 +28,7 @@ ParametersName | In | Type | Required | Description
 settle | path | string | Required | Perpetual futures settlement currency  
 limit | query | integer | Optional | Maximum number of records returned in a single list  
 offset | query | integer | Optional | List offset, starting from 0  
+X-Gate-Size-Decimal | header | string | Optional | none  
   
 ####  Enumerated Values
 
@@ -68,9 +73,9 @@ _None_ | array | [Futures contract details]
 »» interest_rate | string | Interest rate parameter used in funding rate and premium-related calculations for perpetual contracts. Returned as a string decimal ratio (e.g. `0.0003`), same convention as `funding_rate` (ratio, not percent).  
 »» risk_limit_step | string | Risk limit adjustment step (deprecated)  
 »» risk_limit_max | string | Maximum risk limit allowed by the contract (deprecated). It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits  
-»» order_size_min | string | Minimum order quantity  
-»» enable_decimal | boolean | Whether decimal string type is supported for contract lot size. When this field is set to `true`, it indicates that the contract supports decimal lot sizes (i.e., the `size` field can use a decimal string type); when set to `false`, it indicates that the contract does not support decimal lot sizes (i.e., the `size` field can only use an integer type).  
-»» order_size_max | string | Maximum order quantity  
+»» order_size_min | string | Minimum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded. A minimum below 1 is returned as 0 in this mode.  
+»» enable_decimal | boolean | Whether the contract supports fractional contract sizes. If `true`, use `X-Gate-Size-Decimal: 1` to submit a fractional size. If `false`, the contract supports whole contract sizes only.  
+»» order_size_max | string | Maximum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 »» order_price_deviate | string | Maximum allowed deviation between order price and current mark price. The order price `order_price` must satisfy the following condition:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
@@ -112,24 +117,16 @@ This operation does not require authentication
 Code samples
     
     
-    # coding: utf-8
     import requests
     
-    host = "https://api.gateio.ws"
-    prefix = "/api/v4"
-    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-    
-    url = '/futures/usdt/contracts'
-    query_param = ''
-    r = requests.request('GET', host + prefix + url, headers=headers)
-    print(r.json())
+    url = "https://api.gateio.ws/api/v4/futures/usdt/contracts"
+    response = requests.get(url, headers={"X-Gate-Size-Decimal": "1"}, timeout=10)
+    response.raise_for_status()
+    print(response.json())
     
     
     
-    
-    curl -X GET https://api.gateio.ws/api/v4/futures/usdt/contracts \
-      -H 'Accept: application/json'
-    
+    curl 'https://api.gateio.ws/api/v4/futures/usdt/contracts' -H 'X-Gate-Size-Decimal: 1'
     
 
 > Example responses
@@ -254,9 +251,9 @@ _None_ | array | [Futures contract details]
 »» interest_rate | string | Interest rate parameter used in funding rate and premium-related calculations for perpetual contracts. Returned as a string decimal ratio (e.g. `0.0003`), same convention as `funding_rate` (ratio, not percent).  
 »» risk_limit_step | string | Risk limit adjustment step (deprecated)  
 »» risk_limit_max | string | Maximum risk limit allowed by the contract (deprecated). It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits  
-»» order_size_min | string | Minimum order quantity  
-»» enable_decimal | boolean | Whether decimal string type is supported for contract lot size. When this field is set to `true`, it indicates that the contract supports decimal lot sizes (i.e., the `size` field can use a decimal string type); when set to `false`, it indicates that the contract does not support decimal lot sizes (i.e., the `size` field can only use an integer type).  
-»» order_size_max | string | Maximum order quantity  
+»» order_size_min | string | Minimum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded. A minimum below 1 is returned as 0 in this mode.  
+»» enable_decimal | boolean | Whether the contract supports fractional contract sizes. If `true`, use `X-Gate-Size-Decimal: 1` to submit a fractional size. If `false`, the contract supports whole contract sizes only.  
+»» order_size_max | string | Maximum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 »» order_price_deviate | string | Maximum allowed deviation between order price and current mark price. The order price `order_price` must satisfy the following condition:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
@@ -389,12 +386,17 @@ GET `/futures/{settle}/contracts/{contract}`
 
 _Query single contract information_
 
+Send `X-Gate-Size-Decimal: 1` to read the actual order size limits. For `ETH_USDT`, `order_size_min` is the string `"0.1"`. Omitting the header or setting it to `0` returns the integer `0`. The actual minimum order size remains `0.1` contracts.
+
+Check the target contract's `enable_decimal` value for fractional size support. See the [API contract size compatibility rules ](https://www.gate.com/announcements/article/48788) and the [market size precision adjustment announcement ](https://www.gate.com/announcements/article/50325).
+
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 settle | path | string | Required | Perpetual futures settlement currency  
 contract | path | string | Required | Futures contract  
+X-Gate-Size-Decimal | header | string | Optional | none  
   
 ####  Enumerated Values
 
@@ -439,9 +441,9 @@ Name | Type | Description
 » interest_rate | string | Interest rate parameter used in funding rate and premium-related calculations for perpetual contracts. Returned as a string decimal ratio (e.g. `0.0003`), same convention as `funding_rate` (ratio, not percent).  
 » risk_limit_step | string | Risk limit adjustment step (deprecated)  
 » risk_limit_max | string | Maximum risk limit allowed by the contract (deprecated). It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits  
-» order_size_min | string | Minimum order quantity  
-» enable_decimal | boolean | Whether decimal string type is supported for contract lot size. When this field is set to `true`, it indicates that the contract supports decimal lot sizes (i.e., the `size` field can use a decimal string type); when set to `false`, it indicates that the contract does not support decimal lot sizes (i.e., the `size` field can only use an integer type).  
-» order_size_max | string | Maximum order quantity  
+» order_size_min | string | Minimum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded. A minimum below 1 is returned as 0 in this mode.  
+» enable_decimal | boolean | Whether the contract supports fractional contract sizes. If `true`, use `X-Gate-Size-Decimal: 1` to submit a fractional size. If `false`, the contract supports whole contract sizes only.  
+» order_size_max | string | Maximum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » order_price_deviate | string | Maximum allowed deviation between order price and current mark price. The order price `order_price` must satisfy the following condition:  
   
 abs(order_price - mark_price) <= mark_price * order_price_deviate  
@@ -483,24 +485,16 @@ This operation does not require authentication
 Code samples
     
     
-    # coding: utf-8
     import requests
     
-    host = "https://api.gateio.ws"
-    prefix = "/api/v4"
-    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
-    
-    url = '/futures/usdt/contracts/BTC_USDT'
-    query_param = ''
-    r = requests.request('GET', host + prefix + url, headers=headers)
-    print(r.json())
+    url = "https://api.gateio.ws/api/v4/futures/usdt/contracts/ETH_USDT"
+    response = requests.get(url, headers={"X-Gate-Size-Decimal": "1"}, timeout=10)
+    response.raise_for_status()
+    print(response.json())
     
     
     
-    
-    curl -X GET https://api.gateio.ws/api/v4/futures/usdt/contracts/BTC_USDT \
-      -H 'Accept: application/json'
-    
+    curl 'https://api.gateio.ws/api/v4/futures/usdt/contracts/ETH_USDT' -H 'X-Gate-Size-Decimal: 1'
     
 
 > Example responses
@@ -509,58 +503,10 @@ Code samples
     
     
     {
-      "name": "BTC_USDT",
-      "type": "direct",
-      "quanto_multiplier": "0.0001",
-      "ref_discount_rate": "0",
-      "order_price_deviate": "0.5",
-      "maintenance_rate": "0.005",
-      "mark_type": "index",
-      "last_price": "38026",
-      "mark_price": "37985.6",
-      "index_price": "37954.92",
-      "funding_rate_indicative": "0.000219",
-      "mark_price_round": "0.01",
-      "funding_offset": 0,
-      "in_delisting": false,
-      "risk_limit_base": "1000000",
-      "interest_rate": "0.0003",
-      "order_price_round": "0.1",
-      "order_size_min": "1",
-      "enable_decimal": false,
-      "ref_rebate_rate": "0.2",
-      "funding_interval": 28800,
-      "risk_limit_step": "1000000",
-      "leverage_min": "1",
-      "leverage_max": "100",
-      "risk_limit_max": "8000000",
-      "maker_fee_rate": "-0.00025",
-      "taker_fee_rate": "0.00075",
-      "funding_rate": "0.002053",
-      "order_size_max": "1000000",
-      "funding_next_apply": 1610035200,
-      "short_users": 977,
-      "config_change_time": 1609899548,
-      "trade_size": "28530850594",
-      "position_size": "5223816",
-      "long_users": 455,
-      "funding_impact_value": "60000",
-      "orders_limit": 50,
-      "trade_id": 10851092,
-      "orderbook_id": 2129638396,
-      "enable_bonus": true,
-      "enable_credit": true,
-      "create_time": 1669688556,
-      "funding_cap_ratio": "0.75",
-      "status": "trading",
-      "launch_time": 1609899548,
-      "delisting_time": 1609899548,
-      "delisted_time": 1609899548,
-      "market_order_slip_ratio": "0.05",
-      "market_order_size_max": "0",
-      "funding_rate_limit": "0.003",
-      "contract_type": "indices",
-      "enable_circuit_breaker": false
+      "name": "ETH_USDT",
+      "enable_decimal": true,
+      "order_size_min": "0.1",
+      "order_size_max": "10000000"
     }
     
 
@@ -5462,7 +5408,7 @@ _None_ | array | [Futures order details]
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-»» left | string | Unfilled quantity  
+»» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 »» fill_price | string | Fill price  
 »» text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -5641,6 +5587,7 @@ POST `/futures/{settle}/orders`
 _Place futures order_
 
   * When placing an order, the number of contracts is specified `size`, not the number of coins. The number of coins corresponding to each contract is returned in the contract details interface `quanto_multiplier`
+  * To place an order with a fractional contract size, query the contract with `X-Gate-Size-Decimal: 1`, check that `enable_decimal` is `true`, and read `order_size_min` and `order_size_max`. Send the same header when placing the order and pass fractional `size` or fractional displayed iceberg size `iceberg` as a decimal string.
   * 0 The order that was completed cannot be obtained after 10 minutes of withdrawal, and the order will be mentioned that the order does not exist
   * Setting `reduce_only` to `true` can prevent the position from being penetrated when reducing the position
   * In single-position mode, if you need to close the position, you need to set `size` to 0 and `close` to `true`
@@ -5827,7 +5774,7 @@ Name | Type | Description
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-» left | string | Unfilled quantity  
+» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » fill_price | string | Fill price  
 » text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -6102,7 +6049,7 @@ _None_ | array | [Futures order details]
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-»» left | string | Unfilled quantity  
+»» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 »» fill_price | string | Fill price  
 »» text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -6843,7 +6790,7 @@ Name | Type | Description
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-» left | string | Unfilled quantity  
+» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » fill_price | string | Fill price  
 » text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -7012,6 +6959,8 @@ PUT `/futures/{settle}/orders/{order_id}`
 
 _Amend single order_
 
+To amend an order to a fractional size, query the original order contract with `X-Gate-Size-Decimal: 1`, check that `enable_decimal` is `true`, and read `order_size_min` and `order_size_max`. Send the same header when amending the order and pass the new `size` as a decimal string.
+
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
@@ -7117,7 +7066,7 @@ Name | Type | Description
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-» left | string | Unfilled quantity  
+» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » fill_price | string | Fill price  
 » text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -7383,7 +7332,7 @@ Name | Type | Description
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-» left | string | Unfilled quantity  
+» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » fill_price | string | Fill price  
 » text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -9156,7 +9105,7 @@ Name | Type | Description
 \- ioc: ImmediateOrCancelled, taker only  
 \- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
 \- fok: FillOrKill, fill either completely or none  
-» left | string | Unfilled quantity  
+» left | string | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
 » fill_price | string | Fill price  
 » text | string | Custom order information. If not empty, must follow the rules below:  
   
@@ -12667,578 +12616,98 @@ Code samples
 
 #  Schemas
 
-##  StopChaseOrderReq
-
-_Request body for stopping a chase order_
+##  FuturesAccount
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Order ID. Either id or text must be provided  
-text | string | Optional | none | Custom text. Required only when id is 0 or omitted  
-settle | string | Optional | none | Overridden by the path parameter  
+total | string | Optional | none | Balance, only applicable to classic contract account.The balance is the sum of all historical fund flows, including historical transfers in and out, closing settlements, and transaction fee expenses, but does not include upl of positions.total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
+unrealised_pnl | string | Optional | none | Unrealized PNL  
+position_margin | string | Optional | none | Deprecated  
+order_margin | string | Optional | none | initial margin of all open orders  
+available | string | Optional | none | Refers to the available withdrawal or trading amount in per-position, specifically the per-position available balance under the unified account that includes the credit line (which incorporates trial funds; since trial funds cannot be withdrawn, the actual withdrawal amount needs to deduct the trial fund portion when processing withdrawals)  
+point | string | Optional | none | Point card amount  
+currency | string | Optional | none | Settlement currency  
+in_dual_mode | boolean | Optional | none | Whether Hedge Mode is enabled  
+enable_credit | boolean | Optional | none | Whether portfolio margin account mode is enabled  
+position_initial_margin | string | Optional | none | Initial margin occupied by positions, applicable to unified account mode  
+maintenance_margin | string | Optional | none | Maintenance margin occupied by positions, applicable to new classic account margin mode and unified account mode  
+bonus | string | Optional | none | Bonus  
+enable_evolved_classic | boolean | Optional | none | Deprecated  
+cross_order_margin | string | Optional | none | Cross margin order margin, applicable to new classic account margin mode  
+cross_initial_margin | string | Optional | none | Cross margin initial margin, applicable to new classic account margin mode  
+cross_maintenance_margin | string | Optional | none | Cross margin maintenance margin, applicable to new classic account margin mode  
+cross_unrealised_pnl | string | Optional | none | Cross margin unrealized P&L, applicable to new classic account margin mode  
+cross_available | string | Optional | none | Cross margin available balance, applicable to new classic account margin mode  
+cross_margin_balance | string | Optional | none | Cross margin balance, applicable to new classic account margin mode  
+cross_mmr | string | Optional | none | Cross margin maintenance margin rate, applicable to new classic account margin mode  
+cross_imr | string | Optional | none | Cross margin initial margin rate, applicable to new classic account margin mode  
+isolated_position_margin | string | Optional | none | Isolated position margin, applicable to new classic account margin mode  
+enable_new_dual_mode | boolean | Optional | none | Deprecated  
+margin_mode | integer | Optional | none | Margin mode of the account  
+0: classic future account or Classic Spot Margin Mode of unified account;  
+1: Multi-Currency Margin Mode;  
+2: Portoforlio Margin Mode;  
+3: Single-Currency Margin Mode  
+enable_tiered_mm | boolean | Optional | none | Whether to enable tiered maintenance margin calculation  
+enable_dual_plus | boolean | Optional | none | Whether to Support Split Position Mode  
+position_mode | string | Optional | none | Position Holding Mode single - Single Direction Position, dual - Dual Direction Position, dual_plus - Split Position  
+history | object | Optional | none | Statistical data  
+» dnw | string | Optional | none | total amount of deposit and withdraw  
+» pnl | string | Optional | none | total amount of trading profit and loss  
+» fee | string | Optional | none | total amount of fee  
+» refr | string | Optional | none | total amount of referrer rebates  
+» fund | string | Optional | none | total amount of funding costs  
+» point_dnw | string | Optional | none | total amount of point deposit and withdraw  
+» point_fee | string | Optional | none | total amount of point fee  
+» point_refr | string | Optional | none | total amount of referrer rebates of point fee  
+» bonus_dnw | string | Optional | none | total amount of perpetual contract bonus transfer  
+» bonus_offset | string | Optional | none | total amount of perpetual contract bonus deduction  
+» cross_settle | string | Optional | none | Represents the value of profit settlement from the futures account to the spot account under Unified Account Mode. Negative values indicate settlement from futures to spot, while positive values indicate settlement from spot to futures. This value is cumulative.  
       
     
     {
-      "id": "string",
-      "text": "string",
-      "settle": "string"
-    }
-    
-    
-
-##  FuturesCandlestick
-
-_data point in every timestamp_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-t | number(double) | Optional | none | Unix timestamp in seconds  
-v | string | Optional | none | size volume (contract size). Only returned if `contract` is not prefixed  
-c | string | Optional | none | Close price (quote currency)  
-h | string | Optional | none | Highest price (quote currency)  
-l | string | Optional | none | Lowest price (quote currency)  
-o | string | Optional | none | Open price (quote currency)  
-sum | string | Optional | none | Trading volume (unit: Quote currency)  
-      
-    
-    {
-      "t": 0,
-      "v": "string",
-      "c": "string",
-      "h": "string",
-      "l": "string",
-      "o": "string",
-      "sum": "string"
-    }
-    
-    
-
-##  FuturesOrderAmendment
-
-_FuturesOrderAmendment_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-size | string | Optional | none | New order size, including filled part.  
-  
-\- If new size is less than or equal to filled size, the order will be cancelled.  
-\- Order side must be identical to the original one.  
-\- Close order size cannot be changed.  
-\- For reduce only orders, increasing size may leads to other reduce only orders being cancelled.  
-\- If price is not changed, decreasing size will not change its precedence in order book, while increasing will move it to the last at current price.  
-price | string | Optional | none | New order price  
-amend_text | string | Optional | none | Custom info during order amendment  
-text | string | Optional | none | Internal users can modify information in the text field.  
-action_mode | string | Optional | none | Processing Mode  
-  
-When placing an order, different fields are returned based on the action_mode  
-  
-\- `ACK`: Asynchronous mode, returns only key order fields  
-\- `RESULT`: No clearing information  
-\- `FULL`: Full mode (default)  
-      
-    
-    {
-      "size": "string",
-      "price": "string",
-      "amend_text": "string",
-      "text": "string",
-      "action_mode": "string"
-    }
-    
-    
-
-##  MyFuturesTrade
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-contract | string | Optional | none | Futures contract  
-order_id | string | Optional | none | Related order ID  
-size | string | Optional | none | Trading size  
-close_size | string | Optional | none | Number of closed positions:  
-  
-close_size=0 && size＞0 Open long position  
-close_size=0 && size＜0 Open short position  
-close_size>0 && size>0 && size <= close_size Close short position  
-close_size>0 && size>0 && size > close_size Close short position and open long position  
-close_size<0 && size<0 && size >= close_size Close long position  
-close_size<0 && size<0 && size < close_size Close long position and open short position  
-price | string | Optional | none | Fill Price  
-role | string | Optional | none | Trade role. taker - taker, maker - maker  
-text | string | Optional | none | Order custom information  
-fee | string | Optional | none | Trade fee  
-point_fee | string | Optional | none | Points used to deduct trade fee  
-trade_value | string | Optional | none | trade value  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-role | taker  
-role | maker  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "order_id": "string",
-      "size": "string",
-      "close_size": "string",
-      "price": "string",
-      "role": "taker",
-      "text": "string",
-      "fee": "string",
-      "point_fee": "string",
-      "trade_value": "string"
-    }
-    
-    
-
-##  FuturesBBOOrder
-
-_contractBBOorderdetails_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Required | none | Futures contract  
-size | integer(int64) | Required | none | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
-direction | string | Required | none | Direction: 'sell' fetches the bid side, 'buy' fetches the ask side.  
-iceberg | integer(int64) | Optional | none | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-level | integer(int64) | Required | write-only | Level: maximum 20 levels  
-close | boolean | Optional | write-only | Set as `true` to close the position, with `size` set to 0  
-is_close | boolean | Optional | read-only | Is the order to close position  
-reduce_only | boolean | Optional | write-only | Set as `true` to be reduce-only order  
-is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
-is_liq | boolean | Optional | read-only | Is the order for liquidation  
-tif | string | Optional | none | Time in force  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled, taker only  
-\- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
-\- fok: FillOrKill, fill either completely or none  
-left | integer(int64) | Optional | read-only | Unfilled quantity  
-fill_price | string | Optional | read-only | Fill price  
-text | string | Optional | none | Order Custom Information: Users can set custom IDs via this field. Custom fields must meet the following conditions:  
-  
-1\. Must start with `t-`  
-2\. Excluding `t-`, length cannot exceed 28 bytes  
-3\. Content can only contain numbers, letters, underscores (_), hyphens (-), or dots (.)  
-  
-In addition to user custom information, the following are internal reserved fields identifying order sources:  
-  
-\- web: Web  
-\- api: API Call  
-\- app: Mobile App  
-\- auto_deleveraging: Auto-Deleveraging  
-\- liquidation: Forced Liquidation of Legacy Classic Mode Positions  
-\- liq-xxx: a. Forced liquidation of New Classic Mode positions, including isolated margin, single-direction cross margin, and non-hedged dual-direction cross margin positions. b. Forced liquidation of isolated margin positions in Unified Account Single-Currency Margin Mode  
-\- hedge-liq-xxx: Forced liquidation of hedged portions in New Classic Mode dual-direction cross margin (simultaneous closing of long and short positions)  
-\- pm_liquidate: Forced liquidation in Unified Account Cross-Currency Margin Mode  
-\- comb_margin_liquidate: Forced liquidation in Unified Account Portfolio Margin Mode  
-\- scm_liquidate: Forced liquidation of positions in Unified Account Single-Currency Margin Mode  
-\- insurance: Insurance  
-tkfr | string | Optional | read-only | Taker fee  
-mkfr | string | Optional | read-only | Maker fee  
-refu | integer | Optional | read-only | Referrer user ID  
-auto_size | string | Optional | write-only | Set side to close dual-mode position. `close_long` closes the long side; while `close_short` the short one. Note `size` also needs to be set to 0  
-stp_id | integer | Optional | read-only | Orders between users in the same `stp_id` group are not allowed to be self-traded  
-  
-1\. If the `stp_id` of two orders being matched is non-zero and equal, they will not be executed. Instead, the corresponding strategy will be executed based on the `stp_act` of the taker.  
-2\. `stp_id` returns `0` by default for orders that have not been set for `STP group`  
-stp_act | string | Optional | none | Self-Trading Prevention Action. Users can use this field to set self-trade prevention strategies  
-  
-1\. After users join the `STP Group`, they can pass `stp_act` to limit the user's self-trade prevention strategy. If `stp_act` is not passed, the default is `cn` strategy.  
-2\. When the user does not join the `STP group`, an error will be returned when passing the `stp_act` parameter.  
-3\. If the user did not use `stp_act` when placing the order, `stp_act` will return '-'  
-  
-\- cn: Cancel newest, cancel new orders and keep old ones  
-\- co: Cancel oldest, cancel old orders and keep new ones  
-\- cb: Cancel both, both old and new orders will be cancelled  
-amend_text | string | Optional | read-only | The custom data that the user remarked when amending the order  
-pid | integer(int64) | Optional | write-only | Position ID  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-auto_size | close_long  
-auto_size | close_short  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
-      
-    
-    {
-      "contract": "string",
-      "size": 0,
-      "direction": "string",
-      "iceberg": 0,
-      "level": 0,
-      "close": false,
-      "is_close": true,
-      "reduce_only": false,
-      "is_reduce_only": true,
-      "is_liq": true,
-      "tif": "gtc",
-      "left": 0,
-      "fill_price": "string",
-      "text": "string",
-      "tkfr": "string",
-      "mkfr": "string",
-      "refu": 0,
-      "auto_size": "close_long",
-      "stp_id": 0,
-      "stp_act": "co",
-      "amend_text": "string",
-      "pid": 0
-    }
-    
-    
-
-##  TrailOrderDetailResponse
-
-_TrailOrderDetailResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer(int32) | Optional | none | Status code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | none  
-» order | object | Optional | none | Trail order details  
-»» id | string | Optional | read-only | Order ID  
-»» user_id | string | Optional | read-only | User ID  
-»» user | string | Optional | read-only | User ID  
-»» contract | string | Optional | none | Contract name  
-»» settle | string | Optional | none | Settle currency  
-»» amount | string | Optional | none | Trading quantity in contracts, positive for buy, negative for sell  
-»» is_gte | boolean | Optional | none | true: activate when market price >= activation price, false: <= activation price  
-»» activation_price | string | Optional | none | Activation price, 0 means trigger immediately  
-»» price_type | integer(int32) | Optional | none | Activation price type: 0-unknown, 1-latest price, 2-index price, 3-mark price  
-»» price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
-»» text | string | Optional | none | Custom field  
-»» reduce_only | boolean | Optional | none | Reduce Position Only  
-»» position_related | boolean | Optional | none | Whether bound to position  
-»» created_at | string | Optional | read-only | Created time  
-»» activated_at | string | Optional | read-only | Activation time  
-»» finished_at | string | Optional | read-only | End time  
-»» create_time | string | Optional | read-only | Created time  
-»» active_time | string | Optional | read-only | Activation time  
-»» finish_time | string | Optional | read-only | End time  
-»» reason | string | Optional | read-only | End reason  
-»» suborder_text | string | Optional | read-only | The child order's text field.  
-»» is_dual_mode | boolean | Optional | read-only | Whether dual position mode when creating order  
-»» trigger_price | string | Optional | read-only | Trigger price  
-»» suborder_id | string | Optional | read-only | Child order ID.  
-»» side_label | string | Optional | read-only | Order direction label: long/short/open long/open short/close long/close short  
-»» original_status | integer(int32) | Optional | read-only | Order status  
-»» status | string | Optional | read-only | Simplified order status: open/finished  
-»» position_side_output | string | Optional | read-only | Same as side_label, client requires consistency with other order types  
-»» updated_at | string | Optional | read-only | Update time  
-»» extremum_price | string | Optional | read-only | Extremum price  
-»» status_code | string | Optional | read-only | Status code value  
-»» created_at_precise | string | Optional | read-only | Creation time (high precision, seconds.microseconds format)  
-»» finished_at_precise | string | Optional | read-only | End time (high precision, seconds.microseconds format)  
-»» activated_at_precise | string | Optional | read-only | Activation time (high precision, seconds.microseconds format)  
-»» status_label | string | Optional | read-only | Status internationalization label (translated status text)  
-»» pos_margin_mode | string | Optional | read-only | Position margin mode: isolated/cross  
-»» position_mode | string | Optional | read-only | Position mode: single, dual, and dual_plus  
-»» error_label | string | Optional | read-only | Error label  
-»» leverage | string | Optional | read-only | Leverage  
-» timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-price_type | 3  
-status | open  
-status | finished  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "order": {
-          "id": "string",
-          "user_id": "string",
-          "user": "string",
-          "contract": "string",
-          "settle": "string",
-          "amount": "string",
-          "is_gte": true,
-          "activation_price": "string",
-          "price_type": 0,
-          "price_offset": "string",
-          "text": "string",
-          "reduce_only": true,
-          "position_related": true,
-          "created_at": "string",
-          "activated_at": "string",
-          "finished_at": "string",
-          "create_time": "string",
-          "active_time": "string",
-          "finish_time": "string",
-          "reason": "string",
-          "suborder_text": "string",
-          "is_dual_mode": true,
-          "trigger_price": "string",
-          "suborder_id": "string",
-          "side_label": "string",
-          "original_status": 0,
-          "status": "open",
-          "position_side_output": "string",
-          "updated_at": "string",
-          "extremum_price": "string",
-          "status_code": "string",
-          "created_at_precise": "string",
-          "finished_at_precise": "string",
-          "activated_at_precise": "string",
-          "status_label": "string",
-          "pos_margin_mode": "string",
-          "position_mode": "string",
-          "error_label": "string",
-          "leverage": "string"
-        }
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FuturesAutoDeleverage
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | integer(int64) | Optional | read-only | Automatic deleveraging time  
-user | integer(int64) | Optional | read-only | User ID  
-order_id | integer(int64) | Optional | read-only | Order ID. Order IDs before 2023-02-20 are null  
-contract | string | Optional | read-only | Futures contract  
-leverage | string | Optional | read-only | leverage for isolated margin. 0 means cross margin. For leverage of cross margin, please refer to `cross_leverage_limit`.  
-cross_leverage_limit | string | Optional | read-only | leverage for cross margin  
-entry_price | string | Optional | read-only | Average entry price  
-fill_price | string | Optional | read-only | Average fill price  
-trade_size | string | Optional | read-only | Trading size  
-position_size | string | Optional | read-only | Positions after auto-deleveraging  
-      
-    
-    {
-      "time": 0,
-      "user": 0,
-      "order_id": 0,
-      "contract": "string",
-      "leverage": "string",
-      "cross_leverage_limit": "string",
-      "entry_price": "string",
-      "fill_price": "string",
-      "trade_size": "string",
-      "position_size": "string"
-    }
-    
-    
-
-##  StopAllTrailOrders
-
-_StopAllTrailOrders_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Optional | none | Contract name  
-related_position | integer(int32) | Optional | none | Associated position, if provided, only cancel orders associated with this position, 1-long, 2-short  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-related_position | 1  
-related_position | 2  
-      
-    
-    {
-      "contract": "string",
-      "related_position": 1
-    }
-    
-    
-
-##  StopAllChaseOrdersResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-orders | [ChaseOrder] | Optional | none | [Chase order detail or list item]  
-      
-    
-    {
-      "orders": [
-        {
-          "id": "string",
-          "user": "string",
-          "contract": "string",
-          "settle": "string",
-          "amount": "string",
-          "price_limit": "string",
-          "reduce_only": true,
-          "text": "string",
-          "create_time": 0,
-          "finish_time": 0,
-          "original_status": 0,
-          "status": "string",
-          "reason": "string",
-          "fill_amount": "string",
-          "average_fill_price": "string",
-          "suborder_id": "string",
-          "is_dual_mode": true,
-          "side_label": "string",
-          "position_side_output": "string",
-          "chase_price": "string",
-          "interval_sec": 0,
-          "updated_at": 0,
-          "suborder_price": "string",
-          "suborder_ongoing": true,
-          "suborder_finish_as": "string",
-          "price_type": 0,
-          "price_gap_type": "string",
-          "price_gap_value": "string",
-          "status_code": "string",
-          "create_time_precise": "string",
-          "finish_time_precise": "string",
-          "pos_margin_mode": "string",
-          "position_mode": "string",
-          "leverage": "string",
-          "error_label": "string"
-        }
-      ]
-    }
-    
-    
-
-##  UpdateDualCompPositionCrossModeRequest
-
-_UpdateDualCompPositionCrossModeRequest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-mode | string | Required | none | Cross/isolated margin mode. ISOLATED - isolated margin, CROSS - cross margin  
-contract | string | Required | none | Futures market  
-      
-    
-    {
-      "mode": "string",
-      "contract": "BTC_USDT"
-    }
-    
-    
-
-##  MyFuturesTradeTimeRange
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-trade_id | string | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-contract | string | Optional | none | Futures contract  
-order_id | string | Optional | none | Related order ID  
-size | string | Optional | none | Trading size  
-close_size | string | Optional | none | Number of closed positions:  
-  
-close_size=0 && size＞0 Open long position  
-close_size=0 && size＜0 Open short position  
-close_size>0 && size>0 && size <= close_size Close short position  
-close_size>0 && size>0 && size > close_size Close short position and open long position  
-close_size<0 && size<0 && size >= close_size Close long position  
-close_size<0 && size<0 && size < close_size Close long position and open short position  
-price | string | Optional | none | Fill Price  
-role | string | Optional | none | Trade role. taker - taker, maker - maker  
-text | string | Optional | none | Order custom information  
-fee | string | Optional | none | Trade fee  
-point_fee | string | Optional | none | Points used to deduct trade fee  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-role | taker  
-role | maker  
-      
-    
-    {
-      "trade_id": "string",
-      "create_time": 0,
-      "contract": "string",
-      "order_id": "string",
-      "size": "string",
-      "close_size": "string",
-      "price": "string",
-      "role": "taker",
-      "text": "string",
-      "fee": "string",
-      "point_fee": "string"
-    }
-    
-    
-
-##  TriggerTime
-
-_triggerTime_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-triggerTime | integer(int64) | Optional | none | Timestamp when countdown ends, in milliseconds  
-      
-    
-    {
-      "triggerTime": "1660039145000"
-    }
-    
-    
-
-##  FundingRateRecord
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-t | integer(int64) | Optional | none | Unix timestamp in seconds  
-r | string | Optional | none | Funding rate  
-      
-    
-    {
-      "t": 0,
-      "r": "string"
+      "total": "string",
+      "unrealised_pnl": "string",
+      "position_margin": "string",
+      "order_margin": "string",
+      "available": "string",
+      "point": "string",
+      "currency": "string",
+      "in_dual_mode": true,
+      "enable_credit": true,
+      "position_initial_margin": "string",
+      "maintenance_margin": "string",
+      "bonus": "string",
+      "enable_evolved_classic": true,
+      "cross_order_margin": "string",
+      "cross_initial_margin": "string",
+      "cross_maintenance_margin": "string",
+      "cross_unrealised_pnl": "string",
+      "cross_available": "string",
+      "cross_margin_balance": "string",
+      "cross_mmr": "string",
+      "cross_imr": "string",
+      "isolated_position_margin": "string",
+      "enable_new_dual_mode": true,
+      "margin_mode": 0,
+      "enable_tiered_mm": true,
+      "enable_dual_plus": true,
+      "position_mode": "string",
+      "history": {
+        "dnw": "string",
+        "pnl": "string",
+        "fee": "string",
+        "refr": "string",
+        "fund": "string",
+        "point_dnw": "string",
+        "point_fee": "string",
+        "point_refr": "string",
+        "bonus_dnw": "string",
+        "bonus_offset": "string",
+        "cross_settle": "string"
+      }
     }
     
     
@@ -13304,28 +12773,141 @@ short_users | integer(int64) | Optional | none | Number of users holding short p
     
     
 
-##  CreateTrailOrderResponse
-
-_CreateTrailOrderResponse_
+##  FuturesIndexConstituents
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-code | integer(int32) | Optional | none | Status code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | none  
-» id | string | Optional | none | Order ID  
-timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
+index | string | Optional | read-only | Index name  
+constituents | array | Optional | read-only | Constituents  
+» IndexConstituent | object | Optional | none | none  
+»» exchange | string | Optional | none | Exchange  
+»» symbols | array | Optional | none | Symbol list  
       
     
     {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "id": "string"
-      },
-      "timestamp": 0
+      "index": "string",
+      "constituents": [
+        {
+          "exchange": "string",
+          "symbols": []
+        }
+      ]
+    }
+    
+    
+
+##  UpdateDualCompPositionCrossModeRequest
+
+_UpdateDualCompPositionCrossModeRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+mode | string | Required | none | Cross/isolated margin mode. ISOLATED - isolated margin, CROSS - cross margin  
+contract | string | Required | none | Futures market  
+      
+    
+    {
+      "mode": "string",
+      "contract": "BTC_USDT"
+    }
+    
+    
+
+##  FuturesADLRiskStates
+
+_FuturesADLRiskStates_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+settle | string | Required | none | Settle currency  
+states | object | Required | none | Mapping of futures markets to ADL risk states  
+» **additionalProperties** | FuturesADLRiskState | Optional | none | none  
+      
+    
+    {
+      "settle": "usdt",
+      "states": {
+        "property1": {
+          "state": "normal",
+          "calculated_at_ms": 1786695185345
+        },
+        "property2": {
+          "state": "normal",
+          "calculated_at_ms": 1786695185345
+        }
+      }
+    }
+    
+    
+
+##  FuturesFee
+
+_The returned result is a map type, where the key represents the market and taker and maker fee rates_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+taker_fee | string | Optional | read-only | Taker fee  
+maker_fee | string | Optional | read-only | maker fee  
+      
+    
+    {
+      "taker_fee": "string",
+      "maker_fee": "string"
+    }
+    
+    
+
+##  FuturesLimitRiskTiers
+
+_Retrieve risk limit configurations for different tiers under a specified contract_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tier | integer(int) | Optional | none | Tier  
+risk_limit | string | Optional | none | Position risk limit  
+initial_rate | string | Optional | none | Initial margin rate  
+maintenance_rate | string | Optional | none | The maintenance margin rate of the first tier of risk limit sheet  
+leverage_max | string | Optional | none | Maximum leverage  
+contract | string | Optional | none | Market, only visible when market pagination is requested  
+deduction | string | Optional | none | Maintenance margin quick calculation deduction amount  
+      
+    
+    {
+      "tier": 0,
+      "risk_limit": "string",
+      "initial_rate": "string",
+      "maintenance_rate": "string",
+      "leverage_max": "string",
+      "contract": "string",
+      "deduction": "string"
+    }
+    
+    
+
+##  BatchFundingRatesRequest
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contracts | array | Required | none | Array of Contract Names  
+      
+    
+    {
+      "contracts": [
+        "BTC_USDT",
+        "ETH_USDT"
+      ]
     }
     
     
@@ -13371,6 +12953,388 @@ position_mode | string | Optional | none | Position mode (e.g. single, dual, dua
     
     
 
+##  Position
+
+_Futures position details_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+user | integer(int64) | Optional | read-only | User ID  
+contract | string | Optional | read-only | Futures contract  
+size | string | Optional | read-only | Position size  
+hedge_status | string | Optional | read-only | The hedging status of the position under the Delta-neutral strategy. Including:  
+  
+\- `partial_hedged`: partially hedged  
+\- `full_hedged`: fully hedged  
+hedged_size | string | Optional | read-only | The hedged position size under the Delta-neutral strategy.  
+unhedged_size | string | Optional | read-only | The unhedged position size under the Delta-neutral strategy, calculated as `max(abs(size) - abs(hedged_size), 0)`.  
+leverage | string | Optional | none | leverage for isolated margin. 0 means cross margin. For leverage of cross margin, please refer to `cross_leverage_limit`.  
+risk_limit | string | Optional | none | Position risk limit  
+leverage_max | string | Optional | read-only | the maximum permissible leverage given to the current positon value: the higher positon value, the lower maximum permissible leverage  
+maintenance_rate | string | Optional | read-only | The maintenance margin requirement for the risk limit at which the current position size is located.Since the maintenance margin for the position has been calculated using a tiered system, the actual maintenance margin rate required for this position is based on `average_maintenance_rate`.  
+value | string | Optional | read-only | Position value calculated in settlement currency  
+margin | string | Optional | none | Margin  
+entry_price | string | Optional | read-only | Entry price  
+liq_price | string | Optional | read-only | Estimated liquidation price, for reference only. The actual liquidation trigger is based on the position mmr or the account maintenance margin level.  
+mark_price | string | Optional | read-only | Current mark price  
+initial_margin | string | Optional | read-only | Initial margin of postions  
+maintenance_margin | string | Optional | read-only | Maintencance margin of postions  
+unrealised_pnl | string | Optional | read-only | Unrealized PNL  
+realised_pnl | string | Optional | read-only | Realised PnL, the sum of all cash flows generated by this position, including settlement of closing positions, settlement of funding fees, and transaction fee expenses.  
+pnl_pnl | string | Optional | read-only | settled pnl when closing postion  
+pnl_fund | string | Optional | read-only | funding fees  
+pnl_fee | string | Optional | read-only | trading fees  
+history_pnl | string | Optional | read-only | Total realized PnL from closed positions  
+last_close_pnl | string | Optional | read-only | PNL of last position close  
+realised_point | string | Optional | read-only | Realized POINT PNL  
+history_point | string | Optional | read-only | History realized POINT PNL  
+adl_ranking | integer | Optional | read-only | Ranking of auto deleveraging, a total of 1-5 grades, `1` is the highest, `5` is the lowest, and `6` is the special case when there is no position held or in liquidation  
+pending_orders | integer | Optional | read-only | Current pending order quantity  
+close_order | object|null | Optional | read-only | Current close order information, or `null` if no close order  
+» id | integer(int64) | Optional | none | Order ID  
+» price | string | Optional | none | Order price  
+» is_liq | boolean | Optional | none | Whether the close order is from liquidation  
+mode | string | Optional | none | Position mode, including:  
+  
+\- `single`: One-way Mode  
+\- `dual_long`: Long position in Hedge Mode  
+\- `dual_short`: Short position in Hedge Mode  
+cross_leverage_limit | string | Optional | none | leverage for cross margin  
+update_time | integer(int64) | Optional | read-only | Last update time  
+update_id | integer(int64) | Optional | read-only | Update ID. The value increments by 1 each time the position is updated  
+open_time | integer(int64) | Optional | none | First Open Time  
+risk_limit_table | string | Optional | read-only | Risk limit table ID  
+average_maintenance_rate | string | Optional | read-only | Average maintenance margin rate  
+pid | integer(int64) | Optional | read-only | Split-position ID.  
+pos_margin_mode | string | Optional | none | Position Margin Mode isolated - Isolated Margin, cross - Cross Margin  
+lever | string | Optional | none | Indicates the current leverage of the position, applicable to both isolated and cross margin, gradually replacing the current leverage and cross_leverage_limit  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+hedge_status | partial_hedged  
+hedge_status | full_hedged  
+mode | single  
+mode | dual_long  
+mode | dual_short  
+      
+    
+    {
+      "user": 0,
+      "contract": "string",
+      "size": "string",
+      "hedge_status": "partial_hedged",
+      "hedged_size": "string",
+      "unhedged_size": "string",
+      "leverage": "string",
+      "risk_limit": "string",
+      "leverage_max": "string",
+      "maintenance_rate": "string",
+      "value": "string",
+      "margin": "string",
+      "entry_price": "string",
+      "liq_price": "string",
+      "mark_price": "string",
+      "initial_margin": "string",
+      "maintenance_margin": "string",
+      "unrealised_pnl": "string",
+      "realised_pnl": "string",
+      "pnl_pnl": "string",
+      "pnl_fund": "string",
+      "pnl_fee": "string",
+      "history_pnl": "string",
+      "last_close_pnl": "string",
+      "realised_point": "string",
+      "history_point": "string",
+      "adl_ranking": 0,
+      "pending_orders": 0,
+      "close_order": {
+        "id": 0,
+        "price": "string",
+        "is_liq": true
+      },
+      "mode": "single",
+      "cross_leverage_limit": "string",
+      "update_time": 0,
+      "update_id": 0,
+      "open_time": 0,
+      "risk_limit_table": "string",
+      "average_maintenance_rate": "string",
+      "pid": 0,
+      "pos_margin_mode": "string",
+      "lever": "string"
+    }
+    
+    
+
+##  FuturesADLRiskState
+
+_FuturesADLRiskState_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+state | string | Required | none | Market ADL risk state  
+calculated_at_ms | integer(int64) | Required | none | State calculation time, as a Unix timestamp in milliseconds  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+state | normal  
+state | warning  
+state | adl_risk  
+      
+    
+    {
+      "state": "normal",
+      "calculated_at_ms": 1786695185345
+    }
+    
+    
+
+##  FuturesAccountBook
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | number(double) | Optional | none | Change time  
+change | string | Optional | none | Change amount  
+balance | string | Optional | none | Balance after change  
+type | string | Optional | none | Change types:  
+  
+\- dnw: Deposit and withdrawal  
+\- pnl: Profit and loss from position reduction  
+\- fee: Trading fees  
+\- refr: Referrer rebates  
+\- fund: Funding fees  
+\- point_dnw: Point card deposit and withdrawal  
+\- point_fee: Point card trading fees  
+\- point_refr: Point card referrer rebates  
+\- bonus_offset: Trial fund deduction  
+\- dividend: Dividend payout  
+text | string | Optional | none | Comment  
+contract | string | Optional | none | Futures contract, the field is only available for data after 2023-10-30  
+trade_id | string | Optional | none | trade id  
+id | string | Optional | none | Account change record ID  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | dnw  
+type | pnl  
+type | fee  
+type | refr  
+type | fund  
+type | point_dnw  
+type | point_fee  
+type | point_refr  
+type | bonus_offset  
+type | dividend  
+      
+    
+    {
+      "time": 0,
+      "change": "string",
+      "balance": "string",
+      "type": "dnw",
+      "text": "string",
+      "contract": "string",
+      "trade_id": "string",
+      "id": "string"
+    }
+    
+    
+
+##  FuturesOrder
+
+_Futures order details_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | read-only | Futures order ID  
+user | integer | Optional | read-only | User ID  
+create_time | number(double) | Optional | read-only | Creation time of order  
+update_time | number(double) | Optional | read-only | OrderUpdateTime  
+finish_time | number(double) | Optional | read-only | Order finished time. Not returned if order is open  
+finish_as | string | Optional | read-only | How the order was finished:  
+  
+\- filled: all filled  
+\- cancelled: manually cancelled  
+\- liquidated: cancelled because of liquidation  
+\- ioc: time in force is `IOC`, finish immediately  
+\- auto_deleveraged: finished by ADL  
+\- reduce_only: cancelled because of increasing position while `reduce-only` set  
+\- position_closed: cancelled because the position was closed  
+\- reduce_out: only reduce positions by excluding hard-to-fill orders  
+\- stp: cancelled because self trade prevention  
+status | string | Optional | read-only | Order status:  
+  
+\- `open`: pending  
+\- `finished`: the order has ended  
+contract | string | Required | none | Futures contract  
+size | string | Required | none | Required. Order size in contracts: positive to buy and negative to sell. Set to 0 for a closing order.  
+iceberg | string | Optional | none | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+price | string | Required | none | Required. Order Price; a price of 0 with `tif` as `ioc` represents a market order.  
+close | boolean | Optional | write-only | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | read-only | Is the order to close position  
+reduce_only | boolean | Optional | write-only | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
+is_liq | boolean | Optional | read-only | Is the order for liquidation  
+tif | string | Optional | none | Time in force  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled, taker only  
+\- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
+\- fok: FillOrKill, fill either completely or none  
+left | string | Optional | read-only | Unfilled size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
+fill_price | string | Optional | read-only | Fill price  
+text | string | Optional | none | Custom order information. If not empty, must follow the rules below:  
+  
+1\. Prefixed with `t-`  
+2\. No longer than 28 bytes without `t-` prefix  
+3\. Can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
+  
+In addition to user-defined information, the following are internal reserved fields that identify the order source:  
+  
+\- web: Web  
+\- api: API call  
+\- app: Mobile app  
+\- auto_deleveraging: Automatic deleveraging  
+\- liquidation: Forced liquidation of positions under the old classic mode  
+\- liq-xxx: a. Forced liquidation of positions under the new classic mode, including isolated margin, one-way cross margin, and non-hedged positions under two-way cross margin. b. Forced liquidation of isolated positions under the unified account single-currency margin mode  
+\- hedge-liq-xxx: Forced liquidation of hedged positions under the new classic mode two-way cross margin, i.e., simultaneously closing long and short positions  
+\- pm_liquidate: Forced liquidation under unified account multi-currency margin mode  
+\- comb_margin_liquidate: Forced liquidation under unified account portfolio margin mode  
+\- scm_liquidate: Forced liquidation of positions under unified account single-currency margin mode  
+\- insurance: Insurance  
+\- clear: Contract delisting withdrawal  
+tkfr | string | Optional | read-only | Taker fee rate.  
+mkfr | string | Optional | read-only | Maker fee rate.  
+refu | integer | Optional | read-only | Referrer user ID  
+auto_size | string | Optional | write-only | Set side to close dual-mode position. `close_long` closes the long side; while `close_short` the short one. Note `size` also needs to be set to 0  
+stp_id | integer | Optional | read-only | Orders between users in the same `stp_id` group are not allowed to be self-traded  
+  
+1\. If the `stp_id` of two orders being matched is non-zero and equal, they will not be executed. Instead, the corresponding strategy will be executed based on the `stp_act` of the taker.  
+2\. `stp_id` returns `0` by default for orders that have not been set for `STP group`  
+stp_act | string | Optional | none | Self-Trading Prevention Action. Users can use this field to set self-trade prevention strategies  
+  
+1\. After users join the `STP Group`, they can pass `stp_act` to limit the user's self-trade prevention strategy. If `stp_act` is not passed, the default is `cn` strategy.  
+2\. When the user does not join the `STP group`, an error will be returned when passing the `stp_act` parameter.  
+3\. If the user did not use `stp_act` when placing the order, `stp_act` will return '-'  
+  
+\- cn: Cancel newest, cancel new orders and keep old ones  
+\- co: Cancel oldest, cancel old orders and keep new ones  
+\- cb: Cancel both, both old and new orders will be cancelled  
+amend_text | string | Optional | read-only | The custom data that the user remarked when amending the order  
+pid | integer(int64) | Optional | write-only | Position ID  
+market_order_slip_ratio | string | Optional | none | Custom maximum slippage rate for market orders. If not provided, the default contract settings will be used  
+pos_margin_mode | string | Optional | none | Position Margin Mode isolated - Isolated Margin, cross - Cross Margin, only passed in simple split position mode  
+action_mode | string | Optional | none | Processing Mode  
+  
+When placing an order, different fields are returned based on the action_mode  
+  
+\- `ACK`: Asynchronous mode, returns only key order fields  
+\- `RESULT`: No clearing information  
+\- `FULL`: Full mode (default)  
+tpsl_tp_trigger_price | string | Optional | none | Take profit price  
+tpsl_sl_trigger_price | string | Optional | none | Stop loss price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+finish_as | filled  
+finish_as | cancelled  
+finish_as | liquidated  
+finish_as | ioc  
+finish_as | auto_deleveraged  
+finish_as | reduce_only  
+finish_as | position_closed  
+finish_as | reduce_out  
+finish_as | stp  
+status | open  
+status | finished  
+tif | gtc  
+tif | ioc  
+tif | poc  
+tif | fok  
+auto_size | close_long  
+auto_size | close_short  
+stp_act | co  
+stp_act | cn  
+stp_act | cb  
+stp_act | -  
+      
+    
+    {
+      "id": 0,
+      "user": 0,
+      "create_time": 0,
+      "update_time": 0,
+      "finish_time": 0,
+      "finish_as": "filled",
+      "status": "open",
+      "contract": "string",
+      "size": "string",
+      "iceberg": "string",
+      "price": "string",
+      "close": false,
+      "is_close": true,
+      "reduce_only": false,
+      "is_reduce_only": true,
+      "is_liq": true,
+      "tif": "gtc",
+      "left": "string",
+      "fill_price": "string",
+      "text": "string",
+      "tkfr": "string",
+      "mkfr": "string",
+      "refu": 0,
+      "auto_size": "close_long",
+      "stp_id": 0,
+      "stp_act": "co",
+      "amend_text": "string",
+      "pid": 0,
+      "market_order_slip_ratio": "string",
+      "pos_margin_mode": "string",
+      "action_mode": "string",
+      "tpsl_tp_trigger_price": "string",
+      "tpsl_sl_trigger_price": "string",
+      "tpsl_tp_bbo_type": "string",
+      "tpsl_sl_bbo_type": "string"
+    }
+    
+    
+
+##  CountdownCancelAllFuturesTask
+
+_CountdownCancelAllFuturesTask_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timeout | integer(int32) | Required | none | Countdown time in seconds  
+At least 5 seconds, 0 means cancel countdown  
+contract | string | Optional | none | Futures contract  
+      
+    
+    {
+      "timeout": 0,
+      "contract": "string"
+    }
+    
+    
+
 ##  FuturesPremiumIndex
 
 _data point in every timestamp_
@@ -13392,6 +13356,385 @@ o | string | Optional | none | Open price
       "h": "string",
       "l": "string",
       "o": "string"
+    }
+    
+    
+
+##  MyFuturesTrade
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Fill ID  
+create_time | number(double) | Optional | none | Fill Time  
+contract | string | Optional | none | Futures contract  
+order_id | string | Optional | none | Related order ID  
+size | string | Optional | none | Trading size  
+close_size | string | Optional | none | Number of closed positions:  
+  
+close_size=0 && size＞0 Open long position  
+close_size=0 && size＜0 Open short position  
+close_size>0 && size>0 && size <= close_size Close short position  
+close_size>0 && size>0 && size > close_size Close short position and open long position  
+close_size<0 && size<0 && size >= close_size Close long position  
+close_size<0 && size<0 && size < close_size Close long position and open short position  
+price | string | Optional | none | Fill Price  
+role | string | Optional | none | Trade role. taker - taker, maker - maker  
+text | string | Optional | none | Order custom information  
+fee | string | Optional | none | Trade fee  
+point_fee | string | Optional | none | Points used to deduct trade fee  
+trade_value | string | Optional | none | trade value  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+role | taker  
+role | maker  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "contract": "string",
+      "order_id": "string",
+      "size": "string",
+      "close_size": "string",
+      "price": "string",
+      "role": "taker",
+      "text": "string",
+      "fee": "string",
+      "point_fee": "string",
+      "trade_value": "string"
+    }
+    
+    
+
+##  FuturesLeverage
+
+_Return result includes Lever field_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+Lever | string | Optional | none | Leverage  
+      
+    
+    {
+      "Lever": "string"
+    }
+    
+    
+
+##  CancelBatchFutureOrdersRequest
+
+_Order ID array_
+
+###  Properties
+
+_None_
+    
+    
+    [
+      "string"
+    ]
+    
+    
+
+##  FuturesCandlestick
+
+_data point in every timestamp_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+t | number(double) | Optional | none | Unix timestamp in seconds  
+v | string | Optional | none | size volume (contract size). Only returned if `contract` is not prefixed  
+c | string | Optional | none | Close price (quote currency)  
+h | string | Optional | none | Highest price (quote currency)  
+l | string | Optional | none | Lowest price (quote currency)  
+o | string | Optional | none | Open price (quote currency)  
+sum | string | Optional | none | Trading volume (unit: Quote currency)  
+      
+    
+    {
+      "t": 0,
+      "v": "string",
+      "c": "string",
+      "h": "string",
+      "l": "string",
+      "o": "string",
+      "sum": "string"
+    }
+    
+    
+
+##  FuturesPositionCrossMode
+
+_FuturesPositionCrossMode_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+mode | string | Required | none | Cross/isolated margin mode. ISOLATED - isolated margin, CROSS - cross margin  
+contract | string | Required | none | Futures market  
+      
+    
+    {
+      "mode": "string",
+      "contract": "BTC_USDT"
+    }
+    
+    
+
+##  CreateTrailOrder
+
+_CreateTrailOrder_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Required | none | Contract name  
+amount | string | Required | none | Trading quantity in contracts, positive for buy, negative for sell  
+activation_price | string | Optional | none | Activation price, 0 means trigger immediately  
+is_gte | boolean | Optional | none | true: activate when market price >= activation price, false: <= activation price  
+price_type | integer(int32) | Required | none | Activation price type, required: 1-latest price, 2-index price, 3-mark price. The caller must specify it explicitly.  
+price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
+reduce_only | boolean | Optional | none | Whether reduce only  
+position_related | boolean | Optional | none | Whether bound to a position (if position_related = true (position-related), then reduce_only must also be true)  
+text | string | Optional | none | Order custom information, optional field. Used to identify the order source or set a user-defined ID.  
+  
+If non-empty, it must meet one of the following rules:  
+  
+1\. Internal Reserved Fields (identifying order source):  
+\- `apiv4`: API call  
+2\. User-defined Fields (setting custom ID):  
+\- Must start with `t-`  
+\- The content after `t-` must not exceed 28 bytes in length  
+\- Can only contain: numbers, letters, underscores (_), hyphens (-), or dots (.)  
+\- Examples: `t-my-order-001`, `t-trail_2024.01`  
+  
+Note: User-defined fields must not conflict with internal reserved fields.  
+pos_margin_mode | string | Optional | none | Position margin mode: isolated/cross  
+position_mode | string | Optional | none | Position mode: single, dual, and dual_plus  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | 1  
+price_type | 2  
+price_type | 3  
+      
+    
+    {
+      "contract": "string",
+      "amount": "string",
+      "activation_price": "0",
+      "is_gte": true,
+      "price_type": 1,
+      "price_offset": "string",
+      "reduce_only": false,
+      "position_related": false,
+      "text": "apiv4",
+      "pos_margin_mode": "string",
+      "position_mode": "string"
+    }
+    
+    
+
+##  FuturesOrderAmendment
+
+_FuturesOrderAmendment_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+size | string | Optional | none | New order size, including filled part.  
+  
+\- If new size is less than or equal to filled size, the order will be cancelled.  
+\- Order side must be identical to the original one.  
+\- Close order size cannot be changed.  
+\- For reduce only orders, increasing size may leads to other reduce only orders being cancelled.  
+\- If price is not changed, decreasing size will not change its precedence in order book, while increasing will move it to the last at current price.  
+price | string | Optional | none | New order price  
+amend_text | string | Optional | none | Custom info during order amendment  
+text | string | Optional | none | Internal users can modify information in the text field.  
+action_mode | string | Optional | none | Processing Mode  
+  
+When placing an order, different fields are returned based on the action_mode  
+  
+\- `ACK`: Asynchronous mode, returns only key order fields  
+\- `RESULT`: No clearing information  
+\- `FULL`: Full mode (default)  
+      
+    
+    {
+      "size": "string",
+      "price": "string",
+      "amend_text": "string",
+      "text": "string",
+      "action_mode": "string"
+    }
+    
+    
+
+##  CreateTrailOrderResponse
+
+_CreateTrailOrderResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer(int32) | Optional | none | Status code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | none  
+» id | string | Optional | none | Order ID  
+timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "id": "string"
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TrailOrderChangeLogResponse
+
+_TrailOrderChangeLogResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer(int32) | Optional | none | Status code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | none  
+» change_log | [TrailChangeLog] | Optional | none | [Trail order modification records]  
+timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "change_log": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  FundingRateRecord
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+t | integer(int64) | Optional | none | Unix timestamp in seconds  
+r | string | Optional | none | Funding rate  
+      
+    
+    {
+      "t": 0,
+      "r": "string"
+    }
+    
+    
+
+##  FuturesUpdatePriceTriggeredOrder
+
+_Modify Price Order Details_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+settle | string | Optional | none | Perpetual futures settlement currency, e.g. usdt, btc, usd1  
+order_id | integer(int64) | Required | none | ID of the Pending Take-Profit/Stop-Loss Trigger Order  
+size | integer(int64) | Optional | none | Modified Contract Quantity. Full Close: 0; Partial Close: Positive/Negative values indicate direction (consistent with the creation interface logic).  
+amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
+price | string | Optional | none | Represents the modified trading price. A value of 0 indicates a market order.  
+trigger_price | string | Optional | none | Modified Trigger Price  
+price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
+auto_size | string | Optional | none | One-way Mode: auto_size is not required  
+Hedge Mode partial closing (size≠0): auto_size is not required  
+Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
+close | boolean | Optional | none | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
+When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+      
+    
+    {
+      "settle": "string",
+      "order_id": 0,
+      "size": 0,
+      "amount": "string",
+      "price": "string",
+      "trigger_price": "string",
+      "price_type": 0,
+      "auto_size": "string",
+      "close": true
+    }
+    
+    
+
+##  FuturesOrderBook
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
+current | number(double) | Optional | none | Response data generation timestamp  
+update | number(double) | Optional | none | Order book changed timestamp  
+asks | array | Required | none | Ask Depth  
+» FuturesOrderBookItem | object | Optional | none | none  
+»» p | string | Optional | none | Price (quote currency)  
+»» s | string | Optional | none | Size  
+» bids | array | Required | none | Bid Depth  
+»» FuturesOrderBookItem | object | Optional | none | none  
+»»» p | string | Optional | none | Price (quote currency)  
+»»» s | string | Optional | none | Size  
+      
+    
+    {
+      "id": 0,
+      "current": 0,
+      "update": 0,
+      "asks": [
+        {
+          "p": "string",
+          "s": "string"
+        }
+      ],
+      "bids": [
+        {
+          "p": "string",
+          "s": "string"
+        }
+      ]
     }
     
     
@@ -13549,98 +13892,6 @@ stp_act | -
     
     
 
-##  FuturesLiquidate
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | integer(int64) | Optional | read-only | Liquidation time  
-contract | string | Optional | read-only | Futures contract  
-leverage | string | Optional | read-only | Position leverage. Not returned in public endpoints  
-size | string | Optional | read-only | Position size  
-margin | string | Optional | read-only | Position margin. Not returned in public endpoints  
-entry_price | string | Optional | read-only | Average entry price. Not returned in public endpoints  
-liq_price | string | Optional | read-only | Liquidation price. Not returned in public endpoints  
-mark_price | string | Optional | read-only | Mark price. Not returned in public endpoints  
-order_id | integer(int64) | Optional | read-only | Liquidation order ID. Not returned in public endpoints  
-order_price | string | Optional | read-only | Liquidation order price  
-fill_price | string | Optional | read-only | Liquidation order average taker price  
-left | string | Optional | read-only | Liquidation order maker size  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "leverage": "string",
-      "size": "string",
-      "margin": "string",
-      "entry_price": "string",
-      "liq_price": "string",
-      "mark_price": "string",
-      "order_id": 0,
-      "order_price": "string",
-      "fill_price": "string",
-      "left": "string"
-    }
-    
-    
-
-##  FuturesAccountBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | none | Change time  
-change | string | Optional | none | Change amount  
-balance | string | Optional | none | Balance after change  
-type | string | Optional | none | Change types:  
-  
-\- dnw: Deposit and withdrawal  
-\- pnl: Profit and loss from position reduction  
-\- fee: Trading fees  
-\- refr: Referrer rebates  
-\- fund: Funding fees  
-\- point_dnw: Point card deposit and withdrawal  
-\- point_fee: Point card trading fees  
-\- point_refr: Point card referrer rebates  
-\- bonus_offset: Trial fund deduction  
-\- dividend: Dividend payout  
-text | string | Optional | none | Comment  
-contract | string | Optional | none | Futures contract, the field is only available for data after 2023-10-30  
-trade_id | string | Optional | none | trade id  
-id | string | Optional | none | Account change record ID  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | dnw  
-type | pnl  
-type | fee  
-type | refr  
-type | fund  
-type | point_dnw  
-type | point_fee  
-type | point_refr  
-type | bonus_offset  
-type | dividend  
-      
-    
-    {
-      "time": 0,
-      "change": "string",
-      "balance": "string",
-      "type": "dnw",
-      "text": "string",
-      "contract": "string",
-      "trade_id": "string",
-      "id": "string"
-    }
-    
-    
-
 ##  CreateChaseOrderResp
 
 ###  Properties
@@ -13656,92 +13907,24 @@ id | string | Optional | none | ID of the newly created order
     
     
 
-##  FuturesOrder
+##  BatchAmendOrderReq
 
-_Futures order details_
+_Modify contract order parameters_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | integer(int64) | Optional | read-only | Futures order ID  
-user | integer | Optional | read-only | User ID  
-create_time | number(double) | Optional | read-only | Creation time of order  
-update_time | number(double) | Optional | read-only | OrderUpdateTime  
-finish_time | number(double) | Optional | read-only | Order finished time. Not returned if order is open  
-finish_as | string | Optional | read-only | How the order was finished:  
-  
-\- filled: all filled  
-\- cancelled: manually cancelled  
-\- liquidated: cancelled because of liquidation  
-\- ioc: time in force is `IOC`, finish immediately  
-\- auto_deleveraged: finished by ADL  
-\- reduce_only: cancelled because of increasing position while `reduce-only` set  
-\- position_closed: cancelled because the position was closed  
-\- reduce_out: only reduce positions by excluding hard-to-fill orders  
-\- stp: cancelled because self trade prevention  
-status | string | Optional | read-only | Order status:  
-  
-\- `open`: pending  
-\- `finished`: the order has ended  
-contract | string | Required | none | Futures contract  
-size | string | Required | none | Required. Order size in contracts: positive to buy and negative to sell. Set to 0 for a closing order.  
-iceberg | string | Optional | none | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
-price | string | Required | none | Required. Order Price; a price of 0 with `tif` as `ioc` represents a market order.  
-close | boolean | Optional | write-only | Set as `true` to close the position, with `size` set to 0  
-is_close | boolean | Optional | read-only | Is the order to close position  
-reduce_only | boolean | Optional | write-only | Set as `true` to be reduce-only order  
-is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
-is_liq | boolean | Optional | read-only | Is the order for liquidation  
-tif | string | Optional | none | Time in force  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled, taker only  
-\- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
-\- fok: FillOrKill, fill either completely or none  
-left | string | Optional | read-only | Unfilled quantity  
-fill_price | string | Optional | read-only | Fill price  
-text | string | Optional | none | Custom order information. If not empty, must follow the rules below:  
-  
-1\. Prefixed with `t-`  
-2\. No longer than 28 bytes without `t-` prefix  
-3\. Can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)  
-  
-In addition to user-defined information, the following are internal reserved fields that identify the order source:  
-  
-\- web: Web  
-\- api: API call  
-\- app: Mobile app  
-\- auto_deleveraging: Automatic deleveraging  
-\- liquidation: Forced liquidation of positions under the old classic mode  
-\- liq-xxx: a. Forced liquidation of positions under the new classic mode, including isolated margin, one-way cross margin, and non-hedged positions under two-way cross margin. b. Forced liquidation of isolated positions under the unified account single-currency margin mode  
-\- hedge-liq-xxx: Forced liquidation of hedged positions under the new classic mode two-way cross margin, i.e., simultaneously closing long and short positions  
-\- pm_liquidate: Forced liquidation under unified account multi-currency margin mode  
-\- comb_margin_liquidate: Forced liquidation under unified account portfolio margin mode  
-\- scm_liquidate: Forced liquidation of positions under unified account single-currency margin mode  
-\- insurance: Insurance  
-\- clear: Contract delisting withdrawal  
-tkfr | string | Optional | read-only | Taker fee rate.  
-mkfr | string | Optional | read-only | Maker fee rate.  
-refu | integer | Optional | read-only | Referrer user ID  
-auto_size | string | Optional | write-only | Set side to close dual-mode position. `close_long` closes the long side; while `close_short` the short one. Note `size` also needs to be set to 0  
-stp_id | integer | Optional | read-only | Orders between users in the same `stp_id` group are not allowed to be self-traded  
-  
-1\. If the `stp_id` of two orders being matched is non-zero and equal, they will not be executed. Instead, the corresponding strategy will be executed based on the `stp_act` of the taker.  
-2\. `stp_id` returns `0` by default for orders that have not been set for `STP group`  
-stp_act | string | Optional | none | Self-Trading Prevention Action. Users can use this field to set self-trade prevention strategies  
-  
-1\. After users join the `STP Group`, they can pass `stp_act` to limit the user's self-trade prevention strategy. If `stp_act` is not passed, the default is `cn` strategy.  
-2\. When the user does not join the `STP group`, an error will be returned when passing the `stp_act` parameter.  
-3\. If the user did not use `stp_act` when placing the order, `stp_act` will return '-'  
-  
-\- cn: Cancel newest, cancel new orders and keep old ones  
-\- co: Cancel oldest, cancel old orders and keep new ones  
-\- cb: Cancel both, both old and new orders will be cancelled  
-amend_text | string | Optional | read-only | The custom data that the user remarked when amending the order  
-pid | integer(int64) | Optional | write-only | Position ID  
-market_order_slip_ratio | string | Optional | none | Custom maximum slippage rate for market orders. If not provided, the default contract settings will be used  
-pos_margin_mode | string | Optional | none | Position Margin Mode isolated - Isolated Margin, cross - Cross Margin, only passed in simple split position mode  
+order_id | integer(int64) | Optional | none | Order id, order_id and text must contain at least one  
+text | string | Optional | none | User-defined order text, at least one of order_id and text must be passed  
+size | string | Optional | none | New order size, including filled size.  
+\- If less than or equal to the filled quantity, the order will be cancelled.  
+\- The new order side must be identical to the original one.  
+\- Close order size cannot be modified.  
+\- For reduce-only orders, increasing the size may cancel other reduce-only orders.  
+\- If the price is not modified, decreasing the size will not affect the depth queue, while increasing the size will place it at the end of the current price level.  
+price | string | Optional | none | New order price  
+amend_text | string | Optional | none | Custom info during order amendment  
 action_mode | string | Optional | none | Processing Mode  
   
 When placing an order, different fields are returned based on the action_mode  
@@ -13749,150 +13932,42 @@ When placing an order, different fields are returned based on the action_mode
 \- `ACK`: Asynchronous mode, returns only key order fields  
 \- `RESULT`: No clearing information  
 \- `FULL`: Full mode (default)  
-tpsl_tp_trigger_price | string | Optional | none | Take profit price  
-tpsl_sl_trigger_price | string | Optional | none | Stop loss price  
-  
-####  Enumerated Values
+      
+    
+    {
+      "order_id": 0,
+      "text": "string",
+      "size": "string",
+      "price": "string",
+      "amend_text": "string",
+      "action_mode": "string"
+    }
+    
+    
 
-Enumerated ValuesProperty | Value  
----|---  
-finish_as | filled  
-finish_as | cancelled  
-finish_as | liquidated  
-finish_as | ioc  
-finish_as | auto_deleveraged  
-finish_as | reduce_only  
-finish_as | position_closed  
-finish_as | reduce_out  
-finish_as | stp  
-status | open  
-status | finished  
-tif | gtc  
-tif | ioc  
-tif | poc  
-tif | fok  
-auto_size | close_long  
-auto_size | close_short  
-stp_act | co  
-stp_act | cn  
-stp_act | cb  
-stp_act | -  
+##  FuturesTrade
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Fill ID  
+create_time | number(double) | Optional | none | Fill Time  
+create_time_ms | number(double) | Optional | none | Trade time, with millisecond precision to 3 decimal places  
+contract | string | Optional | none | Futures contract  
+size | string | Optional | none | Trading size  
+price | string | Optional | none | Trade price (quote currency)  
+is_internal | boolean | Optional | none | Deprecated  
       
     
     {
       "id": 0,
-      "user": 0,
       "create_time": 0,
-      "update_time": 0,
-      "finish_time": 0,
-      "finish_as": "filled",
-      "status": "open",
+      "create_time_ms": 0,
       "contract": "string",
       "size": "string",
-      "iceberg": "string",
       "price": "string",
-      "close": false,
-      "is_close": true,
-      "reduce_only": false,
-      "is_reduce_only": true,
-      "is_liq": true,
-      "tif": "gtc",
-      "left": "string",
-      "fill_price": "string",
-      "text": "string",
-      "tkfr": "string",
-      "mkfr": "string",
-      "refu": 0,
-      "auto_size": "close_long",
-      "stp_id": 0,
-      "stp_act": "co",
-      "amend_text": "string",
-      "pid": 0,
-      "market_order_slip_ratio": "string",
-      "pos_margin_mode": "string",
-      "action_mode": "string",
-      "tpsl_tp_trigger_price": "string",
-      "tpsl_sl_trigger_price": "string",
-      "tpsl_tp_bbo_type": "string",
-      "tpsl_sl_bbo_type": "string"
-    }
-    
-    
-
-##  StopTrailOrder
-
-_StopTrailOrder_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Order ID, if ID is specified, text is not needed  
-text | string | Optional | none | Custom text, if ID is not specified, terminate based on user_id and text  
-      
-    
-    {
-      "id": 0,
-      "text": "string"
-    }
-    
-    
-
-##  CountdownCancelAllFuturesTask
-
-_CountdownCancelAllFuturesTask_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timeout | integer(int32) | Required | none | Countdown time in seconds  
-At least 5 seconds, 0 means cancel countdown  
-contract | string | Optional | none | Futures contract  
-      
-    
-    {
-      "timeout": 0,
-      "contract": "string"
-    }
-    
-    
-
-##  FuturesOrderBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
-current | number(double) | Optional | none | Response data generation timestamp  
-update | number(double) | Optional | none | Order book changed timestamp  
-asks | array | Required | none | Ask Depth  
-» FuturesOrderBookItem | object | Optional | none | none  
-»» p | string | Optional | none | Price (quote currency)  
-»» s | string | Optional | none | Size  
-» bids | array | Required | none | Bid Depth  
-»» FuturesOrderBookItem | object | Optional | none | none  
-»»» p | string | Optional | none | Price (quote currency)  
-»»» s | string | Optional | none | Size  
-      
-    
-    {
-      "id": 0,
-      "current": 0,
-      "update": 0,
-      "asks": [
-        {
-          "p": "string",
-          "s": "string"
-        }
-      ],
-      "bids": [
-        {
-          "p": "string",
-          "s": "string"
-        }
-      ]
+      "is_internal": true
     }
     
     
@@ -13917,71 +13992,21 @@ Prefer this field to display the order ID or when a string unique identifier is 
     
     
 
-##  CancelBatchFutureOrdersRequest
+##  StopTrailOrder
 
-_Order ID array_
-
-###  Properties
-
-_None_
-    
-    
-    [
-      "string"
-    ]
-    
-    
-
-##  UpdateTrailOrder
-
-_UpdateTrailOrder_
+_StopTrailOrder_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | integer(int64) | Required | none | Order ID  
-amount | string | Optional | none | Total trading quantity in contracts, positive for buy, negative for sell, 0 means no modification  
-activation_price | string | Optional | none | Activation price, 0 means trigger immediately, empty means no modification  
-is_gte_str | string | Optional | none | true: activate when market price >= activation price, false: <= activation price, empty means no modification  
-price_type | integer(int32) | Optional | none | Activation price type, not provided or 0 means no modification, 1-latest price, 2-index price, 3-mark price  
-price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`; empty means no modification  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-price_type | 3  
+id | integer(int64) | Optional | none | Order ID, if ID is specified, text is not needed  
+text | string | Optional | none | Custom text, if ID is not specified, terminate based on user_id and text  
       
     
     {
       "id": 0,
-      "amount": "string",
-      "activation_price": "string",
-      "is_gte_str": "string",
-      "price_type": 0,
-      "price_offset": "string"
-    }
-    
-    
-
-##  BatchFundingRatesRequest
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contracts | array | Required | none | Array of Contract Names  
-      
-    
-    {
-      "contracts": [
-        "BTC_USDT",
-        "ETH_USDT"
-      ]
+      "text": "string"
     }
     
     
@@ -14003,6 +14028,114 @@ pos_margin_mode | string | Optional | none | Optional margin mode
       "contract": "string",
       "settle": "string",
       "pos_margin_mode": "string"
+    }
+    
+    
+
+##  FuturesBBOOrder
+
+_contractBBOorderdetails_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Required | none | Futures contract  
+size | integer(int64) | Required | none | Required. Trading quantity. Positive for buy, negative for sell. Set to 0 for close position orders.  
+direction | string | Required | none | Direction: 'sell' fetches the bid side, 'buy' fetches the ask side.  
+iceberg | integer(int64) | Optional | none | Display size for iceberg orders. 0 for non-iceberg orders. Note that hidden portions are charged taker fees.  
+level | integer(int64) | Required | write-only | Level: maximum 20 levels  
+close | boolean | Optional | write-only | Set as `true` to close the position, with `size` set to 0  
+is_close | boolean | Optional | read-only | Is the order to close position  
+reduce_only | boolean | Optional | write-only | Set as `true` to be reduce-only order  
+is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
+is_liq | boolean | Optional | read-only | Is the order for liquidation  
+tif | string | Optional | none | Time in force  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled, taker only  
+\- poc: PendingOrCancelled, makes a post-only order that always enjoys a maker fee  
+\- fok: FillOrKill, fill either completely or none  
+left | integer(int64) | Optional | read-only | Unfilled quantity  
+fill_price | string | Optional | read-only | Fill price  
+text | string | Optional | none | Order Custom Information: Users can set custom IDs via this field. Custom fields must meet the following conditions:  
+  
+1\. Must start with `t-`  
+2\. Excluding `t-`, length cannot exceed 28 bytes  
+3\. Content can only contain numbers, letters, underscores (_), hyphens (-), or dots (.)  
+  
+In addition to user custom information, the following are internal reserved fields identifying order sources:  
+  
+\- web: Web  
+\- api: API Call  
+\- app: Mobile App  
+\- auto_deleveraging: Auto-Deleveraging  
+\- liquidation: Forced Liquidation of Legacy Classic Mode Positions  
+\- liq-xxx: a. Forced liquidation of New Classic Mode positions, including isolated margin, single-direction cross margin, and non-hedged dual-direction cross margin positions. b. Forced liquidation of isolated margin positions in Unified Account Single-Currency Margin Mode  
+\- hedge-liq-xxx: Forced liquidation of hedged portions in New Classic Mode dual-direction cross margin (simultaneous closing of long and short positions)  
+\- pm_liquidate: Forced liquidation in Unified Account Cross-Currency Margin Mode  
+\- comb_margin_liquidate: Forced liquidation in Unified Account Portfolio Margin Mode  
+\- scm_liquidate: Forced liquidation of positions in Unified Account Single-Currency Margin Mode  
+\- insurance: Insurance  
+tkfr | string | Optional | read-only | Taker fee  
+mkfr | string | Optional | read-only | Maker fee  
+refu | integer | Optional | read-only | Referrer user ID  
+auto_size | string | Optional | write-only | Set side to close dual-mode position. `close_long` closes the long side; while `close_short` the short one. Note `size` also needs to be set to 0  
+stp_id | integer | Optional | read-only | Orders between users in the same `stp_id` group are not allowed to be self-traded  
+  
+1\. If the `stp_id` of two orders being matched is non-zero and equal, they will not be executed. Instead, the corresponding strategy will be executed based on the `stp_act` of the taker.  
+2\. `stp_id` returns `0` by default for orders that have not been set for `STP group`  
+stp_act | string | Optional | none | Self-Trading Prevention Action. Users can use this field to set self-trade prevention strategies  
+  
+1\. After users join the `STP Group`, they can pass `stp_act` to limit the user's self-trade prevention strategy. If `stp_act` is not passed, the default is `cn` strategy.  
+2\. When the user does not join the `STP group`, an error will be returned when passing the `stp_act` parameter.  
+3\. If the user did not use `stp_act` when placing the order, `stp_act` will return '-'  
+  
+\- cn: Cancel newest, cancel new orders and keep old ones  
+\- co: Cancel oldest, cancel old orders and keep new ones  
+\- cb: Cancel both, both old and new orders will be cancelled  
+amend_text | string | Optional | read-only | The custom data that the user remarked when amending the order  
+pid | integer(int64) | Optional | write-only | Position ID  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+tif | gtc  
+tif | ioc  
+tif | poc  
+tif | fok  
+auto_size | close_long  
+auto_size | close_short  
+stp_act | co  
+stp_act | cn  
+stp_act | cb  
+stp_act | -  
+      
+    
+    {
+      "contract": "string",
+      "size": 0,
+      "direction": "string",
+      "iceberg": 0,
+      "level": 0,
+      "close": false,
+      "is_close": true,
+      "reduce_only": false,
+      "is_reduce_only": true,
+      "is_liq": true,
+      "tif": "gtc",
+      "left": 0,
+      "fill_price": "string",
+      "text": "string",
+      "tkfr": "string",
+      "mkfr": "string",
+      "refu": 0,
+      "auto_size": "close_long",
+      "stp_id": 0,
+      "stp_act": "co",
+      "amend_text": "string",
+      "pid": 0
     }
     
     
@@ -14060,6 +14193,136 @@ orders | [ChaseOrder] | Optional | none | [Chase order detail or list item]
     
     
 
+##  StopAllTrailOrders
+
+_StopAllTrailOrders_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Optional | none | Contract name  
+related_position | integer(int32) | Optional | none | Associated position, if provided, only cancel orders associated with this position, 1-long, 2-short  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+related_position | 1  
+related_position | 2  
+      
+    
+    {
+      "contract": "string",
+      "related_position": 1
+    }
+    
+    
+
+##  TriggerTime
+
+_triggerTime_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+triggerTime | integer(int64) | Optional | none | Timestamp when countdown ends, in milliseconds  
+      
+    
+    {
+      "triggerTime": "1660039145000"
+    }
+    
+    
+
+##  InsuranceRecord
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+t | integer(int64) | Optional | none | Unix timestamp in seconds  
+b | string | Optional | none | Insurance balance  
+      
+    
+    {
+      "t": 0,
+      "b": "string"
+    }
+    
+    
+
+##  MyFuturesTradeTimeRange
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+trade_id | string | Optional | none | Fill ID  
+create_time | number(double) | Optional | none | Fill Time  
+contract | string | Optional | none | Futures contract  
+order_id | string | Optional | none | Related order ID  
+size | string | Optional | none | Trading size  
+close_size | string | Optional | none | Number of closed positions:  
+  
+close_size=0 && size＞0 Open long position  
+close_size=0 && size＜0 Open short position  
+close_size>0 && size>0 && size <= close_size Close short position  
+close_size>0 && size>0 && size > close_size Close short position and open long position  
+close_size<0 && size<0 && size >= close_size Close long position  
+close_size<0 && size<0 && size < close_size Close long position and open short position  
+price | string | Optional | none | Fill Price  
+role | string | Optional | none | Trade role. taker - taker, maker - maker  
+text | string | Optional | none | Order custom information  
+fee | string | Optional | none | Trade fee  
+point_fee | string | Optional | none | Points used to deduct trade fee  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+role | taker  
+role | maker  
+      
+    
+    {
+      "trade_id": "string",
+      "create_time": 0,
+      "contract": "string",
+      "order_id": "string",
+      "size": "string",
+      "close_size": "string",
+      "price": "string",
+      "role": "taker",
+      "text": "string",
+      "fee": "string",
+      "point_fee": "string"
+    }
+    
+    
+
+##  StopChaseOrderReq
+
+_Request body for stopping a chase order_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | string | Optional | none | Order ID. Either id or text must be provided  
+text | string | Optional | none | Custom text. Required only when id is 0 or omitted  
+settle | string | Optional | none | Overridden by the path parameter  
+      
+    
+    {
+      "id": "string",
+      "text": "string",
+      "settle": "string"
+    }
+    
+    
+
 ##  StopChaseOrderResp
 
 ###  Properties
@@ -14111,36 +14374,902 @@ order | ChaseOrder | Optional | none | Chase order detail or list item
     
     
 
-##  InsuranceRecord
+##  ChaseOrder
+
+_Chase order detail or list item_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-t | integer(int64) | Optional | none | Unix timestamp in seconds  
-b | string | Optional | none | Insurance balance  
+id | string | Optional | none | none  
+user | string | Optional | none | none  
+contract | string | Optional | none | none  
+settle | string | Optional | none | none  
+amount | string | Optional | none | Total size in contracts; positive for buy, negative for sell  
+price_limit | string | Optional | none | none  
+reduce_only | boolean | Optional | none | none  
+text | string | Optional | none | none  
+create_time | integer(int64) | Optional | none | none  
+finish_time | integer(int64) | Optional | none | none  
+original_status | integer | Optional | none | Raw status enum  
+status | string | Optional | none | Simplified status, e.g. open / finished  
+reason | string | Optional | none | none  
+fill_amount | string | Optional | none | none  
+average_fill_price | string | Optional | none | none  
+suborder_id | string | Optional | none | none  
+is_dual_mode | boolean | Optional | none | none  
+side_label | string | Optional | none | none  
+position_side_output | string | Optional | none | none  
+chase_price | string | Optional | none | none  
+interval_sec | integer(uint32) | Optional | none | none  
+updated_at | integer(int64) | Optional | none | none  
+suborder_price | string | Optional | none | none  
+suborder_ongoing | boolean | Optional | none | none  
+suborder_finish_as | string | Optional | none | none  
+price_type | integer | Optional | none | PriceType enum: 1 latest, 2 index, 3 mark  
+price_gap_type | string | Optional | none | none  
+price_gap_value | string | Optional | none | none  
+status_code | string | Optional | none | none  
+create_time_precise | string | Optional | none | Creation time (seconds.microseconds)  
+finish_time_precise | string | Optional | none | none  
+pos_margin_mode | string | Optional | none | none  
+position_mode | string | Optional | none | none  
+leverage | string | Optional | none | none  
+error_label | string | Optional | none | none  
       
     
     {
-      "t": 0,
-      "b": "string"
+      "id": "string",
+      "user": "string",
+      "contract": "string",
+      "settle": "string",
+      "amount": "string",
+      "price_limit": "string",
+      "reduce_only": true,
+      "text": "string",
+      "create_time": 0,
+      "finish_time": 0,
+      "original_status": 0,
+      "status": "string",
+      "reason": "string",
+      "fill_amount": "string",
+      "average_fill_price": "string",
+      "suborder_id": "string",
+      "is_dual_mode": true,
+      "side_label": "string",
+      "position_side_output": "string",
+      "chase_price": "string",
+      "interval_sec": 0,
+      "updated_at": 0,
+      "suborder_price": "string",
+      "suborder_ongoing": true,
+      "suborder_finish_as": "string",
+      "price_type": 0,
+      "price_gap_type": "string",
+      "price_gap_value": "string",
+      "status_code": "string",
+      "create_time_precise": "string",
+      "finish_time_precise": "string",
+      "pos_margin_mode": "string",
+      "position_mode": "string",
+      "leverage": "string",
+      "error_label": "string"
     }
     
     
 
-##  FuturesLeverage
+##  FuturesPriceTriggeredOrder
 
-_Return result includes Lever field_
+_Futures price-triggered order details_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-Lever | string | Optional | none | Leverage  
+initial | object | Required | none | none  
+» contract | string | Required | none | Futures contract  
+» size | integer(int64) | Optional | none | Represents the number of contracts that need to be closed, full closing: size=0  
+Partial closing: plan-close-short-position size>0   
+Partial closing: plan-close-long-position size<0  
+» amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
+» price | string | Required | none | Order price. Set to 0 to use market price  
+» close | boolean | Optional | write-only | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
+When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
+» tif | string | Optional | none | Time in force strategy, default is gtc, market orders currently only support ioc mode  
+  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+» text | string | Optional | none | The source of the order, including:  
+\- web: Web  
+\- api: API call  
+\- app: Mobile app  
+» reduce_only | boolean | Optional | none | When set to true, perform automatic position reduction operation. Set to true to ensure that the order will not open a new position, and is only used to close or reduce positions  
+» auto_size | string | Optional | write-only | One-way Mode: auto_size is not required  
+Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
+Hedge Mode partial closing (size≠0): auto_size is not required  
+» is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
+» is_close | boolean | Optional | read-only | Is the order to close position  
+trigger | object | Required | none | none  
+» strategy_type | integer(int32) | Optional | none | Trigger Strategy  
+  
+\- 0: Price trigger, triggered when price meets conditions  
+\- 1: Price spread trigger, i.e. the difference between the latest price specified in `price_type` and the second-last price  
+Currently only supports 0 (latest transaction price)  
+» price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
+» price | string | Required | none | Price value for price trigger, or spread value for spread trigger  
+» rule | integer(int32) | Required | none | Price Condition Type  
+  
+\- 1: Trigger when the price calculated based on `strategy_type` and `price_type` is greater than or equal to `Trigger.Price`, while Trigger.Price must > last_price  
+\- 2: Trigger when the price calculated based on `strategy_type` and `price_type` is less than or equal to `Trigger.Price`, and Trigger.Price must < last_price  
+» expiration | integer | Optional | none | Maximum wait time for trigger condition (in seconds). Order will be cancelled if timeout  
+id | integer(int64) | Optional | read-only | Auto order ID  
+id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
+Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
+user | integer | Optional | read-only | User ID  
+create_time | number(double) | Optional | read-only | Created time  
+finish_time | number(double) | Optional | read-only | End time  
+trade_id | integer(int64) | Optional | read-only | ID of the order created after trigger  
+status | string | Optional | read-only | Order status  
+  
+\- `open`: Active  
+\- `finished`: Finished  
+\- `inactive`: Inactive, only applies to order take-profit/stop-loss  
+\- `invalid`: Invalid, only applies to order take-profit/stop-loss  
+finish_as | string | Optional | read-only | Finish status: cancelled - Cancelled; succeeded - Succeeded; failed - Failed; expired - Expired  
+reason | string | Optional | read-only | Additional description of how the order was completed  
+order_type | string | Optional | none | Types of take-profit and stop-loss orders, including:  
+  
+\- `close-long-order`: Order take-profit/stop-loss, close long position  
+\- `close-short-order`: Order take-profit/stop-loss, close short position  
+\- `close-long-position`: Position take-profit/stop-loss, used to close all long positions  
+\- `close-short-position`: Position take-profit/stop-loss, used to close all short positions  
+\- `plan-close-long-position`: Position plan take-profit/stop-loss, used to close all or partial long positions  
+\- `plan-close-short-position`: Position plan take-profit/stop-loss, used to close all or partial short positions  
+  
+The two types of order take-profit/stop-loss are read-only and cannot be passed in requests  
+me_order_id | integer(int64) | Optional | read-only | Corresponding order ID for order take-profit/stop-loss orders  
+pos_margin_mode | string | Optional | none | Position margin mode: `isolated` (isolated margin) or `cross` (cross margin).  
+Returned by the server in simple split-position mode; when writing, use only the values below.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+tif | gtc  
+tif | ioc  
+strategy_type | 0  
+strategy_type | 1  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+rule | 1  
+rule | 2  
+status | open  
+status | finished  
+status | inactive  
+status | invalid  
+finish_as | cancelled  
+finish_as | succeeded  
+finish_as | failed  
+finish_as | expired  
+pos_margin_mode | isolated  
+pos_margin_mode | cross  
       
     
     {
-      "Lever": "string"
+      "initial": {
+        "contract": "string",
+        "size": 0,
+        "amount": "string",
+        "price": "string",
+        "close": false,
+        "tif": "gtc",
+        "text": "string",
+        "reduce_only": false,
+        "auto_size": "string",
+        "is_reduce_only": true,
+        "is_close": true
+      },
+      "trigger": {
+        "strategy_type": 0,
+        "price_type": 0,
+        "price": "string",
+        "rule": 1,
+        "expiration": 0
+      },
+      "id": 0,
+      "id_string": "string",
+      "user": 0,
+      "create_time": 0,
+      "finish_time": 0,
+      "trade_id": 0,
+      "status": "open",
+      "finish_as": "cancelled",
+      "reason": "string",
+      "order_type": "string",
+      "me_order_id": 0,
+      "pos_margin_mode": "isolated"
+    }
+    
+    
+
+##  PositionTimerange
+
+_Contract position details (historical data)_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Optional | read-only | Futures contract  
+size | string | Optional | read-only | Position size  
+leverage | string | Optional | none | Position leverage. 0 means cross margin; positive number means isolated margin  
+risk_limit | string | Optional | none | Position risk limit  
+leverage_max | string | Optional | read-only | the maximum permissible leverage given to the current positon value: the higher positon value, the lower maximum permissible leverage  
+maintenance_rate | string | Optional | read-only | The maintenance margin rate of the first tier of risk limit sheet  
+margin | string | Optional | none | Margin  
+liq_price | string | Optional | read-only | Liquidation price  
+realised_pnl | string | Optional | read-only | Realized PnL  
+history_pnl | string | Optional | read-only | Total realized PnL from closed positions  
+last_close_pnl | string | Optional | read-only | PNL of last position close  
+realised_point | string | Optional | read-only | Realized POINT PNL  
+history_point | string | Optional | read-only | History realized POINT PNL  
+mode | string | Optional | none | Position mode, including:  
+\- `single`: One-way Mode  
+\- `dual_long`: Long position in Hedge Mode  
+\- `dual_short`: Short position in Hedge Mode  
+cross_leverage_limit | string | Optional | none | Cross margin leverage (valid only when `leverage` is 0)  
+entry_price | string | Optional | read-only | Entry price  
+time | integer(int64) | Optional | none | Timestamp  
+      
+    
+    {
+      "contract": "string",
+      "size": "string",
+      "leverage": "string",
+      "risk_limit": "string",
+      "leverage_max": "string",
+      "maintenance_rate": "string",
+      "margin": "string",
+      "liq_price": "string",
+      "realised_pnl": "string",
+      "history_pnl": "string",
+      "last_close_pnl": "string",
+      "realised_point": "string",
+      "history_point": "string",
+      "mode": "string",
+      "cross_leverage_limit": "string",
+      "entry_price": "string",
+      "time": 0
+    }
+    
+    
+
+##  UpdateTrailOrder
+
+_UpdateTrailOrder_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Required | none | Order ID  
+amount | string | Optional | none | Total trading quantity in contracts, positive for buy, negative for sell, 0 means no modification  
+activation_price | string | Optional | none | Activation price, 0 means trigger immediately, empty means no modification  
+is_gte_str | string | Optional | none | true: activate when market price >= activation price, false: <= activation price, empty means no modification  
+price_type | integer(int32) | Optional | none | Activation price type, not provided or 0 means no modification, 1-latest price, 2-index price, 3-mark price  
+price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`; empty means no modification  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+price_type | 3  
+      
+    
+    {
+      "id": 0,
+      "amount": "string",
+      "activation_price": "string",
+      "is_gte_str": "string",
+      "price_type": 0,
+      "price_offset": "string"
+    }
+    
+    
+
+##  StopAllChaseOrdersResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+orders | [ChaseOrder] | Optional | none | [Chase order detail or list item]  
+      
+    
+    {
+      "orders": [
+        {
+          "id": "string",
+          "user": "string",
+          "contract": "string",
+          "settle": "string",
+          "amount": "string",
+          "price_limit": "string",
+          "reduce_only": true,
+          "text": "string",
+          "create_time": 0,
+          "finish_time": 0,
+          "original_status": 0,
+          "status": "string",
+          "reason": "string",
+          "fill_amount": "string",
+          "average_fill_price": "string",
+          "suborder_id": "string",
+          "is_dual_mode": true,
+          "side_label": "string",
+          "position_side_output": "string",
+          "chase_price": "string",
+          "interval_sec": 0,
+          "updated_at": 0,
+          "suborder_price": "string",
+          "suborder_ongoing": true,
+          "suborder_finish_as": "string",
+          "price_type": 0,
+          "price_gap_type": "string",
+          "price_gap_value": "string",
+          "status_code": "string",
+          "create_time_precise": "string",
+          "finish_time_precise": "string",
+          "pos_margin_mode": "string",
+          "position_mode": "string",
+          "leverage": "string",
+          "error_label": "string"
+        }
+      ]
+    }
+    
+    
+
+##  FuturesLiqOrder
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional | read-only | Liquidation time  
+contract | string | Optional | read-only | Futures contract  
+size | string | Optional | read-only | User position size  
+order_size | string | Optional | read-only | Number of forced liquidation orders  
+order_price | string | Optional | read-only | Liquidation order price  
+fill_price | string | Optional | read-only | Liquidation order average taker price  
+left | string | Optional | read-only | Reserved field with no current business significance.  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "size": "string",
+      "order_size": "string",
+      "order_price": "string",
+      "fill_price": "string",
+      "left": "string"
+    }
+    
+    
+
+##  PositionClose
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | number(double) | Optional | read-only | Position close time  
+contract | string | Optional | read-only | Futures contract  
+side | string | Optional | read-only | Position side  
+  
+\- `long`: Long position  
+\- `short`: Short position  
+pnl | string | Optional | read-only | PnL  
+pnl_pnl | string | Optional | read-only | PNL - Position P/L  
+pnl_fund | string | Optional | read-only | PNL - Funding Fees  
+pnl_fee | string | Optional | read-only | PNL - Transaction Fees  
+text | string | Optional | read-only | Source of close order. See `order.text` field for specific values  
+max_size | string | Optional | read-only | Max Trade Size  
+accum_size | string | Optional | read-only | Cumulative closed position volume  
+first_open_time | integer(int64) | Optional | read-only | First Open Time  
+long_price | string | Optional | read-only | When side is 'long', it indicates the opening average price; when side is 'short', it indicates the closing average price  
+short_price | string | Optional | read-only | When side is 'long', it indicates the closing average price; when side is 'short', it indicates the opening average price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+side | long  
+side | short  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "side": "long",
+      "pnl": "string",
+      "pnl_pnl": "string",
+      "pnl_fund": "string",
+      "pnl_fee": "string",
+      "text": "string",
+      "max_size": "string",
+      "accum_size": "string",
+      "first_open_time": 0,
+      "long_price": "string",
+      "short_price": "string"
+    }
+    
+    
+
+##  Contract
+
+_Futures contract details_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+name | string | Optional | none | Futures contract  
+type | string | Optional | none | Contract type: inverse - inverse contract, direct - direct contract  
+quanto_multiplier | string | Optional | none | The contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
+leverage_min | string | Optional | none | Minimum leverage  
+leverage_max | string | Optional | none | Maximum leverage  
+maintenance_rate | string | Optional | none | The maintenance margin rate of the first tier of risk limit sheet  
+mark_type | string | Optional | none | Deprecated  
+mark_price | string | Optional | none | Current mark price  
+index_price | string | Optional | none | Current index price  
+last_price | string | Optional | none | Last trading price  
+maker_fee_rate | string | Optional | none | Maker fee rate, negative values indicate rebates  
+taker_fee_rate | string | Optional | none | Taker fee rate  
+order_price_round | string | Optional | none | Minimum order price increment  
+mark_price_round | string | Optional | none | Minimum mark price increment  
+funding_rate | string | Optional | none | Current funding rate  
+funding_interval | integer | Optional | none | Funding application interval, unit in seconds  
+funding_next_apply | number(double) | Optional | none | Next funding time  
+risk_limit_base | string | Optional | none | Base risk limit (deprecated)  
+interest_rate | string | Optional | none | Interest rate parameter used in funding rate and premium-related calculations for perpetual contracts. Returned as a string decimal ratio (e.g. `0.0003`), same convention as `funding_rate` (ratio, not percent).  
+risk_limit_step | string | Optional | none | Risk limit adjustment step (deprecated)  
+risk_limit_max | string | Optional | none | Maximum risk limit allowed by the contract (deprecated). It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits  
+order_size_min | string | Optional | none | Minimum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded. A minimum below 1 is returned as 0 in this mode.  
+enable_decimal | boolean | Optional | none | Whether the contract supports fractional contract sizes. If `true`, use `X-Gate-Size-Decimal: 1` to submit a fractional size. If `false`, the contract supports whole contract sizes only.  
+order_size_max | string | Optional | none | Maximum order size in contracts. With `X-Gate-Size-Decimal: 1`, this field is a string that preserves the fractional part. With the header set to `0` or omitted, it is an integer with the fractional part discarded.  
+order_price_deviate | string | Optional | none | Maximum allowed deviation between order price and current mark price. The order price `order_price` must satisfy the following condition:  
+  
+abs(order_price - mark_price) <= mark_price * order_price_deviate  
+ref_discount_rate | string | Optional | none | Trading fee discount for referred users  
+ref_rebate_rate | string | Optional | none | Commission rate for referrers  
+orderbook_id | integer(int64) | Optional | none | Orderbook update ID  
+trade_id | integer(int64) | Optional | none | Current trade ID  
+trade_size | string | Optional | none | Historical cumulative trading volume  
+position_size | string | Optional | none | Current total long position size  
+config_change_time | number(double) | Optional | none | Last configuration update time  
+in_delisting | boolean | Optional | none | `in_delisting=true` and position_size>0 indicates the contract is in delisting transition period  
+`in_delisting=true` and position_size=0 indicates the contract is delisted  
+orders_limit | integer | Optional | none | Maximum number of pending orders  
+enable_bonus | boolean | Optional | none | Whether bonus is enabled  
+enable_credit | boolean | Optional | none | Whether this contract supports unified accounts.  
+create_time | number(double) | Optional | none | Created time of the contract  
+funding_cap_ratio | string | Optional | none | Deprecated  
+status | string | Optional | none | Contract status types include: prelaunch (pre-launch), trading (active), delisting (delisting), delisted (delisted), circuit_breaker (circuit breaker)  
+launch_time | integer(int64) | Optional | none | Contract trading start time.  
+delisting_time | integer(int64) | Optional | none | Timestamp when contract enters reduce-only state  
+delisted_time | integer(int64) | Optional | none | Contract delisting time  
+market_order_slip_ratio | string | Optional | none | The maximum slippage allowed for market orders, with the slippage rate calculated based on the latest market price  
+market_order_size_max | string | Optional | none | The maximum number of contracts supported for market orders, with a default value of 0. When the default value is used, the maximum number of contracts is limited by the `order_size_max` field  
+funding_rate_limit | string | Optional | none | Upper and lower limits of funding rate  
+contract_type | string | Optional | none | Contract classification type, e.g. stocks, metals, indices, forex, commodities, etc.  
+funding_impact_value | string | Optional | none | Funding rate depth impact value  
+enable_circuit_breaker | boolean | Optional | none | Whether the newly launched contract activates mark price circuit breaker (If the platform intends to activate this mechanism for a newly launched contract market to prevent significant price fluctuations and excessive liquidations after launch, an advance announcement will be made).  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | inverse  
+type | direct  
+mark_type | internal  
+mark_type | index  
+      
+    
+    {
+      "name": "string",
+      "type": "inverse",
+      "quanto_multiplier": "string",
+      "leverage_min": "string",
+      "leverage_max": "string",
+      "maintenance_rate": "string",
+      "mark_type": "internal",
+      "mark_price": "string",
+      "index_price": "string",
+      "last_price": "string",
+      "maker_fee_rate": "string",
+      "taker_fee_rate": "string",
+      "order_price_round": "string",
+      "mark_price_round": "string",
+      "funding_rate": "string",
+      "funding_interval": 0,
+      "funding_next_apply": 0,
+      "risk_limit_base": "string",
+      "interest_rate": "string",
+      "risk_limit_step": "string",
+      "risk_limit_max": "string",
+      "order_size_min": "string",
+      "enable_decimal": true,
+      "order_size_max": "string",
+      "order_price_deviate": "string",
+      "ref_discount_rate": "string",
+      "ref_rebate_rate": "string",
+      "orderbook_id": 0,
+      "trade_id": 0,
+      "trade_size": "string",
+      "position_size": "string",
+      "config_change_time": 0,
+      "in_delisting": true,
+      "orders_limit": 0,
+      "enable_bonus": true,
+      "enable_credit": true,
+      "create_time": 0,
+      "funding_cap_ratio": "string",
+      "status": "string",
+      "launch_time": 0,
+      "delisting_time": 0,
+      "delisted_time": 0,
+      "market_order_slip_ratio": "string",
+      "market_order_size_max": "string",
+      "funding_rate_limit": "string",
+      "contract_type": "string",
+      "funding_impact_value": "string",
+      "enable_circuit_breaker": true
+    }
+    
+    
+
+##  FuturesLiquidate
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional | read-only | Liquidation time  
+contract | string | Optional | read-only | Futures contract  
+leverage | string | Optional | read-only | Position leverage. Not returned in public endpoints  
+size | string | Optional | read-only | Position size  
+margin | string | Optional | read-only | Position margin. Not returned in public endpoints  
+entry_price | string | Optional | read-only | Average entry price. Not returned in public endpoints  
+liq_price | string | Optional | read-only | Liquidation price. Not returned in public endpoints  
+mark_price | string | Optional | read-only | Mark price. Not returned in public endpoints  
+order_id | integer(int64) | Optional | read-only | Liquidation order ID. Not returned in public endpoints  
+order_price | string | Optional | read-only | Liquidation order price  
+fill_price | string | Optional | read-only | Liquidation order average taker price  
+left | string | Optional | read-only | Liquidation order maker size  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "leverage": "string",
+      "size": "string",
+      "margin": "string",
+      "entry_price": "string",
+      "liq_price": "string",
+      "mark_price": "string",
+      "order_id": 0,
+      "order_price": "string",
+      "fill_price": "string",
+      "left": "string"
+    }
+    
+    
+
+##  GetChaseOrderDetailResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order | ChaseOrder | Optional | none | Chase order detail or list item  
+      
+    
+    {
+      "order": {
+        "id": "string",
+        "user": "string",
+        "contract": "string",
+        "settle": "string",
+        "amount": "string",
+        "price_limit": "string",
+        "reduce_only": true,
+        "text": "string",
+        "create_time": 0,
+        "finish_time": 0,
+        "original_status": 0,
+        "status": "string",
+        "reason": "string",
+        "fill_amount": "string",
+        "average_fill_price": "string",
+        "suborder_id": "string",
+        "is_dual_mode": true,
+        "side_label": "string",
+        "position_side_output": "string",
+        "chase_price": "string",
+        "interval_sec": 0,
+        "updated_at": 0,
+        "suborder_price": "string",
+        "suborder_ongoing": true,
+        "suborder_finish_as": "string",
+        "price_type": 0,
+        "price_gap_type": "string",
+        "price_gap_value": "string",
+        "status_code": "string",
+        "create_time_precise": "string",
+        "finish_time_precise": "string",
+        "pos_margin_mode": "string",
+        "position_mode": "string",
+        "leverage": "string",
+        "error_label": "string"
+      }
+    }
+    
+    
+
+##  TrailOrderDetailResponse
+
+_TrailOrderDetailResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer(int32) | Optional | none | Status code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | none  
+» order | object | Optional | none | Trail order details  
+»» id | string | Optional | read-only | Order ID  
+»» user_id | string | Optional | read-only | User ID  
+»» user | string | Optional | read-only | User ID  
+»» contract | string | Optional | none | Contract name  
+»» settle | string | Optional | none | Settle currency  
+»» amount | string | Optional | none | Trading quantity in contracts, positive for buy, negative for sell  
+»» is_gte | boolean | Optional | none | true: activate when market price >= activation price, false: <= activation price  
+»» activation_price | string | Optional | none | Activation price, 0 means trigger immediately  
+»» price_type | integer(int32) | Optional | none | Activation price type: 0-unknown, 1-latest price, 2-index price, 3-mark price  
+»» price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
+»» text | string | Optional | none | Custom field  
+»» reduce_only | boolean | Optional | none | Reduce Position Only  
+»» position_related | boolean | Optional | none | Whether bound to position  
+»» created_at | string | Optional | read-only | Created time  
+»» activated_at | string | Optional | read-only | Activation time  
+»» finished_at | string | Optional | read-only | End time  
+»» create_time | string | Optional | read-only | Created time  
+»» active_time | string | Optional | read-only | Activation time  
+»» finish_time | string | Optional | read-only | End time  
+»» reason | string | Optional | read-only | End reason  
+»» suborder_text | string | Optional | read-only | The child order's text field.  
+»» is_dual_mode | boolean | Optional | read-only | Whether dual position mode when creating order  
+»» trigger_price | string | Optional | read-only | Trigger price  
+»» suborder_id | string | Optional | read-only | Child order ID.  
+»» side_label | string | Optional | read-only | Order direction label: long/short/open long/open short/close long/close short  
+»» original_status | integer(int32) | Optional | read-only | Order status  
+»» status | string | Optional | read-only | Simplified order status: open/finished  
+»» position_side_output | string | Optional | read-only | Same as side_label, client requires consistency with other order types  
+»» updated_at | string | Optional | read-only | Update time  
+»» extremum_price | string | Optional | read-only | Extremum price  
+»» status_code | string | Optional | read-only | Status code value  
+»» created_at_precise | string | Optional | read-only | Creation time (high precision, seconds.microseconds format)  
+»» finished_at_precise | string | Optional | read-only | End time (high precision, seconds.microseconds format)  
+»» activated_at_precise | string | Optional | read-only | Activation time (high precision, seconds.microseconds format)  
+»» status_label | string | Optional | read-only | Status internationalization label (translated status text)  
+»» pos_margin_mode | string | Optional | read-only | Position margin mode: isolated/cross  
+»» position_mode | string | Optional | read-only | Position mode: single, dual, and dual_plus  
+»» error_label | string | Optional | read-only | Error label  
+»» leverage | string | Optional | read-only | Leverage  
+» timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+price_type | 3  
+status | open  
+status | finished  
+      
+    
+    {
+      "code": 0,
+      "message": "string",
+      "data": {
+        "order": {
+          "id": "string",
+          "user_id": "string",
+          "user": "string",
+          "contract": "string",
+          "settle": "string",
+          "amount": "string",
+          "is_gte": true,
+          "activation_price": "string",
+          "price_type": 0,
+          "price_offset": "string",
+          "text": "string",
+          "reduce_only": true,
+          "position_related": true,
+          "created_at": "string",
+          "activated_at": "string",
+          "finished_at": "string",
+          "create_time": "string",
+          "active_time": "string",
+          "finish_time": "string",
+          "reason": "string",
+          "suborder_text": "string",
+          "is_dual_mode": true,
+          "trigger_price": "string",
+          "suborder_id": "string",
+          "side_label": "string",
+          "original_status": 0,
+          "status": "open",
+          "position_side_output": "string",
+          "updated_at": "string",
+          "extremum_price": "string",
+          "status_code": "string",
+          "created_at_precise": "string",
+          "finished_at_precise": "string",
+          "activated_at_precise": "string",
+          "status_label": "string",
+          "pos_margin_mode": "string",
+          "position_mode": "string",
+          "error_label": "string",
+          "leverage": "string"
+        }
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  FuturesTicker
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Optional | none | Futures contract  
+last | string | Optional | none | Last trading price  
+change_percentage | string | Optional | none | Price change percentage. Negative values indicate price decrease, e.g. -7.45  
+total_size | string | Optional | none | Contract total size  
+low_24h | string | Optional | none | 24-hour lowest price  
+high_24h | string | Optional | none | 24-hour highest price  
+volume_24h | string | Optional | none | 24-hour trading volume  
+volume_24h_btc | string | Optional | none | 24-hour trading volume in BTC (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+volume_24h_usd | string | Optional | none | 24-hour trading volume in USD (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+volume_24h_base | string | Optional | none | 24-hour trading volume in base currency  
+volume_24h_quote | string | Optional | none | 24-hour trading volume in quote currency  
+volume_24h_settle | string | Optional | none | 24-hour trading volume in settle currency  
+mark_price | string | Optional | none | Recent mark price  
+funding_rate | string | Optional | none | Funding rate  
+funding_rate_indicative | string | Optional | none | Indicative Funding rate in next period. (deprecated. use `funding_rate`)  
+index_price | string | Optional | none | Index price  
+quanto_base_rate | string | Optional | none | Deprecated  
+lowest_ask | string | Optional | none | Recent lowest ask  
+lowest_size | string | Optional | none | The latest seller's lowest price order quantity  
+highest_bid | string | Optional | none | Recent highest bid  
+highest_size | string | Optional | none | The latest buyer's highest price order volume  
+change_utc0 | string | Optional | none | Percentage change at utc0. Negative values indicate a drop, e.g., -7.45%  
+change_utc8 | string | Optional | none | Percentage change at utc8. Negative values indicate a drop, e.g., -7.45%  
+change_price | string | Optional | none | 24h change amount. Negative values indicate a drop, e.g., -7.45  
+change_utc0_price | string | Optional | none | Change amount at utc0. Negative values indicate a drop, e.g., -7.45  
+change_utc8_price | string | Optional | none | Change amount at utc8. Negative values indicate a drop, e.g., -7.45  
+      
+    
+    {
+      "contract": "string",
+      "last": "string",
+      "change_percentage": "string",
+      "total_size": "string",
+      "low_24h": "string",
+      "high_24h": "string",
+      "volume_24h": "string",
+      "volume_24h_btc": "string",
+      "volume_24h_usd": "string",
+      "volume_24h_base": "string",
+      "volume_24h_quote": "string",
+      "volume_24h_settle": "string",
+      "mark_price": "string",
+      "funding_rate": "string",
+      "funding_rate_indicative": "string",
+      "index_price": "string",
+      "quanto_base_rate": "string",
+      "lowest_ask": "string",
+      "lowest_size": "string",
+      "highest_bid": "string",
+      "highest_size": "string",
+      "change_utc0": "string",
+      "change_utc8": "string",
+      "change_price": "string",
+      "change_utc0_price": "string",
+      "change_utc8_price": "string"
+    }
+    
+    
+
+##  FuturesAutoDeleverage
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional | read-only | Automatic deleveraging time  
+user | integer(int64) | Optional | read-only | User ID  
+order_id | integer(int64) | Optional | read-only | Order ID. Order IDs before 2023-02-20 are null  
+contract | string | Optional | read-only | Futures contract  
+leverage | string | Optional | read-only | leverage for isolated margin. 0 means cross margin. For leverage of cross margin, please refer to `cross_leverage_limit`.  
+cross_leverage_limit | string | Optional | read-only | leverage for cross margin  
+entry_price | string | Optional | read-only | Average entry price  
+fill_price | string | Optional | read-only | Average fill price  
+trade_size | string | Optional | read-only | Trading size  
+position_size | string | Optional | read-only | Positions after auto-deleveraging  
+      
+    
+    {
+      "time": 0,
+      "user": 0,
+      "order_id": 0,
+      "contract": "string",
+      "leverage": "string",
+      "cross_leverage_limit": "string",
+      "entry_price": "string",
+      "fill_price": "string",
+      "trade_size": "string",
+      "position_size": "string"
+    }
+    
+    
+
+##  TrailChangeLog
+
+_Trail order modification records_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+updated_at | string | Optional | read-only | Update time  
+amount | string | Optional | read-only | Trading quantity in contracts, positive for buy, negative for sell  
+is_gte | boolean | Optional | read-only | true: activate when market price >= activation price, false: <= activation price  
+activation_price | string | Optional | read-only | Activation price, 0 means trigger immediately  
+price_type | integer(int32) | Optional | read-only | Activation price type: 0-unknown, 1-latest price, 2-index price, 3-mark price  
+price_offset | string | Optional | read-only | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
+is_create | boolean | Optional | read-only | true - order creation, false - order modification  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+price_type | 3  
+      
+    
+    {
+      "updated_at": "string",
+      "amount": "string",
+      "is_gte": true,
+      "activation_price": "string",
+      "price_type": 0,
+      "price_offset": "string",
+      "is_create": true
     }
     
     
@@ -14287,749 +15416,6 @@ stp_act | -
     
     
 
-##  Contract
-
-_Futures contract details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-name | string | Optional | none | Futures contract  
-type | string | Optional | none | Contract type: inverse - inverse contract, direct - direct contract  
-quanto_multiplier | string | Optional | none | The contract multiplier indicates how many units of the underlying asset the face value of one contract represents.  
-leverage_min | string | Optional | none | Minimum leverage  
-leverage_max | string | Optional | none | Maximum leverage  
-maintenance_rate | string | Optional | none | The maintenance margin rate of the first tier of risk limit sheet  
-mark_type | string | Optional | none | Deprecated  
-mark_price | string | Optional | none | Current mark price  
-index_price | string | Optional | none | Current index price  
-last_price | string | Optional | none | Last trading price  
-maker_fee_rate | string | Optional | none | Maker fee rate, negative values indicate rebates  
-taker_fee_rate | string | Optional | none | Taker fee rate  
-order_price_round | string | Optional | none | Minimum order price increment  
-mark_price_round | string | Optional | none | Minimum mark price increment  
-funding_rate | string | Optional | none | Current funding rate  
-funding_interval | integer | Optional | none | Funding application interval, unit in seconds  
-funding_next_apply | number(double) | Optional | none | Next funding time  
-risk_limit_base | string | Optional | none | Base risk limit (deprecated)  
-interest_rate | string | Optional | none | Interest rate parameter used in funding rate and premium-related calculations for perpetual contracts. Returned as a string decimal ratio (e.g. `0.0003`), same convention as `funding_rate` (ratio, not percent).  
-risk_limit_step | string | Optional | none | Risk limit adjustment step (deprecated)  
-risk_limit_max | string | Optional | none | Maximum risk limit allowed by the contract (deprecated). It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits  
-order_size_min | string | Optional | none | Minimum order quantity  
-enable_decimal | boolean | Optional | none | Whether decimal string type is supported for contract lot size. When this field is set to `true`, it indicates that the contract supports decimal lot sizes (i.e., the `size` field can use a decimal string type); when set to `false`, it indicates that the contract does not support decimal lot sizes (i.e., the `size` field can only use an integer type).  
-order_size_max | string | Optional | none | Maximum order quantity  
-order_price_deviate | string | Optional | none | Maximum allowed deviation between order price and current mark price. The order price `order_price` must satisfy the following condition:  
-  
-abs(order_price - mark_price) <= mark_price * order_price_deviate  
-ref_discount_rate | string | Optional | none | Trading fee discount for referred users  
-ref_rebate_rate | string | Optional | none | Commission rate for referrers  
-orderbook_id | integer(int64) | Optional | none | Orderbook update ID  
-trade_id | integer(int64) | Optional | none | Current trade ID  
-trade_size | string | Optional | none | Historical cumulative trading volume  
-position_size | string | Optional | none | Current total long position size  
-config_change_time | number(double) | Optional | none | Last configuration update time  
-in_delisting | boolean | Optional | none | `in_delisting=true` and position_size>0 indicates the contract is in delisting transition period  
-`in_delisting=true` and position_size=0 indicates the contract is delisted  
-orders_limit | integer | Optional | none | Maximum number of pending orders  
-enable_bonus | boolean | Optional | none | Whether bonus is enabled  
-enable_credit | boolean | Optional | none | Whether this contract supports unified accounts.  
-create_time | number(double) | Optional | none | Created time of the contract  
-funding_cap_ratio | string | Optional | none | Deprecated  
-status | string | Optional | none | Contract status types include: prelaunch (pre-launch), trading (active), delisting (delisting), delisted (delisted), circuit_breaker (circuit breaker)  
-launch_time | integer(int64) | Optional | none | Contract trading start time.  
-delisting_time | integer(int64) | Optional | none | Timestamp when contract enters reduce-only state  
-delisted_time | integer(int64) | Optional | none | Contract delisting time  
-market_order_slip_ratio | string | Optional | none | The maximum slippage allowed for market orders, with the slippage rate calculated based on the latest market price  
-market_order_size_max | string | Optional | none | The maximum number of contracts supported for market orders, with a default value of 0. When the default value is used, the maximum number of contracts is limited by the `order_size_max` field  
-funding_rate_limit | string | Optional | none | Upper and lower limits of funding rate  
-contract_type | string | Optional | none | Contract classification type, e.g. stocks, metals, indices, forex, commodities, etc.  
-funding_impact_value | string | Optional | none | Funding rate depth impact value  
-enable_circuit_breaker | boolean | Optional | none | Whether the newly launched contract activates mark price circuit breaker (If the platform intends to activate this mechanism for a newly launched contract market to prevent significant price fluctuations and excessive liquidations after launch, an advance announcement will be made).  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | inverse  
-type | direct  
-mark_type | internal  
-mark_type | index  
-      
-    
-    {
-      "name": "string",
-      "type": "inverse",
-      "quanto_multiplier": "string",
-      "leverage_min": "string",
-      "leverage_max": "string",
-      "maintenance_rate": "string",
-      "mark_type": "internal",
-      "mark_price": "string",
-      "index_price": "string",
-      "last_price": "string",
-      "maker_fee_rate": "string",
-      "taker_fee_rate": "string",
-      "order_price_round": "string",
-      "mark_price_round": "string",
-      "funding_rate": "string",
-      "funding_interval": 0,
-      "funding_next_apply": 0,
-      "risk_limit_base": "string",
-      "interest_rate": "string",
-      "risk_limit_step": "string",
-      "risk_limit_max": "string",
-      "order_size_min": "string",
-      "enable_decimal": true,
-      "order_size_max": "string",
-      "order_price_deviate": "string",
-      "ref_discount_rate": "string",
-      "ref_rebate_rate": "string",
-      "orderbook_id": 0,
-      "trade_id": 0,
-      "trade_size": "string",
-      "position_size": "string",
-      "config_change_time": 0,
-      "in_delisting": true,
-      "orders_limit": 0,
-      "enable_bonus": true,
-      "enable_credit": true,
-      "create_time": 0,
-      "funding_cap_ratio": "string",
-      "status": "string",
-      "launch_time": 0,
-      "delisting_time": 0,
-      "delisted_time": 0,
-      "market_order_slip_ratio": "string",
-      "market_order_size_max": "string",
-      "funding_rate_limit": "string",
-      "contract_type": "string",
-      "funding_impact_value": "string",
-      "enable_circuit_breaker": true
-    }
-    
-    
-
-##  FuturesTrade
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-create_time_ms | number(double) | Optional | none | Trade time, with millisecond precision to 3 decimal places  
-contract | string | Optional | none | Futures contract  
-size | string | Optional | none | Trading size  
-price | string | Optional | none | Trade price (quote currency)  
-is_internal | boolean | Optional | none | Deprecated  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "create_time_ms": 0,
-      "contract": "string",
-      "size": "string",
-      "price": "string",
-      "is_internal": true
-    }
-    
-    
-
-##  PositionTimerange
-
-_Contract position details (historical data)_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Optional | read-only | Futures contract  
-size | string | Optional | read-only | Position size  
-leverage | string | Optional | none | Position leverage. 0 means cross margin; positive number means isolated margin  
-risk_limit | string | Optional | none | Position risk limit  
-leverage_max | string | Optional | read-only | the maximum permissible leverage given to the current positon value: the higher positon value, the lower maximum permissible leverage  
-maintenance_rate | string | Optional | read-only | The maintenance margin rate of the first tier of risk limit sheet  
-margin | string | Optional | none | Margin  
-liq_price | string | Optional | read-only | Liquidation price  
-realised_pnl | string | Optional | read-only | Realized PnL  
-history_pnl | string | Optional | read-only | Total realized PnL from closed positions  
-last_close_pnl | string | Optional | read-only | PNL of last position close  
-realised_point | string | Optional | read-only | Realized POINT PNL  
-history_point | string | Optional | read-only | History realized POINT PNL  
-mode | string | Optional | none | Position mode, including:  
-\- `single`: One-way Mode  
-\- `dual_long`: Long position in Hedge Mode  
-\- `dual_short`: Short position in Hedge Mode  
-cross_leverage_limit | string | Optional | none | Cross margin leverage (valid only when `leverage` is 0)  
-entry_price | string | Optional | read-only | Entry price  
-time | integer(int64) | Optional | none | Timestamp  
-      
-    
-    {
-      "contract": "string",
-      "size": "string",
-      "leverage": "string",
-      "risk_limit": "string",
-      "leverage_max": "string",
-      "maintenance_rate": "string",
-      "margin": "string",
-      "liq_price": "string",
-      "realised_pnl": "string",
-      "history_pnl": "string",
-      "last_close_pnl": "string",
-      "realised_point": "string",
-      "history_point": "string",
-      "mode": "string",
-      "cross_leverage_limit": "string",
-      "entry_price": "string",
-      "time": 0
-    }
-    
-    
-
-##  BatchAmendOrderReq
-
-_Modify contract order parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | integer(int64) | Optional | none | Order id, order_id and text must contain at least one  
-text | string | Optional | none | User-defined order text, at least one of order_id and text must be passed  
-size | string | Optional | none | New order size, including filled size.  
-\- If less than or equal to the filled quantity, the order will be cancelled.  
-\- The new order side must be identical to the original one.  
-\- Close order size cannot be modified.  
-\- For reduce-only orders, increasing the size may cancel other reduce-only orders.  
-\- If the price is not modified, decreasing the size will not affect the depth queue, while increasing the size will place it at the end of the current price level.  
-price | string | Optional | none | New order price  
-amend_text | string | Optional | none | Custom info during order amendment  
-action_mode | string | Optional | none | Processing Mode  
-  
-When placing an order, different fields are returned based on the action_mode  
-  
-\- `ACK`: Asynchronous mode, returns only key order fields  
-\- `RESULT`: No clearing information  
-\- `FULL`: Full mode (default)  
-      
-    
-    {
-      "order_id": 0,
-      "text": "string",
-      "size": "string",
-      "price": "string",
-      "amend_text": "string",
-      "action_mode": "string"
-    }
-    
-    
-
-##  Position
-
-_Futures position details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-user | integer(int64) | Optional | read-only | User ID  
-contract | string | Optional | read-only | Futures contract  
-size | string | Optional | read-only | Position size  
-hedge_status | string | Optional | read-only | The hedging status of the position under the Delta-neutral strategy. Including:  
-  
-\- `partial_hedged`: partially hedged  
-\- `full_hedged`: fully hedged  
-hedged_size | string | Optional | read-only | The hedged position size under the Delta-neutral strategy.  
-unhedged_size | string | Optional | read-only | The unhedged position size under the Delta-neutral strategy, calculated as `max(abs(size) - abs(hedged_size), 0)`.  
-leverage | string | Optional | none | leverage for isolated margin. 0 means cross margin. For leverage of cross margin, please refer to `cross_leverage_limit`.  
-risk_limit | string | Optional | none | Position risk limit  
-leverage_max | string | Optional | read-only | the maximum permissible leverage given to the current positon value: the higher positon value, the lower maximum permissible leverage  
-maintenance_rate | string | Optional | read-only | The maintenance margin requirement for the risk limit at which the current position size is located.Since the maintenance margin for the position has been calculated using a tiered system, the actual maintenance margin rate required for this position is based on `average_maintenance_rate`.  
-value | string | Optional | read-only | Position value calculated in settlement currency  
-margin | string | Optional | none | Margin  
-entry_price | string | Optional | read-only | Entry price  
-liq_price | string | Optional | read-only | Estimated liquidation price, for reference only. The actual liquidation trigger is based on the position mmr or the account maintenance margin level.  
-mark_price | string | Optional | read-only | Current mark price  
-initial_margin | string | Optional | read-only | Initial margin of postions  
-maintenance_margin | string | Optional | read-only | Maintencance margin of postions  
-unrealised_pnl | string | Optional | read-only | Unrealized PNL  
-realised_pnl | string | Optional | read-only | Realised PnL, the sum of all cash flows generated by this position, including settlement of closing positions, settlement of funding fees, and transaction fee expenses.  
-pnl_pnl | string | Optional | read-only | settled pnl when closing postion  
-pnl_fund | string | Optional | read-only | funding fees  
-pnl_fee | string | Optional | read-only | trading fees  
-history_pnl | string | Optional | read-only | Total realized PnL from closed positions  
-last_close_pnl | string | Optional | read-only | PNL of last position close  
-realised_point | string | Optional | read-only | Realized POINT PNL  
-history_point | string | Optional | read-only | History realized POINT PNL  
-adl_ranking | integer | Optional | read-only | Ranking of auto deleveraging, a total of 1-5 grades, `1` is the highest, `5` is the lowest, and `6` is the special case when there is no position held or in liquidation  
-pending_orders | integer | Optional | read-only | Current pending order quantity  
-close_order | object|null | Optional | read-only | Current close order information, or `null` if no close order  
-» id | integer(int64) | Optional | none | Order ID  
-» price | string | Optional | none | Order price  
-» is_liq | boolean | Optional | none | Whether the close order is from liquidation  
-mode | string | Optional | none | Position mode, including:  
-  
-\- `single`: One-way Mode  
-\- `dual_long`: Long position in Hedge Mode  
-\- `dual_short`: Short position in Hedge Mode  
-cross_leverage_limit | string | Optional | none | leverage for cross margin  
-update_time | integer(int64) | Optional | read-only | Last update time  
-update_id | integer(int64) | Optional | read-only | Update ID. The value increments by 1 each time the position is updated  
-open_time | integer(int64) | Optional | none | First Open Time  
-risk_limit_table | string | Optional | read-only | Risk limit table ID  
-average_maintenance_rate | string | Optional | read-only | Average maintenance margin rate  
-pid | integer(int64) | Optional | read-only | Split-position ID.  
-pos_margin_mode | string | Optional | none | Position Margin Mode isolated - Isolated Margin, cross - Cross Margin  
-lever | string | Optional | none | Indicates the current leverage of the position, applicable to both isolated and cross margin, gradually replacing the current leverage and cross_leverage_limit  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-hedge_status | partial_hedged  
-hedge_status | full_hedged  
-mode | single  
-mode | dual_long  
-mode | dual_short  
-      
-    
-    {
-      "user": 0,
-      "contract": "string",
-      "size": "string",
-      "hedge_status": "partial_hedged",
-      "hedged_size": "string",
-      "unhedged_size": "string",
-      "leverage": "string",
-      "risk_limit": "string",
-      "leverage_max": "string",
-      "maintenance_rate": "string",
-      "value": "string",
-      "margin": "string",
-      "entry_price": "string",
-      "liq_price": "string",
-      "mark_price": "string",
-      "initial_margin": "string",
-      "maintenance_margin": "string",
-      "unrealised_pnl": "string",
-      "realised_pnl": "string",
-      "pnl_pnl": "string",
-      "pnl_fund": "string",
-      "pnl_fee": "string",
-      "history_pnl": "string",
-      "last_close_pnl": "string",
-      "realised_point": "string",
-      "history_point": "string",
-      "adl_ranking": 0,
-      "pending_orders": 0,
-      "close_order": {
-        "id": 0,
-        "price": "string",
-        "is_liq": true
-      },
-      "mode": "single",
-      "cross_leverage_limit": "string",
-      "update_time": 0,
-      "update_id": 0,
-      "open_time": 0,
-      "risk_limit_table": "string",
-      "average_maintenance_rate": "string",
-      "pid": 0,
-      "pos_margin_mode": "string",
-      "lever": "string"
-    }
-    
-    
-
-##  FuturesLiqOrder
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | integer(int64) | Optional | read-only | Liquidation time  
-contract | string | Optional | read-only | Futures contract  
-size | string | Optional | read-only | User position size  
-order_size | string | Optional | read-only | Number of forced liquidation orders  
-order_price | string | Optional | read-only | Liquidation order price  
-fill_price | string | Optional | read-only | Liquidation order average taker price  
-left | string | Optional | read-only | Reserved field with no current business significance.  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "size": "string",
-      "order_size": "string",
-      "order_price": "string",
-      "fill_price": "string",
-      "left": "string"
-    }
-    
-    
-
-##  FuturesTicker
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Optional | none | Futures contract  
-last | string | Optional | none | Last trading price  
-change_percentage | string | Optional | none | Price change percentage. Negative values indicate price decrease, e.g. -7.45  
-total_size | string | Optional | none | Contract total size  
-low_24h | string | Optional | none | 24-hour lowest price  
-high_24h | string | Optional | none | 24-hour highest price  
-volume_24h | string | Optional | none | 24-hour trading volume  
-volume_24h_btc | string | Optional | none | 24-hour trading volume in BTC (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
-volume_24h_usd | string | Optional | none | 24-hour trading volume in USD (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
-volume_24h_base | string | Optional | none | 24-hour trading volume in base currency  
-volume_24h_quote | string | Optional | none | 24-hour trading volume in quote currency  
-volume_24h_settle | string | Optional | none | 24-hour trading volume in settle currency  
-mark_price | string | Optional | none | Recent mark price  
-funding_rate | string | Optional | none | Funding rate  
-funding_rate_indicative | string | Optional | none | Indicative Funding rate in next period. (deprecated. use `funding_rate`)  
-index_price | string | Optional | none | Index price  
-quanto_base_rate | string | Optional | none | Deprecated  
-lowest_ask | string | Optional | none | Recent lowest ask  
-lowest_size | string | Optional | none | The latest seller's lowest price order quantity  
-highest_bid | string | Optional | none | Recent highest bid  
-highest_size | string | Optional | none | The latest buyer's highest price order volume  
-change_utc0 | string | Optional | none | Percentage change at utc0. Negative values indicate a drop, e.g., -7.45%  
-change_utc8 | string | Optional | none | Percentage change at utc8. Negative values indicate a drop, e.g., -7.45%  
-change_price | string | Optional | none | 24h change amount. Negative values indicate a drop, e.g., -7.45  
-change_utc0_price | string | Optional | none | Change amount at utc0. Negative values indicate a drop, e.g., -7.45  
-change_utc8_price | string | Optional | none | Change amount at utc8. Negative values indicate a drop, e.g., -7.45  
-      
-    
-    {
-      "contract": "string",
-      "last": "string",
-      "change_percentage": "string",
-      "total_size": "string",
-      "low_24h": "string",
-      "high_24h": "string",
-      "volume_24h": "string",
-      "volume_24h_btc": "string",
-      "volume_24h_usd": "string",
-      "volume_24h_base": "string",
-      "volume_24h_quote": "string",
-      "volume_24h_settle": "string",
-      "mark_price": "string",
-      "funding_rate": "string",
-      "funding_rate_indicative": "string",
-      "index_price": "string",
-      "quanto_base_rate": "string",
-      "lowest_ask": "string",
-      "lowest_size": "string",
-      "highest_bid": "string",
-      "highest_size": "string",
-      "change_utc0": "string",
-      "change_utc8": "string",
-      "change_price": "string",
-      "change_utc0_price": "string",
-      "change_utc8_price": "string"
-    }
-    
-    
-
-##  FuturesADLRiskStates
-
-_FuturesADLRiskStates_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-settle | string | Required | none | Settle currency  
-states | object | Required | none | Mapping of futures markets to ADL risk states  
-» **additionalProperties** | FuturesADLRiskState | Optional | none | none  
-      
-    
-    {
-      "settle": "usdt",
-      "states": {
-        "property1": {
-          "state": "normal",
-          "calculated_at_ms": 1786695185345
-        },
-        "property2": {
-          "state": "normal",
-          "calculated_at_ms": 1786695185345
-        }
-      }
-    }
-    
-    
-
-##  FuturesAccount
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-total | string | Optional | none | Balance, only applicable to classic contract account.The balance is the sum of all historical fund flows, including historical transfers in and out, closing settlements, and transaction fee expenses, but does not include upl of positions.total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)  
-unrealised_pnl | string | Optional | none | Unrealized PNL  
-position_margin | string | Optional | none | Deprecated  
-order_margin | string | Optional | none | initial margin of all open orders  
-available | string | Optional | none | Refers to the available withdrawal or trading amount in per-position, specifically the per-position available balance under the unified account that includes the credit line (which incorporates trial funds; since trial funds cannot be withdrawn, the actual withdrawal amount needs to deduct the trial fund portion when processing withdrawals)  
-point | string | Optional | none | Point card amount  
-currency | string | Optional | none | Settlement currency  
-in_dual_mode | boolean | Optional | none | Whether Hedge Mode is enabled  
-enable_credit | boolean | Optional | none | Whether portfolio margin account mode is enabled  
-position_initial_margin | string | Optional | none | Initial margin occupied by positions, applicable to unified account mode  
-maintenance_margin | string | Optional | none | Maintenance margin occupied by positions, applicable to new classic account margin mode and unified account mode  
-bonus | string | Optional | none | Bonus  
-enable_evolved_classic | boolean | Optional | none | Deprecated  
-cross_order_margin | string | Optional | none | Cross margin order margin, applicable to new classic account margin mode  
-cross_initial_margin | string | Optional | none | Cross margin initial margin, applicable to new classic account margin mode  
-cross_maintenance_margin | string | Optional | none | Cross margin maintenance margin, applicable to new classic account margin mode  
-cross_unrealised_pnl | string | Optional | none | Cross margin unrealized P&L, applicable to new classic account margin mode  
-cross_available | string | Optional | none | Cross margin available balance, applicable to new classic account margin mode  
-cross_margin_balance | string | Optional | none | Cross margin balance, applicable to new classic account margin mode  
-cross_mmr | string | Optional | none | Cross margin maintenance margin rate, applicable to new classic account margin mode  
-cross_imr | string | Optional | none | Cross margin initial margin rate, applicable to new classic account margin mode  
-isolated_position_margin | string | Optional | none | Isolated position margin, applicable to new classic account margin mode  
-enable_new_dual_mode | boolean | Optional | none | Deprecated  
-margin_mode | integer | Optional | none | Margin mode of the account  
-0: classic future account or Classic Spot Margin Mode of unified account;  
-1: Multi-Currency Margin Mode;  
-2: Portoforlio Margin Mode;  
-3: Single-Currency Margin Mode  
-enable_tiered_mm | boolean | Optional | none | Whether to enable tiered maintenance margin calculation  
-enable_dual_plus | boolean | Optional | none | Whether to Support Split Position Mode  
-position_mode | string | Optional | none | Position Holding Mode single - Single Direction Position, dual - Dual Direction Position, dual_plus - Split Position  
-history | object | Optional | none | Statistical data  
-» dnw | string | Optional | none | total amount of deposit and withdraw  
-» pnl | string | Optional | none | total amount of trading profit and loss  
-» fee | string | Optional | none | total amount of fee  
-» refr | string | Optional | none | total amount of referrer rebates  
-» fund | string | Optional | none | total amount of funding costs  
-» point_dnw | string | Optional | none | total amount of point deposit and withdraw  
-» point_fee | string | Optional | none | total amount of point fee  
-» point_refr | string | Optional | none | total amount of referrer rebates of point fee  
-» bonus_dnw | string | Optional | none | total amount of perpetual contract bonus transfer  
-» bonus_offset | string | Optional | none | total amount of perpetual contract bonus deduction  
-» cross_settle | string | Optional | none | Represents the value of profit settlement from the futures account to the spot account under Unified Account Mode. Negative values indicate settlement from futures to spot, while positive values indicate settlement from spot to futures. This value is cumulative.  
-      
-    
-    {
-      "total": "string",
-      "unrealised_pnl": "string",
-      "position_margin": "string",
-      "order_margin": "string",
-      "available": "string",
-      "point": "string",
-      "currency": "string",
-      "in_dual_mode": true,
-      "enable_credit": true,
-      "position_initial_margin": "string",
-      "maintenance_margin": "string",
-      "bonus": "string",
-      "enable_evolved_classic": true,
-      "cross_order_margin": "string",
-      "cross_initial_margin": "string",
-      "cross_maintenance_margin": "string",
-      "cross_unrealised_pnl": "string",
-      "cross_available": "string",
-      "cross_margin_balance": "string",
-      "cross_mmr": "string",
-      "cross_imr": "string",
-      "isolated_position_margin": "string",
-      "enable_new_dual_mode": true,
-      "margin_mode": 0,
-      "enable_tiered_mm": true,
-      "enable_dual_plus": true,
-      "position_mode": "string",
-      "history": {
-        "dnw": "string",
-        "pnl": "string",
-        "fee": "string",
-        "refr": "string",
-        "fund": "string",
-        "point_dnw": "string",
-        "point_fee": "string",
-        "point_refr": "string",
-        "bonus_dnw": "string",
-        "bonus_offset": "string",
-        "cross_settle": "string"
-      }
-    }
-    
-    
-
-##  PositionClose
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | read-only | Position close time  
-contract | string | Optional | read-only | Futures contract  
-side | string | Optional | read-only | Position side  
-  
-\- `long`: Long position  
-\- `short`: Short position  
-pnl | string | Optional | read-only | PnL  
-pnl_pnl | string | Optional | read-only | PNL - Position P/L  
-pnl_fund | string | Optional | read-only | PNL - Funding Fees  
-pnl_fee | string | Optional | read-only | PNL - Transaction Fees  
-text | string | Optional | read-only | Source of close order. See `order.text` field for specific values  
-max_size | string | Optional | read-only | Max Trade Size  
-accum_size | string | Optional | read-only | Cumulative closed position volume  
-first_open_time | integer(int64) | Optional | read-only | First Open Time  
-long_price | string | Optional | read-only | When side is 'long', it indicates the opening average price; when side is 'short', it indicates the closing average price  
-short_price | string | Optional | read-only | When side is 'long', it indicates the closing average price; when side is 'short', it indicates the opening average price  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | long  
-side | short  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "side": "long",
-      "pnl": "string",
-      "pnl_pnl": "string",
-      "pnl_fund": "string",
-      "pnl_fee": "string",
-      "text": "string",
-      "max_size": "string",
-      "accum_size": "string",
-      "first_open_time": 0,
-      "long_price": "string",
-      "short_price": "string"
-    }
-    
-    
-
-##  FuturesUpdatePriceTriggeredOrder
-
-_Modify Price Order Details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-settle | string | Optional | none | Perpetual futures settlement currency, e.g. usdt, btc, usd1  
-order_id | integer(int64) | Required | none | ID of the Pending Take-Profit/Stop-Loss Trigger Order  
-size | integer(int64) | Optional | none | Modified Contract Quantity. Full Close: 0; Partial Close: Positive/Negative values indicate direction (consistent with the creation interface logic).  
-amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
-price | string | Optional | none | Represents the modified trading price. A value of 0 indicates a market order.  
-trigger_price | string | Optional | none | Modified Trigger Price  
-price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
-auto_size | string | Optional | none | One-way Mode: auto_size is not required  
-Hedge Mode partial closing (size≠0): auto_size is not required  
-Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
-close | boolean | Optional | none | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
-When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-      
-    
-    {
-      "settle": "string",
-      "order_id": 0,
-      "size": 0,
-      "amount": "string",
-      "price": "string",
-      "trigger_price": "string",
-      "price_type": 0,
-      "auto_size": "string",
-      "close": true
-    }
-    
-    
-
-##  GetChaseOrderDetailResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order | ChaseOrder | Optional | none | Chase order detail or list item  
-      
-    
-    {
-      "order": {
-        "id": "string",
-        "user": "string",
-        "contract": "string",
-        "settle": "string",
-        "amount": "string",
-        "price_limit": "string",
-        "reduce_only": true,
-        "text": "string",
-        "create_time": 0,
-        "finish_time": 0,
-        "original_status": 0,
-        "status": "string",
-        "reason": "string",
-        "fill_amount": "string",
-        "average_fill_price": "string",
-        "suborder_id": "string",
-        "is_dual_mode": true,
-        "side_label": "string",
-        "position_side_output": "string",
-        "chase_price": "string",
-        "interval_sec": 0,
-        "updated_at": 0,
-        "suborder_price": "string",
-        "suborder_ongoing": true,
-        "suborder_finish_as": "string",
-        "price_type": 0,
-        "price_gap_type": "string",
-        "price_gap_value": "string",
-        "status_code": "string",
-        "create_time_precise": "string",
-        "finish_time_precise": "string",
-        "pos_margin_mode": "string",
-        "position_mode": "string",
-        "leverage": "string",
-        "error_label": "string"
-      }
-    }
-    
-    
-
-##  FuturesIndexConstituents
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-index | string | Optional | read-only | Index name  
-constituents | array | Optional | read-only | Constituents  
-» IndexConstituent | object | Optional | none | none  
-»» exchange | string | Optional | none | Exchange  
-»» symbols | array | Optional | none | Symbol list  
-      
-    
-    {
-      "index": "string",
-      "constituents": [
-        {
-          "exchange": "string",
-          "symbols": []
-        }
-      ]
-    }
-    
-    
-
 ##  FuturesRiskLimitTier
 
 _Information for each tier of the gradient risk limit table_
@@ -15077,441 +15463,4 @@ data | array | Optional | none | Array of Funding Rates
           "r": "string"
         }
       ]
-    }
-    
-    
-
-##  TrailOrderChangeLogResponse
-
-_TrailOrderChangeLogResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer(int32) | Optional | none | Status code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | none  
-» change_log | [TrailChangeLog] | Optional | none | [Trail order modification records]  
-timestamp | integer(int64) | Optional | none | Response timestamp (milliseconds)  
-      
-    
-    {
-      "code": 0,
-      "message": "string",
-      "data": {
-        "change_log": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  FuturesFee
-
-_The returned result is a map type, where the key represents the market and taker and maker fee rates_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-taker_fee | string | Optional | read-only | Taker fee  
-maker_fee | string | Optional | read-only | maker fee  
-      
-    
-    {
-      "taker_fee": "string",
-      "maker_fee": "string"
-    }
-    
-    
-
-##  CreateTrailOrder
-
-_CreateTrailOrder_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Required | none | Contract name  
-amount | string | Required | none | Trading quantity in contracts, positive for buy, negative for sell  
-activation_price | string | Optional | none | Activation price, 0 means trigger immediately  
-is_gte | boolean | Optional | none | true: activate when market price >= activation price, false: <= activation price  
-price_type | integer(int32) | Required | none | Activation price type, required: 1-latest price, 2-index price, 3-mark price. The caller must specify it explicitly.  
-price_offset | string | Optional | none | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
-reduce_only | boolean | Optional | none | Whether reduce only  
-position_related | boolean | Optional | none | Whether bound to a position (if position_related = true (position-related), then reduce_only must also be true)  
-text | string | Optional | none | Order custom information, optional field. Used to identify the order source or set a user-defined ID.  
-  
-If non-empty, it must meet one of the following rules:  
-  
-1\. Internal Reserved Fields (identifying order source):  
-\- `apiv4`: API call  
-2\. User-defined Fields (setting custom ID):  
-\- Must start with `t-`  
-\- The content after `t-` must not exceed 28 bytes in length  
-\- Can only contain: numbers, letters, underscores (_), hyphens (-), or dots (.)  
-\- Examples: `t-my-order-001`, `t-trail_2024.01`  
-  
-Note: User-defined fields must not conflict with internal reserved fields.  
-pos_margin_mode | string | Optional | none | Position margin mode: isolated/cross  
-position_mode | string | Optional | none | Position mode: single, dual, and dual_plus  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | 1  
-price_type | 2  
-price_type | 3  
-      
-    
-    {
-      "contract": "string",
-      "amount": "string",
-      "activation_price": "0",
-      "is_gte": true,
-      "price_type": 1,
-      "price_offset": "string",
-      "reduce_only": false,
-      "position_related": false,
-      "text": "apiv4",
-      "pos_margin_mode": "string",
-      "position_mode": "string"
-    }
-    
-    
-
-##  ChaseOrder
-
-_Chase order detail or list item_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | string | Optional | none | none  
-user | string | Optional | none | none  
-contract | string | Optional | none | none  
-settle | string | Optional | none | none  
-amount | string | Optional | none | Total size in contracts; positive for buy, negative for sell  
-price_limit | string | Optional | none | none  
-reduce_only | boolean | Optional | none | none  
-text | string | Optional | none | none  
-create_time | integer(int64) | Optional | none | none  
-finish_time | integer(int64) | Optional | none | none  
-original_status | integer | Optional | none | Raw status enum  
-status | string | Optional | none | Simplified status, e.g. open / finished  
-reason | string | Optional | none | none  
-fill_amount | string | Optional | none | none  
-average_fill_price | string | Optional | none | none  
-suborder_id | string | Optional | none | none  
-is_dual_mode | boolean | Optional | none | none  
-side_label | string | Optional | none | none  
-position_side_output | string | Optional | none | none  
-chase_price | string | Optional | none | none  
-interval_sec | integer(uint32) | Optional | none | none  
-updated_at | integer(int64) | Optional | none | none  
-suborder_price | string | Optional | none | none  
-suborder_ongoing | boolean | Optional | none | none  
-suborder_finish_as | string | Optional | none | none  
-price_type | integer | Optional | none | PriceType enum: 1 latest, 2 index, 3 mark  
-price_gap_type | string | Optional | none | none  
-price_gap_value | string | Optional | none | none  
-status_code | string | Optional | none | none  
-create_time_precise | string | Optional | none | Creation time (seconds.microseconds)  
-finish_time_precise | string | Optional | none | none  
-pos_margin_mode | string | Optional | none | none  
-position_mode | string | Optional | none | none  
-leverage | string | Optional | none | none  
-error_label | string | Optional | none | none  
-      
-    
-    {
-      "id": "string",
-      "user": "string",
-      "contract": "string",
-      "settle": "string",
-      "amount": "string",
-      "price_limit": "string",
-      "reduce_only": true,
-      "text": "string",
-      "create_time": 0,
-      "finish_time": 0,
-      "original_status": 0,
-      "status": "string",
-      "reason": "string",
-      "fill_amount": "string",
-      "average_fill_price": "string",
-      "suborder_id": "string",
-      "is_dual_mode": true,
-      "side_label": "string",
-      "position_side_output": "string",
-      "chase_price": "string",
-      "interval_sec": 0,
-      "updated_at": 0,
-      "suborder_price": "string",
-      "suborder_ongoing": true,
-      "suborder_finish_as": "string",
-      "price_type": 0,
-      "price_gap_type": "string",
-      "price_gap_value": "string",
-      "status_code": "string",
-      "create_time_precise": "string",
-      "finish_time_precise": "string",
-      "pos_margin_mode": "string",
-      "position_mode": "string",
-      "leverage": "string",
-      "error_label": "string"
-    }
-    
-    
-
-##  FuturesLimitRiskTiers
-
-_Retrieve risk limit configurations for different tiers under a specified contract_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-tier | integer(int) | Optional | none | Tier  
-risk_limit | string | Optional | none | Position risk limit  
-initial_rate | string | Optional | none | Initial margin rate  
-maintenance_rate | string | Optional | none | The maintenance margin rate of the first tier of risk limit sheet  
-leverage_max | string | Optional | none | Maximum leverage  
-contract | string | Optional | none | Market, only visible when market pagination is requested  
-deduction | string | Optional | none | Maintenance margin quick calculation deduction amount  
-      
-    
-    {
-      "tier": 0,
-      "risk_limit": "string",
-      "initial_rate": "string",
-      "maintenance_rate": "string",
-      "leverage_max": "string",
-      "contract": "string",
-      "deduction": "string"
-    }
-    
-    
-
-##  FuturesPriceTriggeredOrder
-
-_Futures price-triggered order details_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-initial | object | Required | none | none  
-» contract | string | Required | none | Futures contract  
-» size | integer(int64) | Optional | none | Represents the number of contracts that need to be closed, full closing: size=0  
-Partial closing: plan-close-short-position size>0   
-Partial closing: plan-close-long-position size<0  
-» amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
-» price | string | Required | none | Order price. Set to 0 to use market price  
-» close | boolean | Optional | write-only | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
-When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
-» tif | string | Optional | none | Time in force strategy, default is gtc, market orders currently only support ioc mode  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-» text | string | Optional | none | The source of the order, including:  
-\- web: Web  
-\- api: API call  
-\- app: Mobile app  
-» reduce_only | boolean | Optional | none | When set to true, perform automatic position reduction operation. Set to true to ensure that the order will not open a new position, and is only used to close or reduce positions  
-» auto_size | string | Optional | write-only | One-way Mode: auto_size is not required  
-Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
-Hedge Mode partial closing (size≠0): auto_size is not required  
-» is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
-» is_close | boolean | Optional | read-only | Is the order to close position  
-trigger | object | Required | none | none  
-» strategy_type | integer(int32) | Optional | none | Trigger Strategy  
-  
-\- 0: Price trigger, triggered when price meets conditions  
-\- 1: Price spread trigger, i.e. the difference between the latest price specified in `price_type` and the second-last price  
-Currently only supports 0 (latest transaction price)  
-» price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
-» price | string | Required | none | Price value for price trigger, or spread value for spread trigger  
-» rule | integer(int32) | Required | none | Price Condition Type  
-  
-\- 1: Trigger when the price calculated based on `strategy_type` and `price_type` is greater than or equal to `Trigger.Price`, while Trigger.Price must > last_price  
-\- 2: Trigger when the price calculated based on `strategy_type` and `price_type` is less than or equal to `Trigger.Price`, and Trigger.Price must < last_price  
-» expiration | integer | Optional | none | Maximum wait time for trigger condition (in seconds). Order will be cancelled if timeout  
-id | integer(int64) | Optional | read-only | Auto order ID  
-id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
-Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
-user | integer | Optional | read-only | User ID  
-create_time | number(double) | Optional | read-only | Created time  
-finish_time | number(double) | Optional | read-only | End time  
-trade_id | integer(int64) | Optional | read-only | ID of the order created after trigger  
-status | string | Optional | read-only | Order status  
-  
-\- `open`: Active  
-\- `finished`: Finished  
-\- `inactive`: Inactive, only applies to order take-profit/stop-loss  
-\- `invalid`: Invalid, only applies to order take-profit/stop-loss  
-finish_as | string | Optional | read-only | Finish status: cancelled - Cancelled; succeeded - Succeeded; failed - Failed; expired - Expired  
-reason | string | Optional | read-only | Additional description of how the order was completed  
-order_type | string | Optional | none | Types of take-profit and stop-loss orders, including:  
-  
-\- `close-long-order`: Order take-profit/stop-loss, close long position  
-\- `close-short-order`: Order take-profit/stop-loss, close short position  
-\- `close-long-position`: Position take-profit/stop-loss, used to close all long positions  
-\- `close-short-position`: Position take-profit/stop-loss, used to close all short positions  
-\- `plan-close-long-position`: Position plan take-profit/stop-loss, used to close all or partial long positions  
-\- `plan-close-short-position`: Position plan take-profit/stop-loss, used to close all or partial short positions  
-  
-The two types of order take-profit/stop-loss are read-only and cannot be passed in requests  
-me_order_id | integer(int64) | Optional | read-only | Corresponding order ID for order take-profit/stop-loss orders  
-pos_margin_mode | string | Optional | none | Position margin mode: `isolated` (isolated margin) or `cross` (cross margin).  
-Returned by the server in simple split-position mode; when writing, use only the values below.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
-      
-    
-    {
-      "initial": {
-        "contract": "string",
-        "size": 0,
-        "amount": "string",
-        "price": "string",
-        "close": false,
-        "tif": "gtc",
-        "text": "string",
-        "reduce_only": false,
-        "auto_size": "string",
-        "is_reduce_only": true,
-        "is_close": true
-      },
-      "trigger": {
-        "strategy_type": 0,
-        "price_type": 0,
-        "price": "string",
-        "rule": 1,
-        "expiration": 0
-      },
-      "id": 0,
-      "id_string": "string",
-      "user": 0,
-      "create_time": 0,
-      "finish_time": 0,
-      "trade_id": 0,
-      "status": "open",
-      "finish_as": "cancelled",
-      "reason": "string",
-      "order_type": "string",
-      "me_order_id": 0,
-      "pos_margin_mode": "isolated"
-    }
-    
-    
-
-##  FuturesADLRiskState
-
-_FuturesADLRiskState_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-state | string | Required | none | Market ADL risk state  
-calculated_at_ms | integer(int64) | Required | none | State calculation time, as a Unix timestamp in milliseconds  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-state | normal  
-state | warning  
-state | adl_risk  
-      
-    
-    {
-      "state": "normal",
-      "calculated_at_ms": 1786695185345
-    }
-    
-    
-
-##  TrailChangeLog
-
-_Trail order modification records_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-updated_at | string | Optional | read-only | Update time  
-amount | string | Optional | read-only | Trading quantity in contracts, positive for buy, negative for sell  
-is_gte | boolean | Optional | read-only | true: activate when market price >= activation price, false: <= activation price  
-activation_price | string | Optional | read-only | Activation price, 0 means trigger immediately  
-price_type | integer(int32) | Optional | read-only | Activation price type: 0-unknown, 1-latest price, 2-index price, 3-mark price  
-price_offset | string | Optional | read-only | Callback ratio or price distance, e.g., `0.1` or `0.1%`  
-is_create | boolean | Optional | read-only | true - order creation, false - order modification  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-price_type | 3  
-      
-    
-    {
-      "updated_at": "string",
-      "amount": "string",
-      "is_gte": true,
-      "activation_price": "string",
-      "price_type": 0,
-      "price_offset": "string",
-      "is_create": true
-    }
-    
-    
-
-##  FuturesPositionCrossMode
-
-_FuturesPositionCrossMode_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-mode | string | Required | none | Cross/isolated margin mode. ISOLATED - isolated margin, CROSS - cross margin  
-contract | string | Required | none | Futures market  
-      
-    
-    {
-      "mode": "string",
-      "contract": "BTC_USDT"
     }

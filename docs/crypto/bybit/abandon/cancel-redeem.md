@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/abandon/cancel-redeem
 api_type: REST
-updated_at: 2026-11-17 18:36:48.207722
+updated_at: 2026-11-18 18:48:42.642636
 ---
 
 # Cancel Redeem

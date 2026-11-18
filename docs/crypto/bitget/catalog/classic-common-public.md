@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-common-public
 api_type: REST
-updated_at: 2026-11-18 08:37:39.047656
+updated_at: 2026-11-18 19:01:09.951500
 ---
 
 # Classic Public Config API

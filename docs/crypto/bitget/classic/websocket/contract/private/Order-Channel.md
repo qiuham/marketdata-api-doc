@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/contract/private/Order-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:35:30.709014
+updated_at: 2026-11-18 18:59:58.598395
 ---
 
 # Order Channel

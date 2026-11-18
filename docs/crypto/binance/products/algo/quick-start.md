@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/algo/quick-start
 api_type: Guide
-updated_at: 2026-11-18 02:11:49.201350
+updated_at: 2026-11-18 18:34:17.144910
 ---
 
 # Quick Start

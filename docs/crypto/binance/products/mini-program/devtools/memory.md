@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/memory
 api_type: Guide
-updated_at: 2026-11-18 02:20:04.240940
+updated_at: 2026-11-18 18:37:38.703710
 ---
 
 # Logical Layer Memory Debugging

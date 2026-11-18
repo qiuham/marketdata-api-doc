@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/Introduction
 api_type: Guide
-updated_at: 2026-11-18 01:53:48.225531
+updated_at: 2026-11-18 18:27:09.450797
 ---
 
 # Introduction

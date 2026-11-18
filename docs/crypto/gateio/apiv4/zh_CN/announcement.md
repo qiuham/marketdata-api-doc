@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/announcement
 api_type: REST
-updated_at: 2026-11-17 18:45:26.300802
+updated_at: 2026-11-18 18:56:13.701045
 ---
 
 # Announcement
@@ -134,34 +134,6 @@ _AnnouncementArticleListResponse_
 
 #  模型
 
-##  AnnouncementArticleListResponse
-
-_AnnouncementArticleListResponse_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-code | integer | true | none | 业务状态码  
-data | AnnouncementArticleListData | true | none | 公告文章列表及总数  
-message | string | true | none | 响应消息  
-version | string | true | none | 响应版本  
-      
-    
-    {
-      "code": 0,
-      "data": {
-        "list": [
-          {}
-        ],
-        "total": 0
-      },
-      "message": "string",
-      "version": "string"
-    }
-    
-    
-
 ##  AnnouncementArticleListRequest
 
 _AnnouncementArticleListRequest_
@@ -197,6 +169,34 @@ filter_empty_content | integer | false | none | 是否排除当前语言内容�
       "update_after": 0,
       "lang": "cn",
       "filter_empty_content": 1
+    }
+    
+    
+
+##  AnnouncementArticleListResponse
+
+_AnnouncementArticleListResponse_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+code | integer | true | none | 业务状态码  
+data | AnnouncementArticleListData | true | none | 公告文章列表及总数  
+message | string | true | none | 响应消息  
+version | string | true | none | 响应版本  
+      
+    
+    {
+      "code": 0,
+      "data": {
+        "list": [
+          {}
+        ],
+        "total": 0
+      },
+      "message": "string",
+      "version": "string"
     }
     
     

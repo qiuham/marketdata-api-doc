@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/portfolio-management/lock-portfolio
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:35.563290
+updated_at: 2026-11-18 18:59:11.145460
 ---
 
 # Lock Portfolio

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/createBufferURL
 api_type: Guide
-updated_at: 2026-11-18 02:37:31.512009
+updated_at: 2026-11-18 18:44:31.647631
 ---
 
 # bn.createBufferURL

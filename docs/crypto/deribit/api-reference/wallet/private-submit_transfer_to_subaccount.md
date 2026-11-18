@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-submit_transfer_to_subaccount
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:30.244811
+updated_at: 2026-11-18 18:59:22.723907
 ---
 
 # private/submit_transfer_to_subaccount

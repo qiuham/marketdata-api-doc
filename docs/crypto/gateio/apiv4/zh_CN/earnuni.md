@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/earnuni
 api_type: Earn
-updated_at: 2026-11-17 18:45:36.440768
+updated_at: 2026-11-18 18:56:23.506366
 ---
 
 # EarnUni
@@ -1033,6 +1033,81 @@ WARNING
 
 #  模型
 
+##  UniLendRecord
+
+_理财记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种名称  
+amount | string | false | 只读 | 本次借出或赎回数量  
+last_wallet_amount | string | false | 只读 | 该记录之前待理财数量  
+last_lent_amount | string | false | 只读 | 该记录之前已借出数量  
+last_frozen_amount | string | false | 只读 | 该记录之前已冻结待待赎回数量  
+type | string | false | 只读 | 记录类型 lend - 借出 , redeem - 赎回  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "currency": "string",
+      "amount": "string",
+      "last_wallet_amount": "string",
+      "last_lent_amount": "string",
+      "last_frozen_amount": "string",
+      "type": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  UniInterestRecord
+
+_派息记录_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
+currency | string | false | 只读 | 币种  
+actual_rate | string | false | 只读 | 真实利率  
+interest | string | false | 只读 | 利息  
+interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+create_time | integer(int64) | false | 只读 | 创建时间戳  
+      
+    
+    {
+      "status": 0,
+      "currency": "string",
+      "actual_rate": "string",
+      "interest": "string",
+      "interest_status": "string",
+      "create_time": 0
+    }
+    
+    
+
+##  UniCurrencyInterest
+
+_UniCurrencyInterest_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种  
+interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
+      
+    
+    {
+      "currency": "string",
+      "interest_status": "string"
+    }
+    
+    
+
 ##  PatchUniLend
 
 _PatchUniLend_
@@ -1047,6 +1122,31 @@ min_rate | string | false | none | 最低小时利率。
     
     {
       "currency": "string",
+      "min_rate": "string"
+    }
+    
+    
+
+##  UniCurrency
+
+_借贷币种_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency | string | false | 只读 | 币种名称  
+min_lend_amount | string | false | 只读 | 最小借出数量,单位该币种  
+max_lend_amount | string | false | 只读 | 累计最大借出数量，单位USDT  
+max_rate | string | false | 只读 | 最大利率（小时）  
+min_rate | string | false | 只读 | 最小利率（小时）  
+      
+    
+    {
+      "currency": "string",
+      "min_lend_amount": "string",
+      "max_lend_amount": "string",
+      "max_rate": "string",
       "min_rate": "string"
     }
     
@@ -1106,58 +1206,6 @@ interest | string | false | 只读 | 利息收益
     
     
 
-##  UniCurrency
-
-_借贷币种_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-min_lend_amount | string | false | 只读 | 最小借出数量,单位该币种  
-max_lend_amount | string | false | 只读 | 累计最大借出数量，单位USDT  
-max_rate | string | false | 只读 | 最大利率（小时）  
-min_rate | string | false | 只读 | 最小利率（小时）  
-      
-    
-    {
-      "currency": "string",
-      "min_lend_amount": "string",
-      "max_lend_amount": "string",
-      "max_rate": "string",
-      "min_rate": "string"
-    }
-    
-    
-
-##  UniInterestRecord
-
-_派息记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-status | integer | false | 只读 | 状态 0 - 失败 , 1 - 成功  
-currency | string | false | 只读 | 币种  
-actual_rate | string | false | 只读 | 真实利率  
-interest | string | false | 只读 | 利息  
-interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "status": 0,
-      "currency": "string",
-      "actual_rate": "string",
-      "interest": "string",
-      "interest_status": "string",
-      "create_time": 0
-    }
-    
-    
-
 ##  CreateUniLend
 
 _创建理财或赎回_
@@ -1184,52 +1232,4 @@ type | redeem
       "amount": "string",
       "type": "lend",
       "min_rate": "string"
-    }
-    
-    
-
-##  UniCurrencyInterest
-
-_UniCurrencyInterest_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种  
-interest_status | string | false | 只读 | 利息状态; interest_dividend - 正常派息, interest_reinvest - 利息复投  
-      
-    
-    {
-      "currency": "string",
-      "interest_status": "string"
-    }
-    
-    
-
-##  UniLendRecord
-
-_理财记录_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency | string | false | 只读 | 币种名称  
-amount | string | false | 只读 | 本次借出或赎回数量  
-last_wallet_amount | string | false | 只读 | 该记录之前待理财数量  
-last_lent_amount | string | false | 只读 | 该记录之前已借出数量  
-last_frozen_amount | string | false | 只读 | 该记录之前已冻结待待赎回数量  
-type | string | false | 只读 | 记录类型 lend - 借出 , redeem - 赎回  
-create_time | integer(int64) | false | 只读 | 创建时间戳  
-      
-    
-    {
-      "currency": "string",
-      "amount": "string",
-      "last_wallet_amount": "string",
-      "last_lent_amount": "string",
-      "last_frozen_amount": "string",
-      "type": "string",
-      "create_time": 0
     }

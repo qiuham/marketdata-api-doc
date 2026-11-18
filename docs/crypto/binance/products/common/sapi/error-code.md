@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/sapi/error-code
 api_type: Guide
-updated_at: 2026-11-18 02:27:30.064434
+updated_at: 2026-11-18 18:40:33.635768
 ---
 
 # Error Codes

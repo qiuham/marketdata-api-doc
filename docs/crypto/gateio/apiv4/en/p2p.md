@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/p2p
 api_type: REST
-updated_at: 2026-11-17 18:45:04.298507
+updated_at: 2026-11-18 18:55:54.076130
 ---
 
 # P2p
@@ -2826,8 +2826,8 @@ ParametersName | In | Type | Required | Description
 ---|---|---|---|---  
 body | body | SendChatMessageRequest | Required | none  
 » txid | body | integer | Required | Order ID  
-» type | body | integer | Optional | Message type: `0` text; `1` file (image or video); defaults to `0`.  
-» message | body | string | Required | Message content. When type=0, pass text up to 500 characters, which goes through off-platform traffic diversion risk control; when hit, the response contains risk_type=1 and toast_msg. When type=1, pass the file_key returned by upload_chat_file  
+» type | body | integer | Optional | Message type: 0 for text, 1 for files. Defaults to 0 when omitted.  
+» message | body | string | Required | Message content. For type=0, provide text up to 500 characters. Off-platform solicitation risk checks may return risk_type=1 and toast_msg. For type=1, after a successful S3 upload, provide the file_key returned by pre_upload_chat_file.  
   
 ####  Enumerated Values
 
@@ -2958,13 +2958,15 @@ POST `/p2p/merchant/chat/upload_chat_file`
 
 _Upload chat file_
 
+This endpoint is deprecated. Use Pre-upload chat file to obtain credentials for direct S3 uploads.
+
 ### Parameters
 
 ParametersName | In | Type | Required | Description  
 ---|---|---|---|---  
 body | body | UploadChatFile | Required | none  
 » image_content_type | body | string | Required | File MIME type: supports `image/jpeg`, `image/jpg`, `image/png`, `video/mp4`.  
-» base64_img | body | string | Required | Base64 file content; max 20 MB.  
+» base64_img | body | string | Required | Base64-encoded file content.  
   
 ####  Enumerated Values
 
@@ -3071,6 +3073,144 @@ Code samples
     }
     
 
+##  Pre-upload chat file🔒 Authenticated
+
+POST`/p2p/merchant/chat/pre_upload_chat_file`
+
+POST `/p2p/merchant/chat/pre_upload_chat_file`
+
+_Pre-upload chat file_
+
+Get credentials for a direct S3 upload of a chat file. Credentials expire after 45 minutes. The maximum file size is 100 MiB.
+
+Upload the file using the returned url and fields, placing the file field last in the form. After S3 returns HTTP 204, call send_chat_message with type=1 and the returned file_key as message.
+
+### Parameters
+
+ParametersName | In | Type | Required | Description  
+---|---|---|---|---  
+body | body | PreUploadChatFileRequest | Required | none  
+» content_type | body | string | Required | File MIME type.  
+  
+####  Enumerated Values
+
+Enumerated ValuesParameter | Value  
+---|---  
+» content_type | image/jpeg  
+» content_type | image/jpg  
+» content_type | image/png  
+» content_type | image/webp  
+» content_type | video/mp4  
+  
+### Responses
+
+ResponsesStatus | Meaning | Description | Schema  
+---|---|---|---  
+200 | [OK ](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | P2pPreUploadChatFileResponse  
+  
+### Response Schema
+
+Status Code **200**
+
+_P2pPreUploadChatFileResponse_
+
+Name | Type | Description  
+---|---|---  
+» timestamp | number | none  
+» method | string | none  
+» code | integer | none  
+» message | string | none  
+» data | P2pPreUploadChatFileResult | none  
+»» url | string | S3 POST upload URL. Use it before the credentials expire.  
+»» fields | object | Signed S3 form fields. Submit all keys and values unchanged when uploading.  
+»»» **additionalProperties** | string | none  
+»» file_key | string | Chat file identifier. After uploading, use it as message in send_chat_message with type=1.  
+» version | string | none  
+  
+WARNING
+
+To perform this operation, you must be authenticated by API key and secret
+
+Code samples
+    
+    
+    # coding: utf-8
+    import requests
+    import time
+    import hashlib
+    import hmac
+    
+    host = "https://api.gateio.ws"
+    prefix = "/api/v4"
+    headers = {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    
+    url = '/p2p/merchant/chat/pre_upload_chat_file'
+    query_param = ''
+    body='{"content_type":"image/png"}'
+    # for `gen_sign` implementation, refer to section `Authentication` above
+    sign_headers = gen_sign('POST', prefix + url, query_param, body)
+    headers.update(sign_headers)
+    r = requests.request('POST', host + prefix + url, headers=headers, data=body)
+    print(r.json())
+    
+    
+    
+    
+    key="YOUR_API_KEY"
+    secret="YOUR_API_SECRET"
+    host="https://api.gateio.ws"
+    prefix="/api/v4"
+    method="POST"
+    url="/p2p/merchant/chat/pre_upload_chat_file"
+    query_param=""
+    body_param='{"content_type":"image/png"}'
+    timestamp=$(date +%s)
+    body_hash=$(printf "$body_param" | openssl sha512 | awk '{print $NF}')
+    sign_string="$method\n$prefix$url\n$query_param\n$body_hash\n$timestamp"
+    sign=$(printf "$sign_string" | openssl sha512 -hmac "$secret" | awk '{print $NF}')
+    
+    full_url="$host$prefix$url"
+    curl -X $method $full_url -d "$body_param" -H "Content-Type: application/json" \
+        -H "Timestamp: $timestamp" -H "KEY: $key" -H "SIGN: $sign"
+    
+    
+
+> Body parameter
+    
+    
+    {
+      "content_type": "image/png"
+    }
+    
+
+> Example responses
+
+> 200 Response
+    
+    
+    {
+      "timestamp": 1767009875.525072,
+      "method": "--",
+      "code": 0,
+      "message": "success",
+      "data": {
+        "url": "https://example-bucket.s3.ap-northeast-1.amazonaws.com/",
+        "fields": {
+          "key": "c2cchat_image/example-receipt.png",
+          "Content-Type": "image/png",
+          "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+          "X-Amz-Credential": "EXAMPLE/20261117/ap-northeast-1/s3/aws4_request",
+          "X-Amz-Date": "20261117T000000Z",
+          "X-Amz-Security-Token": "example-session-token",
+          "Policy": "example-policy",
+          "X-Amz-Signature": "example-signature"
+        },
+        "file_key": "c2cchat_image/example-receipt.png|s3-gateio-payments"
+      },
+      "version": "1.0.0"
+    }
+    
+
 #  Schemas
 
 ##  GetMyselfPaymentRequest
@@ -3090,6 +3230,45 @@ fiat | string | Optional | none | Fiat currency; omit to return all available pa
     
     
 
+##  GetPendingTransactionListRequest
+
+_Get pending transaction list request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+crypto_currency | string | Required | none | Cryptocurrency symbol.  
+fiat_currency | string | Required | none | Fiat currency  
+order_tab | string | Optional | none | Order tab: `pending` in progress (`OPEN`, `PAID`, `LOCKED`, `TEMP`); `dispute` in dispute; default `pending`.  
+select_type | string | Optional | none | Order side filter: `buy` buy orders; `sell` sell orders; empty: all.  
+status | string | Optional | none | Order status filter. `open` unpaid (`OPEN`); `paid` paid (`PAID`); `locked` locked (`LOCKED`);  
+`dispute` in dispute; empty or omitted uses the default range for `order_tab`.  
+txid | integer | Optional | none | Order ID  
+start_time | integer | Optional | none | Start timestamp, default is 00:00 89 days ago  
+end_time | integer | Optional | none | End timestamp, default is 23:59:59 today  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+order_tab | pending  
+order_tab | dispute  
+      
+    
+    {
+      "crypto_currency": "USDT",
+      "fiat_currency": "USD",
+      "order_tab": "pending",
+      "select_type": "sell",
+      "status": "open",
+      "txid": 40000001,
+      "start_time": 1764547200,
+      "end_time": 1767139199
+    }
+    
+    
+
 ##  ConfirmPayment
 
 _Confirm payment request_
@@ -3105,6 +3284,296 @@ payment_method | string | Optional | none | Payment type used for this payment; 
     {
       "txid": "40000001",
       "payment_method": "bank"
+    }
+    
+    
+
+##  ConfirmReceipt
+
+_Confirm receipt request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+txid | string | Required | none | Order ID  
+      
+    
+    {
+      "txid": "40000001"
+    }
+    
+    
+
+##  SetMerchantWorkHoursRequest
+
+_Request to set merchant working status or custom working hours_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+work_status | integer | Required | none | Working status. 0: resting, 1: working, 2: using custom working hours  
+cycle_type | string | Optional | none | Custom working cycle; required when work_status is 2  
+day_of_week | string | Optional | none | Weekly working days, comma-separated values 1-7 for Monday to Sunday; required when work_status is 2 and cycle_type is Weekly  
+time_zone | string | Optional | none | UTC timezone offset, ranging from -12 to +14; required when work_status is 2  
+start_time | string | Optional | none | Custom working start time in HH:mm format; required when work_status is 2 and must not be later than end_time  
+end_time | string | Optional | none | Custom working end time in HH:mm format; required when work_status is 2 and must not be earlier than start_time  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+work_status | 0  
+work_status | 1  
+work_status | 2  
+cycle_type | Weekly  
+cycle_type | Daily  
+      
+    
+    {
+      "work_status": 2,
+      "cycle_type": "Weekly",
+      "day_of_week": "1,2,3,4,5",
+      "time_zone": "+8",
+      "start_time": "09:00",
+      "end_time": "18:00"
+    }
+    
+    
+
+##  P2pTransactionActionResponse
+
+_P2pTransactionActionResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | Response timestamp.  
+method | string | Optional | none | Placeholder for request method.  
+code | integer | Optional | none | Response code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | Empty object on success.  
+version | string | Optional | none | API version.  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {},
+      "version": "string"
+    }
+    
+    
+
+##  AdsDetailRequest
+
+_Get ad details request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+adv_no | string | Required | none | Advertisement ID.  
+      
+    
+    {
+      "adv_no": "2124000001"
+    }
+    
+    
+
+##  GetCounterpartyUserInfoRequest
+
+_Get counterparty user info request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+biz_uid | string | Required | none | Counterparty crypto UID from order list or detail field `its_uid`.  
+      
+    
+    {
+      "biz_uid": "biz_uid_demo_9f3a7c"
+    }
+    
+    
+
+##  P2pTransactionListResponse
+
+_P2pTransactionListResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | none  
+method | string | Optional | none | none  
+code | integer | Optional | none | none  
+message | string | Optional | none | none  
+data | object | Optional | none | none  
+» list | array | Optional | none | none  
+»» P2pTransactionListItem | object | Optional | none | none  
+»»» type_buy | integer | Optional | none | Order side from current user's view. `1`: buy; `0`: sell.  
+»»» timest | string | Optional | none | Creation time of order  
+»»» timest_expire | string | Optional | none | Order expiration time  
+»»» timestamp | integer | Optional | none | Order creation timestamp  
+»»» rate | string | Optional | none | Order price in fiat currency.  
+»»» amount | string | Optional | none | Order size in cryptocurrency.  
+»»» total | string | Optional | none | Total fiat amount of the order.  
+»»» txid | integer | Optional | none | Order ID  
+»»» status | string | Optional | none | Display status: `unpay` awaiting payment; `paid` buyer paid; `unconfirmed` awaiting seller confirmation; `locked` locked; `finished` completed; `cancel` canceled; `expired` expired; `bclosed` arbitration filled; `sclosed` arbitration canceled.  
+»»» its_realname | string | Optional | none | Counterparty real name or verified display name.  
+»»» its_uid | string | Optional | none | Counterparty crypto UID.  
+»»» its_nick | string | Optional | none | Counterparty nickname  
+»»» seller_realname | string | Optional | none | Seller real name or verified display name.  
+»»» buyer_realname | string | Optional | none | Buyer real name or verified display name.  
+»»» cancelable | integer | Optional | none | Whether the order can be canceled. `1`: yes; `0`: no.  
+»»» currency_type | string | Optional | none | Cryptocurrency symbol.  
+»»» want_type | string | Optional | none | Fiat currency  
+»»» hide_payment | integer | Optional | none | Whether payment methods are hidden. `1`: hidden; `0`: visible.  
+»»» sel_paytype | string | Optional | none | Selected payment type for this order, e.g. `bank`, `alipay`, `wechat`, `paypal`, `swift`, `wu`.  
+»»» pay_others | array | Optional | none | Other payment method details; may appear on historical orders.  
+»»»» pay_type | string | Optional | none | Payment method type  
+»»»» pay_name | string | Optional | none | Payment method name  
+»»» cd_time | integer | Optional | none | Countdown seconds for the current order.  
+»»» order_type | integer | Optional | none | Order type: `1` standard; `2` partner; `3` flash swap; `4` Web3.  
+»»» order_tag | array | Optional | none | Order tags  
+»»» convert_info | object | Optional | none | Flash swap order information  
+»»»» convert_type | string | Optional | none | Flash swap target currency  
+»»»» convert_status | string | Optional | none | Flash swap order status  
+»»»» pre_rate | string | Optional | none | Expected price when placing order  
+»»»» rate | string | Optional | none | Execution price  
+»»»» pre_fiat_rate | string | Optional | none | Expected fiat price when placing order  
+»»»» fiat_rate | string | Optional | none | Fiat price at execution  
+»»»» amount | string | Optional | none | Size  
+»»»» convert_amount | string | Optional | none | Swap Amount  
+»»»» slippage | string | Optional | none | Slippage calculation: slippage = (expected price when placing order - real-time price during auto swap) / expected price when placing order  
+»»»» status | string | Optional | none | Flash swap order display status  
+»»» trans_time | array | Optional | none | Countdown time  
+»»»» P2pTransactionTimeMarker | object | Optional | none | none  
+»»»»» od_time | integer | Optional | none | none  
+»»»» count | integer | Optional | none | Number of orders  
+»»»» exported_num | integer | Optional | none | Export count  
+»»» version | string | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "list": [
+          {}
+        ],
+        "trans_time": [
+          {}
+        ],
+        "count": 0,
+        "exported_num": 0
+      },
+      "version": "string"
+    }
+    
+    
+
+##  P2pPreUploadChatFileResponse
+
+_P2pPreUploadChatFileResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | none  
+method | string | Optional | none | none  
+code | integer | Optional | none | none  
+message | string | Optional | none | none  
+data | P2pPreUploadChatFileResult | Optional | none | none  
+version | string | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "url": "string",
+        "fields": {
+          "property1": "string",
+          "property2": "string"
+        },
+        "file_key": "string"
+      },
+      "version": "string"
+    }
+    
+    
+
+##  P2pMerchantBooksPlaceBizPushOrderResponse
+
+_P2pMerchantBooksPlaceBizPushOrderResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | Response timestamp.  
+method | string | Optional | none | Placeholder for request method.  
+code | integer | Optional | none | Response code. 0 means success; 70305102 means the advertisement trade terms or auto reply hit off-platform traffic diversion risk control  
+message | string | Optional | none | Response message  
+data | object | Optional | none | Empty object when the advertisement is published or edited successfully; returns risk details when the advertisement content hits risk control  
+» risk_code | integer | Optional | none | Risk control sub-code; 0 for advertisement content traffic diversion risk control  
+» risk_event | object | Optional | none | Risk control prompt event for advertisement content  
+»» type | string | Optional | none | Prompt display type  
+»» title | string | Optional | none | Risk control prompt title  
+»» msg | string | Optional | none | Risk control prompt message generated based on the field that hit risk control  
+»» action | array | Optional | none | Available actions; advertisement content risk control only returns the close action  
+»»» action_type | string | Optional | none | Action type  
+»»» title | string | Optional | none | Action button text  
+»»» mainly | integer | Optional | none | Whether it is the primary action. 0: no  
+»»» action_data | object | Optional | none | Additional data of the action; empty object for the close action  
+»» content_risk_type | string | Optional | none | Advertisement content field that hit risk control  
+»» trade_tips | string | Optional | none | Prompt message returned when the trade terms hit risk control  
+»» auto_reply | string | Optional | none | Prompt message returned when the auto reply hits risk control  
+» version | string | Optional | none | API version.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | modal  
+action_type | close  
+mainly | 0  
+content_risk_type | trade_tips  
+content_risk_type | auto_reply  
+content_risk_type | trade_tips_auto_reply  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "risk_code": 0,
+        "risk_event": {
+          "type": "modal",
+          "title": "string",
+          "msg": "string",
+          "action": [],
+          "content_risk_type": "trade_tips",
+          "trade_tips": "string",
+          "auto_reply": "string"
+        }
+      },
+      "version": "string"
     }
     
     
@@ -3199,178 +3668,6 @@ polymarket_limit | 1
     
     
 
-##  P2pTransactionActionResponse
-
-_P2pTransactionActionResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | Response timestamp.  
-method | string | Optional | none | Placeholder for request method.  
-code | integer | Optional | none | Response code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | Empty object on success.  
-version | string | Optional | none | API version.  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": {},
-      "version": "string"
-    }
-    
-    
-
-##  GetTransactionDetailsRequest
-
-_Get transaction details request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-txid | integer | Required | none | Order ID  
-channel | string | Optional | none | Channel tag: omit or empty for normal P2P; use `web3` for Web3 orders.  
-      
-    
-    {
-      "txid": 40000001,
-      "channel": ""
-    }
-    
-    
-
-##  GetCompletedTransactionListRequest
-
-_Get completed/historical transaction list request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-crypto_currency | string | Required | none | Cryptocurrency symbol.  
-fiat_currency | string | Required | none | Fiat currency  
-select_type | string | Optional | none | Order side filter: `buy` buy orders; `sell` sell orders; empty: all.  
-status | string | Optional | none | Order status filter. `closed`: filled (`ACCEPT`, `BCLOSED`); `cancel`: canceled (`CANCEL`, `BECANCEL`, `SCLOSED`, `SCANCEL`);  
-`locked`: locked (`LOCKED`); `open`: unpaid (`OPEN`); `paid`: paid (`PAID`);  
-`completed`: finished or canceled (`CANCEL`, `BECANCEL`, `SCLOSED`, `SCANCEL`, `ACCEPT`, `BCLOSED`);  
-Empty or omitted uses the endpoint default range.  
-txid | integer | Optional | none | Order ID  
-start_time | integer | Optional | none | Start timestamp, default is 00:00 89 days ago  
-end_time | integer | Optional | none | End timestamp, default is 23:59:59 today  
-query_dispute | integer | Optional | none | Whether to flag dispute status in the response. `1`: yes; `0`: no.  
-page | integer | Optional | none | Page number starting at 1; values below 1 are treated as 1.  
-per_page | integer | Optional | none | Orders per page; default 10, max 200.  
-      
-    
-    {
-      "crypto_currency": "USDT",
-      "fiat_currency": "USD",
-      "select_type": "buy",
-      "status": "closed",
-      "txid": 40000001,
-      "start_time": 1764547200,
-      "end_time": 1767139199,
-      "query_dispute": 0,
-      "page": 1,
-      "per_page": 20
-    }
-    
-    
-
-##  SendChatMessageRequest
-
-_Send chat message request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-txid | integer | Required | none | Order ID  
-type | integer | Optional | none | Message type: `0` text; `1` file (image or video); defaults to `0`.  
-message | string | Required | none | Message content. When type=0, pass text up to 500 characters, which goes through off-platform traffic diversion risk control; when hit, the response contains risk_type=1 and toast_msg. When type=1, pass the file_key returned by upload_chat_file  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | 0  
-type | 1  
-      
-    
-    {
-      "txid": 40000001,
-      "type": 0,
-      "message": "Payment completed, please check"
-    }
-    
-    
-
-##  P2pMerchantWorkHoursResponse
-
-_P2pMerchantWorkHoursResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | Response timestamp.  
-method | string | Optional | none | Placeholder for request method.  
-code | integer | Optional | none | Response code, 0 means success  
-message | string | Optional | none | Response message  
-data | object | Optional | none | none  
-» work_status | integer | Optional | none | Merchant's current working status. 0: normal resting, 1: normal working, 2: custom resting, 3: custom working  
-version | string | Optional | none | API version.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-work_status | 0  
-work_status | 1  
-work_status | 2  
-work_status | 3  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": {
-        "work_status": 0
-      },
-      "version": "string"
-    }
-    
-    
-
-##  MyAdsListRequest
-
-_Get my ads list request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-asset | string | Optional | none | Crypto asset; omit to skip asset filter.  
-fiat_unit | string | Optional | none | Fiat currency; omit to skip fiat filter.  
-trade_type | string | Optional | none | Ad side: `buy` for buy-crypto ads, `sell` for sell-crypto ads; omit for all sides.  
-      
-    
-    {
-      "asset": "USDT",
-      "fiat_unit": "USD",
-      "trade_type": "sell"
-    }
-    
-    
-
 ##  P2pAdsListResponse
 
 _P2pAdsListResponse_
@@ -3445,51 +3742,9 @@ limit_basis_text | fiat
     
     
 
-##  CancelOrder
+##  P2pCounterpartyUserInfoResponse
 
-_Cancel order request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-txid | string | Required | none | Order ID  
-reason_id | string | Optional | none | Cancel reason ID. `1` no longer want to buy; `2` cannot reach seller; `3` will not pay; `4` seller account not real; `5` payout account issue; `6` price mismatch; `7` mutually agreed cancel; `8` poor communication; `9` other; `10` seller cannot release with refund; `11` terms not met; `12` seller payout risk-controlled.  
-reason_memo | string | Optional | none | Extra cancel notes when `reason_id` is `9` or explanation is required.  
-      
-    
-    {
-      "txid": "40000001",
-      "reason_id": "1",
-      "reason_memo": "Canceled after agreement with the counterparty"
-    }
-    
-    
-
-##  GetChatsListRequest
-
-_Get chat history request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-txid | integer | Optional | none | Order ID; omit or `0` to return the latest order with chat for the user.  
-lastreceived | integer | Optional | none | Timestamp of the last received message for backward incremental fetch; omit on first load.  
-firstreceived | integer | Optional | none | Timestamp of first received message for paging backward; omit on first load.  
-      
-    
-    {
-      "txid": 40000001,
-      "lastreceived": 1767009884,
-      "firstreceived": 1767009000
-    }
-    
-    
-
-##  P2pAdDetailResponse
-
-_P2pAdDetailResponse_
+_P2pCounterpartyUserInfoResponse_
 
 ###  Properties
 
@@ -3500,58 +3755,26 @@ method | string | Optional | none | none
 code | integer | Optional | none | none  
 message | string | Optional | none | none  
 data | object | Optional | none | none  
-» rate | string | Optional | none | Advertisement price.  
-» type | string | Optional | none | Ad side: `buy` buy-crypto ad; `sell` sell-crypto ad.  
-» amount | string | Optional | none | Remaining crypto amount on the ad.  
-» min_amount | string | Optional | none | Minimum quantity per order, denominated by currency_type  
-» max_amount | string | Optional | none | Maximum quantity per order, denominated by currency_type  
-» fiat_min_amount | string | Optional | none | Minimum trade amount in `want_type`.  
-» fiat_max_amount | string | Optional | none | Maximum trade amount priced in `want_type`.  
-» limit_basis | integer | Optional | none | Trading limit unit. 0: crypto quantity, 1: fiat amount  
-» limit_basis_text | string | Optional | none | Trading limit unit label. crypto: crypto quantity, fiat: fiat amount  
-» total | string | Optional | none | Fiat amount  
-» pay_ali | integer | Optional | none | Whether Alipay is supported. `1`: yes; `0`: no.  
-» pay_bank | integer | Optional | none | Whether bank transfer is supported. `1`: yes; `0`: no.  
-» pay_paypal | integer | Optional | none | Whether PayPal is supported. `1`: yes; `0`: no.  
-» pay_wechat | integer | Optional | none | Whether WeChat Pay is supported. `1`: yes; `0`: no.  
-» pay_type_num | string | Optional | none | Payment method ID list  
-» pay_type_json | string | Optional | none | JSON map of payment type -> payment method ID.  
-» locked_amount | string | Optional | none | Locked amount  
-» orderid | integer | Optional | none | Order ID  
-» timestamp | integer | Optional | none | Created time  
-» currency_type | string | Optional | none | Cryptocurrency symbol.  
-» want_type | string | Optional | none | Fiat type  
-» hide_rate | string | Optional | none | Hidden price  
-» trade_tips | string | Optional | none | Trading terms  
-» auto_reply | string | Optional | none | Auto reply  
-» rate_ref_id | integer | Optional | none | Floating reference: `1` platform; `2` Gate; `3` spot; `<= 0` means fixed price.  
-» rate_offset | number | Optional | none | Floating ratio (absolute value)  
-» status | string | Optional | none | Ad status: `OPEN` listed; `OFFLIN` delisted; `CLOSED` closed; `CANCEL` canceled.  
-» rate_fixed | integer | Optional | none | Price type: `0` floating; `1` fixed.  
-» float_trend | integer | Optional | none | Floating direction: `0` markup; `1` markdown.  
-» expire_min | integer | Optional | none | Timeout (minutes)  
-» tier_limit | integer | Optional | none | Tier limit  
-» reg_time_limit | integer | Optional | none | Registration time limit  
-» advertisers_limit | integer | Optional | none | Whether trading with the advertiser is restricted. `0`: no; `1`: yes.  
-» polymarket_limit | integer | Optional | none | Whether to restrict trading with Polymarket users. 0: no restriction, 1: restricted  
-» min_completed_limit | integer | Optional | none | Minimum limit of completed orders  
-» max_completed_limit | integer | Optional | none | Maximum limit of completed orders  
-» user_orders_limit | integer | Optional | none | Order count limit  
-» completed_rate_limit | number | Optional | none | 30-day completion rate limit  
-» limit_country_cn | string | Optional | none | Restricted nationality (Chinese)  
-» limit_country_en | string | Optional | none | Restricted nationality (English)  
-» is_hedge | integer | Optional | none | Whether auto-delegation is enabled. `1`: yes; `0`: no.  
-» hide_payment | integer | Optional | none | Whether payment methods are hidden. `1`: hidden; `0`: visible.  
+» user_timest | string | Optional | none | User registration time (formatted string)  
+» email_verified | string | Optional | none | Whether email is verified. `1`: yes; `0`: no.  
+» verified | string | Optional | none | Whether KYC is completed. `1`: yes; `0`: no.  
+» has_phone | string | Optional | none | Whether a phone number is bound. `1`: yes; `0`: no.  
+» user_name | string | Optional | none | Username  
+» user_note | string | Optional | none | User note information  
+» complete_transactions | string | Optional | none | Total completed orders  
+» paid_transactions | string | Optional | none | Number of completed buy orders  
+» accepted_transactions | string | Optional | none | Number of completed sell orders  
+» transactions_used_time | string | Optional | none | Average time to confirm receipt  
+» cancelled_used_time_month | string | Optional | none | Cancellation time in last 30 days  
+» complete_transactions_month | string | Optional | none | Number of completed orders in last 30 days  
+» complete_rate_month | number | Optional | none | Completion rate in last 30 days  
+» is_follow | integer | Optional | none | Whether you follow this user. `1`: yes; `0`: no.  
+» have_traded | integer | Optional | none | Whether you have traded with this user before. `1`: yes; `0`: no.  
+» biz_uid | string | Optional | none | Encrypted UID  
+» registration_days | integer | Optional | none | Registration days  
+» first_trade_days | integer | Optional | none | Days since first trade  
+» trade_versatile | boolean | Optional | none | Single user or composite user  
 version | string | Optional | none | none  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-limit_basis | 0  
-limit_basis | 1  
-limit_basis_text | crypto  
-limit_basis_text | fiat  
       
     
     {
@@ -3560,121 +3783,122 @@ limit_basis_text | fiat
       "code": 0,
       "message": "string",
       "data": {
-        "rate": "string",
-        "type": "string",
-        "amount": "string",
-        "min_amount": "string",
-        "max_amount": "string",
-        "fiat_min_amount": "string",
-        "fiat_max_amount": "string",
-        "limit_basis": 0,
-        "limit_basis_text": "crypto",
-        "total": "string",
-        "pay_ali": 0,
-        "pay_bank": 0,
-        "pay_paypal": 0,
-        "pay_wechat": 0,
-        "pay_type_num": "string",
-        "pay_type_json": "string",
-        "locked_amount": "string",
-        "orderid": 0,
-        "timestamp": 0,
-        "currency_type": "string",
-        "want_type": "string",
-        "hide_rate": "string",
-        "trade_tips": "string",
-        "auto_reply": "string",
-        "rate_ref_id": 0,
-        "rate_offset": 0,
-        "status": "string",
-        "rate_fixed": 0,
-        "float_trend": 0,
-        "expire_min": 0,
-        "tier_limit": 0,
-        "reg_time_limit": 0,
-        "advertisers_limit": 0,
-        "polymarket_limit": 0,
-        "min_completed_limit": 0,
-        "max_completed_limit": 0,
-        "user_orders_limit": 0,
-        "completed_rate_limit": 0,
-        "limit_country_cn": "string",
-        "limit_country_en": "string",
-        "is_hedge": 0,
-        "hide_payment": 0
+        "user_timest": "string",
+        "email_verified": "string",
+        "verified": "string",
+        "has_phone": "string",
+        "user_name": "string",
+        "user_note": "string",
+        "complete_transactions": "string",
+        "paid_transactions": "string",
+        "accepted_transactions": "string",
+        "transactions_used_time": "string",
+        "cancelled_used_time_month": "string",
+        "complete_transactions_month": "string",
+        "complete_rate_month": 0,
+        "is_follow": 0,
+        "have_traded": 0,
+        "biz_uid": "string",
+        "registration_days": 0,
+        "first_trade_days": 0,
+        "trade_versatile": true
       },
       "version": "string"
     }
     
     
 
-##  ConfirmReceipt
+##  P2pMerchantUserInfoResponse
 
-_Confirm receipt request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-txid | string | Required | none | Order ID  
-      
-    
-    {
-      "txid": "40000001"
-    }
-    
-    
-
-##  GetCounterpartyUserInfoRequest
-
-_Get counterparty user info request_
+_P2pMerchantUserInfoResponse_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-biz_uid | string | Required | none | Counterparty crypto UID from order list or detail field `its_uid`.  
+timestamp | number | Optional | none | none  
+method | string | Optional | none | none  
+code | integer | Optional | none | none  
+message | string | Optional | none | none  
+data | object | Optional | none | none  
+» is_self | boolean | Optional | none | Whether self  
+» user_timest | string | Optional | none | User registration time (formatted string)  
+» counterparties_num | integer | Optional | none | Number of counterparties  
+» email_verified | string | Optional | none | Whether email is verified. `1`: yes; `0`: no.  
+» verified | string | Optional | none | Whether KYC is completed. `1`: yes; `0`: no.  
+» has_phone | string | Optional | none | Whether a phone number is bound. `1`: yes; `0`: no.  
+» user_name | string | Optional | none | Username  
+» user_note | string | Optional | none | User note information  
+» complete_transactions | string | Optional | none | Total completed orders  
+» paid_transactions | string | Optional | none | Number of completed buy orders  
+» accepted_transactions | string | Optional | none | Number of completed sell orders  
+» transactions_used_time | string | Optional | none | Average time to confirm receipt  
+» cancelled_used_time_month | string | Optional | none | Cancellation time in last 30 days  
+» complete_transactions_month | string | Optional | none | Number of completed orders in last 30 days  
+» complete_rate_month | number | Optional | none | Completion rate in last 30 days  
+» orders_buy_rate_month | number | Optional | none | Buy order ratio in last 30 days  
+» is_black | integer | Optional | none | Whether the user is blocked. `1`: yes; `0`: no.  
+» is_follow | integer | Optional | none | Whether you follow this user. `1`: yes; `0`: no.  
+» have_traded | integer | Optional | none | Whether you have traded with this user before. `1`: yes; `0`: no.  
+» biz_uid | string | Optional | none | Encrypted UID  
+» blue_vip | integer | Optional | none | Blue V Crown Shield  
+» work_status | integer | Optional | none | Merchant work status  
+» registration_days | integer | Optional | none | Registration days  
+» first_trade_days | integer | Optional | none | Days since first trade  
+» need_replenish | integer | Optional | none | Whether additional margin is required. `1`: yes; `0`: no.  
+» merchant_info | object | Optional | none | Markets where user can place orders  
+»» type | string | Optional | none | none  
+»» market | string | Optional | none | none  
+» online_status | integer | Optional | none | Merchant online status: `1` online; `0` offline.  
+» work_hours | object|null | Optional | none | Merchant online status details  
+» transactions_month | number | Optional | none | 30-day transaction volume  
+» transactions_all | number | Optional | none | Total transaction volume  
+» trade_versatile | boolean | Optional | none | Single user or composite user  
+version | string | Optional | none | none  
       
     
     {
-      "biz_uid": "biz_uid_demo_9f3a7c"
-    }
-    
-    
-
-##  SetMerchantWorkHoursRequest
-
-_Request to set merchant working status or custom working hours_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-work_status | integer | Required | none | Working status. 0: resting, 1: working, 2: using custom working hours  
-cycle_type | string | Optional | none | Custom working cycle; required when work_status is 2  
-day_of_week | string | Optional | none | Weekly working days, comma-separated values 1-7 for Monday to Sunday; required when work_status is 2 and cycle_type is Weekly  
-time_zone | string | Optional | none | UTC timezone offset, ranging from -12 to +14; required when work_status is 2  
-start_time | string | Optional | none | Custom working start time in HH:mm format; required when work_status is 2 and must not be later than end_time  
-end_time | string | Optional | none | Custom working end time in HH:mm format; required when work_status is 2 and must not be earlier than start_time  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-work_status | 0  
-work_status | 1  
-work_status | 2  
-cycle_type | Weekly  
-cycle_type | Daily  
-      
-    
-    {
-      "work_status": 2,
-      "cycle_type": "Weekly",
-      "day_of_week": "1,2,3,4,5",
-      "time_zone": "+8",
-      "start_time": "09:00",
-      "end_time": "18:00"
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "is_self": true,
+        "user_timest": "string",
+        "counterparties_num": 0,
+        "email_verified": "string",
+        "verified": "string",
+        "has_phone": "string",
+        "user_name": "string",
+        "user_note": "string",
+        "complete_transactions": "string",
+        "paid_transactions": "string",
+        "accepted_transactions": "string",
+        "transactions_used_time": "string",
+        "cancelled_used_time_month": "string",
+        "complete_transactions_month": "string",
+        "complete_rate_month": 0,
+        "orders_buy_rate_month": 0,
+        "is_black": 0,
+        "is_follow": 0,
+        "have_traded": 0,
+        "biz_uid": "string",
+        "blue_vip": 0,
+        "work_status": 0,
+        "registration_days": 0,
+        "first_trade_days": 0,
+        "need_replenish": 0,
+        "merchant_info": {
+          "type": "string",
+          "market": "string"
+        },
+        "online_status": 0,
+        "work_hours": {},
+        "transactions_month": 0,
+        "transactions_all": 0,
+        "trade_versatile": true
+      },
+      "version": "string"
     }
     
     
@@ -3751,9 +3975,30 @@ data | object | Optional | none | none
     
     
 
-##  GetPendingTransactionListRequest
+##  MyAdsListRequest
 
-_Get pending transaction list request_
+_Get my ads list request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+asset | string | Optional | none | Crypto asset; omit to skip asset filter.  
+fiat_unit | string | Optional | none | Fiat currency; omit to skip fiat filter.  
+trade_type | string | Optional | none | Ad side: `buy` for buy-crypto ads, `sell` for sell-crypto ads; omit for all sides.  
+      
+    
+    {
+      "asset": "USDT",
+      "fiat_unit": "USD",
+      "trade_type": "sell"
+    }
+    
+    
+
+##  GetCompletedTransactionListRequest
+
+_Get completed/historical transaction list request_
 
 ###  Properties
 
@@ -3761,31 +4006,57 @@ PropertiesName | Type | Required | Restrictions | Description
 ---|---|---|---|---  
 crypto_currency | string | Required | none | Cryptocurrency symbol.  
 fiat_currency | string | Required | none | Fiat currency  
-order_tab | string | Optional | none | Order tab: `pending` in progress (`OPEN`, `PAID`, `LOCKED`, `TEMP`); `dispute` in dispute; default `pending`.  
 select_type | string | Optional | none | Order side filter: `buy` buy orders; `sell` sell orders; empty: all.  
-status | string | Optional | none | Order status filter. `open` unpaid (`OPEN`); `paid` paid (`PAID`); `locked` locked (`LOCKED`);  
-`dispute` in dispute; empty or omitted uses the default range for `order_tab`.  
+status | string | Optional | none | Order status filter. `closed`: filled (`ACCEPT`, `BCLOSED`); `cancel`: canceled (`CANCEL`, `BECANCEL`, `SCLOSED`, `SCANCEL`);  
+`locked`: locked (`LOCKED`); `open`: unpaid (`OPEN`); `paid`: paid (`PAID`);  
+`completed`: finished or canceled (`CANCEL`, `BECANCEL`, `SCLOSED`, `SCANCEL`, `ACCEPT`, `BCLOSED`);  
+Empty or omitted uses the endpoint default range.  
 txid | integer | Optional | none | Order ID  
 start_time | integer | Optional | none | Start timestamp, default is 00:00 89 days ago  
 end_time | integer | Optional | none | End timestamp, default is 23:59:59 today  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-order_tab | pending  
-order_tab | dispute  
+query_dispute | integer | Optional | none | Whether to flag dispute status in the response. `1`: yes; `0`: no.  
+page | integer | Optional | none | Page number starting at 1; values below 1 are treated as 1.  
+per_page | integer | Optional | none | Orders per page; default 10, max 200.  
       
     
     {
       "crypto_currency": "USDT",
       "fiat_currency": "USD",
-      "order_tab": "pending",
-      "select_type": "sell",
-      "status": "open",
+      "select_type": "buy",
+      "status": "closed",
       "txid": 40000001,
       "start_time": 1764547200,
-      "end_time": 1767139199
+      "end_time": 1767139199,
+      "query_dispute": 0,
+      "page": 1,
+      "per_page": 20
+    }
+    
+    
+
+##  AdsUpdateStatus
+
+_Ad status update request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+adv_no | integer | Required | none | Advertisement ID.  
+adv_status | integer | Required | none | Ad status. `1`: listed; `3`: delisted; `4`: closed.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+adv_status | 1  
+adv_status | 3  
+adv_status | 4  
+      
+    
+    {
+      "adv_no": 2124000001,
+      "adv_status": 3
     }
     
     
@@ -3820,53 +4091,82 @@ version | string | Optional | none | none
     
     
 
-##  AdsUpdateStatus
+##  P2pPreUploadChatFileResult
 
-_Ad status update request_
+_P2pPreUploadChatFileResult_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-adv_no | integer | Required | none | Advertisement ID.  
-adv_status | integer | Required | none | Ad status. `1`: listed; `3`: delisted; `4`: closed.  
+url | string | Optional | none | S3 POST upload URL. Use it before the credentials expire.  
+fields | object | Optional | none | Signed S3 form fields. Submit all keys and values unchanged when uploading.  
+» **additionalProperties** | string | Optional | none | none  
+file_key | string | Optional | none | Chat file identifier. After uploading, use it as message in send_chat_message with type=1.  
+      
+    
+    {
+      "url": "string",
+      "fields": {
+        "property1": "string",
+        "property2": "string"
+      },
+      "file_key": "string"
+    }
+    
+    
+
+##  PreUploadChatFileRequest
+
+_Request credentials for a direct chat file upload_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+content_type | string | Required | none | File MIME type.  
   
 ####  Enumerated Values
 
 Enumerated ValuesProperty | Value  
 ---|---  
-adv_status | 1  
-adv_status | 3  
-adv_status | 4  
+content_type | image/jpeg  
+content_type | image/jpg  
+content_type | image/png  
+content_type | image/webp  
+content_type | video/mp4  
       
     
     {
-      "adv_no": 2124000001,
-      "adv_status": 3
+      "content_type": "image/png"
     }
     
     
 
-##  AdsDetailRequest
+##  CancelOrder
 
-_Get ad details request_
+_Cancel order request_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-adv_no | string | Required | none | Advertisement ID.  
+txid | string | Required | none | Order ID  
+reason_id | string | Optional | none | Cancel reason ID. `1` no longer want to buy; `2` cannot reach seller; `3` will not pay; `4` seller account not real; `5` payout account issue; `6` price mismatch; `7` mutually agreed cancel; `8` poor communication; `9` other; `10` seller cannot release with refund; `11` terms not met; `12` seller payout risk-controlled.  
+reason_memo | string | Optional | none | Extra cancel notes when `reason_id` is `9` or explanation is required.  
       
     
     {
-      "adv_no": "2124000001"
+      "txid": "40000001",
+      "reason_id": "1",
+      "reason_memo": "Canceled after agreement with the counterparty"
     }
     
     
 
-##  P2pTransactionListResponse
+##  P2pUploadChatFileResponse
 
-_P2pTransactionListResponse_
+_P2pUploadChatFileResponse_
 
 ###  Properties
 
@@ -3877,50 +4177,8 @@ method | string | Optional | none | none
 code | integer | Optional | none | none  
 message | string | Optional | none | none  
 data | object | Optional | none | none  
-» list | array | Optional | none | none  
-»» P2pTransactionListItem | object | Optional | none | none  
-»»» type_buy | integer | Optional | none | Order side from current user's view. `1`: buy; `0`: sell.  
-»»» timest | string | Optional | none | Creation time of order  
-»»» timest_expire | string | Optional | none | Order expiration time  
-»»» timestamp | integer | Optional | none | Order creation timestamp  
-»»» rate | string | Optional | none | Order price in fiat currency.  
-»»» amount | string | Optional | none | Order size in cryptocurrency.  
-»»» total | string | Optional | none | Total fiat amount of the order.  
-»»» txid | integer | Optional | none | Order ID  
-»»» status | string | Optional | none | Display status: `unpay` awaiting payment; `paid` buyer paid; `unconfirmed` awaiting seller confirmation; `locked` locked; `finished` completed; `cancel` canceled; `expired` expired; `bclosed` arbitration filled; `sclosed` arbitration canceled.  
-»»» its_realname | string | Optional | none | Counterparty real name or verified display name.  
-»»» its_uid | string | Optional | none | Counterparty crypto UID.  
-»»» its_nick | string | Optional | none | Counterparty nickname  
-»»» seller_realname | string | Optional | none | Seller real name or verified display name.  
-»»» buyer_realname | string | Optional | none | Buyer real name or verified display name.  
-»»» cancelable | integer | Optional | none | Whether the order can be canceled. `1`: yes; `0`: no.  
-»»» currency_type | string | Optional | none | Cryptocurrency symbol.  
-»»» want_type | string | Optional | none | Fiat currency  
-»»» hide_payment | integer | Optional | none | Whether payment methods are hidden. `1`: hidden; `0`: visible.  
-»»» sel_paytype | string | Optional | none | Selected payment type for this order, e.g. `bank`, `alipay`, `wechat`, `paypal`, `swift`, `wu`.  
-»»» pay_others | array | Optional | none | Other payment method details; may appear on historical orders.  
-»»»» pay_type | string | Optional | none | Payment method type  
-»»»» pay_name | string | Optional | none | Payment method name  
-»»» cd_time | integer | Optional | none | Countdown seconds for the current order.  
-»»» order_type | integer | Optional | none | Order type: `1` standard; `2` partner; `3` flash swap; `4` Web3.  
-»»» order_tag | array | Optional | none | Order tags  
-»»» convert_info | object | Optional | none | Flash swap order information  
-»»»» convert_type | string | Optional | none | Flash swap target currency  
-»»»» convert_status | string | Optional | none | Flash swap order status  
-»»»» pre_rate | string | Optional | none | Expected price when placing order  
-»»»» rate | string | Optional | none | Execution price  
-»»»» pre_fiat_rate | string | Optional | none | Expected fiat price when placing order  
-»»»» fiat_rate | string | Optional | none | Fiat price at execution  
-»»»» amount | string | Optional | none | Size  
-»»»» convert_amount | string | Optional | none | Swap Amount  
-»»»» slippage | string | Optional | none | Slippage calculation: slippage = (expected price when placing order - real-time price during auto swap) / expected price when placing order  
-»»»» status | string | Optional | none | Flash swap order display status  
-»»» trans_time | array | Optional | none | Countdown time  
-»»»» P2pTransactionTimeMarker | object | Optional | none | none  
-»»»»» od_time | integer | Optional | none | none  
-»»»» count | integer | Optional | none | Number of orders  
-»»»» exported_num | integer | Optional | none | Export count  
-»»» version | string | Optional | none | none  
+» file_key | string | Optional | none | File key  
+version | string | Optional | none | none  
       
     
     {
@@ -3929,16 +4187,169 @@ data | object | Optional | none | none
       "code": 0,
       "message": "string",
       "data": {
-        "list": [
-          {}
-        ],
-        "trans_time": [
-          {}
-        ],
-        "count": 0,
-        "exported_num": 0
+        "file_key": "string"
       },
       "version": "string"
+    }
+    
+    
+
+##  UploadChatFile
+
+_Upload chat file request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+image_content_type | string | Required | none | File MIME type: supports `image/jpeg`, `image/jpg`, `image/png`, `video/mp4`.  
+base64_img | string | Required | none | Base64-encoded file content.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+image_content_type | image/jpeg  
+image_content_type | image/jpg  
+image_content_type | image/png  
+image_content_type | video/mp4  
+      
+    
+    {
+      "image_content_type": "image/png",
+      "base64_img": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB..."
+    }
+    
+    
+
+##  SendChatMessageRequest
+
+_Send chat message request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+txid | integer | Required | none | Order ID  
+type | integer | Optional | none | Message type: 0 for text, 1 for files. Defaults to 0 when omitted.  
+message | string | Required | none | Message content. For type=0, provide text up to 500 characters. Off-platform solicitation risk checks may return risk_type=1 and toast_msg. For type=1, after a successful S3 upload, provide the file_key returned by pre_upload_chat_file.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | 0  
+type | 1  
+      
+    
+    {
+      "txid": 40000001,
+      "type": 0,
+      "message": "Payment completed, please check"
+    }
+    
+    
+
+##  P2pPaymentMethodsResponse
+
+_P2pPaymentMethodsResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | none  
+method | string | Optional | none | none  
+code | integer | Optional | none | none  
+message | string | Optional | none | none  
+data | array | Optional | none | none  
+» P2pPaymentMethodGroup | object | Optional | none | none  
+»» pay_type | string | Optional | none | Payment method type  
+»» pay_name | string | Optional | none | Payment method name  
+»» ids | array | Optional | none | User's currently bound payment method (primary key ID)  
+»» list | array | Optional | none | none  
+»»» P2pPaymentMethodAccount | object | Optional | none | none  
+»»»» uid | integer | Optional | none | useruID  
+»»»» bankid | string | Optional | none | User's currently bound payment method (primary key ID)  
+»»»» nickname | integer | Optional | none | Cardholder UID  
+»»»» bankname | string | Optional | none | Bank name  
+»»»» bankbranch | string | Optional | none | Bank branch name  
+»»»» bankcity | string | Optional | none | Bank city  
+»»»» bankprov | string | Optional | none | Bank province  
+»»»» bankaddr | string | Optional | none | Bank card number or masked card number.  
+»»»» bankdesc | string | Optional | none | Bank note  
+»»»» hold_uid | integer | Optional | none | Cardholder UID  
+»»»» hold_username | string | Optional | none | Cardholder name  
+»»»» real_name | string | Optional | none | User verified display name.  
+»»»» id | string | Optional | none | User's currently bound payment method (primary key ID)  
+»»»» account_des | string | Optional | none | Payment method description  
+»»»» pay_type | string | Optional | none | Payment method type  
+»»»» file | string | Optional | none | Payment method file link  
+»»»» file_key | string | Optional | none | Payment method file key  
+»»»» account | string | Optional | none | Payment account or masked payment account.  
+»»»» memo | string | Optional | none | Payment method note  
+»»»» code | string | Optional | none | Payment method code  
+»»»» memo_ext | string | Optional | none | Payment method additional note  
+»»»» trade_tips | string | Optional | none | Payment method transaction information  
+»»» version | string | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": [
+        {
+          "pay_type": "string",
+          "pay_name": "string",
+          "ids": [],
+          "list": []
+        }
+      ],
+      "version": "string"
+    }
+    
+    
+
+##  AdsListRequest
+
+_Get market ads list request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+asset | string | Required | none | Cryptocurrency symbol.  
+fiat_unit | string | Required | none | Fiat currency  
+trade_type | string | Required | none | Ad side: `buy` buy-crypto ad; `sell` sell-crypto ad.  
+      
+    
+    {
+      "asset": "USDT",
+      "fiat_unit": "USD",
+      "trade_type": "sell"
+    }
+    
+    
+
+##  GetChatsListRequest
+
+_Get chat history request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+txid | integer | Optional | none | Order ID; omit or `0` to return the latest order with chat for the user.  
+lastreceived | integer | Optional | none | Timestamp of the last received message for backward incremental fetch; omit on first load.  
+firstreceived | integer | Optional | none | Timestamp of first received message for paging backward; omit on first load.  
+      
+    
+    {
+      "txid": 40000001,
+      "lastreceived": 1767009884,
+      "firstreceived": 1767009000
     }
     
     
@@ -4020,6 +4431,64 @@ risk_type | 1
         "txid": 0,
         "SRVTM": 0,
         "order_status": "string"
+      },
+      "version": "string"
+    }
+    
+    
+
+##  GetTransactionDetailsRequest
+
+_Get transaction details request_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+txid | integer | Required | none | Order ID  
+channel | string | Optional | none | Channel tag: omit or empty for normal P2P; use `web3` for Web3 orders.  
+      
+    
+    {
+      "txid": 40000001,
+      "channel": ""
+    }
+    
+    
+
+##  P2pMerchantWorkHoursResponse
+
+_P2pMerchantWorkHoursResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | number | Optional | none | Response timestamp.  
+method | string | Optional | none | Placeholder for request method.  
+code | integer | Optional | none | Response code, 0 means success  
+message | string | Optional | none | Response message  
+data | object | Optional | none | none  
+» work_status | integer | Optional | none | Merchant's current working status. 0: normal resting, 1: normal working, 2: custom resting, 3: custom working  
+version | string | Optional | none | API version.  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+work_status | 0  
+work_status | 1  
+work_status | 2  
+work_status | 3  
+      
+    
+    {
+      "timestamp": 0,
+      "method": "string",
+      "code": 0,
+      "message": "string",
+      "data": {
+        "work_status": 0
       },
       "version": "string"
     }
@@ -4163,9 +4632,9 @@ version | string | Optional | none | none
     
     
 
-##  P2pPaymentMethodsResponse
+##  P2pAdDetailResponse
 
-_P2pPaymentMethodsResponse_
+_P2pAdDetailResponse_
 
 ###  Properties
 
@@ -4175,131 +4644,59 @@ timestamp | number | Optional | none | none
 method | string | Optional | none | none  
 code | integer | Optional | none | none  
 message | string | Optional | none | none  
-data | array | Optional | none | none  
-» P2pPaymentMethodGroup | object | Optional | none | none  
-»» pay_type | string | Optional | none | Payment method type  
-»» pay_name | string | Optional | none | Payment method name  
-»» ids | array | Optional | none | User's currently bound payment method (primary key ID)  
-»» list | array | Optional | none | none  
-»»» P2pPaymentMethodAccount | object | Optional | none | none  
-»»»» uid | integer | Optional | none | useruID  
-»»»» bankid | string | Optional | none | User's currently bound payment method (primary key ID)  
-»»»» nickname | integer | Optional | none | Cardholder UID  
-»»»» bankname | string | Optional | none | Bank name  
-»»»» bankbranch | string | Optional | none | Bank branch name  
-»»»» bankcity | string | Optional | none | Bank city  
-»»»» bankprov | string | Optional | none | Bank province  
-»»»» bankaddr | string | Optional | none | Bank card number or masked card number.  
-»»»» bankdesc | string | Optional | none | Bank note  
-»»»» hold_uid | integer | Optional | none | Cardholder UID  
-»»»» hold_username | string | Optional | none | Cardholder name  
-»»»» real_name | string | Optional | none | User verified display name.  
-»»»» id | string | Optional | none | User's currently bound payment method (primary key ID)  
-»»»» account_des | string | Optional | none | Payment method description  
-»»»» pay_type | string | Optional | none | Payment method type  
-»»»» file | string | Optional | none | Payment method file link  
-»»»» file_key | string | Optional | none | Payment method file key  
-»»»» account | string | Optional | none | Payment account or masked payment account.  
-»»»» memo | string | Optional | none | Payment method note  
-»»»» code | string | Optional | none | Payment method code  
-»»»» memo_ext | string | Optional | none | Payment method additional note  
-»»»» trade_tips | string | Optional | none | Payment method transaction information  
-»»» version | string | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": [
-        {
-          "pay_type": "string",
-          "pay_name": "string",
-          "ids": [],
-          "list": []
-        }
-      ],
-      "version": "string"
-    }
-    
-    
-
-##  UploadChatFile
-
-_Upload chat file request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-image_content_type | string | Required | none | File MIME type: supports `image/jpeg`, `image/jpg`, `image/png`, `video/mp4`.  
-base64_img | string | Required | none | Base64 file content; max 20 MB.  
+data | object | Optional | none | none  
+» rate | string | Optional | none | Advertisement price.  
+» type | string | Optional | none | Ad side: `buy` buy-crypto ad; `sell` sell-crypto ad.  
+» amount | string | Optional | none | Remaining crypto amount on the ad.  
+» min_amount | string | Optional | none | Minimum quantity per order, denominated by currency_type  
+» max_amount | string | Optional | none | Maximum quantity per order, denominated by currency_type  
+» fiat_min_amount | string | Optional | none | Minimum trade amount in `want_type`.  
+» fiat_max_amount | string | Optional | none | Maximum trade amount priced in `want_type`.  
+» limit_basis | integer | Optional | none | Trading limit unit. 0: crypto quantity, 1: fiat amount  
+» limit_basis_text | string | Optional | none | Trading limit unit label. crypto: crypto quantity, fiat: fiat amount  
+» total | string | Optional | none | Fiat amount  
+» pay_ali | integer | Optional | none | Whether Alipay is supported. `1`: yes; `0`: no.  
+» pay_bank | integer | Optional | none | Whether bank transfer is supported. `1`: yes; `0`: no.  
+» pay_paypal | integer | Optional | none | Whether PayPal is supported. `1`: yes; `0`: no.  
+» pay_wechat | integer | Optional | none | Whether WeChat Pay is supported. `1`: yes; `0`: no.  
+» pay_type_num | string | Optional | none | Payment method ID list  
+» pay_type_json | string | Optional | none | JSON map of payment type -> payment method ID.  
+» locked_amount | string | Optional | none | Locked amount  
+» orderid | integer | Optional | none | Order ID  
+» timestamp | integer | Optional | none | Created time  
+» currency_type | string | Optional | none | Cryptocurrency symbol.  
+» want_type | string | Optional | none | Fiat type  
+» hide_rate | string | Optional | none | Hidden price  
+» trade_tips | string | Optional | none | Trading terms  
+» auto_reply | string | Optional | none | Auto reply  
+» rate_ref_id | integer | Optional | none | Floating reference: `1` platform; `2` Gate; `3` spot; `<= 0` means fixed price.  
+» rate_offset | number | Optional | none | Floating ratio (absolute value)  
+» status | string | Optional | none | Ad status: `OPEN` listed; `OFFLIN` delisted; `CLOSED` closed; `CANCEL` canceled.  
+» rate_fixed | integer | Optional | none | Price type: `0` floating; `1` fixed.  
+» float_trend | integer | Optional | none | Floating direction: `0` markup; `1` markdown.  
+» expire_min | integer | Optional | none | Timeout (minutes)  
+» tier_limit | integer | Optional | none | Tier limit  
+» reg_time_limit | integer | Optional | none | Registration time limit  
+» advertisers_limit | integer | Optional | none | Whether trading with the advertiser is restricted. `0`: no; `1`: yes.  
+» polymarket_limit | integer | Optional | none | Whether to restrict trading with Polymarket users. 0: no restriction, 1: restricted  
+» min_completed_limit | integer | Optional | none | Minimum limit of completed orders  
+» max_completed_limit | integer | Optional | none | Maximum limit of completed orders  
+» user_orders_limit | integer | Optional | none | Order count limit  
+» completed_rate_limit | number | Optional | none | 30-day completion rate limit  
+» limit_country_cn | string | Optional | none | Restricted nationality (Chinese)  
+» limit_country_en | string | Optional | none | Restricted nationality (English)  
+» is_hedge | integer | Optional | none | Whether auto-delegation is enabled. `1`: yes; `0`: no.  
+» hide_payment | integer | Optional | none | Whether payment methods are hidden. `1`: hidden; `0`: visible.  
+version | string | Optional | none | none  
   
 ####  Enumerated Values
 
 Enumerated ValuesProperty | Value  
 ---|---  
-image_content_type | image/jpeg  
-image_content_type | image/jpg  
-image_content_type | image/png  
-image_content_type | video/mp4  
-      
-    
-    {
-      "image_content_type": "image/png",
-      "base64_img": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB..."
-    }
-    
-    
-
-##  P2pMerchantUserInfoResponse
-
-_P2pMerchantUserInfoResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | none  
-method | string | Optional | none | none  
-code | integer | Optional | none | none  
-message | string | Optional | none | none  
-data | object | Optional | none | none  
-» is_self | boolean | Optional | none | Whether self  
-» user_timest | string | Optional | none | User registration time (formatted string)  
-» counterparties_num | integer | Optional | none | Number of counterparties  
-» email_verified | string | Optional | none | Whether email is verified. `1`: yes; `0`: no.  
-» verified | string | Optional | none | Whether KYC is completed. `1`: yes; `0`: no.  
-» has_phone | string | Optional | none | Whether a phone number is bound. `1`: yes; `0`: no.  
-» user_name | string | Optional | none | Username  
-» user_note | string | Optional | none | User note information  
-» complete_transactions | string | Optional | none | Total completed orders  
-» paid_transactions | string | Optional | none | Number of completed buy orders  
-» accepted_transactions | string | Optional | none | Number of completed sell orders  
-» transactions_used_time | string | Optional | none | Average time to confirm receipt  
-» cancelled_used_time_month | string | Optional | none | Cancellation time in last 30 days  
-» complete_transactions_month | string | Optional | none | Number of completed orders in last 30 days  
-» complete_rate_month | number | Optional | none | Completion rate in last 30 days  
-» orders_buy_rate_month | number | Optional | none | Buy order ratio in last 30 days  
-» is_black | integer | Optional | none | Whether the user is blocked. `1`: yes; `0`: no.  
-» is_follow | integer | Optional | none | Whether you follow this user. `1`: yes; `0`: no.  
-» have_traded | integer | Optional | none | Whether you have traded with this user before. `1`: yes; `0`: no.  
-» biz_uid | string | Optional | none | Encrypted UID  
-» blue_vip | integer | Optional | none | Blue V Crown Shield  
-» work_status | integer | Optional | none | Merchant work status  
-» registration_days | integer | Optional | none | Registration days  
-» first_trade_days | integer | Optional | none | Days since first trade  
-» need_replenish | integer | Optional | none | Whether additional margin is required. `1`: yes; `0`: no.  
-» merchant_info | object | Optional | none | Markets where user can place orders  
-»» type | string | Optional | none | none  
-»» market | string | Optional | none | none  
-» online_status | integer | Optional | none | Merchant online status: `1` online; `0` offline.  
-» work_hours | object|null | Optional | none | Merchant online status details  
-» transactions_month | number | Optional | none | 30-day transaction volume  
-» transactions_all | number | Optional | none | Total transaction volume  
-» trade_versatile | boolean | Optional | none | Single user or composite user  
-version | string | Optional | none | none  
+limit_basis | 0  
+limit_basis | 1  
+limit_basis_text | crypto  
+limit_basis_text | fiat  
       
     
     {
@@ -4308,106 +4705,48 @@ version | string | Optional | none | none
       "code": 0,
       "message": "string",
       "data": {
-        "is_self": true,
-        "user_timest": "string",
-        "counterparties_num": 0,
-        "email_verified": "string",
-        "verified": "string",
-        "has_phone": "string",
-        "user_name": "string",
-        "user_note": "string",
-        "complete_transactions": "string",
-        "paid_transactions": "string",
-        "accepted_transactions": "string",
-        "transactions_used_time": "string",
-        "cancelled_used_time_month": "string",
-        "complete_transactions_month": "string",
-        "complete_rate_month": 0,
-        "orders_buy_rate_month": 0,
-        "is_black": 0,
-        "is_follow": 0,
-        "have_traded": 0,
-        "biz_uid": "string",
-        "blue_vip": 0,
-        "work_status": 0,
-        "registration_days": 0,
-        "first_trade_days": 0,
-        "need_replenish": 0,
-        "merchant_info": {
-          "type": "string",
-          "market": "string"
-        },
-        "online_status": 0,
-        "work_hours": {},
-        "transactions_month": 0,
-        "transactions_all": 0,
-        "trade_versatile": true
-      },
-      "version": "string"
-    }
-    
-    
-
-##  P2pCounterpartyUserInfoResponse
-
-_P2pCounterpartyUserInfoResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | none  
-method | string | Optional | none | none  
-code | integer | Optional | none | none  
-message | string | Optional | none | none  
-data | object | Optional | none | none  
-» user_timest | string | Optional | none | User registration time (formatted string)  
-» email_verified | string | Optional | none | Whether email is verified. `1`: yes; `0`: no.  
-» verified | string | Optional | none | Whether KYC is completed. `1`: yes; `0`: no.  
-» has_phone | string | Optional | none | Whether a phone number is bound. `1`: yes; `0`: no.  
-» user_name | string | Optional | none | Username  
-» user_note | string | Optional | none | User note information  
-» complete_transactions | string | Optional | none | Total completed orders  
-» paid_transactions | string | Optional | none | Number of completed buy orders  
-» accepted_transactions | string | Optional | none | Number of completed sell orders  
-» transactions_used_time | string | Optional | none | Average time to confirm receipt  
-» cancelled_used_time_month | string | Optional | none | Cancellation time in last 30 days  
-» complete_transactions_month | string | Optional | none | Number of completed orders in last 30 days  
-» complete_rate_month | number | Optional | none | Completion rate in last 30 days  
-» is_follow | integer | Optional | none | Whether you follow this user. `1`: yes; `0`: no.  
-» have_traded | integer | Optional | none | Whether you have traded with this user before. `1`: yes; `0`: no.  
-» biz_uid | string | Optional | none | Encrypted UID  
-» registration_days | integer | Optional | none | Registration days  
-» first_trade_days | integer | Optional | none | Days since first trade  
-» trade_versatile | boolean | Optional | none | Single user or composite user  
-version | string | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": {
-        "user_timest": "string",
-        "email_verified": "string",
-        "verified": "string",
-        "has_phone": "string",
-        "user_name": "string",
-        "user_note": "string",
-        "complete_transactions": "string",
-        "paid_transactions": "string",
-        "accepted_transactions": "string",
-        "transactions_used_time": "string",
-        "cancelled_used_time_month": "string",
-        "complete_transactions_month": "string",
-        "complete_rate_month": 0,
-        "is_follow": 0,
-        "have_traded": 0,
-        "biz_uid": "string",
-        "registration_days": 0,
-        "first_trade_days": 0,
-        "trade_versatile": true
+        "rate": "string",
+        "type": "string",
+        "amount": "string",
+        "min_amount": "string",
+        "max_amount": "string",
+        "fiat_min_amount": "string",
+        "fiat_max_amount": "string",
+        "limit_basis": 0,
+        "limit_basis_text": "crypto",
+        "total": "string",
+        "pay_ali": 0,
+        "pay_bank": 0,
+        "pay_paypal": 0,
+        "pay_wechat": 0,
+        "pay_type_num": "string",
+        "pay_type_json": "string",
+        "locked_amount": "string",
+        "orderid": 0,
+        "timestamp": 0,
+        "currency_type": "string",
+        "want_type": "string",
+        "hide_rate": "string",
+        "trade_tips": "string",
+        "auto_reply": "string",
+        "rate_ref_id": 0,
+        "rate_offset": 0,
+        "status": "string",
+        "rate_fixed": 0,
+        "float_trend": 0,
+        "expire_min": 0,
+        "tier_limit": 0,
+        "reg_time_limit": 0,
+        "advertisers_limit": 0,
+        "polymarket_limit": 0,
+        "min_completed_limit": 0,
+        "max_completed_limit": 0,
+        "user_orders_limit": 0,
+        "completed_rate_limit": 0,
+        "limit_country_cn": "string",
+        "limit_country_en": "string",
+        "is_hedge": 0,
+        "hide_payment": 0
       },
       "version": "string"
     }
@@ -4457,117 +4796,4 @@ risk_type | 1
         "toast_msg": "string"
       },
       "version": "string"
-    }
-    
-    
-
-##  P2pUploadChatFileResponse
-
-_P2pUploadChatFileResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | none  
-method | string | Optional | none | none  
-code | integer | Optional | none | none  
-message | string | Optional | none | none  
-data | object | Optional | none | none  
-» file_key | string | Optional | none | File key  
-version | string | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": {
-        "file_key": "string"
-      },
-      "version": "string"
-    }
-    
-    
-
-##  P2pMerchantBooksPlaceBizPushOrderResponse
-
-_P2pMerchantBooksPlaceBizPushOrderResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | number | Optional | none | Response timestamp.  
-method | string | Optional | none | Placeholder for request method.  
-code | integer | Optional | none | Response code. 0 means success; 70305102 means the advertisement trade terms or auto reply hit off-platform traffic diversion risk control  
-message | string | Optional | none | Response message  
-data | object | Optional | none | Empty object when the advertisement is published or edited successfully; returns risk details when the advertisement content hits risk control  
-» risk_code | integer | Optional | none | Risk control sub-code; 0 for advertisement content traffic diversion risk control  
-» risk_event | object | Optional | none | Risk control prompt event for advertisement content  
-»» type | string | Optional | none | Prompt display type  
-»» title | string | Optional | none | Risk control prompt title  
-»» msg | string | Optional | none | Risk control prompt message generated based on the field that hit risk control  
-»» action | array | Optional | none | Available actions; advertisement content risk control only returns the close action  
-»»» action_type | string | Optional | none | Action type  
-»»» title | string | Optional | none | Action button text  
-»»» mainly | integer | Optional | none | Whether it is the primary action. 0: no  
-»»» action_data | object | Optional | none | Additional data of the action; empty object for the close action  
-»» content_risk_type | string | Optional | none | Advertisement content field that hit risk control  
-»» trade_tips | string | Optional | none | Prompt message returned when the trade terms hit risk control  
-»» auto_reply | string | Optional | none | Prompt message returned when the auto reply hits risk control  
-» version | string | Optional | none | API version.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | modal  
-action_type | close  
-mainly | 0  
-content_risk_type | trade_tips  
-content_risk_type | auto_reply  
-content_risk_type | trade_tips_auto_reply  
-      
-    
-    {
-      "timestamp": 0,
-      "method": "string",
-      "code": 0,
-      "message": "string",
-      "data": {
-        "risk_code": 0,
-        "risk_event": {
-          "type": "modal",
-          "title": "string",
-          "msg": "string",
-          "action": [],
-          "content_risk_type": "trade_tips",
-          "trade_tips": "string",
-          "auto_reply": "string"
-        }
-      },
-      "version": "string"
-    }
-    
-    
-
-##  AdsListRequest
-
-_Get market ads list request_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-asset | string | Required | none | Cryptocurrency symbol.  
-fiat_unit | string | Required | none | Fiat currency  
-trade_type | string | Required | none | Ad side: `buy` buy-crypto ad; `sell` sell-crypto ad.  
-      
-    
-    {
-      "asset": "USDT",
-      "fiat_unit": "USD",
-      "trade_type": "sell"
     }

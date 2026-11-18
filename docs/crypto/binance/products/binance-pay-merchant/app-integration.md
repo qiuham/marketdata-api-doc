@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/app-integration
 api_type: Guide
-updated_at: 2026-11-18 02:08:03.869721
+updated_at: 2026-11-18 18:32:45.692958
 ---
 
 # Integrate Binance Pay with your App

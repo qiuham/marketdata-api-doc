@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/agent-native/overview
 api_type: Guide
-updated_at: 2026-11-18 01:50:57.543108
+updated_at: 2026-11-18 18:26:01.698129
 ---
 
 # Agent Native

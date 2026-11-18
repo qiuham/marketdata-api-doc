@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/device/stopGyroscope
 api_type: Guide
-updated_at: 2026-11-18 02:41:56.460148
+updated_at: 2026-11-18 18:46:16.159372
 ---
 
 # bn.stopGyroscope

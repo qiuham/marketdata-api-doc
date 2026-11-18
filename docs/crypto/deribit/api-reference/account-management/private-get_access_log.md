@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-get_access_log
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:43.848731
+updated_at: 2026-11-18 18:59:13.151819
 ---
 
 # private/get_access_log

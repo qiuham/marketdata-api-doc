@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/storage/setStorage
 api_type: Guide
-updated_at: 2026-11-18 02:33:59.708522
+updated_at: 2026-11-18 18:43:07.729112
 ---
 
 # bn.setStorage

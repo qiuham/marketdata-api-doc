@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-open-api/scopes
 api_type: Guide
-updated_at: 2026-11-18 02:06:39.315476
+updated_at: 2026-11-18 18:32:12.014342
 ---
 
 # OAuth 2.0 Scopes (Permissions) for Binance APIs

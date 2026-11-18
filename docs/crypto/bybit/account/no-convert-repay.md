@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/no-convert-repay
 api_type: Account
-updated_at: 2026-11-17 18:36:57.343536
+updated_at: 2026-11-18 18:48:50.196888
 ---
 
 # Manual Repay Without Asset Conversion

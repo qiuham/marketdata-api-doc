@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/user/userchangesinstrument_nameinterval
 api_type: WebSocket
-updated_at: 2026-11-18 05:08:15.014945
+updated_at: 2026-11-18 18:59:04.428984
 ---
 
 # user.changes.(instrument_name).(interval)

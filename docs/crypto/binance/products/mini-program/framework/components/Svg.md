@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Svg
 api_type: Guide
-updated_at: 2026-11-18 02:29:56.879130
+updated_at: 2026-11-18 18:41:33.151146
 ---
 
 # svg

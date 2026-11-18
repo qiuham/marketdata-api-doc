@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/fap
 api_type: Guide
-updated_at: 2026-11-18 02:07:44.719102
+updated_at: 2026-11-18 18:32:38.377639
 ---
 
 # FAQ

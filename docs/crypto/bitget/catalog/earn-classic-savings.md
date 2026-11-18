@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn-classic-savings
 api_type: REST
-updated_at: 2026-11-18 08:38:20.113397
+updated_at: 2026-11-18 19:01:29.492216
 ---
 
 # Classic Earn Savings

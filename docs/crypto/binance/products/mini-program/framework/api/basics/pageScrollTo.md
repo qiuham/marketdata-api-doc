@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/pageScrollTo
 api_type: Guide
-updated_at: 2026-11-18 02:43:39.861936
+updated_at: 2026-11-18 18:46:56.709690
 ---
 
 # bn.pageScrollTo

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/common-definition
 api_type: Guide
-updated_at: 2026-11-18 02:00:11.204718
+updated_at: 2026-11-18 18:29:36.456884
 ---
 
 # Public API Definitions

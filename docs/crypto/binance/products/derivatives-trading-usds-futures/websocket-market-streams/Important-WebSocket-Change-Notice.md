@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Important-WebSocket-Change-Notice
 api_type: WebSocket
-updated_at: 2026-11-18 02:22:30.001757
+updated_at: 2026-11-18 18:38:36.237900
 ---
 
 # Important WebSocket Change Notice — Base URL Split & Migration

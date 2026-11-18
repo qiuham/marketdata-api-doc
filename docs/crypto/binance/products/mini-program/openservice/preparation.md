@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/preparation
 api_type: Guide
-updated_at: 2026-11-18 02:17:13.557540
+updated_at: 2026-11-18 18:36:28.061756
 ---
 
 # Preparation

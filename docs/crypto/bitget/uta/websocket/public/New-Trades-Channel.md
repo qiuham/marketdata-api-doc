@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/New-Trades-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:37:09.389409
+updated_at: 2026-11-18 19:00:54.086232
 ---
 
 # Public Trades Channel

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/crypto-loan/quick-start
 api_type: Guide
-updated_at: 2026-11-18 02:04:14.975168
+updated_at: 2026-11-18 18:31:13.766736
 ---
 
 # Quick Start

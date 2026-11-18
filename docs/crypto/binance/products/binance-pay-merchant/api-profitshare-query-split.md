@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-query-split
 api_type: Guide
-updated_at: 2026-11-18 02:08:54.456724
+updated_at: 2026-11-18 18:33:05.685864
 ---
 
 # Query Split

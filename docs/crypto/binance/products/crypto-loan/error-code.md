@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/crypto-loan/error-code
 api_type: Guide
-updated_at: 2026-11-18 02:04:22.937149
+updated_at: 2026-11-18 18:31:17.129633
 ---
 
 # Error Codes

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/common/sapi/contact-us
 api_type: Guide
-updated_at: 2026-11-18 02:27:33.836569
+updated_at: 2026-11-18 18:40:35.037740
 ---
 
 # Contact Us

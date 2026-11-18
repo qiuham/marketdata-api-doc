@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/stock
 api_type: REST
-updated_at: 2026-11-17 18:45:54.729727
+updated_at: 2026-11-18 18:56:40.121964
 ---
 
 # 股票
@@ -3183,136 +3183,47 @@ _TradFiSpotError_
 
 #  模型
 
-##  TradFiSpotError
-
-_TradFiSpotError_
+##  SetMarginFeature
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-label | string | false | none | 业务错误标签  
-message | string | false | none | 错误信息  
-data | object|null | false | none | 错误附加数据  
-timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
-      
-    
-    {
-      "label": "INVALID_ARGUMENT",
-      "message": "invalid argument",
-      "data": {},
-      "timestamp": 1783411200000
-    }
-    
-    
-
-##  TradfiSpotOrderBook
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» symbol | string | false | none | 交易对代码  
-» bids | array | false | none | 买盘  
-»» p | string | false | none | 价格  
-»» user_order | boolean | false | none | 是否为用户自己的订单  
-» asks | [TradfiSpotOrderBook/properties/data/properties/bids/items] | false | none | 卖盘  
+data | object | false | none | 成功时返回空对象  
 timestamp | integer(int64) | false | none | none  
       
     
     {
-      "data": {
-        "symbol": "AAPL",
-        "bids": [
-          {}
-        ],
-        "asks": [
-          {}
-        ]
-      },
+      "data": {},
       "timestamp": 0
     }
     
     
 
-##  FeeRate
+##  TradFiSpotClosePositionRequest
+
+_平仓请求参数_
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | none  
-»» vip_level | integer | false | none | VIP 等级  
-»» maker_fee | string | false | none | 日股、韩股 Maker 手续费率  
-»» taker_fee | string | false | none | 日股、韩股 Taker 手续费率  
-» timestamp | integer(int64) | false | none | none  
+symbol | string | true | none | 交易对代码  
+close_volume | string | false | none | 平仓数量；部分平仓时必填  
+close_type | integer | true | none | 平仓类型（1=部分平仓，2=全平）  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+close_type | 1  
+close_type | 2  
       
     
     {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotUserAssetResp
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» equity | string | false | none | 账户净值  
-» balance | string | false | none | 账户余额  
-» available | string | false | none | 可用余额  
-» loan_amount | string | false | none | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
-» buy_power | string | false | none | 购买力  
-» leverage | string | false | none | 杠杆  
-» leave_liquidity | string | false | none | 剩余流动性  
-» leave_liquidity_rate | string | false | none | 剩余流动性比率  
-» aee | string | false | none | 可用资产（Available Excess Equity）  
-» options_margin | string | false | none | 期权保证金  
-» position_market_value | string | false | none | 持仓市值  
-» position_pnl | string | false | none | 持仓盈亏  
-» today_pnl | string | false | none | 今日盈亏  
-» option_position_market_value | string | false | none | 期权持仓市值  
-» option_position_pnl | string | false | none | 期权持仓盈亏  
-» option_today_pnl | string | false | none | 期权今日盈亏  
-» user_exists | boolean | false | none | 用户是否已开通业务  
-» margin_enabled | boolean | false | none | 是否已开启融资功能  
-» long_borrowing_rate | string | false | none | 融资年利率。空字符串表示暂无有效利率。  
-timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
-      
-    
-    {
-      "data": {
-        "equity": "10000.12",
-        "balance": "8000",
-        "available": "6500.5",
-        "loan_amount": "0",
-        "buy_power": "13000",
-        "leverage": "2",
-        "leave_liquidity": "5000",
-        "leave_liquidity_rate": "0.5",
-        "aee": "4800",
-        "options_margin": "0",
-        "position_market_value": "1500.25",
-        "position_pnl": "12.5",
-        "today_pnl": "3.2",
-        "option_position_market_value": "0",
-        "option_position_pnl": "0",
-        "option_today_pnl": "0",
-        "user_exists": true,
-        "margin_enabled": true,
-        "long_borrowing_rate": "0.03"
-      },
-      "timestamp": 0
+      "symbol": "AAPL",
+      "close_volume": "2",
+      "close_type": 1
     }
     
     
@@ -3378,6 +3289,239 @@ role | taker
     
     
 
+##  TradFiSpotError
+
+_TradFiSpotError_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+label | string | false | none | 业务错误标签  
+message | string | false | none | 错误信息  
+data | object|null | false | none | 错误附加数据  
+timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
+      
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "invalid argument",
+      "data": {},
+      "timestamp": 1783411200000
+    }
+    
+    
+
+##  TradfiSpotOrderBook
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» symbol | string | false | none | 交易对代码  
+» bids | array | false | none | 买盘  
+»» p | string | false | none | 价格  
+»» user_order | boolean | false | none | 是否为用户自己的订单  
+» asks | [TradfiSpotOrderBook/properties/data/properties/bids/items] | false | none | 卖盘  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "symbol": "AAPL",
+        "bids": [
+          {}
+        ],
+        "asks": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotOrderList
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» list | array | false | none | 当前委托单列表  
+»» order_id | string | false | none | 订单 ID  
+»» symbol | string | false | none | 交易对代码  
+»» exchange | string | false | none | 交易所。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+»» quote_currency | string | false | none | 报价币种  
+»» fx_rate | string | false | none | 报价币种对美元的汇率  
+»» symbol_desc | string | false | none | 交易对描述  
+»» trade_status | string | false | none | 交易状态。  
+\- pre_market: 盘前。  
+\- open: 盘中。  
+\- post_market: 盘后。  
+»» trade_mode | integer | false | none | 当前时段交易模式。  
+\- 0: 禁止交易。  
+\- 1: 仅允许买入。  
+\- 2: 仅允许卖出。  
+\- 4: 支持买入和卖出。  
+\- 5: 交易暂停。  
+\- 6: 交易暂停。  
+\- 7: 交易暂停。  
+\- 8: 交易暂停。  
+»» price_type | string | false | none | 价格类型（market=市价，limit=限价）  
+»» side | integer | false | none | 买卖方向（1=卖，2=买）  
+»» status | integer | false | none | 订单状态。  
+\- 0: 未知。  
+\- 1: 新订单，订单已验证，等待处理。  
+\- 2: 部分成交。  
+\- 3: 全部成交。  
+\- 4: 已撤销。  
+\- 5: 下单被拒绝。  
+\- 6: 撤单被拒绝。  
+\- 7: 改单成功。  
+\- 8: 改单拒绝。  
+»» volume | string | false | none | 委托数量  
+»» fill_volume | string | false | none | 成交数量  
+»» price | string | false | none | 委托价格  
+»» time_setup | integer(int64) | false | none | 下单时间（Unix 时间戳，秒）  
+»» time_update | integer(int64) | false | none | 订单更新时间（Unix 时间戳，秒）  
+»» max_order_volume | string | false | none | 最大下单数量  
+»» step_order_volume | string | false | none | 下单步长  
+»» min_order_volume | string | false | none | 最小下单数量  
+»» price_precision | integer | false | none | 价格精度  
+»» price_protection | string | false | none | 价格保护范围  
+»» sell_price_protection | string | false | none | 卖出价格保护比例  
+»» buy_price_protection | string | false | none | 买入价格保护比例  
+»» commission_rate | string | false | none | 手续费率  
+»» slippage_rate | string | false | none | 滑点  
+» timestamp | integer(int64) | false | none | none  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+exchange | us  
+exchange | hk  
+exchange | kr  
+exchange | jp  
+trade_status | pre_market  
+trade_status | open  
+trade_status | post_market  
+trade_mode | 0  
+trade_mode | 1  
+trade_mode | 2  
+trade_mode | 4  
+trade_mode | 5  
+trade_mode | 6  
+trade_mode | 7  
+trade_mode | 8  
+price_type | market  
+price_type | limit  
+side | 1  
+side | 2  
+status | 0  
+status | 1  
+status | 2  
+status | 3  
+status | 4  
+status | 5  
+status | 6  
+status | 7  
+status | 8  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotTransactionRequest
+
+_资金转入转出请求参数。转入表示从现货账户转入到股票账户，转出表示从股票账户转出到现货账户。_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+asset | string | true | none | 资产，仅支持 USDT  
+change | string | true | none | 变动数量，必须大于 0  
+type | string | true | none | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
+ref_id | string | true | none | 业务幂等 ID  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+asset | USDT  
+type | deposit  
+type | withdraw  
+      
+    
+    {
+      "asset": "USDT",
+      "change": "100",
+      "type": "deposit",
+      "ref_id": "transfer-202607070001"
+    }
+    
+    
+
+##  TradFiSpotOrderRequest
+
+_下单请求参数_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+volume | string | true | none | 下单数量  
+symbol | string | true | none | 交易对代码  
+side | integer | true | none | 买卖方向（1=卖，2=买）  
+price_type | string | true | none | 价格类型（market=市价，limit=限价）  
+trading_session | string | true | none | 交易时段。  
+限价单仅支持 all，市价单仅支持 regular。  
+time_in_force | string | true | none | 订单有效方式。  
+\- day: 当日有效。  
+price | string | false | none | 委托价格，限价单使用  
+client_order_id | string | false | none | 客户端自定义订单 ID  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+side | 1  
+side | 2  
+price_type | market  
+price_type | limit  
+trading_session | regular  
+trading_session | all  
+time_in_force | day  
+      
+    
+    {
+      "volume": "10",
+      "symbol": "AAPL",
+      "side": 2,
+      "price_type": "limit",
+      "trading_session": "all",
+      "time_in_force": "day",
+      "price": "200.12",
+      "client_order_id": "client-202607070001"
+    }
+    
+    
+
 ##  TradfiSpotTransactionList
 
 ###  属性
@@ -3432,6 +3576,219 @@ type | stock_transfer_out
         "list": [
           {}
         ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotOrderUpdateRequest
+
+_修改委托单请求参数_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+volume | string | true | none | 修改后的委托数量  
+price | string | true | none | 修改后的委托价格  
+      
+    
+    {
+      "volume": "8",
+      "price": "201.23"
+    }
+    
+    
+
+##  TradfiSpotUserAssetResp
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» equity | string | false | none | 账户净值  
+» balance | string | false | none | 账户余额  
+» available | string | false | none | 可用余额  
+» loan_amount | string | false | none | 借款金额。非负；由原始可用余额为负时取其绝对值，否则为 0。  
+» buy_power | string | false | none | 购买力  
+» leverage | string | false | none | 杠杆  
+» leave_liquidity | string | false | none | 剩余流动性  
+» leave_liquidity_rate | string | false | none | 剩余流动性比率  
+» aee | string | false | none | 可用资产（Available Excess Equity）  
+» options_margin | string | false | none | 期权保证金  
+» position_market_value | string | false | none | 持仓市值  
+» position_pnl | string | false | none | 持仓盈亏  
+» today_pnl | string | false | none | 今日盈亏  
+» option_position_market_value | string | false | none | 期权持仓市值  
+» option_position_pnl | string | false | none | 期权持仓盈亏  
+» option_today_pnl | string | false | none | 期权今日盈亏  
+» user_exists | boolean | false | none | 用户是否已开通业务  
+» margin_enabled | boolean | false | none | 是否已开启融资功能  
+» long_borrowing_rate | string | false | none | 融资年利率。空字符串表示暂无有效利率。  
+timestamp | integer(int64) | false | none | 服务器时间戳（毫秒）  
+      
+    
+    {
+      "data": {
+        "equity": "10000.12",
+        "balance": "8000",
+        "available": "6500.5",
+        "loan_amount": "0",
+        "buy_power": "13000",
+        "leverage": "2",
+        "leave_liquidity": "5000",
+        "leave_liquidity_rate": "0.5",
+        "aee": "4800",
+        "options_margin": "0",
+        "position_market_value": "1500.25",
+        "position_pnl": "12.5",
+        "today_pnl": "3.2",
+        "option_position_market_value": "0",
+        "option_position_pnl": "0",
+        "option_today_pnl": "0",
+        "user_exists": true,
+        "margin_enabled": true,
+        "long_borrowing_rate": "0.03"
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotCreateTransaction
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | 成功时返回空对象  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {},
+      "timestamp": 0
+    }
+    
+    
+
+##  FeeRate
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» list | array | false | none | none  
+»» vip_level | integer | false | none | VIP 等级  
+»» maker_fee | string | false | none | 日股、韩股 Maker 手续费率  
+»» taker_fee | string | false | none | 日股、韩股 Taker 手续费率  
+» timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  ClosePosition
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» order_id | integer(int64) | false | none | 平仓订单 ID  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradFiSpotSetMarginFeatureRequest
+
+_设置融资功能开关请求参数_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+margin_feature | boolean | true | none | 是否开启融资功能。true 表示开启，false 表示关闭。  
+      
+    
+    {
+      "margin_feature": true
+    }
+    
+    
+
+##  Exchanges
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» list | array | false | none | none  
+»» exchange | string | false | none | 交易市场。  
+\- us: 美股。  
+\- hk: 港股。  
+\- kr: 韩股。  
+\- jp: 日股。  
+»» exchange_desc | string | false | none | 市场展示名称  
+»» icon_link | string | false | none | 市场图标  
+»» support_transfer | boolean | false | none | 是否支持股票转移  
+» timestamp | integer(int64) | false | none | none  
+  
+####  枚举值列表
+
+枚举值列表属性 | 值  
+---|---  
+exchange | us  
+exchange | hk  
+exchange | kr  
+exchange | jp  
+      
+    
+    {
+      "data": {
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotCreateOrder
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» id | string | false | none | 订单 ID  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "id": "123456"
       },
       "timestamp": 0
     }
@@ -3559,39 +3916,52 @@ margin_mode | 3
     
     
 
-##  SetMarginFeature
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  Exchanges
+##  TradfiSpotPositionList
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
 data | object | false | none | none  
-» list | array | false | none | none  
-»» exchange | string | false | none | 交易市场。  
+» list | array | false | none | 当前仓位列表  
+»» symbol | string | false | none | 交易对代码  
+»» exchange | string | false | none | 交易所。  
 \- us: 美股。  
 \- hk: 港股。  
 \- kr: 韩股。  
 \- jp: 日股。  
-»» exchange_desc | string | false | none | 市场展示名称  
-»» icon_link | string | false | none | 市场图标  
-»» support_transfer | boolean | false | none | 是否支持股票转移  
+»» quote_currency | string | false | none | 报价币种  
+»» quote_currency_precision | integer | false | none | 报价币种精度  
+»» fx_rate | string | false | none | 报价币种对美元的汇率  
+»» trade_status | string | false | none | 交易状态。  
+\- pre_market: 盘前。  
+\- open: 盘中。  
+\- post_market: 盘后。  
+»» symbol_desc | string | false | none | 交易对描述  
+»» position_pnl | string | false | none | 持仓盈亏  
+»» today_pnl | string | false | none | 今日盈亏  
+»» pnl_rate | string | false | none | 收益率  
+»» today_sell_amount | string | false | none | 今日卖出额  
+»» today_buy_amount | string | false | none | 今日买入额  
+»» today_sell_volume | string | false | none | 今日卖出量  
+»» today_buy_volume | string | false | none | 今日买入量  
+»» yesterday_volume | string | false | none | 昨日收盘持仓量  
+»» volume | string | false | none | 持仓量  
+»» available | string | false | none | 可用持仓量  
+»» transfer_out_pending_qty | string | false | none | 股票转出处理中数量  
+»» avg_cost_price | string | false | none | 成本价  
+»» diluted_cost_price | string | false | none | 摊薄成本价  
+»» last_price | string | false | none | 最新价格  
+»» extended_last_price | string|null | false | none | 延长时段最新价格  
+»» max_order_volume | string | false | none | 最大下单数量  
+»» step_order_volume | string | false | none | 下单步长  
+»» min_order_volume | string | false | none | 最小下单数量  
+»» price_precision | integer | false | none | 价格精度  
+»» price_protection | string | false | none | 价格保护范围  
+»» sell_price_protection | string | false | none | 卖出价格保护比例  
+»» buy_price_protection | string | false | none | 买入价格保护比例  
+»» commission_rate | string | false | none | 手续费率  
+»» slippage_rate | string | false | none | 滑点  
 » timestamp | integer(int64) | false | none | none  
   
 ####  枚举值列表
@@ -3602,6 +3972,9 @@ exchange | us
 exchange | hk  
 exchange | kr  
 exchange | jp  
+trade_status | pre_market  
+trade_status | open  
+trade_status | post_market  
       
     
     {
@@ -3610,133 +3983,6 @@ exchange | jp
           {}
         ]
       },
-      "timestamp": 0
-    }
-    
-    
-
-##  DeleteOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {},
-      "timestamp": 0
-    }
-    
-    
-
-##  BalanceRecordList
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» total | integer(int64) | false | none | 总数量  
-» total_page | integer(int64) | false | none | 总页数  
-» list | array | false | none | 资金流水明细列表  
-»» id | integer(int64) | false | none | 资金流水主键 ID  
-»» user_id | integer | false | none | 用户 ID  
-»» change | string | false | none | 资金变动数量。正数表示入账，负数表示出账。  
-»» balance | string | false | none | 变动后资金余额快照  
-»» stock_change | string | false | none | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
-»» type | string | false | none | 流水类型原始值。常见值包括：  
-\- deposit: 资金转入。  
-\- withdraw: 资金转出。  
-\- fee: 交易手续费。  
-\- dividend: 分红派息。  
-\- sell: 卖出股票入账。  
-\- buy: 买入股票出账。  
-\- award: 空投奖励。  
-\- stock_transfer_in: 股票转入。  
-\- stock_transfer_out: 股票转出。  
-»» business | string | false | none | 业务标识  
-»» business_id | integer(int64) | false | none | 业务关联 ID  
-»» symbol | string | false | none | 交易对代码  
-»» detail | string | false | none | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
-»» version | integer | false | none | 记录版本号  
-»» time_create | integer(int64) | false | none | 业务时间（Unix 时间戳，秒）  
-»» create_time | integer(int64) | false | none | 记录创建时间（Unix 时间戳，秒）  
-» timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotOrderRequest
-
-_下单请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-volume | string | true | none | 下单数量  
-symbol | string | true | none | 交易对代码  
-side | integer | true | none | 买卖方向（1=卖，2=买）  
-price_type | string | true | none | 价格类型（market=市价，limit=限价）  
-trading_session | string | true | none | 交易时段。  
-限价单仅支持 all，市价单仅支持 regular。  
-time_in_force | string | true | none | 订单有效方式。  
-\- day: 当日有效。  
-price | string | false | none | 委托价格，限价单使用  
-client_order_id | string | false | none | 客户端自定义订单 ID  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-side | 1  
-side | 2  
-price_type | market  
-price_type | limit  
-trading_session | regular  
-trading_session | all  
-time_in_force | day  
-      
-    
-    {
-      "volume": "10",
-      "symbol": "AAPL",
-      "side": 2,
-      "price_type": "limit",
-      "trading_session": "all",
-      "time_in_force": "day",
-      "price": "200.12",
-      "client_order_id": "client-202607070001"
-    }
-    
-    
-
-##  TradfiSpotCreateTransaction
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | 成功时返回空对象  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {},
       "timestamp": 0
     }
     
@@ -3844,6 +4090,91 @@ time_in_force | day
           {}
         ]
       },
+      "timestamp": 0
+    }
+    
+    
+
+##  TradfiSpotUpdateOrder
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» order_id | integer(int64) | false | none | 订单 ID  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "order_id": 123456
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  BalanceRecordList
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | none  
+» total | integer(int64) | false | none | 总数量  
+» total_page | integer(int64) | false | none | 总页数  
+» list | array | false | none | 资金流水明细列表  
+»» id | integer(int64) | false | none | 资金流水主键 ID  
+»» user_id | integer | false | none | 用户 ID  
+»» change | string | false | none | 资金变动数量。正数表示入账，负数表示出账。  
+»» balance | string | false | none | 变动后资金余额快照  
+»» stock_change | string | false | none | 股票数量变动；股票数量类流水从 detail.amount 解析，其他流水可能为空字符串  
+»» type | string | false | none | 流水类型原始值。常见值包括：  
+\- deposit: 资金转入。  
+\- withdraw: 资金转出。  
+\- fee: 交易手续费。  
+\- dividend: 分红派息。  
+\- sell: 卖出股票入账。  
+\- buy: 买入股票出账。  
+\- award: 空投奖励。  
+\- stock_transfer_in: 股票转入。  
+\- stock_transfer_out: 股票转出。  
+»» business | string | false | none | 业务标识  
+»» business_id | integer(int64) | false | none | 业务关联 ID  
+»» symbol | string | false | none | 交易对代码  
+»» detail | string | false | none | 原始业务详情 JSON 字符串；仅当请求 include_detail=true 时返回  
+»» version | integer | false | none | 记录版本号  
+»» time_create | integer(int64) | false | none | 业务时间（Unix 时间戳，秒）  
+»» create_time | integer(int64) | false | none | 记录创建时间（Unix 时间戳，秒）  
+» timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      },
+      "timestamp": 0
+    }
+    
+    
+
+##  DeleteOrder
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+data | object | false | none | 成功时返回空对象  
+timestamp | integer(int64) | false | none | none  
+      
+    
+    {
+      "data": {},
       "timestamp": 0
     }
     
@@ -3974,335 +4305,4 @@ margin_mode | 3
         ]
       },
       "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotSetMarginFeatureRequest
-
-_设置融资功能开关请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-margin_feature | boolean | true | none | 是否开启融资功能。true 表示开启，false 表示关闭。  
-      
-    
-    {
-      "margin_feature": true
-    }
-    
-    
-
-##  TradFiSpotClosePositionRequest
-
-_平仓请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-symbol | string | true | none | 交易对代码  
-close_volume | string | false | none | 平仓数量；部分平仓时必填  
-close_type | integer | true | none | 平仓类型（1=部分平仓，2=全平）  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-close_type | 1  
-close_type | 2  
-      
-    
-    {
-      "symbol": "AAPL",
-      "close_volume": "2",
-      "close_type": 1
-    }
-    
-    
-
-##  TradfiSpotUpdateOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» order_id | integer(int64) | false | none | 订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotTransactionRequest
-
-_资金转入转出请求参数。转入表示从现货账户转入到股票账户，转出表示从股票账户转出到现货账户。_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-asset | string | true | none | 资产，仅支持 USDT  
-change | string | true | none | 变动数量，必须大于 0  
-type | string | true | none | 交易类型。deposit 表示从现货账户转入到股票账户，withdraw 表示从股票账户转出到现货账户。  
-ref_id | string | true | none | 业务幂等 ID  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-asset | USDT  
-type | deposit  
-type | withdraw  
-      
-    
-    {
-      "asset": "USDT",
-      "change": "100",
-      "type": "deposit",
-      "ref_id": "transfer-202607070001"
-    }
-    
-    
-
-##  TradfiSpotOrderList
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | 当前委托单列表  
-»» order_id | string | false | none | 订单 ID  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» quote_currency | string | false | none | 报价币种  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» symbol_desc | string | false | none | 交易对描述  
-»» trade_status | string | false | none | 交易状态。  
-\- pre_market: 盘前。  
-\- open: 盘中。  
-\- post_market: 盘后。  
-»» trade_mode | integer | false | none | 当前时段交易模式。  
-\- 0: 禁止交易。  
-\- 1: 仅允许买入。  
-\- 2: 仅允许卖出。  
-\- 4: 支持买入和卖出。  
-\- 5: 交易暂停。  
-\- 6: 交易暂停。  
-\- 7: 交易暂停。  
-\- 8: 交易暂停。  
-»» price_type | string | false | none | 价格类型（market=市价，limit=限价）  
-»» side | integer | false | none | 买卖方向（1=卖，2=买）  
-»» status | integer | false | none | 订单状态。  
-\- 0: 未知。  
-\- 1: 新订单，订单已验证，等待处理。  
-\- 2: 部分成交。  
-\- 3: 全部成交。  
-\- 4: 已撤销。  
-\- 5: 下单被拒绝。  
-\- 6: 撤单被拒绝。  
-\- 7: 改单成功。  
-\- 8: 改单拒绝。  
-»» volume | string | false | none | 委托数量  
-»» fill_volume | string | false | none | 成交数量  
-»» price | string | false | none | 委托价格  
-»» time_setup | integer(int64) | false | none | 下单时间（Unix 时间戳，秒）  
-»» time_update | integer(int64) | false | none | 订单更新时间（Unix 时间戳，秒）  
-»» max_order_volume | string | false | none | 最大下单数量  
-»» step_order_volume | string | false | none | 下单步长  
-»» min_order_volume | string | false | none | 最小下单数量  
-»» price_precision | integer | false | none | 价格精度  
-»» price_protection | string | false | none | 价格保护范围  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» commission_rate | string | false | none | 手续费率  
-»» slippage_rate | string | false | none | 滑点  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-trade_mode | 0  
-trade_mode | 1  
-trade_mode | 2  
-trade_mode | 4  
-trade_mode | 5  
-trade_mode | 6  
-trade_mode | 7  
-trade_mode | 8  
-price_type | market  
-price_type | limit  
-side | 1  
-side | 2  
-status | 0  
-status | 1  
-status | 2  
-status | 3  
-status | 4  
-status | 5  
-status | 6  
-status | 7  
-status | 8  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotCreateOrder
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» id | string | false | none | 订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "id": "123456"
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  ClosePosition
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» order_id | integer(int64) | false | none | 平仓订单 ID  
-timestamp | integer(int64) | false | none | none  
-      
-    
-    {
-      "data": {
-        "order_id": 123456
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradfiSpotPositionList
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-data | object | false | none | none  
-» list | array | false | none | 当前仓位列表  
-»» symbol | string | false | none | 交易对代码  
-»» exchange | string | false | none | 交易所。  
-\- us: 美股。  
-\- hk: 港股。  
-\- kr: 韩股。  
-\- jp: 日股。  
-»» quote_currency | string | false | none | 报价币种  
-»» quote_currency_precision | integer | false | none | 报价币种精度  
-»» fx_rate | string | false | none | 报价币种对美元的汇率  
-»» trade_status | string | false | none | 交易状态。  
-\- pre_market: 盘前。  
-\- open: 盘中。  
-\- post_market: 盘后。  
-»» symbol_desc | string | false | none | 交易对描述  
-»» position_pnl | string | false | none | 持仓盈亏  
-»» today_pnl | string | false | none | 今日盈亏  
-»» pnl_rate | string | false | none | 收益率  
-»» today_sell_amount | string | false | none | 今日卖出额  
-»» today_buy_amount | string | false | none | 今日买入额  
-»» today_sell_volume | string | false | none | 今日卖出量  
-»» today_buy_volume | string | false | none | 今日买入量  
-»» yesterday_volume | string | false | none | 昨日收盘持仓量  
-»» volume | string | false | none | 持仓量  
-»» available | string | false | none | 可用持仓量  
-»» transfer_out_pending_qty | string | false | none | 股票转出处理中数量  
-»» avg_cost_price | string | false | none | 成本价  
-»» diluted_cost_price | string | false | none | 摊薄成本价  
-»» last_price | string | false | none | 最新价格  
-»» extended_last_price | string|null | false | none | 延长时段最新价格  
-»» max_order_volume | string | false | none | 最大下单数量  
-»» step_order_volume | string | false | none | 下单步长  
-»» min_order_volume | string | false | none | 最小下单数量  
-»» price_precision | integer | false | none | 价格精度  
-»» price_protection | string | false | none | 价格保护范围  
-»» sell_price_protection | string | false | none | 卖出价格保护比例  
-»» buy_price_protection | string | false | none | 买入价格保护比例  
-»» commission_rate | string | false | none | 手续费率  
-»» slippage_rate | string | false | none | 滑点  
-» timestamp | integer(int64) | false | none | none  
-  
-####  枚举值列表
-
-枚举值列表属性 | 值  
----|---  
-exchange | us  
-exchange | hk  
-exchange | kr  
-exchange | jp  
-trade_status | pre_market  
-trade_status | open  
-trade_status | post_market  
-      
-    
-    {
-      "data": {
-        "list": [
-          {}
-        ]
-      },
-      "timestamp": 0
-    }
-    
-    
-
-##  TradFiSpotOrderUpdateRequest
-
-_修改委托单请求参数_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-volume | string | true | none | 修改后的委托数量  
-price | string | true | none | 修改后的委托价格  
-      
-    
-    {
-      "volume": "8",
-      "price": "201.23"
     }

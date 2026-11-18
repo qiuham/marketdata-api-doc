@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-directdebit-query-contract
 api_type: Guide
-updated_at: 2026-11-18 02:10:12.549041
+updated_at: 2026-11-18 18:33:39.159914
 ---
 
 # Direct Debit/Pre Authorization Query Contract

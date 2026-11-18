@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/bab-token/apis-spec
 api_type: Guide
-updated_at: 2026-11-18 02:11:06.869067
+updated_at: 2026-11-18 18:34:00.218187
 ---
 
 # APIs Spec

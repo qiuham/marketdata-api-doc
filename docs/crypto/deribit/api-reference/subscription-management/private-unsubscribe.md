@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/subscription-management/private-unsubscribe
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:11.791060
+updated_at: 2026-11-18 18:59:18.461267
 ---
 
 # private/unsubscribe

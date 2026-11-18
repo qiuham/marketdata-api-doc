@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideLoading
 api_type: Guide
-updated_at: 2026-11-18 02:41:21.657528
+updated_at: 2026-11-18 18:46:02.543595
 ---
 
 # bn.hideLoading

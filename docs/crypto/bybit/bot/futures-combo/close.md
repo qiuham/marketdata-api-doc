@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/bot/futures-combo/close
 api_type: REST
-updated_at: 2026-11-17 18:37:37.342004
+updated_at: 2026-11-18 18:49:27.208744
 ---
 
 # Close Bot

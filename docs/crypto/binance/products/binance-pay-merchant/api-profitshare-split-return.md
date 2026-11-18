@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-profitshare-split-return
 api_type: Guide
-updated_at: 2026-11-18 02:08:50.571585
+updated_at: 2026-11-18 18:33:04.162450
 ---
 
 # Split Return

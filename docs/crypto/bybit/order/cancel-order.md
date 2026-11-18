@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/order/cancel-order
 api_type: Trading
-updated_at: 2026-11-17 18:39:00.170967
+updated_at: 2026-11-18 18:50:47.514280
 ---
 
 # Cancel Order

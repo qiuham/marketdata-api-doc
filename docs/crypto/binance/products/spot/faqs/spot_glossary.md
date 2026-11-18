@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot/faqs/spot_glossary
 api_type: Guide
-updated_at: 2026-11-18 02:14:27.822764
+updated_at: 2026-11-18 18:35:22.164269
 ---
 
 # SPOT API Glossary

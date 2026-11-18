@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-common-notice
 api_type: REST
-updated_at: 2026-11-18 08:37:37.652264
+updated_at: 2026-11-18 19:01:09.003750
 ---
 
 # Classic Notice API

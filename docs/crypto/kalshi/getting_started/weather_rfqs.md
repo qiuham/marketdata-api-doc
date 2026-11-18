@@ -155,8 +155,8 @@ Rain markets settle on NOAA's MRMS radar and gauge analysis, which measures what
 | When | What happens |
 | - | - |
 | About 2 hours after the window ends | MRMS normally has every hour, and the market settles. |
-| Up to 48 hours after | If MRMS is missing an hour, the market waits for it. Nothing is estimated or filled in. |
-| From 48 hours after | An hour MRMS still doesn't have is taken from NOAA's HRRR analysis for the market's point. Hours MRMS does have still come from MRMS. |
+| Up to 24 hours after | If MRMS is missing an hour, the market waits for it. Nothing is estimated or filled in. |
+| From 24 hours after | An hour MRMS still doesn't have is taken from NOAA's HRRR analysis for the market's point. Hours MRMS does have still come from MRMS. |
 | If an hour is missing from both | The exchange determines the market, by `latest_expiration_time` at the latest. |
 
 What to know about the fallback:

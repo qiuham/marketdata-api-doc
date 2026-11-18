@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn-classic-account
 api_type: REST
-updated_at: 2026-11-18 08:38:16.597850
+updated_at: 2026-11-18 19:01:27.689914
 ---
 
 # Classic Earn Account

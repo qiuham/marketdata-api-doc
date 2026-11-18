@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-pay/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 02:47:01.729019
+updated_at: 2026-11-18 18:48:35.149266
 ---
 
 # Binance Pay REST API

@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/public-get_announcements
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:51.093475
+updated_at: 2026-11-18 18:59:15.074045
 ---
 
 # public/get_announcements

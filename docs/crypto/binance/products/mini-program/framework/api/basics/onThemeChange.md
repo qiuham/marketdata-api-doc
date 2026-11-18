@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/onThemeChange
 api_type: Guide
-updated_at: 2026-11-18 02:43:51.310307
+updated_at: 2026-11-18 18:47:01.202430
 ---
 
 # bn.onThemeChange

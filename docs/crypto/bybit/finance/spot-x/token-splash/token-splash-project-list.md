@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/finance/spot-x/token-splash/token-splash-project-list
 api_type: REST
-updated_at: 2026-11-17 18:38:35.234795
+updated_at: 2026-11-18 18:50:22.934316
 ---
 
 # Get Token Splash Project List

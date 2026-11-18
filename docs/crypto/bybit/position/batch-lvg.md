@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/position/batch-lvg
 api_type: Position
-updated_at: 2026-11-17 18:39:08.150153
+updated_at: 2026-11-18 18:50:54.272733
 ---
 
 # Get Futures Leverage

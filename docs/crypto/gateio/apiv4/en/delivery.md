@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/delivery
 api_type: Trading
-updated_at: 2026-11-17 18:44:47.964128
+updated_at: 2026-11-18 18:55:39.586008
 ---
 
 # Delivery
@@ -4901,6 +4901,59 @@ Code samples
 
 #  Schemas
 
+##  DeliveryAccountBook
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | number(double) | Optional | none | Change time  
+change | string | Optional | none | Change amount  
+balance | string | Optional | none | Balance after change  
+type | string | Optional | none | Change types:  
+  
+\- dnw: Deposit and withdrawal  
+\- pnl: Profit and loss from position reduction  
+\- fee: Trading fees  
+\- refr: Referrer rebates  
+\- fund: Funding fees  
+\- point_dnw: Point card deposit and withdrawal  
+\- point_fee: Point card trading fees  
+\- point_refr: Point card referrer rebates  
+\- bonus_offset: Trial fund deduction  
+text | string | Optional | none | Comment  
+contract | string | Optional | none | Futures contract, the field is only available for data after 2023-10-30  
+trade_id | string | Optional | none | trade id  
+id | string | Optional | none | Account change record ID  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | dnw  
+type | pnl  
+type | fee  
+type | refr  
+type | fund  
+type | point_dnw  
+type | point_fee  
+type | point_refr  
+type | bonus_offset  
+      
+    
+    {
+      "time": 0,
+      "change": "string",
+      "balance": "string",
+      "type": "dnw",
+      "text": "string",
+      "contract": "string",
+      "trade_id": "string",
+      "id": "string"
+    }
+    
+    
+
 ##  DeliveryAccount
 
 ###  Properties
@@ -4991,68 +5044,276 @@ history | object | Optional | none | Statistical data
     
     
 
-##  InsuranceRecord
+##  FuturesPriceTriggeredOrder
+
+_Futures price-triggered order details_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-t | integer(int64) | Optional | none | Unix timestamp in seconds  
-b | string | Optional | none | Insurance balance  
-      
-    
-    {
-      "t": 0,
-      "b": "string"
-    }
-    
-    
-
-##  DeliveryPositionClose
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | read-only | Position close time  
-contract | string | Optional | read-only | Futures contract  
-side | string | Optional | read-only | Position side  
+initial | object | Required | none | none  
+» contract | string | Required | none | Futures contract  
+» size | integer(int64) | Optional | none | Represents the number of contracts that need to be closed, full closing: size=0  
+Partial closing: plan-close-short-position size>0   
+Partial closing: plan-close-long-position size<0  
+» amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
+» price | string | Required | none | Order price. Set to 0 to use market price  
+» close | boolean | Optional | write-only | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
+When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
+» tif | string | Optional | none | Time in force strategy, default is gtc, market orders currently only support ioc mode  
   
-\- `long`: Long position  
-\- `short`: Short position  
-pnl | string | Optional | read-only | PnL  
-pnl_pnl | string | Optional | read-only | PNL - Position P/L  
-pnl_fund | string | Optional | read-only | PNL - Funding Fees  
-pnl_fee | string | Optional | read-only | PNL - Transaction Fees  
-text | string | Optional | read-only | Source of close order. See `order.text` field for specific values  
-max_size | integer(int64) | Optional | read-only | Max Trade Size  
-accum_size | integer(int64) | Optional | read-only | Cumulative closed position volume  
-first_open_time | integer(int64) | Optional | read-only | First Open Time  
-long_price | string | Optional | read-only | When side is 'long', it indicates the opening average price; when side is 'short', it indicates the closing average price  
-short_price | string | Optional | read-only | When side is 'long', it indicates the closing average price; when side is 'short', it indicates the opening average price  
+\- gtc: GoodTillCancelled  
+\- ioc: ImmediateOrCancelled  
+» text | string | Optional | none | The source of the order, including:  
+\- web: Web  
+\- api: API call  
+\- app: Mobile app  
+» reduce_only | boolean | Optional | none | When set to true, perform automatic position reduction operation. Set to true to ensure that the order will not open a new position, and is only used to close or reduce positions  
+» auto_size | string | Optional | write-only | One-way Mode: auto_size is not required  
+Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
+Hedge Mode partial closing (size≠0): auto_size is not required  
+» is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
+» is_close | boolean | Optional | read-only | Is the order to close position  
+trigger | object | Required | none | none  
+» strategy_type | integer(int32) | Optional | none | Trigger Strategy  
+  
+\- 0: Price trigger, triggered when price meets conditions  
+\- 1: Price spread trigger, i.e. the difference between the latest price specified in `price_type` and the second-last price  
+Currently only supports 0 (latest transaction price)  
+» price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
+» price | string | Required | none | Price value for price trigger, or spread value for spread trigger  
+» rule | integer(int32) | Required | none | Price Condition Type  
+  
+\- 1: Trigger when the price calculated based on `strategy_type` and `price_type` is greater than or equal to `Trigger.Price`, while Trigger.Price must > last_price  
+\- 2: Trigger when the price calculated based on `strategy_type` and `price_type` is less than or equal to `Trigger.Price`, and Trigger.Price must < last_price  
+» expiration | integer | Optional | none | Maximum wait time for trigger condition (in seconds). Order will be cancelled if timeout  
+id | integer(int64) | Optional | read-only | Auto order ID  
+id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
+Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
+user | integer | Optional | read-only | User ID  
+create_time | number(double) | Optional | read-only | Created time  
+finish_time | number(double) | Optional | read-only | End time  
+trade_id | integer(int64) | Optional | read-only | ID of the order created after trigger  
+status | string | Optional | read-only | Order status  
+  
+\- `open`: Active  
+\- `finished`: Finished  
+\- `inactive`: Inactive, only applies to order take-profit/stop-loss  
+\- `invalid`: Invalid, only applies to order take-profit/stop-loss  
+finish_as | string | Optional | read-only | Finish status: cancelled - Cancelled; succeeded - Succeeded; failed - Failed; expired - Expired  
+reason | string | Optional | read-only | Additional description of how the order was completed  
+order_type | string | Optional | none | Types of take-profit and stop-loss orders, including:  
+  
+\- `close-long-order`: Order take-profit/stop-loss, close long position  
+\- `close-short-order`: Order take-profit/stop-loss, close short position  
+\- `close-long-position`: Position take-profit/stop-loss, used to close all long positions  
+\- `close-short-position`: Position take-profit/stop-loss, used to close all short positions  
+\- `plan-close-long-position`: Position plan take-profit/stop-loss, used to close all or partial long positions  
+\- `plan-close-short-position`: Position plan take-profit/stop-loss, used to close all or partial short positions  
+  
+The two types of order take-profit/stop-loss are read-only and cannot be passed in requests  
+me_order_id | integer(int64) | Optional | read-only | Corresponding order ID for order take-profit/stop-loss orders  
+pos_margin_mode | string | Optional | none | Position margin mode: `isolated` (isolated margin) or `cross` (cross margin).  
+Returned by the server in simple split-position mode; when writing, use only the values below.  
   
 ####  Enumerated Values
 
 Enumerated ValuesProperty | Value  
 ---|---  
-side | long  
-side | short  
+tif | gtc  
+tif | ioc  
+strategy_type | 0  
+strategy_type | 1  
+price_type | 0  
+price_type | 1  
+price_type | 2  
+rule | 1  
+rule | 2  
+status | open  
+status | finished  
+status | inactive  
+status | invalid  
+finish_as | cancelled  
+finish_as | succeeded  
+finish_as | failed  
+finish_as | expired  
+pos_margin_mode | isolated  
+pos_margin_mode | cross  
+      
+    
+    {
+      "initial": {
+        "contract": "string",
+        "size": 0,
+        "amount": "string",
+        "price": "string",
+        "close": false,
+        "tif": "gtc",
+        "text": "string",
+        "reduce_only": false,
+        "auto_size": "string",
+        "is_reduce_only": true,
+        "is_close": true
+      },
+      "trigger": {
+        "strategy_type": 0,
+        "price_type": 0,
+        "price": "string",
+        "rule": 1,
+        "expiration": 0
+      },
+      "id": 0,
+      "id_string": "string",
+      "user": 0,
+      "create_time": 0,
+      "finish_time": 0,
+      "trade_id": 0,
+      "status": "open",
+      "finish_as": "cancelled",
+      "reason": "string",
+      "order_type": "string",
+      "me_order_id": 0,
+      "pos_margin_mode": "isolated"
+    }
+    
+    
+
+##  TriggerOrderResponse
+
+_TriggerOrderResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Auto order ID  
+id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
+Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
+      
+    
+    {
+      "id": 0,
+      "id_string": "string"
+    }
+    
+    
+
+##  DeliveryMyTrade
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Fill ID  
+create_time | number(double) | Optional | none | Fill Time  
+contract | string | Optional | none | Futures contract  
+order_id | string | Optional | none | Related order ID  
+size | integer(int64) | Optional | none | Trading size  
+close_size | integer(int64) | Optional | none | Number of closed positions:  
+  
+close_size=0 && size＞0 Open long position  
+close_size=0 && size＜0 Open short position  
+close_size>0 && size>0 && size <= close_size Close short position  
+close_size>0 && size>0 && size > close_size Close short position and open long position  
+close_size<0 && size<0 && size >= close_size Close long position  
+close_size<0 && size<0 && size < close_size Close long position and open short position  
+price | string | Optional | none | Fill Price  
+role | string | Optional | none | Trade role. taker - taker, maker - maker  
+text | string | Optional | none | Order custom information  
+fee | string | Optional | none | Trade fee  
+point_fee | string | Optional | none | Points used to deduct trade fee  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+role | taker  
+role | maker  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "contract": "string",
+      "order_id": "string",
+      "size": 0,
+      "close_size": 0,
+      "price": "string",
+      "role": "taker",
+      "text": "string",
+      "fee": "string",
+      "point_fee": "string"
+    }
+    
+    
+
+##  DeliveryOrderBook
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+id | integer(int64) | Optional | none | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
+current | number(double) | Optional | none | Response data generation timestamp  
+update | number(double) | Optional | none | Order book changed timestamp  
+asks | array | Required | none | Ask Depth  
+» DeliveryOrderBookItem | object | Optional | none | none  
+»» p | string | Optional | none | Price (quote currency)  
+»» s | integer(int64) | Optional | none | Size  
+» bids | array | Required | none | Bid Depth  
+»» DeliveryOrderBookItem | object | Optional | none | none  
+»»» p | string | Optional | none | Price (quote currency)  
+»»» s | integer(int64) | Optional | none | Size  
+      
+    
+    {
+      "id": 0,
+      "current": 0,
+      "update": 0,
+      "asks": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ],
+      "bids": [
+        {
+          "p": "string",
+          "s": 0
+        }
+      ]
+    }
+    
+    
+
+##  DeliverySettlement
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional | read-only | Liquidation time  
+contract | string | Optional | read-only | Futures contract  
+leverage | string | Optional | read-only | Leverage multiplier  
+size | integer(int64) | Optional | read-only | Position size  
+margin | string | Optional | read-only | Margin  
+entry_price | string | Optional | read-only | Average entry price  
+settle_price | string | Optional | read-only | Settled price  
+profit | string | Optional | read-only | Profit  
+fee | string | Optional | read-only | Fee deducted  
       
     
     {
       "time": 0,
       "contract": "string",
-      "side": "long",
-      "pnl": "string",
-      "pnl_pnl": "string",
-      "pnl_fund": "string",
-      "pnl_fee": "string",
-      "text": "string",
-      "max_size": 0,
-      "accum_size": 0,
-      "first_open_time": 0,
-      "long_price": "string",
-      "short_price": "string"
+      "leverage": "string",
+      "size": 0,
+      "margin": "string",
+      "entry_price": "string",
+      "settle_price": "string",
+      "profit": "string",
+      "fee": "string"
     }
     
     
@@ -5153,348 +5414,6 @@ mode | dual_short
       "open_time": 0,
       "risk_limit_table": "string",
       "average_maintenance_rate": "string"
-    }
-    
-    
-
-##  DeliveryAccountBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | number(double) | Optional | none | Change time  
-change | string | Optional | none | Change amount  
-balance | string | Optional | none | Balance after change  
-type | string | Optional | none | Change types:  
-  
-\- dnw: Deposit and withdrawal  
-\- pnl: Profit and loss from position reduction  
-\- fee: Trading fees  
-\- refr: Referrer rebates  
-\- fund: Funding fees  
-\- point_dnw: Point card deposit and withdrawal  
-\- point_fee: Point card trading fees  
-\- point_refr: Point card referrer rebates  
-\- bonus_offset: Trial fund deduction  
-text | string | Optional | none | Comment  
-contract | string | Optional | none | Futures contract, the field is only available for data after 2023-10-30  
-trade_id | string | Optional | none | trade id  
-id | string | Optional | none | Account change record ID  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | dnw  
-type | pnl  
-type | fee  
-type | refr  
-type | fund  
-type | point_dnw  
-type | point_fee  
-type | point_refr  
-type | bonus_offset  
-      
-    
-    {
-      "time": 0,
-      "change": "string",
-      "balance": "string",
-      "type": "dnw",
-      "text": "string",
-      "contract": "string",
-      "trade_id": "string",
-      "id": "string"
-    }
-    
-    
-
-##  DeliveryTrade
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-create_time_ms | number(double) | Optional | none | Trade time, with millisecond precision to 3 decimal places  
-contract | string | Optional | none | Futures contract  
-size | integer(int64) | Optional | none | Trading size  
-price | string | Optional | none | Trade price (quote currency)  
-is_internal | boolean | Optional | none | Deprecated  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "create_time_ms": 0,
-      "contract": "string",
-      "size": 0,
-      "price": "string",
-      "is_internal": true
-    }
-    
-    
-
-##  DeliveryLiquidate
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | integer(int64) | Optional | read-only | Liquidation time  
-contract | string | Optional | read-only | Futures contract  
-leverage | string | Optional | read-only | Position leverage. Not returned in public endpoints  
-size | integer(int64) | Optional | read-only | Position size  
-margin | string | Optional | read-only | Position margin. Not returned in public endpoints  
-entry_price | string | Optional | read-only | Average entry price. Not returned in public endpoints  
-liq_price | string | Optional | read-only | Liquidation price. Not returned in public endpoints  
-mark_price | string | Optional | read-only | Mark price. Not returned in public endpoints  
-order_id | integer(int64) | Optional | read-only | Liquidation order ID. Not returned in public endpoints  
-order_price | string | Optional | read-only | Liquidation order price  
-fill_price | string | Optional | read-only | Liquidation order average taker price  
-left | integer(int64) | Optional | read-only | Liquidation order maker size  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "leverage": "string",
-      "size": 0,
-      "margin": "string",
-      "entry_price": "string",
-      "liq_price": "string",
-      "mark_price": "string",
-      "order_id": 0,
-      "order_price": "string",
-      "fill_price": "string",
-      "left": 0
-    }
-    
-    
-
-##  TriggerOrderResponse
-
-_TriggerOrderResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Auto order ID  
-id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
-Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
-      
-    
-    {
-      "id": 0,
-      "id_string": "string"
-    }
-    
-    
-
-##  DeliveryTicker
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-contract | string | Optional | none | Futures contract  
-last | string | Optional | none | Last trading price  
-change_percentage | string | Optional | none | Price change percentage. Negative values indicate price decrease, e.g. -7.45  
-total_size | string | Optional | none | Contract total size  
-low_24h | string | Optional | none | 24-hour lowest price  
-high_24h | string | Optional | none | 24-hour highest price  
-volume_24h | string | Optional | none | 24-hour trading volume  
-volume_24h_btc | string | Optional | none | 24-hour trading volume in BTC (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
-volume_24h_usd | string | Optional | none | 24-hour trading volume in USD (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
-volume_24h_base | string | Optional | none | 24-hour trading volume in base currency  
-volume_24h_quote | string | Optional | none | 24-hour trading volume in quote currency  
-volume_24h_settle | string | Optional | none | 24-hour trading volume in settle currency  
-mark_price | string | Optional | none | Recent mark price  
-funding_rate | string | Optional | none | Funding rate  
-funding_rate_indicative | string | Optional | none | Indicative Funding rate in next period. (deprecated. use `funding_rate`)  
-index_price | string | Optional | none | Index price  
-quanto_base_rate | string | Optional | none | Deprecated  
-basis_rate | string | Optional | none | Basis rate  
-basis_value | string | Optional | none | Basis value  
-lowest_ask | string | Optional | none | Recent lowest ask  
-lowest_size | string | Optional | none | The latest seller's lowest price order quantity  
-highest_bid | string | Optional | none | Recent highest bid  
-highest_size | string | Optional | none | The latest buyer's highest price order volume  
-      
-    
-    {
-      "contract": "string",
-      "last": "string",
-      "change_percentage": "string",
-      "total_size": "string",
-      "low_24h": "string",
-      "high_24h": "string",
-      "volume_24h": "string",
-      "volume_24h_btc": "string",
-      "volume_24h_usd": "string",
-      "volume_24h_base": "string",
-      "volume_24h_quote": "string",
-      "volume_24h_settle": "string",
-      "mark_price": "string",
-      "funding_rate": "string",
-      "funding_rate_indicative": "string",
-      "index_price": "string",
-      "quanto_base_rate": "string",
-      "basis_rate": "string",
-      "basis_value": "string",
-      "lowest_ask": "string",
-      "lowest_size": "string",
-      "highest_bid": "string",
-      "highest_size": "string"
-    }
-    
-    
-
-##  DeliveryOrderBook
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Order Book ID. Increases by 1 on every order book change. Set `with_id=true` to include this field in response  
-current | number(double) | Optional | none | Response data generation timestamp  
-update | number(double) | Optional | none | Order book changed timestamp  
-asks | array | Required | none | Ask Depth  
-» DeliveryOrderBookItem | object | Optional | none | none  
-»» p | string | Optional | none | Price (quote currency)  
-»» s | integer(int64) | Optional | none | Size  
-» bids | array | Required | none | Bid Depth  
-»» DeliveryOrderBookItem | object | Optional | none | none  
-»»» p | string | Optional | none | Price (quote currency)  
-»»» s | integer(int64) | Optional | none | Size  
-      
-    
-    {
-      "id": 0,
-      "current": 0,
-      "update": 0,
-      "asks": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ],
-      "bids": [
-        {
-          "p": "string",
-          "s": 0
-        }
-      ]
-    }
-    
-    
-
-##  DeliveryCandlestick
-
-_data point in every timestamp_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-t | number(double) | Optional | none | Unix timestamp in seconds  
-v | integer(int64) | Optional | none | size volume (contract size). Only returned if `contract` is not prefixed  
-c | string | Optional | none | Close price (quote currency)  
-h | string | Optional | none | Highest price (quote currency)  
-l | string | Optional | none | Lowest price (quote currency)  
-o | string | Optional | none | Open price (quote currency)  
-      
-    
-    {
-      "t": 0,
-      "v": 0,
-      "c": "string",
-      "h": "string",
-      "l": "string",
-      "o": "string"
-    }
-    
-    
-
-##  DeliverySettlement
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-time | integer(int64) | Optional | read-only | Liquidation time  
-contract | string | Optional | read-only | Futures contract  
-leverage | string | Optional | read-only | Leverage multiplier  
-size | integer(int64) | Optional | read-only | Position size  
-margin | string | Optional | read-only | Margin  
-entry_price | string | Optional | read-only | Average entry price  
-settle_price | string | Optional | read-only | Settled price  
-profit | string | Optional | read-only | Profit  
-fee | string | Optional | read-only | Fee deducted  
-      
-    
-    {
-      "time": 0,
-      "contract": "string",
-      "leverage": "string",
-      "size": 0,
-      "margin": "string",
-      "entry_price": "string",
-      "settle_price": "string",
-      "profit": "string",
-      "fee": "string"
-    }
-    
-    
-
-##  DeliveryMyTrade
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | integer(int64) | Optional | none | Fill ID  
-create_time | number(double) | Optional | none | Fill Time  
-contract | string | Optional | none | Futures contract  
-order_id | string | Optional | none | Related order ID  
-size | integer(int64) | Optional | none | Trading size  
-close_size | integer(int64) | Optional | none | Number of closed positions:  
-  
-close_size=0 && size＞0 Open long position  
-close_size=0 && size＜0 Open short position  
-close_size>0 && size>0 && size <= close_size Close short position  
-close_size>0 && size>0 && size > close_size Close short position and open long position  
-close_size<0 && size<0 && size >= close_size Close long position  
-close_size<0 && size<0 && size < close_size Close long position and open short position  
-price | string | Optional | none | Fill Price  
-role | string | Optional | none | Trade role. taker - taker, maker - maker  
-text | string | Optional | none | Order custom information  
-fee | string | Optional | none | Trade fee  
-point_fee | string | Optional | none | Points used to deduct trade fee  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-role | taker  
-role | maker  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "contract": "string",
-      "order_id": "string",
-      "size": 0,
-      "close_size": 0,
-      "price": "string",
-      "role": "taker",
-      "text": "string",
-      "fee": "string",
-      "point_fee": "string"
     }
     
     
@@ -5601,6 +5520,102 @@ mark_type | index
       "config_change_time": 0,
       "in_delisting": true,
       "orders_limit": 0
+    }
+    
+    
+
+##  DeliveryTicker
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+contract | string | Optional | none | Futures contract  
+last | string | Optional | none | Last trading price  
+change_percentage | string | Optional | none | Price change percentage. Negative values indicate price decrease, e.g. -7.45  
+total_size | string | Optional | none | Contract total size  
+low_24h | string | Optional | none | 24-hour lowest price  
+high_24h | string | Optional | none | 24-hour highest price  
+volume_24h | string | Optional | none | 24-hour trading volume  
+volume_24h_btc | string | Optional | none | 24-hour trading volume in BTC (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+volume_24h_usd | string | Optional | none | 24-hour trading volume in USD (deprecated, use `volume_24h_base`, `volume_24h_quote`, `volume_24h_settle` instead)  
+volume_24h_base | string | Optional | none | 24-hour trading volume in base currency  
+volume_24h_quote | string | Optional | none | 24-hour trading volume in quote currency  
+volume_24h_settle | string | Optional | none | 24-hour trading volume in settle currency  
+mark_price | string | Optional | none | Recent mark price  
+funding_rate | string | Optional | none | Funding rate  
+funding_rate_indicative | string | Optional | none | Indicative Funding rate in next period. (deprecated. use `funding_rate`)  
+index_price | string | Optional | none | Index price  
+quanto_base_rate | string | Optional | none | Deprecated  
+basis_rate | string | Optional | none | Basis rate  
+basis_value | string | Optional | none | Basis value  
+lowest_ask | string | Optional | none | Recent lowest ask  
+lowest_size | string | Optional | none | The latest seller's lowest price order quantity  
+highest_bid | string | Optional | none | Recent highest bid  
+highest_size | string | Optional | none | The latest buyer's highest price order volume  
+      
+    
+    {
+      "contract": "string",
+      "last": "string",
+      "change_percentage": "string",
+      "total_size": "string",
+      "low_24h": "string",
+      "high_24h": "string",
+      "volume_24h": "string",
+      "volume_24h_btc": "string",
+      "volume_24h_usd": "string",
+      "volume_24h_base": "string",
+      "volume_24h_quote": "string",
+      "volume_24h_settle": "string",
+      "mark_price": "string",
+      "funding_rate": "string",
+      "funding_rate_indicative": "string",
+      "index_price": "string",
+      "quanto_base_rate": "string",
+      "basis_rate": "string",
+      "basis_value": "string",
+      "lowest_ask": "string",
+      "lowest_size": "string",
+      "highest_bid": "string",
+      "highest_size": "string"
+    }
+    
+    
+
+##  DeliveryLiquidate
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | integer(int64) | Optional | read-only | Liquidation time  
+contract | string | Optional | read-only | Futures contract  
+leverage | string | Optional | read-only | Position leverage. Not returned in public endpoints  
+size | integer(int64) | Optional | read-only | Position size  
+margin | string | Optional | read-only | Position margin. Not returned in public endpoints  
+entry_price | string | Optional | read-only | Average entry price. Not returned in public endpoints  
+liq_price | string | Optional | read-only | Liquidation price. Not returned in public endpoints  
+mark_price | string | Optional | read-only | Mark price. Not returned in public endpoints  
+order_id | integer(int64) | Optional | read-only | Liquidation order ID. Not returned in public endpoints  
+order_price | string | Optional | read-only | Liquidation order price  
+fill_price | string | Optional | read-only | Liquidation order average taker price  
+left | integer(int64) | Optional | read-only | Liquidation order maker size  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "leverage": "string",
+      "size": 0,
+      "margin": "string",
+      "entry_price": "string",
+      "liq_price": "string",
+      "mark_price": "string",
+      "order_id": 0,
+      "order_price": "string",
+      "fill_price": "string",
+      "left": 0
     }
     
     
@@ -5745,137 +5760,46 @@ stp_act | -
     
     
 
-##  FuturesPriceTriggeredOrder
-
-_Futures price-triggered order details_
+##  DeliveryTrade
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-initial | object | Required | none | none  
-» contract | string | Required | none | Futures contract  
-» size | integer(int64) | Optional | none | Represents the number of contracts that need to be closed, full closing: size=0  
-Partial closing: plan-close-short-position size>0   
-Partial closing: plan-close-long-position size<0  
-» amount | string | Optional | none | Same as `size`; used for decimal contract size. When both `size` and `amount` are provided, `amount` takes precedence.  
-» price | string | Required | none | Order price. Set to 0 to use market price  
-» close | boolean | Optional | write-only | When fully closing a position in single-position mode, close must be set to true to execute the close operation.  
-When partially closing a position in single-position mode or in dual-position mode, close can be left unset or set to false.  
-» tif | string | Optional | none | Time in force strategy, default is gtc, market orders currently only support ioc mode  
-  
-\- gtc: GoodTillCancelled  
-\- ioc: ImmediateOrCancelled  
-» text | string | Optional | none | The source of the order, including:  
-\- web: Web  
-\- api: API call  
-\- app: Mobile app  
-» reduce_only | boolean | Optional | none | When set to true, perform automatic position reduction operation. Set to true to ensure that the order will not open a new position, and is only used to close or reduce positions  
-» auto_size | string | Optional | write-only | One-way Mode: auto_size is not required  
-Hedge Mode full closing (size=0): auto_size must be set, close_long for closing long positions, close_short for closing short positions  
-Hedge Mode partial closing (size≠0): auto_size is not required  
-» is_reduce_only | boolean | Optional | read-only | Is the order reduce-only  
-» is_close | boolean | Optional | read-only | Is the order to close position  
-trigger | object | Required | none | none  
-» strategy_type | integer(int32) | Optional | none | Trigger Strategy  
-  
-\- 0: Price trigger, triggered when price meets conditions  
-\- 1: Price spread trigger, i.e. the difference between the latest price specified in `price_type` and the second-last price  
-Currently only supports 0 (latest transaction price)  
-» price_type | integer(int32) | Optional | none | Reference price type. 0 - Latest trade price, 1 - Mark price, 2 - Index price  
-» price | string | Required | none | Price value for price trigger, or spread value for spread trigger  
-» rule | integer(int32) | Required | none | Price Condition Type  
-  
-\- 1: Trigger when the price calculated based on `strategy_type` and `price_type` is greater than or equal to `Trigger.Price`, while Trigger.Price must > last_price  
-\- 2: Trigger when the price calculated based on `strategy_type` and `price_type` is less than or equal to `Trigger.Price`, and Trigger.Price must < last_price  
-» expiration | integer | Optional | none | Maximum wait time for trigger condition (in seconds). Order will be cancelled if timeout  
-id | integer(int64) | Optional | read-only | Auto order ID  
-id_string | string | Optional | read-only | String form of the auto order ID; the same order as numeric `id`, as the decimal string of `id` to avoid int64 precision loss in JavaScript and similar environments.  
-Prefer this field to display the order ID or when a string unique identifier is needed; one-to-one with `id`. Same meaning as the field of the same name in futures price-trigger REST APIs and in `futures.orders` / `futures.autoorders` WebSocket pushes.  
-user | integer | Optional | read-only | User ID  
-create_time | number(double) | Optional | read-only | Created time  
-finish_time | number(double) | Optional | read-only | End time  
-trade_id | integer(int64) | Optional | read-only | ID of the order created after trigger  
-status | string | Optional | read-only | Order status  
-  
-\- `open`: Active  
-\- `finished`: Finished  
-\- `inactive`: Inactive, only applies to order take-profit/stop-loss  
-\- `invalid`: Invalid, only applies to order take-profit/stop-loss  
-finish_as | string | Optional | read-only | Finish status: cancelled - Cancelled; succeeded - Succeeded; failed - Failed; expired - Expired  
-reason | string | Optional | read-only | Additional description of how the order was completed  
-order_type | string | Optional | none | Types of take-profit and stop-loss orders, including:  
-  
-\- `close-long-order`: Order take-profit/stop-loss, close long position  
-\- `close-short-order`: Order take-profit/stop-loss, close short position  
-\- `close-long-position`: Position take-profit/stop-loss, used to close all long positions  
-\- `close-short-position`: Position take-profit/stop-loss, used to close all short positions  
-\- `plan-close-long-position`: Position plan take-profit/stop-loss, used to close all or partial long positions  
-\- `plan-close-short-position`: Position plan take-profit/stop-loss, used to close all or partial short positions  
-  
-The two types of order take-profit/stop-loss are read-only and cannot be passed in requests  
-me_order_id | integer(int64) | Optional | read-only | Corresponding order ID for order take-profit/stop-loss orders  
-pos_margin_mode | string | Optional | none | Position margin mode: `isolated` (isolated margin) or `cross` (cross margin).  
-Returned by the server in simple split-position mode; when writing, use only the values below.  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-tif | gtc  
-tif | ioc  
-strategy_type | 0  
-strategy_type | 1  
-price_type | 0  
-price_type | 1  
-price_type | 2  
-rule | 1  
-rule | 2  
-status | open  
-status | finished  
-status | inactive  
-status | invalid  
-finish_as | cancelled  
-finish_as | succeeded  
-finish_as | failed  
-finish_as | expired  
-pos_margin_mode | isolated  
-pos_margin_mode | cross  
+id | integer(int64) | Optional | none | Fill ID  
+create_time | number(double) | Optional | none | Fill Time  
+create_time_ms | number(double) | Optional | none | Trade time, with millisecond precision to 3 decimal places  
+contract | string | Optional | none | Futures contract  
+size | integer(int64) | Optional | none | Trading size  
+price | string | Optional | none | Trade price (quote currency)  
+is_internal | boolean | Optional | none | Deprecated  
       
     
     {
-      "initial": {
-        "contract": "string",
-        "size": 0,
-        "amount": "string",
-        "price": "string",
-        "close": false,
-        "tif": "gtc",
-        "text": "string",
-        "reduce_only": false,
-        "auto_size": "string",
-        "is_reduce_only": true,
-        "is_close": true
-      },
-      "trigger": {
-        "strategy_type": 0,
-        "price_type": 0,
-        "price": "string",
-        "rule": 1,
-        "expiration": 0
-      },
       "id": 0,
-      "id_string": "string",
-      "user": 0,
       "create_time": 0,
-      "finish_time": 0,
-      "trade_id": 0,
-      "status": "open",
-      "finish_as": "cancelled",
-      "reason": "string",
-      "order_type": "string",
-      "me_order_id": 0,
-      "pos_margin_mode": "isolated"
+      "create_time_ms": 0,
+      "contract": "string",
+      "size": 0,
+      "price": "string",
+      "is_internal": true
+    }
+    
+    
+
+##  InsuranceRecord
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+t | integer(int64) | Optional | none | Unix timestamp in seconds  
+b | string | Optional | none | Insurance balance  
+      
+    
+    {
+      "t": 0,
+      "b": "string"
     }
     
     
@@ -5905,4 +5829,80 @@ deduction | string | Optional | none | Maintenance margin quick calculation dedu
       "leverage_max": "string",
       "contract": "string",
       "deduction": "string"
+    }
+    
+    
+
+##  DeliveryPositionClose
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+time | number(double) | Optional | read-only | Position close time  
+contract | string | Optional | read-only | Futures contract  
+side | string | Optional | read-only | Position side  
+  
+\- `long`: Long position  
+\- `short`: Short position  
+pnl | string | Optional | read-only | PnL  
+pnl_pnl | string | Optional | read-only | PNL - Position P/L  
+pnl_fund | string | Optional | read-only | PNL - Funding Fees  
+pnl_fee | string | Optional | read-only | PNL - Transaction Fees  
+text | string | Optional | read-only | Source of close order. See `order.text` field for specific values  
+max_size | integer(int64) | Optional | read-only | Max Trade Size  
+accum_size | integer(int64) | Optional | read-only | Cumulative closed position volume  
+first_open_time | integer(int64) | Optional | read-only | First Open Time  
+long_price | string | Optional | read-only | When side is 'long', it indicates the opening average price; when side is 'short', it indicates the closing average price  
+short_price | string | Optional | read-only | When side is 'long', it indicates the closing average price; when side is 'short', it indicates the opening average price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+side | long  
+side | short  
+      
+    
+    {
+      "time": 0,
+      "contract": "string",
+      "side": "long",
+      "pnl": "string",
+      "pnl_pnl": "string",
+      "pnl_fund": "string",
+      "pnl_fee": "string",
+      "text": "string",
+      "max_size": 0,
+      "accum_size": 0,
+      "first_open_time": 0,
+      "long_price": "string",
+      "short_price": "string"
+    }
+    
+    
+
+##  DeliveryCandlestick
+
+_data point in every timestamp_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+t | number(double) | Optional | none | Unix timestamp in seconds  
+v | integer(int64) | Optional | none | size volume (contract size). Only returned if `contract` is not prefixed  
+c | string | Optional | none | Close price (quote currency)  
+h | string | Optional | none | Highest price (quote currency)  
+l | string | Optional | none | Lowest price (quote currency)  
+o | string | Optional | none | Open price (quote currency)  
+      
+    
+    {
+      "t": 0,
+      "v": 0,
+      "c": "string",
+      "h": "string",
+      "l": "string",
+      "o": "string"
     }

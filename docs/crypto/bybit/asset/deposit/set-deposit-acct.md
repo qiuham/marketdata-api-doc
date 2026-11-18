@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/asset/deposit/set-deposit-acct
 api_type: REST
-updated_at: 2026-11-17 18:37:25.253379
+updated_at: 2026-11-18 18:49:14.980343
 ---
 
 # Set Deposit Account

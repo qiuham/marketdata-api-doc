@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/createCameraContext
 api_type: Guide
-updated_at: 2026-11-18 02:38:32.949133
+updated_at: 2026-11-18 18:44:55.671630
 ---
 
 # bn.createCameraContext

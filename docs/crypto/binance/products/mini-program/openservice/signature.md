@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/openservice/signature
 api_type: Guide
-updated_at: 2026-11-18 02:17:05.844922
+updated_at: 2026-11-18 18:36:24.963175
 ---
 
 # Description of External Interface Signature Authentication Algorithm

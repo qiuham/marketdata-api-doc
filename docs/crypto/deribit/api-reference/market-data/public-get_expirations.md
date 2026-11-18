@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/market-data/public-get_expirations
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:03.639019
+updated_at: 2026-11-18 18:59:17.074472
 ---
 
 # public/get_expirations

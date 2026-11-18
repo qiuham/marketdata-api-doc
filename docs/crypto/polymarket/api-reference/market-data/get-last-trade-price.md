@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/api-reference/market-data/get-last-trade-price'
-updated_at: 2026-11-17
+updated_at: 2026-11-18
 ---
 
 # Get last trade price

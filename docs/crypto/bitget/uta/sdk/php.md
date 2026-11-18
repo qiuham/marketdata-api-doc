@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/sdk/php
 api_type: Guide
-updated_at: 2026-11-18 08:36:43.604886
+updated_at: 2026-11-18 19:00:40.067031
 ---
 
 # PHP

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/unified/ws/en
 api_type: WebSocket
-updated_at: 2026-11-17 18:46:26.170682
+updated_at: 2026-11-18 18:57:09.618821
 ---
 
 # Gate Unified WebSocket v1.0.0

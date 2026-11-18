@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/account/wallet-balance
 api_type: Account
-updated_at: 2026-11-17 18:37:03.178959
+updated_at: 2026-11-18 18:48:54.821292
 ---
 
 # Get Wallet Balance

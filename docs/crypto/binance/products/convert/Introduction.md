@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/convert/Introduction
 api_type: Guide
-updated_at: 2026-11-18 02:04:50.260496
+updated_at: 2026-11-18 18:31:28.356842
 ---
 
 # Introduction

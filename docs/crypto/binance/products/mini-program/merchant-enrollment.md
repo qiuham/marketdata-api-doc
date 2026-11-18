@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/merchant-enrollment
 api_type: Guide
-updated_at: 2026-11-18 01:59:32.378284
+updated_at: 2026-11-18 18:29:20.438927
 ---
 
 # Mini Program Platform Merchant Enrollment

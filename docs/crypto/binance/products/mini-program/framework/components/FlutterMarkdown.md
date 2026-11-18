@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/FlutterMarkdown
 api_type: Guide
-updated_at: 2026-11-18 02:32:00.140124
+updated_at: 2026-11-18 18:42:21.278723
 ---
 
 # markdown

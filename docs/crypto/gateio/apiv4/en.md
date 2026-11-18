@@ -2,12 +2,12 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en
 api_type: REST
-updated_at: 2026-11-17 18:44:38.066065
+updated_at: 2026-11-18 18:55:29.979569
 ---
 
-# Gate API v4.106.182
+# Gate API v4.106.184
 
-v4.106.182 · Stable
+v4.106.184 · Stable
 
 
 Welcome to Gate API APIv4 provides operations related to spot, margin, and contract trading, including public interfaces for querying market data and authenticated private interfaces for implementing API-based automated trading.
@@ -102,6 +102,13 @@ DANGER
 Even if you submit a problem, you should not submit the API key information to customer service or others, otherwise there will be serious asset risk. If it has been accidentally leaked, please delete the existing API and rebuild it.
 
 #  Changelog
+
+**v4.106.184**
+
+2026-11-18
+
+  * Add `POST /p2p/merchant/chat/pre_upload_chat_file` with required request field `content_type`, accepting only `image/jpeg`, `image/jpg`, `image/png`, `image/webp`, and `video/mp4`. The response includes `data.url`, the signed form fields in `data.fields`, and `data.file_key` for sending a file message after a successful direct upload.
+  * Deprecate `POST /p2p/merchant/chat/upload_chat_file` in favor of `POST /p2p/merchant/chat/pre_upload_chat_file`.
 
 **v4.106.180**
 
@@ -1128,9 +1135,9 @@ Even if you submit a problem, you should not submit the API key information to c
 
 **v4.106.0**
 
-  * To support decimal quantity orders, all size and quantity-related fields in Futures-related interfaces have been uniformly changed from `integer` type to `string` type. Affected models include: `FuturesOrder` (`size`, `iceberg`, `left`), `BatchFuturesOrder` (`size`, `iceberg`, `left`), `Position` (`size`, `trade_long_size`, `trade_short_size`), `PositionTimerange` (`size`), `MyFuturesTrade` (`size`, `close_size`), `MyFuturesTradeTimeRange` (`size`, `close_size`), `FuturesTrade` (`size`), `FuturesOrderBook` (`size` in `asks` and `bids`), `FuturesCandlestick` (`v`), `FuturesLiquidate` (`size`, `order_size`), `FuturesLiqOrder` (`position_size`, `size`, `order_size`), `FuturesAutoDeleverage` (`size`, `entry_size`), `FuturesCollusionOrder` (`size`, `left`), `FuturesBatchAmendOrderRequest` (`size`), `Contract` (`order_size_min`, `order_size_max`, `trade_size`, `position_size`), and `ContractStat` (`long_liq_size`, `short_liq_size`, `open_interest`)
+  * To support decimal contract sizes, the affected Futures fields use `string` in the OpenAPI and SDK models. REST responses return these fields as JSON strings with `X-Gate-Size-Decimal: 1`. Direct HTTP requests that set the header to `0` or omit it receive integer values with the fractional part discarded. Affected models include: `FuturesOrder` (`size`, `iceberg`, `left`), `BatchFuturesOrder` (`size`, `iceberg`, `left`), `Position` (`size`, `trade_long_size`, `trade_short_size`), `PositionTimerange` (`size`), `MyFuturesTrade` (`size`, `close_size`), `MyFuturesTradeTimeRange` (`size`, `close_size`), `FuturesTrade` (`size`), `FuturesOrderBook` (`size` in `asks` and `bids`), `FuturesCandlestick` (`v`), `FuturesLiquidate` (`size`, `order_size`), `FuturesLiqOrder` (`position_size`, `size`, `order_size`), `FuturesAutoDeleverage` (`size`, `entry_size`), `FuturesCollusionOrder` (`size`, `left`), `FuturesBatchAmendOrderRequest` (`size`), `Contract` (`order_size_min`, `order_size_max`, `trade_size`, `position_size`), and `ContractStat` (`long_liq_size`, `short_liq_size`, `open_interest`)
   * Add `pid` field in `Position` model for sub-position ID
-  * All language SDKs (Go, C#, Java, Python, PHP, TypeScript) uniformly add `X-Gate-Size-Decimal: 1` default request header to ensure the server correctly handles size fields
+  * The Go, C#, Java, Python, PHP, and TypeScript SDKs send `X-Gate-Size-Decimal: 1` by default.
   * Created 12 independent Delivery Schema files to separate Delivery and Futures objects: `DeliveryAccount`, `DeliveryAccountBook`, `DeliveryOrder`, `DeliveryOrderBook`, `DeliveryPosition`, `DeliveryPositionClose`, `DeliveryTrade`, `DeliveryMyTrade`, `DeliveryLiquidate`, `DeliveryInsuranceRecord`, `DeliveryLimitRiskTiers`, `DeliveryCloseAllPositionsResponse`
 
 **v4.105.32**

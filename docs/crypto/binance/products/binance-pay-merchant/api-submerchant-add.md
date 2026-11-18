@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-submerchant-add
 api_type: Guide
-updated_at: 2026-11-18 02:08:38.955367
+updated_at: 2026-11-18 18:32:59.663932
 ---
 
 # Create SubMerchant

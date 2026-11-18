@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/handleCrossAppMessage
 api_type: Guide
-updated_at: 2026-11-18 02:44:56.352086
+updated_at: 2026-11-18 18:47:26.893238
 ---
 
 # bn.handleCrossAppMessage

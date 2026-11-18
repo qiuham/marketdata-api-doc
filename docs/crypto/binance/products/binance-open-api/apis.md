@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-open-api/apis
 api_type: Guide
-updated_at: 2026-11-18 02:06:43.163593
+updated_at: 2026-11-18 18:32:13.711727
 ---
 
 # OAuth 2.0 APIs for Binance APIs

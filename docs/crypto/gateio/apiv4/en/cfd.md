@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/cfd
 api_type: REST
-updated_at: 2026-11-17 18:44:44.044359
+updated_at: 2026-11-18 18:55:36.095139
 ---
 
 # CFD
@@ -2954,6 +2954,542 @@ Code samples
 
 #  Schemas
 
+##  OrderList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Order list  
+»» _None_ | object | Optional | none | Order detail  
+»»» order_id | integer(int64) | Optional | none | Order ID  
+»»» symbol | string | Optional | none | Currency pair  
+»»» symbol_desc | string | Optional | none | Symbol description  
+»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+»»» state | integer | Optional | none | Order status code  
+»»» state_desc | string | Optional | none | Order status description  
+»»» finished | integer | Optional | none | Is completed (0=shown in active order list, 1=not shown in active list)  
+»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
+»»» volume | string | Optional | none | Order quantity  
+»»» price | string | Optional | none | Trigger price  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+finished | 0  
+finished | 1  
+side | 1  
+side | 2  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  TradFiPositionUpdateRequest
+
+_Modify position take profit/stop loss parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+price_tp | string|null | Optional | none | Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface  
+price_sl | string|null | Optional | none | Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface  
+      
+    
+    {
+      "price_tp": "1",
+      "price_sl": "1"
+    }
+    
+    
+
+##  DeletePosition
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  TradFiTicker
+
+_TradFiTicker_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+label | string | Optional | none | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
+message | string | Optional | none | Return message, returned when request error occurs  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» highest_price | string | Optional | none | High price  
+» lowest_price | string | Optional | none | Low price  
+» price_change | string | Optional | none | Price change percentage (multiplied by 100)  
+» price_change_amount | string | Optional | none | Price change amount  
+» today_open_price | string | Optional | none | Today's open price  
+» last_today_close_price | string | Optional | none | Previous close price  
+» last_price | string | Optional | none | Last trading price  
+» bid_price | string | Optional | none | Bid price  
+» ask_price | string | Optional | none | Ask price  
+» favorite | boolean | Optional | none | Is favorited  
+» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
+» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
+» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
+» next_open_time | integer(int64) | Optional | none | Next open time (0 means none)  
+» trade_mode | string | Optional | none | Trading mode code  
+» category_name | string | Optional | none | Category name  
+      
+    
+    {
+      "label": "INVALID_ARGUMENT",
+      "message": "无效参数",
+      "timestamp": 0,
+      "data": {
+        "highest_price": "5093.04",
+        "lowest_price": "5003.61",
+        "price_change": "1.32",
+        "price_change_amount": "66.13",
+        "today_open_price": "5008.06",
+        "last_today_close_price": "4989.92",
+        "last_price": "5074.19",
+        "bid_price": "5073.83",
+        "ask_price": "5074.06",
+        "favorite": false,
+        "status": "open",
+        "close_time": 1769464800,
+        "open_time": 1769378400,
+        "next_open_time": 0,
+        "trade_mode": "4",
+        "category_name": "Metals"
+      }
+    }
+    
+    
+
+##  OrderHistoryList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Historical order list  
+»» _None_ | object | Optional | none | Order detail  
+»»» order_id | integer(int64) | Optional | none | Order ID  
+»»» symbol | string | Optional | none | Currency pair  
+»»» symbol_desc | string | Optional | none | Symbol description  
+»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+»»» order_opt_type | integer | Optional | none | Order operation type (1=sell, 2=buy, 3=close long, 4=close short, 5=force close long, 6=force close short)  
+»»» state | integer | Optional | none | Order status code  
+»»» state_desc | string | Optional | none | Order status description  
+»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
+»»» volume | string | Optional | none | Order quantity  
+»»» fill_volume | string | Optional | none | Trading size  
+»»» close_pnl | string | Optional | none | Close Position P&L  
+»»» price | string | Optional | none | Average fill price  
+»»» trigger_price | string | Optional | none | Trigger price  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
+»»» time_done | integer(int64) | Optional | none | End time (Unix timestamp in seconds)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+order_opt_type | 1  
+order_opt_type | 2  
+order_opt_type | 3  
+order_opt_type | 4  
+order_opt_type | 5  
+order_opt_type | 6  
+side | 1  
+side | 2  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  PositionHistoryList
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» total | integer | Optional | none | Total amount  
+» total_page | integer | Optional | none | Total pages  
+» list | array | Optional | none | Query historical position list  
+»» _None_ | object | Optional | none | Position close history  
+»»» position_id | integer(int64) | Required | none | Position ID  
+»»» symbol | string | Required | none | Market / Trading symbol  
+»»» realized_pnl | string | Required | none | Realized PnL  
+»»» realized_pnl_rate | string | Optional | none | Realized return rate  
+»»» volume | string | Required | none | Position size / Maximum position size  
+»»» volume_closed | string | Required | none | Close volume  
+»»» price_open | string | Required | none | Average Opening Price  
+»»» position_dir | string | Required | none | Position Direction  
+\- Long: Long Position  
+\- Short: Short Position  
+»»» price_tp | string | Optional | none | Take profit price  
+»»» price_sl | string | Optional | none | Stop loss price  
+»»» counterparty_price | string | Optional | none | Counterparty price  
+»»» close_price | string | Required | none | Close price  
+»»» time_create | string | Required | none | Open time (timestamp in seconds)  
+»»» time_close | string | Required | none | Close time (timestamp in seconds)  
+»»» position_status | string | Required | none | Position Status  
+\- 1: Fully Closed  
+\- 2: Forced Liquidation  
+»»» close_detail | object|null | Optional | none | Liquidation details (null for normal close)  
+»»»» margin_level | string | Optional | none | Margin ratio (multiplied by 100)  
+»»»» margin | string | Optional | none | Margin  
+»»»» equity | string | Optional | none | Net equity  
+»»»» stop_out_level | string | Optional | none | Liquidation ratio (multiplied by 100)  
+»»» realized_pnl_detail | object | Required | none | Realized P&L details  
+»»»» closed_pnl | string | Optional | none | Close Position P&L  
+»»»» swap | string | Optional | none | Swap fee  
+»»»» fee | string | Optional | none | fee  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+position_dir | Long  
+position_dir | Short  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "total": 0,
+        "total_page": 0,
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  Categories
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Data  
+» list | array | Optional | none | none  
+»» _None_ | object | Optional | none | Category information  
+»»» category_id | integer | Optional | none | Category ID  
+»»» is_favorite | boolean | Optional | none | Whether it is a custom category, generally no need to pay attention  
+»»» category_name | string | Optional | none | Category name  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  Mt5Account
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+code | integer | Optional | none | Business Status Code; Non-zero Indicates Business Exception, Please Check Message  
+message | string | Optional | none | Response message  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» leverage | integer | Optional | none | Leverage multiplier  
+» stop_out_level | string | Optional | none | Liquidation margin ratio  
+» status | integer | Optional | none | Account status (1=not opened, 2=pending review, 3=active)  
+      
+    
+    {
+      "code": 0,
+      "message": "ok",
+      "timestamp": 0,
+      "data": {
+        "leverage": 100,
+        "stop_out_level": "50%",
+        "status": 1
+      }
+    }
+    
+    
+
+##  CreateUserResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+» status | integer | Optional | none | Status (1=not opened, 2=pending review, 3=opened)  
+» leverage | integer | Optional | none | Leverage  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "status": 0,
+        "leverage": 0
+      }
+    }
+    
+    
+
+##  ContractDetail
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Contract Details List  
+»» _None_ | object | Optional | none | Futures contract details  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» symbol_desc | string | Optional | none | Trading symbol description  
+»»» category_name | string | Optional | none | Category name  
+»»» contract_volume | string | Optional | none | Contract Volume  
+»»» settlement_currency | string | Optional | none | Settle currency  
+»»» max_order_volume | string | Optional | none | Maximum Order Volume  
+»»» min_order_volume | string | Optional | none | Minimum Order Volume  
+»»» leverage | string | Optional | none | Leverage multiplier  
+»»» price_precision | integer | Optional | none | Price precision (decimal places)  
+»»» price_sl_level | string | Optional | none | Stop Loss Price Level  
+»»» swap_cost_type | string | Optional | none | Swap Cost Type  
+»»» buy_swap_cost_rate | string | Optional | none | Buy Swap Cost Rate  
+»»» sell_swap_cost_rate | string | Optional | none | Sell Swap Cost Rate  
+»»» swap_cost_3day | string | Optional | none | 3-Day Swap Cost  
+»»» trade_timezone | string | Optional | none | Trading Timezone  
+»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
+»»» icon_link | string | Optional | none | Symbol icon URL  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  CreateOrder
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Order result  
+» id | string | Optional | none | Queue Task ID (not order ID)  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "id": "117"
+      }
+    }
+    
+    
+
+##  SymbolCommissions
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | List of symbol commission rates  
+»» _None_ | object | Optional | none | Symbol commission rate  
+»»» category_code | string | Optional | none | Category code  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» fee_per_lot | string | Optional | none | Commission rate per lot  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
+##  UpdateOrder
+
+_Order modification result_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» order_id | integer(int64) | Required | none | Order ID  
+» symbol | string | Required | none | Currency pair  
+» state | string | Required | none | Order status code  
+» volume | string | Required | none | Order quantity  
+» price | string | Required | none | Current price  
+» price_tp | string | Required | none | Current take profit price  
+» price_sl | string | Required | none | Current stop loss price  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "order_id": 2630591,
+        "symbol": "USDCHF",
+        "state": 1,
+        "volume": "1.6",
+        "price": "5.000000",
+        "price_tp": "5.200000",
+        "price_sl": "4.800000"
+      }
+    }
+    
+    
+
+##  OrderLog
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» order_id | integer(int64) | Optional | none | Order ID  
+» log_id | integer(int64) | Optional | none | logID  
+» symbol | string | Optional | none | Trading pair of the order  
+» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
+» state | integer | Optional | none | Order status code (1=placed, 2=canceled, 3=partially filled, 4=filled, 5=rejected)  
+» side | integer | Optional | none | Side (1=sell, 2=buy)  
+» volume | string | Optional | none | Order quantity  
+» price | string | Optional | none | Average fill price  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+price_type | market  
+price_type | trigger  
+side | 1  
+side | 2  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "order_id": 2648991,
+        "log_id": 87699,
+        "symbol": "USDCAD",
+        "price_type": "market",
+        "state": 4,
+        "side": 2,
+        "volume": "0.05",
+        "price": "1.3689"
+      }
+    }
+    
+    
+
+##  Symbols
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» list | array | Optional | none | Trading symbol list  
+»» _None_ | object | Optional | none | Trading symbol information  
+»»» symbol | string | Optional | none | Trading symbol code  
+»»» symbol_desc | string | Optional | none | Trading symbol description  
+»»» category_id | integer | Optional | none | Category ID  
+»»» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
+»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
+»»» icon_link | string | Optional | none | Symbol icon URL  
+»»» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
+»»» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
+»»» next_open_time | integer(int64) | Optional | none | Next open time (Unix timestamp in seconds, 0 means none)  
+»»» settlement_currency | string | Optional | none | Settlement currency  
+»»» settlement_currency_symbol | string | Optional | none | Settlement currency symbol  
+»»» price_precision | integer | Optional | none | Price precision (decimal places)  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "list": [
+          {}
+        ]
+      }
+    }
+    
+    
+
 ##  TransactionList
 
 ###  Properties
@@ -2991,6 +3527,127 @@ type | fill_negative-填平负余额
         ]
       },
       "timestamp": 1769332996590
+    }
+    
+    
+
+##  CreateTransaction
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  UserAssetResp
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | Response data  
+» equity | string | Optional | none | Account equity  
+» margin_level | string | Optional | none | Margin level (percentage)  
+» balance | string | Optional | none | Account Balance  
+» margin | string | Optional | none | Used margin  
+» margin_free | string | Optional | none | Available Margin  
+» unrealized_pnl | string | Optional | none | Unrealized PNL  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {
+        "equity": "0.00",
+        "margin_level": "0.00",
+        "balance": "0.00",
+        "margin": "0.00",
+        "margin_free": "0.00",
+        "unrealized_pnl": "0.00"
+      }
+    }
+    
+    
+
+##  UpdatePosition
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
+data | object | Optional | none | none  
+      
+    
+    {
+      "timestamp": 0,
+      "data": {}
+    }
+    
+    
+
+##  TradFiOrderUpdateRequest
+
+_Modify order price and take profit/stop loss parameters_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+price | string | Required | none | Price  
+Description:  
+\- Required  
+price_tp | string|null | Optional | none | Take Profit Price  
+Description:  
+\- If not provided or set to "0": The original take profit price will be cleared  
+\- If you do not want to clear it, pass the original take profit price returned by the interface  
+price_sl | string|null | Optional | none | Stop Loss Price  
+Description:  
+\- If not provided or set to "0": The original stop loss price will be cleared  
+\- If you do not want to clear it, pass the original stop loss price returned by the interface  
+      
+    
+    {
+      "price": "2",
+      "price_tp": "1.5",
+      "price_sl": "0.8"
+    }
+    
+    
+
+##  TradFiTransactionRequest
+
+_Fund Transfer Request Body_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+asset | string | Required | none | Asset type, e.g., USDT, currently only USDT is supported  
+change | string | Required | none | Change Quantity, supports up to two decimal places  
+type | string | Required | none | Transaction Type (deposit - transfer in, withdraw - transfer out)  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | deposit  
+type | withdraw  
+      
+    
+    {
+      "asset": "USDT",
+      "change": "10",
+      "type": "withdraw"
     }
     
     
@@ -3063,130 +3720,6 @@ data | object | Optional | none | Response data
     
     
 
-##  CreateOrder
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Order result  
-» id | string | Optional | none | Queue Task ID (not order ID)  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "id": "117"
-      }
-    }
-    
-    
-
-##  CreateUserResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-» status | integer | Optional | none | Status (1=not opened, 2=pending review, 3=opened)  
-» leverage | integer | Optional | none | Leverage  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "status": 0,
-        "leverage": 0
-      }
-    }
-    
-    
-
-##  OrderList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» list | array | Optional | none | Order list  
-»» _None_ | object | Optional | none | Order detail  
-»»» order_id | integer(int64) | Optional | none | Order ID  
-»»» symbol | string | Optional | none | Currency pair  
-»»» symbol_desc | string | Optional | none | Symbol description  
-»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
-»»» state | integer | Optional | none | Order status code  
-»»» state_desc | string | Optional | none | Order status description  
-»»» finished | integer | Optional | none | Is completed (0=shown in active order list, 1=not shown in active list)  
-»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
-»»» volume | string | Optional | none | Order quantity  
-»»» price | string | Optional | none | Trigger price  
-»»» price_tp | string | Optional | none | Take profit price  
-»»» price_sl | string | Optional | none | Stop loss price  
-»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | market  
-price_type | trigger  
-finished | 0  
-finished | 1  
-side | 1  
-side | 2  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  Symbols
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» list | array | Optional | none | Trading symbol list  
-»» _None_ | object | Optional | none | Trading symbol information  
-»»» symbol | string | Optional | none | Trading symbol code  
-»»» symbol_desc | string | Optional | none | Trading symbol description  
-»»» category_id | integer | Optional | none | Category ID  
-»»» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
-»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
-»»» icon_link | string | Optional | none | Symbol icon URL  
-»»» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
-»»» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
-»»» next_open_time | integer(int64) | Optional | none | Next open time (Unix timestamp in seconds, 0 means none)  
-»»» settlement_currency | string | Optional | none | Settlement currency  
-»»» settlement_currency_symbol | string | Optional | none | Settlement currency symbol  
-»»» price_precision | integer | Optional | none | Price precision (decimal places)  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
 ##  TradFiClosePositionRequest
 
 _Close position request parameters_
@@ -3219,265 +3752,6 @@ close_type | 2
     
     
 
-##  OrderLog
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» order_id | integer(int64) | Optional | none | Order ID  
-» log_id | integer(int64) | Optional | none | logID  
-» symbol | string | Optional | none | Trading pair of the order  
-» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
-» state | integer | Optional | none | Order status code (1=placed, 2=canceled, 3=partially filled, 4=filled, 5=rejected)  
-» side | integer | Optional | none | Side (1=sell, 2=buy)  
-» volume | string | Optional | none | Order quantity  
-» price | string | Optional | none | Average fill price  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | market  
-price_type | trigger  
-side | 1  
-side | 2  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "order_id": 2648991,
-        "log_id": 87699,
-        "symbol": "USDCAD",
-        "price_type": "market",
-        "state": 4,
-        "side": 2,
-        "volume": "0.05",
-        "price": "1.3689"
-      }
-    }
-    
-    
-
-##  Categories
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Data  
-» list | array | Optional | none | none  
-»» _None_ | object | Optional | none | Category information  
-»»» category_id | integer | Optional | none | Category ID  
-»»» is_favorite | boolean | Optional | none | Whether it is a custom category, generally no need to pay attention  
-»»» category_name | string | Optional | none | Category name  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  UpdatePosition
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
-    }
-    
-    
-
-##  UserAssetResp
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» equity | string | Optional | none | Account equity  
-» margin_level | string | Optional | none | Margin level (percentage)  
-» balance | string | Optional | none | Account Balance  
-» margin | string | Optional | none | Used margin  
-» margin_free | string | Optional | none | Available Margin  
-» unrealized_pnl | string | Optional | none | Unrealized PNL  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "equity": "0.00",
-        "margin_level": "0.00",
-        "balance": "0.00",
-        "margin": "0.00",
-        "margin_free": "0.00",
-        "unrealized_pnl": "0.00"
-      }
-    }
-    
-    
-
-##  TradFiPositionUpdateRequest
-
-_Modify position take profit/stop loss parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-price_tp | string|null | Optional | none | Take Profit Price  
-Description:  
-\- If not provided or set to "0": The original take profit price will be cleared  
-\- If you do not want to clear it, pass the original take profit price returned by the interface  
-price_sl | string|null | Optional | none | Stop Loss Price  
-Description:  
-\- If not provided or set to "0": The original stop loss price will be cleared  
-\- If you do not want to clear it, pass the original stop loss price returned by the interface  
-      
-    
-    {
-      "price_tp": "1",
-      "price_sl": "1"
-    }
-    
-    
-
-##  PositionHistoryList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» total | integer | Optional | none | Total amount  
-» total_page | integer | Optional | none | Total pages  
-» list | array | Optional | none | Query historical position list  
-»» _None_ | object | Optional | none | Position close history  
-»»» position_id | integer(int64) | Required | none | Position ID  
-»»» symbol | string | Required | none | Market / Trading symbol  
-»»» realized_pnl | string | Required | none | Realized PnL  
-»»» realized_pnl_rate | string | Optional | none | Realized return rate  
-»»» volume | string | Required | none | Position size / Maximum position size  
-»»» volume_closed | string | Required | none | Close volume  
-»»» price_open | string | Required | none | Average Opening Price  
-»»» position_dir | string | Required | none | Position Direction  
-\- Long: Long Position  
-\- Short: Short Position  
-»»» price_tp | string | Optional | none | Take profit price  
-»»» price_sl | string | Optional | none | Stop loss price  
-»»» counterparty_price | string | Optional | none | Counterparty price  
-»»» close_price | string | Required | none | Close price  
-»»» time_create | string | Required | none | Open time (timestamp in seconds)  
-»»» time_close | string | Required | none | Close time (timestamp in seconds)  
-»»» position_status | string | Required | none | Position Status  
-\- 1: Fully Closed  
-\- 2: Forced Liquidation  
-»»» close_detail | object|null | Optional | none | Liquidation details (null for normal close)  
-»»»» margin_level | string | Optional | none | Margin ratio (multiplied by 100)  
-»»»» margin | string | Optional | none | Margin  
-»»»» equity | string | Optional | none | Net equity  
-»»»» stop_out_level | string | Optional | none | Liquidation ratio (multiplied by 100)  
-»»» realized_pnl_detail | object | Required | none | Realized P&L details  
-»»»» closed_pnl | string | Optional | none | Close Position P&L  
-»»»» swap | string | Optional | none | Swap fee  
-»»»» fee | string | Optional | none | fee  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-position_dir | Long  
-position_dir | Short  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "total": 0,
-        "total_page": 0,
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  TradFiTransactionRequest
-
-_Fund Transfer Request Body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-asset | string | Required | none | Asset type, e.g., USDT, currently only USDT is supported  
-change | string | Required | none | Change Quantity, supports up to two decimal places  
-type | string | Required | none | Transaction Type (deposit - transfer in, withdraw - transfer out)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | deposit  
-type | withdraw  
-      
-    
-    {
-      "asset": "USDT",
-      "change": "10",
-      "type": "withdraw"
-    }
-    
-    
-
-##  Mt5Account
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-code | integer | Optional | none | Business Status Code; Non-zero Indicates Business Exception, Please Check Message  
-message | string | Optional | none | Response message  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» leverage | integer | Optional | none | Leverage multiplier  
-» stop_out_level | string | Optional | none | Liquidation margin ratio  
-» status | integer | Optional | none | Account status (1=not opened, 2=pending review, 3=active)  
-      
-    
-    {
-      "code": 0,
-      "message": "ok",
-      "timestamp": 0,
-      "data": {
-        "leverage": 100,
-        "stop_out_level": "50%",
-        "status": 1
-      }
-    }
-    
-    
-
 ##  TradFiError
 
 _TradFiError_
@@ -3495,199 +3769,6 @@ timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)
       "label": "INVALID_ARGUMENT",
       "message": "无效参数",
       "timestamp": 0
-    }
-    
-    
-
-##  TradFiTicker
-
-_TradFiTicker_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-label | string | Optional | none | Business status code, non-empty indicates request exception, please refer to TradFi error enumeration in documentation  
-message | string | Optional | none | Return message, returned when request error occurs  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» highest_price | string | Optional | none | High price  
-» lowest_price | string | Optional | none | Low price  
-» price_change | string | Optional | none | Price change percentage (multiplied by 100)  
-» price_change_amount | string | Optional | none | Price change amount  
-» today_open_price | string | Optional | none | Today's open price  
-» last_today_close_price | string | Optional | none | Previous close price  
-» last_price | string | Optional | none | Last trading price  
-» bid_price | string | Optional | none | Bid price  
-» ask_price | string | Optional | none | Ask price  
-» favorite | boolean | Optional | none | Is favorited  
-» status | string | Optional | none | Trading status (open=tradable, closed=non-tradable)  
-» close_time | integer(int64) | Optional | none | Close time (Unix timestamp in seconds)  
-» open_time | integer(int64) | Optional | none | Open time (Unix timestamp in seconds)  
-» next_open_time | integer(int64) | Optional | none | Next open time (0 means none)  
-» trade_mode | string | Optional | none | Trading mode code  
-» category_name | string | Optional | none | Category name  
-      
-    
-    {
-      "label": "INVALID_ARGUMENT",
-      "message": "无效参数",
-      "timestamp": 0,
-      "data": {
-        "highest_price": "5093.04",
-        "lowest_price": "5003.61",
-        "price_change": "1.32",
-        "price_change_amount": "66.13",
-        "today_open_price": "5008.06",
-        "last_today_close_price": "4989.92",
-        "last_price": "5074.19",
-        "bid_price": "5073.83",
-        "ask_price": "5074.06",
-        "favorite": false,
-        "status": "open",
-        "close_time": 1769464800,
-        "open_time": 1769378400,
-        "next_open_time": 0,
-        "trade_mode": "4",
-        "category_name": "Metals"
-      }
-    }
-    
-    
-
-##  UpdateOrder
-
-_Order modification result_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» order_id | integer(int64) | Required | none | Order ID  
-» symbol | string | Required | none | Currency pair  
-» state | string | Required | none | Order status code  
-» volume | string | Required | none | Order quantity  
-» price | string | Required | none | Current price  
-» price_tp | string | Required | none | Current take profit price  
-» price_sl | string | Required | none | Current stop loss price  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "order_id": 2630591,
-        "symbol": "USDCHF",
-        "state": 1,
-        "volume": "1.6",
-        "price": "5.000000",
-        "price_tp": "5.200000",
-        "price_sl": "4.800000"
-      }
-    }
-    
-    
-
-##  TradFiOrderUpdateRequest
-
-_Modify order price and take profit/stop loss parameters_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-price | string | Required | none | Price  
-Description:  
-\- Required  
-price_tp | string|null | Optional | none | Take Profit Price  
-Description:  
-\- If not provided or set to "0": The original take profit price will be cleared  
-\- If you do not want to clear it, pass the original take profit price returned by the interface  
-price_sl | string|null | Optional | none | Stop Loss Price  
-Description:  
-\- If not provided or set to "0": The original stop loss price will be cleared  
-\- If you do not want to clear it, pass the original stop loss price returned by the interface  
-      
-    
-    {
-      "price": "2",
-      "price_tp": "1.5",
-      "price_sl": "0.8"
-    }
-    
-    
-
-##  ContractDetail
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» list | array | Optional | none | Contract Details List  
-»» _None_ | object | Optional | none | Futures contract details  
-»»» symbol | string | Optional | none | Trading symbol code  
-»»» symbol_desc | string | Optional | none | Trading symbol description  
-»»» category_name | string | Optional | none | Category name  
-»»» contract_volume | string | Optional | none | Contract Volume  
-»»» settlement_currency | string | Optional | none | Settle currency  
-»»» max_order_volume | string | Optional | none | Maximum Order Volume  
-»»» min_order_volume | string | Optional | none | Minimum Order Volume  
-»»» leverage | string | Optional | none | Leverage multiplier  
-»»» price_precision | integer | Optional | none | Price precision (decimal places)  
-»»» price_sl_level | string | Optional | none | Stop Loss Price Level  
-»»» swap_cost_type | string | Optional | none | Swap Cost Type  
-»»» buy_swap_cost_rate | string | Optional | none | Buy Swap Cost Rate  
-»»» sell_swap_cost_rate | string | Optional | none | Sell Swap Cost Rate  
-»»» swap_cost_3day | string | Optional | none | 3-Day Swap Cost  
-»»» trade_timezone | string | Optional | none | Trading Timezone  
-»»» trade_mode | string | Optional | none | Trading mode code (0=disabled, 1=long only, 2=short only, 3=close only, 4=full trading access)  
-»»» icon_link | string | Optional | none | Symbol icon URL  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  DeletePosition
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
-    }
-    
-    
-
-##  CreateTransaction
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | none  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {}
     }
     
     
@@ -3718,87 +3799,6 @@ data | object | Optional | none | Response data
     {
       "label": "INVALID_ARGUMENT",
       "message": "无效参数",
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  SymbolCommissions
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» list | array | Optional | none | List of symbol commission rates  
-»» _None_ | object | Optional | none | Symbol commission rate  
-»»» category_code | string | Optional | none | Category code  
-»»» symbol | string | Optional | none | Trading symbol code  
-»»» fee_per_lot | string | Optional | none | Commission rate per lot  
-      
-    
-    {
-      "timestamp": 0,
-      "data": {
-        "list": [
-          {}
-        ]
-      }
-    }
-    
-    
-
-##  OrderHistoryList
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-timestamp | integer(int64) | Optional | none | Server timestamp (milliseconds)  
-data | object | Optional | none | Response data  
-» list | array | Optional | none | Historical order list  
-»» _None_ | object | Optional | none | Order detail  
-»»» order_id | integer(int64) | Optional | none | Order ID  
-»»» symbol | string | Optional | none | Currency pair  
-»»» symbol_desc | string | Optional | none | Symbol description  
-»»» price_type | string | Optional | none | Trade type (market=market price, trigger=trigger price)  
-»»» order_opt_type | integer | Optional | none | Order operation type (1=sell, 2=buy, 3=close long, 4=close short, 5=force close long, 6=force close short)  
-»»» state | integer | Optional | none | Order status code  
-»»» state_desc | string | Optional | none | Order status description  
-»»» side | integer | Optional | none | Side (1=sell, 2=buy)  
-»»» volume | string | Optional | none | Order quantity  
-»»» fill_volume | string | Optional | none | Trading size  
-»»» close_pnl | string | Optional | none | Close Position P&L  
-»»» price | string | Optional | none | Average fill price  
-»»» trigger_price | string | Optional | none | Trigger price  
-»»» price_tp | string | Optional | none | Take profit price  
-»»» price_sl | string | Optional | none | Stop loss price  
-»»» time_setup | integer(int64) | Optional | none | Order time (Unix timestamp in seconds)  
-»»» time_done | integer(int64) | Optional | none | End time (Unix timestamp in seconds)  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-price_type | market  
-price_type | trigger  
-order_opt_type | 1  
-order_opt_type | 2  
-order_opt_type | 3  
-order_opt_type | 4  
-order_opt_type | 5  
-order_opt_type | 6  
-side | 1  
-side | 2  
-      
-    
-    {
       "timestamp": 0,
       "data": {
         "list": [

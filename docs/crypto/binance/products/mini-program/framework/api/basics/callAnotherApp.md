@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/callAnotherApp
 api_type: Guide
-updated_at: 2026-11-18 02:46:12.979110
+updated_at: 2026-11-18 18:47:57.741653
 ---
 
 # bn.callAnotherApp

@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/sbe/sbe-trade
 api_type: SBE
-updated_at: 2026-11-18 08:37:22.540383
+updated_at: 2026-11-18 19:01:01.270274
 ---
 
 # SBE Public Trade Integration Guide

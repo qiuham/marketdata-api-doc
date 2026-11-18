@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/alpha/general-info
 api_type: Guide
-updated_at: 2026-11-18 02:11:33.679527
+updated_at: 2026-11-18 18:34:10.973745
 ---
 
 # General Info

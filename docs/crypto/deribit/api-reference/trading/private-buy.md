@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-buy
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:14.420958
+updated_at: 2026-11-18 18:59:18.763267
 ---
 
 # private/buy

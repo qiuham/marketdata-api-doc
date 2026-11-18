@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/devtool
 api_type: Guide
-updated_at: 2026-11-18 02:20:31.273601
+updated_at: 2026-11-18 18:37:49.516806
 ---
 
 # How to Use Devtools

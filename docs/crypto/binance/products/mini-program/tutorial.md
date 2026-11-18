@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/tutorial
 api_type: Guide
-updated_at: 2026-11-18 01:59:20.595031
+updated_at: 2026-11-18 18:29:15.645395
 ---
 
 # Tutorial: Create a weather app by mini program

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/hideTabBarRedDot
 api_type: Guide
-updated_at: 2026-11-18 02:41:10.197579
+updated_at: 2026-11-18 18:45:58.040102
 ---
 
 # bn.hideTabBarRedDot

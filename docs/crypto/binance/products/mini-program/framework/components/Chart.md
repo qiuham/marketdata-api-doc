@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/Chart
 api_type: Guide
-updated_at: 2026-11-18 02:32:57.694609
+updated_at: 2026-11-18 18:42:42.804804
 ---
 
 # Chart

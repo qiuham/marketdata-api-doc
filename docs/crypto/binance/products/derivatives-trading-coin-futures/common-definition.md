@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/common-definition
 api_type: Guide
-updated_at: 2026-11-18 02:03:59.045885
+updated_at: 2026-11-18 18:31:07.443268
 ---
 
 # Public Endpoints Info

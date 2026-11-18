@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/openapis/requestBinanceCardInfo
 api_type: Guide
-updated_at: 2026-11-18 02:35:39.381511
+updated_at: 2026-11-18 18:43:46.666717
 ---
 
 # bn.requestBinanceCardInfo

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/copy-trading/error-code
 api_type: Guide
-updated_at: 2026-11-18 02:05:02.222068
+updated_at: 2026-11-18 18:31:33.266870
 ---
 
 # Error Codes

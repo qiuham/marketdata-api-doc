@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/sbe/sbe-depth50
 api_type: SBE
-updated_at: 2026-11-18 08:37:20.373047
+updated_at: 2026-11-18 19:01:00.105627
 ---
 
 # SBE Level 50 Integration Guide

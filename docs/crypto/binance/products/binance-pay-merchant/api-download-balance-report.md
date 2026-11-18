@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-download-balance-report
 api_type: Guide
-updated_at: 2026-11-18 02:10:01.042024
+updated_at: 2026-11-18 18:33:34.257135
 ---
 
 # Download Balance Report

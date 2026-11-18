@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/market-data/incremental_tickerinstrument_name
 api_type: WebSocket
-updated_at: 2026-11-18 05:08:06.374605
+updated_at: 2026-11-18 18:58:58.851886
 ---
 
 # incremental_ticker.(instrument_name)

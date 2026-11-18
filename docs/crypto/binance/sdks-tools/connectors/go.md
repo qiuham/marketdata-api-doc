@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/go
 api_type: Guide
-updated_at: 2026-11-18 01:52:03.561539
+updated_at: 2026-11-18 18:26:28.618242
 ---
 
 # Go

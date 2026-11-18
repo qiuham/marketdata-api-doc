@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stock-options/general-info
 api_type: Guide
-updated_at: 2026-11-18 01:54:46.566716
+updated_at: 2026-11-18 18:27:32.478800
 ---
 
 # General Info

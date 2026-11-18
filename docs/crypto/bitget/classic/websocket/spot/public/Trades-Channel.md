@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/public/Trades-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:35:58.015440
+updated_at: 2026-11-18 19:00:13.493034
 ---
 
 # Trading Channel

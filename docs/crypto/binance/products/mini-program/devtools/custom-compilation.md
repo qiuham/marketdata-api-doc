@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/custom-compilation
 api_type: Guide
-updated_at: 2026-11-18 02:20:35.046538
+updated_at: 2026-11-18 18:37:50.934216
 ---
 
 # Custom Compilation

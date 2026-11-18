@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#public-data-rest-api-get-discount-rate-and-interest-free-quota
 anchor_id: public-data-rest-api-get-discount-rate-and-interest-free-quota
 api_type: REST
-updated_at: 2026-11-17 18:46:59.962033
+updated_at: 2026-11-18 18:57:49.373128
 ---
 
 # Get discount rate and interest-free quota

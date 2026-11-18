@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-common
 api_type: Guide
-updated_at: 2026-11-18 02:10:43.633042
+updated_at: 2026-11-18 18:33:51.442514
 ---
 
 # API Specification Common Rules

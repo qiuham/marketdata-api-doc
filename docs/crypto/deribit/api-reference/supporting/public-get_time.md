@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/supporting/public-get_time
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:13.920206
+updated_at: 2026-11-18 18:59:18.605451
 ---
 
 # public/get_time

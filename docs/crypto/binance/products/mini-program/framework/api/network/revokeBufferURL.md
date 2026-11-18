@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/network/revokeBufferURL
 api_type: Guide
-updated_at: 2026-11-18 02:36:57.081193
+updated_at: 2026-11-18 18:44:18.096612
 ---
 
 # bn.revokeBufferURL

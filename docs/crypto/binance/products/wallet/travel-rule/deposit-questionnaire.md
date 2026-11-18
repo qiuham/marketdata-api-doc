@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/travel-rule/deposit-questionnaire
 api_type: Guide
-updated_at: 2026-11-18 02:12:59.903695
+updated_at: 2026-11-18 18:34:45.258352
 ---
 
 # Deposit Questionnaire Contents (for existing local entities)

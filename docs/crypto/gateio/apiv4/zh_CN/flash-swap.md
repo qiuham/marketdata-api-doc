@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/flash-swap
 api_type: REST
-updated_at: 2026-11-17 18:45:38.138032
+updated_at: 2026-11-18 18:56:24.935132
 ---
 
 # Flash_swap
@@ -728,6 +728,42 @@ _FlashSwapErrorResponse_
 
 #  模型
 
+##  FlashSwapOrder
+
+_闪兑订单_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+id | integer(int64) | false | 只读 | 闪兑订单id  
+create_time | integer(int64) | false | 只读 | 订单创建时间，毫秒精度  
+user_id | integer(int64) | false | 只读 | 用户id  
+sell_currency | string | false | 只读 | 卖出的资产名称  
+sell_amount | string | false | 只读 | 卖出的资产数量  
+buy_currency | string | false | 只读 | 买入的资产名称  
+buy_amount | string | false | 只读 | 买入的资产数量  
+price | string | false | 只读 | 价格  
+status | integer | false | 只读 | 闪兑订单状态  
+  
+\- `1`: 成功  
+\- `2`: 失败  
+      
+    
+    {
+      "id": 0,
+      "create_time": 0,
+      "user_id": 0,
+      "sell_currency": "string",
+      "sell_amount": "string",
+      "buy_currency": "string",
+      "buy_amount": "string",
+      "price": "string",
+      "status": 0
+    }
+    
+    
+
 ##  FlashSwapErrorResponse
 
 _FlashSwapErrorResponse_
@@ -774,35 +810,6 @@ buy_amount | string | false | none | 买入的资产数量，
     
     
 
-##  FlashSwapCurrencyPair
-
-_查询闪兑的交易对列表_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | string | false | 只读 | 交易对 ， `BTC_USDT` 表示卖`BTC`买`USDT`  
-sell_currency | string | false | 只读 | 卖出币种  
-buy_currency | string | false | 只读 | 买入币种  
-sell_min_amount | string | false | 只读 | 卖出最小数量  
-sell_max_amount | string | false | 只读 | 卖出最大数量  
-buy_min_amount | string | false | 只读 | 买入最小数量  
-buy_max_amount | string | false | 只读 | 买入最大数量  
-      
-    
-    {
-      "currency_pair": "string",
-      "sell_currency": "BTC",
-      "buy_currency": "USDT",
-      "sell_min_amount": "0.00001",
-      "sell_max_amount": "100",
-      "buy_min_amount": "10",
-      "buy_max_amount": "10000000"
-    }
-    
-    
-
 ##  FlashSwapOrderRequest
 
 _创建闪兑订单参数_
@@ -824,69 +831,6 @@ buy_amount | string | true | none | 买入的资产数量(根据预览结果)
       "sell_amount": "string",
       "buy_currency": "string",
       "buy_amount": "string"
-    }
-    
-    
-
-##  FlashSwapOrder
-
-_闪兑订单_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-id | integer(int64) | false | 只读 | 闪兑订单id  
-create_time | integer(int64) | false | 只读 | 订单创建时间，毫秒精度  
-user_id | integer(int64) | false | 只读 | 用户id  
-sell_currency | string | false | 只读 | 卖出的资产名称  
-sell_amount | string | false | 只读 | 卖出的资产数量  
-buy_currency | string | false | 只读 | 买入的资产名称  
-buy_amount | string | false | 只读 | 买入的资产数量  
-price | string | false | 只读 | 价格  
-status | integer | false | 只读 | 闪兑订单状态  
-  
-\- `1`: 成功  
-\- `2`: 失败  
-      
-    
-    {
-      "id": 0,
-      "create_time": 0,
-      "user_id": 0,
-      "sell_currency": "string",
-      "sell_amount": "string",
-      "buy_currency": "string",
-      "buy_amount": "string",
-      "price": "string",
-      "status": 0
-    }
-    
-    
-
-##  FlashSwapV1CurrencyPairListResp
-
-_FlashSwapV1CurrencyPairListResp_
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-currency_pair | [FlashSwapV1CurrencyPair] | true | none | 可闪兑的币对列表  
-      
-    
-    {
-      "currency_pair": [
-        {
-          "market": "string",
-          "sell_asset": "string",
-          "sell_min_amount": "string",
-          "sell_max_amount": "string",
-          "buy_asset": "string",
-          "buy_min_amount": "string",
-          "buy_max_amount": "string"
-        }
-      ]
     }
     
     
@@ -916,6 +860,62 @@ price | string | false | none | 价格
       "buy_currency": "string",
       "buy_amount": "string",
       "price": "string"
+    }
+    
+    
+
+##  FlashSwapCurrencyPair
+
+_查询闪兑的交易对列表_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | string | false | 只读 | 交易对 ， `BTC_USDT` 表示卖`BTC`买`USDT`  
+sell_currency | string | false | 只读 | 卖出币种  
+buy_currency | string | false | 只读 | 买入币种  
+sell_min_amount | string | false | 只读 | 卖出最小数量  
+sell_max_amount | string | false | 只读 | 卖出最大数量  
+buy_min_amount | string | false | 只读 | 买入最小数量  
+buy_max_amount | string | false | 只读 | 买入最大数量  
+      
+    
+    {
+      "currency_pair": "string",
+      "sell_currency": "BTC",
+      "buy_currency": "USDT",
+      "sell_min_amount": "0.00001",
+      "sell_max_amount": "100",
+      "buy_min_amount": "10",
+      "buy_max_amount": "10000000"
+    }
+    
+    
+
+##  FlashSwapV1CurrencyPairListResp
+
+_FlashSwapV1CurrencyPairListResp_
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+currency_pair | [FlashSwapV1CurrencyPair] | true | none | 可闪兑的币对列表  
+      
+    
+    {
+      "currency_pair": [
+        {
+          "market": "string",
+          "sell_asset": "string",
+          "sell_min_amount": "string",
+          "sell_max_amount": "string",
+          "buy_asset": "string",
+          "buy_min_amount": "string",
+          "buy_max_amount": "string"
+        }
+      ]
     }
     
     

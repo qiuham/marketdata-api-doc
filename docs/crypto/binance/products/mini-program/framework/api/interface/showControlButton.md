@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/showControlButton
 api_type: Guide
-updated_at: 2026-11-18 02:40:24.235016
+updated_at: 2026-11-18 18:45:39.445876
 ---
 
 # bn.showControlButton

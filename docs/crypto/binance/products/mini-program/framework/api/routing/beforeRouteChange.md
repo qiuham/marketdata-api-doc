@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/routing/beforeRouteChange
 api_type: Guide
-updated_at: 2026-11-18 02:35:20.136705
+updated_at: 2026-11-18 18:43:39.015738
 ---
 
 # bn.beforeRouteChange

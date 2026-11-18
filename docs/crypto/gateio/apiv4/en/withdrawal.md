@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/withdrawal
 api_type: Account
-updated_at: 2026-11-17 18:45:15.953237
+updated_at: 2026-11-18 18:56:05.125899
 ---
 
 # Withdrawal
@@ -388,17 +388,68 @@ Code samples
 
 #  Schemas
 
-##  UidPushWithdrawalResp
+##  WithdrawalsDel
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-id | string | Optional | none | Order ID  
+id | string | Optional | read-only | Record ID  
+txid | string | Optional | read-only | Hash record of the withdrawal  
+timestamp | string | Optional | read-only | Operation time  
+amount | string | Required | none | Token amount  
+currency | string | Required | none | Currency name  
+address | string | Optional | none | Withdrawal address. Required for withdrawals  
+memo | string | Optional | none | Additional remarks with regards to the withdrawal  
+block_number | string | Optional | read-only | Block Number  
+status | string | Optional | read-only | Transaction Status  
+  
+\- BCODE: Deposit Code Operation  
+\- CANCEL: Cancelled  
+\- CANCELPEND: Withdrawal Cancellation Pending  
+\- DMOVE: Pending Manual Review  
+\- DONE: Completed (Only considered truly on-chain when block_number > 0)  
+\- EXTPEND: Sent and Waiting for Confirmation  
+\- FAIL: On-Chain Failure Pending Confirmation  
+\- FVERIFY: Facial Verification in Progress  
+\- LOCKED: Wallet-Side Order Locked  
+\- MANUAL: Pending Manual Review  
+\- REJECT: Rejected  
+\- REQUEST: Request in Progress  
+\- REVIEW: Under Review  
+chain | string | Required | none | Name of the chain used in withdrawals  
       
     
     {
-      "id": "string"
+      "id": "string",
+      "txid": "string",
+      "timestamp": "string",
+      "amount": "string",
+      "currency": "string",
+      "address": "string",
+      "memo": "string",
+      "block_number": "string",
+      "status": "string",
+      "chain": "string"
+    }
+    
+    
+
+##  UidPushWithdrawal
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+receive_uid | integer(int64) | Required | none | Recipient UID  
+currency | string | Required | none | Currency name  
+amount | string | Required | none | Transfer amount  
+      
+    
+    {
+      "receive_uid": 0,
+      "currency": "string",
+      "amount": "string"
     }
     
     
@@ -458,66 +509,15 @@ chain | string | Required | none | Name of the chain used in withdrawals
     
     
 
-##  UidPushWithdrawal
+##  UidPushWithdrawalResp
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-receive_uid | integer(int64) | Required | none | Recipient UID  
-currency | string | Required | none | Currency name  
-amount | string | Required | none | Transfer amount  
+id | string | Optional | none | Order ID  
       
     
     {
-      "receive_uid": 0,
-      "currency": "string",
-      "amount": "string"
-    }
-    
-    
-
-##  WithdrawalsDel
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-id | string | Optional | read-only | Record ID  
-txid | string | Optional | read-only | Hash record of the withdrawal  
-timestamp | string | Optional | read-only | Operation time  
-amount | string | Required | none | Token amount  
-currency | string | Required | none | Currency name  
-address | string | Optional | none | Withdrawal address. Required for withdrawals  
-memo | string | Optional | none | Additional remarks with regards to the withdrawal  
-block_number | string | Optional | read-only | Block Number  
-status | string | Optional | read-only | Transaction Status  
-  
-\- BCODE: Deposit Code Operation  
-\- CANCEL: Cancelled  
-\- CANCELPEND: Withdrawal Cancellation Pending  
-\- DMOVE: Pending Manual Review  
-\- DONE: Completed (Only considered truly on-chain when block_number > 0)  
-\- EXTPEND: Sent and Waiting for Confirmation  
-\- FAIL: On-Chain Failure Pending Confirmation  
-\- FVERIFY: Facial Verification in Progress  
-\- LOCKED: Wallet-Side Order Locked  
-\- MANUAL: Pending Manual Review  
-\- REJECT: Rejected  
-\- REQUEST: Request in Progress  
-\- REVIEW: Under Review  
-chain | string | Required | none | Name of the chain used in withdrawals  
-      
-    
-    {
-      "id": "string",
-      "txid": "string",
-      "timestamp": "string",
-      "amount": "string",
-      "currency": "string",
-      "address": "string",
-      "memo": "string",
-      "block_number": "string",
-      "status": "string",
-      "chain": "string"
+      "id": "string"
     }

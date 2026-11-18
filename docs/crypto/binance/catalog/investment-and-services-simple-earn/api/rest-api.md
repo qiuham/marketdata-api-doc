@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/investment-and-services-simple-earn/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 02:47:00.731976
+updated_at: 2026-11-18 18:48:34.561155
 ---
 
 # Simple Earn REST API

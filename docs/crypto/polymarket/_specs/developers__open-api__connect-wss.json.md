@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/developers/open-api/connect-wss.json'
-updated_at: 2026-11-17
+updated_at: 2026-11-18
 ---
 
 # connect-wss.json

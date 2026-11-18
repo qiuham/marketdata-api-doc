@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/startPullDownRefresh
 api_type: Guide
-updated_at: 2026-11-18 02:39:42.045095
+updated_at: 2026-11-18 18:45:22.830403
 ---
 
 # bn.startPullDownRefresh

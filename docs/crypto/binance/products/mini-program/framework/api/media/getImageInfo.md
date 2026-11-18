@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/media/getImageInfo
 api_type: Guide
-updated_at: 2026-11-18 02:38:09.768193
+updated_at: 2026-11-18 18:44:46.338096
 ---
 
 # bn.getImageInfo

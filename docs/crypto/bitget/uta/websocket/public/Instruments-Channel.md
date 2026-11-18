@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Instruments-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:37:05.022640
+updated_at: 2026-11-18 19:00:51.778285
 ---
 
 # Instruments Channel

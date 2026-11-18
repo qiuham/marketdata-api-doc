@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/margin/isolated/private/Isolate-Orders
 api_type: WebSocket
-updated_at: 2026-11-18 08:35:43.603965
+updated_at: 2026-11-18 19:00:05.911755
 ---
 
 # Isolated-Margin Orders Channel

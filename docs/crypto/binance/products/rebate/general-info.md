@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/rebate/general-info
 api_type: Guide
-updated_at: 2026-11-18 01:57:34.637929
+updated_at: 2026-11-18 18:28:33.715777
 ---
 
 # General Info

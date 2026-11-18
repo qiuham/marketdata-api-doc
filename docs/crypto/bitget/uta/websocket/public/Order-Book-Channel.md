@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/websocket/public/Order-Book-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:37:11.756826
+updated_at: 2026-11-18 19:00:55.259727
 ---
 
 # Depth Channel

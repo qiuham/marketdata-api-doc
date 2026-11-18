@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-change_scope_in_api_key
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:41.828327
+updated_at: 2026-11-18 18:59:12.522372
 ---
 
 # private/change_scope_in_api_key

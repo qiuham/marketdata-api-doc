@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-broker-commission
 api_type: REST
-updated_at: 2026-11-18 08:37:33.553477
+updated_at: 2026-11-18 19:01:06.958828
 ---
 
 # Classic Broker Commission API

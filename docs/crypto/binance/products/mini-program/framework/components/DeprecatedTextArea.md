@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/components/DeprecatedTextArea
 api_type: Guide
-updated_at: 2026-11-18 02:32:38.584968
+updated_at: 2026-11-18 18:42:35.456258
 ---
 
 # TextArea

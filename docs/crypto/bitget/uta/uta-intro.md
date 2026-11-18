@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/uta-intro
 api_type: Guide
-updated_at: 2026-11-18 08:36:47.213579
+updated_at: 2026-11-18 19:00:41.759716
 ---
 
 # Unified Trading Account

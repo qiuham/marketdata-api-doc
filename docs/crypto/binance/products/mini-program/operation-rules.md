@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/operation-rules
 api_type: Guide
-updated_at: 2026-11-18 01:59:28.564053
+updated_at: 2026-11-18 18:29:18.927518
 ---
 
 # Mini Program Platform Operation Rules

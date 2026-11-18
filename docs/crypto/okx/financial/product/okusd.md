@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#financial-product-okusd
 anchor_id: financial-product-okusd
 api_type: API
-updated_at: 2026-11-17 18:47:02.959320
+updated_at: 2026-11-18 18:57:51.261503
 ---
 
 # OKUSD

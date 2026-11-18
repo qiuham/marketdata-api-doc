@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/errors
 api_type: Guide
-updated_at: 2026-11-18 05:08:39.591401
+updated_at: 2026-11-18 18:59:11.981111
 ---
 
 # Error Codes
@@ -225,7 +225,7 @@ The following table contains the complete list of all RPC error codes returned b
 | 13905 | `"too_many_quotes_per_block_rfq"` | Number of quotes for single Block RFQ exceeded. |
 | 13906 | `"too_many_quotes_per_block_rfq_side"` | Number of quotes per single Block RFQ side exceeded. |
 | 13907 | `"not_fully_filled"` | Block RFQ trade cannot be fully filled with matched quotes. |
-| 13907 | `"too_many_open_block_rfqs"` | Number of open Block RFQs by taker exceeds configured max amount. |
+| 13908 | `"too_many_open_block_rfqs"` | Number of open Block RFQs by taker exceeds configured max amount. |
 | 13910 | `"quote_crossed"` | Quote placed by the maker crosses an already placed quote by the same maker. |
 | 13911 | `"max_broker_client_count"` | Number of broker clients exceeds allowed max amount. |
 | 13912 | `"broker_cannot_be_client"` | Broker accounts cannot be clients of other brokers. |
@@ -237,6 +237,9 @@ The following table contains the complete list of all RPC error codes returned b
 | 13918 | `"inverse_future_cross_trading"` | Placed Block RFQ quote would cross trade inverse futures with Block RFQ quote limits set on the account. |
 | 13919 | `"client_of_main_account"` | Subaccounts of brokers cannot be linked to their own broker account. |
 | 13922 | `"linked_order_type_not_supported_for_csr_spot"` | Linked orders (OTO, OCO, OTOCO) are not supported on spot instruments routed to Coinbase Exchange. |
+| 14060 | `"neg_equity_not_allowed"` | Margin model change rejected because the currency's equity is negative and its backing would change between cross and segregated margin. The `data` object contains `currency`. |
+| 14061 | `"long_options_not_funded"` | Margin model change rejected because the currency's margin balance does not cover the reserve for its long option positions and open option or combo buy orders. The `data` object contains `currency`, `margin_balance` and `required`. |
+| 14062 | `"negative_margin_balance"` | Margin model change rejected because the currency's margin balance would be negative after it leaves cross margin backing. The `data` object contains `currency` and `margin_balance`. |
 | -32602 | `"Invalid params"` | See JSON-RPC spec. The `data` object names the offending `param` and a `reason`. For the `currency` and `kind` variants, see [Using the currency Parameter](https://docs.deribit.com/articles/currency-parameter.md). |
 | -32600 | `"request entity too large"` | Error thrown when body size in POST request or single frame in websocket connection frame exceeds the limit (32 kB). |
 | -32601 | `"Method not found"` | See JSON-RPC spec. |

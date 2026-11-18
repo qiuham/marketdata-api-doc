@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/announcement
 api_type: REST
-updated_at: 2026-11-17 18:44:40.555982
+updated_at: 2026-11-18 18:55:32.925723
 ---
 
 # Announcement
@@ -134,6 +134,45 @@ Code samples
 
 #  Schemas
 
+##  AnnouncementArticleListRequest
+
+_AnnouncementArticleListRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+title_query | string | Optional | none | Article title to use when querying announcements.  
+page | string | Optional | none | Page number. Optional. Pass as a string, for example "1".  
+size | string | Optional | none | Number of articles to return per page. Optional. Pass as a string, for example "5".  
+tags | string | Optional | none | Article tags  
+timer | string | Optional | none | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
+cate_name | string | Optional | none | Announcement category name.  
+cate_level | string | Optional | none | Category level, passed as a string: "1" or "2".  
+sub_website_id | string | Optional | none | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
+pinned | integer | Optional | none | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
+update_after | integer | Optional | none | Query announcement articles updated after this timestamp.  
+lang | string | Optional | none | Language code, for example "cn".  
+filter_empty_content | integer | Optional | none | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
+      
+    
+    {
+      "title_query": "string",
+      "page": "1",
+      "size": "5",
+      "tags": "string",
+      "timer": "string",
+      "cate_name": "string",
+      "cate_level": "string",
+      "sub_website_id": "0",
+      "pinned": 1,
+      "update_after": 0,
+      "lang": "cn",
+      "filter_empty_content": 1
+    }
+    
+    
+
 ##  AnnouncementArticleListResponse
 
 _AnnouncementArticleListResponse_
@@ -195,45 +234,6 @@ total | integer | Required | none | Total number of announcement articles.
         }
       ],
       "total": 0
-    }
-    
-    
-
-##  AnnouncementArticleListRequest
-
-_AnnouncementArticleListRequest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-title_query | string | Optional | none | Article title to use when querying announcements.  
-page | string | Optional | none | Page number. Optional. Pass as a string, for example "1".  
-size | string | Optional | none | Number of articles to return per page. Optional. Pass as a string, for example "5".  
-tags | string | Optional | none | Article tags  
-timer | string | Optional | none | Query announcements from the last N days, with N passed as a string. For example, on the 10th, pass "10" to query announcements from the 1st through the 10th.  
-cate_name | string | Optional | none | Announcement category name.  
-cate_level | string | Optional | none | Category level, passed as a string: "1" or "2".  
-sub_website_id | string | Optional | none | Subsite ID, passed as a string: "0" for the main site or "177" for the Turkey site. Defaults to "0".  
-pinned | integer | Optional | none | Whether to include pinned articles: 1 to include them or 0 to exclude them. Defaults to 1.  
-update_after | integer | Optional | none | Query announcement articles updated after this timestamp.  
-lang | string | Optional | none | Language code, for example "cn".  
-filter_empty_content | integer | Optional | none | Whether to exclude articles with empty content in the current language: 0 to keep them or 1 to exclude them. Defaults to 1.  
-      
-    
-    {
-      "title_query": "string",
-      "page": "1",
-      "size": "5",
-      "tags": "string",
-      "timer": "string",
-      "cate_name": "string",
-      "cate_level": "string",
-      "sub_website_id": "0",
-      "pinned": 1,
-      "update_after": 0,
-      "lang": "cn",
-      "filter_empty_content": 1
     }
     
     

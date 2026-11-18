@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/keyboard/hideKeyboard
 api_type: Guide
-updated_at: 2026-11-18 02:39:22.812176
+updated_at: 2026-11-18 18:45:15.120396
 ---
 
 # bn.hideKeyboard

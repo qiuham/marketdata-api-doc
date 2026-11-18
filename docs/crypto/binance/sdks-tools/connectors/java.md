@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/sdks-tools/connectors/java
 api_type: Guide
-updated_at: 2026-11-18 01:51:59.721105
+updated_at: 2026-11-18 18:26:26.932612
 ---
 
 # Java

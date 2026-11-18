@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/classic/websocket/spot/public/Auction-Channel
 api_type: WebSocket
-updated_at: 2026-11-18 08:35:53.231213
+updated_at: 2026-11-18 19:00:10.899905
 ---
 
 # Auction Channel

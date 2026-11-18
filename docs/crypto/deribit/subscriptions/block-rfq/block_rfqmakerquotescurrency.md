@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/subscriptions/block-rfq/block_rfqmakerquotescurrency
 api_type: WebSocket
-updated_at: 2026-11-18 05:08:17.927648
+updated_at: 2026-11-18 18:59:07.155221
 ---
 
 # block_rfq.maker.quotes.(currency)

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/spot-block-matching/change-log
 api_type: Changelog
-updated_at: 2026-11-18 01:56:04.658453
+updated_at: 2026-11-18 18:28:03.389272
 ---
 
 # Changelog

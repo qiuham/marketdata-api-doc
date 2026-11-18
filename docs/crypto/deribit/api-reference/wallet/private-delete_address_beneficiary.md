@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/wallet/private-delete_address_beneficiary
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:25.560825
+updated_at: 2026-11-18 18:59:21.429319
 ---
 
 # private/delete_address_beneficiary

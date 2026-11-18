@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/margin-trading/risk-data-stream
 api_type: WebSocket
-updated_at: 2026-11-18 01:59:55.344536
+updated_at: 2026-11-18 18:29:29.125472
 ---
 
 # Risk Data Stream

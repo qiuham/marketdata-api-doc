@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/storage/setStorageSync
 api_type: Guide
-updated_at: 2026-11-18 02:33:55.855600
+updated_at: 2026-11-18 18:43:06.311700
 ---
 
 # bn.setStorageSync

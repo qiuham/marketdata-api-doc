@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/wallet/quick-start
 api_type: Guide
-updated_at: 2026-11-18 01:53:32.205278
+updated_at: 2026-11-18 18:27:03.201956
 ---
 
 # Quick Start

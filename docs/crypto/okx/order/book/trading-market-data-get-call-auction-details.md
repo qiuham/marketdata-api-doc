@@ -3,7 +3,7 @@ exchange: okx
 source_url: https://www.okx.com/docs-v5/en/#order-book-trading-market-data-get-call-auction-details
 anchor_id: order-book-trading-market-data-get-call-auction-details
 api_type: API
-updated_at: 2026-11-17 18:46:57.130393
+updated_at: 2026-11-18 18:57:47.576658
 ---
 
 # GET / Call auction details

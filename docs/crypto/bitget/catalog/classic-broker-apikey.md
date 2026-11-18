@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-broker-apikey
 api_type: REST
-updated_at: 2026-11-18 08:37:32.350980
+updated_at: 2026-11-18 19:01:06.680896
 ---
 
 # Classic Broker API Key API

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/zh_CN/account
 api_type: Account
-updated_at: 2026-11-17 18:45:23.494123
+updated_at: 2026-11-18 18:56:11.727575
 ---
 
 # Account
@@ -1030,6 +1030,34 @@ WARNING
 
 #  模型
 
+##  AddSTPGroupUsersRequest
+
+###  属性
+
+_无_
+    
+    
+    [
+      0
+    ]
+    
+    
+
+##  DebitFee
+
+###  属性
+
+属性名称 | 类型 | 必选 | 限制 | 描述  
+---|---|---|---|---  
+enabled | boolean | true | none | 是否开启GT抵扣  
+      
+    
+    {
+      "enabled": true
+    }
+    
+    
+
 ##  AccountDetail
 
 _AccountDetail_
@@ -1064,17 +1092,23 @@ copy_trading_role | integer(int32) | false | none | 用户角色： 0 - 普通�
     
     
 
-##  DebitFee
+##  AccountRateLimit
 
 ###  属性
 
 属性名称 | 类型 | 必选 | 限制 | 描述  
 ---|---|---|---|---  
-enabled | boolean | true | none | 是否开启GT抵扣  
+tier | string | false | 只读 | 限频等级（详细限频规则查看成交比率限频）  
+ratio | string | false | none | 成交率  
+main_ratio | string | false | 只读 | 主账户合计成交比率  
+updated_at | string | false | 只读 | 更新时间  
       
     
     {
-      "enabled": true
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
     }
     
     
@@ -1097,40 +1131,6 @@ create_time | integer(int64) | false | 只读 | 创建时间
       "creator_id": 0,
       "create_time": 0
     }
-    
-    
-
-##  AccountRateLimit
-
-###  属性
-
-属性名称 | 类型 | 必选 | 限制 | 描述  
----|---|---|---|---  
-tier | string | false | 只读 | 限频等级（详细限频规则查看成交比率限频）  
-ratio | string | false | none | 成交率  
-main_ratio | string | false | 只读 | 主账户合计成交比率  
-updated_at | string | false | 只读 | 更新时间  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  AddSTPGroupUsersRequest
-
-###  属性
-
-_无_
-    
-    
-    [
-      0
-    ]
     
     
 

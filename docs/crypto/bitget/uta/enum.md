@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/uta/enum
 api_type: Guide
-updated_at: 2026-11-18 08:36:28.327644
+updated_at: 2026-11-18 19:00:31.482554
 ---
 
 # Enumeration

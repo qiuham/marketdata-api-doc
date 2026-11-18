@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/stocks/common-definition
 api_type: Guide
-updated_at: 2026-11-18 01:55:25.394347
+updated_at: 2026-11-18 18:27:47.822657
 ---
 
 # Common Definition

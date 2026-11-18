@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/articles/coinbase-wallet-api
 api_type: Guide
-updated_at: 2026-11-18 05:07:59.025898
+updated_at: 2026-11-18 18:58:57.972080
 ---
 
 # Coinbase Wallet API

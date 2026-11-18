@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/interface/updatePageUrl
 api_type: Guide
-updated_at: 2026-11-18 02:39:34.423693
+updated_at: 2026-11-18 18:45:19.766537
 ---
 
 # bn.updatePageUrl

@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/account
 api_type: Account
-updated_at: 2026-11-17 18:44:37.719541
+updated_at: 2026-11-18 18:55:30.405603
 ---
 
 # Account
@@ -1030,89 +1030,6 @@ Code samples
 
 #  Schemas
 
-##  AddSTPGroupUsersRequest
-
-###  Properties
-
-_None_
-    
-    
-    [
-      0
-    ]
-    
-    
-
-##  AccountRateLimit
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-tier | string | Optional | read-only | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
-ratio | string | Optional | none | Fill rate  
-main_ratio | string | Optional | read-only | Total fill ratio of main account  
-updated_at | string | Optional | read-only | Update time  
-      
-    
-    {
-      "tier": "string",
-      "ratio": "string",
-      "main_ratio": "string",
-      "updated_at": "string"
-    }
-    
-    
-
-##  AccountDetail
-
-_AccountDetail_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-ip_whitelist | array | Optional | none | IP Whitelist  
-currency_pairs | array | Optional | none | Trading pair whitelist  
-user_id | integer(int64) | Optional | none | User ID  
-tier | integer(int64) | Optional | none | User VIP level  
-key | object | Optional | none | API Key details  
-» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
-copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
-      
-    
-    {
-      "ip_whitelist": [
-        "string"
-      ],
-      "currency_pairs": [
-        "string"
-      ],
-      "user_id": 0,
-      "tier": 0,
-      "key": {
-        "mode": 0
-      },
-      "copy_trading_role": 0
-    }
-    
-    
-
-##  DebitFee
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-enabled | boolean | Required | none | Whether GT fee deduction is enabled  
-      
-    
-    {
-      "enabled": true
-    }
-    
-    
-
 ##  AccountKeyInfo
 
 _AccountKeyInfo_
@@ -1182,6 +1099,89 @@ last_access | string | Optional | read-only | Last Access Time
       "created_at": "string",
       "updated_at": "string",
       "last_access": "string"
+    }
+    
+    
+
+##  AccountDetail
+
+_AccountDetail_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+ip_whitelist | array | Optional | none | IP Whitelist  
+currency_pairs | array | Optional | none | Trading pair whitelist  
+user_id | integer(int64) | Optional | none | User ID  
+tier | integer(int64) | Optional | none | User VIP level  
+key | object | Optional | none | API Key details  
+» mode | integer(int32) | Optional | none | Mode: 1 - Classic mode, 2 - Legacy unified mode  
+copy_trading_role | integer(int32) | Optional | none | User role: 0 - Normal user 1 - Copy trading leader 2 - Copy trading follower 3 - Both leader and follower  
+      
+    
+    {
+      "ip_whitelist": [
+        "string"
+      ],
+      "currency_pairs": [
+        "string"
+      ],
+      "user_id": 0,
+      "tier": 0,
+      "key": {
+        "mode": 0
+      },
+      "copy_trading_role": 0
+    }
+    
+    
+
+##  AddSTPGroupUsersRequest
+
+###  Properties
+
+_None_
+    
+    
+    [
+      0
+    ]
+    
+    
+
+##  AccountRateLimit
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tier | string | Optional | read-only | Frequency limit level (For detailed frequency limit rules, see Transaction ratio frequency limit)  
+ratio | string | Optional | none | Fill rate  
+main_ratio | string | Optional | read-only | Total fill ratio of main account  
+updated_at | string | Optional | read-only | Update time  
+      
+    
+    {
+      "tier": "string",
+      "ratio": "string",
+      "main_ratio": "string",
+      "updated_at": "string"
+    }
+    
+    
+
+##  DebitFee
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+enabled | boolean | Required | none | Whether GT fee deduction is enabled  
+      
+    
+    {
+      "enabled": true
     }
     
     

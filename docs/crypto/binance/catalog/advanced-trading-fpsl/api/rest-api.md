@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/advanced-trading-fpsl/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 02:46:54.498606
+updated_at: 2026-11-18 18:48:28.189072
 ---
 
 # FPSL REST API

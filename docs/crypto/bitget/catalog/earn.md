@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/earn
 api_type: REST
-updated_at: 2026-11-18 08:38:15.816556
+updated_at: 2026-11-18 19:01:27.261531
 ---
 
 # Earn

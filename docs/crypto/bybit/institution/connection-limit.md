@@ -2,7 +2,7 @@
 exchange: bybit
 source_url: https://bybit-exchange.github.io/docs/v5/institution/connection-limit
 api_type: REST
-updated_at: 2026-11-17 18:38:35.469712
+updated_at: 2026-11-18 18:50:23.089308
 ---
 
 # Get Institution Connection Limit

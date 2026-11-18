@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/trading/private-get_order_state_by_label
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:09:20.141596
+updated_at: 2026-11-18 18:59:20.227695
 ---
 
 # private/get_order_state_by_label

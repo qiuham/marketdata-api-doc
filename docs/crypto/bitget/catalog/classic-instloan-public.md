@@ -2,7 +2,7 @@
 exchange: bitget
 source_url: https://www.bitget.com/docs/catalog/classic-instloan-public
 api_type: REST
-updated_at: 2026-11-18 08:37:53.708703
+updated_at: 2026-11-18 19:01:16.605791
 ---
 
 # Classic Inst Loan Public API

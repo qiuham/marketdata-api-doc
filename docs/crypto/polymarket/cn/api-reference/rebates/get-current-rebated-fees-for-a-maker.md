@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rebates/get-current-rebated-fees-for-a-maker'
-updated_at: 2026-11-17
+updated_at: 2026-11-18
 ---
 
 # 获取做市商当前返佣

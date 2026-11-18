@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/ton-provider
 api_type: Guide
-updated_at: 2026-11-18 01:52:30.635706
+updated_at: 2026-11-18 18:26:39.338805
 ---
 
 # Ton Provider

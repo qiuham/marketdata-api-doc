@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/web3-connect/introduction
 api_type: Guide
-updated_at: 2026-11-18 01:52:45.984635
+updated_at: 2026-11-18 18:26:45.061814
 ---
 
 # Binance Wallet SDK

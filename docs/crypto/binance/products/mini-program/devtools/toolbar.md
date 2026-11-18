@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/devtools/toolbar
 api_type: Guide
-updated_at: 2026-11-18 02:19:29.906424
+updated_at: 2026-11-18 18:37:24.735401
 ---
 
 # Toolbar

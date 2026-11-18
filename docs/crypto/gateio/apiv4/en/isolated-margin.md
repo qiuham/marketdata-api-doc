@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/isolated-margin
 api_type: REST
-updated_at: 2026-11-17 18:44:55.603900
+updated_at: 2026-11-18 18:55:46.553240
 ---
 
 # Isolated-Margin
@@ -1796,38 +1796,6 @@ PropertiesName | Type | Required | Restrictions | Description
     
     
 
-##  CreateUniLoan
-
-_Borrow or repay_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | none | Currency  
-type | string | Required | none | Loan Type margin: margin borrowing  
-amount | string | Required | none | Borrow or repayment amount  
-repaid_all | boolean | Optional | none | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
-currency_pair | string | Required | none | Currency pair  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-type | borrow  
-type | repay  
-      
-    
-    {
-      "currency": "string",
-      "type": "borrow",
-      "amount": "string",
-      "repaid_all": true,
-      "currency_pair": "string"
-    }
-    
-    
-
 ##  UniLoan
 
 _Borrowing_
@@ -1851,71 +1819,6 @@ update_time | integer(int64) | Optional | read-only | Last Update Time
       "type": "string",
       "create_time": 0,
       "update_time": 0
-    }
-    
-    
-
-##  MaxUniBorrowable
-
-_MaxUniBorrowable_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Required | read-only | Currency  
-currency_pair | string | Optional | read-only | Currency pair  
-borrowable | string | Required | read-only | Maximum borrowable  
-      
-    
-    {
-      "currency": "string",
-      "currency_pair": "string",
-      "borrowable": "string"
-    }
-    
-    
-
-##  UniLoanRecord
-
-_Borrowing Records_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-type | string | Optional | read-only | Type: `borrow` \- borrow, `repay` \- repay  
-currency_pair | string | Optional | read-only | Currency pair  
-currency | string | Optional | read-only | Currency  
-amount | string | Optional | read-only | Borrow or repayment amount  
-create_time | integer(int64) | Optional | read-only | Created time  
-      
-    
-    {
-      "type": "string",
-      "currency_pair": "string",
-      "currency": "string",
-      "amount": "string",
-      "create_time": 0
-    }
-    
-    
-
-##  MarginMarketLeverage
-
-_Market leverage settings_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency_pair | string | Optional | none | Market  
-leverage | string | Required | none | Leverage multiplier  
-      
-    
-    {
-      "currency_pair": "string",
-      "leverage": "string"
     }
     
     
@@ -1968,29 +1871,6 @@ quote | MarginAccount/properties/base | Optional | none | Currency account infor
     
     
 
-##  FundingAccount
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-currency | string | Optional | none | Currency name  
-available | string | Optional | none | Available assets to lend, which is identical to spot account `available`  
-locked | string | Optional | none | Locked amount. i.e. amount in `open` loans  
-lent | string | Optional | none | Outstanding loan amount yet to be repaid  
-total_lent | string | Optional | none | Amount used for lending. total_lent = lent + locked  
-      
-    
-    {
-      "currency": "string",
-      "available": "string",
-      "locked": "string",
-      "lent": "string",
-      "total_lent": "string"
-    }
-    
-    
-
 ##  MarginLeverageTier
 
 _Market gradient information_
@@ -2037,6 +1917,101 @@ create_time | integer(int64) | Optional | read-only | Created time
       "status": 0,
       "type": "string",
       "create_time": 0
+    }
+    
+    
+
+##  MarginMarketLeverage
+
+_Market leverage settings_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency_pair | string | Optional | none | Market  
+leverage | string | Required | none | Leverage multiplier  
+      
+    
+    {
+      "currency_pair": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  CreateUniLoan
+
+_Borrow or repay_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Required | none | Currency  
+type | string | Required | none | Loan Type margin: margin borrowing  
+amount | string | Required | none | Borrow or repayment amount  
+repaid_all | boolean | Optional | none | Full repayment. For repayment operations only. When `true`, overrides `amount` and repays the full amount  
+currency_pair | string | Required | none | Currency pair  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+type | borrow  
+type | repay  
+      
+    
+    {
+      "currency": "string",
+      "type": "borrow",
+      "amount": "string",
+      "repaid_all": true,
+      "currency_pair": "string"
+    }
+    
+    
+
+##  FundingAccount
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Optional | none | Currency name  
+available | string | Optional | none | Available assets to lend, which is identical to spot account `available`  
+locked | string | Optional | none | Locked amount. i.e. amount in `open` loans  
+lent | string | Optional | none | Outstanding loan amount yet to be repaid  
+total_lent | string | Optional | none | Amount used for lending. total_lent = lent + locked  
+      
+    
+    {
+      "currency": "string",
+      "available": "string",
+      "locked": "string",
+      "lent": "string",
+      "total_lent": "string"
+    }
+    
+    
+
+##  MaxUniBorrowable
+
+_MaxUniBorrowable_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+currency | string | Required | read-only | Currency  
+currency_pair | string | Optional | read-only | Currency pair  
+borrowable | string | Required | read-only | Maximum borrowable  
+      
+    
+    {
+      "currency": "string",
+      "currency_pair": "string",
+      "borrowable": "string"
     }
     
     
@@ -2096,4 +2071,29 @@ type | string | Optional | none | Account book type. Please refer to account boo
       "change": "string",
       "balance": "string",
       "type": "string"
+    }
+    
+    
+
+##  UniLoanRecord
+
+_Borrowing Records_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+type | string | Optional | read-only | Type: `borrow` \- borrow, `repay` \- repay  
+currency_pair | string | Optional | read-only | Currency pair  
+currency | string | Optional | read-only | Currency  
+amount | string | Optional | read-only | Borrow or repayment amount  
+create_time | integer(int64) | Optional | read-only | Created time  
+      
+    
+    {
+      "type": "string",
+      "currency_pair": "string",
+      "currency": "string",
+      "amount": "string",
+      "create_time": 0
     }

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/products/mini-program/framework/api/location/openLocation
 api_type: Guide
-updated_at: 2026-11-18 02:38:55.929729
+updated_at: 2026-11-18 18:45:04.734780
 ---
 
 # bn.openLocation

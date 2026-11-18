@@ -2,7 +2,7 @@
 exchange: gateio
 source_url: https://www.gate.com/docs/developers/apiv4/en/crossex
 api_type: Trading
-updated_at: 2026-11-17 18:44:45.454849
+updated_at: 2026-11-18 18:55:37.077028
 ---
 
 # CrossEx
@@ -4706,23 +4706,21 @@ Code samples
 
 #  Schemas
 
-##  CrossexIsolatedMarginResponse
+##  CrossexConvertOrderResponse
 
-_CrossexIsolatedMarginResponse_
+_CrossexConvertOrderResponse_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Futures trading pair  
-margin | string | Required | none | Amount of isolated margin increased or decreased in this request  
-position_side | string | Optional | none | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+order_id | string | Required | none | Order ID  
+text | string | Required | none | Order ID (cannot be customized)  
       
     
     {
-      "symbol": "string",
-      "margin": "string",
-      "position_side": "string"
+      "order_id": "string",
+      "text": "string"
     }
     
     
@@ -4749,6 +4747,118 @@ margin_mode | ISOLATED
     {
       "symbol": "string",
       "margin_mode": "CROSS"
+    }
+    
+    
+
+##  CrossexOrderRequest
+
+_Place Order Request Body_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+text | string | Optional | none | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
+symbol | string | Required | none | Unique identifier Exchange_Business_Base_Counter  
+Examples:  
+To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
+To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
+To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
+To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
+To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
+To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
+To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
+To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
+To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
+To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
+Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
+side | string | Required | none | BUY, SELL  
+type | string | Optional | none | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
+time_in_force | string | Optional | none | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
+`GTC`: GoodTillCancelled  
+`IOC`: ImmediateOrCancelled  
+`FOK`: FillOrKill  
+`POC`: PendingOrCancelled or PostOnly  
+`RPI`: RPI  
+Stocks and ETFs support only `GTC`  
+qty | string | Optional | none | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
+price | string | Optional | none | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
+quote_qty | string | Optional | none | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
+reduce_only | string | Optional | none | Reduce-only: `true` or `false`  
+position_side | string | Optional | none | Position side: `NONE`, `LONG`, `SHORT`  
+Defaults to `NONE` (single position mode) if not specified  
+  
+####  Enumerated Values
+
+Enumerated ValuesProperty | Value  
+---|---  
+side | BUY  
+side | SELL  
+type | LIMIT  
+type | MARKET  
+time_in_force | GTC  
+time_in_force | IOC  
+time_in_force | FOK  
+time_in_force | POC  
+time_in_force | RPI  
+reduce_only | true  
+reduce_only | false  
+position_side | LONG  
+position_side | SHORT  
+position_side | NONE  
+      
+    
+    {
+      "text": "string",
+      "symbol": "string",
+      "side": "BUY",
+      "type": "LIMIT",
+      "time_in_force": "GTC",
+      "qty": "string",
+      "price": "string",
+      "quote_qty": "string",
+      "reduce_only": "true",
+      "position_side": "LONG"
+    }
+    
+    
+
+##  CrossexTransferResponse
+
+_CrossexTransferResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+tx_id | string | Required | none | Order ID  
+text | string | Required | none | User-defined Order ID  
+      
+    
+    {
+      "tx_id": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexOrderActionResponse
+
+_CrossexOrderActionResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | string | Required | none | Order ID  
+text | string | Required | none | User-defined Order ID  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string"
     }
     
     
@@ -4832,40 +4942,31 @@ update_time | string | Required | none | Update time
     
     
 
-##  CrossexOrderActionResponse
+##  CrossexConvertQuoteRequest
 
-_CrossexOrderActionResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | User-defined Order ID  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexLeverageResponse
-
-_CrossexLeverageResponse_
+_Flash Swap Quote Request Body_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-symbol | string | Required | none | Currency pair  
-leverage | string | Required | none | Requested Modified Leverage  
+exchange_type | string | Required | none | Exchange type  
+Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
+from_coin | string | Required | none | Asset Sold  
+to_coin | string | Required | none | Asset to receive  
+OKX and GATE only support conversion to BTC, ETH, or USDT  
+BYBIT and BINANCE only support conversion to USDT  
+HYPERLIQUID only supports conversion to USDT or USDC  
+KRAKEN only supports conversion to USDT  
+LIGHTER only supports swaps between USDT and USDC  
+from_amount | string | Required | none | Amount to sell  
       
     
     {
-      "symbol": "string",
-      "leverage": "string"
+      "exchange_type": "string",
+      "from_coin": "string",
+      "to_coin": "string",
+      "from_amount": "string"
     }
     
     
@@ -4918,122 +5019,6 @@ tag | string | Required | none | Tag information. Hyperliquid returns DEX inform
     
     
 
-##  CrossexBatchCancelOrderResponse
-
-_CrossexBatchCancelOrderResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | Custom ID specified by the user when creating the order  
-accepted | string | Required | none | Whether the request was accepted, as the string true or false  
-label | string | Required | none | Error label when the request is not accepted; empty on success  
-message | string | Required | none | Error message when the request is not accepted; empty on success  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string",
-      "accepted": "string",
-      "label": "string",
-      "message": "string"
-    }
-    
-    
-
-##  CrossexLeverageRequest
-
-_Change Leverage Request Body (for futures/margin)_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-symbol | string | Required | none | Currency pair  
-leverage | string | Required | none | Leverage  
-      
-    
-    {
-      "symbol": "string",
-      "leverage": "string"
-    }
-    
-    
-
-##  CrossexTransferResponse
-
-_CrossexTransferResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-tx_id | string | Required | none | Order ID  
-text | string | Required | none | User-defined Order ID  
-      
-    
-    {
-      "tx_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexTransferRequest
-
-_Fund Transfer Request Body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-coin | string | Required | none | Currency  
-amount | string | Required | none | Transfer amount  
-from | string | Required | none | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
-to | string | Required | none | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
-text | string | Optional | none | User-defined ID  
-      
-    
-    {
-      "coin": "string",
-      "amount": "string",
-      "from": "string",
-      "to": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexBatchCancelOrderRequest
-
-_CrossexBatchCancelOrderRequest_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Optional | none | Order ID; either this field or text is required  
-text | string | Optional | none | Custom ID specified by the user when creating the order; either this field or order_id is required  
-  
-_anyOf_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
-  
-_or_
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-_None_ | object | Optional | none | none  
-      
-    
-    {}
-    
-    
-
 ##  CrossexIsolatedMarginRequest
 
 _Request body for increasing or decreasing isolated margin_
@@ -5063,116 +5048,78 @@ position_side | SHORT
     
     
 
-##  CrossexAccountUpdateRequest
+##  CrossexConvertOrderRequest
 
-_Change Account Request Body_
+_Flash Swap Transaction Request Body_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-position_mode | string | Optional | none | Futures position mode (SINGLE/DUAL)  
-account_mode | string | Optional | none | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
-exchange_type | string | Optional | none | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+quote_id | string | Required | none | Inquiry ID  
       
     
     {
-      "position_mode": "string",
-      "account_mode": "string",
-      "exchange_type": "string"
+      "quote_id": "string"
     }
     
     
 
-##  CrossexConvertOrderResponse
+##  CrossexLeverageRequest
 
-_CrossexConvertOrderResponse_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-order_id | string | Required | none | Order ID  
-text | string | Required | none | Order ID (cannot be customized)  
-      
-    
-    {
-      "order_id": "string",
-      "text": "string"
-    }
-    
-    
-
-##  CrossexOrderRequest
-
-_Place Order Request Body_
+_Change Leverage Request Body (for futures/margin)_
 
 ###  Properties
 
 PropertiesName | Type | Required | Restrictions | Description  
 ---|---|---|---|---  
-text | string | Optional | none | Client-defined Order ID, supports letters (a-z), numbers (0-9), symbols (-, _) only  
-symbol | string | Required | none | Unique identifier Exchange_Business_Base_Counter  
-Examples:  
-To place a spot order for ADA/USDT on BINANCE, use `BINANCE_SPOT_ADA_USDT`;  
-To place a USDT-margined perpetual futures order for ADA/USDT on OKX, use `OKX_FUTURE_ADA_USDT`;  
-To place a spot margin order for ADA/USDT on GATE, use `GATE_MARGIN_ADA_USDT`;  
-To place a spot order for ADA/USDT on BYBIT, use `BYBIT_SPOT_ADA_USDT`;  
-To place a futures order for ADA/USD on KRAKEN, use `KRAKEN_FUTURE_ADA_USD`;  
-To place a futures order for ADA/USDC on HYPERLIQUID, use `HYPERLIQUID_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on DERIBIT, use `DERIBIT_FUTURE_ADA_USDC`;  
-To place a futures order for ADA/USDC on LIGHTER, use `LIGHTER_FUTURE_ADA_USDC`;  
-To trade US stock AAPL, use `US_STOCK_AAPL_USDT`;  
-To trade Hong Kong stock 00700, use `HK_STOCK_00700_USDT`;  
-To trade US ETF SPY, use `US_ETF_SPY_USDT`;  
-Spot, USDT-margined perpetual futures, spot margin, stock, and ETF orders are supported. BYBIT/DERIBIT do not currently support spot margin orders. KRAKEN, HYPERLIQUID, and LIGHTER do not currently support spot or margin orders. Stocks and ETFs support only cross-exchange account mode  
-side | string | Required | none | BUY, SELL  
-type | string | Optional | none | Order type (default: `LIMIT`; supported types: `LIMIT`, `MARKET`)  
-time_in_force | string | Optional | none | Defaults to GTC. Supported values: `GTC`, `IOC`, `FOK`, `POC`, `RPI`  
-`GTC`: GoodTillCancelled  
-`IOC`: ImmediateOrCancelled  
-`FOK`: FillOrKill  
-`POC`: PendingOrCancelled or PostOnly  
-`RPI`: RPI  
-Stocks and ETFs support only `GTC`  
-qty | string | Optional | none | Order quantity (required except for spot and margin market buys; qty is required for stocks and ETFs)  
-price | string | Optional | none | Limit order price (required for limit orders). Stocks and ETFs use the listing market currency (USD/HKD/KRW/JPY)  
-quote_qty | string | Optional | none | Order quote quantity, required for spot and margin market buys. Stock and ETF orders do not support quote_qty  
-reduce_only | string | Optional | none | Reduce-only: `true` or `false`  
-position_side | string | Optional | none | Position side: `NONE`, `LONG`, `SHORT`  
-Defaults to `NONE` (single position mode) if not specified  
-  
-####  Enumerated Values
-
-Enumerated ValuesProperty | Value  
----|---  
-side | BUY  
-side | SELL  
-type | LIMIT  
-type | MARKET  
-time_in_force | GTC  
-time_in_force | IOC  
-time_in_force | FOK  
-time_in_force | POC  
-time_in_force | RPI  
-reduce_only | true  
-reduce_only | false  
-position_side | LONG  
-position_side | SHORT  
-position_side | NONE  
+symbol | string | Required | none | Currency pair  
+leverage | string | Required | none | Leverage  
       
     
     {
-      "text": "string",
       "symbol": "string",
-      "side": "BUY",
-      "type": "LIMIT",
-      "time_in_force": "GTC",
+      "leverage": "string"
+    }
+    
+    
+
+##  CrossexIsolatedMarginResponse
+
+_CrossexIsolatedMarginResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+symbol | string | Required | none | Futures trading pair  
+margin | string | Required | none | Amount of isolated margin increased or decreased in this request  
+position_side | string | Optional | none | Position side (NONE/LONG/SHORT). Defaults to NONE for one-way positions if omitted  
+      
+    
+    {
+      "symbol": "string",
+      "margin": "string",
+      "position_side": "string"
+    }
+    
+    
+
+##  CrossexOrderUpdateRequest
+
+_Order Modification Request Body_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+qty | string | Optional | none | modify amount  
+price | string | Optional | none | modify price  
+      
+    
+    {
       "qty": "string",
-      "price": "string",
-      "quote_qty": "string",
-      "reduce_only": "true",
-      "position_side": "LONG"
+      "price": "string"
     }
     
     
@@ -5221,6 +5168,71 @@ price | string | Required | none | Quoted price
       "from_amount": "string",
       "to_amount": "string",
       "price": "string"
+    }
+    
+    
+
+##  CrossexLeverageResponse
+
+_CrossexLeverageResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+symbol | string | Required | none | Currency pair  
+leverage | string | Required | none | Requested Modified Leverage  
+      
+    
+    {
+      "symbol": "string",
+      "leverage": "string"
+    }
+    
+    
+
+##  CrossexBatchCancelOrderResponse
+
+_CrossexBatchCancelOrderResponse_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | string | Required | none | Order ID  
+text | string | Required | none | Custom ID specified by the user when creating the order  
+accepted | string | Required | none | Whether the request was accepted, as the string true or false  
+label | string | Required | none | Error label when the request is not accepted; empty on success  
+message | string | Required | none | Error message when the request is not accepted; empty on success  
+      
+    
+    {
+      "order_id": "string",
+      "text": "string",
+      "accepted": "string",
+      "label": "string",
+      "message": "string"
+    }
+    
+    
+
+##  CrossexAccountUpdateRequest
+
+_Change Account Request Body_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+position_mode | string | Optional | none | Futures position mode (SINGLE/DUAL)  
+account_mode | string | Optional | none | Account mode (CROSS_EXCHANGE/ISOLATED_EXCHANGE, default: CROSS_EXCHANGE)  
+exchange_type | string | Optional | none | Exchange (`BINANCE` / `OKX` / `GATE` / `BYBIT` / `KRAKEN` / `HYPERLIQUID` / `DERIBIT` / `LIGHTER` / `CROSSEX`). When account mode is `ISOLATED_EXCHANGE`, the exchange must be specified to adjust futures position mode.  
+      
+    
+    {
+      "position_mode": "string",
+      "account_mode": "string",
+      "exchange_type": "string"
     }
     
     
@@ -5317,71 +5329,6 @@ assets | array | Required | none | Asset list: grouped by exchange and currency,
     
     
 
-##  CrossexOrderUpdateRequest
-
-_Order Modification Request Body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-qty | string | Optional | none | modify amount  
-price | string | Optional | none | modify price  
-      
-    
-    {
-      "qty": "string",
-      "price": "string"
-    }
-    
-    
-
-##  CrossexConvertQuoteRequest
-
-_Flash Swap Quote Request Body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-exchange_type | string | Required | none | Exchange type  
-Currently supports only BINANCE, OKX, GATE, BYBIT, HYPERLIQUID, KRAKEN, and LIGHTER  
-from_coin | string | Required | none | Asset Sold  
-to_coin | string | Required | none | Asset to receive  
-OKX and GATE only support conversion to BTC, ETH, or USDT  
-BYBIT and BINANCE only support conversion to USDT  
-HYPERLIQUID only supports conversion to USDT or USDC  
-KRAKEN only supports conversion to USDT  
-LIGHTER only supports swaps between USDT and USDC  
-from_amount | string | Required | none | Amount to sell  
-      
-    
-    {
-      "exchange_type": "string",
-      "from_coin": "string",
-      "to_coin": "string",
-      "from_amount": "string"
-    }
-    
-    
-
-##  CrossexConvertOrderRequest
-
-_Flash Swap Transaction Request Body_
-
-###  Properties
-
-PropertiesName | Type | Required | Restrictions | Description  
----|---|---|---|---  
-quote_id | string | Required | none | Inquiry ID  
-      
-    
-    {
-      "quote_id": "string"
-    }
-    
-    
-
 ##  CrossexClosePositionRequest
 
 _Full Close Position Request Body_
@@ -5402,3 +5349,56 @@ position_side | string | Optional | none | Position Direction
       "symbol": "string",
       "position_side": "string"
     }
+    
+    
+
+##  CrossexTransferRequest
+
+_Fund Transfer Request Body_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+coin | string | Required | none | Currency  
+amount | string | Required | none | Transfer amount  
+from | string | Required | none | `from` debit account (funds withdrawn from): `CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`  
+to | string | Required | none | `to` receiving account (`CROSSEX_BINANCE`, `CROSSEX_OKX`, `CROSSEX_GATE`, `CROSSEX_BYBIT`, `CROSSEX_KRAKEN`, `CROSSEX_HYPERLIQUID`, `CROSSEX_DERIBIT`, `CROSSEX_LIGHTER`, `CROSSEX`, `SPOT`).  
+text | string | Optional | none | User-defined ID  
+      
+    
+    {
+      "coin": "string",
+      "amount": "string",
+      "from": "string",
+      "to": "string",
+      "text": "string"
+    }
+    
+    
+
+##  CrossexBatchCancelOrderRequest
+
+_CrossexBatchCancelOrderRequest_
+
+###  Properties
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+order_id | string | Optional | none | Order ID; either this field or text is required  
+text | string | Optional | none | Custom ID specified by the user when creating the order; either this field or order_id is required  
+  
+_anyOf_
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+_None_ | object | Optional | none | none  
+  
+_or_
+
+PropertiesName | Type | Required | Restrictions | Description  
+---|---|---|---|---  
+_None_ | object | Optional | none | none  
+      
+    
+    {}

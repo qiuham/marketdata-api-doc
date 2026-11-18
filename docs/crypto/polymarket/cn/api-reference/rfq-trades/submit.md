@@ -10,7 +10,7 @@ provider_name: Polymarket
 product: api
 product_id: polymarket
 source_url: 'https://docs.polymarket.com/cn/api-reference/rfq-trades/submit'
-updated_at: 2026-11-17
+updated_at: 2026-11-18
 ---
 
 # 提交 RFQ 交易

@@ -2,7 +2,7 @@
 exchange: binance
 source_url: https://developers.binance.com/en/docs/catalog/web3-wallet-prediction-trading/api/rest-api
 api_type: REST
-updated_at: 2026-11-18 02:47:02.225855
+updated_at: 2026-11-18 18:48:35.590016
 ---
 
 # Prediction Trading REST API

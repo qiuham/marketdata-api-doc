@@ -2,7 +2,7 @@
 exchange: deribit
 source_url: https://docs.deribit.com/api-reference/account-management/private-create_api_key
 api_type: JSON-RPC
-updated_at: 2026-11-18 05:08:41.673162
+updated_at: 2026-11-18 18:59:12.481050
 ---
 
 # private/create_api_key
