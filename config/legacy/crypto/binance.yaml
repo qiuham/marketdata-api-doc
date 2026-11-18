@@ -1,38 +1,18 @@
 name: binance
 
 crawler:
-  # 多语言支持
-  languages:
-    - lang: en
-      start_urls:
-        - "https://developers.binance.com/docs/binance-spot-api-docs/CHANGELOG"
-        - "https://developers.binance.com/docs/derivatives/Introduction"
-        - "https://developers.binance.com/docs/margin_trading/Introduction"
-        - "https://developers.binance.com/docs/algo/Introduction"
-        - "https://developers.binance.com/docs/wallet/Introduction"
-        - "https://developers.binance.com/docs/copy_trading/Introduction"
-        - "https://developers.binance.com/docs/convert/Introduction"
-        - "https://developers.binance.com/docs/institutional_loan/Introduction"
-        - "https://developers.binance.com/docs/alpha/change-log"
-        - "https://developers.binance.com/docs/sub_account/Introduction"
-    - lang: zh
-      start_urls:
-        - "https://developers.binance.com/docs/zh-CN/binance-spot-api-docs/CHANGELOG"
-        - "https://developers.binance.com/docs/zh-CN/derivatives/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/margin_trading/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/algo/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/wallet/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/copy_trading/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/convert/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/institutional_loan/Introduction"
-        - "https://developers.binance.com/docs/zh-CN/alpha/change-log"
-        - "https://developers.binance.com/docs/zh-CN/sub_account/Introduction"
-
-  selectors:
-    collapsed_menu: ".menu__list-item--collapsed"
-    doc_link: 'aside nav a:not([role="button"])'
-    main_content: "main article"
-    title: "h1"
+  # 2026-11 改版后的新文档站。旧地址 /docs/binance-spot-api-docs/... 都跳到这里。
+  site: "https://developers.binance.com"
+  # 文档页：llms.txt 列出全部文档页，每页加 .md 是原始 Markdown；英文在前，中文在后
+  llms_index: "/en/docs/llms.txt"
+  primary_prefix: "/en/docs/"
+  secondary_prefixes:
+    - "/zh-CN/docs/"
+  # API 参考：目录页列出全部 API，每个 API 一份 OpenAPI schema.yaml（含中英文），要用浏览器取
+  catalog_url: "/en/docs/catalog"
+  schema_version: "1.0.0"
+  # 每次请求前等的秒数；太快会被限流（HTTP 429）一阵子
+  request_delay: 0.5
 
 output:
   base_dir: "docs"

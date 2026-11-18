@@ -13,7 +13,7 @@ adapter: crypto_legacy
 source:
   type: legacy_crypto
   legacy_exchange: binance
-  concurrency: 5
+  concurrency: 1
 output:
   docs_dir: docs/crypto/binance
   index_file: index/crypto/binance.json
@@ -21,3 +21,30 @@ metadata_defaults:
   api_type: reference
   source_type: legacy_crypto
   version: ''
+validate:
+  # 标题和 URL 用词不同、但已核对是对的页（validate 不再报）：
+  # 2026-11-18 核对，这些页按地址直接取 .md 原文，标题就是官网该页的标题
+  ignore_title_mismatch:
+    - https://developers.binance.com/en/docs/agent-native/mcp-server/agentic
+    - https://developers.binance.com/en/docs/introduction
+    - https://developers.binance.com/en/docs/products/agentic-wallet/welcome
+    - https://developers.binance.com/en/docs/products/announcements/cms-log
+    - https://developers.binance.com/en/docs/products/binance-pay-merchant/autogen_index
+    - https://developers.binance.com/en/docs/products/connect-2.0/introduction
+    - https://developers.binance.com/en/docs/products/connect-2.0/send-primary-mode/send-primary-mode
+    - https://developers.binance.com/en/docs/products/connect-prime/introduction
+    - https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/common-definition
+    - https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/portfolio-margin-endpoints/General-Info
+    - https://developers.binance.com/en/docs/products/derivatives-trading-coin-futures/websocket-market-streams/Connect
+    - https://developers.binance.com/en/docs/products/derivatives-trading-options/common-definition
+    - https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/common-definition
+    - https://developers.binance.com/en/docs/products/derivatives-trading-usds-futures/websocket-market-streams/Connect
+    - https://developers.binance.com/en/docs/products/mini-program/framework/api/basics/on
+    - https://developers.binance.com/en/docs/products/mini-program/management/compatibility
+    - https://developers.binance.com/en/docs/products/onchainpay-x402/introduction
+    - https://developers.binance.com/en/docs/products/onchainpay-x402/open-apis-v2/0.overview
+    - https://developers.binance.com/en/docs/products/onchainpay-x402/open-apis/0.overview
+    - https://developers.binance.com/en/docs/products/spot/demo-mode/general-info
+    - https://developers.binance.com/en/docs/products/spot/fix/schemas/introduction
+    - https://developers.binance.com/en/docs/products/spot/sbe/schemas/introduction
+    - https://developers.binance.com/en/docs/products/web3-connect/introduction

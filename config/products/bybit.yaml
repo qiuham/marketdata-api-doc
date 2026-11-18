@@ -21,3 +21,22 @@ metadata_defaults:
   api_type: reference
   source_type: legacy_crypto
   version: ''
+validate:
+  # 标题和 URL 用词不同、但已核对是对的页（validate 不再报）：
+  # 2026-11-18 核对，抓取时确认过标签地址就是这一页，或网页标题和正文一致
+  ignore_title_mismatch:
+    - https://bybit-exchange.github.io/docs/v5/asset/fiat-convert/query-trade
+    - https://bybit-exchange.github.io/docs/v5/broker/exchange-broker/rate-limit/query-all
+    - https://bybit-exchange.github.io/docs/v5/event/trade/execution
+    - https://bybit-exchange.github.io/docs/v5/finance/advanced-earn/double-win/leverage
+    - https://bybit-exchange.github.io/docs/v5/finance/earn/easy-onchain/create-order
+    - https://bybit-exchange.github.io/docs/v5/finance/earn/hold-to-earn/yield-history
+    - https://bybit-exchange.github.io/docs/v5/guide
+    - https://bybit-exchange.github.io/docs/v5/new-crypto-loan/flexible/loan-orders
+    - https://bybit-exchange.github.io/docs/v5/order/execution
+    - https://bybit-exchange.github.io/docs/v5/position/batch-lvg
+    - https://bybit-exchange.github.io/docs/v5/pre-upgrade/execution
+    - https://bybit-exchange.github.io/docs/v5/rfq/websocket/private/inquiry
+    - https://bybit-exchange.github.io/docs/v5/rfq/websocket/private/transaction
+    - https://bybit-exchange.github.io/docs/v5/rfq/websocket/public/public-transaction
+    - https://bybit-exchange.github.io/docs/v5/spot-margin-uta/switch-mode

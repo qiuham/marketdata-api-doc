@@ -1,0 +1,90 @@
+---
+exchange: kraken
+source_url: https://docs.kraken.com/exchange/api-reference/unified-fix-v2/reject-session
+api_type: FIX
+updated_at: 2026-11-18 01:45:11.553419
+---
+
+# Reject (Session)
+
+> Session-level rejection of a malformed message
+
+FIX
+session: admin
+35=3
+
+Session-level rejection. Kraken discards any message that is garbled, cannot be parsed, or fails a data integrity or field-level check, and reports it here with the sequence number and message type of the offending message. RefTagID names the offending tag where one can be identified. A FIX field-level validation failure on an order arrives here rather than as a business reject. A message the FIX decoder cannot accept, such as one missing a required tag, is rejected by the decoder itself and carries only RefSeqNum (45) and Text (58), with no RefTagID, RefMsgType or SessionRejectReason; the Reject for a missing Side (54) in the example below is of this kind.
+
+**Direction:** Kraken → client
+
+***
+
+**header** *required*
+
+35=`3`
+
+**45 - RefSeqNum** `SeqNum` *required*
+
+MsgSeqNum of the message being rejected.
+
+**371 - RefTagID** `integer`
+
+Tag that caused the rejection.
+
+Required: Conditional
+
+**372 - RefMsgType** `string`
+
+MsgType of the message being rejected.
+
+**373 - SessionRejectReason** `integer`
+
+Why the message was rejected at session level.
+
+**Possible values:**
+
+* `0` : Invalid tag number.
+* `1` : Required tag missing. For example, `AllAccounts (5034)` on a US Perps OrderMassCancelRequest, or `Account (1)` with `AllAccounts=N`.
+* `2` : Tag not defined for this message type. For example, `AllAccounts (5034)` or `Account (1)` on an OrderMassCancelRequest on a Spot or Futures session.
+* `3` : Undefined tag.
+* `4` : Tag specified without a value.
+* `5` : Value is incorrect or out of range for this tag. For example, a ClOrdID that is not a positive integer (with `RelaxedClOrdID=Y`, anything other than a positive int64), or an ExecInst of `E` or `s` on an amend, or an `Account (1)` that is not a usable id (or is sent with `AllAccounts=Y`) on an OrderMassCancelRequest. On US Perps it is also used for a Price (44) that is not a multiple of the instrument's `tickSize`, and for an OrderQty (38) that is not a whole number of Min Tradable Contracts or is below the minimum order quantity, on a NewOrderSingle or an OrderCancelReplaceRequest. RefTagID (371) names the tag.
+* `6` : Incorrect data format for value.
+* `7` : Decryption problem.
+* `8` : Signature problem.
+* `9` : CompID problem.
+* `10` : SendingTime accuracy problem.
+* `11` : Invalid MsgType.
+* `12` : XML validation error.
+* `13` : Tag appears more than once.
+* `14` : Tag out of required order.
+* `15` : Repeating group fields out of order.
+* `16` : Incorrect NumInGroup count.
+* `17` : Field delimiter inside a non-data value.
+* `99` : Other.
+
+**58 - Text** `string`
+
+Free-text description: the cancellation reason, reject reason, or order status detail.
+
+**Format:** Free text set by Kraken; carries the reject or cancellation reason.
+
+**trailer** *required*
+
+***
+
+> [!NOTE]
+>
+> The examples are UAT captures. The symbols, InstrumentIDs and account `12345` are UAT test values: use a contract listed for production and your own account.
+
+> [accordion] Requests
+>
+> ```text Order Cancel Request, Side (54) missing theme={null}
+> 8=FIX.4.4|9=181|35=F|49=CLIENT|56=KRAKEN-PERPS-TRD|34=20|52=20261027-11:48:32.837|41=1793101320084148|11=1793101670946167|1=12345|55=PBTCUCZ50|48=12184107997830506656|22=8|60=20261027-11:47:50.941|10=099|
+> ```
+
+> [accordion] Responses
+>
+> ```text Reject, missing mandatory field theme={null}
+> 8=FIX.4.4|9=110|35=3|49=KRAKEN-PERPS-TRD|56=CLIENT|34=17|52=20261027-11:48:33.092|45=20|58=Missing Mandatory Field: Side (54)|10=158|
+> ```

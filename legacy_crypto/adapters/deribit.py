@@ -11,15 +11,13 @@ Deribit 文档站 https://docs.deribit.com/ 提供：
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from http.client import IncompleteRead
 from typing import Any, Dict, List, Optional
-from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
-from urllib.request import Request, urlopen
 
 from loguru import logger as log
 
 from .base import DocumentPage, ExchangeAdapter, register_adapter
+from ..utils.http import fetch_text, strip_llm_preamble
 from ..utils.markdown import MarkdownProcessor
 
 
@@ -27,11 +25,6 @@ from ..utils.markdown import MarkdownProcessor
 class DeribitAdapter(ExchangeAdapter):
     """Deribit Mintlify 文档适配器"""
 
-    USER_AGENT = (
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
-        'AppleWebKit/537.36 (KHTML, like Gecko) '
-        'Chrome/148.0.0.0 Safari/537.36'
-    )
 
     _LINK_RE = re.compile(r'\]\((https?://[^)\s]+|/[^)\s]+)\)')
 
@@ -199,45 +192,10 @@ class DeribitAdapter(ExchangeAdapter):
         return page_url.rstrip('/') + '.md'
 
     def _fetch_text(self, url: str, accept: str) -> Optional[str]:
-        headers = {
-            'User-Agent': self.USER_AGENT,
-            'Accept': f'{accept},text/plain;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.9',
-        }
-        last_error = None
-        for attempt in range(1, 4):
-            try:
-                with urlopen(Request(url, headers=headers), timeout=30) as response:
-                    charset = response.headers.get_content_charset() or 'utf-8'
-                    try:
-                        data = response.read()
-                    except IncompleteRead as exc:
-                        data = exc.partial
-                        log.warning(f"响应提前结束，使用已读取内容: {url} ({len(data)} bytes)")
-                    return data.decode(charset, errors='replace')
-            except HTTPError as exc:
-                last_error = exc
-                if exc.code == 404:
-                    break
-                log.warning(f"请求失败({attempt}/3): {url} - {exc}")
-            except (URLError, TimeoutError, OSError) as exc:
-                last_error = exc
-                log.warning(f"请求失败({attempt}/3): {url} - {exc}")
-        log.warning(f"请求最终失败: {url} - {last_error}")
-        return None
+        return fetch_text(url, accept=accept)
 
     def _clean_markdown(self, text: str) -> str:
-        text = text.replace('\r\n', '\n')
-        # 去掉页首给 AI 看的“Documentation Index”提示块
-        text = re.sub(
-            r'\A\s*> ## Documentation Index\n(?:>.*\n)*\s*',
-            '',
-            text,
-        )
-        # 去掉页面自带的 YAML frontmatter（如果有）
-        text = re.sub(r'\A---\n.*?\n---\n', '', text, flags=re.DOTALL)
-        text = re.sub(r'\n{4,}', '\n\n\n', text)
-        return text.strip()
+        return strip_llm_preamble(text)
 
     def _extract_title(self, markdown: str, url: str) -> str:
         match = re.search(r'^#\s+(.+?)\s*$', markdown, flags=re.MULTILINE)

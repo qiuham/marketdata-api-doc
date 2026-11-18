@@ -22,6 +22,8 @@ _STOPWORDS = {
     "api", "apis", "doc", "docs", "md", "html", "index", "v1", "v2", "v3", "v4", "v5",
     "get", "post", "put", "delete", "new", "is", "my", "all",
 }
+# Different words for the same thing in titles and URLs.
+_SYNONYMS = {"ws": "websocket", "changelog": "change", "release": "change"}
 # Page names that say nothing about the content; for these the parent URL segment is used too.
 _GENERIC = {"introduction", "intro", "overview", "reference", "home", "readme", "ws", "rest", "http"}
 
@@ -77,7 +79,7 @@ def _tokens(text: str) -> set[str]:
     for word in words:
         if len(word) < 2 or word in _STOPWORDS:
             continue
-        word = "websocket" if word == "ws" else word
+        word = _SYNONYMS.get(word, word)
         out.add(word[:-1] if len(word) > 3 and word.endswith("s") else word)
     return out
 
@@ -98,6 +100,9 @@ def title_matches_url(title: str, url: str) -> bool:
         return True
     if title_tokens & key_tokens:
         return True
+    # A page name of one short code (FIX message types such as "sl", "ocj") cannot be judged.
+    if len(key_tokens) == 1 and len(next(iter(key_tokens))) <= 3:
+        return True
     # Acronyms such as "er-fix" for "Execution Report".
     initials = "".join(w[0] for w in re.split(r"[^A-Za-z0-9]+", title.lower()) if w)
     if any(len(k) >= 2 and k in initials for k in key_tokens):
@@ -107,8 +112,29 @@ def title_matches_url(title: str, url: str) -> bool:
         for k in key_tokens:
             if min(len(t), len(k)) >= 3 and (t.startswith(k) or k.startswith(t)):
                 return True
+            # One word inside the other, e.g. "ratelimits" / "Limits".
+            if min(len(t), len(k)) >= 4 and (t in k or k in t):
+                return True
+    # Joined abbreviations such as "clordid" = CLient ORDer IDentifiers.
+    words = [w for w in re.split(r"[^a-z0-9]+", title.lower()) if w]
+    if any(_joined_prefixes(k, words) for k in key_tokens if len(k) >= 5):
+        return True
     a, b = _squash(title), _squash(key)
     return bool(a and b and (a in b or b in a))
+
+
+def _joined_prefixes(key: str, words: list[str]) -> bool:
+    """True when key is prefixes (2+ letters each) of 2+ title words, in title order."""
+    def walk(pos: int, start: int, used: int) -> bool:
+        if pos == len(key):
+            return used >= 2
+        for i in range(start, len(words)):
+            word = words[i]
+            for n in range(min(len(word), len(key) - pos), 1, -1):
+                if key[pos:pos + n] == word[:n] and walk(pos + n, i + 1, used + 1):
+                    return True
+        return False
+    return walk(0, 0, 0)
 
 
 def _body_fingerprint(body: str) -> str:
@@ -120,7 +146,9 @@ def _body_fingerprint(body: str) -> str:
     return hashlib.sha1(normalized.encode("utf-8")).hexdigest()
 
 
-def check_docs(docs_dir: Path) -> list[PageIssue]:
+def check_docs(docs_dir: Path, ignore_urls: set[str] | None = None) -> list[PageIssue]:
+    """ignore_urls: source_url values whose title check is a known false positive (from product config)."""
+    ignore_urls = ignore_urls or set()
     issues: list[PageIssue] = []
     by_body: dict[str, list[tuple[Path, str, str]]] = {}
     for path in sorted(docs_dir.rglob("*.md")):
@@ -134,13 +162,18 @@ def check_docs(docs_dir: Path) -> list[PageIssue]:
         fp = _body_fingerprint(body)
         if fp:
             by_body.setdefault(fp, []).append((path, url, title))
-        if title and not title_matches_url(title, url):
+        if title and url not in ignore_urls and not title_matches_url(title, url):
             issues.append(PageIssue(path, url, title, "标题和 URL 对不上"))
 
     flagged = {i.path for i in issues}
     for group in by_body.values():
         urls = {_strip_lang(u) for _, u, _ in group}
         if len(urls) < 2:
+            continue
+        # Sites do publish one shared page under several URLs (e.g. the same "General Info" under
+        # every product). That is fine when every copy has the same title and each title fits its URL.
+        titles = {t for _, _, t in group}
+        if len(titles) == 1 and all(title_matches_url(t, u) for _, u, t in group):
             continue
         for path, url, title in group:
             if path not in flagged:

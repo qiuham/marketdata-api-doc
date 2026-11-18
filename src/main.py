@@ -111,7 +111,8 @@ def cmd_validate(args: argparse.Namespace) -> int:
             errors.append(f"Missing index_file for {product.get('id')}: {index_file.relative_to(PROJECT_ROOT)}")
         if docs_dir.exists():
             # Body must belong to source_url: catches pages saved from the wrong tab or a stale page.
-            issues = check_docs(docs_dir)
+            ignore = set(product.get("validate", {}).get("ignore_title_mismatch", []) or [])
+            issues = check_docs(docs_dir, ignore)
             mismatched += len(issues)
             if issues:
                 print(f"WARN: {product.get('id')}: {len(issues)} 页正文和 source_url 对不上")

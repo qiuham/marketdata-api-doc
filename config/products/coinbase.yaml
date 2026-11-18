@@ -21,3 +21,9 @@ metadata_defaults:
   api_type: reference
   source_type: legacy_crypto
   version: ''
+validate:
+  # 标题和 URL 用词不同、但已核对是对的页（validate 不再报）：
+  # 2026-11-18 核对，抓取时确认过标签地址就是这一页，或网页标题和正文一致
+  ignore_title_mismatch:
+    - https://docs.cdp.coinbase.com/api-reference/advanced-trade-api/rest-api/introduction
+    - https://docs.cdp.coinbase.com/coinbase-app/advanced-trade-apis/guides/futures

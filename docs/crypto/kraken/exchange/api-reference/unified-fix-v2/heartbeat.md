@@ -1,0 +1,42 @@
+---
+exchange: kraken
+source_url: https://docs.kraken.com/exchange/api-reference/unified-fix-v2/heartbeat
+api_type: FIX
+updated_at: 2026-11-18 01:45:08.532683
+---
+
+# Heartbeat
+
+> Keep the session alive during inactivity
+
+FIX
+session: admin
+35=0
+
+Sent when no other traffic has passed within the negotiated heartbeat interval, so that both sides can tell a quiet session from a dead one. When it answers a Test Request it must echo that request's TestReqID. The interval is negotiated through HeartBtInt (108) on Logon.
+
+**Direction:** Either direction
+
+***
+
+**header** *required*
+
+35=`0`
+
+**112 - TestReqID** `string`
+
+Token identifying the test request. A heartbeat answering a test request must echo the value it carried.
+
+Required: Conditional
+
+**trailer** *required*
+
+***
+
+```text Heartbeat theme={null}
+8=FIX.4.4|9=65|35=0|49=CLIENT|56=KRAKEN-PERPS-TRD|34=2|52=20261026-16:09:12.141|10=029|
+```
+
+```text Heartbeat, reply to Test Request theme={null}
+8=FIX.4.4|9=86|35=0|49=KRAKEN-PERPS-TRD|56=CLIENT|34=2|52=20261027-14:17:45.894|112=TR-1793110662130|10=112|
+```

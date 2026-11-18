@@ -1,0 +1,426 @@
+---
+exchange: binance
+source_url: https://developers.binance.com/en/docs/products/binance-pay-merchant/api-submerchant-modify
+api_type: Guide
+updated_at: 2026-11-18 02:08:34.918302
+---
+
+# Modify SubMerchant
+
+Modify the Sub-merchant API to update submerchant details for order management. This feature is
+available exclusively for Partners.
+
+## EndPoint
+
+```http request
+POST /binancepay/openapi/submerchant/modify
+```
+
+## Request Parameters
+
+| **Attributes**                       | **Type**     | **Required**               | **Limitation**                                                                                 | **Description**                                                                                                                                                                                       |
+| ------------------------------------ | ------------ | -------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **subMerchantId**                    | string       | Y                          | maximum length 128                                                                             | Sub-merchant ID returned by create sub-merchant api should be all number.                                                                                                                             |
+| **merchantName**                     | string       | Y                          | maximum length 128                                                                             | The sub merchant name maximum length 128, unique under one mainMerchantId.                                                                                                                            |
+| **storeType**                        | int          | Y                          | 0 or 1                                                                                         | 0=Online , 1=Physical, -1=Online&Physical                                                                                                                                                             |
+| **merchantMcc**                      | string       | Y                          | Specified code                                                                                 | four-digit number that classifies the business. Get from [here](#MCC)                                                                                                                                 |
+| **merchantType**                     | int          | N                          | 2=solo proprietor、 3=Partnership、4=Private company、5=Others company                         | -                                                                                                                                                                                                     |
+| **country**                          | string       | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), use "GO" if global | Country/Region of Business Operation,Can be multiple, split by "," eg:"AR,MX". Refer to link(https://merchant.binance.com/en/application-guidelines-merchant) for restricted countries of operations. |
+| **siteUrl**                          | string       | N                          | maximum length 256                                                                             | For Online stores, the URL field is required. (If your online store is an APP, please pass its link in the app store )                                                                                |
+| **address**                          | string       | N                          | maximum length 1024                                                                            | For Physical stores, the address field is required.                                                                                                                                                   |
+| **payIndustryDescription**           | string       | N                          | maximum length 500                                                                             | Mandatory if merchantMcc is 9999. Please specify the industry of this sub merchant here.                                                                                                              |
+| **subPayMccCode**                    | string       | N                          | Specified code                                                                                 | four-digit number that classifies the business. Get from [here](#MCC)                                                                                                                                 |
+| **subPayIndustryDescription**        | string       | N                          | Specified code                                                                                 | Mandatory if subPayMccCode is 9999. Please specify the industry of this sub merchant here.                                                                                                            |
+| **brandLogo**                        | string       | N                          | maximum length 256                                                                             | sub merchant logo url                                                                                                                                                                                 |
+| **companyName**                      | string       | N                          | maximum length 64                                                                              | The legal name that is used in the registration.                                                                                                                                                      |
+| **registrationNumber**               | string       | Y                          | maximum length 64                                                                              | Registration number/Company tax ID                                                                                                                                                                    |
+| **registrationCountry**              | string       | Y                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Country of Registration                                                                                                                                                                               |
+| **registrationAddress**              | string       | N                          | maximum length 1024                                                                            | Address of Registration. Refer to link(https://merchant.binance.com/en/application-guidelines-merchant) for restricted registration addresses.                                                        |
+| **incorporationDate**                | long         | N                          | UnixTimestamp in milliseconds                                                                  | The date when the business registration is in effective.                                                                                                                                              |
+| **certificateType**                  | int          | N                          | 1 or 2                                                                                         | 1=ID 2=Passport                                                                                                                                                                                       |
+| **certificateCountry**               | string       | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Certificate country                                                                                                                                                                                   |
+| **certificateNumber**                | string       | N                          | maximum length 64                                                                              | Certificate number                                                                                                                                                                                    |
+| **certificateValidDate**             | long         | N                          | UnixTimestamp in milliseconds                                                                  | Certificate Valid Date                                                                                                                                                                                |
+| **contractTimeIsv**                  | long         | N                          | UnixTimestamp in milliseconds                                                                  | Contract date with ISV                                                                                                                                                                                |
+| **blockPayerKycCountries**           | List<String> | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Blocks payers from specified countries based on their KYC country. The list contains the countries to be blocked.                                                                                     |
+| **blockKybUserPayment**              | boolean      | N                          | true or false                                                                                  | block kyb users to pay this sub merchant, default false                                                                                                                                               |
+| **businessRegistrationUrl**          | string       | N                          | maximum length 1024                                                                            | business registration certificate URL                                                                                                                                                                 |
+| **bettingOperationalCertificateUrl** | String       | N(Y If merchantMcc = 1024) | maximum length 2048                                                                            | Betting Operational Certificate Url                                                                                                                                                                   |
+
+### Sample Request Body
+
+when merchant type is individual
+
+```json
+{
+  "subMerchantId": "1111111",
+  "merchantName": "Individual",
+  "merchantType": 1,
+  "merchantMcc": "5511",
+  "brandLogo": null,
+  "country": "AE",
+  "address": null,
+  "companyName": null,
+  "registrationNumber": null,
+  "registrationCountry": null,
+  "registrationAddress": null,
+  "incorporationDate": null,
+  "storeType": null,
+  "siteUrl": null,
+  "certificateType": 1,
+  "certificateCountry": "AE",
+  "blockPayerKycCountries": ["AR", "MX"],
+  "certificateNumber": "123456X",
+  "certificateValidDate": 1752422400000,
+  "contractTimeIsv": 1594656000000
+}
+```
+
+when merchant type is not individual
+
+```json
+{
+  "subMerchantId": "1111111",
+  "merchantName": "Sole Proprietor",
+  "merchantType": 2,
+  "merchantMcc": "5511",
+  "brandLogo": "logoUrlDemo",
+  "country": "AE",
+  "address": "store address demo",
+  "companyName": "Sole Proprietor",
+  "registrationNumber": "registration number demo",
+  "registrationCountry": "AE",
+  "registrationAddress": "registration address demo",
+  "incorporationDate": 1588262400000,
+  "storeType": 1,
+  "siteUrl": "site url demo",
+  "blockPayerKycCountries": ["AR", "MX"],
+  "certificateType": null,
+  "certificateCountry": null,
+  "certificateNumber": null,
+  "certificateValidDate": null,
+  "contractTimeIsv": 1594656000000
+}
+```
+
+## Response Parameters
+
+| **Attributes**   | **Type**               | **Required** | **Limitation**                      | **Description**                                       |
+| ---------------- | ---------------------- | ------------ | ----------------------------------- | ----------------------------------------------------- |
+| **status**       | string                 | Y            | &#34;SUCCESS&#34; or &#34;FAIL&#34; | status of the API request                             |
+| **code**         | string                 | Y            | -                                   | result code                                           |
+| **data**         | AddSubMerchantResponse | N            | -                                   | response body, [refer to](#add-sub-merchant-response) |
+| **errorMessage** | string                 | N            | maximum length 256                  | -                                                     |
+
+## Child Attribute
+
+### AddSubMerchantResponse
+
+<span id="add-sub-merchant-response"></span>
+
+| **Attributes**    | **Type** | **Required** | **Limitation** | **Description**                             |
+| ----------------- | -------- | ------------ | -------------- | ------------------------------------------- |
+| **subMerchantId** | long     | Y            | -              | unique sub-merchant id generated by payment |
+
+### Sample Response
+
+```json
+{
+  "status": "SUCCESS",
+  "code": "000000",
+  "data": true
+}
+```
+
+```json
+{
+  "status": "FAIL",
+  "code": "400101",
+  "errorMessage": "Parameter 'merchantMcc' not valid, was empty/null, or too long/short, or wrong format."
+}
+```
+
+## Result Code
+
+<span id="result-code"></span>
+
+| **Name**                           | **Code** | **Reason**                                                                     | **Solution**                                                                                   |
+| ---------------------------------- | -------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| UNKNOWN_ERROR                      | 400000   | An unknown error occurred while processing the request.                        | Try again later                                                                                |
+| INVALID_REQUEST                    | 400001   | Parameter format is wrong or parameter transferring doesn't follow the rules.  | Please check whether the parameters are correct.                                               |
+| INVALID_SIGNATURE                  | 400002   | Incorrect signature result                                                     | Check whether the signature parameter and method comply with signature algorithm requirements. |
+| INVALID_TIMESTAMP                  | 400003   | Timestamp for this request is outside of the time window.                      | Sync server clock                                                                              |
+| INVALID_API_KEY_OR_IP              | 400004   | API identity key not found or invalid.                                         | Check API identity key                                                                         |
+| BAD_API_KEY_FMT                    | 400005   | API identity key format invalid.                                               | Check API identity key.                                                                        |
+| BAD_HTTP_METHOD                    | 400006   | Request method not supported.                                                  | Check Request method.                                                                          |
+| MEDIA_TYPE_NOT_SUPPORTED           | 400007   | Media type not supported.                                                      | Check Request Media type.                                                                      |
+| INVALID_REQUEST_BODY               | 400008   | Request body is not a valid json object.                                       | Check Request body                                                                             |
+| MANDATORY_PARAM_EMPTY_OR_MALFORMED | 400100   | A parameter was missing/empty/null, or malformed.                              |                                                                                                |
+| INVALID_PARAM_WRONG_LENGTH         | 400101   | A parameter was not valid, was empty/null, or too long/short, or wrong format. |                                                                                                |
+| INVALID_PARAM_ILLEGAL_CHAR         | 400103   | A parameter was not valid, contains illegal characters                         |                                                                                                |
+| INVALID_REQUEST_TOO_LARGE          | 400104   | Invalid request, content length too large                                      |                                                                                                |
+| INVALID_ACCOUNT_STATUS             | 400203   | Not support for this account, please check account status.                     |                                                                                                |
+| SUB_MERCHANT_EXISTS                | 400205   | Sub-merchant already exists.                                                   | Please check merchant name                                                                     |
+| PAYMENT_MERCHANT_NOT_FOUND         | 400208   | Merchant not found.                                                            | Please check your merchantId                                                                   |
+| PAYMENT_ACTION_TOO_FREQUENT        | 400501   | action Too Frequent, get the lock fail                                         | Try again later                                                                                |
+
+### MCC
+
+<span id="MCC"></span>
+
+| Code | Industry                                                     | Industry Description                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1001 | Accommodation and Food Services                              | Hotels, Caterers, Restaurants, Bars, Cafes                                                                                                                                                                                                                                                                                                                                                                                  |
+| 1002 | Combined office administrative service activities            | Organization / association, office administrative services, travel arrangements, locksmiths, janitorial / landscaping services, waste collection / treatment / disposal                                                                                                                                                                                                                                                     |
+| 1004 | Agriculture, Forestry and Fishing                            | Crop production, animal farming, aquaculture, fishing                                                                                                                                                                                                                                                                                                                                                                       |
+| 1005 | Arts, Entertainment, and Recreation                          | Non-betting related industry, such as Arts and Cultural, Sports and Recreation, Amusements and recreation industries, Theatre companies, Dance companies, Museums, Sports teams and clubs, Social App (such as livestreaming)                                                                                                                                                                                               |
+| 1006 | Construction                                                 | Building, flooring, highway, bridge, glass construction/contractors                                                                                                                                                                                                                                                                                                                                                         |
+| 1007 | Crypto Exchange, Brokers, Market Makers                      | Crypto OTC Broker Desk,Crypto OTC Principal Desk, Market Maker, Broker, Exchange service                                                                                                                                                                                                                                                                                                                                    |
+| 1008 | Crypto ATM                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1009 | Crypto Mining                                                | Crypto miner, mining pool, mining hardware                                                                                                                                                                                                                                                                                                                                                                                  |
+| 1010 | Proprietary Crypto Traders                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1011 | Algorithm Crypto Traders                                     |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1012 | P2P Merchants                                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1013 | Other Digital Asset Services Provider (VASP)                 | Digital Wallet Provider (Custodial), NFT Marketplace (Custodial), OTC Desk, Custody Service Providers, Decentralized Applications (dApp)                                                                                                                                                                                                                                                                                    |
+| 1014 | Bank                                                         | Private banking, investment banking, corporate banking, wealth management                                                                                                                                                                                                                                                                                                                                                   |
+| 1015 | Non-Bank Financial Institution                               | Insurance companies, investment firms, microfinance providers, and leasing companies                                                                                                                                                                                                                                                                                                                                        |
+| 1016 | Money Services Business and Payment Service Providers        |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1017 | Family Office                                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1018 | Personal Investment Companies                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1019 | Superannuation Fund                                          |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1020 | Sovereign Wealth Fund                                        |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1021 | Investment Funds                                             | Collective investment schemes, mutual funds, hedge funds, private equity funds                                                                                                                                                                                                                                                                                                                                              |
+| 1022 | Educational Services                                         | Child care, schools, universities, educational support services                                                                                                                                                                                                                                                                                                                                                             |
+| 1024 | Betting                                                      | Legalised casino, online betting, gambling platform                                                                                                                                                                                                                                                                                                                                                                         |
+| 1025 | Health Care and Social Assistance                            | Hospitals, Nursing care facilities, Vocational rehabilitation services, Offices of physicians/dentists/optometrists, Medical practice activities,Social work activities                                                                                                                                                                                                                                                     |
+| 1027 | General Wholesalers                                          | Building supplies, equipment, motor vehicles, household appliances, apparels, F&B wholesalers                                                                                                                                                                                                                                                                                                                               |
+| 1028 | Management of Companies and Enterprises                      | Non-Operating Asset Holding Companies, Head offices Management of Companies and Enterprises                                                                                                                                                                                                                                                                                                                                 |
+| 1029 | Precious Stones and Precious Metals Dealers                  | Production or trading of precious metals, precious stones or jewelry                                                                                                                                                                                                                                                                                                                                                        |
+| 1030 | Crude Oil and Natural Gas Dealers                            | Production, refining and trading of oil and gas                                                                                                                                                                                                                                                                                                                                                                             |
+| 1031 | General Manufacturing                                        | F&B manufacturing, breweries / wineries / distilleries, poultry processing, books printing, valves / motor vehicle manufacturing                                                                                                                                                                                                                                                                                            |
+| 1033 | Mining and Extraction                                        | Mining and quarrying, oil and gas extraction                                                                                                                                                                                                                                                                                                                                                                                |
+| 1034 | Pawn Shops                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1035 | Professional Services                                        | Offices of Lawyers, Notaries, other independent legal professionals and accountants, Trust and Company Service Providers, Professional Services, Consultancy activities, Marketing services, Software & IT Development & Consultancy services                                                                                                                                                                               |
+| 1036 | Scientific research and development services                 | Scientific research and development services involve the systematic investigation and innovation aimed at advancing knowledge, technology, and solutions across various fields. These activities are crucial for driving progress, enhancing capabilities, and addressing complex challenges in society.                                                                                                                    |
+| 1038 | Real Estate Rental and Leasing                               | Real Estate Rental and Leasing sector involves renting, leasing, and managing residential, commercial, and industrial properties                                                                                                                                                                                                                                                                                            |
+| 1039 | Retail Stores - Electronics                                  | Phones, Computers, Cameras, Softwares, Electronic Product Supplies/Parts E-commerce (selling through websites, apps, and online marketplaces), Games (Non-betting)                                                                                                                                                                                                                                                          |
+| 1040 | Retail Stores - F&B                                          | Restaurants, bars, bakeries                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 1041 | Retail Stores - Jewelry                                      | Jewelry, watches                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 1042 | Retail Trade - Others                                        | Gasoline stations, clothing / shoe stores, florists, bookstores, newspaper stand, mini-marts, convenience store, supermarket, household appliances / supplies, hardware stores, beauty shop                                                                                                                                                                                                                                 |
+| 1043 | Sale of Drugs and Pharmaceutical products (except Marijuana) |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1044 | Tobacco                                                      | Sales of tobacco / farming of tobacco / manufacturing of tobacco                                                                                                                                                                                                                                                                                                                                                            |
+| 1045 | Transportation and Warehousing                               | Air / rail / water / truck transportation, scenic and sightseeing transportation, postal service, warehousing and storage, automotive business                                                                                                                                                                                                                                                                              |
+| 1046 | Utilities                                                    | Electric power generation, transmission and distribution, sewage treatment facilities, water supply and irrigation systems, natural gas distribution                                                                                                                                                                                                                                                                        |
+| 1047 | Other Crypto, Web3 services (non VASP)                       | Digital Wallet Provider (Non Custodial), NFT Marketplace (Non Custodial), Decentralised Exchange (DEX), Trading Bots Providers Crypto Consultants, E-gaming (GameFi, P2E Games, Metaverse Games), Decentralised Autonomous Organisation (DAO), Cross-Chain Bridge Service Providers Blockchain as a Service (BaaS),Software as a Service (SaaS) Providers, API solution for payment services, Proprietary Trading Platforms |
+| 9999 | Other                                                        |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+
+---
+
+# Modify SubMerchant
+
+Modify the Sub-merchant API to update submerchant details for order management. This feature is
+available exclusively for Partners.
+
+## EndPoint
+
+```http request
+POST /binancepay/openapi/submerchant/modify
+```
+
+## Request Parameters
+
+| **Attributes**                       | **Type**     | **Required**               | **Limitation**                                                                                 | **Description**                                                                                                                                                                                       |
+| ------------------------------------ | ------------ | -------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **subMerchantId**                    | string       | Y                          | maximum length 128                                                                             | Sub-merchant ID returned by create sub-merchant api should be all number.                                                                                                                             |
+| **merchantName**                     | string       | Y                          | maximum length 128                                                                             | The sub merchant name maximum length 128, unique under one mainMerchantId.                                                                                                                            |
+| **storeType**                        | int          | Y                          | 0 or 1                                                                                         | 0=Online , 1=Physical, -1=Online&Physical                                                                                                                                                             |
+| **merchantMcc**                      | string       | Y                          | Specified code                                                                                 | four-digit number that classifies the business. Get from [here](#MCC)                                                                                                                                 |
+| **merchantType**                     | int          | N                          | 2=solo proprietor、 3=Partnership、4=Private company、5=Others company                         | -                                                                                                                                                                                                     |
+| **country**                          | string       | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), use "GO" if global | Country/Region of Business Operation,Can be multiple, split by "," eg:"AR,MX". Refer to link(https://merchant.binance.com/en/application-guidelines-merchant) for restricted countries of operations. |
+| **siteUrl**                          | string       | N                          | maximum length 256                                                                             | For Online stores, the URL field is required. (If your online store is an APP, please pass its link in the app store )                                                                                |
+| **address**                          | string       | N                          | maximum length 1024                                                                            | For Physical stores, the address field is required.                                                                                                                                                   |
+| **payIndustryDescription**           | string       | N                          | maximum length 500                                                                             | Mandatory if merchantMcc is 9999. Please specify the industry of this sub merchant here.                                                                                                              |
+| **subPayMccCode**                    | string       | N                          | Specified code                                                                                 | four-digit number that classifies the business. Get from [here](#MCC)                                                                                                                                 |
+| **subPayIndustryDescription**        | string       | N                          | Specified code                                                                                 | Mandatory if subPayMccCode is 9999. Please specify the industry of this sub merchant here.                                                                                                            |
+| **brandLogo**                        | string       | N                          | maximum length 256                                                                             | sub merchant logo url                                                                                                                                                                                 |
+| **companyName**                      | string       | N                          | maximum length 64                                                                              | The legal name that is used in the registration.                                                                                                                                                      |
+| **registrationNumber**               | string       | Y                          | maximum length 64                                                                              | Registration number/Company tax ID                                                                                                                                                                    |
+| **registrationCountry**              | string       | Y                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Country of Registration                                                                                                                                                                               |
+| **registrationAddress**              | string       | N                          | maximum length 1024                                                                            | Address of Registration. Refer to link(https://merchant.binance.com/en/application-guidelines-merchant) for restricted registration addresses.                                                        |
+| **incorporationDate**                | long         | N                          | UnixTimestamp in milliseconds                                                                  | The date when the business registration is in effective.                                                                                                                                              |
+| **certificateType**                  | int          | N                          | 1 or 2                                                                                         | 1=ID 2=Passport                                                                                                                                                                                       |
+| **certificateCountry**               | string       | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Certificate country                                                                                                                                                                                   |
+| **certificateNumber**                | string       | N                          | maximum length 64                                                                              | Certificate number                                                                                                                                                                                    |
+| **certificateValidDate**             | long         | N                          | UnixTimestamp in milliseconds                                                                  | Certificate Valid Date                                                                                                                                                                                |
+| **contractTimeIsv**                  | long         | N                          | UnixTimestamp in milliseconds                                                                  | Contract date with ISV                                                                                                                                                                                |
+| **blockPayerKycCountries**           | List<String> | N                          | iso alpha 2 country code(https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)                     | Blocks payers from specified countries based on their KYC country. The list contains the countries to be blocked.                                                                                     |
+| **blockKybUserPayment**              | boolean      | N                          | true or false                                                                                  | block kyb users to pay this sub merchant, default false                                                                                                                                               |
+| **businessRegistrationUrl**          | string       | N                          | maximum length 1024                                                                            | business registration certificate URL                                                                                                                                                                 |
+| **bettingOperationalCertificateUrl** | String       | N(Y If merchantMcc = 1024) | maximum length 2048                                                                            | Betting Operational Certificate Url                                                                                                                                                                   |
+
+### Sample Request Body
+
+when merchant type is individual
+
+```json
+{
+  "subMerchantId": "1111111",
+  "merchantName": "Individual",
+  "merchantType": 1,
+  "merchantMcc": "5511",
+  "brandLogo": null,
+  "country": "AE",
+  "address": null,
+  "companyName": null,
+  "registrationNumber": null,
+  "registrationCountry": null,
+  "registrationAddress": null,
+  "incorporationDate": null,
+  "storeType": null,
+  "siteUrl": null,
+  "certificateType": 1,
+  "certificateCountry": "AE",
+  "blockPayerKycCountries": ["AR", "MX"],
+  "certificateNumber": "123456X",
+  "certificateValidDate": 1752422400000,
+  "contractTimeIsv": 1594656000000
+}
+```
+
+when merchant type is not individual
+
+```json
+{
+  "subMerchantId": "1111111",
+  "merchantName": "Sole Proprietor",
+  "merchantType": 2,
+  "merchantMcc": "5511",
+  "brandLogo": "logoUrlDemo",
+  "country": "AE",
+  "address": "store address demo",
+  "companyName": "Sole Proprietor",
+  "registrationNumber": "registration number demo",
+  "registrationCountry": "AE",
+  "registrationAddress": "registration address demo",
+  "incorporationDate": 1588262400000,
+  "storeType": 1,
+  "siteUrl": "site url demo",
+  "blockPayerKycCountries": ["AR", "MX"],
+  "certificateType": null,
+  "certificateCountry": null,
+  "certificateNumber": null,
+  "certificateValidDate": null,
+  "contractTimeIsv": 1594656000000
+}
+```
+
+## Response Parameters
+
+| **Attributes**   | **Type**               | **Required** | **Limitation**                      | **Description**                                       |
+| ---------------- | ---------------------- | ------------ | ----------------------------------- | ----------------------------------------------------- |
+| **status**       | string                 | Y            | &#34;SUCCESS&#34; or &#34;FAIL&#34; | status of the API request                             |
+| **code**         | string                 | Y            | -                                   | result code                                           |
+| **data**         | AddSubMerchantResponse | N            | -                                   | response body, [refer to](#add-sub-merchant-response) |
+| **errorMessage** | string                 | N            | maximum length 256                  | -                                                     |
+
+## Child Attribute
+
+### AddSubMerchantResponse
+
+<span id="add-sub-merchant-response"></span>
+
+| **Attributes**    | **Type** | **Required** | **Limitation** | **Description**                             |
+| ----------------- | -------- | ------------ | -------------- | ------------------------------------------- |
+| **subMerchantId** | long     | Y            | -              | unique sub-merchant id generated by payment |
+
+### Sample Response
+
+```json
+{
+  "status": "SUCCESS",
+  "code": "000000",
+  "data": true
+}
+```
+
+```json
+{
+  "status": "FAIL",
+  "code": "400101",
+  "errorMessage": "Parameter 'merchantMcc' not valid, was empty/null, or too long/short, or wrong format."
+}
+```
+
+## Result Code
+
+<span id="result-code"></span>
+
+| **Name**                           | **Code** | **Reason**                                                                     | **Solution**                                                                                   |
+| ---------------------------------- | -------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| UNKNOWN_ERROR                      | 400000   | An unknown error occurred while processing the request.                        | Try again later                                                                                |
+| INVALID_REQUEST                    | 400001   | Parameter format is wrong or parameter transferring doesn't follow the rules.  | Please check whether the parameters are correct.                                               |
+| INVALID_SIGNATURE                  | 400002   | Incorrect signature result                                                     | Check whether the signature parameter and method comply with signature algorithm requirements. |
+| INVALID_TIMESTAMP                  | 400003   | Timestamp for this request is outside of the time window.                      | Sync server clock                                                                              |
+| INVALID_API_KEY_OR_IP              | 400004   | API identity key not found or invalid.                                         | Check API identity key                                                                         |
+| BAD_API_KEY_FMT                    | 400005   | API identity key format invalid.                                               | Check API identity key.                                                                        |
+| BAD_HTTP_METHOD                    | 400006   | Request method not supported.                                                  | Check Request method.                                                                          |
+| MEDIA_TYPE_NOT_SUPPORTED           | 400007   | Media type not supported.                                                      | Check Request Media type.                                                                      |
+| INVALID_REQUEST_BODY               | 400008   | Request body is not a valid json object.                                       | Check Request body                                                                             |
+| MANDATORY_PARAM_EMPTY_OR_MALFORMED | 400100   | A parameter was missing/empty/null, or malformed.                              |                                                                                                |
+| INVALID_PARAM_WRONG_LENGTH         | 400101   | A parameter was not valid, was empty/null, or too long/short, or wrong format. |                                                                                                |
+| INVALID_PARAM_ILLEGAL_CHAR         | 400103   | A parameter was not valid, contains illegal characters                         |                                                                                                |
+| INVALID_REQUEST_TOO_LARGE          | 400104   | Invalid request, content length too large                                      |                                                                                                |
+| INVALID_ACCOUNT_STATUS             | 400203   | Not support for this account, please check account status.                     |                                                                                                |
+| SUB_MERCHANT_EXISTS                | 400205   | Sub-merchant already exists.                                                   | Please check merchant name                                                                     |
+| PAYMENT_MERCHANT_NOT_FOUND         | 400208   | Merchant not found.                                                            | Please check your merchantId                                                                   |
+| PAYMENT_ACTION_TOO_FREQUENT        | 400501   | action Too Frequent, get the lock fail                                         | Try again later                                                                                |
+
+### MCC
+
+<span id="MCC"></span>
+
+| Code | Industry                                                     | Industry Description                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1001 | Accommodation and Food Services                              | Hotels, Caterers, Restaurants, Bars, Cafes                                                                                                                                                                                                                                                                                                                                                                                  |
+| 1002 | Combined office administrative service activities            | Organization / association, office administrative services, travel arrangements, locksmiths, janitorial / landscaping services, waste collection / treatment / disposal                                                                                                                                                                                                                                                     |
+| 1004 | Agriculture, Forestry and Fishing                            | Crop production, animal farming, aquaculture, fishing                                                                                                                                                                                                                                                                                                                                                                       |
+| 1005 | Arts, Entertainment, and Recreation                          | Non-betting related industry, such as Arts and Cultural, Sports and Recreation, Amusements and recreation industries, Theatre companies, Dance companies, Museums, Sports teams and clubs, Social App (such as livestreaming)                                                                                                                                                                                               |
+| 1006 | Construction                                                 | Building, flooring, highway, bridge, glass construction/contractors                                                                                                                                                                                                                                                                                                                                                         |
+| 1007 | Crypto Exchange, Brokers, Market Makers                      | Crypto OTC Broker Desk,Crypto OTC Principal Desk, Market Maker, Broker, Exchange service                                                                                                                                                                                                                                                                                                                                    |
+| 1008 | Crypto ATM                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1009 | Crypto Mining                                                | Crypto miner, mining pool, mining hardware                                                                                                                                                                                                                                                                                                                                                                                  |
+| 1010 | Proprietary Crypto Traders                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1011 | Algorithm Crypto Traders                                     |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1012 | P2P Merchants                                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1013 | Other Digital Asset Services Provider (VASP)                 | Digital Wallet Provider (Custodial), NFT Marketplace (Custodial), OTC Desk, Custody Service Providers, Decentralized Applications (dApp)                                                                                                                                                                                                                                                                                    |
+| 1014 | Bank                                                         | Private banking, investment banking, corporate banking, wealth management                                                                                                                                                                                                                                                                                                                                                   |
+| 1015 | Non-Bank Financial Institution                               | Insurance companies, investment firms, microfinance providers, and leasing companies                                                                                                                                                                                                                                                                                                                                        |
+| 1016 | Money Services Business and Payment Service Providers        |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1017 | Family Office                                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1018 | Personal Investment Companies                                |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1019 | Superannuation Fund                                          |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1020 | Sovereign Wealth Fund                                        |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1021 | Investment Funds                                             | Collective investment schemes, mutual funds, hedge funds, private equity funds                                                                                                                                                                                                                                                                                                                                              |
+| 1022 | Educational Services                                         | Child care, schools, universities, educational support services                                                                                                                                                                                                                                                                                                                                                             |
+| 1024 | Betting                                                      | Legalised casino, online betting, gambling platform                                                                                                                                                                                                                                                                                                                                                                         |
+| 1025 | Health Care and Social Assistance                            | Hospitals, Nursing care facilities, Vocational rehabilitation services, Offices of physicians/dentists/optometrists, Medical practice activities,Social work activities                                                                                                                                                                                                                                                     |
+| 1027 | General Wholesalers                                          | Building supplies, equipment, motor vehicles, household appliances, apparels, F&B wholesalers                                                                                                                                                                                                                                                                                                                               |
+| 1028 | Management of Companies and Enterprises                      | Non-Operating Asset Holding Companies, Head offices Management of Companies and Enterprises                                                                                                                                                                                                                                                                                                                                 |
+| 1029 | Precious Stones and Precious Metals Dealers                  | Production or trading of precious metals, precious stones or jewelry                                                                                                                                                                                                                                                                                                                                                        |
+| 1030 | Crude Oil and Natural Gas Dealers                            | Production, refining and trading of oil and gas                                                                                                                                                                                                                                                                                                                                                                             |
+| 1031 | General Manufacturing                                        | F&B manufacturing, breweries / wineries / distilleries, poultry processing, books printing, valves / motor vehicle manufacturing                                                                                                                                                                                                                                                                                            |
+| 1033 | Mining and Extraction                                        | Mining and quarrying, oil and gas extraction                                                                                                                                                                                                                                                                                                                                                                                |
+| 1034 | Pawn Shops                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1035 | Professional Services                                        | Offices of Lawyers, Notaries, other independent legal professionals and accountants, Trust and Company Service Providers, Professional Services, Consultancy activities, Marketing services, Software & IT Development & Consultancy services                                                                                                                                                                               |
+| 1036 | Scientific research and development services                 | Scientific research and development services involve the systematic investigation and innovation aimed at advancing knowledge, technology, and solutions across various fields. These activities are crucial for driving progress, enhancing capabilities, and addressing complex challenges in society.                                                                                                                    |
+| 1038 | Real Estate Rental and Leasing                               | Real Estate Rental and Leasing sector involves renting, leasing, and managing residential, commercial, and industrial properties                                                                                                                                                                                                                                                                                            |
+| 1039 | Retail Stores - Electronics                                  | Phones, Computers, Cameras, Softwares, Electronic Product Supplies/Parts E-commerce (selling through websites, apps, and online marketplaces), Games (Non-betting)                                                                                                                                                                                                                                                          |
+| 1040 | Retail Stores - F&B                                          | Restaurants, bars, bakeries                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 1041 | Retail Stores - Jewelry                                      | Jewelry, watches                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 1042 | Retail Trade - Others                                        | Gasoline stations, clothing / shoe stores, florists, bookstores, newspaper stand, mini-marts, convenience store, supermarket, household appliances / supplies, hardware stores, beauty shop                                                                                                                                                                                                                                 |
+| 1043 | Sale of Drugs and Pharmaceutical products (except Marijuana) |                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 1044 | Tobacco                                                      | Sales of tobacco / farming of tobacco / manufacturing of tobacco                                                                                                                                                                                                                                                                                                                                                            |
+| 1045 | Transportation and Warehousing                               | Air / rail / water / truck transportation, scenic and sightseeing transportation, postal service, warehousing and storage, automotive business                                                                                                                                                                                                                                                                              |
+| 1046 | Utilities                                                    | Electric power generation, transmission and distribution, sewage treatment facilities, water supply and irrigation systems, natural gas distribution                                                                                                                                                                                                                                                                        |
+| 1047 | Other Crypto, Web3 services (non VASP)                       | Digital Wallet Provider (Non Custodial), NFT Marketplace (Non Custodial), Decentralised Exchange (DEX), Trading Bots Providers Crypto Consultants, E-gaming (GameFi, P2E Games, Metaverse Games), Decentralised Autonomous Organisation (DAO), Cross-Chain Bridge Service Providers Blockchain as a Service (BaaS),Software as a Service (SaaS) Providers, API solution for payment services, Proprietary Trading Platforms |
+| 9999 | Other                                                        |                                                                                                                                                                                                                                                                                                                                                                                                                             |

@@ -17,12 +17,12 @@
 
 | 范围 | 提供方 | 产品 | 状态 | 文档数量 | 最后更新 |
 |------|--------|------|------|----------|----------|
-| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 825 | 2026-07-01 |
+| crypto | Binance | [Binance](./docs/crypto/binance/) | ✅ | 909 | 2026-11-18 |
 | crypto | Bybit | [Bybit](./docs/crypto/bybit/) | ✅ | 528 | 2026-11-18 |
 | crypto | Coinbase | [Coinbase](./docs/crypto/coinbase/) | ✅ | 78 | 2026-11-11 |
 | crypto | Gate.io | [Gate.io](./docs/crypto/gateio/) | ✅ | 66 | 2026-05-27 |
 | crypto | Hyperliquid | [Hyperliquid](./docs/crypto/hyperliquid/) | ✅ | 37 | 2026-11-11 |
-| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 243 | 2026-11-11 |
+| crypto | Kraken | [Kraken](./docs/crypto/kraken/) | ✅ | 382 | 2026-11-18 |
 | crypto | OKX | [OKX](./docs/crypto/okx/) | ✅ | 518 | 2026-11-11 |
 | crypto | Deribit | [Deribit](./docs/crypto/deribit/) | ✅ | 342 | 2026-11-16 |
 
@@ -83,13 +83,13 @@ marketdata-api-doc/
 │           └── okx.yaml
 ├── docs/                 # Markdown 文档
 │   └── crypto/
-│       ├── binance/                                # 825 Markdown docs
+│       ├── binance/                                # 909 Markdown docs
 │       ├── bybit/                                  # 528 Markdown docs
 │       ├── coinbase/                               # 78 Markdown docs
 │       ├── deribit/                                # 342 Markdown docs
 │       ├── gateio/                                 # 66 Markdown docs
 │       ├── hyperliquid/                            # 37 Markdown docs
-│       ├── kraken/                                 # 243 Markdown docs
+│       ├── kraken/                                 # 382 Markdown docs
 │       └── okx/                                    # 518 Markdown docs
 ├── index/                # JSON 索引（供 AI 读取）
 │   ├── catalog.json
