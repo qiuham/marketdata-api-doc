@@ -1,0 +1,19 @@
+name: bitget
+
+crawler:
+  # 2026 年的新文档站（Zudoku）。旧地址 /api-doc/... 都跳到 /docs/...
+  site: "https://www.bitget.com"
+  # 读这一页 HTML 找 entry.client 脚本，脚本里有全部路由（文档页 + API 参考）
+  entry_page: "/docs/uta/Introduction"
+  # 文档页只收这两套：统一账户（UTA）和经典账户（classic）
+  doc_sections:
+    - "/docs/uta/"
+    - "/docs/classic/"
+  # 中文页地址 = 这个前缀 + 英文页地址；英文在前，中文在后，合成一篇
+  secondary_prefix: "/zh-CN"
+  # 每次请求前等的秒数
+  request_delay: 0.3
+
+output:
+  base_dir: "docs"
+  dir_name: "bitget"

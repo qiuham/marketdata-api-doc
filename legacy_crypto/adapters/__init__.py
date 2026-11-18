@@ -14,5 +14,6 @@ from . import okx
 from . import coinbase
 from . import gateio
 from . import deribit
+from . import bitget
 
 __all__ = ['get_adapter', 'register_adapter', 'ExchangeAdapter', 'DocumentPage']

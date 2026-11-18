@@ -9,6 +9,7 @@ name: Crawl Docs
         type: choice
         options:
           - binance
+          - bitget
           - bybit
           - coinbase
           - deribit

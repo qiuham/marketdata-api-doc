@@ -1,0 +1,24 @@
+id: bitget
+display_name: Bitget
+scope: crypto
+asset_class: digital_asset
+domain: exchanges
+provider:
+  id: bitget
+  display_name: Bitget
+product: api
+status: active
+priority: 180
+# 没有 llms.txt、sitemap，不能用 llms_txt；路由表在 entry.client 脚本里，全部 HTTP 取，不开浏览器
+adapter: crypto_legacy
+source:
+  type: legacy_crypto
+  legacy_exchange: bitget
+  concurrency: 2
+output:
+  docs_dir: docs/crypto/bitget
+  index_file: index/crypto/bitget.json
+metadata_defaults:
+  api_type: reference
+  source_type: legacy_crypto
+  version: ''
